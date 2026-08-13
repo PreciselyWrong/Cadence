@@ -42,6 +42,9 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Modifier la version directement dans Gradle — elle provient de `app-release/version.json`.
 - ⛔ Arrêter le lancement dev sans appareil — démarrer un AVD disponible et attendre `sys.boot_completed`.
 - ⛔ Considérer la gestion des habitudes complète sans édition, pause, archive, duplication, réordonnancement et suppression accessibles — un modèle persistant seul ne constitue pas une option utilisateur.
+- ⛔ Masquer la sélection ou l’action principale d’un formulaire — l’icône choisie et le bouton d’enregistrement doivent rester clairement visibles.
+- ⛔ Ouvrir une saisie globale depuis une icône du widget — chaque icône cible uniquement son habitude et disparaît lorsque celle-ci est terminée.
+- ⛔ Placer la valeur du widget à côté de l’icône — elle s’affiche dessous et l’apparence reste configurable.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

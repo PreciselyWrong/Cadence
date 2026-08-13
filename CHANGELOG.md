@@ -9,6 +9,11 @@
 
 ### Améliorations
 - Le widget s’adapte à sa largeur et affiche la progression utile.
+- Un toucher sur le widget ouvre seulement l’habitude choisie.
+- La valeur du jour se place sous l’icône et disparaît avec l’habitude terminée.
+- Le widget propose davantage de couleurs, de tailles et de transparence.
+- Le mode sombre gagne en contraste et en couleurs.
+- L’icône choisie reste visible pendant toute la modification.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.
 - Toutes les options d’une habitude sont réunies dans un menu simple.
 

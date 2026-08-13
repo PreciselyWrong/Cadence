@@ -55,20 +55,22 @@ import ch.nicolab.cadence.ui.theme.CadenceTheme
 import java.util.UUID
 
 class QuickEntryActivity : ComponentActivity() {
+    companion object { const val EXTRA_HABIT_ID = "habit_id" }
     private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(application as CadenceApp) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { CadenceTheme { QuickEntryScreen(viewModel, ::finish) } }
+        val habitId = intent.getStringExtra(EXTRA_HABIT_ID)
+        setContent { CadenceTheme { QuickEntryScreen(viewModel, habitId, ::finish) } }
     }
 }
 
 @Composable
-private fun QuickEntryScreen(viewModel: MainViewModel, dismiss: () -> Unit) {
+private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss: () -> Unit) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val lastEntryId by viewModel.lastEntryId.collectAsStateWithLifecycle()
-    val pending = habits.filter { it.evaluation.needsAttentionNow }
+    val pending = habits.filter { it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.scrim.copy(alpha = .45f)).clickable(onClick = dismiss), contentAlignment = Alignment.BottomCenter) {
         Card(
             modifier = Modifier.fillMaxWidth().navigationBarsPadding().pointerInput(Unit) { detectVerticalDragGestures { _, drag -> if (drag > 120f) dismiss() } }.clickable(onClick = {}),

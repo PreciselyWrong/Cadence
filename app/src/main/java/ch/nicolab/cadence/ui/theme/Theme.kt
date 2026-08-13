@@ -1,22 +1,26 @@
 package ch.nicolab.cadence.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PeriwinkleSoft,
-    onPrimary = Ink,
-    primaryContainer = InkSoft,
-    onPrimaryContainer = PeriwinkleSoft,
-    background = Night,
-    onBackground = NightMist,
-    surface = NightSurface,
-    onSurface = NightMist,
-    surfaceVariant = InkSoft,
-    onSurfaceVariant = Mist
+    primary = Color(0xFF8EACFF),
+    onPrimary = Color(0xFF071A45),
+    primaryContainer = Color(0xFF233C76),
+    onPrimaryContainer = Color(0xFFDCE5FF),
+    secondary = Color(0xFF62DBC8),
+    secondaryContainer = Color(0xFF0C4F47),
+    tertiary = Color(0xFFFF8F9A),
+    tertiaryContainer = Color(0xFF6B2630),
+    background = Color(0xFF0C1020),
+    onBackground = Color(0xFFF0F1FA),
+    surface = Color(0xFF151A2D),
+    onSurface = Color(0xFFF0F1FA),
+    surfaceVariant = Color(0xFF252C45),
+    onSurfaceVariant = Color(0xFFC5CAE0)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -35,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun CadenceTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

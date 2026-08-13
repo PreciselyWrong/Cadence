@@ -18,6 +18,8 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -30,6 +32,7 @@ import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.ContentScale
+import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
@@ -55,7 +58,7 @@ import kotlinx.coroutines.flow.first
 private data class WidgetHabit(val habit: PersistedHabit, val evaluation: HabitEvaluation)
 
 class CadenceWidget : GlanceAppWidget() {
-    override val sizeMode = SizeMode.Responsive(setOf(DpSize(140.dp, 56.dp), DpSize(220.dp, 56.dp), DpSize(320.dp, 56.dp)))
+    override val sizeMode = SizeMode.Responsive(setOf(DpSize(140.dp, 76.dp), DpSize(220.dp, 76.dp), DpSize(320.dp, 76.dp)))
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repository = (context.applicationContext as CadenceApp).repository
@@ -80,29 +83,32 @@ class CadenceWidget : GlanceAppWidget() {
 private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>) {
     val isMono = config.theme == "MONO"
     val alpha = config.opacity.coerceIn(0, 100) / 100f
-    val surface = (if (isMono) Color(0xFFF7F8FC) else Color(0xFF202944)).copy(alpha = alpha)
+    val baseSurface = when (config.theme) { "OCEAN" -> Color(0xFF073B4C); "FOREST" -> Color(0xFF12372A); "AUBERGINE" -> Color(0xFF35155D); "CORAL" -> Color(0xFF6D2932); "MONO" -> Color(0xFFF7F8FC); else -> Color(0xFF171B2E) }
+    val surface = baseSurface.copy(alpha = alpha)
     val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
-    val badge = (if (isMono) Color(0xFFE9EDF5) else Color(0xFF6278BC)).copy(alpha = .72f)
+    val badge = (if (isMono) Color(0xFFE9EDF5) else Color.White).copy(alpha = if (isMono) .72f else .14f)
     val capacity = WidgetCapacityCalculator.calculateCapacity(LocalSize.current.width.value.toInt(), config.iconSizeDp, config.showValues, habits.size)
     Row(
-        modifier = GlanceModifier.fillMaxWidth().height(56.dp).background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).padding(horizontal = 10.dp).clickable(actionStartActivity<QuickEntryActivity>()),
+        modifier = GlanceModifier.fillMaxWidth().height(76.dp).background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).padding(horizontal = 10.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (habits.isEmpty()) {
             if (config.showDoneIndicator) Image(ImageProvider(if (isMono) R.drawable.ic_widget_mark else R.drawable.ic_widget_mark_light), "À jour", modifier = GlanceModifier.size(24.dp))
         } else {
             habits.take(capacity).forEach { item ->
-                Row(modifier = GlanceModifier.padding(end = 6.dp), verticalAlignment = Alignment.Vertical.CenterVertically) {
+                Column(modifier = GlanceModifier.padding(end = 8.dp).clickable(actionStartActivity<QuickEntryActivity>(actionParametersOf(habitIdKey to item.habit.id))), horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
                     Box(modifier = GlanceModifier.size((config.iconSizeDp + 8).dp).background(ColorProvider(day = badge, night = badge)).cornerRadius(((config.iconSizeDp + 8) / 2).dp), contentAlignment = Alignment.Center) {
                         iconBitmaps[item.habit.id]?.let { bitmap -> Image(ImageProvider(bitmap), item.habit.name, modifier = GlanceModifier.size(config.iconSizeDp.dp), contentScale = ContentScale.Fit) }
                     }
-                    if (config.showValues) Text(HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.habit.goal.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium), modifier = GlanceModifier.padding(start = 3.dp))
+                    if (config.showValues) Text(HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.habit.goal.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium), modifier = GlanceModifier.padding(top = 2.dp))
                 }
             }
             if (habits.size > capacity) Text("+${habits.size - capacity}", style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium))
         }
     }
 }
+
+private val habitIdKey = ActionParameters.Key<String>(QuickEntryActivity.EXTRA_HABIT_ID)
 
 private fun renderIcon(iconId: String?, argb: Int, sizeDp: Int): Bitmap {
     val vector = HabitIconRegistry.getIcon(iconId).imageVector

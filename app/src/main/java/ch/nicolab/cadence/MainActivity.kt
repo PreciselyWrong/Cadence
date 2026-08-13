@@ -275,27 +275,36 @@ private fun QuickSheet(item: HabitCardState, add: (Long) -> Unit, undo: () -> Un
     }
 }
 
-private data class EditorState(
-    var step: Int = 0,
-    var name: String = "",
-    var description: String = "",
-    var iconId: String = HabitIconRegistry.DEFAULT_ICON_ID,
-    var colorArgb: Int = 0xFF526AA0.toInt(),
-    var goalType: GoalType = GoalType.BINARY,
-    var target: String = "1",
-    var unit: MeasurementUnit = MeasurementUnit.COUNT,
-    var customUnit: Boolean = false,
-    var customName: String = "",
-    var customSymbol: String = "",
-    var period: PeriodType = PeriodType.DAY,
-    var scheduleMode: ScheduleMode = ScheduleMode.EVERY_DAY,
-    var activeDays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
-    var firstDay: DayOfWeek = DayOfWeek.MONDAY,
-    var quickValues: String = "1",
-    var reminderTimes: String = "",
-    var conditionalReminders: Boolean = true,
-    var frequencyTarget: String = "",
-)
+private class EditorState(
+    step: Int = 0, name: String = "", description: String = "",
+    iconId: String = HabitIconRegistry.DEFAULT_ICON_ID, colorArgb: Int = 0xFF526AA0.toInt(),
+    goalType: GoalType = GoalType.BINARY, target: String = "1", unit: MeasurementUnit = MeasurementUnit.COUNT,
+    customUnit: Boolean = false, customName: String = "", customSymbol: String = "",
+    period: PeriodType = PeriodType.DAY, scheduleMode: ScheduleMode = ScheduleMode.EVERY_DAY,
+    activeDays: Set<DayOfWeek> = DayOfWeek.entries.toSet(), firstDay: DayOfWeek = DayOfWeek.MONDAY,
+    quickValues: String = "1", reminderTimes: String = "", conditionalReminders: Boolean = true,
+    frequencyTarget: String = "",
+) {
+    var step by mutableIntStateOf(step)
+    var name by mutableStateOf(name)
+    var description by mutableStateOf(description)
+    var iconId by mutableStateOf(iconId)
+    var colorArgb by mutableIntStateOf(colorArgb)
+    var goalType by mutableStateOf(goalType)
+    var target by mutableStateOf(target)
+    var unit by mutableStateOf(unit)
+    var customUnit by mutableStateOf(customUnit)
+    var customName by mutableStateOf(customName)
+    var customSymbol by mutableStateOf(customSymbol)
+    var period by mutableStateOf(period)
+    var scheduleMode by mutableStateOf(scheduleMode)
+    var activeDays by mutableStateOf(activeDays)
+    var firstDay by mutableStateOf(firstDay)
+    var quickValues by mutableStateOf(quickValues)
+    var reminderTimes by mutableStateOf(reminderTimes)
+    var conditionalReminders by mutableStateOf(conditionalReminders)
+    var frequencyTarget by mutableStateOf(frequencyTarget)
+}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -327,7 +336,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.height(480.dp)) {
             item { Text(listOf(stringResource(R.string.form_step_identity_title), stringResource(R.string.form_step_goal_title), stringResource(R.string.form_step_schedule_title), stringResource(R.string.form_step_quick_title))[state.step], style = MaterialTheme.typography.titleMedium) }
             when (state.step) {
-                0 -> { item { OutlinedTextField(state.name, { state.name = it }, label = { Text(stringResource(R.string.form_name_label)) }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.description, { state.description = it }, label = { Text(stringResource(R.string.form_description_label)) }, modifier = Modifier.fillMaxWidth()) }; item { HabitIconPicker(state.iconId, { state.iconId = it }) }; item { FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf(0xFF526AA0, 0xFF2E7D68, 0xFF9A5B4A, 0xFF72569A, 0xFF9A7A2F).forEach { color -> Box(Modifier.size(44.dp).background(Color(color), CircleShape).clickable { state.colorArgb = color.toInt() }) } } } }
+                0 -> { item { OutlinedTextField(state.name, { state.name = it }, label = { Text(stringResource(R.string.form_name_label)) }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.description, { state.description = it }, label = { Text(stringResource(R.string.form_description_label)) }, modifier = Modifier.fillMaxWidth()) }; item { val chosen = HabitIconRegistry.getIcon(state.iconId); Card(colors = CardDefaults.cardColors(containerColor = Color(state.colorArgb).copy(alpha = .22f))) { Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) { Box(Modifier.size(52.dp).background(Color(state.colorArgb), CircleShape), contentAlignment = Alignment.Center) { Icon(chosen.imageVector, chosen.labelFr, tint = Color.White) }; Spacer(Modifier.width(12.dp)); Column { Text("Icône choisie", style = MaterialTheme.typography.labelMedium); Text(chosen.labelFr, style = MaterialTheme.typography.titleMedium) } } } }; item { HabitIconPicker(state.iconId, { state.iconId = it }) }; item { FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf(0xFF5B8CFF, 0xFF00BFA5, 0xFFFF6B6B, 0xFFB388FF, 0xFFFFB74D, 0xFF4DD0E1, 0xFFEC407A, 0xFF8BC34A).forEach { color -> Box(Modifier.size(if (state.colorArgb == color.toInt()) 52.dp else 44.dp).background(Color(color), CircleShape).clickable { state.colorArgb = color.toInt() }) } } } }
                 1 -> { item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { GoalType.entries.forEach { Choice(it.name.lowercase(), state.goalType == it) { state.goalType = it; if (it == GoalType.BINARY) state.target = "1" } } } }; if (state.goalType != GoalType.BINARY) item { OutlinedTextField(state.target, { state.target = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.form_target_label)) }, modifier = Modifier.fillMaxWidth()) }; if (state.goalType != GoalType.BINARY) item { val units = when (state.goalType) { GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS); GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }; else -> MeasurementUnit.BUILT_INS.filter { it.dimension != UnitDimension.TIME } }; FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { units.forEach { Choice(it.symbol.ifBlank { it.nameFr }, !state.customUnit && state.unit.id == it.id) { state.unit = it; state.customUnit = false } }; Choice(stringResource(R.string.form_unit_custom), state.customUnit) { state.customUnit = true } } }; if (state.customUnit) item { OutlinedTextField(state.customName, { state.customName = it }, label = { Text(stringResource(R.string.form_custom_unit_name)) }, modifier = Modifier.fillMaxWidth()); OutlinedTextField(state.customSymbol, { state.customSymbol = it }, label = { Text(stringResource(R.string.form_custom_unit_symbol)) }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.frequencyTarget, { state.frequencyTarget = it.filter(Char::isDigit) }, label = { Text("Nombre minimal de séances (facultatif)") }, supportingText = { Text("Distinct de la quantité visée") }, modifier = Modifier.fillMaxWidth()) } }
                 2 -> { item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { PeriodType.entries.forEach { Choice(it.name.lowercase(), state.period == it) { state.period = it } } } }; item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { ScheduleMode.entries.forEach { Choice(it.name.lowercase(), state.scheduleMode == it) { state.scheduleMode = it } } } }; if (state.period == PeriodType.WEEK) item { Text(stringResource(R.string.form_first_day_of_week_label)); FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { DayOfWeek.entries.forEach { Choice(it.name.take(3).lowercase(), state.firstDay == it) { state.firstDay = it } } } }; if (state.scheduleMode == ScheduleMode.SELECTED_DAYS) item { FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { DayOfWeek.entries.forEach { day -> Choice(day.name.take(3).lowercase(), day in state.activeDays) { state.activeDays = if (day in state.activeDays) state.activeDays - day else state.activeDays + day } } } } }
                 else -> { item { OutlinedTextField(state.quickValues, { state.quickValues = it.filter { c -> c.isDigit() || c == ',' || c == ' ' } }, label = { Text(stringResource(R.string.form_quick_values_label)) }, supportingText = { Text("Ex. 10, 20, 30") }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.reminderTimes, { state.reminderTimes = it.filter { c -> c.isDigit() || c == ':' || c == ',' || c == ' ' } }, label = { Text("Rappels (HH:mm, HH:mm)") }, supportingText = { Text("Laissez vide pour aucun rappel") }, modifier = Modifier.fillMaxWidth()) }; item { Row(verticalAlignment = Alignment.CenterVertically) { androidx.compose.material3.Switch(state.conditionalReminders, { state.conditionalReminders = it }); Spacer(Modifier.width(8.dp)); Text("Seulement si l’objectif reste à faire") } } }

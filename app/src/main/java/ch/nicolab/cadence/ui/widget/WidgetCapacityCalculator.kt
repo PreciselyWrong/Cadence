@@ -16,11 +16,8 @@ object WidgetCapacityCalculator {
 
         val netWidth = (availableWidthDp - rowPaddingDp).coerceAtLeast(40)
 
-        val itemWidthDp = if (showValues) {
-            (iconSizeDp + 36).coerceAtLeast(50)
-        } else {
-            (iconSizeDp + 8).coerceAtLeast(36)
-        }
+        // La valeur est empilée sous l’icône : elle ne consomme plus de largeur.
+        val itemWidthDp = (iconSizeDp + if (showValues) 14 else 8).coerceAtLeast(40)
 
         val maxWithoutPlus = (netWidth + itemSpacingDp) / (itemWidthDp + itemSpacingDp)
         if (totalHabitsCount <= maxWithoutPlus) {
