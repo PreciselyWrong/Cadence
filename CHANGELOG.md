@@ -10,6 +10,7 @@
 ### Améliorations
 - Le widget s’adapte à sa largeur et affiche la progression utile.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.
+- Toutes les options d’une habitude sont réunies dans un menu simple.
 
 ## [1.0.4] — 13 août 2026
 

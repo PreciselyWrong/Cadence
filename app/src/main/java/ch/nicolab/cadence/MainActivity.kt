@@ -36,6 +36,11 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TrackChanges
@@ -132,7 +137,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     Scaffold(bottomBar = { NavigationBar { Tab.entries.forEach { item -> NavigationBarItem(tab == item, { tab = item }, { Icon(item.icon, stringResource(item.label)) }, label = { Text(stringResource(item.label)) }) } } }) { inset ->
         when (tab) {
             Tab.TODAY -> TodayScreen(habits, Modifier.padding(inset), { quick = it }, { creating = true })
-            Tab.HABITS -> HabitsScreen(habits, Modifier.padding(inset), { creating = true }, { editor = it }, viewModel::duplicateHabit, { viewModel.archiveHabit(it, !it.archived) }, { deleting = it })
+            Tab.HABITS -> HabitsScreen(habits, Modifier.padding(inset), { creating = true }, { editor = it }, viewModel::duplicateHabit, { viewModel.archiveHabit(it, !it.archived) }, viewModel::togglePause, viewModel::moveHabit, { deleting = it })
             Tab.STATS -> StatsScreen(habits, Modifier.padding(inset))
             Tab.SETTINGS -> SettingsScreen(Modifier.padding(inset), { exportLauncher.launch("cadence-backup.json") }, { importLauncher.launch(arrayOf("application/json")) }, backupMessage)
         }
@@ -188,17 +193,44 @@ private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, don
     }
 }
 
-private fun progress(item: HabitCardState) = HabitFormatter.formatProgress(item.evaluation.progressMinor, item.stored.goal.targetMinor, item.stored.goal.goalType, item.stored.goal.unit)
+private fun progress(item: HabitCardState): String {
+    val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, item.stored.goal.targetMinor, item.stored.goal.goalType, item.stored.goal.unit)
+    val frequency = item.stored.goal.frequencyTarget ?: return quantity
+    return "$quantity · ${item.evaluation.sessionCount} / $frequency séances"
+}
 
 @Composable private fun EmptyDone() = Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) { Column(Modifier.padding(22.dp)) { Icon(Icons.Outlined.Check, null); Spacer(Modifier.height(10.dp)); Text(stringResource(R.string.empty_today_done_title), style = MaterialTheme.typography.titleLarge); Text(stringResource(R.string.empty_today_done_message)) } }
 @Composable private fun EmptyHabits(create: () -> Unit) = Card(shape = RoundedCornerShape(24.dp)) { Column(Modifier.padding(22.dp)) { Text(stringResource(R.string.empty_habits_title), style = MaterialTheme.typography.titleLarge); Text(stringResource(R.string.empty_habits_message)); FilledTonalButton(create, modifier = Modifier.padding(top = 16.dp)) { Text(stringResource(R.string.create_habit_button)) } } }
 
 @Composable
-private fun HabitsScreen(habits: List<HabitCardState>, modifier: Modifier, create: () -> Unit, edit: (HabitCardState) -> Unit, duplicate: (PersistedHabit) -> Unit, archive: (PersistedHabit) -> Unit, delete: (PersistedHabit) -> Unit) = LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-    item { Spacer(Modifier.height(16.dp)); ScreenTitle(stringResource(R.string.habits_title), stringResource(R.string.habits_subtitle), create) }
-    items(habits, key = { it.stored.id }) { item -> HabitCard(item, {}, actions = { Row { IconButton({ edit(item) }) { Icon(Icons.Outlined.Edit, stringResource(R.string.action_edit)) }; IconButton({ archive(item.stored) }) { Icon(if (item.stored.archived) Icons.Outlined.Restore else Icons.Outlined.Archive, stringResource(if (item.stored.archived) R.string.action_restore else R.string.action_archive)) }; IconButton({ duplicate(item.stored) }) { Icon(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate)) }; IconButton({ delete(item.stored) }) { Icon(Icons.Outlined.Delete, stringResource(R.string.action_delete)) } } }) }
-    item { Spacer(Modifier.height(24.dp)) }
+private fun HabitsScreen(habits: List<HabitCardState>, modifier: Modifier, create: () -> Unit, edit: (HabitCardState) -> Unit, duplicate: (PersistedHabit) -> Unit, archive: (PersistedHabit) -> Unit, pause: (HabitCardState) -> Unit, move: (String, Int) -> Unit, delete: (PersistedHabit) -> Unit) {
+    var options by remember { mutableStateOf<HabitCardState?>(null) }
+    LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        item { Spacer(Modifier.height(16.dp)); ScreenTitle(stringResource(R.string.habits_title), stringResource(R.string.habits_subtitle), create) }
+        items(habits, key = { it.stored.id }) { item -> HabitCard(item, {}, actions = { IconButton({ options = item }) { Icon(Icons.Outlined.MoreVert, "Options de ${item.stored.name}") } }) }
+        item { Spacer(Modifier.height(24.dp)) }
+    }
+    options?.let { item -> HabitOptionsDialog(item, { options = null }, { edit(item); options = null }, { pause(item); options = null }, { archive(item.stored); options = null }, { duplicate(item.stored); options = null }, { move(item.stored.id, -1); options = null }, { move(item.stored.id, 1); options = null }, { delete(item.stored); options = null }) }
 }
+
+@Composable
+private fun HabitOptionsDialog(item: HabitCardState, dismiss: () -> Unit, edit: () -> Unit, pause: () -> Unit, archive: () -> Unit, duplicate: () -> Unit, up: () -> Unit, down: () -> Unit, delete: () -> Unit) {
+    AlertDialog(onDismissRequest = dismiss, title = { Text(item.stored.name) }, text = {
+        Column {
+            Option(Icons.Outlined.Edit, stringResource(R.string.action_edit), edit)
+            Option(if (item.evaluation.isPaused) Icons.Outlined.PlayArrow else Icons.Outlined.Pause, stringResource(if (item.evaluation.isPaused) R.string.action_resume else R.string.action_pause), pause)
+            Option(if (item.stored.archived) Icons.Outlined.Restore else Icons.Outlined.Archive, stringResource(if (item.stored.archived) R.string.action_restore else R.string.action_archive), archive)
+            Option(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate), duplicate)
+            Option(Icons.Outlined.KeyboardArrowUp, stringResource(R.string.action_reorder_up), up)
+            Option(Icons.Outlined.KeyboardArrowDown, stringResource(R.string.action_reorder_down), down)
+            HorizontalDivider()
+            Option(Icons.Outlined.Delete, stringResource(R.string.action_delete), delete)
+        }
+    }, confirmButton = { TextButton(dismiss) { Text(stringResource(R.string.form_btn_cancel)) } })
+}
+
+@Composable
+private fun Option(icon: ImageVector, label: String, action: () -> Unit) = Row(Modifier.fillMaxWidth().height(52.dp).clickable(onClick = action).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) { Icon(icon, null); Spacer(Modifier.width(12.dp)); Text(label) }
 
 @Composable
 private fun StatsScreen(habits: List<HabitCardState>, modifier: Modifier) = LazyColumn(modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -262,6 +294,7 @@ private data class EditorState(
     var quickValues: String = "1",
     var reminderTimes: String = "",
     var conditionalReminders: Boolean = true,
+    var frequencyTarget: String = "",
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -285,6 +318,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                 quickValues = existing?.quickValues?.joinToString(", ") { (it / (stored?.goal?.unit?.scaleToCanonical ?: 1)).toString() } ?: "1",
                 reminderTimes = existing?.reminders?.joinToString(", ") { it.time }.orEmpty(),
                 conditionalReminders = existing?.reminders?.all { it.conditional } ?: true,
+                frequencyTarget = stored?.goal?.frequencyTarget?.toString().orEmpty(),
             ),
         )
     }.value
@@ -294,7 +328,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
             item { Text(listOf(stringResource(R.string.form_step_identity_title), stringResource(R.string.form_step_goal_title), stringResource(R.string.form_step_schedule_title), stringResource(R.string.form_step_quick_title))[state.step], style = MaterialTheme.typography.titleMedium) }
             when (state.step) {
                 0 -> { item { OutlinedTextField(state.name, { state.name = it }, label = { Text(stringResource(R.string.form_name_label)) }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.description, { state.description = it }, label = { Text(stringResource(R.string.form_description_label)) }, modifier = Modifier.fillMaxWidth()) }; item { HabitIconPicker(state.iconId, { state.iconId = it }) }; item { FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf(0xFF526AA0, 0xFF2E7D68, 0xFF9A5B4A, 0xFF72569A, 0xFF9A7A2F).forEach { color -> Box(Modifier.size(44.dp).background(Color(color), CircleShape).clickable { state.colorArgb = color.toInt() }) } } } }
-                1 -> { item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { GoalType.entries.forEach { Choice(it.name.lowercase(), state.goalType == it) { state.goalType = it; if (it == GoalType.BINARY) state.target = "1" } } } }; if (state.goalType != GoalType.BINARY) item { OutlinedTextField(state.target, { state.target = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.form_target_label)) }, modifier = Modifier.fillMaxWidth()) }; if (state.goalType != GoalType.BINARY) item { val units = when (state.goalType) { GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS); GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }; else -> MeasurementUnit.BUILT_INS.filter { it.dimension != UnitDimension.TIME } }; FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { units.forEach { Choice(it.symbol.ifBlank { it.nameFr }, !state.customUnit && state.unit.id == it.id) { state.unit = it; state.customUnit = false } }; Choice(stringResource(R.string.form_unit_custom), state.customUnit) { state.customUnit = true } } }; if (state.customUnit) item { OutlinedTextField(state.customName, { state.customName = it }, label = { Text(stringResource(R.string.form_custom_unit_name)) }, modifier = Modifier.fillMaxWidth()); OutlinedTextField(state.customSymbol, { state.customSymbol = it }, label = { Text(stringResource(R.string.form_custom_unit_symbol)) }, modifier = Modifier.fillMaxWidth()) } }
+                1 -> { item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { GoalType.entries.forEach { Choice(it.name.lowercase(), state.goalType == it) { state.goalType = it; if (it == GoalType.BINARY) state.target = "1" } } } }; if (state.goalType != GoalType.BINARY) item { OutlinedTextField(state.target, { state.target = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.form_target_label)) }, modifier = Modifier.fillMaxWidth()) }; if (state.goalType != GoalType.BINARY) item { val units = when (state.goalType) { GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS); GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }; else -> MeasurementUnit.BUILT_INS.filter { it.dimension != UnitDimension.TIME } }; FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { units.forEach { Choice(it.symbol.ifBlank { it.nameFr }, !state.customUnit && state.unit.id == it.id) { state.unit = it; state.customUnit = false } }; Choice(stringResource(R.string.form_unit_custom), state.customUnit) { state.customUnit = true } } }; if (state.customUnit) item { OutlinedTextField(state.customName, { state.customName = it }, label = { Text(stringResource(R.string.form_custom_unit_name)) }, modifier = Modifier.fillMaxWidth()); OutlinedTextField(state.customSymbol, { state.customSymbol = it }, label = { Text(stringResource(R.string.form_custom_unit_symbol)) }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.frequencyTarget, { state.frequencyTarget = it.filter(Char::isDigit) }, label = { Text("Nombre minimal de séances (facultatif)") }, supportingText = { Text("Distinct de la quantité visée") }, modifier = Modifier.fillMaxWidth()) } }
                 2 -> { item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { PeriodType.entries.forEach { Choice(it.name.lowercase(), state.period == it) { state.period = it } } } }; item { FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { ScheduleMode.entries.forEach { Choice(it.name.lowercase(), state.scheduleMode == it) { state.scheduleMode = it } } } }; if (state.period == PeriodType.WEEK) item { Text(stringResource(R.string.form_first_day_of_week_label)); FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { DayOfWeek.entries.forEach { Choice(it.name.take(3).lowercase(), state.firstDay == it) { state.firstDay = it } } } }; if (state.scheduleMode == ScheduleMode.SELECTED_DAYS) item { FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { DayOfWeek.entries.forEach { day -> Choice(day.name.take(3).lowercase(), day in state.activeDays) { state.activeDays = if (day in state.activeDays) state.activeDays - day else state.activeDays + day } } } } }
                 else -> { item { OutlinedTextField(state.quickValues, { state.quickValues = it.filter { c -> c.isDigit() || c == ',' || c == ' ' } }, label = { Text(stringResource(R.string.form_quick_values_label)) }, supportingText = { Text("Ex. 10, 20, 30") }, modifier = Modifier.fillMaxWidth()) }; item { OutlinedTextField(state.reminderTimes, { state.reminderTimes = it.filter { c -> c.isDigit() || c == ':' || c == ',' || c == ' ' } }, label = { Text("Rappels (HH:mm, HH:mm)") }, supportingText = { Text("Laissez vide pour aucun rappel") }, modifier = Modifier.fillMaxWidth()) }; item { Row(verticalAlignment = Alignment.CenterVertically) { androidx.compose.material3.Switch(state.conditionalReminders, { state.conditionalReminders = it }); Spacer(Modifier.width(8.dp)); Text("Seulement si l’objectif reste à faire") } } }
             }
@@ -306,7 +340,8 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
             val unit = if (state.goalType == GoalType.BINARY) null else if (state.customUnit) MeasurementUnit("custom-${state.customName.trim().lowercase()}", UnitDimension.CUSTOM, state.customName.trim(), state.customSymbol.trim()) else state.unit
             val quick = state.quickValues.split(',', ' ').mapNotNull(String::toLongOrNull).filter { it > 0 }.map { it * (unit?.scaleToCanonical ?: 1) }
             val reminderTimes = state.reminderTimes.split(',', ' ').map(String::trim).filter(String::isNotBlank)
-            when { target <= 0 -> error = "L’objectif doit être positif"; state.customUnit && (state.customName.isBlank() || state.customSymbol.isBlank()) -> error = "L’unité personnalisée est incomplète"; state.scheduleMode == ScheduleMode.SELECTED_DAYS && state.activeDays.isEmpty() -> error = "Choisissez au moins un jour"; reminderTimes.any { runCatching { java.time.LocalTime.parse(it) }.isFailure } -> error = "Utilisez le format HH:mm pour les rappels"; else -> { val base = stored; val habit = PersistedHabit(id = base?.id ?: UUID.randomUUID().toString(), name = state.name.trim(), description = state.description.trim().ifBlank { null }, iconId = state.iconId, colorArgb = state.colorArgb, active = base?.active ?: true, startsOn = base?.startsOn ?: LocalDate.now(), archived = base?.archived ?: false, sortOrder = base?.sortOrder ?: 0, createdAtEpochMs = base?.createdAtEpochMs ?: 0, updatedAtEpochMs = base?.updatedAtEpochMs ?: 0, goal = HabitGoal(target * (unit?.scaleToCanonical ?: 1), state.period, state.goalType, unit), schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay)); save(habit, quick, reminderTimes, state.conditionalReminders, stored == null) } }
+            val frequency = state.frequencyTarget.toIntOrNull()
+            when { target <= 0 -> error = "L’objectif doit être positif"; state.frequencyTarget.isNotBlank() && (frequency ?: 0) <= 0 -> error = "La fréquence doit être positive"; state.customUnit && (state.customName.isBlank() || state.customSymbol.isBlank()) -> error = "L’unité personnalisée est incomplète"; state.scheduleMode == ScheduleMode.SELECTED_DAYS && state.activeDays.isEmpty() -> error = "Choisissez au moins un jour"; reminderTimes.any { runCatching { java.time.LocalTime.parse(it) }.isFailure } -> error = "Utilisez le format HH:mm pour les rappels"; else -> { val base = stored; val habit = PersistedHabit(id = base?.id ?: UUID.randomUUID().toString(), name = state.name.trim(), description = state.description.trim().ifBlank { null }, iconId = state.iconId, colorArgb = state.colorArgb, active = base?.active ?: true, startsOn = base?.startsOn ?: LocalDate.now(), archived = base?.archived ?: false, sortOrder = base?.sortOrder ?: 0, createdAtEpochMs = base?.createdAtEpochMs ?: 0, updatedAtEpochMs = base?.updatedAtEpochMs ?: 0, goal = HabitGoal(target * (unit?.scaleToCanonical ?: 1), state.period, state.goalType, unit, frequency), schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay)); save(habit, quick, reminderTimes, state.conditionalReminders, stored == null) } }
         }
     }) { Text(if (state.step < 3) stringResource(R.string.form_btn_next) else stringResource(R.string.form_btn_save)) } }, dismissButton = { TextButton({ if (state.step > 0) state.step-- else dismiss() }) { Text(if (state.step > 0) stringResource(R.string.form_btn_back) else stringResource(R.string.form_btn_cancel)) } })
 }

@@ -131,6 +131,25 @@ class MainViewModel(
         refreshAll()
     }
 
+    fun togglePause(habit: HabitCardState) = viewModelScope.launch {
+        val today = LocalDate.now(clock)
+        if (habit.evaluation.isPaused) repository.resumeHabit(habit.stored.id, today)
+        else repository.pauseHabit(habit.stored.id, today)
+        refreshAll()
+    }
+
+    fun moveHabit(habitId: String, direction: Int) = viewModelScope.launch {
+        val ordered = latest.sortedBy(PersistedHabit::sortOrder)
+        val index = ordered.indexOfFirst { it.id == habitId }
+        val otherIndex = index + direction
+        if (index !in ordered.indices || otherIndex !in ordered.indices) return@launch
+        val current = ordered[index]
+        val other = ordered[otherIndex]
+        repository.updateSortOrder(current.id, other.sortOrder)
+        repository.updateSortOrder(other.id, current.sortOrder)
+        refreshAll()
+    }
+
     fun duplicateHabit(habit: PersistedHabit) = viewModelScope.launch {
         val copy = habit.copy(
             id = UUID.randomUUID().toString(),

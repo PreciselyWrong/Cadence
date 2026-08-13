@@ -41,6 +41,7 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Écrire un correctif métier sans test rouge préalable — la logique temporelle suit TDD.
 - ⛔ Modifier la version directement dans Gradle — elle provient de `app-release/version.json`.
 - ⛔ Arrêter le lancement dev sans appareil — démarrer un AVD disponible et attendre `sys.boot_completed`.
+- ⛔ Considérer la gestion des habitudes complète sans édition, pause, archive, duplication, réordonnancement et suppression accessibles — un modèle persistant seul ne constitue pas une option utilisateur.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

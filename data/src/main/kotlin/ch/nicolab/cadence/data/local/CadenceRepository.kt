@@ -211,6 +211,10 @@ class CadenceRepository(
         database.habitDao().deleteHabit(habitId)
     }
 
+    suspend fun updateSortOrder(habitId: String, sortOrder: Int) {
+        database.habitDao().updateSortOrder(habitId, sortOrder, System.currentTimeMillis())
+    }
+
     suspend fun addEntry(entry: HabitEntry, source: String = "MANUAL") {
         val entryEntity = HabitEntryEntity(
             id = entry.id,
@@ -327,6 +331,22 @@ class CadenceRepository(
 
     suspend fun deletePause(id: String) {
         database.habitPauseDao().deletePause(id)
+    }
+
+    suspend fun pauseHabit(habitId: String, date: LocalDate) {
+        if (database.habitPauseDao().getOpenPauses(habitId).isEmpty()) {
+            database.habitPauseDao().insertPause(
+                HabitPauseEntity(UUID.randomUUID().toString(), habitId, date.toString(), null, null),
+            )
+        }
+    }
+
+    suspend fun resumeHabit(habitId: String, date: LocalDate) {
+        database.habitPauseDao().getOpenPauses(habitId).forEach { pause ->
+            val start = LocalDate.parse(pause.start)
+            if (start >= date) database.habitPauseDao().deletePause(pause.id)
+            else database.habitPauseDao().insertPause(pause.copy(endExclusive = date.toString()))
+        }
     }
 
     suspend fun saveWidgetConfig(config: WidgetConfigurationEntity, habitIds: List<String>) {

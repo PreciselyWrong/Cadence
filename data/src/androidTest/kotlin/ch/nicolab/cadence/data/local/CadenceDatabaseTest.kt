@@ -380,4 +380,25 @@ class CadenceDatabaseTest {
         val pauses = repository.getPauses("habit-4")
         assertTrue(pauses.isEmpty())
     }
+
+    @Test
+    fun pauseAndResumePreservePastPauseWithoutKeepingHabitPaused() = runBlocking {
+        val habit = PersistedHabit(
+            id = "pause-management",
+            name = "Lecture",
+            active = true,
+            goal = HabitGoal(1, PeriodType.DAY),
+            schedule = HabitSchedule(DayOfWeek.entries.toSet(), DayOfWeek.MONDAY),
+        )
+        repository.addHabit(habit)
+        val start = LocalDate.of(2026, 8, 10)
+
+        repository.pauseHabit(habit.id, start)
+        repository.resumeHabit(habit.id, start.plusDays(2))
+
+        val pauses = repository.getPauses(habit.id)
+        assertEquals(1, pauses.size)
+        assertTrue(pauses.single().includes(start))
+        assertTrue(!pauses.single().includes(start.plusDays(2)))
+    }
 }
