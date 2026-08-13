@@ -115,6 +115,7 @@ data class BackupWidgetConfigV2(
     val iconSizeDp: Int = 32,
     val progressStyle: String = "RING",
     val showDoneIndicator: Boolean = true,
+    val maxHabitsPerRow: Int = 4,
 )
 
 @Serializable

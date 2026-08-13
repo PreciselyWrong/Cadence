@@ -87,7 +87,13 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     val surface = baseSurface.copy(alpha = alpha)
     val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
     val badge = (if (isMono) Color(0xFFE9EDF5) else Color.White).copy(alpha = if (isMono) .72f else .14f)
-    val capacity = WidgetCapacityCalculator.calculateCapacity(LocalSize.current.width.value.toInt(), config.iconSizeDp, config.showValues, habits.size)
+    val capacity = WidgetCapacityCalculator.calculateCapacity(
+        LocalSize.current.width.value.toInt(),
+        config.iconSizeDp,
+        config.showValues,
+        habits.size,
+        config.maxHabitsPerRow,
+    )
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(76.dp).background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).padding(horizontal = 10.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,

@@ -459,6 +459,7 @@ class CadenceRepository(
                 iconSizeDp = c.iconSizeDp,
                 progressStyle = c.progressStyle,
                 showDoneIndicator = c.showDoneIndicator,
+                maxHabitsPerRow = c.maxHabitsPerRow,
             )
         }
 
@@ -603,6 +604,7 @@ class CadenceRepository(
                     iconSizeDp = w.iconSizeDp,
                     progressStyle = w.progressStyle,
                     showDoneIndicator = w.showDoneIndicator,
+                    maxHabitsPerRow = w.maxHabitsPerRow,
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
@@ -661,6 +663,7 @@ class CadenceRepository(
         doc.widgetConfigs.forEach { w ->
             require(w.opacity in 0..100) { "Widget opacity must be between 0 and 100" }
             require(w.iconSizeDp in 24..48) { "Widget icon size is invalid" }
+            require(w.maxHabitsPerRow in 1..6) { "Widget habits per row is invalid" }
             w.selectedHabitIds.forEach { hId ->
                 require(hId in habitIds) { "Widget config references missing habitId $hId" }
             }

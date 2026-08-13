@@ -8,6 +8,7 @@
 - Les six dernières périodes montrent l’évolution réelle de chaque habitude.
 
 ### Améliorations
+- Le widget peut afficher jusqu’à six habitudes sur une ligne.
 - Le widget s’adapte à sa largeur et affiche la progression utile.
 - Un toucher sur le widget ouvre seulement l’habitude choisie.
 - La valeur du jour se place sous l’icône et disparaît avec l’habitude terminée.

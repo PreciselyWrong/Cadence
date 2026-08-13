@@ -7,6 +7,7 @@ object WidgetCapacityCalculator {
         iconSizeDp: Int,
         showValues: Boolean,
         totalHabitsCount: Int,
+        maxHabitsPerRow: Int = 6,
     ): Int {
         if (totalHabitsCount <= 0) return 0
 
@@ -20,13 +21,14 @@ object WidgetCapacityCalculator {
         val itemWidthDp = (iconSizeDp + if (showValues) 14 else 8).coerceAtLeast(40)
 
         val maxWithoutPlus = (netWidth + itemSpacingDp) / (itemWidthDp + itemSpacingDp)
-        if (totalHabitsCount <= maxWithoutPlus) {
-            return totalHabitsCount.coerceAtLeast(1)
+        val configuredMaximum = maxHabitsPerRow.coerceIn(1, 6)
+        if (totalHabitsCount <= maxWithoutPlus.coerceAtMost(configuredMaximum)) {
+            return totalHabitsCount.coerceIn(1, configuredMaximum)
         }
 
         val widthForPlus = netWidth - plusBadgeWidthDp - itemSpacingDp
         val maxWithPlus = (widthForPlus + itemSpacingDp) / (itemWidthDp + itemSpacingDp)
 
-        return maxWithPlus.coerceIn(1, totalHabitsCount)
+        return maxWithPlus.coerceIn(1, totalHabitsCount).coerceAtMost(configuredMaximum)
     }
 }

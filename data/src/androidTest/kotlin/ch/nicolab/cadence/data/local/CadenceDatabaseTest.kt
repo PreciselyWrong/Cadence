@@ -183,7 +183,10 @@ class CadenceDatabaseTest {
         repository.addEntry(entry)
         repository.addQuickValue("habit-backup", "qv-1", "+10", 10L, 1)
         repository.addPause("habit-backup", "p-1", HabitPause(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 5)))
-        repository.saveWidgetConfig(WidgetConfigurationEntity(appWidgetId = 101, title = "Main Widget", theme = "DARK"), listOf("habit-backup"))
+        repository.saveWidgetConfig(
+            WidgetConfigurationEntity(appWidgetId = 101, title = "Main Widget", theme = "DARK", maxHabitsPerRow = 6),
+            listOf("habit-backup"),
+        )
 
         val exportedJson = repository.exportBackup()
         assertTrue(exportedJson.contains("habit-backup"))
@@ -202,6 +205,7 @@ class CadenceDatabaseTest {
 
         val widgetHabits = repository.getWidgetHabitIds(101)
         assertEquals(listOf("habit-backup"), widgetHabits)
+        assertEquals(6, repository.getWidgetConfig(101)?.maxHabitsPerRow)
     }
 
     @Test

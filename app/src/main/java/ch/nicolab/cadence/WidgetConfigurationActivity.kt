@@ -132,6 +132,7 @@ private fun WidgetConfiguration(
     var iconSize by remember { mutableFloatStateOf(initial.iconSizeDp.toFloat()) }
     var progressStyle by remember { mutableStateOf(initial.progressStyle) }
     var showDone by remember { mutableStateOf(initial.showDoneIndicator) }
+    var maxHabitsPerRow by remember { mutableFloatStateOf(initial.maxHabitsPerRow.toFloat()) }
 
     CadenceScreen {
         LazyColumn(
@@ -202,6 +203,13 @@ private fun WidgetConfiguration(
                     ToggleRow(stringResource(R.string.widget_config_show_values), showValues) { showValues = it }
                     ToggleRow(stringResource(R.string.widget_config_show_done), showDone) { showDone = it }
                     Spacer(Modifier.height(Space.md))
+                    SliderRow(
+                        stringResource(R.string.widget_config_habits_per_row, maxHabitsPerRow.toInt()),
+                        maxHabitsPerRow,
+                        1f..6f,
+                        4,
+                    ) { maxHabitsPerRow = it }
+                    Spacer(Modifier.height(Space.md))
                     Text(stringResource(R.string.widget_config_progress_style), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
                     Spacer(Modifier.height(Space.sm))
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -227,6 +235,7 @@ private fun WidgetConfiguration(
                             iconSizeDp = iconSize.toInt(),
                             progressStyle = progressStyle,
                             showDoneIndicator = showDone,
+                            maxHabitsPerRow = maxHabitsPerRow.toInt(),
                         ),
                         if (all) emptyList() else selected.toList(),
                     )

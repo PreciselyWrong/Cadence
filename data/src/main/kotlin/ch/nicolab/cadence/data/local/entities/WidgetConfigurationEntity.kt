@@ -14,4 +14,5 @@ data class WidgetConfigurationEntity(
     val iconSizeDp: Int = 32,
     val progressStyle: String = "RING",
     val showDoneIndicator: Boolean = true,
+    val maxHabitsPerRow: Int = 4,
 )
