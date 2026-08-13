@@ -20,7 +20,9 @@ import ch.nicolab.cadence.domain.HabitInsights
 import ch.nicolab.cadence.domain.HabitInsightsCalculator
 import ch.nicolab.cadence.domain.InsightDay
 import ch.nicolab.cadence.domain.PeriodType
+import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.PeriodCalculator
+import ch.nicolab.cadence.domain.StreakCalculator
 import ch.nicolab.cadence.domain.isPlannedOn
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
@@ -53,6 +55,8 @@ data class HabitCardState(
     val recentEntries: List<HabitEntry>,
     /** Sauts et suspensions de l'habitude, avec leur identifiant pour les annuler. */
     val pauses: List<IdentifiedPause>,
+    /** Périodes planifiées réussies d'affilée, et meilleure série passée. */
+    val streak: HabitStreak,
 ) {
     /** Saut du jour encore annulable, s'il existe. */
     fun cancellableSkip(today: LocalDate): IdentifiedPause? =
@@ -373,6 +377,13 @@ class MainViewModel(
             val identifiedPauses = repository.observeIdentifiedPauses(habit.id).first()
             val pauses = identifiedPauses.map(IdentifiedPause::pause)
             val allEntries = repository.getEntries(habit.id)
+            val versions = repository.habitVersionsOf(habit.id)
+            val streak = StreakCalculator.compute(
+                habitAt = { day -> versions(day)?.definition },
+                today = date,
+                entries = allEntries,
+                pauses = pauses,
+            )
             var cursor = date
             val history = buildList {
                 repeat(6) {
@@ -426,6 +437,7 @@ class MainViewModel(
                 insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
                 recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
                 pauses = identifiedPauses,
+                streak = streak,
             )
         }
     }

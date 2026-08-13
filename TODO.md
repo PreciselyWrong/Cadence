@@ -1,12 +1,6 @@
 # Cadence
 
 ## Now
-- [ ] Séries intelligentes
-  - Compter les périodes planifiées réussies, pas les jours calendaires consécutifs
-  - Ignorer pauses, voyages et sauts autorisés sans créer de réussite artificielle
-  - Vérification : tous les N jours, semaines flexibles, changements d'objectif et historique
-
-## Fonctions à venir
 - [ ] Groupes dans l’application
   - Filtrer Aujourd’hui et Habitudes par groupe sans cacher l’accès à l’ensemble
   - Créer, renommer, réordonner et supprimer un groupe; déplacer simplement ses habitudes
@@ -51,6 +45,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Séries intelligentes
 - [x] Chronomètre pour les habitudes de durée
 - [x] Variantes supplémentaires du widget
 - [x] Mode voyage

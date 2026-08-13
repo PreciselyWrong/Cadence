@@ -123,6 +123,13 @@
     <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
     <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
     <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
+    <string name="streak_section">Série</string>
+    <plurals name="streak_current">
+        <item quantity="one">%1$d période réussie d\'affilée</item>
+        <item quantity="other">%1$d périodes réussies d\'affilée</item>
+    </plurals>
+    <string name="streak_none">Aucune période réussie pour le moment.</string>
+    <string name="streak_best">Meilleure série : %1$d</string>
     <string name="timer_section">Chronomètre</string>
     <string name="timer_start">Démarrer</string>
     <string name="timer_pause">Pause</string>

@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -75,6 +76,7 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
@@ -568,6 +570,34 @@ private fun formatMinuteOfDay(minute: Int?): String =
 private fun parseMinuteOfDay(raw: String): Int? =
     runCatching { java.time.LocalTime.parse(raw.trim()) }.getOrNull()?.let { it.hour * 60 + it.minute }
 
+/**
+ * La série se lit en périodes planifiées réussies, pas en jours calendaires : le libellé
+ * évite donc de parler de jours, qui serait faux pour un objectif hebdomadaire ou un
+ * rythme tous les N jours.
+ */
+@Composable
+private fun StreakLine(streak: HabitStreak) {
+    val palette = cadence
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            if (streak.current > 0) {
+                pluralStringResource(R.plurals.streak_current, streak.current, streak.current)
+            } else {
+                stringResource(R.string.streak_none)
+            },
+            style = MaterialTheme.typography.titleMedium,
+            color = if (streak.current > 0) palette.ink else palette.inkFaint,
+        )
+        if (streak.best > streak.current) {
+            Text(
+                stringResource(R.string.streak_best, streak.best),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.inkFaint,
+            )
+        }
+    }
+}
+
 @Composable
 private fun HabitAvatar(item: HabitCardState, tint: Color) {
     val icon = HabitIconRegistry.getIcon(item.stored.iconId)
@@ -663,6 +693,8 @@ private fun QuickSheet(
         leading = { HabitAvatar(item, tint) },
     ) {
         HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth().padding(bottom = Space.xl))
+        StreakLine(item.streak)
+        Spacer(Modifier.height(Space.xl))
         if (item.stored.timerEnabled && item.stored.goal.goalType == GoalType.DURATION) {
             SectionLabel(stringResource(R.string.timer_section))
             Spacer(Modifier.height(Space.sm))

@@ -59,6 +59,16 @@ class CadenceRepository(
         }
     }
 
+    /**
+     * Lecteur des versions successives d'une habitude, résolu en une seule requête.
+     * Parcourir un long historique date par date passerait sinon par autant de requêtes.
+     */
+    suspend fun habitVersionsOf(habitId: String): (LocalDate) -> PersistedHabit? {
+        val relation = database.habitDao().getHabitWithGoalAndScheduleById(habitId)
+            ?: return { null }
+        return { date -> mapToPersistedHabit(relation, date) }
+    }
+
     suspend fun getHabitEffectiveAt(habitId: String, date: LocalDate): PersistedHabit? {
         val relation = database.habitDao().getHabitWithGoalAndScheduleById(habitId) ?: return null
         return mapToPersistedHabit(relation, date)
