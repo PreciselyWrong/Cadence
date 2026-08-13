@@ -12,6 +12,7 @@ import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.widget.CadenceWidget
+import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import java.time.Clock
 import java.time.LocalDate
@@ -56,6 +57,9 @@ class MainViewModel(
     val lastEntryId = MutableStateFlow<String?>(null)
 
     private var latest: List<PersistedHabit> = emptyList()
+    private val widgetRefresh = WidgetRefreshDispatcher(app.applicationScope) {
+        CadenceWidget().updateAll(app)
+    }
 
     init {
         viewModelScope.launch {
@@ -180,7 +184,7 @@ class MainViewModel(
 
     private suspend fun refreshAll() {
         rebuild(latest)
-        CadenceWidget().updateAll(app)
+        widgetRefresh.request()
     }
 
     private suspend fun rebuild(source: List<PersistedHabit>) {
