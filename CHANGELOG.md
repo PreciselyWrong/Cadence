@@ -19,6 +19,9 @@
 - Les widgets déjà placés peuvent être reconfigurés.
 - Depuis le widget, seule la fiche rapide apparaît au-dessus de l’écran d’accueil.
 - La configuration du widget reste parfaitement lisible en mode sombre.
+
+### Corrections
+- L’enregistrement du widget se termine sans bloquer l’écran.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.
 - Toutes les options d’une habitude sont réunies dans un menu simple.
 

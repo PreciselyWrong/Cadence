@@ -45,11 +45,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.glance.appwidget.updateAll
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.ui.theme.CadenceTheme
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class WidgetConfigurationActivity : ComponentActivity() {
@@ -58,19 +60,44 @@ class WidgetConfigurationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) { finish(); return }
-        val repository = (application as CadenceApp).repository
+        val app = application as CadenceApp
+        val repository = app.repository
         val habits = runBlocking { repository.observeHabits().first() }
         val initial = runBlocking { repository.getWidgetConfig(appWidgetId) } ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = runBlocking { repository.getWidgetHabitIds(appWidgetId).toSet() }
-        setContent { CadenceTheme { WidgetConfiguration(habits, initial, selected) { config, ids ->
-            runBlocking { repository.saveWidgetConfig(config, ids); ch.nicolab.cadence.widget.CadenceWidget().updateAll(this@WidgetConfigurationActivity) }
-            setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)); finish()
-        } } }
+        setContent {
+            CadenceTheme {
+                var saving by remember { mutableStateOf(false) }
+                var saveError by remember { mutableStateOf<String?>(null) }
+                WidgetConfiguration(habits, initial, selected, saving, saveError) { config, ids ->
+                    if (saving) return@WidgetConfiguration
+                    saving = true
+                    saveError = null
+                    lifecycleScope.launch {
+                        runCatching {
+                            repository.saveWidgetConfig(config, ids)
+                        }.onSuccess {
+                            setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
+                            finish()
+                            app.applicationScope.launch {
+                                runCatching {
+                                    val glanceId = GlanceAppWidgetManager(app).getGlanceIdBy(appWidgetId)
+                                    ch.nicolab.cadence.widget.CadenceWidget().update(app, glanceId)
+                                }
+                            }
+                        }.onFailure {
+                            saving = false
+                            saveError = "Impossible d’enregistrer. Réessayez."
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun WidgetConfiguration(habits: List<PersistedHabit>, initial: WidgetConfigurationEntity, initialSelected: Set<String>, save: (WidgetConfigurationEntity, List<String>) -> Unit) {
+private fun WidgetConfiguration(habits: List<PersistedHabit>, initial: WidgetConfigurationEntity, initialSelected: Set<String>, saving: Boolean, saveError: String?, save: (WidgetConfigurationEntity, List<String>) -> Unit) {
     var all by remember { mutableStateOf(initial.selectAll) }
     var selected by remember { mutableStateOf(initialSelected) }
     var style by remember { mutableStateOf(initial.theme) }
@@ -106,7 +133,7 @@ private fun WidgetConfiguration(habits: List<PersistedHabit>, initial: WidgetCon
                     Row(verticalAlignment = Alignment.CenterVertically) { listOf("RING", "COMPACT").forEach { mode -> RadioButton(progressStyle == mode, { progressStyle = mode }); Text(if (mode == "RING") stringResource(R.string.widget_config_progress_ring) else stringResource(R.string.widget_config_progress_compact), color = MaterialTheme.colorScheme.onSurface) } }
                 }
             }
-            item { Button({ save(initial.copy(theme = style, selectAll = all, opacity = opacity.toInt(), showValues = showValues, iconSizeDp = iconSize.toInt(), progressStyle = progressStyle, showDoneIndicator = showDone), if (all) emptyList() else selected.toList()) }, Modifier.fillMaxWidth().height(54.dp)) { Text(stringResource(R.string.widget_config_save)) }; Spacer(Modifier.height(12.dp)) }
+            item { saveError?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(bottom = 8.dp)) }; Button({ save(initial.copy(theme = style, selectAll = all, opacity = opacity.toInt(), showValues = showValues, iconSizeDp = iconSize.toInt(), progressStyle = progressStyle, showDoneIndicator = showDone), if (all) emptyList() else selected.toList()) }, Modifier.fillMaxWidth().height(54.dp), enabled = !saving) { Text(if (saving) "Enregistrement…" else stringResource(R.string.widget_config_save)) }; Spacer(Modifier.height(12.dp)) }
         }
     }
 }
