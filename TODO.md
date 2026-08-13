@@ -1,12 +1,10 @@
 # Cadence
 
 ## Now
-- [ ] Corriger une saisie et l’historique
-  - Depuis Aujourd’hui et l’historique, ouvrir chaque saisie pour modifier sa valeur, sa date, son heure ou sa note, puis la supprimer si nécessaire
-  - Une saisie rapide erronée, par exemple `+10`, reste corrigeable à tout moment en une action claire
-  - Recalculer immédiatement progression, minimum/idéal, séries, statistiques et widget après correction
-  - Conserver la date civile et le fuseau réellement choisis lors d’une correction passée
-  - Vérification : plusieurs saisies le même jour, correction transfrontalière de période, suppression, annulation et sauvegarde/restauration
+- [ ] Objectif minimum et idéal
+  - Le minimum valide la période et la série; l’idéal marque une réussite complète
+  - L’interface montre clairement `À faire`, `Minimum atteint` et `Idéal atteint`
+  - Vérification : objectifs quotidiens, hebdomadaires, mensuels, fréquences et historique versionné
 
 ## Fonctions à venir
 - [ ] Synchroniser les activités sportives via Health Connect
@@ -19,10 +17,6 @@
   - Vérification : permission refusée, montre déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Next
-- [ ] Objectif minimum et idéal
-  - Le minimum valide la période et la série; l’idéal marque une réussite complète
-  - L’interface montre clairement `À faire`, `Minimum atteint` et `Idéal atteint`
-  - Vérification : objectifs quotidiens, hebdomadaires, mensuels, fréquences et historique versionné
 - [ ] Chronomètre pour les habitudes de durée
   - Proposer un mode chronomètre activable pour les objectifs en durée, sans le rendre obligatoire
   - La saisie rapide affiche `Démarrer`, `Pause`, `Reprendre`, `Terminer` et `Réinitialiser`
@@ -80,6 +74,7 @@
 - [ ] Valeurs rapides propres à chaque groupe ou moment de la journée
 
 ## Done
+- [x] Corriger une saisie et l’historique
 - [x] Groupes d’habitudes et widget contextuel
 - [x] Synchronisation widget vers l’application
 - [x] Affichage lisible des durées exactes

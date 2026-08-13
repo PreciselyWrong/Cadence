@@ -5,6 +5,10 @@ Cadence est une application Android locale de suivi d'habitudes, destinée à un
 Le widget compact et l'Activity de saisie rapide sont les surfaces principales.
 Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicatif.
 
+## Échanges
+Réponses low verbose : l'essentiel, sans préambule ni récapitulatif de ce qui vient d'être lu.
+Lister ce qui a changé et ce qui reste, pas la démarche.
+
 ## Commandes
 | But | Commande |
 |---|---|

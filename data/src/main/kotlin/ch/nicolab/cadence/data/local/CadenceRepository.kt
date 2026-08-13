@@ -246,6 +246,29 @@ class CadenceRepository(
         database.habitEntryDao().insertEntry(entryEntity)
     }
 
+    /**
+     * Réécrit une saisie existante. La source d'origine est conservée quand elle n'est pas
+     * précisée : une correction ne transforme pas une saisie du widget en saisie manuelle.
+     */
+    suspend fun updateEntry(entry: HabitEntry, source: String? = null) {
+        val existing = database.habitEntryDao().getEntryById(entry.id)
+        addEntry(entry, source ?: existing?.source ?: "MANUAL")
+    }
+
+    suspend fun getEntry(entryId: String): HabitEntry? =
+        database.habitEntryDao().getEntryById(entryId)?.let { entity ->
+            HabitEntry(
+                id = entity.id,
+                habitId = entity.habitId,
+                occurredAt = Instant.ofEpochMilli(entity.occurredAtEpochMs),
+                localDate = LocalDate.parse(entity.localDate),
+                observedZoneId = ZoneId.of(entity.observedZoneId),
+                valueMinor = entity.valueMinor,
+                sessionId = entity.sessionId,
+                note = entity.note,
+            )
+        }
+
     suspend fun deleteEntry(entryId: String) {
         database.habitEntryDao().deleteEntry(entryId)
     }

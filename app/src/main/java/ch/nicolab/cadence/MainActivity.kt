@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
+import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.MeasurementUnit
@@ -112,6 +113,8 @@ import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -139,6 +142,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     var editor by remember { mutableStateOf<HabitCardState?>(null) }
     var creating by remember { mutableStateOf(false) }
     var quick by remember { mutableStateOf<HabitCardState?>(null) }
+    var correcting by remember { mutableStateOf<HabitEntry?>(null) }
     var options by remember { mutableStateOf<HabitCardState?>(null) }
     var deleting by remember { mutableStateOf<PersistedHabit?>(null) }
     var backupMessage by remember { mutableStateOf<String?>(null) }
@@ -180,7 +184,28 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
 
     quick?.let { item ->
         val sessionId = remember(item.stored.id) { UUID.randomUUID().toString() }
-        QuickSheet(item, { viewModel.addEntry(item, it, "APP", sessionId) }, viewModel::undoLastEntry, { quick = null })
+        QuickSheet(
+            item,
+            { viewModel.addEntry(item, it, "APP", sessionId) },
+            viewModel::undoLastEntry,
+            { correcting = it },
+            { quick = null },
+        )
+    }
+    correcting?.let { entry ->
+        val habit = habits.firstOrNull { it.stored.id == entry.habitId }
+        EntryEditor(
+            entry = entry,
+            goalType = habit?.stored?.goal?.goalType ?: GoalType.QUANTITY,
+            unit = habit?.stored?.goal?.unit,
+            accent = habit?.let { habitTint(it) } ?: cadence.accent,
+            dismiss = { correcting = null },
+            save = { value, date, time, note ->
+                viewModel.correctEntry(entry, value, date, time, note)
+                correcting = null
+            },
+            delete = { viewModel.deleteEntry(entry.id); correcting = null },
+        )
     }
     options?.let { item ->
         HabitOptionsSheet(
@@ -549,7 +574,13 @@ private fun HabitOptionsSheet(
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun QuickSheet(item: HabitCardState, add: (Long) -> Unit, undo: () -> Unit, dismiss: () -> Unit) {
+private fun QuickSheet(
+    item: HabitCardState,
+    add: (Long) -> Unit,
+    undo: () -> Unit,
+    correct: (HabitEntry) -> Unit,
+    dismiss: () -> Unit,
+) {
     var custom by remember { mutableStateOf("") }
     val tint = habitTint(item)
     val scale = item.stored.goal.unit?.scaleToCanonical ?: 1
@@ -584,6 +615,114 @@ private fun QuickSheet(item: HabitCardState, add: (Long) -> Unit, undo: () -> Un
         }
         Spacer(Modifier.height(Space.xs))
         TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.fillMaxWidth(), onClick = undo)
+
+        Spacer(Modifier.height(Space.xl))
+        SectionLabel(stringResource(R.string.entries_section))
+        Spacer(Modifier.height(Space.sm))
+        if (item.recentEntries.isEmpty()) {
+            Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                item.recentEntries.take(VISIBLE_ENTRIES).forEach { entry ->
+                    EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { correct(entry) }
+                }
+            }
+        }
+    }
+}
+
+/** Une saisie corrigeable : sa date civile, son heure et sa valeur, sans carte imbriquée. */
+@Composable
+private fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUnit?, onClick: () -> Unit) {
+    val palette = cadence
+    Row(
+        Modifier.fillMaxWidth().clip(Radius.Control).clickable(onClick = onClick).padding(vertical = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column {
+            Text(entry.localDate.toString(), style = MaterialTheme.typography.bodyMedium, color = palette.ink)
+            Text(
+                entry.occurredAt.atZone(entry.observedZoneId).toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString(),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.inkFaint,
+            )
+        }
+        Text(
+            HabitFormatter.formatValue(entry.valueMinor, goalType, unit),
+            style = MaterialTheme.typography.titleMedium,
+            color = palette.ink,
+        )
+    }
+}
+
+/** Nombre de saisies proposées directement; l'ensemble reste corrigeable par défilement. */
+private const val VISIBLE_ENTRIES = 12
+
+/**
+ * Correction d'une saisie. La date et l'heure sont lues dans le fuseau enregistré avec la
+ * saisie, pour qu'une correction passée reste attribuée à la bonne période.
+ */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun EntryEditor(
+    entry: HabitEntry,
+    goalType: GoalType,
+    unit: MeasurementUnit?,
+    accent: Color,
+    dismiss: () -> Unit,
+    save: (Long, LocalDate, LocalTime, String) -> Unit,
+    delete: () -> Unit,
+) {
+    val palette = cadence
+    val scale = unit?.scaleToCanonical ?: 1L
+    val zoned = remember(entry.id) { entry.occurredAt.atZone(entry.observedZoneId) }
+    var value by remember(entry.id) { mutableStateOf((entry.valueMinor / scale).toString()) }
+    var date by remember(entry.id) { mutableStateOf(entry.localDate.toString()) }
+    var time by remember(entry.id) { mutableStateOf(zoned.toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString()) }
+    var note by remember(entry.id) { mutableStateOf(entry.note.orEmpty()) }
+    var error by remember(entry.id) { mutableStateOf<String?>(null) }
+    val badValue = stringResource(R.string.entry_error_value)
+    val badDate = stringResource(R.string.entry_error_date)
+    val badTime = stringResource(R.string.entry_error_time)
+
+    CadenceSheet(
+        title = stringResource(R.string.entry_edit_title),
+        subtitle = stringResource(R.string.entry_edit_subtitle),
+        dismiss = dismiss,
+    ) {
+        CadenceField(value, { value = it.filter(Char::isDigit) }, stringResource(R.string.entry_value_label), suffix = unit?.symbol, accent = accent, numeric = true)
+        Spacer(Modifier.height(Space.md))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+            CadenceField(date, { date = it }, stringResource(R.string.entry_date_label), Modifier.weight(1f), accent = accent)
+            CadenceField(time, { time = it }, stringResource(R.string.entry_time_label), Modifier.weight(1f), accent = accent)
+        }
+        Spacer(Modifier.height(Space.md))
+        CadenceField(note, { note = it }, stringResource(R.string.entry_note_label), accent = accent)
+        Spacer(Modifier.height(Space.sm))
+        Text(
+            stringResource(R.string.entry_zone_notice, entry.observedZoneId.id),
+            style = MaterialTheme.typography.bodySmall,
+            color = palette.inkFaint,
+        )
+        error?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
+        Spacer(Modifier.height(Space.xl))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+            SecondaryAction(stringResource(R.string.form_btn_cancel), Modifier.weight(1f), onClick = dismiss)
+            PrimaryAction(stringResource(R.string.form_btn_save), Modifier.weight(1f), accent = accent) {
+                val amount = value.toLongOrNull() ?: 0
+                val parsedDate = runCatching { LocalDate.parse(date.trim()) }.getOrNull()
+                val parsedTime = runCatching { LocalTime.parse(time.trim()) }.getOrNull()
+                when {
+                    amount <= 0 -> error = badValue
+                    parsedDate == null -> error = badDate
+                    parsedTime == null -> error = badTime
+                    else -> save(amount * scale, parsedDate, parsedTime, note)
+                }
+            }
+        }
+        Spacer(Modifier.height(Space.sm))
+        TertiaryAction(stringResource(R.string.entry_delete), Modifier.fillMaxWidth(), onClick = delete)
     }
 }
 

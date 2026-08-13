@@ -14,6 +14,9 @@ interface HabitEntryDao {
 
     @Query("SELECT * FROM habit_entries WHERE habitId = :habitId ORDER BY occurredAtEpochMs")
     suspend fun getEntriesForHabit(habitId: String): List<HabitEntryEntity>
+
+    @Query("SELECT * FROM habit_entries WHERE id = :id")
+    suspend fun getEntryById(id: String): HabitEntryEntity?
     @Query("""
         SELECT * FROM habit_entries 
         WHERE habitId = :habitId 

@@ -8,6 +8,7 @@ import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitEntryCorrection
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitGroup
@@ -17,6 +18,7 @@ import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +37,12 @@ data class HabitCardState(
     val history: List<PeriodStat>,
     val entryCount: Int,
     val dailyHistory: List<DailyStat>,
+    /** Saisies les plus récentes, de la plus récente à la plus ancienne, pour correction. */
+    val recentEntries: List<HabitEntry>,
 )
+
+/** Profondeur d'historique proposée à la correction depuis Aujourd'hui et l'historique. */
+private const val RECENT_ENTRIES = 60
 
 data class PeriodStat(
     val label: String,
@@ -206,6 +213,34 @@ class MainViewModel(
         refreshAll()
     }
 
+    /**
+     * Corrige une saisie déjà enregistrée. Progression, séries, statistiques et widget
+     * se recalculent depuis les saisies, il n'y a donc rien d'autre à mettre à jour.
+     */
+    fun correctEntry(
+        entry: HabitEntry,
+        valueMinor: Long,
+        localDate: LocalDate? = null,
+        localTime: LocalTime? = null,
+        note: String? = null,
+    ) = viewModelScope.launch {
+        val corrected = HabitEntryCorrection.apply(
+            entry = entry,
+            valueMinor = valueMinor,
+            localDate = localDate,
+            localTime = localTime,
+            note = note,
+        )
+        repository.updateEntry(corrected)
+        refreshAll()
+    }
+
+    fun deleteEntry(entryId: String) = viewModelScope.launch {
+        repository.deleteEntry(entryId)
+        if (lastEntryId.value == entryId) lastEntryId.value = null
+        refreshAll()
+    }
+
     fun saveGroup(group: HabitGroup) = viewModelScope.launch {
         repository.saveGroup(group)
         refreshAll()
@@ -279,6 +314,7 @@ class MainViewModel(
                 history = history,
                 entryCount = allEntries.size,
                 dailyHistory = dailyHistory,
+                recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
             )
         }
     }
