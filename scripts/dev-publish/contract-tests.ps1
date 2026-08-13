@@ -18,6 +18,10 @@ function Assert-ExitCode([scriptblock]$command, [int]$expected, [string]$message
 
 Assert-Condition (Test-Path (Join-Path $root 'dev.ps1')) 'dev.ps1 absent'
 Assert-Condition (Test-Path (Join-Path $root 'publish.ps1')) 'publish.ps1 absent'
+$devSource = Get-Content -Raw (Join-Path $root 'dev.ps1')
+Assert-Condition ($devSource -match 'emulator\\emulator\.exe') 'Le lanceur doit pouvoir démarrer un AVD'
+Assert-Condition ($devSource -match 'sys\.boot_completed') 'Le lanceur doit attendre le démarrage complet de l AVD'
+Assert-Condition ($devSource -match 'Wait-ForCadence') 'Le lanceur doit attendre que Cadence soit au premier plan'
 & (Join-Path $root 'dev.ps1') -Plan -NonInteractive
 Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan de développement doit réussir'
 & (Join-Path $root 'publish.ps1') -Plan -NonInteractive
