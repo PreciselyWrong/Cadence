@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,30 +16,61 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ch.nicolab.cadence.ui.theme.Space
+import ch.nicolab.cadence.ui.theme.cadence
 
+/**
+ * Le rythme des dernières périodes. Une seule question : la cadence a-t-elle tenu ?
+ * Chaque période est une colonne creusée dans laquelle la part accomplie remonte.
+ */
 @Composable
 fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifier = Modifier) {
+    val palette = cadence
     Column(modifier) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("Rythme", style = MaterialTheme.typography.labelLarge)
-            Text("6 dernières périodes", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+        Text(stringResource(R.string.history_graph_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Spacer(Modifier.height(Space.md))
         Row(
-            Modifier.fillMaxWidth().height(92.dp).padding(top = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(7.dp),
+            Modifier.fillMaxWidth().height(72.dp),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
             verticalAlignment = Alignment.Bottom,
         ) {
             history.forEach { period ->
                 val ratio = if (period.targetMinor <= 0L) 0f else (period.progressMinor.toFloat() / period.targetMinor).coerceIn(0f, 1f)
-                val color = when { period.excludedByPause -> MaterialTheme.colorScheme.outline; period.succeeded -> accent; else -> accent.copy(alpha = .38f) }
+                val color = when {
+                    period.excludedByPause -> palette.hairline
+                    period.succeeded -> accent
+                    else -> accent.copy(alpha = 0.35f)
+                }
                 Box(
-                    Modifier.weight(1f)
-                        .height((10 + ratio * 70).dp)
-                        .background(color, RoundedCornerShape(14.dp)),
+                    Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(8.dp)).background(palette.sunken),
+                    contentAlignment = Alignment.BottomCenter,
+                ) {
+                    Box(Modifier.fillMaxWidth().height((6 + ratio * 66).dp).clip(RoundedCornerShape(8.dp)).background(color))
+                }
+            }
+        }
+        Spacer(Modifier.height(Space.sm))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            history.forEach { period ->
+                Text(
+                    compactLabel(period.label),
+                    Modifier.weight(1f).padding(top = 2.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = palette.inkFaint,
+                    maxLines = 1,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 )
             }
         }
     }
 }
+
+/** L'étiquette persistée est une date ISO ; la colonne n'a la place que du jour et du mois. */
+private fun compactLabel(label: String): String = runCatching {
+    val date = java.time.LocalDate.parse(label)
+    "${date.dayOfMonth}/${date.monthValue}"
+}.getOrDefault(label)

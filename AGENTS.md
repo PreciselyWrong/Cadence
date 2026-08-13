@@ -27,6 +27,11 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - Le widget Halo est la première variante d'un système de rendu extensible.
 - Plus Jakarta Sans est embarquée localement; aucune police n'est téléchargée à l'exécution.
 - `app-release/version.json` est l'unique source de version lue par le build Android.
+- L'interface suit un design system unique — `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
+- Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface, jamais d'une bordure.
+- La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
+- La navigation est une capsule sombre flottante ; la destination active porte icône et libellé, les autres restent iconiques.
+- Le thème suit le réglage système clair/sombre.
 
 ## ⛔ Interdits
 - ⛔ Stocker une progression courante — elle doit être dérivée des entrées horodatées.
@@ -49,6 +54,9 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Afficher une saisie rapide comme une pile de cartes grises — le modal porte la couleur de l’habitude et montre son historique.
 - ⛔ Limiter la configuration d’un widget à sa création — un widget placé doit rester reconfigurable depuis le lanceur.
 - ⛔ Poser une interface Compose directement sur la fenêtre système — chaque écran fournit un fond et une couleur de contenu explicites pour garantir le contraste.
+- ⛔ Afficher un nom d'énumération du domaine — l'interface est intégralement en français via `strings.xml` et `HabitLabels`.
+- ⛔ Écrire une valeur d'espacement, de rayon, de couleur ou de durée en dur dans un écran — tout provient de `Space`, `Radius`, `Elevation`, `Size`, `Motion` et de la palette Cadence.
+- ⛔ Empiler une carte dans une carte — une unité fonctionnelle est une seule surface, la hiérarchie interne vient de la typographie et de l'espacement.
 - ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget — l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
 
 ## Pièges

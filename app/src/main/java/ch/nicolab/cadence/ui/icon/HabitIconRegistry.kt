@@ -161,7 +161,10 @@ fun HabitIconPicker(
     selectedIconId: String?,
     onIconSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
+    accent: androidx.compose.ui.graphics.Color? = null,
 ) {
+    val palette = ch.nicolab.cadence.ui.theme.cadence
+    val fill = accent ?: palette.accent
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(IconCategory.ALL) }
     val filteredIcons = remember(searchQuery, selectedCategory) {
@@ -169,55 +172,44 @@ fun HabitIconPicker(
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        OutlinedTextField(
+        ch.nicolab.cadence.ui.components.CadenceField(
             value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = { Text(stringResource(R.string.icon_picker_search_placeholder)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            onValue = { searchQuery = it },
+            label = stringResource(R.string.icon_picker_search_placeholder),
+            accent = fill,
         )
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(ch.nicolab.cadence.ui.theme.Space.md))
 
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
+            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
         ) {
             IconCategory.entries.forEach { category ->
-                FilterChip(
+                ch.nicolab.cadence.ui.components.ChoiceChip(
+                    label = stringResource(category.labelResId),
                     selected = selectedCategory == category,
-                    onClick = { selectedCategory = category },
-                    label = { Text(stringResource(category.labelResId)) },
-                )
+                    accent = fill,
+                ) { selectedCategory = category }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(ch.nicolab.cadence.ui.theme.Space.md))
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 56.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
+            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
+            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
+            modifier = Modifier.fillMaxWidth().height(200.dp),
         ) {
             items(filteredIcons, key = { it.id }) { icon ->
                 val isSelected = (selectedIconId ?: HabitIconRegistry.DEFAULT_ICON_ID) == icon.id
                 val cd = stringResource(R.string.icon_accessibility_format, icon.labelFr)
-
                 Box(
                     modifier = Modifier
                         .size(52.dp)
-                        .clip(CircleShape)
-                        .background(
-                            if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.surfaceContainerHigh
-                        )
-                        .then(
-                            if (isSelected) Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                            else Modifier
-                        )
+                        .clip(ch.nicolab.cadence.ui.theme.Radius.Control)
+                        .background(if (isSelected) fill else palette.sunken)
                         .clickable { onIconSelected(icon.id) }
                         .semantics { contentDescription = cd },
                     contentAlignment = Alignment.Center,
@@ -225,9 +217,8 @@ fun HabitIconPicker(
                     Icon(
                         imageVector = icon.imageVector,
                         contentDescription = icon.labelFr,
-                        tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                        else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(28.dp),
+                        tint = if (isSelected) ch.nicolab.cadence.ui.components.onColorOf(fill) else palette.inkMuted,
+                        modifier = Modifier.size(ch.nicolab.cadence.ui.theme.Size.iconLarge),
                     )
                 }
             }

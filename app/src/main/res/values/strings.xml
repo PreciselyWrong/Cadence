@@ -54,6 +54,34 @@
     <string name="day_friday">Vendredi</string>
     <string name="day_saturday">Samedi</string>
     <string name="day_sunday">Dimanche</string>
+    <string name="day_short_monday">Lun</string>
+    <string name="day_short_tuesday">Mar</string>
+    <string name="day_short_wednesday">Mer</string>
+    <string name="day_short_thursday">Jeu</string>
+    <string name="day_short_friday">Ven</string>
+    <string name="day_short_saturday">Sam</string>
+    <string name="day_short_sunday">Dim</string>
+    <string name="form_goal_type_binary_short">Binaire</string>
+    <string name="form_goal_type_count_short">Compteur</string>
+    <string name="form_goal_type_quantity_short">Quantité</string>
+    <string name="form_goal_type_duration_short">Durée</string>
+    <string name="form_period_day_short">Jour</string>
+    <string name="form_period_week_short">Semaine</string>
+    <string name="form_period_month_short">Mois</string>
+    <string name="form_frequency_label">Nombre minimal de séances (facultatif)</string>
+    <string name="form_frequency_support">Distinct de la quantité visée</string>
+    <string name="form_icon_selected_label">Icône choisie</string>
+    <string name="form_quick_values_support">Ex. 10, 20, 30</string>
+    <string name="form_reminders_label">Rappels (HH:mm, HH:mm)</string>
+    <string name="form_reminders_support">Laissez vide pour aucun rappel</string>
+    <string name="form_reminders_conditional">Seulement si l\'objectif reste à faire</string>
+    <string name="form_error_required_name">Le nom est requis</string>
+    <string name="form_error_positive_target">L\'objectif doit être positif</string>
+    <string name="form_error_positive_frequency">La fréquence doit être positive</string>
+    <string name="form_error_incomplete_unit">L\'unité personnalisée est incomplète</string>
+    <string name="form_error_no_day">Choisissez au moins un jour</string>
+    <string name="form_error_time_format">Utilisez le format HH:mm pour les rappels</string>
+    <string name="form_step_indicator">Étape %1$d sur %2$d</string>
 
     <string name="form_step_quick_title">Saisie rapide</string>
     <string name="form_step_quick_subtitle">Boutons d\'incrément rapide (+1, +5, etc.).</string>
@@ -135,4 +163,30 @@
     <string name="empty_habits_message">Créez une première habitude pour commencer.</string>
     <string name="create_habit_button">Créer une habitude</string>
     <string name="duplicate_suffix">(copie)</string>
+    <string name="today_completed_section">Terminé</string>
+    <string name="habit_sessions_format">%1$s · %2$d / %3$d séances</string>
+    <string name="stats_subtitle">Six dernières périodes</string>
+    <string name="stats_entry_count">%1$d saisies conservées</string>
+    <string name="settings_widget_title">Widget</string>
+    <string name="settings_widget_hint">Appui long sur le widget, puis Configurer.</string>
+    <string name="settings_widget_options">Taille · couleur · transparence · valeurs · habitudes</string>
+    <string name="settings_data_title">Données</string>
+    <string name="settings_data_subtitle">Sauvegarde locale versionnée</string>
+    <string name="settings_export">Exporter</string>
+    <string name="settings_import">Importer</string>
+    <string name="backup_exported">Sauvegarde exportée</string>
+    <string name="backup_imported">Sauvegarde restaurée</string>
+    <string name="history_graph_title">Rythme</string>
+
+    <!-- Widget styles -->
+    <string name="widget_style_halo">Halo</string>
+    <string name="widget_style_ocean">Océan</string>
+    <string name="widget_style_forest">Forêt</string>
+    <string name="widget_style_aubergine">Aubergine</string>
+    <string name="widget_style_coral">Corail</string>
+    <string name="widget_style_mono">Monochrome</string>
+    <string name="widget_config_habits_section">Habitudes</string>
+    <string name="widget_config_content_section">Contenu</string>
+    <string name="widget_config_saving">Enregistrement…</string>
+    <string name="widget_config_save_error">Impossible d\'enregistrer. Réessayez.</string>
 </resources>
