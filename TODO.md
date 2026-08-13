@@ -13,14 +13,6 @@
 
 ## Todo
 
-### Saisie rapide en moins de deux secondes
-  - tags: [compose, ux]
-  - workload: Hard
-
-### Widget Halo configurable
-  - tags: [glance, widget]
-  - workload: Extreme
-
 ### Rappels conditionnels
   - tags: [notifications]
   - workload: Hard
@@ -35,12 +27,19 @@
 
 ## In Progress
 
-### Persistance locale fiable
-  - priority: high
-  - tags: [room, data]
+## Done
+
+### Widget Halo compact
+  - tags: [glance, widget]
+  - workload: Extreme
+
+### Saisie rapide quotidienne
+  - tags: [compose, ux]
   - workload: Hard
 
-## Done
+### Persistance locale fiable
+  - tags: [room, data]
+  - workload: Hard
 
 ### Moteur temporel fiable
   - tags: [domain, tdd]

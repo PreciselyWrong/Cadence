@@ -43,4 +43,5 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - Glance produit des RemoteViews; les anneaux déterminés doivent être rendus comme images.
 
 ## État
-Scaffold et moteur temporel validés. Prochaine tranche : modèle Room et dépôts.
+MVP local compilable : Room, saisie rapide, statistiques de période et widget Glance.
+Prochaines tranches : rappels conditionnels, sauvegarde JSON et statistiques historiques.
