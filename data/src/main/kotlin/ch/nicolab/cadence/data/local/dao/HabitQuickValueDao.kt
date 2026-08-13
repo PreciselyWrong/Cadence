@@ -22,4 +22,7 @@ interface HabitQuickValueDao {
 
     @Query("DELETE FROM habit_quick_values WHERE id = :id")
     suspend fun deleteQuickValue(id: String)
+
+    @Query("DELETE FROM habit_quick_values WHERE habitId = :habitId")
+    suspend fun deleteQuickValuesForHabit(habitId: String)
 }

@@ -1,5 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cadence</string>
-    <string name="welcome_message">Application de suivi de rythme.</string>
+
+    <!-- Icon Categories & Picker -->
+    <string name="icon_cat_all">Tous</string>
+    <string name="icon_cat_health">Santé &amp; Sport</string>
+    <string name="icon_cat_productivity">Travail &amp; Esprit</string>
+    <string name="icon_cat_leisure">Loisirs</string>
+    <string name="icon_cat_home">Maison</string>
+    <string name="icon_picker_search_placeholder">Rechercher une icône…</string>
+    <string name="icon_accessibility_format">Icône %1$s</string>
+
+    <!-- Form Steps & Labels -->
+    <string name="form_title_create">Nouvelle habitude</string>
+    <string name="form_title_edit">Éditer l\'habitude</string>
+    <string name="form_step_identity_title">Identité</string>
+    <string name="form_step_identity_subtitle">Nom, description, icône et couleur.</string>
+    <string name="form_name_label">Nom de l\'habitude *</string>
+    <string name="form_name_placeholder">Ex: Boire de l\'eau, Courir…</string>
+    <string name="form_description_label">Description (optionnelle)</string>
+    <string name="form_icon_label">Icône</string>
+    <string name="form_color_label">Couleur</string>
+
+    <string name="form_step_goal_title">Objectif &amp; Unités</string>
+    <string name="form_step_goal_subtitle">Cible et mesure de votre habitude.</string>
+    <string name="form_goal_type_label">Type d\'objectif</string>
+    <string name="form_goal_type_binary">Binaire (Fait / À faire)</string>
+    <string name="form_goal_type_count">Compteur (Fois / Unités)</string>
+    <string name="form_goal_type_quantity">Quantité (Distance, Masse, Volume)</string>
+    <string name="form_goal_type_duration">Durée (Temps)</string>
+    <string name="form_target_label">Objectif cible *</string>
+    <string name="form_unit_label">Unité de mesure</string>
+    <string name="form_unit_custom">Unité personnalisée</string>
+    <string name="form_custom_unit_name">Nom de l\'unité * (ex: Pages)</string>
+    <string name="form_custom_unit_symbol">Symbole * (ex: p.)</string>
+    <string name="form_period_label">Période de calcul</string>
+    <string name="form_period_day">Quotidienne (Jour)</string>
+    <string name="form_period_week">Hebdomadaire (Semaine)</string>
+    <string name="form_period_month">Mensuelle (Mois)</string>
+
+    <string name="form_step_schedule_title">Planning &amp; Période</string>
+    <string name="form_step_schedule_subtitle">Planification et jours d\'activation.</string>
+    <string name="form_starts_on_label">Date de démarrage</string>
+    <string name="form_schedule_mode_label">Mode de planification</string>
+    <string name="form_schedule_every_day">Tous les jours</string>
+    <string name="form_schedule_selected_days">Jours sélectionnés</string>
+    <string name="form_schedule_flexible">Période flexible</string>
+    <string name="form_first_day_of_week_label">Premier jour de la semaine</string>
+    <string name="day_monday">Lundi</string>
+    <string name="day_tuesday">Mardi</string>
+    <string name="day_wednesday">Mercredi</string>
+    <string name="day_thursday">Jeudi</string>
+    <string name="day_friday">Vendredi</string>
+    <string name="day_saturday">Samedi</string>
+    <string name="day_sunday">Dimanche</string>
+
+    <string name="form_step_quick_title">Saisie rapide</string>
+    <string name="form_step_quick_subtitle">Boutons d\'incrément rapide (+1, +5, etc.).</string>
+    <string name="form_quick_values_label">Valeurs des boutons rapides</string>
+    <string name="form_add_quick_value">Ajouter un bouton</string>
+
+    <string name="form_btn_back">Précédent</string>
+    <string name="form_btn_next">Suivant</string>
+    <string name="form_btn_save">Enregistrer</string>
+    <string name="form_btn_create">Créer l\'habitude</string>
+    <string name="form_btn_cancel">Annuler</string>
+
+    <string name="form_error_blank_name">Le nom de l\'habitude ne peut pas être vide.</string>
+    <string name="form_error_invalid_target">L\'objectif cible doit être supérieur à zéro.</string>
+    <string name="form_error_empty_custom_unit">Le nom et le symbole de l\'unité personnalisée sont requis.</string>
+    <string name="form_error_invalid_quick">Les boutons rapides doivent être supérieurs à zéro.</string>
+
+    <!-- Management Actions & Dialogs -->
+    <string name="action_edit">Éditer</string>
+    <string name="action_pause">Mettre en pause</string>
+    <string name="action_resume">Reprendre</string>
+    <string name="action_archive">Archiver</string>
+    <string name="action_restore">Restaurer</string>
+    <string name="action_duplicate">Dupliquer</string>
+    <string name="action_reorder_up">Monter</string>
+    <string name="action_reorder_down">Descendre</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="status_paused">En pause</string>
+    <string name="status_archived">Archivée</string>
+
+    <string name="delete_dialog_title">Supprimer l\'habitude ?</string>
+    <string name="delete_dialog_message">Cette action est irréversible. Tout l\'historique et l\'ensemble des entrées de cette habitude seront définitivement supprimés.</string>
+    <string name="delete_dialog_confirm">Supprimer définitivement</string>
+    <string name="delete_dialog_cancel">Annuler</string>
+
+    <!-- Quick Entry Sheet / Activity -->
+    <string name="quick_sheet_title">Saisie rapide</string>
+    <string name="quick_sheet_subtitle">Uniquement ce qui reste à faire</string>
+    <string name="quick_custom_value_label">Autre valeur</string>
+    <string name="quick_btn_add">Ajouter</string>
+    <string name="quick_btn_validate">Valider</string>
+    <string name="quick_btn_undo">Annuler la dernière saisie</string>
+    <string name="quick_all_done">Tout est à jour !</string>
+    <string name="quick_btn_close">Fermer</string>
+
+    <!-- Widget Configuration -->
+    <string name="widget_config_title">Configurer le widget</string>
+    <string name="widget_config_subtitle">Ligne compacte de suivi d\'habitudes</string>
+    <string name="widget_config_all_habits">Toutes les habitudes actives</string>
+    <string name="widget_config_select_habits">Sélectionner des habitudes spécifiques</string>
+    <string name="widget_config_style_label">Style visuel</string>
+    <string name="widget_config_style_halo">Halo sombre</string>
+    <string name="widget_config_style_mono">Monochrome clair</string>
+    <string name="widget_config_opacity_label">Opacité du fond (%1$d%%)</string>
+    <string name="widget_config_show_values">Afficher les valeurs numériques</string>
+    <string name="widget_config_icon_size">Taille des icônes (%1$d dp)</string>
+    <string name="widget_config_progress_style">Style de progression</string>
+    <string name="widget_config_progress_ring">Anneau</string>
+    <string name="widget_config_progress_bar">Barre</string>
+    <string name="widget_config_progress_compact">Compact</string>
+    <string name="widget_config_show_done">Afficher l\'indicateur d\'achèvement</string>
+    <string name="widget_config_save">Enregistrer la configuration</string>
+
+    <!-- Main Navigation & Titles -->
+    <string name="tab_today">Aujourd’hui</string>
+    <string name="tab_habits">Habitudes</string>
+    <string name="tab_stats">Statistiques</string>
+    <string name="tab_settings">Réglages</string>
+    <string name="today_title">Aujourd’hui</string>
+    <string name="today_subtitle">Ce qui mérite encore votre attention</string>
+    <string name="habits_title">Habitudes</string>
+    <string name="habits_subtitle">Gérer vos routines</string>
+    <string name="habits_archived_section">Habitudes archivées</string>
+    <string name="habits_show_archived">Voir les archivées (%1$d)</string>
+    <string name="habits_hide_archived">Masquer les archivées</string>
+    <string name="empty_today_done_title">Rien d’urgent</string>
+    <string name="empty_today_done_message">Les habitudes prévues sont à jour.</string>
+    <string name="empty_habits_title">Votre rythme, à vous</string>
+    <string name="empty_habits_message">Créez une première habitude pour commencer.</string>
+    <string name="create_habit_button">Créer une habitude</string>
+    <string name="duplicate_suffix">(copie)</string>
 </resources>

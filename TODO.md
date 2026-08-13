@@ -13,6 +13,10 @@
 
 ## Todo
 
+## In Progress
+
+## Done
+
 ### Rappels conditionnels
   - tags: [notifications]
   - workload: Hard
@@ -24,10 +28,6 @@
 ### Sauvegarde JSON versionnée
   - tags: [backup]
   - workload: Normal
-
-## In Progress
-
-## Done
 
 ### Widget Halo compact
   - tags: [glance, widget]

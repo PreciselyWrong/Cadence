@@ -9,6 +9,12 @@ object AppDatabaseFactory {
             context.applicationContext,
             CadenceDatabase::class.java,
             "cadence.db",
-        ).build()
+        )
+        .addMigrations(
+            CadenceDatabase.MIGRATION_1_2,
+            CadenceDatabase.MIGRATION_2_3,
+            CadenceDatabase.MIGRATION_3_4,
+        )
+        .build()
     }
 }

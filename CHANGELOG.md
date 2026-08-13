@@ -1,3 +1,16 @@
+## [1.0.5] — 13 août 2026
+
+### Nouveautés
+- Chaque habitude peut avoir son icône, sa couleur et son unité.
+- Les objectifs acceptent désormais les durées, quantités et semaines personnalisées.
+- La saisie rapide permet une valeur libre et l’annulation du dernier ajout.
+- Plusieurs rappels peuvent attendre qu’un objectif reste à faire.
+- Les six dernières périodes montrent l’évolution réelle de chaque habitude.
+
+### Améliorations
+- Le widget s’adapte à sa largeur et affiche la progression utile.
+- La sauvegarde conserve les réglages, l’historique et chaque widget.
+
 ## [1.0.4] — 13 août 2026
 
 ### Corrections

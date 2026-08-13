@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.data.local.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -22,5 +23,12 @@ data class HabitGoalEntity(
     val habitId: String,
     val targetMinor: Long,
     val period: String,
+    @ColumnInfo(defaultValue = "QUANTITY") val goalType: String = "QUANTITY",
+    val unitId: String? = null,
+    val unitDimension: String? = null,
+    val unitNameFr: String? = null,
+    val unitSymbol: String? = null,
+    val unitScaleToCanonical: Long? = null,
+    val frequencyTarget: Int? = null,
     val effectiveFrom: String,
 )

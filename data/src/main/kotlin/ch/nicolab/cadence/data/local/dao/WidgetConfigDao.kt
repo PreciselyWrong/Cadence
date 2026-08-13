@@ -10,6 +10,12 @@ import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 
 @Dao
 interface WidgetConfigDao {
+    @Query("SELECT * FROM widget_configurations")
+    suspend fun getAllConfigurations(): List<WidgetConfigurationEntity>
+
+    @Query("SELECT * FROM widget_habits")
+    suspend fun getAllWidgetHabits(): List<WidgetHabitEntity>
+
     @Query("SELECT * FROM widget_configurations WHERE appWidgetId = :appWidgetId")
     suspend fun getConfiguration(appWidgetId: Int): WidgetConfigurationEntity?
 

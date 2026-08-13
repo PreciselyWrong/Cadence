@@ -28,4 +28,6 @@ data class HabitEntryEntity(
     val observedZoneId: String,
     val valueMinor: Long,
     val source: String,
+    val sessionId: String? = null,
+    val note: String? = null,
 )

@@ -23,4 +23,5 @@ data class HabitReminderEntity(
     val time: String,
     val daysOfWeek: String,
     val enabled: Boolean,
+    val conditional: Boolean = true,
 )

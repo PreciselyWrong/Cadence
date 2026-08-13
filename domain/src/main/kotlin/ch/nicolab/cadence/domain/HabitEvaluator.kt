@@ -6,8 +6,14 @@ data class HabitEvaluation(
     val habit: HabitDefinition,
     val period: PeriodWindow,
     val progressMinor: Long,
+    val completedQuantity: Boolean,
+    val sessionCount: Int,
+    val completedFrequency: Boolean,
+    val isCompleted: Boolean,
     val isPaused: Boolean,
-    val requiresAction: Boolean,
+    val isPlannedForDate: Boolean,
+    val needsAttentionNow: Boolean,
+    val requiresAction: Boolean = needsAttentionNow,
     val countsAsFailure: Boolean,
 )
 
@@ -19,25 +25,43 @@ class HabitEvaluator {
         pauses: List<HabitPause> = emptyList(),
     ): HabitEvaluation {
         val period = PeriodCalculator.window(date, habit.goal.period, habit.schedule.firstDayOfWeek)
-        val progress = entries
-            .asSequence()
-            .filter { it.habitId == habit.id && period.includes(it.localDate) }
-            .sumOf(HabitEntry::valueMinor)
+        val periodEntries = entries.filter { it.habitId == habit.id && period.includes(it.localDate) }
+        val progress = periodEntries.sumOf { it.valueMinor }
+
+        val withSession = periodEntries.mapNotNull { it.sessionId }.distinct().size
+        val withoutSession = periodEntries.count { it.sessionId == null }
+        val sessionCount = withSession + withoutSession
+
+        val completedQuantity = progress >= habit.goal.targetMinor
+        val completedFrequency = habit.goal.frequencyTarget == null || sessionCount >= habit.goal.frequencyTarget
+        val isCompleted = completedQuantity && completedFrequency
+
         val paused = pauses.any { it.includes(date) }
-        val planned = date.dayOfWeek in habit.schedule.activeDays
-        val requiresAction = habit.active && planned && !paused && progress < habit.goal.targetMinor
+
+        val isPlannedForDate = habit.active && !habit.archived && date >= habit.startsOn && when (habit.schedule.mode) {
+            ScheduleMode.EVERY_DAY -> true
+            ScheduleMode.SELECTED_DAYS -> date.dayOfWeek in habit.schedule.activeDays
+            ScheduleMode.FLEXIBLE_PERIOD -> true
+        }
+
+        val needsAttentionNow = isPlannedForDate && !paused && !isCompleted
 
         return HabitEvaluation(
             habit = habit,
             period = period,
             progressMinor = progress,
+            completedQuantity = completedQuantity,
+            sessionCount = sessionCount,
+            completedFrequency = completedFrequency,
+            isCompleted = isCompleted,
             isPaused = paused,
-            requiresAction = requiresAction,
-            countsAsFailure = habit.active && planned && !paused && progress < habit.goal.targetMinor,
+            isPlannedForDate = isPlannedForDate,
+            needsAttentionNow = needsAttentionNow,
+            requiresAction = needsAttentionNow,
+            countsAsFailure = isPlannedForDate && !paused && !isCompleted,
         )
     }
 }
-
 class PendingHabitsResolver(
     private val evaluator: HabitEvaluator,
 ) {
@@ -52,6 +76,6 @@ class PendingHabitsResolver(
             date = date,
             entries = entries,
             pauses = pauses[habit.id].orEmpty(),
-        ).takeIf(HabitEvaluation::requiresAction)
+        ).takeIf(HabitEvaluation::needsAttentionNow)
     }
 }

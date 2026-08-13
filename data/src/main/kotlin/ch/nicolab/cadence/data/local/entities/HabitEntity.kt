@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.data.local.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,6 +8,13 @@ import androidx.room.PrimaryKey
 data class HabitEntity(
     @PrimaryKey val id: String,
     val name: String,
+    val description: String? = null,
+    val iconId: String? = null,
+    val colorArgb: Int? = null,
     val active: Boolean,
+    @ColumnInfo(defaultValue = "1970-01-01") val startsOn: String = "1970-01-01",
+    @ColumnInfo(defaultValue = "0") val archived: Boolean = false,
+    @ColumnInfo(defaultValue = "0") val sortOrder: Int = 0,
     val createdAtEpochMs: Long,
+    @ColumnInfo(defaultValue = "0") val updatedAtEpochMs: Long = 0L,
 )

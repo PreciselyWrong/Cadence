@@ -8,4 +8,10 @@ data class WidgetConfigurationEntity(
     @PrimaryKey val appWidgetId: Int,
     val title: String?,
     val theme: String,
+    val selectAll: Boolean = true,
+    val opacity: Int = 100,
+    val showValues: Boolean = true,
+    val iconSizeDp: Int = 32,
+    val progressStyle: String = "RING",
+    val showDoneIndicator: Boolean = true,
 )
