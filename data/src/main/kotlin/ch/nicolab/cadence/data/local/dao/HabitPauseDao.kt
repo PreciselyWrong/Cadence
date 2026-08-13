@@ -20,6 +20,10 @@ interface HabitPauseDao {
     @Query("SELECT * FROM habit_pauses WHERE habitId = :habitId AND endExclusive IS NULL")
     suspend fun getOpenPauses(habitId: String): List<HabitPauseEntity>
 
+    /** Émet à chaque pause ou saut écrit, quel que soit le processus d'origine. */
+    @Query("SELECT COUNT(*) FROM habit_pauses")
+    fun observePauseRevision(): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPause(pause: HabitPauseEntity)
 

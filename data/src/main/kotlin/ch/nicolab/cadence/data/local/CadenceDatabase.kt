@@ -12,13 +12,16 @@ import ch.nicolab.cadence.data.local.dao.HabitReminderDao
 import ch.nicolab.cadence.data.local.dao.WidgetConfigDao
 import ch.nicolab.cadence.data.local.entities.HabitEntity
 import ch.nicolab.cadence.data.local.entities.HabitEntryEntity
+import ch.nicolab.cadence.data.local.dao.HabitGroupDao
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
+import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
+import ch.nicolab.cadence.domain.HabitGroup
 
 @Database(
     entities = [
@@ -29,10 +32,11 @@ import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
         HabitQuickValueEntity::class,
         HabitReminderEntity::class,
         HabitPauseEntity::class,
+        HabitGroupEntity::class,
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -40,6 +44,7 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun habitEntryDao(): HabitEntryDao
     abstract fun habitQuickValueDao(): HabitQuickValueDao
     abstract fun habitPauseDao(): HabitPauseDao
+    abstract fun habitGroupDao(): HabitGroupDao
     abstract fun habitReminderDao(): HabitReminderDao
     abstract fun widgetConfigDao(): WidgetConfigDao
 
@@ -113,6 +118,38 @@ abstract class CadenceDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN iconOpacity INTEGER NOT NULL DEFAULT 100")
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN iconSaturation INTEGER NOT NULL DEFAULT 100")
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN monochromeIcons INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
+        /**
+         * Introduit les groupes d'habitudes. Les groupes livrés sont créés et toutes les
+         * habitudes existantes rejoignent `Journée`, le seul groupe sans horaire.
+         */
+        val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS habit_groups (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        startMinute INTEGER,
+                        endMinute INTEGER,
+                        sortOrder INTEGER NOT NULL
+                    )
+                    """.trimIndent(),
+                )
+                HabitGroup.defaults().forEach { group ->
+                    db.execSQL(
+                        "INSERT OR IGNORE INTO habit_groups (id, name, startMinute, endMinute, sortOrder) VALUES (?, ?, ?, ?, ?)",
+                        arrayOf<Any?>(group.id, group.name, group.startMinute, group.endMinute, group.sortOrder),
+                    )
+                }
+                db.execSQL(
+                    "ALTER TABLE habits ADD COLUMN groupId TEXT NOT NULL DEFAULT '${HabitGroup.ALL_DAY_ID}'",
+                )
+                db.execSQL("UPDATE habits SET groupId = '${HabitGroup.ALL_DAY_ID}'")
+                db.execSQL("ALTER TABLE widget_configurations ADD COLUMN groupMode TEXT NOT NULL DEFAULT 'ALL'")
+                db.execSQL("ALTER TABLE widget_configurations ADD COLUMN groupId TEXT")
             }
         }
     }

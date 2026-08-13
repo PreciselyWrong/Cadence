@@ -7,14 +7,17 @@ import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
+import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
+
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGoal
+import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.MeasurementUnit
@@ -57,6 +60,15 @@ class CadenceRepository(
         val relation = database.habitDao().getHabitWithGoalAndScheduleById(habitId) ?: return null
         return mapToPersistedHabit(relation, date)
     }
+
+    /**
+     * Signal de révision des saisies et des pauses. Il émet aussi bien pour une écriture
+     * de l'application que pour une écriture venue du widget, ce qui permet de reconstruire
+     * l'état sans jamais s'appuyer sur une copie conservée en mémoire.
+     */
+    fun observeEntryRevision(): Flow<Int> = database.habitEntryDao().observeEntryRevision()
+
+    fun observePauseRevision(): Flow<Int> = database.habitPauseDao().observePauseRevision()
 
     fun observeEntries(
         habitId: String,
@@ -115,6 +127,7 @@ class CadenceRepository(
                 sortOrder = habit.sortOrder,
                 createdAtEpochMs = createdAt,
                 updatedAtEpochMs = updatedAt,
+                groupId = habit.groupId,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -176,6 +189,7 @@ class CadenceRepository(
                 sortOrder = habit.sortOrder,
                 createdAtEpochMs = createdAt,
                 updatedAtEpochMs = nowMs,
+                groupId = habit.groupId,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -351,6 +365,60 @@ class CadenceRepository(
         }
     }
 
+    /**
+     * Groupes d'habitudes, garnis à la première lecture avec `Journée`, `Matin`,
+     * `Après-midi` et `Soir`. Le groupe sans horaire ne disparaît jamais : il reste la
+     * destination de repli d'une habitude dont le groupe est supprimé.
+     */
+    fun observeGroups(): Flow<List<HabitGroup>> =
+        database.habitGroupDao().observeGroups().map { rows -> rows.map(::mapToGroup) }
+
+    suspend fun getGroups(): List<HabitGroup> {
+        ensureDefaultGroups()
+        return database.habitGroupDao().getGroups().map(::mapToGroup)
+    }
+
+    suspend fun ensureDefaultGroups() {
+        if (database.habitGroupDao().getGroups().isNotEmpty()) return
+        database.habitGroupDao().upsertAll(HabitGroup.defaults().map(::mapToGroupEntity))
+    }
+
+    suspend fun saveGroup(group: HabitGroup) {
+        require(!(group.id == HabitGroup.ALL_DAY_ID && !group.isAllDay)) {
+            "The all day group keeps no schedule"
+        }
+        database.habitGroupDao().upsert(mapToGroupEntity(group))
+    }
+
+    suspend fun saveGroups(groups: List<HabitGroup>) {
+        database.habitGroupDao().upsertAll(groups.map(::mapToGroupEntity))
+    }
+
+    /** Supprime un groupe et ramène ses habitudes vers `Journée`. */
+    suspend fun deleteGroup(groupId: String) {
+        require(groupId != HabitGroup.ALL_DAY_ID) { "The all day group cannot be removed" }
+        database.withTransaction {
+            database.habitGroupDao().reassignHabits(groupId, HabitGroup.ALL_DAY_ID)
+            database.habitGroupDao().delete(groupId)
+        }
+    }
+
+    private fun mapToGroup(entity: HabitGroupEntity) = HabitGroup(
+        id = entity.id,
+        name = entity.name,
+        startMinute = entity.startMinute,
+        endMinute = entity.endMinute,
+        sortOrder = entity.sortOrder,
+    )
+
+    private fun mapToGroupEntity(group: HabitGroup) = HabitGroupEntity(
+        id = group.id,
+        name = group.name,
+        startMinute = group.startMinute,
+        endMinute = group.endMinute,
+        sortOrder = group.sortOrder,
+    )
+
     suspend fun saveWidgetConfig(config: WidgetConfigurationEntity, habitIds: List<String>) {
         database.widgetConfigDao().saveWidgetConfiguration(config, habitIds)
     }
@@ -416,6 +484,7 @@ class CadenceRepository(
                 sortOrder = relation.habit.sortOrder,
                 createdAtEpochMs = relation.habit.createdAtEpochMs,
                 updatedAtEpochMs = relation.habit.updatedAtEpochMs,
+                groupId = relation.habit.groupId,
                 goals = goals,
                 schedules = schedules,
             )
@@ -471,7 +540,13 @@ class CadenceRepository(
                 iconOpacity = c.iconOpacity,
                 iconSaturation = c.iconSaturation,
                 monochromeIcons = c.monochromeIcons,
+                groupMode = c.groupMode,
+                groupId = c.groupId,
             )
+        }
+
+        val backupGroups = database.habitGroupDao().getGroups().map { g ->
+            BackupGroupV2(g.id, g.name, g.startMinute, g.endMinute, g.sortOrder)
         }
 
         val doc = BackupDocument(
@@ -483,6 +558,7 @@ class CadenceRepository(
             reminders = backupReminders,
             pauses = backupPauses,
             widgetConfigs = backupWidgetConfigs,
+            groups = backupGroups,
         )
 
         return json.encodeToString(BackupDocument.serializer(), doc)
@@ -504,6 +580,14 @@ class CadenceRepository(
         database.withTransaction {
             database.clearAllTables()
 
+            // Les groupes précèdent les habitudes : une sauvegarde antérieure aux groupes
+            // restaure les groupes livrés et laisse chaque habitude dans `Journée`.
+            val restoredGroups = docV2.groups
+                .map { HabitGroupEntity(it.id, it.name, it.startMinute, it.endMinute, it.sortOrder) }
+                .ifEmpty { HabitGroup.defaults().map(::mapToGroupEntity) }
+            val knownGroupIds = restoredGroups.map(HabitGroupEntity::id).toSet()
+            database.habitGroupDao().upsertAll(restoredGroups)
+
             docV2.habits.forEach { habit ->
                 val habitEntity = HabitEntity(
                     id = habit.id,
@@ -517,6 +601,7 @@ class CadenceRepository(
                     sortOrder = habit.sortOrder,
                     createdAtEpochMs = habit.createdAtEpochMs,
                     updatedAtEpochMs = habit.updatedAtEpochMs,
+                    groupId = habit.groupId.takeIf(knownGroupIds::contains) ?: HabitGroup.ALL_DAY_ID,
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -625,6 +710,8 @@ class CadenceRepository(
                     iconOpacity = w.iconOpacity,
                     iconSaturation = w.iconSaturation,
                     monochromeIcons = w.monochromeIcons,
+                    groupMode = w.groupMode,
+                    groupId = w.groupId?.takeIf(knownGroupIds::contains),
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
@@ -806,6 +893,7 @@ class CadenceRepository(
             sortOrder = relation.habit.sortOrder,
             createdAtEpochMs = relation.habit.createdAtEpochMs,
             updatedAtEpochMs = relation.habit.updatedAtEpochMs,
+            groupId = relation.habit.groupId,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 period = PeriodType.valueOf(goalEntity.period),

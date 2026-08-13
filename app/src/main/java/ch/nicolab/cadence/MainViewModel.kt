@@ -10,6 +10,7 @@ import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
+import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
@@ -19,6 +20,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -62,9 +64,25 @@ class MainViewModel(
         CadenceWidget().updateAll(app)
     }
 
+    /** Groupes disponibles, garnis à la première ouverture avec les moments livrés. */
+    val groups: StateFlow<List<HabitGroup>> = repository.observeGroups().stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        emptyList(),
+    )
+
     init {
+        viewModelScope.launch { repository.ensureDefaultGroups() }
+
+        // Les saisies venues du widget écrivent directement en base : l'état affiché est
+        // reconstruit à chaque révision des habitudes, des saisies ou des pauses, sans
+        // dépendre d'une copie conservée en mémoire par l'application.
         viewModelScope.launch {
-            repository.observeHabits().collect { source ->
+            combine(
+                repository.observeHabits(),
+                repository.observeEntryRevision(),
+                repository.observePauseRevision(),
+            ) { source, _, _ -> source }.collect { source ->
                 latest = source
                 rebuild(source)
             }
@@ -93,15 +111,17 @@ class MainViewModel(
             ),
             source = source,
         )
-        lastEntryId.value = entryId
+        // La confirmation (et donc l'accès à « Annuler ») n'apparaît qu'une fois le
+        // rafraîchissement du widget demandé.
         refreshAll()
+        lastEntryId.value = entryId
     }
 
     fun undoLastEntry() = viewModelScope.launch {
         val id = lastEntryId.value ?: return@launch
         repository.deleteEntry(id)
-        lastEntryId.value = null
         refreshAll()
+        lastEntryId.value = null
     }
 
     fun saveHabit(
@@ -186,6 +206,22 @@ class MainViewModel(
         refreshAll()
     }
 
+    fun saveGroup(group: HabitGroup) = viewModelScope.launch {
+        repository.saveGroup(group)
+        refreshAll()
+    }
+
+    fun addGroup(name: String, startMinute: Int?, endMinute: Int?) = viewModelScope.launch {
+        val order = (groups.value.maxOfOrNull(HabitGroup::sortOrder) ?: 0) + 1
+        repository.saveGroup(HabitGroup(UUID.randomUUID().toString(), name, startMinute, endMinute, order))
+        refreshAll()
+    }
+
+    fun deleteGroup(groupId: String) = viewModelScope.launch {
+        repository.deleteGroup(groupId)
+        refreshAll()
+    }
+
     fun exportBackup(onReady: (String) -> Unit) = viewModelScope.launch { onReady(repository.exportBackup()) }
 
     fun importBackup(content: String, onComplete: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {
@@ -196,7 +232,7 @@ class MainViewModel(
 
     private suspend fun refreshAll() {
         rebuild(latest)
-        widgetRefresh.request()
+        widgetRefresh.request().join()
     }
 
     private suspend fun rebuild(source: List<PersistedHabit>) {

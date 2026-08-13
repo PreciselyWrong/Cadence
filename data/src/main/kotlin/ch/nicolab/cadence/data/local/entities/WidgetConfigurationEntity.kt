@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.data.local.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -23,4 +24,8 @@ data class WidgetConfigurationEntity(
     val iconOpacity: Int = 100,
     val iconSaturation: Int = 100,
     val monochromeIcons: Boolean = false,
+    /** `ALL`, `AUTOMATIC` ou `SINGLE` — voir `WidgetGroupMode`. */
+    @ColumnInfo(defaultValue = "ALL") val groupMode: String = "ALL",
+    /** Groupe retenu lorsque le mode est `SINGLE`. */
+    val groupId: String? = null,
 )

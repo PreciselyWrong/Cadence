@@ -12,6 +12,16 @@ data class BackupDocument(
     val reminders: List<BackupReminderV2> = emptyList(),
     val pauses: List<BackupPauseV2> = emptyList(),
     val widgetConfigs: List<BackupWidgetConfigV2> = emptyList(),
+    val groups: List<BackupGroupV2> = emptyList(),
+)
+
+@Serializable
+data class BackupGroupV2(
+    val id: String,
+    val name: String,
+    val startMinute: Int? = null,
+    val endMinute: Int? = null,
+    val sortOrder: Int,
 )
 
 @Serializable
@@ -27,6 +37,7 @@ data class BackupHabitV2(
     val sortOrder: Int,
     val createdAtEpochMs: Long,
     val updatedAtEpochMs: Long,
+    val groupId: String = "group-day",
     val goals: List<BackupGoalV2>,
     val schedules: List<BackupScheduleV2>,
 )
@@ -125,6 +136,8 @@ data class BackupWidgetConfigV2(
     val iconOpacity: Int = 100,
     val iconSaturation: Int = 100,
     val monochromeIcons: Boolean = false,
+    val groupMode: String = "ALL",
+    val groupId: String? = null,
 )
 
 @Serializable

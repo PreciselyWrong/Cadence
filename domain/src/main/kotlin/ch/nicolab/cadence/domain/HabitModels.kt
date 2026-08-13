@@ -130,6 +130,7 @@ data class HabitDefinition(
     val archived: Boolean = false,
     val sortOrder: Int = 0,
     val updatedAtEpochMs: Long = 0L,
+    val groupId: String = HabitGroup.ALL_DAY_ID,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {
@@ -149,6 +150,7 @@ data class HabitDefinition(
         archived = false,
         sortOrder = 0,
         updatedAtEpochMs = 0L,
+        groupId = HabitGroup.ALL_DAY_ID,
         goal = goal,
         schedule = schedule,
     )

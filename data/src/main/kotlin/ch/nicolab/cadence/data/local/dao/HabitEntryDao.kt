@@ -27,6 +27,13 @@ interface HabitEntryDao {
         endDateInclusive: String,
     ): Flow<List<HabitEntryEntity>>
 
+    /**
+     * Émet à chaque écriture sur la table, y compris celles faites depuis le widget.
+     * Room réémet dès que la table est invalidée, la valeur ne sert que de porteur.
+     */
+    @Query("SELECT COUNT(*) FROM habit_entries")
+    fun observeEntryRevision(): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(entry: HabitEntryEntity)
 

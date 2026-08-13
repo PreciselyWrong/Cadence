@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
+import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
@@ -133,6 +134,7 @@ private enum class Tab(val label: Int, val icon: ImageVector) {
 @Composable
 private fun CadenceAppScreen(viewModel: MainViewModel) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
+    val groups by viewModel.groups.collectAsStateWithLifecycle()
     var tab by remember { mutableStateOf(Tab.TODAY) }
     var editor by remember { mutableStateOf<HabitCardState?>(null) }
     var creating by remember { mutableStateOf(false) }
@@ -161,7 +163,16 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
                 Tab.TODAY -> TodayScreen(habits, { quick = it }, { options = it }, { creating = true })
                 Tab.HABITS -> HabitsScreen(habits, { creating = true }, { options = it })
                 Tab.STATS -> StatsScreen(habits)
-                Tab.SETTINGS -> SettingsScreen({ exportLauncher.launch("cadence-backup.json") }, { importLauncher.launch(arrayOf("application/json")) }, backupMessage)
+                Tab.SETTINGS -> SettingsScreen(
+                    groups = groups,
+                    habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
+                    saveGroup = viewModel::saveGroup,
+                    addGroup = { viewModel.addGroup(it, 8 * 60, 12 * 60) },
+                    deleteGroup = viewModel::deleteGroup,
+                    export = { exportLauncher.launch("cadence-backup.json") },
+                    import = { importLauncher.launch(arrayOf("application/json")) },
+                    message = backupMessage,
+                )
             }
         }
         CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter)) { index -> tab = Tab.entries[index] }
@@ -185,7 +196,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             delete = { deleting = item.stored; options = null },
         )
     }
-    if (creating || editor != null) HabitEditor(editor, { creating = false; editor = null }) { habit, quickValues, reminderTimes, conditional, isNew ->
+    if (creating || editor != null) HabitEditor(editor, groups, { creating = false; editor = null }) { habit, quickValues, reminderTimes, conditional, isNew ->
         if (reminderTimes.isNotEmpty() && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
         viewModel.saveHabit(habit, quickValues, reminderTimes, conditional, isNew)
         creating = false
@@ -368,9 +379,32 @@ private fun StatsScreen(habits: List<HabitCardState>) {
 }
 
 @Composable
-private fun SettingsScreen(export: () -> Unit, import: () -> Unit, message: String?) {
+private fun SettingsScreen(
+    groups: List<HabitGroup>,
+    habitCountByGroup: Map<String, Int>,
+    saveGroup: (HabitGroup) -> Unit,
+    addGroup: (String) -> Unit,
+    deleteGroup: (String) -> Unit,
+    export: () -> Unit,
+    import: () -> Unit,
+    message: String?,
+) {
     val palette = cadence
     ScreenList(context = stringResource(R.string.settings_data_subtitle), title = stringResource(R.string.tab_settings)) {
+        item { SectionLabel(stringResource(R.string.group_section_title)) }
+        item {
+            Panel {
+                Text(stringResource(R.string.group_overlap_notice), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            }
+        }
+        items(groups, key = HabitGroup::id) { group ->
+            GroupPanel(group, habitCountByGroup[group.id] ?: 0, saveGroup, deleteGroup)
+        }
+        item {
+            val newGroupName = stringResource(R.string.group_new_name)
+            SecondaryAction(stringResource(R.string.group_add), Modifier.fillMaxWidth()) { addGroup(newGroupName) }
+        }
+
         item { SectionLabel(stringResource(R.string.settings_widget_title)) }
         item {
             Panel {
@@ -396,6 +430,66 @@ private fun SettingsScreen(export: () -> Unit, import: () -> Unit, message: Stri
         }
     }
 }
+
+/**
+ * Réglage d'un moment de la journée. `Journée` garde sa nature de groupe sans horaire :
+ * son nom reste modifiable, mais il ne prend jamais de plage et ne se supprime pas —
+ * c'est la destination de repli des habitudes d'un groupe supprimé.
+ */
+@Composable
+private fun GroupPanel(
+    group: HabitGroup,
+    habitCount: Int,
+    save: (HabitGroup) -> Unit,
+    delete: (String) -> Unit,
+) {
+    val palette = cadence
+    var name by remember(group.id, group.name) { mutableStateOf(group.name) }
+    var start by remember(group.id, group.startMinute) { mutableStateOf(formatMinuteOfDay(group.startMinute)) }
+    var end by remember(group.id, group.endMinute) { mutableStateOf(formatMinuteOfDay(group.endMinute)) }
+    val fixedAllDay = group.id == HabitGroup.ALL_DAY_ID
+
+    fun commit() {
+        val startMinute = if (fixedAllDay) null else parseMinuteOfDay(start)
+        val endMinute = if (fixedAllDay) null else parseMinuteOfDay(end)
+        val bounded = if (startMinute == null || endMinute == null) null to null else startMinute to endMinute
+        runCatching {
+            HabitGroup(group.id, name.trim().ifBlank { group.name }, bounded.first, bounded.second, group.sortOrder)
+        }.onSuccess(save)
+    }
+
+    Panel {
+        CadenceField(name, { name = it }, stringResource(R.string.group_name_label), accent = palette.accent)
+        if (!fixedAllDay) {
+            Spacer(Modifier.height(Space.md))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+                CadenceField(start, { start = it }, stringResource(R.string.group_start_label), Modifier.weight(1f), accent = palette.accent)
+                CadenceField(end, { end = it }, stringResource(R.string.group_end_label), Modifier.weight(1f), accent = palette.accent)
+            }
+        } else {
+            Spacer(Modifier.height(Space.xs))
+            Text(stringResource(R.string.group_all_day), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+        }
+        Spacer(Modifier.height(Space.md))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+            PrimaryAction(stringResource(R.string.form_btn_save), Modifier.weight(1f)) { commit() }
+            if (!fixedAllDay) {
+                TertiaryAction(stringResource(R.string.group_delete), Modifier.weight(1f)) { delete(group.id) }
+            }
+        }
+        if (!fixedAllDay && habitCount > 0) {
+            Spacer(Modifier.height(Space.xs))
+            Text(stringResource(R.string.group_delete_notice), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+        }
+    }
+}
+
+private fun formatMinuteOfDay(minute: Int?): String =
+    minute?.let { String.format(java.util.Locale.ROOT, "%02d:%02d", it / 60, it % 60) }.orEmpty()
+
+/** Lit `HH:mm`; toute autre écriture laisse le groupe sans horaire plutôt que d'inventer une plage. */
+private fun parseMinuteOfDay(raw: String): Int? =
+    runCatching { java.time.LocalTime.parse(raw.trim()) }.getOrNull()?.let { it.hour * 60 + it.minute }
 
 @Composable
 private fun HabitAvatar(item: HabitCardState, tint: Color) {
@@ -503,6 +597,7 @@ private class EditorState(
     quickValues: String = "1", reminderTimes: String = "", conditionalReminders: Boolean = true,
     frequencyTarget: String = "",
     intervalDays: String = "2",
+    groupId: String = HabitGroup.ALL_DAY_ID,
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -524,11 +619,12 @@ private class EditorState(
     var conditionalReminders by mutableStateOf(conditionalReminders)
     var frequencyTarget by mutableStateOf(frequencyTarget)
     var intervalDays by mutableStateOf(intervalDays)
+    var groupId by mutableStateOf(groupId)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit) {
+private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dismiss: () -> Unit, save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit) {
     val palette = cadence
     val stored = existing?.stored
     val state = remember(stored?.id) {
@@ -550,6 +646,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                 conditionalReminders = existing?.reminders?.all { it.conditional } ?: true,
                 frequencyTarget = stored?.goal?.frequencyTarget?.toString().orEmpty(),
                 intervalDays = stored?.schedule?.intervalDays?.toString() ?: "2",
+                groupId = stored?.groupId ?: HabitGroup.ALL_DAY_ID,
             ),
         )
     }.value
@@ -659,6 +756,15 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                     }
                 }
                 2 -> {
+                    item {
+                        FieldGroup(stringResource(R.string.habit_form_group_label)) {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                groups.forEach { group ->
+                                    ChoiceChip(group.name, state.groupId == group.id, accent = accent) { state.groupId = group.id }
+                                }
+                            }
+                        }
+                    }
                     item {
                         FieldGroup(stringResource(R.string.form_period_label)) {
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -773,6 +879,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                                 sortOrder = base?.sortOrder ?: 0,
                                 createdAtEpochMs = base?.createdAtEpochMs ?: 0,
                                 updatedAtEpochMs = base?.updatedAtEpochMs ?: 0,
+                                groupId = state.groupId,
                                 goal = HabitGoal(target * (unit?.scaleToCanonical ?: 1), state.period, state.goalType, unit, frequency),
                                 schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay, state.intervalDays.toIntOrNull() ?: 2),
                             )

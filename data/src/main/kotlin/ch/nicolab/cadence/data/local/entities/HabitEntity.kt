@@ -17,4 +17,5 @@ data class HabitEntity(
     @ColumnInfo(defaultValue = "0") val sortOrder: Int = 0,
     val createdAtEpochMs: Long,
     @ColumnInfo(defaultValue = "0") val updatedAtEpochMs: Long = 0L,
+    @ColumnInfo(defaultValue = "group-day") val groupId: String = "group-day",
 )

@@ -2,6 +2,7 @@ package ch.nicolab.cadence.data.local.model
 
 import ch.nicolab.cadence.domain.HabitDefinition
 import ch.nicolab.cadence.domain.HabitGoal
+import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
 import java.time.LocalDate
 
@@ -17,6 +18,7 @@ data class PersistedHabit(
     val sortOrder: Int = 0,
     val createdAtEpochMs: Long = 0L,
     val updatedAtEpochMs: Long = 0L,
+    val groupId: String = HabitGroup.ALL_DAY_ID,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {
@@ -32,6 +34,7 @@ data class PersistedHabit(
             archived = archived,
             sortOrder = sortOrder,
             updatedAtEpochMs = updatedAtEpochMs,
+            groupId = groupId,
             goal = goal,
             schedule = schedule,
         )
@@ -54,6 +57,7 @@ data class PersistedHabit(
         sortOrder = 0,
         createdAtEpochMs = 0L,
         updatedAtEpochMs = 0L,
+        groupId = HabitGroup.ALL_DAY_ID,
         goal = goal,
         schedule = schedule,
     )

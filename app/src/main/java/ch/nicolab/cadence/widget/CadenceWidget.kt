@@ -55,11 +55,14 @@ import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.PeriodCalculator
+import ch.nicolab.cadence.domain.WidgetGroupMode
+import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
 import java.time.LocalDate
+import java.time.LocalTime
 import kotlinx.coroutines.flow.first
 
 private data class WidgetHabit(val habit: PersistedHabit, val evaluation: HabitEvaluation)
@@ -84,7 +87,16 @@ class CadenceWidget : GlanceAppWidget() {
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val config = repository.getWidgetConfig(appWidgetId) ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
-        val pending = if (config.selectAll || selected.isEmpty()) allPending else allPending.filter { it.habit.id in selected }
+        val chosen = if (config.selectAll || selected.isEmpty()) allPending else allPending.filter { it.habit.id in selected }
+        // Le groupe filtre en dernier : une habitude terminée, sautée ou en pause a déjà
+        // disparu, et le mode automatique suit l'heure de rendu.
+        val visibleGroupIds = WidgetGroupSelection.visibleGroupIds(
+            mode = WidgetGroupMode.fromStorage(config.groupMode),
+            groups = repository.getGroups(),
+            selectedGroupId = config.groupId,
+            time = LocalTime.now(),
+        )
+        val pending = visibleGroupIds?.let { ids -> chosen.filter { it.habit.groupId in ids } } ?: chosen
         val iconBitmaps = pending.associate { item ->
             val color = if (config.monochromeIcons) 0xFFF7F8FC.toInt() else item.habit.colorArgb ?: 0xFFF7F8FC.toInt()
             item.habit.id to renderIcon(item.habit.iconId, color, config.iconSizeDp, config.iconOpacity, config.iconSaturation)

@@ -63,12 +63,10 @@ object HabitFormatter {
         val hours = totalMinutes / 60
         val mins = totalMinutes % 60
 
-        if (hours > 0 && mins > 0) {
-            return "${hours} h ${mins.toString().padStart(2, '0')}"
-        } else if (hours > 0 && mins == 0L) {
-            return "${hours} h"
-        } else {
-            return "${mins} min"
+        return when {
+            hours > 0 && mins > 0 -> "$hours h $mins min"
+            hours > 0 -> "$hours h"
+            else -> "$mins min"
         }
     }
 
@@ -88,6 +86,8 @@ object HabitFormatter {
     }
 
     private fun unitSymbolSuffix(unit: MeasurementUnit?, goalType: GoalType): String {
+        // Une durée porte déjà son unité (`1 h 5 min`) : la répéter donnerait `1 h min`.
+        if (goalType == GoalType.DURATION) return ""
         val sym = unit?.symbol?.trim()
         if (sym.isNullOrEmpty()) return ""
         return " $sym"

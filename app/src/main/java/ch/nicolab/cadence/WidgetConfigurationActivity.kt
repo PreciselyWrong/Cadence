@@ -51,6 +51,8 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.domain.HabitGroup
+import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.components.CadenceScreen
 import ch.nicolab.cadence.ui.components.ChoiceChip
@@ -82,11 +84,12 @@ class WidgetConfigurationActivity : ComponentActivity() {
         val habits = runBlocking { repository.observeHabits().first() }
         val initial = runBlocking { repository.getWidgetConfig(appWidgetId) } ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = runBlocking { repository.getWidgetHabitIds(appWidgetId).toSet() }
+        val groups = runBlocking { repository.getGroups() }
         setContent {
             CadenceTheme {
                 var saving by remember { mutableStateOf(false) }
                 var saveError by remember { mutableStateOf<String?>(null) }
-                WidgetConfiguration(habits, initial, selected, saving, saveError) { config, ids ->
+                WidgetConfiguration(habits, groups, initial, selected, saving, saveError) { config, ids ->
                     if (saving) return@WidgetConfiguration
                     saving = true
                     saveError = null
@@ -117,6 +120,7 @@ class WidgetConfigurationActivity : ComponentActivity() {
 @Composable
 private fun WidgetConfiguration(
     habits: List<PersistedHabit>,
+    groups: List<HabitGroup>,
     initial: WidgetConfigurationEntity,
     initialSelected: Set<String>,
     saving: Boolean,
@@ -141,6 +145,8 @@ private fun WidgetConfiguration(
     var iconOpacity by remember { mutableFloatStateOf(initial.iconOpacity.toFloat()) }
     var iconSaturation by remember { mutableFloatStateOf(initial.iconSaturation.toFloat()) }
     var monochromeIcons by remember { mutableStateOf(initial.monochromeIcons) }
+    var groupMode by remember { mutableStateOf(WidgetGroupMode.fromStorage(initial.groupMode)) }
+    var groupId by remember { mutableStateOf(initial.groupId ?: groups.firstOrNull()?.id) }
 
     CadenceScreen {
         LazyColumn(
@@ -163,6 +169,41 @@ private fun WidgetConfiguration(
                             }
                         }
                     }
+                }
+            }
+
+            item { SectionLabel(stringResource(R.string.widget_config_groups_section)) }
+            item {
+                Panel {
+                    Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                        ChoiceChip(stringResource(R.string.widget_config_group_all), groupMode == WidgetGroupMode.ALL) {
+                            groupMode = WidgetGroupMode.ALL
+                        }
+                        ChoiceChip(stringResource(R.string.widget_config_group_automatic), groupMode == WidgetGroupMode.AUTOMATIC) {
+                            groupMode = WidgetGroupMode.AUTOMATIC
+                        }
+                    }
+                    Spacer(Modifier.height(Space.sm))
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                        groups.forEach { group ->
+                            ChoiceChip(group.name, groupMode == WidgetGroupMode.SINGLE && groupId == group.id) {
+                                groupMode = WidgetGroupMode.SINGLE
+                                groupId = group.id
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(Space.sm))
+                    Text(
+                        stringResource(
+                            when (groupMode) {
+                                WidgetGroupMode.ALL -> R.string.widget_config_group_all_hint
+                                WidgetGroupMode.AUTOMATIC -> R.string.widget_config_group_automatic_hint
+                                WidgetGroupMode.SINGLE -> R.string.widget_config_group_single_hint
+                            },
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.inkFaint,
+                    )
                 }
             }
 
@@ -266,6 +307,8 @@ private fun WidgetConfiguration(
                             iconOpacity = iconOpacity.toInt(),
                             iconSaturation = iconSaturation.toInt(),
                             monochromeIcons = monochromeIcons,
+                            groupMode = groupMode.name,
+                            groupId = groupId.takeIf { groupMode == WidgetGroupMode.SINGLE },
                         ),
                         if (all) emptyList() else selected.toList(),
                     )
