@@ -23,4 +23,6 @@ data class HabitPauseEntity(
     val start: String,
     val endExclusive: String?,
     val reason: String?,
+    /** Formulation libre d'une raison personnalisée. */
+    val reasonLabel: String? = null,
 )

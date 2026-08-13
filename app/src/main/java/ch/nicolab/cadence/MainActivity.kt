@@ -145,6 +145,8 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     var quick by remember { mutableStateOf<HabitCardState?>(null) }
     var correcting by remember { mutableStateOf<HabitEntry?>(null) }
     var options by remember { mutableStateOf<HabitCardState?>(null) }
+    var skipping by remember { mutableStateOf<HabitCardState?>(null) }
+    var travelling by remember { mutableStateOf(false) }
     var deleting by remember { mutableStateOf<PersistedHabit?>(null) }
     var backupMessage by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
@@ -174,6 +176,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
                     saveGroup = viewModel::saveGroup,
                     addGroup = { viewModel.addGroup(it, 8 * 60, 12 * 60) },
                     deleteGroup = viewModel::deleteGroup,
+                    startTravel = { travelling = true },
                     export = { exportLauncher.launch("cadence-backup.json") },
                     import = { importLauncher.launch(arrayOf("application/json")) },
                     message = backupMessage,
@@ -214,13 +217,27 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             dismiss = { options = null },
             edit = { editor = item; options = null },
             pause = { viewModel.togglePause(item); options = null },
-            skipToday = { viewModel.skipToday(item); options = null },
+            skipToday = { skipping = item; options = null },
+            cancelSkip = { viewModel.cancelSkip(it); options = null },
+            resumePause = { viewModel.resumePause(it); options = null },
             archive = { viewModel.archiveHabit(item.stored, !item.stored.archived); options = null },
             duplicate = { viewModel.duplicateHabit(item.stored); options = null },
             up = { viewModel.moveHabit(item.stored.id, -1); options = null },
             down = { viewModel.moveHabit(item.stored.id, 1); options = null },
             delete = { deleting = item.stored; options = null },
         )
+    }
+    skipping?.let { item ->
+        SkipSheet(habitTint(item), { skipping = null }) { reason, label ->
+            viewModel.skipToday(item, reason, label)
+            skipping = null
+        }
+    }
+    if (travelling) {
+        TravelSheet(habits, groups, LocalDate.now(), { travelling = false }) { ids, from, to ->
+            viewModel.startTravel(ids, from, to)
+            travelling = false
+        }
     }
     if (creating || editor != null) HabitEditor(editor, groups, { creating = false; editor = null }) { habit, quickValues, reminderTimes, conditional, isNew ->
         if (reminderTimes.isNotEmpty() && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -410,6 +427,10 @@ private fun StatsScreen(habits: List<HabitCardState>) {
                 HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth())
                 Spacer(Modifier.height(Space.xl))
                 HabitHeatmap(item.dailyHistory, tint, Modifier.fillMaxWidth())
+                Spacer(Modifier.height(Space.xl))
+                Hairline()
+                Spacer(Modifier.height(Space.lg))
+                HabitInsightsPanel(item.insights, item.stored.goal, tint, Modifier.fillMaxWidth())
             }
         }
     }
@@ -422,12 +443,24 @@ private fun SettingsScreen(
     saveGroup: (HabitGroup) -> Unit,
     addGroup: (String) -> Unit,
     deleteGroup: (String) -> Unit,
+    startTravel: () -> Unit,
     export: () -> Unit,
     import: () -> Unit,
     message: String?,
 ) {
     val palette = cadence
     ScreenList(context = stringResource(R.string.settings_data_subtitle), title = stringResource(R.string.tab_settings)) {
+        item { SectionLabel(stringResource(R.string.travel_section)) }
+        item {
+            Panel {
+                Text(stringResource(R.string.travel_subtitle), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+                Spacer(Modifier.height(Space.xs))
+                Text(stringResource(R.string.travel_reminders_silent), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+                Spacer(Modifier.height(Space.md))
+                SecondaryAction(stringResource(R.string.travel_title), Modifier.fillMaxWidth(), onClick = startTravel)
+            }
+        }
+
         item { SectionLabel(stringResource(R.string.group_section_title)) }
         item {
             Panel {
@@ -544,6 +577,8 @@ private fun HabitOptionsSheet(
     edit: () -> Unit,
     pause: () -> Unit,
     skipToday: () -> Unit,
+    cancelSkip: (String) -> Unit,
+    resumePause: (String) -> Unit,
     archive: () -> Unit,
     duplicate: () -> Unit,
     up: () -> Unit,
@@ -565,8 +600,21 @@ private fun HabitOptionsSheet(
             tint,
             pause,
         )
-        if (!item.evaluation.isPaused) {
-            ActionRow(Icons.Outlined.EventBusy, stringResource(R.string.action_skip_today), tint, skipToday)
+        val today = LocalDate.now()
+        val skip = item.cancellableSkip(today)
+        val suspension = item.activePause(today)
+        when {
+            skip != null -> ActionRow(Icons.Outlined.Restore, stringResource(R.string.skip_cancel_today), tint) { cancelSkip(skip.id) }
+            suspension != null -> ActionRow(
+                Icons.Outlined.PlayArrow,
+                stringResource(
+                    R.string.travel_active,
+                    suspension.pause.endExclusive?.minusDays(1)?.toString().orEmpty(),
+                ),
+                tint,
+            ) { resumePause(suspension.id) }
+            !item.evaluation.isPaused ->
+                ActionRow(Icons.Outlined.EventBusy, stringResource(R.string.action_skip_today), tint, skipToday)
         }
         ActionRow(
             if (item.stored.archived) Icons.Outlined.Restore else Icons.Outlined.Archive,

@@ -13,6 +13,7 @@ import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
 
+import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
@@ -20,8 +21,8 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.MeasurementUnit
-import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
 import ch.nicolab.cadence.domain.UnitDimension
@@ -168,15 +169,9 @@ class CadenceRepository(
             val existingHabit = database.habitDao().getHabitById(habit.id)
             val createdAt = existingHabit?.createdAtEpochMs ?: (if (habit.createdAtEpochMs > 0) habit.createdAtEpochMs else nowMs)
 
-            val today = LocalDate.now()
-            val effectiveDate = effectiveFrom ?: run {
-                val currentEffective = getHabitEffectiveAt(habit.id, today)
-                if (currentEffective != null) {
-                    PeriodCalculator.window(today, currentEffective.goal.period, currentEffective.schedule.firstDayOfWeek).endExclusive
-                } else {
-                    today
-                }
-            }
+            // Un objectif modifié s'applique à partir d'aujourd'hui : les jours déjà écoulés
+            // gardent leur version, mais l'utilisateur voit immédiatement sa correction.
+            val effectiveDate = effectiveFrom ?: LocalDate.now()
 
             val habitEntity = HabitEntity(
                 id = habit.id,
@@ -338,46 +333,81 @@ class CadenceRepository(
         habitId: String,
         id: String,
         pause: HabitPause,
-        reason: String? = null,
     ) {
-        val pauseEntity = HabitPauseEntity(
-            id = id,
-            habitId = habitId,
-            start = pause.start.toString(),
-            endExclusive = pause.endExclusive?.toString(),
-            reason = reason,
-        )
-        database.habitPauseDao().insertPause(pauseEntity)
+        database.habitPauseDao().insertPause(toPauseEntity(id, habitId, pause))
     }
 
     fun observePauses(habitId: String): Flow<List<HabitPause>> {
         return database.habitPauseDao().observePauses(habitId).map { entities ->
-            entities.map { entity ->
-                HabitPause(
-                    start = LocalDate.parse(entity.start),
-                    endExclusive = entity.endExclusive?.let { LocalDate.parse(it) },
-                )
-            }
+            entities.map(::toPause)
+        }
+    }
+
+    /** Pauses avec leur identifiant, nécessaire pour annuler un saut ou écourter un voyage. */
+    fun observeIdentifiedPauses(habitId: String): Flow<List<IdentifiedPause>> {
+        return database.habitPauseDao().observePauses(habitId).map { entities ->
+            entities.map { IdentifiedPause(it.id, it.habitId, toPause(it)) }
         }
     }
 
     suspend fun getPauses(habitId: String): List<HabitPause> {
-        return database.habitPauseDao().getPauses(habitId).map { entity ->
-            HabitPause(
-                start = LocalDate.parse(entity.start),
-                endExclusive = entity.endExclusive?.let { LocalDate.parse(it) },
-            )
-        }
+        return database.habitPauseDao().getPauses(habitId).map(::toPause)
     }
 
     suspend fun deletePause(id: String) {
         database.habitPauseDao().deletePause(id)
     }
 
+    /**
+     * Suspend plusieurs habitudes sur une plage inclusive. Chaque habitude reçoit sa propre
+     * pause, ce qui permet ensuite d'en écourter une sans toucher aux autres.
+     */
+    suspend fun startTravel(habitIds: List<String>, from: LocalDate, toInclusive: LocalDate) {
+        val pause = HabitPause.travel(from, toInclusive)
+        database.withTransaction {
+            habitIds.distinct().forEach { habitId ->
+                database.habitPauseDao().insertPause(
+                    toPauseEntity(UUID.randomUUID().toString(), habitId, pause),
+                )
+            }
+        }
+    }
+
+    /**
+     * Reprise anticipée : la pause s'arrête au matin de [date], ou disparaît si la reprise
+     * précède son premier jour.
+     */
+    suspend fun resumePause(pauseId: String, date: LocalDate) {
+        val entity = database.habitPauseDao().getPauseById(pauseId) ?: return
+        val resumed = toPause(entity).resumedOn(date)
+        if (resumed == null) database.habitPauseDao().deletePause(pauseId)
+        else database.habitPauseDao().insertPause(toPauseEntity(pauseId, entity.habitId, resumed))
+    }
+
+    private fun toPause(entity: HabitPauseEntity) = HabitPause(
+        start = LocalDate.parse(entity.start),
+        endExclusive = entity.endExclusive?.let { LocalDate.parse(it) },
+        reason = PauseReason.fromStorage(entity.reason),
+        reasonLabel = entity.reasonLabel,
+    )
+
+    private fun toPauseEntity(id: String, habitId: String, pause: HabitPause) = HabitPauseEntity(
+        id = id,
+        habitId = habitId,
+        start = pause.start.toString(),
+        endExclusive = pause.endExclusive?.toString(),
+        reason = pause.reason?.name,
+        reasonLabel = pause.reasonLabel,
+    )
+
     suspend fun pauseHabit(habitId: String, date: LocalDate) {
         if (database.habitPauseDao().getOpenPauses(habitId).isEmpty()) {
             database.habitPauseDao().insertPause(
-                HabitPauseEntity(UUID.randomUUID().toString(), habitId, date.toString(), null, null),
+                toPauseEntity(
+                    UUID.randomUUID().toString(),
+                    habitId,
+                    HabitPause(date, null, PauseReason.MANUAL),
+                ),
             )
         }
     }
@@ -539,7 +569,7 @@ class CadenceRepository(
         }
 
         val backupPauses = database.habitPauseDao().getAllPauses().map { p ->
-            BackupPauseV2(p.id, p.habitId, p.start, p.endExclusive, p.reason)
+            BackupPauseV2(p.id, p.habitId, p.start, p.endExclusive, p.reason, p.reasonLabel)
         }
 
         val widgetConfigs = database.widgetConfigDao().getAllConfigurations()
@@ -713,6 +743,7 @@ class CadenceRepository(
                         start = p.start,
                         endExclusive = p.endExclusive,
                         reason = p.reason,
+                        reasonLabel = p.reasonLabel,
                     )
                 )
             }

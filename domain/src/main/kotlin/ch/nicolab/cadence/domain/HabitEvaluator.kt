@@ -24,6 +24,15 @@ data class HabitEvaluation(
     val countsAsFailure: Boolean,
 )
 
+/** Un jour où l'habitude est attendue : ni archivée, ni hors planning, ni avant son début. */
+fun isPlannedOn(habit: HabitDefinition, date: LocalDate): Boolean =
+    habit.active && !habit.archived && date >= habit.startsOn && when (habit.schedule.mode) {
+        ScheduleMode.EVERY_DAY -> true
+        ScheduleMode.SELECTED_DAYS -> date.dayOfWeek in habit.schedule.activeDays
+        ScheduleMode.FLEXIBLE_PERIOD -> true
+        ScheduleMode.INTERVAL_DAYS -> ChronoUnit.DAYS.between(habit.startsOn, date) % habit.schedule.intervalDays == 0L
+    }
+
 class HabitEvaluator {
     fun evaluate(
         habit: HabitDefinition,
@@ -52,12 +61,7 @@ class HabitEvaluator {
 
         val paused = pauses.any { it.includes(date) }
 
-        val isPlannedForDate = habit.active && !habit.archived && date >= habit.startsOn && when (habit.schedule.mode) {
-            ScheduleMode.EVERY_DAY -> true
-            ScheduleMode.SELECTED_DAYS -> date.dayOfWeek in habit.schedule.activeDays
-            ScheduleMode.FLEXIBLE_PERIOD -> true
-            ScheduleMode.INTERVAL_DAYS -> ChronoUnit.DAYS.between(habit.startsOn, date) % habit.schedule.intervalDays == 0L
-        }
+        val isPlannedForDate = isPlannedOn(habit, date)
 
         val needsAttentionNow = isPlannedForDate && !paused && !isCompleted
 

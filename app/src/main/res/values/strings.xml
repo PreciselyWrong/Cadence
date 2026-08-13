@@ -123,6 +123,30 @@
     <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
     <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
     <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
+    <string name="skip_sheet_title">Sauter aujourd\'hui</string>
+    <string name="skip_sheet_subtitle">La série reste intacte</string>
+    <string name="skip_reason_rest">Repos</string>
+    <string name="skip_reason_illness">Maladie</string>
+    <string name="skip_reason_travel">Voyage</string>
+    <string name="skip_reason_custom">Autre raison</string>
+    <string name="skip_reason_manual">Pause</string>
+    <string name="skip_custom_label">Préciser la raison</string>
+    <string name="skip_confirm">Sauter la journée</string>
+    <string name="skip_cancel_today">Annuler le saut</string>
+    <string name="skip_notice">Le saut ne valide pas l\'habitude et ne casse pas la série. Il reste annulable aujourd\'hui.</string>
+    <string name="travel_title">Mode voyage</string>
+    <string name="travel_subtitle">Suspendre plusieurs habitudes</string>
+    <string name="travel_section">Voyage</string>
+    <string name="travel_from_label">Du</string>
+    <string name="travel_to_label">Au (inclus)</string>
+    <string name="travel_select_group">Tout le groupe %1$s</string>
+    <string name="travel_select_all">Toutes les habitudes</string>
+    <string name="travel_start">Suspendre la période</string>
+    <string name="travel_error_range">La fin du voyage ne peut pas précéder son début.</string>
+    <string name="travel_error_empty">Choisir au moins une habitude.</string>
+    <string name="travel_active">Suspendue jusqu\'au %1$s</string>
+    <string name="travel_resume_now">Reprendre maintenant</string>
+    <string name="travel_reminders_silent">Les rappels restent silencieux pendant la suspension.</string>
 
     <string name="delete_dialog_title">Supprimer l\'habitude ?</string>
     <string name="delete_dialog_message">Cette action est irréversible. Tout l\'historique et l\'ensemble des entrées de cette habitude seront définitivement supprimés.</string>
@@ -206,6 +230,9 @@
     <string name="widget_style_aubergine">Aubergine</string>
     <string name="widget_style_coral">Corail</string>
     <string name="widget_style_mono">Monochrome</string>
+    <string name="widget_style_slate">Ardoise</string>
+    <string name="widget_style_sand">Sable</string>
+    <string name="widget_style_ink">Encre</string>
     <string name="widget_config_habits_section">Habitudes</string>
     <string name="widget_config_preview_section">Aperçu</string>
     <string name="widget_config_preview_hint">L\'aperçu suit les réglages en cours. Le widget placé ne change qu\'à l\'enregistrement.</string>
@@ -246,4 +273,28 @@
     <string name="widget_config_save_error">Impossible d\'enregistrer. Réessayez.</string>
     <string name="stats_heatmap_title">12 dernières semaines</string>
     <string name="action_skip_today">Sauter aujourd’hui</string>
+
+    <string name="insights_title">Ce que disent vos saisies</string>
+    <string name="insights_not_enough">Pas encore assez de saisies pour conclure.</string>
+    <string name="insights_best_day">Meilleur jour</string>
+    <string name="insights_best_day_detail">%1$s en moyenne, contre %2$s tous jours confondus</string>
+    <string name="insights_best_slot">Meilleur créneau</string>
+    <string name="insights_best_slot_detail">%1$d %% des saisies, sur %2$d saisies</string>
+    <string name="insights_slot_morning">Matin</string>
+    <string name="insights_slot_midday">Midi</string>
+    <string name="insights_slot_afternoon">Après-midi</string>
+    <string name="insights_slot_evening">Soir</string>
+    <string name="insights_slot_night">Nuit</string>
+    <string name="insights_month_title">Ce mois, comparé au précédent</string>
+    <string name="insights_month_quantity">Quantité</string>
+    <string name="insights_month_regularity">Régularité</string>
+    <string name="insights_month_minimum">Jours au minimum</string>
+    <string name="insights_month_ideal">Jours à l’idéal</string>
+    <string name="insights_month_scope">Sur %1$d jours écoulés, pauses exclues</string>
+    <string name="insights_percent">%1$d %%</string>
+    <string name="insights_days">%1$d j</string>
+
+    <string name="notification_action_done">Fait</string>
+    <string name="notification_action_add">+%1$s</string>
+    <string name="notification_action_skip">Sauter</string>
 </resources>

@@ -6,13 +6,21 @@ import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.data.local.CadenceRepository
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
+import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEntryCorrection
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitGroup
+import ch.nicolab.cadence.domain.HabitPause
+import ch.nicolab.cadence.domain.PauseReason
+import ch.nicolab.cadence.domain.HabitInsights
+import ch.nicolab.cadence.domain.HabitInsightsCalculator
+import ch.nicolab.cadence.domain.InsightDay
+import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.PeriodCalculator
+import ch.nicolab.cadence.domain.isPlannedOn
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
 import ch.nicolab.cadence.reminder.ReminderScheduler
@@ -37,9 +45,21 @@ data class HabitCardState(
     val history: List<PeriodStat>,
     val entryCount: Int,
     val dailyHistory: List<DailyStat>,
+    /** Tendances calculées sur la même fenêtre, absentes quand l'échantillon ne les porte pas. */
+    val insights: HabitInsights,
     /** Saisies les plus récentes, de la plus récente à la plus ancienne, pour correction. */
     val recentEntries: List<HabitEntry>,
-)
+    /** Sauts et suspensions de l'habitude, avec leur identifiant pour les annuler. */
+    val pauses: List<IdentifiedPause>,
+) {
+    /** Saut du jour encore annulable, s'il existe. */
+    fun cancellableSkip(today: LocalDate): IdentifiedPause? =
+        pauses.firstOrNull { it.pause.isCancellableOn(today) }
+
+    /** Suspension en cours qu'une reprise anticipée peut écourter. */
+    fun activePause(today: LocalDate): IdentifiedPause? =
+        pauses.firstOrNull { !it.pause.isSingleDay && it.pause.includes(today) }
+}
 
 /** Profondeur d'historique proposée à la correction depuis Aujourd'hui et l'historique. */
 private const val RECENT_ENTRIES = 60
@@ -170,14 +190,39 @@ class MainViewModel(
         refreshAll()
     }
 
-    fun skipToday(habit: HabitCardState) = viewModelScope.launch {
+    /**
+     * Saute la journée avec un motif. Le saut ne valide pas l'habitude et ne casse pas la
+     * série : il reste une pause d'un jour, annulable tant que ce jour dure.
+     */
+    fun skipToday(
+        habit: HabitCardState,
+        reason: PauseReason = PauseReason.REST,
+        label: String? = null,
+    ) = viewModelScope.launch {
         val today = LocalDate.now(clock)
         repository.addPause(
             habit.stored.id,
             UUID.randomUUID().toString(),
-            ch.nicolab.cadence.domain.HabitPause(today, today.plusDays(1)),
-            reason = "SKIPPED_TODAY",
+            HabitPause.skip(today, reason, label),
         )
+        refreshAll()
+    }
+
+    fun cancelSkip(pauseId: String) = viewModelScope.launch {
+        repository.deletePause(pauseId)
+        refreshAll()
+    }
+
+    /** Suspend plusieurs habitudes sur une plage inclusive, sélection par groupe comprise. */
+    fun startTravel(habitIds: List<String>, from: LocalDate, toInclusive: LocalDate) = viewModelScope.launch {
+        if (habitIds.isEmpty()) return@launch
+        repository.startTravel(habitIds, from, toInclusive)
+        refreshAll()
+    }
+
+    /** Reprise anticipée d'une suspension, à partir du jour choisi. */
+    fun resumePause(pauseId: String, date: LocalDate = LocalDate.now(clock)) = viewModelScope.launch {
+        repository.resumePause(pauseId, date)
         refreshAll()
     }
 
@@ -275,7 +320,8 @@ class MainViewModel(
         cards.value = source.sortedBy(PersistedHabit::sortOrder).map { habit ->
             val window = PeriodCalculator.window(date, habit.goal.period, habit.schedule.firstDayOfWeek)
             val entries = repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
-            val pauses = repository.observePauses(habit.id).first()
+            val identifiedPauses = repository.observeIdentifiedPauses(habit.id).first()
+            val pauses = identifiedPauses.map(IdentifiedPause::pause)
             val allEntries = repository.getEntries(habit.id)
             var cursor = date
             val history = buildList {
@@ -294,17 +340,30 @@ class MainViewModel(
             val valuesByDate = allEntries.filter { it.localDate in dailyStart..date }
                 .groupBy(HabitEntry::localDate)
                 .mapValues { (_, dayEntries) -> dayEntries.sumOf(HabitEntry::valueMinor) }
-            val dailyHistory = buildList {
-                for (offset in 0 until 84) {
+            val dailyHistory = mutableListOf<DailyStat>()
+            val insightDays = mutableListOf<InsightDay>()
+            for (offset in 0 until 84) {
                 val day = dailyStart.plusDays(offset.toLong())
                 val historicalHabit = repository.getHabitEffectiveAt(habit.id, day) ?: habit
-                add(DailyStat(
-                    date = day,
-                    valueMinor = valuesByDate[day] ?: 0,
-                    targetMinor = historicalHabit.goal.targetMinor,
-                    paused = pauses.any { it.includes(day) },
-                ))
-                }
+                val paused = pauses.any { it.includes(day) }
+                dailyHistory.add(
+                    DailyStat(
+                        date = day,
+                        valueMinor = valuesByDate[day] ?: 0,
+                        targetMinor = historicalHabit.goal.targetMinor,
+                        paused = paused,
+                    ),
+                )
+                insightDays.add(
+                    InsightDay(
+                        date = day,
+                        minimumMinor = historicalHabit.goal.effectiveMinimumMinor,
+                        targetMinor = historicalHabit.goal.targetMinor,
+                        planned = isPlannedOn(historicalHabit.definition, day),
+                        paused = paused,
+                        dailyGoal = historicalHabit.goal.period == PeriodType.DAY,
+                    ),
+                )
             }
             HabitCardState(
                 stored = habit,
@@ -314,7 +373,9 @@ class MainViewModel(
                 history = history,
                 entryCount = allEntries.size,
                 dailyHistory = dailyHistory,
+                insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
                 recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
+                pauses = identifiedPauses,
             )
         }
     }

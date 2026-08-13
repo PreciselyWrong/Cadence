@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Icon
@@ -62,6 +63,7 @@ import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
+import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import ch.nicolab.cadence.ui.components.CadenceScreen
 import ch.nicolab.cadence.ui.components.ChoiceChip
 import ch.nicolab.cadence.ui.components.ErrorText
@@ -252,13 +254,10 @@ private fun WidgetConfiguration(
             item { SectionLabel(stringResource(R.string.widget_config_style_label)) }
             item {
                 Panel {
-                    val swatches = mapOf(
-                        "HALO" to Color(0xFF171B2E), "OCEAN" to Color(0xFF00677D), "FOREST" to Color(0xFF08705A),
-                        "AUBERGINE" to Color(0xFF5926A6), "CORAL" to Color(0xFFA43845), "MONO" to Color(0xFFF7F8FC),
-                    )
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalArrangement = Arrangement.spacedBy(Space.md)) {
-                        HabitLabels.WIDGET_STYLES.forEach { (value, label) ->
-                            val swatch = swatches.getValue(value)
+                        HabitLabels.WIDGET_STYLES.forEach { (renderStyle, label) ->
+                            val value = renderStyle.id
+                            val swatch = Color(renderStyle.swatchArgb)
                             val active = style == value
                             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(64.dp)) {
                                 Box(
@@ -384,24 +383,17 @@ private fun WidgetPreview(
     showDoneIndicator: Boolean,
     maxHabitsPerRow: Int,
 ) {
-    val isMono = theme == "MONO"
-    val baseSurface = when (theme) {
-        "OCEAN" -> Color(0xFF073B4C)
-        "FOREST" -> Color(0xFF12372A)
-        "AUBERGINE" -> Color(0xFF35155D)
-        "CORAL" -> Color(0xFF6D2932)
-        "MONO" -> Color(0xFFF7F8FC)
-        else -> Color(0xFF171B2E)
-    }
-    val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
-    val badge = (if (isMono) Color(0xFFE9EDF5) else Color.White).copy(alpha = if (isMono) .72f else .14f)
+    val renderStyle = WidgetRenderStyle.byId(theme)
+    val baseSurface = Color(renderStyle.surfaceArgb)
+    val content = Color(renderStyle.contentArgb)
+    val badge = Color(renderStyle.badgeArgb).copy(alpha = renderStyle.badgeAlpha)
     val height = (iconSizeDp + 8 + (if (showLabels) labelTextSizeSp + 6 else 0) + (if (showValues) valueTextSizeSp + 6 else 0) + 20).dp
 
     BoxWithConstraints(
         Modifier
             .fillMaxWidth()
             .height(height)
-            .clip(Radius.Panel)
+            .clip(RoundedCornerShape(renderStyle.cornerRadiusDp.dp))
             .background(baseSurface.copy(alpha = opacity.coerceIn(0, 100) / 100f)),
         contentAlignment = Alignment.Center,
     ) {
@@ -424,7 +416,7 @@ private fun WidgetPreview(
         } else {
             Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 habits.take(visibleCount).forEach { habit ->
-                    val tint = previewIconColor(habit.colorArgb, monochromeIcons, iconSaturation)
+                    val tint = previewIconColor(habit.colorArgb, monochromeIcons, iconSaturation, renderStyle.contentArgb)
                     Column(Modifier.width(cellWidth), horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(
                             Modifier.size((iconSizeDp + 8).dp).clip(CircleShape).background(badge),
@@ -470,8 +462,8 @@ private fun WidgetPreview(
  * Même résultat que le filtre de saturation appliqué au rendu du widget : la saturation
  * ramène la teinte vers sa luminance, le mode monochrome ignore la couleur de l'habitude.
  */
-private fun previewIconColor(colorArgb: Int?, monochrome: Boolean, saturation: Int): Color {
-    val base = Color(if (monochrome) 0xFFF7F8FC.toInt() else colorArgb ?: 0xFFF7F8FC.toInt())
+private fun previewIconColor(colorArgb: Int?, monochrome: Boolean, saturation: Int, inkArgb: Int): Color {
+    val base = Color(if (monochrome) inkArgb else colorArgb ?: inkArgb)
     val factor = saturation.coerceIn(0, 100) / 100f
     val luminance = 0.213f * base.red + 0.715f * base.green + 0.072f * base.blue
     return Color(

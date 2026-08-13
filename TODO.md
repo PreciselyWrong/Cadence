@@ -11,10 +11,6 @@
   - Vérification : passage minimum/idéal, pause longue, minuit, changement de fuseau, annulation, réinitialisation et double appui
 
 ## Fonctions à venir
-- [ ] Actions depuis les notifications
-  - Proposer `Fait`, `+1` et `Sauter` selon le type d’objectif
-  - Mettre à jour immédiatement l’application et le widget sans ouvrir d’écran inutile
-  - Vérification : action répétée, habitude déjà terminée, permission refusée et redémarrage
 - [ ] Groupes dans l’application
   - Filtrer Aujourd’hui et Habitudes par groupe sans cacher l’accès à l’ensemble
   - Créer, renommer, réordonner et supprimer un groupe; déplacer simplement ses habitudes
@@ -32,14 +28,6 @@
 - [ ] Notes rapides sur les saisies
   - Ajouter ou modifier une note courte depuis la saisie rapide et l’historique
   - Vérification : plusieurs saisies le même jour, sauvegarde et restauration
-- [ ] Saut motivé et réversible
-  - `Sauter aujourd’hui` propose repos, maladie, voyage ou raison personnalisée
-  - Le saut ne valide pas l’habitude, ne casse pas la série et peut être annulé le jour même
-  - Vérification : widget, statistiques, historique, minuit et restauration
-- [ ] Mode voyage
-  - Suspendre plusieurs habitudes entre deux dates, avec sélection rapide par groupe
-  - Afficher clairement la période et permettre une reprise anticipée
-  - Vérification : plages inclusives, voyage en cours, futur, fuseau et rappels silencieux
 - [ ] Vue Cette semaine
   - Regrouper les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`
   - Montrer uniquement les actions utiles et ouvrir directement la saisie concernée
@@ -48,28 +36,35 @@
   - Compter les périodes planifiées réussies, pas les jours calendaires consécutifs
   - Ignorer pauses, voyages et sauts autorisés sans créer de réussite artificielle
   - Vérification : tous les N jours, semaines flexibles, changements d’objectif et historique
-- [ ] Statistiques utiles
-  - Afficher le meilleur jour et le meilleur créneau horaire avec un minimum de données fiable
-  - Comparer le mois courant au précédent pour minimum, idéal, quantité et régularité
-  - Éviter toute conclusion lorsque l’échantillon est insuffisant
-  - Vérification : mois incomplet, habitudes récentes, pauses, limites et fuseaux
 
 
 ## Ideas
-- [ ] Variantes supplémentaires du widget
-  - [ ] Définir le contrat des styles de rendu
-  - [ ] Ajouter de nouveaux styles après validation du Halo
 - [ ] Valeurs rapides propres à chaque groupe ou moment de la journée
+- [ ] Synchronisation des habitudes avec le calendrier Android (`CalendarProvider`)
+  - Écrire les événements à venir via `CalendarProvider` (API locale, permission `WRITE_CALENDAR`, aucune permission réseau) ; Google, Samsung ou tout agenda installé se charge de la synchronisation cloud de son côté
+  - Choisir par habitude le créneau horaire et la durée à bloquer (repris depuis le groupe ou personnalisé)
+  - Gérer le cycle de vie complet des événements : création, mise à jour après changement d'objectif, suppression à la validation de l'habitude, recréation si la saisie est annulée, suppression à la mise en pause ou au saut
+  - Cadence conserve l'`_ID` CalendarProvider de chaque événement qu'elle a créé pour pouvoir le modifier ou le supprimer sans doublons
+  - Choisir dans quel calendrier local écrire (agenda personnel, agenda dédié Cadence…)
+  - Vérification : habitude sans horaire, permission refusée, événement supprimé manuellement dans l'agenda, changement de créneau, habitude supprimée et sauvegarde/restauration sans les IDs calendrier
 - [ ] Synchroniser les activités sportives via Health Connect
   - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
-  - Associer une habitude, par exemple `Cardio`, à un type d’activité suivi par la montre ou une application compatible
-  - Importer la durée des séances compatibles pour compléter automatiquement l’objectif de durée, y compris le minimum et l’idéal
-  - Continuer d’accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
-  - Montrer clairement l’origine de chaque durée : montre, chronomètre ou ajout manuel
-  - Permettre de choisir les activités importées, de les ignorer, de les corriger ou de les désactiver à tout moment
-  - Vérification : permission refusée, montre déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
+  - Associer chaque habitude à une règle de correspondance sur deux axes combinables :
+    - **Type d'exercice** (`ExerciseSessionRecord.exerciseType`) : `RUNNING`, `CYCLING`, `SWIMMING`, `WEIGHTLIFTING`, `OTHER_WORKOUT`… — liste fixe définie par Health Connect, indépendante de l'app source
+    - **Application source** (`metadata.dataOrigin.packageName`) : filtrer par app précise, par exemple Strava uniquement, ou toutes les sources acceptées
+  - Exemples : `RUNNING || CYCLING` → Cardio ; `WEIGHTLIFTING` depuis `com.myfitnesspal` → Musculation
+  - Importer la durée de la séance pour compléter automatiquement l'objectif, minimum et idéal inclus
+  - Continuer d'accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
+  - Montrer clairement l'origine de chaque durée : app source, chronomètre ou saisie manuelle
+  - Permettre de modifier, ignorer ou désactiver les règles à tout moment sans effacer l'historique importé
+  - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Variantes supplémentaires du widget
+- [x] Mode voyage
+- [x] Saut motivé et réversible
+- [x] Actions depuis les notifications
+- [x] Statistiques utiles
 - [x] Objectif minimum et idéal
 - [x] Corriger une saisie et l’historique
 - [x] Groupes d’habitudes et widget contextuel

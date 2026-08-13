@@ -17,6 +17,9 @@ interface HabitPauseDao {
     @Query("SELECT * FROM habit_pauses WHERE habitId = :habitId ORDER BY start ASC")
     suspend fun getPauses(habitId: String): List<HabitPauseEntity>
 
+    @Query("SELECT * FROM habit_pauses WHERE id = :id")
+    suspend fun getPauseById(id: String): HabitPauseEntity?
+
     @Query("SELECT * FROM habit_pauses WHERE habitId = :habitId AND endExclusive IS NULL")
     suspend fun getOpenPauses(habitId: String): List<HabitPauseEntity>
 

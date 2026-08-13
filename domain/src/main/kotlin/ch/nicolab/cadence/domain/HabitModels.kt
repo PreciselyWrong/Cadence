@@ -192,13 +192,65 @@ data class HabitEntry(
     }
 }
 
+/** Pourquoi une habitude est mise de côté. Aucune de ces raisons ne casse la série. */
+enum class PauseReason {
+    REST,
+    ILLNESS,
+    TRAVEL,
+    CUSTOM,
+
+    /** Pause ouverte décidée depuis les options de l'habitude, sans motif déclaré. */
+    MANUAL,
+    ;
+
+    companion object {
+        fun fromStorage(raw: String?): PauseReason? = entries.firstOrNull { it.name == raw }
+    }
+}
+
 data class HabitPause(
     val start: LocalDate,
     val endExclusive: LocalDate?,
+    val reason: PauseReason? = null,
+    /** Formulation libre, réservée à [PauseReason.CUSTOM]. */
+    val reasonLabel: String? = null,
 ) {
     init {
         require(endExclusive == null || endExclusive > start) { "Pause end must be after start" }
+        if (reason == PauseReason.CUSTOM) {
+            require(!reasonLabel.isNullOrBlank()) { "A custom reason needs its wording" }
+        }
     }
 
     fun includes(date: LocalDate): Boolean = date >= start && (endExclusive == null || date < endExclusive)
+
+    val isSingleDay: Boolean get() = endExclusive == start.plusDays(1)
+
+    /** Un saut s'annule le jour même, pas après coup. */
+    fun isCancellableOn(date: LocalDate): Boolean = isSingleDay && date == start
+
+    /**
+     * Reprise anticipée : la pause s'arrête au matin de [date]. Rendre `null` signifie que
+     * la pause n'a plus lieu d'être — la reprise précède son premier jour.
+     */
+    fun resumedOn(date: LocalDate): HabitPause? = when {
+        date <= start -> null
+        endExclusive != null && date >= endExclusive -> this
+        else -> copy(endExclusive = date)
+    }
+
+    companion object {
+        fun skip(date: LocalDate, reason: PauseReason, label: String? = null) = HabitPause(
+            start = date,
+            endExclusive = date.plusDays(1),
+            reason = reason,
+            reasonLabel = label?.trim()?.ifBlank { null }.takeIf { reason == PauseReason.CUSTOM },
+        )
+
+        /** Voyage sur une plage inclusive : le dernier jour est encore suspendu. */
+        fun travel(from: LocalDate, toInclusive: LocalDate): HabitPause {
+            require(toInclusive >= from) { "Travel must end on or after its first day" }
+            return HabitPause(from, toInclusive.plusDays(1), PauseReason.TRAVEL)
+        }
+    }
 }

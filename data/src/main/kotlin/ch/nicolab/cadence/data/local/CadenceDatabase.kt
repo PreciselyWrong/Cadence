@@ -36,7 +36,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 10,
+    version = 11,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -160,6 +160,18 @@ abstract class CadenceDatabase : RoomDatabase() {
         val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE habit_goals ADD COLUMN minimumMinor INTEGER")
+            }
+        }
+
+        /**
+         * Motive les pauses. `SKIPPED_TODAY`, seule valeur écrite jusqu'ici, devient un
+         * saut de repos; les autres pauses restent des pauses manuelles sans motif.
+         */
+        val MIGRATION_10_11 = object : Migration(10, 11) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habit_pauses ADD COLUMN reasonLabel TEXT")
+                db.execSQL("UPDATE habit_pauses SET reason = 'REST' WHERE reason = 'SKIPPED_TODAY'")
+                db.execSQL("UPDATE habit_pauses SET reason = 'MANUAL' WHERE reason IS NULL OR reason NOT IN ('REST', 'ILLNESS', 'TRAVEL', 'CUSTOM')")
             }
         }
     }

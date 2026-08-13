@@ -114,6 +114,7 @@ data class BackupPauseV2(
     val start: String,
     val endExclusive: String?,
     val reason: String?,
+    val reasonLabel: String? = null,
 )
 
 @Serializable

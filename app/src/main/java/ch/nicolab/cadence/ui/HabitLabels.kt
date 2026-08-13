@@ -5,6 +5,7 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
+import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import java.time.DayOfWeek
 
 /**
@@ -74,12 +75,20 @@ object HabitLabels {
     }
 
     /** Styles de widget persistés par clé technique, affichés en français. */
-    val WIDGET_STYLES: List<Pair<String, Int>> = listOf(
+    /** Libellé de chaque style du contrat de rendu, dans l'ordre où il est proposé. */
+    private val WIDGET_STYLE_LABELS: Map<String, Int> = mapOf(
         "HALO" to R.string.widget_style_halo,
         "OCEAN" to R.string.widget_style_ocean,
         "FOREST" to R.string.widget_style_forest,
         "AUBERGINE" to R.string.widget_style_aubergine,
         "CORAL" to R.string.widget_style_coral,
         "MONO" to R.string.widget_style_mono,
+        "SLATE" to R.string.widget_style_slate,
+        "SAND" to R.string.widget_style_sand,
+        "INK" to R.string.widget_style_ink,
     )
+
+    val WIDGET_STYLES: List<Pair<WidgetRenderStyle, Int>> = WidgetRenderStyle.all.mapNotNull { style ->
+        WIDGET_STYLE_LABELS[style.id]?.let { style to it }
+    }
 }

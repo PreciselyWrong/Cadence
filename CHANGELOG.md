@@ -1,6 +1,11 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- `Sauter aujourd’hui` demande un motif — repos, maladie, voyage ou raison libre — et le saut reste annulable le jour même.
+- Le mode voyage suspend plusieurs habitudes entre deux dates, avec sélection par groupe et reprise anticipée.
+- Trois styles de widget rejoignent le Halo : Ardoise, Sable et Encre.
+- Un rappel propose directement `Fait`, un incrément rapide et `Sauter`, sans ouvrir l’application.
+- Les statistiques indiquent le meilleur jour, le meilleur créneau horaire et comparent le mois courant au précédent.
 - Les statistiques montrent maintenant les douze dernières semaines sous forme de calendrier coloré.
 - Une habitude peut être masquée pour aujourd’hui sans être comptée comme faite.
 - Une nouvelle icône de dent rejoint les soins du quotidien.

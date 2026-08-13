@@ -61,6 +61,7 @@ import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
+import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.flow.first
@@ -98,7 +99,9 @@ class CadenceWidget : GlanceAppWidget() {
         )
         val pending = visibleGroupIds?.let { ids -> chosen.filter { it.habit.groupId in ids } } ?: chosen
         val iconBitmaps = pending.associate { item ->
-            val color = if (config.monochromeIcons) 0xFFF7F8FC.toInt() else item.habit.colorArgb ?: 0xFFF7F8FC.toInt()
+            // Le monochrome emprunte l'encre du style : elle reste lisible sur son fond.
+            val ink = WidgetRenderStyle.byId(config.theme).contentArgb
+            val color = if (config.monochromeIcons) ink else item.habit.colorArgb ?: ink
             item.habit.id to renderIcon(item.habit.iconId, color, config.iconSizeDp, config.iconOpacity, config.iconSaturation)
         }
         provideContent { WidgetLine(pending, config, iconBitmaps) }
@@ -107,12 +110,12 @@ class CadenceWidget : GlanceAppWidget() {
 
 @Composable
 private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>) {
-    val isMono = config.theme == "MONO"
+    val style = WidgetRenderStyle.byId(config.theme)
+    val isMono = style.isLight
     val alpha = config.opacity.coerceIn(0, 100) / 100f
-    val baseSurface = when (config.theme) { "OCEAN" -> Color(0xFF073B4C); "FOREST" -> Color(0xFF12372A); "AUBERGINE" -> Color(0xFF35155D); "CORAL" -> Color(0xFF6D2932); "MONO" -> Color(0xFFF7F8FC); else -> Color(0xFF171B2E) }
-    val surface = baseSurface.copy(alpha = alpha)
-    val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
-    val badge = (if (isMono) Color(0xFFE9EDF5) else Color.White).copy(alpha = if (isMono) .72f else .14f)
+    val surface = Color(style.surfaceArgb).copy(alpha = alpha)
+    val content = Color(style.contentArgb)
+    val badge = Color(style.badgeArgb).copy(alpha = style.badgeAlpha)
     val capacity = WidgetCapacityCalculator.calculateCapacity(
         LocalSize.current.width.value.toInt(),
         config.iconSizeDp,
@@ -134,7 +137,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     val labelColor = content.copy(alpha = config.labelOpacity.coerceIn(0, 100) / 100f)
     val valueColor = content.copy(alpha = config.valueOpacity.coerceIn(0, 100) / 100f)
     Box(
-        modifier = GlanceModifier.fillMaxSize().background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).clickable(actionStartActivity<MainActivity>()),
+        modifier = GlanceModifier.fillMaxSize().background(ColorProvider(day = surface, night = surface)).cornerRadius(style.cornerRadiusDp.dp).clickable(actionStartActivity<MainActivity>()),
     ) {
     Row(
         modifier = GlanceModifier.fillMaxSize().padding(horizontal = 10.dp),

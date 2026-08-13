@@ -16,15 +16,25 @@ import androidx.core.content.ContextCompat
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
+import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
+import ch.nicolab.cadence.domain.HabitPause
+import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.ui.HabitFormatter
+import ch.nicolab.cadence.widget.CadenceWidget
+import androidx.glance.appwidget.updateAll
 import java.time.DayOfWeek
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -92,9 +102,20 @@ class ReminderReceiver : BroadcastReceiver() {
                 val entries = app.repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
                 val pauses = app.repository.observePauses(habit.id).first()
                 val evaluation = HabitEvaluator().evaluate(habit.definition, today, entries, pauses)
-                if (!reminder.conditional || evaluation.needsAttentionNow) {
+                // Une habitude sautée ou suspendue reste silencieuse, même sans rappel
+                // conditionnel : la période est volontairement mise de côté.
+                if (!evaluation.isPaused && (!reminder.conditional || evaluation.needsAttentionNow)) {
                     val remaining = (habit.goal.targetMinor - evaluation.progressMinor).coerceAtLeast(0)
-                    showNotification(context, habit.name, if (reminder.conditional) "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim() else "Votre rappel est prêt")
+                    ReminderNotifications.show(
+                        context = context,
+                        habit = habit,
+                        quickValue = app.repository.getQuickValues(habit.id).minOfOrNull(HabitQuickValueEntity::amountMinor),
+                        message = if (reminder.conditional) {
+                            "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim()
+                        } else {
+                            "Votre rappel est prêt"
+                        },
+                    )
                 }
                 ReminderScheduler.schedule(context, reminder)
             } finally {
@@ -102,18 +123,160 @@ class ReminderReceiver : BroadcastReceiver() {
             }
         }
     }
+}
 
-    private fun showNotification(context: Context, title: String, message: String) {
-        if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
-        val open = PendingIntent.getActivity(context, 0, Intent(context, QuickEntryActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        val notification = NotificationCompat.Builder(context, ReminderScheduler.CHANNEL_ID)
+/**
+ * La notification porte les actions utiles au type d'objectif : `Fait` pour un binaire,
+ * un incrément rapide sinon, et toujours `Sauter`. Chacune écrit directement, sans
+ * ouvrir d'écran.
+ */
+object ReminderNotifications {
+    const val ACTION_DONE = "ch.nicolab.cadence.reminder.DONE"
+    const val ACTION_ADD = "ch.nicolab.cadence.reminder.ADD"
+    const val ACTION_SKIP = "ch.nicolab.cadence.reminder.SKIP"
+    const val EXTRA_HABIT_ID = "habit_id"
+    const val EXTRA_VALUE = "value_minor"
+
+    fun notificationId(habitId: String): Int = habitId.hashCode()
+
+    fun cancel(context: Context, habitId: String) {
+        NotificationManagerCompat.from(context).cancel(notificationId(habitId))
+    }
+
+    fun show(context: Context, habit: PersistedHabit, quickValue: Long?, message: String) {
+        if (Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        val open = PendingIntent.getActivity(
+            context,
+            notificationId(habit.id),
+            Intent(context, QuickEntryActivity::class.java).putExtra(QuickEntryActivity.EXTRA_HABIT_ID, habit.id),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val builder = NotificationCompat.Builder(context, ReminderScheduler.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_widget_mark)
-            .setContentTitle(title)
+            .setContentTitle(habit.name)
             .setContentText(message)
             .setContentIntent(open)
             .setAutoCancel(true)
-            .build()
-        NotificationManagerCompat.from(context).notify(title.hashCode(), notification)
+        if (habit.goal.goalType == GoalType.BINARY) {
+            builder.addAction(0, context.getString(R.string.notification_action_done), action(context, habit.id, ACTION_DONE))
+        } else {
+            val increment = quickValue ?: habit.goal.unit?.scaleToCanonical ?: 1L
+            builder.addAction(
+                0,
+                context.getString(
+                    R.string.notification_action_add,
+                    HabitFormatter.formatValue(increment, habit.goal.goalType, habit.goal.unit),
+                ),
+                action(context, habit.id, ACTION_ADD, increment),
+            )
+        }
+        builder.addAction(0, context.getString(R.string.notification_action_skip), action(context, habit.id, ACTION_SKIP))
+        NotificationManagerCompat.from(context).notify(notificationId(habit.id), builder.build())
+    }
+
+    private fun action(context: Context, habitId: String, action: String, value: Long = 0L): PendingIntent {
+        val intent = Intent(context, ReminderActionReceiver::class.java)
+            .setAction(action)
+            .putExtra(EXTRA_HABIT_ID, habitId)
+            .putExtra(EXTRA_VALUE, value)
+        return PendingIntent.getBroadcast(
+            context,
+            (habitId + action).hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+}
+
+/**
+ * Applique une action de notification. L'application se reconstruit sur la révision des
+ * saisies et des pauses; il reste à rafraîchir le widget et la notification elle-même.
+ */
+class ReminderActionReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val habitId = intent.getStringExtra(ReminderNotifications.EXTRA_HABIT_ID) ?: return
+        val action = intent.action ?: return
+        val pending = goAsync()
+        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+            try {
+                val repository = (context.applicationContext as CadenceApp).repository
+                val today = LocalDate.now()
+                val habit = repository.getHabitEffectiveAt(habitId, today)
+                if (habit == null) {
+                    ReminderNotifications.cancel(context, habitId)
+                    return@launch
+                }
+                val zone = ZoneId.systemDefault()
+                val evaluator = HabitEvaluator()
+                fun window() = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
+                suspend fun evaluate(): HabitEvaluation {
+                    val period = window()
+                    val entries = repository.observeEntries(habit.id, period.start, period.endExclusive.minusDays(1)).first()
+                    return evaluator.evaluate(habit.definition, today, entries, repository.observePauses(habit.id).first())
+                }
+
+                // Une habitude déjà terminée ou déjà sautée n'accepte plus l'action : la
+                // notification disparaît simplement.
+                if (evaluate().needsAttentionNow) {
+                    when (action) {
+                        ReminderNotifications.ACTION_DONE -> addEntry(repository, habit, habit.goal.targetMinor, zone, today)
+                        ReminderNotifications.ACTION_ADD -> addEntry(
+                            repository,
+                            habit,
+                            intent.getLongExtra(ReminderNotifications.EXTRA_VALUE, 0L).takeIf { it > 0 } ?: return@launch,
+                            zone,
+                            today,
+                        )
+                        ReminderNotifications.ACTION_SKIP -> repository.addPause(
+                            habit.id,
+                            UUID.randomUUID().toString(),
+                            HabitPause.skip(today, PauseReason.REST),
+                        )
+                    }
+                }
+                CadenceWidget().updateAll(context)
+                val updated = evaluate()
+                if (updated.needsAttentionNow) {
+                    val remaining = (habit.goal.targetMinor - updated.progressMinor).coerceAtLeast(0)
+                    ReminderNotifications.show(
+                        context = context,
+                        habit = habit,
+                        quickValue = repository.getQuickValues(habit.id).minOfOrNull(HabitQuickValueEntity::amountMinor),
+                        message = "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim(),
+                    )
+                } else {
+                    ReminderNotifications.cancel(context, habit.id)
+                }
+            } finally {
+                pending.finish()
+            }
+        }
+    }
+
+    private suspend fun addEntry(
+        repository: ch.nicolab.cadence.data.local.CadenceRepository,
+        habit: PersistedHabit,
+        valueMinor: Long,
+        zone: ZoneId,
+        today: LocalDate,
+    ) {
+        val id = UUID.randomUUID().toString()
+        repository.addEntry(
+            HabitEntry(
+                id = id,
+                habitId = habit.id,
+                occurredAt = java.time.Instant.now(),
+                localDate = today,
+                observedZoneId = zone,
+                valueMinor = valueMinor,
+                sessionId = id,
+            ),
+            source = "NOTIFICATION",
+        )
     }
 }
 
