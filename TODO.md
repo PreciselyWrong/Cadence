@@ -1,52 +1,25 @@
 # Cadence
 
+## Now
+- [ ]
+
+## Next
+- [ ]
+
 ## Ideas
-
-### Variantes supplémentaires du widget
-  - tags: [widget, ux]
-  - steps:
-      - [ ] Définir le contrat des styles de rendu
-      - [ ] Ajouter de nouveaux styles après validation du Halo
-
-### Chronomètre de durée
-  - tags: [habits]
-
-## Todo
-
-## In Progress
+- [ ] Variantes supplémentaires du widget
+  - [ ] Définir le contrat des styles de rendu
+  - [ ] Ajouter de nouveaux styles après validation du Halo
+- [ ] Chronomètre de durée
 
 ## Done
-
-### Rappels conditionnels
-  - tags: [notifications]
-  - workload: Hard
-
-### Historique et tendances utiles
-  - tags: [history, statistics]
-  - workload: Hard
-
-### Sauvegarde JSON versionnée
-  - tags: [backup]
-  - workload: Normal
-
-### Widget Halo compact
-  - tags: [glance, widget]
-  - workload: Extreme
-
-### Saisie rapide quotidienne
-  - tags: [compose, ux]
-  - workload: Hard
-
-### Persistance locale fiable
-  - tags: [room, data]
-  - workload: Hard
-
-### Moteur temporel fiable
-  - tags: [domain, tdd]
-  - workload: Extreme
-  - steps:
-      - [x] Initialiser un projet compilable
-      - [x] Écrire les tests de périodes
-      - [x] Faire passer les tests du filtrage actuel
+- [x] Rappels conditionnels
+- [x] Historique et tendances utiles
+- [x] Sauvegarde JSON versionnée
+- [x] Widget Halo compact
+- [x] Saisie rapide quotidienne
+- [x] Persistance locale fiable
+- [x] Moteur temporel fiable
 
 ## Dropped
+-
