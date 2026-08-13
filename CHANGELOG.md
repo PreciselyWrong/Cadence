@@ -1,6 +1,8 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Aujourd’hui et Habitudes se filtrent par groupe, avec `Tous` toujours à portée.
+- Une habitude change de groupe depuis ses options, et les groupes se réordonnent.
 - La série compte les périodes réussies : un jour non planifié, un saut ou un voyage la traverse sans la casser.
 - Les habitudes en durée peuvent proposer un chronomètre : démarrer, mettre en pause, reprendre, terminer ou réinitialiser, avec le palier atteint affiché en direct.
 - Une séance chronométrée reste visible depuis le widget et une notification, et se reprend d’un toucher.

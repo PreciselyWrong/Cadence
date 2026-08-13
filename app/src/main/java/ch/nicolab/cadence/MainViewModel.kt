@@ -356,6 +356,31 @@ class MainViewModel(
         refreshAll()
     }
 
+    /** Échange un groupe avec son voisin. `Journée` reste en tête : c'est le repli. */
+    fun moveGroup(groupId: String, direction: Int) = viewModelScope.launch {
+        val ordered = groups.value.sortedBy(HabitGroup::sortOrder)
+        val index = ordered.indexOfFirst { it.id == groupId }
+        val otherIndex = index + direction
+        if (index !in ordered.indices || otherIndex !in ordered.indices) return@launch
+        val current = ordered[index]
+        val other = ordered[otherIndex]
+        if (current.id == HabitGroup.ALL_DAY_ID || other.id == HabitGroup.ALL_DAY_ID) return@launch
+        repository.saveGroups(
+            listOf(
+                current.copy(sortOrder = other.sortOrder),
+                other.copy(sortOrder = current.sortOrder),
+            ),
+        )
+        refreshAll()
+    }
+
+    /** Déplace une habitude vers un autre groupe, sans toucher à son objectif. */
+    fun moveHabitToGroup(habit: PersistedHabit, groupId: String) = viewModelScope.launch {
+        if (habit.groupId == groupId) return@launch
+        repository.updateHabit(habit.copy(groupId = groupId))
+        refreshAll()
+    }
+
     fun exportBackup(onReady: (String) -> Unit) = viewModelScope.launch { onReady(repository.exportBackup()) }
 
     fun importBackup(content: String, onComplete: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {

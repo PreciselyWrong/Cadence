@@ -123,6 +123,13 @@
     <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
     <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
     <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
+    <string name="group_filter_all">Tous</string>
+    <string name="group_filter_empty">Aucune habitude dans ce groupe.</string>
+    <string name="group_move_title">Déplacer vers un groupe</string>
+    <string name="action_move_to_group">Changer de groupe</string>
+    <string name="group_move_up">Monter le groupe</string>
+    <string name="group_move_down">Descendre le groupe</string>
+    <string name="group_habit_count">%1$d habitude(s)</string>
     <string name="streak_section">Série</string>
     <plurals name="streak_current">
         <item quantity="one">%1$d période réussie d\'affilée</item>

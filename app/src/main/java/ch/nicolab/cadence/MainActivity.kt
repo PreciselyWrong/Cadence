@@ -43,6 +43,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Restore
+import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.TrackChanges
@@ -151,6 +152,10 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     var options by remember { mutableStateOf<HabitCardState?>(null) }
     var skipping by remember { mutableStateOf<HabitCardState?>(null) }
     var travelling by remember { mutableStateOf(false) }
+    var groupFilter by remember { mutableStateOf<String?>(null) }
+    // Un groupe supprimé pendant qu'il filtrait la vue ne doit pas la laisser vide.
+    if (groupFilter != null && groups.isNotEmpty() && groups.none { it.id == groupFilter }) groupFilter = null
+    var movingToGroup by remember { mutableStateOf<HabitCardState?>(null) }
     var deleting by remember { mutableStateOf<PersistedHabit?>(null) }
     var backupMessage by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
@@ -171,8 +176,8 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     CadenceScreen {
         Crossfade(tab, label = "tab") { current ->
             when (current) {
-                Tab.TODAY -> TodayScreen(habits, { quick = it }, { options = it }, { creating = true })
-                Tab.HABITS -> HabitsScreen(habits, { creating = true }, { options = it })
+                Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { quick = it }, { options = it }, { creating = true })
+                Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { creating = true }, { options = it })
                 Tab.STATS -> StatsScreen(habits)
                 Tab.SETTINGS -> SettingsScreen(
                     groups = groups,
@@ -180,6 +185,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
                     saveGroup = viewModel::saveGroup,
                     addGroup = { viewModel.addGroup(it, 8 * 60, 12 * 60) },
                     deleteGroup = viewModel::deleteGroup,
+                    moveGroup = viewModel::moveGroup,
                     startTravel = { travelling = true },
                     export = { exportLauncher.launch("cadence-backup.json") },
                     import = { importLauncher.launch(arrayOf("application/json")) },
@@ -229,12 +235,19 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             skipToday = { skipping = item; options = null },
             cancelSkip = { viewModel.cancelSkip(it); options = null },
             resumePause = { viewModel.resumePause(it); options = null },
+            moveToGroup = { movingToGroup = item; options = null },
             archive = { viewModel.archiveHabit(item.stored, !item.stored.archived); options = null },
             duplicate = { viewModel.duplicateHabit(item.stored); options = null },
             up = { viewModel.moveHabit(item.stored.id, -1); options = null },
             down = { viewModel.moveHabit(item.stored.id, 1); options = null },
             delete = { deleting = item.stored; options = null },
         )
+    }
+    movingToGroup?.let { item ->
+        GroupPickerSheet(item, groups, { movingToGroup = null }) { groupId ->
+            viewModel.moveHabitToGroup(item.stored, groupId)
+            movingToGroup = null
+        }
     }
     skipping?.let { item ->
         SkipSheet(habitTint(item), { skipping = null }) { reason, label ->
@@ -291,16 +304,30 @@ private fun ScreenList(
 }
 
 @Composable
-private fun TodayScreen(habits: List<HabitCardState>, quick: (HabitCardState) -> Unit, options: (HabitCardState) -> Unit, create: () -> Unit) {
-    val active = habits.filter { !it.stored.archived }
-    val pending = habits.filter { it.evaluation.needsAttentionNow }
+private fun TodayScreen(
+    habits: List<HabitCardState>,
+    groups: List<HabitGroup>,
+    selectedGroupId: String?,
+    onSelectGroup: (String?) -> Unit,
+    quick: (HabitCardState) -> Unit,
+    options: (HabitCardState) -> Unit,
+    create: () -> Unit,
+) {
+    val visible = habits.inGroup(selectedGroupId)
+    val active = visible.filter { !it.stored.archived }
+    val pending = visible.filter { it.evaluation.needsAttentionNow }
     val completed = active.filter { it.evaluation.isCompleted }
     ScreenList(
         context = stringResource(R.string.today_subtitle),
         title = stringResource(R.string.today_title),
         action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
     ) {
+        if (groups.size > 1) item { GroupFilter(groups, habits, selectedGroupId, onSelectGroup) }
         when {
+            // Un groupe vide n'est pas une application vide : ne pas proposer de créer.
+            active.isEmpty() && selectedGroupId != null -> item {
+                EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.group_filter_empty), stringResource(R.string.empty_habits_message))
+            }
             active.isEmpty() -> item {
                 EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message)) {
                     PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
@@ -319,15 +346,28 @@ private fun TodayScreen(habits: List<HabitCardState>, quick: (HabitCardState) ->
 }
 
 @Composable
-private fun HabitsScreen(habits: List<HabitCardState>, create: () -> Unit, options: (HabitCardState) -> Unit) {
-    val active = habits.filter { !it.stored.archived }
-    val archived = habits.filter { it.stored.archived }
+private fun HabitsScreen(
+    habits: List<HabitCardState>,
+    groups: List<HabitGroup>,
+    selectedGroupId: String?,
+    onSelectGroup: (String?) -> Unit,
+    create: () -> Unit,
+    options: (HabitCardState) -> Unit,
+) {
+    val visible = habits.inGroup(selectedGroupId)
+    val active = visible.filter { !it.stored.archived }
+    val archived = visible.filter { it.stored.archived }
     ScreenList(
         context = stringResource(R.string.habits_subtitle),
         title = stringResource(R.string.habits_title),
         action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
     ) {
-        if (active.isEmpty() && archived.isEmpty()) {
+        if (groups.size > 1) item { GroupFilter(groups, habits, selectedGroupId, onSelectGroup) }
+        if (active.isEmpty() && archived.isEmpty() && selectedGroupId != null) {
+            item {
+                EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.group_filter_empty), stringResource(R.string.empty_habits_message))
+            }
+        } else if (active.isEmpty() && archived.isEmpty()) {
             item {
                 EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message)) {
                     PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
@@ -452,6 +492,7 @@ private fun SettingsScreen(
     saveGroup: (HabitGroup) -> Unit,
     addGroup: (String) -> Unit,
     deleteGroup: (String) -> Unit,
+    moveGroup: (String, Int) -> Unit,
     startTravel: () -> Unit,
     export: () -> Unit,
     import: () -> Unit,
@@ -477,7 +518,7 @@ private fun SettingsScreen(
             }
         }
         items(groups, key = HabitGroup::id) { group ->
-            GroupPanel(group, habitCountByGroup[group.id] ?: 0, saveGroup, deleteGroup)
+            GroupPanel(group, habitCountByGroup[group.id] ?: 0, saveGroup, deleteGroup, moveGroup)
         }
         item {
             val newGroupName = stringResource(R.string.group_new_name)
@@ -521,6 +562,7 @@ private fun GroupPanel(
     habitCount: Int,
     save: (HabitGroup) -> Unit,
     delete: (String) -> Unit,
+    move: (String, Int) -> Unit,
 ) {
     val palette = cadence
     var name by remember(group.id, group.name) { mutableStateOf(group.name) }
@@ -556,9 +598,21 @@ private fun GroupPanel(
                 TertiaryAction(stringResource(R.string.group_delete), Modifier.weight(1f)) { delete(group.id) }
             }
         }
-        if (!fixedAllDay && habitCount > 0) {
+        if (!fixedAllDay) {
+            Spacer(Modifier.height(Space.sm))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+                TertiaryAction(stringResource(R.string.group_move_up), Modifier.weight(1f)) { move(group.id, -1) }
+                TertiaryAction(stringResource(R.string.group_move_down), Modifier.weight(1f)) { move(group.id, 1) }
+            }
+        }
+        if (habitCount > 0) {
             Spacer(Modifier.height(Space.xs))
-            Text(stringResource(R.string.group_delete_notice), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+            Text(
+                stringResource(R.string.group_habit_count, habitCount) +
+                    if (fixedAllDay) "" else " · " + stringResource(R.string.group_delete_notice),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.inkFaint,
+            )
         }
     }
 }
@@ -569,6 +623,61 @@ private fun formatMinuteOfDay(minute: Int?): String =
 /** Lit `HH:mm`; toute autre écriture laisse le groupe sans horaire plutôt que d'inventer une plage. */
 private fun parseMinuteOfDay(raw: String): Int? =
     runCatching { java.time.LocalTime.parse(raw.trim()) }.getOrNull()?.let { it.hour * 60 + it.minute }
+
+/** Déplacement d'une habitude d'un groupe à l'autre, sans passer par le formulaire complet. */
+@OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun GroupPickerSheet(
+    item: HabitCardState,
+    groups: List<HabitGroup>,
+    dismiss: () -> Unit,
+    choose: (String) -> Unit,
+) {
+    val tint = habitTint(item)
+    CadenceSheet(
+        title = stringResource(R.string.group_move_title),
+        subtitle = item.stored.name,
+        dismiss = dismiss,
+        leading = { HabitAvatar(item, tint) },
+    ) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            groups.forEach { group ->
+                ChoiceChip(group.name, item.stored.groupId == group.id, accent = tint) { choose(group.id) }
+            }
+        }
+        Spacer(Modifier.height(Space.xl))
+        SecondaryAction(stringResource(R.string.form_btn_cancel), Modifier.fillMaxWidth(), onClick = dismiss)
+    }
+}
+
+/** `null` signifie l'ensemble : le filtre restreint la vue, il ne cache jamais le reste. */
+private fun List<HabitCardState>.inGroup(groupId: String?): List<HabitCardState> =
+    if (groupId == null) this else filter { it.stored.groupId == groupId }
+
+/**
+ * Filtre par groupe. `Tous` reste toujours en tête et sélectionnable : accéder à
+ * l'ensemble ne doit jamais demander de deviner quel groupe choisir.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun GroupFilter(
+    groups: List<HabitGroup>,
+    habits: List<HabitCardState>,
+    selectedGroupId: String?,
+    onSelect: (String?) -> Unit,
+) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+        ChoiceChip(stringResource(R.string.group_filter_all), selectedGroupId == null) { onSelect(null) }
+        groups.forEach { group ->
+            // Un groupe sans aucune habitude n'encombre pas le filtre.
+            if (habits.any { it.stored.groupId == group.id }) {
+                ChoiceChip(group.name, selectedGroupId == group.id) {
+                    onSelect(group.id.takeIf { it != selectedGroupId })
+                }
+            }
+        }
+    }
+}
 
 /**
  * La série se lit en périodes planifiées réussies, pas en jours calendaires : le libellé
@@ -616,6 +725,7 @@ private fun HabitOptionsSheet(
     skipToday: () -> Unit,
     cancelSkip: (String) -> Unit,
     resumePause: (String) -> Unit,
+    moveToGroup: () -> Unit,
     archive: () -> Unit,
     duplicate: () -> Unit,
     up: () -> Unit,
@@ -659,6 +769,7 @@ private fun HabitOptionsSheet(
             tint,
             archive,
         )
+        ActionRow(Icons.Outlined.Sell, stringResource(R.string.action_move_to_group), tint, moveToGroup)
         ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate), tint, duplicate)
         ActionRow(Icons.Outlined.KeyboardArrowUp, stringResource(R.string.action_reorder_up), tint, up)
         ActionRow(Icons.Outlined.KeyboardArrowDown, stringResource(R.string.action_reorder_down), tint, down)

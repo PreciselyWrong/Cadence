@@ -1,16 +1,12 @@
 # Cadence
 
 ## Now
-- [ ] Groupes dans l’application
-  - Filtrer Aujourd’hui et Habitudes par groupe sans cacher l’accès à l’ensemble
-  - Créer, renommer, réordonner et supprimer un groupe; déplacer simplement ses habitudes
-  - Vérification : suppression avec habitudes, groupe vide, archive, duplication et sauvegarde
-
-## Next
 - [ ] Habitudes à limiter
   - Définir un maximum par période, par exemple deux cafés par jour
   - Rester sous la limite est positif; atteindre puis dépasser la limite devient progressivement visible
   - Vérification : aucune saisie négative, changement de limite sans réinterpréter l’historique
+
+## Next
 - [ ] Objectifs progressifs
   - Augmentation automatique configurable par semaine ou par mois, avec plafond facultatif
   - Prévisualiser les prochaines cibles et permettre d’arrêter la progression
@@ -45,6 +41,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Groupes dans l’application
 - [x] Séries intelligentes
 - [x] Chronomètre pour les habitudes de durée
 - [x] Variantes supplémentaires du widget
