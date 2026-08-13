@@ -11,6 +11,16 @@
   - La configuration reste accessible depuis le lanceur et sauvegarde tous les réglages
   - Vérification : tests des bornes horaires, minuit, fuseau, changement d’heure et migration des habitudes existantes vers `Journée`
 
+## Correctifs à venir
+- [ ] Rafraîchissement immédiat du widget
+  - Toute saisie, annulation, pause, saut ou modification d’habitude doit mettre à jour le widget placé sans attendre
+  - La confirmation de l’action ne s’affiche qu’après la demande de rafraîchissement du widget
+  - Vérification : saisie depuis l’application, saisie depuis le widget, annulation et plusieurs widgets placés
+- [ ] Aperçu direct dans les paramètres du widget
+  - Afficher un aperçu vivant qui reprend les réglages en cours avant l’enregistrement
+  - L’aperçu reflète style, fond, textes, icônes, transparence, saturation, monochrome, taille et nombre d’habitudes
+  - Vérification : chaque réglage se reflète immédiatement, sans modifier le widget placé avant l’enregistrement
+
 ## Next
 - [ ] Objectif minimum et idéal
   - Le minimum valide la période et la série; l’idéal marque une réussite complète
