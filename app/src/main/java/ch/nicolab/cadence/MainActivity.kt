@@ -76,6 +76,8 @@ import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
+import ch.nicolab.cadence.domain.GoalDirection
+import ch.nicolab.cadence.domain.LimitStatus
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.HabitTimer
@@ -430,10 +432,21 @@ private fun habitTint(item: HabitCardState): Color = item.stored.colorArgb?.let(
 private fun habitStatus(item: HabitCardState): String = when {
     item.stored.archived -> stringResource(R.string.status_archived)
     item.evaluation.isPaused -> stringResource(R.string.status_paused)
+    // Sous un plafond, la position vis-à-vis de la limite prime sur la progression.
+    item.evaluation.limitStatus != null -> "${limitLabel(item.evaluation.limitStatus!!)} · ${progress(item)}"
     // Le palier n'est annoncé que lorsque le minimum se distingue réellement de l'idéal.
     item.stored.goal.hasDistinctMinimum -> "${attainmentLabel(item.evaluation.attainment)} · ${progress(item)}"
     else -> progress(item)
 }
+
+@Composable
+private fun limitLabel(status: LimitStatus): String = stringResource(
+    when (status) {
+        LimitStatus.UNDER -> R.string.status_limit_under
+        LimitStatus.AT_LIMIT -> R.string.status_limit_at
+        LimitStatus.EXCEEDED -> R.string.status_limit_exceeded
+    },
+)
 
 @Composable
 private fun attainmentLabel(attainment: GoalAttainment): String = stringResource(
@@ -446,8 +459,17 @@ private fun attainmentLabel(attainment: GoalAttainment): String = stringResource
 
 @Composable
 private fun progress(item: HabitCardState): String {
-    val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, item.stored.goal.targetMinor, item.stored.goal.goalType, item.stored.goal.unit)
-    val frequency = item.stored.goal.frequencyTarget ?: return quantity
+    val goal = item.stored.goal
+    // `2 / 2` se lirait comme un objectif atteint : un plafond s'annonce comme un maximum.
+    if (goal.isLimit) {
+        return stringResource(
+            R.string.limit_progress,
+            HabitFormatter.formatValue(item.evaluation.progressMinor, goal.goalType, goal.unit),
+            HabitFormatter.formatValue(goal.targetMinor, goal.goalType, goal.unit),
+        )
+    }
+    val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit)
+    val frequency = goal.frequencyTarget ?: return quantity
     return stringResource(R.string.habit_sessions_format, quantity, item.evaluation.sessionCount, frequency)
 }
 
@@ -969,6 +991,7 @@ private class EditorState(
     groupId: String = HabitGroup.ALL_DAY_ID,
     minimum: String = "",
     timerEnabled: Boolean = false,
+    limited: Boolean = false,
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -993,6 +1016,7 @@ private class EditorState(
     var groupId by mutableStateOf(groupId)
     var minimum by mutableStateOf(minimum)
     var timerEnabled by mutableStateOf(timerEnabled)
+    var limited by mutableStateOf(limited)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -1021,6 +1045,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 intervalDays = stored?.schedule?.intervalDays?.toString() ?: "2",
                 groupId = stored?.groupId ?: HabitGroup.ALL_DAY_ID,
                 timerEnabled = stored?.timerEnabled ?: false,
+                limited = stored?.goal?.isLimit ?: false,
                 minimum = stored?.goal?.minimumMinor
                     ?.let { (it / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
                     .orEmpty(),
@@ -1107,8 +1132,31 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                         }
                     }
                     if (state.goalType != GoalType.BINARY) {
-                        item { CadenceField(state.target, { state.target = it.filter(Char::isDigit) }, stringResource(R.string.form_target_label), accent = accent, numeric = true) }
                         item {
+                            FieldGroup(stringResource(R.string.form_direction_label)) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    ChoiceChip(stringResource(R.string.form_direction_at_least), !state.limited, accent = accent) {
+                                        state.limited = false
+                                    }
+                                    ChoiceChip(stringResource(R.string.form_direction_at_most), state.limited, accent = accent) {
+                                        // Un plafond ne porte pas de minimum : il n'aurait aucun sens.
+                                        state.limited = true
+                                        state.minimum = ""
+                                    }
+                                }
+                            }
+                        }
+                        item {
+                            CadenceField(
+                                state.target,
+                                { state.target = it.filter(Char::isDigit) },
+                                stringResource(if (state.limited) R.string.form_limit_label else R.string.form_target_label),
+                                support = stringResource(R.string.form_limit_support).takeIf { state.limited },
+                                accent = accent,
+                                numeric = true,
+                            )
+                        }
+                        if (!state.limited) item {
                             CadenceField(
                                 state.minimum,
                                 { state.minimum = it.filter(Char::isDigit) },
@@ -1141,7 +1189,8 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                         item { CadenceField(state.customName, { state.customName = it }, stringResource(R.string.form_custom_unit_name), accent = accent) }
                         item { CadenceField(state.customSymbol, { state.customSymbol = it }, stringResource(R.string.form_custom_unit_symbol), accent = accent) }
                     }
-                    item {
+                    // La fréquence minimale n'a pas de sens sous un plafond.
+                    if (!state.limited) item {
                         CadenceField(
                             state.frequencyTarget,
                             { state.frequencyTarget = it.filter(Char::isDigit) },
@@ -1285,8 +1334,9 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                     period = state.period,
                                     goalType = state.goalType,
                                     unit = unit,
-                                    frequencyTarget = frequency,
-                                    minimumMinor = minimum,
+                                    frequencyTarget = frequency.takeUnless { state.limited },
+                                    minimumMinor = minimum.takeUnless { state.limited },
+                                    direction = if (state.limited) GoalDirection.AT_MOST else GoalDirection.AT_LEAST,
                                 ),
                                 schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay, state.intervalDays.toIntOrNull() ?: 2),
                             )

@@ -82,9 +82,25 @@ enum class ScheduleMode {
     INTERVAL_DAYS,
 }
 
+/** Sens d'un objectif : atteindre une cible, ou rester sous un maximum. */
+enum class GoalDirection {
+    AT_LEAST,
+    AT_MOST,
+}
+
+/** Où se situe une habitude à limiter par rapport à son maximum. */
+enum class LimitStatus {
+    UNDER,
+    AT_LIMIT,
+    EXCEEDED,
+}
+
 /**
  * `targetMinor` est l'idéal, `minimumMinor` le seuil qui valide la période et la série.
  * Sans minimum explicite, les deux se confondent : un objectif hérité garde son sens.
+ *
+ * En [GoalDirection.AT_MOST], `targetMinor` devient un maximum : la période réussit tant
+ * que la quantité y reste inférieure ou égale.
  */
 data class HabitGoal(
     val targetMinor: Long,
@@ -93,6 +109,7 @@ data class HabitGoal(
     val unit: MeasurementUnit? = null,
     val frequencyTarget: Int? = null,
     val minimumMinor: Long? = null,
+    val direction: GoalDirection = GoalDirection.AT_LEAST,
 ) {
     init {
         require(targetMinor > 0) { "Target must be positive" }
@@ -101,7 +118,14 @@ data class HabitGoal(
             require(it > 0) { "Minimum must be positive" }
             require(it <= targetMinor) { "Minimum cannot exceed the ideal" }
         }
+        if (direction == GoalDirection.AT_MOST) {
+            // Un minimum n'a pas de sens sous un plafond, et un binaire ne se compte pas.
+            require(minimumMinor == null) { "A limit carries no minimum" }
+            require(goalType != GoalType.BINARY) { "A limit needs a countable goal" }
+        }
     }
+
+    val isLimit: Boolean get() = direction == GoalDirection.AT_MOST
 
     val effectiveMinimumMinor: Long get() = minimumMinor ?: targetMinor
 

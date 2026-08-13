@@ -53,6 +53,7 @@ data class BackupGoalV2(
     val unit: BackupUnitV2? = null,
     val frequencyTarget: Int? = null,
     val minimumMinor: Long? = null,
+    val direction: String = "AT_LEAST",
     val effectiveFrom: String,
 )
 

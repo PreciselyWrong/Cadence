@@ -16,6 +16,7 @@ import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
 
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGoal
@@ -149,6 +150,7 @@ class CadenceRepository(
                 habitId = habit.id,
                 targetMinor = habit.goal.targetMinor,
                 minimumMinor = habit.goal.minimumMinor,
+                direction = habit.goal.direction.name,
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -207,6 +209,7 @@ class CadenceRepository(
                 habitId = habit.id,
                 targetMinor = habit.goal.targetMinor,
                 minimumMinor = habit.goal.minimumMinor,
+                direction = habit.goal.direction.name,
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -554,6 +557,7 @@ class CadenceRepository(
                     habitId = g.habitId,
                     targetMinor = g.targetMinor,
                     minimumMinor = g.minimumMinor,
+                    direction = g.direction,
                     period = g.period,
                     goalType = g.goalType,
                     unit = unit,
@@ -715,6 +719,7 @@ class CadenceRepository(
                         habitId = g.habitId,
                         targetMinor = g.targetMinor,
                         minimumMinor = g.minimumMinor,
+                        direction = g.direction,
                         period = g.period,
                         goalType = g.goalType,
                         unitId = g.unit?.id,
@@ -840,6 +845,10 @@ class CadenceRepository(
                 g.minimumMinor?.let {
                     require(it > 0) { "Goal minimumMinor must be positive" }
                     require(it <= g.targetMinor) { "Goal minimumMinor cannot exceed the ideal" }
+                }
+                require(GoalDirection.entries.any { it.name == g.direction }) { "Goal direction is invalid" }
+                if (g.direction == GoalDirection.AT_MOST.name) {
+                    require(g.minimumMinor == null) { "A limit carries no minimum" }
                 }
                 require(g.frequencyTarget == null || g.frequencyTarget > 0) { "Frequency target must be positive" }
                 g.unit?.let { require(it.scaleToCanonical > 0) { "Unit scale must be positive" } }
@@ -1008,6 +1017,7 @@ class CadenceRepository(
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,
+                direction = GoalDirection.valueOf(goalEntity.direction),
                 period = PeriodType.valueOf(goalEntity.period),
                 goalType = GoalType.valueOf(goalEntity.goalType),
                 unit = unit,

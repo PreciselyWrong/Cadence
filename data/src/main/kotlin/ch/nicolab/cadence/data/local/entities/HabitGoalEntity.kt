@@ -32,5 +32,7 @@ data class HabitGoalEntity(
     val frequencyTarget: Int? = null,
     /** Seuil qui valide la période; nul lorsqu'il se confond avec l'idéal. */
     val minimumMinor: Long? = null,
+    /** `AT_LEAST` pour une cible à atteindre, `AT_MOST` pour un maximum à ne pas dépasser. */
+    @ColumnInfo(defaultValue = "AT_LEAST") val direction: String = "AT_LEAST",
     val effectiveFrom: String,
 )

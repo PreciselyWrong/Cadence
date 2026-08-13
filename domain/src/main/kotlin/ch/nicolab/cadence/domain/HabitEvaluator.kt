@@ -14,6 +14,8 @@ data class HabitEvaluation(
     /** Minimum et fréquence atteints : la période compte comme réussie. */
     val validatesPeriod: Boolean,
     val attainment: GoalAttainment,
+    /** Position vis-à-vis du maximum, nulle hors habitude à limiter. */
+    val limitStatus: LimitStatus?,
     val sessionCount: Int,
     val completedFrequency: Boolean,
     val isCompleted: Boolean,
@@ -48,12 +50,24 @@ class HabitEvaluator {
         val withoutSession = periodEntries.count { it.sessionId == null }
         val sessionCount = withSession + withoutSession
 
+        val limit = habit.goal.isLimit
+        val limitStatus = when {
+            !limit -> null
+            progress < habit.goal.targetMinor -> LimitStatus.UNDER
+            progress == habit.goal.targetMinor -> LimitStatus.AT_LIMIT
+            else -> LimitStatus.EXCEEDED
+        }
+
         val completedQuantity = progress >= habit.goal.targetMinor
         val reachedMinimum = progress >= habit.goal.effectiveMinimumMinor
         val completedFrequency = habit.goal.frequencyTarget == null || sessionCount >= habit.goal.frequencyTarget
-        val validatesPeriod = reachedMinimum && completedFrequency
-        val isCompleted = completedQuantity && completedFrequency
+
+        // Sous un plafond, la réussite est de ne pas le dépasser; la fréquence ne s'applique pas.
+        val validatesPeriod =
+            if (limit) limitStatus != LimitStatus.EXCEEDED else reachedMinimum && completedFrequency
+        val isCompleted = if (limit) validatesPeriod else completedQuantity && completedFrequency
         val attainment = when {
+            limit -> if (validatesPeriod) GoalAttainment.IDEAL else GoalAttainment.TODO
             isCompleted -> GoalAttainment.IDEAL
             validatesPeriod -> GoalAttainment.MINIMUM
             else -> GoalAttainment.TODO
@@ -63,7 +77,10 @@ class HabitEvaluator {
 
         val isPlannedForDate = isPlannedOn(habit, date)
 
-        val needsAttentionNow = isPlannedForDate && !paused && !isCompleted
+        // Une habitude à limiter reste offerte à la saisie tant qu'il reste de la place :
+        // c'est ce qui permet de noter un café, alors qu'il n'y a rien à « accomplir ».
+        val needsAttentionNow = isPlannedForDate && !paused &&
+            if (limit) limitStatus == LimitStatus.UNDER else !isCompleted
 
         return HabitEvaluation(
             habit = habit,
@@ -73,6 +90,7 @@ class HabitEvaluator {
             reachedMinimum = reachedMinimum,
             validatesPeriod = validatesPeriod,
             attainment = attainment,
+            limitStatus = limitStatus,
             sessionCount = sessionCount,
             completedFrequency = completedFrequency,
             isCompleted = isCompleted,

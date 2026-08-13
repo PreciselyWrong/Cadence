@@ -1,16 +1,12 @@
 # Cadence
 
 ## Now
-- [ ] Habitudes à limiter
-  - Définir un maximum par période, par exemple deux cafés par jour
-  - Rester sous la limite est positif; atteindre puis dépasser la limite devient progressivement visible
-  - Vérification : aucune saisie négative, changement de limite sans réinterpréter l’historique
-
-## Next
 - [ ] Objectifs progressifs
   - Augmentation automatique configurable par semaine ou par mois, avec plafond facultatif
   - Prévisualiser les prochaines cibles et permettre d’arrêter la progression
   - Vérification : fuseaux, changements de mois, plafonds et objectifs versionnés
+
+## Next
 - [ ] Notes rapides sur les saisies
   - Ajouter ou modifier une note courte depuis la saisie rapide et l’historique
   - Vérification : plusieurs saisies le même jour, sauvegarde et restauration
@@ -41,6 +37,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Habitudes à limiter
 - [x] Groupes dans l’application
 - [x] Séries intelligentes
 - [x] Chronomètre pour les habitudes de durée

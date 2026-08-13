@@ -39,7 +39,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 12,
+    version = 13,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -196,6 +196,16 @@ abstract class CadenceDatabase : RoomDatabase() {
                     )
                     """.trimIndent(),
                 )
+            }
+        }
+
+        /**
+         * Introduit les habitudes à limiter. Les objectifs existants gardent leur sens :
+         * une cible à atteindre, jamais un plafond.
+         */
+        val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN direction TEXT NOT NULL DEFAULT 'AT_LEAST'")
             }
         }
     }

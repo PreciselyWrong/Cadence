@@ -123,6 +123,15 @@
     <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
     <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
     <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
+    <string name="form_direction_label">Sens de l\'objectif</string>
+    <string name="form_direction_at_least">Atteindre</string>
+    <string name="form_direction_at_most">Limiter</string>
+    <string name="form_limit_label">Maximum par période *</string>
+    <string name="form_limit_support">Par exemple deux cafés par jour. Rester en dessous est une réussite.</string>
+    <string name="status_limit_under">Sous la limite</string>
+    <string name="status_limit_at">Limite atteinte</string>
+    <string name="status_limit_exceeded">Limite dépassée</string>
+    <string name="limit_progress">%1$s sur %2$s max</string>
     <string name="group_filter_all">Tous</string>
     <string name="group_filter_empty">Aucune habitude dans ce groupe.</string>
     <string name="group_move_title">Déplacer vers un groupe</string>

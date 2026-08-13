@@ -93,10 +93,13 @@ object StreakCalculator {
         if (plannedDays.all { day -> pauses.any { it.includes(day) } }) return PeriodOutcome.NEUTRAL
 
         val validated = evaluator.evaluate(habit, cursor, entries, pauses).validatesPeriod
+        val running = window.includes(today)
         return when {
+            // Sous un plafond, rien n'est acquis tant que la période peut encore le franchir.
+            running && habit.goal.isLimit -> PeriodOutcome.NEUTRAL
             validated -> PeriodOutcome.VALIDATED
             // La période courante n'est pas finie : elle ne peut pas encore échouer.
-            window.includes(today) -> PeriodOutcome.NEUTRAL
+            running -> PeriodOutcome.NEUTRAL
             else -> PeriodOutcome.FAILED
         }
     }
