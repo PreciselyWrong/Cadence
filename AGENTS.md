@@ -25,6 +25,8 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - Les changements d'objectif ou de période prennent effet à la période suivante.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
 - Le widget Halo est la première variante d'un système de rendu extensible.
+- Une habitude appartient à un seul groupe. `Journée` (`HabitGroup.ALL_DAY_ID`) n'a pas d'horaire, ne se supprime pas et récupère les habitudes d'un groupe supprimé.
+- Les plages de groupes peuvent se chevaucher et traverser minuit; une plage dont la fin égale le début couvre l'horloge entière.
 - Plus Jakarta Sans est embarquée localement; aucune police n'est téléchargée à l'exécution.
 - `app-release/version.json` est l'unique source de version lue par le build Android.
 - L'interface suit un design system unique — `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
@@ -52,6 +54,8 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Placer la valeur du widget à côté de l’icône — elle s’affiche dessous et l’apparence reste configurable.
 - ⛔ Cacher les options d’une habitude derrière trois points — un appui long ouvre les actions depuis Aujourd’hui comme depuis Habitudes.
 - ⛔ Afficher une saisie rapide comme une pile de cartes grises — le modal porte la couleur de l’habitude et montre son historique.
+- ⛔ Conserver en mémoire l’état des habitudes sans écouter les révisions de saisies et de pauses — une écriture venue du widget doit remonter immédiatement dans l’application.
+- ⛔ Répéter l’unité d’une durée — `formatValue` la porte déjà (`1 h 5 min`), jamais `1 h min`.
 - ⛔ Limiter la configuration d’un widget à sa création — un widget placé doit rester reconfigurable depuis le lanceur.
 - ⛔ Poser une interface Compose directement sur la fenêtre système — chaque écran fournit un fond et une couleur de contenu explicites pour garantir le contraste.
 - ⛔ Afficher un nom d'énumération du domaine — l'interface est intégralement en français via `strings.xml` et `HabitLabels`.

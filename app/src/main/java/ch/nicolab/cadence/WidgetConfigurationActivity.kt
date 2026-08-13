@@ -12,6 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -47,13 +48,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.time.LocalTime
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.WidgetGroupMode
+import ch.nicolab.cadence.domain.WidgetGroupSelection
+import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
+import ch.nicolab.cadence.ui.icon.HabitIconRegistry
+import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
+import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
 import ch.nicolab.cadence.ui.components.CadenceScreen
 import ch.nicolab.cadence.ui.components.ChoiceChip
 import ch.nicolab.cadence.ui.components.ErrorText
@@ -148,6 +156,13 @@ private fun WidgetConfiguration(
     var groupMode by remember { mutableStateOf(WidgetGroupMode.fromStorage(initial.groupMode)) }
     var groupId by remember { mutableStateOf(initial.groupId ?: groups.firstOrNull()?.id) }
 
+    // L'aperçu applique les mêmes filtres que le widget : sélection d'habitudes puis groupe.
+    val previewHabits = remember(all, selected, groupMode, groupId, habits, groups) {
+        val chosen = if (all || selected.isEmpty()) habits else habits.filter { it.id in selected }
+        val visible = WidgetGroupSelection.visibleGroupIds(groupMode, groups, groupId, LocalTime.now())
+        (visible?.let { ids -> chosen.filter { it.groupId in ids } } ?: chosen).filter { !it.archived }
+    }
+
     CadenceScreen {
         LazyColumn(
             Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = Space.gutter),
@@ -170,6 +185,33 @@ private fun WidgetConfiguration(
                         }
                     }
                 }
+            }
+
+            item { SectionLabel(stringResource(R.string.widget_config_preview_section)) }
+            item {
+                WidgetPreview(
+                    habits = previewHabits,
+                    theme = style,
+                    opacity = opacity.toInt(),
+                    iconSizeDp = iconSize.toInt(),
+                    iconOpacity = iconOpacity.toInt(),
+                    iconSaturation = iconSaturation.toInt(),
+                    monochromeIcons = monochromeIcons,
+                    showLabels = showLabels,
+                    labelTextSizeSp = labelTextSize.toInt(),
+                    labelOpacity = labelOpacity.toInt(),
+                    showValues = showValues,
+                    valueTextSizeSp = valueTextSize.toInt(),
+                    valueOpacity = valueOpacity.toInt(),
+                    showDoneIndicator = showDone,
+                    maxHabitsPerRow = maxHabitsPerRow.toInt(),
+                )
+                Spacer(Modifier.height(Space.sm))
+                Text(
+                    stringResource(R.string.widget_config_preview_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = palette.inkFaint,
+                )
             }
 
             item { SectionLabel(stringResource(R.string.widget_config_groups_section)) }
@@ -317,6 +359,127 @@ private fun WidgetConfiguration(
             }
         }
     }
+}
+
+/**
+ * Aperçu vivant du widget. Il reprend la mise en page réelle — mêmes calculs de capacité
+ * et de visibilité des textes — sans toucher au widget déjà placé, qui n'est mis à jour
+ * qu'à l'enregistrement.
+ */
+@Composable
+private fun WidgetPreview(
+    habits: List<PersistedHabit>,
+    theme: String,
+    opacity: Int,
+    iconSizeDp: Int,
+    iconOpacity: Int,
+    iconSaturation: Int,
+    monochromeIcons: Boolean,
+    showLabels: Boolean,
+    labelTextSizeSp: Int,
+    labelOpacity: Int,
+    showValues: Boolean,
+    valueTextSizeSp: Int,
+    valueOpacity: Int,
+    showDoneIndicator: Boolean,
+    maxHabitsPerRow: Int,
+) {
+    val isMono = theme == "MONO"
+    val baseSurface = when (theme) {
+        "OCEAN" -> Color(0xFF073B4C)
+        "FOREST" -> Color(0xFF12372A)
+        "AUBERGINE" -> Color(0xFF35155D)
+        "CORAL" -> Color(0xFF6D2932)
+        "MONO" -> Color(0xFFF7F8FC)
+        else -> Color(0xFF171B2E)
+    }
+    val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
+    val badge = (if (isMono) Color(0xFFE9EDF5) else Color.White).copy(alpha = if (isMono) .72f else .14f)
+    val height = (iconSizeDp + 8 + (if (showLabels) labelTextSizeSp + 6 else 0) + (if (showValues) valueTextSizeSp + 6 else 0) + 20).dp
+
+    BoxWithConstraints(
+        Modifier
+            .fillMaxWidth()
+            .height(height)
+            .clip(Radius.Panel)
+            .background(baseSurface.copy(alpha = opacity.coerceIn(0, 100) / 100f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        val widthDp = maxWidth.value.toInt()
+        val capacity = WidgetCapacityCalculator.calculateCapacity(widthDp, iconSizeDp, habits.size, maxHabitsPerRow)
+        val configuredCount = habits.size.coerceAtMost(maxHabitsPerRow.coerceIn(1, 6))
+        val spaceOverflow = capacity < configuredCount && capacity > 1
+        val visibleCount = if (spaceOverflow) capacity - 1 else capacity
+        val cellWidth = ((maxWidth.value - 20f) / capacity.coerceAtLeast(1)).dp
+        val textVisibility = WidgetLayoutCalculator.resolve(
+            height.value.toInt(),
+            iconSizeDp,
+            showLabels,
+            showValues,
+            labelTextSizeSp,
+            valueTextSizeSp,
+        )
+        if (habits.isEmpty()) {
+            if (showDoneIndicator) Icon(Icons.Outlined.Check, null, tint = content, modifier = Modifier.size(Size.icon))
+        } else {
+            Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                habits.take(visibleCount).forEach { habit ->
+                    val tint = previewIconColor(habit.colorArgb, monochromeIcons, iconSaturation)
+                    Column(Modifier.width(cellWidth), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            Modifier.size((iconSizeDp + 8).dp).clip(CircleShape).background(badge),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            val icon = HabitIconRegistry.getIcon(habit.iconId)
+                            Icon(
+                                icon.imageVector,
+                                icon.labelFr,
+                                tint = tint.copy(alpha = iconOpacity.coerceIn(0, 100) / 100f),
+                                modifier = Modifier.size(iconSizeDp.dp),
+                            )
+                        }
+                        if (textVisibility.showLabels) {
+                            Text(
+                                habit.name,
+                                maxLines = 1,
+                                fontSize = labelTextSizeSp.sp,
+                                color = content.copy(alpha = labelOpacity.coerceIn(0, 100) / 100f),
+                            )
+                        }
+                        if (textVisibility.showValues) {
+                            Text(
+                                HabitFormatter.formatCompactProgress(0, habit.goal.targetMinor, habit.goal.goalType, habit.goal.unit),
+                                maxLines = 1,
+                                fontSize = valueTextSizeSp.sp,
+                                color = content.copy(alpha = valueOpacity.coerceIn(0, 100) / 100f),
+                            )
+                        }
+                    }
+                }
+                if (spaceOverflow) {
+                    Box(Modifier.width(cellWidth), contentAlignment = Alignment.Center) {
+                        Text("+${configuredCount - visibleCount}", color = content)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Même résultat que le filtre de saturation appliqué au rendu du widget : la saturation
+ * ramène la teinte vers sa luminance, le mode monochrome ignore la couleur de l'habitude.
+ */
+private fun previewIconColor(colorArgb: Int?, monochrome: Boolean, saturation: Int): Color {
+    val base = Color(if (monochrome) 0xFFF7F8FC.toInt() else colorArgb ?: 0xFFF7F8FC.toInt())
+    val factor = saturation.coerceIn(0, 100) / 100f
+    val luminance = 0.213f * base.red + 0.715f * base.green + 0.072f * base.blue
+    return Color(
+        red = luminance + (base.red - luminance) * factor,
+        green = luminance + (base.green - luminance) * factor,
+        blue = luminance + (base.blue - luminance) * factor,
+        alpha = base.alpha,
+    )
 }
 
 @Composable
