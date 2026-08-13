@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -59,7 +60,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, dismiss: () -> Unit) {
         contentAlignment = Alignment.BottomCenter,
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth().pointerInput(Unit) { detectVerticalDragGestures { _, drag -> if (drag > 120f) dismiss() } }.clickable(enabled = false) {},
+            modifier = Modifier.fillMaxWidth().navigationBarsPadding().pointerInput(Unit) { detectVerticalDragGestures { _, drag -> if (drag > 120f) dismiss() } }.clickable(enabled = false) {},
             shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {

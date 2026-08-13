@@ -1,3 +1,8 @@
+## [1.0.4] — 13 août 2026
+
+### Corrections
+- Les actions restent accessibles au-dessus des boutons du téléphone.
+
 ## [1.0.3] — 13 août 2026
 
 ### Corrections

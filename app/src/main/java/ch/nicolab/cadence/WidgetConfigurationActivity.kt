@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -59,7 +60,7 @@ private fun WidgetConfiguration(habits: List<PersistedHabit>, save: (List<String
     var all by remember { mutableStateOf(true) }
     var selected by remember { mutableStateOf(emptySet<String>()) }
     var style by remember { mutableStateOf("HALO") }
-    Column(Modifier.fillMaxSize().padding(24.dp)) {
+    Column(Modifier.fillMaxSize().safeDrawingPadding().padding(24.dp)) {
         Text("Configurer le widget", style = MaterialTheme.typography.headlineSmall)
         Text("Une seule ligne, uniquement les objectifs en attente.", color = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.height(20.dp))
