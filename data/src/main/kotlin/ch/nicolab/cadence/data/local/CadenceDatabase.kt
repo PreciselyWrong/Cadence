@@ -36,7 +36,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 9,
+    version = 10,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -150,6 +150,16 @@ abstract class CadenceDatabase : RoomDatabase() {
                 db.execSQL("UPDATE habits SET groupId = '${HabitGroup.ALL_DAY_ID}'")
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN groupMode TEXT NOT NULL DEFAULT 'ALL'")
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN groupId TEXT")
+            }
+        }
+
+        /**
+         * Introduit le minimum d'un objectif. Les objectifs existants restent sans minimum
+         * distinct : leur cible seule continue de valider la période.
+         */
+        val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN minimumMinor INTEGER")
             }
         }
     }

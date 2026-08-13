@@ -51,6 +51,7 @@ data class BackupGoalV2(
     val goalType: String = "QUANTITY",
     val unit: BackupUnitV2? = null,
     val frequencyTarget: Int? = null,
+    val minimumMinor: Long? = null,
     val effectiveFrom: String,
 )
 

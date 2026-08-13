@@ -134,6 +134,7 @@ class CadenceRepository(
                 id = UUID.randomUUID().toString(),
                 habitId = habit.id,
                 targetMinor = habit.goal.targetMinor,
+                minimumMinor = habit.goal.minimumMinor,
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -196,6 +197,7 @@ class CadenceRepository(
                 id = UUID.randomUUID().toString(),
                 habitId = habit.id,
                 targetMinor = habit.goal.targetMinor,
+                minimumMinor = habit.goal.minimumMinor,
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -475,6 +477,7 @@ class CadenceRepository(
                     id = g.id,
                     habitId = g.habitId,
                     targetMinor = g.targetMinor,
+                    minimumMinor = g.minimumMinor,
                     period = g.period,
                     goalType = g.goalType,
                     unit = unit,
@@ -633,6 +636,7 @@ class CadenceRepository(
                         id = g.id,
                         habitId = g.habitId,
                         targetMinor = g.targetMinor,
+                        minimumMinor = g.minimumMinor,
                         period = g.period,
                         goalType = g.goalType,
                         unitId = g.unit?.id,
@@ -754,6 +758,10 @@ class CadenceRepository(
             habit.goals.forEach { g ->
                 require(g.habitId == habit.id) { "Goal habitId mismatch" }
                 require(g.targetMinor > 0) { "Goal targetMinor must be positive" }
+                g.minimumMinor?.let {
+                    require(it > 0) { "Goal minimumMinor must be positive" }
+                    require(it <= g.targetMinor) { "Goal minimumMinor cannot exceed the ideal" }
+                }
                 require(g.frequencyTarget == null || g.frequencyTarget > 0) { "Frequency target must be positive" }
                 g.unit?.let { require(it.scaleToCanonical > 0) { "Unit scale must be positive" } }
                 LocalDate.parse(g.effectiveFrom)
@@ -919,6 +927,7 @@ class CadenceRepository(
             groupId = relation.habit.groupId,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
+                minimumMinor = goalEntity.minimumMinor,
                 period = PeriodType.valueOf(goalEntity.period),
                 goalType = GoalType.valueOf(goalEntity.goalType),
                 unit = unit,

@@ -7,7 +7,13 @@ data class HabitEvaluation(
     val habit: HabitDefinition,
     val period: PeriodWindow,
     val progressMinor: Long,
+    /** Quantité idéale atteinte. */
     val completedQuantity: Boolean,
+    /** Quantité minimale atteinte : c'est elle qui valide la période et la série. */
+    val reachedMinimum: Boolean,
+    /** Minimum et fréquence atteints : la période compte comme réussie. */
+    val validatesPeriod: Boolean,
+    val attainment: GoalAttainment,
     val sessionCount: Int,
     val completedFrequency: Boolean,
     val isCompleted: Boolean,
@@ -34,8 +40,15 @@ class HabitEvaluator {
         val sessionCount = withSession + withoutSession
 
         val completedQuantity = progress >= habit.goal.targetMinor
+        val reachedMinimum = progress >= habit.goal.effectiveMinimumMinor
         val completedFrequency = habit.goal.frequencyTarget == null || sessionCount >= habit.goal.frequencyTarget
+        val validatesPeriod = reachedMinimum && completedFrequency
         val isCompleted = completedQuantity && completedFrequency
+        val attainment = when {
+            isCompleted -> GoalAttainment.IDEAL
+            validatesPeriod -> GoalAttainment.MINIMUM
+            else -> GoalAttainment.TODO
+        }
 
         val paused = pauses.any { it.includes(date) }
 
@@ -53,6 +66,9 @@ class HabitEvaluator {
             period = period,
             progressMinor = progress,
             completedQuantity = completedQuantity,
+            reachedMinimum = reachedMinimum,
+            validatesPeriod = validatesPeriod,
+            attainment = attainment,
             sessionCount = sessionCount,
             completedFrequency = completedFrequency,
             isCompleted = isCompleted,
@@ -60,7 +76,8 @@ class HabitEvaluator {
             isPlannedForDate = isPlannedForDate,
             needsAttentionNow = needsAttentionNow,
             requiresAction = needsAttentionNow,
-            countsAsFailure = isPlannedForDate && !paused && !isCompleted,
+            // Une période où le minimum est atteint n'est pas un échec, même sans l'idéal.
+            countsAsFailure = isPlannedForDate && !paused && !validatesPeriod,
         )
     }
 }

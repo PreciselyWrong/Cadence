@@ -30,6 +30,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
 - Le widget Halo est la première variante d'un système de rendu extensible.
 - Une habitude appartient à un seul groupe. `Journée` (`HabitGroup.ALL_DAY_ID`) n'a pas d'horaire, ne se supprime pas et récupère les habitudes d'un groupe supprimé.
+- `HabitGoal.targetMinor` est l'idéal, `minimumMinor` le seuil qui valide la période et la série; sans minimum les deux se confondent. `validatesPeriod` porte la série, `isCompleted` l'idéal.
 - Les plages de groupes peuvent se chevaucher et traverser minuit; une plage dont la fin égale le début couvre l'horloge entière.
 - Plus Jakarta Sans est embarquée localement; aucune police n'est téléchargée à l'exécution.
 - `app-release/version.json` est l'unique source de version lue par le build Android.

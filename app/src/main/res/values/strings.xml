@@ -116,6 +116,13 @@
     <string name="action_delete">Supprimer</string>
     <string name="status_paused">En pause</string>
     <string name="status_archived">Archivée</string>
+    <string name="status_todo">À faire</string>
+    <string name="status_minimum_reached">Minimum atteint</string>
+    <string name="status_ideal_reached">Idéal atteint</string>
+    <string name="form_minimum_label">Minimum</string>
+    <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
+    <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
+    <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
 
     <string name="delete_dialog_title">Supprimer l\'habitude ?</string>
     <string name="delete_dialog_message">Cette action est irréversible. Tout l\'historique et l\'ensemble des entrées de cette habitude seront définitivement supprimés.</string>

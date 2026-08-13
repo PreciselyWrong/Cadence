@@ -82,17 +82,38 @@ enum class ScheduleMode {
     INTERVAL_DAYS,
 }
 
+/**
+ * `targetMinor` est l'idéal, `minimumMinor` le seuil qui valide la période et la série.
+ * Sans minimum explicite, les deux se confondent : un objectif hérité garde son sens.
+ */
 data class HabitGoal(
     val targetMinor: Long,
     val period: PeriodType,
     val goalType: GoalType = GoalType.QUANTITY,
     val unit: MeasurementUnit? = null,
     val frequencyTarget: Int? = null,
+    val minimumMinor: Long? = null,
 ) {
     init {
         require(targetMinor > 0) { "Target must be positive" }
         require(frequencyTarget == null || frequencyTarget > 0) { "Frequency target must be positive" }
+        minimumMinor?.let {
+            require(it > 0) { "Minimum must be positive" }
+            require(it <= targetMinor) { "Minimum cannot exceed the ideal" }
+        }
     }
+
+    val effectiveMinimumMinor: Long get() = minimumMinor ?: targetMinor
+
+    /** Vrai lorsque le minimum et l'idéal se distinguent réellement. */
+    val hasDistinctMinimum: Boolean get() = effectiveMinimumMinor < targetMinor
+}
+
+/** Ce qu'une période a atteint : rien, le minimum, ou l'idéal. */
+enum class GoalAttainment {
+    TODO,
+    MINIMUM,
+    IDEAL,
 }
 
 data class HabitSchedule(

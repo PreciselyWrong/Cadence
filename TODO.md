@@ -1,22 +1,6 @@
 # Cadence
 
 ## Now
-- [ ] Objectif minimum et idéal
-  - Le minimum valide la période et la série; l’idéal marque une réussite complète
-  - L’interface montre clairement `À faire`, `Minimum atteint` et `Idéal atteint`
-  - Vérification : objectifs quotidiens, hebdomadaires, mensuels, fréquences et historique versionné
-
-## Fonctions à venir
-- [ ] Synchroniser les activités sportives via Health Connect
-  - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
-  - Associer une habitude, par exemple `Cardio`, à un type d’activité suivi par la montre ou une application compatible
-  - Importer la durée des séances compatibles pour compléter automatiquement l’objectif de durée, y compris le minimum et l’idéal
-  - Continuer d’accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
-  - Montrer clairement l’origine de chaque durée : montre, chronomètre ou ajout manuel
-  - Permettre de choisir les activités importées, de les ignorer, de les corriger ou de les désactiver à tout moment
-  - Vérification : permission refusée, montre déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
-
-## Next
 - [ ] Chronomètre pour les habitudes de durée
   - Proposer un mode chronomètre activable pour les objectifs en durée, sans le rendre obligatoire
   - La saisie rapide affiche `Démarrer`, `Pause`, `Reprendre`, `Terminer` et `Réinitialiser`
@@ -25,6 +9,18 @@
   - Préserver un chronomètre en cours après rotation, retour à l’application et redémarrage du processus
   - Le widget et les notifications indiquent qu’un chronomètre est actif et permettent de le reprendre rapidement
   - Vérification : passage minimum/idéal, pause longue, minuit, changement de fuseau, annulation, réinitialisation et double appui
+
+## Fonctions à venir
+- [ ] Actions depuis les notifications
+  - Proposer `Fait`, `+1` et `Sauter` selon le type d’objectif
+  - Mettre à jour immédiatement l’application et le widget sans ouvrir d’écran inutile
+  - Vérification : action répétée, habitude déjà terminée, permission refusée et redémarrage
+- [ ] Groupes dans l’application
+  - Filtrer Aujourd’hui et Habitudes par groupe sans cacher l’accès à l’ensemble
+  - Créer, renommer, réordonner et supprimer un groupe; déplacer simplement ses habitudes
+  - Vérification : suppression avec habitudes, groupe vide, archive, duplication et sauvegarde
+
+## Next
 - [ ] Habitudes à limiter
   - Définir un maximum par période, par exemple deux cafés par jour
   - Rester sous la limite est positif; atteindre puis dépasser la limite devient progressivement visible
@@ -57,23 +53,24 @@
   - Comparer le mois courant au précédent pour minimum, idéal, quantité et régularité
   - Éviter toute conclusion lorsque l’échantillon est insuffisant
   - Vérification : mois incomplet, habitudes récentes, pauses, limites et fuseaux
-- [ ] Actions depuis les notifications
-  - Proposer `Fait`, `+1` et `Sauter` selon le type d’objectif
-  - Mettre à jour immédiatement l’application et le widget sans ouvrir d’écran inutile
-  - Vérification : action répétée, habitude déjà terminée, permission refusée et redémarrage
-- [ ] Groupes dans l’application
-  - Filtrer Aujourd’hui et Habitudes par groupe sans cacher l’accès à l’ensemble
-  - Créer, renommer, réordonner et supprimer un groupe; déplacer simplement ses habitudes
-  - Vérification : suppression avec habitudes, groupe vide, archive, duplication et sauvegarde
+
 
 ## Ideas
 - [ ] Variantes supplémentaires du widget
   - [ ] Définir le contrat des styles de rendu
   - [ ] Ajouter de nouveaux styles après validation du Halo
-- [ ] Chronomètre de durée
 - [ ] Valeurs rapides propres à chaque groupe ou moment de la journée
+- [ ] Synchroniser les activités sportives via Health Connect
+  - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
+  - Associer une habitude, par exemple `Cardio`, à un type d’activité suivi par la montre ou une application compatible
+  - Importer la durée des séances compatibles pour compléter automatiquement l’objectif de durée, y compris le minimum et l’idéal
+  - Continuer d’accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
+  - Montrer clairement l’origine de chaque durée : montre, chronomètre ou ajout manuel
+  - Permettre de choisir les activités importées, de les ignorer, de les corriger ou de les désactiver à tout moment
+  - Vérification : permission refusée, montre déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Objectif minimum et idéal
 - [x] Corriger une saisie et l’historique
 - [x] Groupes d’habitudes et widget contextuel
 - [x] Synchronisation widget vers l’application

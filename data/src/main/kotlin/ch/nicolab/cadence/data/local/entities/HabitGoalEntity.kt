@@ -30,5 +30,7 @@ data class HabitGoalEntity(
     val unitSymbol: String? = null,
     val unitScaleToCanonical: Long? = null,
     val frequencyTarget: Int? = null,
+    /** Seuil qui valide la période; nul lorsqu'il se confond avec l'idéal. */
+    val minimumMinor: Long? = null,
     val effectiveFrom: String,
 )

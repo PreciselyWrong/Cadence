@@ -69,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
@@ -363,8 +364,19 @@ private fun habitTint(item: HabitCardState): Color = item.stored.colorArgb?.let(
 private fun habitStatus(item: HabitCardState): String = when {
     item.stored.archived -> stringResource(R.string.status_archived)
     item.evaluation.isPaused -> stringResource(R.string.status_paused)
+    // Le palier n'est annoncé que lorsque le minimum se distingue réellement de l'idéal.
+    item.stored.goal.hasDistinctMinimum -> "${attainmentLabel(item.evaluation.attainment)} · ${progress(item)}"
     else -> progress(item)
 }
+
+@Composable
+private fun attainmentLabel(attainment: GoalAttainment): String = stringResource(
+    when (attainment) {
+        GoalAttainment.TODO -> R.string.status_todo
+        GoalAttainment.MINIMUM -> R.string.status_minimum_reached
+        GoalAttainment.IDEAL -> R.string.status_ideal_reached
+    },
+)
 
 @Composable
 private fun progress(item: HabitCardState): String {
@@ -737,6 +749,7 @@ private class EditorState(
     frequencyTarget: String = "",
     intervalDays: String = "2",
     groupId: String = HabitGroup.ALL_DAY_ID,
+    minimum: String = "",
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -759,6 +772,7 @@ private class EditorState(
     var frequencyTarget by mutableStateOf(frequencyTarget)
     var intervalDays by mutableStateOf(intervalDays)
     var groupId by mutableStateOf(groupId)
+    var minimum by mutableStateOf(minimum)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -786,6 +800,9 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 frequencyTarget = stored?.goal?.frequencyTarget?.toString().orEmpty(),
                 intervalDays = stored?.schedule?.intervalDays?.toString() ?: "2",
                 groupId = stored?.groupId ?: HabitGroup.ALL_DAY_ID,
+                minimum = stored?.goal?.minimumMinor
+                    ?.let { (it / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
+                    .orEmpty(),
             ),
         )
     }.value
@@ -800,6 +817,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
     val noDay = stringResource(R.string.form_error_no_day)
     val badTime = stringResource(R.string.form_error_time_format)
     val badInterval = stringResource(R.string.form_error_interval_days)
+    val badMinimum = stringResource(R.string.form_error_minimum)
 
     CadenceSheet(
         title = stringResource(stepTitles[state.step]),
@@ -860,6 +878,16 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                     }
                     if (state.goalType != GoalType.BINARY) {
                         item { CadenceField(state.target, { state.target = it.filter(Char::isDigit) }, stringResource(R.string.form_target_label), accent = accent, numeric = true) }
+                        item {
+                            CadenceField(
+                                state.minimum,
+                                { state.minimum = it.filter(Char::isDigit) },
+                                stringResource(R.string.form_minimum_label),
+                                support = stringResource(R.string.form_minimum_support),
+                                accent = accent,
+                                numeric = true,
+                            )
+                        }
                         item {
                             val units = when (state.goalType) {
                                 GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS)
@@ -997,8 +1025,10 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                     val quick = state.quickValues.split(',', ' ').mapNotNull(String::toLongOrNull).filter { it > 0 }.map { it * (unit?.scaleToCanonical ?: 1) }
                     val reminderTimes = state.reminderTimes.split(',', ' ').map(String::trim).filter(String::isNotBlank)
                     val frequency = state.frequencyTarget.toIntOrNull()
+                    val minimum = state.minimum.toLongOrNull()?.times(unit?.scaleToCanonical ?: 1)
                     when {
                         target <= 0 -> error = positiveTarget
+                        state.minimum.isNotBlank() && (minimum == null || minimum <= 0 || minimum > target * (unit?.scaleToCanonical ?: 1)) -> error = badMinimum
                         state.frequencyTarget.isNotBlank() && (frequency ?: 0) <= 0 -> error = positiveFrequency
                         state.customUnit && (state.customName.isBlank() || state.customSymbol.isBlank()) -> error = incompleteUnit
                         state.scheduleMode == ScheduleMode.SELECTED_DAYS && state.activeDays.isEmpty() -> error = noDay
@@ -1019,7 +1049,14 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                 createdAtEpochMs = base?.createdAtEpochMs ?: 0,
                                 updatedAtEpochMs = base?.updatedAtEpochMs ?: 0,
                                 groupId = state.groupId,
-                                goal = HabitGoal(target * (unit?.scaleToCanonical ?: 1), state.period, state.goalType, unit, frequency),
+                                goal = HabitGoal(
+                                    targetMinor = target * (unit?.scaleToCanonical ?: 1),
+                                    period = state.period,
+                                    goalType = state.goalType,
+                                    unit = unit,
+                                    frequencyTarget = frequency,
+                                    minimumMinor = minimum,
+                                ),
                                 schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay, state.intervalDays.toIntOrNull() ?: 2),
                             )
                             save(habit, quick, reminderTimes, state.conditionalReminders, stored == null)
