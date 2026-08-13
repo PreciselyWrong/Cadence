@@ -9,6 +9,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -73,6 +76,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -176,12 +181,12 @@ private fun ScreenTitle(title: String, caption: String, create: () -> Unit) = Ro
 
 @Composable
 private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, done: Boolean = false, edit: ((HabitCardState) -> Unit)? = null) {
-    val ratio = (item.evaluation.progressMinor.toFloat() / item.stored.goal.targetMinor).coerceIn(0f, 1f)
+    val ratio by animateFloatAsState((item.evaluation.progressMinor.toFloat() / item.stored.goal.targetMinor).coerceIn(0f, 1f), tween(420), label = "ratio")
     val icon = HabitIconRegistry.getIcon(item.stored.iconId)
     val tint = item.stored.colorArgb?.let(::Color) ?: MaterialTheme.colorScheme.primary
     Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = if (done) MaterialTheme.colorScheme.surfaceContainerLow else tint.copy(alpha = .12f))) {
         Row(Modifier.fillMaxWidth().combinedClickable(onClick = { quick(item) }, onLongClick = { edit?.invoke(item) }).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(48.dp).background(tint.copy(alpha = .16f), CircleShape), contentAlignment = Alignment.Center) { Icon(icon.imageVector, icon.labelFr, tint = tint) }
+            RingBadge(icon.imageVector, icon.labelFr, tint, ratio)
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f)) {
                 Text(item.stored.name, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -189,6 +194,20 @@ private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, don
                 Text(progress(item), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp))
             }
         }
+    }
+}
+
+/** Icon badge ringed by the habit's own progress — the cadence completing a turn. */
+@Composable
+private fun RingBadge(icon: ImageVector, label: String?, tint: Color, ratio: Float, size: androidx.compose.ui.unit.Dp = 48.dp) {
+    Box(Modifier.size(size), contentAlignment = Alignment.Center) {
+        Canvas(Modifier.fillMaxSize()) {
+            val stroke = Stroke(width = 2.6.dp.toPx(), cap = StrokeCap.Round)
+            val inset = stroke.width / 2
+            drawArc(tint.copy(alpha = .18f), 0f, 360f, false, topLeft = androidx.compose.ui.geometry.Offset(inset, inset), size = androidx.compose.ui.geometry.Size(size.toPx() - stroke.width, size.toPx() - stroke.width), style = stroke)
+            if (ratio > 0f) drawArc(tint, -90f, 360f * ratio, false, topLeft = androidx.compose.ui.geometry.Offset(inset, inset), size = androidx.compose.ui.geometry.Size(size.toPx() - stroke.width, size.toPx() - stroke.width), style = stroke)
+        }
+        Box(Modifier.size(size - 10.dp).background(tint.copy(alpha = .16f), CircleShape), contentAlignment = Alignment.Center) { Icon(icon, label, tint = tint) }
     }
 }
 
