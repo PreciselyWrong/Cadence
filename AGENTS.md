@@ -10,6 +10,9 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 |---|---|
 | Tests domaine | `$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'; .\gradlew.bat :domain:test` |
 | Build debug | `$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'; .\gradlew.bat :app:assembleDebug` |
+| Préparer le développement | `.\dev.ps1 -Plan -NonInteractive` |
+| Lancer sur un appareil ADB | `.\dev.ps1 -NonInteractive` |
+| Préparer une publication | `.\publish.ps1 -Plan -NonInteractive` |
 
 ## Carte
 `domain/` — calculs temporels et règles métier Kotlin sans Android.
