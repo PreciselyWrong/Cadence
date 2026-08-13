@@ -14,6 +14,10 @@
 - Le widget propose davantage de couleurs, de tailles et de transparence.
 - Le mode sombre gagne en contraste et en couleurs.
 - L’icône choisie reste visible pendant toute la modification.
+- La saisie rapide adopte la couleur de l’habitude et montre son rythme récent.
+- Un appui long remplace les trois points sur Aujourd’hui et Habitudes.
+- Les widgets déjà placés peuvent être reconfigurés.
+- Depuis le widget, seule la fiche rapide apparaît au-dessus de l’écran d’accueil.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.
 - Toutes les options d’une habitude sont réunies dans un menu simple.
 

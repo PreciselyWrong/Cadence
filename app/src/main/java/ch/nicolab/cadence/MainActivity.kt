@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,6 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Restore
@@ -136,7 +136,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
 
     Scaffold(bottomBar = { NavigationBar { Tab.entries.forEach { item -> NavigationBarItem(tab == item, { tab = item }, { Icon(item.icon, stringResource(item.label)) }, label = { Text(stringResource(item.label)) }) } } }) { inset ->
         when (tab) {
-            Tab.TODAY -> TodayScreen(habits, Modifier.padding(inset), { quick = it }, { creating = true })
+            Tab.TODAY -> TodayScreen(habits, Modifier.padding(inset), { quick = it }, { editor = it }, { creating = true })
             Tab.HABITS -> HabitsScreen(habits, Modifier.padding(inset), { creating = true }, { editor = it }, viewModel::duplicateHabit, { viewModel.archiveHabit(it, !it.archived) }, viewModel::togglePause, viewModel::moveHabit, { deleting = it })
             Tab.STATS -> StatsScreen(habits, Modifier.padding(inset))
             Tab.SETTINGS -> SettingsScreen(Modifier.padding(inset), { exportLauncher.launch("cadence-backup.json") }, { importLauncher.launch(arrayOf("application/json")) }, backupMessage)
@@ -156,14 +156,14 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
 }
 
 @Composable
-private fun TodayScreen(habits: List<HabitCardState>, modifier: Modifier, quick: (HabitCardState) -> Unit, create: () -> Unit) {
+private fun TodayScreen(habits: List<HabitCardState>, modifier: Modifier, quick: (HabitCardState) -> Unit, edit: (HabitCardState) -> Unit, create: () -> Unit) {
     val pending = habits.filter { it.evaluation.needsAttentionNow }
     val completed = habits.filter { !it.stored.archived && it.evaluation.isCompleted }
     LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { Spacer(Modifier.height(16.dp)); ScreenTitle(stringResource(R.string.today_title), stringResource(R.string.today_subtitle), create) }
-        if (habits.none { !it.stored.archived }) item { EmptyHabits(create) } else if (pending.isEmpty()) item { EmptyDone() } else items(pending, key = { it.stored.id }) { HabitCard(it, quick) }
+        if (habits.none { !it.stored.archived }) item { EmptyHabits(create) } else if (pending.isEmpty()) item { EmptyDone() } else items(pending, key = { it.stored.id }) { HabitCard(it, quick, edit = edit) }
         if (completed.isNotEmpty()) item { Text("Terminé", style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 12.dp)) }
-        items(completed, key = { "done-${it.stored.id}" }) { HabitCard(it, quick, done = true) }
+        items(completed, key = { "done-${it.stored.id}" }) { HabitCard(it, quick, done = true, edit = edit) }
         item { Spacer(Modifier.height(24.dp)) }
     }
 }
@@ -175,12 +175,12 @@ private fun ScreenTitle(title: String, caption: String, create: () -> Unit) = Ro
 }
 
 @Composable
-private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, done: Boolean = false, actions: (@Composable () -> Unit)? = null) {
+private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, done: Boolean = false, edit: ((HabitCardState) -> Unit)? = null) {
     val ratio = (item.evaluation.progressMinor.toFloat() / item.stored.goal.targetMinor).coerceIn(0f, 1f)
     val icon = HabitIconRegistry.getIcon(item.stored.iconId)
     val tint = item.stored.colorArgb?.let(::Color) ?: MaterialTheme.colorScheme.primary
-    Card(onClick = { quick(item) }, shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = if (done) MaterialTheme.colorScheme.surfaceContainerLow else MaterialTheme.colorScheme.surfaceContainer)) {
-        Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = if (done) MaterialTheme.colorScheme.surfaceContainerLow else tint.copy(alpha = .12f))) {
+        Row(Modifier.fillMaxWidth().combinedClickable(onClick = { quick(item) }, onLongClick = { edit?.invoke(item) }).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(48.dp).background(tint.copy(alpha = .16f), CircleShape), contentAlignment = Alignment.Center) { Icon(icon.imageVector, icon.labelFr, tint = tint) }
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f)) {
@@ -188,7 +188,6 @@ private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, don
                 Spacer(Modifier.height(7.dp)); LinearProgressIndicator({ ratio }, Modifier.fillMaxWidth().height(5.dp).clip(CircleShape), color = tint)
                 Text(progress(item), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp))
             }
-            actions?.invoke()
         }
     }
 }
@@ -207,7 +206,7 @@ private fun HabitsScreen(habits: List<HabitCardState>, modifier: Modifier, creat
     var options by remember { mutableStateOf<HabitCardState?>(null) }
     LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { Spacer(Modifier.height(16.dp)); ScreenTitle(stringResource(R.string.habits_title), stringResource(R.string.habits_subtitle), create) }
-        items(habits, key = { it.stored.id }) { item -> HabitCard(item, {}, actions = { IconButton({ options = item }) { Icon(Icons.Outlined.MoreVert, "Options de ${item.stored.name}") } }) }
+        items(habits, key = { it.stored.id }) { item -> HabitCard(item, {}, edit = { options = it }) }
         item { Spacer(Modifier.height(24.dp)) }
     }
     options?.let { item -> HabitOptionsDialog(item, { options = null }, { edit(item); options = null }, { pause(item); options = null }, { archive(item.stored); options = null }, { duplicate(item.stored); options = null }, { move(item.stored.id, -1); options = null }, { move(item.stored.id, 1); options = null }, { delete(item.stored); options = null }) }
@@ -254,7 +253,22 @@ private fun StatsScreen(habits: List<HabitCardState>, modifier: Modifier) = Lazy
 }
 
 @Composable
-private fun SettingsScreen(modifier: Modifier, export: () -> Unit, import: () -> Unit, message: String?) = Column(modifier.fillMaxSize().padding(20.dp)) { Text(stringResource(R.string.tab_settings), style = MaterialTheme.typography.headlineMedium); Spacer(Modifier.height(20.dp)); Text("Données", style = MaterialTheme.typography.titleMedium); Text("Sauvegarde locale versionnée", color = MaterialTheme.colorScheme.onSurfaceVariant); Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 10.dp)) { FilledTonalButton(export) { Text("Exporter") }; FilledTonalButton(import) { Text("Importer") } }; message?.let { Text(it, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 12.dp)) } }
+private fun SettingsScreen(modifier: Modifier, export: () -> Unit, import: () -> Unit, message: String?) = Column(modifier.fillMaxSize().padding(20.dp)) {
+    Text(stringResource(R.string.tab_settings), style = MaterialTheme.typography.headlineMedium)
+    Spacer(Modifier.height(20.dp))
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer), shape = RoundedCornerShape(26.dp)) {
+        Column(Modifier.fillMaxWidth().padding(20.dp)) {
+            Text("Widget", style = MaterialTheme.typography.titleLarge)
+            Text("Appui long sur le widget, puis Configurer.", color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text("Taille · couleur · transparence · valeurs · habitudes", style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 10.dp))
+        }
+    }
+    Spacer(Modifier.height(20.dp))
+    Text("Données", style = MaterialTheme.typography.titleMedium)
+    Text("Sauvegarde locale versionnée", color = MaterialTheme.colorScheme.onSurfaceVariant)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 10.dp)) { FilledTonalButton(export) { Text("Exporter") }; FilledTonalButton(import) { Text("Importer") } }
+    message?.let { Text(it, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 12.dp)) }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -262,8 +276,8 @@ private fun QuickSheet(item: HabitCardState, add: (Long) -> Unit, undo: () -> Un
     var custom by remember { mutableStateOf("") }
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) { val icon = HabitIconRegistry.getIcon(item.stored.iconId); Icon(icon.imageVector, icon.labelFr); Spacer(Modifier.width(10.dp)); Column { Text(item.stored.name, style = MaterialTheme.typography.headlineSmall); Text(progress(item), color = MaterialTheme.colorScheme.onSurfaceVariant) } }
-            Spacer(Modifier.height(20.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) { val icon = HabitIconRegistry.getIcon(item.stored.iconId); val tint = item.stored.colorArgb?.let(::Color) ?: MaterialTheme.colorScheme.primary; Box(Modifier.size(58.dp).background(tint, RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) { Icon(icon.imageVector, icon.labelFr, tint = Color.White) }; Spacer(Modifier.width(14.dp)); Column { Text(item.stored.name, style = MaterialTheme.typography.headlineSmall); Text(progress(item), color = MaterialTheme.colorScheme.onSurfaceVariant) } }
+            HabitHistoryGraph(item.history, item.stored.colorArgb?.let(::Color) ?: MaterialTheme.colorScheme.primary, Modifier.fillMaxWidth().padding(vertical = 18.dp))
             if (item.stored.goal.goalType == GoalType.BINARY) Button({ add(1); dismiss() }, Modifier.fillMaxWidth().height(56.dp)) { Text(stringResource(R.string.quick_btn_validate)) } else {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { item.quickValues.ifEmpty { listOf(item.stored.goal.unit?.scaleToCanonical ?: 1) }.forEach { value -> FilledTonalButton({ add(value) }) { Text("+${HabitFormatter.formatValue(value, item.stored.goal.goalType, item.stored.goal.unit)}") } } }
                 OutlinedTextField(custom, { custom = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.quick_custom_value_label)) }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 12.dp), suffix = { Text(item.stored.goal.unit?.symbol.orEmpty()) })

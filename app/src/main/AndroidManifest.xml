@@ -24,6 +24,8 @@
         <activity
             android:name=".QuickEntryActivity"
             android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.Cadence.QuickEntry" />
         <activity
             android:name=".WidgetConfigurationActivity"

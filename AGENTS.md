@@ -45,6 +45,9 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Masquer la sélection ou l’action principale d’un formulaire — l’icône choisie et le bouton d’enregistrement doivent rester clairement visibles.
 - ⛔ Ouvrir une saisie globale depuis une icône du widget — chaque icône cible uniquement son habitude et disparaît lorsque celle-ci est terminée.
 - ⛔ Placer la valeur du widget à côté de l’icône — elle s’affiche dessous et l’apparence reste configurable.
+- ⛔ Cacher les options d’une habitude derrière trois points — un appui long ouvre les actions depuis Aujourd’hui comme depuis Habitudes.
+- ⛔ Afficher une saisie rapide comme une pile de cartes grises — le modal porte la couleur de l’habitude et montre son historique.
+- ⛔ Limiter la configuration d’un widget à sa création — un widget placé doit rester reconfigurable depuis le lanceur.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

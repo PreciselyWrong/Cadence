@@ -44,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -96,10 +97,11 @@ private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
     val sessionId = remember(habit.stored.id) { UUID.randomUUID().toString() }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+    val tint = habit.stored.colorArgb?.let(::Color) ?: MaterialTheme.colorScheme.primary
+    Card(colors = CardDefaults.cardColors(containerColor = tint.copy(alpha = .16f)), shape = RoundedCornerShape(28.dp)) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) { Box(Modifier.size(44.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape), contentAlignment = Alignment.Center) { Icon(icon.imageVector, icon.labelFr) }; Spacer(Modifier.width(12.dp)); Column { Text(habit.stored.name, style = MaterialTheme.typography.titleMedium); Text(HabitFormatter.formatProgress(habit.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit), color = MaterialTheme.colorScheme.onSurfaceVariant) } }
-            Spacer(Modifier.height(10.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) { Box(Modifier.size(52.dp).background(tint, RoundedCornerShape(18.dp)), contentAlignment = Alignment.Center) { Icon(icon.imageVector, icon.labelFr, tint = Color.White) }; Spacer(Modifier.width(12.dp)); Column { Text(habit.stored.name, style = MaterialTheme.typography.titleLarge); Text(HabitFormatter.formatProgress(habit.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit), color = MaterialTheme.colorScheme.onSurfaceVariant) } }
+            HabitHistoryGraph(habit.history, tint, Modifier.fillMaxWidth().padding(vertical = 16.dp))
             if (goal.goalType == GoalType.BINARY) Button({ add(1, sessionId) }, Modifier.fillMaxWidth().height(52.dp)) { Text(stringResource(R.string.quick_btn_validate)) }
             else {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { habit.quickValues.ifEmpty { listOf(goal.unit?.scaleToCanonical ?: 1) }.forEach { value -> FilledTonalButton({ add(value, sessionId) }) { Text("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}") } } }

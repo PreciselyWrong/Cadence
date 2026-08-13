@@ -1,7 +1,8 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="180dp"
-    android:minHeight="56dp"
+    android:minHeight="76dp"
     android:configure="ch.nicolab.cadence.WidgetConfigurationActivity"
     android:resizeMode="horizontal"
+    android:widgetFeatures="reconfigurable"
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/glance_default_loading_layout" />
