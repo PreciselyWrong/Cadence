@@ -51,7 +51,7 @@ fun CadenceSheet(
         shape = Radius.Sheet,
         containerColor = palette.surface,
         contentColor = palette.ink,
-        scrimColor = palette.structural.copy(alpha = 0.55f),
+        scrimColor = palette.structural.copy(alpha = 0.72f),
         dragHandle = {
             Box(Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs), contentAlignment = Alignment.Center) {
                 Box(Modifier.width(36.dp).height(4.dp).background(palette.hairline, CircleShape))

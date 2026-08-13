@@ -14,6 +14,7 @@ import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
+import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.HabitInsights
 import ch.nicolab.cadence.domain.HabitInsightsCalculator
@@ -24,6 +25,7 @@ import ch.nicolab.cadence.domain.isPlannedOn
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
 import ch.nicolab.cadence.reminder.ReminderScheduler
+import ch.nicolab.cadence.reminder.TimerNotifications
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
@@ -206,6 +208,54 @@ class MainViewModel(
             HabitPause.skip(today, reason, label),
         )
         refreshAll()
+    }
+
+    /**
+     * Chronomètres en cours, réémis à chaque commande. Le temps affiché se dérive de cet
+     * état et de l'horloge : rien n'a besoin d'être rattrapé après un redémarrage.
+     */
+    val timers: StateFlow<Map<String, HabitTimer>> = repository.observeTimers().stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        emptyMap(),
+    )
+
+    fun startTimer(habitId: String) = viewModelScope.launch {
+        val existing = repository.getTimer(habitId)
+        // Un second appui sur `Démarrer` ne repart pas de zéro : il reprend.
+        val timer = existing?.resumedAt(clock.instant()) ?: HabitTimer.started(habitId, clock.instant())
+        repository.saveTimer(timer)
+        latest.firstOrNull { it.id == habitId }?.let { TimerNotifications.show(app, it, timer) }
+        widgetRefresh.request()
+    }
+
+    fun pauseTimer(habitId: String) = viewModelScope.launch {
+        val timer = repository.getTimer(habitId) ?: return@launch
+        repository.saveTimer(timer.pausedAt(clock.instant()))
+        TimerNotifications.cancel(app, habitId)
+        widgetRefresh.request()
+    }
+
+    fun resetTimer(habitId: String) = viewModelScope.launch {
+        repository.clearTimer(habitId)
+        TimerNotifications.cancel(app, habitId)
+        widgetRefresh.request()
+    }
+
+    /**
+     * Termine la séance : une seule saisie de durée est enregistrée, puis le chronomètre
+     * disparaît. Un chronomètre resté à zéro n'écrit rien.
+     */
+    fun finishTimer(habit: HabitCardState) = viewModelScope.launch {
+        val timer = repository.getTimer(habit.stored.id) ?: return@launch
+        val seconds = timer.elapsedSecondsAt(clock.instant())
+        repository.clearTimer(habit.stored.id)
+        TimerNotifications.cancel(app, habit.stored.id)
+        if (seconds <= 0) {
+            refreshAll()
+            return@launch
+        }
+        addEntry(habit, seconds, source = "TIMER").join()
     }
 
     fun cancelSkip(pauseId: String) = viewModelScope.launch {

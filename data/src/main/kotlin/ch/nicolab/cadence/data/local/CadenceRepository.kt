@@ -9,6 +9,7 @@ import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
+import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
@@ -21,6 +22,7 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
@@ -129,6 +131,7 @@ class CadenceRepository(
                 createdAtEpochMs = createdAt,
                 updatedAtEpochMs = updatedAt,
                 groupId = habit.groupId,
+                timerEnabled = habit.timerEnabled,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -186,6 +189,7 @@ class CadenceRepository(
                 createdAtEpochMs = createdAt,
                 updatedAtEpochMs = nowMs,
                 groupId = habit.groupId,
+                timerEnabled = habit.timerEnabled,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -328,6 +332,38 @@ class CadenceRepository(
             }
         }
     }
+
+    /**
+     * Chronomètres en cours. Rien n'est écrit tant qu'aucun chronomètre n'a démarré :
+     * l'absence de ligne signifie « arrêté à zéro ».
+     */
+    fun observeTimers(): Flow<Map<String, HabitTimer>> =
+        database.habitTimerDao().observeTimers().map { rows ->
+            rows.associate { it.habitId to toTimer(it) }
+        }
+
+    suspend fun getTimer(habitId: String): HabitTimer? =
+        database.habitTimerDao().getTimer(habitId)?.let(::toTimer)
+
+    suspend fun saveTimer(timer: HabitTimer) {
+        database.habitTimerDao().upsert(
+            HabitTimerEntity(
+                habitId = timer.habitId,
+                accumulatedSeconds = timer.accumulatedSeconds,
+                runningSinceEpochMs = timer.runningSince?.toEpochMilli(),
+            ),
+        )
+    }
+
+    suspend fun clearTimer(habitId: String) {
+        database.habitTimerDao().delete(habitId)
+    }
+
+    private fun toTimer(entity: HabitTimerEntity) = HabitTimer(
+        habitId = entity.habitId,
+        accumulatedSeconds = entity.accumulatedSeconds,
+        runningSince = entity.runningSinceEpochMs?.let(Instant::ofEpochMilli),
+    )
 
     suspend fun addPause(
         habitId: String,
@@ -541,6 +577,7 @@ class CadenceRepository(
                 createdAtEpochMs = relation.habit.createdAtEpochMs,
                 updatedAtEpochMs = relation.habit.updatedAtEpochMs,
                 groupId = relation.habit.groupId,
+                timerEnabled = relation.habit.timerEnabled,
                 goals = goals,
                 schedules = schedules,
             )
@@ -658,6 +695,7 @@ class CadenceRepository(
                     createdAtEpochMs = habit.createdAtEpochMs,
                     updatedAtEpochMs = habit.updatedAtEpochMs,
                     groupId = habit.groupId.takeIf(knownGroupIds::contains) ?: HabitGroup.ALL_DAY_ID,
+                    timerEnabled = habit.timerEnabled,
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -956,6 +994,7 @@ class CadenceRepository(
             createdAtEpochMs = relation.habit.createdAtEpochMs,
             updatedAtEpochMs = relation.habit.updatedAtEpochMs,
             groupId = relation.habit.groupId,
+            timerEnabled = relation.habit.timerEnabled,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,

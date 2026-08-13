@@ -1,14 +1,10 @@
 # Cadence
 
 ## Now
-- [ ] Chronomètre pour les habitudes de durée
-  - Proposer un mode chronomètre activable pour les objectifs en durée, sans le rendre obligatoire
-  - La saisie rapide affiche `Démarrer`, `Pause`, `Reprendre`, `Terminer` et `Réinitialiser`
-  - Le temps écoulé continue après le minimum et passe visuellement à `Minimum atteint`, puis `Idéal atteint`
-  - Enregistrer une seule saisie de durée à la fin; une pause ne crée pas de temps compté
-  - Préserver un chronomètre en cours après rotation, retour à l’application et redémarrage du processus
-  - Le widget et les notifications indiquent qu’un chronomètre est actif et permettent de le reprendre rapidement
-  - Vérification : passage minimum/idéal, pause longue, minuit, changement de fuseau, annulation, réinitialisation et double appui
+- [ ] Séries intelligentes
+  - Compter les périodes planifiées réussies, pas les jours calendaires consécutifs
+  - Ignorer pauses, voyages et sauts autorisés sans créer de réussite artificielle
+  - Vérification : tous les N jours, semaines flexibles, changements d'objectif et historique
 
 ## Fonctions à venir
 - [ ] Groupes dans l’application
@@ -32,11 +28,6 @@
   - Regrouper les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`
   - Montrer uniquement les actions utiles et ouvrir directement la saisie concernée
   - Vérification : rythmes flexibles, jours choisis, tous les N jours et habitudes à limiter
-- [ ] Séries intelligentes
-  - Compter les périodes planifiées réussies, pas les jours calendaires consécutifs
-  - Ignorer pauses, voyages et sauts autorisés sans créer de réussite artificielle
-  - Vérification : tous les N jours, semaines flexibles, changements d’objectif et historique
-
 
 ## Ideas
 - [ ] Valeurs rapides propres à chaque groupe ou moment de la journée
@@ -60,6 +51,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Chronomètre pour les habitudes de durée
 - [x] Variantes supplémentaires du widget
 - [x] Mode voyage
 - [x] Saut motivé et réversible

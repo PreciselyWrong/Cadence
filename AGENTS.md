@@ -29,6 +29,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les changements d'objectif ou de période s'appliquent à partir du jour même; les jours déjà écoulés gardent la version qui les a produits.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
 - Le widget Halo est la première variante d'un système de rendu extensible. `ui/widget/WidgetRenderStyle.kt` porte le contrat — fond, encre, pastille, arrondi — lu par le widget, son aperçu et sa configuration; ajouter une variante se limite à une entrée et son libellé.
+- Le temps d'un chronomètre n'est jamais stocké : `HabitTimer` garde les segments terminés et l'instant de reprise, le reste se dérive de l'horloge. Une pause fige donc le compteur et un redémarrage du processus retrouve la valeur exacte.
 - Une pause porte un motif (`PauseReason`). Un saut est une pause d'un jour annulable le jour même; un voyage est une plage inclusive écourtable par reprise anticipée. Aucun motif ne casse la série et aucun rappel ne sonne pendant une pause.
 - Une habitude appartient à un seul groupe. `Journée` (`HabitGroup.ALL_DAY_ID`) n'a pas d'horaire, ne se supprime pas et récupère les habitudes d'un groupe supprimé.
 - `HabitGoal.targetMinor` est l'idéal, `minimumMinor` le seuil qui valide la période et la série; sans minimum les deux se confondent. `validatesPeriod` porte la série, `isCompleted` l'idéal.

@@ -18,4 +18,6 @@ data class HabitEntity(
     val createdAtEpochMs: Long,
     @ColumnInfo(defaultValue = "0") val updatedAtEpochMs: Long = 0L,
     @ColumnInfo(defaultValue = "group-day") val groupId: String = "group-day",
+    /** Mode chronomètre proposé dans la saisie rapide, réservé aux objectifs en durée. */
+    @ColumnInfo(defaultValue = "0") val timerEnabled: Boolean = false,
 )

@@ -1,10 +1,12 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Les habitudes en durée peuvent proposer un chronomètre : démarrer, mettre en pause, reprendre, terminer ou réinitialiser, avec le palier atteint affiché en direct.
+- Une séance chronométrée reste visible depuis le widget et une notification, et se reprend d’un toucher.
 - `Sauter aujourd’hui` demande un motif — repos, maladie, voyage ou raison libre — et le saut reste annulable le jour même.
 - Le mode voyage suspend plusieurs habitudes entre deux dates, avec sélection par groupe et reprise anticipée.
 - Trois styles de widget rejoignent le Halo : Ardoise, Sable et Encre.
-- Un rappel propose directement `Fait`, un incrément rapide et `Sauter`, sans ouvrir l’application.
+- Un rappel propose directement `Valider` ou un incrément rapide, et `Sauter`, sans ouvrir l’application.
 - Les statistiques indiquent le meilleur jour, le meilleur créneau horaire et comparent le mois courant au précédent.
 - Les statistiques montrent maintenant les douze dernières semaines sous forme de calendrier coloré.
 - Une habitude peut être masquée pour aujourd’hui sans être comptée comme faite.
@@ -43,6 +45,9 @@
 - La publication installe Cadence directement sur le téléphone lorsqu’il est connecté.
 
 ### Corrections
+- Modifier l’objectif d’une habitude s’applique immédiatement, sans attendre la période suivante.
+- Champs, boutons secondaires et incréments restent lisibles dans les fenêtres sombres.
+- Un rappel d’habitude binaire propose simplement `Valider`, sans annoncer un reste à faire.
 - Le widget se rafraîchit même si la saisie rapide se ferme aussitôt.
 - L’enregistrement du widget se termine sans bloquer l’écran.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.

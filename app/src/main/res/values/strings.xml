@@ -123,6 +123,17 @@
     <string name="form_minimum_support">Seuil qui valide la période et la série. Vide : la cible seule compte.</string>
     <string name="form_error_minimum">Le minimum doit être supérieur à zéro et ne pas dépasser la cible.</string>
     <string name="habit_goal_range">Minimum %1$s, idéal %2$s</string>
+    <string name="timer_section">Chronomètre</string>
+    <string name="timer_start">Démarrer</string>
+    <string name="timer_pause">Pause</string>
+    <string name="timer_resume">Reprendre</string>
+    <string name="timer_finish">Terminer</string>
+    <string name="timer_reset">Réinitialiser</string>
+    <string name="timer_form_label">Proposer un chronomètre</string>
+    <string name="timer_form_support">Disponible pour les objectifs en durée.</string>
+    <string name="timer_running">Chronomètre en cours</string>
+    <string name="timer_notification_title">%1$s — chronomètre</string>
+    <string name="timer_notification_text">Séance en cours</string>
     <string name="skip_sheet_title">Sauter aujourd\'hui</string>
     <string name="skip_sheet_subtitle">La série reste intacte</string>
     <string name="skip_reason_rest">Repos</string>
@@ -294,7 +305,7 @@
     <string name="insights_percent">%1$d %%</string>
     <string name="insights_days">%1$d j</string>
 
-    <string name="notification_action_done">Fait</string>
+    <string name="notification_action_validate">Valider</string>
     <string name="notification_action_add">+%1$s</string>
     <string name="notification_action_skip">Sauter</string>
 </resources>

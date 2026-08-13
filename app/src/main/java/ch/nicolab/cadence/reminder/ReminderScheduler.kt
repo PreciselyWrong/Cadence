@@ -105,13 +105,12 @@ class ReminderReceiver : BroadcastReceiver() {
                 // Une habitude sautée ou suspendue reste silencieuse, même sans rappel
                 // conditionnel : la période est volontairement mise de côté.
                 if (!evaluation.isPaused && (!reminder.conditional || evaluation.needsAttentionNow)) {
-                    val remaining = (habit.goal.targetMinor - evaluation.progressMinor).coerceAtLeast(0)
                     ReminderNotifications.show(
                         context = context,
                         habit = habit,
                         quickValue = app.repository.getQuickValues(habit.id).minOfOrNull(HabitQuickValueEntity::amountMinor),
                         message = if (reminder.conditional) {
-                            "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim()
+                            ReminderNotifications.remainingMessage(habit, evaluation.progressMinor)
                         } else {
                             "Votre rappel est prêt"
                         },
@@ -136,6 +135,13 @@ object ReminderNotifications {
     const val ACTION_SKIP = "ch.nicolab.cadence.reminder.SKIP"
     const val EXTRA_HABIT_ID = "habit_id"
     const val EXTRA_VALUE = "value_minor"
+
+    /** Un binaire ne compte pas : il n'annonce jamais « il reste 1 ». */
+    fun remainingMessage(habit: PersistedHabit, progressMinor: Long): String {
+        if (habit.goal.goalType == GoalType.BINARY) return "À valider aujourd’hui"
+        val remaining = (habit.goal.targetMinor - progressMinor).coerceAtLeast(0)
+        return "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim()
+    }
 
     fun notificationId(habitId: String): Int = habitId.hashCode()
 
@@ -162,7 +168,7 @@ object ReminderNotifications {
             .setContentIntent(open)
             .setAutoCancel(true)
         if (habit.goal.goalType == GoalType.BINARY) {
-            builder.addAction(0, context.getString(R.string.notification_action_done), action(context, habit.id, ACTION_DONE))
+            builder.addAction(0, context.getString(R.string.notification_action_validate), action(context, habit.id, ACTION_DONE))
         } else {
             val increment = quickValue ?: habit.goal.unit?.scaleToCanonical ?: 1L
             builder.addAction(
@@ -241,12 +247,11 @@ class ReminderActionReceiver : BroadcastReceiver() {
                 CadenceWidget().updateAll(context)
                 val updated = evaluate()
                 if (updated.needsAttentionNow) {
-                    val remaining = (habit.goal.targetMinor - updated.progressMinor).coerceAtLeast(0)
                     ReminderNotifications.show(
                         context = context,
                         habit = habit,
                         quickValue = repository.getQuickValues(habit.id).minOfOrNull(HabitQuickValueEntity::amountMinor),
-                        message = "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim(),
+                        message = ReminderNotifications.remainingMessage(habit, updated.progressMinor),
                     )
                 } else {
                     ReminderNotifications.cancel(context, habit.id)

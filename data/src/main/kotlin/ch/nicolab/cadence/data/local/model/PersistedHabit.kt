@@ -19,6 +19,8 @@ data class PersistedHabit(
     val createdAtEpochMs: Long = 0L,
     val updatedAtEpochMs: Long = 0L,
     val groupId: String = HabitGroup.ALL_DAY_ID,
+    /** Mode chronomètre proposé dans la saisie rapide; sans effet hors objectif en durée. */
+    val timerEnabled: Boolean = false,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {

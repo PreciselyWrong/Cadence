@@ -83,9 +83,10 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
     val palette = cadence
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val lastEntryId by viewModel.lastEntryId.collectAsStateWithLifecycle()
+    val timers by viewModel.timers.collectAsStateWithLifecycle()
     val pending = habits.filter { it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
     Box(
-        Modifier.fillMaxSize().background(palette.structural.copy(alpha = .55f)).clickable(onClick = dismiss),
+        Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)).clickable(onClick = dismiss),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Surface(
@@ -118,7 +119,14 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
                         modifier = Modifier.heightIn(max = 420.dp),
                     ) {
                         items(pending, key = { it.stored.id }) { habit ->
-                            QuickHabit(habit) { value, sessionId -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId) }
+                            QuickHabit(
+                                habit,
+                                timers[habit.stored.id],
+                                start = { viewModel.startTimer(habit.stored.id) },
+                                pauseTimer = { viewModel.pauseTimer(habit.stored.id) },
+                                finishTimer = { viewModel.finishTimer(habit); dismiss() },
+                                resetTimer = { viewModel.resetTimer(habit.stored.id) },
+                            ) { value, sessionId -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId) }
                         }
                     }
                 }
@@ -139,7 +147,15 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
+private fun QuickHabit(
+    habit: HabitCardState,
+    timer: ch.nicolab.cadence.domain.HabitTimer?,
+    start: () -> Unit,
+    pauseTimer: () -> Unit,
+    finishTimer: () -> Unit,
+    resetTimer: () -> Unit,
+    add: (Long, String) -> Unit,
+) {
     val palette = cadence
     var custom by remember { mutableStateOf("") }
     val sessionId = remember(habit.stored.id) { UUID.randomUUID().toString() }
@@ -162,6 +178,19 @@ private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
             }
         }
         Spacer(Modifier.height(Space.md))
+        if (habit.stored.timerEnabled && goal.goalType == GoalType.DURATION) {
+            TimerPanel(
+                timer = timer,
+                goal = goal,
+                progressMinor = habit.evaluation.progressMinor,
+                accent = tint,
+                start = start,
+                pause = pauseTimer,
+                finish = finishTimer,
+                reset = resetTimer,
+            )
+            Spacer(Modifier.height(Space.lg))
+        }
         if (goal.goalType == GoalType.BINARY) {
             PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, sessionId) }
         } else {
@@ -177,6 +206,7 @@ private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
                     { custom = it.filter(Char::isDigit) },
                     stringResource(R.string.quick_custom_value_label),
                     modifier = Modifier.weight(1f),
+                    placeholder = "0",
                     suffix = goal.unit?.symbol,
                     accent = tint,
                     numeric = true,

@@ -54,6 +54,7 @@ import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
+import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
@@ -62,11 +63,17 @@ import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
 import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.flow.first
 
-private data class WidgetHabit(val habit: PersistedHabit, val evaluation: HabitEvaluation)
+private data class WidgetHabit(
+    val habit: PersistedHabit,
+    val evaluation: HabitEvaluation,
+    /** Secondes déjà mesurées lorsqu'un chronomètre est actif, nulles sinon. */
+    val timerSeconds: Long? = null,
+)
 
 class CadenceWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(
@@ -79,11 +86,18 @@ class CadenceWidget : GlanceAppWidget() {
         val repository = (context.applicationContext as CadenceApp).repository
         val today = LocalDate.now()
         val evaluator = HabitEvaluator()
+        val now = Instant.now()
+        val timers = repository.observeTimers().first()
         val allPending = repository.observeHabits().first().mapNotNull { habit ->
             val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
             val entries = repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
             val pauses = repository.observePauses(habit.id).first()
-            evaluator.evaluate(habit.definition, today, entries, pauses).takeIf { it.needsAttentionNow }?.let { WidgetHabit(habit, it) }
+            evaluator.evaluate(habit.definition, today, entries, pauses).takeIf { it.needsAttentionNow }?.let { evaluation ->
+                // Un chronomètre actif s'affiche à la place de la progression : un toucher
+                // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.
+                val running = timers[habit.id]?.takeIf(HabitTimer::isRunning)?.elapsedSecondsAt(now)
+                WidgetHabit(habit, evaluation, running)
+            }
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val config = repository.getWidgetConfig(appWidgetId) ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
@@ -153,7 +167,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
                         iconBitmaps[item.habit.id]?.let { bitmap -> Image(ImageProvider(bitmap), item.habit.name, modifier = GlanceModifier.size(config.iconSizeDp.dp), contentScale = ContentScale.Fit) }
                     }
                     if (textVisibility.showLabels) Text(item.habit.name, maxLines = 1, style = TextStyle(color = ColorProvider(day = labelColor, night = labelColor), fontSize = config.labelTextSizeSp.sp, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
-                    if (textVisibility.showValues) Text(HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.habit.goal.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
+                    if (textVisibility.showValues) Text(item.timerSeconds?.let { HabitFormatter.formatValue(it, item.habit.goal.goalType, item.habit.goal.unit) } ?: HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.habit.goal.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                 }
             }
             if (spaceOverflow) {

@@ -38,6 +38,7 @@ data class BackupHabitV2(
     val createdAtEpochMs: Long,
     val updatedAtEpochMs: Long,
     val groupId: String = "group-day",
+    val timerEnabled: Boolean = false,
     val goals: List<BackupGoalV2>,
     val schedules: List<BackupScheduleV2>,
 )

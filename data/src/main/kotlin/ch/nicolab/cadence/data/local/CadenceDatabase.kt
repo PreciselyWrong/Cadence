@@ -13,12 +13,14 @@ import ch.nicolab.cadence.data.local.dao.WidgetConfigDao
 import ch.nicolab.cadence.data.local.entities.HabitEntity
 import ch.nicolab.cadence.data.local.entities.HabitEntryEntity
 import ch.nicolab.cadence.data.local.dao.HabitGroupDao
+import ch.nicolab.cadence.data.local.dao.HabitTimerDao
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
+import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.domain.HabitGroup
@@ -33,10 +35,11 @@ import ch.nicolab.cadence.domain.HabitGroup
         HabitReminderEntity::class,
         HabitPauseEntity::class,
         HabitGroupEntity::class,
+        HabitTimerEntity::class,
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 11,
+    version = 12,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -45,6 +48,7 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun habitQuickValueDao(): HabitQuickValueDao
     abstract fun habitPauseDao(): HabitPauseDao
     abstract fun habitGroupDao(): HabitGroupDao
+    abstract fun habitTimerDao(): HabitTimerDao
     abstract fun habitReminderDao(): HabitReminderDao
     abstract fun widgetConfigDao(): WidgetConfigDao
 
@@ -172,6 +176,26 @@ abstract class CadenceDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE habit_pauses ADD COLUMN reasonLabel TEXT")
                 db.execSQL("UPDATE habit_pauses SET reason = 'REST' WHERE reason = 'SKIPPED_TODAY'")
                 db.execSQL("UPDATE habit_pauses SET reason = 'MANUAL' WHERE reason IS NULL OR reason NOT IN ('REST', 'ILLNESS', 'TRAVEL', 'CUSTOM')")
+            }
+        }
+
+        /**
+         * Introduit le chronomètre. Le mode reste désactivé sur les habitudes existantes :
+         * il se propose, il ne s'impose pas.
+         */
+        val MIGRATION_11_12 = object : Migration(11, 12) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habits ADD COLUMN timerEnabled INTEGER NOT NULL DEFAULT 0")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS habit_timers (
+                        habitId TEXT NOT NULL PRIMARY KEY,
+                        accumulatedSeconds INTEGER NOT NULL,
+                        runningSinceEpochMs INTEGER,
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
             }
         }
     }

@@ -75,6 +75,7 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
@@ -139,6 +140,7 @@ private enum class Tab(val label: Int, val icon: ImageVector) {
 private fun CadenceAppScreen(viewModel: MainViewModel) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
+    val timers by viewModel.timers.collectAsStateWithLifecycle()
     var tab by remember { mutableStateOf(Tab.TODAY) }
     var editor by remember { mutableStateOf<HabitCardState?>(null) }
     var creating by remember { mutableStateOf(false) }
@@ -193,6 +195,11 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             { viewModel.addEntry(item, it, "APP", sessionId) },
             viewModel::undoLastEntry,
             { correcting = it },
+            timers[item.stored.id],
+            { viewModel.startTimer(item.stored.id) },
+            { viewModel.pauseTimer(item.stored.id) },
+            { viewModel.finishTimer(item) },
+            { viewModel.resetTimer(item.stored.id) },
             { quick = null },
         )
     }
@@ -639,6 +646,11 @@ private fun QuickSheet(
     add: (Long) -> Unit,
     undo: () -> Unit,
     correct: (HabitEntry) -> Unit,
+    timer: HabitTimer?,
+    startTimer: () -> Unit,
+    pauseTimer: () -> Unit,
+    finishTimer: () -> Unit,
+    resetTimer: () -> Unit,
     dismiss: () -> Unit,
 ) {
     var custom by remember { mutableStateOf("") }
@@ -651,6 +663,21 @@ private fun QuickSheet(
         leading = { HabitAvatar(item, tint) },
     ) {
         HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth().padding(bottom = Space.xl))
+        if (item.stored.timerEnabled && item.stored.goal.goalType == GoalType.DURATION) {
+            SectionLabel(stringResource(R.string.timer_section))
+            Spacer(Modifier.height(Space.sm))
+            TimerPanel(
+                timer = timer,
+                goal = item.stored.goal,
+                progressMinor = item.evaluation.progressMinor,
+                accent = tint,
+                start = startTimer,
+                pause = pauseTimer,
+                finish = { finishTimer(); dismiss() },
+                reset = resetTimer,
+            )
+            Spacer(Modifier.height(Space.xl))
+        }
         if (item.stored.goal.goalType == GoalType.BINARY) {
             PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1); dismiss() }
         } else {
@@ -798,6 +825,7 @@ private class EditorState(
     intervalDays: String = "2",
     groupId: String = HabitGroup.ALL_DAY_ID,
     minimum: String = "",
+    timerEnabled: Boolean = false,
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -821,6 +849,7 @@ private class EditorState(
     var intervalDays by mutableStateOf(intervalDays)
     var groupId by mutableStateOf(groupId)
     var minimum by mutableStateOf(minimum)
+    var timerEnabled by mutableStateOf(timerEnabled)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -848,6 +877,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 frequencyTarget = stored?.goal?.frequencyTarget?.toString().orEmpty(),
                 intervalDays = stored?.schedule?.intervalDays?.toString() ?: "2",
                 groupId = stored?.groupId ?: HabitGroup.ALL_DAY_ID,
+                timerEnabled = stored?.timerEnabled ?: false,
                 minimum = stored?.goal?.minimumMinor
                     ?.let { (it / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
                     .orEmpty(),
@@ -920,6 +950,15 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                         state.goalType = type
                                         if (type == GoalType.BINARY) state.target = "1"
                                     }
+                                }
+                            }
+                        }
+                    }
+                    if (state.goalType == GoalType.DURATION) {
+                        item {
+                            FieldGroup(stringResource(R.string.timer_form_support)) {
+                                ToggleRow(stringResource(R.string.timer_form_label), state.timerEnabled, accent) {
+                                    state.timerEnabled = it
                                 }
                             }
                         }
@@ -1097,6 +1136,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                 createdAtEpochMs = base?.createdAtEpochMs ?: 0,
                                 updatedAtEpochMs = base?.updatedAtEpochMs ?: 0,
                                 groupId = state.groupId,
+                                timerEnabled = state.timerEnabled && state.goalType == GoalType.DURATION,
                                 goal = HabitGoal(
                                     targetMinor = target * (unit?.scaleToCanonical ?: 1),
                                     period = state.period,

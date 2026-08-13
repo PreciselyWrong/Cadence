@@ -56,7 +56,7 @@ fun PrimaryAction(
     val palette = cadence
     val fill = accent ?: palette.accent
     val container = if (enabled) fill else palette.sunken
-    val content = if (enabled) onColorOf(fill) else palette.inkFaint
+    val content = if (enabled) onColorOf(fill) else palette.inkMuted
     Box(
         modifier
             .heightIn(min = Size.control)
@@ -150,7 +150,7 @@ fun ValueChip(label: String, accent: Color? = null, modifier: Modifier = Modifie
     Box(
         modifier
             .clip(Radius.Chip)
-            .background(fill.copy(alpha = 0.14f))
+            .background(fill.copy(alpha = if (cadence.isDark) 0.26f else 0.16f))
             .clickable(onClick = onClick)
             .defaultMinSize(minHeight = 44.dp)
             .padding(horizontal = Space.lg, vertical = Space.md),
