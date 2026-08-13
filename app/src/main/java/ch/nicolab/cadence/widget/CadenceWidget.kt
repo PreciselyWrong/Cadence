@@ -2,12 +2,14 @@ package ch.nicolab.cadence.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.color.ColorProvider
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -15,6 +17,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -52,27 +55,37 @@ class CadenceWidget : GlanceAppWidget() {
             evaluator.evaluate(habit.definition, today, entries, pauses).requiresAction
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
+        val configuration = repository.getWidgetConfig(appWidgetId)
         val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
         val pending = if (selected.isEmpty()) allPending else allPending.filter { it.id in selected }
-        provideContent { WidgetLine(pending) }
+        provideContent { WidgetLine(pending, configuration?.theme ?: "HALO") }
     }
 }
 
 @Composable
-private fun WidgetLine(habits: List<PersistedHabit>) {
+private fun WidgetLine(habits: List<PersistedHabit>, style: String) {
+    val isMono = style == "MONO"
+    val surface = if (isMono) Color(0xFFF7F8FC) else Color(0xFF202944)
+    val content = if (isMono) Color(0xFF172033) else Color(0xFFF7F8FC)
+    val badge = if (isMono) Color(0xFFE9EDF5) else Color(0xFF6278BC)
+    val mark = if (isMono) R.drawable.ic_widget_mark else R.drawable.ic_widget_mark_light
     Row(
-        modifier = GlanceModifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp).clickable(actionStartActivity<QuickEntryActivity>()),
+        modifier = GlanceModifier.fillMaxWidth().height(56.dp)
+            .background(ColorProvider(day = surface, night = surface))
+            .cornerRadius(28.dp)
+            .padding(horizontal = 10.dp)
+            .clickable(actionStartActivity<QuickEntryActivity>()),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (habits.isEmpty()) {
-            Image(ImageProvider(R.drawable.ic_widget_mark), "Toutes les habitudes prévues sont terminées", modifier = GlanceModifier.size(26.dp))
+            Image(ImageProvider(mark), "Toutes les habitudes prévues sont terminées", modifier = GlanceModifier.size(26.dp))
         } else {
             habits.take(4).forEach { habit ->
-                Box(modifier = GlanceModifier.size(42.dp).padding(4.dp), contentAlignment = Alignment.Center) {
-                    Image(ImageProvider(R.drawable.ic_widget_mark), habit.name, modifier = GlanceModifier.size(30.dp), contentScale = ContentScale.Fit)
+                Box(modifier = GlanceModifier.size(42.dp).background(ColorProvider(day = badge, night = badge)).cornerRadius(21.dp).padding(4.dp), contentAlignment = Alignment.Center) {
+                    Image(ImageProvider(mark), habit.name, modifier = GlanceModifier.size(30.dp), contentScale = ContentScale.Fit)
                 }
             }
-            if (habits.size > 4) Text("+${habits.size - 4}", style = TextStyle(fontWeight = FontWeight.Medium))
+            if (habits.size > 4) Text("+${habits.size - 4}", style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium))
         }
     }
 }

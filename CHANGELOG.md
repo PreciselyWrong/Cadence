@@ -1,3 +1,11 @@
+## [1.0.3] — 13 août 2026
+
+### Corrections
+- Le widget reste bien lisible, même sur un fond sombre.
+
+### Améliorations
+- Des couleurs plus douces et des formes plus rondes partout dans l’application.
+
 ## [1.0.2] — 13 août 2026
 
 ### Nouveautés
