@@ -51,6 +51,30 @@ import androidx.compose.material.icons.outlined.TrackChanges
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.outlined.Work
+import androidx.compose.material.icons.outlined.Calculate
+import androidx.compose.material.icons.outlined.ChildCare
+import androidx.compose.material.icons.outlined.Coffee
+import androidx.compose.material.icons.outlined.DeleteSweep
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.EditNote
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Flight
+import androidx.compose.material.icons.outlined.Hiking
+import androidx.compose.material.icons.outlined.Kitchen
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.LocalDrink
+import androidx.compose.material.icons.outlined.LocalLaundryService
+import androidx.compose.material.icons.outlined.MonitorWeight
+import androidx.compose.material.icons.outlined.Movie
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Piano
+import androidx.compose.material.icons.outlined.Pool
+import androidx.compose.material.icons.outlined.SmokeFree
+import androidx.compose.material.icons.outlined.Spa
+import androidx.compose.material.icons.outlined.SportsEsports
+import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.material.icons.outlined.Yard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -102,6 +126,13 @@ object HabitIconRegistry {
         HabitIcon("meditation", Icons.Outlined.SelfImprovement, "Méditation", "Meditation", IconCategory.HEALTH, listOf("meditation", "zen", "mindfulness", "relaxation")),
         HabitIcon("pill", Icons.Outlined.Medication, "Santé", "Health", IconCategory.HEALTH, listOf("sante", "health", "medicament", "pill", "soin")),
         HabitIcon("heart", Icons.Outlined.Favorite, "Bien-être", "Wellbeing", IconCategory.HEALTH, listOf("coeur", "heart", "bien-etre", "love")),
+        HabitIcon("swim", Icons.Outlined.Pool, "Natation", "Swimming", IconCategory.HEALTH, listOf("natation", "nage", "piscine", "swim")),
+        HabitIcon("spa", Icons.Outlined.Spa, "Détente", "Relaxation", IconCategory.HEALTH, listOf("detente", "spa", "repos", "relax")),
+        HabitIcon("weight", Icons.Outlined.MonitorWeight, "Poids", "Weight", IconCategory.HEALTH, listOf("poids", "balance", "weight")),
+        HabitIcon("drink", Icons.Outlined.LocalDrink, "Boisson", "Drink", IconCategory.HEALTH, listOf("boisson", "verre", "drink")),
+        HabitIcon("coffee", Icons.Outlined.Coffee, "Café", "Coffee", IconCategory.HEALTH, listOf("café", "cafe", "coffee", "thé", "the")),
+        HabitIcon("smoke-free", Icons.Outlined.SmokeFree, "Sans tabac", "Smoke free", IconCategory.HEALTH, listOf("tabac", "cigarette", "smoke", "arreter")),
+        HabitIcon("hike", Icons.Outlined.Hiking, "Randonnée", "Hiking", IconCategory.HEALTH, listOf("randonnee", "hike", "montagne", "marche")),
 
         HabitIcon("book", Icons.AutoMirrored.Outlined.MenuBook, "Lecture", "Reading", IconCategory.PRODUCTIVITY, listOf("lecture", "book", "livre", "read")),
         HabitIcon("study", Icons.Outlined.School, "Études", "Study", IconCategory.PRODUCTIVITY, listOf("etudes", "study", "ecole", "school", "apprendre")),
@@ -113,6 +144,11 @@ object HabitIconRegistry {
         HabitIcon("star", Icons.Outlined.Star, "Priorité", "Priority", IconCategory.PRODUCTIVITY, listOf("etoile", "star", "priorite", "favori")),
         HabitIcon("calendar", Icons.Outlined.CalendarToday, "Rendez-vous", "Schedule", IconCategory.PRODUCTIVITY, listOf("calendrier", "calendar", "date", "planning")),
         HabitIcon("target", Icons.Outlined.TrackChanges, "Cible", "Target", IconCategory.PRODUCTIVITY, listOf("cible", "target", "rythme", "habitude")),
+        HabitIcon("notes", Icons.Outlined.EditNote, "Écriture", "Writing", IconCategory.PRODUCTIVITY, listOf("ecriture", "notes", "journal", "writing")),
+        HabitIcon("email", Icons.Outlined.Email, "Messages", "Messages", IconCategory.PRODUCTIVITY, listOf("email", "mail", "message", "courrier")),
+        HabitIcon("language", Icons.Outlined.Language, "Langue", "Language", IconCategory.PRODUCTIVITY, listOf("langue", "language", "anglais", "vocabulaire")),
+        HabitIcon("calculate", Icons.Outlined.Calculate, "Calcul", "Calculation", IconCategory.PRODUCTIVITY, listOf("calcul", "math", "calculate", "chiffres")),
+        HabitIcon("idea", Icons.Outlined.Lightbulb, "Idée", "Idea", IconCategory.PRODUCTIVITY, listOf("idee", "idea", "creer", "projet")),
 
         HabitIcon("music", Icons.Outlined.MusicNote, "Musique", "Music", IconCategory.LEISURE, listOf("musique", "music", "chanson", "instrument")),
         HabitIcon("brush", Icons.Outlined.Brush, "Art", "Art", IconCategory.LEISURE, listOf("art", "dessin", "peinture", "brush", "creativite")),
@@ -121,11 +157,23 @@ object HabitIconRegistry {
         HabitIcon("sun", Icons.Outlined.WbSunny, "Soleil", "Outdoor", IconCategory.LEISURE, listOf("soleil", "sun", "dehors", "air")),
         HabitIcon("phone", Icons.Outlined.PhonelinkOff, "Déconnexion", "Digital detox", IconCategory.LEISURE, listOf("deconnexion", "screen", "detox", "ecran")),
         HabitIcon("pet", Icons.Outlined.Pets, "Animaux", "Pets", IconCategory.LEISURE, listOf("chat", "chien", "animal", "pet")),
+        HabitIcon("movie", Icons.Outlined.Movie, "Cinéma", "Movie", IconCategory.LEISURE, listOf("cinema", "film", "movie", "serie")),
+        HabitIcon("games", Icons.Outlined.SportsEsports, "Jeux", "Games", IconCategory.LEISURE, listOf("jeu", "gaming", "game", "console")),
+        HabitIcon("piano", Icons.Outlined.Piano, "Piano", "Piano", IconCategory.LEISURE, listOf("piano", "instrument", "musique")),
+        HabitIcon("palette", Icons.Outlined.Palette, "Création", "Creative", IconCategory.LEISURE, listOf("creation", "palette", "couleur", "art")),
+        HabitIcon("travel", Icons.Outlined.TravelExplore, "Découverte", "Explore", IconCategory.LEISURE, listOf("voyage", "explorer", "travel", "decouverte")),
+        HabitIcon("flight", Icons.Outlined.Flight, "Voyage", "Travel", IconCategory.LEISURE, listOf("avion", "flight", "voyage", "vacances")),
 
         HabitIcon("clean", Icons.Outlined.CleaningServices, "Ménage", "Cleaning", IconCategory.HOME, listOf("menage", "clean", "rangement", "proprete")),
         HabitIcon("home", Icons.Outlined.Home, "Maison", "Home", IconCategory.HOME, listOf("maison", "home", "foyer")),
         HabitIcon("shopping", Icons.Outlined.ShoppingCart, "Courses", "Shopping", IconCategory.HOME, listOf("courses", "shopping", "achats")),
         HabitIcon("smile", Icons.Outlined.SentimentSatisfied, "Humeur", "Mood", IconCategory.HOME, listOf("humeur", "mood", "joie", "smile")),
+        HabitIcon("laundry", Icons.Outlined.LocalLaundryService, "Lessive", "Laundry", IconCategory.HOME, listOf("lessive", "linge", "laundry", "machine")),
+        HabitIcon("garden", Icons.Outlined.Yard, "Jardin", "Garden", IconCategory.HOME, listOf("jardin", "plante", "garden", "fleur")),
+        HabitIcon("tidy", Icons.Outlined.DeleteSweep, "Rangement", "Tidying", IconCategory.HOME, listOf("rangement", "ranger", "tidy", "tri")),
+        HabitIcon("car", Icons.Outlined.DirectionsCar, "Voiture", "Car", IconCategory.HOME, listOf("voiture", "car", "conduite", "auto")),
+        HabitIcon("cook", Icons.Outlined.Kitchen, "Cuisine", "Cooking", IconCategory.HOME, listOf("cuisine", "cuisiner", "cook", "frigo")),
+        HabitIcon("family", Icons.Outlined.ChildCare, "Famille", "Family", IconCategory.HOME, listOf("famille", "enfant", "family", "bébé", "bebe")),
     )
 
     private val iconMap: Map<String, HabitIcon> = ICONS.associateBy { it.id }

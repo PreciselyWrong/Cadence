@@ -58,6 +58,7 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Écrire une valeur d'espacement, de rayon, de couleur ou de durée en dur dans un écran — tout provient de `Space`, `Radius`, `Elevation`, `Size`, `Motion` et de la palette Cadence.
 - ⛔ Empiler une carte dans une carte — une unité fonctionnelle est une seule surface, la hiérarchie interne vient de la typographie et de l'espacement.
 - ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget — l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
+- ⛔ Nommer un planning « période flexible » sans expliquer son effet — les rythmes doivent décrire concrètement les jours où l’habitude apparaît.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

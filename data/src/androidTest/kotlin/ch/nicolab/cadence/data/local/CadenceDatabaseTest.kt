@@ -95,6 +95,7 @@ class CadenceDatabaseTest {
                 mode = ScheduleMode.FLEXIBLE_PERIOD,
                 activeDays = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
                 firstDayOfWeek = DayOfWeek.MONDAY,
+                intervalDays = 3,
             ),
         )
 
@@ -108,6 +109,7 @@ class CadenceDatabaseTest {
         assertEquals(MeasurementUnit.MINUTES, loadedPast.goal.unit)
         assertEquals(3, loadedPast.goal.frequencyTarget)
         assertEquals(ScheduleMode.FLEXIBLE_PERIOD, loadedPast.schedule.mode)
+        assertEquals(3, loadedPast.schedule.intervalDays)
 
         // Update habit goal effective for future date
         val futureDate = LocalDate.of(2026, 8, 20)

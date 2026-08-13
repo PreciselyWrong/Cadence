@@ -25,4 +25,5 @@ data class HabitScheduleEntity(
     val activeDays: String,
     val firstDayOfWeek: String,
     val effectiveFrom: String,
+    val intervalDays: Int = 2,
 )

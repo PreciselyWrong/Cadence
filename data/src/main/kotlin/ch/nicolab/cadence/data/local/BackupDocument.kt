@@ -60,6 +60,7 @@ data class BackupScheduleV2(
     val activeDays: List<String>,
     val firstDayOfWeek: String,
     val effectiveFrom: String,
+    val intervalDays: Int = 2,
 )
 
 @Serializable

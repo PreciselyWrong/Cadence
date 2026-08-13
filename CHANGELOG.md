@@ -1,6 +1,8 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- De nouvelles icônes couvrent le sport, la maison, les loisirs et le quotidien.
+- Une habitude peut revenir tous les deux, trois jours ou davantage.
 - Chaque habitude peut avoir son icône, sa couleur et son unité.
 - Les objectifs acceptent désormais les durées, quantités et semaines personnalisées.
 - La saisie rapide permet une valeur libre et l’annulation du dernier ajout.
@@ -8,6 +10,7 @@
 - Les six dernières périodes montrent l’évolution réelle de chaque habitude.
 
 ### Améliorations
+- Le planning libre explique clairement que l’objectif peut être fait n’importe quel jour.
 - Le widget peut afficher jusqu’à six habitudes sur une ligne.
 - Le widget s’adapte à sa largeur et affiche la progression utile.
 - Un toucher sur le widget ouvre seulement l’habitude choisie.

@@ -171,6 +171,21 @@ class HabitEvaluatorTest {
     }
 
     @Test
+    fun `every three days is anchored to the habit start date`() {
+        val habit = habit(
+            target = 1,
+            mode = ScheduleMode.INTERVAL_DAYS,
+            startsOn = LocalDate.of(2026, 8, 10),
+            intervalDays = 3,
+        )
+
+        assertTrue(evaluator.evaluate(habit, LocalDate.of(2026, 8, 10), emptyList()).isPlannedForDate)
+        assertFalse(evaluator.evaluate(habit, LocalDate.of(2026, 8, 11), emptyList()).isPlannedForDate)
+        assertFalse(evaluator.evaluate(habit, LocalDate.of(2026, 8, 12), emptyList()).isPlannedForDate)
+        assertTrue(evaluator.evaluate(habit, LocalDate.of(2026, 8, 13), emptyList()).isPlannedForDate)
+    }
+
+    @Test
     fun `frequency target is distinct from quantity target`() {
         val habit = habit(
             target = 60,
@@ -306,6 +321,7 @@ class HabitEvaluatorTest {
         startsOn: LocalDate = LocalDate.of(1970, 1, 1),
         archived: Boolean = false,
         activeDays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
+        intervalDays: Int = 2,
     ) = HabitDefinition(
         id = id,
         name = "Test Habit",
@@ -323,6 +339,7 @@ class HabitEvaluatorTest {
             mode = mode,
             activeDays = activeDays,
             firstDayOfWeek = firstDay,
+            intervalDays = intervalDays,
         ),
     )
 

@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test
 class HabitIconRegistryTest {
     @Test
     fun `stable icon registry is broad and searchable in French and English`() {
-        assertTrue(HabitIconRegistry.ICONS.size >= 30)
+        assertTrue(HabitIconRegistry.ICONS.size >= 50)
         assertEquals("run", HabitIconRegistry.search("running").single().id)
         assertEquals("water", HabitIconRegistry.search("eau").single().id)
+        assertEquals("coffee", HabitIconRegistry.search("café").single().id)
     }
 
     @Test

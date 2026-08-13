@@ -79,6 +79,7 @@ enum class ScheduleMode {
     EVERY_DAY,
     SELECTED_DAYS,
     FLEXIBLE_PERIOD,
+    INTERVAL_DAYS,
 }
 
 data class HabitGoal(
@@ -98,11 +99,13 @@ data class HabitSchedule(
     val mode: ScheduleMode = ScheduleMode.SELECTED_DAYS,
     val activeDays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
     val firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
+    val intervalDays: Int = 2,
 ) {
     init {
         if (mode == ScheduleMode.SELECTED_DAYS) {
             require(activeDays.isNotEmpty()) { "At least one active day is required for SELECTED_DAYS" }
         }
+        require(intervalDays >= 2) { "Interval must be at least two days" }
     }
 
     constructor(
@@ -112,6 +115,7 @@ data class HabitSchedule(
         mode = ScheduleMode.SELECTED_DAYS,
         activeDays = activeDays,
         firstDayOfWeek = firstDayOfWeek,
+        intervalDays = 2,
     )
 }
 

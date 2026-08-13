@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.domain
 
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 data class HabitEvaluation(
     val habit: HabitDefinition,
@@ -42,6 +43,7 @@ class HabitEvaluator {
             ScheduleMode.EVERY_DAY -> true
             ScheduleMode.SELECTED_DAYS -> date.dayOfWeek in habit.schedule.activeDays
             ScheduleMode.FLEXIBLE_PERIOD -> true
+            ScheduleMode.INTERVAL_DAYS -> ChronoUnit.DAYS.between(habit.startsOn, date) % habit.schedule.intervalDays == 0L
         }
 
         val needsAttentionNow = isPlannedForDate && !paused && !isCompleted

@@ -13,6 +13,7 @@
 - [ ] Chronomètre de durée
 
 ## Done
+- [x] Ajouter les rythmes tous les N jours et enrichir les icônes
 - [x] Régler jusqu’à six habitudes par ligne dans le widget
 - [x] Rafraîchir le widget après une saisie et installer la publication sur le téléphone connecté
 - [x] Rappels conditionnels

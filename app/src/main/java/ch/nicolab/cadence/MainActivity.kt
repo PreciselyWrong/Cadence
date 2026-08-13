@@ -494,6 +494,7 @@ private class EditorState(
     activeDays: Set<DayOfWeek> = DayOfWeek.entries.toSet(), firstDay: DayOfWeek = DayOfWeek.MONDAY,
     quickValues: String = "1", reminderTimes: String = "", conditionalReminders: Boolean = true,
     frequencyTarget: String = "",
+    intervalDays: String = "2",
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -514,6 +515,7 @@ private class EditorState(
     var reminderTimes by mutableStateOf(reminderTimes)
     var conditionalReminders by mutableStateOf(conditionalReminders)
     var frequencyTarget by mutableStateOf(frequencyTarget)
+    var intervalDays by mutableStateOf(intervalDays)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -539,6 +541,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                 reminderTimes = existing?.reminders?.joinToString(", ") { it.time }.orEmpty(),
                 conditionalReminders = existing?.reminders?.all { it.conditional } ?: true,
                 frequencyTarget = stored?.goal?.frequencyTarget?.toString().orEmpty(),
+                intervalDays = stored?.schedule?.intervalDays?.toString() ?: "2",
             ),
         )
     }.value
@@ -552,6 +555,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
     val incompleteUnit = stringResource(R.string.form_error_incomplete_unit)
     val noDay = stringResource(R.string.form_error_no_day)
     val badTime = stringResource(R.string.form_error_time_format)
+    val badInterval = stringResource(R.string.form_error_interval_days)
 
     CadenceSheet(
         title = stringResource(stepTitles[state.step]),
@@ -685,6 +689,19 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                             }
                         }
                     }
+                    if (state.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) item {
+                        Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodyMedium, color = palette.inkFaint)
+                    }
+                    if (state.scheduleMode == ScheduleMode.INTERVAL_DAYS) item {
+                        CadenceField(
+                            state.intervalDays,
+                            { state.intervalDays = it.filter(Char::isDigit) },
+                            stringResource(R.string.form_schedule_interval_days),
+                            support = stringResource(R.string.form_schedule_interval_support),
+                            accent = accent,
+                            numeric = true,
+                        )
+                    }
                 }
                 else -> {
                     item {
@@ -732,6 +749,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                         state.frequencyTarget.isNotBlank() && (frequency ?: 0) <= 0 -> error = positiveFrequency
                         state.customUnit && (state.customName.isBlank() || state.customSymbol.isBlank()) -> error = incompleteUnit
                         state.scheduleMode == ScheduleMode.SELECTED_DAYS && state.activeDays.isEmpty() -> error = noDay
+                        state.scheduleMode == ScheduleMode.INTERVAL_DAYS && (state.intervalDays.toIntOrNull() ?: 0) < 2 -> error = badInterval
                         reminderTimes.any { runCatching { java.time.LocalTime.parse(it) }.isFailure } -> error = badTime
                         else -> {
                             val base = stored
@@ -748,7 +766,7 @@ private fun HabitEditor(existing: HabitCardState?, dismiss: () -> Unit, save: (P
                                 createdAtEpochMs = base?.createdAtEpochMs ?: 0,
                                 updatedAtEpochMs = base?.updatedAtEpochMs ?: 0,
                                 goal = HabitGoal(target * (unit?.scaleToCanonical ?: 1), state.period, state.goalType, unit, frequency),
-                                schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay),
+                                schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay, state.intervalDays.toIntOrNull() ?: 2),
                             )
                             save(habit, quick, reminderTimes, state.conditionalReminders, stored == null)
                         }

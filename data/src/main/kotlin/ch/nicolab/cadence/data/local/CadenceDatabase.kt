@@ -32,7 +32,7 @@ import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -89,6 +89,12 @@ abstract class CadenceDatabase : RoomDatabase() {
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN maxHabitsPerRow INTEGER NOT NULL DEFAULT 4")
+            }
+        }
+
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habit_schedules ADD COLUMN intervalDays INTEGER NOT NULL DEFAULT 2")
             }
         }
     }

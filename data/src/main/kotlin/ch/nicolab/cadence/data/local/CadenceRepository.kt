@@ -139,6 +139,7 @@ class CadenceRepository(
                 activeDays = habit.schedule.activeDays.joinToString(",") { it.name },
                 firstDayOfWeek = habit.schedule.firstDayOfWeek.name,
                 effectiveFrom = effectiveFrom.toString(),
+                intervalDays = habit.schedule.intervalDays,
             )
 
             database.habitDao().insertHabit(habitEntity)
@@ -199,6 +200,7 @@ class CadenceRepository(
                 activeDays = habit.schedule.activeDays.joinToString(",") { it.name },
                 firstDayOfWeek = habit.schedule.firstDayOfWeek.name,
                 effectiveFrom = effectiveDate.toString(),
+                intervalDays = habit.schedule.intervalDays,
             )
 
             database.habitDao().updateHabit(habitEntity)
@@ -398,6 +400,7 @@ class CadenceRepository(
                     activeDays = s.activeDays.split(",").filter(String::isNotBlank),
                     firstDayOfWeek = s.firstDayOfWeek,
                     effectiveFrom = s.effectiveFrom,
+                    intervalDays = s.intervalDays,
                 )
             }
 
@@ -535,6 +538,7 @@ class CadenceRepository(
                         activeDays = s.activeDays.joinToString(","),
                         firstDayOfWeek = s.firstDayOfWeek,
                         effectiveFrom = s.effectiveFrom,
+                        intervalDays = s.intervalDays,
                     )
                     database.habitDao().insertSchedule(scheduleEntity)
                 }
@@ -631,6 +635,7 @@ class CadenceRepository(
 
             habit.schedules.forEach { s ->
                 require(s.habitId == habit.id) { "Schedule habitId mismatch" }
+                require(s.intervalDays >= 2) { "Schedule interval must be at least two days" }
                 LocalDate.parse(s.effectiveFrom)
             }
         }
@@ -704,6 +709,7 @@ class CadenceRepository(
                         activeDays = h.activeDays,
                         firstDayOfWeek = h.firstDayOfWeek,
                         effectiveFrom = "1970-01-01",
+                        intervalDays = 2,
                     )
                 ),
             )
@@ -789,6 +795,7 @@ class CadenceRepository(
                 mode = ScheduleMode.valueOf(scheduleEntity.scheduleMode),
                 activeDays = activeDays,
                 firstDayOfWeek = DayOfWeek.valueOf(scheduleEntity.firstDayOfWeek),
+                intervalDays = scheduleEntity.intervalDays,
             ),
         )
     }

@@ -48,6 +48,7 @@ object HabitLabels {
         ScheduleMode.EVERY_DAY -> R.string.form_schedule_every_day
         ScheduleMode.SELECTED_DAYS -> R.string.form_schedule_selected_days
         ScheduleMode.FLEXIBLE_PERIOD -> R.string.form_schedule_flexible
+        ScheduleMode.INTERVAL_DAYS -> R.string.form_schedule_interval
     }
 
     @StringRes
