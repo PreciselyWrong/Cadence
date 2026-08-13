@@ -133,6 +133,11 @@ private fun WidgetConfiguration(
     var progressStyle by remember { mutableStateOf(initial.progressStyle) }
     var showDone by remember { mutableStateOf(initial.showDoneIndicator) }
     var maxHabitsPerRow by remember { mutableFloatStateOf(initial.maxHabitsPerRow.toFloat()) }
+    var showLabels by remember { mutableStateOf(initial.showLabels) }
+    var labelTextSize by remember { mutableFloatStateOf(initial.labelTextSizeSp.toFloat()) }
+    var labelOpacity by remember { mutableFloatStateOf(initial.labelOpacity.toFloat()) }
+    var valueTextSize by remember { mutableFloatStateOf(initial.valueTextSizeSp.toFloat()) }
+    var valueOpacity by remember { mutableFloatStateOf(initial.valueOpacity.toFloat()) }
 
     CadenceScreen {
         LazyColumn(
@@ -200,7 +205,18 @@ private fun WidgetConfiguration(
             item { SectionLabel(stringResource(R.string.widget_config_content_section)) }
             item {
                 Panel {
+                    ToggleRow(stringResource(R.string.widget_config_show_labels), showLabels) { showLabels = it }
+                    if (showLabels) {
+                        Spacer(Modifier.height(Space.sm))
+                        SliderRow(stringResource(R.string.widget_config_label_size, labelTextSize.toInt()), labelTextSize, 8f..18f, 9) { labelTextSize = it }
+                        SliderRow(stringResource(R.string.widget_config_label_opacity, labelOpacity.toInt()), labelOpacity, 0f..100f, 9) { labelOpacity = it }
+                    }
                     ToggleRow(stringResource(R.string.widget_config_show_values), showValues) { showValues = it }
+                    if (showValues) {
+                        Spacer(Modifier.height(Space.sm))
+                        SliderRow(stringResource(R.string.widget_config_value_size, valueTextSize.toInt()), valueTextSize, 8f..18f, 9) { valueTextSize = it }
+                        SliderRow(stringResource(R.string.widget_config_value_opacity, valueOpacity.toInt()), valueOpacity, 0f..100f, 9) { valueOpacity = it }
+                    }
                     ToggleRow(stringResource(R.string.widget_config_show_done), showDone) { showDone = it }
                     Spacer(Modifier.height(Space.md))
                     SliderRow(
@@ -236,6 +252,11 @@ private fun WidgetConfiguration(
                             progressStyle = progressStyle,
                             showDoneIndicator = showDone,
                             maxHabitsPerRow = maxHabitsPerRow.toInt(),
+                            showLabels = showLabels,
+                            labelTextSizeSp = labelTextSize.toInt(),
+                            labelOpacity = labelOpacity.toInt(),
+                            valueTextSizeSp = valueTextSize.toInt(),
+                            valueOpacity = valueOpacity.toInt(),
                         ),
                         if (all) emptyList() else selected.toList(),
                     )

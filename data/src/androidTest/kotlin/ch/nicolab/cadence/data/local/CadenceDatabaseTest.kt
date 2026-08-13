@@ -186,7 +186,17 @@ class CadenceDatabaseTest {
         repository.addQuickValue("habit-backup", "qv-1", "+10", 10L, 1)
         repository.addPause("habit-backup", "p-1", HabitPause(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 5)))
         repository.saveWidgetConfig(
-            WidgetConfigurationEntity(appWidgetId = 101, title = "Main Widget", theme = "DARK", maxHabitsPerRow = 6),
+            WidgetConfigurationEntity(
+                appWidgetId = 101,
+                title = "Main Widget",
+                theme = "DARK",
+                maxHabitsPerRow = 6,
+                showLabels = true,
+                labelTextSizeSp = 14,
+                labelOpacity = 70,
+                valueTextSizeSp = 12,
+                valueOpacity = 80,
+            ),
             listOf("habit-backup"),
         )
 
@@ -208,6 +218,11 @@ class CadenceDatabaseTest {
         val widgetHabits = repository.getWidgetHabitIds(101)
         assertEquals(listOf("habit-backup"), widgetHabits)
         assertEquals(6, repository.getWidgetConfig(101)?.maxHabitsPerRow)
+        assertEquals(true, repository.getWidgetConfig(101)?.showLabels)
+        assertEquals(14, repository.getWidgetConfig(101)?.labelTextSizeSp)
+        assertEquals(70, repository.getWidgetConfig(101)?.labelOpacity)
+        assertEquals(12, repository.getWidgetConfig(101)?.valueTextSizeSp)
+        assertEquals(80, repository.getWidgetConfig(101)?.valueOpacity)
     }
 
     @Test

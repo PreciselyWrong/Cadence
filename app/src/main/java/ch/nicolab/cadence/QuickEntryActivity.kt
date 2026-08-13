@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.domain.GoalType
@@ -97,14 +98,14 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
             contentColor = palette.ink,
             shadowElevation = Elevation.floating,
         ) {
-            Column(Modifier.navigationBarsPadding().padding(horizontal = Space.xl, vertical = Space.lg)) {
+            Column(Modifier.navigationBarsPadding().padding(horizontal = Space.xl, vertical = Space.lg), horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(Modifier.align(Alignment.CenterHorizontally).width(36.dp).height(4.dp).background(palette.hairline, CircleShape))
                 Spacer(Modifier.height(Space.lg))
-                Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
-                Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.ink)
+                Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint, textAlign = TextAlign.Center)
+                Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.ink, textAlign = TextAlign.Center)
                 Spacer(Modifier.height(Space.lg))
                 if (pending.isEmpty()) {
-                    Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically) {
+                    Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Box(Modifier.size(36.dp).clip(CircleShape).background(palette.success.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
                         }
@@ -146,16 +147,17 @@ private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
     val tint = habit.stored.colorArgb?.let(::Color) ?: palette.accent
     val target = goal.targetMinor.takeIf { it > 0 } ?: 1L
-    Column(Modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             HabitFacet(icon.imageVector, icon.labelFr, (habit.evaluation.progressMinor.toFloat() / target), tint, tint.copy(alpha = 0.20f), size = Size.badge)
             Spacer(Modifier.width(Space.md))
-            Column(Modifier.weight(1f)) {
-                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
                 Text(
                     HabitFormatter.formatProgress(habit.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit),
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.inkFaint,
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -163,7 +165,7 @@ private fun QuickHabit(habit: HabitCardState, add: (Long, String) -> Unit) {
         if (goal.goalType == GoalType.BINARY) {
             PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, sessionId) }
         } else {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 habit.quickValues.ifEmpty { listOf(goal.unit?.scaleToCanonical ?: 1) }.forEach { value ->
                     ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, sessionId) }
                 }

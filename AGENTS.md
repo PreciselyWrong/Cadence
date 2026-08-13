@@ -59,6 +59,9 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Empiler une carte dans une carte — une unité fonctionnelle est une seule surface, la hiérarchie interne vient de la typographie et de l'espacement.
 - ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget — l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
 - ⛔ Nommer un planning « période flexible » sans expliquer son effet — les rythmes doivent décrire concrètement les jours où l’habitude apparaît.
+- ⛔ Réduire le nombre d’icônes du widget à cause de sa hauteur — seuls les textes s’effacent lorsque l’espace vertical manque.
+- ⛔ Répartir irrégulièrement les habitudes dans le widget — chaque élément occupe une largeur identique et l’ensemble reste centré.
+- ⛔ Aligner le contenu principal d’un modal de saisie sur un bord — titres, progression et choix rapides restent centrés.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

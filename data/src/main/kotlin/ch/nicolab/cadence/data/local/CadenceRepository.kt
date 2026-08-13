@@ -463,6 +463,11 @@ class CadenceRepository(
                 progressStyle = c.progressStyle,
                 showDoneIndicator = c.showDoneIndicator,
                 maxHabitsPerRow = c.maxHabitsPerRow,
+                showLabels = c.showLabels,
+                labelTextSizeSp = c.labelTextSizeSp,
+                labelOpacity = c.labelOpacity,
+                valueTextSizeSp = c.valueTextSizeSp,
+                valueOpacity = c.valueOpacity,
             )
         }
 
@@ -609,6 +614,11 @@ class CadenceRepository(
                     progressStyle = w.progressStyle,
                     showDoneIndicator = w.showDoneIndicator,
                     maxHabitsPerRow = w.maxHabitsPerRow,
+                    showLabels = w.showLabels,
+                    labelTextSizeSp = w.labelTextSizeSp,
+                    labelOpacity = w.labelOpacity,
+                    valueTextSizeSp = w.valueTextSizeSp,
+                    valueOpacity = w.valueOpacity,
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
@@ -669,6 +679,10 @@ class CadenceRepository(
             require(w.opacity in 0..100) { "Widget opacity must be between 0 and 100" }
             require(w.iconSizeDp in 24..48) { "Widget icon size is invalid" }
             require(w.maxHabitsPerRow in 1..6) { "Widget habits per row is invalid" }
+            require(w.labelTextSizeSp in 8..18) { "Widget label size is invalid" }
+            require(w.valueTextSizeSp in 8..18) { "Widget value size is invalid" }
+            require(w.labelOpacity in 0..100) { "Widget label opacity is invalid" }
+            require(w.valueOpacity in 0..100) { "Widget value opacity is invalid" }
             w.selectedHabitIds.forEach { hId ->
                 require(hId in habitIds) { "Widget config references missing habitId $hId" }
             }

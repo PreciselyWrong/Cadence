@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Space
@@ -57,14 +59,14 @@ fun CadenceSheet(
         },
         modifier = modifier,
     ) {
-        Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = Space.xl)) {
-            Row(Modifier.fillMaxWidth().padding(top = Space.sm, bottom = Space.lg), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = Space.xl), horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(Modifier.fillMaxWidth().padding(top = Space.sm, bottom = Space.lg), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                 leading?.let { it(); Spacer(Modifier.width(Space.md)) }
-                Column(Modifier.weight(1f)) {
-                    Text(title, style = MaterialTheme.typography.headlineSmall, color = palette.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(title, style = MaterialTheme.typography.headlineSmall, color = palette.ink, maxLines = 2, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
                     subtitle?.let {
                         Spacer(Modifier.height(2.dp))
-                        Text(it, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted, textAlign = TextAlign.Center)
                     }
                 }
             }

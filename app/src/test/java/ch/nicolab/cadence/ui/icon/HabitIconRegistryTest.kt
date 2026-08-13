@@ -11,6 +11,10 @@ class HabitIconRegistryTest {
         assertEquals("run", HabitIconRegistry.search("running").single().id)
         assertEquals("water", HabitIconRegistry.search("eau").single().id)
         assertEquals("coffee", HabitIconRegistry.search("café").single().id)
+        assertEquals("stretch", HabitIconRegistry.search("bras en l'air").single().id)
+        assertEquals("abs", HabitIconRegistry.search("abdos").single().id)
+        assertEquals("toothpaste", HabitIconRegistry.search("dentifrice").single().id)
+        assertEquals("cream", HabitIconRegistry.search("crème").single().id)
     }
 
     @Test

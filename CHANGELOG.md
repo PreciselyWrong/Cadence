@@ -1,6 +1,7 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Le widget peut afficher le nom des habitudes avec une taille et une transparence réglables.
 - De nouvelles icônes couvrent le sport, la maison, les loisirs et le quotidien.
 - Une habitude peut revenir tous les deux, trois jours ou davantage.
 - Chaque habitude peut avoir son icône, sa couleur et son unité.
@@ -10,6 +11,11 @@
 - Les six dernières périodes montrent l’évolution réelle de chaque habitude.
 
 ### Améliorations
+- Les valeurs du widget ont leur propre taille et transparence.
+- Les habitudes restent centrées et également réparties sur toute la largeur.
+- Réduire la hauteur masque les textes avant de retirer une habitude.
+- Les fenêtres de saisie recentrent leur contenu.
+- De nouvelles icônes couvrent les étirements, les abdos et les soins.
 - Le planning libre explique clairement que l’objectif peut être fait n’importe quel jour.
 - Le widget peut afficher jusqu’à six habitudes sur une ligne.
 - Le widget s’adapte à sa largeur et affiche la progression utile.

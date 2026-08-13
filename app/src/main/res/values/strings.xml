@@ -142,6 +142,11 @@
     <string name="widget_config_style_mono">Monochrome clair</string>
     <string name="widget_config_opacity_label">Opacité du fond (%1$d%%)</string>
     <string name="widget_config_show_values">Afficher les valeurs numériques</string>
+    <string name="widget_config_show_labels">Afficher le nom des habitudes</string>
+    <string name="widget_config_label_size">Taille des noms (%1$d)</string>
+    <string name="widget_config_label_opacity">Transparence des noms (%1$d%%)</string>
+    <string name="widget_config_value_size">Taille des valeurs (%1$d)</string>
+    <string name="widget_config_value_opacity">Transparence des valeurs (%1$d%%)</string>
     <string name="widget_config_icon_size">Taille des icônes (%1$d dp)</string>
     <string name="widget_config_progress_style">Style de progression</string>
     <string name="widget_config_progress_ring">Anneau</string>

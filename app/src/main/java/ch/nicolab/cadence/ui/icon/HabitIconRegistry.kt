@@ -75,6 +75,10 @@ import androidx.compose.material.icons.outlined.Spa
 import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.Yard
+import androidx.compose.material.icons.outlined.AccessibilityNew
+import androidx.compose.material.icons.outlined.CleanHands
+import androidx.compose.material.icons.outlined.Soap
+import androidx.compose.material.icons.outlined.SportsGymnastics
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -133,6 +137,10 @@ object HabitIconRegistry {
         HabitIcon("coffee", Icons.Outlined.Coffee, "Café", "Coffee", IconCategory.HEALTH, listOf("café", "cafe", "coffee", "thé", "the")),
         HabitIcon("smoke-free", Icons.Outlined.SmokeFree, "Sans tabac", "Smoke free", IconCategory.HEALTH, listOf("tabac", "cigarette", "smoke", "arreter")),
         HabitIcon("hike", Icons.Outlined.Hiking, "Randonnée", "Hiking", IconCategory.HEALTH, listOf("randonnee", "hike", "montagne", "marche")),
+        HabitIcon("stretch", Icons.Outlined.AccessibilityNew, "Étirements", "Stretching", IconCategory.HEALTH, listOf("étirements", "etirements", "stretch", "bras en l'air", "échauffement")),
+        HabitIcon("abs", Icons.Outlined.SportsGymnastics, "Abdos", "Abs", IconCategory.HEALTH, listOf("abdos", "abdominaux", "gainage", "abs", "gymnastique")),
+        HabitIcon("toothpaste", Icons.Outlined.CleanHands, "Dentifrice", "Toothpaste", IconCategory.HEALTH, listOf("dentifrice", "dents", "brossage", "toothpaste", "hygiène")),
+        HabitIcon("cream", Icons.Outlined.Soap, "Crème", "Cream", IconCategory.HEALTH, listOf("crème", "creme", "soin", "peau", "cream", "cosmétique")),
 
         HabitIcon("book", Icons.AutoMirrored.Outlined.MenuBook, "Lecture", "Reading", IconCategory.PRODUCTIVITY, listOf("lecture", "book", "livre", "read")),
         HabitIcon("study", Icons.Outlined.School, "Études", "Study", IconCategory.PRODUCTIVITY, listOf("etudes", "study", "ecole", "school", "apprendre")),

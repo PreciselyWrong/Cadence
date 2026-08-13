@@ -15,4 +15,9 @@ data class WidgetConfigurationEntity(
     val progressStyle: String = "RING",
     val showDoneIndicator: Boolean = true,
     val maxHabitsPerRow: Int = 4,
+    val showLabels: Boolean = false,
+    val labelTextSizeSp: Int = 11,
+    val labelOpacity: Int = 100,
+    val valueTextSizeSp: Int = 11,
+    val valueOpacity: Int = 100,
 )
