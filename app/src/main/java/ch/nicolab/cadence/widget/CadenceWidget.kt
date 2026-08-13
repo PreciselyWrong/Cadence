@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidPath
@@ -46,6 +48,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.text.TextAlign
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
+import ch.nicolab.cadence.MainActivity
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
@@ -82,7 +85,10 @@ class CadenceWidget : GlanceAppWidget() {
         val config = repository.getWidgetConfig(appWidgetId) ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
         val pending = if (config.selectAll || selected.isEmpty()) allPending else allPending.filter { it.habit.id in selected }
-        val iconBitmaps = pending.associate { item -> item.habit.id to renderIcon(item.habit.iconId, item.habit.colorArgb ?: 0xFFF7F8FC.toInt(), config.iconSizeDp) }
+        val iconBitmaps = pending.associate { item ->
+            val color = if (config.monochromeIcons) 0xFFF7F8FC.toInt() else item.habit.colorArgb ?: 0xFFF7F8FC.toInt()
+            item.habit.id to renderIcon(item.habit.iconId, color, config.iconSizeDp, config.iconOpacity, config.iconSaturation)
+        }
         provideContent { WidgetLine(pending, config, iconBitmaps) }
     }
 }
@@ -104,7 +110,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     val configuredCount = habits.size.coerceAtMost(config.maxHabitsPerRow.coerceIn(1, 6))
     val spaceOverflow = capacity < configuredCount && capacity > 1
     val visibleHabitCount = if (spaceOverflow) capacity - 1 else capacity
-    val cellWidthDp = ((LocalSize.current.width.value - 20f) / capacity.coerceAtLeast(1)).toInt().coerceAtLeast(40)
+    val cellWidthDp = (LocalSize.current.width.value - 20f) / capacity.coerceAtLeast(1)
     val textVisibility = WidgetLayoutCalculator.resolve(
         LocalSize.current.height.value.toInt(),
         config.iconSizeDp,
@@ -115,8 +121,11 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     )
     val labelColor = content.copy(alpha = config.labelOpacity.coerceIn(0, 100) / 100f)
     val valueColor = content.copy(alpha = config.valueOpacity.coerceIn(0, 100) / 100f)
+    Box(
+        modifier = GlanceModifier.fillMaxSize().background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).clickable(actionStartActivity<MainActivity>()),
+    ) {
     Row(
-        modifier = GlanceModifier.fillMaxSize().background(ColorProvider(day = surface, night = surface)).cornerRadius(28.dp).padding(horizontal = 10.dp),
+        modifier = GlanceModifier.fillMaxSize().padding(horizontal = 10.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
         horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
     ) {
@@ -139,16 +148,22 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
             }
         }
     }
+    }
 }
 
 private val habitIdKey = ActionParameters.Key<String>(QuickEntryActivity.EXTRA_HABIT_ID)
 
-private fun renderIcon(iconId: String?, argb: Int, sizeDp: Int): Bitmap {
+private fun renderIcon(iconId: String?, argb: Int, sizeDp: Int, opacity: Int, saturation: Int): Bitmap {
     val vector = HabitIconRegistry.getIcon(iconId).imageVector
     val pixels = (sizeDp.coerceIn(24, 48) * 2).coerceAtLeast(48)
     val bitmap = Bitmap.createBitmap(pixels, pixels, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = argb; style = Paint.Style.FILL }
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = argb
+        alpha = (opacity.coerceIn(0, 100) * 255 / 100)
+        colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(saturation.coerceIn(0, 100) / 100f) })
+        style = Paint.Style.FILL
+    }
     val scale = pixels / vector.viewportWidth
     canvas.scale(scale, scale)
     fun draw(group: VectorGroup) {

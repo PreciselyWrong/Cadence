@@ -468,6 +468,9 @@ class CadenceRepository(
                 labelOpacity = c.labelOpacity,
                 valueTextSizeSp = c.valueTextSizeSp,
                 valueOpacity = c.valueOpacity,
+                iconOpacity = c.iconOpacity,
+                iconSaturation = c.iconSaturation,
+                monochromeIcons = c.monochromeIcons,
             )
         }
 
@@ -619,6 +622,9 @@ class CadenceRepository(
                     labelOpacity = w.labelOpacity,
                     valueTextSizeSp = w.valueTextSizeSp,
                     valueOpacity = w.valueOpacity,
+                    iconOpacity = w.iconOpacity,
+                    iconSaturation = w.iconSaturation,
+                    monochromeIcons = w.monochromeIcons,
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
@@ -683,6 +689,8 @@ class CadenceRepository(
             require(w.valueTextSizeSp in 8..18) { "Widget value size is invalid" }
             require(w.labelOpacity in 0..100) { "Widget label opacity is invalid" }
             require(w.valueOpacity in 0..100) { "Widget value opacity is invalid" }
+            require(w.iconOpacity in 0..100) { "Widget icon opacity is invalid" }
+            require(w.iconSaturation in 0..100) { "Widget icon saturation is invalid" }
             w.selectedHabitIds.forEach { hId ->
                 require(hId in habitIds) { "Widget config references missing habitId $hId" }
             }

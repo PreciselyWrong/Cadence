@@ -1,6 +1,9 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Les statistiques montrent maintenant les douze dernières semaines sous forme de calendrier coloré.
+- Une habitude peut être masquée pour aujourd’hui sans être comptée comme faite.
+- Une nouvelle icône de dent rejoint les soins du quotidien.
 - Le widget peut afficher le nom des habitudes avec une taille et une transparence réglables.
 - De nouvelles icônes couvrent le sport, la maison, les loisirs et le quotidien.
 - Une habitude peut revenir tous les deux, trois jours ou davantage.
@@ -11,6 +14,9 @@
 - Les six dernières périodes montrent l’évolution réelle de chaque habitude.
 
 ### Améliorations
+- La transparence, la saturation et le rendu monochrome des icônes du widget sont réglables séparément.
+- Les habitudes occupent toute la largeur du widget avec un espacement uniforme.
+- Un toucher dans l’espace libre du widget ouvre Cadence.
 - Les valeurs du widget ont leur propre taille et transparence.
 - Les habitudes restent centrées et également réparties sur toute la largeur.
 - Réduire la hauteur masque les textes avant de retirer une habitude.

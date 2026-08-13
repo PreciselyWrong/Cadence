@@ -46,6 +46,7 @@ import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.TrackChanges
+import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -176,6 +177,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             dismiss = { options = null },
             edit = { editor = item; options = null },
             pause = { viewModel.togglePause(item); options = null },
+            skipToday = { viewModel.skipToday(item); options = null },
             archive = { viewModel.archiveHabit(item.stored, !item.stored.archived); options = null },
             duplicate = { viewModel.duplicateHabit(item.stored); options = null },
             up = { viewModel.moveHabit(item.stored.id, -1); options = null },
@@ -358,6 +360,8 @@ private fun StatsScreen(habits: List<HabitCardState>) {
                 Hairline()
                 Spacer(Modifier.height(Space.lg))
                 HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth())
+                Spacer(Modifier.height(Space.xl))
+                HabitHeatmap(item.dailyHistory, tint, Modifier.fillMaxWidth())
             }
         }
     }
@@ -408,6 +412,7 @@ private fun HabitOptionsSheet(
     dismiss: () -> Unit,
     edit: () -> Unit,
     pause: () -> Unit,
+    skipToday: () -> Unit,
     archive: () -> Unit,
     duplicate: () -> Unit,
     up: () -> Unit,
@@ -429,6 +434,9 @@ private fun HabitOptionsSheet(
             tint,
             pause,
         )
+        if (!item.evaluation.isPaused) {
+            ActionRow(Icons.Outlined.EventBusy, stringResource(R.string.action_skip_today), tint, skipToday)
+        }
         ActionRow(
             if (item.stored.archived) Icons.Outlined.Restore else Icons.Outlined.Archive,
             stringResource(if (item.stored.archived) R.string.action_restore else R.string.action_archive),

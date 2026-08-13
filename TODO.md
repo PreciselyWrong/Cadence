@@ -13,6 +13,7 @@
 - [ ] Chronomètre de durée
 
 ## Done
+- [x] Enrichir le widget, les statistiques et l’action « Sauter aujourd’hui »
 - [x] Personnaliser les textes et la répartition du widget
 - [x] Ajouter les rythmes tous les N jours et enrichir les icônes
 - [x] Régler jusqu’à six habitudes par ligne dans le widget

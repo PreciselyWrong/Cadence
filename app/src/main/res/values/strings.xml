@@ -148,6 +148,9 @@
     <string name="widget_config_value_size">Taille des valeurs (%1$d)</string>
     <string name="widget_config_value_opacity">Transparence des valeurs (%1$d%%)</string>
     <string name="widget_config_icon_size">Taille des icônes (%1$d dp)</string>
+    <string name="widget_config_icon_opacity">Transparence des icônes (%1$d%%)</string>
+    <string name="widget_config_icon_saturation">Saturation des icônes (%1$d%%)</string>
+    <string name="widget_config_monochrome_icons">Icônes monochromes</string>
     <string name="widget_config_progress_style">Style de progression</string>
     <string name="widget_config_progress_ring">Anneau</string>
     <string name="widget_config_progress_bar">Barre</string>
@@ -200,4 +203,6 @@
     <string name="widget_config_content_section">Contenu</string>
     <string name="widget_config_saving">Enregistrement…</string>
     <string name="widget_config_save_error">Impossible d\'enregistrer. Réessayez.</string>
+    <string name="stats_heatmap_title">12 dernières semaines</string>
+    <string name="action_skip_today">Sauter aujourd’hui</string>
 </resources>

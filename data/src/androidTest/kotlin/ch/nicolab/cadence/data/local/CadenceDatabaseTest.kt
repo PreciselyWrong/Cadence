@@ -196,6 +196,9 @@ class CadenceDatabaseTest {
                 labelOpacity = 70,
                 valueTextSizeSp = 12,
                 valueOpacity = 80,
+                iconOpacity = 65,
+                iconSaturation = 40,
+                monochromeIcons = true,
             ),
             listOf("habit-backup"),
         )
@@ -223,6 +226,9 @@ class CadenceDatabaseTest {
         assertEquals(70, repository.getWidgetConfig(101)?.labelOpacity)
         assertEquals(12, repository.getWidgetConfig(101)?.valueTextSizeSp)
         assertEquals(80, repository.getWidgetConfig(101)?.valueOpacity)
+        assertEquals(65, repository.getWidgetConfig(101)?.iconOpacity)
+        assertEquals(40, repository.getWidgetConfig(101)?.iconSaturation)
+        assertEquals(true, repository.getWidgetConfig(101)?.monochromeIcons)
     }
 
     @Test

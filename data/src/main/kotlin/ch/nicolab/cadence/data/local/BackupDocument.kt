@@ -122,6 +122,9 @@ data class BackupWidgetConfigV2(
     val labelOpacity: Int = 100,
     val valueTextSizeSp: Int = 11,
     val valueOpacity: Int = 100,
+    val iconOpacity: Int = 100,
+    val iconSaturation: Int = 100,
+    val monochromeIcons: Boolean = false,
 )
 
 @Serializable

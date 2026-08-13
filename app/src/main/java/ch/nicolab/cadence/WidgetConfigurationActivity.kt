@@ -138,6 +138,9 @@ private fun WidgetConfiguration(
     var labelOpacity by remember { mutableFloatStateOf(initial.labelOpacity.toFloat()) }
     var valueTextSize by remember { mutableFloatStateOf(initial.valueTextSizeSp.toFloat()) }
     var valueOpacity by remember { mutableFloatStateOf(initial.valueOpacity.toFloat()) }
+    var iconOpacity by remember { mutableFloatStateOf(initial.iconOpacity.toFloat()) }
+    var iconSaturation by remember { mutableFloatStateOf(initial.iconSaturation.toFloat()) }
+    var monochromeIcons by remember { mutableStateOf(initial.monochromeIcons) }
 
     CadenceScreen {
         LazyColumn(
@@ -199,6 +202,9 @@ private fun WidgetConfiguration(
                     SliderRow(stringResource(R.string.widget_config_opacity_label, opacity.toInt()), opacity, 0f..100f, 9) { opacity = it }
                     Spacer(Modifier.height(Space.md))
                     SliderRow(stringResource(R.string.widget_config_icon_size, iconSize.toInt()), iconSize, 24f..48f, 5) { iconSize = it }
+                    SliderRow(stringResource(R.string.widget_config_icon_opacity, iconOpacity.toInt()), iconOpacity, 0f..100f, 9) { iconOpacity = it }
+                    SliderRow(stringResource(R.string.widget_config_icon_saturation, iconSaturation.toInt()), iconSaturation, 0f..100f, 9) { iconSaturation = it }
+                    ToggleRow(stringResource(R.string.widget_config_monochrome_icons), monochromeIcons) { monochromeIcons = it }
                 }
             }
 
@@ -257,6 +263,9 @@ private fun WidgetConfiguration(
                             labelOpacity = labelOpacity.toInt(),
                             valueTextSizeSp = valueTextSize.toInt(),
                             valueOpacity = valueOpacity.toInt(),
+                            iconOpacity = iconOpacity.toInt(),
+                            iconSaturation = iconSaturation.toInt(),
+                            monochromeIcons = monochromeIcons,
                         ),
                         if (all) emptyList() else selected.toList(),
                     )

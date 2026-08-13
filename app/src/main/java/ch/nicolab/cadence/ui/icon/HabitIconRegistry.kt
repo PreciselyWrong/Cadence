@@ -79,6 +79,10 @@ import androidx.compose.material.icons.outlined.AccessibilityNew
 import androidx.compose.material.icons.outlined.CleanHands
 import androidx.compose.material.icons.outlined.Soap
 import androidx.compose.material.icons.outlined.SportsGymnastics
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -92,7 +96,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -140,6 +143,7 @@ object HabitIconRegistry {
         HabitIcon("stretch", Icons.Outlined.AccessibilityNew, "Étirements", "Stretching", IconCategory.HEALTH, listOf("étirements", "etirements", "stretch", "bras en l'air", "échauffement")),
         HabitIcon("abs", Icons.Outlined.SportsGymnastics, "Abdos", "Abs", IconCategory.HEALTH, listOf("abdos", "abdominaux", "gainage", "abs", "gymnastique")),
         HabitIcon("toothpaste", Icons.Outlined.CleanHands, "Dentifrice", "Toothpaste", IconCategory.HEALTH, listOf("dentifrice", "dents", "brossage", "toothpaste", "hygiène")),
+        HabitIcon("tooth", ToothIcon, "Dent", "Tooth", IconCategory.HEALTH, listOf("dent", "dents", "dentaire", "dentiste", "tooth")),
         HabitIcon("cream", Icons.Outlined.Soap, "Crème", "Cream", IconCategory.HEALTH, listOf("crème", "creme", "soin", "peau", "cream", "cosmétique")),
 
         HabitIcon("book", Icons.AutoMirrored.Outlined.MenuBook, "Lecture", "Reading", IconCategory.PRODUCTIVITY, listOf("lecture", "book", "livre", "read")),
@@ -209,6 +213,25 @@ object HabitIconRegistry {
         }
         return exactMatches.ifEmpty { candidates }
     }
+}
+
+private val ToothIcon: ImageVector by lazy {
+    ImageVector.Builder("Dent", 24.dp, 24.dp, 24f, 24f).apply {
+        path(fill = SolidColor(Color.Black)) {
+            moveTo(7.2f, 2.2f)
+            curveTo(5.0f, 2.7f, 3.8f, 4.6f, 4.1f, 7.1f)
+            curveTo(4.5f, 10.2f, 6.0f, 11.4f, 6.5f, 15.3f)
+            curveTo(6.9f, 18.4f, 7.6f, 21.8f, 9.3f, 21.8f)
+            curveTo(10.8f, 21.8f, 10.7f, 16.0f, 12.0f, 16.0f)
+            curveTo(13.3f, 16.0f, 13.2f, 21.8f, 14.7f, 21.8f)
+            curveTo(16.4f, 21.8f, 17.1f, 18.4f, 17.5f, 15.3f)
+            curveTo(18.0f, 11.4f, 19.5f, 10.2f, 19.9f, 7.1f)
+            curveTo(20.2f, 4.6f, 19.0f, 2.7f, 16.8f, 2.2f)
+            curveTo(15.2f, 1.8f, 13.7f, 3.0f, 12.0f, 3.0f)
+            curveTo(10.3f, 3.0f, 8.8f, 1.8f, 7.2f, 2.2f)
+            close()
+        }
+    }.build()
 }
 
 @OptIn(ExperimentalLayoutApi::class)

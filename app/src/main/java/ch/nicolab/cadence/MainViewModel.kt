@@ -32,6 +32,7 @@ data class HabitCardState(
     val reminders: List<HabitReminderEntity>,
     val history: List<PeriodStat>,
     val entryCount: Int,
+    val dailyHistory: List<DailyStat>,
 )
 
 data class PeriodStat(
@@ -142,6 +143,17 @@ class MainViewModel(
         refreshAll()
     }
 
+    fun skipToday(habit: HabitCardState) = viewModelScope.launch {
+        val today = LocalDate.now(clock)
+        repository.addPause(
+            habit.stored.id,
+            UUID.randomUUID().toString(),
+            ch.nicolab.cadence.domain.HabitPause(today, today.plusDays(1)),
+            reason = "SKIPPED_TODAY",
+        )
+        refreshAll()
+    }
+
     fun moveHabit(habitId: String, direction: Int) = viewModelScope.launch {
         val ordered = latest.sortedBy(PersistedHabit::sortOrder)
         val index = ordered.indexOfFirst { it.id == habitId }
@@ -207,6 +219,22 @@ class MainViewModel(
                     cursor = historicalWindow.start.minusDays(1)
                 }
             }.reversed()
+            val dailyStart = date.minusDays(83)
+            val valuesByDate = allEntries.filter { it.localDate in dailyStart..date }
+                .groupBy(HabitEntry::localDate)
+                .mapValues { (_, dayEntries) -> dayEntries.sumOf(HabitEntry::valueMinor) }
+            val dailyHistory = buildList {
+                for (offset in 0 until 84) {
+                val day = dailyStart.plusDays(offset.toLong())
+                val historicalHabit = repository.getHabitEffectiveAt(habit.id, day) ?: habit
+                add(DailyStat(
+                    date = day,
+                    valueMinor = valuesByDate[day] ?: 0,
+                    targetMinor = historicalHabit.goal.targetMinor,
+                    paused = pauses.any { it.includes(day) },
+                ))
+                }
+            }
             HabitCardState(
                 stored = habit,
                 evaluation = evaluator.evaluate(habit.definition, date, entries, pauses),
@@ -214,6 +242,7 @@ class MainViewModel(
                 reminders = repository.getReminders(habit.id),
                 history = history,
                 entryCount = allEntries.size,
+                dailyHistory = dailyHistory,
             )
         }
     }
