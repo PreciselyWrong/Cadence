@@ -12,6 +12,14 @@
   - Vérification : tests des bornes horaires, minuit, fuseau, changement d’heure et migration des habitudes existantes vers `Journée`
 
 ## Correctifs à venir
+- [ ] Synchronisation widget vers l’application
+  - Une saisie faite depuis le widget doit apparaître immédiatement dans Aujourd’hui, les statistiques et l’historique
+  - Éviter tout état conservé en mémoire qui masquerait une écriture récente du widget
+  - Vérification : saisie depuis widget, retour immédiat dans l’application ouverte, plusieurs saisies et redémarrage
+- [ ] Affichage lisible des durées exactes
+  - Afficher une durée comme `1 h` pour 60 minutes, jamais `1 h min`
+  - Afficher les minutes seulement lorsqu’elles sont non nulles, par exemple `1 h 5 min`
+  - Vérification : secondes, 59 min, 60 min, 61 min, heures entières et grandes durées
 - [ ] Rafraîchissement immédiat du widget
   - Toute saisie, annulation, pause, saut ou modification d’habitude doit mettre à jour le widget placé sans attendre
   - La confirmation de l’action ne s’affiche qu’après la demande de rafraîchissement du widget
@@ -20,6 +28,14 @@
   - Afficher un aperçu vivant qui reprend les réglages en cours avant l’enregistrement
   - L’aperçu reflète style, fond, textes, icônes, transparence, saturation, monochrome, taille et nombre d’habitudes
   - Vérification : chaque réglage se reflète immédiatement, sans modifier le widget placé avant l’enregistrement
+
+## Fonctions à venir
+- [ ] Corriger une saisie et l’historique
+  - Depuis Aujourd’hui et l’historique, ouvrir chaque saisie pour modifier sa valeur, sa date, son heure ou sa note, puis la supprimer si nécessaire
+  - Une saisie rapide erronée, par exemple `+10`, reste corrigeable à tout moment en une action claire
+  - Recalculer immédiatement progression, minimum/idéal, séries, statistiques et widget après correction
+  - Conserver la date civile et le fuseau réellement choisis lors d’une correction passée
+  - Vérification : plusieurs saisies le même jour, correction transfrontalière de période, suppression, annulation et sauvegarde/restauration
 
 ## Next
 - [ ] Objectif minimum et idéal
