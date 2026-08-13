@@ -30,6 +30,14 @@
   - Vérification : chaque réglage se reflète immédiatement, sans modifier le widget placé avant l’enregistrement
 
 ## Fonctions à venir
+- [ ] Synchroniser les activités sportives via Health Connect
+  - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
+  - Associer une habitude, par exemple `Cardio`, à un type d’activité suivi par la montre ou une application compatible
+  - Importer la durée des séances compatibles pour compléter automatiquement l’objectif de durée, y compris le minimum et l’idéal
+  - Continuer d’accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
+  - Montrer clairement l’origine de chaque durée : montre, chronomètre ou ajout manuel
+  - Permettre de choisir les activités importées, de les ignorer, de les corriger ou de les désactiver à tout moment
+  - Vérification : permission refusée, montre déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 - [ ] Corriger une saisie et l’historique
   - Depuis Aujourd’hui et l’historique, ouvrir chaque saisie pour modifier sa valeur, sa date, son heure ou sa note, puis la supprimer si nécessaire
   - Une saisie rapide erronée, par exemple `+10`, reste corrigeable à tout moment en une action claire
