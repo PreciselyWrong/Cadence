@@ -12,6 +12,7 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
@@ -29,7 +30,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import ch.nicolab.cadence.CadenceApp
-import ch.nicolab.cadence.MainActivity
+import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEvaluator
@@ -44,12 +45,15 @@ class CadenceWidget : GlanceAppWidget() {
         val repository = (context.applicationContext as CadenceApp).repository
         val today = LocalDate.now()
         val evaluator = HabitEvaluator()
-        val pending = repository.observeHabits().first().filter { habit ->
+        val allPending = repository.observeHabits().first().filter { habit ->
             val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
             val entries = repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
             val pauses = repository.observePauses(habit.id).first()
             evaluator.evaluate(habit.definition, today, entries, pauses).requiresAction
         }
+        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
+        val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
+        val pending = if (selected.isEmpty()) allPending else allPending.filter { it.id in selected }
         provideContent { WidgetLine(pending) }
     }
 }
@@ -57,7 +61,7 @@ class CadenceWidget : GlanceAppWidget() {
 @Composable
 private fun WidgetLine(habits: List<PersistedHabit>) {
     Row(
-        modifier = GlanceModifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp).clickable(actionStartActivity<MainActivity>()),
+        modifier = GlanceModifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp).clickable(actionStartActivity<QuickEntryActivity>()),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (habits.isEmpty()) {

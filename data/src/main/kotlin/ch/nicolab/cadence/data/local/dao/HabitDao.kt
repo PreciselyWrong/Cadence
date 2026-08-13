@@ -18,6 +18,10 @@ interface HabitDao {
     @Query("SELECT * FROM habits")
     fun observeHabitsWithGoalAndSchedule(): Flow<List<HabitWithGoalAndSchedule>>
 
+    @Transaction
+    @Query("SELECT * FROM habits")
+    suspend fun getAllHabitsWithGoalAndSchedule(): List<HabitWithGoalAndSchedule>
+
     @Query("SELECT * FROM habits WHERE id = :id")
     suspend fun getHabitById(id: String): HabitEntity?
 

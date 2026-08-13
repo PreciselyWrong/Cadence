@@ -1,3 +1,13 @@
+## [1.0.2] — 13 août 2026
+
+### Nouveautés
+- Sauvegarde et restauration de vos habitudes depuis les réglages.
+- Configuration du widget, avec les habitudes et le style de votre choix.
+- Ajout d’une valeur sur mesure dans la saisie rapide.
+
+### Améliorations
+- L’application démarre désormais avec votre propre liste, sans exemples imposés.
+
 ## [1.0.1] — 13 août 2026
 
 ### Nouveautés

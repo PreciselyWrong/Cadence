@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +55,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -79,12 +82,16 @@ private fun App(viewModel: MainViewModel) {
     var tab by remember { mutableStateOf(Tab.TODAY) }
     var create by remember { mutableStateOf(false) }
     var quick by remember { mutableStateOf<HabitCardState?>(null) }
+    var backupMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> uri?.let { destination -> viewModel.exportBackup { content -> context.contentResolver.openOutputStream(destination)?.bufferedWriter()?.use { it.write(content) }; backupMessage = "Sauvegarde exportée" } } }
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let { source -> val content = context.contentResolver.openInputStream(source)?.bufferedReader()?.use { it.readText() } ?: return@let; viewModel.importBackup(content, { backupMessage = "Sauvegarde restaurée" }, { backupMessage = it }) } }
     Scaffold(bottomBar = { NavigationBar { Tab.entries.forEach { item -> NavigationBarItem(tab == item, { tab = item }, { Icon(item.icon, item.label) }, label = { Text(item.label) }) } } }) { inset ->
         when (tab) {
             Tab.TODAY -> Today(habits, Modifier.padding(inset), { quick = it }, { create = true })
             Tab.HABITS -> Habits(habits, Modifier.padding(inset), { create = true })
             Tab.STATS -> Stats(habits, Modifier.padding(inset))
-            Tab.SETTINGS -> Settings(Modifier.padding(inset))
+            Tab.SETTINGS -> Settings(Modifier.padding(inset), { exportLauncher.launch("cadence-backup.json") }, { importLauncher.launch(arrayOf("application/json")) }, backupMessage)
         }
     }
     quick?.let { QuickSheet(it, { value -> viewModel.addEntry(it, value) }, { quick = null }) }
@@ -96,7 +103,7 @@ private fun Today(habits: List<HabitCardState>, modifier: Modifier, quick: (Habi
     val pending = habits.filter { it.evaluation.requiresAction }
     LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { Spacer(Modifier.height(16.dp)); Title("Aujourd’hui", "Ce qui mérite encore votre attention", create) }
-        if (pending.isEmpty()) item { EmptyDone() } else items(pending, key = { it.stored.id }) { HabitCard(it, quick) }
+        if (habits.isEmpty()) item { EmptyHabits(create) } else if (pending.isEmpty()) item { EmptyDone() } else items(pending, key = { it.stored.id }) { HabitCard(it, quick) }
         if (habits.size > pending.size) item { Text("Terminé", style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 12.dp)) }
         items(habits.filterNot { it.evaluation.requiresAction }, key = { "done-${it.stored.id}" }) { HabitCard(it, quick, true) }
         item { Spacer(Modifier.height(24.dp)) }
@@ -124,6 +131,7 @@ private fun HabitCard(item: HabitCardState, quick: (HabitCardState) -> Unit, don
 private fun progress(item: HabitCardState): String = if (item.stored.goal.targetMinor == 1L) if (item.evaluation.progressMinor > 0) "Fait" else "À faire" else "${item.evaluation.progressMinor} / ${item.stored.goal.targetMinor}"
 
 @Composable private fun EmptyDone() = Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) { Column(Modifier.padding(22.dp)) { Icon(Icons.Outlined.Check, null); Spacer(Modifier.height(10.dp)); Text("Rien d’urgent", style = MaterialTheme.typography.titleLarge); Text("Les habitudes prévues sont à jour.") } }
+@Composable private fun EmptyHabits(create: () -> Unit) = Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) { Column(Modifier.padding(22.dp)) { Text("Votre rythme, à vous", style = MaterialTheme.typography.titleLarge); Text("Créez une première habitude pour commencer.", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp)); FilledTonalButton(create, modifier = Modifier.padding(top = 16.dp)) { Text("Créer une habitude") } } }
 
 @Composable
 private fun Habits(habits: List<HabitCardState>, modifier: Modifier, create: () -> Unit) = LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) { item { Spacer(Modifier.height(16.dp)); Title("Habitudes", "Gérer vos routines", create) }; items(habits, key = { it.stored.id }) { HabitCard(it, {}) } }
@@ -132,13 +140,14 @@ private fun Habits(habits: List<HabitCardState>, modifier: Modifier, create: () 
 private fun Stats(habits: List<HabitCardState>, modifier: Modifier) = LazyColumn(modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) { item { Text("Statistiques", style = MaterialTheme.typography.headlineMedium); Text("Période en cours", color = MaterialTheme.colorScheme.onSurfaceVariant) }; items(habits, key = { it.stored.id }) { habit -> Card(shape = RoundedCornerShape(22.dp)) { Column(Modifier.padding(18.dp)) { Text(habit.stored.name, style = MaterialTheme.typography.titleMedium); Spacer(Modifier.height(8.dp)); Text(progress(habit), style = MaterialTheme.typography.headlineSmall); Text(if (habit.evaluation.requiresAction) "Objectif en cours" else "Objectif atteint", color = MaterialTheme.colorScheme.onSurfaceVariant) } } } }
 
 @Composable
-private fun Settings(modifier: Modifier) = Column(modifier.fillMaxSize().padding(20.dp)) { Text("Réglages", style = MaterialTheme.typography.headlineMedium); Spacer(Modifier.height(20.dp)); Setting("Thème", "Suit le système"); Setting("Début de semaine", "Lundi par défaut"); Setting("Widget", "Configuration par instance"); Setting("Données", "Export et import local") }
+private fun Settings(modifier: Modifier, export: () -> Unit, import: () -> Unit, message: String?) = Column(modifier.fillMaxSize().padding(20.dp)) { Text("Réglages", style = MaterialTheme.typography.headlineMedium); Spacer(Modifier.height(20.dp)); Setting("Thème", "Suit le système"); Setting("Début de semaine", "Lundi par défaut"); Setting("Widget", "Configuration par instance"); Text("Données", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 18.dp)); Text("Sauvegarde complète locale", color = MaterialTheme.colorScheme.onSurfaceVariant); Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 10.dp)) { FilledTonalButton(export) { Text("Exporter") }; FilledTonalButton(import) { Text("Importer") } }; message?.let { Text(it, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 12.dp)) } }
 @Composable private fun Setting(title: String, detail: String) { Row(Modifier.fillMaxWidth().padding(vertical = 16.dp)) { Column(Modifier.weight(1f)) { Text(title, style = MaterialTheme.typography.titleMedium); Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant) }; Icon(Icons.Outlined.TrackChanges, null) }; HorizontalDivider() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun QuickSheet(item: HabitCardState, add: (Long) -> Unit, dismiss: () -> Unit) {
-    ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) { Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp)) { Text(item.stored.name, style = MaterialTheme.typography.headlineSmall); Text(progress(item), color = MaterialTheme.colorScheme.onSurfaceVariant); Spacer(Modifier.height(20.dp)); if (item.stored.goal.targetMinor == 1L) Button({ add(1L); dismiss() }, Modifier.fillMaxWidth().height(56.dp)) { Icon(Icons.Outlined.Check, null); Spacer(Modifier.width(8.dp)); Text("Valider") } else Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) { item.quickValues.ifEmpty { listOf(1L) }.forEach { value -> FilledTonalButton({ add(value) }, Modifier.weight(1f)) { Text("+$value") } } }; Spacer(Modifier.height(28.dp)) } }
+    var custom by remember { mutableStateOf("") }
+    ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) { Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp)) { Text(item.stored.name, style = MaterialTheme.typography.headlineSmall); Text(progress(item), color = MaterialTheme.colorScheme.onSurfaceVariant); Spacer(Modifier.height(20.dp)); if (item.stored.goal.targetMinor == 1L) Button({ add(1L); dismiss() }, Modifier.fillMaxWidth().height(56.dp)) { Icon(Icons.Outlined.Check, null); Spacer(Modifier.width(8.dp)); Text("Valider") } else { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) { item.quickValues.ifEmpty { listOf(1L) }.forEach { value -> FilledTonalButton({ add(value) }, Modifier.weight(1f)) { Text("+$value") } } }; OutlinedTextField(custom, { custom = it.filter(Char::isDigit) }, label = { Text("Autre valeur") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)); Button({ custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it); custom = "" } }, enabled = (custom.toLongOrNull() ?: 0) > 0, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) { Text("Ajouter") } }; Spacer(Modifier.height(28.dp)) } }
 }
 
 @Composable

@@ -20,15 +20,19 @@ import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import androidx.room.withTransaction
+import kotlinx.serialization.json.Json
 
 class CadenceRepository(
     private val database: CadenceDatabase,
 ) {
+    private val json = Json { ignoreUnknownKeys = false; encodeDefaults = true }
     fun observeHabits(): Flow<List<PersistedHabit>> {
         return database.habitDao().observeHabitsWithGoalAndSchedule().map { habitRelations ->
+            val today = LocalDate.now().toString()
             habitRelations.mapNotNull { relation ->
-                val goalEntity = relation.goals.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
-                val scheduleEntity = relation.schedules.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
+                val goalEntity = relation.goals.filter { it.effectiveFrom <= today }.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
+                val scheduleEntity = relation.schedules.filter { it.effectiveFrom <= today }.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
 
                 val activeDays = scheduleEntity.activeDays
                     .split(",")
@@ -237,5 +241,37 @@ class CadenceRepository(
 
     suspend fun deleteWidgetConfig(appWidgetId: Int) {
         database.widgetConfigDao().deleteConfiguration(appWidgetId)
+    }
+
+    suspend fun exportBackup(): String {
+        val habits = database.habitDao().getAllHabitsWithGoalAndSchedule().mapNotNull { relation ->
+            val goal = relation.goals.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
+            val schedule = relation.schedules.maxByOrNull { it.effectiveFrom } ?: return@mapNotNull null
+            BackupHabit(relation.habit.id, relation.habit.name, relation.habit.active, goal.targetMinor, goal.period, schedule.activeDays.split(",").filter(String::isNotBlank), schedule.firstDayOfWeek)
+        }
+        return json.encodeToString(BackupDocument(
+            exportedAtEpochMs = System.currentTimeMillis(),
+            habits = habits,
+            entries = database.habitEntryDao().getAllEntries().map { BackupEntry(it.id, it.habitId, it.occurredAtEpochMs, it.localDate, it.observedZoneId, it.valueMinor, it.source) },
+            quickValues = database.habitQuickValueDao().getAllQuickValues().map { BackupQuickValue(it.id, it.habitId, it.label, it.amountMinor, it.sortOrder) },
+            pauses = database.habitPauseDao().getAllPauses().map { BackupPause(it.id, it.habitId, it.start, it.endExclusive, it.reason) },
+        ))
+    }
+
+    suspend fun importBackup(content: String) {
+        val document = json.decodeFromString<BackupDocument>(content)
+        require(document.formatVersion == 1) { "Unsupported backup version" }
+        require(document.habits.map(BackupHabit::id).toSet().size == document.habits.size) { "Duplicate habit IDs" }
+        val habitIds = document.habits.map(BackupHabit::id).toSet()
+        require(document.entries.all { it.habitId in habitIds && it.valueMinor > 0 }) { "Invalid entries" }
+        database.withTransaction {
+            database.clearAllTables()
+            document.habits.forEach { backup ->
+                addHabit(PersistedHabit(backup.id, backup.name, backup.active, HabitGoal(backup.targetMinor, PeriodType.valueOf(backup.period)), HabitSchedule(backup.activeDays.map(DayOfWeek::valueOf).toSet(), DayOfWeek.valueOf(backup.firstDayOfWeek))))
+            }
+            document.entries.forEach { entry -> database.habitEntryDao().insertEntry(HabitEntryEntity(entry.id, entry.habitId, entry.occurredAtEpochMs, entry.localDate, entry.observedZoneId, entry.valueMinor, entry.source)) }
+            document.quickValues.forEach { value -> database.habitQuickValueDao().insertQuickValue(HabitQuickValueEntity(value.id, value.habitId, value.label, value.amountMinor, value.sortOrder)) }
+            document.pauses.forEach { pause -> database.habitPauseDao().insertPause(HabitPauseEntity(pause.id, pause.habitId, pause.start, pause.endExclusive, pause.reason)) }
+        }
     }
 }

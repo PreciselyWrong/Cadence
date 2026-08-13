@@ -18,6 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".QuickEntryActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Cadence.QuickEntry" />
+        <activity
+            android:name=".WidgetConfigurationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".widget.CadenceWidgetReceiver"
             android:exported="false">

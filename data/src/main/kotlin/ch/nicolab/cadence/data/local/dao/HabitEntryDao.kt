@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitEntryDao {
+    @Query("SELECT * FROM habit_entries ORDER BY occurredAtEpochMs")
+    suspend fun getAllEntries(): List<HabitEntryEntity>
     @Query("""
         SELECT * FROM habit_entries 
         WHERE habitId = :habitId 

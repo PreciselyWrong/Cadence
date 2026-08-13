@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitQuickValueDao {
+    @Query("SELECT * FROM habit_quick_values ORDER BY habitId, sortOrder")
+    suspend fun getAllQuickValues(): List<HabitQuickValueEntity>
     @Query("SELECT * FROM habit_quick_values WHERE habitId = :habitId ORDER BY sortOrder ASC")
     fun observeQuickValues(habitId: String): Flow<List<HabitQuickValueEntity>>
 

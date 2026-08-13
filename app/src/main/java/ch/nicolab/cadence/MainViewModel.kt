@@ -31,9 +31,7 @@ class MainViewModel(private val repository: CadenceRepository) : ViewModel() {
     private val cards = MutableStateFlow<List<HabitCardState>>(emptyList())
     val habits: StateFlow<List<HabitCardState>> = cards.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     private var latest: List<PersistedHabit> = emptyList()
-    private var seeded = false
-
-    init { viewModelScope.launch { repository.observeHabits().collect { source -> latest = source; if (source.isEmpty() && !seeded) { seeded = true; seed(); } else rebuild(source) } } }
+    init { viewModelScope.launch { repository.observeHabits().collect { source -> latest = source; rebuild(source) } } }
 
     fun addEntry(habit: HabitCardState, value: Long) = viewModelScope.launch {
         val now = Instant.now(); val zone = ZoneId.systemDefault()
@@ -47,6 +45,12 @@ class MainViewModel(private val repository: CadenceRepository) : ViewModel() {
         quick.forEachIndexed { index, value -> repository.addQuickValue(habit.id, UUID.randomUUID().toString(), "+$value", value, index) }
     }
 
+    fun exportBackup(onReady: (String) -> Unit) = viewModelScope.launch { onReady(repository.exportBackup()) }
+
+    fun importBackup(content: String, onComplete: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {
+        runCatching { repository.importBackup(content) }.onSuccess { onComplete() }.onFailure { onError(it.message ?: "Fichier de sauvegarde invalide") }
+    }
+
     private suspend fun rebuild(source: List<PersistedHabit>) {
         val date = LocalDate.now()
         cards.value = source.map { habit ->
@@ -57,11 +61,4 @@ class MainViewModel(private val repository: CadenceRepository) : ViewModel() {
         }
     }
 
-    private suspend fun seed() {
-        createHabit("Suspension", "DURATION", 60, "s", PeriodType.DAY, listOf(15, 30, 60))
-        createHabit("Ab Wheel", "COUNT", 4, "rép.", PeriodType.DAY, listOf(1))
-        createHabit("Fil dentaire", "BINARY", 1, "", PeriodType.DAY, listOf(1))
-        createHabit("Crème", "BINARY", 1, "", PeriodType.DAY, listOf(1))
-        createHabit("Cardio Zone 2", "DURATION", 60, "min", PeriodType.WEEK, listOf(10, 20, 30))
-    }
 }

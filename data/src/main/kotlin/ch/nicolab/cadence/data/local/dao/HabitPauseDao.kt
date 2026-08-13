@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitPauseDao {
+    @Query("SELECT * FROM habit_pauses ORDER BY habitId, start")
+    suspend fun getAllPauses(): List<HabitPauseEntity>
     @Query("SELECT * FROM habit_pauses WHERE habitId = :habitId ORDER BY start ASC")
     fun observePauses(habitId: String): Flow<List<HabitPauseEntity>>
 
