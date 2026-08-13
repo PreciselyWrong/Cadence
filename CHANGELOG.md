@@ -18,6 +18,7 @@
 - Un appui long remplace les trois points sur Aujourd’hui et Habitudes.
 - Les widgets déjà placés peuvent être reconfigurés.
 - Depuis le widget, seule la fiche rapide apparaît au-dessus de l’écran d’accueil.
+- La configuration du widget reste parfaitement lisible en mode sombre.
 - La sauvegarde conserve les réglages, l’historique et chaque widget.
 - Toutes les options d’une habitude sont réunies dans un menu simple.
 

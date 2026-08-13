@@ -48,6 +48,7 @@ Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicati
 - ⛔ Cacher les options d’une habitude derrière trois points — un appui long ouvre les actions depuis Aujourd’hui comme depuis Habitudes.
 - ⛔ Afficher une saisie rapide comme une pile de cartes grises — le modal porte la couleur de l’habitude et montre son historique.
 - ⛔ Limiter la configuration d’un widget à sa création — un widget placé doit rester reconfigurable depuis le lanceur.
+- ⛔ Poser une interface Compose directement sur la fenêtre système — chaque écran fournit un fond et une couleur de contenu explicites pour garantir le contraste.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.
