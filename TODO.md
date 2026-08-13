@@ -26,6 +26,14 @@
   - Le minimum valide la période et la série; l’idéal marque une réussite complète
   - L’interface montre clairement `À faire`, `Minimum atteint` et `Idéal atteint`
   - Vérification : objectifs quotidiens, hebdomadaires, mensuels, fréquences et historique versionné
+- [ ] Chronomètre pour les habitudes de durée
+  - Proposer un mode chronomètre activable pour les objectifs en durée, sans le rendre obligatoire
+  - La saisie rapide affiche `Démarrer`, `Pause`, `Reprendre`, `Terminer` et `Réinitialiser`
+  - Le temps écoulé continue après le minimum et passe visuellement à `Minimum atteint`, puis `Idéal atteint`
+  - Enregistrer une seule saisie de durée à la fin; une pause ne crée pas de temps compté
+  - Préserver un chronomètre en cours après rotation, retour à l’application et redémarrage du processus
+  - Le widget et les notifications indiquent qu’un chronomètre est actif et permettent de le reprendre rapidement
+  - Vérification : passage minimum/idéal, pause longue, minuit, changement de fuseau, annulation, réinitialisation et double appui
 - [ ] Habitudes à limiter
   - Définir un maximum par période, par exemple deux cafés par jour
   - Rester sous la limite est positif; atteindre puis dépasser la limite devient progressivement visible
