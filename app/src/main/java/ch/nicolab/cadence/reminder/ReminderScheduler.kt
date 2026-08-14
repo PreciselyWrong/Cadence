@@ -27,8 +27,6 @@ import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.widget.CadenceWidget
-import androidx.glance.appwidget.updateAll
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
@@ -244,7 +242,6 @@ class ReminderActionReceiver : BroadcastReceiver() {
                         )
                     }
                 }
-                CadenceWidget().updateAll(context)
                 val updated = evaluate()
                 if (updated.needsAttentionNow) {
                     ReminderNotifications.show(

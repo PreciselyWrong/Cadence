@@ -1,6 +1,5 @@
 package ch.nicolab.cadence
 
-import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.data.local.CadenceRepository
@@ -24,8 +23,6 @@ import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.StreakCalculator
 import ch.nicolab.cadence.domain.isPlannedOn
-import ch.nicolab.cadence.widget.CadenceWidget
-import ch.nicolab.cadence.widget.WidgetRefreshDispatcher
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
 import java.time.Clock
@@ -93,10 +90,6 @@ class MainViewModel(
     val lastEntryId = MutableStateFlow<String?>(null)
 
     private var latest: List<PersistedHabit> = emptyList()
-    private val widgetRefresh = WidgetRefreshDispatcher(app.applicationScope) {
-        CadenceWidget().updateAll(app)
-    }
-
     /** Groupes disponibles, garnis à la première ouverture avec les moments livrés. */
     val groups: StateFlow<List<HabitGroup>> = repository.observeGroups().stateIn(
         viewModelScope,
@@ -232,20 +225,17 @@ class MainViewModel(
         val timer = existing?.resumedAt(clock.instant()) ?: HabitTimer.started(habitId, clock.instant())
         repository.saveTimer(timer)
         latest.firstOrNull { it.id == habitId }?.let { TimerNotifications.show(app, it, timer) }
-        widgetRefresh.request()
     }
 
     fun pauseTimer(habitId: String) = viewModelScope.launch {
         val timer = repository.getTimer(habitId) ?: return@launch
         repository.saveTimer(timer.pausedAt(clock.instant()))
         TimerNotifications.cancel(app, habitId)
-        widgetRefresh.request()
     }
 
     fun resetTimer(habitId: String) = viewModelScope.launch {
         repository.clearTimer(habitId)
         TimerNotifications.cancel(app, habitId)
-        widgetRefresh.request()
     }
 
     /**
@@ -402,9 +392,12 @@ class MainViewModel(
             .onFailure { onError(it.message ?: "Fichier de sauvegarde invalide") }
     }
 
+    /**
+     * Redessine l'écran après une écriture. Les widgets ne sont pas prévenus ici : ils
+     * suivent les révisions de la base et se mettent à jour d'eux-mêmes.
+     */
     private suspend fun refreshAll() {
         rebuild(latest)
-        widgetRefresh.request().join()
     }
 
     private suspend fun rebuild(source: List<PersistedHabit>) {

@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.widget
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -60,13 +62,17 @@ import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
+import ch.nicolab.cadence.domain.WidgetSlotAlignment
+import ch.nicolab.cadence.domain.WidgetSlotMode
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
+import ch.nicolab.cadence.ui.widget.WidgetSlotSolver
 import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import androidx.glance.appwidget.updateAll
 
 private data class WidgetHabit(
     val habit: PersistedHabit,
@@ -130,16 +136,21 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     val surface = Color(style.surfaceArgb).copy(alpha = alpha)
     val content = Color(style.contentArgb)
     val badge = Color(style.badgeArgb).copy(alpha = style.badgeAlpha)
-    val capacity = WidgetCapacityCalculator.calculateCapacity(
+    val slotMode = WidgetSlotMode.fromStorage(config.slotMode)
+    val layout = WidgetSlotSolver.solve(
         LocalSize.current.width.value.toInt(),
         config.iconSizeDp,
         habits.size,
         config.maxHabitsPerRow,
+        slotMode,
     )
-    val configuredCount = habits.size.coerceAtMost(config.maxHabitsPerRow.coerceIn(1, 6))
-    val spaceOverflow = capacity < configuredCount && capacity > 1
-    val visibleHabitCount = if (spaceOverflow) capacity - 1 else capacity
-    val cellWidthDp = (LocalSize.current.width.value - 20f) / capacity.coerceAtLeast(1)
+    // L'alignement ne se voit qu'en mode fixe : en souple, les emplacements remplissent
+    // déjà toute la largeur.
+    val rowAlignment = when (WidgetSlotAlignment.fromStorage(config.slotAlignment)) {
+        WidgetSlotAlignment.START -> Alignment.Horizontal.Start
+        WidgetSlotAlignment.CENTER -> Alignment.Horizontal.CenterHorizontally
+        WidgetSlotAlignment.END -> Alignment.Horizontal.End
+    }
     val textVisibility = WidgetLayoutCalculator.resolve(
         LocalSize.current.height.value.toInt(),
         config.iconSizeDp,
@@ -156,13 +167,13 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     Row(
         modifier = GlanceModifier.fillMaxSize().padding(horizontal = 10.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
-        horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
+        horizontalAlignment = if (slotMode == WidgetSlotMode.FIXED) rowAlignment else Alignment.Horizontal.CenterHorizontally,
     ) {
         if (habits.isEmpty()) {
             if (config.showDoneIndicator) Image(ImageProvider(if (isMono) R.drawable.ic_widget_mark else R.drawable.ic_widget_mark_light), "À jour", modifier = GlanceModifier.size(24.dp))
         } else {
-            habits.take(visibleHabitCount).forEach { item ->
-                Column(modifier = GlanceModifier.width(cellWidthDp.dp).clickable(actionStartActivity<QuickEntryActivity>(actionParametersOf(habitIdKey to item.habit.id))), horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
+            habits.take(layout.visibleCount).forEach { item ->
+                Column(modifier = GlanceModifier.width(layout.slotWidthDp.dp).clickable(actionStartActivity<QuickEntryActivity>(actionParametersOf(habitIdKey to item.habit.id))), horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
                     Box(modifier = GlanceModifier.size((config.iconSizeDp + 8).dp).background(ColorProvider(day = badge, night = badge)).cornerRadius(((config.iconSizeDp + 8) / 2).dp), contentAlignment = Alignment.Center) {
                         iconBitmaps[item.habit.id]?.let { bitmap -> Image(ImageProvider(bitmap), item.habit.name, modifier = GlanceModifier.size(config.iconSizeDp.dp), contentScale = ContentScale.Fit) }
                     }
@@ -170,9 +181,9 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
                     if (textVisibility.showValues) Text(item.timerSeconds?.let { HabitFormatter.formatValue(it, item.habit.goal.goalType, item.habit.goal.unit) } ?: HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.evaluation.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                 }
             }
-            if (spaceOverflow) {
-                Box(GlanceModifier.width(cellWidthDp.dp), contentAlignment = Alignment.Center) {
-                    Text("+${configuredCount - visibleHabitCount}", style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium, textAlign = TextAlign.Center))
+            if (layout.showsOverflow) {
+                Box(GlanceModifier.width(layout.slotWidthDp.dp), contentAlignment = Alignment.Center) {
+                    Text("+${layout.overflowCount}", style = TextStyle(color = ColorProvider(day = content, night = content), fontWeight = FontWeight.Medium, textAlign = TextAlign.Center))
                 }
             }
         }
@@ -209,4 +220,37 @@ private fun renderIcon(iconId: String?, argb: Int, sizeDp: Int, opacity: Int, sa
 
 class CadenceWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = CadenceWidget()
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        when (intent.action) {
+            // Le contenu dépend du jour et de l'heure : ces signaux le redessinent
+            // immédiatement, puis réarment le prochain basculement.
+            WidgetBoundaryAlarm.ACTION_BOUNDARY,
+            Intent.ACTION_DATE_CHANGED,
+            Intent.ACTION_TIME_CHANGED,
+            Intent.ACTION_TIMEZONE_CHANGED,
+            -> {
+                val pending = goAsync()
+                (context.applicationContext as CadenceApp).applicationScope.launch {
+                    try {
+                        CadenceWidget().updateAll(context)
+                        WidgetBoundaryAlarm.arm(context)
+                    } finally {
+                        pending.finish()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onUpdate(context: Context, manager: AppWidgetManager, appWidgetIds: IntArray) {
+        super.onUpdate(context, manager, appWidgetIds)
+        WidgetBoundaryAlarm.arm(context)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        WidgetBoundaryAlarm.cancel(context)
+    }
 }

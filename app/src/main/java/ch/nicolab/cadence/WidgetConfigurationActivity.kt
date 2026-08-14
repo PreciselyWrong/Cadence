@@ -61,8 +61,10 @@ import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.widget.WidgetCapacityCalculator
+import ch.nicolab.cadence.domain.WidgetSlotAlignment
+import ch.nicolab.cadence.domain.WidgetSlotMode
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
+import ch.nicolab.cadence.ui.widget.WidgetSlotSolver
 import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import ch.nicolab.cadence.ui.components.CadenceScreen
 import ch.nicolab.cadence.ui.components.ChoiceChip
@@ -155,6 +157,8 @@ private fun WidgetConfiguration(
     var iconOpacity by remember { mutableFloatStateOf(initial.iconOpacity.toFloat()) }
     var iconSaturation by remember { mutableFloatStateOf(initial.iconSaturation.toFloat()) }
     var monochromeIcons by remember { mutableStateOf(initial.monochromeIcons) }
+    var slotMode by remember { mutableStateOf(WidgetSlotMode.fromStorage(initial.slotMode)) }
+    var slotAlignment by remember { mutableStateOf(WidgetSlotAlignment.fromStorage(initial.slotAlignment)) }
     var groupMode by remember { mutableStateOf(WidgetGroupMode.fromStorage(initial.groupMode)) }
     var groupId by remember { mutableStateOf(initial.groupId ?: groups.firstOrNull()?.id) }
 
@@ -207,6 +211,8 @@ private fun WidgetConfiguration(
                     valueOpacity = valueOpacity.toInt(),
                     showDoneIndicator = showDone,
                     maxHabitsPerRow = maxHabitsPerRow.toInt(),
+                    slotMode = slotMode,
+                    slotAlignment = slotAlignment,
                 )
                 Spacer(Modifier.height(Space.sm))
                 Text(
@@ -314,6 +320,40 @@ private fun WidgetConfiguration(
                         4,
                     ) { maxHabitsPerRow = it }
                     Spacer(Modifier.height(Space.md))
+                    Text(stringResource(R.string.widget_config_slot_mode), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+                    Spacer(Modifier.height(Space.sm))
+                    Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                        ChoiceChip(stringResource(R.string.widget_config_slot_flexible), slotMode == WidgetSlotMode.FLEXIBLE) {
+                            slotMode = WidgetSlotMode.FLEXIBLE
+                        }
+                        ChoiceChip(stringResource(R.string.widget_config_slot_fixed), slotMode == WidgetSlotMode.FIXED) {
+                            slotMode = WidgetSlotMode.FIXED
+                        }
+                    }
+                    if (slotMode == WidgetSlotMode.FIXED) {
+                        Spacer(Modifier.height(Space.sm))
+                        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                            ChoiceChip(stringResource(R.string.widget_config_slot_start), slotAlignment == WidgetSlotAlignment.START) {
+                                slotAlignment = WidgetSlotAlignment.START
+                            }
+                            ChoiceChip(stringResource(R.string.widget_config_slot_center), slotAlignment == WidgetSlotAlignment.CENTER) {
+                                slotAlignment = WidgetSlotAlignment.CENTER
+                            }
+                            ChoiceChip(stringResource(R.string.widget_config_slot_end), slotAlignment == WidgetSlotAlignment.END) {
+                                slotAlignment = WidgetSlotAlignment.END
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(Space.sm))
+                    Text(
+                        stringResource(
+                            if (slotMode == WidgetSlotMode.FIXED) R.string.widget_config_slot_fixed_hint
+                            else R.string.widget_config_slot_flexible_hint,
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.inkFaint,
+                    )
+                    Spacer(Modifier.height(Space.md))
                     Text(stringResource(R.string.widget_config_progress_style), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
                     Spacer(Modifier.height(Space.sm))
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -350,6 +390,8 @@ private fun WidgetConfiguration(
                             monochromeIcons = monochromeIcons,
                             groupMode = groupMode.name,
                             groupId = groupId.takeIf { groupMode == WidgetGroupMode.SINGLE },
+                            slotMode = slotMode.name,
+                            slotAlignment = slotAlignment.name,
                         ),
                         if (all) emptyList() else selected.toList(),
                     )
@@ -382,6 +424,8 @@ private fun WidgetPreview(
     valueOpacity: Int,
     showDoneIndicator: Boolean,
     maxHabitsPerRow: Int,
+    slotMode: WidgetSlotMode,
+    slotAlignment: WidgetSlotAlignment,
 ) {
     val renderStyle = WidgetRenderStyle.byId(theme)
     val baseSurface = Color(renderStyle.surfaceArgb)
@@ -398,11 +442,8 @@ private fun WidgetPreview(
         contentAlignment = Alignment.Center,
     ) {
         val widthDp = maxWidth.value.toInt()
-        val capacity = WidgetCapacityCalculator.calculateCapacity(widthDp, iconSizeDp, habits.size, maxHabitsPerRow)
-        val configuredCount = habits.size.coerceAtMost(maxHabitsPerRow.coerceIn(1, 6))
-        val spaceOverflow = capacity < configuredCount && capacity > 1
-        val visibleCount = if (spaceOverflow) capacity - 1 else capacity
-        val cellWidth = ((maxWidth.value - 20f) / capacity.coerceAtLeast(1)).dp
+        val layout = WidgetSlotSolver.solve(widthDp, iconSizeDp, habits.size, maxHabitsPerRow, slotMode)
+        val cellWidth = layout.slotWidthDp.dp
         val textVisibility = WidgetLayoutCalculator.resolve(
             height.value.toInt(),
             iconSizeDp,
@@ -414,8 +455,17 @@ private fun WidgetPreview(
         if (habits.isEmpty()) {
             if (showDoneIndicator) Icon(Icons.Outlined.Check, null, tint = content, modifier = Modifier.size(Size.icon))
         } else {
-            Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                habits.take(visibleCount).forEach { habit ->
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                horizontalArrangement = when {
+                    slotMode != WidgetSlotMode.FIXED -> Arrangement.Center
+                    slotAlignment == WidgetSlotAlignment.START -> Arrangement.Start
+                    slotAlignment == WidgetSlotAlignment.END -> Arrangement.End
+                    else -> Arrangement.Center
+                },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                habits.take(layout.visibleCount).forEach { habit ->
                     val tint = previewIconColor(habit.colorArgb, monochromeIcons, iconSaturation, renderStyle.contentArgb)
                     Column(Modifier.width(cellWidth), horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(
@@ -448,9 +498,9 @@ private fun WidgetPreview(
                         }
                     }
                 }
-                if (spaceOverflow) {
+                if (layout.showsOverflow) {
                     Box(Modifier.width(cellWidth), contentAlignment = Alignment.Center) {
-                        Text("+${configuredCount - visibleCount}", color = content)
+                        Text("+${layout.overflowCount}", color = content)
                     }
                 }
             }

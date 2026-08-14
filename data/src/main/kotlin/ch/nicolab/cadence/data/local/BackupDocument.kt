@@ -146,6 +146,8 @@ data class BackupWidgetConfigV2(
     val monochromeIcons: Boolean = false,
     val groupMode: String = "ALL",
     val groupId: String? = null,
+    val slotMode: String = "FLEXIBLE",
+    val slotAlignment: String = "CENTER",
 )
 
 @Serializable

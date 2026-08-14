@@ -39,7 +39,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 14,
+    version = 15,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -216,6 +216,17 @@ abstract class CadenceDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionCadence TEXT")
                 db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionCapMinor INTEGER")
                 db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionStartsOn TEXT")
+            }
+        }
+
+        /**
+         * Introduit la découpe en emplacements du widget. Les widgets existants gardent
+         * la répartition souple qu'ils avaient déjà.
+         */
+        val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE widget_configurations ADD COLUMN slotMode TEXT NOT NULL DEFAULT 'FLEXIBLE'")
+                db.execSQL("ALTER TABLE widget_configurations ADD COLUMN slotAlignment TEXT NOT NULL DEFAULT 'CENTER'")
             }
         }
     }

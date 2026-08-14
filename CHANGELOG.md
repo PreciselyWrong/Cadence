@@ -1,6 +1,7 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Le widget garde au choix sa répartition souple ou découpe sa largeur en emplacements fixes, alignés à gauche, au centre ou à droite : l’espacement ne bouge plus quand une habitude est cochée.
 - Un onglet `Cette semaine` regroupe les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`, et ouvre directement la saisie.
 - Une note courte peut accompagner une saisie dès son enregistrement, depuis l’application comme depuis le widget.
 - Une cible peut augmenter seule chaque semaine ou chaque mois, avec plafond facultatif, aperçu des prochaines cibles et arrêt à tout moment.

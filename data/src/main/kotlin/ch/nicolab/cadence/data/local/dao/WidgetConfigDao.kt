@@ -7,9 +7,20 @@ import androidx.room.Query
 import androidx.room.Transaction
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WidgetConfigDao {
+    /**
+     * Émet à chaque écriture sur la configuration d'un widget, sélection d'habitudes
+     * comprise. La valeur ne sert que de porteur.
+     */
+    @Query(
+        "SELECT (SELECT COUNT(*) FROM widget_configurations) + " +
+            "(SELECT COUNT(*) FROM widget_habits)",
+    )
+    fun observeWidgetConfigRevision(): Flow<Int>
+
     @Query("SELECT * FROM widget_configurations")
     suspend fun getAllConfigurations(): List<WidgetConfigurationEntity>
 

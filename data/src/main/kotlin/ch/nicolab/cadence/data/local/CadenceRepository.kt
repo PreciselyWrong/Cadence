@@ -38,6 +38,7 @@ import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -85,6 +86,27 @@ class CadenceRepository(
     fun observeEntryRevision(): Flow<Int> = database.habitEntryDao().observeEntryRevision()
 
     fun observePauseRevision(): Flow<Int> = database.habitPauseDao().observePauseRevision()
+
+    fun observeHabitRevision(): Flow<Int> = database.habitDao().observeHabitRevision()
+
+    fun observeTimerRevision(): Flow<Int> = database.habitTimerDao().observeTimerRevision()
+
+    fun observeGroupRevision(): Flow<Int> = database.habitGroupDao().observeGroupRevision()
+
+    fun observeWidgetConfigRevision(): Flow<Int> = database.widgetConfigDao().observeWidgetConfigRevision()
+
+    /**
+     * Toutes les révisions dont dépend l'affichage d'un widget, fusionnées. Un widget qui
+     * s'y abonne se remet à jour quelle que soit l'origine de l'écriture.
+     */
+    fun observeWidgetRevisions(): Flow<Int> = merge(
+        observeHabitRevision(),
+        observeEntryRevision(),
+        observePauseRevision(),
+        observeTimerRevision(),
+        observeGroupRevision(),
+        observeWidgetConfigRevision(),
+    )
 
     fun observeEntries(
         habitId: String,
@@ -663,6 +685,8 @@ class CadenceRepository(
                 monochromeIcons = c.monochromeIcons,
                 groupMode = c.groupMode,
                 groupId = c.groupId,
+                slotMode = c.slotMode,
+                slotAlignment = c.slotAlignment,
             )
         }
 
@@ -841,6 +865,8 @@ class CadenceRepository(
                     monochromeIcons = w.monochromeIcons,
                     groupMode = w.groupMode,
                     groupId = w.groupId?.takeIf(knownGroupIds::contains),
+                    slotMode = w.slotMode,
+                    slotAlignment = w.slotAlignment,
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
@@ -915,6 +941,8 @@ class CadenceRepository(
             require(w.valueOpacity in 0..100) { "Widget value opacity is invalid" }
             require(w.iconOpacity in 0..100) { "Widget icon opacity is invalid" }
             require(w.iconSaturation in 0..100) { "Widget icon saturation is invalid" }
+            require(w.slotMode in setOf("FLEXIBLE", "FIXED")) { "Widget slot mode is invalid" }
+            require(w.slotAlignment in setOf("START", "CENTER", "END")) { "Widget slot alignment is invalid" }
             w.selectedHabitIds.forEach { hId ->
                 require(hId in habitIds) { "Widget config references missing habitId $hId" }
             }

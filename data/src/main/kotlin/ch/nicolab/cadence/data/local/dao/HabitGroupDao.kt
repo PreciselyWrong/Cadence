@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitGroupDao {
+    /** Émet à chaque écriture sur la table : la valeur ne sert que de porteur. */
+    @Query("SELECT COUNT(*) FROM habit_groups")
+    fun observeGroupRevision(): Flow<Int>
+
     @Query("SELECT * FROM habit_groups ORDER BY sortOrder ASC")
     fun observeGroups(): Flow<List<HabitGroupEntity>>
 

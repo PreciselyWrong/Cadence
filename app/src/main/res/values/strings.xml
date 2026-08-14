@@ -244,6 +244,14 @@
     <string name="widget_config_progress_compact">Compact</string>
     <string name="widget_config_show_done">Afficher l\'indicateur d\'achèvement</string>
     <string name="widget_config_habits_per_row">Habitudes par ligne (%1$d)</string>
+    <string name="widget_config_slot_mode">Répartition</string>
+    <string name="widget_config_slot_flexible">Souple</string>
+    <string name="widget_config_slot_fixed">Emplacements fixes</string>
+    <string name="widget_config_slot_start">À gauche</string>
+    <string name="widget_config_slot_center">Au centre</string>
+    <string name="widget_config_slot_end">À droite</string>
+    <string name="widget_config_slot_flexible_hint">Les habitudes restantes se partagent toute la largeur : elles s\'écartent à mesure que vous cochez.</string>
+    <string name="widget_config_slot_fixed_hint">La largeur est découpée pour le nombre maximum d\'habitudes : l\'espacement ne bouge jamais, seul le bloc se déplace.</string>
     <string name="widget_config_save">Enregistrer la configuration</string>
 
     <!-- Main Navigation & Titles -->

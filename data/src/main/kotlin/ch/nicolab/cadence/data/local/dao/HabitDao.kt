@@ -14,6 +14,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitDao {
+    /**
+     * Émet à chaque écriture sur la définition d'une habitude, objectif et planification
+     * compris : les trois tables sont citées pour que Room suive leurs invalidations.
+     * La valeur ne sert que de porteur.
+     */
+    @Query(
+        "SELECT (SELECT COUNT(*) FROM habits) + (SELECT COUNT(*) FROM habit_goals) + " +
+            "(SELECT COUNT(*) FROM habit_schedules)",
+    )
+    fun observeHabitRevision(): Flow<Int>
+
     @Transaction
     @Query("SELECT * FROM habits")
     fun observeHabitsWithGoalAndSchedule(): Flow<List<HabitWithGoalAndSchedule>>

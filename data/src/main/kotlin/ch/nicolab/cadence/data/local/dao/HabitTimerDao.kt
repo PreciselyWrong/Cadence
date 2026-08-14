@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitTimerDao {
+    /** Émet à chaque écriture sur la table : la valeur ne sert que de porteur. */
+    @Query("SELECT COUNT(*) FROM habit_timers")
+    fun observeTimerRevision(): Flow<Int>
+
     @Query("SELECT * FROM habit_timers")
     fun observeTimers(): Flow<List<HabitTimerEntity>>
 
