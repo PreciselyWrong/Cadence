@@ -74,6 +74,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import androidx.glance.appwidget.updateAll
 
+import android.graphics.PointF
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.sin
+
 private data class WidgetHabit(
     val habit: PersistedHabit,
     val evaluation: HabitEvaluation,
@@ -118,11 +124,23 @@ class CadenceWidget : GlanceAppWidget() {
             time = LocalTime.now(),
         )
         val pending = visibleGroupIds?.let { ids -> chosen.filter { it.habit.groupId in ids } } ?: chosen
+        val style = WidgetRenderStyle.byId(config.theme)
         val iconBitmaps = pending.associate { item ->
             // Le monochrome emprunte l'encre du style : elle reste lisible sur son fond.
-            val ink = WidgetRenderStyle.byId(config.theme).contentArgb
+            val ink = style.contentArgb
             val color = if (config.monochromeIcons) ink else item.habit.colorArgb ?: ink
-            item.habit.id to renderIcon(item.habit.iconId, color, config.iconSizeDp, config.iconOpacity, config.iconSaturation)
+            val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
+            val progress = (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
+            item.habit.id to renderHabitFacet(
+                iconId = item.habit.iconId,
+                colorArgb = color,
+                progress = progress,
+                badgeArgb = style.badgeArgb,
+                badgeAlpha = style.badgeAlpha,
+                iconSizeDp = config.iconSizeDp,
+                opacity = config.iconOpacity,
+                saturation = config.iconSaturation,
+            )
         }
         provideContent { WidgetLine(pending, config, iconBitmaps) }
     }
@@ -135,7 +153,6 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     val alpha = config.opacity.coerceIn(0, 100) / 100f
     val surface = Color(style.surfaceArgb).copy(alpha = alpha)
     val content = Color(style.contentArgb)
-    val badge = Color(style.badgeArgb).copy(alpha = style.badgeAlpha)
     val slotMode = WidgetSlotMode.fromStorage(config.slotMode)
     val layout = WidgetSlotSolver.solve(
         LocalSize.current.width.value.toInt(),
@@ -161,6 +178,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
     )
     val labelColor = content.copy(alpha = config.labelOpacity.coerceIn(0, 100) / 100f)
     val valueColor = content.copy(alpha = config.valueOpacity.coerceIn(0, 100) / 100f)
+    val badgeSizeDp = config.iconSizeDp + 10
     Box(
         modifier = GlanceModifier.fillMaxSize().background(ColorProvider(day = surface, night = surface)).cornerRadius(style.cornerRadiusDp.dp).clickable(actionStartActivity<MainActivity>()),
     ) {
@@ -174,8 +192,13 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
         } else {
             habits.take(layout.visibleCount).forEach { item ->
                 Column(modifier = GlanceModifier.width(layout.slotWidthDp.dp).clickable(actionStartActivity<QuickEntryActivity>(actionParametersOf(habitIdKey to item.habit.id))), horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
-                    Box(modifier = GlanceModifier.size((config.iconSizeDp + 8).dp).background(ColorProvider(day = badge, night = badge)).cornerRadius(((config.iconSizeDp + 8) / 2).dp), contentAlignment = Alignment.Center) {
-                        iconBitmaps[item.habit.id]?.let { bitmap -> Image(ImageProvider(bitmap), item.habit.name, modifier = GlanceModifier.size(config.iconSizeDp.dp), contentScale = ContentScale.Fit) }
+                    iconBitmaps[item.habit.id]?.let { bitmap ->
+                        Image(
+                            ImageProvider(bitmap),
+                            item.habit.name,
+                            modifier = GlanceModifier.size(badgeSizeDp.dp),
+                            contentScale = ContentScale.Fit,
+                        )
                     }
                     if (textVisibility.showLabels) Text(item.habit.name, maxLines = 1, style = TextStyle(color = ColorProvider(day = labelColor, night = labelColor), fontSize = config.labelTextSizeSp.sp, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                     if (textVisibility.showValues) Text(item.timerSeconds?.let { HabitFormatter.formatValue(it, item.habit.goal.goalType, item.habit.goal.unit) } ?: HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.evaluation.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
@@ -193,28 +216,123 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
 
 private val habitIdKey = ActionParameters.Key<String>(QuickEntryActivity.EXTRA_HABIT_ID)
 
-private fun renderIcon(iconId: String?, argb: Int, sizeDp: Int, opacity: Int, saturation: Int): Bitmap {
-    val vector = HabitIconRegistry.getIcon(iconId).imageVector
-    val pixels = (sizeDp.coerceIn(24, 48) * 2).coerceAtLeast(48)
-    val bitmap = Bitmap.createBitmap(pixels, pixels, Bitmap.Config.ARGB_8888)
+private fun PointF.moveToward(target: PointF, distance: Float): PointF {
+    val length = hypot(target.x - x, target.y - y).coerceAtLeast(0.001f)
+    val step = distance.coerceAtMost(length / 2f) / length
+    return PointF(x + (target.x - x) * step, y + (target.y - y) * step)
+}
+
+private fun facetPath(cx: Float, cy: Float, radius: Float, corner: Float, sides: Int = 6, rotation: Float = -60f): android.graphics.Path {
+    val path = android.graphics.Path()
+    val points = List(sides) { index ->
+        val angle = (rotation + index * 360f / sides) * PI.toFloat() / 180f
+        PointF(cx + radius * cos(angle), cy + radius * sin(angle))
+    }
+    points.forEachIndexed { index, point ->
+        val previous = points[(index - 1 + sides) % sides]
+        val next = points[(index + 1) % sides]
+        val entry = point.moveToward(previous, corner)
+        val exit = point.moveToward(next, corner)
+        if (index == 0) path.moveTo(entry.x, entry.y) else path.lineTo(entry.x, entry.y)
+        path.quadTo(point.x, point.y, exit.x, exit.y)
+    }
+    path.close()
+    return path
+}
+
+private fun renderHabitFacet(
+    iconId: String?,
+    colorArgb: Int,
+    progress: Float,
+    badgeArgb: Int,
+    badgeAlpha: Float,
+    iconSizeDp: Int,
+    opacity: Int,
+    saturation: Int,
+): Bitmap {
+    val density = 3f
+    val badgeSizeDp = iconSizeDp + 10
+    val totalPixels = (badgeSizeDp * density).toInt()
+    val bitmap = Bitmap.createBitmap(totalPixels, totalPixels, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = argb
+
+    val strokeWidth = 2.5f * density
+    val cx = totalPixels / 2f
+    val cy = totalPixels / 2f
+    val radius = (totalPixels - strokeWidth) / 2f
+    val path = facetPath(cx, cy, radius, radius * 0.12f)
+
+    // Fond du badge
+    val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = badgeArgb
+        alpha = (badgeAlpha.coerceIn(0f, 1f) * 255).toInt()
+    }
+    canvas.drawPath(path, bgPaint)
+
+    // Teinte subtile de l'habitude
+    val tintFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = colorArgb
+        alpha = (0.12f * (opacity.coerceIn(0, 100) / 100f) * 255).toInt()
+    }
+    canvas.drawPath(path, tintFillPaint)
+
+    // Piste de la jauge
+    val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        this.strokeWidth = strokeWidth
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
+        color = colorArgb
+        alpha = (0.22f * 255).toInt()
+    }
+    canvas.drawPath(path, trackPaint)
+
+    // Progression active
+    if (progress > 0f) {
+        val measure = android.graphics.PathMeasure(path, false)
+        val traced = android.graphics.Path()
+        measure.getSegment(0f, measure.length * progress.coerceIn(0f, 1f), traced, true)
+        val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            this.strokeWidth = strokeWidth
+            strokeCap = Paint.Cap.ROUND
+            strokeJoin = Paint.Join.ROUND
+            color = colorArgb
+            alpha = (opacity.coerceIn(0, 100) * 255 / 100)
+            colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(saturation.coerceIn(0, 100) / 100f) })
+        }
+        canvas.drawPath(traced, progressPaint)
+    }
+
+    // Icône centrale
+    val vector = HabitIconRegistry.getIcon(iconId).imageVector
+    val iconPixels = iconSizeDp * density * 0.9f
+    val iconLeft = (totalPixels - iconPixels) / 2f
+    val iconTop = (totalPixels - iconPixels) / 2f
+    canvas.save()
+    canvas.translate(iconLeft, iconTop)
+    val scale = iconPixels / vector.viewportWidth
+    canvas.scale(scale, scale)
+
+    val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = colorArgb
         alpha = (opacity.coerceIn(0, 100) * 255 / 100)
         colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(saturation.coerceIn(0, 100) / 100f) })
         style = Paint.Style.FILL
     }
-    val scale = pixels / vector.viewportWidth
-    canvas.scale(scale, scale)
     fun draw(group: VectorGroup) {
         group.forEach { node ->
             when (node) {
-                is VectorPath -> canvas.drawPath(PathParser().addPathNodes(node.pathData).toPath().asAndroidPath(), paint)
+                is VectorPath -> canvas.drawPath(PathParser().addPathNodes(node.pathData).toPath().asAndroidPath(), iconPaint)
                 is VectorGroup -> draw(node)
             }
         }
     }
     draw(vector.root)
+    canvas.restore()
+
     return bitmap
 }
 

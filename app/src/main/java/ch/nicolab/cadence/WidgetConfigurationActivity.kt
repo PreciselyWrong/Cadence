@@ -58,6 +58,7 @@ import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
+import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -468,18 +469,15 @@ private fun WidgetPreview(
                 habits.take(layout.visibleCount).forEach { habit ->
                     val tint = previewIconColor(habit.colorArgb, monochromeIcons, iconSaturation, renderStyle.contentArgb)
                     Column(Modifier.width(cellWidth), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Box(
-                            Modifier.size((iconSizeDp + 8).dp).clip(CircleShape).background(badge),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            val icon = HabitIconRegistry.getIcon(habit.iconId)
-                            Icon(
-                                icon.imageVector,
-                                icon.labelFr,
-                                tint = tint.copy(alpha = iconOpacity.coerceIn(0, 100) / 100f),
-                                modifier = Modifier.size(iconSizeDp.dp),
-                            )
-                        }
+                        val icon = HabitIconRegistry.getIcon(habit.iconId)
+                        HabitFacet(
+                            icon = icon.imageVector,
+                            label = icon.labelFr,
+                            progress = 0.5f,
+                            tint = tint.copy(alpha = iconOpacity.coerceIn(0, 100) / 100f),
+                            trackColor = tint.copy(alpha = 0.22f),
+                            size = (iconSizeDp + 10).dp,
+                        )
                         if (textVisibility.showLabels) {
                             Text(
                                 habit.name,

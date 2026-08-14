@@ -1,6 +1,7 @@
 ## [1.0.6] — 14 août 2026
 
 ### Améliorations
+- Les icônes du widget adoptent la forme en facette et tracent leur progression sur l’arête.
 - Le calendrier des douze semaines s’étire sur toute la largeur de l’écran.
 - Un appui prolongé dans la vue semaine ouvre les options de l’habitude.
 
