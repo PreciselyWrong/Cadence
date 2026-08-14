@@ -210,10 +210,9 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     }
 
     quick?.let { item ->
-        val sessionId = remember(item.stored.id) { UUID.randomUUID().toString() }
         QuickSheet(
             item,
-            { value, note -> viewModel.addEntry(item, value, "APP", sessionId, note) },
+            { value, note -> viewModel.addEntry(item, value, "APP", UUID.randomUUID().toString(), note) },
             viewModel::undoLastEntry,
             { correcting = it },
             timers[item.stored.id],

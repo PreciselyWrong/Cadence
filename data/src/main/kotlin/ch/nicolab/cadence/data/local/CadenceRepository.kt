@@ -83,7 +83,7 @@ class CadenceRepository(
      * de l'application que pour une écriture venue du widget, ce qui permet de reconstruire
      * l'état sans jamais s'appuyer sur une copie conservée en mémoire.
      */
-    fun observeEntryRevision(): Flow<Int> = database.habitEntryDao().observeEntryRevision()
+    fun observeEntryRevision(): Flow<Long> = database.habitEntryDao().observeEntryRevision()
 
     fun observePauseRevision(): Flow<Int> = database.habitPauseDao().observePauseRevision()
 
@@ -99,7 +99,7 @@ class CadenceRepository(
      * Toutes les révisions dont dépend l'affichage d'un widget, fusionnées. Un widget qui
      * s'y abonne se remet à jour quelle que soit l'origine de l'écriture.
      */
-    fun observeWidgetRevisions(): Flow<Int> = merge(
+    fun observeWidgetRevisions(): Flow<Number> = merge(
         observeHabitRevision(),
         observeEntryRevision(),
         observePauseRevision(),
@@ -132,6 +132,28 @@ class CadenceRepository(
             }
         }
     }
+
+    suspend fun getEntries(
+        habitId: String,
+        startDateInclusive: LocalDate,
+        endDateInclusive: LocalDate,
+    ): List<HabitEntry> =
+        database.habitEntryDao().getEntriesForHabitBetween(
+            habitId = habitId,
+            startDateInclusive = startDateInclusive.toString(),
+            endDateInclusive = endDateInclusive.toString(),
+        ).map { entity ->
+            HabitEntry(
+                id = entity.id,
+                habitId = entity.habitId,
+                occurredAt = Instant.ofEpochMilli(entity.occurredAtEpochMs),
+                localDate = LocalDate.parse(entity.localDate),
+                observedZoneId = ZoneId.of(entity.observedZoneId),
+                valueMinor = entity.valueMinor,
+                sessionId = entity.sessionId,
+                note = entity.note,
+            )
+        }
 
     suspend fun getEntries(habitId: String): List<HabitEntry> =
         database.habitEntryDao().getEntriesForHabit(habitId).map { entity ->
@@ -388,6 +410,9 @@ class CadenceRepository(
         database.habitTimerDao().observeTimers().map { rows ->
             rows.associate { it.habitId to toTimer(it) }
         }
+
+    suspend fun getTimers(): Map<String, HabitTimer> =
+        database.habitTimerDao().getTimers().associate { it.habitId to toTimer(it) }
 
     suspend fun getTimer(habitId: String): HabitTimer? =
         database.habitTimerDao().getTimer(habitId)?.let(::toTimer)

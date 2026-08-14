@@ -99,11 +99,11 @@ class CadenceWidget : GlanceAppWidget() {
         val today = LocalDate.now()
         val evaluator = HabitEvaluator()
         val now = Instant.now()
-        val timers = repository.observeTimers().first()
-        val allPending = repository.observeHabits().first().mapNotNull { habit ->
+        val timers = repository.getTimers()
+        val allPending = repository.getHabitsEffectiveAt(today).mapNotNull { habit ->
             val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
-            val entries = repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
-            val pauses = repository.observePauses(habit.id).first()
+            val entries = repository.getEntries(habit.id, window.start, window.endExclusive.minusDays(1))
+            val pauses = repository.getPauses(habit.id)
             evaluator.evaluate(habit.definition, today, entries, pauses).takeIf { it.needsAttentionNow }?.let { evaluation ->
                 // Un chronomètre actif s'affiche à la place de la progression : un toucher
                 // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.

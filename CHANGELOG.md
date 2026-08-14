@@ -6,6 +6,8 @@
 - Un appui prolongé dans la vue semaine ouvre les options de l’habitude.
 
 ### Corrections
+- L’ouverture de la saisie rapide attend le chargement des habitudes sans afficher brièvement « Tout est à jour ! » par erreur.
+- Les saisies rapides consécutives sont toutes prises en compte immédiatement sur le widget.
 - La modification d’une habitude met bien à jour sa fréquence et son rythme.
 - La suppression d’une ancienne saisie disparaît immédiatement de la fenêtre.
 

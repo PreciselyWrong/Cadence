@@ -30,12 +30,25 @@ interface HabitEntryDao {
         endDateInclusive: String,
     ): Flow<List<HabitEntryEntity>>
 
+    @Query("""
+        SELECT * FROM habit_entries 
+        WHERE habitId = :habitId 
+        AND localDate >= :startDateInclusive 
+        AND localDate <= :endDateInclusive 
+        ORDER BY localDate ASC, occurredAtEpochMs ASC
+    """)
+    suspend fun getEntriesForHabitBetween(
+        habitId: String,
+        startDateInclusive: String,
+        endDateInclusive: String,
+    ): List<HabitEntryEntity>
+
     /**
      * Émet à chaque écriture sur la table, y compris celles faites depuis le widget.
      * Room réémet dès que la table est invalidée, la valeur ne sert que de porteur.
      */
-    @Query("SELECT COUNT(*) FROM habit_entries")
-    fun observeEntryRevision(): Flow<Int>
+    @Query("SELECT COUNT(*) + COALESCE(SUM(valueMinor), 0) FROM habit_entries")
+    fun observeEntryRevision(): Flow<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(entry: HabitEntryEntity)

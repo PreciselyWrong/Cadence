@@ -81,6 +81,7 @@ class QuickEntryActivity : ComponentActivity() {
 @Composable
 private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss: () -> Unit) {
     val palette = cadence
+    val isLoaded by viewModel.isLoaded.collectAsStateWithLifecycle()
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val lastEntryId by viewModel.lastEntryId.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
@@ -105,7 +106,9 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
                 Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint, textAlign = TextAlign.Center)
                 Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.ink, textAlign = TextAlign.Center)
                 Spacer(Modifier.height(Space.lg))
-                if (pending.isEmpty()) {
+                if (!isLoaded) {
+                    Spacer(Modifier.height(100.dp))
+                } else if (pending.isEmpty()) {
                     Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Box(Modifier.size(36.dp).clip(CircleShape).background(palette.success.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
@@ -160,7 +163,6 @@ private fun QuickHabit(
     var custom by remember { mutableStateOf("") }
     // La note accompagne la prochaine saisie de cette habitude.
     var note by remember(habit.stored.id) { mutableStateOf("") }
-    val sessionId = remember(habit.stored.id) { UUID.randomUUID().toString() }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
     val tint = habit.stored.colorArgb?.let(::Color) ?: palette.accent
@@ -196,11 +198,11 @@ private fun QuickHabit(
         CadenceField(note, { note = it }, stringResource(R.string.quick_note_label), accent = tint)
         Spacer(Modifier.height(Space.md))
         if (goal.goalType == GoalType.BINARY) {
-            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, sessionId, note) }
+            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, UUID.randomUUID().toString(), note) }
         } else {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 habit.quickValues.ifEmpty { listOf(goal.unit?.scaleToCanonical ?: 1) }.forEach { value ->
-                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, sessionId, note); note = "" }
+                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, UUID.randomUUID().toString(), note); note = "" }
                 }
             }
             Spacer(Modifier.height(Space.md))
@@ -216,7 +218,7 @@ private fun QuickHabit(
                     numeric = true,
                 )
                 PrimaryAction(stringResource(R.string.quick_btn_add), accent = tint, enabled = (custom.toLongOrNull() ?: 0) > 0) {
-                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), sessionId, note); custom = ""; note = "" }
+                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), UUID.randomUUID().toString(), note); custom = ""; note = "" }
                 }
             }
         }

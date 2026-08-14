@@ -82,6 +82,7 @@ class MainViewModel(
 ) : ViewModel() {
     private val evaluator = HabitEvaluator()
     private val cards = MutableStateFlow<List<HabitCardState>>(emptyList())
+    val isLoaded = MutableStateFlow(false)
     val habits: StateFlow<List<HabitCardState>> = cards.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
@@ -471,5 +472,6 @@ class MainViewModel(
                 streak = streak,
             )
         }
+        isLoaded.value = true
     }
 }
