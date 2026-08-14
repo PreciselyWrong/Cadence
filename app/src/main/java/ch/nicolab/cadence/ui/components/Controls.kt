@@ -126,7 +126,7 @@ fun ChoiceChip(
     val palette = cadence
     val fill = accent ?: palette.accent
     val container by animateColorAsState(if (selected) fill else palette.sunken, Motion.quick(), label = "chip")
-    val content by animateColorAsState(if (selected) onColorOf(fill) else palette.inkMuted, Motion.quick(), label = "chipText")
+    val content by animateColorAsState(if (selected) onColorOf(fill) else palette.ink, Motion.quick(), label = "chipText")
     Box(
         modifier
             .clip(Radius.Chip)
@@ -141,22 +141,22 @@ fun ChoiceChip(
 }
 
 /**
- * Puce d'incrément : c'est une action, pas une sélection. Accent adouci pour qu'une
- * rangée d'incréments reste lisible sans devenir une rangée de boutons pleins.
+ * Puce d'incrément : action rapide de saisie. Surface doucement teintée avec texte net.
  */
 @Composable
 fun ValueChip(label: String, accent: Color? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val fill = accent ?: cadence.accent
+    val palette = cadence
+    val fill = accent ?: palette.accent
     Box(
         modifier
             .clip(Radius.Chip)
-            .background(fill.copy(alpha = if (cadence.isDark) 0.26f else 0.16f))
+            .background(fill.copy(alpha = if (palette.isDark) 0.24f else 0.14f))
             .clickable(onClick = onClick)
             .defaultMinSize(minHeight = 44.dp)
             .padding(horizontal = Space.lg, vertical = Space.md),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = fill)
+        Text(label, style = MaterialTheme.typography.labelLarge, color = palette.ink)
     }
 }
 

@@ -47,7 +47,13 @@ fun HabitHeatmap(days: List<DailyStat>, accent: Color, modifier: Modifier = Modi
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                     week.forEach { day ->
                         val level = HeatmapLevel.of(day.valueMinor, day.targetMinor, day.paused)
-                        val color = if (level == 0) palette.sunken else accent.copy(alpha = .2f * level)
+                        val color = when (level) {
+                            1 -> accent.copy(alpha = if (palette.isDark) 0.35f else 0.25f)
+                            2 -> accent.copy(alpha = if (palette.isDark) 0.55f else 0.50f)
+                            3 -> accent.copy(alpha = if (palette.isDark) 0.75f else 0.75f)
+                            4 -> accent
+                            else -> palette.sunken
+                        }
                         Box(
                             Modifier.fillMaxWidth().aspectRatio(1f).background(color, RoundedCornerShape(Space.xs)),
                         )

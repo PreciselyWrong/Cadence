@@ -42,14 +42,20 @@ fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifi
                 val ratio = if (period.targetMinor <= 0L) 0f else (period.progressMinor.toFloat() / period.targetMinor).coerceIn(0f, 1f)
                 val color = when {
                     period.excludedByPause -> palette.hairline
-                    period.succeeded -> accent
-                    else -> accent.copy(alpha = 0.35f)
+                    else -> accent
                 }
                 Box(
                     Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(8.dp)).background(palette.sunken),
                     contentAlignment = Alignment.BottomCenter,
                 ) {
-                    Box(Modifier.fillMaxWidth().height((6 + ratio * 66).dp).clip(RoundedCornerShape(8.dp)).background(color))
+                    if (ratio > 0f || period.excludedByPause) {
+                        Box(
+                            Modifier.fillMaxWidth()
+                                .height((ratio * 72).dp.coerceAtLeast(6.dp))
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(color),
+                        )
+                    }
                 }
             }
         }
