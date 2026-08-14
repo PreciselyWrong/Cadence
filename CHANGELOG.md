@@ -1,6 +1,8 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Un onglet `Cette semaine` regroupe les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`, et ouvre directement la saisie.
+- Une note courte peut accompagner une saisie dès son enregistrement, depuis l’application comme depuis le widget.
 - Une cible peut augmenter seule chaque semaine ou chaque mois, avec plafond facultatif, aperçu des prochaines cibles et arrêt à tout moment.
 - Une habitude peut se limiter au lieu de s’atteindre : deux cafés par jour au maximum, avec `Sous la limite`, `Limite atteinte` puis `Limite dépassée`.
 - Aujourd’hui et Habitudes se filtrent par groupe, avec `Tous` toujours à portée.

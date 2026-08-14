@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -71,6 +72,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
@@ -81,6 +83,9 @@ import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.GoalProgression
 import ch.nicolab.cadence.domain.ProgressionCadence
 import ch.nicolab.cadence.domain.LimitStatus
+import ch.nicolab.cadence.domain.WeekEntry
+import ch.nicolab.cadence.domain.WeekOutlook
+import ch.nicolab.cadence.domain.WeekStage
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.HabitTimer
@@ -139,6 +144,7 @@ class MainActivity : ComponentActivity() {
 
 private enum class Tab(val label: Int, val icon: ImageVector) {
     TODAY(R.string.tab_today, Icons.Outlined.TrackChanges),
+    WEEK(R.string.tab_week, Icons.Outlined.DateRange),
     HABITS(R.string.tab_habits, Icons.Outlined.Check),
     STATS(R.string.tab_stats, Icons.Outlined.Analytics),
     SETTINGS(R.string.tab_settings, Icons.Outlined.Settings),
@@ -182,6 +188,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
         Crossfade(tab, label = "tab") { current ->
             when (current) {
                 Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { quick = it }, { options = it }, { creating = true })
+                Tab.WEEK -> WeekScreen(habits) { quick = it }
                 Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { creating = true }, { options = it })
                 Tab.STATS -> StatsScreen(habits)
                 Tab.SETTINGS -> SettingsScreen(
@@ -205,7 +212,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
         val sessionId = remember(item.stored.id) { UUID.randomUUID().toString() }
         QuickSheet(
             item,
-            { viewModel.addEntry(item, it, "APP", sessionId) },
+            { value, note -> viewModel.addEntry(item, value, "APP", sessionId, note) },
             viewModel::undoLastEntry,
             { correcting = it },
             timers[item.stored.id],
@@ -475,6 +482,57 @@ private fun progress(item: HabitCardState): String {
     val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, item.evaluation.targetMinor, goal.goalType, goal.unit)
     val frequency = goal.frequencyTarget ?: return quantity
     return stringResource(R.string.habit_sessions_format, quantity, item.evaluation.sessionCount, frequency)
+}
+
+/**
+ * Cette semaine : les habitudes regroupées par ce qu'il reste à en faire. Une habitude
+ * dont plus aucun jour n'est planifié d'ici dimanche ne s'affiche pas — la lister ne
+ * proposerait aucune action.
+ */
+@Composable
+private fun WeekScreen(habits: List<HabitCardState>, quick: (HabitCardState) -> Unit) {
+    val today = LocalDate.now()
+    val byId = habits.associateBy { it.stored.id }
+    val outlook = remember(habits) {
+        WeekOutlook.of(
+            habits = habits.map { it.stored.definition },
+            today = today,
+            entries = habits.flatMap(HabitCardState::recentEntries),
+            pausesOf = { id -> byId[id]?.pauses?.map(IdentifiedPause::pause).orEmpty() },
+        )
+    }
+    val labels = mapOf(
+        WeekStage.TODO to R.string.week_stage_todo,
+        WeekStage.WELL_UNDERWAY to R.string.week_stage_well_underway,
+        WeekStage.MINIMUM to R.string.week_stage_minimum,
+        WeekStage.DONE to R.string.week_stage_done,
+    )
+
+    ScreenList(context = stringResource(R.string.week_subtitle), title = stringResource(R.string.week_title)) {
+        if (outlook.byStage.values.all(List<WeekEntry>::isEmpty)) {
+            item {
+                EmptyState(
+                    Icons.Outlined.Check,
+                    stringResource(R.string.week_empty_title),
+                    stringResource(R.string.week_empty_message),
+                )
+            }
+        }
+        WeekStage.entries.forEach { stage ->
+            val entries = outlook.byStage.getValue(stage).mapNotNull { byId[it.habit.id] }
+            if (entries.isNotEmpty()) {
+                item(key = "stage-$stage") { SectionLabel(stringResource(labels.getValue(stage))) }
+                items(entries, key = { "$stage-${it.stored.id}" }) { card ->
+                    HabitRow(
+                        card,
+                        done = stage == WeekStage.DONE,
+                        onClick = { quick(card) },
+                        onLongClick = { quick(card) },
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -850,7 +908,7 @@ private fun HabitOptionsSheet(
 @Composable
 private fun QuickSheet(
     item: HabitCardState,
-    add: (Long) -> Unit,
+    add: (Long, String?) -> Unit,
     undo: () -> Unit,
     correct: (HabitEntry) -> Unit,
     timer: HabitTimer?,
@@ -861,6 +919,9 @@ private fun QuickSheet(
     dismiss: () -> Unit,
 ) {
     var custom by remember { mutableStateOf("") }
+    // La note accompagne la prochaine saisie, quelle que soit la façon de la déclencher.
+    var note by remember(item.stored.id) { mutableStateOf("") }
+    val record: (Long) -> Unit = { value -> add(value, note); note = "" }
     val tint = habitTint(item)
     val scale = item.stored.goal.unit?.scaleToCanonical ?: 1
     CadenceSheet(
@@ -887,12 +948,14 @@ private fun QuickSheet(
             )
             Spacer(Modifier.height(Space.xl))
         }
+        CadenceField(note, { note = it }, stringResource(R.string.quick_note_label), accent = tint)
+        Spacer(Modifier.height(Space.lg))
         if (item.stored.goal.goalType == GoalType.BINARY) {
-            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1); dismiss() }
+            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { record(1); dismiss() }
         } else {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 item.quickValues.ifEmpty { listOf(scale) }.forEach { value ->
-                    ValueChip("+${HabitFormatter.formatValue(value, item.stored.goal.goalType, item.stored.goal.unit)}", accent = tint) { add(value) }
+                    ValueChip("+${HabitFormatter.formatValue(value, item.stored.goal.goalType, item.stored.goal.unit)}", accent = tint) { record(value) }
                 }
             }
             Spacer(Modifier.height(Space.lg))
@@ -906,7 +969,7 @@ private fun QuickSheet(
             )
             Spacer(Modifier.height(Space.md))
             PrimaryAction(stringResource(R.string.quick_btn_add), Modifier.fillMaxWidth(), accent = tint, enabled = (custom.toLongOrNull() ?: 0) > 0) {
-                custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * scale); custom = "" }
+                custom.toLongOrNull()?.takeIf { it > 0 }?.let { record(it * scale); custom = "" }
             }
         }
         Spacer(Modifier.height(Space.xs))
@@ -936,12 +999,16 @@ private fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUni
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column {
+        Column(Modifier.weight(1f)) {
             Text(entry.localDate.toString(), style = MaterialTheme.typography.bodyMedium, color = palette.ink)
             Text(
-                entry.occurredAt.atZone(entry.observedZoneId).toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString(),
+                // La note prime sur l'heure : c'est elle qui rappelle de quoi il s'agissait.
+                entry.note ?: entry.occurredAt.atZone(entry.observedZoneId).toLocalTime()
+                    .truncatedTo(ChronoUnit.MINUTES).toString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = palette.inkFaint,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
         Text(

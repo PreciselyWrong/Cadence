@@ -1,15 +1,10 @@
 # Cadence
 
 ## Now
-- [ ] Notes rapides sur les saisies
-  - Ajouter ou modifier une note courte depuis la saisie rapide et l’historique
-  - Vérification : plusieurs saisies le même jour, sauvegarde et restauration
+-
 
 ## Next
-- [ ] Vue Cette semaine
-  - Regrouper les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`
-  - Montrer uniquement les actions utiles et ouvrir directement la saisie concernée
-  - Vérification : rythmes flexibles, jours choisis, tous les N jours et habitudes à limiter
+-
 
 ## Ideas
 - [ ] Valeurs rapides propres à chaque groupe ou moment de la journée
@@ -33,6 +28,8 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Vue Cette semaine
+- [x] Notes rapides sur les saisies
 - [x] Objectifs progressifs
 - [x] Habitudes à limiter
 - [x] Groupes dans l’application

@@ -127,6 +127,7 @@ class MainViewModel(
         valueMinor: Long,
         source: String = "APP",
         sessionId: String? = null,
+        note: String? = null,
     ) = viewModelScope.launch {
         require(valueMinor > 0)
         val now = clock.instant()
@@ -141,6 +142,7 @@ class MainViewModel(
                 observedZoneId = zone,
                 valueMinor = valueMinor,
                 sessionId = sessionId ?: entryId,
+                note = note?.trim()?.ifBlank { null },
             ),
             source = source,
         )

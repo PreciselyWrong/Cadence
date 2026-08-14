@@ -126,7 +126,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
                                 pauseTimer = { viewModel.pauseTimer(habit.stored.id) },
                                 finishTimer = { viewModel.finishTimer(habit); dismiss() },
                                 resetTimer = { viewModel.resetTimer(habit.stored.id) },
-                            ) { value, sessionId -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId) }
+                            ) { value, sessionId, note -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId, note) }
                         }
                     }
                 }
@@ -154,10 +154,12 @@ private fun QuickHabit(
     pauseTimer: () -> Unit,
     finishTimer: () -> Unit,
     resetTimer: () -> Unit,
-    add: (Long, String) -> Unit,
+    add: (Long, String, String?) -> Unit,
 ) {
     val palette = cadence
     var custom by remember { mutableStateOf("") }
+    // La note accompagne la prochaine saisie de cette habitude.
+    var note by remember(habit.stored.id) { mutableStateOf("") }
     val sessionId = remember(habit.stored.id) { UUID.randomUUID().toString() }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
@@ -191,12 +193,14 @@ private fun QuickHabit(
             )
             Spacer(Modifier.height(Space.lg))
         }
+        CadenceField(note, { note = it }, stringResource(R.string.quick_note_label), accent = tint)
+        Spacer(Modifier.height(Space.md))
         if (goal.goalType == GoalType.BINARY) {
-            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, sessionId) }
+            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, sessionId, note) }
         } else {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 habit.quickValues.ifEmpty { listOf(goal.unit?.scaleToCanonical ?: 1) }.forEach { value ->
-                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, sessionId) }
+                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, sessionId, note); note = "" }
                 }
             }
             Spacer(Modifier.height(Space.md))
@@ -212,7 +216,7 @@ private fun QuickHabit(
                     numeric = true,
                 )
                 PrimaryAction(stringResource(R.string.quick_btn_add), accent = tint, enabled = (custom.toLongOrNull() ?: 0) > 0) {
-                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), sessionId); custom = "" }
+                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), sessionId, note); custom = ""; note = "" }
                 }
             }
         }

@@ -145,6 +145,15 @@
     <string name="status_limit_at">Limite atteinte</string>
     <string name="status_limit_exceeded">Limite dépassée</string>
     <string name="limit_progress">%1$s sur %2$s max</string>
+    <string name="tab_week">Semaine</string>
+    <string name="week_title">Cette semaine</string>
+    <string name="week_subtitle">Ce qu\'il reste à faire</string>
+    <string name="week_stage_todo">À faire</string>
+    <string name="week_stage_well_underway">Bien parti</string>
+    <string name="week_stage_minimum">Minimum atteint</string>
+    <string name="week_stage_done">Terminé</string>
+    <string name="week_empty_title">Rien à poursuivre</string>
+    <string name="week_empty_message">Aucune habitude n\'attend d\'action d\'ici la fin de la semaine.</string>
     <string name="group_filter_all">Tous</string>
     <string name="group_filter_empty">Aucune habitude dans ce groupe.</string>
     <string name="group_move_title">Déplacer vers un groupe</string>
@@ -310,6 +319,7 @@
     <string name="entry_date_label">Date</string>
     <string name="entry_time_label">Heure</string>
     <string name="entry_note_label">Note</string>
+    <string name="quick_note_label">Note (facultative)</string>
     <string name="entry_delete">Supprimer la saisie</string>
     <string name="entry_error_value">La valeur doit être supérieure à zéro.</string>
     <string name="entry_error_date">La date attendue est AAAA-MM-JJ.</string>
