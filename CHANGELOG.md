@@ -1,4 +1,4 @@
-## [1.0.5] — 13 août 2026
+## [1.0.5] — 14 août 2026
 
 ### Nouveautés
 - Le widget garde au choix sa répartition souple ou découpe sa largeur en emplacements fixes, alignés à gauche, au centre ou à droite : l’espacement ne bouge plus quand une habitude est cochée.

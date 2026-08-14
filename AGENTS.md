@@ -29,6 +29,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les changements d'objectif ou de période s'appliquent à partir du jour même; les jours déjà écoulés gardent la version qui les a produits.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
 - Le widget Halo est la première variante d'un système de rendu extensible. `ui/widget/WidgetRenderStyle.kt` porte le contrat — fond, encre, pastille, arrondi — lu par le widget, son aperçu et sa configuration; ajouter une variante se limite à une entrée et son libellé.
+- Le widget suit la base, pas ses appelants : `WidgetAutoRefresh` écoute les révisions des tables qui le concernent et redessine après une courte fenêtre de calme. Ce qui dépend de l'heure sans écriture — minuit, entrée et sortie d'un groupe horaire — est réveillé par `WidgetBoundaryAlarm`, calculé par `WidgetRefreshSchedule`.
 - La vue `Cette semaine` (`WeekOutlook`) masque une habitude dont plus aucun jour n'est planifié d'ici dimanche : la lister ne proposerait aucune action.
 - Une progression recalcule la cible depuis son départ (`GoalProgression`), jamais en cumulant la valeur courante : relire une date donne toujours le même chiffre. La cadence mensuelle suit les changements de mois civils, pas le quantième.
 - Un objectif porte un sens (`GoalDirection`). Sous `AT_MOST`, `targetMinor` est un maximum : la période réussit tant qu'il n'est pas dépassé, la limite ne porte ni minimum ni fréquence, et l'habitude reste offerte à la saisie tant qu'il reste de la place. Rien n'est acquis avant la fin de la période.
@@ -75,7 +76,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget — l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
 - ⛔ Nommer un planning « période flexible » sans expliquer son effet — les rythmes doivent décrire concrètement les jours où l’habitude apparaît.
 - ⛔ Réduire le nombre d’icônes du widget à cause de sa hauteur — seuls les textes s’effacent lorsque l’espace vertical manque.
-- ⛔ Répartir irrégulièrement les habitudes dans le widget — chaque élément occupe une largeur identique et l’ensemble reste centré.
+- ⛔ Répartir irrégulièrement les habitudes dans le widget — chaque élément occupe une largeur identique; l’alignement de l’ensemble se choisit (`WidgetSlotAlignment`), le centre n’étant que le défaut.
+- ⛔ Demander explicitement un rafraîchissement du widget depuis un point d’écriture — le widget suit les révisions de la base, un appel manuel finit toujours par être oublié quelque part.
 - ⛔ Aligner le contenu principal d’un modal de saisie sur un bord — titres, progression et choix rapides restent centrés.
 
 ## Pièges
