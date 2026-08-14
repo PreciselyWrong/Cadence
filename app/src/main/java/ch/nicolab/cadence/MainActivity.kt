@@ -47,6 +47,7 @@ import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.TrackChanges
+import androidx.compose.material.icons.outlined.TrendingFlat
 import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -77,6 +78,8 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.GoalDirection
+import ch.nicolab.cadence.domain.GoalProgression
+import ch.nicolab.cadence.domain.ProgressionCadence
 import ch.nicolab.cadence.domain.LimitStatus
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.HabitStreak
@@ -238,6 +241,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             cancelSkip = { viewModel.cancelSkip(it); options = null },
             resumePause = { viewModel.resumePause(it); options = null },
             moveToGroup = { movingToGroup = item; options = null },
+            stopProgression = { viewModel.stopProgression(item.stored); options = null },
             archive = { viewModel.archiveHabit(item.stored, !item.stored.archived); options = null },
             duplicate = { viewModel.duplicateHabit(item.stored); options = null },
             up = { viewModel.moveHabit(item.stored.id, -1); options = null },
@@ -392,7 +396,7 @@ private fun HabitsScreen(
 private fun HabitRow(item: HabitCardState, done: Boolean = false, onClick: () -> Unit, onLongClick: () -> Unit) {
     val palette = cadence
     val tint = habitTint(item)
-    val target = item.stored.goal.targetMinor.takeIf { it > 0 } ?: 1L
+    val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     val ratio = (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
     Panel(onClick = onClick, onLongClick = onLongClick) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -465,10 +469,10 @@ private fun progress(item: HabitCardState): String {
         return stringResource(
             R.string.limit_progress,
             HabitFormatter.formatValue(item.evaluation.progressMinor, goal.goalType, goal.unit),
-            HabitFormatter.formatValue(goal.targetMinor, goal.goalType, goal.unit),
+            HabitFormatter.formatValue(item.evaluation.targetMinor, goal.goalType, goal.unit),
         )
     }
-    val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit)
+    val quantity = HabitFormatter.formatProgress(item.evaluation.progressMinor, item.evaluation.targetMinor, goal.goalType, goal.unit)
     val frequency = goal.frequencyTarget ?: return quantity
     return stringResource(R.string.habit_sessions_format, quantity, item.evaluation.sessionCount, frequency)
 }
@@ -646,6 +650,42 @@ private fun formatMinuteOfDay(minute: Int?): String =
 private fun parseMinuteOfDay(raw: String): Int? =
     runCatching { java.time.LocalTime.parse(raw.trim()) }.getOrNull()?.let { it.hour * 60 + it.minute }
 
+/**
+ * Où mène la progression, avant de s'y engager. Les cibles sont calculées avec le même
+ * code que celui qui les appliquera, plafond compris.
+ */
+@Composable
+private fun ProgressionPreview(state: EditorState, accent: Color) {
+    val palette = cadence
+    val scale = if (state.customUnit) 1L else state.unit.scaleToCanonical
+    val target = state.target.toLongOrNull()?.times(scale)
+    val step = state.progressionStep.toLongOrNull()?.times(scale)
+    if (target == null || target <= 0 || step == null || step <= 0) return
+
+    val progression = runCatching {
+        GoalProgression(
+            step = step,
+            cadence = if (state.progressionMonthly) ProgressionCadence.MONTHLY else ProgressionCadence.WEEKLY,
+            capMinor = state.progressionCap.toLongOrNull()?.times(scale)?.takeIf { it > 0 },
+            startsOn = LocalDate.now(),
+        )
+    }.getOrNull() ?: return
+    val unit = if (state.customUnit) null else state.unit
+
+    FieldGroup(stringResource(R.string.form_progression_preview)) {
+        progression.preview(target, LocalDate.now(), count = 5).forEach { entry ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(entry.from.toString(), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+                Text(
+                    HabitFormatter.formatValue(entry.targetMinor, state.goalType, unit),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = accent,
+                )
+            }
+        }
+    }
+}
+
 /** Déplacement d'une habitude d'un groupe à l'autre, sans passer par le formulaire complet. */
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
@@ -748,6 +788,7 @@ private fun HabitOptionsSheet(
     cancelSkip: (String) -> Unit,
     resumePause: (String) -> Unit,
     moveToGroup: () -> Unit,
+    stopProgression: () -> Unit,
     archive: () -> Unit,
     duplicate: () -> Unit,
     up: () -> Unit,
@@ -792,6 +833,9 @@ private fun HabitOptionsSheet(
             archive,
         )
         ActionRow(Icons.Outlined.Sell, stringResource(R.string.action_move_to_group), tint, moveToGroup)
+        if (item.stored.goal.progression != null) {
+            ActionRow(Icons.Outlined.TrendingFlat, stringResource(R.string.progression_stop), tint, stopProgression)
+        }
         ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate), tint, duplicate)
         ActionRow(Icons.Outlined.KeyboardArrowUp, stringResource(R.string.action_reorder_up), tint, up)
         ActionRow(Icons.Outlined.KeyboardArrowDown, stringResource(R.string.action_reorder_down), tint, down)
@@ -992,6 +1036,10 @@ private class EditorState(
     minimum: String = "",
     timerEnabled: Boolean = false,
     limited: Boolean = false,
+    progressive: Boolean = false,
+    progressionStep: String = "",
+    progressionMonthly: Boolean = false,
+    progressionCap: String = "",
 ) {
     var step by mutableIntStateOf(step)
     var name by mutableStateOf(name)
@@ -1017,6 +1065,10 @@ private class EditorState(
     var minimum by mutableStateOf(minimum)
     var timerEnabled by mutableStateOf(timerEnabled)
     var limited by mutableStateOf(limited)
+    var progressive by mutableStateOf(progressive)
+    var progressionStep by mutableStateOf(progressionStep)
+    var progressionMonthly by mutableStateOf(progressionMonthly)
+    var progressionCap by mutableStateOf(progressionCap)
 }
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -1046,6 +1098,14 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 groupId = stored?.groupId ?: HabitGroup.ALL_DAY_ID,
                 timerEnabled = stored?.timerEnabled ?: false,
                 limited = stored?.goal?.isLimit ?: false,
+                progressive = stored?.goal?.progression != null,
+                progressionStep = stored?.goal?.progression
+                    ?.let { (it.step / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
+                    .orEmpty(),
+                progressionMonthly = stored?.goal?.progression?.cadence == ProgressionCadence.MONTHLY,
+                progressionCap = stored?.goal?.progression?.capMinor
+                    ?.let { (it / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
+                    .orEmpty(),
                 minimum = stored?.goal?.minimumMinor
                     ?.let { (it / (stored.goal.unit?.scaleToCanonical ?: 1)).toString() }
                     .orEmpty(),
@@ -1064,6 +1124,8 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
     val badTime = stringResource(R.string.form_error_time_format)
     val badInterval = stringResource(R.string.form_error_interval_days)
     val badMinimum = stringResource(R.string.form_error_minimum)
+    val badProgressionStep = stringResource(R.string.form_error_progression_step)
+    val badProgressionCap = stringResource(R.string.form_error_progression_cap)
 
     CadenceSheet(
         title = stringResource(stepTitles[state.step]),
@@ -1155,6 +1217,46 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                 accent = accent,
                                 numeric = true,
                             )
+                        }
+                        item {
+                            FieldGroup(stringResource(R.string.form_progression_support)) {
+                                ToggleRow(stringResource(R.string.form_progression_label), state.progressive, accent) {
+                                    state.progressive = it
+                                }
+                            }
+                        }
+                        if (state.progressive) {
+                            item {
+                                CadenceField(
+                                    state.progressionStep,
+                                    { state.progressionStep = it.filter(Char::isDigit) },
+                                    stringResource(R.string.form_progression_step),
+                                    accent = accent,
+                                    numeric = true,
+                                )
+                            }
+                            item {
+                                FieldGroup(stringResource(R.string.form_progression_cadence)) {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                        ChoiceChip(stringResource(R.string.form_progression_weekly), !state.progressionMonthly, accent = accent) {
+                                            state.progressionMonthly = false
+                                        }
+                                        ChoiceChip(stringResource(R.string.form_progression_monthly), state.progressionMonthly, accent = accent) {
+                                            state.progressionMonthly = true
+                                        }
+                                    }
+                                }
+                            }
+                            item {
+                                CadenceField(
+                                    state.progressionCap,
+                                    { state.progressionCap = it.filter(Char::isDigit) },
+                                    stringResource(R.string.form_progression_cap),
+                                    accent = accent,
+                                    numeric = true,
+                                )
+                            }
+                            item { ProgressionPreview(state, accent) }
                         }
                         if (!state.limited) item {
                             CadenceField(
@@ -1305,8 +1407,13 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                     val reminderTimes = state.reminderTimes.split(',', ' ').map(String::trim).filter(String::isNotBlank)
                     val frequency = state.frequencyTarget.toIntOrNull()
                     val minimum = state.minimum.toLongOrNull()?.times(unit?.scaleToCanonical ?: 1)
+                    val scale = unit?.scaleToCanonical ?: 1
+                    val progressionStep = state.progressionStep.toLongOrNull()?.times(scale)
+                    val progressionCap = state.progressionCap.toLongOrNull()?.times(scale)
                     when {
                         target <= 0 -> error = positiveTarget
+                        state.progressive && (progressionStep == null || progressionStep <= 0) -> error = badProgressionStep
+                        state.progressive && state.progressionCap.isNotBlank() && (progressionCap == null || progressionCap <= 0) -> error = badProgressionCap
                         state.minimum.isNotBlank() && (minimum == null || minimum <= 0 || minimum > target * (unit?.scaleToCanonical ?: 1)) -> error = badMinimum
                         state.frequencyTarget.isNotBlank() && (frequency ?: 0) <= 0 -> error = positiveFrequency
                         state.customUnit && (state.customName.isBlank() || state.customSymbol.isBlank()) -> error = incompleteUnit
@@ -1337,6 +1444,18 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                                     frequencyTarget = frequency.takeUnless { state.limited },
                                     minimumMinor = minimum.takeUnless { state.limited },
                                     direction = if (state.limited) GoalDirection.AT_MOST else GoalDirection.AT_LEAST,
+                                    progression = if (state.progressive && progressionStep != null) {
+                                        GoalProgression(
+                                            step = progressionStep,
+                                            cadence = if (state.progressionMonthly) ProgressionCadence.MONTHLY else ProgressionCadence.WEEKLY,
+                                            capMinor = progressionCap,
+                                            // Une progression part de la date d'effet de l'objectif,
+                                            // pas d'un passé qu'elle réinterpréterait.
+                                            startsOn = base?.goal?.progression?.startsOn ?: LocalDate.now(),
+                                        )
+                                    } else {
+                                        null
+                                    },
                                 ),
                                 schedule = HabitSchedule(state.scheduleMode, state.activeDays, state.firstDay, state.intervalDays.toIntOrNull() ?: 2),
                             )

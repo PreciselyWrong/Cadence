@@ -23,6 +23,8 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.GoalProgression
+import ch.nicolab.cadence.domain.ProgressionCadence
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.MeasurementUnit
@@ -151,6 +153,10 @@ class CadenceRepository(
                 targetMinor = habit.goal.targetMinor,
                 minimumMinor = habit.goal.minimumMinor,
                 direction = habit.goal.direction.name,
+                progressionStep = habit.goal.progression?.step,
+                progressionCadence = habit.goal.progression?.cadence?.name,
+                progressionCapMinor = habit.goal.progression?.capMinor,
+                progressionStartsOn = habit.goal.progression?.startsOn?.toString(),
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -210,6 +216,10 @@ class CadenceRepository(
                 targetMinor = habit.goal.targetMinor,
                 minimumMinor = habit.goal.minimumMinor,
                 direction = habit.goal.direction.name,
+                progressionStep = habit.goal.progression?.step,
+                progressionCadence = habit.goal.progression?.cadence?.name,
+                progressionCapMinor = habit.goal.progression?.capMinor,
+                progressionStartsOn = habit.goal.progression?.startsOn?.toString(),
                 period = habit.goal.period.name,
                 goalType = habit.goal.goalType.name,
                 unitId = habit.goal.unit?.id,
@@ -558,6 +568,10 @@ class CadenceRepository(
                     targetMinor = g.targetMinor,
                     minimumMinor = g.minimumMinor,
                     direction = g.direction,
+                    progressionStep = g.progressionStep,
+                    progressionCadence = g.progressionCadence,
+                    progressionCapMinor = g.progressionCapMinor,
+                    progressionStartsOn = g.progressionStartsOn,
                     period = g.period,
                     goalType = g.goalType,
                     unit = unit,
@@ -720,6 +734,10 @@ class CadenceRepository(
                         targetMinor = g.targetMinor,
                         minimumMinor = g.minimumMinor,
                         direction = g.direction,
+                        progressionStep = g.progressionStep,
+                        progressionCadence = g.progressionCadence,
+                        progressionCapMinor = g.progressionCapMinor,
+                        progressionStartsOn = g.progressionStartsOn,
                         period = g.period,
                         goalType = g.goalType,
                         unitId = g.unit?.id,
@@ -977,6 +995,19 @@ class CadenceRepository(
         )
     }
 
+    /** Une progression n'existe que si son pas, sa cadence et son départ sont tous présents. */
+    private fun toProgression(goal: HabitGoalEntity): GoalProgression? {
+        val step = goal.progressionStep ?: return null
+        val cadence = goal.progressionCadence?.let { raw ->
+            ProgressionCadence.entries.firstOrNull { it.name == raw }
+        } ?: return null
+        val startsOn = goal.progressionStartsOn?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+            ?: return null
+        return runCatching {
+            GoalProgression(step, cadence, goal.progressionCapMinor, startsOn)
+        }.getOrNull()
+    }
+
     private fun mapToPersistedHabit(relation: HabitWithGoalAndSchedule, date: LocalDate): PersistedHabit? {
         val dateStr = date.toString()
         val goalEntity = relation.goals.filter { it.effectiveFrom <= dateStr }.maxByOrNull { it.effectiveFrom } ?: return null
@@ -1018,6 +1049,7 @@ class CadenceRepository(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,
                 direction = GoalDirection.valueOf(goalEntity.direction),
+                progression = toProgression(goalEntity),
                 period = PeriodType.valueOf(goalEntity.period),
                 goalType = GoalType.valueOf(goalEntity.goalType),
                 unit = unit,

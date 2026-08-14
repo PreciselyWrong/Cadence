@@ -162,7 +162,7 @@ private fun QuickHabit(
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
     val tint = habit.stored.colorArgb?.let(::Color) ?: palette.accent
-    val target = goal.targetMinor.takeIf { it > 0 } ?: 1L
+    val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             HabitFacet(icon.imageVector, icon.labelFr, (habit.evaluation.progressMinor.toFloat() / target), tint, tint.copy(alpha = 0.20f), size = Size.badge)
@@ -170,7 +170,7 @@ private fun QuickHabit(
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
                 Text(
-                    HabitFormatter.formatProgress(habit.evaluation.progressMinor, goal.targetMinor, goal.goalType, goal.unit),
+                    HabitFormatter.formatProgress(habit.evaluation.progressMinor, habit.evaluation.targetMinor, goal.goalType, goal.unit),
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.inkFaint,
                     textAlign = TextAlign.Center,

@@ -1,15 +1,11 @@
 # Cadence
 
 ## Now
-- [ ] Objectifs progressifs
-  - Augmentation automatique configurable par semaine ou par mois, avec plafond facultatif
-  - Prévisualiser les prochaines cibles et permettre d’arrêter la progression
-  - Vérification : fuseaux, changements de mois, plafonds et objectifs versionnés
-
-## Next
 - [ ] Notes rapides sur les saisies
   - Ajouter ou modifier une note courte depuis la saisie rapide et l’historique
   - Vérification : plusieurs saisies le même jour, sauvegarde et restauration
+
+## Next
 - [ ] Vue Cette semaine
   - Regrouper les habitudes en `À faire`, `Bien parti`, `Minimum atteint` et `Terminé`
   - Montrer uniquement les actions utiles et ouvrir directement la saisie concernée
@@ -37,6 +33,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Objectifs progressifs
 - [x] Habitudes à limiter
 - [x] Groupes dans l’application
 - [x] Séries intelligentes

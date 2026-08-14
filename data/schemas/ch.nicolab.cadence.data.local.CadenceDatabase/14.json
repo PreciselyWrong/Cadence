@@ -1,0 +1,907 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 14,
+    "identityHash": "084a05e07aa11bea7d314fd9bb4f26a1",
+    "entities": [
+      {
+        "tableName": "habits",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `iconId` TEXT, `colorArgb` INTEGER, `active` INTEGER NOT NULL, `startsOn` TEXT NOT NULL DEFAULT '1970-01-01', `archived` INTEGER NOT NULL DEFAULT 0, `sortOrder` INTEGER NOT NULL DEFAULT 0, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL DEFAULT 0, `groupId` TEXT NOT NULL DEFAULT 'group-day', `timerEnabled` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "iconId",
+            "columnName": "iconId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "colorArgb",
+            "columnName": "colorArgb",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startsOn",
+            "columnName": "startsOn",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'1970-01-01'"
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "createdAtEpochMs",
+            "columnName": "createdAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMs",
+            "columnName": "updatedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'group-day'"
+          },
+          {
+            "fieldPath": "timerEnabled",
+            "columnName": "timerEnabled",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "habit_goals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `targetMinor` INTEGER NOT NULL, `period` TEXT NOT NULL, `goalType` TEXT NOT NULL DEFAULT 'QUANTITY', `unitId` TEXT, `unitDimension` TEXT, `unitNameFr` TEXT, `unitSymbol` TEXT, `unitScaleToCanonical` INTEGER, `frequencyTarget` INTEGER, `minimumMinor` INTEGER, `direction` TEXT NOT NULL DEFAULT 'AT_LEAST', `progressionStep` INTEGER, `progressionCadence` TEXT, `progressionCapMinor` INTEGER, `progressionStartsOn` TEXT, `effectiveFrom` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetMinor",
+            "columnName": "targetMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "period",
+            "columnName": "period",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goalType",
+            "columnName": "goalType",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'QUANTITY'"
+          },
+          {
+            "fieldPath": "unitId",
+            "columnName": "unitId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "unitDimension",
+            "columnName": "unitDimension",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "unitNameFr",
+            "columnName": "unitNameFr",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "unitSymbol",
+            "columnName": "unitSymbol",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "unitScaleToCanonical",
+            "columnName": "unitScaleToCanonical",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "frequencyTarget",
+            "columnName": "frequencyTarget",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "minimumMinor",
+            "columnName": "minimumMinor",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "direction",
+            "columnName": "direction",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'AT_LEAST'"
+          },
+          {
+            "fieldPath": "progressionStep",
+            "columnName": "progressionStep",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "progressionCadence",
+            "columnName": "progressionCadence",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "progressionCapMinor",
+            "columnName": "progressionCapMinor",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "progressionStartsOn",
+            "columnName": "progressionStartsOn",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "effectiveFrom",
+            "columnName": "effectiveFrom",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_goals_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_goals_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_schedules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `scheduleMode` TEXT NOT NULL DEFAULT 'SELECTED_DAYS', `activeDays` TEXT NOT NULL, `firstDayOfWeek` TEXT NOT NULL, `effectiveFrom` TEXT NOT NULL, `intervalDays` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scheduleMode",
+            "columnName": "scheduleMode",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'SELECTED_DAYS'"
+          },
+          {
+            "fieldPath": "activeDays",
+            "columnName": "activeDays",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstDayOfWeek",
+            "columnName": "firstDayOfWeek",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "effectiveFrom",
+            "columnName": "effectiveFrom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intervalDays",
+            "columnName": "intervalDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_schedules_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_schedules_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_entries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `occurredAtEpochMs` INTEGER NOT NULL, `localDate` TEXT NOT NULL, `observedZoneId` TEXT NOT NULL, `valueMinor` INTEGER NOT NULL, `source` TEXT NOT NULL, `sessionId` TEXT, `note` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "occurredAtEpochMs",
+            "columnName": "occurredAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDate",
+            "columnName": "localDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observedZoneId",
+            "columnName": "observedZoneId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "valueMinor",
+            "columnName": "valueMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_entries_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_entries_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          },
+          {
+            "name": "index_habit_entries_habitId_localDate",
+            "unique": false,
+            "columnNames": [
+              "habitId",
+              "localDate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_entries_habitId_localDate` ON `${TABLE_NAME}` (`habitId`, `localDate`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_quick_values",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `label` TEXT NOT NULL, `amountMinor` INTEGER NOT NULL, `sortOrder` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountMinor",
+            "columnName": "amountMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_quick_values_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_quick_values_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_reminders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `time` TEXT NOT NULL, `daysOfWeek` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `conditional` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "daysOfWeek",
+            "columnName": "daysOfWeek",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enabled",
+            "columnName": "enabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conditional",
+            "columnName": "conditional",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_reminders_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_reminders_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_pauses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `habitId` TEXT NOT NULL, `start` TEXT NOT NULL, `endExclusive` TEXT, `reason` TEXT, `reasonLabel` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "start",
+            "columnName": "start",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endExclusive",
+            "columnName": "endExclusive",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "reasonLabel",
+            "columnName": "reasonLabel",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_habit_pauses_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_habit_pauses_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "habit_groups",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `startMinute` INTEGER, `endMinute` INTEGER, `sortOrder` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startMinute",
+            "columnName": "startMinute",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "endMinute",
+            "columnName": "endMinute",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "habit_timers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`habitId` TEXT NOT NULL, `accumulatedSeconds` INTEGER NOT NULL, `runningSinceEpochMs` INTEGER, PRIMARY KEY(`habitId`), FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accumulatedSeconds",
+            "columnName": "accumulatedSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "runningSinceEpochMs",
+            "columnName": "runningSinceEpochMs",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "habitId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "widget_configurations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`appWidgetId` INTEGER NOT NULL, `title` TEXT, `theme` TEXT NOT NULL, `selectAll` INTEGER NOT NULL, `opacity` INTEGER NOT NULL, `showValues` INTEGER NOT NULL, `iconSizeDp` INTEGER NOT NULL, `progressStyle` TEXT NOT NULL, `showDoneIndicator` INTEGER NOT NULL, `maxHabitsPerRow` INTEGER NOT NULL, `showLabels` INTEGER NOT NULL, `labelTextSizeSp` INTEGER NOT NULL, `labelOpacity` INTEGER NOT NULL, `valueTextSizeSp` INTEGER NOT NULL, `valueOpacity` INTEGER NOT NULL, `iconOpacity` INTEGER NOT NULL, `iconSaturation` INTEGER NOT NULL, `monochromeIcons` INTEGER NOT NULL, `groupMode` TEXT NOT NULL DEFAULT 'ALL', `groupId` TEXT, PRIMARY KEY(`appWidgetId`))",
+        "fields": [
+          {
+            "fieldPath": "appWidgetId",
+            "columnName": "appWidgetId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "theme",
+            "columnName": "theme",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectAll",
+            "columnName": "selectAll",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opacity",
+            "columnName": "opacity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showValues",
+            "columnName": "showValues",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iconSizeDp",
+            "columnName": "iconSizeDp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progressStyle",
+            "columnName": "progressStyle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showDoneIndicator",
+            "columnName": "showDoneIndicator",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxHabitsPerRow",
+            "columnName": "maxHabitsPerRow",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showLabels",
+            "columnName": "showLabels",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelTextSizeSp",
+            "columnName": "labelTextSizeSp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelOpacity",
+            "columnName": "labelOpacity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "valueTextSizeSp",
+            "columnName": "valueTextSizeSp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "valueOpacity",
+            "columnName": "valueOpacity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iconOpacity",
+            "columnName": "iconOpacity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iconSaturation",
+            "columnName": "iconSaturation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monochromeIcons",
+            "columnName": "monochromeIcons",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupMode",
+            "columnName": "groupMode",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'ALL'"
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "appWidgetId"
+          ]
+        }
+      },
+      {
+        "tableName": "widget_habits",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`appWidgetId` INTEGER NOT NULL, `habitId` TEXT NOT NULL, PRIMARY KEY(`appWidgetId`, `habitId`), FOREIGN KEY(`appWidgetId`) REFERENCES `widget_configurations`(`appWidgetId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`habitId`) REFERENCES `habits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "appWidgetId",
+            "columnName": "appWidgetId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitId",
+            "columnName": "habitId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "appWidgetId",
+            "habitId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_widget_habits_appWidgetId",
+            "unique": false,
+            "columnNames": [
+              "appWidgetId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_widget_habits_appWidgetId` ON `${TABLE_NAME}` (`appWidgetId`)"
+          },
+          {
+            "name": "index_widget_habits_habitId",
+            "unique": false,
+            "columnNames": [
+              "habitId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_widget_habits_habitId` ON `${TABLE_NAME}` (`habitId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "widget_configurations",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "appWidgetId"
+            ],
+            "referencedColumns": [
+              "appWidgetId"
+            ]
+          },
+          {
+            "table": "habits",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "habitId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '084a05e07aa11bea7d314fd9bb4f26a1')"
+    ]
+  }
+}

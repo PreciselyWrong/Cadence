@@ -139,7 +139,7 @@ object ReminderNotifications {
     /** Un binaire ne compte pas : il n'annonce jamais « il reste 1 ». */
     fun remainingMessage(habit: PersistedHabit, progressMinor: Long): String {
         if (habit.goal.goalType == GoalType.BINARY) return "À valider aujourd’hui"
-        val remaining = (habit.goal.targetMinor - progressMinor).coerceAtLeast(0)
+        val remaining = (habit.goal.targetAt(LocalDate.now()) - progressMinor).coerceAtLeast(0)
         return "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim()
     }
 
@@ -229,7 +229,7 @@ class ReminderActionReceiver : BroadcastReceiver() {
                 // notification disparaît simplement.
                 if (evaluate().needsAttentionNow) {
                     when (action) {
-                        ReminderNotifications.ACTION_DONE -> addEntry(repository, habit, habit.goal.targetMinor, zone, today)
+                        ReminderNotifications.ACTION_DONE -> addEntry(repository, habit, habit.goal.targetAt(today), zone, today)
                         ReminderNotifications.ACTION_ADD -> addEntry(
                             repository,
                             habit,

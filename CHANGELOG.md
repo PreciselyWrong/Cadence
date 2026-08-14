@@ -1,6 +1,7 @@
 ## [1.0.5] — 13 août 2026
 
 ### Nouveautés
+- Une cible peut augmenter seule chaque semaine ou chaque mois, avec plafond facultatif, aperçu des prochaines cibles et arrêt à tout moment.
 - Une habitude peut se limiter au lieu de s’atteindre : deux cafés par jour au maximum, avec `Sous la limite`, `Limite atteinte` puis `Limite dépassée`.
 - Aujourd’hui et Habitudes se filtrent par groupe, avec `Tous` toujours à portée.
 - Une habitude change de groupe depuis ses options, et les groupes se réordonnent.

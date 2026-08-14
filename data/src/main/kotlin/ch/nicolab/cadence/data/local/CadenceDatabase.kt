@@ -39,7 +39,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 13,
+    version = 14,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -206,6 +206,16 @@ abstract class CadenceDatabase : RoomDatabase() {
         val MIGRATION_12_13 = object : Migration(12, 13) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE habit_goals ADD COLUMN direction TEXT NOT NULL DEFAULT 'AT_LEAST'")
+            }
+        }
+
+        /** Introduit les objectifs progressifs. Les cibles existantes restent fixes. */
+        val MIGRATION_13_14 = object : Migration(13, 14) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionStep INTEGER")
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionCadence TEXT")
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionCapMinor INTEGER")
+                db.execSQL("ALTER TABLE habit_goals ADD COLUMN progressionStartsOn TEXT")
             }
         }
     }

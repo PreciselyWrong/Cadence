@@ -110,6 +110,8 @@ data class HabitGoal(
     val frequencyTarget: Int? = null,
     val minimumMinor: Long? = null,
     val direction: GoalDirection = GoalDirection.AT_LEAST,
+    /** Augmentation automatique facultative de la cible. */
+    val progression: GoalProgression? = null,
 ) {
     init {
         require(targetMinor > 0) { "Target must be positive" }
@@ -126,6 +128,16 @@ data class HabitGoal(
     }
 
     val isLimit: Boolean get() = direction == GoalDirection.AT_MOST
+
+    /** Cible en vigueur à une date, progression comprise. */
+    fun targetAt(date: LocalDate): Long = progression?.targetAt(targetMinor, date) ?: targetMinor
+
+    /**
+     * Arrête la progression en gelant la cible là où elle en est. Le passé n'est pas
+     * réinterprété : c'est la version suivante de l'objectif qui porte la cible atteinte.
+     */
+    fun withoutProgression(on: LocalDate): HabitGoal =
+        copy(targetMinor = targetAt(on), progression = null)
 
     val effectiveMinimumMinor: Long get() = minimumMinor ?: targetMinor
 

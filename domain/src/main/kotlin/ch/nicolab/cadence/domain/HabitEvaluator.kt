@@ -14,6 +14,8 @@ data class HabitEvaluation(
     /** Minimum et fréquence atteints : la période compte comme réussie. */
     val validatesPeriod: Boolean,
     val attainment: GoalAttainment,
+    /** Cible réellement en vigueur sur la période, progression comprise. */
+    val targetMinor: Long,
     /** Position vis-à-vis du maximum, nulle hors habitude à limiter. */
     val limitStatus: LimitStatus?,
     val sessionCount: Int,
@@ -51,15 +53,18 @@ class HabitEvaluator {
         val sessionCount = withSession + withoutSession
 
         val limit = habit.goal.isLimit
+        // La cible du jour tient compte de la progression : elle se recalcule depuis le
+        // départ, elle n'est jamais cumulée d'une période à l'autre.
+        val target = habit.goal.targetAt(period.start)
         val limitStatus = when {
             !limit -> null
-            progress < habit.goal.targetMinor -> LimitStatus.UNDER
-            progress == habit.goal.targetMinor -> LimitStatus.AT_LIMIT
+            progress < target -> LimitStatus.UNDER
+            progress == target -> LimitStatus.AT_LIMIT
             else -> LimitStatus.EXCEEDED
         }
 
-        val completedQuantity = progress >= habit.goal.targetMinor
-        val reachedMinimum = progress >= habit.goal.effectiveMinimumMinor
+        val completedQuantity = progress >= target
+        val reachedMinimum = progress >= (habit.goal.minimumMinor ?: target)
         val completedFrequency = habit.goal.frequencyTarget == null || sessionCount >= habit.goal.frequencyTarget
 
         // Sous un plafond, la réussite est de ne pas le dépasser; la fréquence ne s'applique pas.
@@ -90,6 +95,7 @@ class HabitEvaluator {
             reachedMinimum = reachedMinimum,
             validatesPeriod = validatesPeriod,
             attainment = attainment,
+            targetMinor = target,
             limitStatus = limitStatus,
             sessionCount = sessionCount,
             completedFrequency = completedFrequency,

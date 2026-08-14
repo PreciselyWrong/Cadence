@@ -54,6 +54,10 @@ data class BackupGoalV2(
     val frequencyTarget: Int? = null,
     val minimumMinor: Long? = null,
     val direction: String = "AT_LEAST",
+    val progressionStep: Long? = null,
+    val progressionCadence: String? = null,
+    val progressionCapMinor: Long? = null,
+    val progressionStartsOn: String? = null,
     val effectiveFrom: String,
 )
 

@@ -375,6 +375,17 @@ class MainViewModel(
     }
 
     /** Déplace une habitude vers un autre groupe, sans toucher à son objectif. */
+    /**
+     * Arrête la progression en gelant la cible là où elle en est. Le changement prend effet
+     * aujourd'hui : les périodes déjà écoulées gardent la cible qui les a produites.
+     */
+    fun stopProgression(habit: PersistedHabit) = viewModelScope.launch {
+        val today = LocalDate.now(clock)
+        val frozen = habit.goal.withoutProgression(today)
+        repository.updateHabit(habit.copy(goal = frozen), effectiveFrom = today)
+        refreshAll()
+    }
+
     fun moveHabitToGroup(habit: PersistedHabit, groupId: String) = viewModelScope.launch {
         if (habit.groupId == groupId) return@launch
         repository.updateHabit(habit.copy(groupId = groupId))
