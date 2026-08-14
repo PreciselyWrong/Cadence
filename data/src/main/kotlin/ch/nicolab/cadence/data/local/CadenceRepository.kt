@@ -263,6 +263,8 @@ class CadenceRepository(
                 intervalDays = habit.schedule.intervalDays,
             )
 
+            database.habitDao().deleteGoalsFrom(habit.id, effectiveDate.toString())
+            database.habitDao().deleteSchedulesFrom(habit.id, effectiveDate.toString())
             database.habitDao().updateHabit(habitEntity)
             database.habitDao().insertGoal(goalEntity)
             database.habitDao().insertSchedule(scheduleEntity)
@@ -1038,8 +1040,10 @@ class CadenceRepository(
 
     private fun mapToPersistedHabit(relation: HabitWithGoalAndSchedule, date: LocalDate): PersistedHabit? {
         val dateStr = date.toString()
-        val goalEntity = relation.goals.filter { it.effectiveFrom <= dateStr }.maxByOrNull { it.effectiveFrom } ?: return null
-        val scheduleEntity = relation.schedules.filter { it.effectiveFrom <= dateStr }.maxByOrNull { it.effectiveFrom } ?: return null
+        val maxGoalDate = relation.goals.filter { it.effectiveFrom <= dateStr }.maxOfOrNull { it.effectiveFrom } ?: return null
+        val goalEntity = relation.goals.findLast { it.effectiveFrom == maxGoalDate } ?: return null
+        val maxScheduleDate = relation.schedules.filter { it.effectiveFrom <= dateStr }.maxOfOrNull { it.effectiveFrom } ?: return null
+        val scheduleEntity = relation.schedules.findLast { it.effectiveFrom == maxScheduleDate } ?: return null
 
         val unit = goalEntity.unitId?.let { id ->
             MeasurementUnit(

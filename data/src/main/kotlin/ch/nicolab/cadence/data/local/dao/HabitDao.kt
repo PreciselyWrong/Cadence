@@ -61,6 +61,12 @@ interface HabitDao {
     @Query("DELETE FROM habits WHERE id = :id")
     suspend fun deleteHabit(id: String)
 
+    @Query("DELETE FROM habit_goals WHERE habitId = :habitId AND effectiveFrom >= :effectiveDate")
+    suspend fun deleteGoalsFrom(habitId: String, effectiveDate: String)
+
+    @Query("DELETE FROM habit_schedules WHERE habitId = :habitId AND effectiveFrom >= :effectiveDate")
+    suspend fun deleteSchedulesFrom(habitId: String, effectiveDate: String)
+
     @Query("UPDATE habits SET sortOrder = :sortOrder, updatedAtEpochMs = :updatedAtEpochMs WHERE id = :habitId")
     suspend fun updateSortOrder(habitId: String, sortOrder: Int, updatedAtEpochMs: Long)
 }

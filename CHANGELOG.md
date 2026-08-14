@@ -1,3 +1,13 @@
+## [1.0.6] — 14 août 2026
+
+### Améliorations
+- Le calendrier des douze semaines s’étire sur toute la largeur de l’écran.
+- Un appui prolongé dans la vue semaine ouvre les options de l’habitude.
+
+### Corrections
+- La modification d’une habitude met bien à jour sa fréquence et son rythme.
+- La suppression d’une ancienne saisie disparaît immédiatement de la fenêtre.
+
 ## [1.0.5] — 14 août 2026
 
 ### Nouveautés

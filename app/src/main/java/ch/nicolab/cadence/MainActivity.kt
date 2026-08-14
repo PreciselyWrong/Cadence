@@ -158,7 +158,8 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     var tab by remember { mutableStateOf(Tab.TODAY) }
     var editor by remember { mutableStateOf<HabitCardState?>(null) }
     var creating by remember { mutableStateOf(false) }
-    var quick by remember { mutableStateOf<HabitCardState?>(null) }
+    var quickHabitId by remember { mutableStateOf<String?>(null) }
+    val quick = habits.firstOrNull { it.stored.id == quickHabitId }
     var correcting by remember { mutableStateOf<HabitEntry?>(null) }
     var options by remember { mutableStateOf<HabitCardState?>(null) }
     var skipping by remember { mutableStateOf<HabitCardState?>(null) }
@@ -187,8 +188,8 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     CadenceScreen {
         Crossfade(tab, label = "tab") { current ->
             when (current) {
-                Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { quick = it }, { options = it }, { creating = true })
-                Tab.WEEK -> WeekScreen(habits) { quick = it }
+                Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { quickHabitId = it.stored.id }, { options = it }, { creating = true })
+                Tab.WEEK -> WeekScreen(habits, { quickHabitId = it.stored.id }, { options = it })
                 Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { creating = true }, { options = it })
                 Tab.STATS -> StatsScreen(habits)
                 Tab.SETTINGS -> SettingsScreen(
@@ -220,7 +221,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             { viewModel.pauseTimer(item.stored.id) },
             { viewModel.finishTimer(item) },
             { viewModel.resetTimer(item.stored.id) },
-            { quick = null },
+            { quickHabitId = null },
         )
     }
     correcting?.let { entry ->
@@ -490,7 +491,11 @@ private fun progress(item: HabitCardState): String {
  * proposerait aucune action.
  */
 @Composable
-private fun WeekScreen(habits: List<HabitCardState>, quick: (HabitCardState) -> Unit) {
+private fun WeekScreen(
+    habits: List<HabitCardState>,
+    quick: (HabitCardState) -> Unit,
+    options: (HabitCardState) -> Unit,
+) {
     val today = LocalDate.now()
     val byId = habits.associateBy { it.stored.id }
     val outlook = remember(habits) {
@@ -527,7 +532,7 @@ private fun WeekScreen(habits: List<HabitCardState>, quick: (HabitCardState) -> 
                         card,
                         done = stage == WeekStage.DONE,
                         onClick = { quick(card) },
-                        onLongClick = { quick(card) },
+                        onLongClick = { options(card) },
                     )
                 }
             }
