@@ -458,6 +458,10 @@ class CadenceRepository(
         }
     }
 
+    /** Pauses identifiées en une seule lecture, sans passer par un flux à collecter. */
+    suspend fun getIdentifiedPauses(habitId: String): List<IdentifiedPause> =
+        database.habitPauseDao().getPauses(habitId).map { IdentifiedPause(it.id, it.habitId, toPause(it)) }
+
     suspend fun getPauses(habitId: String): List<HabitPause> {
         return database.habitPauseDao().getPauses(habitId).map(::toPause)
     }

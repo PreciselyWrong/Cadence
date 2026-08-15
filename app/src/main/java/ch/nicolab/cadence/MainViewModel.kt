@@ -30,11 +30,13 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.UUID
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -403,75 +405,85 @@ class MainViewModel(
 
     private suspend fun rebuild(source: List<PersistedHabit>) {
         val date = LocalDate.now(clock)
-        cards.value = source.sortedBy(PersistedHabit::sortOrder).map { habit ->
-            val window = PeriodCalculator.window(date, habit.goal.period, habit.schedule.firstDayOfWeek)
-            val entries = repository.observeEntries(habit.id, window.start, window.endExclusive.minusDays(1)).first()
-            val identifiedPauses = repository.observeIdentifiedPauses(habit.id).first()
-            val pauses = identifiedPauses.map(IdentifiedPause::pause)
-            val allEntries = repository.getEntries(habit.id)
-            val versions = repository.habitVersionsOf(habit.id)
-            val streak = StreakCalculator.compute(
-                habitAt = { day -> versions(day)?.definition },
-                today = date,
-                entries = allEntries,
-                pauses = pauses,
-            )
-            var cursor = date
-            val history = buildList {
-                repeat(6) {
-                    val historicalHabit = repository.getHabitEffectiveAt(habit.id, cursor) ?: habit
-                    val historicalWindow = PeriodCalculator.window(cursor, historicalHabit.goal.period, historicalHabit.schedule.firstDayOfWeek)
-                    val evaluation = evaluator.evaluate(historicalHabit.definition, cursor, allEntries, pauses)
-                    val paused = generateSequence(historicalWindow.start) { it.plusDays(1) }
-                        .takeWhile { it < historicalWindow.endExclusive }
-                        .any { day -> pauses.any { it.includes(day) } }
-                    add(PeriodStat(historicalWindow.start.toString(), evaluation.progressMinor, historicalHabit.goal.targetMinor, evaluation.isCompleted, paused))
-                    cursor = historicalWindow.start.minusDays(1)
-                }
-            }.reversed()
-            val dailyStart = date.minusDays(83)
-            val valuesByDate = allEntries.filter { it.localDate in dailyStart..date }
-                .groupBy(HabitEntry::localDate)
-                .mapValues { (_, dayEntries) -> dayEntries.sumOf(HabitEntry::valueMinor) }
-            val dailyHistory = mutableListOf<DailyStat>()
-            val insightDays = mutableListOf<InsightDay>()
-            for (offset in 0 until 84) {
-                val day = dailyStart.plusDays(offset.toLong())
-                val historicalHabit = repository.getHabitEffectiveAt(habit.id, day) ?: habit
-                val paused = pauses.any { it.includes(day) }
-                dailyHistory.add(
-                    DailyStat(
-                        date = day,
-                        valueMinor = valuesByDate[day] ?: 0,
-                        targetMinor = historicalHabit.goal.targetMinor,
-                        paused = paused,
-                    ),
-                )
-                insightDays.add(
-                    InsightDay(
-                        date = day,
-                        minimumMinor = historicalHabit.goal.effectiveMinimumMinor,
-                        targetMinor = historicalHabit.goal.targetMinor,
-                        planned = isPlannedOn(historicalHabit.definition, day),
-                        paused = paused,
-                        dailyGoal = historicalHabit.goal.period == PeriodType.DAY,
-                    ),
-                )
-            }
-            HabitCardState(
-                stored = habit,
-                evaluation = evaluator.evaluate(habit.definition, date, entries, pauses),
-                quickValues = repository.getQuickValues(habit.id).map(HabitQuickValueEntity::amountMinor),
-                reminders = repository.getReminders(habit.id),
-                history = history,
-                entryCount = allEntries.size,
-                dailyHistory = dailyHistory,
-                insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
-                recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
-                pauses = identifiedPauses,
-                streak = streak,
-            )
+        // Chaque habitude lit la base une fois pour toutes : ses versions, ses saisies et
+        // ses pauses. Les 90 jours d'historique sont ensuite dérivés en mémoire, sinon
+        // l'écran reste vide le temps d'autant d'allers-retours SQL.
+        cards.value = coroutineScope {
+            source.sortedBy(PersistedHabit::sortOrder).map { habit ->
+                async { buildCard(habit, date) }
+            }.awaitAll()
         }
         isLoaded.value = true
+    }
+
+    private suspend fun buildCard(habit: PersistedHabit, date: LocalDate): HabitCardState {
+        val window = PeriodCalculator.window(date, habit.goal.period, habit.schedule.firstDayOfWeek)
+        val identifiedPauses = repository.getIdentifiedPauses(habit.id)
+        val pauses = identifiedPauses.map(IdentifiedPause::pause)
+        val allEntries = repository.getEntries(habit.id)
+        val entries = allEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
+        val versions = repository.habitVersionsOf(habit.id)
+        val effectiveAt = { day: LocalDate -> versions(day) ?: habit }
+        val streak = StreakCalculator.compute(
+            habitAt = { day -> versions(day)?.definition },
+            today = date,
+            entries = allEntries,
+            pauses = pauses,
+        )
+        var cursor = date
+        val history = buildList {
+            repeat(6) {
+                val historicalHabit = effectiveAt(cursor)
+                val historicalWindow = PeriodCalculator.window(cursor, historicalHabit.goal.period, historicalHabit.schedule.firstDayOfWeek)
+                val evaluation = evaluator.evaluate(historicalHabit.definition, cursor, allEntries, pauses)
+                val paused = generateSequence(historicalWindow.start) { it.plusDays(1) }
+                    .takeWhile { it < historicalWindow.endExclusive }
+                    .any { day -> pauses.any { it.includes(day) } }
+                add(PeriodStat(historicalWindow.start.toString(), evaluation.progressMinor, historicalHabit.goal.targetMinor, evaluation.isCompleted, paused))
+                cursor = historicalWindow.start.minusDays(1)
+            }
+        }.reversed()
+        val dailyStart = date.minusDays(83)
+        val valuesByDate = allEntries.filter { it.localDate in dailyStart..date }
+            .groupBy(HabitEntry::localDate)
+            .mapValues { (_, dayEntries) -> dayEntries.sumOf(HabitEntry::valueMinor) }
+        val dailyHistory = mutableListOf<DailyStat>()
+        val insightDays = mutableListOf<InsightDay>()
+        for (offset in 0 until 84) {
+            val day = dailyStart.plusDays(offset.toLong())
+            val historicalHabit = effectiveAt(day)
+            val paused = pauses.any { it.includes(day) }
+            dailyHistory.add(
+                DailyStat(
+                    date = day,
+                    valueMinor = valuesByDate[day] ?: 0,
+                    targetMinor = historicalHabit.goal.targetMinor,
+                    paused = paused,
+                ),
+            )
+            insightDays.add(
+                InsightDay(
+                    date = day,
+                    minimumMinor = historicalHabit.goal.effectiveMinimumMinor,
+                    targetMinor = historicalHabit.goal.targetMinor,
+                    planned = isPlannedOn(historicalHabit.definition, day),
+                    paused = paused,
+                    dailyGoal = historicalHabit.goal.period == PeriodType.DAY,
+                ),
+            )
+        }
+        return HabitCardState(
+            stored = habit,
+            evaluation = evaluator.evaluate(habit.definition, date, entries, pauses),
+            quickValues = repository.getQuickValues(habit.id).map(HabitQuickValueEntity::amountMinor),
+            reminders = repository.getReminders(habit.id),
+            history = history,
+            entryCount = allEntries.size,
+            dailyHistory = dailyHistory,
+            insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
+            recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
+            pauses = identifiedPauses,
+            streak = streak,
+        )
     }
 }
