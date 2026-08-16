@@ -163,21 +163,21 @@ private fun QuickHabit(
     var custom by remember { mutableStateOf("") }
     // La note accompagne la prochaine saisie de cette habitude.
     var note by remember(habit.stored.id) { mutableStateOf("") }
+    var noteOpen by remember(habit.stored.id) { mutableStateOf(false) }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
     val tint = habit.stored.colorArgb?.let(::Color) ?: palette.accent
     val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HabitFacet(icon.imageVector, icon.labelFr, (habit.evaluation.progressMinor.toFloat() / target), tint, tint.copy(alpha = 0.20f), size = Size.badge)
             Spacer(Modifier.width(Space.md))
-            Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
+            Column(Modifier.weight(1f)) {
+                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
                     HabitFormatter.formatProgress(habit.evaluation.progressMinor, habit.evaluation.targetMinor, goal.goalType, goal.unit),
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.inkFaint,
-                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -195,14 +195,12 @@ private fun QuickHabit(
             )
             Spacer(Modifier.height(Space.lg))
         }
-        CadenceField(note, { note = it }, stringResource(R.string.quick_note_label), accent = tint)
-        Spacer(Modifier.height(Space.md))
         if (goal.goalType == GoalType.BINARY) {
-            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, UUID.randomUUID().toString(), note) }
+            PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { add(1, UUID.randomUUID().toString(), note.ifBlank { null }) }
         } else {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 habit.quickValues.ifEmpty { listOf(goal.unit?.scaleToCanonical ?: 1) }.forEach { value ->
-                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, UUID.randomUUID().toString(), note); note = "" }
+                    ValueChip("+${HabitFormatter.formatValue(value, goal.goalType, goal.unit)}", accent = tint) { add(value, UUID.randomUUID().toString(), note.ifBlank { null }); note = "" }
                 }
             }
             Spacer(Modifier.height(Space.md))
@@ -218,9 +216,16 @@ private fun QuickHabit(
                     numeric = true,
                 )
                 PrimaryAction(stringResource(R.string.quick_btn_add), accent = tint, enabled = (custom.toLongOrNull() ?: 0) > 0) {
-                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), UUID.randomUUID().toString(), note); custom = ""; note = "" }
+                    custom.toLongOrNull()?.takeIf { it > 0 }?.let { add(it * (goal.unit?.scaleToCanonical ?: 1), UUID.randomUUID().toString(), note.ifBlank { null }); custom = ""; note = "" }
                 }
             }
+        }
+        // La note reste repliée : elle est rare, et son champ alourdit chaque habitude.
+        Spacer(Modifier.height(Space.sm))
+        if (noteOpen) {
+            CadenceField(note, { note = it }, stringResource(R.string.quick_note_label), accent = tint)
+        } else {
+            TertiaryAction(stringResource(R.string.quick_note_add), onClick = { noteOpen = true })
         }
         Spacer(Modifier.height(Space.lg))
         Hairline()

@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitTimer
@@ -67,12 +68,18 @@ internal fun TimerPanel(
     val running = timer?.isRunning == true
     val attainment = HabitTimer.attainmentOf(goal, progressMinor, seconds)
 
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    // Un chronomètre en cours garde l'écran allumé : la veille couperait le retour visuel.
+    val view = LocalView.current
+    DisposableEffect(view, running) {
+        view.keepScreenOn = running
+        onDispose { view.keepScreenOn = false }
+    }
+
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
         Text(
             HabitFormatter.formatValue(seconds, goal.goalType, goal.unit),
             style = MaterialTheme.typography.headlineSmall,
             color = palette.ink,
-            textAlign = TextAlign.Center,
         )
         Text(
             stringResource(
@@ -84,7 +91,6 @@ internal fun TimerPanel(
             ),
             style = MaterialTheme.typography.labelMedium,
             color = if (attainment == GoalAttainment.TODO) palette.inkFaint else palette.success,
-            textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(Space.md))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
