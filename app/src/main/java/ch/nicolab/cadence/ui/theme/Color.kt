@@ -10,17 +10,17 @@ import androidx.compose.ui.graphics.Color
  */
 @Immutable
 data class CadencePalette(
-    /** Niveau 1 — fond général, jamais blanc pur en clair. */
+    /** Niveau 1 - fond général, jamais blanc pur en clair. */
     val background: Color,
-    /** Niveau 2 — grandes surfaces fonctionnelles. */
+    /** Niveau 2 - grandes surfaces fonctionnelles. */
     val surface: Color,
-    /** Niveau 2 creusé — zone intérieure d'une surface (champ, jauge, piste). */
+    /** Niveau 2 creusé - zone intérieure d'une surface (champ, jauge, piste). */
     val sunken: Color,
-    /** Surface sombre structurante — navigation et contextes forts. */
+    /** Surface sombre structurante - navigation et contextes forts. */
     val structural: Color,
     val onStructural: Color,
     val onStructuralMuted: Color,
-    /** Niveau 3 — accent principal, réservé aux éléments interactifs et aux états actifs. */
+    /** Niveau 3 - accent principal, réservé aux éléments interactifs et aux états actifs. */
     val accent: Color,
     val onAccent: Color,
     val accentSoft: Color,

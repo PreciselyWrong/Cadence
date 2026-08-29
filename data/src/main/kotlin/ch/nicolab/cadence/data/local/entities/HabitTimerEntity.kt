@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 /**
  * Chronomètre en cours d'une habitude. Une habitude n'en a qu'un : la clé est son
- * identifiant. Seuls les segments terminés et l'instant de reprise sont écrits — le temps
+ * identifiant. Seuls les segments terminés et l'instant de reprise sont écrits - le temps
  * écoulé reste dérivé, donc juste après un redémarrage du processus.
  */
 @Entity(

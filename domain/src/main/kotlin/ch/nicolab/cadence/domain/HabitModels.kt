@@ -267,7 +267,7 @@ data class HabitPause(
 
     /**
      * Reprise anticipée : la pause s'arrête au matin de [date]. Rendre `null` signifie que
-     * la pause n'a plus lieu d'être — la reprise précède son premier jour.
+     * la pause n'a plus lieu d'être - la reprise précède son premier jour.
      */
     fun resumedOn(date: LocalDate): HabitPause? = when {
         date <= start -> null

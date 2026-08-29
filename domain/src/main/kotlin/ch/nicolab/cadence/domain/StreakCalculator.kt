@@ -25,7 +25,7 @@ private enum class PeriodOutcome {
  *
  * Chaque période est relue avec la version de l'habitude en vigueur à ce moment-là, via
  * [habitAt] : un changement d'objectif ne réinterprète pas le passé. Une période entièrement
- * mise de côté — pause, voyage, saut motivé — ou sans aucun jour planifié est neutre : la
+ * mise de côté - pause, voyage, saut motivé - ou sans aucun jour planifié est neutre : la
  * série la franchit sans y gagner de réussite artificielle.
  *
  * La période en cours ne casse jamais la série : elle n'est pas terminée. Elle ne compte

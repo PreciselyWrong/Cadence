@@ -21,7 +21,7 @@ data class WeekEntry(
  * Vue « Cette semaine » : uniquement les habitudes sur lesquelles il reste quelque chose
  * à faire ou à constater.
  *
- * Une habitude dont plus aucun jour n'est planifié d'ici la fin de la semaine disparaît —
+ * Une habitude dont plus aucun jour n'est planifié d'ici la fin de la semaine disparaît -
  * la lister ne servirait qu'à culpabiliser sans action possible. Une habitude en pause
  * disparaît de même.
  */

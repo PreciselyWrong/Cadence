@@ -486,7 +486,7 @@ private fun progress(item: HabitCardState): String {
 
 /**
  * Cette semaine : les habitudes regroupées par ce qu'il reste à en faire. Une habitude
- * dont plus aucun jour n'est planifié d'ici dimanche ne s'affiche pas — la lister ne
+ * dont plus aucun jour n'est planifié d'ici dimanche ne s'affiche pas - la lister ne
  * proposerait aucune action.
  */
 @Composable
@@ -641,7 +641,7 @@ private fun SettingsScreen(
 
 /**
  * Réglage d'un moment de la journée. `Journée` garde sa nature de groupe sans horaire :
- * son nom reste modifiable, mais il ne prend jamais de plage et ne se supprime pas —
+ * son nom reste modifiable, mais il ne prend jamais de plage et ne se supprime pas -
  * c'est la destination de repli des habitudes d'un groupe supprimé.
  */
 @Composable

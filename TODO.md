@@ -18,7 +18,7 @@
 - [ ] Synchroniser les activités sportives via Health Connect
   - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
   - Associer chaque habitude à une règle de correspondance sur deux axes combinables :
-    - **Type d'exercice** (`ExerciseSessionRecord.exerciseType`) : `RUNNING`, `CYCLING`, `SWIMMING`, `WEIGHTLIFTING`, `OTHER_WORKOUT`… — liste fixe définie par Health Connect, indépendante de l'app source
+    - **Type d'exercice** (`ExerciseSessionRecord.exerciseType`) : `RUNNING`, `CYCLING`, `SWIMMING`, `WEIGHTLIFTING`, `OTHER_WORKOUT`… - liste fixe définie par Health Connect, indépendante de l'app source
     - **Application source** (`metadata.dataOrigin.packageName`) : filtrer par app précise, par exemple Strava uniquement, ou toutes les sources acceptées
   - Exemples : `RUNNING || CYCLING` → Cardio ; `WEIGHTLIFTING` depuis `com.myfitnesspal` → Musculation
   - Importer la durée de la séance pour compléter automatiquement l'objectif, minimum et idéal inclus

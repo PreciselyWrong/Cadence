@@ -22,11 +22,34 @@ function Get-ReadyDevice {
     & $adb devices | Select-String '^.+\sdevice$' | Select-Object -First 1
 }
 
+function Start-InteractiveEmulator {
+    param(
+        [Parameter(Mandatory = $true)][string]$EmulatorPath,
+        [Parameter(Mandatory = $true)][string]$AvdName,
+        [string[]]$ExtraArguments = @()
+    )
+    $argsList = @("@$AvdName") + $ExtraArguments
+    if ($IsWindows -or $env:OS -match 'Windows') {
+        $taskName = "DevEmuLaunch_$([guid]::NewGuid().ToString('N').Substring(0,8))"
+        $cmdLine = "`"$EmulatorPath`" $($argsList -join ' ')"
+        try {
+            $null = schtasks /create /tn $taskName /tr "$cmdLine" /sc ONCE /st "23:59" /it /f 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                $null = schtasks /run /tn $taskName 2>&1
+                Start-Sleep -Milliseconds 500
+                $null = schtasks /delete /tn $taskName /f 2>&1
+                return
+            }
+        } catch {}
+    }
+    Start-Process -FilePath $EmulatorPath -ArgumentList $argsList
+}
+
 function Start-AvailableAvd {
     if (-not (Test-Path $emulator)) { Fail "Emulateur Android introuvable : $emulator" }
     $avd = & $emulator -list-avds | Select-Object -First 1
     if (-not $avd) { Fail "Aucun AVD Android configure." }
-    Start-Process -FilePath $emulator -ArgumentList "@$avd", '-no-snapshot-save' -WindowStyle Hidden
+    Start-InteractiveEmulator -EmulatorPath $emulator -AvdName $avd -ExtraArguments @('-no-snapshot-save')
     for ($attempt = 1; $attempt -le 60; $attempt++) {
         $device = Get-ReadyDevice
         if ($device) {

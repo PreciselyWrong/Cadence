@@ -18,8 +18,8 @@ data class ProgressionStep(
 /**
  * Augmentation automatique d'une cible.
  *
- * La cible d'une date se calcule toujours depuis le point de départ — nombre de paliers
- * franchis multiplié par le pas — jamais en cumulant la valeur courante. Relire une date
+ * La cible d'une date se calcule toujours depuis le point de départ - nombre de paliers
+ * franchis multiplié par le pas - jamais en cumulant la valeur courante. Relire une date
  * deux fois donne donc deux fois le même chiffre, quel que soit le moment de la lecture.
  *
  * La cadence mensuelle suit les mois civils : un départ le 31 janvier avance au mois

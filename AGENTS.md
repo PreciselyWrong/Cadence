@@ -19,17 +19,17 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 | Préparer une publication | `.\publish.ps1 -Plan -NonInteractive` |
 
 ## Carte
-`domain/` — calculs temporels et règles métier Kotlin sans Android.
-`data/` — persistance locale, préférences et sauvegardes.
-`app/` — UI Compose, widget Glance, rappels et assemblage.
+`domain/` - calculs temporels et règles métier Kotlin sans Android.
+`data/` - persistance locale, préférences et sauvegardes.
+`app/` - UI Compose, widget Glance, rappels et assemblage.
 
 ## Décisions
 - Min SDK 26, compilation et cible API 36.
 - Une entrée garde la date civile et le fuseau observés lors de sa saisie.
 - Les changements d'objectif ou de période s'appliquent à partir du jour même; les jours déjà écoulés gardent la version qui les a produits.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
-- Le widget Halo est la première variante d'un système de rendu extensible. `ui/widget/WidgetRenderStyle.kt` porte le contrat — fond, encre, pastille, arrondi — lu par le widget, son aperçu et sa configuration; ajouter une variante se limite à une entrée et son libellé.
-- Le widget suit la base, pas ses appelants : `WidgetAutoRefresh` écoute les révisions des tables qui le concernent et redessine après une courte fenêtre de calme. Ce qui dépend de l'heure sans écriture — minuit, entrée et sortie d'un groupe horaire — est réveillé par `WidgetBoundaryAlarm`, calculé par `WidgetRefreshSchedule`.
+- Le widget Halo est la première variante d'un système de rendu extensible. `ui/widget/WidgetRenderStyle.kt` porte le contrat - fond, encre, pastille, arrondi - lu par le widget, son aperçu et sa configuration; ajouter une variante se limite à une entrée et son libellé.
+- Le widget suit la base, pas ses appelants : `WidgetAutoRefresh` écoute les révisions des tables qui le concernent et redessine après une courte fenêtre de calme. Ce qui dépend de l'heure sans écriture - minuit, entrée et sortie d'un groupe horaire - est réveillé par `WidgetBoundaryAlarm`, calculé par `WidgetRefreshSchedule`.
 - La vue `Cette semaine` (`WeekOutlook`) masque une habitude dont plus aucun jour n'est planifié d'ici dimanche : la lister ne proposerait aucune action.
 - Une progression recalcule la cible depuis son départ (`GoalProgression`), jamais en cumulant la valeur courante : relire une date donne toujours le même chiffre. La cadence mensuelle suit les changements de mois civils, pas le quantième.
 - Un objectif porte un sens (`GoalDirection`). Sous `AT_MOST`, `targetMinor` est un maximum : la période réussit tant qu'il n'est pas dépassé, la limite ne porte ni minimum ni fréquence, et l'habitude reste offerte à la saisie tant qu'il reste de la place. Rien n'est acquis avant la fin de la période.
@@ -41,44 +41,44 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les plages de groupes peuvent se chevaucher et traverser minuit; une plage dont la fin égale le début couvre l'horloge entière.
 - Plus Jakarta Sans est embarquée localement; aucune police n'est téléchargée à l'exécution.
 - `app-release/version.json` est l'unique source de version lue par le build Android.
-- L'interface suit un design system unique — `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
+- L'interface suit un design system unique - `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
 - Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface, jamais d'une bordure.
 - La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
 - La navigation est une capsule sombre flottante ; la destination active porte icône et libellé, les autres restent iconiques.
 - Le thème suit le réglage système clair/sombre.
 
 ## ⛔ Interdits
-- ⛔ Stocker une progression courante — elle doit être dérivée des entrées horodatées.
-- ⛔ Réinitialiser ou supprimer des entrées à une frontière de période — les périodes sont calculées.
-- ⛔ Réinterpréter l'historique après une édition — objectifs et plannings sont versionnés.
-- ⛔ Utiliser `Double` pour les quantités persistées — les montants utilisent un entier et une précision explicite.
-- ⛔ Confondre fréquence et quantité — ce sont deux contraintes indépendantes.
-- ⛔ Ajouter des emoji — l'interface, le widget, les notifications et les données utilisent des icônes vectorielles.
-- ⛔ Ajouter une permission réseau — le produit fonctionne entièrement hors ligne.
-- ⛔ Ajouter une alarme exacte — le choix produit est une alarme inexacte sans accès système spécial.
-- ⛔ Ajouter une dépendance ou une architecture par anticipation — chaque abstraction doit servir une tranche active.
-- ⛔ Écrire un correctif métier sans test rouge préalable — la logique temporelle suit TDD.
-- ⛔ Modifier la version directement dans Gradle — elle provient de `app-release/version.json`.
-- ⛔ Arrêter le lancement dev sans appareil — démarrer un AVD disponible et attendre `sys.boot_completed`.
-- ⛔ Considérer la gestion des habitudes complète sans édition, pause, archive, duplication, réordonnancement et suppression accessibles — un modèle persistant seul ne constitue pas une option utilisateur.
-- ⛔ Masquer la sélection ou l’action principale d’un formulaire — l’icône choisie et le bouton d’enregistrement doivent rester clairement visibles.
-- ⛔ Ouvrir une saisie globale depuis une icône du widget — chaque icône cible uniquement son habitude et disparaît lorsque celle-ci est terminée.
-- ⛔ Placer la valeur du widget à côté de l’icône — elle s’affiche dessous et l’apparence reste configurable.
-- ⛔ Cacher les options d’une habitude derrière trois points — un appui long ouvre les actions depuis Aujourd’hui comme depuis Habitudes.
-- ⛔ Afficher une saisie rapide comme une pile de cartes grises — le modal porte la couleur de l’habitude et montre son historique.
-- ⛔ Conserver en mémoire l’état des habitudes sans écouter les révisions de saisies et de pauses — une écriture venue du widget doit remonter immédiatement dans l’application.
-- ⛔ Répéter l’unité d’une durée — `formatValue` la porte déjà (`1 h 5 min`), jamais `1 h min`.
-- ⛔ Limiter la configuration d’un widget à sa création — un widget placé doit rester reconfigurable depuis le lanceur.
-- ⛔ Poser une interface Compose directement sur la fenêtre système — chaque écran fournit un fond et une couleur de contenu explicites pour garantir le contraste.
-- ⛔ Afficher un nom d'énumération du domaine — l'interface est intégralement en français via `strings.xml` et `HabitLabels`.
-- ⛔ Écrire une valeur d'espacement, de rayon, de couleur ou de durée en dur dans un écran — tout provient de `Space`, `Radius`, `Elevation`, `Size`, `Motion` et de la palette Cadence.
-- ⛔ Empiler une carte dans une carte — une unité fonctionnelle est une seule surface, la hiérarchie interne vient de la typographie et de l'espacement.
-- ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget — l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
-- ⛔ Nommer un planning « période flexible » sans expliquer son effet — les rythmes doivent décrire concrètement les jours où l’habitude apparaît.
-- ⛔ Réduire le nombre d’icônes du widget à cause de sa hauteur — seuls les textes s’effacent lorsque l’espace vertical manque.
-- ⛔ Répartir irrégulièrement les habitudes dans le widget — chaque élément occupe une largeur identique; l’alignement de l’ensemble se choisit (`WidgetSlotAlignment`), le centre n’étant que le défaut.
-- ⛔ Demander explicitement un rafraîchissement du widget depuis un point d’écriture — le widget suit les révisions de la base, un appel manuel finit toujours par être oublié quelque part.
-- ⛔ Aligner le contenu principal d’un modal de saisie sur un bord — titres, progression et choix rapides restent centrés.
+- ⛔ Stocker une progression courante - elle doit être dérivée des entrées horodatées.
+- ⛔ Réinitialiser ou supprimer des entrées à une frontière de période - les périodes sont calculées.
+- ⛔ Réinterpréter l'historique après une édition - objectifs et plannings sont versionnés.
+- ⛔ Utiliser `Double` pour les quantités persistées - les montants utilisent un entier et une précision explicite.
+- ⛔ Confondre fréquence et quantité - ce sont deux contraintes indépendantes.
+- ⛔ Ajouter des emoji - l'interface, le widget, les notifications et les données utilisent des icônes vectorielles.
+- ⛔ Ajouter une permission réseau - le produit fonctionne entièrement hors ligne.
+- ⛔ Ajouter une alarme exacte - le choix produit est une alarme inexacte sans accès système spécial.
+- ⛔ Ajouter une dépendance ou une architecture par anticipation - chaque abstraction doit servir une tranche active.
+- ⛔ Écrire un correctif métier sans test rouge préalable - la logique temporelle suit TDD.
+- ⛔ Modifier la version directement dans Gradle - elle provient de `app-release/version.json`.
+- ⛔ Arrêter le lancement dev sans appareil - démarrer un AVD disponible et attendre `sys.boot_completed`.
+- ⛔ Considérer la gestion des habitudes complète sans édition, pause, archive, duplication, réordonnancement et suppression accessibles - un modèle persistant seul ne constitue pas une option utilisateur.
+- ⛔ Masquer la sélection ou l’action principale d’un formulaire - l’icône choisie et le bouton d’enregistrement doivent rester clairement visibles.
+- ⛔ Ouvrir une saisie globale depuis une icône du widget - chaque icône cible uniquement son habitude et disparaît lorsque celle-ci est terminée.
+- ⛔ Placer la valeur du widget à côté de l’icône - elle s’affiche dessous et l’apparence reste configurable.
+- ⛔ Cacher les options d’une habitude derrière trois points - un appui long ouvre les actions depuis Aujourd’hui comme depuis Habitudes.
+- ⛔ Afficher une saisie rapide comme une pile de cartes grises - le modal porte la couleur de l’habitude et montre son historique.
+- ⛔ Conserver en mémoire l’état des habitudes sans écouter les révisions de saisies et de pauses - une écriture venue du widget doit remonter immédiatement dans l’application.
+- ⛔ Répéter l’unité d’une durée - `formatValue` la porte déjà (`1 h 5 min`), jamais `1 h min`.
+- ⛔ Limiter la configuration d’un widget à sa création - un widget placé doit rester reconfigurable depuis le lanceur.
+- ⛔ Poser une interface Compose directement sur la fenêtre système - chaque écran fournit un fond et une couleur de contenu explicites pour garantir le contraste.
+- ⛔ Afficher un nom d'énumération du domaine - l'interface est intégralement en français via `strings.xml` et `HabitLabels`.
+- ⛔ Écrire une valeur d'espacement, de rayon, de couleur ou de durée en dur dans un écran - tout provient de `Space`, `Radius`, `Elevation`, `Size`, `Motion` et de la palette Cadence.
+- ⛔ Empiler une carte dans une carte - une unité fonctionnelle est une seule surface, la hiérarchie interne vient de la typographie et de l'espacement.
+- ⛔ Bloquer le thread principal pendant une sauvegarde ou un rafraîchissement de widget - l’action affiche son avancement, confirme l’échec et ne ferme qu’après succès.
+- ⛔ Nommer un planning « période flexible » sans expliquer son effet - les rythmes doivent décrire concrètement les jours où l’habitude apparaît.
+- ⛔ Réduire le nombre d’icônes du widget à cause de sa hauteur - seuls les textes s’effacent lorsque l’espace vertical manque.
+- ⛔ Répartir irrégulièrement les habitudes dans le widget - chaque élément occupe une largeur identique; l’alignement de l’ensemble se choisit (`WidgetSlotAlignment`), le centre n’étant que le défaut.
+- ⛔ Demander explicitement un rafraîchissement du widget depuis un point d’écriture - le widget suit les révisions de la base, un appel manuel finit toujours par être oublié quelque part.
+- ⛔ Aligner le contenu principal d’un modal de saisie sur un bord - titres, progression et choix rapides restent centrés.
 
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.

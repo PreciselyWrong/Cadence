@@ -29,7 +29,7 @@ import kotlin.math.sin
 
 /**
  * Signature visuelle de Cadence : l'extérieur des surfaces est doux, la mesure intérieure
- * est structurée. La progression d'une habitude ne suit pas un cercle mais une facette —
+ * est structurée. La progression d'une habitude ne suit pas un cercle mais une facette -
  * un hexagone à sommet plat, aux angles à peine adoucis, dont l'arête se remplit.
  */
 private fun facetPath(cx: Float, cy: Float, radius: Float, corner: Float, sides: Int = 6, rotation: Float = -60f): Path {

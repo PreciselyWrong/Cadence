@@ -404,8 +404,8 @@ private fun WidgetConfiguration(
 }
 
 /**
- * Aperçu vivant du widget. Il reprend la mise en page réelle — mêmes calculs de capacité
- * et de visibilité des textes — sans toucher au widget déjà placé, qui n'est mis à jour
+ * Aperçu vivant du widget. Il reprend la mise en page réelle - mêmes calculs de capacité
+ * et de visibilité des textes - sans toucher au widget déjà placé, qui n'est mis à jour
  * qu'à l'enregistrement.
  */
 @Composable

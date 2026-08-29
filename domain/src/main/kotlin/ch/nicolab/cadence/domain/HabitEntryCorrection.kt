@@ -9,7 +9,7 @@ import java.time.ZoneId
  *
  * L'identité et la session sont conservées : corriger n'est pas ressaisir. La date civile
  * et le fuseau retenus sont ceux réellement choisis lors de la correction, et l'instant en
- * découle — jamais l'inverse, pour qu'une correction passée reste attribuée à sa période.
+ * découle - jamais l'inverse, pour qu'une correction passée reste attribuée à sa période.
  */
 object HabitEntryCorrection {
 

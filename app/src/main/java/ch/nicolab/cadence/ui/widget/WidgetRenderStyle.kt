@@ -3,7 +3,7 @@ package ch.nicolab.cadence.ui.widget
 /**
  * Contrat d'un style de rendu du widget.
  *
- * Un style décrit entièrement son apparence — fond, contenu, pastille d'icône, arrondi —
+ * Un style décrit entièrement son apparence - fond, contenu, pastille d'icône, arrondi -
  * pour que le widget, son aperçu et sa configuration lisent la même source. Ajouter une
  * variante se limite à ajouter une entrée dans [all] et son libellé dans `HabitLabels`.
  *

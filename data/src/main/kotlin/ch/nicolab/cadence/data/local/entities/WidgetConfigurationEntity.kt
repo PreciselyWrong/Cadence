@@ -24,11 +24,11 @@ data class WidgetConfigurationEntity(
     val iconOpacity: Int = 100,
     val iconSaturation: Int = 100,
     val monochromeIcons: Boolean = false,
-    /** `ALL`, `AUTOMATIC` ou `SINGLE` — voir `WidgetGroupMode`. */
+    /** `ALL`, `AUTOMATIC` ou `SINGLE` - voir `WidgetGroupMode`. */
     @ColumnInfo(defaultValue = "ALL") val groupMode: String = "ALL",
     /** Groupe retenu lorsque le mode est `SINGLE`. */
     val groupId: String? = null,
-    /** `FLEXIBLE` ou `FIXED` — voir `WidgetSlotMode`. */
+    /** `FLEXIBLE` ou `FIXED` - voir `WidgetSlotMode`. */
     @ColumnInfo(defaultValue = "FLEXIBLE") val slotMode: String = "FLEXIBLE",
     /** `START`, `CENTER` ou `END`, appliqué aux emplacements fixes. */
     @ColumnInfo(defaultValue = "CENTER") val slotAlignment: String = "CENTER",

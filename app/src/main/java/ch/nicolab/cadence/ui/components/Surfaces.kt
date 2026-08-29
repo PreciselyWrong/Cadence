@@ -39,7 +39,7 @@ import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 
 /**
- * Niveau 1 — fond de tout écran. Fournit explicitement fond et couleur de contenu
+ * Niveau 1 - fond de tout écran. Fournit explicitement fond et couleur de contenu
  * afin qu'aucune surface Compose ne repose directement sur la fenêtre système.
  */
 @Composable
@@ -51,7 +51,7 @@ fun CadenceScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.(
 }
 
 /**
- * Niveau 2 — grande surface fonctionnelle. Pas de bordure : la séparation vient du
+ * Niveau 2 - grande surface fonctionnelle. Pas de bordure : la séparation vient du
  * contraste de surface. L'ombre n'apparaît que si la surface est réellement au-dessus.
  */
 @Composable

@@ -1,4 +1,4 @@
-# Terrain — Synchroniser les activités sportives via Health Connect
+# Terrain - Synchroniser les activités sportives via Health Connect
 
 Document de préparation. Aucune ligne de production n'est écrite : il fixe le modèle, les
 frontières de modules, l'ordre des tranches et les points qui demandent un arbitrage.
@@ -15,7 +15,7 @@ ni remplacer le chronomètre et la saisie manuelle qui continuent de fonctionner
 |---|---|
 | Bibliothèque | `androidx.health.connect:connect-client` (une entrée `libs.versions.toml`, module `app` uniquement) |
 | minSdk | 26 tenu : le client compile dès 26, mais sous Android 14 il exige l'APK Health Connect installé |
-| Détection | `HealthConnectClient.getSdkStatus()` — `SDK_UNAVAILABLE`, `PROVIDER_UPDATE_REQUIRED`, `SDK_AVAILABLE` |
+| Détection | `HealthConnectClient.getSdkStatus()` - `SDK_UNAVAILABLE`, `PROVIDER_UPDATE_REQUIRED`, `SDK_AVAILABLE` |
 | Réseau | aucun : Health Connect est un fournisseur local sur l'appareil |
 
 Absence du fournisseur = la fonction ne s'affiche pas. Elle ne doit jamais bloquer un écran
@@ -50,7 +50,7 @@ HealthMatchRule(
 
 `exerciseTypes` reste un `Set<Int>` : le domaine n'importe pas Health Connect, et l'app fait la
 correspondance entier → libellé français (⛔ afficher un nom d'énumération).
-Une règle vide sur les deux axes ne correspond à rien — elle ne vaut pas « tout accepter ».
+Une règle vide sur les deux axes ne correspond à rien - elle ne vaut pas « tout accepter ».
 
 Fonction pure à tester en premier :
 `HealthMatchRule.matches(exerciseType: Int, sourcePackage: String): Boolean`.
@@ -69,8 +69,8 @@ ImportedSession(
 ```
 
 `HealthImportPlan` (domaine, pur) transforme une liste d'`ImportedSession` + les règles +
-les `externalId` déjà connus en une liste d'écritures. Toute la logique fine — doublons,
-fuseaux, date civile, séance à cheval sur minuit — se teste ici sans appareil.
+les `externalId` déjà connus en une liste d'écritures. Toute la logique fine - doublons,
+fuseaux, date civile, séance à cheval sur minuit - se teste ici sans appareil.
 
 ### Persistance (`data/`)
 
@@ -117,12 +117,12 @@ fenêtre des 30 derniers jours, la déduplication rend l'opération sans risque.
 
 ## Interface
 
-1. **Réglages de l'habitude** — section `Import automatique` : activer, choisir les types
+1. **Réglages de l'habitude** - section `Import automatique` : activer, choisir les types
    d'exercice, choisir les sources (liste des paquets réellement vus dans les données, plus
    « Toutes »), désactiver sans perdre l'historique importé.
-2. **Origine d'une durée** — chaque saisie affiche son origine : nom de l'app source,
+2. **Origine d'une durée** - chaque saisie affiche son origine : nom de l'app source,
    chronomètre, ou saisie manuelle. Icône vectorielle + libellé, pas d'emoji.
-3. **États** — fournisseur absent, permission refusée, aucune règle, dernière synchronisation.
+3. **États** - fournisseur absent, permission refusée, aucune règle, dernière synchronisation.
 
 Tout passe par `Space`, `Radius`, `Size`, la palette Cadence et `strings.xml`.
 
@@ -130,12 +130,12 @@ Tout passe par `Space`, `Radius`, `Size`, la palette Cadence et `strings.xml`.
 
 Les règles sont de la configuration : elles sont exportées.
 Aucun jeton, aucun identifiant de compte, aucune donnée de santé brute n'entre dans la sauvegarde.
-Les saisies importées s'exportent comme les autres, avec leur `source` et leur `sessionId` —
+Les saisies importées s'exportent comme les autres, avec leur `source` et leur `sessionId` -
 une restauration sur un appareil sans Health Connect les garde donc lisibles et modifiables.
 
 ## Ordre des tranches
 
-1. `HealthMatchRule` + `HealthImportPlan` et leurs tests domaine — rouge d'abord.
+1. `HealthMatchRule` + `HealthImportPlan` et leurs tests domaine - rouge d'abord.
 2. Table `health_match_rules`, migration 16, schéma exporté, accès dépôt.
 3. Client Health Connect : disponibilité, permissions, lecture, jeton de changements.
 4. Écriture des saisies importées et mise à jour incrémentale.

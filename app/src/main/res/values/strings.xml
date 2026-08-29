@@ -177,7 +177,7 @@
     <string name="timer_form_label">Proposer un chronomètre</string>
     <string name="timer_form_support">Disponible pour les objectifs en durée.</string>
     <string name="timer_running">Chronomètre en cours</string>
-    <string name="timer_notification_title">%1$s — chronomètre</string>
+    <string name="timer_notification_title">%1$s - chronomètre</string>
     <string name="timer_notification_text">Séance en cours</string>
     <string name="skip_sheet_title">Sauter aujourd\'hui</string>
     <string name="skip_sheet_subtitle">La série reste intacte</string>
