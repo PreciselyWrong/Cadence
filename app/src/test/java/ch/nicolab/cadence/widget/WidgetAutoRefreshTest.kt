@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.widget
 
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
@@ -40,5 +41,24 @@ class WidgetAutoRefreshTest {
         scope.advanceUntilIdle()
 
         assertEquals(1, refreshes)
+    }
+
+    @Test
+    fun `une revision ne peut pas annuler un rendu en cours`() = runTest {
+        val revisions = MutableSharedFlow<Int>()
+        var refreshesCompleted = 0
+        val scope = TestScope(StandardTestDispatcher(testScheduler))
+        WidgetAutoRefresh(revisions, quietMillis = 60) {
+            delay(50)
+            refreshesCompleted++
+        }.start(scope)
+        scope.advanceUntilIdle()
+
+        revisions.emit(1)
+        scope.advanceTimeBy(80)
+        revisions.emit(2)
+        scope.advanceUntilIdle()
+
+        assertEquals(2, refreshesCompleted)
     }
 }

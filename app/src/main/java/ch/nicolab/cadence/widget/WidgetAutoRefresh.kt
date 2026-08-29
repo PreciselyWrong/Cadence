@@ -1,10 +1,10 @@
 package ch.nicolab.cadence.widget
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 /**
@@ -21,9 +21,9 @@ class WidgetAutoRefresh(
     private val quietMillis: Long = 60,
     private val refresh: suspend () -> Unit,
 ) {
+    @OptIn(FlowPreview::class)
     fun start(scope: CoroutineScope): Job = scope.launch {
-        revisions.collectLatest {
-            delay(quietMillis)
+        revisions.debounce(quietMillis).collect {
             refresh()
         }
     }
