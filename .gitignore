@@ -5,6 +5,7 @@
 /.externalNativeBuild
 .DS_Store
 /captures
+/.codex-remote-attachments/
 .cxx
 local.properties
 local.properties

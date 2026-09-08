@@ -1,6 +1,8 @@
 package ch.nicolab.cadence
 
 import android.content.res.Configuration
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -8,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
@@ -110,16 +113,33 @@ fun AbstinenceSetupSheet(
                     ) { profile = choice; name = defaultName; choosing = false }
                 }
             } else {
-                item { Text(stringResource(content.label), style = MaterialTheme.typography.titleLarge, color = accent) }
-                item { Text(stringResource(content.description), style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted) }
+                item {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Space.lg)) {
+                        HabitFacet(
+                            icon = HabitIconRegistry.getIcon(abstinenceIconId(profile)).imageVector,
+                            label = null,
+                            progress = 0f,
+                            tint = accent,
+                            trackColor = palette.hairline,
+                            size = Size.badge,
+                        )
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                            Text(stringResource(content.label), style = MaterialTheme.typography.titleLarge, color = accent)
+                            Text(stringResource(content.description), style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted)
+                        }
+                    }
+                }
                 item { CadenceField(name, { name = it.take(80) }, stringResource(R.string.abst_setup_name), accent = accent) }
                 item { CadenceField(reason, { reason = it.take(500) }, stringResource(R.string.abst_setup_reason),
-                    support = stringResource(R.string.abst_setup_reason_hint), accent = accent) }
+                    placeholder = stringResource(R.string.abst_setup_reason_hint), accent = accent) }
                 item {
                     if (stored == null) {
-                        SecondaryAction(stringResource(R.string.abst_setup_start, displayAbstinenceDate(start)),
-                            Modifier.fillMaxWidth(), enabled = !busy,
-                        ) { dateOpen = true }
+                        ActionRow(
+                            Icons.Outlined.DateRange,
+                            stringResource(R.string.abst_setup_start, displayAbstinenceDate(start)),
+                            accent,
+                        ) { if (!busy) dateOpen = true }
                         Spacer(Modifier.height(Space.sm))
                         Text(stringResource(R.string.abst_setup_start_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
                     } else {
@@ -129,6 +149,7 @@ fun AbstinenceSetupSheet(
                 }
                 item {
                     CadenceField(reminder, { reminder = it }, stringResource(R.string.abst_setup_reminder),
+                        placeholder = stringResource(R.string.abst_setup_reminder_placeholder),
                         support = stringResource(R.string.abst_setup_reminder_help), accent = accent)
                 }
                 if (groups.size > 1) item {
@@ -172,9 +193,9 @@ fun AbstinenceSetupSheet(
             }
         }
         Spacer(Modifier.height(Space.sm))
-        SecondaryAction(stringResource(if (!choosing && stored == null) R.string.form_btn_back else R.string.form_btn_cancel),
-            Modifier.fillMaxWidth(), enabled = !busy,
-        ) { if (!choosing && stored == null) choosing = true else close() }
+        TertiaryAction(stringResource(if (!choosing && stored == null) R.string.form_btn_back else R.string.form_btn_cancel),
+            Modifier.fillMaxWidth(),
+        ) { if (!busy) { if (!choosing && stored == null) choosing = true else close() } }
     }
     if (dateOpen) {
         val context = LocalContext.current

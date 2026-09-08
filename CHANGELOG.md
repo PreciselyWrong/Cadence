@@ -1,3 +1,11 @@
+## [1.0.9] — 08 septembre 2026
+
+### Corrections
+- Le bilan parle désormais des écarts notés sans présenter une journée vide comme une certitude.
+
+### Améliorations
+- La création d’une abstinence est plus chaleureuse, plus colorée et plus simple à parcourir.
+
 ## [1.0.8] — 08 septembre 2026
 
 ### Corrections

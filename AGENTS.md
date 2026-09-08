@@ -52,6 +52,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les statistiques générales (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. L’agrégat pondère les périodes, pas les quantités; une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
 
 ## ⛔ Interdits
+- ⛔ Présenter une absence de saisie comme la preuve d’une abstinence — le bilan compte seulement les écarts notés et explique cette limite clairement.
 - ⛔ Déplier le calendrier et les tendances à l’intérieur d’une carte de statistiques — la synthèse reste courte et le détail s’ouvre dans une surface dédiée.
 - ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.
 - ⛔ Réduire une abstinence à une saisie d’habitude ordinaire — son accès quotidien propose d’abord un point et le journal des envies, pour accompagner le suivi.

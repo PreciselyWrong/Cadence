@@ -180,7 +180,8 @@ fun CadenceField(
     val fill = accent ?: palette.accent
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
-    val container by animateColorAsState(if (focused) fill.copy(alpha = 0.10f) else palette.sunken, Motion.quick(), label = "field")
+    val resting = if (accent == null) palette.sunken else fill.copy(alpha = if (palette.isDark) 0.12f else 0.07f)
+    val container by animateColorAsState(if (focused) fill.copy(alpha = 0.16f) else resting, Motion.quick(), label = "field")
     Column(modifier.fillMaxWidth()) {
         Text(label, style = MaterialTheme.typography.labelMedium, color = if (focused) fill else palette.inkFaint)
         Spacer(Modifier.height(Space.xs))
