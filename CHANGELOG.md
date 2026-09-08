@@ -1,3 +1,10 @@
+## [1.0.10] — 08 septembre 2026
+
+### Améliorations
+- Les statistiques montrent directement le bilan de chaque habitude, sans résumé global difficile à interpréter.
+- Le calendrier et les tendances restent disponibles en touchant l’habitude concernée.
+- Les cinq boutons du menu gardent désormais une taille régulière.
+
 ## [1.0.9] — 08 septembre 2026
 
 ### Corrections

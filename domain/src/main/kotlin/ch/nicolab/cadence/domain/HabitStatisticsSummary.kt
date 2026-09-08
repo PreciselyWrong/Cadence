@@ -74,21 +74,6 @@ data class HabitStatisticsSummary(
                 from, today, previousFrom, days)
         }
 
-        /** Period counts are weighted directly; quantities and per-habit percentages are never summed. */
-        fun aggregate(summaries: List<HabitStatisticsSummary>, today: LocalDate): HabitStatisticsSummary {
-            require(summaries.all { it.untilExclusive == today && it.from == today.minusDays(30) }) {
-                "Statistics windows must match"
-            }
-            val evaluated = summaries.filter { it.evaluatedPeriods + it.previousEvaluatedPeriods > 0 }
-            val types = evaluated.map { it.periodType }.distinct()
-            return HabitStatisticsSummary(
-                summaries.sumOf { it.evaluatedPeriods }, summaries.sumOf { it.validatedPeriods },
-                summaries.sumOf { it.idealPeriods }, summaries.sumOf { it.previousEvaluatedPeriods },
-                summaries.sumOf { it.previousValidatedPeriods }, summaries.sumOf { it.previousIdealPeriods },
-                types.singleOrNull(), today.minusDays(30), today, today.minusDays(60),
-            )
-        }
-
         private fun dayStatus(
             habit: HabitDefinition?,
             date: LocalDate,

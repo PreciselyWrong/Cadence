@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 
 data class HabitCardState(
     val stored: PersistedHabit,
@@ -107,10 +106,6 @@ class MainViewModel(
         emptyList(),
     )
     val lastEntryId = MutableStateFlow<String?>(null)
-    val statistics: StateFlow<HabitStatisticsSummary?> = habits.map { items ->
-        val summaries = items.filterNot { it.stored.archived || it.stored.goal.isAbstinence }.mapNotNull { it.statistics }
-        summaries.takeIf { it.isNotEmpty() }?.let { HabitStatisticsSummary.aggregate(it, it.first().untilExclusive) }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val saving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = saving
     private val savingError = MutableStateFlow<String?>(null)

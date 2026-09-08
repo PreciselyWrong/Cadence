@@ -65,14 +65,4 @@ class HabitStatisticsSummaryTest {
         assertEquals(0, HabitStatisticsSummary.compute({ null }, today, emptyList(), emptyList()).evaluatedPeriods)
     }
 
-    @Test fun `aggregate weights periods and hides trend across mixed rhythms`() {
-        val daily = HabitStatisticsSummary.compute({ habit(HabitGoal(2, PeriodType.DAY, direction = GoalDirection.AT_MOST)) }, today, emptyList(), emptyList())
-        val monthly = HabitStatisticsSummary.compute({ habit(HabitGoal(1, PeriodType.MONTH)) }, today, emptyList(), emptyList())
-        val all = HabitStatisticsSummary.aggregate(listOf(daily, monthly), today)
-        assertEquals(31, all.evaluatedPeriods)
-        assertEquals(30, all.validatedPeriods)
-        assertEquals(97, all.successRatePercent)
-        assertNull(all.periodType)
-        assertNull(all.trendPercentagePoints)
-    }
 }

@@ -44,14 +44,16 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - L'interface suit un design system unique - `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
 - Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface, jamais d'une bordure.
 - La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
-- La navigation est une capsule sombre flottante ; la destination active porte icône et libellé, les autres restent iconiques.
+- La navigation est une capsule sombre flottante à cinq cibles égales ; la destination active est portée par une pastille colorée autour de son icône.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
 - Les repères d’abstinence distinguent objectifs personnels et observations scientifiques. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Les limites des sources sont documentées dans `docs/abstinence-evidence.md`; aucun taux hormonal ni état d’organe n’est déduit du compteur.
 - L’abstinence dispose d’une création et d’un détail dédiés. Le profil et le début déclaré restent fixes après création; la motivation utilise `description`. Le journal (`AbstinenceLog`) sépare les points quotidiens et les envies des occurrences : un point ne valide pas une journée et une envie ne casse pas la série. Un seul point est conservé par habitude et date civile.
-- Les statistiques générales (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. L’agrégat pondère les périodes, pas les quantités; une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
+- Les statistiques de chaque habitude (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. Une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
 
 ## ⛔ Interdits
+- ⛔ Ouvrir les statistiques par un agrégat abstrait de toutes les habitudes — la page commence directement par une synthèse courte pour chaque habitude.
+- ⛔ Étirer la destination active de la navigation — les cinq cibles gardent la même largeur et seule la pastille de l’icône indique l’onglet actif.
 - ⛔ Présenter une absence de saisie comme la preuve d’une abstinence — le bilan compte seulement les écarts notés et explique cette limite clairement.
 - ⛔ Déplier le calendrier et les tendances à l’intérieur d’une carte de statistiques — la synthèse reste courte et le détail s’ouvre dans une surface dédiée.
 - ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.

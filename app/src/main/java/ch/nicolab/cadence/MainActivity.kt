@@ -167,7 +167,6 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     val timers by viewModel.timers.collectAsStateWithLifecycle()
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
-    val statistics by viewModel.statistics.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableStateOf(Tab.TODAY) }
     var editorId by rememberSaveable { mutableStateOf<String?>(null) }
     val editor = habits.firstOrNull { it.stored.id == editorId }
@@ -217,7 +216,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
                 Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it }, { choosingCreation = true })
                 Tab.WEEK -> WeekScreen(habits, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it })
                 Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { choosingCreation = true }, { options = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id })
-                Tab.STATS -> StatsScreen(habits, statistics) { viewModel.clearSaveError(); quickHabitId = it.stored.id }
+                Tab.STATS -> StatsScreen(habits) { viewModel.clearSaveError(); quickHabitId = it.stored.id }
                 Tab.SETTINGS -> SettingsScreen(
                     groups = groups,
                     habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
@@ -612,7 +611,7 @@ private fun WeekScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSummary?, open: (HabitCardState) -> Unit) {
+private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> Unit) {
     val visible = habits.filterNot { it.stored.archived }
     val regular = visible.filterNot { it.stored.goal.isAbstinence }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
@@ -622,41 +621,69 @@ private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSu
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
         }
         if (regular.isNotEmpty()) {
-            summary?.let { total -> item {
-                Panel {
-                    Text(stringResource(R.string.habit_stats_overview), style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.height(Space.sm))
-                    Text(stringResource(R.string.habit_stats_dates, displayAbstinenceDate(total.from), displayAbstinenceDate(total.untilExclusive.minusDays(1))),
-                        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                    Spacer(Modifier.height(Space.lg))
-                    StatisticsNumbers(total, cadence.accent)
-                    Spacer(Modifier.height(Space.md))
-                    Text(stringResource(R.string.habit_stats_scope), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                }
-            } }
             item { SectionLabel(stringResource(R.string.today_regular_section)) }
             items(regular, key = { it.stored.id }) { item ->
                 val tint = habitTint(item)
+                val stats = item.statistics
+                val rate = stats?.successRatePercent
                 Panel(onClick = { detailId = item.stored.id }) {
-                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                    Spacer(Modifier.height(Space.md))
-                    item.statistics?.let { StatisticsNumbers(it, tint, compact = true) }
-                    Spacer(Modifier.height(Space.md))
-                    StreakLine(item.streak)
-                    Spacer(Modifier.height(Space.sm))
-                    Text(stringResource(R.string.habit_stats_details), style = MaterialTheme.typography.labelLarge, color = tint)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
+                        HabitFacet(
+                            icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                            label = null,
+                            progress = (rate ?: 0) / 100f,
+                            tint = tint,
+                            trackColor = cadence.sunken,
+                            size = Size.badge,
+                        )
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                            if (stats == null || stats.evaluatedPeriods == 0) {
+                                Text(stringResource(R.string.habit_stats_waiting), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                            } else {
+                                Text(stringResource(R.string.habit_stats_validated_compact, stats.validatedPeriods, stats.evaluatedPeriods),
+                                    style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                                if (item.streak.current > 0) Text(
+                                    pluralStringResource(R.plurals.streak_current, item.streak.current, item.streak.current),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = cadence.inkFaint,
+                                )
+                            }
+                        }
+                        rate?.let {
+                            Text(stringResource(R.string.habit_stats_rate_value, it), style = MaterialTheme.typography.titleLarge, color = tint)
+                        }
+                    }
                 }
             }
         }
         if (abstinences.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
             items(abstinences, key = { it.stored.id }) { item ->
-                Panel {
-                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                    Spacer(Modifier.height(Space.lg))
-                    AbstinencePanel(item, habitTint(item))
-                    Spacer(Modifier.height(Space.md))
-                    SecondaryAction(stringResource(R.string.abstinence_open_followup), Modifier.fillMaxWidth()) { open(item) }
+                val tint = habitTint(item)
+                val abstinence = item.abstinenceStats
+                Panel(onClick = { open(item) }) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
+                        HabitFacet(
+                            icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                            label = null,
+                            progress = 0f,
+                            tint = tint,
+                            trackColor = cadence.sunken,
+                            size = Size.badge,
+                        )
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                            Text(stringResource(abstinenceProfileLabel(item.stored.abstinenceProfile)),
+                                style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                        }
+                        abstinence?.let {
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(stringResource(R.string.habit_stats_days_short, it.currentDays), style = MaterialTheme.typography.titleLarge, color = tint)
+                                Text(stringResource(R.string.habit_stats_current_series), style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -686,7 +713,7 @@ private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSu
 }
 
 @Composable
-private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color, compact: Boolean = false) {
+private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color) {
     if (summary.evaluatedPeriods == 0) {
         Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = cadence.inkMuted)
         return
@@ -699,12 +726,12 @@ private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color, co
                 style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
         }
     }
-    if (compact) return
     Spacer(Modifier.height(Space.sm))
-    Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    if (summary.idealPeriods > 0) {
+        Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    }
     val trend = summary.trendPercentagePoints
-    Text(when {
-        trend == null -> stringResource(R.string.habit_stats_no_comparison)
+    if (trend != null) Text(when {
         trend > 0 -> stringResource(R.string.habit_stats_trend_up, trend)
         trend < 0 -> stringResource(R.string.habit_stats_trend_down, -trend)
         else -> stringResource(R.string.habit_stats_trend_stable)
@@ -761,7 +788,6 @@ private fun StatisticsCalendar(days: List<HabitStatisticsDay>, accent: Color) {
         Text(stringResource(R.string.habit_stats_selected_day, displayAbstinenceDate(day.date), stringResource(statisticsDayLabel(day.status))),
             style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
     }
-    Text(stringResource(R.string.habit_stats_legend), style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
 }
 
 private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {

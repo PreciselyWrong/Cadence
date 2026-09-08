@@ -6,7 +6,6 @@
     <string name="create_regular_habit">Construire une habitude</string>
     <string name="today_abstinences_section">Mes abstinences</string>
     <string name="today_regular_section">Mes habitudes</string>
-    <string name="abstinence_open_followup">Ouvrir mon suivi</string>
     <string name="abstinence_save_failed">Enregistrement impossible. Réessayez.</string>
     <string name="abstinence_saving">Enregistrement…</string>
     <string name="abstinence_quick_unavailable">Ce suivi n’est plus disponible.</string>
