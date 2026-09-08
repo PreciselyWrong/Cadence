@@ -28,6 +28,7 @@ Assert-Condition ($publishSource -match 'adb.+install.+--user') 'La publication 
 Assert-Condition ($publishSource -match 'ro\.kernel\.qemu') 'La publication doit exclure les émulateurs'
 Assert-Condition ($publishSource -match ':app:assembleDebug') 'La publication doit construire l APK debug distribuable'
 Assert-Condition ($publishSource -match 'app-debug\.apk') 'La publication doit envoyer l APK debug construit'
+Assert-Condition ($publishSource -match '--no-configuration-cache') 'La publication doit relire la version avant chaque build'
 & (Join-Path $root 'dev.ps1') -Plan -NonInteractive
 Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan de développement doit réussir'
 & (Join-Path $root 'publish.ps1') -Plan -NonInteractive

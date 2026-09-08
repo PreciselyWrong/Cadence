@@ -69,7 +69,7 @@ Write-Host "Exécution des tests..." -ForegroundColor Cyan
 if ($LASTEXITCODE -ne 0) { Fail 'Les tests ont échoué.' 3 }
 
 Write-Host "Construction debug..." -ForegroundColor Cyan
-& (Join-Path $root 'gradlew.bat') ':app:assembleDebug'
+& (Join-Path $root 'gradlew.bat') ':app:assembleDebug' '--no-configuration-cache'
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact)) { Fail 'La construction Android a échoué.' 3 }
 
 # NicoApps
