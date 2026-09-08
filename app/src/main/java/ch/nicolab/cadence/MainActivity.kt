@@ -52,6 +52,7 @@ import androidx.compose.material.icons.outlined.TrackChanges
 import androidx.compose.material.icons.outlined.TrendingFlat
 import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -610,10 +611,12 @@ private fun WeekScreen(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSummary?, open: (HabitCardState) -> Unit) {
     val visible = habits.filterNot { it.stored.archived }
     val regular = visible.filterNot { it.stored.goal.isAbstinence }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
+    var detailId by rememberSaveable { mutableStateOf<String?>(null) }
     ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
         if (visible.isEmpty()) item {
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
@@ -634,24 +637,14 @@ private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSu
             item { SectionLabel(stringResource(R.string.today_regular_section)) }
             items(regular, key = { it.stored.id }) { item ->
                 val tint = habitTint(item)
-                var expanded by rememberSaveable(item.stored.id) { mutableStateOf(false) }
-                Panel {
-                    Text(item.stored.name, style = MaterialTheme.typography.titleLarge, color = cadence.ink)
+                Panel(onClick = { detailId = item.stored.id }) {
+                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
                     Spacer(Modifier.height(Space.md))
-                    item.statistics?.let { StatisticsNumbers(it, tint) }
+                    item.statistics?.let { StatisticsNumbers(it, tint, compact = true) }
                     Spacer(Modifier.height(Space.md))
                     StreakLine(item.streak)
-                    Spacer(Modifier.height(Space.md))
-                    SecondaryAction(stringResource(if (expanded) R.string.habit_stats_hide else R.string.habit_stats_details), Modifier.fillMaxWidth()) { expanded = !expanded }
-                    if (expanded) {
-                        Spacer(Modifier.height(Space.lg))
-                        item.statistics?.let { StatisticsCalendar(it.days, tint) }
-                        // Les préférences de quantité/heure ne décrivent pas la réussite d'un plafond.
-                        if (!item.stored.goal.isLimit) {
-                            Spacer(Modifier.height(Space.lg))
-                            HabitInsightsPanel(item.insights, item.stored.goal, tint, Modifier.fillMaxWidth())
-                        }
-                    }
+                    Spacer(Modifier.height(Space.sm))
+                    Text(stringResource(R.string.habit_stats_details), style = MaterialTheme.typography.labelLarge, color = tint)
                 }
             }
         }
@@ -668,22 +661,47 @@ private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSu
             }
         }
     }
+    regular.firstOrNull { it.stored.id == detailId }?.let { item ->
+        val tint = habitTint(item)
+        CadenceSheet(
+            title = item.stored.name,
+            subtitle = stringResource(R.string.habit_stats_detail_subtitle),
+            dismiss = { detailId = null },
+        ) {
+            LazyColumn(
+                Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+                verticalArrangement = Arrangement.spacedBy(Space.lg),
+            ) {
+                item { item.statistics?.let { StatisticsNumbers(it, tint) } }
+                item { StreakLine(item.streak) }
+                item { Hairline() }
+                item { item.statistics?.let { StatisticsCalendar(it.days, tint) } }
+                if (!item.stored.goal.isLimit) {
+                    item { Hairline() }
+                    item { HabitInsightsPanel(item.insights, item.stored.goal, tint, Modifier.fillMaxWidth()) }
+                }
+            }
+        }
+    }
 }
 
 @Composable
-private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color) {
+private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color, compact: Boolean = false) {
     if (summary.evaluatedPeriods == 0) {
         Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = cadence.inkMuted)
         return
     }
-    Text(stringResource(R.string.habit_stats_validated, summary.validatedPeriods, summary.evaluatedPeriods),
-        style = MaterialTheme.typography.headlineSmall, color = accent)
-    Spacer(Modifier.height(Space.xs))
-    summary.successRatePercent?.let { rate ->
-        Text(stringResource(R.string.habit_stats_rate, rate), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.lg), verticalAlignment = Alignment.CenterVertically) {
+        Text(stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0), style = MetricStyle, color = accent)
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
+            Text(stringResource(R.string.habit_stats_validated_compact, summary.validatedPeriods, summary.evaluatedPeriods),
+                style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+        }
     }
-    Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    if (compact) return
     Spacer(Modifier.height(Space.sm))
+    Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
     val trend = summary.trendPercentagePoints
     Text(when {
         trend == null -> stringResource(R.string.habit_stats_no_comparison)
@@ -701,7 +719,7 @@ private fun StatisticsCalendar(days: List<HabitStatisticsDay>, accent: Color) {
     val cells = remember(days) {
         List<HabitStatisticsDay?>(days.first().date.dayOfWeek.value - 1) { null } + days
     }
-    Text(stringResource(R.string.habit_stats_calendar), style = MaterialTheme.typography.titleMedium)
+    Text(stringResource(R.string.habit_stats_calendar), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
     Text(stringResource(R.string.habit_stats_calendar_help), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
     Spacer(Modifier.height(Space.md))
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
@@ -722,11 +740,17 @@ private fun StatisticsCalendar(days: List<HabitStatisticsDay>, accent: Color) {
                         else -> cadence.sunken
                     }
                     val label = stringResource(statisticsDayLabel(day.status))
-                    Box(Modifier.weight(1f).height(Size.touch).padding(vertical = Space.xs).clip(Radius.Control)
-                        .background(color).clickable { selectedDate = day.date.toString() }, contentAlignment = Alignment.Center) {
-                        Text(day.date.dayOfMonth.toString(), color = if (day.status == HabitStatisticsDayStatus.IDEAL || day.status == HabitStatisticsDayStatus.MISSED) onColorOf(color) else cadence.ink,
-                            style = if (day == selected) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.semantics { contentDescription = "${displayAbstinenceDate(day.date)} : $label" })
+                    Box(
+                        Modifier.weight(1f).height(Size.touch).clip(Radius.Control)
+                            .background(if (day == selected) cadence.sunken else Color.Transparent)
+                            .clickable { selectedDate = day.date.toString() }
+                            .semantics { contentDescription = "${displayAbstinenceDate(day.date)} : $label" },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Box(Modifier.size(Size.calendarMark).clip(Radius.Chip).background(color), contentAlignment = Alignment.Center) {
+                            Text(day.date.dayOfMonth.toString(), color = if (day.status == HabitStatisticsDayStatus.IDEAL || day.status == HabitStatisticsDayStatus.MISSED) onColorOf(color) else cadence.ink,
+                                style = MaterialTheme.typography.bodySmall)
+                        }
                     }
                 }
             }
@@ -737,7 +761,7 @@ private fun StatisticsCalendar(days: List<HabitStatisticsDay>, accent: Color) {
         Text(stringResource(R.string.habit_stats_selected_day, displayAbstinenceDate(day.date), stringResource(statisticsDayLabel(day.status))),
             style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
     }
-    Text(stringResource(R.string.habit_stats_legend), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    Text(stringResource(R.string.habit_stats_legend), style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
 }
 
 private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {

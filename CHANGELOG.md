@@ -1,3 +1,12 @@
+## [1.0.8] — 08 septembre 2026
+
+### Corrections
+- Les types d’abstinence sont classés par ordre alphabétique, avec « Autre » à la fin.
+
+### Améliorations
+- Les statistiques sont plus courtes à parcourir, avec le calendrier et les tendances dans un détail séparé.
+- La navigation reste lisible sans masquer le contenu qui défile derrière elle.
+
 ## [1.0.7] — 08 septembre 2026
 
 ### Nouveautés

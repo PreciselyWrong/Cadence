@@ -57,6 +57,7 @@ object Size {
     val touch = 48.dp
     val control = 52.dp
     val badge = 52.dp
+    val calendarMark = 36.dp
     val navBar = 64.dp
     val sheetContent = 480.dp
 }

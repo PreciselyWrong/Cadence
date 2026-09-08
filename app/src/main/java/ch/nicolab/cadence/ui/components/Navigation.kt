@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -46,8 +47,14 @@ fun CadenceNavigation(
     onSelect: (Int) -> Unit,
 ) {
     val palette = cadence
-    Box(modifier.padding(horizontal = Space.gutter).navigationBarsPadding().padding(bottom = Space.md)) {
+    Box(modifier.fillMaxWidth().navigationBarsPadding()) {
+        Box(
+            Modifier.matchParentSize().background(
+                Brush.verticalGradient(listOf(palette.background.copy(alpha = 0f), palette.background))
+            )
+        )
         Surface(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.md),
             shape = Radius.Pill,
             color = palette.structural,
             contentColor = palette.onStructural,

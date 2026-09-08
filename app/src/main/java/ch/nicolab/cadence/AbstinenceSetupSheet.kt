@@ -27,6 +27,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.text.Collator
 import java.util.Locale
 import java.util.UUID
 
@@ -44,6 +45,20 @@ internal fun abstinenceIconId(profile: AbstinenceProfile): String = when (profil
 
 internal fun displayAbstinenceDate(date: LocalDate): String =
     date.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH))
+
+internal fun sortedAbstinenceProfiles(
+    profiles: Collection<AbstinenceProfile> = AbstinenceProfile.entries.filter { it != AbstinenceProfile.NONE },
+    label: (AbstinenceProfile) -> String,
+): List<AbstinenceProfile> {
+    val collator = Collator.getInstance(Locale.FRENCH)
+    return profiles.sortedWith { left, right ->
+        when {
+            left == AbstinenceProfile.CUSTOM -> if (right == AbstinenceProfile.CUSTOM) 0 else 1
+            right == AbstinenceProfile.CUSTOM -> -1
+            else -> collator.compare(label(left), label(right))
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -71,6 +86,10 @@ fun AbstinenceSetupSheet(
     val palette = cadence
     val accent = palette.habitAccent(stored?.colorArgb)
     val content = AbstinenceGuide.content(profile)
+    val resources = LocalResources.current
+    val profileChoices = remember(resources.configuration) {
+        sortedAbstinenceProfiles { resources.getString(AbstinenceGuide.content(it).label) }
+    }
     val close = { if (!busy) dismiss() }
 
     CadenceSheet(
@@ -83,7 +102,7 @@ fun AbstinenceSetupSheet(
             verticalArrangement = Arrangement.spacedBy(Space.lg),
         ) {
             if (choosing) {
-                items(AbstinenceProfile.entries.filter { it != AbstinenceProfile.NONE }) { choice ->
+                items(profileChoices, key = { it.name }) { choice ->
                     val info = AbstinenceGuide.content(choice)
                     val defaultName = stringResource(info.defaultName)
                     ActionRow(HabitIconRegistry.getIcon(abstinenceIconId(choice)).imageVector,
