@@ -18,6 +18,27 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AbstinencePersistenceTest {
+    @Test fun behavioralProfilesSurviveBackup() = runBlocking {
+        val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), CadenceDatabase::class.java).build()
+        try {
+            val repository = CadenceRepository(db)
+            val start = LocalDate.of(2026, 9, 1)
+            val profiles = listOf("GAMBLING", "SOCIAL_MEDIA", "BEDTIME_SCREENS", "IMPULSE_SHOPPING", "PORNOGRAPHY")
+                .map(AbstinenceProfile::valueOf)
+            profiles.forEach { profile ->
+                repository.addHabit(PersistedHabit(profile.name, "Suivi", active = true, startsOn = start,
+                    abstinenceProfile = profile, abstinenceStartedOn = start,
+                    goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
+                    schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY)), start)
+            }
+            repository.importBackup(repository.exportBackup())
+            profiles.forEach { profile ->
+                val restored = repository.getHabitEffectiveAt(profile.name, start)!!
+                assertEquals(profile, restored.abstinenceProfile)
+                assertEquals(start, restored.abstinenceStartedOn)
+            }
+        } finally { db.close() }
+    }
     @Test fun convertingRunningTimerToAbstinenceClearsTimer() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val db = Room.inMemoryDatabaseBuilder(context, CadenceDatabase::class.java).build()

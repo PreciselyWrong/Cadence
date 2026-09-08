@@ -72,6 +72,34 @@ Les jalons ne portent que sur la durée du suivi et la réflexion personnelle. A
 
 [Smoke Free](https://smokefreeapp.com/) présente un journal des envies et de leur intensité, des motivations personnelles et la progression dans le temps. [I Am Sober](https://iamsober.com/en/site/faq) documente les bilans quotidiens, les notes et les envies, avec des fonctions principales disponibles hors ligne. Ces mécanismes inspirent un bilan court et un journal local dans Cadence. Il ne s’agit ni de copier leur interface ni d’attribuer à Cadence leur efficacité revendiquée. Leurs pages produit ne sont pas des sources médicales du catalogue.
 
+## Jeux d’argent
+
+L’OMS décrit des dommages possibles liés aux jeux d’argent, notamment financiers et relationnels, et cite les limites de pertes et l’auto-exclusion parmi les mesures de réduction des risques. Cadence ne diagnostique pas un trouble du jeu.
+
+Source : [OMS, jeux d’argent](https://www.who.int/news-room/fact-sheets/detail/gambling).
+
+## Réseaux sociaux
+
+Le suivi est un objectif personnel. Les conseils de notifications, raccourcis et activités de remplacement servent à observer les déclencheurs ; aucun effet sanitaire ni diagnostic n’est déduit du compteur.
+
+## Écrans avant le coucher
+
+Le conseil porte sur l’heure avant le coucher. NHS Oxford Health recommande d’éviter les écrans et la lumière bleue au moins une heure avant le coucher ; Cadence ne garantit pas un meilleur sommeil et ne l’étend pas à tous les écrans de la journée.
+
+Source : [NHS Oxford Health, hygiène du sommeil](https://oxfordhealth.nhs.uk/mindset/skills/sleep-hygiene/).
+
+## Achats impulsifs
+
+Le suivi porte sur un choix personnel et propose un délai avant achat, la désactivation des sollicitations et l’observation des déclencheurs. Il ne pose aucun diagnostic et ne remplace pas un conseil financier.
+
+## Pornographie
+
+La pornographie est distincte de la masturbation dans Cadence. NHS Sexual Health Oxfordshire décrit l’usage problématique et les difficultés compulsives comme des situations pouvant justifier un accompagnement ; l’application n’évalue pas et ne diagnostique pas ces situations.
+
+Source : [NHS Sexual Health Oxfordshire, accompagnement psychosexuel](https://www.sexualhealthoxfordshire.nhs.uk/services/psychosexual-therapy/sex-addiction/).
+
+Ces cinq profils utilisent uniquement des repères personnels à 7, 14, 30 et 90 jours. Les minutes, ouvertures d’application et dépenses ne sont pas mesurées automatiquement ; le journal reçoit les notes saisies volontairement.
+
 ## Statistiques
 
 L’absence de saisie signifie uniquement « aucune occurrence enregistrée ». Une pause signifie que le suivi est interrompu, et ne démontre pas une abstinence. La journée en cours ne compte pas comme un jour entier terminé. Les corrections d’historique recalculent les statistiques ; elles ne suppriment pas les jours passés sans occurrence. Aucun chiffre de Cadence ne mesure l’état des organes ni les taux hormonaux.

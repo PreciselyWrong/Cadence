@@ -1,6 +1,7 @@
 ## [1.0.7] — 08 septembre 2026
 
 ### Nouveautés
+- Cinq nouveaux suivis : paris, réseaux sociaux, écrans avant le coucher, achats impulsifs et pornographie.
 - Un bilan sur 30 jours montre les périodes validées et l’évolution de vos habitudes.
 - Touchez un jour du calendrier pour distinguer minimum, idéal et pause.
 - Retrouvez vos abstinences dès l’accueil, dans un suivi dédié.

@@ -5,6 +5,20 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AbstinenceGuideTest {
+    @Test fun `behavioral profiles have distinct guidance and only personal milestones`() {
+        val profiles = listOf("GAMBLING", "SOCIAL_MEDIA", "BEDTIME_SCREENS", "IMPULSE_SHOPPING", "PORNOGRAPHY")
+            .map(AbstinenceProfile::valueOf)
+        assertEquals(5, profiles.map { AbstinenceGuide.content(it).label }.distinct().size)
+        assertEquals(5, profiles.map { AbstinenceGuide.content(it).tip }.distinct().size)
+        profiles.forEach { profile ->
+            val content = AbstinenceGuide.content(profile)
+            assertNotEquals(AbstinenceGuide.content(AbstinenceProfile.CUSTOM).description, content.description)
+            assertNotNull(content.notice)
+            val milestones = AbstinenceGuide.milestones(profile)
+            assertEquals(listOf(7L, 14L, 30L, 90L), milestones.map { it.days })
+            assertTrue(milestones.none { it.scientific })
+        }
+    }
     @Test fun `smoking landmarks retain approximate ranges at their opening thresholds`() {
         val milestones = AbstinenceGuide.milestones(AbstinenceProfile.SMOKING)
         assertEquals(listOf(2L, 3L, 14L, 90L, 365L), milestones.map { it.days })

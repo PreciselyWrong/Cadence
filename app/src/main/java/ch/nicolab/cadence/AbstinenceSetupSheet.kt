@@ -3,6 +3,7 @@ package ch.nicolab.cadence
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,6 +35,10 @@ internal fun abstinenceIconId(profile: AbstinenceProfile): String = when (profil
     AbstinenceProfile.CAFFEINE -> "coffee"
     AbstinenceProfile.ALCOHOL -> "water"
     AbstinenceProfile.CANNABIS, AbstinenceProfile.MASTURBATION -> "spa"
+    AbstinenceProfile.GAMBLING -> "money"
+    AbstinenceProfile.SOCIAL_MEDIA, AbstinenceProfile.PORNOGRAPHY -> "phone"
+    AbstinenceProfile.BEDTIME_SCREENS -> "bed"
+    AbstinenceProfile.IMPULSE_SHOPPING -> "shopping"
     else -> HabitIconRegistry.DEFAULT_ICON_ID
 }
 
@@ -54,6 +59,7 @@ fun AbstinenceSetupSheet(
     val habitId = rememberSaveable(stored?.id) { stored?.id ?: UUID.randomUUID().toString() }
     var profile by rememberSaveable(stored?.id) { mutableStateOf(stored?.abstinenceProfile ?: AbstinenceProfile.NONE) }
     var choosing by rememberSaveable(stored?.id) { mutableStateOf(stored == null) }
+    val listState = remember(choosing) { LazyListState() }
     var name by rememberSaveable(stored?.id) { mutableStateOf(stored?.name.orEmpty()) }
     var reason by rememberSaveable(stored?.id) { mutableStateOf(stored?.description.orEmpty()) }
     var startText by rememberSaveable(stored?.id) { mutableStateOf((stored?.abstinenceStartedOn ?: LocalDate.now()).toString()) }
@@ -73,6 +79,7 @@ fun AbstinenceSetupSheet(
         dismiss = close,
     ) {
         LazyColumn(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(Space.lg),
         ) {
             if (choosing) {

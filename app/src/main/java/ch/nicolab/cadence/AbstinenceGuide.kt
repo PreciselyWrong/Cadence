@@ -36,6 +36,9 @@ object AbstinenceGuide {
     val vapingSupport = EvidenceSource(R.string.catalogue_source_cdc_vaping, "https://www.cdc.gov/tobacco/e-cigarettes/quitting.html")
     val cannabisWithdrawal = EvidenceSource(R.string.catalogue_source_nida, "https://datashare.nida.nih.gov/instrument/marijuana-withdrawal-symptom-checklist")
     val caffeineAdvice = EvidenceSource(R.string.catalogue_source_fda, "https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much")
+    val gamblingAdvice = EvidenceSource(R.string.catalogue_source_who_gambling, "https://www.who.int/news-room/fact-sheets/detail/gambling")
+    val sleepAdvice = EvidenceSource(R.string.catalogue_source_nhs_sleep, "https://oxfordhealth.nhs.uk/mindset/skills/sleep-hygiene/")
+    val pornographyAdvice = EvidenceSource(R.string.catalogue_source_nhs_pornography, "https://www.sexualhealthoxfordshire.nhs.uk/services/psychosexual-therapy/sex-addiction/")
 
     fun content(profile: AbstinenceProfile): AbstinenceProfileContent = when (profile) {
         AbstinenceProfile.NONE -> AbstinenceProfileContent(
@@ -73,6 +76,31 @@ object AbstinenceGuide {
             R.string.catalogue_caffeine_description, R.string.catalogue_caffeine_tip,
             R.string.catalogue_caffeine_notice, listOf(caffeineAdvice),
         )
+        AbstinenceProfile.GAMBLING -> AbstinenceProfileContent(
+            R.string.catalogue_gambling_label, R.string.catalogue_gambling_name,
+            R.string.catalogue_gambling_description, R.string.catalogue_gambling_tip,
+            R.string.catalogue_gambling_notice, listOf(gamblingAdvice),
+        )
+        AbstinenceProfile.SOCIAL_MEDIA -> AbstinenceProfileContent(
+            R.string.catalogue_social_media_label, R.string.catalogue_social_media_name,
+            R.string.catalogue_social_media_description, R.string.catalogue_social_media_tip,
+            R.string.catalogue_social_media_notice, emptyList(),
+        )
+        AbstinenceProfile.BEDTIME_SCREENS -> AbstinenceProfileContent(
+            R.string.catalogue_bedtime_screens_label, R.string.catalogue_bedtime_screens_name,
+            R.string.catalogue_bedtime_screens_description, R.string.catalogue_bedtime_screens_tip,
+            R.string.catalogue_bedtime_screens_notice, listOf(sleepAdvice),
+        )
+        AbstinenceProfile.IMPULSE_SHOPPING -> AbstinenceProfileContent(
+            R.string.catalogue_impulse_shopping_label, R.string.catalogue_impulse_shopping_name,
+            R.string.catalogue_impulse_shopping_description, R.string.catalogue_impulse_shopping_tip,
+            R.string.catalogue_impulse_shopping_notice, emptyList(),
+        )
+        AbstinenceProfile.PORNOGRAPHY -> AbstinenceProfileContent(
+            R.string.catalogue_pornography_label, R.string.catalogue_pornography_name,
+            R.string.catalogue_pornography_description, R.string.catalogue_pornography_tip,
+            R.string.catalogue_pornography_notice, listOf(pornographyAdvice),
+        )
         AbstinenceProfile.CUSTOM -> AbstinenceProfileContent(
             R.string.catalogue_custom_label, R.string.catalogue_custom_name,
             R.string.catalogue_custom_description, R.string.catalogue_custom_tip,
@@ -94,6 +122,8 @@ object AbstinenceGuide {
             AbstinenceMilestone(365, true, R.string.catalogue_smoking_heart, listOf(smokingBenefits), R.string.catalogue_time_years_1_2),
         )
         AbstinenceProfile.MASTURBATION, AbstinenceProfile.VAPING, AbstinenceProfile.CANNABIS,
-        AbstinenceProfile.CAFFEINE, AbstinenceProfile.CUSTOM -> milestoneDays.map { AbstinenceMilestone(it) }
+        AbstinenceProfile.CAFFEINE, AbstinenceProfile.GAMBLING, AbstinenceProfile.SOCIAL_MEDIA,
+        AbstinenceProfile.BEDTIME_SCREENS, AbstinenceProfile.IMPULSE_SHOPPING,
+        AbstinenceProfile.PORNOGRAPHY, AbstinenceProfile.CUSTOM -> milestoneDays.map { AbstinenceMilestone(it) }
     }
 }

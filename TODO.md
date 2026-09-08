@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Cinq profils supplémentaires avec conseils et sauvegarde vérifiés
 - [x] Bilan des habitudes sur 30 jours et parcours d’abstinence avec conseils et journal
 - [x] Vue Cette semaine
 - [x] Notes rapides sur les saisies

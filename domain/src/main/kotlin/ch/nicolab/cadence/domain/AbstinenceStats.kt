@@ -2,7 +2,10 @@ package ch.nicolab.cadence.domain
 
 import java.time.LocalDate
 
-enum class AbstinenceProfile { NONE, ALCOHOL, MASTURBATION, SMOKING, VAPING, CANNABIS, CAFFEINE, CUSTOM }
+enum class AbstinenceProfile {
+    NONE, ALCOHOL, MASTURBATION, SMOKING, VAPING, CANNABIS, CAFFEINE,
+    GAMBLING, SOCIAL_MEDIA, BEDTIME_SCREENS, IMPULSE_SHOPPING, PORNOGRAPHY, CUSTOM,
+}
 
 data class AbstinenceStats(
     val currentDays: Long,
