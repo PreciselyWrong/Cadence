@@ -1,3 +1,22 @@
+## [1.0.7] — 08 septembre 2026
+
+### Nouveautés
+- Un bilan sur 30 jours montre les périodes validées et l’évolution de vos habitudes.
+- Touchez un jour du calendrier pour distinguer minimum, idéal et pause.
+- Retrouvez vos abstinences dès l’accueil, dans un suivi dédié.
+- Alcool, cigarette, vapotage, cannabis, caféine, masturbation ou choix personnel : chacun a ses conseils.
+- Découvrez les bénéfices étudiés de l’arrêt de l’alcool et du tabac, avec leurs sources.
+- Faites un point quotidien et notez vos envies sans remettre votre série à zéro.
+- Gardez votre motivation et la date d’un arrêt déjà commencé.
+- Vos statistiques distinguent la série actuelle, votre record et les jours sans événement enregistré.
+
+### Améliorations
+- Les habitudes restent au premier plan dans l’accueil et les statistiques.
+- Les comparaisons respectent le rythme et les anciens objectifs de chaque habitude.
+- Un événement se confirme avant d’être enregistré et reste corrigeable.
+- Votre journal conserve les points, les envies et les événements au même endroit.
+- Les boutons de navigation restent accessibles sur les petits écrans.
+
 ## [1.0.6] - 14 août 2026
 
 ### Améliorations

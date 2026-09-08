@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.data.local.model
 
+import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.HabitDefinition
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
@@ -21,6 +22,8 @@ data class PersistedHabit(
     val groupId: String = HabitGroup.ALL_DAY_ID,
     /** Mode chronomètre proposé dans la saisie rapide; sans effet hors objectif en durée. */
     val timerEnabled: Boolean = false,
+    val abstinenceProfile: AbstinenceProfile = AbstinenceProfile.NONE,
+    val abstinenceStartedOn: LocalDate? = null,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {

@@ -114,7 +114,8 @@ data class HabitGoal(
     val progression: GoalProgression? = null,
 ) {
     init {
-        require(targetMinor > 0) { "Target must be positive" }
+        require(targetMinor > 0 || (targetMinor == 0L && direction == GoalDirection.AT_MOST)) { "Only a limit permits a zero target" }
+        require(targetMinor != 0L || (progression == null && frequencyTarget == null)) { "Abstinence carries no progression or frequency" }
         require(frequencyTarget == null || frequencyTarget > 0) { "Frequency target must be positive" }
         minimumMinor?.let {
             require(it > 0) { "Minimum must be positive" }
@@ -128,6 +129,7 @@ data class HabitGoal(
     }
 
     val isLimit: Boolean get() = direction == GoalDirection.AT_MOST
+    val isAbstinence: Boolean get() = isLimit && targetMinor == 0L
 
     /** Cible en vigueur à une date, progression comprise. */
     fun targetAt(date: LocalDate): Long = progression?.targetAt(targetMinor, date) ?: targetMinor

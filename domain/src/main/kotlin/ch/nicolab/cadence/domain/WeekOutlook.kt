@@ -65,6 +65,9 @@ data class WeekOutlook(
             .any { isPlannedOn(habit, it) }
 
         private fun stageOf(habit: HabitDefinition, evaluation: HabitEvaluation): WeekStage {
+            if (habit.goal.isAbstinence) {
+                return if (evaluation.validatesPeriod) WeekStage.WELL_UNDERWAY else WeekStage.TODO
+            }
             // Sous un plafond il n'y a rien à poursuivre : soit on tient, soit on a dépassé.
             if (habit.goal.isLimit) {
                 return if (evaluation.validatesPeriod) WeekStage.DONE else WeekStage.TODO

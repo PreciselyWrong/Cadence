@@ -60,7 +60,6 @@ import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
-import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.domain.WidgetSlotAlignment
 import ch.nicolab.cadence.domain.WidgetSlotMode
@@ -129,8 +128,7 @@ class CadenceWidget : GlanceAppWidget() {
             // Le monochrome emprunte l'encre du style : elle reste lisible sur son fond.
             val ink = style.contentArgb
             val color = if (config.monochromeIcons) ink else item.habit.colorArgb ?: ink
-            val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
-            val progress = (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
+            val progress = WidgetHabitPresentation.progress(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor)
             item.habit.id to renderHabitFacet(
                 iconId = item.habit.iconId,
                 colorArgb = color,
@@ -142,12 +140,12 @@ class CadenceWidget : GlanceAppWidget() {
                 saturation = config.iconSaturation,
             )
         }
-        provideContent { WidgetLine(pending, config, iconBitmaps) }
+        provideContent { WidgetLine(pending, config, iconBitmaps, context.getString(R.string.abstinence_widget_tracking)) }
     }
 }
 
 @Composable
-private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>) {
+private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>, trackingLabel: String) {
     val style = WidgetRenderStyle.byId(config.theme)
     val isMono = style.isLight
     val alpha = config.opacity.coerceIn(0, 100) / 100f
@@ -201,7 +199,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
                         )
                     }
                     if (textVisibility.showLabels) Text(item.habit.name, maxLines = 1, style = TextStyle(color = ColorProvider(day = labelColor, night = labelColor), fontSize = config.labelTextSizeSp.sp, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
-                    if (textVisibility.showValues) Text(item.timerSeconds?.let { HabitFormatter.formatValue(it, item.habit.goal.goalType, item.habit.goal.unit) } ?: HabitFormatter.formatCompactProgress(item.evaluation.progressMinor, item.evaluation.targetMinor, item.habit.goal.goalType, item.habit.goal.unit), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
+                    if (textVisibility.showValues) Text(WidgetHabitPresentation.value(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor, item.timerSeconds, trackingLabel), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                 }
             }
             if (layout.showsOverflow) {

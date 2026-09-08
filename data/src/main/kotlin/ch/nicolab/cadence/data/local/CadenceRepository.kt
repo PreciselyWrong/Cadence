@@ -17,6 +17,11 @@ import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalDirection
+import ch.nicolab.cadence.domain.AbstinenceProfile
+import ch.nicolab.cadence.domain.AbstinenceLog
+import ch.nicolab.cadence.domain.AbstinenceLogKind
+import ch.nicolab.cadence.data.local.entities.AbstinenceLogEntity
+import java.time.Clock
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGoal
@@ -46,8 +51,54 @@ import kotlinx.serialization.json.int
 
 class CadenceRepository(
     private val database: CadenceDatabase,
+    private val clock: Clock = Clock.systemDefaultZone(),
 ) {
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+
+    fun observeAbstinenceLogRevision(): Flow<Int> = database.abstinenceLogDao().observeRevision()
+
+    suspend fun getAbstinenceLogs(habitId: String): List<AbstinenceLog> =
+        database.abstinenceLogDao().getLogs(habitId).map(::toAbstinenceLog)
+
+    suspend fun saveAbstinenceLog(log: AbstinenceLog) {
+        database.withTransaction {
+            val habit = requireNotNull(getHabitEffectiveAt(log.habitId, LocalDate.now(clock))) { "Journal habit is missing" }
+            require(habit.goal.isAbstinence && habit.abstinenceProfile != AbstinenceProfile.NONE) { "Journal requires abstinence" }
+            validateLogDates(log, requireNotNull(habit.abstinenceStartedOn) { "Observation start is missing" })
+            val entity = toAbstinenceLogEntity(log)
+            database.abstinenceLogDao().getLog(entity.id)?.let { existing ->
+                require(existing.habitId == log.habitId && existing.kind == log.kind.name) { "Journal identity cannot change habit or kind" }
+            }
+            database.abstinenceLogDao().save(entity)
+        }
+    }
+
+    suspend fun deleteAbstinenceLog(id: String) = database.abstinenceLogDao().delete(id)
+
+    private fun validateLogDates(log: AbstinenceLog, startsOn: LocalDate) {
+        require(log.localDate in startsOn..LocalDate.now(clock)) { "Journal date is outside observation" }
+        require(log.occurredAt <= clock.instant()) { "Journal instant cannot be in the future" }
+        require(log.occurredAt.atZone(log.observedZoneId).toLocalDate() == log.localDate) { "Journal date and observed zone disagree" }
+    }
+
+    private fun toAbstinenceLogEntity(log: AbstinenceLog) = AbstinenceLogEntity(
+        id = if (log.kind == AbstinenceLogKind.CHECK_IN) {
+            UUID.nameUUIDFromBytes("check-in:${log.habitId}:${log.localDate}".toByteArray(Charsets.UTF_8)).toString()
+        } else log.id,
+        habitId = log.habitId,
+        occurredAtEpochMs = log.occurredAt.toEpochMilli(),
+        localDate = log.localDate.toString(),
+        observedZoneId = log.observedZoneId.id,
+        kind = log.kind.name,
+        intensity = log.intensity,
+        note = log.note,
+    )
+
+    private fun toAbstinenceLog(entity: AbstinenceLogEntity) = AbstinenceLog(
+        entity.id, entity.habitId, Instant.ofEpochMilli(entity.occurredAtEpochMs),
+        LocalDate.parse(entity.localDate), ZoneId.of(entity.observedZoneId),
+        AbstinenceLogKind.valueOf(entity.kind), entity.intensity, entity.note,
+    )
 
     fun observeHabits(): Flow<List<PersistedHabit>> = observeHabitsEffectiveAt(LocalDate.now())
 
@@ -189,6 +240,8 @@ class CadenceRepository(
                 updatedAtEpochMs = updatedAt,
                 groupId = habit.groupId,
                 timerEnabled = habit.timerEnabled,
+                abstinenceProfile = habit.abstinenceProfile.name,
+                abstinenceStartedOn = habit.abstinenceStartedOn?.toString(),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -252,6 +305,8 @@ class CadenceRepository(
                 updatedAtEpochMs = nowMs,
                 groupId = habit.groupId,
                 timerEnabled = habit.timerEnabled,
+                abstinenceProfile = habit.abstinenceProfile.name,
+                abstinenceStartedOn = habit.abstinenceStartedOn?.toString(),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -288,6 +343,9 @@ class CadenceRepository(
             database.habitDao().deleteGoalsFrom(habit.id, effectiveDate.toString())
             database.habitDao().deleteSchedulesFrom(habit.id, effectiveDate.toString())
             database.habitDao().updateHabit(habitEntity)
+            if (!habit.timerEnabled || habit.goal.goalType != GoalType.DURATION) {
+                database.habitTimerDao().delete(habit.id)
+            }
             database.habitDao().insertGoal(goalEntity)
             database.habitDao().insertSchedule(scheduleEntity)
         }
@@ -659,6 +717,8 @@ class CadenceRepository(
                 updatedAtEpochMs = relation.habit.updatedAtEpochMs,
                 groupId = relation.habit.groupId,
                 timerEnabled = relation.habit.timerEnabled,
+                abstinenceProfile = relation.habit.abstinenceProfile,
+                abstinenceStartedOn = relation.habit.abstinenceStartedOn,
                 goals = goals,
                 schedules = schedules,
             )
@@ -735,6 +795,10 @@ class CadenceRepository(
             pauses = backupPauses,
             widgetConfigs = backupWidgetConfigs,
             groups = backupGroups,
+            abstinenceLogs = database.abstinenceLogDao().getAllLogs().map { log ->
+                BackupAbstinenceLogV2(log.id, log.habitId, log.occurredAtEpochMs, log.localDate,
+                    log.observedZoneId, log.kind, log.intensity, log.note)
+            },
         )
 
         return json.encodeToString(BackupDocument.serializer(), doc)
@@ -752,6 +816,7 @@ class CadenceRepository(
         }
 
         validateBackupV2(docV2)
+        val journal = validateBackupJournal(docV2)
 
         database.withTransaction {
             database.clearAllTables()
@@ -779,6 +844,8 @@ class CadenceRepository(
                     updatedAtEpochMs = habit.updatedAtEpochMs,
                     groupId = habit.groupId.takeIf(knownGroupIds::contains) ?: HabitGroup.ALL_DAY_ID,
                     timerEnabled = habit.timerEnabled,
+                    abstinenceProfile = habit.abstinenceProfile,
+                    abstinenceStartedOn = habit.abstinenceStartedOn,
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -819,6 +886,8 @@ class CadenceRepository(
                     database.habitDao().insertSchedule(scheduleEntity)
                 }
             }
+
+            journal.forEach { database.abstinenceLogDao().save(it) }
 
             docV2.entries.forEach { e ->
                 database.habitEntryDao().insertEntry(
@@ -904,6 +973,27 @@ class CadenceRepository(
         }
     }
 
+    private fun validateBackupJournal(doc: BackupDocument): List<AbstinenceLogEntity> {
+        val habits = doc.habits.associateBy { it.id }
+        val ids = mutableSetOf<String>()
+        val checkIns = mutableSetOf<Pair<String, LocalDate>>()
+        val logs = doc.abstinenceLogs.map { raw ->
+            require(ids.add(raw.id)) { "Duplicate journal ID" }
+            val habit = requireNotNull(habits[raw.habitId]) { "Journal references a missing habit" }
+            val log = AbstinenceLog(raw.id, raw.habitId, Instant.ofEpochMilli(raw.occurredAtEpochMs),
+                LocalDate.parse(raw.localDate), ZoneId.of(raw.observedZoneId),
+                AbstinenceLogKind.valueOf(raw.kind), raw.intensity, raw.note)
+            // Old journal pages remain restorable after a profile change or stopping abstinence.
+            validateLogDates(log, LocalDate.parse(habit.startsOn))
+            if (log.kind == AbstinenceLogKind.CHECK_IN) {
+                require(checkIns.add(log.habitId to log.localDate)) { "Duplicate daily check-in" }
+            }
+            toAbstinenceLogEntity(log)
+        }
+        require(logs.map { it.id }.distinct().size == logs.size) { "Conflicting journal identities" }
+        return logs
+    }
+
     private fun validateBackupV2(doc: BackupDocument) {
         val habitIds = doc.habits.map { it.id }.toSet()
         require(habitIds.size == doc.habits.size) { "Duplicate habit IDs in backup" }
@@ -912,11 +1002,27 @@ class CadenceRepository(
             require(habit.id.isNotBlank()) { "Habit ID cannot be blank" }
             require(habit.goals.isNotEmpty()) { "Habit ${habit.id} must have at least one goal" }
             require(habit.schedules.isNotEmpty()) { "Habit ${habit.id} must have at least one schedule" }
-            LocalDate.parse(habit.startsOn)
+            val startsOn = LocalDate.parse(habit.startsOn)
+            val profile = AbstinenceProfile.valueOf(habit.abstinenceProfile)
+            val abstinenceStart = habit.abstinenceStartedOn?.let(LocalDate::parse)
+            if (profile != AbstinenceProfile.NONE) {
+                require(abstinenceStart != null && abstinenceStart >= startsOn) { "Abstinence requires an observation start" }
+                val latestGoal = habit.goals.maxBy { LocalDate.parse(it.effectiveFrom) }
+                val latestSchedule = habit.schedules.maxBy { LocalDate.parse(it.effectiveFrom) }
+                require(latestGoal.direction == GoalDirection.AT_MOST.name && latestGoal.targetMinor == 0L &&
+                    latestGoal.goalType == GoalType.COUNT.name && latestGoal.period == PeriodType.DAY.name &&
+                    latestGoal.frequencyTarget == null && latestGoal.progressionStep == null && !habit.timerEnabled &&
+                    latestSchedule.scheduleMode == ScheduleMode.EVERY_DAY.name) { "Invalid abstinence configuration" }
+            }
 
             habit.goals.forEach { g ->
                 require(g.habitId == habit.id) { "Goal habitId mismatch" }
-                require(g.targetMinor > 0) { "Goal targetMinor must be positive" }
+                require(g.targetMinor > 0 || (g.targetMinor == 0L && g.direction == GoalDirection.AT_MOST.name)) {
+                    "Only a limit permits a zero target"
+                }
+                require(g.targetMinor != 0L || (g.progressionStep == null && g.frequencyTarget == null)) {
+                    "Abstinence carries no progression or frequency"
+                }
                 g.minimumMinor?.let {
                     require(it > 0) { "Goal minimumMinor must be positive" }
                     require(it <= g.targetMinor) { "Goal minimumMinor cannot exceed the ideal" }
@@ -1106,6 +1212,8 @@ class CadenceRepository(
             updatedAtEpochMs = relation.habit.updatedAtEpochMs,
             groupId = relation.habit.groupId,
             timerEnabled = relation.habit.timerEnabled,
+            abstinenceProfile = AbstinenceProfile.valueOf(relation.habit.abstinenceProfile),
+            abstinenceStartedOn = relation.habit.abstinenceStartedOn?.let(LocalDate::parse),
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,

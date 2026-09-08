@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="habit_stats_navigation">Stats</string>
+    <string name="habit_stats_subtitle">Vos habitudes dans la durée</string>
+    <string name="habit_stats_overview">30 jours terminés</string>
+    <string name="habit_stats_dates">Du %1$s au %2$s</string>
+    <string name="habit_stats_scope">Chaque période terminée compte une fois, selon le rythme choisi. Les périodes sans jour prévu ou entièrement en pause sont exclues.</string>
+    <string name="habit_stats_validated">%1$d / %2$d périodes validées</string>
+    <string name="habit_stats_rate">%1$d %% des périodes prévues</string>
+    <string name="habit_stats_ideal">Dont %1$d à l’idéal · le minimum suffit à valider</string>
+    <string name="habit_stats_no_period">Pas encore de période terminée à évaluer.</string>
+    <string name="habit_stats_no_comparison">Pas encore de comparaison sur un même rythme.</string>
+    <string name="habit_stats_trend_up">+%1$d points par rapport aux 30 jours précédents</string>
+    <string name="habit_stats_trend_down">−%1$d points par rapport aux 30 jours précédents</string>
+    <string name="habit_stats_trend_stable">Même taux que sur les 30 jours précédents</string>
+    <string name="habit_stats_details">Voir le calendrier et les tendances</string>
+    <string name="habit_stats_hide">Replier les détails</string>
+    <string name="habit_stats_calendar">Votre calendrier</string>
+    <string name="habit_stats_calendar_help">Touchez un jour pour lire son bilan. Les objectifs hebdomadaires ou mensuels montrent les jours de saisie, sans exiger une réussite quotidienne.</string>
+    <string name="habit_stats_selected_day">%1$s : %2$s</string>
+    <string name="habit_stats_legend">Accent : idéal. Clair : minimum ou saisie. Rouge : objectif quotidien non atteint. Gris : repos ou aucune saisie.</string>
+    <string name="habit_stats_unplanned">Aucune action prévue</string>
+    <string name="habit_stats_paused">En pause</string>
+    <string name="habit_stats_missed">Objectif quotidien non atteint</string>
+    <string name="habit_stats_minimum">Minimum atteint</string>
+    <string name="habit_stats_day_ideal">Idéal atteint</string>
+    <string name="habit_stats_activity">Une saisie enregistrée</string>
+    <string name="habit_stats_no_activity">Aucune saisie ce jour</string>
+</resources>

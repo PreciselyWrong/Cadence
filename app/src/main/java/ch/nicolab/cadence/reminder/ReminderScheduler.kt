@@ -20,6 +20,7 @@ import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
@@ -122,11 +123,7 @@ class ReminderReceiver : BroadcastReceiver() {
     }
 }
 
-/**
- * La notification porte les actions utiles au type d'objectif : `Fait` pour un binaire,
- * un incrément rapide sinon, et toujours `Sauter`. Chacune écrit directement, sans
- * ouvrir d'écran.
- */
+/** Les rappels d'abstinence invitent au bilan; les autres proposent une saisie directe. */
 object ReminderNotifications {
     const val ACTION_DONE = "ch.nicolab.cadence.reminder.DONE"
     const val ACTION_ADD = "ch.nicolab.cadence.reminder.ADD"
@@ -140,6 +137,8 @@ object ReminderNotifications {
         val remaining = (habit.goal.targetAt(LocalDate.now()) - progressMinor).coerceAtLeast(0)
         return "Il reste ${HabitFormatter.formatValue(remaining, habit.goal.goalType, habit.goal.unit)} ${habit.goal.unit?.symbol.orEmpty()}".trim()
     }
+
+    internal fun allowsEntryAction(goal: HabitGoal): Boolean = !goal.isAbstinence
 
     fun notificationId(habitId: String): Int = habitId.hashCode()
 
@@ -162,21 +161,23 @@ object ReminderNotifications {
         val builder = NotificationCompat.Builder(context, ReminderScheduler.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_widget_mark)
             .setContentTitle(habit.name)
-            .setContentText(message)
+            .setContentText(if (habit.goal.isAbstinence) context.getString(R.string.abstinence_reminder_check_in) else message)
             .setContentIntent(open)
             .setAutoCancel(true)
-        if (habit.goal.goalType == GoalType.BINARY) {
-            builder.addAction(0, context.getString(R.string.notification_action_validate), action(context, habit.id, ACTION_DONE))
-        } else {
-            val increment = quickValue ?: habit.goal.unit?.scaleToCanonical ?: 1L
-            builder.addAction(
-                0,
-                context.getString(
-                    R.string.notification_action_add,
-                    HabitFormatter.formatValue(increment, habit.goal.goalType, habit.goal.unit),
-                ),
-                action(context, habit.id, ACTION_ADD, increment),
-            )
+        if (allowsEntryAction(habit.goal)) {
+            if (habit.goal.goalType == GoalType.BINARY) {
+                builder.addAction(0, context.getString(R.string.notification_action_validate), action(context, habit.id, ACTION_DONE))
+            } else {
+                val increment = quickValue ?: habit.goal.unit?.scaleToCanonical ?: 1L
+                builder.addAction(
+                    0,
+                    context.getString(
+                        R.string.notification_action_add,
+                        HabitFormatter.formatValue(increment, habit.goal.goalType, habit.goal.unit),
+                    ),
+                    action(context, habit.id, ACTION_ADD, increment),
+                )
+            }
         }
         builder.addAction(0, context.getString(R.string.notification_action_skip), action(context, habit.id, ACTION_SKIP))
         NotificationManagerCompat.from(context).notify(notificationId(habit.id), builder.build())
@@ -266,6 +267,8 @@ class ReminderActionReceiver : BroadcastReceiver() {
         zone: ZoneId,
         today: LocalDate,
     ) {
+        // Une ancienne notification peut rester affichée après le passage en abstinence.
+        if (!ReminderNotifications.allowsEntryAction(habit.goal)) return
         val id = UUID.randomUUID().toString()
         repository.addEntry(
             HabitEntry(

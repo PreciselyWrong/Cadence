@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import ch.nicolab.cadence.data.local.dao.AbstinenceLogDao
+import ch.nicolab.cadence.data.local.entities.AbstinenceLogEntity
 import ch.nicolab.cadence.data.local.dao.HabitDao
 import ch.nicolab.cadence.data.local.dao.HabitEntryDao
 import ch.nicolab.cadence.data.local.dao.HabitPauseDao
@@ -28,6 +30,7 @@ import ch.nicolab.cadence.domain.HabitGroup
 @Database(
     entities = [
         HabitEntity::class,
+        AbstinenceLogEntity::class,
         HabitGoalEntity::class,
         HabitScheduleEntity::class,
         HabitEntryEntity::class,
@@ -39,10 +42,11 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 15,
+    version = 17,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
+    abstract fun abstinenceLogDao(): AbstinenceLogDao
     abstract fun habitDao(): HabitDao
     abstract fun habitEntryDao(): HabitEntryDao
     abstract fun habitQuickValueDao(): HabitQuickValueDao
@@ -53,6 +57,25 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
+        val MIGRATION_16_17 = object : Migration(16, 17) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS abstinence_logs (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        habitId TEXT NOT NULL,
+                        occurredAtEpochMs INTEGER NOT NULL,
+                        localDate TEXT NOT NULL,
+                        observedZoneId TEXT NOT NULL,
+                        kind TEXT NOT NULL,
+                        intensity INTEGER,
+                        note TEXT,
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_abstinence_logs_habitId_localDate ON abstinence_logs (habitId, localDate)")
+            }
+        }
+
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE habits ADD COLUMN description TEXT")
@@ -219,10 +242,15 @@ abstract class CadenceDatabase : RoomDatabase() {
             }
         }
 
-        /**
-         * Introduit la découpe en emplacements du widget. Les widgets existants gardent
-         * la répartition souple qu'ils avaient déjà.
-         */
+        /** Existing habits keep ordinary tracking until abstinence is explicitly selected. */
+        val MIGRATION_15_16 = object : Migration(15, 16) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habits ADD COLUMN abstinenceProfile TEXT NOT NULL DEFAULT 'NONE'")
+                db.execSQL("ALTER TABLE habits ADD COLUMN abstinenceStartedOn TEXT")
+            }
+        }
+
+        /** Existing widgets keep their flexible slot distribution. */
         val MIGRATION_14_15 = object : Migration(14, 15) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE widget_configurations ADD COLUMN slotMode TEXT NOT NULL DEFAULT 'FLEXIBLE'")

@@ -85,7 +85,7 @@ class HabitEvaluator {
         // Une habitude à limiter reste offerte à la saisie tant qu'il reste de la place :
         // c'est ce qui permet de noter un café, alors qu'il n'y a rien à « accomplir ».
         val needsAttentionNow = isPlannedForDate && !paused &&
-            if (limit) limitStatus == LimitStatus.UNDER else !isCompleted
+            if (limit) habit.goal.isAbstinence || limitStatus == LimitStatus.UNDER else !isCompleted
 
         return HabitEvaluation(
             habit = habit,

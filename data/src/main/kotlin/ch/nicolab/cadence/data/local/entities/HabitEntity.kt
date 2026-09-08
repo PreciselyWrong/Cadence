@@ -20,4 +20,6 @@ data class HabitEntity(
     @ColumnInfo(defaultValue = "group-day") val groupId: String = "group-day",
     /** Mode chronomètre proposé dans la saisie rapide, réservé aux objectifs en durée. */
     @ColumnInfo(defaultValue = "0") val timerEnabled: Boolean = false,
+    @ColumnInfo(defaultValue = "NONE") val abstinenceProfile: String = "NONE",
+    val abstinenceStartedOn: String? = null,
 )

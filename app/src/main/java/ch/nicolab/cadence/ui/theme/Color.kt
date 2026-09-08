@@ -3,6 +3,11 @@ package ch.nicolab.cadence.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+
+fun CadencePalette.habitAccent(colorArgb: Int?): Color =
+    if (colorArgb == null || colorArgb == LightPalette.accent.toArgb() || colorArgb == DarkPalette.accent.toArgb()) accent
+    else Color(colorArgb)
 
 /**
  * Palette de Cadence : un fond très calme, une surface claire, une surface sombre

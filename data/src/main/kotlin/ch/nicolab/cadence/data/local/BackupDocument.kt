@@ -13,6 +13,19 @@ data class BackupDocument(
     val pauses: List<BackupPauseV2> = emptyList(),
     val widgetConfigs: List<BackupWidgetConfigV2> = emptyList(),
     val groups: List<BackupGroupV2> = emptyList(),
+    val abstinenceLogs: List<BackupAbstinenceLogV2> = emptyList(),
+)
+
+@Serializable
+data class BackupAbstinenceLogV2(
+    val id: String,
+    val habitId: String,
+    val occurredAtEpochMs: Long,
+    val localDate: String,
+    val observedZoneId: String,
+    val kind: String,
+    val intensity: Int? = null,
+    val note: String? = null,
 )
 
 @Serializable
@@ -39,6 +52,8 @@ data class BackupHabitV2(
     val updatedAtEpochMs: Long,
     val groupId: String = "group-day",
     val timerEnabled: Boolean = false,
+    val abstinenceProfile: String = "NONE",
+    val abstinenceStartedOn: String? = null,
     val goals: List<BackupGoalV2>,
     val schedules: List<BackupScheduleV2>,
 )

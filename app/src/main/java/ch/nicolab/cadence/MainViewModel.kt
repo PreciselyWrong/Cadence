@@ -8,6 +8,12 @@ import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.AbstinenceStats
+import ch.nicolab.cadence.domain.AbstinenceLog
+import ch.nicolab.cadence.domain.AbstinenceLogKind
+import ch.nicolab.cadence.domain.AbstinenceJournalSummary
+import ch.nicolab.cadence.domain.AbstinenceStatsCalculator
 import ch.nicolab.cadence.domain.HabitEntryCorrection
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
@@ -17,6 +23,7 @@ import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.HabitInsights
 import ch.nicolab.cadence.domain.HabitInsightsCalculator
+import ch.nicolab.cadence.domain.HabitStatisticsSummary
 import ch.nicolab.cadence.domain.InsightDay
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.HabitStreak
@@ -31,6 +38,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.async
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +47,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 data class HabitCardState(
     val stored: PersistedHabit,
@@ -56,6 +68,10 @@ data class HabitCardState(
     val pauses: List<IdentifiedPause>,
     /** Périodes planifiées réussies d'affilée, et meilleure série passée. */
     val streak: HabitStreak,
+    val abstinenceStats: AbstinenceStats? = null,
+    val abstinenceLogs: List<AbstinenceLog> = emptyList(),
+    val abstinenceJournalSummary: AbstinenceJournalSummary? = null,
+    val statistics: HabitStatisticsSummary? = null,
 ) {
     /** Saut du jour encore annulable, s'il existe. */
     fun cancellableSkip(today: LocalDate): IdentifiedPause? =
@@ -91,6 +107,35 @@ class MainViewModel(
         emptyList(),
     )
     val lastEntryId = MutableStateFlow<String?>(null)
+    val statistics: StateFlow<HabitStatisticsSummary?> = habits.map { items ->
+        val summaries = items.filterNot { it.stored.archived || it.stored.goal.isAbstinence }.mapNotNull { it.statistics }
+        summaries.takeIf { it.isNotEmpty() }?.let { HabitStatisticsSummary.aggregate(it, it.first().untilExclusive) }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val saving = MutableStateFlow(false)
+    val isSaving: StateFlow<Boolean> = saving
+    private val savingError = MutableStateFlow<String?>(null)
+    val saveError: StateFlow<String?> = savingError
+
+    fun clearSaveError() { savingError.value = null }
+
+    private fun saveSafely(onSaved: () -> Unit = {}, write: suspend () -> Unit) {
+        if (saving.value) return
+        saving.value = true
+        savingError.value = null
+        viewModelScope.launch {
+            try {
+                write()
+                refreshAll()
+                onSaved()
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                savingError.value = app.getString(R.string.abstinence_save_failed)
+            } finally {
+                saving.value = false
+            }
+        }
+    }
 
     private var latest: List<PersistedHabit> = emptyList()
     /** Groupes disponibles, garnis à la première ouverture avec les moments livrés. */
@@ -111,7 +156,14 @@ class MainViewModel(
                 repository.observeHabits(),
                 repository.observeEntryRevision(),
                 repository.observePauseRevision(),
-            ) { source, _, _ -> source }.collect { source ->
+                repository.observeAbstinenceLogRevision(),
+                flow {
+                    while (true) {
+                        emit(LocalDate.now(clock))
+                        delay(60_000)
+                    }
+                }.distinctUntilChanged(),
+            ) { source, _, _, _, _ -> source }.collect { source ->
                 latest = source
                 rebuild(source)
             }
@@ -125,6 +177,17 @@ class MainViewModel(
         sessionId: String? = null,
         note: String? = null,
     ) = viewModelScope.launch {
+        persistEntry(habit, valueMinor, source, sessionId, note)
+        refreshAll()
+    }
+
+    private suspend fun persistEntry(
+        habit: HabitCardState,
+        valueMinor: Long,
+        source: String,
+        sessionId: String? = null,
+        note: String? = null,
+    ) {
         require(valueMinor > 0)
         val now = clock.instant()
         val zone = clock.zone
@@ -142,10 +205,35 @@ class MainViewModel(
             ),
             source = source,
         )
-        // La confirmation (et donc l'accès à « Annuler ») n'apparaît qu'une fois le
-        // rafraîchissement du widget demandé.
-        refreshAll()
         lastEntryId.value = entryId
+    }
+
+    fun checkIn(habit: HabitCardState) = saveSafely {
+        require(habit.stored.goal.isAbstinence && !habit.evaluation.isPaused)
+        val today = LocalDate.now(clock)
+        if (repository.getAbstinenceLogs(habit.stored.id).none {
+                it.kind == AbstinenceLogKind.CHECK_IN && it.localDate == today
+            }) repository.saveAbstinenceLog(newLog(habit, AbstinenceLogKind.CHECK_IN))
+    }
+
+    fun recordUrge(habit: HabitCardState, intensity: Int, note: String?, onSaved: () -> Unit) = saveSafely(onSaved) {
+        require(habit.stored.goal.isAbstinence && !habit.evaluation.isPaused)
+        repository.saveAbstinenceLog(newLog(habit, AbstinenceLogKind.URGE, intensity, note))
+    }
+
+    fun recordAbstinenceOccurrence(habit: HabitCardState, note: String?, onSaved: () -> Unit) = saveSafely(onSaved) {
+        require(habit.stored.goal.isAbstinence && !habit.evaluation.isPaused)
+        persistEntry(habit, 1, "APP", note = note)
+    }
+
+    fun deleteAbstinenceLog(id: String, onSaved: () -> Unit) = saveSafely(onSaved) {
+        repository.deleteAbstinenceLog(id)
+    }
+
+    private fun newLog(habit: HabitCardState, kind: AbstinenceLogKind, intensity: Int? = null, note: String? = null): AbstinenceLog {
+        val now = clock.instant()
+        return AbstinenceLog(UUID.randomUUID().toString(), habit.stored.id, now,
+            now.atZone(clock.zone).toLocalDate(), clock.zone, kind, intensity, note?.trim()?.ifBlank { null })
     }
 
     fun undoLastEntry() = viewModelScope.launch {
@@ -161,10 +249,17 @@ class MainViewModel(
         reminderTimes: List<String>,
         conditionalReminders: Boolean,
         isNew: Boolean,
-    ) = viewModelScope.launch {
+        onSaved: () -> Unit,
+    ) = saveSafely(onSaved) {
         require(habit.name.isNotBlank())
         require(quickValues.all { it > 0 })
-        if (isNew) repository.addHabit(habit) else repository.updateHabit(habit)
+        // Une reprise après l'échec des rappels conserve la ligne et son historique.
+        if (isNew && repository.getHabitEffectiveAt(habit.id, LocalDate.now(clock)) == null) {
+            repository.addHabit(habit, habit.startsOn)
+        } else repository.updateHabit(habit, effectiveFrom = if (isNew) habit.startsOn else LocalDate.now(clock))
+        if (!habit.timerEnabled || habit.goal.goalType != GoalType.DURATION) {
+            TimerNotifications.cancel(app, habit.id)
+        }
         repository.replaceQuickValues(habit.id, quickValues.distinct())
         repository.getReminders(habit.id).forEach { ReminderScheduler.cancel(app, it.id) }
         val reminders = reminderTimes.distinct().map { time ->
@@ -179,7 +274,6 @@ class MainViewModel(
         }
         repository.replaceReminders(habit.id, reminders)
         reminders.forEach { ReminderScheduler.schedule(app, it) }
-        refreshAll()
     }
 
     fun archiveHabit(habit: PersistedHabit, archived: Boolean) = viewModelScope.launch {
@@ -292,6 +386,7 @@ class MainViewModel(
             id = UUID.randomUUID().toString(),
             name = "${habit.name} (copie)",
             archived = false,
+            abstinenceStartedOn = if (habit.goal.isAbstinence) LocalDate.now(clock) else null,
             createdAtEpochMs = 0,
             updatedAtEpochMs = 0,
             sortOrder = latest.maxOfOrNull(PersistedHabit::sortOrder)?.plus(1) ?: 0,
@@ -317,22 +412,21 @@ class MainViewModel(
         localDate: LocalDate? = null,
         localTime: LocalTime? = null,
         note: String? = null,
-    ) = viewModelScope.launch {
+        onSaved: () -> Unit,
+    ) = saveSafely(onSaved) {
         val corrected = HabitEntryCorrection.apply(
             entry = entry,
             valueMinor = valueMinor,
-            localDate = localDate,
-            localTime = localTime,
+            localDate = localDate?.takeUnless { it == entry.localDate },
+            localTime = localTime?.takeUnless { it == entry.occurredAt.atZone(entry.observedZoneId).toLocalTime() },
             note = note,
         )
         repository.updateEntry(corrected)
-        refreshAll()
     }
 
-    fun deleteEntry(entryId: String) = viewModelScope.launch {
+    fun deleteEntry(entryId: String, onSaved: () -> Unit) = saveSafely(onSaved) {
         repository.deleteEntry(entryId)
         if (lastEntryId.value == entryId) lastEntryId.value = null
-        refreshAll()
     }
 
     fun saveGroup(group: HabitGroup) = viewModelScope.launch {
@@ -421,6 +515,7 @@ class MainViewModel(
         val identifiedPauses = repository.getIdentifiedPauses(habit.id)
         val pauses = identifiedPauses.map(IdentifiedPause::pause)
         val allEntries = repository.getEntries(habit.id)
+        val abstinenceLogs = if (habit.goal.isAbstinence) repository.getAbstinenceLogs(habit.id) else emptyList()
         val entries = allEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
         val versions = repository.habitVersionsOf(habit.id)
         val effectiveAt = { day: LocalDate -> versions(day) ?: habit }
@@ -481,9 +576,21 @@ class MainViewModel(
             entryCount = allEntries.size,
             dailyHistory = dailyHistory,
             insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
-            recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).take(RECENT_ENTRIES),
+            recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).let {
+                if (habit.goal.isAbstinence) it else it.take(RECENT_ENTRIES)
+            },
             pauses = identifiedPauses,
             streak = streak,
+            statistics = if (habit.goal.isAbstinence) null else HabitStatisticsSummary.compute(
+                habitAt = { day -> versions(day)?.definition }, today = date, entries = allEntries, pauses = pauses,
+            ),
+            abstinenceLogs = abstinenceLogs.sortedByDescending(AbstinenceLog::occurredAt),
+            abstinenceJournalSummary = habit.abstinenceStartedOn?.takeIf { habit.goal.isAbstinence }?.let { start ->
+                AbstinenceJournalSummary.compute(habit.id, start, date, abstinenceLogs, allEntries)
+            },
+            abstinenceStats = habit.abstinenceStartedOn?.takeIf { habit.goal.isAbstinence }?.let { start ->
+                AbstinenceStatsCalculator.compute(habit.id, start, date, allEntries, pauses)
+            },
         )
     }
 }

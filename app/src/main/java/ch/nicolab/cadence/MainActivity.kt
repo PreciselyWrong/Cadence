@@ -1,4 +1,5 @@
 package ch.nicolab.cadence
+import ch.nicolab.cadence.ui.theme.habitAccent
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -55,6 +56,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,6 +70,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -78,6 +82,9 @@ import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitStatisticsSummary
+import ch.nicolab.cadence.domain.HabitStatisticsDay
+import ch.nicolab.cadence.domain.HabitStatisticsDayStatus
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.GoalProgression
@@ -133,12 +140,13 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
+    companion object { const val EXTRA_EDIT_HABIT_ID = "edit_habit_id" }
     private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(application as CadenceApp) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { CadenceTheme { CadenceAppScreen(viewModel) } }
+        setContent { CadenceTheme { CadenceAppScreen(viewModel, intent.getStringExtra(EXTRA_EDIT_HABIT_ID)) } }
     }
 }
 
@@ -151,20 +159,35 @@ private enum class Tab(val label: Int, val icon: ImageVector) {
 }
 
 @Composable
-private fun CadenceAppScreen(viewModel: MainViewModel) {
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = null) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
-    var tab by remember { mutableStateOf(Tab.TODAY) }
-    var editor by remember { mutableStateOf<HabitCardState?>(null) }
-    var creating by remember { mutableStateOf(false) }
-    var quickHabitId by remember { mutableStateOf<String?>(null) }
+    val busy by viewModel.isSaving.collectAsStateWithLifecycle()
+    val saveError by viewModel.saveError.collectAsStateWithLifecycle()
+    val statistics by viewModel.statistics.collectAsStateWithLifecycle()
+    var tab by rememberSaveable { mutableStateOf(Tab.TODAY) }
+    var editorId by rememberSaveable { mutableStateOf<String?>(null) }
+    val editor = habits.firstOrNull { it.stored.id == editorId }
+    var creating by rememberSaveable { mutableStateOf(false) }
+    var choosingCreation by rememberSaveable { mutableStateOf(false) }
+    var creatingAbstinence by rememberSaveable { mutableStateOf(false) }
+    var editIntentHandled by rememberSaveable { mutableStateOf(false) }
+    androidx.compose.runtime.LaunchedEffect(editHabitId, habits) {
+        if (!editIntentHandled && editHabitId != null) habits.firstOrNull { it.stored.id == editHabitId }?.let {
+            editorId = it.stored.id
+            editIntentHandled = true
+        }
+    }
+    var quickHabitId by rememberSaveable { mutableStateOf<String?>(null) }
     val quick = habits.firstOrNull { it.stored.id == quickHabitId }
-    var correcting by remember { mutableStateOf<HabitEntry?>(null) }
+    var correctingId by rememberSaveable { mutableStateOf<String?>(null) }
+    val correcting = habits.asSequence().flatMap { it.recentEntries.asSequence() }.firstOrNull { it.id == correctingId }
     var options by remember { mutableStateOf<HabitCardState?>(null) }
     var skipping by remember { mutableStateOf<HabitCardState?>(null) }
     var travelling by remember { mutableStateOf(false) }
-    var groupFilter by remember { mutableStateOf<String?>(null) }
+    var groupFilter by rememberSaveable { mutableStateOf<String?>(null) }
     // Un groupe supprimé pendant qu'il filtrait la vue ne doit pas la laisser vide.
     if (groupFilter != null && groups.isNotEmpty() && groups.none { it.id == groupFilter }) groupFilter = null
     var movingToGroup by remember { mutableStateOf<HabitCardState?>(null) }
@@ -183,15 +206,17 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             viewModel.importBackup(content, { backupMessage = importedMessage }, { backupMessage = it })
         }
     }
-    val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon) }
+    val destinations = Tab.entries.map {
+        NavDestination(stringResource(if (it == Tab.STATS) R.string.habit_stats_navigation else it.label), it.icon)
+    }
 
     CadenceScreen {
         Crossfade(tab, label = "tab") { current ->
             when (current) {
-                Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { quickHabitId = it.stored.id }, { options = it }, { creating = true })
-                Tab.WEEK -> WeekScreen(habits, { quickHabitId = it.stored.id }, { options = it })
-                Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { creating = true }, { options = it })
-                Tab.STATS -> StatsScreen(habits)
+                Tab.TODAY -> TodayScreen(habits, groups, groupFilter, { groupFilter = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it }, { choosingCreation = true })
+                Tab.WEEK -> WeekScreen(habits, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it })
+                Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { choosingCreation = true }, { options = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id })
+                Tab.STATS -> StatsScreen(habits, statistics) { viewModel.clearSaveError(); quickHabitId = it.stored.id }
                 Tab.SETTINGS -> SettingsScreen(
                     groups = groups,
                     habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
@@ -210,11 +235,22 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
     }
 
     quick?.let { item ->
-        QuickSheet(
+        if (item.stored.goal.isAbstinence) AbstinenceDetailSheet(
+            item = item,
+            dismiss = { if (!busy) quickHabitId = null },
+            onCheckIn = { viewModel.checkIn(item) },
+            onUrge = { intensity, note, saved -> viewModel.recordUrge(item, intensity, note, saved) },
+            onRecordOccurrence = { note, saved -> viewModel.recordAbstinenceOccurrence(item, note, saved) },
+            onCorrectOccurrence = { viewModel.clearSaveError(); correctingId = it.id },
+            onDeleteLog = viewModel::deleteAbstinenceLog,
+            onEdit = { quickHabitId = null; viewModel.clearSaveError(); editorId = item.stored.id },
+            busy = busy,
+            error = saveError,
+        ) else QuickSheet(
             item,
             { value, note -> viewModel.addEntry(item, value, "APP", UUID.randomUUID().toString(), note) },
             viewModel::undoLastEntry,
-            { correcting = it },
+            { viewModel.clearSaveError(); correctingId = it.id },
             timers[item.stored.id],
             { viewModel.startTimer(item.stored.id) },
             { viewModel.pauseTimer(item.stored.id) },
@@ -230,19 +266,21 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             goalType = habit?.stored?.goal?.goalType ?: GoalType.QUANTITY,
             unit = habit?.stored?.goal?.unit,
             accent = habit?.let { habitTint(it) } ?: cadence.accent,
-            dismiss = { correcting = null },
+            dismiss = { if (!busy) correctingId = null },
             save = { value, date, time, note ->
-                viewModel.correctEntry(entry, value, date, time, note)
-                correcting = null
+                viewModel.correctEntry(entry, value, date, time, note) { correctingId = null }
             },
-            delete = { viewModel.deleteEntry(entry.id); correcting = null },
+            delete = { viewModel.deleteEntry(entry.id) { correctingId = null } },
+            busy = busy,
+            saveError = saveError,
+            occurrenceOnly = habit?.stored?.goal?.isAbstinence == true,
         )
     }
     options?.let { item ->
         HabitOptionsSheet(
             item,
             dismiss = { options = null },
-            edit = { editor = item; options = null },
+            edit = { viewModel.clearSaveError(); editorId = item.stored.id; options = null },
             pause = { viewModel.togglePause(item); options = null },
             skipToday = { skipping = item; options = null },
             cancelSkip = { viewModel.cancelSkip(it); options = null },
@@ -274,11 +312,32 @@ private fun CadenceAppScreen(viewModel: MainViewModel) {
             travelling = false
         }
     }
-    if (creating || editor != null) HabitEditor(editor, groups, { creating = false; editor = null }) { habit, quickValues, reminderTimes, conditional, isNew ->
-        if (reminderTimes.isNotEmpty() && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
-        viewModel.saveHabit(habit, quickValues, reminderTimes, conditional, isNew)
-        creating = false
-        editor = null
+    if (choosingCreation) CadenceSheet(
+        title = stringResource(R.string.create_choose_title),
+        subtitle = stringResource(R.string.create_choose_subtitle),
+        dismiss = { choosingCreation = false },
+    ) {
+        PrimaryAction(stringResource(R.string.create_regular_habit), Modifier.fillMaxWidth()) {
+            viewModel.clearSaveError(); choosingCreation = false; creating = true
+        }
+        Spacer(Modifier.height(Space.md))
+        SecondaryAction(stringResource(R.string.create_abstinence), Modifier.fillMaxWidth()) {
+            viewModel.clearSaveError(); choosingCreation = false; creatingAbstinence = true
+        }
+    }
+    if (creating || creatingAbstinence || editor != null) {
+        val dismissEditor = { if (!busy) { creating = false; creatingAbstinence = false; editorId = null } }
+        val save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit = { habit, quickValues, reminderTimes, conditional, isNew ->
+            if (!busy) {
+                if (reminderTimes.isNotEmpty() && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                viewModel.saveHabit(habit, quickValues, reminderTimes, conditional, isNew) {
+                    creating = false; creatingAbstinence = false; editorId = null
+                }
+            }
+        }
+        if (creatingAbstinence || editor?.stored?.goal?.isAbstinence == true) {
+            AbstinenceSetupSheet(editor, groups, dismissEditor, save, busy, saveError)
+        } else HabitEditor(editor, groups, dismissEditor, busy, saveError, save)
     }
     deleting?.let { habit -> DeleteDialog({ deleting = null }) { viewModel.deleteHabit(habit.id); deleting = null } }
 }
@@ -328,14 +387,16 @@ private fun TodayScreen(
 ) {
     val visible = habits.inGroup(selectedGroupId)
     val active = visible.filter { !it.stored.archived }
-    val pending = visible.filter { it.evaluation.needsAttentionNow }
-    val completed = active.filter { it.evaluation.isCompleted }
+    val abstinences = active.filter { it.stored.goal.isAbstinence }
+    val pending = active.filter { !it.stored.goal.isAbstinence && it.evaluation.needsAttentionNow }
+    val completed = active.filter { it.evaluation.isCompleted && !it.stored.goal.isAbstinence }
     ScreenList(
         context = stringResource(R.string.today_subtitle),
         title = stringResource(R.string.today_title),
         action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
     ) {
         if (groups.size > 1) item { GroupFilter(groups, habits, selectedGroupId, onSelectGroup) }
+        if (pending.isNotEmpty() && abstinences.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_regular_section)) }
         when {
             // Un groupe vide n'est pas une application vide : ne pas proposer de créer.
             active.isEmpty() && selectedGroupId != null -> item {
@@ -346,7 +407,7 @@ private fun TodayScreen(
                     PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
                 }
             }
-            pending.isEmpty() -> item {
+            pending.isEmpty() && abstinences.isEmpty() -> item {
                 EmptyState(Icons.Outlined.Check, stringResource(R.string.empty_today_done_title), stringResource(R.string.empty_today_done_message))
             }
             else -> items(pending, key = { it.stored.id }) { HabitRow(it, onClick = { quick(it) }, onLongClick = { options(it) }) }
@@ -354,6 +415,12 @@ private fun TodayScreen(
         if (completed.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_completed_section)) }
             items(completed, key = { "done-${it.stored.id}" }) { HabitRow(it, done = true, onClick = { quick(it) }, onLongClick = { options(it) }) }
+        }
+        if (abstinences.isNotEmpty()) {
+            item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+            items(abstinences, key = { "abstinence-${it.stored.id}" }) {
+                AbstinenceHomeCard(it, { quick(it) }, { options(it) })
+            }
         }
     }
 }
@@ -366,6 +433,7 @@ private fun HabitsScreen(
     onSelectGroup: (String?) -> Unit,
     create: () -> Unit,
     options: (HabitCardState) -> Unit,
+    open: (HabitCardState) -> Unit,
 ) {
     val visible = habits.inGroup(selectedGroupId)
     val active = visible.filter { !it.stored.archived }
@@ -387,7 +455,7 @@ private fun HabitsScreen(
                 }
             }
         }
-        items(active, key = { it.stored.id }) { HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) }) }
+        items(active, key = { it.stored.id }) { HabitRow(it, onClick = { if (it.stored.goal.isAbstinence) open(it) else options(it) }, onLongClick = { options(it) }) }
         if (archived.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.habits_archived_section)) }
             items(archived, key = { "archived-${it.stored.id}" }) { HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) }) }
@@ -404,7 +472,7 @@ private fun HabitRow(item: HabitCardState, done: Boolean = false, onClick: () ->
     val palette = cadence
     val tint = habitTint(item)
     val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
-    val ratio = (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
+    val ratio = if (item.stored.goal.isAbstinence) 0f else (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
     Panel(onClick = onClick, onLongClick = onLongClick) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HabitFacet(
@@ -437,12 +505,13 @@ private fun HabitRow(item: HabitCardState, done: Boolean = false, onClick: () ->
 }
 
 @Composable
-private fun habitTint(item: HabitCardState): Color = item.stored.colorArgb?.let(::Color) ?: cadence.accent
+private fun habitTint(item: HabitCardState): Color = cadence.habitAccent(item.stored.colorArgb)
 
 @Composable
 private fun habitStatus(item: HabitCardState): String = when {
     item.stored.archived -> stringResource(R.string.status_archived)
     item.evaluation.isPaused -> stringResource(R.string.status_paused)
+    item.stored.goal.isAbstinence -> progress(item)
     // Sous un plafond, la position vis-à-vis de la limite prime sur la progression.
     item.evaluation.limitStatus != null -> "${limitLabel(item.evaluation.limitStatus!!)} · ${progress(item)}"
     // Le palier n'est annoncé que lorsque le minimum se distingue réellement de l'idéal.
@@ -471,6 +540,7 @@ private fun attainmentLabel(attainment: GoalAttainment): String = stringResource
 @Composable
 private fun progress(item: HabitCardState): String {
     val goal = item.stored.goal
+    if (goal.isAbstinence) return abstinenceStatus(item)
     // `2 / 2` se lirait comme un objectif atteint : un plafond s'annonce comme un maximum.
     if (goal.isLimit) {
         return stringResource(
@@ -540,37 +610,144 @@ private fun WeekScreen(
 }
 
 @Composable
-private fun StatsScreen(habits: List<HabitCardState>) {
-    val palette = cadence
+private fun StatsScreen(habits: List<HabitCardState>, summary: HabitStatisticsSummary?, open: (HabitCardState) -> Unit) {
     val visible = habits.filterNot { it.stored.archived }
-    ScreenList(context = stringResource(R.string.stats_subtitle), title = stringResource(R.string.tab_stats)) {
-        if (visible.isEmpty()) {
-            item { EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message)) }
+    val regular = visible.filterNot { it.stored.goal.isAbstinence }
+    val abstinences = visible.filter { it.stored.goal.isAbstinence }
+    ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
+        if (visible.isEmpty()) item {
+            EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
         }
-        items(visible, key = { it.stored.id }) { item ->
-            val tint = habitTint(item)
-            Panel {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-                    Column(Modifier.weight(1f)) {
-                        Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Spacer(Modifier.height(Space.sm))
-                        Text(progress(item), style = MetricStyle, color = tint)
-                        Text(stringResource(R.string.stats_entry_count, item.entryCount), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        if (regular.isNotEmpty()) {
+            summary?.let { total -> item {
+                Panel {
+                    Text(stringResource(R.string.habit_stats_overview), style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.height(Space.sm))
+                    Text(stringResource(R.string.habit_stats_dates, displayAbstinenceDate(total.from), displayAbstinenceDate(total.untilExclusive.minusDays(1))),
+                        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                    Spacer(Modifier.height(Space.lg))
+                    StatisticsNumbers(total, cadence.accent)
+                    Spacer(Modifier.height(Space.md))
+                    Text(stringResource(R.string.habit_stats_scope), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                }
+            } }
+            item { SectionLabel(stringResource(R.string.today_regular_section)) }
+            items(regular, key = { it.stored.id }) { item ->
+                val tint = habitTint(item)
+                var expanded by rememberSaveable(item.stored.id) { mutableStateOf(false) }
+                Panel {
+                    Text(item.stored.name, style = MaterialTheme.typography.titleLarge, color = cadence.ink)
+                    Spacer(Modifier.height(Space.md))
+                    item.statistics?.let { StatisticsNumbers(it, tint) }
+                    Spacer(Modifier.height(Space.md))
+                    StreakLine(item.streak)
+                    Spacer(Modifier.height(Space.md))
+                    SecondaryAction(stringResource(if (expanded) R.string.habit_stats_hide else R.string.habit_stats_details), Modifier.fillMaxWidth()) { expanded = !expanded }
+                    if (expanded) {
+                        Spacer(Modifier.height(Space.lg))
+                        item.statistics?.let { StatisticsCalendar(it.days, tint) }
+                        // Les préférences de quantité/heure ne décrivent pas la réussite d'un plafond.
+                        if (!item.stored.goal.isLimit) {
+                            Spacer(Modifier.height(Space.lg))
+                            HabitInsightsPanel(item.insights, item.stored.goal, tint, Modifier.fillMaxWidth())
+                        }
                     }
                 }
-                Spacer(Modifier.height(Space.lg))
-                Hairline()
-                Spacer(Modifier.height(Space.lg))
-                HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth())
-                Spacer(Modifier.height(Space.xl))
-                HabitHeatmap(item.dailyHistory, tint, Modifier.fillMaxWidth())
-                Spacer(Modifier.height(Space.xl))
-                Hairline()
-                Spacer(Modifier.height(Space.lg))
-                HabitInsightsPanel(item.insights, item.stored.goal, tint, Modifier.fillMaxWidth())
+            }
+        }
+        if (abstinences.isNotEmpty()) {
+            item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+            items(abstinences, key = { it.stored.id }) { item ->
+                Panel {
+                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                    Spacer(Modifier.height(Space.lg))
+                    AbstinencePanel(item, habitTint(item))
+                    Spacer(Modifier.height(Space.md))
+                    SecondaryAction(stringResource(R.string.abstinence_open_followup), Modifier.fillMaxWidth()) { open(item) }
+                }
             }
         }
     }
+}
+
+@Composable
+private fun StatisticsNumbers(summary: HabitStatisticsSummary, accent: Color) {
+    if (summary.evaluatedPeriods == 0) {
+        Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = cadence.inkMuted)
+        return
+    }
+    Text(stringResource(R.string.habit_stats_validated, summary.validatedPeriods, summary.evaluatedPeriods),
+        style = MaterialTheme.typography.headlineSmall, color = accent)
+    Spacer(Modifier.height(Space.xs))
+    summary.successRatePercent?.let { rate ->
+        Text(stringResource(R.string.habit_stats_rate, rate), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+    }
+    Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    Spacer(Modifier.height(Space.sm))
+    val trend = summary.trendPercentagePoints
+    Text(when {
+        trend == null -> stringResource(R.string.habit_stats_no_comparison)
+        trend > 0 -> stringResource(R.string.habit_stats_trend_up, trend)
+        trend < 0 -> stringResource(R.string.habit_stats_trend_down, -trend)
+        else -> stringResource(R.string.habit_stats_trend_stable)
+    }, style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+}
+
+@Composable
+private fun StatisticsCalendar(days: List<HabitStatisticsDay>, accent: Color) {
+    if (days.isEmpty()) return
+    var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
+    val selected = days.firstOrNull { it.date.toString() == selectedDate }
+    val cells = remember(days) {
+        List<HabitStatisticsDay?>(days.first().date.dayOfWeek.value - 1) { null } + days
+    }
+    Text(stringResource(R.string.habit_stats_calendar), style = MaterialTheme.typography.titleMedium)
+    Text(stringResource(R.string.habit_stats_calendar_help), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    Spacer(Modifier.height(Space.md))
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
+        DayOfWeek.entries.forEach { day ->
+            Text(stringResource(HabitLabels.dayShort(day)), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall,
+                color = cadence.inkMuted, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        }
+    }
+    cells.chunked(7).forEach { week ->
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
+            repeat(7) { index ->
+                val day = week.getOrNull(index)
+                if (day == null) Spacer(Modifier.weight(1f).height(Size.touch)) else {
+                    val color = when (day.status) {
+                        HabitStatisticsDayStatus.IDEAL -> accent
+                        HabitStatisticsDayStatus.MINIMUM, HabitStatisticsDayStatus.ACTIVITY -> cadence.accentSoft
+                        HabitStatisticsDayStatus.MISSED -> cadence.danger
+                        else -> cadence.sunken
+                    }
+                    val label = stringResource(statisticsDayLabel(day.status))
+                    Box(Modifier.weight(1f).height(Size.touch).padding(vertical = Space.xs).clip(Radius.Control)
+                        .background(color).clickable { selectedDate = day.date.toString() }, contentAlignment = Alignment.Center) {
+                        Text(day.date.dayOfMonth.toString(), color = if (day.status == HabitStatisticsDayStatus.IDEAL || day.status == HabitStatisticsDayStatus.MISSED) onColorOf(color) else cadence.ink,
+                            style = if (day == selected) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.semantics { contentDescription = "${displayAbstinenceDate(day.date)} : $label" })
+                    }
+                }
+            }
+        }
+    }
+    Spacer(Modifier.height(Space.sm))
+    selected?.let { day ->
+        Text(stringResource(R.string.habit_stats_selected_day, displayAbstinenceDate(day.date), stringResource(statisticsDayLabel(day.status))),
+            style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+    }
+    Text(stringResource(R.string.habit_stats_legend), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+}
+
+private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {
+    HabitStatisticsDayStatus.UNPLANNED -> R.string.habit_stats_unplanned
+    HabitStatisticsDayStatus.PAUSED -> R.string.habit_stats_paused
+    HabitStatisticsDayStatus.MISSED -> R.string.habit_stats_missed
+    HabitStatisticsDayStatus.MINIMUM -> R.string.habit_stats_minimum
+    HabitStatisticsDayStatus.IDEAL -> R.string.habit_stats_day_ideal
+    HabitStatisticsDayStatus.ACTIVITY -> R.string.habit_stats_activity
+    HabitStatisticsDayStatus.NO_ACTIVITY -> R.string.habit_stats_no_activity
 }
 
 @Composable
@@ -1032,7 +1209,7 @@ private const val VISIBLE_ENTRIES = 12
  */
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun EntryEditor(
+internal fun EntryEditor(
     entry: HabitEntry,
     goalType: GoalType,
     unit: MeasurementUnit?,
@@ -1040,14 +1217,17 @@ private fun EntryEditor(
     dismiss: () -> Unit,
     save: (Long, LocalDate, LocalTime, String) -> Unit,
     delete: () -> Unit,
+    busy: Boolean,
+    saveError: String?,
+    occurrenceOnly: Boolean,
 ) {
     val palette = cadence
     val scale = unit?.scaleToCanonical ?: 1L
     val zoned = remember(entry.id) { entry.occurredAt.atZone(entry.observedZoneId) }
-    var value by remember(entry.id) { mutableStateOf((entry.valueMinor / scale).toString()) }
-    var date by remember(entry.id) { mutableStateOf(entry.localDate.toString()) }
-    var time by remember(entry.id) { mutableStateOf(zoned.toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString()) }
-    var note by remember(entry.id) { mutableStateOf(entry.note.orEmpty()) }
+    var value by rememberSaveable(entry.id) { mutableStateOf((entry.valueMinor / scale).toString()) }
+    var date by rememberSaveable(entry.id) { mutableStateOf(entry.localDate.toString()) }
+    var time by rememberSaveable(entry.id) { mutableStateOf(zoned.toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString()) }
+    var note by rememberSaveable(entry.id) { mutableStateOf(entry.note.orEmpty()) }
     var error by remember(entry.id) { mutableStateOf<String?>(null) }
     val badValue = stringResource(R.string.entry_error_value)
     val badDate = stringResource(R.string.entry_error_date)
@@ -1058,8 +1238,10 @@ private fun EntryEditor(
         subtitle = stringResource(R.string.entry_edit_subtitle),
         dismiss = dismiss,
     ) {
-        CadenceField(value, { value = it.filter(Char::isDigit) }, stringResource(R.string.entry_value_label), suffix = unit?.symbol, accent = accent, numeric = true)
-        Spacer(Modifier.height(Space.md))
+        if (!occurrenceOnly) {
+            CadenceField(value, { value = it.filter(Char::isDigit) }, stringResource(R.string.entry_value_label), suffix = unit?.symbol, accent = accent, numeric = true)
+            Spacer(Modifier.height(Space.md))
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
             CadenceField(date, { date = it }, stringResource(R.string.entry_date_label), Modifier.weight(1f), accent = accent)
             CadenceField(time, { time = it }, stringResource(R.string.entry_time_label), Modifier.weight(1f), accent = accent)
@@ -1072,24 +1254,30 @@ private fun EntryEditor(
             style = MaterialTheme.typography.bodySmall,
             color = palette.inkFaint,
         )
-        error?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
+        (error ?: saveError)?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
             SecondaryAction(stringResource(R.string.form_btn_cancel), Modifier.weight(1f), onClick = dismiss)
-            PrimaryAction(stringResource(R.string.form_btn_save), Modifier.weight(1f), accent = accent) {
-                val amount = value.toLongOrNull() ?: 0
+            PrimaryAction(stringResource(if (busy) R.string.abstinence_saving else R.string.form_btn_save), Modifier.weight(1f), accent = accent, enabled = !busy) {
+                val amount = if (occurrenceOnly) entry.valueMinor else value.toLongOrNull() ?: 0
                 val parsedDate = runCatching { LocalDate.parse(date.trim()) }.getOrNull()
                 val parsedTime = runCatching { LocalTime.parse(time.trim()) }.getOrNull()
                 when {
                     amount <= 0 -> error = badValue
                     parsedDate == null -> error = badDate
                     parsedTime == null -> error = badTime
-                    else -> save(amount * scale, parsedDate, parsedTime, note)
+                    else -> {
+                        error = null
+                        // Une correction de note ne doit pas arrondir l'instant d'origine à la minute.
+                        val observedTime = zoned.toLocalTime()
+                        val correctedTime = if (parsedTime == observedTime.truncatedTo(ChronoUnit.MINUTES)) observedTime else parsedTime
+                        save(if (occurrenceOnly) entry.valueMinor else amount * scale, parsedDate, correctedTime, note)
+                    }
                 }
             }
         }
         Spacer(Modifier.height(Space.sm))
-        TertiaryAction(stringResource(R.string.entry_delete), Modifier.fillMaxWidth(), onClick = delete)
+        TertiaryAction(stringResource(R.string.entry_delete), Modifier.fillMaxWidth(), onClick = { if (!busy) { error = null; delete() } })
     }
 }
 
@@ -1144,9 +1332,10 @@ private class EditorState(
 
 @OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dismiss: () -> Unit, save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit) {
+private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dismiss: () -> Unit, busy: Boolean, saveError: String?, save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit) {
     val palette = cadence
     val stored = existing?.stored
+    val draftId = rememberSaveable(stored?.id) { stored?.id ?: UUID.randomUUID().toString() }
     val state = remember(stored?.id) {
         mutableStateOf(
             EditorState(
@@ -1243,136 +1432,136 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                     }
                 }
                 1 -> {
-                    item {
-                        FieldGroup(stringResource(R.string.form_goal_type_label)) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                GoalType.entries.forEach { type ->
-                                    ChoiceChip(stringResource(HabitLabels.goalTypeShort(type)), state.goalType == type, accent = accent) {
-                                        state.goalType = type
-                                        if (type == GoalType.BINARY) state.target = "1"
+                        item {
+                            FieldGroup(stringResource(R.string.form_goal_type_label)) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    GoalType.entries.forEach { type ->
+                                        ChoiceChip(stringResource(HabitLabels.goalTypeShort(type)), state.goalType == type, accent = accent) {
+                                            state.goalType = type
+                                            if (type == GoalType.BINARY) state.target = "1"
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (state.goalType == GoalType.DURATION) {
-                        item {
-                            FieldGroup(stringResource(R.string.timer_form_support)) {
-                                ToggleRow(stringResource(R.string.timer_form_label), state.timerEnabled, accent) {
-                                    state.timerEnabled = it
-                                }
-                            }
-                        }
-                    }
-                    if (state.goalType != GoalType.BINARY) {
-                        item {
-                            FieldGroup(stringResource(R.string.form_direction_label)) {
-                                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                    ChoiceChip(stringResource(R.string.form_direction_at_least), !state.limited, accent = accent) {
-                                        state.limited = false
-                                    }
-                                    ChoiceChip(stringResource(R.string.form_direction_at_most), state.limited, accent = accent) {
-                                        // Un plafond ne porte pas de minimum : il n'aurait aucun sens.
-                                        state.limited = true
-                                        state.minimum = ""
-                                    }
-                                }
-                            }
-                        }
-                        item {
-                            CadenceField(
-                                state.target,
-                                { state.target = it.filter(Char::isDigit) },
-                                stringResource(if (state.limited) R.string.form_limit_label else R.string.form_target_label),
-                                support = stringResource(R.string.form_limit_support).takeIf { state.limited },
-                                accent = accent,
-                                numeric = true,
-                            )
-                        }
-                        item {
-                            FieldGroup(stringResource(R.string.form_progression_support)) {
-                                ToggleRow(stringResource(R.string.form_progression_label), state.progressive, accent) {
-                                    state.progressive = it
-                                }
-                            }
-                        }
-                        if (state.progressive) {
+                        if (state.goalType == GoalType.DURATION) {
                             item {
-                                CadenceField(
-                                    state.progressionStep,
-                                    { state.progressionStep = it.filter(Char::isDigit) },
-                                    stringResource(R.string.form_progression_step),
-                                    accent = accent,
-                                    numeric = true,
-                                )
+                                FieldGroup(stringResource(R.string.timer_form_support)) {
+                                    ToggleRow(stringResource(R.string.timer_form_label), state.timerEnabled, accent) {
+                                        state.timerEnabled = it
+                                    }
+                                }
                             }
+                        }
+                        if (state.goalType != GoalType.BINARY) {
                             item {
-                                FieldGroup(stringResource(R.string.form_progression_cadence)) {
+                                FieldGroup(stringResource(R.string.form_direction_label)) {
                                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                        ChoiceChip(stringResource(R.string.form_progression_weekly), !state.progressionMonthly, accent = accent) {
-                                            state.progressionMonthly = false
+                                        ChoiceChip(stringResource(R.string.form_direction_at_least), !state.limited, accent = accent) {
+                                            state.limited = false
                                         }
-                                        ChoiceChip(stringResource(R.string.form_progression_monthly), state.progressionMonthly, accent = accent) {
-                                            state.progressionMonthly = true
+                                        ChoiceChip(stringResource(R.string.form_direction_at_most), state.limited, accent = accent) {
+                                            // Un plafond ne porte pas de minimum : il n'aurait aucun sens.
+                                            state.limited = true
+                                            state.minimum = ""
                                         }
                                     }
                                 }
                             }
                             item {
                                 CadenceField(
-                                    state.progressionCap,
-                                    { state.progressionCap = it.filter(Char::isDigit) },
-                                    stringResource(R.string.form_progression_cap),
+                                    state.target,
+                                    { state.target = it.filter(Char::isDigit) },
+                                    stringResource(if (state.limited) R.string.form_limit_label else R.string.form_target_label),
+                                    support = stringResource(R.string.form_limit_support).takeIf { state.limited },
                                     accent = accent,
                                     numeric = true,
                                 )
                             }
-                            item { ProgressionPreview(state, accent) }
+                            item {
+                                FieldGroup(stringResource(R.string.form_progression_support)) {
+                                    ToggleRow(stringResource(R.string.form_progression_label), state.progressive, accent) {
+                                        state.progressive = it
+                                    }
+                                }
+                            }
+                            if (state.progressive) {
+                                item {
+                                    CadenceField(
+                                        state.progressionStep,
+                                        { state.progressionStep = it.filter(Char::isDigit) },
+                                        stringResource(R.string.form_progression_step),
+                                        accent = accent,
+                                        numeric = true,
+                                    )
+                                }
+                                item {
+                                    FieldGroup(stringResource(R.string.form_progression_cadence)) {
+                                        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                            ChoiceChip(stringResource(R.string.form_progression_weekly), !state.progressionMonthly, accent = accent) {
+                                                state.progressionMonthly = false
+                                            }
+                                            ChoiceChip(stringResource(R.string.form_progression_monthly), state.progressionMonthly, accent = accent) {
+                                                state.progressionMonthly = true
+                                            }
+                                        }
+                                    }
+                                }
+                                item {
+                                    CadenceField(
+                                        state.progressionCap,
+                                        { state.progressionCap = it.filter(Char::isDigit) },
+                                        stringResource(R.string.form_progression_cap),
+                                        accent = accent,
+                                        numeric = true,
+                                    )
+                                }
+                                item { ProgressionPreview(state, accent) }
+                            }
+                            if (!state.limited) item {
+                                CadenceField(
+                                    state.minimum,
+                                    { state.minimum = it.filter(Char::isDigit) },
+                                    stringResource(R.string.form_minimum_label),
+                                    support = stringResource(R.string.form_minimum_support),
+                                    accent = accent,
+                                    numeric = true,
+                                )
+                            }
+                            item {
+                                val units = when (state.goalType) {
+                                    GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS)
+                                    GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }
+                                    else -> MeasurementUnit.BUILT_INS.filter { it.dimension != UnitDimension.TIME }
+                                }
+                                FieldGroup(stringResource(R.string.form_unit_label)) {
+                                    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                        units.forEach { unit ->
+                                            ChoiceChip(unit.symbol.ifBlank { unit.nameFr }, !state.customUnit && state.unit.id == unit.id, accent = accent) {
+                                                state.unit = unit
+                                                state.customUnit = false
+                                            }
+                                        }
+                                        ChoiceChip(stringResource(R.string.form_unit_custom), state.customUnit, accent = accent) { state.customUnit = true }
+                                    }
+                                }
+                            }
                         }
+                        if (state.customUnit) {
+                            item { CadenceField(state.customName, { state.customName = it }, stringResource(R.string.form_custom_unit_name), accent = accent) }
+                            item { CadenceField(state.customSymbol, { state.customSymbol = it }, stringResource(R.string.form_custom_unit_symbol), accent = accent) }
+                        }
+                        // La fréquence minimale n'a pas de sens sous un plafond.
                         if (!state.limited) item {
                             CadenceField(
-                                state.minimum,
-                                { state.minimum = it.filter(Char::isDigit) },
-                                stringResource(R.string.form_minimum_label),
-                                support = stringResource(R.string.form_minimum_support),
+                                state.frequencyTarget,
+                                { state.frequencyTarget = it.filter(Char::isDigit) },
+                                stringResource(R.string.form_frequency_label),
+                                support = stringResource(R.string.form_frequency_support),
                                 accent = accent,
                                 numeric = true,
                             )
                         }
-                        item {
-                            val units = when (state.goalType) {
-                                GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS)
-                                GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }
-                                else -> MeasurementUnit.BUILT_INS.filter { it.dimension != UnitDimension.TIME }
-                            }
-                            FieldGroup(stringResource(R.string.form_unit_label)) {
-                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                    units.forEach { unit ->
-                                        ChoiceChip(unit.symbol.ifBlank { unit.nameFr }, !state.customUnit && state.unit.id == unit.id, accent = accent) {
-                                            state.unit = unit
-                                            state.customUnit = false
-                                        }
-                                    }
-                                    ChoiceChip(stringResource(R.string.form_unit_custom), state.customUnit, accent = accent) { state.customUnit = true }
-                                }
-                            }
-                        }
-                    }
-                    if (state.customUnit) {
-                        item { CadenceField(state.customName, { state.customName = it }, stringResource(R.string.form_custom_unit_name), accent = accent) }
-                        item { CadenceField(state.customSymbol, { state.customSymbol = it }, stringResource(R.string.form_custom_unit_symbol), accent = accent) }
-                    }
-                    // La fréquence minimale n'a pas de sens sous un plafond.
-                    if (!state.limited) item {
-                        CadenceField(
-                            state.frequencyTarget,
-                            { state.frequencyTarget = it.filter(Char::isDigit) },
-                            stringResource(R.string.form_frequency_label),
-                            support = stringResource(R.string.form_frequency_support),
-                            accent = accent,
-                            numeric = true,
-                        )
-                    }
                 }
                 2 -> {
                     item {
@@ -1384,57 +1573,57 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                             }
                         }
                     }
-                    item {
-                        FieldGroup(stringResource(R.string.form_period_label)) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                PeriodType.entries.forEach { period ->
-                                    ChoiceChip(stringResource(HabitLabels.periodShort(period)), state.period == period, accent = accent) { state.period = period }
-                                }
-                            }
-                        }
-                    }
-                    item {
-                        FieldGroup(stringResource(R.string.form_schedule_mode_label)) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                ScheduleMode.entries.forEach { mode ->
-                                    ChoiceChip(stringResource(HabitLabels.scheduleMode(mode)), state.scheduleMode == mode, accent = accent) { state.scheduleMode = mode }
-                                }
-                            }
-                        }
-                    }
-                    if (state.period == PeriodType.WEEK) item {
-                        FieldGroup(stringResource(R.string.form_first_day_of_week_label)) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                DayOfWeek.entries.forEach { day ->
-                                    ChoiceChip(stringResource(HabitLabels.dayShort(day)), state.firstDay == day, accent = accent) { state.firstDay = day }
-                                }
-                            }
-                        }
-                    }
-                    if (state.scheduleMode == ScheduleMode.SELECTED_DAYS) item {
-                        FieldGroup(stringResource(R.string.form_schedule_selected_days)) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                                DayOfWeek.entries.forEach { day ->
-                                    ChoiceChip(stringResource(HabitLabels.dayShort(day)), day in state.activeDays, accent = accent) {
-                                        state.activeDays = if (day in state.activeDays) state.activeDays - day else state.activeDays + day
+                        item {
+                            FieldGroup(stringResource(R.string.form_period_label)) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    PeriodType.entries.forEach { period ->
+                                        ChoiceChip(stringResource(HabitLabels.periodShort(period)), state.period == period, accent = accent) { state.period = period }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (state.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) item {
-                        Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodyMedium, color = palette.inkFaint)
-                    }
-                    if (state.scheduleMode == ScheduleMode.INTERVAL_DAYS) item {
-                        CadenceField(
-                            state.intervalDays,
-                            { state.intervalDays = it.filter(Char::isDigit) },
-                            stringResource(R.string.form_schedule_interval_days),
-                            support = stringResource(R.string.form_schedule_interval_support),
-                            accent = accent,
-                            numeric = true,
-                        )
-                    }
+                        item {
+                            FieldGroup(stringResource(R.string.form_schedule_mode_label)) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    ScheduleMode.entries.forEach { mode ->
+                                        ChoiceChip(stringResource(HabitLabels.scheduleMode(mode)), state.scheduleMode == mode, accent = accent) { state.scheduleMode = mode }
+                                    }
+                                }
+                            }
+                        }
+                        if (state.period == PeriodType.WEEK) item {
+                            FieldGroup(stringResource(R.string.form_first_day_of_week_label)) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    DayOfWeek.entries.forEach { day ->
+                                        ChoiceChip(stringResource(HabitLabels.dayShort(day)), state.firstDay == day, accent = accent) { state.firstDay = day }
+                                    }
+                                }
+                            }
+                        }
+                        if (state.scheduleMode == ScheduleMode.SELECTED_DAYS) item {
+                            FieldGroup(stringResource(R.string.form_schedule_selected_days)) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                                    DayOfWeek.entries.forEach { day ->
+                                        ChoiceChip(stringResource(HabitLabels.dayShort(day)), day in state.activeDays, accent = accent) {
+                                            state.activeDays = if (day in state.activeDays) state.activeDays - day else state.activeDays + day
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (state.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) item {
+                            Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodyMedium, color = palette.inkFaint)
+                        }
+                        if (state.scheduleMode == ScheduleMode.INTERVAL_DAYS) item {
+                            CadenceField(
+                                state.intervalDays,
+                                { state.intervalDays = it.filter(Char::isDigit) },
+                                stringResource(R.string.form_schedule_interval_days),
+                                support = stringResource(R.string.form_schedule_interval_support),
+                                accent = accent,
+                                numeric = true,
+                            )
+                        }
                 }
                 else -> {
                     item {
@@ -1459,7 +1648,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 }
             }
         }
-        error?.let { Spacer(Modifier.height(Space.lg)); ErrorText(it) }
+        (error ?: saveError)?.let { Spacer(Modifier.height(Space.lg)); ErrorText(it) }
         Row(Modifier.fillMaxWidth().padding(top = Space.xl), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
             SecondaryAction(stringResource(if (state.step > 0) R.string.form_btn_back else R.string.form_btn_cancel), Modifier.weight(1f)) {
                 if (state.step > 0) state.step-- else dismiss()
@@ -1468,6 +1657,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                 stringResource(if (state.step < stepTitles.lastIndex) R.string.form_btn_next else if (stored == null) R.string.form_btn_create else R.string.form_btn_save),
                 Modifier.weight(1f),
                 accent = accent,
+                enabled = !busy,
             ) {
                 if (state.step < stepTitles.lastIndex) {
                     if (state.step == 0 && state.name.isBlank()) error = requiredName else { error = null; state.step++ }
@@ -1494,7 +1684,7 @@ private fun HabitEditor(existing: HabitCardState?, groups: List<HabitGroup>, dis
                         else -> {
                             val base = stored
                             val habit = PersistedHabit(
-                                id = base?.id ?: UUID.randomUUID().toString(),
+                                id = draftId,
                                 name = state.name.trim(),
                                 description = state.description.trim().ifBlank { null },
                                 iconId = state.iconId,

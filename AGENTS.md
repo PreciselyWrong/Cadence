@@ -46,8 +46,15 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
 - La navigation est une capsule sombre flottante ; la destination active porte icône et libellé, les autres restent iconiques.
 - Le thème suit le réglage système clair/sombre.
+- L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
+- Les repères d’abstinence distinguent objectifs personnels et observations scientifiques. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Les limites des sources sont documentées dans `docs/abstinence-evidence.md`; aucun taux hormonal ni état d’organe n’est déduit du compteur.
+- L’abstinence dispose d’une création et d’un détail dédiés. Le profil et le début déclaré restent fixes après création; la motivation utilise `description`. Le journal (`AbstinenceLog`) sépare les points quotidiens et les envies des occurrences : un point ne valide pas une journée et une envie ne casse pas la série. Un seul point est conservé par habitude et date civile.
+- Les statistiques générales (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. L’agrégat pondère les périodes, pas les quantités; une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
 
 ## ⛔ Interdits
+- ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.
+- ⛔ Réduire une abstinence à une saisie d’habitude ordinaire — son accès quotidien propose d’abord un point et le journal des envies, pour accompagner le suivi.
+- ⛔ Transposer les bénéfices de la cigarette au vapotage ou promettre des bénéfices hormonaux de l’arrêt de la masturbation — chaque profil doit refléter ses propres preuves.
 - ⛔ Stocker une progression courante - elle doit être dérivée des entrées horodatées.
 - ⛔ Réinitialiser ou supprimer des entrées à une frontière de période - les périodes sont calculées.
 - ⛔ Réinterpréter l'historique après une édition - objectifs et plannings sont versionnés.
@@ -86,4 +93,4 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 
 ## État
 MVP local compilable : Room, saisie rapide, statistiques de période et widget Glance.
-Prochaines tranches : rappels conditionnels, sauvegarde JSON et statistiques historiques.
+Rappels conditionnels, sauvegarde JSON, statistiques historiques et abstinences avec profils, conseils sourcés et journal local disponibles.

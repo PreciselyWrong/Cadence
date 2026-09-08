@@ -1,6 +1,7 @@
 package ch.nicolab.cadence
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,7 +53,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.ChoiceChip
 import ch.nicolab.cadence.ui.components.ValueChip
 import ch.nicolab.cadence.ui.components.Hairline
 import ch.nicolab.cadence.ui.components.PrimaryAction
@@ -85,7 +87,45 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val lastEntryId by viewModel.lastEntryId.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
-    val pending = habits.filter { it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
+    val busy by viewModel.isSaving.collectAsStateWithLifecycle()
+    val saveError by viewModel.saveError.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    var selectedId by rememberSaveable(habitId) { mutableStateOf(habitId) }
+    var correctingId by rememberSaveable { mutableStateOf<String?>(null) }
+    val correcting = habits.asSequence().flatMap { it.recentEntries.asSequence() }.firstOrNull { it.id == correctingId }
+    val selected = habits.firstOrNull { it.stored.id == selectedId && it.stored.goal.isAbstinence }
+    val abstinences = habits.filter { !it.stored.archived && it.stored.goal.isAbstinence && (habitId == null || it.stored.id == habitId) }
+    val pending = habits.filter { !it.stored.goal.isAbstinence && it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
+    if (selected != null) {
+        Box(Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)))
+        AbstinenceDetailSheet(
+            item = selected,
+            dismiss = { if (!busy) { if (habitId != null) dismiss() else selectedId = null } },
+            onCheckIn = { viewModel.checkIn(selected) },
+            onUrge = { intensity, note, saved -> viewModel.recordUrge(selected, intensity, note, saved) },
+            onRecordOccurrence = { note, saved -> viewModel.recordAbstinenceOccurrence(selected, note, saved) },
+            onCorrectOccurrence = { viewModel.clearSaveError(); correctingId = it.id },
+            onDeleteLog = viewModel::deleteAbstinenceLog,
+            onEdit = {
+                context.startActivity(Intent(context, MainActivity::class.java).putExtra(MainActivity.EXTRA_EDIT_HABIT_ID, selected.stored.id))
+                dismiss()
+            },
+            busy = busy,
+            error = saveError,
+        )
+        correcting?.let { entry ->
+            EntryEditor(entry, selected.stored.goal.goalType, selected.stored.goal.unit,
+                selected.stored.colorArgb?.let(::Color) ?: palette.accent,
+                dismiss = { if (!busy) correctingId = null },
+                save = { value, date, time, note -> viewModel.correctEntry(entry, value, date, time, note) { correctingId = null } },
+                delete = { viewModel.deleteEntry(entry.id) { correctingId = null } },
+                busy = busy,
+                saveError = saveError,
+                occurrenceOnly = selected.stored.goal.isAbstinence,
+            )
+        }
+        return
+    }
     Box(
         Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)).clickable(onClick = dismiss),
         contentAlignment = Alignment.BottomCenter,
@@ -108,19 +148,24 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
                 Spacer(Modifier.height(Space.lg))
                 if (!isLoaded) {
                     Spacer(Modifier.height(100.dp))
-                } else if (pending.isEmpty()) {
+                } else if (pending.isEmpty() && abstinences.isEmpty()) {
                     Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Box(Modifier.size(36.dp).clip(CircleShape).background(palette.success.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
                         }
                         Spacer(Modifier.width(Space.md))
-                        Text(stringResource(R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+                        Text(stringResource(if (habitId != null && habits.none { it.stored.id == habitId }) R.string.abstinence_quick_unavailable else R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
                     }
                 } else {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(Space.lg),
                         modifier = Modifier.heightIn(max = 420.dp),
                     ) {
+                        items(abstinences, key = { "abstinence-${it.stored.id}" }) { habit ->
+                            SecondaryAction(habit.stored.name, Modifier.fillMaxWidth()) {
+                                viewModel.clearSaveError(); selectedId = habit.stored.id
+                            }
+                        }
                         items(pending, key = { it.stored.id }) { habit ->
                             QuickHabit(
                                 habit,
@@ -170,7 +215,7 @@ private fun QuickHabit(
     val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            HabitFacet(icon.imageVector, icon.labelFr, (habit.evaluation.progressMinor.toFloat() / target), tint, tint.copy(alpha = 0.20f), size = Size.badge)
+            HabitFacet(icon.imageVector, icon.labelFr, habit.evaluation.progressMinor.toFloat() / target, tint, tint.copy(alpha = 0.20f), size = Size.badge)
             Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
                 Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
