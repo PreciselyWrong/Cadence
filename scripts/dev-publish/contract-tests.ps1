@@ -26,6 +26,8 @@ Assert-Condition ($devSource -match 'Wait-ForCadence') 'Le lanceur doit attendre
 Assert-Condition ($publishSource -match "'smartphone'") 'La publication doit accepter la destination smartphone'
 Assert-Condition ($publishSource -match 'adb.+install.+--user') 'La publication doit installer explicitement dans un profil Android'
 Assert-Condition ($publishSource -match 'ro\.kernel\.qemu') 'La publication doit exclure les émulateurs'
+Assert-Condition ($publishSource -match ':app:assembleDebug') 'La publication doit construire l APK debug distribuable'
+Assert-Condition ($publishSource -match 'app-debug\.apk') 'La publication doit envoyer l APK debug construit'
 & (Join-Path $root 'dev.ps1') -Plan -NonInteractive
 Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan de développement doit réussir'
 & (Join-Path $root 'publish.ps1') -Plan -NonInteractive

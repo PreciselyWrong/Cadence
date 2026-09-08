@@ -40,12 +40,6 @@ function Get-BaseUrl {
     }
 }
 
-$token = Get-AdminToken
-if ([string]::IsNullOrWhiteSpace($token)) {
-    Write-Error "Diffusion ignoree : aucun jeton d'administration. Lancer scripts\dev-publish\new-admin-token.ps1 dans NicoApps, puis declarer son empreinte au serveur."
-    exit 1
-}
-
 $baseUrl = Get-BaseUrl
 $onLan = $baseUrl -eq $lanBaseUrl
 
@@ -53,6 +47,12 @@ if ($Plan) {
     $loc = if ($onLan) { ' (reseau local)' } else { ' (domaine public)' }
     Write-Output "  - NicoApps : envoi de $ApkPath a $baseUrl$loc, puis publication."
     exit 0
+}
+
+$token = Get-AdminToken
+if ([string]::IsNullOrWhiteSpace($token)) {
+    Write-Error "Diffusion ignoree : aucun jeton d'administration. Lancer scripts\dev-publish\new-admin-token.ps1 dans NicoApps, puis declarer son empreinte au serveur."
+    exit 1
 }
 
 if (-not (Test-Path -LiteralPath $ApkPath)) {

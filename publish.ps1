@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 $versionFile = Join-Path $root 'app-release\version.json'
 $supportedDestinations = @('smartphone', 'nicoapps', 'default')
-$artifact = Join-Path $root 'app\build\outputs\apk\release\app-release.apk'
+$artifact = Join-Path $root 'app\build\outputs\apk\debug\app-debug.apk'
 $javaHome = 'C:\Program Files\Android\Android Studio\jbr'
 $uploader = Join-Path $root 'scripts\dev-publish\upload-release.ps1'
 
@@ -49,8 +49,8 @@ if ($Plan) {
     Write-Output 'Destinations :'
     & $uploader -ApkPath $artifact -Plan
     Write-Output "  - Smartphone : $phoneTarget"
-    Write-Output 'Vérifications : tests domaine et construction release Android'
-    Write-Output 'Artefact : app\build\outputs\apk\release\app-release.apk'
+    Write-Output 'Vérifications : tests domaine et construction debug Android'
+    Write-Output 'Artefact : app\build\outputs\apk\debug\app-debug.apk'
     exit 0
 }
 
@@ -68,8 +68,8 @@ Write-Host "Exécution des tests..." -ForegroundColor Cyan
 & (Join-Path $root 'gradlew.bat') ':domain:test'
 if ($LASTEXITCODE -ne 0) { Fail 'Les tests ont échoué.' 3 }
 
-Write-Host "Construction release..." -ForegroundColor Cyan
-& (Join-Path $root 'gradlew.bat') ':app:assembleRelease'
+Write-Host "Construction debug..." -ForegroundColor Cyan
+& (Join-Path $root 'gradlew.bat') ':app:assembleDebug'
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact)) { Fail 'La construction Android a échoué.' 3 }
 
 # NicoApps
