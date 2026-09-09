@@ -28,7 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
-- [x] Actions d’abstinence concrètes et compteur d’argent économisé facultatif
+- [x] Actions concrètes et économies facultatives calculées depuis une dépense, sa fréquence et sa monnaie
 - [x] Compteur d’abstinence vivant, saisie clarifiée, départ modifiable et paliers scientifiques
 - [x] Cinq profils supplémentaires avec conseils et sauvegarde vérifiés
 - [x] Bilan des habitudes sur 30 jours et parcours d’abstinence avec conseils et journal

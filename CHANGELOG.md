@@ -1,13 +1,14 @@
 ## [1.0.11] — 09 septembre 2026
 
 ### Nouveautés
-- Le total d’argent économisé peut maintenant avancer avec le compteur, si vous renseignez un montant par jour.
+- Si vous le souhaitez, déclarez votre dépense par jour, semaine ou mois et choisissez la monnaie; le total suit le compteur.
 - Le temps sans écart défile maintenant en jours, heures, minutes et secondes.
 - Le compteur reste visible dans les widgets choisis et se met à jour au fil du temps.
 - Une alerte célèbre chaque repère appuyé par une observation scientifique.
 - La date et l’heure de départ peuvent être corrigées à tout moment.
 
 ### Améliorations
+- Les onglets du suivi respirent mieux et restent clairement séparés.
 - Chaque suivi nomme clairement l’action à enregistrer, comme « J’ai bu un verre ».
 - La création ne demande plus d’expliquer pourquoi vous commencez.
 - Les actions parlent simplement d’envie, de note ou d’écart, avec leur effet sur le compteur.

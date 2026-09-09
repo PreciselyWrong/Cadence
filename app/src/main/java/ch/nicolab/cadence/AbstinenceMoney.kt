@@ -9,7 +9,10 @@ import java.util.Locale
 internal fun defaultCurrencyCode(locale: Locale = Locale.getDefault()): String =
     runCatching { Currency.getInstance(locale).currencyCode }.getOrDefault("CHF")
 
-internal fun parseDailySavingsMinor(value: String, currencyCode: String): Long? {
+internal fun isCurrencyCode(value: String): Boolean =
+    runCatching { Currency.getInstance(value.trim().uppercase(Locale.ROOT)) }.isSuccess
+
+internal fun parseSavingsMinor(value: String, currencyCode: String): Long? {
     if (value.isBlank()) return null
     val currency = runCatching { Currency.getInstance(currencyCode) }.getOrNull() ?: return null
     return runCatching {
@@ -17,11 +20,11 @@ internal fun parseDailySavingsMinor(value: String, currencyCode: String): Long? 
             .movePointRight(currency.defaultFractionDigits.coerceAtLeast(0))
             .setScale(0, RoundingMode.UNNECESSARY)
             .longValueExact()
-            .takeIf { it > 0L }
+            .takeIf { it >= 0L }
     }.getOrNull()
 }
 
-internal fun dailySavingsInput(minor: Long?, currencyCode: String): String {
+internal fun savingsInput(minor: Long?, currencyCode: String): String {
     if (minor == null) return ""
     val digits = runCatching { Currency.getInstance(currencyCode).defaultFractionDigits }.getOrDefault(2).coerceAtLeast(0)
     return BigDecimal.valueOf(minor, digits).stripTrailingZeros().toPlainString()

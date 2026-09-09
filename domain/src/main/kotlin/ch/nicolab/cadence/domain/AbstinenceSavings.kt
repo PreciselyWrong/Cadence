@@ -1,37 +1,55 @@
 package ch.nicolab.cadence.domain
 
 import java.math.BigInteger
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
-object AbstinenceSavings {
+enum class SavingsPeriod { DAY, WEEK, MONTH }
 
-    private const val SECONDS_PER_DAY = 86_400L
+object AbstinenceSavingsCalculator {
+    private val maxLong = BigInteger.valueOf(Long.MAX_VALUE)
 
-    private val BIG_SECONDS_PER_DAY = BigInteger.valueOf(SECONDS_PER_DAY)
-    private val BIG_MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE)
+    fun calculate(
+        spendingMinor: Long?,
+        period: SavingsPeriod?,
+        activeStart: Instant,
+        now: Instant,
+        zoneId: ZoneId,
+    ): Long {
+        if (spendingMinor == null || spendingMinor < 0L || period == null || now <= activeStart) return 0L
+        return calendarPeriods(spendingMinor, period, activeStart, now, zoneId)
+    }
 
-    fun calculate(dailyCostMinor: Long?, elapsedSeconds: Long?): Long {
-        if (dailyCostMinor == null || dailyCostMinor <= 0L || elapsedSeconds == null || elapsedSeconds <= 0L) {
-            return 0L
+    private fun calendarPeriods(spendingMinor: Long, period: SavingsPeriod, start: Instant, now: Instant, zoneId: ZoneId): Long {
+        val startAtZone = start.atZone(zoneId)
+        val nowAtZone = now.atZone(zoneId)
+        val unit = when (period) {
+            SavingsPeriod.DAY -> ChronoUnit.DAYS
+            SavingsPeriod.WEEK -> ChronoUnit.WEEKS
+            SavingsPeriod.MONTH -> ChronoUnit.MONTHS
         }
-        return compute(dailyCostMinor, BigInteger.valueOf(elapsedSeconds))
-    }
-
-    fun calculate(dailyCostMinor: Long?, elapsed: AbstinenceElapsed?): Long {
-        if (dailyCostMinor == null || dailyCostMinor <= 0L || elapsed == null) {
-            return 0L
+        var fullPeriods = unit.between(startAtZone, nowAtZone).coerceAtLeast(0L)
+        var boundary = startAtZone.plus(fullPeriods, unit)
+        if (boundary.toInstant() > now) {
+            fullPeriods--
+            boundary = startAtZone.plus(fullPeriods, unit)
         }
-        val extraSeconds = elapsed.hours * 3600L + elapsed.minutes * 60L + elapsed.seconds
-        val totalSeconds = BigInteger.valueOf(elapsed.days)
-            .multiply(BIG_SECONDS_PER_DAY)
-            .add(BigInteger.valueOf(extraSeconds))
-        return compute(dailyCostMinor, totalSeconds)
+        val nextBoundary = startAtZone.plus(fullPeriods + 1L, unit)
+        val partial = proportional(
+            spendingMinor,
+            Duration.between(boundary.toInstant(), now).seconds,
+            Duration.between(boundary.toInstant(), nextBoundary.toInstant()).seconds,
+        )
+        return clamp(BigInteger.valueOf(spendingMinor).multiply(BigInteger.valueOf(fullPeriods)).add(BigInteger.valueOf(partial)))
     }
 
-    private fun compute(dailyCostMinor: Long, totalSeconds: BigInteger): Long {
-        if (totalSeconds <= BigInteger.ZERO) return 0L
-        val saved = BigInteger.valueOf(dailyCostMinor)
-            .multiply(totalSeconds)
-            .divide(BIG_SECONDS_PER_DAY)
-        return if (saved > BIG_MAX_LONG) Long.MAX_VALUE else saved.toLong()
-    }
+    private fun proportional(spendingMinor: Long, elapsedSeconds: Long, periodSeconds: Long): Long = clamp(
+        BigInteger.valueOf(spendingMinor)
+            .multiply(BigInteger.valueOf(elapsedSeconds.coerceAtLeast(0L)))
+            .divide(BigInteger.valueOf(periodSeconds)),
+    )
+
+    private fun clamp(value: BigInteger): Long = if (value > maxLong) Long.MAX_VALUE else value.toLong()
 }

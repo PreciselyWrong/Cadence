@@ -35,6 +35,7 @@ import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
+import ch.nicolab.cadence.domain.SavingsPeriod
 import ch.nicolab.cadence.domain.UnitDimension
 import java.time.DayOfWeek
 import java.time.Instant
@@ -243,7 +244,8 @@ class CadenceRepository(
                 abstinenceProfile = habit.abstinenceProfile.name,
                 abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
                 abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
-                abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
+                abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod?.name,
                 abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
             )
 
@@ -311,7 +313,8 @@ class CadenceRepository(
                 abstinenceProfile = habit.abstinenceProfile.name,
                 abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
                 abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
-                abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
+                abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod?.name,
                 abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
             )
 
@@ -726,7 +729,8 @@ class CadenceRepository(
                 abstinenceProfile = relation.habit.abstinenceProfile,
                 abstinenceStartedOn = relation.habit.abstinenceStartedOn,
                 abstinenceStartedAtEpochMs = relation.habit.abstinenceStartedAtEpochMs,
-                abstinenceSavingsDailyMinor = relation.habit.abstinenceSavingsDailyMinor,
+                abstinenceSpendingMinor = relation.habit.abstinenceSpendingMinor,
+                abstinenceSpendingPeriod = relation.habit.abstinenceSpendingPeriod,
                 abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
                 goals = goals,
                 schedules = schedules,
@@ -856,7 +860,8 @@ class CadenceRepository(
                     abstinenceProfile = habit.abstinenceProfile,
                     abstinenceStartedOn = habit.abstinenceStartedOn,
                     abstinenceStartedAtEpochMs = habit.abstinenceStartedAtEpochMs,
-                    abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                    abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
+                    abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod,
                     abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
                 )
                 database.habitDao().insertHabit(habitEntity)
@@ -1228,7 +1233,8 @@ class CadenceRepository(
             abstinenceProfile = AbstinenceProfile.valueOf(relation.habit.abstinenceProfile),
             abstinenceStartedAt = relation.habit.abstinenceStartedAtEpochMs?.let(java.time.Instant::ofEpochMilli)
                 ?: relation.habit.abstinenceStartedOn?.let(LocalDate::parse)?.atStartOfDay(clock.zone)?.toInstant(),
-            abstinenceSavingsDailyMinor = relation.habit.abstinenceSavingsDailyMinor,
+            abstinenceSpendingMinor = relation.habit.abstinenceSpendingMinor,
+            abstinenceSpendingPeriod = relation.habit.abstinenceSpendingPeriod?.let(SavingsPeriod::valueOf),
             abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,

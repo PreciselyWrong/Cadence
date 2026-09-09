@@ -120,7 +120,8 @@ class AbstinencePersistenceTest {
             val startAt = Instant.parse("2026-09-01T08:42:00Z")
             val habit = PersistedHabit("abstinence", "Alcool", active = true, startsOn = start,
                 abstinenceProfile = AbstinenceProfile.ALCOHOL, abstinenceStartedAt = startAt,
-                abstinenceSavingsDailyMinor = 1_250L, abstinenceSavingsCurrency = "CHF",
+                abstinenceSpendingMinor = 1_250L, abstinenceSpendingPeriod = SavingsPeriod.WEEK,
+                abstinenceSavingsCurrency = "CHF",
                 goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
                 schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY))
             repository.addHabit(habit, start)
@@ -131,7 +132,8 @@ class AbstinencePersistenceTest {
             assertEquals(AbstinenceProfile.ALCOHOL, restored.abstinenceProfile)
             assertEquals(start, restored.abstinenceStartedOn(ZoneOffset.UTC))
             assertEquals(startAt, restored.abstinenceStartedAt)
-            assertEquals(1_250L, restored.abstinenceSavingsDailyMinor)
+            assertEquals(1_250L, restored.abstinenceSpendingMinor)
+            assertEquals(SavingsPeriod.WEEK, restored.abstinenceSpendingPeriod)
             assertEquals("CHF", restored.abstinenceSavingsCurrency)
             assertTrue(restored.goal.isAbstinence)
             assertEquals("Sans alcool", restored.name)

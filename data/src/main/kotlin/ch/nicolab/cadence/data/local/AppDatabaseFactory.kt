@@ -29,6 +29,7 @@ object AppDatabaseFactory {
             CadenceDatabase.MIGRATION_16_17,
             CadenceDatabase.MIGRATION_17_18,
             CadenceDatabase.MIGRATION_18_19,
+            CadenceDatabase.MIGRATION_19_20,
         )
         .build()
     }

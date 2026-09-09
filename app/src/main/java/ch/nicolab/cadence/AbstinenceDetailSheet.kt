@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.*
@@ -48,8 +49,7 @@ fun AbstinenceDetailSheet(
     }
     CadenceSheet(item.stored.name, null,
         dismiss = { if (!busy) dismiss() }) {
-        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally)) {
             listOf(R.string.abst_overview, R.string.abst_support, R.string.abst_journal).forEachIndexed { index, label ->
                 ChoiceChip(stringResource(label), tab == index, Modifier.heightIn(min = Size.touch), accent) { tab = index }
             }

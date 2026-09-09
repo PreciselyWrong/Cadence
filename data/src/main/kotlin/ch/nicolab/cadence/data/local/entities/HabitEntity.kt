@@ -24,6 +24,9 @@ data class HabitEntity(
     /** Conservé pour relire les installations créées avant l'ajout de l'heure. */
     val abstinenceStartedOn: String? = null,
     val abstinenceStartedAtEpochMs: Long? = null,
+    /** Ancien taux conservé uniquement pour une migration non destructive. */
     val abstinenceSavingsDailyMinor: Long? = null,
+    val abstinenceSpendingMinor: Long? = null,
+    val abstinenceSpendingPeriod: String? = null,
     val abstinenceSavingsCurrency: String? = null,
 )

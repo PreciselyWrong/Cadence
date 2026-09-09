@@ -5,6 +5,7 @@ import ch.nicolab.cadence.domain.HabitDefinition
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
+import ch.nicolab.cadence.domain.SavingsPeriod
 import java.time.LocalDate
 import java.time.Instant
 import java.time.ZoneId
@@ -26,7 +27,8 @@ data class PersistedHabit(
     val timerEnabled: Boolean = false,
     val abstinenceProfile: AbstinenceProfile = AbstinenceProfile.NONE,
     val abstinenceStartedAt: Instant? = null,
-    val abstinenceSavingsDailyMinor: Long? = null,
+    val abstinenceSpendingMinor: Long? = null,
+    val abstinenceSpendingPeriod: SavingsPeriod? = null,
     val abstinenceSavingsCurrency: String? = null,
     val goal: HabitGoal,
     val schedule: HabitSchedule,

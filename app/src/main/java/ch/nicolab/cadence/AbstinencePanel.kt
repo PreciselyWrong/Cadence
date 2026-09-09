@@ -30,7 +30,8 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceStats
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
-import ch.nicolab.cadence.domain.AbstinenceSavings
+import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
+import ch.nicolab.cadence.domain.SavingsPeriod
 import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -40,6 +41,7 @@ import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.Instant
+import java.time.ZoneId
 import kotlinx.coroutines.delay
 
 fun abstinenceProfileLabel(profile: AbstinenceProfile): Int = AbstinenceGuide.content(profile).label
@@ -100,9 +102,17 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
         }
     }
     val elapsed = AbstinenceElapsedCalculator.calculate(item.stored.id, start, item.recentEntries, now)
+    val activeStart = AbstinenceElapsedCalculator.activeStart(item.stored.id, start, item.recentEntries)
+    val saved = AbstinenceSavingsCalculator.calculate(
+        item.stored.abstinenceSpendingMinor,
+        item.stored.abstinenceSpendingPeriod,
+        activeStart,
+        now,
+        ZoneId.systemDefault(),
+    )
     if (compact) {
         Text(elapsed.formatCompact(), style = MaterialTheme.typography.headlineSmall, color = accent)
-        SavingsTotal(item, elapsed, accent)
+        SavingsTotal(item, saved, accent)
         return
     }
     val nextDays = AbstinenceGuide.milestones(item.stored.abstinenceProfile)
@@ -119,23 +129,38 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
         TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f)
         TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f)
         TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f)
-        SavingsTotal(item, elapsed, accent, centered = true)
+        SavingsTotal(item, saved, accent, centered = true)
     }
 }
 
 @Composable
-private fun SavingsTotal(item: HabitCardState, elapsed: ch.nicolab.cadence.domain.AbstinenceElapsed, accent: Color, centered: Boolean = false) {
-    val daily = item.stored.abstinenceSavingsDailyMinor ?: return
+private fun SavingsTotal(item: HabitCardState, saved: Long, accent: Color, centered: Boolean = false) {
+    val spending = item.stored.abstinenceSpendingMinor ?: return
+    val period = item.stored.abstinenceSpendingPeriod ?: return
     val currency = item.stored.abstinenceSavingsCurrency ?: return
-    val saved = AbstinenceSavings.calculate(daily, elapsed)
-    Text(
-        stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
-        style = MaterialTheme.typography.titleMedium,
-        color = accent,
-        textAlign = if (centered) TextAlign.Center else TextAlign.Start,
-        modifier = if (centered) Modifier.fillMaxWidth() else Modifier,
-    )
+    val alignment = if (centered) Alignment.CenterHorizontally else Alignment.Start
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = alignment, verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+        Text(
+            stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
+            style = MaterialTheme.typography.titleMedium,
+            color = accent,
+            textAlign = if (centered) TextAlign.Center else TextAlign.Start,
+        )
+        Text(
+            stringResource(R.string.abst_savings_basis, formatMoney(spending, currency), savingsPeriodLabel(period)),
+            style = MaterialTheme.typography.bodySmall,
+            color = cadence.inkMuted,
+            textAlign = if (centered) TextAlign.Center else TextAlign.Start,
+        )
+    }
 }
+
+@Composable
+private fun savingsPeriodLabel(period: SavingsPeriod): String = stringResource(when (period) {
+    SavingsPeriod.DAY -> R.string.abst_setup_savings_day
+    SavingsPeriod.WEEK -> R.string.abst_setup_savings_week
+    SavingsPeriod.MONTH -> R.string.abst_setup_savings_month
+}).lowercase()
 
 @Composable
 private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, alpha: Float) {
