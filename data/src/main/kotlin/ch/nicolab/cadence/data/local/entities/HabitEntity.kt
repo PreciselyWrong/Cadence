@@ -21,5 +21,7 @@ data class HabitEntity(
     /** Mode chronomètre proposé dans la saisie rapide, réservé aux objectifs en durée. */
     @ColumnInfo(defaultValue = "0") val timerEnabled: Boolean = false,
     @ColumnInfo(defaultValue = "NONE") val abstinenceProfile: String = "NONE",
+    /** Conservé pour relire les installations créées avant l'ajout de l'heure. */
     val abstinenceStartedOn: String? = null,
+    val abstinenceStartedAtEpochMs: Long? = null,
 )

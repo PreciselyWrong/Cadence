@@ -11,6 +11,7 @@ import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.*
 import java.time.LocalDate
 import java.time.Instant
+import java.time.ZoneOffset
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -27,7 +28,7 @@ class AbstinencePersistenceTest {
                 .map(AbstinenceProfile::valueOf)
             profiles.forEach { profile ->
                 repository.addHabit(PersistedHabit(profile.name, "Suivi", active = true, startsOn = start,
-                    abstinenceProfile = profile, abstinenceStartedOn = start,
+                    abstinenceProfile = profile, abstinenceStartedAt = start.atStartOfDay(ZoneOffset.UTC).toInstant(),
                     goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
                     schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY)), start)
             }
@@ -35,7 +36,7 @@ class AbstinencePersistenceTest {
             profiles.forEach { profile ->
                 val restored = repository.getHabitEffectiveAt(profile.name, start)!!
                 assertEquals(profile, restored.abstinenceProfile)
-                assertEquals(start, restored.abstinenceStartedOn)
+                assertEquals(start, restored.abstinenceStartedOn(ZoneOffset.UTC))
             }
         } finally { db.close() }
     }
@@ -57,7 +58,7 @@ class AbstinencePersistenceTest {
             repository.updateHabit(habit.copy(
                 timerEnabled = false,
                 abstinenceProfile = AbstinenceProfile.ALCOHOL,
-                abstinenceStartedOn = start,
+                abstinenceStartedAt = start.atStartOfDay(ZoneOffset.UTC).toInstant(),
                 goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
             ), start)
             assertNull(repository.getTimer(habit.id))
@@ -94,8 +95,9 @@ class AbstinencePersistenceTest {
         try {
             val repository = CadenceRepository(db)
             val start = LocalDate.of(2026, 9, 1)
+            val startAt = Instant.parse("2026-09-01T08:42:00Z")
             val habit = PersistedHabit("abstinence", "Alcool", active = true, startsOn = start,
-                abstinenceProfile = AbstinenceProfile.ALCOHOL, abstinenceStartedOn = start,
+                abstinenceProfile = AbstinenceProfile.ALCOHOL, abstinenceStartedAt = startAt,
                 goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
                 schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY))
             repository.addHabit(habit, start)
@@ -104,7 +106,8 @@ class AbstinencePersistenceTest {
             repository.importBackup(backup)
             val restored = repository.getHabitEffectiveAt(habit.id, start.plusDays(2))!!
             assertEquals(AbstinenceProfile.ALCOHOL, restored.abstinenceProfile)
-            assertEquals(start, restored.abstinenceStartedOn)
+            assertEquals(start, restored.abstinenceStartedOn(ZoneOffset.UTC))
+            assertEquals(startAt, restored.abstinenceStartedAt)
             assertTrue(restored.goal.isAbstinence)
             assertEquals("Sans alcool", restored.name)
             val invalidProfile = backup.replace("\"ALCOHOL\"", "\"UNKNOWN\"")

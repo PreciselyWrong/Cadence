@@ -45,7 +45,7 @@ fun AbstinenceDetailSheet(
         (item.abstinenceLogs.map { JournalRow(it.occurredAt, log = it) } +
             item.recentEntries.map { JournalRow(it.occurredAt, entry = it) }).sortedByDescending { it.at }
     }
-    CadenceSheet(item.stored.name, stringResource(abstinenceProfileLabel(item.stored.abstinenceProfile)),
+    CadenceSheet(item.stored.name, null,
         dismiss = { if (!busy) dismiss() }) {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
             verticalArrangement = Arrangement.spacedBy(Space.xs)) {
@@ -59,13 +59,17 @@ fun AbstinenceDetailSheet(
             if (error != null) item { ErrorText(error) }
             when (tab) {
                 0 -> {
-                    item { item.abstinenceStats?.let { AbstinenceSummary(it, accent, centered = true) } }
+                    item { LiveAbstinenceCounter(item, accent) }
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                            PrimaryAction(stringResource(if (summary?.checkedInToday == true) R.string.abst_checkin_done else R.string.abst_checkin),
-                                Modifier.fillMaxWidth(), accent, enabled && summary?.checkedInToday != true, onCheckIn)
+                            PrimaryAction(stringResource(R.string.abst_urge), Modifier.fillMaxWidth(), accent, enabled) { form = "urge" }
+                            SecondaryAction(stringResource(R.string.abst_occurrence_title), Modifier.fillMaxWidth(), enabled) { form = "occurrence" }
+                            if (enabled && summary?.checkedInToday != true) {
+                                TertiaryAction(stringResource(R.string.abst_checkin), Modifier.fillMaxWidth(), onClick = onCheckIn)
+                            } else {
+                                Text(stringResource(R.string.abst_checkin_done), style = MaterialTheme.typography.labelLarge, color = cadence.inkMuted)
+                            }
                             Text(stringResource(R.string.abst_checkin_help), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                            SecondaryAction(stringResource(R.string.abst_urge), Modifier.fillMaxWidth(), enabled) { form = "urge" }
                             if (item.evaluation.isPaused) Text(stringResource(R.string.abst_pause_help), color = cadence.inkMuted)
                         }
                     }
@@ -94,9 +98,6 @@ fun AbstinenceDetailSheet(
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                             Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                            TextButton(enabled = enabled, onClick = { form = "occurrence" }, modifier = Modifier.fillMaxWidth()) {
-                                Text(stringResource(R.string.abst_occurrence_title))
-                            }
                         }
                     }
                 }

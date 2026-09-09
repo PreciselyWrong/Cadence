@@ -25,7 +25,7 @@ class AbstinenceJournalPersistenceTest {
     private val now = Instant.parse("2026-09-08T12:00:00Z")
     private val today = LocalDate.of(2026, 9, 8)
     private fun habit() = PersistedHabit("h", "Suivi", active = true, startsOn = today.minusDays(7),
-        abstinenceProfile = AbstinenceProfile.SMOKING, abstinenceStartedOn = today.minusDays(7),
+        abstinenceProfile = AbstinenceProfile.SMOKING, abstinenceStartedAt = today.minusDays(7).atStartOfDay(ZoneOffset.UTC).toInstant(),
         goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
         schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY))
     private fun checkIn(id: String = "requested") = AbstinenceLog(id, "h", now, today, ZoneOffset.UTC, AbstinenceLogKind.CHECK_IN)
@@ -93,7 +93,7 @@ class AbstinenceJournalPersistenceTest {
             repository.importBackup(backup)
             repository.deleteAbstinenceLog("urge-one")
             assertEquals(2, repository.getAbstinenceLogs("h").size)
-            repository.updateHabit(habit().copy(abstinenceProfile = AbstinenceProfile.NONE, abstinenceStartedOn = null,
+            repository.updateHabit(habit().copy(abstinenceProfile = AbstinenceProfile.NONE, abstinenceStartedAt = null,
                 goal = HabitGoal(1, PeriodType.DAY, GoalType.COUNT)), today)
             repository.importBackup(repository.exportBackup())
             assertEquals(2, repository.getAbstinenceLogs("h").size)
@@ -111,7 +111,7 @@ class AbstinenceJournalPersistenceTest {
             assertTrue(runCatching { repository.saveAbstinenceLog(checkIn().copy(occurredAt = now.plusSeconds(1))) }.isFailure)
             assertTrue(runCatching { repository.saveAbstinenceLog(checkIn().copy(localDate = today.plusDays(1))) }.isFailure)
             assertTrue(runCatching { repository.saveAbstinenceLog(checkIn().copy(localDate = today.minusDays(8))) }.isFailure)
-            repository.updateHabit(habit().copy(abstinenceProfile = AbstinenceProfile.NONE, abstinenceStartedOn = null,
+            repository.updateHabit(habit().copy(abstinenceProfile = AbstinenceProfile.NONE, abstinenceStartedAt = null,
                 goal = HabitGoal(1, PeriodType.DAY, GoalType.COUNT)), today)
             assertTrue(runCatching { repository.saveAbstinenceLog(checkIn()) }.isFailure)
         } finally { db.close() }

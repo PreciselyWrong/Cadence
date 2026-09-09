@@ -22,7 +22,14 @@ object WidgetBoundaryAlarm {
         val app = context.applicationContext as CadenceApp
         app.applicationScope.launch {
             val groups = app.repository.getGroups()
-            val next = WidgetRefreshSchedule.nextBoundary(LocalDateTime.now(), groups)
+            val hasLiveCounter = app.repository.getHabitsEffectiveAt(java.time.LocalDate.now()).any {
+                it.goal.isAbstinence && it.active && !it.archived
+            }
+            val next = WidgetRefreshSchedule.nextBoundary(
+                LocalDateTime.now(),
+                groups,
+                refreshEveryMinutes = 60.takeIf { hasLiveCounter },
+            )
             val triggerAt = next.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
             // Une alarme approchée suffit : la seconde près n'a pas de sens à l'écran, et
             // elle n'exige aucune permission d'alarme exacte.

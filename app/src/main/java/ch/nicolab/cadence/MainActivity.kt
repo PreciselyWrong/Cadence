@@ -329,7 +329,9 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
         val dismissEditor = { if (!busy) { creating = false; creatingAbstinence = false; editorId = null } }
         val save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit = { habit, quickValues, reminderTimes, conditional, isNew ->
             if (!busy) {
-                if (reminderTimes.isNotEmpty() && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                val needsNotifications = reminderTimes.isNotEmpty() ||
+                    (habit.goal.isAbstinence && AbstinenceGuide.milestones(habit.abstinenceProfile).any { it.scientific })
+                if (needsNotifications && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                 viewModel.saveHabit(habit, quickValues, reminderTimes, conditional, isNew) {
                     creating = false; creatingAbstinence = false; editorId = null
                 }

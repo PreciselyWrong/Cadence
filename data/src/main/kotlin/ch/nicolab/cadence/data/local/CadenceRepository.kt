@@ -64,7 +64,7 @@ class CadenceRepository(
         database.withTransaction {
             val habit = requireNotNull(getHabitEffectiveAt(log.habitId, LocalDate.now(clock))) { "Journal habit is missing" }
             require(habit.goal.isAbstinence && habit.abstinenceProfile != AbstinenceProfile.NONE) { "Journal requires abstinence" }
-            validateLogDates(log, requireNotNull(habit.abstinenceStartedOn) { "Observation start is missing" })
+            validateLogDates(log, requireNotNull(habit.abstinenceStartedOn(clock.zone)) { "Observation start is missing" })
             val entity = toAbstinenceLogEntity(log)
             database.abstinenceLogDao().getLog(entity.id)?.let { existing ->
                 require(existing.habitId == log.habitId && existing.kind == log.kind.name) { "Journal identity cannot change habit or kind" }
@@ -241,7 +241,8 @@ class CadenceRepository(
                 groupId = habit.groupId,
                 timerEnabled = habit.timerEnabled,
                 abstinenceProfile = habit.abstinenceProfile.name,
-                abstinenceStartedOn = habit.abstinenceStartedOn?.toString(),
+                abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
+                abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -306,7 +307,8 @@ class CadenceRepository(
                 groupId = habit.groupId,
                 timerEnabled = habit.timerEnabled,
                 abstinenceProfile = habit.abstinenceProfile.name,
-                abstinenceStartedOn = habit.abstinenceStartedOn?.toString(),
+                abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
+                abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -719,6 +721,7 @@ class CadenceRepository(
                 timerEnabled = relation.habit.timerEnabled,
                 abstinenceProfile = relation.habit.abstinenceProfile,
                 abstinenceStartedOn = relation.habit.abstinenceStartedOn,
+                abstinenceStartedAtEpochMs = relation.habit.abstinenceStartedAtEpochMs,
                 goals = goals,
                 schedules = schedules,
             )
@@ -846,6 +849,7 @@ class CadenceRepository(
                     timerEnabled = habit.timerEnabled,
                     abstinenceProfile = habit.abstinenceProfile,
                     abstinenceStartedOn = habit.abstinenceStartedOn,
+                    abstinenceStartedAtEpochMs = habit.abstinenceStartedAtEpochMs,
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -1004,7 +1008,8 @@ class CadenceRepository(
             require(habit.schedules.isNotEmpty()) { "Habit ${habit.id} must have at least one schedule" }
             val startsOn = LocalDate.parse(habit.startsOn)
             val profile = AbstinenceProfile.valueOf(habit.abstinenceProfile)
-            val abstinenceStart = habit.abstinenceStartedOn?.let(LocalDate::parse)
+            val abstinenceStart = habit.abstinenceStartedAtEpochMs?.let(java.time.Instant::ofEpochMilli)
+                ?.atZone(clock.zone)?.toLocalDate() ?: habit.abstinenceStartedOn?.let(LocalDate::parse)
             if (profile != AbstinenceProfile.NONE) {
                 require(abstinenceStart != null && abstinenceStart >= startsOn) { "Abstinence requires an observation start" }
                 val latestGoal = habit.goals.maxBy { LocalDate.parse(it.effectiveFrom) }
@@ -1213,7 +1218,8 @@ class CadenceRepository(
             groupId = relation.habit.groupId,
             timerEnabled = relation.habit.timerEnabled,
             abstinenceProfile = AbstinenceProfile.valueOf(relation.habit.abstinenceProfile),
-            abstinenceStartedOn = relation.habit.abstinenceStartedOn?.let(LocalDate::parse),
+            abstinenceStartedAt = relation.habit.abstinenceStartedAtEpochMs?.let(java.time.Instant::ofEpochMilli)
+                ?: relation.habit.abstinenceStartedOn?.let(LocalDate::parse)?.atStartOfDay(clock.zone)?.toInstant(),
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,

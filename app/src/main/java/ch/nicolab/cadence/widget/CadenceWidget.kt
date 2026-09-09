@@ -84,6 +84,7 @@ private data class WidgetHabit(
     val evaluation: HabitEvaluation,
     /** Secondes déjà mesurées lorsqu'un chronomètre est actif, nulles sinon. */
     val timerSeconds: Long? = null,
+    val abstinenceElapsed: ch.nicolab.cadence.domain.AbstinenceElapsed? = null,
 )
 
 class CadenceWidget : GlanceAppWidget() {
@@ -103,17 +104,23 @@ class CadenceWidget : GlanceAppWidget() {
             val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
             val entries = repository.getEntries(habit.id, window.start, window.endExclusive.minusDays(1))
             val pauses = repository.getPauses(habit.id)
-            evaluator.evaluate(habit.definition, today, entries, pauses).takeIf { it.needsAttentionNow }?.let { evaluation ->
+            val evaluation = evaluator.evaluate(habit.definition, today, entries, pauses)
+            evaluation.takeIf { habit.goal.isAbstinence || it.needsAttentionNow }?.let {
                 // Un chronomètre actif s'affiche à la place de la progression : un toucher
                 // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.
                 val running = timers[habit.id]?.takeIf(HabitTimer::isRunning)?.elapsedSecondsAt(now)
-                WidgetHabit(habit, evaluation, running)
+                val elapsed = habit.abstinenceStartedAt?.takeIf { habit.goal.isAbstinence }?.let { start ->
+                    ch.nicolab.cadence.domain.AbstinenceElapsedCalculator.calculate(
+                        habit.id, start, repository.getEntries(habit.id), now,
+                    )
+                }
+                WidgetHabit(habit, evaluation, running, elapsed)
             }
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val config = repository.getWidgetConfig(appWidgetId) ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
-        val chosen = if (config.selectAll || selected.isEmpty()) allPending else allPending.filter { it.habit.id in selected }
+        val chosen = if (config.selectAll) allPending else allPending.filter { it.habit.id in selected }
         // Le groupe filtre en dernier : une habitude terminée, sautée ou en pause a déjà
         // disparu, et le mode automatique suit l'heure de rendu.
         val visibleGroupIds = WidgetGroupSelection.visibleGroupIds(
@@ -140,12 +147,12 @@ class CadenceWidget : GlanceAppWidget() {
                 saturation = config.iconSaturation,
             )
         }
-        provideContent { WidgetLine(pending, config, iconBitmaps, context.getString(R.string.abstinence_widget_tracking)) }
+        provideContent { WidgetLine(pending, config, iconBitmaps) }
     }
 }
 
 @Composable
-private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>, trackingLabel: String) {
+private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEntity, iconBitmaps: Map<String, Bitmap>) {
     val style = WidgetRenderStyle.byId(config.theme)
     val isMono = style.isLight
     val alpha = config.opacity.coerceIn(0, 100) / 100f
@@ -199,7 +206,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
                         )
                     }
                     if (textVisibility.showLabels) Text(item.habit.name, maxLines = 1, style = TextStyle(color = ColorProvider(day = labelColor, night = labelColor), fontSize = config.labelTextSizeSp.sp, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
-                    if (textVisibility.showValues) Text(WidgetHabitPresentation.value(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor, item.timerSeconds, trackingLabel), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
+                    if (textVisibility.showValues) Text(WidgetHabitPresentation.value(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor, item.timerSeconds, item.abstinenceElapsed), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                 }
             }
             if (layout.showsOverflow) {

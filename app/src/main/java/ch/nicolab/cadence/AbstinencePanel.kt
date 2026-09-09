@@ -2,13 +2,23 @@ package ch.nicolab.cadence
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.draw.clip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
@@ -19,13 +29,17 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceStats
+import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.theme.Size
+import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import ch.nicolab.cadence.ui.theme.habitAccent
+import java.time.Instant
+import kotlinx.coroutines.delay
 
 fun abstinenceProfileLabel(profile: AbstinenceProfile): Int = AbstinenceGuide.content(profile).label
 
@@ -47,10 +61,9 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
                 )
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                     Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                    Text(stringResource(abstinenceProfileLabel(item.stored.abstinenceProfile)), style = MaterialTheme.typography.labelMedium, color = cadence.inkMuted)
                 }
             }
-            Text(abstinenceStatus(item), style = MaterialTheme.typography.headlineSmall, color = accent)
+            LiveAbstinenceCounter(item, accent, compact = true)
             Text(stringResource(when {
                 item.evaluation.isPaused -> R.string.abstinence_today_paused
                 item.abstinenceJournalSummary?.checkedInToday == true -> R.string.catalogue_home_checked_in
@@ -73,6 +86,53 @@ fun abstinenceStatus(item: HabitCardState): String = when {
     item.evaluation.isPaused -> stringResource(R.string.abstinence_today_paused)
     item.evaluation.progressMinor > 0 -> stringResource(R.string.abstinence_today_event)
     else -> stringResource(R.string.abstinence_days, item.abstinenceStats?.currentDays ?: 0L)
+}
+
+@Composable
+fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean = false) {
+    val start = item.stored.abstinenceStartedAt ?: return
+    var now by remember(item.stored.id) { mutableStateOf(Instant.now()) }
+    LaunchedEffect(item.stored.id, start, item.recentEntries) {
+        while (true) {
+            now = Instant.now()
+            delay(1_000)
+        }
+    }
+    val elapsed = AbstinenceElapsedCalculator.calculate(item.stored.id, start, item.recentEntries, now)
+    if (compact) {
+        Text(elapsed.formatCompact(), style = MaterialTheme.typography.headlineSmall, color = accent)
+        return
+    }
+    val nextDays = AbstinenceGuide.milestones(item.stored.abstinenceProfile)
+        .firstOrNull { it.days > elapsed.days }?.days ?: (elapsed.days + 1)
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+        Text(
+            stringResource(R.string.abst_elapsed_intro),
+            style = MaterialTheme.typography.bodyMedium,
+            color = cadence.inkMuted,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        TimeBand(elapsed.days, stringResource(R.string.abst_elapsed_days), elapsed.days.toFloat() / nextDays, accent, 1f)
+        TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f)
+        TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f)
+        TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f)
+    }
+}
+
+@Composable
+private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, alpha: Float) {
+    Box(Modifier.fillMaxWidth().height(Size.control).clip(Radius.Control).background(cadence.sunken)) {
+        Box(Modifier.fillMaxWidth(progress.coerceIn(0.08f, 1f)).height(Size.control).background(accent.copy(alpha = alpha)))
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = Space.lg).align(Alignment.CenterStart),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            Text(value.toString(), style = MaterialTheme.typography.headlineSmall, color = cadence.onAccent)
+            Text(unit, style = MaterialTheme.typography.titleMedium, color = cadence.inkMuted)
+        }
+    }
 }
 
 @Composable
@@ -101,6 +161,7 @@ fun AbstinencePanel(item: HabitCardState, accent: Color) {
         milestones.firstOrNull { !it.reached(stats.currentDays) },
     )
     Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
+        LiveAbstinenceCounter(item, accent)
         AbstinenceSummary(stats, accent)
         Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             Text(stringResource(R.string.abstinence_window), style = MaterialTheme.typography.titleSmall, color = cadence.ink)

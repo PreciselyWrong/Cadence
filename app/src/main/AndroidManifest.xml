@@ -56,6 +56,9 @@
             android:name=".reminder.ReminderActionReceiver"
             android:exported="false" />
         <receiver
+            android:name=".reminder.AbstinenceMilestoneReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".reminder.ReminderBootReceiver"
             android:exported="false">
             <intent-filter>

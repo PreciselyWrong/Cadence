@@ -3,6 +3,7 @@ package ch.nicolab.cadence
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -29,6 +30,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.text.Collator
 import java.util.Locale
@@ -80,12 +82,18 @@ fun AbstinenceSetupSheet(
     val listState = remember(choosing) { LazyListState() }
     var name by rememberSaveable(stored?.id) { mutableStateOf(stored?.name.orEmpty()) }
     var reason by rememberSaveable(stored?.id) { mutableStateOf(stored?.description.orEmpty()) }
-    var startText by rememberSaveable(stored?.id) { mutableStateOf((stored?.abstinenceStartedOn ?: LocalDate.now()).toString()) }
+    val initialStart = stored?.abstinenceStartedAt?.atZone(ZoneId.systemDefault())
+        ?: java.time.ZonedDateTime.now().withSecond(0).withNano(0)
+    var startText by rememberSaveable(stored?.id) { mutableStateOf(initialStart.toLocalDate().toString()) }
+    var startTimeText by rememberSaveable(stored?.id) { mutableStateOf(initialStart.toLocalTime().toString()) }
     var groupId by rememberSaveable(stored?.id) { mutableStateOf(stored?.groupId ?: HabitGroup.ALL_DAY_ID) }
     var reminder by rememberSaveable(stored?.id) { mutableStateOf(existing?.reminders?.joinToString(", ") { it.time }.orEmpty()) }
     var dateOpen by remember { mutableStateOf(false) }
+    var timeOpen by remember { mutableStateOf(false) }
     var validation by remember { mutableStateOf<Int?>(null) }
     val start = LocalDate.parse(startText)
+    val startTime = LocalTime.parse(startTimeText)
+    val startAt = start.atTime(startTime).atZone(ZoneId.systemDefault()).toInstant()
     val palette = cadence
     val accent = palette.habitAccent(stored?.colorArgb)
     val content = AbstinenceGuide.content(profile)
@@ -125,7 +133,6 @@ fun AbstinenceSetupSheet(
                             size = Size.badge,
                         )
                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                            Text(stringResource(content.label), style = MaterialTheme.typography.titleLarge, color = accent)
                             Text(stringResource(content.description), style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted)
                         }
                     }
@@ -134,18 +141,15 @@ fun AbstinenceSetupSheet(
                 item { CadenceField(reason, { reason = it.take(500) }, stringResource(R.string.abst_setup_reason),
                     placeholder = stringResource(R.string.abst_setup_reason_hint), accent = accent) }
                 item {
-                    if (stored == null) {
-                        ActionRow(
-                            Icons.Outlined.DateRange,
-                            stringResource(R.string.abst_setup_start, displayAbstinenceDate(start)),
-                            accent,
-                        ) { if (!busy) dateOpen = true }
-                        Spacer(Modifier.height(Space.sm))
-                        Text(stringResource(R.string.abst_setup_start_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-                    } else {
-                        Text(stringResource(R.string.abst_setup_start_locked, displayAbstinenceDate(start)),
-                            style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                    ActionRow(Icons.Outlined.DateRange, stringResource(R.string.abst_setup_start, displayAbstinenceDate(start)), accent) {
+                        if (!busy) dateOpen = true
                     }
+                    Spacer(Modifier.height(Space.sm))
+                    ActionRow(Icons.Outlined.AccessTime, stringResource(R.string.abst_setup_time, startTime), accent) {
+                        if (!busy) timeOpen = true
+                    }
+                    Spacer(Modifier.height(Space.sm))
+                    Text(stringResource(R.string.abst_setup_start_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
                 }
                 item {
                     CadenceField(reminder, { reminder = it }, stringResource(R.string.abst_setup_reminder),
@@ -176,16 +180,18 @@ fun AbstinenceSetupSheet(
         ) {
             val times = reminder.split(',', ' ').filter(String::isNotBlank)
             validation = when {
-                name.isBlank() || start > LocalDate.now() || profile == AbstinenceProfile.NONE -> R.string.abst_setup_invalid
+                name.isBlank() || startAt > Instant.now() || profile == AbstinenceProfile.NONE -> R.string.abst_setup_invalid
                 times.any { runCatching { LocalTime.parse(it) }.isFailure } -> R.string.abst_setup_bad_reminder
                 else -> null
             }
             if (validation == null) {
-                val habit = stored?.copy(name = name.trim(), description = reason.trim().ifBlank { null }, groupId = groupId)
+                val habit = stored?.copy(name = name.trim(), description = reason.trim().ifBlank { null }, groupId = groupId,
+                    startsOn = minOf(stored.startsOn, start),
+                    abstinenceStartedAt = startAt)
                     ?: PersistedHabit(
                         id = habitId, name = name.trim(), description = reason.trim().ifBlank { null },
                         iconId = abstinenceIconId(profile), colorArgb = accent.toArgb(), active = true, startsOn = start,
-                        groupId = groupId, abstinenceProfile = profile, abstinenceStartedOn = start,
+                        groupId = groupId, abstinenceProfile = profile, abstinenceStartedAt = startAt,
                         goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, MeasurementUnit.COUNT, direction = GoalDirection.AT_MOST),
                         schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY),
                     )
@@ -232,5 +238,18 @@ fun AbstinenceSetupSheet(
                 DatePicker(state = dateState, title = { Text(stringResource(R.string.abst_setup_date_title), Modifier.padding(Space.lg)) })
             }
         }
+    }
+    if (timeOpen) {
+        val timeState = rememberTimePickerState(startTime.hour, startTime.minute, is24Hour = true)
+        AlertDialog(
+            onDismissRequest = { timeOpen = false },
+            title = { Text(stringResource(R.string.abst_setup_time_title)) },
+            text = { TimePicker(timeState) },
+            confirmButton = { TextButton(onClick = {
+                startTimeText = LocalTime.of(timeState.hour, timeState.minute).toString()
+                timeOpen = false
+            }) { Text(stringResource(R.string.abst_setup_time_confirm)) } },
+            dismissButton = { TextButton(onClick = { timeOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
+        )
     }
 }

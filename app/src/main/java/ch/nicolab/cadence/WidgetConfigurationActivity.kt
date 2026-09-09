@@ -64,6 +64,8 @@ import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.domain.WidgetSlotAlignment
 import ch.nicolab.cadence.domain.WidgetSlotMode
+import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
+import java.time.Instant
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
 import ch.nicolab.cadence.ui.widget.WidgetSlotSolver
 import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
@@ -165,7 +167,7 @@ private fun WidgetConfiguration(
 
     // L'aperçu applique les mêmes filtres que le widget : sélection d'habitudes puis groupe.
     val previewHabits = remember(all, selected, groupMode, groupId, habits, groups) {
-        val chosen = if (all || selected.isEmpty()) habits else habits.filter { it.id in selected }
+        val chosen = if (all) habits else habits.filter { it.id in selected }
         val visible = WidgetGroupSelection.visibleGroupIds(groupMode, groups, groupId, LocalTime.now())
         (visible?.let { ids -> chosen.filter { it.groupId in ids } } ?: chosen).filter { !it.archived }
     }
@@ -488,7 +490,9 @@ private fun WidgetPreview(
                         }
                         if (textVisibility.showValues) {
                             Text(
-                                HabitFormatter.formatCompactProgress(0, habit.goal.targetMinor, habit.goal.goalType, habit.goal.unit),
+                                habit.abstinenceStartedAt?.takeIf { habit.goal.isAbstinence }?.let { start ->
+                                    AbstinenceElapsedCalculator.calculate(habit.id, start, emptyList(), Instant.now()).formatCompact()
+                                } ?: HabitFormatter.formatCompactProgress(0, habit.goal.targetMinor, habit.goal.goalType, habit.goal.unit),
                                 maxLines = 1,
                                 fontSize = valueTextSizeSp.sp,
                                 color = content.copy(alpha = valueOpacity.coerceIn(0, 100) / 100f),

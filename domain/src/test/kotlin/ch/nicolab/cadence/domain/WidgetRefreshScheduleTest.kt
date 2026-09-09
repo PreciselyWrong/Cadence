@@ -35,4 +35,14 @@ class WidgetRefreshScheduleTest {
         )
         assertEquals(LocalDateTime.of(2026, 8, 15, 0, 0), next)
     }
+
+    @Test
+    fun `un compteur vivant rafraichit le widget a la prochaine heure`() {
+        val next = WidgetRefreshSchedule.nextBoundary(
+            LocalDateTime.of(2026, 8, 14, 15, 30, 45),
+            emptyList(),
+            refreshEveryMinutes = 60,
+        )
+        assertEquals(LocalDateTime.of(2026, 8, 14, 16, 0), next)
+    }
 }

@@ -53,7 +53,9 @@ data class BackupHabitV2(
     val groupId: String = "group-day",
     val timerEnabled: Boolean = false,
     val abstinenceProfile: String = "NONE",
+    /** Repli pour les sauvegardes créées avant que l'heure précise soit disponible. */
     val abstinenceStartedOn: String? = null,
+    val abstinenceStartedAtEpochMs: Long? = null,
     val goals: List<BackupGoalV2>,
     val schedules: List<BackupScheduleV2>,
 )

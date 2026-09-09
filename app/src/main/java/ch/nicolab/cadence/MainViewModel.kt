@@ -31,6 +31,7 @@ import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.StreakCalculator
 import ch.nicolab.cadence.domain.isPlannedOn
 import ch.nicolab.cadence.reminder.ReminderScheduler
+import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
 import java.time.Clock
 import java.time.LocalDate
@@ -381,7 +382,7 @@ class MainViewModel(
             id = UUID.randomUUID().toString(),
             name = "${habit.name} (copie)",
             archived = false,
-            abstinenceStartedOn = if (habit.goal.isAbstinence) LocalDate.now(clock) else null,
+            abstinenceStartedAt = if (habit.goal.isAbstinence) clock.instant() else null,
             createdAtEpochMs = 0,
             updatedAtEpochMs = 0,
             sortOrder = latest.maxOfOrNull(PersistedHabit::sortOrder)?.plus(1) ?: 0,
@@ -393,6 +394,7 @@ class MainViewModel(
 
     fun deleteHabit(habitId: String) = viewModelScope.launch {
         repository.getReminders(habitId).forEach { ReminderScheduler.cancel(app, it.id) }
+        AbstinenceMilestoneScheduler.cancel(app, habitId)
         repository.deleteHabit(habitId)
         refreshAll()
     }
@@ -490,6 +492,7 @@ class MainViewModel(
      */
     private suspend fun refreshAll() {
         rebuild(latest)
+        AbstinenceMilestoneScheduler.scheduleAll(app, repository, clock.instant())
     }
 
     private suspend fun rebuild(source: List<PersistedHabit>) {
@@ -580,10 +583,10 @@ class MainViewModel(
                 habitAt = { day -> versions(day)?.definition }, today = date, entries = allEntries, pauses = pauses,
             ),
             abstinenceLogs = abstinenceLogs.sortedByDescending(AbstinenceLog::occurredAt),
-            abstinenceJournalSummary = habit.abstinenceStartedOn?.takeIf { habit.goal.isAbstinence }?.let { start ->
+            abstinenceJournalSummary = habit.abstinenceStartedOn(clock.zone)?.takeIf { habit.goal.isAbstinence }?.let { start ->
                 AbstinenceJournalSummary.compute(habit.id, start, date, abstinenceLogs, allEntries)
             },
-            abstinenceStats = habit.abstinenceStartedOn?.takeIf { habit.goal.isAbstinence }?.let { start ->
+            abstinenceStats = habit.abstinenceStartedOn(clock.zone)?.takeIf { habit.goal.isAbstinence }?.let { start ->
                 AbstinenceStatsCalculator.compute(habit.id, start, date, allEntries, pauses)
             },
         )

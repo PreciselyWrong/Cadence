@@ -42,7 +42,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 17,
+    version = 18,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -57,6 +57,12 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
+        val MIGRATION_17_18 = object : Migration(17, 18) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habits ADD COLUMN abstinenceStartedAtEpochMs INTEGER")
+            }
+        }
+
         val MIGRATION_16_17 = object : Migration(16, 17) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""

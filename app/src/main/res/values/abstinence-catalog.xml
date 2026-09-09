@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="catalogue_home_checked_in">Le point est fait aujourd’hui</string>
-    <string name="catalogue_home_check_in">Faire le point aujourd’hui</string>
+    <string name="catalogue_home_checked_in">Note ajoutée aujourd’hui</string>
+    <string name="catalogue_home_check_in">Le compteur avance automatiquement</string>
     <string name="catalogue_home_next">Prochain repère · %1$s</string>
     <string name="catalogue_none_name">Mon habitude</string>
     <string name="catalogue_none_description">Une habitude ordinaire, sans parcours d’abstinence.</string>

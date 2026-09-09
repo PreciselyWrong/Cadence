@@ -15,15 +15,21 @@ object WidgetRefreshSchedule {
      * Prochain basculement strictement après [now]. Minuit sert de borne haute : il change
      * la journée affichée et rend le résultat toujours défini.
      */
-    fun nextBoundary(now: LocalDateTime, groups: List<HabitGroup>): LocalDateTime {
+    fun nextBoundary(now: LocalDateTime, groups: List<HabitGroup>, refreshEveryMinutes: Int? = null): LocalDateTime {
         val midnight = now.toLocalDate().plusDays(1).atStartOfDay()
         val nowMinute = now.hour * 60 + now.minute
-        return groups
+        val groupBoundary = groups
             .flatMap { listOfNotNull(it.startMinute, it.endMinute) }
             .filter { it > nowMinute }
             .distinct()
             .minOrNull()
             ?.let { minute -> now.toLocalDate().atTime(LocalTime.of(minute / 60, minute % 60)) }
             ?: midnight
+        val liveBoundary = refreshEveryMinutes?.takeIf { it > 0 }?.let { interval ->
+            val nextMinute = ((nowMinute / interval) + 1) * interval
+            if (nextMinute >= 24 * 60) midnight
+            else now.toLocalDate().atTime(LocalTime.of(nextMinute / 60, nextMinute % 60))
+        } ?: midnight
+        return minOf(groupBoundary, liveBoundary)
     }
 }

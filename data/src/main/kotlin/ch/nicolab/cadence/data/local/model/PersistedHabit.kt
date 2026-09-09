@@ -6,6 +6,8 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitSchedule
 import java.time.LocalDate
+import java.time.Instant
+import java.time.ZoneId
 
 data class PersistedHabit(
     val id: String,
@@ -23,10 +25,13 @@ data class PersistedHabit(
     /** Mode chronomètre proposé dans la saisie rapide; sans effet hors objectif en durée. */
     val timerEnabled: Boolean = false,
     val abstinenceProfile: AbstinenceProfile = AbstinenceProfile.NONE,
-    val abstinenceStartedOn: LocalDate? = null,
+    val abstinenceStartedAt: Instant? = null,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {
+    fun abstinenceStartedOn(zoneId: ZoneId = ZoneId.systemDefault()): LocalDate? =
+        abstinenceStartedAt?.atZone(zoneId)?.toLocalDate()
+
     val definition: HabitDefinition
         get() = HabitDefinition(
             id = id,
