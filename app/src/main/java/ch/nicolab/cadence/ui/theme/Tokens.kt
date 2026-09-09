@@ -58,6 +58,7 @@ object Size {
     val control = 52.dp
     val badge = 52.dp
     val calendarMark = 36.dp
+    val statisticsPulse = 48.dp
     val navBar = 64.dp
     val sheetContent = 480.dp
 }

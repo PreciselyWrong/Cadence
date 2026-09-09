@@ -8,6 +8,7 @@
 - La date et l’heure de départ peuvent être corrigées à tout moment.
 
 ### Améliorations
+- Les statistiques deviennent visuelles : grand score, rythme récent, évolution, série et record se lisent d’un coup d’œil.
 - Les onglets du suivi respirent mieux et restent clairement séparés.
 - Chaque suivi nomme clairement l’action à enregistrer, comme « J’ai bu un verre ».
 - La création ne demande plus d’expliquer pourquoi vous commencez.

@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Statistiques visuelles distinctes du détail
 - [x] Actions concrètes et économies facultatives calculées depuis une dépense, sa fréquence et sa monnaie
 - [x] Compteur d’abstinence vivant, saisie clarifiée, départ modifiable et paliers scientifiques
 - [x] Cinq profils supplémentaires avec conseils et sauvegarde vérifiés

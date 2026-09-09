@@ -61,6 +61,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Étirer la destination active de la navigation — les cinq cibles gardent la même largeur et seule la pastille de l’icône indique l’onglet actif.
 - ⛔ Présenter une absence de saisie comme la preuve d’une abstinence — le bilan compte seulement les écarts notés et explique cette limite clairement.
 - ⛔ Déplier le calendrier et les tendances à l’intérieur d’une carte de statistiques — la synthèse reste courte et le détail s’ouvre dans une surface dédiée.
+- ⛔ Dupliquer le contenu du modal dans la page Statistiques — la page donne une lecture visuelle immédiate; le modal garde le calendrier et l’analyse détaillée.
 - ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.
 - ⛔ Réduire une abstinence à une saisie d’habitude ordinaire — son accès quotidien propose d’abord un point et le journal des envies, pour accompagner le suivi.
 - ⛔ Transposer les bénéfices de la cigarette au vapotage ou promettre des bénéfices hormonaux de l’arrêt de la masturbation — chaque profil doit refléter ses propres preuves.

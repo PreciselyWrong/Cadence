@@ -24,4 +24,20 @@
     <string name="habit_stats_day_ideal">Idéal atteint</string>
     <string name="habit_stats_activity">Une saisie enregistrée</string>
     <string name="habit_stats_no_activity">Aucune saisie ce jour</string>
+    <string name="habit_stats_overview_period">30 derniers jours</string>
+    <string name="habit_stats_pulse">Rythme des 14 derniers jours</string>
+    <string name="habit_stats_goal_count">%1$d / %2$d</string>
+    <string name="habit_stats_goals_label">objectifs</string>
+    <string name="habit_stats_streak_label">série</string>
+    <string name="habit_stats_trend_short_up">+%1$d pts</string>
+    <string name="habit_stats_trend_short_down">−%1$d pts</string>
+    <string name="habit_stats_trend_short_stable">stable</string>
+    <string name="habit_stats_trend_label">évolution</string>
+    <string name="habit_stats_abstinence_hero">jours en cours</string>
+    <string name="habit_stats_abstinence_clear">%1$d jours sans écart noté sur %2$d observés</string>
+    <string name="habit_stats_record_label">record</string>
+    <string name="habit_stats_occurrences_label">écarts notés</string>
+    <string name="habit_stats_paused_short">En pause</string>
+    <string name="habit_stats_today_occurrence_short">Écart noté aujourd’hui</string>
+    <string name="habit_stats_active_short">Compteur actif</string>
 </resources>

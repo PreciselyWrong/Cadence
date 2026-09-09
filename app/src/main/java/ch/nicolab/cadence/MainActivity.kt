@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -625,68 +626,13 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
         if (regular.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_regular_section)) }
             items(regular, key = { it.stored.id }) { item ->
-                val tint = habitTint(item)
-                val stats = item.statistics
-                val rate = stats?.successRatePercent
-                Panel(onClick = { detailId = item.stored.id }) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
-                        HabitFacet(
-                            icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
-                            label = null,
-                            progress = (rate ?: 0) / 100f,
-                            tint = tint,
-                            trackColor = cadence.sunken,
-                            size = Size.badge,
-                        )
-                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                            if (stats == null || stats.evaluatedPeriods == 0) {
-                                Text(stringResource(R.string.habit_stats_waiting), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                            } else {
-                                Text(stringResource(R.string.habit_stats_validated_compact, stats.validatedPeriods, stats.evaluatedPeriods),
-                                    style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                                if (item.streak.current > 0) Text(
-                                    pluralStringResource(R.plurals.streak_current, item.streak.current, item.streak.current),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = cadence.inkFaint,
-                                )
-                            }
-                        }
-                        rate?.let {
-                            Text(stringResource(R.string.habit_stats_rate_value, it), style = MaterialTheme.typography.titleLarge, color = tint)
-                        }
-                    }
-                }
+                HabitStatisticsOverview(item) { detailId = item.stored.id }
             }
         }
         if (abstinences.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
             items(abstinences, key = { it.stored.id }) { item ->
-                val tint = habitTint(item)
-                val abstinence = item.abstinenceStats
-                Panel(onClick = { open(item) }) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
-                        HabitFacet(
-                            icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
-                            label = null,
-                            progress = 0f,
-                            tint = tint,
-                            trackColor = cadence.sunken,
-                            size = Size.badge,
-                        )
-                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                            Text(stringResource(abstinenceProfileLabel(item.stored.abstinenceProfile)),
-                                style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                        }
-                        abstinence?.let {
-                            Column(horizontalAlignment = Alignment.End) {
-                                Text(stringResource(R.string.habit_stats_days_short, it.currentDays), style = MaterialTheme.typography.titleLarge, color = tint)
-                                Text(stringResource(R.string.habit_stats_current_series), style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
-                            }
-                        }
-                    }
-                }
+                AbstinenceStatisticsOverview(item) { open(item) }
             }
         }
     }
@@ -711,6 +657,153 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
+    val palette = cadence
+    val tint = habitTint(item)
+    val stats = item.statistics
+    val rate = stats?.successRatePercent
+    Panel(onClick = onClick) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = (rate ?: 0) / 100f,
+                tint = tint,
+                trackColor = palette.sunken,
+                size = Size.badge,
+            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink)
+                Text(stringResource(R.string.habit_stats_overview_period), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+            }
+        }
+        if (stats == null || stats.evaluatedPeriods == 0) {
+            Spacer(Modifier.height(Space.xl))
+            Text(stringResource(R.string.habit_stats_waiting), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            return@Panel
+        }
+        Spacer(Modifier.height(Space.xl))
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+            Text(stringResource(R.string.habit_stats_rate_value, rate ?: 0), style = MaterialTheme.typography.displayMedium, color = palette.ink)
+            Spacer(Modifier.weight(1f))
+            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = tint)
+        }
+        Spacer(Modifier.height(Space.lg))
+        StatisticsPulse(stats.days.toStatisticsPulse(), tint)
+        Spacer(Modifier.height(Space.sm))
+        Text(stringResource(R.string.habit_stats_pulse), style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
+        Spacer(Modifier.height(Space.xl))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            OverviewMetric(stringResource(R.string.habit_stats_goal_count, stats.validatedPeriods, stats.evaluatedPeriods), stringResource(R.string.habit_stats_goals_label))
+            OverviewMetric(item.streak.current.toString(), stringResource(R.string.habit_stats_streak_label))
+            val trend = stats.trendPercentagePoints
+            OverviewMetric(
+                when {
+                    trend == null || trend == 0 -> stringResource(R.string.habit_stats_trend_short_stable)
+                    trend > 0 -> stringResource(R.string.habit_stats_trend_short_up, trend)
+                    else -> stringResource(R.string.habit_stats_trend_short_down, -trend)
+                },
+                stringResource(R.string.habit_stats_trend_label),
+                if (trend != null && trend > 0) palette.success else palette.ink,
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatisticsPulse(levels: List<StatisticsPulseLevel>, accent: Color) {
+    val palette = cadence
+    if (levels.isEmpty()) return
+    Row(
+        Modifier.fillMaxWidth().height(Size.statisticsPulse),
+        horizontalArrangement = Arrangement.spacedBy(Space.xs),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        levels.forEach { level ->
+            val fraction = when (level) {
+                StatisticsPulseLevel.QUIET -> 0.18f
+                StatisticsPulseLevel.MISSED -> 0.42f
+                StatisticsPulseLevel.ACTIVE -> 0.68f
+                StatisticsPulseLevel.IDEAL -> 1f
+            }
+            val color = when (level) {
+                StatisticsPulseLevel.QUIET -> palette.sunken
+                StatisticsPulseLevel.MISSED -> palette.danger
+                StatisticsPulseLevel.ACTIVE -> palette.accentSoft
+                StatisticsPulseLevel.IDEAL -> accent
+            }
+            Box(Modifier.weight(1f).fillMaxHeight(fraction).clip(Radius.Pill).background(color))
+        }
+    }
+}
+
+@Composable
+private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
+    val palette = cadence
+    val tint = habitTint(item)
+    val stats = item.abstinenceStats
+    Panel(onClick = onClick) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = stats?.let { if (it.bestDays == 0L) 0f else it.currentDays.toFloat() / it.bestDays } ?: 0f,
+                tint = tint,
+                trackColor = palette.sunken,
+                size = Size.badge,
+            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink)
+                Text(
+                    stringResource(when {
+                        stats?.isPaused == true -> R.string.habit_stats_paused_short
+                        stats?.todayHasOccurrence == true -> R.string.habit_stats_today_occurrence_short
+                        else -> R.string.habit_stats_active_short
+                    }),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (stats?.isPaused == true || stats?.todayHasOccurrence == true) palette.inkMuted else palette.success,
+                )
+            }
+        }
+        stats?.let {
+            Spacer(Modifier.height(Space.xl))
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(it.currentDays.toString(), style = MaterialTheme.typography.displayMedium, color = palette.ink)
+                Spacer(Modifier.width(Space.sm))
+                Text(stringResource(R.string.habit_stats_abstinence_hero), style = MaterialTheme.typography.labelMedium, color = tint)
+            }
+            Spacer(Modifier.height(Space.lg))
+            val observed = it.observedDays30.coerceAtLeast(1)
+            Box(Modifier.fillMaxWidth().height(Space.sm).clip(Radius.Pill).background(palette.sunken)) {
+                Box(
+                    Modifier.fillMaxWidth(it.clearDays30.toFloat() / observed).fillMaxHeight()
+                        .clip(Radius.Pill).background(tint),
+                )
+            }
+            Spacer(Modifier.height(Space.sm))
+            Text(
+                stringResource(R.string.habit_stats_abstinence_clear, it.clearDays30, it.observedDays30),
+                style = MaterialTheme.typography.labelSmall,
+                color = palette.inkFaint,
+            )
+            Spacer(Modifier.height(Space.xl))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
+                OverviewMetric(stringResource(R.string.habit_stats_days_short, it.bestDays), stringResource(R.string.habit_stats_record_label))
+                OverviewMetric(it.occurrences30.toString(), stringResource(R.string.habit_stats_occurrences_label))
+            }
+        }
+    }
+}
+
+@Composable
+private fun OverviewMetric(value: String, label: String, color: Color = cadence.ink) {
+    Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+        Text(value, style = MaterialTheme.typography.titleMedium, color = color)
+        Text(label, style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
     }
 }
 
