@@ -19,6 +19,28 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AbstinencePersistenceTest {
+    @Test fun migrationAddsOptionalSavingsWithoutInventingAValue() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val helper = FrameworkSQLiteOpenHelperFactory().create(
+            SupportSQLiteOpenHelper.Configuration.builder(context)
+                .callback(object : SupportSQLiteOpenHelper.Callback(18) {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        db.execSQL("CREATE TABLE habits (id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL)")
+                        db.execSQL("INSERT INTO habits VALUES ('existing', 'Lecture')")
+                    }
+                    override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
+                }).build())
+        try {
+            val db = helper.writableDatabase
+            CadenceDatabase.MIGRATION_18_19.migrate(db)
+            db.query("SELECT abstinenceSavingsDailyMinor, abstinenceSavingsCurrency FROM habits").use {
+                assertTrue(it.moveToFirst())
+                assertTrue(it.isNull(0))
+                assertTrue(it.isNull(1))
+            }
+        } finally { helper.close() }
+    }
+
     @Test fun behavioralProfilesSurviveBackup() = runBlocking {
         val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), CadenceDatabase::class.java).build()
         try {
@@ -98,6 +120,7 @@ class AbstinencePersistenceTest {
             val startAt = Instant.parse("2026-09-01T08:42:00Z")
             val habit = PersistedHabit("abstinence", "Alcool", active = true, startsOn = start,
                 abstinenceProfile = AbstinenceProfile.ALCOHOL, abstinenceStartedAt = startAt,
+                abstinenceSavingsDailyMinor = 1_250L, abstinenceSavingsCurrency = "CHF",
                 goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.AT_MOST),
                 schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY))
             repository.addHabit(habit, start)
@@ -108,6 +131,8 @@ class AbstinencePersistenceTest {
             assertEquals(AbstinenceProfile.ALCOHOL, restored.abstinenceProfile)
             assertEquals(start, restored.abstinenceStartedOn(ZoneOffset.UTC))
             assertEquals(startAt, restored.abstinenceStartedAt)
+            assertEquals(1_250L, restored.abstinenceSavingsDailyMinor)
+            assertEquals("CHF", restored.abstinenceSavingsCurrency)
             assertTrue(restored.goal.isAbstinence)
             assertEquals("Sans alcool", restored.name)
             val invalidProfile = backup.replace("\"ALCOHOL\"", "\"UNKNOWN\"")

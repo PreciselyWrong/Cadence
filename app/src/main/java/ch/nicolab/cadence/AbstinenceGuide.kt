@@ -40,6 +40,22 @@ object AbstinenceGuide {
     val sleepAdvice = EvidenceSource(R.string.catalogue_source_nhs_sleep, "https://oxfordhealth.nhs.uk/mindset/skills/sleep-hygiene/")
     val pornographyAdvice = EvidenceSource(R.string.catalogue_source_nhs_pornography, "https://www.sexualhealthoxfordshire.nhs.uk/services/psychosexual-therapy/sex-addiction/")
 
+    fun occurrenceAction(profile: AbstinenceProfile): Int = when (profile) {
+        AbstinenceProfile.NONE -> R.string.abst_occurrence_title
+        AbstinenceProfile.ALCOHOL -> R.string.abst_occurrence_alcohol
+        AbstinenceProfile.SMOKING -> R.string.abst_occurrence_smoking
+        AbstinenceProfile.VAPING -> R.string.abst_occurrence_vaping
+        AbstinenceProfile.CANNABIS -> R.string.abst_occurrence_cannabis
+        AbstinenceProfile.CAFFEINE -> R.string.abst_occurrence_caffeine
+        AbstinenceProfile.MASTURBATION -> R.string.abst_occurrence_masturbation
+        AbstinenceProfile.GAMBLING -> R.string.abst_occurrence_gambling
+        AbstinenceProfile.SOCIAL_MEDIA -> R.string.abst_occurrence_social_media
+        AbstinenceProfile.BEDTIME_SCREENS -> R.string.abst_occurrence_bedtime_screens
+        AbstinenceProfile.IMPULSE_SHOPPING -> R.string.abst_occurrence_impulse_shopping
+        AbstinenceProfile.PORNOGRAPHY -> R.string.abst_occurrence_pornography
+        AbstinenceProfile.CUSTOM -> R.string.abst_occurrence_custom
+    }
+
     fun content(profile: AbstinenceProfile): AbstinenceProfileContent = when (profile) {
         AbstinenceProfile.NONE -> AbstinenceProfileContent(
             R.string.abstinence_none, R.string.catalogue_none_name,

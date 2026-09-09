@@ -5,6 +5,13 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AbstinenceGuideTest {
+    @Test fun `each abstinence profile exposes a concrete occurrence action`() {
+        val actionable = AbstinenceProfile.entries.filter { it != AbstinenceProfile.NONE }
+        assertEquals(actionable.size, actionable.map(AbstinenceGuide::occurrenceAction).distinct().size)
+        assertEquals(R.string.abst_occurrence_alcohol, AbstinenceGuide.occurrenceAction(AbstinenceProfile.ALCOHOL))
+        assertEquals(R.string.abst_occurrence_smoking, AbstinenceGuide.occurrenceAction(AbstinenceProfile.SMOKING))
+    }
+
     @Test fun `behavioral profiles have distinct guidance and only personal milestones`() {
         val profiles = listOf("GAMBLING", "SOCIAL_MEDIA", "BEDTIME_SCREENS", "IMPULSE_SHOPPING", "PORNOGRAPHY")
             .map(AbstinenceProfile::valueOf)

@@ -39,6 +39,7 @@ fun AbstinenceDetailSheet(
     var deleting by remember { mutableStateOf<String?>(null) }
     var visibleCount by rememberSaveable(item.stored.id) { mutableIntStateOf(20) }
     val accent = cadence.habitAccent(item.stored.colorArgb)
+    val occurrenceAction = AbstinenceGuide.occurrenceAction(item.stored.abstinenceProfile)
     val enabled = !busy && !item.evaluation.isPaused
     val summary = item.abstinenceJournalSummary
     val rows = remember(item.abstinenceLogs, item.recentEntries) {
@@ -63,7 +64,7 @@ fun AbstinenceDetailSheet(
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                             PrimaryAction(stringResource(R.string.abst_urge), Modifier.fillMaxWidth(), accent, enabled) { form = "urge" }
-                            SecondaryAction(stringResource(R.string.abst_occurrence_title), Modifier.fillMaxWidth(), enabled) { form = "occurrence" }
+                            SecondaryAction(stringResource(occurrenceAction), Modifier.fillMaxWidth(), enabled) { form = "occurrence" }
                             if (enabled && summary?.checkedInToday != true) {
                                 TertiaryAction(stringResource(R.string.abst_checkin), Modifier.fillMaxWidth(), onClick = onCheckIn)
                             } else {
@@ -73,12 +74,6 @@ fun AbstinenceDetailSheet(
                             if (item.evaluation.isPaused) Text(stringResource(R.string.abst_pause_help), color = cadence.inkMuted)
                         }
                     }
-                    item.stored.description?.takeIf(String::isNotBlank)?.let { reason -> item {
-                        Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                            Text(stringResource(R.string.abst_reason), style = MaterialTheme.typography.titleSmall, color = accent)
-                            Text(reason, style = MaterialTheme.typography.bodyLarge)
-                        }
-                    } }
                     item { JournalCounts(item) }
                     val days = item.abstinenceStats?.currentDays ?: 0L
                     val next = AbstinenceGuide.milestones(item.stored.abstinenceProfile).firstOrNull { !it.reached(days) }
@@ -117,7 +112,7 @@ fun AbstinenceDetailSheet(
                             Text(when {
                                 log?.kind == AbstinenceLogKind.CHECK_IN -> stringResource(R.string.abst_journal_checkin)
                                 log != null -> stringResource(R.string.abst_journal_urge, log.intensity ?: 0)
-                                else -> stringResource(R.string.abst_journal_occurrence)
+                                else -> stringResource(occurrenceAction)
                             }, style = MaterialTheme.typography.titleSmall, color = accent)
                             Text(row.at.atZone(zone).format(DateTimeFormatter.ofPattern("d MMM yyyy · HH:mm", Locale.FRENCH)),
                                 style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
@@ -137,7 +132,7 @@ fun AbstinenceDetailSheet(
         TextButton(enabled = !busy, onClick = onEdit) { Text(stringResource(R.string.abst_edit)) }
     }
     form?.let { kind ->
-        JournalForm(kind == "urge", busy, error, dismiss = { form = null }) { intensity, note ->
+        JournalForm(kind == "urge", occurrenceAction, busy, error, dismiss = { form = null }) { intensity, note ->
             val saved = { form = null }
             if (kind == "urge") onUrge(intensity, note, saved) else onRecordOccurrence(note, saved)
         }
@@ -166,12 +161,12 @@ private fun JournalCounts(item: HabitCardState) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun JournalForm(urge: Boolean, busy: Boolean, error: String?, dismiss: () -> Unit, save: (Int, String?) -> Unit) {
+private fun JournalForm(urge: Boolean, occurrenceAction: Int, busy: Boolean, error: String?, dismiss: () -> Unit, save: (Int, String?) -> Unit) {
     var intensity by rememberSaveable { mutableIntStateOf(3) }
     var note by rememberSaveable { mutableStateOf("") }
     AlertDialog(onDismissRequest = { if (!busy) dismiss() }, containerColor = cadence.surface,
         titleContentColor = cadence.ink, textContentColor = cadence.inkMuted,
-        title = { Text(stringResource(if (urge) R.string.abst_urge else R.string.abst_occurrence_title)) },
+        title = { Text(stringResource(if (urge) R.string.abst_urge else occurrenceAction)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(Space.md)) {
                 Text(stringResource(if (urge) R.string.abst_urge_help else R.string.abst_occurrence_help))

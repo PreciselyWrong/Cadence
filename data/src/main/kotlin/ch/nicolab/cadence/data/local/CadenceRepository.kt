@@ -243,6 +243,8 @@ class CadenceRepository(
                 abstinenceProfile = habit.abstinenceProfile.name,
                 abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
                 abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
+                abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -309,6 +311,8 @@ class CadenceRepository(
                 abstinenceProfile = habit.abstinenceProfile.name,
                 abstinenceStartedOn = habit.abstinenceStartedOn(clock.zone)?.toString(),
                 abstinenceStartedAtEpochMs = habit.abstinenceStartedAt?.toEpochMilli(),
+                abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
             )
 
             val goalEntity = HabitGoalEntity(
@@ -722,6 +726,8 @@ class CadenceRepository(
                 abstinenceProfile = relation.habit.abstinenceProfile,
                 abstinenceStartedOn = relation.habit.abstinenceStartedOn,
                 abstinenceStartedAtEpochMs = relation.habit.abstinenceStartedAtEpochMs,
+                abstinenceSavingsDailyMinor = relation.habit.abstinenceSavingsDailyMinor,
+                abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
                 goals = goals,
                 schedules = schedules,
             )
@@ -850,6 +856,8 @@ class CadenceRepository(
                     abstinenceProfile = habit.abstinenceProfile,
                     abstinenceStartedOn = habit.abstinenceStartedOn,
                     abstinenceStartedAtEpochMs = habit.abstinenceStartedAtEpochMs,
+                    abstinenceSavingsDailyMinor = habit.abstinenceSavingsDailyMinor,
+                    abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -1220,6 +1228,8 @@ class CadenceRepository(
             abstinenceProfile = AbstinenceProfile.valueOf(relation.habit.abstinenceProfile),
             abstinenceStartedAt = relation.habit.abstinenceStartedAtEpochMs?.let(java.time.Instant::ofEpochMilli)
                 ?: relation.habit.abstinenceStartedOn?.let(LocalDate::parse)?.atStartOfDay(clock.zone)?.toInstant(),
+            abstinenceSavingsDailyMinor = relation.habit.abstinenceSavingsDailyMinor,
+            abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,

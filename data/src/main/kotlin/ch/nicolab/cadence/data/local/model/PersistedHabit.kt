@@ -26,6 +26,8 @@ data class PersistedHabit(
     val timerEnabled: Boolean = false,
     val abstinenceProfile: AbstinenceProfile = AbstinenceProfile.NONE,
     val abstinenceStartedAt: Instant? = null,
+    val abstinenceSavingsDailyMinor: Long? = null,
+    val abstinenceSavingsCurrency: String? = null,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {

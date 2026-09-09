@@ -175,6 +175,7 @@ fun CadenceField(
     suffix: String? = null,
     accent: Color? = null,
     numeric: Boolean = false,
+    decimal: Boolean = false,
 ) {
     val palette = cadence
     val fill = accent ?: palette.accent
@@ -200,7 +201,11 @@ fun CadenceField(
                     interactionSource = interaction,
                     textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.ink),
                     cursorBrush = SolidColor(fill),
-                    keyboardOptions = KeyboardOptions(keyboardType = if (numeric) KeyboardType.Number else KeyboardType.Text),
+                    keyboardOptions = KeyboardOptions(keyboardType = when {
+                        decimal -> KeyboardType.Decimal
+                        numeric -> KeyboardType.Number
+                        else -> KeyboardType.Text
+                    }),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceStats
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
+import ch.nicolab.cadence.domain.AbstinenceSavings
 import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -101,6 +102,7 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
     val elapsed = AbstinenceElapsedCalculator.calculate(item.stored.id, start, item.recentEntries, now)
     if (compact) {
         Text(elapsed.formatCompact(), style = MaterialTheme.typography.headlineSmall, color = accent)
+        SavingsTotal(item, elapsed, accent)
         return
     }
     val nextDays = AbstinenceGuide.milestones(item.stored.abstinenceProfile)
@@ -117,7 +119,22 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
         TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f)
         TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f)
         TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f)
+        SavingsTotal(item, elapsed, accent, centered = true)
     }
+}
+
+@Composable
+private fun SavingsTotal(item: HabitCardState, elapsed: ch.nicolab.cadence.domain.AbstinenceElapsed, accent: Color, centered: Boolean = false) {
+    val daily = item.stored.abstinenceSavingsDailyMinor ?: return
+    val currency = item.stored.abstinenceSavingsCurrency ?: return
+    val saved = AbstinenceSavings.calculate(daily, elapsed)
+    Text(
+        stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
+        style = MaterialTheme.typography.titleMedium,
+        color = accent,
+        textAlign = if (centered) TextAlign.Center else TextAlign.Start,
+        modifier = if (centered) Modifier.fillMaxWidth() else Modifier,
+    )
 }
 
 @Composable

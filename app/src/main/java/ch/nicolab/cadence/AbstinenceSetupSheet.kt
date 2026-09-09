@@ -81,7 +81,10 @@ fun AbstinenceSetupSheet(
     var choosing by rememberSaveable(stored?.id) { mutableStateOf(stored == null) }
     val listState = remember(choosing) { LazyListState() }
     var name by rememberSaveable(stored?.id) { mutableStateOf(stored?.name.orEmpty()) }
-    var reason by rememberSaveable(stored?.id) { mutableStateOf(stored?.description.orEmpty()) }
+    val currencyCode = rememberSaveable(stored?.id) { stored?.abstinenceSavingsCurrency ?: defaultCurrencyCode() }
+    var savingsText by rememberSaveable(stored?.id) {
+        mutableStateOf(dailySavingsInput(stored?.abstinenceSavingsDailyMinor, currencyCode))
+    }
     val initialStart = stored?.abstinenceStartedAt?.atZone(ZoneId.systemDefault())
         ?: java.time.ZonedDateTime.now().withSecond(0).withNano(0)
     var startText by rememberSaveable(stored?.id) { mutableStateOf(initialStart.toLocalDate().toString()) }
@@ -138,8 +141,9 @@ fun AbstinenceSetupSheet(
                     }
                 }
                 item { CadenceField(name, { name = it.take(80) }, stringResource(R.string.abst_setup_name), accent = accent) }
-                item { CadenceField(reason, { reason = it.take(500) }, stringResource(R.string.abst_setup_reason),
-                    placeholder = stringResource(R.string.abst_setup_reason_hint), accent = accent) }
+                item { CadenceField(savingsText, { savingsText = it.take(18) }, stringResource(R.string.abst_setup_savings),
+                    placeholder = stringResource(R.string.abst_setup_savings_hint),
+                    support = stringResource(R.string.abst_setup_savings_help), suffix = currencyCode, accent = accent, decimal = true) }
                 item {
                     ActionRow(Icons.Outlined.DateRange, stringResource(R.string.abst_setup_start, displayAbstinenceDate(start)), accent) {
                         if (!busy) dateOpen = true
@@ -179,19 +183,24 @@ fun AbstinenceSetupSheet(
             Modifier.fillMaxWidth(), accent, enabled = !busy,
         ) {
             val times = reminder.split(',', ' ').filter(String::isNotBlank)
+            val savingsMinor = parseDailySavingsMinor(savingsText, currencyCode)
             validation = when {
                 name.isBlank() || startAt > Instant.now() || profile == AbstinenceProfile.NONE -> R.string.abst_setup_invalid
+                savingsText.isNotBlank() && savingsMinor == null -> R.string.abst_setup_bad_savings
                 times.any { runCatching { LocalTime.parse(it) }.isFailure } -> R.string.abst_setup_bad_reminder
                 else -> null
             }
             if (validation == null) {
-                val habit = stored?.copy(name = name.trim(), description = reason.trim().ifBlank { null }, groupId = groupId,
+                val habit = stored?.copy(name = name.trim(), description = null, groupId = groupId,
                     startsOn = minOf(stored.startsOn, start),
-                    abstinenceStartedAt = startAt)
+                    abstinenceStartedAt = startAt, abstinenceSavingsDailyMinor = savingsMinor,
+                    abstinenceSavingsCurrency = currencyCode.takeIf { savingsMinor != null })
                     ?: PersistedHabit(
-                        id = habitId, name = name.trim(), description = reason.trim().ifBlank { null },
+                        id = habitId, name = name.trim(), description = null,
                         iconId = abstinenceIconId(profile), colorArgb = accent.toArgb(), active = true, startsOn = start,
                         groupId = groupId, abstinenceProfile = profile, abstinenceStartedAt = startAt,
+                        abstinenceSavingsDailyMinor = savingsMinor,
+                        abstinenceSavingsCurrency = currencyCode.takeIf { savingsMinor != null },
                         goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, MeasurementUnit.COUNT, direction = GoalDirection.AT_MOST),
                         schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY),
                     )
