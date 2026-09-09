@@ -16,6 +16,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 | Build debug | `$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'; .\gradlew.bat :app:assembleDebug` |
 | Préparer le développement | `.\dev.ps1 -Plan -NonInteractive` |
 | Lancer sur un appareil ADB | `.\dev.ps1 -NonInteractive` |
+| Lancer avec les données de démonstration | `.\dev.ps1 -NonInteractive -Dummy` |
 | Préparer une publication | `.\publish.ps1 -Plan -NonInteractive` |
 
 ## Carte
@@ -50,6 +51,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les repères d’abstinence distinguent objectifs personnels et observations scientifiques. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Les limites des sources sont documentées dans `docs/abstinence-evidence.md`; aucun taux hormonal ni état d’organe n’est déduit du compteur.
 - L'abstinence dispose d'une création et d'un détail dédiés. Le profil reste fixe après création; la date et l'heure de départ restent modifiables. Une dépense réelle facultative porte un montant en unités mineures, une cadence quotidienne, hebdomadaire ou mensuelle, et une devise choisie; le total économisé est dérivé du compteur actif, avec la durée réelle des mois. Le journal (`AbstinenceLog`) sépare les notes quotidiennes et les envies des occurrences : une note ne valide pas une journée et une envie ne casse pas la série. Une seule note est conservée par habitude et date civile.
 - Les statistiques de chaque habitude (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. Une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
+- Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
 
 ## ⛔ Interdits
 - ⛔ Demander « Pourquoi je fais ça » dans une abstinence — ce champ alourdit la création sans aider à enregistrer le suivi.

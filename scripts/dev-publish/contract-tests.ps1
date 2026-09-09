@@ -33,7 +33,10 @@ Assert-Condition ($publishSource -match '--no-configuration-cache') 'La publicat
 Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan de développement doit réussir'
 & (Join-Path $root 'publish.ps1') -Plan -NonInteractive
 Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan de publication doit réussir'
-Assert-ExitCode { & (Join-Path $root 'dev.ps1') -Dummy -Plan -NonInteractive 2>$null } 2 'Le mode démo doit être refusé avant action'
+$dummyPlan = & (Join-Path $root 'dev.ps1') -Dummy -Plan -NonInteractive
+Assert-Condition ($LASTEXITCODE -eq 0) 'Le plan du mode démo doit réussir'
+Assert-Condition (($dummyPlan -join "`n") -match 'Mode : donnees de demonstration') 'Le plan doit annoncer les données de démonstration'
+Assert-Condition ($devSource -match 'POPULATE_DUMMY_DATA') 'Le mode démo doit demander le peuplement du build debug'
 Assert-ExitCode { & (Join-Path $root 'publish.ps1') -NonInteractive 2>$null } 2 'La publication non confirmée doit être refusée'
 Assert-ExitCode { & (Join-Path $root 'publish.ps1') -Plan -NonInteractive -Destination inconnue 2>$null } 2 'Une destination inconnue doit être refusée'
 

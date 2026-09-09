@@ -11,6 +11,7 @@
 - Le rappel d’une habitude disparaît dès que son objectif est terminé, depuis l’application comme depuis le widget.
 
 ### Améliorations
+- Le mode de démonstration présente six habitudes variées avec deux mois d’historique réaliste.
 - Le menu affiche de nouveau le nom de l’onglet ouvert sans déplacer les autres boutons.
 - Les statistiques deviennent visuelles : grand score, rythme récent, évolution, série et record se lisent d’un coup d’œil.
 - Les onglets du suivi respirent mieux et restent clairement séparés.

@@ -71,13 +71,12 @@ function Wait-ForCadence([string]$serial) {
     return $false
 }
 
-if ($Dummy) { Fail "Ce projet ne propose pas de données de démonstration." }
 if (-not (Test-Path $jdk)) { Fail "JDK Android Studio introuvable : $jdk" }
 if (-not (Test-Path (Join-Path $root 'gradlew.bat'))) { Fail 'Le wrapper Gradle est introuvable.' }
 
 if ($Plan) {
     Write-Output 'Developpement pret'
-    Write-Output 'Mode : donnees reelles locales'
+    Write-Output $(if ($Dummy) { 'Mode : donnees de demonstration' } else { 'Mode : donnees reelles locales' })
     Write-Output 'Prerequis : JDK Android Studio, SDK Android et appareil ADB connecte'
     Write-Output 'Construction : .\\gradlew.bat :app:assembleDebug'
     Write-Output 'Cible : ch.nicolab.cadence/.MainActivity'
@@ -97,6 +96,15 @@ try {
     if (-not (Test-Path $apk)) { Fail 'APK de développement introuvable après la construction.' 3 }
     & $adb -s $serial install -r $apk
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    if ($Dummy) {
+        $seedResult = & $adb -s $serial shell am broadcast -W `
+            -a 'ch.nicolab.cadence.debug.POPULATE_DUMMY_DATA' `
+            -n 'ch.nicolab.cadence/ch.nicolab.cadence.debug.DummyDataReceiver'
+        if ($LASTEXITCODE -ne 0 -or ($seedResult -join "`n") -notmatch 'result=-1') {
+            $seedResult | Write-Output
+            Fail 'Les données de démonstration n ont pas pu être préparées.' 3
+        }
+    }
     & $adb -s $serial shell am start -n 'ch.nicolab.cadence/.MainActivity'
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     if (-not (Wait-ForCadence $serial)) { Fail "Activite Cadence non ouverte." 3 }

@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Jeu de démonstration riche pour les habitudes et les statistiques
 - [x] Rappels effacés à la réussite et nom de l’onglet actif restauré
 - [x] Statistiques visuelles distinctes du détail
 - [x] Actions concrètes et économies facultatives calculées depuis une dépense, sa fréquence et sa monnaie
