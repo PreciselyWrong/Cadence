@@ -1,6 +1,7 @@
 package ch.nicolab.cadence
 
-import ch.nicolab.cadence.domain.HabitStatisticsDay
+import ch.nicolab.cadence.domain.HabitStatisticsPeriod
+import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.HabitStatisticsDayStatus
 import java.time.LocalDate
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,7 +20,7 @@ class StatisticsPulseTest {
 
         assertEquals(
             listOf(StatisticsPulseLevel.ACTIVE, StatisticsPulseLevel.ACTIVE, StatisticsPulseLevel.IDEAL),
-            days.toStatisticsPulse(maxDays = 3),
+            days.toStatisticsPulse(maxPeriods = 3),
         )
     }
 
@@ -38,5 +39,5 @@ class StatisticsPulseTest {
     }
 
     private fun day(day: Int, status: HabitStatisticsDayStatus) =
-        HabitStatisticsDay(LocalDate.of(2026, 9, day), status)
+        HabitStatisticsPeriod(LocalDate.of(2026, 9, day), LocalDate.of(2026, 9, day).plusDays(1), PeriodType.DAY, status)
 }

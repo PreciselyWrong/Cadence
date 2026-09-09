@@ -13,7 +13,7 @@
     <string name="habit_stats_trend_stable">Même taux que sur les 30 jours précédents</string>
     <string name="habit_stats_detail_subtitle">Calendrier et tendances sur 30 jours</string>
     <string name="habit_stats_calendar">Les 30 derniers jours</string>
-    <string name="habit_stats_calendar_help">Touchez un jour pour lire son bilan.</string>
+    <string name="habit_stats_calendar_help">Vert : réussi · rouge : raté · gris : neutre. Touchez un jour pour le détail.</string>
     <string name="habit_stats_selected_day">%1$s : %2$s</string>
     <string name="habit_stats_days_short">%1$d j</string>
     <string name="habit_stats_current_series">série actuelle</string>
@@ -25,7 +25,7 @@
     <string name="habit_stats_activity">Une saisie enregistrée</string>
     <string name="habit_stats_no_activity">Aucune saisie ce jour</string>
     <string name="habit_stats_overview_period">30 derniers jours</string>
-    <string name="habit_stats_pulse">Rythme des 14 derniers jours</string>
+    <string name="habit_stats_pulse">14 jours · vert réussi · rouge raté · gris neutre</string>
     <string name="habit_stats_goal_count">%1$d / %2$d</string>
     <string name="habit_stats_goals_label">objectifs</string>
     <string name="habit_stats_streak_label">série</string>

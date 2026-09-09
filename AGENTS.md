@@ -30,7 +30,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les changements d'objectif ou de période s'appliquent à partir du jour même; les jours déjà écoulés gardent la version qui les a produits.
 - Les rappels utilisent des alarmes inexactes sans permission spéciale.
 - Le widget Halo est la première variante d'un système de rendu extensible. `ui/widget/WidgetRenderStyle.kt` porte le contrat - fond, encre, pastille, arrondi - lu par le widget, son aperçu et sa configuration; ajouter une variante se limite à une entrée et son libellé.
-- Le widget suit la base, pas ses appelants : `WidgetAutoRefresh` écoute les révisions des tables qui le concernent et redessine après une courte fenêtre de calme. Ce qui dépend de l'heure sans écriture - minuit, entrée et sortie d'un groupe horaire - est réveillé par `WidgetBoundaryAlarm`, calculé par `WidgetRefreshSchedule`.
+- Le widget suit la base, pas ses appelants : `WidgetAutoRefresh` regroupe les révisions dans une fenêtre bornée de 60 ms dès la première écriture, sans repousser ni annuler le rendu lors de saisies continues. Ce qui dépend de l'heure sans écriture - minuit, entrée et sortie d'un groupe horaire - est réveillé par `WidgetBoundaryAlarm`, calculé par `WidgetRefreshSchedule`.
 - La vue `Cette semaine` (`WeekOutlook`) masque une habitude dont plus aucun jour n'est planifié d'ici dimanche : la lister ne proposerait aucune action.
 - Une progression recalcule la cible depuis son départ (`GoalProgression`), jamais en cumulant la valeur courante : relire une date donne toujours le même chiffre. La cadence mensuelle suit les changements de mois civils, pas le quantième.
 - Un objectif porte un sens (`GoalDirection`). Sous `AT_MOST`, `targetMinor` est un maximum : la période réussit tant qu'il n'est pas dépassé, la limite ne porte ni minimum ni fréquence, et l'habitude reste offerte à la saisie tant qu'il reste de la place. Rien n'est acquis avant la fin de la période.
@@ -48,12 +48,15 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - La navigation est une capsule sombre flottante à cinq cibles égales ; la destination active porte une pastille colorée, son icône et un libellé court.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
-- Les repères d’abstinence distinguent objectifs personnels et observations scientifiques. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Les limites des sources sont documentées dans `docs/abstinence-evidence.md`; aucun taux hormonal ni état d’organe n’est déduit du compteur.
-- L'abstinence dispose d'une création et d'un détail dédiés. Le profil reste fixe après création; la date et l'heure de départ restent modifiables. Une dépense réelle facultative porte un montant en unités mineures, une cadence quotidienne, hebdomadaire ou mensuelle, et une devise choisie; le total économisé est dérivé du compteur actif, avec la durée réelle des mois. Le journal (`AbstinenceLog`) sépare les notes quotidiennes et les envies des occurrences : une note ne valide pas une journée et une envie ne casse pas la série. Une seule note est conservée par habitude et date civile.
+- Les jalons d’abstinence sont uniquement des observations scientifiques associées à une durée et à une source. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Sans preuve temporelle suffisante, l’interface dit qu’aucun jalon corporel n’est établi; aucun taux hormonal ni état d’organe n’est déduit du compteur.
+- L'abstinence dispose d'une création et d'un détail dédiés. Le profil reste fixe après création; la date et l'heure de départ restent modifiables. Une dépense réelle facultative porte un montant en unités mineures, une cadence quotidienne, hebdomadaire ou mensuelle, et une devise choisie; le total économisé est dérivé du compteur actif, avec la durée réelle des mois. Le détail montre le compteur, une action directe pour enregistrer un écart et les jalons scientifiques; il ne contient ni journal, ni note quotidienne, ni suivi des envies.
 - Les statistiques de chaque habitude (`HabitStatisticsSummary`) comptent les périodes closes dans les 30 derniers jours terminés, avec leurs versions historiques. Les pauses complètes et périodes sans planning sont neutres. Une comparaison de taux n’apparaît que pour un rythme homogène. Le calendrier hebdomadaire/mensuel montre l’activité, jamais une exigence quotidienne fictive.
 - Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
 
 ## ⛔ Interdits
+- ⛔ Présenter d’abord des jours dans les statistiques d’un objectif hebdomadaire ou mensuel — l’aperçu suit la période souhaitée, le détail quotidien reste secondaire.
+- ⛔ Poursuivre les captures d’écran après une demande d’arrêt — terminer les vérifications automatisées et la publication demandée.
+- ⛔ Utiliser un sous-agent coûteux pour un travail borné ou écraser le travail parallèle — privilégier Terra ou AGY et coordonner les fichiers partagés.
 - ⛔ Demander « Pourquoi je fais ça » dans une abstinence — ce champ alourdit la création sans aider à enregistrer le suivi.
 - ⛔ Nommer une occurrence de façon abstraite — chaque profil dit concrètement ce qui a été fait, par exemple « J’ai bu un verre ».
 - ⛔ Demander un total économisé manuel ou inventer une moyenne mensuelle — l’utilisateur déclare sa dépense, sa cadence et sa monnaie; Cadence calcule avec les durées réelles.
@@ -66,7 +69,9 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Déplier le calendrier et les tendances à l’intérieur d’une carte de statistiques — la synthèse reste courte et le détail s’ouvre dans une surface dédiée.
 - ⛔ Dupliquer le contenu du modal dans la page Statistiques — la page donne une lecture visuelle immédiate; le modal garde le calendrier et l’analyse détaillée.
 - ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.
-- ⛔ Réduire une abstinence à une saisie d’habitude ordinaire — son accès quotidien propose d’abord un point et le journal des envies, pour accompagner le suivi.
+- ⛔ Ajouter un journal, une note quotidienne ou un suivi des envies à une abstinence — son détail reste centré sur le compteur, l’écart et les bienfaits documentés.
+- ⛔ Créer des jalons personnels pour remplir une chronologie — seuls les bénéfices liés à une durée et suffisamment sourcés sont déblocables; sinon l’absence de preuve est affichée.
+- ⛔ Utiliser la couleur propre d’une habitude pour coder sa réussite — elle sert uniquement à l’identifier; réussite, progression, échec et neutralité gardent les mêmes couleurs sémantiques partout.
 - ⛔ Transposer les bénéfices de la cigarette au vapotage ou promettre des bénéfices hormonaux de l’arrêt de la masturbation — chaque profil doit refléter ses propres preuves.
 - ⛔ Stocker une progression courante - elle doit être dérivée des entrées horodatées.
 - ⛔ Réinitialiser ou supprimer des entrées à une frontière de période - les périodes sont calculées.
@@ -106,4 +111,4 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 
 ## État
 MVP local compilable : Room, saisie rapide, statistiques de période et widget Glance.
-Rappels conditionnels, sauvegarde JSON, statistiques historiques et abstinences avec profils, conseils sourcés et journal local disponibles.
+Rappels conditionnels, sauvegarde JSON, statistiques historiques et abstinences avec profils et jalons scientifiques sourcés disponibles.

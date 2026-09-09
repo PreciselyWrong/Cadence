@@ -28,6 +28,9 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Aperçu statistique adapté au rythme et rafraîchissement du widget sans report continu
+- [x] Accueil allégé, création guidée, saisie directe et rappels reportables
+- [x] Abstinences sans journal, avec jalons scientifiques et statistiques aux couleurs explicites
 - [x] Jeu de démonstration riche pour les habitudes et les statistiques
 - [x] Rappels effacés à la réussite et nom de l’onglet actif restauré
 - [x] Statistiques visuelles distinctes du détail

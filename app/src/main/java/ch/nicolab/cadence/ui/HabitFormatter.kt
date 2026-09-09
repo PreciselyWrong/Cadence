@@ -6,6 +6,9 @@ import java.util.Locale
 
 object HabitFormatter {
 
+    fun formatWithUnit(valueMinor: Long, goalType: GoalType, unit: MeasurementUnit?): String =
+        formatValue(valueMinor, goalType, unit) + unitSymbolSuffix(unit, goalType)
+
     fun formatValue(valueMinor: Long, goalType: GoalType, unit: MeasurementUnit?): String {
         return when (goalType) {
             GoalType.BINARY -> if (valueMinor > 0) "1" else "0"

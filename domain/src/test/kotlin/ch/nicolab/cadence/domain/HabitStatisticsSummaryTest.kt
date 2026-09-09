@@ -6,6 +6,24 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class HabitStatisticsSummaryTest {
+    @Test fun `overview follows completed weeks and months rather than daily activity`() {
+        val weekly = habit(HabitGoal(1, PeriodType.WEEK)).copy(startsOn = today.minusDays(29))
+        val summary = HabitStatisticsSummary.compute({ weekly }, today, listOf(entry(4, 1), entry(0, 1)), emptyList())
+        assertEquals(4, summary.periods.size)
+        assertTrue(summary.periods.all { it.periodType == PeriodType.WEEK && it.endExclusive <= today })
+        assertEquals(HabitStatisticsDayStatus.IDEAL, summary.periods.last().status)
+        val monthly = HabitStatisticsSummary.compute({ habit(HabitGoal(1, PeriodType.MONTH)) }, today, emptyList(), emptyList())
+        assertEquals(1, monthly.periods.size)
+        assertEquals(PeriodType.MONTH, monthly.periods.single().periodType)
+    }
+
+    @Test fun `fully paused week is neutral in overview`() {
+        val weekly = habit(HabitGoal(1, PeriodType.WEEK))
+        val end = PeriodCalculator.window(today, PeriodType.WEEK).start
+        val summary = HabitStatisticsSummary.compute({ weekly }, today, emptyList(), listOf(HabitPause(end.minusWeeks(1), end)))
+        assertEquals(HabitStatisticsDayStatus.PAUSED, summary.periods.last().status)
+        assertEquals(summary.periods.count { it.status == HabitStatisticsDayStatus.MISSED }, summary.evaluatedPeriods)
+    }
     private val today = LocalDate.of(2026, 9, 8)
     private fun habit(goal: HabitGoal = HabitGoal(10, PeriodType.DAY, minimumMinor = 5)) =
         HabitDefinition("h", startsOn = today.minusDays(100), goal = goal, schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY))

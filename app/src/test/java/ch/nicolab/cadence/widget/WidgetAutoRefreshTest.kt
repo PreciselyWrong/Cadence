@@ -44,6 +44,22 @@ class WidgetAutoRefreshTest {
     }
 
     @Test
+    fun `des revisions continues ne repoussent pas le rendu`() = runTest {
+        val revisions = MutableSharedFlow<Int>()
+        var refreshes = 0
+        val scope = TestScope(StandardTestDispatcher(testScheduler))
+        WidgetAutoRefresh(revisions, quietMillis = 60) { refreshes++ }.start(scope)
+        scope.advanceUntilIdle()
+
+        repeat(10) {
+            revisions.emit(it)
+            scope.advanceTimeBy(10)
+        }
+
+        assertEquals(1, refreshes)
+    }
+
+    @Test
     fun `une revision ne peut pas annuler un rendu en cours`() = runTest {
         val revisions = MutableSharedFlow<Int>()
         var refreshesCompleted = 0

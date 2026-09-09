@@ -30,7 +30,7 @@ De petites études hormonales existent, mais ne fournissent pas un calendrier fi
 
 Sources : https://pubmed.ncbi.nlm.nih.gov/11760788/ et https://pubmed.ncbi.nlm.nih.gov/34937544/
 
-Les jalons de durée sont des repères personnels, clairement distincts des observations scientifiques. Les suggestions de réflexion sur le temps, le sommeil ou le bien-être sont des pistes pratiques, sans efficacité médicale chiffrée annoncée.
+Aucun jalon n’est affiché pour la masturbation : les études disponibles ne permettent pas d’associer un bénéfice corporel fiable à une durée. En particulier, Cadence ne reprend pas la promesse d’un taux de testostérone à sept jours.
 
 ## Cigarette
 
@@ -48,13 +48,13 @@ Source : [CDC, aides pour arrêter](https://www.cdc.gov/tobacco/about/how-to-qui
 
 ## Vapotage
 
-Les CDC indiquent que les méthodes d’arrêt du vapotage font encore l’objet de recherches. Un produit nicotiné peut entraîner un manque à l’arrêt ; préparer un plan et chercher de l’aide sont des pistes proposées. Cadence utilise uniquement des jalons personnels, sans importer les délais liés à la fumée de cigarette ou au monoxyde de carbone.
+Les CDC indiquent que les méthodes d’arrêt du vapotage font encore l’objet de recherches. Un produit nicotiné peut entraîner un manque à l’arrêt ; préparer un plan et chercher de l’aide sont des pistes proposées. Cadence n’affiche aucun jalon daté et n’importe pas les délais liés à la fumée de cigarette ou au monoxyde de carbone.
 
 Source : [CDC, arrêt du vapotage](https://www.cdc.gov/tobacco/e-cigarettes/quitting.html).
 
 ## Cannabis
 
-Le questionnaire officiel du NIDA mentionne notamment envies, irritabilité et troubles du sommeil parmi les symptômes de sevrage. Il ne fournit pas de calendrier de récupération. Les repères restent personnels, sans promesse de récupération cognitive ou de « réinitialisation » de dopamine. La page générale du NIDA était protégée par une vérification JavaScript ; le contenu retenu a été vérifié sur la fiche accessible du questionnaire.
+Le questionnaire officiel du NIDA mentionne notamment envies, irritabilité et troubles du sommeil parmi les symptômes de sevrage. Il ne fournit pas de calendrier de récupération. Aucun jalon n’est affiché, sans promesse de récupération cognitive ou de « réinitialisation » de dopamine. La page générale du NIDA était protégée par une vérification JavaScript ; le contenu retenu a été vérifié sur la fiche accessible du questionnaire.
 
 Source : [NIDA, Marijuana Withdrawal Symptom Checklist](https://datashare.nida.nih.gov/instrument/marijuana-withdrawal-symptom-checklist).
 
@@ -66,11 +66,7 @@ Source : [FDA, caféine et réduction](https://www.fda.gov/consumers/consumer-up
 
 ## Objectif libre
 
-Les jalons ne portent que sur la durée du suivi et la réflexion personnelle. Aucun contenu médical n’est déduit du nom saisi. L’application invite à un conseil adapté pour l’arrêt d’une substance ou d’un médicament, sans fournir de protocole.
-
-## Inspirations fonctionnelles
-
-[Smoke Free](https://smokefreeapp.com/) présente un journal des envies et de leur intensité, des motivations personnelles et la progression dans le temps. [I Am Sober](https://iamsober.com/en/site/faq) documente les bilans quotidiens, les notes et les envies, avec des fonctions principales disponibles hors ligne. Ces mécanismes inspirent un bilan court et un journal local dans Cadence. Il ne s’agit ni de copier leur interface ni d’attribuer à Cadence leur efficacité revendiquée. Leurs pages produit ne sont pas des sources médicales du catalogue.
+Aucun jalon n’est créé à partir du nom saisi. L’application invite à un conseil adapté pour l’arrêt d’une substance ou d’un médicament, sans fournir de protocole.
 
 ## Jeux d’argent
 
@@ -98,7 +94,7 @@ La pornographie est distincte de la masturbation dans Cadence. NHS Sexual Health
 
 Source : [NHS Sexual Health Oxfordshire, accompagnement psychosexuel](https://www.sexualhealthoxfordshire.nhs.uk/services/psychosexual-therapy/sex-addiction/).
 
-Ces cinq profils utilisent uniquement des repères personnels à 7, 14, 30 et 90 jours. Les minutes, ouvertures d’application et dépenses ne sont pas mesurées automatiquement ; le journal reçoit les notes saisies volontairement.
+Ces cinq profils n’affichent aucun jalon daté faute de preuve temporelle suffisante. Les minutes, ouvertures d’application et dépenses ne sont pas mesurées automatiquement.
 
 ## Statistiques
 

@@ -7,6 +7,13 @@ enum class HabitStatisticsDayStatus { UNPLANNED, PAUSED, MISSED, MINIMUM, IDEAL,
 
 data class HabitStatisticsDay(val date: LocalDate, val status: HabitStatisticsDayStatus)
 
+data class HabitStatisticsPeriod(
+    val start: LocalDate,
+    val endExclusive: LocalDate,
+    val periodType: PeriodType,
+    val status: HabitStatisticsDayStatus,
+)
+
 data class HabitStatisticsSummary(
     val evaluatedPeriods: Int,
     val validatedPeriods: Int,
@@ -19,6 +26,7 @@ data class HabitStatisticsSummary(
     val untilExclusive: LocalDate,
     val previousFrom: LocalDate,
     val days: List<HabitStatisticsDay> = emptyList(),
+    val periods: List<HabitStatisticsPeriod> = emptyList(),
 ) {
     val successRatePercent: Int?
         get() = rate(validatedPeriods, evaluatedPeriods)
@@ -46,6 +54,7 @@ data class HabitStatisticsSummary(
             val previous = Totals()
             val types = mutableSetOf<PeriodType>()
             val days = mutableListOf<HabitStatisticsDay>()
+            val periods = mutableListOf<HabitStatisticsPeriod>()
             for (offset in 0L until 60L) {
                 val date = previousFrom.plusDays(offset)
                 val habit = habitAt(date)
@@ -60,9 +69,18 @@ data class HabitStatisticsSummary(
                         version != null && !version.goal.isAbstinence && isPlannedOn(version, day) &&
                             pauses.none { it.includes(day) }
                     }
-                if (!observed) continue
                 val evaluation = evaluator.evaluate(habit, date,
                     entries.filter { it.localDate >= habit.startsOn }, pauses)
+                if (date >= from && date >= habit.startsOn) {
+                    val status = when {
+                        !observed -> HabitStatisticsDayStatus.PAUSED
+                        evaluation.isCompleted -> HabitStatisticsDayStatus.IDEAL
+                        evaluation.validatesPeriod -> HabitStatisticsDayStatus.MINIMUM
+                        else -> HabitStatisticsDayStatus.MISSED
+                    }
+                    periods += HabitStatisticsPeriod(window.start, window.endExclusive, habit.goal.period, status)
+                }
+                if (!observed) continue
                 val totals = if (date >= from) current else previous
                 totals.evaluated++
                 if (evaluation.validatesPeriod) totals.validated++
@@ -71,7 +89,7 @@ data class HabitStatisticsSummary(
             }
             return HabitStatisticsSummary(current.evaluated, current.validated, current.ideal,
                 previous.evaluated, previous.validated, previous.ideal, types.singleOrNull(),
-                from, today, previousFrom, days)
+                from, today, previousFrom, days, periods)
         }
 
         private fun dayStatus(

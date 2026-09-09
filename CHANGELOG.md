@@ -1,3 +1,18 @@
+## [1.0.12] — 09 septembre 2026
+
+### Améliorations
+- L’accueil garde les habitudes à faire en vue et replie celles qui sont terminées.
+- Une action rapide permet de saisir une valeur ou de lancer le chronomètre, avec possibilité d’annuler.
+- La création montre l’essentiel, puis les réglages au besoin.
+- Les statistiques suivent le rythme choisi : jours, semaines ou mois.
+- Un rappel peut être reporté de trente minutes.
+- Après une absence, la reprise se fait à votre rythme.
+- Le suivi d’abstinence se concentre sur le compteur, les écarts et les jalons documentés.
+
+### Corrections
+- Le widget se rafraîchit sans attendre la fin des saisies successives.
+- Modifier une habitude conserve ses quantités précises et ses réglages.
+
 ## [1.0.11] — 09 septembre 2026
 
 ### Nouveautés

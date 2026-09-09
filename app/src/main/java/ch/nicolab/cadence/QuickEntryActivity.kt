@@ -101,11 +101,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
         AbstinenceDetailSheet(
             item = selected,
             dismiss = { if (!busy) { if (habitId != null) dismiss() else selectedId = null } },
-            onCheckIn = { viewModel.checkIn(selected) },
-            onUrge = { intensity, note, saved -> viewModel.recordUrge(selected, intensity, note, saved) },
-            onRecordOccurrence = { note, saved -> viewModel.recordAbstinenceOccurrence(selected, note, saved) },
-            onCorrectOccurrence = { viewModel.clearSaveError(); correctingId = it.id },
-            onDeleteLog = viewModel::deleteAbstinenceLog,
+            onRecordOccurrence = { saved -> viewModel.recordAbstinenceOccurrence(selected, null, saved) },
             onEdit = {
                 context.startActivity(Intent(context, MainActivity::class.java).putExtra(MainActivity.EXTRA_EDIT_HABIT_ID, selected.stored.id))
                 dismiss()

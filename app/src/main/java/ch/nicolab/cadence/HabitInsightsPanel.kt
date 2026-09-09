@@ -11,12 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitInsights
-import ch.nicolab.cadence.domain.MonthMetrics
 import ch.nicolab.cadence.domain.TimeSlot
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
@@ -32,7 +30,6 @@ import kotlin.math.roundToInt
 fun HabitInsightsPanel(
     insights: HabitInsights,
     goal: HabitGoal,
-    accent: Color,
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
@@ -53,7 +50,6 @@ fun HabitInsightsPanel(
                     HabitFormatter.formatValue(best.averageMinor, goal.goalType, goal.unit),
                     HabitFormatter.formatValue(best.overallAverageMinor, goal.goalType, goal.unit),
                 ),
-                accent,
             )
         }
         insights.bestSlot?.let { best ->
@@ -61,7 +57,6 @@ fun HabitInsightsPanel(
                 stringResource(R.string.insights_best_slot),
                 stringResource(slotLabel(best.slot)),
                 stringResource(R.string.insights_best_slot_detail, (best.share * 100).roundToInt(), best.entryCount),
-                accent,
             )
         }
         insights.monthComparison?.let { comparison ->
@@ -72,7 +67,6 @@ fun HabitInsightsPanel(
                 stringResource(R.string.insights_month_quantity),
                 HabitFormatter.formatValue(comparison.current.quantityMinor, goal.goalType, goal.unit),
                 delta(comparison.current.quantityMinor, comparison.previous.quantityMinor),
-                accent,
             )
             MonthRow(
                 stringResource(R.string.insights_month_regularity),
@@ -81,7 +75,6 @@ fun HabitInsightsPanel(
                     (comparison.current.regularity * 100).roundToInt().toLong(),
                     (comparison.previous.regularity * 100).roundToInt().toLong(),
                 ),
-                accent,
             )
             if (goal.goalType != GoalType.BINARY) {
                 comparison.current.minimumDays?.let { current ->
@@ -89,7 +82,6 @@ fun HabitInsightsPanel(
                         stringResource(R.string.insights_month_minimum),
                         stringResource(R.string.insights_days, current),
                         delta(current.toLong(), comparison.previous.minimumDays?.toLong() ?: 0L),
-                        accent,
                     )
                 }
             }
@@ -98,7 +90,6 @@ fun HabitInsightsPanel(
                     stringResource(R.string.insights_month_ideal),
                     stringResource(R.string.insights_days, current),
                     delta(current.toLong(), comparison.previous.idealDays?.toLong() ?: 0L),
-                    accent,
                 )
             }
             Spacer(Modifier.height(Space.xs))
@@ -112,19 +103,19 @@ fun HabitInsightsPanel(
 }
 
 @Composable
-private fun InsightLine(label: String, value: String, detail: String, accent: Color) {
+private fun InsightLine(label: String, value: String, detail: String) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-            Text(value, style = MaterialTheme.typography.titleSmall, color = accent)
+            Text(value, style = MaterialTheme.typography.titleSmall, color = palette.success)
         }
         Text(detail, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
     }
 }
 
 @Composable
-private fun MonthRow(label: String, value: String, delta: MonthDelta, accent: Color) {
+private fun MonthRow(label: String, value: String, delta: MonthDelta) {
     val palette = cadence
     Row(Modifier.fillMaxWidth().padding(vertical = Space.xs), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
@@ -134,7 +125,7 @@ private fun MonthRow(label: String, value: String, delta: MonthDelta, accent: Co
                 delta.text,
                 style = MaterialTheme.typography.titleSmall,
                 color = when {
-                    delta.value > 0 -> accent
+                    delta.value > 0 -> palette.success
                     delta.value < 0 -> palette.inkMuted
                     else -> palette.inkFaint
                 },

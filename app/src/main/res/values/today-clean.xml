@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="today_completed_count">Terminées · %1$d</string>
+    <string name="today_later_count">Plus tard · %1$d</string>
+    <string name="today_earlier_count">Un autre moment · %1$d</string>
+    <string name="today_now">En ce moment</string>
+    <string name="today_expand">Déplié</string>
+    <string name="today_collapse">Replié</string>
+    <string name="today_remaining">Encore %1$s</string>
+    <string name="today_remaining_week">Encore %1$s cette semaine</string>
+    <string name="today_remaining_month">Encore %1$s ce mois-ci</string>
+    <string name="today_limit">%1$s sur %2$s maximum</string>
+    <string name="today_limit_exceeded">Maximum dépassé · %1$s sur %2$s</string>
+    <string name="today_frequency">Encore %1$d saisie(s) sur la période</string>
+    <string name="today_minimum">Minimum atteint · encore %1$s pour l’idéal</string>
+    <string name="today_action_done">Fait</string>
+    <string name="today_action_add">+%1$s</string>
+    <string name="today_action_start">Démarrer</string>
+    <string name="today_action_resume">Reprendre</string>
+    <string name="today_action_timer">En cours</string>
+    <string name="today_action_description">%1$s : %2$s</string>
+    <string name="today_saved">%1$s · enregistré</string>
+    <string name="today_timer_started">%1$s · chronomètre démarré</string>
+    <string name="today_undo">Annuler</string>
+    <string name="today_return_title">On reprend tranquillement ?</string>
+    <string name="today_return_message">Vos habitudes vous attendent. Rien à rattraper.</string>
+    <string name="today_return_resume">Reprendre aujourd’hui</string>
+    <string name="today_return_adjust">Ajuster mon rythme</string>
+    <string name="today_return_choose">Quelle habitude ajuster ?</string>
+    <string name="today_return_choose_help">Son nouveau rythme s’appliquera à partir d’aujourd’hui.</string>
+</resources>

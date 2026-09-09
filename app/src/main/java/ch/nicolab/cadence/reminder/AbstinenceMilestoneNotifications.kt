@@ -36,7 +36,6 @@ data class PlannedAbstinenceMilestone(val milestone: AbstinenceMilestone, val tr
 object AbstinenceMilestonePlanner {
     fun next(profile: AbstinenceProfile, activeStart: Instant, now: Instant): PlannedAbstinenceMilestone? =
         AbstinenceGuide.milestones(profile).asSequence()
-            .filter(AbstinenceMilestone::scientific)
             .map { PlannedAbstinenceMilestone(it, activeStart.plus(Duration.ofDays(it.days))) }
             .firstOrNull { it.triggerAt > now }
 
@@ -111,7 +110,7 @@ class AbstinenceMilestoneReceiver : BroadcastReceiver() {
                 val declaredStart = habit.abstinenceStartedAt ?: return@launch
                 val activeStart = AbstinenceElapsedCalculator.activeStart(habitId, declaredStart, entries)
                 val milestone = AbstinenceGuide.milestones(habit.abstinenceProfile)
-                    .firstOrNull { it.scientific && it.days == AbstinenceMilestoneScheduler.days(intent) }
+                    .firstOrNull { it.days == AbstinenceMilestoneScheduler.days(intent) }
                 val expectedTrigger = milestone?.let { activeStart.plus(Duration.ofDays(it.days)) }
                 if (milestone != null && expectedTrigger == AbstinenceMilestoneScheduler.triggerAt(intent) &&
                     AbstinenceMilestonePlanner.isReachedNow(milestone, activeStart, Instant.now())) {

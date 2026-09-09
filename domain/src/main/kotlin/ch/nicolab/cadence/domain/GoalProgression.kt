@@ -51,9 +51,11 @@ data class GoalProgression(
     }.coerceAtLeast(0)
 
     fun targetAt(startingTargetMinor: Long, date: LocalDate): Long {
-        val raised = startingTargetMinor + step * stepsUntil(date)
-        val cap = capMinor ?: return raised
-        return minOf(raised, maxOf(cap, startingTargetMinor))
+        val ceiling = maxOf(capMinor ?: Long.MAX_VALUE, startingTargetMinor)
+        val steps = stepsUntil(date)
+        // Comparer avant de multiplier évite qu'une grande progression redevienne négative.
+        return if (steps > (ceiling - startingTargetMinor) / step) ceiling
+        else startingTargetMinor + step * steps
     }
 
     /** Prochaines cibles, pour montrer où mène la progression avant de s'y engager. */

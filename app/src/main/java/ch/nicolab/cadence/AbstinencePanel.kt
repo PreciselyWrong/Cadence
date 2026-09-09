@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.draw.clip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,16 +25,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Science
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
-import ch.nicolab.cadence.domain.AbstinenceStats
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
 import ch.nicolab.cadence.domain.SavingsPeriod
 import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.components.HabitFacet
+import ch.nicolab.cadence.ui.components.FacetGauge
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Radius
@@ -69,8 +74,7 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
             LiveAbstinenceCounter(item, accent, compact = true)
             Text(stringResource(when {
                 item.evaluation.isPaused -> R.string.abstinence_today_paused
-                item.abstinenceJournalSummary?.checkedInToday == true -> R.string.catalogue_home_checked_in
-                else -> R.string.catalogue_home_check_in
+                else -> R.string.abst_home_open
             }), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
             next?.let {
                 Text(stringResource(R.string.catalogue_home_next, milestoneTime(it)), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
@@ -178,79 +182,61 @@ private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, 
 }
 
 @Composable
-fun AbstinenceSummary(stats: AbstinenceStats, accent: Color, centered: Boolean = false) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm),
-        horizontalAlignment = if (centered) Alignment.CenterHorizontally else Alignment.Start,
-    ) {
-        Text(stringResource(R.string.abstinence_days, stats.currentDays), style = MaterialTheme.typography.headlineMedium, color = accent)
-        Text(stringResource(R.string.abstinence_current), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted,
-            textAlign = if (centered) TextAlign.Center else TextAlign.Start)
-        Text(stringResource(R.string.abstinence_best, stats.bestDays), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
-        Text(stringResource(when {
-            stats.isPaused -> R.string.abstinence_today_paused
-            stats.todayHasOccurrence -> R.string.abstinence_today_event
-            else -> R.string.abstinence_today_clear
-        }), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-    }
-}
-
-@Composable
-fun AbstinencePanel(item: HabitCardState, accent: Color) {
-    val stats = item.abstinenceStats ?: return
-    val milestones = AbstinenceGuide.milestones(item.stored.abstinenceProfile)
-    val recent = listOfNotNull(
-        milestones.lastOrNull { it.reached(stats.currentDays) },
-        milestones.firstOrNull { !it.reached(stats.currentDays) },
-    )
-    Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
-        LiveAbstinenceCounter(item, accent)
-        AbstinenceSummary(stats, accent)
-        Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-            Text(stringResource(R.string.abstinence_window), style = MaterialTheme.typography.titleSmall, color = cadence.ink)
-            if (stats.observedDays30 == 0) {
-                Text(stringResource(R.string.abstinence_no_days), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-            } else {
-                Text(stringResource(R.string.abstinence_clear_days, stats.clearDays30, stats.observedDays30), style = MaterialTheme.typography.bodyLarge, color = accent)
-                Text(stringResource(R.string.abstinence_events, stats.occurrences30, stats.occurrenceDays30), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-            }
-        }
-        Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-        recent.forEach { MilestoneItem(it, stats.currentDays, accent, expanded = false) }
-    }
-}
-
-@Composable
-fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long, accent: Color) {
+fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long) {
     val milestones = AbstinenceGuide.milestones(profile)
     if (milestones.isEmpty()) return
+    val content = AbstinenceGuide.content(profile)
+    val milestoneSources = milestones.flatMap(AbstinenceMilestone::sources).map(EvidenceSource::url).toSet()
     Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
         Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
         milestones.forEach { milestone ->
-            MilestoneItem(milestone, currentDays, accent, expanded = true)
+            MilestoneItem(milestone, currentDays, expanded = true)
+        }
+        content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted) }
+        content.sources.filterNot { it.url in milestoneSources }.forEach { SourceLink(it) }
+    }
+}
+
+@Composable
+private fun MilestoneItem(milestone: AbstinenceMilestone, currentDays: Long, expanded: Boolean) {
+    val reached = milestone.reached(currentDays)
+    val tone = if (reached) cadence.success else cadence.inkMuted
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.Top) {
+        FacetGauge(
+            progress = if (reached) 1f else (currentDays.toFloat() / milestone.days).coerceIn(0f, 1f),
+            tint = tone,
+            trackColor = cadence.sunken,
+            size = Size.badge,
+        ) {
+            Icon(
+                if (reached) Icons.Outlined.Check else Icons.Outlined.Lock,
+                contentDescription = null,
+                tint = tone,
+            )
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            Text(milestoneTime(milestone), style = MaterialTheme.typography.titleLarge, color = tone)
+            Text(
+                stringResource(if (reached) R.string.abstinence_reached else R.string.abstinence_upcoming),
+                style = MaterialTheme.typography.labelMedium,
+                color = cadence.inkMuted,
+            )
+            if (expanded) {
+                Text(stringResource(milestone.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+                milestone.sources.forEach { SourceLink(it) }
+            }
         }
     }
 }
 
 @Composable
-private fun MilestoneItem(milestone: AbstinenceMilestone, currentDays: Long, accent: Color, expanded: Boolean) {
-    Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        Text(milestoneTime(milestone), style = MaterialTheme.typography.titleLarge, color = accent)
-        Text(stringResource(if (milestone.reached(currentDays)) R.string.abstinence_reached else R.string.abstinence_upcoming), style = MaterialTheme.typography.labelMedium, color = cadence.inkMuted)
-        Text(stringResource(if (milestone.scientific) R.string.abstinence_scientific else R.string.abstinence_personal), style = MaterialTheme.typography.labelMedium, color = cadence.ink)
-        if (expanded) {
-            Text(stringResource(milestone.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-            milestone.sources.forEach { SourceLink(it) }
-        }
-    }
-}
-
-@Composable
-fun AbstinenceGuidance(profile: AbstinenceProfile, accent: Color) {
+fun AbstinenceEvidenceEmpty(profile: AbstinenceProfile) {
     if (profile == AbstinenceProfile.NONE) return
     val content = AbstinenceGuide.content(profile)
     Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        Text(stringResource(R.string.abstinence_tips), style = MaterialTheme.typography.titleSmall, color = accent)
-        Text(stringResource(content.tip), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+        Icon(Icons.Outlined.Science, contentDescription = null, tint = cadence.inkMuted)
+        Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+        Text(stringResource(R.string.abstinence_evidence_empty), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
         content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.ink) }
         content.sources.forEach { SourceLink(it) }
     }
