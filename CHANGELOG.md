@@ -7,7 +7,11 @@
 - Une alerte célèbre chaque repère appuyé par une observation scientifique.
 - La date et l’heure de départ peuvent être corrigées à tout moment.
 
+### Corrections
+- Le rappel d’une habitude disparaît dès que son objectif est terminé, depuis l’application comme depuis le widget.
+
 ### Améliorations
+- Le menu affiche de nouveau le nom de l’onglet ouvert sans déplacer les autres boutons.
 - Les statistiques deviennent visuelles : grand score, rythme récent, évolution, série et record se lisent d’un coup d’œil.
 - Les onglets du suivi respirent mieux et restent clairement séparés.
 - Chaque suivi nomme clairement l’action à enregistrer, comme « J’ai bu un verre ».

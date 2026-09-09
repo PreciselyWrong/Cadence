@@ -256,7 +256,9 @@
 
     <!-- Main Navigation & Titles -->
     <string name="tab_today">Aujourd’hui</string>
+    <string name="tab_today_navigation">Jour</string>
     <string name="tab_habits">Habitudes</string>
+    <string name="tab_habits_navigation">Suivis</string>
     <string name="tab_stats">Statistiques</string>
     <string name="tab_settings">Réglages</string>
     <string name="today_title">Aujourd’hui</string>

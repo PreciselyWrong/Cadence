@@ -31,6 +31,7 @@ import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.StreakCalculator
 import ch.nicolab.cadence.domain.isPlannedOn
 import ch.nicolab.cadence.reminder.ReminderScheduler
+import ch.nicolab.cadence.reminder.ReminderNotifications
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
 import java.time.Clock
@@ -500,11 +501,14 @@ class MainViewModel(
         // Chaque habitude lit la base une fois pour toutes : ses versions, ses saisies et
         // ses pauses. Les 90 jours d'historique sont ensuite dérivés en mémoire, sinon
         // l'écran reste vide le temps d'autant d'allers-retours SQL.
-        cards.value = coroutineScope {
+        val rebuilt = coroutineScope {
             source.sortedBy(PersistedHabit::sortOrder).map { habit ->
                 async { buildCard(habit, date) }
             }.awaitAll()
         }
+        rebuilt.filter { ReminderNotifications.shouldCancel(it.evaluation) }
+            .forEach { ReminderNotifications.cancel(app, it.stored.id) }
+        cards.value = rebuilt
         isLoaded.value = true
     }
 

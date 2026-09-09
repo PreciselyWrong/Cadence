@@ -21,8 +21,8 @@ import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
-import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEvaluation
+import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.PauseReason
@@ -139,6 +139,9 @@ object ReminderNotifications {
     }
 
     internal fun allowsEntryAction(goal: HabitGoal): Boolean = !goal.isAbstinence
+
+    /** Une notification d'action n'a plus de raison d'être quand rien n'est attendu. */
+    internal fun shouldCancel(evaluation: HabitEvaluation): Boolean = !evaluation.needsAttentionNow
 
     fun notificationId(habitId: String): Int = habitId.hashCode()
 

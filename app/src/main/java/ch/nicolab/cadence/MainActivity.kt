@@ -208,7 +208,14 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
         }
     }
     val destinations = Tab.entries.map {
-        NavDestination(stringResource(if (it == Tab.STATS) R.string.habit_stats_navigation else it.label), it.icon)
+        val label = stringResource(it.label)
+        val shortLabel = stringResource(when (it) {
+            Tab.TODAY -> R.string.tab_today_navigation
+            Tab.HABITS -> R.string.tab_habits_navigation
+            Tab.STATS -> R.string.habit_stats_navigation
+            else -> it.label
+        })
+        NavDestination(label, it.icon, shortLabel)
     }
 
     CadenceScreen {

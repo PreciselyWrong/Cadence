@@ -44,7 +44,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - L'interface suit un design system unique - `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
 - Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface, jamais d'une bordure.
 - La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
-- La navigation est une capsule sombre flottante à cinq cibles égales ; la destination active est portée par une pastille colorée autour de son icône.
+- La navigation est une capsule sombre flottante à cinq cibles égales ; la destination active porte une pastille colorée, son icône et un libellé court.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
 - Les repères d’abstinence distinguent objectifs personnels et observations scientifiques. Les textes et références sont embarqués (`AbstinenceGuide`, ressources `abstinence-*.xml`), les liens ouvrent le navigateur externe. Les limites des sources sont documentées dans `docs/abstinence-evidence.md`; aucun taux hormonal ni état d’organe n’est déduit du compteur.
@@ -58,7 +58,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Imposer la configuration des économies — un interrupteur facultatif masque le montant, la cadence et la monnaie tant que ce suivi n’est pas souhaité.
 - ⛔ Coller les onglets d’une surface — un espace du design system doit séparer clairement chaque cible.
 - ⛔ Ouvrir les statistiques par un agrégat abstrait de toutes les habitudes — la page commence directement par une synthèse courte pour chaque habitude.
-- ⛔ Étirer la destination active de la navigation — les cinq cibles gardent la même largeur et seule la pastille de l’icône indique l’onglet actif.
+- ⛔ Étirer la destination active de la navigation — les cinq cibles gardent la même largeur et le libellé actif reste dans la sienne.
+- ⛔ Masquer le nom de l’onglet actif — son libellé court accompagne toujours l’icône sélectionnée.
 - ⛔ Présenter une absence de saisie comme la preuve d’une abstinence — le bilan compte seulement les écarts notés et explique cette limite clairement.
 - ⛔ Déplier le calendrier et les tendances à l’intérieur d’une carte de statistiques — la synthèse reste courte et le détail s’ouvre dans une surface dédiée.
 - ⛔ Dupliquer le contenu du modal dans la page Statistiques — la page donne une lecture visuelle immédiate; le modal garde le calendrier et l’analyse détaillée.
