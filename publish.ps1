@@ -10,6 +10,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 $versionFile = Join-Path $root 'app-release\version.json'
+$changelogFile = Join-Path $root 'CHANGELOG.md'
 $supportedDestinations = @('smartphone', 'nicoapps', 'default')
 $artifact = Join-Path $root 'app\build\outputs\apk\debug\app-debug.apk'
 $javaHome = 'C:\Program Files\Android\Android Studio\jbr'
@@ -22,6 +23,18 @@ function Fail([string]$message, [int]$code = 2) {
 
 if (-not (Test-Path $versionFile)) { Fail 'La version de publication est introuvable.' }
 $version = Get-Content -Raw $versionFile | ConvertFrom-Json
+
+function Get-ReleaseChangelog {
+    if (-not (Test-Path -LiteralPath $changelogFile)) { return $null }
+    $content = Get-Content -LiteralPath $changelogFile -Raw -Encoding UTF8
+    $match = [regex]::Match($content, '(?ms)^## .+?\r?\n(?<body>.*?)(?=^## |\z)')
+    if (-not $match.Success) { return $null }
+    $body = $match.Groups['body'].Value.Trim()
+    if ([string]::IsNullOrWhiteSpace($body)) { return $null }
+    return $body
+}
+
+$releaseChangelog = Get-ReleaseChangelog
 if ($Destination) {
     $unknown = $Destination | Where-Object { $_ -notin $supportedDestinations }
     if ($unknown) { Fail "Destination inconnue : $($unknown -join ', ')" }
@@ -47,7 +60,7 @@ if ($Plan) {
     Write-Output 'Publication prête'
     Write-Output "Version : $($version.versionName)"
     Write-Output 'Destinations :'
-    & $uploader -ApkPath $artifact -Plan
+    & $uploader -ApkPath $artifact -Changelog $releaseChangelog -Plan
     Write-Output "  - Smartphone : $phoneTarget"
     Write-Output 'Vérifications : tests domaine et construction debug Android'
     Write-Output 'Artefact : app\build\outputs\apk\debug\app-debug.apk'
@@ -75,7 +88,7 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact)) { Fail 'La construction 
 # NicoApps
 if ('default' -in $selectedDestinations -or 'nicoapps' -in $selectedDestinations) {
     Write-Host "Publication sur NicoApps..." -ForegroundColor Cyan
-    & $uploader -ApkPath $artifact
+    & $uploader -ApkPath $artifact -Changelog $releaseChangelog
     if ($LASTEXITCODE -ne 0) { Fail 'La publication NicoApps a échoué.' 4 }
 }
 

@@ -2,6 +2,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$ApkPath,
+    [string]$Changelog,
     [switch]$Plan
 )
 
@@ -40,14 +41,13 @@ function Get-BaseUrl {
     }
 }
 
-$baseUrl = Get-BaseUrl
-$onLan = $baseUrl -eq $lanBaseUrl
-
 if ($Plan) {
-    $loc = if ($onLan) { ' (reseau local)' } else { ' (domaine public)' }
-    Write-Output "  - NicoApps : envoi de $ApkPath a $baseUrl$loc, puis publication."
+    $changelogState = if ([string]::IsNullOrWhiteSpace($Changelog)) { 'sans changelog' } else { 'avec changelog' }
+    Write-Output "  - NicoApps : envoi de $ApkPath, puis publication $changelogState."
     exit 0
 }
+
+$baseUrl = Get-BaseUrl
 
 $token = Get-AdminToken
 if ([string]::IsNullOrWhiteSpace($token)) {
@@ -88,7 +88,18 @@ if ($analysis.blocking) {
 }
 
 Write-Host 'Publication sur NicoApps...' -ForegroundColor Cyan
-$publishRaw = & curl.exe -s -S -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" -d "{}" "$baseUrl/v1/admin/releases/$releaseId/publish"
+$publishPayload = @{ force = $false }
+if (-not [string]::IsNullOrWhiteSpace($Changelog)) {
+    $publishPayload.changelog = $Changelog.Trim()
+}
+$publishBody = $publishPayload | ConvertTo-Json -Compress
+$publishTemp = [System.IO.Path]::GetTempFileName()
+try {
+    [System.IO.File]::WriteAllBytes($publishTemp, [System.Text.Encoding]::UTF8.GetBytes($publishBody))
+    $publishRaw = & curl.exe -s -S -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" --data-binary "@$publishTemp" "$baseUrl/v1/admin/releases/$releaseId/publish"
+} finally {
+    if (Test-Path -LiteralPath $publishTemp) { Remove-Item -LiteralPath $publishTemp -Force }
+}
 if ($LASTEXITCODE -ne 0) {
     Write-Error "La publication a echoue."
     exit 1
@@ -100,4 +111,28 @@ if ($publishResult.PSObject.Properties['error'] -and $publishResult.error) {
     exit 1
 }
 
+$catalogRaw = & curl.exe -s -S -H "Authorization: Bearer $token" "$baseUrl/v1/catalog"
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($catalogRaw)) {
+    Write-Output 'UPLOAD_VERIFY_FAILED'
+    Write-Error "La publication est partie, mais NicoApps n'a pas pu la confirmer."
+    exit 1
+}
+
+$catalog = $catalogRaw | ConvertFrom-Json
+$published = @($catalog.apps) | Where-Object { $_.package_name -eq $analysis.package_name } | Select-Object -First 1
+$expectedChangelog = if ([string]::IsNullOrWhiteSpace($Changelog)) { $null } else { ($Changelog -replace '\r\n', "`n").Trim() }
+$actualChangelog = if ($null -eq $published -or $null -eq $published.release -or [string]::IsNullOrWhiteSpace($published.release.changelog)) { $null } else { ($published.release.changelog -replace '\r\n', "`n").Trim() }
+$versionMatches = $null -ne $published -and
+    $null -ne $published.release -and
+    [long]$published.release.version_code -eq [long]$analysis.version_code -and
+    [string]$published.release.version_name -eq [string]$analysis.version_name
+$changelogMatches = $null -eq $expectedChangelog -or
+    [string]$actualChangelog -ceq [string]$expectedChangelog
+if (-not $versionMatches -or -not $changelogMatches) {
+    Write-Output 'UPLOAD_VERIFY_FAILED'
+    Write-Error "La publication est partie, mais la version ou son changelog n'est pas visible dans NicoApps."
+    exit 1
+}
+
 Write-Host "Diffuse sur NicoApps : $($analysis.display_name) $($analysis.version_name) est en ligne." -ForegroundColor Green
+Write-Output 'UPLOAD_OK'

@@ -57,6 +57,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
 
 ## ⛔ Interdits
+- ⛔ Publier sur NicoApps sans transmettre puis relire le bloc courant de `CHANGELOG.md` — l’APK ne contient pas les notes de version et le catalogue ne peut pas les reconstruire.
 - ⛔ Afficher un jalon alcool vide comme « Pas de bénéfice daté établi » — chaque période donne une observation concrète, sa population et sa source sans transformer une donnée limitée en promesse générale.
 - ⛔ Remplacer le temps écoulé vivant d’une abstinence par les seuls jours complets — le suivi alcool affiche les deux, car ils répondent à deux besoins différents.
 - ⛔ Réduire le compteur détaillé d’abstinence à une ligne — les quatre barres jours, heures, minutes et secondes restent visibles dans le détail.

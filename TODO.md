@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Publication NicoApps reliée au changelog avec relecture obligatoire
 - [x] Six périodes alcool concrètes et sourcées des premières heures à plus d’un an
 - [x] Barres du compteur alcool restaurées et jours de repos rendus cumulatifs
 - [x] Compteur vivant restauré à côté des jours complets du suivi alcool
