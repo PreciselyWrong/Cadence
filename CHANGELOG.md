@@ -1,3 +1,11 @@
+## [1.0.15] — 11 septembre 2026
+
+### Améliorations
+- Les jours conseillés s’additionnent si vous rebuvez avant la fin de l’objectif.
+
+### Corrections
+- Le détail alcool retrouve ses quatre barres pour les jours, heures, minutes et secondes.
+
 ## [1.0.14] — 11 septembre 2026
 
 ### Corrections

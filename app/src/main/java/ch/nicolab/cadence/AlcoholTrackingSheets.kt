@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -81,7 +82,7 @@ fun AlcoholDetailSheet(
 
     CadenceSheet(item.stored.name, null, dismiss = { if (!busy) dismiss() }) {
         LazyColumn(
-            Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+            Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent).testTag("alcohol_detail_list"),
             verticalArrangement = Arrangement.spacedBy(Space.xl),
         ) {
             if (error != null) item { ErrorText(error) }
@@ -89,15 +90,9 @@ fun AlcoholDetailSheet(
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     Text(stats.currentSoberDays.toString(), style = MaterialTheme.typography.displayLarge, color = cadence.habitAccent(item.stored.colorArgb))
                     Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.titleMedium, color = cadence.inkMuted)
-                    Text(stringResource(R.string.alcohol_elapsed_intro), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                    LiveAbstinenceCounter(
-                        item,
-                        cadence.habitAccent(item.stored.colorArgb),
-                        compact = true,
-                        showSeconds = true,
-                    )
                 }
             }
+            item { LiveAbstinenceCounter(item, cadence.habitAccent(item.stored.colorArgb)) }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     val plan = stats.restPlan

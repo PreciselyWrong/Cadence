@@ -155,14 +155,16 @@ object AlcoholStatsCalculator {
     }
 
     fun restPlan(today: LocalDate, consumptions: List<AlcoholConsumption>): AlcoholRestPlan? {
-        val avoidThrough = consumptions.asSequence()
-            .mapNotNull { consumption ->
-                consumption.standardDrinks?.let { consumption.localDate.plusDays(it.toLong()) }
+        var avoidThrough: LocalDate? = null
+        consumptions.asSequence()
+            .filter { it.standardDrinks != null }
+            .sortedBy(AlcoholConsumption::localDate)
+            .forEach { consumption ->
+                val planStart = maxOf(consumption.localDate, avoidThrough ?: consumption.localDate)
+                avoidThrough = planStart.plusDays(requireNotNull(consumption.standardDrinks).toLong())
             }
-            .filter { it >= today }
-            .maxOrNull()
-            ?: return null
-        return AlcoholRestPlan(avoidThrough, avoidThrough.plusDays(1))
+        val activeEnd = avoidThrough?.takeIf { it >= today } ?: return null
+        return AlcoholRestPlan(activeEnd, activeEnd.plusDays(1))
     }
 
     private fun calendarDay(

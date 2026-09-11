@@ -95,13 +95,34 @@ class AlcoholStatsTest {
         assertTrue(result.exceedsUsualSoberGap)
     }
 
-    @Test fun `rest plans use known drinks and keep the latest overlapping end`() {
+    @Test fun `rest plans ignore unknown quantities and accumulate overlapping known days`() {
         val result = stats(consumptions = listOf(consumption(4, 3), consumption(2, 5), consumption(1)))
 
-        assertEquals(AlcoholRestPlan(today.plusDays(3), today.plusDays(4)), result.restPlan)
+        assertEquals(AlcoholRestPlan(today.plusDays(4), today.plusDays(5)), result.restPlan)
         assertEquals(AlcoholRestPlan(today.plusDays(5), today.plusDays(6)),
             AlcoholStatsCalculator.restPlan(today, listOf(consumption(0, 5))))
         assertNull(stats(consumptions = listOf(consumption(10, 1))).restPlan)
+    }
+
+    @Test fun `drinks consumed before the current rest plan ends add their days cumulatively`() {
+        val first = consumption(2, 2, id = "first")
+        val nextDay = consumption(1, 2, id = "next-day")
+
+        assertEquals(
+            AlcoholRestPlan(today.plusDays(2), today.plusDays(3)),
+            AlcoholStatsCalculator.restPlan(today, listOf(first, nextDay)),
+        )
+        assertEquals(
+            AlcoholRestPlan(today.plusDays(4), today.plusDays(5)),
+            AlcoholStatsCalculator.restPlan(today, listOf(first, nextDay.copy(standardDrinks = 4))),
+        )
+    }
+
+    @Test fun `a consumption after a completed rest plan starts a new plan`() {
+        assertEquals(
+            AlcoholRestPlan(today.plusDays(1), today.plusDays(2)),
+            AlcoholStatsCalculator.restPlan(today, listOf(consumption(10, 2), consumption(0, 1))),
+        )
     }
 
     @Test fun `elapsed time without consumption starts at the declared instant`() {

@@ -4,6 +4,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.AbstinenceProfile
@@ -50,10 +53,13 @@ class AlcoholTrackingSheetsTest {
             }
         }
 
+        compose.onNodeWithTag("abstinence_time_seconds").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(4)
+        compose.onNodeWithText("Verres à renseigner").assertIsDisplayed()
+        compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(3)
         compose.onNodeWithText("J’ai bu aujourd’hui").assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals(1, todayActions) }
-        compose.onNodeWithText("Temps écoulé depuis le début de la période sans alcool suivie").assertIsDisplayed()
-        compose.onNodeWithText("Verres à renseigner").assertIsDisplayed()
+        compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(3)
         compose.onNodeWithText("Ajouter une consommation passée").performClick()
         compose.onNodeWithText("Nombre de verres standards").assertIsDisplayed()
         compose.onNodeWithText("Verres standards").assertIsDisplayed()

@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Science
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
@@ -164,10 +165,10 @@ fun LiveAbstinenceCounter(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
-        TimeBand(elapsed.days, stringResource(R.string.abst_elapsed_days), elapsed.days.toFloat() / nextDays, accent, 1f)
-        TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f)
-        TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f)
-        TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f)
+        TimeBand(elapsed.days, stringResource(R.string.abst_elapsed_days), elapsed.days.toFloat() / nextDays, accent, 1f, "abstinence_time_days")
+        TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f, "abstinence_time_hours")
+        TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f, "abstinence_time_minutes")
+        TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f, "abstinence_time_seconds")
         SavingsTotal(item, saved, accent, centered = true)
     }
 }
@@ -202,8 +203,8 @@ private fun savingsPeriodLabel(period: SavingsPeriod): String = stringResource(w
 }).lowercase()
 
 @Composable
-private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, alpha: Float) {
-    Box(Modifier.fillMaxWidth().height(Size.control).clip(Radius.Control).background(cadence.sunken)) {
+private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, alpha: Float, tag: String) {
+    Box(Modifier.fillMaxWidth().height(Size.control).clip(Radius.Control).background(cadence.sunken).testTag(tag)) {
         Box(Modifier.fillMaxWidth(progress.coerceIn(0.08f, 1f)).height(Size.control).background(accent.copy(alpha = alpha)))
         Row(
             Modifier.fillMaxWidth().padding(horizontal = Space.lg).align(Alignment.CenterStart),
