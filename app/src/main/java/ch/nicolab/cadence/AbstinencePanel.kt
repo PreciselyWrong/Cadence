@@ -244,28 +244,32 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
         Text(stringResource(R.string.abstinence_evidence_timeline), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
         checkpoints.forEach { checkpoint ->
             val reached = currentDays >= checkpoint.days
-            val documented = checkpoint.status == EvidenceStatus.DOCUMENTED
-            val tone = if (documented && reached) cadence.success else cadence.inkMuted
+            val unlockable = checkpoint.unlockable
+            val tone = if (unlockable && reached) cadence.success else cadence.inkMuted
             Row(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.Top) {
                 FacetGauge(
-                    progress = if (documented) (currentDays.toFloat() / checkpoint.days).coerceIn(0f, 1f) else 0f,
+                    progress = if (unlockable) (currentDays.toFloat() / checkpoint.days).coerceIn(0f, 1f) else 0f,
                     tint = tone,
                     trackColor = cadence.sunken,
                     size = Size.badge,
                 ) {
                     Icon(
-                        if (documented && reached) Icons.Outlined.Check else Icons.Outlined.Science,
+                        if (unlockable && reached) Icons.Outlined.Check else Icons.Outlined.Science,
                         contentDescription = null,
                         tint = tone,
                     )
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    Text(stringResource(R.string.abstinence_milestone_day, checkpoint.days), style = MaterialTheme.typography.titleLarge, color = tone)
+                    Text(
+                        checkpoint.timeLabel?.let { stringResource(it) }
+                            ?: stringResource(R.string.abstinence_milestone_day, checkpoint.days),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = tone,
+                    )
                     Text(
                         stringResource(when (checkpoint.status) {
                             EvidenceStatus.DOCUMENTED -> R.string.abstinence_evidence_documented
                             EvidenceStatus.LIMITED -> R.string.abstinence_evidence_limited
-                            EvidenceStatus.INSUFFICIENT -> R.string.abstinence_evidence_insufficient
                         }),
                         style = MaterialTheme.typography.labelMedium,
                         color = cadence.inkMuted,

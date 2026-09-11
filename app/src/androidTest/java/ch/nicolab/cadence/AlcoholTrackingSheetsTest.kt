@@ -56,6 +56,7 @@ class AlcoholTrackingSheetsTest {
         compose.onNodeWithTag("abstinence_time_seconds").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(4)
         compose.onNodeWithText("Verres à renseigner").assertIsDisplayed()
+        compose.onNodeWithText("24 à 72 heures").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(3)
         compose.onNodeWithText("J’ai bu aujourd’hui").assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals(1, todayActions) }

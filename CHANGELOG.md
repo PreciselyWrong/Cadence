@@ -2,6 +2,7 @@
 
 ### Améliorations
 - Les jours conseillés s’additionnent si vous rebuvez avant la fin de l’objectif.
+- Six repères concrets montrent ce qui peut changer des premières heures à plus d’un an, avec le contexte de chaque étude.
 
 ### Corrections
 - Le détail alcool retrouve ses quatre barres pour les jours, heures, minutes et secondes.

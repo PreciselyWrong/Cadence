@@ -13,13 +13,14 @@ data class AbstinenceMilestone(
     fun reached(completedDays: Long): Boolean = completedDays >= days
 }
 
-enum class EvidenceStatus { INSUFFICIENT, LIMITED, DOCUMENTED }
+enum class EvidenceStatus { LIMITED, DOCUMENTED }
 
 data class AbstinenceEvidenceCheckpoint(
     val days: Long,
     val detail: Int,
     val status: EvidenceStatus,
     val sources: List<EvidenceSource> = emptyList(),
+    val timeLabel: Int? = null,
 ) {
     val unlockable: Boolean get() = status == EvidenceStatus.DOCUMENTED
 }
@@ -34,8 +35,11 @@ data class AbstinenceProfileContent(
 
 object AbstinenceGuide {
     val alcoholStudy = EvidenceSource(R.string.abstinence_source_mehta, "https://pmc.ncbi.nlm.nih.gov/articles/PMC5942469/")
-    val alcoholSafety = EvidenceSource(R.string.abstinence_source_niaaa_safety, "https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/understanding-alcohol-use-disorder")
+    val alcoholSafety = EvidenceSource(R.string.abstinence_source_asam, "https://www.asam.org/docs/default-source/quality-science/the_asam_clinical_practice_guideline_on-alcohol-1.pdf")
+    val alcoholOneWeek = EvidenceSource(R.string.abstinence_source_mundle, "https://pubmed.ncbi.nlm.nih.gov/2706096/")
     val alcoholTwoWeeks = EvidenceSource(R.string.abstinence_source_kirpitchny, "https://pubmed.ncbi.nlm.nih.gov/28166367/")
+    val alcoholBrainRecovery = EvidenceSource(R.string.abstinence_source_durazzo, "https://pmc.ncbi.nlm.nih.gov/articles/PMC4345147/")
+    val alcoholImmuneRecovery = EvidenceSource(R.string.abstinence_source_li, "https://pubmed.ncbi.nlm.nih.gov/28466561/")
     val alcoholCancerReview = EvidenceSource(R.string.abstinence_source_iarc, "https://www.iarc.who.int/faq/iarc-handbooks-of-cancer-prevention-volume-20a-reduction-or-cessation-of-alcohol-consumption/")
     val sexualHealth = EvidenceSource(R.string.abstinence_source_nhs, "https://www.devonsexualhealth.nhs.uk/your-sexual-health/relationships-and-intimacy/")
     val retraction = EvidenceSource(R.string.abstinence_source_retracted, "https://pubmed.ncbi.nlm.nih.gov/12659241/")
@@ -142,10 +146,30 @@ object AbstinenceGuide {
 
     fun evidenceTimeline(profile: AbstinenceProfile): List<AbstinenceEvidenceCheckpoint> = when (profile) {
         AbstinenceProfile.ALCOHOL -> listOf(
-            AbstinenceEvidenceCheckpoint(5, R.string.abstinence_alcohol_five_days, EvidenceStatus.INSUFFICIENT, listOf(alcoholSafety)),
-            AbstinenceEvidenceCheckpoint(14, R.string.abstinence_alcohol_two_weeks, EvidenceStatus.LIMITED, listOf(alcoholTwoWeeks)),
-            AbstinenceEvidenceCheckpoint(30, R.string.abstinence_alcohol_month, EvidenceStatus.DOCUMENTED, listOf(alcoholStudy)),
-            AbstinenceEvidenceCheckpoint(90, R.string.abstinence_alcohol_ninety_days, EvidenceStatus.INSUFFICIENT, listOf(alcoholCancerReview)),
+            AbstinenceEvidenceCheckpoint(
+                3, R.string.abstinence_alcohol_acute_withdrawal, EvidenceStatus.DOCUMENTED,
+                listOf(alcoholSafety), R.string.abstinence_alcohol_time_24_72_hours,
+            ),
+            AbstinenceEvidenceCheckpoint(
+                7, R.string.abstinence_alcohol_one_week, EvidenceStatus.LIMITED,
+                listOf(alcoholOneWeek, alcoholSafety), R.string.abstinence_alcohol_time_one_week,
+            ),
+            AbstinenceEvidenceCheckpoint(
+                14, R.string.abstinence_alcohol_two_weeks, EvidenceStatus.LIMITED,
+                listOf(alcoholTwoWeeks), R.string.abstinence_alcohol_time_two_weeks,
+            ),
+            AbstinenceEvidenceCheckpoint(
+                30, R.string.abstinence_alcohol_month, EvidenceStatus.DOCUMENTED,
+                listOf(alcoholStudy), R.string.abstinence_alcohol_time_one_month,
+            ),
+            AbstinenceEvidenceCheckpoint(
+                90, R.string.abstinence_alcohol_brain_recovery, EvidenceStatus.LIMITED,
+                listOf(alcoholBrainRecovery), R.string.abstinence_alcohol_time_three_to_eight_months,
+            ),
+            AbstinenceEvidenceCheckpoint(
+                365, R.string.abstinence_alcohol_one_year, EvidenceStatus.LIMITED,
+                listOf(alcoholImmuneRecovery, alcoholCancerReview), R.string.abstinence_alcohol_time_one_year_plus,
+            ),
         )
         else -> milestones(profile).map {
             AbstinenceEvidenceCheckpoint(it.days, it.detail, EvidenceStatus.DOCUMENTED, it.sources)
