@@ -361,6 +361,11 @@
     <string name="insights_month_scope">Sur %1$d jours écoulés, pauses exclues</string>
     <string name="insights_percent">%1$d %%</string>
     <string name="insights_days">%1$d j</string>
+    <string name="insights_best_day_insufficient">Moins de 12 saisies pour dégager un jour dominant</string>
+    <string name="insights_best_day_none">Aucun jour de la semaine ne se détache nettement</string>
+    <string name="insights_best_slot_insufficient">Moins de 12 saisies pour dégager un créneau horaire</string>
+    <string name="insights_best_slot_none">Saisies réparties sans créneau prédominant</string>
+    <string name="insights_month_insufficient">Moins de deux mois d’historique pour comparer</string>
 
     <string name="notification_action_validate">Valider</string>
     <string name="notification_action_add">+%1$s</string>

@@ -51,8 +51,24 @@ class HabitInsightsTest {
 
         val insights = HabitInsightsCalculator.of(entries, today, days())
 
+        assertEquals(5, insights.observedEntryCount)
         assertNull(insights.bestDay)
         assertNull(insights.bestSlot)
+    }
+
+    @Test
+    fun `sample count excludes entries outside planned unpaused days`() {
+        val kept = entry(today, LocalTime.of(7, 0), 100)
+        val paused = entry(today.minusDays(1), LocalTime.of(7, 0), 100)
+        val unplanned = entry(today.minusDays(2), LocalTime.of(7, 0), 100)
+        val observedDays = days(
+            planned = { it != unplanned.localDate },
+            paused = { it == paused.localDate },
+        )
+
+        val insights = HabitInsightsCalculator.of(listOf(kept, paused, unplanned), today, observedDays)
+
+        assertEquals(1, insights.observedEntryCount)
     }
 
     @Test

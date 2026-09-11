@@ -40,4 +40,15 @@
     <string name="habit_stats_paused_short">En pause</string>
     <string name="habit_stats_today_occurrence_short">Écart noté aujourd’hui</string>
     <string name="habit_stats_active_short">Compteur actif</string>
+    <string name="stats_confidence_established">Recul établi</string>
+    <string name="stats_confidence_limited">Recul limité</string>
+    <string name="stats_confidence_insufficient">Recul insuffisant</string>
+    <string name="stats_confidence_label">recul</string>
+    <string name="stats_completeness_detail">%1$d sur %2$d périodes évaluées</string>
+    <string name="stats_completeness_detail_single">%1$d périodes évaluées</string>
+    <string name="stats_comparison_up">+%1$d points par rapport aux périodes précédentes (%2$d %%)</string>
+    <string name="stats_comparison_down">−%1$d points par rapport aux périodes précédentes (%2$d %%)</string>
+    <string name="stats_comparison_stable">Taux identique aux périodes précédentes (%1$d %%)</string>
+    <string name="stats_comparison_insufficient">Recul insuffisant pour comparer aux périodes précédentes</string>
+    <string name="stats_comparison_inhomogeneous">Changement de rythme : comparaison suspendue</string>
 </resources>

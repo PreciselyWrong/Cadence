@@ -66,6 +66,7 @@ data class HabitInsights(
     val bestDay: BestDayInsight? = null,
     val bestSlot: BestSlotInsight? = null,
     val monthComparison: MonthComparison? = null,
+    val observedEntryCount: Int = 0,
 )
 
 object HabitInsightsCalculator {
@@ -92,6 +93,7 @@ object HabitInsightsCalculator {
             bestDay = bestDay(observed, considered),
             bestSlot = bestSlot(observed),
             monthComparison = monthComparison(entries, today, days),
+            observedEntryCount = observed.size,
         )
     }
 

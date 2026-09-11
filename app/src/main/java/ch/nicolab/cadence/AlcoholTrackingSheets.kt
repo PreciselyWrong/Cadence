@@ -33,6 +33,9 @@ import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.AlcoholStatisticsDay
 import ch.nicolab.cadence.domain.AlcoholStatisticsDayStatus
 import ch.nicolab.cadence.ui.components.ActionRow
+import ch.nicolab.cadence.ui.components.ActivityCalendar
+import ch.nicolab.cadence.ui.components.ActivityCalendarCell
+import ch.nicolab.cadence.ui.components.ActivityCalendarTone
 import ch.nicolab.cadence.ui.components.CadenceField
 import ch.nicolab.cadence.ui.components.CadenceSheet
 import ch.nicolab.cadence.ui.components.ErrorText
@@ -304,49 +307,26 @@ private fun AlcoholMetric(value: String, label: String, color: Color = cadence.i
 @Composable
 private fun AlcoholCalendar(days: List<AlcoholStatisticsDay>) {
     if (days.isEmpty()) return
-    var selected by rememberSaveable { mutableStateOf<String?>(null) }
-    val selectedDay = days.firstOrNull { it.date.toString() == selected }
-    val cells = remember(days) { List<AlcoholStatisticsDay?>(days.first().date.dayOfWeek.value - 1) { null } + days }
-    Text(stringResource(R.string.alcohol_stats_calendar), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-    Spacer(Modifier.height(Space.sm))
-    cells.chunked(7).forEach { week ->
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-            repeat(7) { index ->
-                val day = week.getOrNull(index)
-                if (day == null) Spacer(Modifier.weight(1f).height(Size.calendarMark)) else {
-                    val color = alcoholDayColor(day.status)
-                    Box(
-                        Modifier.weight(1f).height(Size.calendarMark).clip(Radius.Chip)
-                            .background(if (selected == day.date.toString()) cadence.sunken else Color.Transparent)
-                            .clickable { selected = day.date.toString() }
-                            .padding(Space.xs),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Box(Modifier.fillMaxWidth().fillMaxHeight().clip(Radius.Chip).background(color), contentAlignment = Alignment.Center) {
-                            Text(day.date.dayOfMonth.toString(), style = MaterialTheme.typography.labelSmall, color = if (day.status == AlcoholStatisticsDayStatus.DRINKING || day.status == AlcoholStatisticsDayStatus.TODAY_DRINKING) cadence.onAccent else cadence.ink)
-                        }
-                    }
-                }
-            }
+    val cells = days.map { day ->
+        val tone = when (day.status) {
+            AlcoholStatisticsDayStatus.DRINKING, AlcoholStatisticsDayStatus.TODAY_DRINKING -> ActivityCalendarTone.DANGER
+            AlcoholStatisticsDayStatus.CLEAR -> ActivityCalendarTone.SUCCESS
+            AlcoholStatisticsDayStatus.TODAY_CLEAR -> ActivityCalendarTone.SUCCESS_SOFT
+            AlcoholStatisticsDayStatus.PAUSED, AlcoholStatisticsDayStatus.UNOBSERVED -> ActivityCalendarTone.NEUTRAL
         }
-    }
-    selectedDay?.let { day ->
-        Spacer(Modifier.height(Space.sm))
-        Text(
-            stringResource(R.string.alcohol_stats_calendar_selected, displayAbstinenceDate(day.date), alcoholDayLabel(day)),
-            style = MaterialTheme.typography.bodyMedium,
-            color = cadence.ink,
-            textAlign = TextAlign.Start,
+        val label = alcoholDayLabel(day)
+        val dateText = displayAbstinenceDate(day.date)
+        ActivityCalendarCell(
+            date = day.date,
+            tone = tone,
+            contentDescription = "$dateText : $label",
+            detailText = stringResource(R.string.alcohol_stats_calendar_selected, dateText, label),
         )
     }
-}
-
-@Composable
-private fun alcoholDayColor(status: AlcoholStatisticsDayStatus): Color = when (status) {
-    AlcoholStatisticsDayStatus.DRINKING, AlcoholStatisticsDayStatus.TODAY_DRINKING -> cadence.danger
-    AlcoholStatisticsDayStatus.CLEAR -> cadence.success
-    AlcoholStatisticsDayStatus.TODAY_CLEAR -> cadence.successSoft
-    AlcoholStatisticsDayStatus.PAUSED, AlcoholStatisticsDayStatus.UNOBSERVED -> cadence.sunken
+    ActivityCalendar(
+        cells = cells,
+        title = stringResource(R.string.alcohol_stats_calendar),
+    )
 }
 
 @Composable

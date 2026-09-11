@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Comparaisons personnelles, recul explicite, actions à compléter et calendrier commun
 - [x] Suivi alcool quotidien avec verres, relance et statistiques sur 90 jours
 - [x] Aperçu statistique adapté au rythme et rafraîchissement du widget sans report continu
 - [x] Accueil allégé, création guidée, saisie directe et rappels reportables

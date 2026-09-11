@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -88,6 +89,7 @@ internal fun TodayScreen(
     val now = if (selectedGroupId == null) sections.now else active.map { it.evaluation }
         .filter { it in sections.now || it in sections.later || it in sections.earlier }
     val abstinences = active.filter { it.stored.goal.isAbstinence }
+    val toComplete = remember(active, timers) { ToCompleteItem.resolve(active, timers) }
 
     ScreenList(
         context = stringResource(R.string.today_subtitle),
@@ -103,6 +105,14 @@ internal fun TodayScreen(
                 TertiaryAction(stringResource(R.string.today_return_adjust), Modifier.fillMaxWidth()) { adjustOpen = true }
             }
         }
+        if (toComplete.isNotEmpty()) {
+            item(key = "section_to_complete") {
+                SectionLabel(stringResource(R.string.today_to_complete_section, toComplete.size))
+            }
+            items(toComplete, key = { it.key }) { item ->
+                ToCompleteRow(item, onClick = { quick(item.habit) })
+            }
+        }
         when {
             active.isEmpty() -> item {
                 EmptyState(
@@ -113,7 +123,7 @@ internal fun TodayScreen(
                     if (selectedGroupId == null) PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
                 }
             }
-            now.isEmpty() && sections.later.isEmpty() && sections.earlier.isEmpty() && abstinences.isEmpty() -> item {
+            toComplete.isEmpty() && now.isEmpty() && sections.later.isEmpty() && sections.earlier.isEmpty() && abstinences.isEmpty() -> item {
                 EmptyState(Icons.Outlined.Check, stringResource(R.string.empty_today_done_title), stringResource(R.string.empty_today_done_message))
             }
         }

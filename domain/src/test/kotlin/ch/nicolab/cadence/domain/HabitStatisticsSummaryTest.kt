@@ -83,4 +83,125 @@ class HabitStatisticsSummaryTest {
         assertEquals(0, HabitStatisticsSummary.compute({ null }, today, emptyList(), emptyList()).evaluatedPeriods)
     }
 
+    @Test fun `comparison requires both windows to have sufficient evaluated sample`() {
+        val habitStartedRecently = habit().copy(startsOn = today.minusDays(10))
+        val summaryRecent = HabitStatisticsSummary.compute({ habitStartedRecently }, today, emptyList(), emptyList())
+        assertEquals(10, summaryRecent.evaluatedPeriods)
+        assertEquals(0, summaryRecent.previousEvaluatedPeriods)
+        assertNull(summaryRecent.comparison)
+        assertNull(summaryRecent.trendPercentagePoints)
+
+        // Current has 30 days, previous has only 5 days (< 7 threshold)
+        val habitStarted35DaysAgo = habit().copy(startsOn = today.minusDays(35))
+        val summary35 = HabitStatisticsSummary.compute({ habitStarted35DaysAgo }, today, emptyList(), emptyList())
+        assertEquals(30, summary35.evaluatedPeriods)
+        assertEquals(5, summary35.previousEvaluatedPeriods)
+        assertNull(summary35.comparison)
+        assertNull(summary35.trendPercentagePoints)
+    }
+
+    @Test fun `broken homogeneity suppresses comparison`() {
+        // Changed period type from DAY to WEEK 35 days ago (previous had DAY, current has WEEK)
+        val boundary = today.minusDays(35)
+        val changedHabit: (LocalDate) -> HabitDefinition? = { date ->
+            if (date < boundary) habit(HabitGoal(10, PeriodType.DAY))
+            else habit(HabitGoal(1, PeriodType.WEEK))
+        }
+        val summary = HabitStatisticsSummary.compute(changedHabit, today, emptyList(), emptyList())
+        assertFalse(summary.isHomogeneous)
+        assertNull(summary.comparison)
+        assertNull(summary.trendPercentagePoints)
+    }
+
+    @Test fun `neutral pauses affect completeness and sample without counting as missed`() {
+        // 25 paused days in 30-day window leaves 5 evaluated days
+        val pauses = listOf(HabitPause(today.minusDays(25), today))
+        val summary = HabitStatisticsSummary.compute({ habit() }, today, emptyList(), pauses)
+        assertEquals(30, summary.observablePeriods)
+        assertEquals(5, summary.evaluatedPeriods)
+        assertEquals(StatisticsConfidence.INSUFFICIENT, summary.completeness.confidence)
+        assertEquals(StatisticsConfidence.INSUFFICIENT, summary.confidence)
+        assertNull(summary.comparison)
+
+        // 10 paused days leaves 20 evaluated days -> LIMITED confidence
+        val pauses10 = listOf(HabitPause(today.minusDays(10), today))
+        val summary10 = HabitStatisticsSummary.compute({ habit() }, today, emptyList(), pauses10)
+        assertEquals(20, summary10.evaluatedPeriods)
+        assertEquals(StatisticsConfidence.LIMITED, summary10.confidence)
+
+        // 0 pauses -> 30 evaluated days -> ESTABLISHED confidence
+        val summaryFull = HabitStatisticsSummary.compute({ habit() }, today, emptyList(), emptyList())
+        assertEquals(30, summaryFull.evaluatedPeriods)
+        assertEquals(StatisticsConfidence.ESTABLISHED, summaryFull.confidence)
+    }
+
+    @Test fun `weekly and monthly comparisons succeed with sufficient sample`() {
+        // Weekly: 60 days history, 4 weeks in previous and 5 weeks in current
+        val weekly = habit(HabitGoal(1, PeriodType.WEEK))
+        // entries in previous 4 weeks (100% success), none in current 5 weeks (0% success)
+        val entries = listOf(entry(37, 1), entry(44, 1), entry(51, 1), entry(58, 1))
+        val weeklySummary = HabitStatisticsSummary.compute({ weekly }, today, entries, emptyList())
+        assertTrue(weeklySummary.isHomogeneous)
+        assertNotNull(weeklySummary.comparison)
+        val compWeek = weeklySummary.comparison!!
+        assertEquals(0, compWeek.currentRatePercent)
+        assertEquals(100, compWeek.previousRatePercent)
+        assertEquals(-100, compWeek.deltaPercentagePoints)
+        assertEquals(StatisticsTrend.DECLINING, compWeek.trend)
+
+        // Monthly: 60 days history, 1 month in previous (validated) and 1 month in current (validated)
+        val monthly = habit(HabitGoal(1, PeriodType.MONTH))
+        val monthlyEntries = listOf(entry(15, 1), entry(45, 1))
+        val monthlySummary = HabitStatisticsSummary.compute({ monthly }, today, monthlyEntries, emptyList())
+        assertTrue(monthlySummary.isHomogeneous)
+        assertNotNull(monthlySummary.comparison)
+        val compMonth = monthlySummary.comparison!!
+        assertEquals(100, compMonth.currentRatePercent)
+        assertEquals(100, compMonth.previousRatePercent)
+        assertEquals(0, compMonth.deltaPercentagePoints)
+        assertEquals(StatisticsTrend.STABLE, compMonth.trend)
+    }
+
+    @Test fun `trend detects improvement decline and stability`() {
+        // Daily improvement: previous has 0 validated (0%), current has 15 validated (50%)
+        val entriesUp = (1..15).map { entry(it.toLong(), 10) }
+        val summaryUp = HabitStatisticsSummary.compute({ habit() }, today, entriesUp, emptyList())
+        val compUp = summaryUp.comparison
+        assertNotNull(compUp)
+        assertEquals(StatisticsTrend.IMPROVING, compUp!!.trend)
+        assertEquals(50, compUp.deltaPercentagePoints)
+
+        // Daily decline: previous has 30 validated (100%), current has 0 validated (0%)
+        val entriesDown = (31..60).map { entry(it.toLong(), 10) }
+        val summaryDown = HabitStatisticsSummary.compute({ habit() }, today, entriesDown, emptyList())
+        val compDown = summaryDown.comparison
+        assertNotNull(compDown)
+        assertEquals(StatisticsTrend.DECLINING, compDown!!.trend)
+        assertEquals(-100, compDown.deltaPercentagePoints)
+
+        // Daily stable: previous has 15 validated (50%), current has 15 validated (50%)
+        val entriesStable = (1..15).map { entry(it.toLong(), 10) } + (31..45).map { entry(it.toLong(), 10) }
+        val summaryStable = HabitStatisticsSummary.compute({ habit() }, today, entriesStable, emptyList())
+        val compStable = summaryStable.comparison
+        assertNotNull(compStable)
+        assertEquals(StatisticsTrend.STABLE, compStable!!.trend)
+        assertEquals(0, compStable.deltaPercentagePoints)
+    }
+
+    @Test fun `confidence thresholds for daily weekly and monthly`() {
+        assertEquals(StatisticsConfidence.INSUFFICIENT, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 0))
+        assertEquals(StatisticsConfidence.INSUFFICIENT, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 6))
+        assertEquals(StatisticsConfidence.LIMITED, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 7))
+        assertEquals(StatisticsConfidence.LIMITED, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 20))
+        assertEquals(StatisticsConfidence.ESTABLISHED, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 21))
+        assertEquals(StatisticsConfidence.ESTABLISHED, HabitStatisticsSummary.confidenceFor(PeriodType.DAY, 30))
+
+        assertEquals(StatisticsConfidence.INSUFFICIENT, HabitStatisticsSummary.confidenceFor(PeriodType.WEEK, 1))
+        assertEquals(StatisticsConfidence.LIMITED, HabitStatisticsSummary.confidenceFor(PeriodType.WEEK, 2))
+        assertEquals(StatisticsConfidence.LIMITED, HabitStatisticsSummary.confidenceFor(PeriodType.WEEK, 3))
+        assertEquals(StatisticsConfidence.ESTABLISHED, HabitStatisticsSummary.confidenceFor(PeriodType.WEEK, 4))
+
+        assertEquals(StatisticsConfidence.INSUFFICIENT, HabitStatisticsSummary.confidenceFor(PeriodType.MONTH, 0))
+        assertEquals(StatisticsConfidence.LIMITED, HabitStatisticsSummary.confidenceFor(PeriodType.MONTH, 1))
+    }
 }

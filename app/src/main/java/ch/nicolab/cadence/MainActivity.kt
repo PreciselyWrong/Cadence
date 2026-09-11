@@ -1,6 +1,11 @@
 package ch.nicolab.cadence
 
 import ch.nicolab.cadence.domain.PeriodType
+import ch.nicolab.cadence.domain.StatisticsConfidence
+import ch.nicolab.cadence.domain.StatisticsTrend
+import ch.nicolab.cadence.ui.components.ActivityCalendar
+import ch.nicolab.cadence.ui.components.ActivityCalendarCell
+import ch.nicolab.cadence.ui.components.ActivityCalendarTone
 import ch.nicolab.cadence.ui.theme.habitAccent
 
 import kotlinx.coroutines.launch
@@ -245,7 +250,11 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
                 )
                 Tab.WEEK -> WeekScreen(habits, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it })
                 Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { choosingCreation = true }, { options = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id })
-                Tab.STATS -> StatsScreen(habits) { viewModel.clearSaveError(); quickHabitId = it.stored.id }
+                Tab.STATS -> StatsScreen(
+                    habits = habits,
+                    open = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                    onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
+                )
                 Tab.SETTINGS -> SettingsScreen(
                     groups = groups,
                     habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
@@ -611,7 +620,11 @@ private fun WeekScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> Unit) {
+private fun StatsScreen(
+    habits: List<HabitCardState>,
+    open: (HabitCardState) -> Unit,
+    onCorrect: (HabitEntry) -> Unit,
+) {
     val visible = habits.filterNot { it.stored.archived }
     val regular = visible.filterNot { it.stored.goal.isAbstinence }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
@@ -638,7 +651,6 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
         }
     }
     regular.firstOrNull { it.stored.id == detailId }?.let { item ->
-        val tint = habitTint(item)
         CadenceSheet(
             title = item.stored.name,
             subtitle = stringResource(R.string.habit_stats_detail_subtitle),
@@ -655,6 +667,20 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
                 if (!item.stored.goal.isLimit) {
                     item { Hairline() }
                     item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
+                }
+                item { Hairline() }
+                item {
+                    Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                    Spacer(Modifier.height(Space.sm))
+                    if (item.recentEntries.isEmpty()) {
+                        Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                            item.recentEntries.take(VISIBLE_ENTRIES).forEach { entry ->
+                                EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -703,26 +729,39 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
         Spacer(Modifier.height(Space.lg))
         StatisticsPulse(stats.periods.toStatisticsPulse())
         Spacer(Modifier.height(Space.sm))
+        val reculLabel = when (stats.confidence) {
+            StatisticsConfidence.ESTABLISHED -> stringResource(R.string.stats_confidence_established)
+            StatisticsConfidence.LIMITED -> stringResource(R.string.stats_confidence_limited)
+            StatisticsConfidence.INSUFFICIENT -> stringResource(R.string.stats_confidence_insufficient)
+        }
         val periodType = stats.periods.map { it.periodType }.distinct().singleOrNull()
-        Text(stringResource(when (periodType) {
+        val pulseLabel = stringResource(when (periodType) {
             PeriodType.DAY -> R.string.stats_pulse_days
             PeriodType.WEEK -> R.string.stats_pulse_weeks
             PeriodType.MONTH -> R.string.stats_pulse_months
             null -> R.string.stats_pulse_periods
-        }, stats.periods.takeLast(14).size), style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
+        }, stats.periods.takeLast(14).size)
+        Text("$reculLabel · $pulseLabel", style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             OverviewMetric(stringResource(R.string.habit_stats_goal_count, stats.validatedPeriods, stats.evaluatedPeriods), stringResource(R.string.habit_stats_goals_label))
             OverviewMetric(item.streak.current.toString(), stringResource(R.string.habit_stats_streak_label))
-            val trend = stats.trendPercentagePoints
+            val comp = stats.comparison
+            val trendText = when {
+                comp == null -> "—"
+                comp.deltaPercentagePoints > 0 -> stringResource(R.string.habit_stats_trend_short_up, comp.deltaPercentagePoints)
+                comp.deltaPercentagePoints < 0 -> stringResource(R.string.habit_stats_trend_short_down, -comp.deltaPercentagePoints)
+                else -> stringResource(R.string.habit_stats_trend_short_stable)
+            }
+            val trendColor = when {
+                comp == null -> palette.inkFaint
+                comp.deltaPercentagePoints > 0 -> palette.success
+                else -> palette.ink
+            }
             OverviewMetric(
-                when {
-                    trend == null || trend == 0 -> stringResource(R.string.habit_stats_trend_short_stable)
-                    trend > 0 -> stringResource(R.string.habit_stats_trend_short_up, trend)
-                    else -> stringResource(R.string.habit_stats_trend_short_down, -trend)
-                },
+                trendText,
                 stringResource(R.string.habit_stats_trend_label),
-                if (trend != null && trend > 0) palette.success else palette.ink,
+                trendColor,
             )
         }
     }
@@ -843,76 +882,75 @@ private fun StatisticsNumbers(summary: HabitStatisticsSummary) {
         Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = cadence.inkMuted)
         return
     }
+    val palette = cadence
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.lg), verticalAlignment = Alignment.CenterVertically) {
-        Text(stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0), style = MetricStyle, color = cadence.success)
+        Text(stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0), style = MetricStyle, color = palette.success)
         Column(Modifier.weight(1f)) {
-            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
+            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
             Text(stringResource(R.string.habit_stats_validated_compact, summary.validatedPeriods, summary.evaluatedPeriods),
-                style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted)
         }
     }
     Spacer(Modifier.height(Space.sm))
     if (summary.idealPeriods > 0) {
-        Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+        Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
     }
-    val trend = summary.trendPercentagePoints
-    if (trend != null) Text(when {
-        trend > 0 -> stringResource(R.string.habit_stats_trend_up, trend)
-        trend < 0 -> stringResource(R.string.habit_stats_trend_down, -trend)
-        else -> stringResource(R.string.habit_stats_trend_stable)
-    }, style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    val confidenceLabel = when (summary.confidence) {
+        StatisticsConfidence.ESTABLISHED -> stringResource(R.string.stats_confidence_established)
+        StatisticsConfidence.LIMITED -> stringResource(R.string.stats_confidence_limited)
+        StatisticsConfidence.INSUFFICIENT -> stringResource(R.string.stats_confidence_insufficient)
+    }
+    val completenessText = if (summary.observablePeriods != summary.evaluatedPeriods) {
+        stringResource(R.string.stats_completeness_detail, summary.evaluatedPeriods, summary.observablePeriods)
+    } else {
+        stringResource(R.string.stats_completeness_detail_single, summary.evaluatedPeriods)
+    }
+    Text(
+        text = "$confidenceLabel · $completenessText",
+        style = MaterialTheme.typography.bodySmall,
+        color = palette.inkFaint,
+    )
+    val comp = summary.comparison
+    val comparisonText = when {
+        comp != null -> when (comp.trend) {
+            StatisticsTrend.IMPROVING -> stringResource(R.string.stats_comparison_up, comp.deltaPercentagePoints, comp.previousRatePercent)
+            StatisticsTrend.DECLINING -> stringResource(R.string.stats_comparison_down, -comp.deltaPercentagePoints, comp.previousRatePercent)
+            StatisticsTrend.STABLE -> stringResource(R.string.stats_comparison_stable, comp.previousRatePercent)
+        }
+        !summary.isHomogeneous -> stringResource(R.string.stats_comparison_inhomogeneous)
+        else -> stringResource(R.string.stats_comparison_insufficient)
+    }
+    Text(
+        text = comparisonText,
+        style = MaterialTheme.typography.bodySmall,
+        color = palette.inkMuted,
+    )
 }
 
 @Composable
 private fun StatisticsCalendar(days: List<HabitStatisticsDay>) {
     if (days.isEmpty()) return
-    var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
-    val selected = days.firstOrNull { it.date.toString() == selectedDate }
-    val cells = remember(days) {
-        List<HabitStatisticsDay?>(days.first().date.dayOfWeek.value - 1) { null } + days
-    }
-    Text(stringResource(R.string.habit_stats_calendar), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-    Text(stringResource(R.string.habit_stats_calendar_help), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-    Spacer(Modifier.height(Space.md))
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-        DayOfWeek.entries.forEach { day ->
-            Text(stringResource(HabitLabels.dayShort(day)), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall,
-                color = cadence.inkMuted, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+    val cells = days.map { day ->
+        val tone = when (day.status) {
+            HabitStatisticsDayStatus.IDEAL, HabitStatisticsDayStatus.ACTIVITY -> ActivityCalendarTone.SUCCESS
+            HabitStatisticsDayStatus.MINIMUM -> ActivityCalendarTone.SUCCESS_SOFT
+            HabitStatisticsDayStatus.MISSED -> ActivityCalendarTone.DANGER
+            else -> ActivityCalendarTone.NEUTRAL
         }
+        val label = stringResource(statisticsDayLabel(day.status))
+        val dateText = displayAbstinenceDate(day.date)
+        ActivityCalendarCell(
+            date = day.date,
+            tone = tone,
+            contentDescription = "$dateText : $label",
+            detailText = stringResource(R.string.habit_stats_selected_day, dateText, label),
+        )
     }
-    cells.chunked(7).forEach { week ->
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-            repeat(7) { index ->
-                val day = week.getOrNull(index)
-                if (day == null) Spacer(Modifier.weight(1f).height(Size.touch)) else {
-                    val color = when (day.status) {
-                        HabitStatisticsDayStatus.IDEAL, HabitStatisticsDayStatus.ACTIVITY -> cadence.success
-                        HabitStatisticsDayStatus.MINIMUM -> cadence.successSoft
-                        HabitStatisticsDayStatus.MISSED -> cadence.danger
-                        else -> cadence.sunken
-                    }
-                    val label = stringResource(statisticsDayLabel(day.status))
-                    Box(
-                        Modifier.weight(1f).height(Size.touch).clip(Radius.Control)
-                            .background(if (day == selected) cadence.sunken else Color.Transparent)
-                            .clickable { selectedDate = day.date.toString() }
-                            .semantics { contentDescription = "${displayAbstinenceDate(day.date)} : $label" },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Box(Modifier.size(Size.calendarMark).clip(Radius.Chip).background(color), contentAlignment = Alignment.Center) {
-                            Text(day.date.dayOfMonth.toString(), color = if (day.status == HabitStatisticsDayStatus.IDEAL || day.status == HabitStatisticsDayStatus.ACTIVITY || day.status == HabitStatisticsDayStatus.MISSED) onColorOf(color) else cadence.ink,
-                                style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    Spacer(Modifier.height(Space.sm))
-    selected?.let { day ->
-        Text(stringResource(R.string.habit_stats_selected_day, displayAbstinenceDate(day.date), stringResource(statisticsDayLabel(day.status))),
-            style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
-    }
+    ActivityCalendar(
+        cells = cells,
+        title = stringResource(R.string.habit_stats_calendar),
+        helpText = stringResource(R.string.habit_stats_calendar_help),
+    )
 }
 
 private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {

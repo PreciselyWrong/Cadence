@@ -9,6 +9,10 @@
 ### Améliorations
 - L’accueil et le widget montrent d’abord les jours terminés sans consommation notée.
 - Les repères à 5, 14, 30 et 90 jours distinguent clairement ce qui est établi ou encore incertain.
+- L’accueil réunit les verres à préciser et les chronomètres à terminer.
+- Vos résultats sont comparés aux périodes précédentes seulement quand le recul suffit.
+- Les dernières saisies se corrigent directement depuis le détail des statistiques.
+- Les calendriers d’activité partagent désormais la même lecture claire.
 
 ## [1.0.12] — 09 septembre 2026
 

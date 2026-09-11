@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitInsights
+import ch.nicolab.cadence.domain.HabitInsightsCalculator
 import ch.nicolab.cadence.domain.TimeSlot
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
@@ -33,34 +34,46 @@ fun HabitInsightsPanel(
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
-    val hasAny = insights.bestDay != null || insights.bestSlot != null || insights.monthComparison != null
+    val bestDay = insights.bestDay
+    val bestSlot = insights.bestSlot
+    val comparison = insights.monthComparison
+
     Column(modifier) {
         Text(stringResource(R.string.insights_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
         Spacer(Modifier.height(Space.md))
-        if (!hasAny) {
-            Text(stringResource(R.string.insights_not_enough), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-            return@Column
-        }
-        insights.bestDay?.let { best ->
+
+        if (bestDay != null) {
             InsightLine(
                 stringResource(R.string.insights_best_day),
-                stringResource(HabitLabels.day(best.day)),
+                stringResource(HabitLabels.day(bestDay.day)),
                 stringResource(
                     R.string.insights_best_day_detail,
-                    HabitFormatter.formatValue(best.averageMinor, goal.goalType, goal.unit),
-                    HabitFormatter.formatValue(best.overallAverageMinor, goal.goalType, goal.unit),
+                    HabitFormatter.formatValue(bestDay.averageMinor, goal.goalType, goal.unit),
+                    HabitFormatter.formatValue(bestDay.overallAverageMinor, goal.goalType, goal.unit),
                 ),
             )
-        }
-        insights.bestSlot?.let { best ->
-            InsightLine(
-                stringResource(R.string.insights_best_slot),
-                stringResource(slotLabel(best.slot)),
-                stringResource(R.string.insights_best_slot_detail, (best.share * 100).roundToInt(), best.entryCount),
+        } else {
+            InsightAbsentLine(
+                stringResource(R.string.insights_best_day),
+                stringResource(if (insights.observedEntryCount < HabitInsightsCalculator.MIN_ENTRIES) R.string.insights_best_day_insufficient else R.string.insights_best_day_none),
             )
         }
-        insights.monthComparison?.let { comparison ->
-            Spacer(Modifier.height(Space.md))
+
+        if (bestSlot != null) {
+            InsightLine(
+                stringResource(R.string.insights_best_slot),
+                stringResource(slotLabel(bestSlot.slot)),
+                stringResource(R.string.insights_best_slot_detail, (bestSlot.share * 100).roundToInt(), bestSlot.entryCount),
+            )
+        } else {
+            InsightAbsentLine(
+                stringResource(R.string.insights_best_slot),
+                stringResource(if (insights.observedEntryCount < HabitInsightsCalculator.MIN_ENTRIES) R.string.insights_best_slot_insufficient else R.string.insights_best_slot_none),
+            )
+        }
+
+        if (comparison != null) {
+            Spacer(Modifier.height(Space.xs))
             Text(stringResource(R.string.insights_month_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
             Spacer(Modifier.height(Space.sm))
             MonthRow(
@@ -98,7 +111,21 @@ fun HabitInsightsPanel(
                 style = MaterialTheme.typography.labelMedium,
                 color = palette.inkFaint,
             )
+        } else {
+            InsightAbsentLine(
+                stringResource(R.string.insights_month_title),
+                stringResource(R.string.insights_month_insufficient),
+            )
         }
+    }
+}
+
+@Composable
+private fun InsightAbsentLine(label: String, reason: String) {
+    val palette = cadence
+    Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
+        Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+        Text(reason, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
     }
 }
 

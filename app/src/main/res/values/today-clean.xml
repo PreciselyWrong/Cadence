@@ -28,4 +28,10 @@
     <string name="today_return_adjust">Ajuster mon rythme</string>
     <string name="today_return_choose">Quelle habitude ajuster ?</string>
     <string name="today_return_choose_help">Son nouveau rythme s’appliquera à partir d’aujourd’hui.</string>
+    <string name="today_to_complete_section">À compléter · %1$d</string>
+    <string name="today_to_complete_alcohol_unknown">Nombre de verres standards à préciser · %1$s</string>
+    <string name="today_to_complete_alcohol_action">Préciser</string>
+    <string name="today_to_complete_timer_running">Chronomètre en cours · %1$s</string>
+    <string name="today_to_complete_timer_paused">Chronomètre en pause · %1$s</string>
+    <string name="today_to_complete_timer_action">Ouvrir</string>
 </resources>
