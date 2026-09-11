@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.domain
 
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -59,6 +61,35 @@ data class AlcoholStats(
     val isPaused: Boolean,
     val days: List<AlcoholStatisticsDay>,
 )
+
+/**
+ * Temps suivi sans prétendre connaître l'heure d'une consommation datée.
+ * Après une consommation, le compteur repart donc à la fin de sa journée civile.
+ */
+object AlcoholElapsedCalculator {
+    fun calculate(
+        habitId: String,
+        declaredStart: Instant,
+        consumptions: List<AlcoholConsumption>,
+        now: Instant,
+    ): AbstinenceElapsed {
+        val activeStart = activeStart(habitId, declaredStart, consumptions)
+        return if (activeStart >= now) AbstinenceElapsed.ZERO
+        else AbstinenceElapsed.from(Duration.between(activeStart, now))
+    }
+
+    fun activeStart(
+        habitId: String,
+        declaredStart: Instant,
+        consumptions: List<AlcoholConsumption>,
+    ): Instant {
+        val latestSafeBoundary = consumptions.asSequence()
+            .filter { it.habitId == habitId }
+            .map { it.localDate.plusDays(1).atStartOfDay(it.observedZoneId).toInstant() }
+            .maxOrNull()
+        return if (latestSafeBoundary != null && latestSafeBoundary > declaredStart) latestSafeBoundary else declaredStart
+    }
+}
 
 /** Local consumption tracking; it never estimates alcohol concentration or driving fitness. */
 object AlcoholStatsCalculator {

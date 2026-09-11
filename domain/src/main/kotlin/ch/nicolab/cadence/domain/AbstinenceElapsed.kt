@@ -33,6 +33,8 @@ data class AbstinenceElapsed(
         "$days j $hours h"
     }
 
+    fun formatLive(): String = "$days j · $hours h · $minutes min · $seconds s"
+
     companion object {
         val ZERO = AbstinenceElapsed(0L, 0, 0, 0)
 

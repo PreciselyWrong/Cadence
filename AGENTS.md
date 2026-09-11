@@ -57,6 +57,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
 
 ## ⛔ Interdits
+- ⛔ Remplacer le temps écoulé vivant d’une abstinence par les seuls jours complets — le suivi alcool affiche les deux, car ils répondent à deux besoins différents.
 - ⛔ Présenter d’abord des jours dans les statistiques d’un objectif hebdomadaire ou mensuel — l’aperçu suit la période souhaitée, le détail quotidien reste secondaire.
 - ⛔ Poursuivre les captures d’écran après une demande d’arrêt — terminer les vérifications automatisées et la publication demandée.
 - ⛔ Utiliser un sous-agent coûteux pour un travail borné ou écraser le travail parallèle — privilégier Terra ou AGY et coordonner les fichiers partagés.

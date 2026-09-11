@@ -89,6 +89,13 @@ fun AlcoholDetailSheet(
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     Text(stats.currentSoberDays.toString(), style = MaterialTheme.typography.displayLarge, color = cadence.habitAccent(item.stored.colorArgb))
                     Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.titleMedium, color = cadence.inkMuted)
+                    Text(stringResource(R.string.alcohol_elapsed_intro), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                    LiveAbstinenceCounter(
+                        item,
+                        cadence.habitAccent(item.stored.colorArgb),
+                        compact = true,
+                        showSeconds = true,
+                    )
                 }
             }
             item {

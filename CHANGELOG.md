@@ -1,3 +1,8 @@
+## [1.0.14] — 11 septembre 2026
+
+### Corrections
+- Le suivi alcool affiche de nouveau le temps écoulé, sans masquer les jours complets.
+
 ## [1.0.13] — 11 septembre 2026
 
 ### Nouveautés

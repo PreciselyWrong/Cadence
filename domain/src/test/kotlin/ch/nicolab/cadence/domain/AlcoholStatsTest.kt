@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.domain
 
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -101,5 +102,37 @@ class AlcoholStatsTest {
         assertEquals(AlcoholRestPlan(today.plusDays(5), today.plusDays(6)),
             AlcoholStatsCalculator.restPlan(today, listOf(consumption(0, 5))))
         assertNull(stats(consumptions = listOf(consumption(10, 1))).restPlan)
+    }
+
+    @Test fun `elapsed time without consumption starts at the declared instant`() {
+        val declaredStart = today.minusDays(2).atTime(15, 30).toInstant(ZoneOffset.UTC)
+        val now = today.atTime(18, 45, 12).toInstant(ZoneOffset.UTC)
+
+        assertEquals(
+            AbstinenceElapsed(2, 3, 15, 12),
+            AlcoholElapsedCalculator.calculate("alcohol", declaredStart, emptyList(), now),
+        )
+    }
+
+    @Test fun `elapsed time after a dated consumption starts when that civil day ends`() {
+        val zurich = ZoneId.of("Europe/Zurich")
+        val drinkingDay = LocalDate.of(2026, 3, 28)
+        val declaredStart = drinkingDay.minusDays(10).atStartOfDay(zurich).toInstant()
+        val consumption = AlcoholConsumption("latest", "alcohol", drinkingDay, zurich, 2)
+        val now = drinkingDay.plusDays(2).atTime(4, 5, 6).atZone(zurich).toInstant()
+
+        assertEquals(
+            AbstinenceElapsed(1, 3, 5, 6),
+            AlcoholElapsedCalculator.calculate("alcohol", declaredStart, listOf(consumption), now),
+        )
+        assertEquals(
+            AbstinenceElapsed.ZERO,
+            AlcoholElapsedCalculator.calculate(
+                "alcohol",
+                declaredStart,
+                listOf(consumption),
+                drinkingDay.atTime(23, 0).atZone(zurich).toInstant(),
+            ),
+        )
     }
 }

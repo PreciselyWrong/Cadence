@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
+import ch.nicolab.cadence.domain.AlcoholElapsedCalculator
 import ch.nicolab.cadence.domain.SavingsPeriod
 import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.components.HabitFacet
@@ -76,6 +77,8 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
             if (alcohol != null) {
                 Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = accent)
                 Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                Text(stringResource(R.string.alcohol_elapsed_intro), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                LiveAbstinenceCounter(item, accent, compact = true, showSeconds = true)
                 alcohol.restPlan?.let { plan ->
                     Text(stringResource(R.string.alcohol_home_rest, displayAbstinenceDate(plan.avoidThrough)), style = MaterialTheme.typography.bodySmall, color = cadence.ink)
                 }
@@ -111,17 +114,30 @@ fun abstinenceStatus(item: HabitCardState): String = when {
 }
 
 @Composable
-fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean = false) {
+fun LiveAbstinenceCounter(
+    item: HabitCardState,
+    accent: Color,
+    compact: Boolean = false,
+    showSeconds: Boolean = false,
+) {
     val start = item.stored.abstinenceStartedAt ?: return
     var now by remember(item.stored.id) { mutableStateOf(Instant.now()) }
-    LaunchedEffect(item.stored.id, start, item.recentEntries) {
+    LaunchedEffect(item.stored.id, start, item.recentEntries, item.alcoholConsumptions) {
         while (true) {
             now = Instant.now()
             delay(1_000)
         }
     }
-    val elapsed = AbstinenceElapsedCalculator.calculate(item.stored.id, start, item.recentEntries, now)
-    val activeStart = AbstinenceElapsedCalculator.activeStart(item.stored.id, start, item.recentEntries)
+    val activeStart = if (item.alcoholStats != null) {
+        AlcoholElapsedCalculator.activeStart(item.stored.id, start, item.alcoholConsumptions)
+    } else {
+        AbstinenceElapsedCalculator.activeStart(item.stored.id, start, item.recentEntries)
+    }
+    val elapsed = if (item.alcoholStats != null) {
+        AlcoholElapsedCalculator.calculate(item.stored.id, start, item.alcoholConsumptions, now)
+    } else {
+        AbstinenceElapsedCalculator.calculate(item.stored.id, start, item.recentEntries, now)
+    }
     val saved = AbstinenceSavingsCalculator.calculate(
         item.stored.abstinenceSpendingMinor,
         item.stored.abstinenceSpendingPeriod,
@@ -130,7 +146,11 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
         ZoneId.systemDefault(),
     )
     if (compact) {
-        Text(elapsed.formatCompact(), style = MaterialTheme.typography.headlineSmall, color = accent)
+        Text(
+            if (showSeconds) elapsed.formatLive() else elapsed.formatCompact(),
+            style = MaterialTheme.typography.headlineSmall,
+            color = accent,
+        )
         SavingsTotal(item, saved, accent)
         return
     }
@@ -138,7 +158,7 @@ fun LiveAbstinenceCounter(item: HabitCardState, accent: Color, compact: Boolean 
         .firstOrNull { it.days > elapsed.days }?.days ?: (elapsed.days + 1)
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
         Text(
-            stringResource(R.string.abst_elapsed_intro),
+            stringResource(if (item.alcoholStats != null) R.string.alcohol_elapsed_intro else R.string.abst_elapsed_intro),
             style = MaterialTheme.typography.bodyMedium,
             color = cadence.inkMuted,
             textAlign = TextAlign.Center,

@@ -52,6 +52,7 @@ class AlcoholTrackingSheetsTest {
 
         compose.onNodeWithText("J’ai bu aujourd’hui").assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals(1, todayActions) }
+        compose.onNodeWithText("Temps écoulé depuis le début de la période sans alcool suivie").assertIsDisplayed()
         compose.onNodeWithText("Verres à renseigner").assertIsDisplayed()
         compose.onNodeWithText("Ajouter une consommation passée").performClick()
         compose.onNodeWithText("Nombre de verres standards").assertIsDisplayed()

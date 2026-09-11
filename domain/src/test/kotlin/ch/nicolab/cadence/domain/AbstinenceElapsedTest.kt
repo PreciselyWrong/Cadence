@@ -170,6 +170,13 @@ class AbstinenceElapsedTest {
     }
 
     @Test
+    fun `live French formatter keeps every elapsed component`() {
+        val elapsed = AbstinenceElapsed(days = 23L, hours = 8, minutes = 12, seconds = 45)
+
+        assertEquals("23 j · 8 h · 12 min · 45 s", elapsed.formatLive())
+    }
+
+    @Test
     fun `component bounds validation`() {
         assertThrows(IllegalArgumentException::class.java) {
             AbstinenceElapsed(days = -1L, hours = 0, minutes = 0, seconds = 0)

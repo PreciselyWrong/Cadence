@@ -447,6 +447,7 @@
     <string name="alcohol_rest_pending">L’objectif sera calculé après le nombre de verres.</string>
     <string name="alcohol_rest_complete">Aucun objectif personnel en cours.</string>
     <string name="alcohol_days_hero">jours complets sans consommation notée</string>
+    <string name="alcohol_elapsed_intro">Temps écoulé depuis le début de la période sans alcool suivie</string>
     <string name="alcohol_home_rest">Objectif jusqu’au %1$s inclus</string>
     <plurals name="alcohol_home_pending">
         <item quantity="one">%1$d quantité à renseigner</item>
