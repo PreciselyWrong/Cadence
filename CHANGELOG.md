@@ -1,3 +1,15 @@
+## [1.0.13] — 11 septembre 2026
+
+### Nouveautés
+- Notez une consommation passée avec son nombre de verres standards.
+- Après une consommation notée le jour même, Cadence demande les verres le lendemain matin.
+- Un calendrier sur 90 jours montre votre fréquence, votre série et votre record.
+- Chaque verre propose un jour complet sans alcool comme objectif personnel.
+
+### Améliorations
+- L’accueil et le widget montrent d’abord les jours terminés sans consommation notée.
+- Les repères à 5, 14, 30 et 90 jours distinguent clairement ce qui est établi ou encore incertain.
+
 ## [1.0.12] — 09 septembre 2026
 
 ### Améliorations

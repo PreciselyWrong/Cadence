@@ -29,4 +29,5 @@ data class HabitEntity(
     val abstinenceSpendingMinor: Long? = null,
     val abstinenceSpendingPeriod: String? = null,
     val abstinenceSavingsCurrency: String? = null,
+    val alcoholFollowUpTime: String? = null,
 )

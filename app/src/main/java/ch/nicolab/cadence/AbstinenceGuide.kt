@@ -13,6 +13,17 @@ data class AbstinenceMilestone(
     fun reached(completedDays: Long): Boolean = completedDays >= days
 }
 
+enum class EvidenceStatus { INSUFFICIENT, LIMITED, DOCUMENTED }
+
+data class AbstinenceEvidenceCheckpoint(
+    val days: Long,
+    val detail: Int,
+    val status: EvidenceStatus,
+    val sources: List<EvidenceSource> = emptyList(),
+) {
+    val unlockable: Boolean get() = status == EvidenceStatus.DOCUMENTED
+}
+
 data class AbstinenceProfileContent(
     val label: Int,
     val defaultName: Int,
@@ -24,6 +35,8 @@ data class AbstinenceProfileContent(
 object AbstinenceGuide {
     val alcoholStudy = EvidenceSource(R.string.abstinence_source_mehta, "https://pmc.ncbi.nlm.nih.gov/articles/PMC5942469/")
     val alcoholSafety = EvidenceSource(R.string.abstinence_source_niaaa_safety, "https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/understanding-alcohol-use-disorder")
+    val alcoholTwoWeeks = EvidenceSource(R.string.abstinence_source_kirpitchny, "https://pubmed.ncbi.nlm.nih.gov/28166367/")
+    val alcoholCancerReview = EvidenceSource(R.string.abstinence_source_iarc, "https://www.iarc.who.int/faq/iarc-handbooks-of-cancer-prevention-volume-20a-reduction-or-cessation-of-alcohol-consumption/")
     val sexualHealth = EvidenceSource(R.string.abstinence_source_nhs, "https://www.devonsexualhealth.nhs.uk/your-sexual-health/relationships-and-intimacy/")
     val retraction = EvidenceSource(R.string.abstinence_source_retracted, "https://pubmed.ncbi.nlm.nih.gov/12659241/")
     val smokingTimeline = EvidenceSource(R.string.catalogue_source_nhs_smoking, "https://www.nhs.uk/better-health/quit-smoking/")
@@ -125,5 +138,17 @@ object AbstinenceGuide {
         AbstinenceProfile.CAFFEINE, AbstinenceProfile.GAMBLING, AbstinenceProfile.SOCIAL_MEDIA,
         AbstinenceProfile.BEDTIME_SCREENS, AbstinenceProfile.IMPULSE_SHOPPING,
         AbstinenceProfile.PORNOGRAPHY, AbstinenceProfile.CUSTOM -> emptyList()
+    }
+
+    fun evidenceTimeline(profile: AbstinenceProfile): List<AbstinenceEvidenceCheckpoint> = when (profile) {
+        AbstinenceProfile.ALCOHOL -> listOf(
+            AbstinenceEvidenceCheckpoint(5, R.string.abstinence_alcohol_five_days, EvidenceStatus.INSUFFICIENT, listOf(alcoholSafety)),
+            AbstinenceEvidenceCheckpoint(14, R.string.abstinence_alcohol_two_weeks, EvidenceStatus.LIMITED, listOf(alcoholTwoWeeks)),
+            AbstinenceEvidenceCheckpoint(30, R.string.abstinence_alcohol_month, EvidenceStatus.DOCUMENTED, listOf(alcoholStudy)),
+            AbstinenceEvidenceCheckpoint(90, R.string.abstinence_alcohol_ninety_days, EvidenceStatus.INSUFFICIENT, listOf(alcoholCancerReview)),
+        )
+        else -> milestones(profile).map {
+            AbstinenceEvidenceCheckpoint(it.days, it.detail, EvidenceStatus.DOCUMENTED, it.sources)
+        }
     }
 }

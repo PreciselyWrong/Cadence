@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.data.local
 
 import androidx.room.withTransaction
+import ch.nicolab.cadence.data.local.entities.AlcoholConsumptionEntity
 import ch.nicolab.cadence.data.local.entities.HabitEntity
 import ch.nicolab.cadence.data.local.entities.HabitEntryEntity
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
@@ -16,6 +17,7 @@ import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
 
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceLog
@@ -40,6 +42,7 @@ import ch.nicolab.cadence.domain.UnitDimension
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
@@ -57,6 +60,62 @@ class CadenceRepository(
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
     fun observeAbstinenceLogRevision(): Flow<Int> = database.abstinenceLogDao().observeRevision()
+
+    fun observeAlcoholRevision(): Flow<Long> = database.alcoholConsumptionDao().observeRevision()
+
+    suspend fun getAlcoholConsumptions(habitId: String): List<AlcoholConsumption> =
+        database.alcoholConsumptionDao().getConsumptions(habitId).map(::toAlcoholConsumption)
+
+    suspend fun saveAlcoholConsumption(consumption: AlcoholConsumption) {
+        require(consumption.id.isNotBlank()) { "Alcohol consumption ID cannot be blank" }
+        require(consumption.localDate <= LocalDate.now(clock)) { "Alcohol consumption cannot be in the future" }
+        val standardDrinks = consumption.standardDrinks
+        require(standardDrinks == null || standardDrinks > 0) {
+            "Standard drinks must be positive"
+        }
+        consumption.followUpDate?.let { require(it > consumption.localDate) { "Follow-up must be after consumption" } }
+        ZoneId.of(consumption.observedZoneId.id)
+        database.withTransaction {
+            val habit = requireNotNull(getHabitEffectiveAt(consumption.habitId, consumption.localDate)) {
+                "Alcohol habit is missing"
+            }
+            require(habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
+                "Alcohol consumption requires the alcohol profile"
+            }
+            val existing = database.alcoholConsumptionDao().getConsumptionForDay(
+                consumption.habitId, consumption.localDate.toString(),
+            )
+            if (existing != null && existing.id != consumption.id) {
+                database.alcoholConsumptionDao().delete(consumption.id)
+            }
+            database.alcoholConsumptionDao().save(
+                AlcoholConsumptionEntity(
+                    id = existing?.id ?: consumption.id,
+                    habitId = consumption.habitId,
+                    localDate = consumption.localDate.toString(),
+                    observedZoneId = consumption.observedZoneId.id,
+                    standardDrinks = consumption.standardDrinks,
+                    followUpDate = consumption.followUpDate?.toString(),
+                    followUpNotified = consumption.followUpNotified,
+                ),
+            )
+        }
+    }
+
+    suspend fun deleteAlcoholConsumption(id: String) = database.alcoholConsumptionDao().delete(id)
+
+    suspend fun markAlcoholFollowUpNotified(id: String) =
+        database.alcoholConsumptionDao().markFollowUpNotified(id)
+
+    private fun toAlcoholConsumption(entity: AlcoholConsumptionEntity) = AlcoholConsumption(
+        id = entity.id,
+        habitId = entity.habitId,
+        localDate = LocalDate.parse(entity.localDate),
+        observedZoneId = ZoneId.of(entity.observedZoneId),
+        standardDrinks = entity.standardDrinks,
+        followUpDate = entity.followUpDate?.let(LocalDate::parse),
+        followUpNotified = entity.followUpNotified,
+    )
 
     suspend fun getAbstinenceLogs(habitId: String): List<AbstinenceLog> =
         database.abstinenceLogDao().getLogs(habitId).map(::toAbstinenceLog)
@@ -154,6 +213,7 @@ class CadenceRepository(
     fun observeWidgetRevisions(): Flow<Number> = merge(
         observeHabitRevision(),
         observeEntryRevision(),
+        observeAlcoholRevision(),
         observePauseRevision(),
         observeTimerRevision(),
         observeGroupRevision(),
@@ -247,6 +307,7 @@ class CadenceRepository(
                 abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
                 abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod?.name,
                 abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
+                alcoholFollowUpTime = alcoholFollowUpTime(habit.abstinenceProfile, habit.alcoholFollowUpTime),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -316,6 +377,7 @@ class CadenceRepository(
                 abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
                 abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod?.name,
                 abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
+                alcoholFollowUpTime = alcoholFollowUpTime(habit.abstinenceProfile, habit.alcoholFollowUpTime),
             )
 
             val goalEntity = HabitGoalEntity(
@@ -732,6 +794,7 @@ class CadenceRepository(
                 abstinenceSpendingMinor = relation.habit.abstinenceSpendingMinor,
                 abstinenceSpendingPeriod = relation.habit.abstinenceSpendingPeriod,
                 abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
+                alcoholFollowUpTime = relation.habit.alcoholFollowUpTime,
                 goals = goals,
                 schedules = schedules,
             )
@@ -799,7 +862,7 @@ class CadenceRepository(
         }
 
         val doc = BackupDocument(
-            formatVersion = 2,
+            formatVersion = 3,
             exportedAtEpochMs = System.currentTimeMillis(),
             habits = backupHabits,
             entries = backupEntries,
@@ -812,6 +875,17 @@ class CadenceRepository(
                 BackupAbstinenceLogV2(log.id, log.habitId, log.occurredAtEpochMs, log.localDate,
                     log.observedZoneId, log.kind, log.intensity, log.note)
             },
+            alcoholConsumptions = database.alcoholConsumptionDao().getAllConsumptions().map { consumption ->
+                BackupAlcoholConsumptionV3(
+                    id = consumption.id,
+                    habitId = consumption.habitId,
+                    localDate = consumption.localDate,
+                    observedZoneId = consumption.observedZoneId,
+                    standardDrinks = consumption.standardDrinks,
+                    followUpDate = consumption.followUpDate,
+                    followUpNotified = consumption.followUpNotified,
+                )
+            },
         )
 
         return json.encodeToString(BackupDocument.serializer(), doc)
@@ -821,12 +895,13 @@ class CadenceRepository(
         val rootObj = json.parseToJsonElement(content).jsonObject
         val version = rootObj["formatVersion"]?.jsonPrimitive?.int ?: 1
 
-        val docV2: BackupDocument = if (version == 1) {
+        val decoded: BackupDocument = if (version == 1) {
             val docV1 = json.decodeFromString<BackupDocumentV1>(content)
             migrateV1ToV2(docV1)
         } else {
             json.decodeFromString<BackupDocument>(content)
         }
+        val docV2 = if (version < 3) migrateAlcoholEntriesToV3(decoded) else decoded
 
         validateBackupV2(docV2)
         val journal = validateBackupJournal(docV2)
@@ -863,6 +938,10 @@ class CadenceRepository(
                     abstinenceSpendingMinor = habit.abstinenceSpendingMinor,
                     abstinenceSpendingPeriod = habit.abstinenceSpendingPeriod,
                     abstinenceSavingsCurrency = habit.abstinenceSavingsCurrency,
+                    alcoholFollowUpTime = alcoholFollowUpTime(
+                        AbstinenceProfile.valueOf(habit.abstinenceProfile),
+                        habit.alcoholFollowUpTime,
+                    ),
                 )
                 database.habitDao().insertHabit(habitEntity)
 
@@ -905,6 +984,21 @@ class CadenceRepository(
             }
 
             journal.forEach { database.abstinenceLogDao().save(it) }
+
+            docV2.alcoholConsumptions.forEach { consumption ->
+                database.alcoholConsumptionDao().save(
+                    AlcoholConsumptionEntity(
+                        id = consumption.id,
+                        habitId = consumption.habitId,
+                        localDate = consumption.localDate,
+                        observedZoneId = consumption.observedZoneId,
+                        standardDrinks = consumption.standardDrinks,
+                        followUpDate = consumption.followUpDate,
+                        // Une restauration remet les données en place sans déclencher une ancienne relance.
+                        followUpNotified = consumption.followUpNotified || consumption.followUpDate != null,
+                    ),
+                )
+            }
 
             docV2.entries.forEach { e ->
                 database.habitEntryDao().insertEntry(
@@ -1021,6 +1115,11 @@ class CadenceRepository(
             require(habit.schedules.isNotEmpty()) { "Habit ${habit.id} must have at least one schedule" }
             val startsOn = LocalDate.parse(habit.startsOn)
             val profile = AbstinenceProfile.valueOf(habit.abstinenceProfile)
+            if (profile == AbstinenceProfile.ALCOHOL) {
+                alcoholFollowUpTime(profile, habit.alcoholFollowUpTime)
+            } else {
+                require(habit.alcoholFollowUpTime == null) { "Only alcohol uses an alcohol follow-up time" }
+            }
             val abstinenceStart = habit.abstinenceStartedAtEpochMs?.let(java.time.Instant::ofEpochMilli)
                 ?.atZone(clock.zone)?.toLocalDate() ?: habit.abstinenceStartedOn?.let(LocalDate::parse)
             if (profile != AbstinenceProfile.NONE) {
@@ -1065,8 +1164,29 @@ class CadenceRepository(
         require(entryIds.size == doc.entries.size) { "Duplicate entry IDs in backup" }
         doc.entries.forEach { e ->
             require(e.habitId in habitIds) { "Entry references missing habitId ${e.habitId}" }
+            require(doc.habits.first { it.id == e.habitId }.abstinenceProfile != AbstinenceProfile.ALCOHOL.name) {
+                "Alcohol entries must use alcoholConsumptions"
+            }
             require(e.valueMinor > 0) { "Entry valueMinor must be positive" }
             LocalDate.parse(e.localDate)
+        }
+
+        val alcoholIds = mutableSetOf<String>()
+        val alcoholDays = mutableSetOf<Pair<String, String>>()
+        doc.alcoholConsumptions.forEach { consumption ->
+            require(alcoholIds.add(consumption.id) && consumption.id.isNotBlank()) { "Duplicate alcohol consumption ID" }
+            require(consumption.habitId in habitIds) { "Alcohol consumption references missing habit" }
+            require(doc.habits.first { it.id == consumption.habitId }.abstinenceProfile == AbstinenceProfile.ALCOHOL.name) {
+                "Alcohol consumption requires the alcohol profile"
+            }
+            require(alcoholDays.add(consumption.habitId to consumption.localDate)) { "Duplicate alcohol consumption day" }
+            val localDate = LocalDate.parse(consumption.localDate)
+            ZoneId.of(consumption.observedZoneId)
+            val standardDrinks = consumption.standardDrinks
+            require(standardDrinks == null || standardDrinks > 0) { "Standard drinks must be positive" }
+            consumption.followUpDate?.let { followUp ->
+                require(LocalDate.parse(followUp) > localDate) { "Follow-up must be after consumption" }
+            }
         }
 
         doc.quickValues.forEach { q ->
@@ -1178,6 +1298,45 @@ class CadenceRepository(
         )
     }
 
+    private fun migrateAlcoholEntriesToV3(document: BackupDocument): BackupDocument {
+        val alcoholHabitIds = document.habits
+            .filter { it.abstinenceProfile == AbstinenceProfile.ALCOHOL.name }
+            .mapTo(mutableSetOf()) { it.id }
+        val legacyAlcoholEntries = document.entries.filter { it.habitId in alcoholHabitIds }
+        val consumptions = legacyAlcoholEntries
+            .groupBy { it.habitId to it.localDate }
+            .values
+            .map { entries ->
+                val selected = entries.minWith(compareBy<BackupEntryV2> { it.occurredAtEpochMs }.thenBy { it.id })
+                BackupAlcoholConsumptionV3(
+                    id = selected.id,
+                    habitId = selected.habitId,
+                    localDate = selected.localDate,
+                    observedZoneId = selected.observedZoneId,
+                )
+            }
+        return document.copy(
+            formatVersion = 3,
+            habits = document.habits.map { habit ->
+                habit.copy(
+                    alcoholFollowUpTime = alcoholFollowUpTime(
+                        AbstinenceProfile.valueOf(habit.abstinenceProfile),
+                        habit.alcoholFollowUpTime,
+                    ),
+                )
+            },
+            entries = document.entries.filterNot { it.habitId in alcoholHabitIds },
+            alcoholConsumptions = consumptions,
+        )
+    }
+
+    private fun alcoholFollowUpTime(profile: AbstinenceProfile, configured: String?): String? {
+        if (profile != AbstinenceProfile.ALCOHOL) return null
+        val value = configured ?: "09:00"
+        LocalTime.parse(value)
+        return value
+    }
+
     /** Une progression n'existe que si son pas, sa cadence et son départ sont tous présents. */
     private fun toProgression(goal: HabitGoalEntity): GoalProgression? {
         val step = goal.progressionStep ?: return null
@@ -1236,6 +1395,7 @@ class CadenceRepository(
             abstinenceSpendingMinor = relation.habit.abstinenceSpendingMinor,
             abstinenceSpendingPeriod = relation.habit.abstinenceSpendingPeriod?.let(SavingsPeriod::valueOf),
             abstinenceSavingsCurrency = relation.habit.abstinenceSavingsCurrency,
+            alcoholFollowUpTime = relation.habit.alcoholFollowUpTime,
             goal = HabitGoal(
                 targetMinor = goalEntity.targetMinor,
                 minimumMinor = goalEntity.minimumMinor,

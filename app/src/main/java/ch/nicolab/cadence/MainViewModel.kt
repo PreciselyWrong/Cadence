@@ -12,6 +12,9 @@ import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.AbstinenceStats
 import ch.nicolab.cadence.domain.AbstinenceJournalSummary
 import ch.nicolab.cadence.domain.AbstinenceStatsCalculator
+import ch.nicolab.cadence.domain.AlcoholConsumption
+import ch.nicolab.cadence.domain.AlcoholStats
+import ch.nicolab.cadence.domain.AlcoholStatsCalculator
 import ch.nicolab.cadence.domain.HabitEntryCorrection
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
@@ -32,6 +35,8 @@ import ch.nicolab.cadence.domain.TodayPresentation
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import ch.nicolab.cadence.reminder.ReminderNotifications
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
+import ch.nicolab.cadence.reminder.AlcoholFollowUpPlanner
+import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
 import java.time.Clock
 import java.time.LocalDate
@@ -77,6 +82,8 @@ data class HabitCardState(
     /** Périodes planifiées réussies d'affilée, et meilleure série passée. */
     val streak: HabitStreak,
     val abstinenceStats: AbstinenceStats? = null,
+    val alcoholConsumptions: List<AlcoholConsumption> = emptyList(),
+    val alcoholStats: AlcoholStats? = null,
     val statistics: HabitStatisticsSummary? = null,
 ) {
     /** Saut du jour encore annulable, s'il existe. */
@@ -210,6 +217,7 @@ class MainViewModel(
             combine(
                 repository.observeHabits(),
                 repository.observeEntryRevision(),
+                repository.observeAlcoholRevision(),
                 repository.observePauseRevision(),
                 flow {
                     while (true) {
@@ -217,7 +225,7 @@ class MainViewModel(
                         delay(60_000)
                     }
                 }.distinctUntilChanged(),
-            ) { source, _, _, _ -> source }.collect { source ->
+            ) { source, _, _, _, _ -> source }.collect { source ->
                 latest = source
                 rebuild(source)
             }
@@ -266,6 +274,60 @@ class MainViewModel(
     fun recordAbstinenceOccurrence(habit: HabitCardState, note: String?, onSaved: () -> Unit) = saveSafely(onSaved) {
         require(habit.stored.goal.isAbstinence && !habit.evaluation.isPaused)
         persistEntry(habit, 1, "APP", note = note)
+    }
+
+    fun recordAlcoholToday(habit: HabitCardState, onSaved: () -> Unit) = saveSafely(onSaved) {
+        require(habit.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL)
+        require(!habit.evaluation.isPaused)
+        val today = LocalDate.now(clock)
+        val existing = repository.getAlcoholConsumptions(habit.stored.id).firstOrNull { it.localDate == today }
+        if (existing == null) {
+            val consumption = AlcoholConsumption(
+                id = UUID.randomUUID().toString(),
+                habitId = habit.stored.id,
+                localDate = today,
+                observedZoneId = clock.zone,
+                followUpDate = today.plusDays(1),
+            )
+            repository.saveAlcoholConsumption(consumption)
+            AlcoholFollowUpScheduler.schedule(
+                app,
+                consumption,
+                habit.stored.alcoholFollowUpTime?.let { raw -> runCatching { LocalTime.parse(raw) }.getOrNull() }
+                    ?: AlcoholFollowUpPlanner.defaultTime,
+                clock.zone,
+                clock.instant(),
+            )
+        }
+    }
+
+    fun saveAlcoholConsumption(
+        habit: HabitCardState,
+        existing: AlcoholConsumption?,
+        localDate: LocalDate,
+        standardDrinks: Int,
+        onSaved: () -> Unit,
+    ) = saveSafely(onSaved) {
+        require(habit.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL)
+        require(standardDrinks > 0 && localDate <= LocalDate.now(clock))
+        val consumption = (existing ?: AlcoholConsumption(
+            id = UUID.randomUUID().toString(),
+            habitId = habit.stored.id,
+            localDate = localDate,
+            observedZoneId = clock.zone,
+        )).copy(
+            localDate = localDate,
+            standardDrinks = standardDrinks,
+            followUpDate = null,
+            followUpNotified = true,
+        )
+        repository.saveAlcoholConsumption(consumption)
+        AlcoholFollowUpScheduler.cancel(app, consumption.id, consumption.habitId)
+    }
+
+    fun deleteAlcoholConsumption(consumption: AlcoholConsumption, onSaved: () -> Unit) = saveSafely(onSaved) {
+        AlcoholFollowUpScheduler.cancel(app, consumption.id, consumption.habitId)
+        repository.deleteAlcoholConsumption(consumption.id)
     }
 
     fun undoLastEntry() = viewModelScope.launch {
@@ -433,6 +495,7 @@ class MainViewModel(
     fun deleteHabit(habitId: String) = viewModelScope.launch {
         ReminderScheduler.cancelSnooze(app, habitId)
         repository.getReminders(habitId).forEach { ReminderScheduler.cancel(app, it.id) }
+        repository.getAlcoholConsumptions(habitId).forEach { AlcoholFollowUpScheduler.cancel(app, it.id, habitId) }
         AbstinenceMilestoneScheduler.cancel(app, habitId)
         repository.deleteHabit(habitId)
         refreshAll()
@@ -521,7 +584,12 @@ class MainViewModel(
 
     fun importBackup(content: String, onComplete: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {
         runCatching { repository.importBackup(content) }
-            .onSuccess { repository.getAllReminders().forEach { ReminderScheduler.schedule(app, it) }; refreshAll(); onComplete() }
+            .onSuccess {
+                repository.getAllReminders().forEach { ReminderScheduler.schedule(app, it) }
+                AlcoholFollowUpScheduler.scheduleAll(app, repository, clock.zone, clock.instant())
+                refreshAll()
+                onComplete()
+            }
             .onFailure { onError(it.message ?: "Fichier de sauvegarde invalide") }
     }
 
@@ -532,6 +600,7 @@ class MainViewModel(
     private suspend fun refreshAll() {
         rebuild(latest)
         AbstinenceMilestoneScheduler.scheduleAll(app, repository, clock.instant())
+        AlcoholFollowUpScheduler.scheduleAll(app, repository, clock.zone, clock.instant())
     }
 
     private suspend fun rebuild(source: List<PersistedHabit>) {
@@ -555,13 +624,26 @@ class MainViewModel(
         val identifiedPauses = repository.getIdentifiedPauses(habit.id)
         val pauses = identifiedPauses.map(IdentifiedPause::pause)
         val allEntries = repository.getEntries(habit.id)
-        val entries = allEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
+        val alcoholConsumptions = if (habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) {
+            repository.getAlcoholConsumptions(habit.id)
+        } else emptyList()
+        val trackingEntries = if (habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) alcoholConsumptions.map { consumption ->
+            HabitEntry(
+                id = consumption.id,
+                habitId = consumption.habitId,
+                occurredAt = consumption.localDate.atStartOfDay(consumption.observedZoneId).toInstant(),
+                localDate = consumption.localDate,
+                observedZoneId = consumption.observedZoneId,
+                valueMinor = 1,
+            )
+        } else allEntries
+        val entries = trackingEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
         val versions = repository.habitVersionsOf(habit.id)
         val effectiveAt = { day: LocalDate -> versions(day) ?: habit }
         val streak = StreakCalculator.compute(
             habitAt = { day -> versions(day)?.definition },
             today = date,
-            entries = allEntries,
+            entries = trackingEntries,
             pauses = pauses,
         )
         var cursor = date
@@ -569,7 +651,7 @@ class MainViewModel(
             repeat(6) {
                 val historicalHabit = effectiveAt(cursor)
                 val historicalWindow = PeriodCalculator.window(cursor, historicalHabit.goal.period, historicalHabit.schedule.firstDayOfWeek)
-                val evaluation = evaluator.evaluate(historicalHabit.definition, cursor, allEntries, pauses)
+                val evaluation = evaluator.evaluate(historicalHabit.definition, cursor, trackingEntries, pauses)
                 val paused = generateSequence(historicalWindow.start) { it.plusDays(1) }
                     .takeWhile { it < historicalWindow.endExclusive }
                     .any { day -> pauses.any { it.includes(day) } }
@@ -578,7 +660,7 @@ class MainViewModel(
             }
         }.reversed()
         val dailyStart = date.minusDays(83)
-        val valuesByDate = allEntries.filter { it.localDate in dailyStart..date }
+        val valuesByDate = trackingEntries.filter { it.localDate in dailyStart..date }
             .groupBy(HabitEntry::localDate)
             .mapValues { (_, dayEntries) -> dayEntries.sumOf(HabitEntry::valueMinor) }
         val dailyHistory = mutableListOf<DailyStat>()
@@ -612,20 +694,25 @@ class MainViewModel(
             quickValues = repository.getQuickValues(habit.id).map(HabitQuickValueEntity::amountMinor),
             reminders = repository.getReminders(habit.id),
             history = history,
-            entryCount = allEntries.size,
+            entryCount = trackingEntries.size,
             dailyHistory = dailyHistory,
-            insights = HabitInsightsCalculator.of(allEntries, date, insightDays),
-            recentEntries = allEntries.sortedByDescending(HabitEntry::occurredAt).let {
-                if (habit.goal.isAbstinence) it else it.take(RECENT_ENTRIES)
+            insights = HabitInsightsCalculator.of(trackingEntries, date, insightDays),
+            recentEntries = trackingEntries.sortedByDescending(HabitEntry::occurredAt).let {
+                if (habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) emptyList()
+                else if (habit.goal.isAbstinence) it else it.take(RECENT_ENTRIES)
             },
             pauses = identifiedPauses,
             streak = streak,
             statistics = if (habit.goal.isAbstinence) null else HabitStatisticsSummary.compute(
-                habitAt = { day -> versions(day)?.definition }, today = date, entries = allEntries, pauses = pauses,
+                habitAt = { day -> versions(day)?.definition }, today = date, entries = trackingEntries, pauses = pauses,
             ),
             abstinenceStats = habit.abstinenceStartedOn(clock.zone)?.takeIf { habit.goal.isAbstinence }?.let { start ->
-                AbstinenceStatsCalculator.compute(habit.id, start, date, allEntries, pauses)
+                AbstinenceStatsCalculator.compute(habit.id, start, date, trackingEntries, pauses)
             },
+            alcoholConsumptions = alcoholConsumptions.sortedByDescending(AlcoholConsumption::localDate),
+            alcoholStats = habit.abstinenceStartedOn(clock.zone)
+                ?.takeIf { habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL }
+                ?.let { start -> AlcoholStatsCalculator.compute(habit.id, start, date, alcoholConsumptions, pauses) },
         )
     }
 }

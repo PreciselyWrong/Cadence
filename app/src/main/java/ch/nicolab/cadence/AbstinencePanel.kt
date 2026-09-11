@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Science
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
@@ -71,13 +72,26 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
                     Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 }
             }
-            LiveAbstinenceCounter(item, accent, compact = true)
-            Text(stringResource(when {
-                item.evaluation.isPaused -> R.string.abstinence_today_paused
-                else -> R.string.abst_home_open
-            }), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-            next?.let {
-                Text(stringResource(R.string.catalogue_home_next, milestoneTime(it)), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+            val alcohol = item.alcoholStats
+            if (alcohol != null) {
+                Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = accent)
+                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                alcohol.restPlan?.let { plan ->
+                    Text(stringResource(R.string.alcohol_home_rest, displayAbstinenceDate(plan.avoidThrough)), style = MaterialTheme.typography.bodySmall, color = cadence.ink)
+                }
+                val pending = alcohol.pendingQuantityDates.size
+                if (pending > 0) {
+                    Text(pluralStringResource(R.plurals.alcohol_home_pending, pending, pending), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                }
+            } else {
+                LiveAbstinenceCounter(item, accent, compact = true)
+                Text(stringResource(when {
+                    item.evaluation.isPaused -> R.string.abstinence_today_paused
+                    else -> R.string.abst_home_open
+                }), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                next?.let {
+                    Text(stringResource(R.string.catalogue_home_next, milestoneTime(it)), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                }
             }
         }
     }
@@ -90,6 +104,7 @@ private fun milestoneTime(milestone: AbstinenceMilestone): String =
 
 @Composable
 fun abstinenceStatus(item: HabitCardState): String = when {
+    item.alcoholStats != null -> stringResource(R.string.abstinence_days, item.alcoholStats.currentSoberDays)
     item.evaluation.isPaused -> stringResource(R.string.abstinence_today_paused)
     item.evaluation.progressMinor > 0 -> stringResource(R.string.abstinence_today_event)
     else -> stringResource(R.string.abstinence_days, item.abstinenceStats?.currentDays ?: 0L)
@@ -183,6 +198,10 @@ private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, 
 
 @Composable
 fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long) {
+    if (profile == AbstinenceProfile.ALCOHOL) {
+        AlcoholEvidenceTimeline(currentDays)
+        return
+    }
     val milestones = AbstinenceGuide.milestones(profile)
     if (milestones.isEmpty()) return
     val content = AbstinenceGuide.content(profile)
@@ -194,6 +213,50 @@ fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long) {
         }
         content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted) }
         content.sources.filterNot { it.url in milestoneSources }.forEach { SourceLink(it) }
+    }
+}
+
+@Composable
+private fun AlcoholEvidenceTimeline(currentDays: Long) {
+    val checkpoints = AbstinenceGuide.evidenceTimeline(AbstinenceProfile.ALCOHOL)
+    Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
+        Text(stringResource(R.string.abstinence_evidence_timeline), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+        checkpoints.forEach { checkpoint ->
+            val reached = currentDays >= checkpoint.days
+            val documented = checkpoint.status == EvidenceStatus.DOCUMENTED
+            val tone = if (documented && reached) cadence.success else cadence.inkMuted
+            Row(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.Top) {
+                FacetGauge(
+                    progress = if (documented) (currentDays.toFloat() / checkpoint.days).coerceIn(0f, 1f) else 0f,
+                    tint = tone,
+                    trackColor = cadence.sunken,
+                    size = Size.badge,
+                ) {
+                    Icon(
+                        if (documented && reached) Icons.Outlined.Check else Icons.Outlined.Science,
+                        contentDescription = null,
+                        tint = tone,
+                    )
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    Text(stringResource(R.string.abstinence_milestone_day, checkpoint.days), style = MaterialTheme.typography.titleLarge, color = tone)
+                    Text(
+                        stringResource(when (checkpoint.status) {
+                            EvidenceStatus.DOCUMENTED -> R.string.abstinence_evidence_documented
+                            EvidenceStatus.LIMITED -> R.string.abstinence_evidence_limited
+                            EvidenceStatus.INSUFFICIENT -> R.string.abstinence_evidence_insufficient
+                        }),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = cadence.inkMuted,
+                    )
+                    Text(stringResource(checkpoint.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+                    checkpoint.sources.forEach { SourceLink(it) }
+                }
+            }
+        }
+        AbstinenceGuide.content(AbstinenceProfile.ALCOHOL).notice?.let {
+            Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+        }
     }
 }
 

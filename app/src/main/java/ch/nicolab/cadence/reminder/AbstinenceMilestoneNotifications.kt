@@ -60,9 +60,23 @@ object AbstinenceMilestoneScheduler {
 
     suspend fun scheduleAll(context: Context, repository: CadenceRepository, now: Instant = Instant.now()) {
         repository.getHabitsEffectiveAt(LocalDate.now()).forEach { habit ->
-            schedule(context, habit, if (habit.goal.isAbstinence) repository.getEntries(habit.id) else emptyList(), now)
+            schedule(context, habit, if (habit.goal.isAbstinence) trackingEntries(repository, habit) else emptyList(), now)
         }
     }
+
+    suspend fun trackingEntries(repository: CadenceRepository, habit: PersistedHabit): List<HabitEntry> =
+        if (habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
+            repository.getAlcoholConsumptions(habit.id).map { consumption ->
+                HabitEntry(
+                    id = consumption.id,
+                    habitId = consumption.habitId,
+                    occurredAt = consumption.localDate.plusDays(1).atStartOfDay(consumption.observedZoneId).toInstant(),
+                    localDate = consumption.localDate,
+                    observedZoneId = consumption.observedZoneId,
+                    valueMinor = 1,
+                )
+            }
+        } else repository.getEntries(habit.id)
 
     fun schedule(context: Context, habit: PersistedHabit, entries: List<HabitEntry>, now: Instant = Instant.now()) {
         cancel(context, habit.id)
@@ -106,7 +120,7 @@ class AbstinenceMilestoneReceiver : BroadcastReceiver() {
             try {
                 val app = context.applicationContext as CadenceApp
                 val habit = app.repository.getHabitEffectiveAt(habitId, LocalDate.now()) ?: return@launch
-                val entries = app.repository.getEntries(habitId)
+                val entries = AbstinenceMilestoneScheduler.trackingEntries(app.repository, habit)
                 val declaredStart = habit.abstinenceStartedAt ?: return@launch
                 val activeStart = AbstinenceElapsedCalculator.activeStart(habitId, declaredStart, entries)
                 val milestone = AbstinenceGuide.milestones(habit.abstinenceProfile)

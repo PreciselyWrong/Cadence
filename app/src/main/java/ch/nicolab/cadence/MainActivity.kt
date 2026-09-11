@@ -83,6 +83,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalAttainment
+import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
@@ -268,7 +269,16 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     }
 
     quick?.let { item ->
-        if (item.stored.goal.isAbstinence) AbstinenceDetailSheet(
+        if (item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL) AlcoholDetailSheet(
+            item = item,
+            dismiss = { if (!busy) quickHabitId = null },
+            recordToday = { saved -> viewModel.recordAlcoholToday(item, saved) },
+            saveConsumption = { existing, date, drinks, saved -> viewModel.saveAlcoholConsumption(item, existing, date, drinks, saved) },
+            deleteConsumption = viewModel::deleteAlcoholConsumption,
+            editHabit = { quickHabitId = null; viewModel.clearSaveError(); editorId = item.stored.id },
+            busy = busy,
+            error = saveError,
+        ) else if (item.stored.goal.isAbstinence) AbstinenceDetailSheet(
             item = item,
             dismiss = { if (!busy) quickHabitId = null },
             onRecordOccurrence = { saved -> viewModel.recordAbstinenceOccurrence(item, null, saved) },
@@ -606,6 +616,7 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
     val regular = visible.filterNot { it.stored.goal.isAbstinence }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
     var detailId by rememberSaveable { mutableStateOf<String?>(null) }
+    var alcoholDetailId by rememberSaveable { mutableStateOf<String?>(null) }
     ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
         if (visible.isEmpty()) item {
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
@@ -619,7 +630,10 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
         if (abstinences.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
             items(abstinences, key = { it.stored.id }) { item ->
-                AbstinenceStatisticsOverview(item) { open(item) }
+                AbstinenceStatisticsOverview(item) {
+                    if (item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL) alcoholDetailId = item.stored.id
+                    else open(item)
+                }
             }
         }
     }
@@ -644,6 +658,9 @@ private fun StatsScreen(habits: List<HabitCardState>, open: (HabitCardState) -> 
                 }
             }
         }
+    }
+    abstinences.firstOrNull { it.stored.id == alcoholDetailId }?.let { item ->
+        AlcoholStatisticsSheet(item) { alcoholDetailId = null }
     }
 }
 
@@ -743,6 +760,7 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
     val palette = cadence
     val tint = habitTint(item)
     val stats = item.abstinenceStats
+    val alcohol = item.alcoholStats
     Panel(onClick = onClick) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
             HabitFacet(
@@ -757,16 +775,31 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
                 Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink)
                 Text(
                     stringResource(when {
-                        stats?.isPaused == true -> R.string.habit_stats_paused_short
-                        stats?.todayHasOccurrence == true -> R.string.habit_stats_today_occurrence_short
+                        alcohol?.isPaused == true || stats?.isPaused == true -> R.string.habit_stats_paused_short
+                        alcohol?.todayHasConsumption == true || stats?.todayHasOccurrence == true -> R.string.habit_stats_today_occurrence_short
                         else -> R.string.habit_stats_active_short
                     }),
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (stats?.isPaused == true || stats?.todayHasOccurrence == true) palette.inkMuted else palette.success,
+                    color = if (alcohol?.isPaused == true || alcohol?.todayHasConsumption == true || stats?.isPaused == true || stats?.todayHasOccurrence == true) palette.inkMuted else palette.success,
                 )
             }
         }
-        stats?.let {
+        if (alcohol != null) {
+            Spacer(Modifier.height(Space.xl))
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.displayMedium, color = palette.ink)
+                Spacer(Modifier.width(Space.sm))
+                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.labelMedium, color = palette.success)
+            }
+            Spacer(Modifier.height(Space.xl))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
+                OverviewMetric(stringResource(R.string.alcohol_stats_days_30, alcohol.drinkingDays30), stringResource(R.string.alcohol_stats_drinking_days))
+                OverviewMetric(
+                    alcohol.averageDaysBetweenDrinking?.let(::formatAlcoholAverage) ?: "—",
+                    stringResource(R.string.alcohol_stats_frequency_label),
+                )
+            }
+        } else stats?.let {
             Spacer(Modifier.height(Space.xl))
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(it.currentDays.toString(), style = MaterialTheme.typography.displayMedium, color = palette.ink)

@@ -63,6 +63,24 @@ class AbstinenceGuideTest {
         assertTrue(milestone.sources.all { it.url.startsWith("https://") })
     }
 
+    @Test fun `alcohol evidence timeline separates proof from honest gaps`() {
+        val timeline = AbstinenceGuide.evidenceTimeline(AbstinenceProfile.ALCOHOL)
+
+        assertEquals(listOf(5L, 14L, 30L, 90L), timeline.map { it.days })
+        assertEquals(
+            listOf(
+                EvidenceStatus.INSUFFICIENT,
+                EvidenceStatus.LIMITED,
+                EvidenceStatus.DOCUMENTED,
+                EvidenceStatus.INSUFFICIENT,
+            ),
+            timeline.map { it.status },
+        )
+        assertTrue(timeline.filter { it.status != EvidenceStatus.INSUFFICIENT }.all { it.sources.isNotEmpty() })
+        assertTrue(timeline.single { it.status == EvidenceStatus.DOCUMENTED }.unlockable)
+        assertTrue(timeline.filterNot { it.status == EvidenceStatus.DOCUMENTED }.none { it.unlockable })
+    }
+
     @Test fun `masturbation has no physiological milestone`() {
         assertTrue(AbstinenceGuide.milestones(AbstinenceProfile.MASTURBATION).isEmpty())
     }

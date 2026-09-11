@@ -56,7 +56,10 @@ import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEvaluation
 import ch.nicolab.cadence.domain.HabitEvaluator
+import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitTimer
+import ch.nicolab.cadence.domain.AbstinenceProfile
+import ch.nicolab.cadence.domain.AlcoholStatsCalculator
 import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
@@ -69,6 +72,7 @@ import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import androidx.glance.appwidget.updateAll
@@ -85,6 +89,7 @@ private data class WidgetHabit(
     /** Secondes déjà mesurées lorsqu'un chronomètre est actif, nulles sinon. */
     val timerSeconds: Long? = null,
     val abstinenceElapsed: ch.nicolab.cadence.domain.AbstinenceElapsed? = null,
+    val alcoholSoberDays: Long? = null,
 )
 
 class CadenceWidget : GlanceAppWidget() {
@@ -99,22 +104,43 @@ class CadenceWidget : GlanceAppWidget() {
         val today = LocalDate.now()
         val evaluator = HabitEvaluator()
         val now = Instant.now()
+        val zone = ZoneId.systemDefault()
         val timers = repository.getTimers()
         val allPending = repository.getHabitsEffectiveAt(today).mapNotNull { habit ->
             val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
-            val entries = repository.getEntries(habit.id, window.start, window.endExclusive.minusDays(1))
             val pauses = repository.getPauses(habit.id)
+            val alcoholConsumptions = if (habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
+                repository.getAlcoholConsumptions(habit.id)
+            } else emptyList()
+            val trackingEntries = if (habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
+                alcoholConsumptions.map { consumption ->
+                    HabitEntry(
+                        id = consumption.id,
+                        habitId = consumption.habitId,
+                        occurredAt = consumption.localDate.atStartOfDay(consumption.observedZoneId).toInstant(),
+                        localDate = consumption.localDate,
+                        observedZoneId = consumption.observedZoneId,
+                        valueMinor = 1,
+                    )
+                }
+            } else repository.getEntries(habit.id)
+            val entries = trackingEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
             val evaluation = evaluator.evaluate(habit.definition, today, entries, pauses)
             evaluation.takeIf { habit.goal.isAbstinence || it.needsAttentionNow }?.let {
                 // Un chronomètre actif s'affiche à la place de la progression : un toucher
                 // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.
                 val running = timers[habit.id]?.takeIf(HabitTimer::isRunning)?.elapsedSecondsAt(now)
-                val elapsed = habit.abstinenceStartedAt?.takeIf { habit.goal.isAbstinence }?.let { start ->
+                val elapsed = habit.abstinenceStartedAt
+                    ?.takeIf { habit.goal.isAbstinence && habit.abstinenceProfile != AbstinenceProfile.ALCOHOL }
+                    ?.let { start ->
                     ch.nicolab.cadence.domain.AbstinenceElapsedCalculator.calculate(
-                        habit.id, start, repository.getEntries(habit.id), now,
+                        habit.id, start, trackingEntries, now,
                     )
                 }
-                WidgetHabit(habit, evaluation, running, elapsed)
+                val soberDays = habit.abstinenceStartedOn(zone)
+                    ?.takeIf { habit.abstinenceProfile == AbstinenceProfile.ALCOHOL }
+                    ?.let { start -> AlcoholStatsCalculator.compute(habit.id, start, today, alcoholConsumptions, pauses).currentSoberDays }
+                WidgetHabit(habit, evaluation, running, elapsed, soberDays)
             }
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
@@ -206,7 +232,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
                         )
                     }
                     if (textVisibility.showLabels) Text(item.habit.name, maxLines = 1, style = TextStyle(color = ColorProvider(day = labelColor, night = labelColor), fontSize = config.labelTextSizeSp.sp, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
-                    if (textVisibility.showValues) Text(WidgetHabitPresentation.value(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor, item.timerSeconds, item.abstinenceElapsed), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
+                    if (textVisibility.showValues) Text(WidgetHabitPresentation.value(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor, item.timerSeconds, item.abstinenceElapsed, item.alcoholSoberDays), maxLines = 1, style = TextStyle(color = ColorProvider(day = valueColor, night = valueColor), fontSize = config.valueTextSizeSp.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp))
                 }
             }
             if (layout.showsOverflow) {

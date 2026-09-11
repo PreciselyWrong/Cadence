@@ -5,7 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ch.nicolab.cadence.data.local.dao.AbstinenceLogDao
+import ch.nicolab.cadence.data.local.dao.AlcoholConsumptionDao
 import ch.nicolab.cadence.data.local.entities.AbstinenceLogEntity
+import ch.nicolab.cadence.data.local.entities.AlcoholConsumptionEntity
 import ch.nicolab.cadence.data.local.dao.HabitDao
 import ch.nicolab.cadence.data.local.dao.HabitEntryDao
 import ch.nicolab.cadence.data.local.dao.HabitPauseDao
@@ -31,6 +33,7 @@ import ch.nicolab.cadence.domain.HabitGroup
     entities = [
         HabitEntity::class,
         AbstinenceLogEntity::class,
+        AlcoholConsumptionEntity::class,
         HabitGoalEntity::class,
         HabitScheduleEntity::class,
         HabitEntryEntity::class,
@@ -42,11 +45,12 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 20,
+    version = 21,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
     abstract fun abstinenceLogDao(): AbstinenceLogDao
+    abstract fun alcoholConsumptionDao(): AlcoholConsumptionDao
     abstract fun habitDao(): HabitDao
     abstract fun habitEntryDao(): HabitEntryDao
     abstract fun habitQuickValueDao(): HabitQuickValueDao
@@ -57,6 +61,47 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
+        val MIGRATION_20_21 = object : Migration(20, 21) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE habits ADD COLUMN alcoholFollowUpTime TEXT")
+                db.execSQL("UPDATE habits SET alcoholFollowUpTime = '09:00' WHERE abstinenceProfile = 'ALCOHOL'")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS alcohol_consumptions (
+                        id TEXT NOT NULL PRIMARY KEY,
+                        habitId TEXT NOT NULL,
+                        localDate TEXT NOT NULL,
+                        observedZoneId TEXT NOT NULL,
+                        standardDrinks INTEGER,
+                        followUpDate TEXT,
+                        followUpNotified INTEGER NOT NULL DEFAULT 0,
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_alcohol_consumptions_habitId_localDate ON alcohol_consumptions (habitId, localDate)")
+                db.execSQL(
+                    """
+                    INSERT INTO alcohol_consumptions (
+                        id, habitId, localDate, observedZoneId, standardDrinks, followUpDate, followUpNotified
+                    )
+                    SELECT entry.id, entry.habitId, entry.localDate, entry.observedZoneId, NULL, NULL, 0
+                    FROM habit_entries AS entry
+                    INNER JOIN habits AS habit ON habit.id = entry.habitId
+                    WHERE habit.abstinenceProfile = 'ALCOHOL'
+                      AND entry.id = (
+                          SELECT candidate.id
+                          FROM habit_entries AS candidate
+                          WHERE candidate.habitId = entry.habitId AND candidate.localDate = entry.localDate
+                          ORDER BY candidate.occurredAtEpochMs ASC, candidate.id ASC
+                          LIMIT 1
+                      )
+                    """.trimIndent(),
+                )
+                db.execSQL("DELETE FROM habit_entries WHERE habitId IN (SELECT id FROM habits WHERE abstinenceProfile = 'ALCOHOL')")
+            }
+        }
+
         val MIGRATION_19_20 = object : Migration(19, 20) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE habits ADD COLUMN abstinenceSpendingMinor INTEGER")

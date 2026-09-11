@@ -69,19 +69,23 @@ import ch.nicolab.cadence.ui.theme.cadence
 import java.util.UUID
 
 class QuickEntryActivity : ComponentActivity() {
-    companion object { const val EXTRA_HABIT_ID = "habit_id" }
+    companion object {
+        const val EXTRA_HABIT_ID = "habit_id"
+        const val EXTRA_ALCOHOL_CONSUMPTION_ID = "alcohol_consumption_id"
+    }
     private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(application as CadenceApp) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val habitId = intent.getStringExtra(EXTRA_HABIT_ID)
-        setContent { CadenceTheme { QuickEntryScreen(viewModel, habitId, ::finish) } }
+        val alcoholConsumptionId = intent.getStringExtra(EXTRA_ALCOHOL_CONSUMPTION_ID)
+        setContent { CadenceTheme { QuickEntryScreen(viewModel, habitId, alcoholConsumptionId, ::finish) } }
     }
 }
 
 @Composable
-private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss: () -> Unit) {
+private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcoholConsumptionId: String?, dismiss: () -> Unit) {
     val palette = cadence
     val isLoaded by viewModel.isLoaded.collectAsStateWithLifecycle()
     val habits by viewModel.habits.collectAsStateWithLifecycle()
@@ -98,7 +102,22 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, dismiss
     val pending = habits.filter { !it.stored.goal.isAbstinence && it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
     if (selected != null) {
         Box(Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)))
-        AbstinenceDetailSheet(
+        if (selected.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) AlcoholDetailSheet(
+            item = selected,
+            dismiss = { if (!busy) { if (habitId != null) dismiss() else selectedId = null } },
+            recordToday = { saved -> viewModel.recordAlcoholToday(selected, saved) },
+            saveConsumption = { existing, date, drinks, saved ->
+                viewModel.saveAlcoholConsumption(selected, existing, date, drinks, saved)
+            },
+            deleteConsumption = viewModel::deleteAlcoholConsumption,
+            editHabit = {
+                context.startActivity(Intent(context, MainActivity::class.java).putExtra(MainActivity.EXTRA_EDIT_HABIT_ID, selected.stored.id))
+                dismiss()
+            },
+            initialConsumptionId = alcoholConsumptionId,
+            busy = busy,
+            error = saveError,
+        ) else AbstinenceDetailSheet(
             item = selected,
             dismiss = { if (!busy) { if (habitId != null) dismiss() else selectedId = null } },
             onRecordOccurrence = { saved -> viewModel.recordAbstinenceOccurrence(selected, null, saved) },

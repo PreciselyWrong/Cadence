@@ -95,8 +95,10 @@ fun AbstinenceSetupSheet(
     var startTimeText by rememberSaveable(stored?.id) { mutableStateOf(initialStart.toLocalTime().toString()) }
     var groupId by rememberSaveable(stored?.id) { mutableStateOf(stored?.groupId ?: HabitGroup.ALL_DAY_ID) }
     var reminder by rememberSaveable(stored?.id) { mutableStateOf(existing?.reminders?.joinToString(", ") { it.time }.orEmpty()) }
+    var alcoholFollowUpTime by rememberSaveable(stored?.id) { mutableStateOf(stored?.alcoholFollowUpTime ?: "09:00") }
     var dateOpen by remember { mutableStateOf(false) }
     var timeOpen by remember { mutableStateOf(false) }
+    var followUpTimeOpen by remember { mutableStateOf(false) }
     var validation by remember { mutableStateOf<Int?>(null) }
     val start = LocalDate.parse(startText)
     val startTime = LocalTime.parse(startTimeText)
@@ -181,6 +183,15 @@ fun AbstinenceSetupSheet(
                         placeholder = stringResource(R.string.abst_setup_reminder_placeholder),
                         support = stringResource(R.string.abst_setup_reminder_help), accent = accent)
                 }
+                if (profile == AbstinenceProfile.ALCOHOL) item {
+                    ActionRow(
+                        Icons.Outlined.AccessTime,
+                        stringResource(R.string.alcohol_follow_up_time_value, stringResource(R.string.alcohol_follow_up_time), alcoholFollowUpTime),
+                        accent,
+                    ) { if (!busy) followUpTimeOpen = true }
+                    Spacer(Modifier.height(Space.sm))
+                    Text(stringResource(R.string.alcohol_follow_up_time_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                }
                 if (groups.size > 1) item {
                     FieldGroup(stringResource(R.string.habit_form_group_label)) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -210,6 +221,7 @@ fun AbstinenceSetupSheet(
                 savingsEnabled && savingsMinor == null -> R.string.abst_setup_bad_savings
                 savingsEnabled && !isCurrencyCode(currencyCode) -> R.string.abst_setup_bad_currency
                 times.any { runCatching { LocalTime.parse(it) }.isFailure } -> R.string.abst_setup_bad_reminder
+                profile == AbstinenceProfile.ALCOHOL && runCatching { LocalTime.parse(alcoholFollowUpTime) }.isFailure -> R.string.alcohol_follow_up_time_invalid
                 else -> null
             }
             if (validation == null) {
@@ -218,7 +230,8 @@ fun AbstinenceSetupSheet(
                     startsOn = minOf(stored.startsOn, start),
                     abstinenceStartedAt = startAt, abstinenceSpendingMinor = configuredSavings,
                     abstinenceSpendingPeriod = savingsPeriod.takeIf { configuredSavings != null },
-                    abstinenceSavingsCurrency = currencyCode.takeIf { configuredSavings != null })
+                    abstinenceSavingsCurrency = currencyCode.takeIf { configuredSavings != null },
+                    alcoholFollowUpTime = alcoholFollowUpTime.takeIf { profile == AbstinenceProfile.ALCOHOL })
                     ?: PersistedHabit(
                         id = habitId, name = name.trim(), description = null,
                         iconId = abstinenceIconId(profile), colorArgb = accent.toArgb(), active = true, startsOn = start,
@@ -226,6 +239,7 @@ fun AbstinenceSetupSheet(
                         abstinenceSpendingMinor = configuredSavings,
                         abstinenceSpendingPeriod = savingsPeriod.takeIf { configuredSavings != null },
                         abstinenceSavingsCurrency = currencyCode.takeIf { configuredSavings != null },
+                        alcoholFollowUpTime = alcoholFollowUpTime.takeIf { profile == AbstinenceProfile.ALCOHOL },
                         goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, MeasurementUnit.COUNT, direction = GoalDirection.AT_MOST),
                         schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY),
                     )
@@ -284,6 +298,20 @@ fun AbstinenceSetupSheet(
                 timeOpen = false
             }) { Text(stringResource(R.string.abst_setup_time_confirm)) } },
             dismissButton = { TextButton(onClick = { timeOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
+        )
+    }
+    if (followUpTimeOpen) {
+        val parsed = runCatching { LocalTime.parse(alcoholFollowUpTime) }.getOrDefault(LocalTime.of(9, 0))
+        val followUpState = rememberTimePickerState(parsed.hour, parsed.minute, is24Hour = true)
+        AlertDialog(
+            onDismissRequest = { followUpTimeOpen = false },
+            title = { Text(stringResource(R.string.alcohol_follow_up_time)) },
+            text = { TimePicker(followUpState) },
+            confirmButton = { TextButton(onClick = {
+                alcoholFollowUpTime = LocalTime.of(followUpState.hour, followUpState.minute).toString()
+                followUpTimeOpen = false
+            }) { Text(stringResource(R.string.abst_setup_time_confirm)) } },
+            dismissButton = { TextButton(onClick = { followUpTimeOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
         )
     }
 }

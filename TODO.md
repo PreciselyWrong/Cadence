@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Suivi alcool quotidien avec verres, relance et statistiques sur 90 jours
 - [x] Aperçu statistique adapté au rythme et rafraîchissement du widget sans report continu
 - [x] Accueil allégé, création guidée, saisie directe et rappels reportables
 - [x] Abstinences sans journal, avec jalons scientifiques et statistiques aux couleurs explicites

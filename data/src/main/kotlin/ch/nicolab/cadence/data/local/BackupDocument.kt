@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BackupDocument(
-    val formatVersion: Int = 2,
+    val formatVersion: Int = 3,
     val exportedAtEpochMs: Long,
     val habits: List<BackupHabitV2> = emptyList(),
     val entries: List<BackupEntryV2> = emptyList(),
@@ -14,6 +14,18 @@ data class BackupDocument(
     val widgetConfigs: List<BackupWidgetConfigV2> = emptyList(),
     val groups: List<BackupGroupV2> = emptyList(),
     val abstinenceLogs: List<BackupAbstinenceLogV2> = emptyList(),
+    val alcoholConsumptions: List<BackupAlcoholConsumptionV3> = emptyList(),
+)
+
+@Serializable
+data class BackupAlcoholConsumptionV3(
+    val id: String,
+    val habitId: String,
+    val localDate: String,
+    val observedZoneId: String,
+    val standardDrinks: Int? = null,
+    val followUpDate: String? = null,
+    val followUpNotified: Boolean = false,
 )
 
 @Serializable
@@ -59,6 +71,7 @@ data class BackupHabitV2(
     val abstinenceSpendingMinor: Long? = null,
     val abstinenceSpendingPeriod: String? = null,
     val abstinenceSavingsCurrency: String? = null,
+    val alcoholFollowUpTime: String? = null,
     val goals: List<BackupGoalV2>,
     val schedules: List<BackupScheduleV2>,
 )

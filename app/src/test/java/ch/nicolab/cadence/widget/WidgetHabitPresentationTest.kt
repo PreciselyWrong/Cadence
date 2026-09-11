@@ -24,6 +24,11 @@ class WidgetHabitPresentationTest {
     }
 
     @Test
+    fun `alcohol shows completed sober days before elapsed time`() {
+        assertEquals("5 j", WidgetHabitPresentation.value(abstinence, 0, 0, null, null, 5))
+    }
+
+    @Test
     fun `a stale timer cannot replace abstinence tracking`() {
         assertEquals("8 h 12 min", WidgetHabitPresentation.value(abstinence, 0, 0, 120L, AbstinenceElapsed(0, 8, 12, 0)))
     }

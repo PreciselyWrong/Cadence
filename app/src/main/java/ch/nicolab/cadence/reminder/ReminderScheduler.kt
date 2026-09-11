@@ -466,6 +466,7 @@ class ReminderBootReceiver : BroadcastReceiver() {
                 val repository = (context.applicationContext as CadenceApp).repository
                 repository.getAllReminders().forEach { ReminderScheduler.schedule(context, it) }
                 AbstinenceMilestoneScheduler.scheduleAll(context, repository)
+                AlcoholFollowUpScheduler.scheduleAll(context, repository)
                 ReminderScheduler.restorePendingSnoozes(context, repository)
             } finally {
                 pending.finish()

@@ -30,6 +30,7 @@ data class PersistedHabit(
     val abstinenceSpendingMinor: Long? = null,
     val abstinenceSpendingPeriod: SavingsPeriod? = null,
     val abstinenceSavingsCurrency: String? = null,
+    val alcoholFollowUpTime: String? = null,
     val goal: HabitGoal,
     val schedule: HabitSchedule,
 ) {

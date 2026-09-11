@@ -1,0 +1,105 @@
+package ch.nicolab.cadence.domain
+
+import java.time.LocalDate
+import java.time.ZoneOffset
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+
+class AlcoholStatsTest {
+    private val today = LocalDate.of(2026, 9, 11)
+
+    private fun consumption(
+        back: Long,
+        drinks: Int? = null,
+        id: String = "c-$back",
+        habitId: String = "alcohol",
+    ) = AlcoholConsumption(id, habitId, today.minusDays(back), ZoneOffset.UTC, drinks)
+
+    private fun stats(
+        startsOn: LocalDate = today.minusDays(120),
+        consumptions: List<AlcoholConsumption> = emptyList(),
+        pauses: List<HabitPause> = emptyList(),
+    ) = AlcoholStatsCalculator.compute("alcohol", startsOn, today, consumptions, pauses)
+
+    @Test fun `consumption only accepts a positive known quantity`() {
+        assertThrows(IllegalArgumentException::class.java) { consumption(0, 0) }
+        assertThrows(IllegalArgumentException::class.java) { consumption(0, -1) }
+        assertNull(consumption(0).standardDrinks)
+    }
+
+    @Test fun `calendar covers the last ninety days and distinguishes today`() {
+        val result = stats(startsOn = today.minusDays(2), consumptions = listOf(consumption(1, 2), consumption(0)))
+
+        assertEquals(90, result.days.size)
+        assertEquals(AlcoholStatisticsDayStatus.UNOBSERVED, result.days.first().status)
+        assertEquals(AlcoholStatisticsDayStatus.DRINKING, result.days[result.days.lastIndex - 1].status)
+        assertEquals(2, result.days[result.days.lastIndex - 1].standardDrinks)
+        assertEquals(AlcoholStatisticsDayStatus.TODAY_DRINKING, result.days.last().status)
+        assertNull(result.days.last().standardDrinks)
+        assertTrue(result.todayHasConsumption)
+    }
+
+    @Test fun `sober streaks only count completed days and pauses break them`() {
+        val result = stats(
+            startsOn = today.minusDays(10),
+            consumptions = listOf(consumption(7, 1), consumption(3, 2)),
+            pauses = listOf(HabitPause(today.minusDays(5), today.minusDays(4))),
+        )
+
+        assertEquals(2L, result.currentSoberDays)
+        assertEquals(3L, result.bestSoberDays)
+        assertFalse(result.isPaused)
+        assertEquals(AlcoholStatisticsDayStatus.PAUSED, result.days[result.days.lastIndex - 5].status)
+        assertEquals(0L, stats(consumptions = listOf(consumption(0, 1))).currentSoberDays)
+        assertEquals(0L, stats(pauses = listOf(HabitPause(today, null))).currentSoberDays)
+    }
+
+    @Test fun `event windows include today while known quantities report completeness`() {
+        val result = stats(consumptions = listOf(
+            consumption(0, 2), consumption(5), consumption(20, 4), consumption(40, 3), consumption(100, 9),
+        ))
+
+        assertEquals(3, result.drinkingDays30)
+        assertEquals(4, result.drinkingDays90)
+        assertEquals(6, result.standardDrinks30)
+        assertEquals(2, result.knownQuantityDays30)
+        assertEquals(3, result.quantityDays30)
+        assertEquals(listOf(today.minusDays(5)), result.pendingQuantityDates)
+    }
+
+    @Test fun `pauses exclude events and intervals that cross them`() {
+        val result = stats(
+            consumptions = listOf(consumption(10, 1), consumption(2, 1), consumption(1, 1)),
+            pauses = listOf(HabitPause(today.minusDays(8), today.minusDays(6))),
+        )
+
+        assertEquals(3, result.drinkingDays30)
+        assertEquals(1.0, result.averageDaysBetweenDrinking)
+        assertEquals(0.0, result.averageSoberDaysBetweenDrinking)
+        assertFalse(result.exceedsUsualSoberGap)
+        assertEquals(AlcoholStatisticsDayStatus.PAUSED, result.days[result.days.lastIndex - 8].status)
+    }
+
+    @Test fun `interval averages need two drinking dates and congratulations are strict`() {
+        assertNull(stats(consumptions = listOf(consumption(3, 1))).averageDaysBetweenDrinking)
+        assertNull(stats(consumptions = listOf(consumption(3, 1))).averageSoberDaysBetweenDrinking)
+
+        val result = stats(consumptions = listOf(consumption(12, 1), consumption(7, 1)))
+        assertEquals(5.0, result.averageDaysBetweenDrinking)
+        assertEquals(4.0, result.averageSoberDaysBetweenDrinking)
+        assertTrue(result.exceedsUsualSoberGap)
+    }
+
+    @Test fun `rest plans use known drinks and keep the latest overlapping end`() {
+        val result = stats(consumptions = listOf(consumption(4, 3), consumption(2, 5), consumption(1)))
+
+        assertEquals(AlcoholRestPlan(today.plusDays(3), today.plusDays(4)), result.restPlan)
+        assertEquals(AlcoholRestPlan(today.plusDays(5), today.plusDays(6)),
+            AlcoholStatsCalculator.restPlan(today, listOf(consumption(0, 5))))
+        assertNull(stats(consumptions = listOf(consumption(10, 1))).restPlan)
+    }
+}
