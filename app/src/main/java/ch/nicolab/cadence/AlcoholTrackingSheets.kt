@@ -5,11 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
@@ -127,10 +130,7 @@ fun AlcoholDetailSheet(
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     SectionLabel(stringResource(R.string.alcohol_pending_title))
                     item.alcoholConsumptions.filter { it.standardDrinks == null }.forEach { consumption ->
-                        TertiaryAction(
-                            stringResource(R.string.alcohol_pending_item, displayAbstinenceDate(consumption.localDate)),
-                            Modifier.fillMaxWidth(),
-                        ) { editing = consumption }
+                        PendingAlcoholQuantityAction(consumption.localDate) { editing = consumption }
                     }
                 }
             }
@@ -181,6 +181,28 @@ fun AlcoholDetailSheet(
                 { deleteConsumption(consumption) { editing = null; addingPast = false } }
             },
         )
+    }
+}
+
+@Composable
+private fun PendingAlcoholQuantityAction(date: LocalDate, onClick: () -> Unit) {
+    val accent = cadence.accent
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(Radius.Control)
+            .background(cadence.accentSoft)
+            .clickable(onClick = onClick)
+            .padding(Space.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.md),
+    ) {
+        Icon(Icons.Outlined.Edit, contentDescription = null, tint = accent, modifier = Modifier.size(Size.iconLarge))
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+            Text(displayAbstinenceDate(date), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+            Text(stringResource(R.string.alcohol_pending_action), style = MaterialTheme.typography.labelLarge, color = accent)
+        }
+        Icon(Icons.Outlined.ChevronRight, contentDescription = null, tint = accent, modifier = Modifier.size(Size.iconLarge))
     }
 }
 

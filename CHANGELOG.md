@@ -1,3 +1,8 @@
+## [1.0.17] — 11 septembre 2026
+
+### Corrections
+- Les verres à préciser apparaissent maintenant comme une action claire et facile à toucher.
+
 ## [1.0.16] — 11 septembre 2026
 
 ### Corrections

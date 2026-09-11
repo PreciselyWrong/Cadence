@@ -445,7 +445,8 @@
     <string name="alcohol_today_recorded">Consommation notée aujourd’hui</string>
     <string name="alcohol_past_action">Ajouter une consommation passée</string>
     <string name="alcohol_today_saved">Noté · verres à préciser demain</string>
-    <string name="alcohol_pending_title">Verres à renseigner</string>
+    <string name="alcohol_pending_title">À compléter</string>
+    <string name="alcohol_pending_action">Renseigner le nombre de verres</string>
     <string name="alcohol_pending_item">%1$s · quantité inconnue</string>
     <string name="alcohol_history_title">Consommations enregistrées</string>
     <string name="alcohol_history_more">Voir tout l’historique</string>
