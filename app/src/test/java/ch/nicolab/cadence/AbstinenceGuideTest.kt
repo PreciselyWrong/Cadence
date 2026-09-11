@@ -79,6 +79,7 @@ class AbstinenceGuideTest {
             timeline.map { it.status },
         )
         assertTrue(timeline.all { it.sources.isNotEmpty() })
+        assertTrue(timeline.all { it.summary != it.detail })
         assertTrue(timeline.all { it.timeLabel != null })
         assertTrue(timeline.all { checkpoint -> checkpoint.sources.all { it.url.startsWith("https://") } })
         assertEquals(2, timeline.count { it.unlockable })

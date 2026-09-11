@@ -21,6 +21,7 @@ data class AbstinenceEvidenceCheckpoint(
     val status: EvidenceStatus,
     val sources: List<EvidenceSource> = emptyList(),
     val timeLabel: Int? = null,
+    val summary: Int = detail,
 ) {
     val unlockable: Boolean get() = status == EvidenceStatus.DOCUMENTED
 }
@@ -149,26 +150,32 @@ object AbstinenceGuide {
             AbstinenceEvidenceCheckpoint(
                 3, R.string.abstinence_alcohol_acute_withdrawal, EvidenceStatus.DOCUMENTED,
                 listOf(alcoholSafety), R.string.abstinence_alcohol_time_24_72_hours,
+                R.string.abstinence_alcohol_acute_withdrawal_summary,
             ),
             AbstinenceEvidenceCheckpoint(
                 7, R.string.abstinence_alcohol_one_week, EvidenceStatus.LIMITED,
                 listOf(alcoholOneWeek, alcoholSafety), R.string.abstinence_alcohol_time_one_week,
+                R.string.abstinence_alcohol_one_week_summary,
             ),
             AbstinenceEvidenceCheckpoint(
                 14, R.string.abstinence_alcohol_two_weeks, EvidenceStatus.LIMITED,
                 listOf(alcoholTwoWeeks), R.string.abstinence_alcohol_time_two_weeks,
+                R.string.abstinence_alcohol_two_weeks_summary,
             ),
             AbstinenceEvidenceCheckpoint(
                 30, R.string.abstinence_alcohol_month, EvidenceStatus.DOCUMENTED,
                 listOf(alcoholStudy), R.string.abstinence_alcohol_time_one_month,
+                R.string.abstinence_alcohol_month_summary,
             ),
             AbstinenceEvidenceCheckpoint(
                 90, R.string.abstinence_alcohol_brain_recovery, EvidenceStatus.LIMITED,
                 listOf(alcoholBrainRecovery), R.string.abstinence_alcohol_time_three_to_eight_months,
+                R.string.abstinence_alcohol_brain_recovery_summary,
             ),
             AbstinenceEvidenceCheckpoint(
                 365, R.string.abstinence_alcohol_one_year, EvidenceStatus.LIMITED,
                 listOf(alcoholImmuneRecovery, alcoholCancerReview), R.string.abstinence_alcohol_time_one_year_plus,
+                R.string.abstinence_alcohol_one_year_summary,
             ),
         )
         else -> milestones(profile).map {

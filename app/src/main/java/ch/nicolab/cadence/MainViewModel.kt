@@ -288,6 +288,7 @@ class MainViewModel(
                 localDate = today,
                 observedZoneId = clock.zone,
                 followUpDate = today.plusDays(1),
+                observedAt = clock.instant(),
             )
             repository.saveAlcoholConsumption(consumption)
             AlcoholFollowUpScheduler.schedule(
@@ -310,11 +311,13 @@ class MainViewModel(
     ) = saveSafely(onSaved) {
         require(habit.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL)
         require(standardDrinks > 0 && localDate <= LocalDate.now(clock))
+        val today = LocalDate.now(clock)
         val consumption = (existing ?: AlcoholConsumption(
             id = UUID.randomUUID().toString(),
             habitId = habit.stored.id,
             localDate = localDate,
             observedZoneId = clock.zone,
+            observedAt = clock.instant().takeIf { localDate == today },
         )).copy(
             localDate = localDate,
             standardDrinks = standardDrinks,

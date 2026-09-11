@@ -13,9 +13,13 @@ data class AlcoholConsumption(
     val standardDrinks: Int? = null,
     val followUpDate: LocalDate? = null,
     val followUpNotified: Boolean = false,
+    val observedAt: Instant? = null,
 ) {
     init {
         require(standardDrinks == null || standardDrinks > 0) { "Standard drinks must be positive" }
+        require(observedAt == null || observedAt.atZone(observedZoneId).toLocalDate() == localDate) {
+            "Observed instant must match the civil date"
+        }
     }
 }
 
@@ -64,7 +68,8 @@ data class AlcoholStats(
 
 /**
  * Temps suivi sans prétendre connaître l'heure d'une consommation datée.
- * Après une consommation, le compteur repart donc à la fin de sa journée civile.
+ * Une saisie faite sur le moment conserve son heure exacte. Une saisie rétroactive sans
+ * heure repart prudemment à la fin de sa journée civile.
  */
 object AlcoholElapsedCalculator {
     fun calculate(
@@ -85,7 +90,10 @@ object AlcoholElapsedCalculator {
     ): Instant {
         val latestSafeBoundary = consumptions.asSequence()
             .filter { it.habitId == habitId }
-            .map { it.localDate.plusDays(1).atStartOfDay(it.observedZoneId).toInstant() }
+            .map { consumption ->
+                consumption.observedAt
+                    ?: consumption.localDate.plusDays(1).atStartOfDay(consumption.observedZoneId).toInstant()
+            }
             .maxOrNull()
         return if (latestSafeBoundary != null && latestSafeBoundary > declaredStart) latestSafeBoundary else declaredStart
     }

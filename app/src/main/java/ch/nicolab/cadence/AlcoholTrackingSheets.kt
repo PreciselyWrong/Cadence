@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.AlcoholStatisticsDay
@@ -74,6 +73,7 @@ fun AlcoholDetailSheet(
     var editing by remember(item.stored.id) { mutableStateOf<AlcoholConsumption?>(null) }
     var addingPast by rememberSaveable(item.stored.id) { mutableStateOf(false) }
     var savedMessage by rememberSaveable(item.stored.id) { mutableStateOf(false) }
+    var historyExpanded by rememberSaveable(item.stored.id) { mutableStateOf(false) }
     LaunchedEffect(initialConsumptionId, item.alcoholConsumptions) {
         if (initialConsumptionId != null) {
             editing = item.alcoholConsumptions.firstOrNull { it.id == initialConsumptionId && it.standardDrinks == null }
@@ -105,7 +105,6 @@ fun AlcoholDetailSheet(
                     plan?.let {
                         Text(stringResource(R.string.alcohol_rest_unrestricted, displayAbstinenceDate(it.nextUnrestrictedOn)), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
                     }
-                    Text(stringResource(R.string.alcohol_rest_next), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
                 }
             }
             item {
@@ -135,7 +134,8 @@ fun AlcoholDetailSheet(
                     }
                 }
             }
-            val knownConsumptions = item.alcoholConsumptions.filter { it.standardDrinks != null }.take(12)
+            val allKnownConsumptions = item.alcoholConsumptions.filter { it.standardDrinks != null }
+            val knownConsumptions = allKnownConsumptions.take(if (historyExpanded) 12 else 3)
             if (knownConsumptions.isNotEmpty()) item {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     SectionLabel(stringResource(R.string.alcohol_history_title))
@@ -151,9 +151,14 @@ fun AlcoholDetailSheet(
                             Modifier.fillMaxWidth(),
                         ) { editing = consumption }
                     }
+                    if (allKnownConsumptions.size > 3) {
+                        TertiaryAction(
+                            stringResource(if (historyExpanded) R.string.alcohol_history_reduce else R.string.alcohol_history_more),
+                            Modifier.fillMaxWidth(),
+                        ) { historyExpanded = !historyExpanded }
+                    }
                 }
             }
-            item { Hairline() }
             item { AbstinenceMilestones(AbstinenceProfile.ALCOHOL, stats.currentSoberDays) }
             item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
         }

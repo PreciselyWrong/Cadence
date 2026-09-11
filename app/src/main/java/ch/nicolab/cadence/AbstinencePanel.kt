@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,6 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
             if (alcohol != null) {
                 Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = accent)
                 Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-                Text(stringResource(R.string.alcohol_elapsed_intro), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
                 LiveAbstinenceCounter(item, accent, compact = true, showSeconds = true)
                 alcohol.restPlan?.let { plan ->
                     Text(stringResource(R.string.alcohol_home_rest, displayAbstinenceDate(plan.avoidThrough)), style = MaterialTheme.typography.bodySmall, color = cadence.ink)
@@ -157,18 +157,21 @@ fun LiveAbstinenceCounter(
     }
     val nextDays = AbstinenceGuide.milestones(item.stored.abstinenceProfile)
         .firstOrNull { it.days > elapsed.days }?.days ?: (elapsed.days + 1)
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        Text(
-            stringResource(if (item.alcoholStats != null) R.string.alcohol_elapsed_intro else R.string.abst_elapsed_intro),
-            style = MaterialTheme.typography.bodyMedium,
-            color = cadence.inkMuted,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        TimeBand(elapsed.days, stringResource(R.string.abst_elapsed_days), elapsed.days.toFloat() / nextDays, accent, 1f, "abstinence_time_days")
-        TimeBand(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, 0.82f, "abstinence_time_hours")
-        TimeBand(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, 0.66f, "abstinence_time_minutes")
-        TimeBand(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, 0.5f, "abstinence_time_seconds")
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(Radius.Card)
+                .background(cadence.sunken)
+                .padding(Space.md)
+                .testTag("abstinence_time_grid"),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            TimeCell(elapsed.days, stringResource(R.string.abst_elapsed_days), elapsed.days.toFloat() / nextDays, accent, "abstinence_time_days")
+            TimeCell(elapsed.hours.toLong(), stringResource(R.string.abst_elapsed_hours), elapsed.hours / 24f, accent, "abstinence_time_hours")
+            TimeCell(elapsed.minutes.toLong(), stringResource(R.string.abst_elapsed_minutes), elapsed.minutes / 60f, accent, "abstinence_time_minutes")
+            TimeCell(elapsed.seconds.toLong(), stringResource(R.string.abst_elapsed_seconds), elapsed.seconds / 60f, accent, "abstinence_time_seconds")
+        }
         SavingsTotal(item, saved, accent, centered = true)
     }
 }
@@ -203,16 +206,26 @@ private fun savingsPeriodLabel(period: SavingsPeriod): String = stringResource(w
 }).lowercase()
 
 @Composable
-private fun TimeBand(value: Long, unit: String, progress: Float, accent: Color, alpha: Float, tag: String) {
-    Box(Modifier.fillMaxWidth().height(Size.control).clip(Radius.Control).background(cadence.sunken).testTag(tag)) {
-        Box(Modifier.fillMaxWidth(progress.coerceIn(0.08f, 1f)).height(Size.control).background(accent.copy(alpha = alpha)))
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = Space.lg).align(Alignment.CenterStart),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Space.sm),
-        ) {
-            Text(value.toString(), style = MaterialTheme.typography.headlineSmall, color = cadence.onAccent)
-            Text(unit, style = MaterialTheme.typography.titleMedium, color = cadence.inkMuted)
+private fun RowScope.TimeCell(value: Long, unit: String, progress: Float, accent: Color, tag: String) {
+    Column(
+        Modifier.weight(1f).testTag(tag),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
+        Text(
+            value.toString().padStart(2, '0'),
+            style = MaterialTheme.typography.headlineSmall.copy(fontFeatureSettings = "tnum"),
+            color = accent,
+        )
+        Text(unit, style = MaterialTheme.typography.labelSmall, color = cadence.inkMuted, maxLines = 1)
+        Box(Modifier.fillMaxWidth().height(Size.counterTrack).clip(Radius.Pill).background(cadence.surface)) {
+            Box(
+                Modifier
+                    .fillMaxWidth(progress.coerceIn(0.08f, 1f))
+                    .height(Size.counterTrack)
+                    .clip(Radius.Pill)
+                    .background(accent),
+            )
         }
     }
 }
@@ -240,8 +253,22 @@ fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long) {
 @Composable
 private fun AlcoholEvidenceTimeline(currentDays: Long) {
     val checkpoints = AbstinenceGuide.evidenceTimeline(AbstinenceProfile.ALCOHOL)
+    var expanded by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
-        Text(stringResource(R.string.abstinence_evidence_timeline), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.abstinence_evidence_timeline),
+                style = MaterialTheme.typography.titleMedium,
+                color = cadence.ink,
+                modifier = Modifier.weight(1f),
+            )
+            TextButton(onClick = { expanded = !expanded }) {
+                Text(stringResource(if (expanded) R.string.abstinence_evidence_hide else R.string.abstinence_evidence_show))
+            }
+        }
+        AbstinenceGuide.content(AbstinenceProfile.ALCOHOL).notice?.let {
+            Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.warning)
+        }
         checkpoints.forEach { checkpoint ->
             val reached = currentDays >= checkpoint.days
             val unlockable = checkpoint.unlockable
@@ -267,20 +294,24 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
                         color = tone,
                     )
                     Text(
-                        stringResource(when (checkpoint.status) {
-                            EvidenceStatus.DOCUMENTED -> R.string.abstinence_evidence_documented
-                            EvidenceStatus.LIMITED -> R.string.abstinence_evidence_limited
-                        }),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = cadence.inkMuted,
+                        stringResource(checkpoint.summary),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = cadence.ink,
                     )
-                    Text(stringResource(checkpoint.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
-                    checkpoint.sources.forEach { SourceLink(it) }
+                    if (expanded) {
+                        Text(
+                            stringResource(when (checkpoint.status) {
+                                EvidenceStatus.DOCUMENTED -> R.string.abstinence_evidence_documented
+                                EvidenceStatus.LIMITED -> R.string.abstinence_evidence_limited
+                            }),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = cadence.inkMuted,
+                        )
+                        Text(stringResource(checkpoint.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                        checkpoint.sources.forEach { SourceLink(it) }
+                    }
                 }
             }
-        }
-        AbstinenceGuide.content(AbstinenceProfile.ALCOHOL).notice?.let {
-            Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
         }
     }
 }

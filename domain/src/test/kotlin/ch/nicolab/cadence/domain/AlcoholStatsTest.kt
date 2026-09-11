@@ -156,4 +156,25 @@ class AlcoholStatsTest {
             ),
         )
     }
+
+    @Test fun `elapsed time after a live consumption starts at its observed instant`() {
+        val observedAt = today.atTime(18, 45, 12).toInstant(ZoneOffset.UTC)
+        val consumption = AlcoholConsumption(
+            id = "live",
+            habitId = "alcohol",
+            localDate = today,
+            observedZoneId = ZoneOffset.UTC,
+            observedAt = observedAt,
+        )
+
+        assertEquals(
+            AbstinenceElapsed(0, 0, 2, 3),
+            AlcoholElapsedCalculator.calculate(
+                "alcohol",
+                today.minusDays(10).atStartOfDay(ZoneOffset.UTC).toInstant(),
+                listOf(consumption),
+                observedAt.plusSeconds(123),
+            ),
+        )
+    }
 }

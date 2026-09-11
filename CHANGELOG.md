@@ -1,3 +1,13 @@
+## [1.0.16] — 11 septembre 2026
+
+### Corrections
+- Après un verre noté aujourd’hui, le compteur repart tout de suite et continue de défiler.
+
+### Améliorations
+- Les jours, heures, minutes et secondes tiennent dans un bloc plus clair et plus vivant.
+- Les repères scientifiques vont à l’essentiel, avec les explications disponibles au besoin.
+- L’historique et l’objectif de repos prennent moins de place à l’écran.
+
 ## [1.0.15] — 11 septembre 2026
 
 ### Améliorations

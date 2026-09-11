@@ -74,6 +74,9 @@ class CadenceRepository(
             "Standard drinks must be positive"
         }
         consumption.followUpDate?.let { require(it > consumption.localDate) { "Follow-up must be after consumption" } }
+        consumption.observedAt?.let {
+            require(it <= clock.instant()) { "Alcohol consumption cannot be observed in the future" }
+        }
         ZoneId.of(consumption.observedZoneId.id)
         database.withTransaction {
             val habit = requireNotNull(getHabitEffectiveAt(consumption.habitId, consumption.localDate)) {
@@ -97,6 +100,7 @@ class CadenceRepository(
                     standardDrinks = consumption.standardDrinks,
                     followUpDate = consumption.followUpDate?.toString(),
                     followUpNotified = consumption.followUpNotified,
+                    observedAtEpochMs = consumption.observedAt?.toEpochMilli() ?: existing?.observedAtEpochMs,
                 ),
             )
         }
@@ -115,6 +119,7 @@ class CadenceRepository(
         standardDrinks = entity.standardDrinks,
         followUpDate = entity.followUpDate?.let(LocalDate::parse),
         followUpNotified = entity.followUpNotified,
+        observedAt = entity.observedAtEpochMs?.let(Instant::ofEpochMilli),
     )
 
     suspend fun getAbstinenceLogs(habitId: String): List<AbstinenceLog> =
@@ -884,6 +889,7 @@ class CadenceRepository(
                     standardDrinks = consumption.standardDrinks,
                     followUpDate = consumption.followUpDate,
                     followUpNotified = consumption.followUpNotified,
+                    observedAtEpochMs = consumption.observedAtEpochMs,
                 )
             },
         )
@@ -996,6 +1002,7 @@ class CadenceRepository(
                         followUpDate = consumption.followUpDate,
                         // Une restauration remet les données en place sans déclencher une ancienne relance.
                         followUpNotified = consumption.followUpNotified || consumption.followUpDate != null,
+                        observedAtEpochMs = consumption.observedAtEpochMs,
                     ),
                 )
             }
@@ -1181,7 +1188,14 @@ class CadenceRepository(
             }
             require(alcoholDays.add(consumption.habitId to consumption.localDate)) { "Duplicate alcohol consumption day" }
             val localDate = LocalDate.parse(consumption.localDate)
-            ZoneId.of(consumption.observedZoneId)
+            val observedZone = ZoneId.of(consumption.observedZoneId)
+            consumption.observedAtEpochMs?.let { raw ->
+                val observedAt = Instant.ofEpochMilli(raw)
+                require(observedAt <= clock.instant()) { "Alcohol consumption cannot be observed in the future" }
+                require(observedAt.atZone(observedZone).toLocalDate() == localDate) {
+                    "Alcohol consumption instant and date disagree"
+                }
+            }
             val standardDrinks = consumption.standardDrinks
             require(standardDrinks == null || standardDrinks > 0) { "Standard drinks must be positive" }
             consumption.followUpDate?.let { followUp ->

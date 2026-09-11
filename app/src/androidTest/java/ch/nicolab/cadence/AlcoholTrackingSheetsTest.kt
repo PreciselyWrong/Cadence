@@ -1,8 +1,10 @@
 package ch.nicolab.cadence
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollTo
@@ -54,6 +56,8 @@ class AlcoholTrackingSheetsTest {
         }
 
         compose.onNodeWithTag("abstinence_time_seconds").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("abstinence_time_grid").assertIsDisplayed()
+        compose.onAllNodesWithText("Temps écoulé depuis le début de la période sans alcool suivie").assertCountEquals(0)
         compose.onNodeWithTag("alcohol_detail_list").performScrollToIndex(4)
         compose.onNodeWithText("Verres à renseigner").assertIsDisplayed()
         compose.onNodeWithText("24 à 72 heures").performScrollTo().assertIsDisplayed()

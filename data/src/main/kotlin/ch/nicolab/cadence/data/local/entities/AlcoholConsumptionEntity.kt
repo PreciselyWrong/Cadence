@@ -28,4 +28,5 @@ data class AlcoholConsumptionEntity(
     val standardDrinks: Int? = null,
     val followUpDate: String? = null,
     @ColumnInfo(defaultValue = "0") val followUpNotified: Boolean = false,
+    val observedAtEpochMs: Long? = null,
 )

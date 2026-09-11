@@ -26,6 +26,7 @@ data class BackupAlcoholConsumptionV3(
     val standardDrinks: Int? = null,
     val followUpDate: String? = null,
     val followUpNotified: Boolean = false,
+    val observedAtEpochMs: Long? = null,
 )
 
 @Serializable

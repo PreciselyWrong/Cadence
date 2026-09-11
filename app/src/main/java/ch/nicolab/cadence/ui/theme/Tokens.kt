@@ -51,6 +51,7 @@ object Elevation {
 
 /** Tailles tactiles et iconographiques homogènes. */
 object Size {
+    val counterTrack = 4.dp
     val heatmapCell = 12.dp
     val icon = 20.dp
     val iconLarge = 24.dp

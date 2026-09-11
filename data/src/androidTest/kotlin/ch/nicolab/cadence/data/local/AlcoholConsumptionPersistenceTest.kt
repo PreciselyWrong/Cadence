@@ -34,6 +34,24 @@ class AlcoholConsumptionPersistenceTest {
         CadenceDatabase::class.java,
     )
 
+    @Test fun migrationAddsOptionalObservedInstant() {
+        helper.createDatabase("alcohol-observed-at", 21).close()
+
+        helper.runMigrationsAndValidate(
+            "alcohol-observed-at",
+            22,
+            true,
+            CadenceDatabase.MIGRATION_21_22,
+        ).use { db ->
+            db.query("PRAGMA table_info(alcohol_consumptions)").use { cursor ->
+                val nameIndex = cursor.getColumnIndex("name")
+                var found = false
+                while (cursor.moveToNext()) found = found || cursor.getString(nameIndex) == "observedAtEpochMs"
+                assertTrue(found)
+            }
+        }
+    }
+
     @Test fun migrationGroupsLegacyAlcoholEntriesAndKeepsOrdinaryEntries() {
         helper.createDatabase("alcohol-consumption", 20).apply {
             execSQL("INSERT INTO habits (id, name, active, createdAtEpochMs, abstinenceProfile) VALUES ('alcohol', 'Alcool', 1, 1, 'ALCOHOL')")
@@ -91,8 +109,9 @@ class AlcoholConsumptionPersistenceTest {
                 schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY),
             )
             repository.addHabit(habit, start)
+            val observedAt = today.atTime(10, 15, 30).toInstant(ZoneOffset.UTC)
             repository.saveAlcoholConsumption(
-                AlcoholConsumption("original", habit.id, today, ZoneOffset.UTC, null, today.plusDays(1), false),
+                AlcoholConsumption("original", habit.id, today, ZoneOffset.UTC, null, today.plusDays(1), false, observedAt),
             )
             repository.saveAlcoholConsumption(
                 AlcoholConsumption("replacement", habit.id, today, ZoneOffset.UTC, 3, today.plusDays(1), true),
@@ -111,6 +130,7 @@ class AlcoholConsumptionPersistenceTest {
             assertEquals(3, known.standardDrinks)
             assertEquals(today.plusDays(1), known.followUpDate)
             assertTrue(known.followUpNotified)
+            assertEquals(observedAt, known.observedAt)
             val pending = restored.first { it.localDate == today.minusDays(1) }
             assertNull(pending.standardDrinks)
             assertEquals(today, pending.followUpDate)
