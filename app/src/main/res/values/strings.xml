@@ -480,6 +480,10 @@
     <string name="alcohol_stats_days_30">%1$d jours sur 30</string>
     <string name="alcohol_stats_days_90">%1$d jours sur 90</string>
     <string name="alcohol_stats_drinking_days">Jours consommés</string>
+    <string name="alcohol_stats_average_sober_label">jours sans consommation entre deux jours consommés · 90 jours</string>
+    <string name="alcohol_stats_average_drinks_label">verres par journée consommée · 30 jours</string>
+    <string name="alcohol_stats_known_drinks_label">verres renseignés · 30 jours</string>
+    <string name="alcohol_stats_peak_drinks_label">maximum en une journée · 30 jours</string>
     <string name="alcohol_stats_record">Record</string>
     <string name="alcohol_stats_drinks_30">%1$d verres renseignés</string>
     <string name="alcohol_stats_completeness">Quantité connue pour %1$d journée(s) sur %2$d.</string>

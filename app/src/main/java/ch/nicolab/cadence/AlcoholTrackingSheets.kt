@@ -310,12 +310,30 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
             }
             item {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+                    AlcoholMetric(
+                        stats.averageSoberDaysBetweenDrinking?.let(::formatAlcoholAverage) ?: "—",
+                        stringResource(R.string.alcohol_stats_average_sober_label),
+                        modifier = Modifier.weight(1f),
+                    )
+                    AlcoholMetric(
+                        stats.averageDrinksPerDrinkingDay30?.let(::formatAlcoholAverage) ?: "—",
+                        stringResource(R.string.alcohol_stats_average_drinks_label),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
                     AlcoholMetric(stringResource(R.string.alcohol_stats_days_30, stats.drinkingDays30), stringResource(R.string.alcohol_stats_drinking_days), modifier = Modifier.weight(1f))
                     AlcoholMetric(stringResource(R.string.alcohol_stats_days_90, stats.drinkingDays90), stringResource(R.string.alcohol_stats_drinking_days), modifier = Modifier.weight(1f))
                 }
             }
             item {
-                Text(stringResource(R.string.alcohol_stats_drinks_30, stats.standardDrinks30), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+                    AlcoholMetric(stats.standardDrinks30.toString(), stringResource(R.string.alcohol_stats_known_drinks_label), modifier = Modifier.weight(1f))
+                    AlcoholMetric(stats.peakDrinksOnDrinkingDay30?.toString() ?: "—",
+                        stringResource(R.string.alcohol_stats_peak_drinks_label), modifier = Modifier.weight(1f))
+                }
                 Text(stringResource(R.string.alcohol_stats_completeness, stats.knownQuantityDays30, stats.quantityDays30), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
             }
             item { Hairline() }

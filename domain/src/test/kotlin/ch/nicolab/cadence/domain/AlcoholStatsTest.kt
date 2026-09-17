@@ -70,6 +70,18 @@ class AlcoholStatsTest {
         assertEquals(2, result.knownQuantityDays30)
         assertEquals(3, result.quantityDays30)
         assertEquals(listOf(today.minusDays(5)), result.pendingQuantityDates)
+        assertEquals(3.0, result.averageDrinksPerDrinkingDay30)
+        assertEquals(4, result.peakDrinksOnDrinkingDay30)
+    }
+
+    @Test fun `drink intensity excludes unknown amounts and paused dates`() {
+        val result = stats(
+            consumptions = listOf(consumption(0), consumption(1, 2), consumption(2, 5), consumption(3, 9)),
+            pauses = listOf(HabitPause(today.minusDays(3), today.minusDays(2))),
+        )
+        assertEquals(3.5, result.averageDrinksPerDrinkingDay30)
+        assertEquals(5, result.peakDrinksOnDrinkingDay30)
+        assertNull(stats(consumptions = listOf(consumption(0))).averageDrinksPerDrinkingDay30)
     }
 
     @Test fun `pauses exclude events and intervals that cross them`() {

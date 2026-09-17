@@ -25,6 +25,7 @@ import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.HabitInsights
 import ch.nicolab.cadence.domain.HabitInsightsCalculator
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
+import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.InsightDay
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.HabitStreak
@@ -85,6 +86,7 @@ data class HabitCardState(
     val alcoholConsumptions: List<AlcoholConsumption> = emptyList(),
     val alcoholStats: AlcoholStats? = null,
     val statistics: HabitStatisticsSummary? = null,
+    val activityStats: HabitActivityStats? = null,
 ) {
     /** Saut du jour encore annulable, s'il existe. */
     fun cancellableSkip(today: LocalDate): IdentifiedPause? =
@@ -708,6 +710,9 @@ class MainViewModel(
             streak = streak,
             statistics = if (habit.goal.isAbstinence) null else HabitStatisticsSummary.compute(
                 habitAt = { day -> versions(day)?.definition }, today = date, entries = trackingEntries, pauses = pauses,
+            ),
+            activityStats = if (habit.goal.isAbstinence) null else HabitActivityStats.compute(
+                habitId = habit.id, startsOn = habit.startsOn, today = date, entries = trackingEntries,
             ),
             abstinenceStats = habit.abstinenceStartedOn(clock.zone)?.takeIf { habit.goal.isAbstinence }?.let { start ->
                 AbstinenceStatsCalculator.compute(habit.id, start, date, trackingEntries, pauses)

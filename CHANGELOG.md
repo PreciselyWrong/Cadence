@@ -1,3 +1,10 @@
+## [1.0.18] — 17 septembre 2026
+
+### Améliorations
+- Les statistiques montrent aussi vos saisies, même quand l’objectif n’est pas atteint.
+- Le suivi alcool affiche la moyenne de verres par journée et les jours entre deux consommations.
+- Le bilan des autres abstinences détaille les écarts notés et leur fréquence.
+
 ## [1.0.17] — 11 septembre 2026
 
 ### Corrections

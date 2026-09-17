@@ -15,7 +15,7 @@ class AbstinenceStatsTest {
         AbstinenceStatsCalculator.compute("h", today.minusDays(days), today, entries, pauses)
 
     @Test fun `only completed civil days count`() {
-        assertEquals(AbstinenceStats(40, 40, 30, 30, 0, 0, false, false), stats())
+        assertEquals(AbstinenceStats(40, 40, 30, 30, 0, 0, false, false, null), stats())
         assertEquals(0L, stats(0).currentDays)
         assertEquals(0, stats(-2).observedDays30)
     }
@@ -28,6 +28,20 @@ class AbstinenceStatsTest {
         assertEquals(1, result.occurrenceDays30)
         assertEquals(2, result.occurrences30)
         assertEquals(40L, stats().currentDays)
+    }
+    @Test fun `activity frequency uses distinct occurrence days and completed gaps`() {
+        val result = stats(entries = listOf(entry(20), entry(10), entry(10, "second"), entry(3)))
+        assertEquals(4, result.occurrences30)
+        assertEquals(3, result.occurrenceDays30)
+        assertEquals(7.5, result.averageClearDaysBetweenOccurrences)
+        assertNull(stats(entries = listOf(entry(3))).averageClearDaysBetweenOccurrences)
+    }
+    @Test fun `frequency does not bridge a tracking pause`() {
+        val result = stats(
+            entries = listOf(entry(20), entry(10), entry(3)),
+            pauses = listOf(HabitPause(today.minusDays(15), today.minusDays(14))),
+        )
+        assertEquals(6.0, result.averageClearDaysBetweenOccurrences)
     }
     @Test fun `today occurrence interrupts current but is absent from completed window`() {
         val result = stats(entries = listOf(entry(0)))

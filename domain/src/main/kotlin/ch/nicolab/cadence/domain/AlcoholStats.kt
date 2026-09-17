@@ -56,6 +56,8 @@ data class AlcoholStats(
     val knownQuantityDays30: Int,
     /** Consumption days in the 30-day window, including quantities still unknown. */
     val quantityDays30: Int,
+    val averageDrinksPerDrinkingDay30: Double?,
+    val peakDrinksOnDrinkingDay30: Int?,
     val averageDaysBetweenDrinking: Double?,
     val averageSoberDaysBetweenDrinking: Double?,
     val exceedsUsualSoberGap: Boolean,
@@ -146,6 +148,9 @@ object AlcoholStatsCalculator {
             standardDrinks30 = knownQuantities30.sumOf { it.standardDrinks ?: 0 },
             knownQuantityDays30 = knownQuantities30.map { it.localDate }.toSet().size,
             quantityDays30 = quantityDays30,
+            averageDrinksPerDrinkingDay30 = knownQuantities30.takeIf { it.isNotEmpty() }
+                ?.let { known -> known.sumOf { requireNotNull(it.standardDrinks) }.toDouble() / known.size },
+            peakDrinksOnDrinkingDay30 = knownQuantities30.maxOfOrNull { requireNotNull(it.standardDrinks) },
             averageDaysBetweenDrinking = averageDays,
             averageSoberDaysBetweenDrinking = averageSoberDays,
             exceedsUsualSoberGap = averageSoberDays != null && currentAndBest.first > averageSoberDays,

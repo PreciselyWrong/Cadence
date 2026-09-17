@@ -23,6 +23,13 @@
     <string name="habit_stats_minimum">Minimum atteint</string>
     <string name="habit_stats_day_ideal">Idéal atteint</string>
     <string name="habit_stats_activity">Une saisie enregistrée</string>
+    <string name="habit_stats_activity_title">Activité enregistrée · 30 derniers jours</string>
+    <string name="habit_stats_activity_overview">%1$d saisies sur %2$d jours d’activité · 30 derniers jours</string>
+    <string name="habit_stats_entries_30">saisies · 30 jours</string>
+    <string name="habit_stats_active_days_30">jours d’activité · 30 jours</string>
+    <string name="habit_stats_total_30">quantité notée · 30 jours</string>
+    <string name="habit_stats_average_active_day_30">moyenne par jour d’activité</string>
+    <string name="habit_stats_peak_day_30">plus grande quantité notée en un jour · 30 jours</string>
     <string name="habit_stats_no_activity">Aucune saisie ce jour</string>
     <string name="habit_stats_overview_period">30 derniers jours</string>
     <string name="habit_stats_pulse">14 jours · vert réussi · rouge raté · gris neutre</string>
@@ -37,6 +44,11 @@
     <string name="habit_stats_abstinence_clear">%1$d jours sans écart noté sur %2$d observés</string>
     <string name="habit_stats_record_label">record</string>
     <string name="habit_stats_occurrences_label">écarts notés</string>
+    <string name="abstinence_stats_detail_subtitle">Activité et écarts notés</string>
+    <string name="abstinence_stats_occurrence_days">jours avec écart · 30 jours</string>
+    <string name="abstinence_stats_average_gap">%1$s jours sans écart noté entre deux jours avec écart, en moyenne · 90 jours</string>
+    <string name="abstinence_stats_average_missing">Deux jours avec écart sont nécessaires pour calculer une moyenne.</string>
+    <string name="abstinence_stats_open_tracking">Ouvrir le suivi</string>
     <string name="habit_stats_paused_short">En pause</string>
     <string name="habit_stats_today_occurrence_short">Écart noté aujourd’hui</string>
     <string name="habit_stats_active_short">Compteur actif</string>

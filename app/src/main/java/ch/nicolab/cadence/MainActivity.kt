@@ -66,6 +66,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -92,6 +93,7 @@ import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
+import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.HabitStatisticsDay
 import ch.nicolab.cadence.domain.HabitStatisticsDayStatus
 import ch.nicolab.cadence.domain.HabitGroup
@@ -630,6 +632,7 @@ private fun StatsScreen(
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
     var detailId by rememberSaveable { mutableStateOf<String?>(null) }
     var alcoholDetailId by rememberSaveable { mutableStateOf<String?>(null) }
+    var abstinenceDetailId by rememberSaveable { mutableStateOf<String?>(null) }
     ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
         if (visible.isEmpty()) item {
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
@@ -645,7 +648,7 @@ private fun StatsScreen(
             items(abstinences, key = { it.stored.id }) { item ->
                 AbstinenceStatisticsOverview(item) {
                     if (item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL) alcoholDetailId = item.stored.id
-                    else open(item)
+                    else abstinenceDetailId = item.stored.id
                 }
             }
         }
@@ -661,6 +664,7 @@ private fun StatsScreen(
                 verticalArrangement = Arrangement.spacedBy(Space.lg),
             ) {
                 item { item.statistics?.let { StatisticsNumbers(it) } }
+                item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit) } }
                 item { StreakLine(item.streak) }
                 item { Hairline() }
                 item { item.statistics?.let { StatisticsCalendar(it.days) } }
@@ -687,6 +691,12 @@ private fun StatsScreen(
     }
     abstinences.firstOrNull { it.stored.id == alcoholDetailId }?.let { item ->
         AlcoholStatisticsSheet(item) { alcoholDetailId = null }
+    }
+    abstinences.firstOrNull { it.stored.id == abstinenceDetailId }?.let { item ->
+        AbstinenceStatisticsSheet(item, { abstinenceDetailId = null }) {
+            abstinenceDetailId = null
+            open(item)
+        }
     }
 }
 
@@ -718,6 +728,11 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
         if (stats == null || stats.evaluatedPeriods == 0) {
             Spacer(Modifier.height(Space.xl))
             Text(stringResource(R.string.habit_stats_waiting), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            item.activityStats?.let { activity ->
+                Spacer(Modifier.height(Space.sm))
+                Text(stringResource(R.string.habit_stats_activity_overview, activity.entries30, activity.activeDays30),
+                    style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            }
             return@Panel
         }
         Spacer(Modifier.height(Space.xl))
@@ -764,6 +779,72 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
                 trendColor,
             )
         }
+        item.activityStats?.let { activity ->
+            Spacer(Modifier.height(Space.sm))
+            Text(stringResource(R.string.habit_stats_activity_overview, activity.entries30, activity.activeDays30),
+                style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
+        }
+    }
+}
+
+@Composable
+private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, unit: MeasurementUnit?) {
+    SectionLabel(stringResource(R.string.habit_stats_activity_title))
+    Spacer(Modifier.height(Space.sm))
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+        OverviewMetric(stats.entries30.toString(), stringResource(R.string.habit_stats_entries_30), modifier = Modifier.weight(1f))
+        OverviewMetric(stats.activeDays30.toString(), stringResource(R.string.habit_stats_active_days_30), modifier = Modifier.weight(1f))
+    }
+    if (goalType != GoalType.BINARY && stats.entries30 > 0) {
+        Spacer(Modifier.height(Space.md))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+            OverviewMetric(HabitFormatter.formatWithUnit(stats.totalMinor30, goalType, unit),
+                stringResource(R.string.habit_stats_total_30), modifier = Modifier.weight(1f))
+            stats.averagePerActiveDayMinor30?.let { average ->
+                OverviewMetric(HabitFormatter.formatWithUnit(average, goalType, unit),
+                    stringResource(R.string.habit_stats_average_active_day_30), modifier = Modifier.weight(1f))
+            }
+        }
+        Spacer(Modifier.height(Space.md))
+        OverviewMetric(HabitFormatter.formatWithUnit(stats.peakDayMinor30, goalType, unit),
+            stringResource(R.string.habit_stats_peak_day_30))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit, openTracking: () -> Unit) {
+    val stats = item.abstinenceStats ?: return
+    CadenceSheet(item.stored.name, stringResource(R.string.abstinence_stats_detail_subtitle), dismiss) {
+        LazyColumn(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+            verticalArrangement = Arrangement.spacedBy(Space.lg)) {
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+                    OverviewMetric(stats.currentDays.toString(), stringResource(R.string.habit_stats_abstinence_hero), modifier = Modifier.weight(1f))
+                    OverviewMetric(stats.bestDays.toString(), stringResource(R.string.habit_stats_record_label), modifier = Modifier.weight(1f))
+                }
+            }
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+                    OverviewMetric(stats.occurrences30.toString(), stringResource(R.string.habit_stats_occurrences_label), modifier = Modifier.weight(1f))
+                    OverviewMetric(stats.occurrenceDays30.toString(), stringResource(R.string.abstinence_stats_occurrence_days), modifier = Modifier.weight(1f))
+                }
+            }
+            item {
+                Text(stringResource(R.string.habit_stats_abstinence_clear, stats.clearDays30, stats.observedDays30),
+                    style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                Spacer(Modifier.height(Space.sm))
+                Text(
+                    stats.averageClearDaysBetweenOccurrences?.let { average ->
+                        stringResource(R.string.abstinence_stats_average_gap, formatAlcoholAverage(average))
+                    } ?: stringResource(R.string.abstinence_stats_average_missing),
+                    style = MaterialTheme.typography.titleMedium, color = cadence.ink,
+                )
+            }
+            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+        }
+        Spacer(Modifier.height(Space.sm))
+        TextButton(onClick = openTracking) { Text(stringResource(R.string.abstinence_stats_open_tracking)) }
     }
 }
 
@@ -869,8 +950,8 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
 }
 
 @Composable
-private fun OverviewMetric(value: String, label: String, color: Color = cadence.ink) {
-    Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+private fun OverviewMetric(value: String, label: String, color: Color = cadence.ink, modifier: Modifier = Modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Text(value, style = MaterialTheme.typography.titleMedium, color = color)
         Text(label, style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
     }

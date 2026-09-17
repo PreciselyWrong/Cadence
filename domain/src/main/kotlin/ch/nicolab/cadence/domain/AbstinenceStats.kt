@@ -16,6 +16,7 @@ data class AbstinenceStats(
     val occurrences30: Int,
     val todayHasOccurrence: Boolean,
     val isPaused: Boolean,
+    val averageClearDaysBetweenOccurrences: Double?,
 )
 
 /** No entry means no recorded occurrence, never a physiological measurement. */
@@ -57,8 +58,23 @@ object AbstinenceStatsCalculator {
         }
         val observed = (end - windowStart).toInt() - pausedDays
         val occurrenceDayCount = windowEntries.map { it.localDate }.toSet().size
+        val frequencyStart = maxOf(start, end - 89)
+        val frequencyDates = relevant.asSequence()
+            .map { it.localDate }
+            .filter { it.toEpochDay() >= frequencyStart && !pauses.any { pause -> pause.includes(it) } }
+            .distinct()
+            .sorted()
+            .toList()
+        val intervals = frequencyDates.zipWithNext().mapNotNull { (from, to) ->
+            if (pauses.any { pause ->
+                    pause.start < to && (pause.endExclusive == null || pause.endExclusive > from.plusDays(1))
+                }) null
+            else to.toEpochDay() - from.toEpochDay()
+        }
+        val averageClearDays = intervals.takeIf { it.isNotEmpty() }?.map { it - 1.0 }?.average()
         return AbstinenceStats(current, best, observed, observed - occurrenceDayCount,
-            occurrenceDayCount, windowEntries.size, todayHasOccurrence, paused)
+            occurrenceDayCount, windowEntries.size, todayHasOccurrence, paused,
+            averageClearDays)
     }
 
     private fun contains(ranges: List<LongRange>, day: Long): Boolean {
