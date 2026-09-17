@@ -1137,7 +1137,7 @@ private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit,
                     )
                     MetricCard(
                         value = stats.averageClearDaysBetweenOccurrences?.let { average ->
-                            stringResource(R.string.habit_stats_days_short, formatAlcoholAverage(average))
+                            "${formatAlcoholAverage(average)} j"
                         } ?: "—",
                         label = stringResource(R.string.abstinence_stats_average_gap_short),
                         icon = Icons.Outlined.Speed,

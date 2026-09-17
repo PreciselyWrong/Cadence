@@ -1,3 +1,8 @@
+## [1.0.20] — 17 septembre 2026
+
+### Corrections
+- L'application ne se ferme plus au démarrage pour les profils d'abstinence avec un écart moyen entre les occurrences.
+
 ## [1.0.19] — 17 septembre 2026
 
 ### Améliorations
