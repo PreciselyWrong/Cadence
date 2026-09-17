@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -59,19 +60,48 @@ fun CadenceSheet(
         },
         modifier = modifier,
     ) {
-        Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = Space.xl), horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(Modifier.fillMaxWidth().padding(top = Space.sm, bottom = Space.lg), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                leading?.let { it(); Spacer(Modifier.width(Space.md)) }
-                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(title, style = MaterialTheme.typography.headlineSmall, color = palette.ink, maxLines = 2, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .then(if (modifier != Modifier) Modifier.fillMaxHeight() else Modifier)
+                .navigationBarsPadding()
+                .padding(horizontal = Space.xl),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Row(
+                Modifier.fillMaxWidth().padding(top = Space.sm, bottom = Space.lg),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = if (leading != null) Arrangement.Start else Arrangement.Center,
+            ) {
+                leading?.let {
+                    it()
+                    Spacer(Modifier.width(Space.md))
+                }
+                Column(
+                    Modifier.weight(1f),
+                    horizontalAlignment = if (leading != null) Alignment.Start else Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = palette.ink,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = if (leading != null) TextAlign.Start else TextAlign.Center,
+                    )
                     subtitle?.let {
                         Spacer(Modifier.height(2.dp))
-                        Text(it, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted, textAlign = TextAlign.Center)
+                        Text(
+                            it,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                            textAlign = if (leading != null) TextAlign.Start else TextAlign.Center,
+                        )
                     }
                 }
             }
             content()
-            Spacer(Modifier.height(Space.xl))
+            Spacer(Modifier.height(Space.sm))
         }
     }
 }

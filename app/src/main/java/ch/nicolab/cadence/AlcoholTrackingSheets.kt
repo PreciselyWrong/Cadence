@@ -6,9 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.EventBusy
+import androidx.compose.material.icons.outlined.LocalBar
+import androidx.compose.material.icons.outlined.Speed
+import ch.nicolab.cadence.ui.components.MetricCard
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -32,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.AlcoholStatisticsDay
@@ -42,6 +49,8 @@ import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
 import ch.nicolab.cadence.ui.components.CadenceField
 import ch.nicolab.cadence.ui.components.CadenceSheet
+import ch.nicolab.cadence.ui.components.CalendarPeriod
+import ch.nicolab.cadence.ui.components.CalendarPeriodSelector
 import ch.nicolab.cadence.ui.components.ErrorText
 import ch.nicolab.cadence.ui.components.Hairline
 import ch.nicolab.cadence.ui.components.PrimaryAction
@@ -53,6 +62,11 @@ import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import ch.nicolab.cadence.ui.theme.habitAccent
+import ch.nicolab.cadence.ui.components.HabitFacet
+import ch.nicolab.cadence.ui.icon.HabitIconRegistry
+import ch.nicolab.cadence.ui.theme.MetricStyle
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.ui.unit.dp
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -270,71 +284,222 @@ private fun AlcoholConsumptionEditor(
     }
 }
 
+@Composable
+private fun AlcoholStatisticsHero(
+    stats: ch.nicolab.cadence.domain.AlcoholStats,
+    accent: Color,
+) {
+    val palette = cadence
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.sunken)
+            .padding(Space.lg),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(Radius.Chip)
+                            .background(palette.successSoft)
+                            .padding(horizontal = Space.md, vertical = Space.sm),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_days_short, stats.currentSoberDays),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = palette.success,
+                        )
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.alcohol_days_hero),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = palette.ink,
+                        )
+                        Text(
+                            text = stringResource(R.string.habit_stats_active_short),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(start = Space.sm)
+                        .clip(Radius.Pill)
+                        .background(palette.accentSoft)
+                        .padding(horizontal = Space.md, vertical = Space.xs),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Space.xs),
+                ) {
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.accent, modifier = Modifier.size(Size.iconSm))
+                    Text(
+                        text = "${stringResource(R.string.alcohol_stats_record)} : ${stringResource(R.string.habit_stats_days_short, stats.bestSoberDays)}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = palette.accent,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
+            }
+            val averageSober = stats.averageSoberDaysBetweenDrinking
+            if (stats.exceedsUsualSoberGap && averageSober != null) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(Radius.Chip)
+                        .background(palette.successSoft)
+                        .padding(horizontal = Space.md, vertical = Space.sm),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.success, modifier = Modifier.size(Size.icon))
+                    Text(
+                        text = stringResource(R.string.alcohol_stats_congratulations, stats.currentSoberDays, formatAlcoholAverage(averageSober)),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.success,
+                    )
+                }
+            }
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                MetricCard(
+                    value = stats.averageDaysBetweenDrinking?.let { "${formatAlcoholAverage(it)} j" } ?: "—",
+                    label = stringResource(R.string.alcohol_stats_frequency_label),
+                    icon = Icons.Outlined.Speed,
+                    iconTint = accent,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = stats.averageSoberDaysBetweenDrinking?.let { "${formatAlcoholAverage(it)} j" } ?: "—",
+                    label = stringResource(R.string.alcohol_stats_average_sober_short),
+                    icon = Icons.Outlined.CheckCircle,
+                    iconTint = palette.success,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = "${stats.drinkingDays90} / ${stats.observedDays90}",
+                    label = stringResource(R.string.alcohol_stats_drinking_days_label),
+                    icon = Icons.Outlined.DateRange,
+                    iconTint = palette.inkMuted,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
     val stats = item.alcoholStats ?: return
-    CadenceSheet(item.stored.name, stringResource(R.string.alcohol_stats_detail_subtitle), dismiss) {
+    var period by rememberSaveable { mutableStateOf(CalendarPeriod.DAYS_90) }
+    val today = LocalDate.now()
+    val accent = cadence.habitAccent(item.stored.colorArgb)
+
+    CadenceSheet(
+        title = item.stored.name,
+        subtitle = stringResource(R.string.alcohol_stats_detail_subtitle),
+        dismiss = dismiss,
+        modifier = Modifier.fillMaxHeight(0.94f),
+        leading = {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = 0f,
+                tint = accent,
+                trackColor = cadence.sunken,
+                size = 48.dp,
+            )
+        },
+    ) {
         LazyColumn(
-            Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+            Modifier.fillMaxWidth().weight(1f),
             verticalArrangement = Arrangement.spacedBy(Space.lg),
         ) {
             item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    AlcoholMetric(stats.currentSoberDays.toString(), stringResource(R.string.alcohol_days_hero), cadence.success, Modifier.weight(1f))
-                    AlcoholMetric(stats.bestSoberDays.toString(), stringResource(R.string.alcohol_stats_record), cadence.ink, Modifier.weight(1f))
-                }
+                AlcoholStatisticsHero(stats = stats, accent = accent)
             }
             item {
-                val average = stats.averageDaysBetweenDrinking
-                Text(
-                    if (average == null) stringResource(R.string.alcohol_stats_frequency_missing)
-                    else stringResource(R.string.alcohol_stats_frequency, formatAlcoholAverage(average)),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = cadence.ink,
+                CalendarPeriodSelector(
+                    selected = period,
+                    onSelect = { period = it },
                 )
-                val averageSober = stats.averageSoberDaysBetweenDrinking
-                if (stats.exceedsUsualSoberGap && averageSober != null) {
-                    Spacer(Modifier.height(Space.sm))
-                    Text(
-                        stringResource(R.string.alcohol_stats_congratulations, stats.currentSoberDays, formatAlcoholAverage(averageSober)),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = cadence.success,
-                    )
-                }
             }
             item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    AlcoholMetric(
-                        stats.averageSoberDaysBetweenDrinking?.let(::formatAlcoholAverage) ?: "—",
-                        stringResource(R.string.alcohol_stats_average_sober_label),
+                val (drinkingDays, observedDays, standardDrinks) = when (period) {
+                    CalendarPeriod.DAYS_30 -> Triple(stats.drinkingDays30, stats.observedDays30, stats.standardDrinks30)
+                    CalendarPeriod.DAYS_90 -> Triple(stats.drinkingDays90, stats.observedDays90, stats.standardDrinks30)
+                    CalendarPeriod.YEAR_1 -> Triple(stats.drinkingDays365, stats.observedDays365, stats.standardDrinks365)
+                    CalendarPeriod.ALL_TIME -> Triple(stats.drinkingDaysAllTime, stats.observedDaysAllTime, stats.standardDrinksAllTime)
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    MetricCard(
+                        value = "$drinkingDays / $observedDays",
+                        label = stringResource(R.string.alcohol_stats_drinking_days_label),
+                        icon = Icons.Outlined.EventBusy,
+                        iconTint = if (drinkingDays > 0) cadence.danger else cadence.inkMuted,
+                        valueColor = if (drinkingDays > 0) cadence.danger else cadence.ink,
                         modifier = Modifier.weight(1f),
                     )
-                    AlcoholMetric(
-                        stats.averageDrinksPerDrinkingDay30?.let(::formatAlcoholAverage) ?: "—",
-                        stringResource(R.string.alcohol_stats_average_drinks_label),
+                    MetricCard(
+                        value = stats.averageSoberDaysBetweenDrinking?.let(::formatAlcoholAverage)?.let { "$it j" } ?: "—",
+                        label = stringResource(R.string.alcohol_stats_average_sober_short),
+                        icon = Icons.Outlined.CheckCircle,
+                        iconTint = cadence.success,
                         modifier = Modifier.weight(1f),
                     )
                 }
             }
             item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    AlcoholMetric(stringResource(R.string.alcohol_stats_observed_days, stats.drinkingDays30, stats.observedDays30),
-                        stringResource(R.string.alcohol_stats_drinking_30), modifier = Modifier.weight(1f))
-                    AlcoholMetric(stringResource(R.string.alcohol_stats_observed_days, stats.drinkingDays90, stats.observedDays90),
-                        stringResource(R.string.alcohol_stats_drinking_90), modifier = Modifier.weight(1f))
+                val standardDrinks = when (period) {
+                    CalendarPeriod.DAYS_30 -> stats.standardDrinks30
+                    CalendarPeriod.DAYS_90 -> stats.standardDrinks30
+                    CalendarPeriod.YEAR_1 -> stats.standardDrinks365
+                    CalendarPeriod.ALL_TIME -> stats.standardDrinksAllTime
                 }
-            }
-            item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    AlcoholMetric(stats.standardDrinks30.toString(), stringResource(R.string.alcohol_stats_known_drinks_label), modifier = Modifier.weight(1f))
-                    AlcoholMetric(stats.peakDrinksOnDrinkingDay30?.toString() ?: "—",
-                        stringResource(R.string.alcohol_stats_peak_drinks_label), modifier = Modifier.weight(1f))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    MetricCard(
+                        value = stringResource(R.string.alcohol_stats_drinks_30, standardDrinks),
+                        label = stringResource(R.string.alcohol_stats_known_drinks_short),
+                        icon = Icons.Outlined.LocalBar,
+                        iconTint = accent,
+                        modifier = Modifier.weight(1f),
+                    )
+                    MetricCard(
+                        value = stats.averageDrinksPerDrinkingDay30?.let(::formatAlcoholAverage) ?: "—",
+                        label = stringResource(R.string.alcohol_stats_average_drinks_short),
+                        icon = Icons.Outlined.Speed,
+                        iconTint = accent,
+                        modifier = Modifier.weight(1f),
+                    )
                 }
-                Text(stringResource(R.string.alcohol_stats_completeness, stats.knownQuantityDays30, stats.quantityDays30), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
             }
             item { Hairline() }
-            item { AlcoholCalendar(stats.days) }
+            item {
+                val filteredDays = when (period) {
+                    CalendarPeriod.DAYS_30 -> stats.days.filter { it.date >= today.minusDays(29) }
+                    CalendarPeriod.DAYS_90 -> stats.days.filter { it.date >= today.minusDays(89) }
+                    CalendarPeriod.YEAR_1 -> stats.days.filter { it.date >= today.minusDays(364) }
+                    CalendarPeriod.ALL_TIME -> stats.days
+                }
+                AlcoholCalendar(filteredDays)
+            }
             item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
             item { SectionLabel(stringResource(R.string.alcohol_stats_full_history)) }
             if (item.alcoholConsumptions.isEmpty()) item {
@@ -356,7 +521,7 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
 private fun AlcoholMetric(value: String, label: String, color: Color = cadence.ink, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Text(value, style = MaterialTheme.typography.titleLarge, color = color)
-        Text(label, style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
     }
 }
 

@@ -7,6 +7,21 @@ enum class AbstinenceProfile {
     GAMBLING, SOCIAL_MEDIA, BEDTIME_SCREENS, IMPULSE_SHOPPING, PORNOGRAPHY, CUSTOM,
 }
 
+enum class AbstinenceStatisticsDayStatus {
+    CLEAR,
+    OCCURRENCE,
+    PAUSED,
+    UNOBSERVED,
+    TODAY_CLEAR,
+    TODAY_OCCURRENCE,
+}
+
+data class AbstinenceStatisticsDay(
+    val date: LocalDate,
+    val status: AbstinenceStatisticsDayStatus,
+    val occurrences: Int,
+)
+
 data class AbstinenceStats(
     val currentDays: Long,
     val bestDays: Long,
@@ -21,6 +36,15 @@ data class AbstinenceStats(
     val clearDays90: Int,
     val occurrenceDays90: Int,
     val occurrences90: Int,
+    val observedDays365: Int = observedDays90,
+    val clearDays365: Int = clearDays90,
+    val occurrenceDays365: Int = occurrenceDays90,
+    val occurrences365: Int = occurrences90,
+    val observedDaysAllTime: Int = observedDays90,
+    val clearDaysAllTime: Int = clearDays90,
+    val occurrenceDaysAllTime: Int = occurrenceDays90,
+    val occurrencesAllTime: Int = occurrences90,
+    val days: List<AbstinenceStatisticsDay> = emptyList(),
 )
 
 /** No entry means no recorded occurrence, never a physiological measurement. */
@@ -54,6 +78,8 @@ object AbstinenceStatsCalculator {
         val current = if (todayHasOccurrence || paused) 0L else end - cursor
         val recent30 = window(maxOf(start, end - 30), end, relevant, pauseRanges)
         val recent90 = window(maxOf(start, end - 90), end, relevant, pauseRanges)
+        val recent365 = window(maxOf(start, end - 365), end, relevant, pauseRanges)
+        val allTime = window(start, end, relevant, pauseRanges)
         val frequencyStart = maxOf(start, end - 89)
         val frequencyDates = relevant.asSequence()
             .map { it.localDate }
@@ -68,10 +94,48 @@ object AbstinenceStatsCalculator {
             else to.toEpochDay() - from.toEpochDay()
         }
         val averageClearDays = intervals.takeIf { it.isNotEmpty() }?.map { it - 1.0 }?.average()
-        return AbstinenceStats(current, best, recent30.observedDays, recent30.clearDays,
-            recent30.occurrenceDays, recent30.occurrences, todayHasOccurrence, paused,
-            averageClearDays, recent90.observedDays, recent90.clearDays,
-            recent90.occurrenceDays, recent90.occurrences)
+        val calendarStart = minOf(startsOn, today.minusDays(364))
+        val occurrencesByDate = relevant.groupBy { it.localDate }
+        val days = generateSequence(calendarStart) { it.plusDays(1) }
+            .takeWhile { it <= today }
+            .map { date ->
+                val dayEntries = occurrencesByDate[date].orEmpty()
+                val count = dayEntries.size
+                val status = when {
+                    date < startsOn -> AbstinenceStatisticsDayStatus.UNOBSERVED
+                    pauses.any { it.includes(date) } -> AbstinenceStatisticsDayStatus.PAUSED
+                    date == today && count > 0 -> AbstinenceStatisticsDayStatus.TODAY_OCCURRENCE
+                    date == today -> AbstinenceStatisticsDayStatus.TODAY_CLEAR
+                    count > 0 -> AbstinenceStatisticsDayStatus.OCCURRENCE
+                    else -> AbstinenceStatisticsDayStatus.CLEAR
+                }
+                AbstinenceStatisticsDay(date, status, count)
+            }
+            .toList()
+        return AbstinenceStats(
+            currentDays = current,
+            bestDays = best,
+            observedDays30 = recent30.observedDays,
+            clearDays30 = recent30.clearDays,
+            occurrenceDays30 = recent30.occurrenceDays,
+            occurrences30 = recent30.occurrences,
+            todayHasOccurrence = todayHasOccurrence,
+            isPaused = paused,
+            averageClearDaysBetweenOccurrences = averageClearDays,
+            observedDays90 = recent90.observedDays,
+            clearDays90 = recent90.clearDays,
+            occurrenceDays90 = recent90.occurrenceDays,
+            occurrences90 = recent90.occurrences,
+            observedDays365 = recent365.observedDays,
+            clearDays365 = recent365.clearDays,
+            occurrenceDays365 = recent365.occurrenceDays,
+            occurrences365 = recent365.occurrences,
+            observedDaysAllTime = allTime.observedDays,
+            clearDaysAllTime = allTime.clearDays,
+            occurrenceDaysAllTime = allTime.occurrenceDays,
+            occurrencesAllTime = allTime.occurrences,
+            days = days,
+        )
     }
 
     private data class WindowCounts(val observedDays: Int, val occurrenceDays: Int, val occurrences: Int) {

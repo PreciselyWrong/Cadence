@@ -22,6 +22,7 @@ $devSource = Get-Content -Raw (Join-Path $root 'dev.ps1')
 $publishSource = Get-Content -Raw (Join-Path $root 'publish.ps1')
 $uploaderSource = Get-Content -Raw (Join-Path $root 'scripts\dev-publish\upload-release.ps1')
 Assert-Condition ($devSource -match 'emulator\\emulator\.exe') 'Le lanceur doit pouvoir démarrer un AVD'
+Assert-Condition ($devSource -match '\$defaultAvd\s*=\s*''Pixel_9_Pro''') 'Le lanceur doit préférer l AVD Pixel 9 Pro'
 Assert-Condition ($devSource -match 'sys\.boot_completed') 'Le lanceur doit attendre le démarrage complet de l AVD'
 Assert-Condition ($devSource -match 'Wait-ForCadence') 'Le lanceur doit attendre que Cadence soit au premier plan'
 Assert-Condition ($publishSource -match "'smartphone'") 'La publication doit accepter la destination smartphone'

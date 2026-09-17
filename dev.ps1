@@ -12,6 +12,7 @@ $jdk = 'C:\Program Files\Android\Android Studio\jbr'
 $sdk = if ($env:ANDROID_SDK_ROOT) { $env:ANDROID_SDK_ROOT } elseif ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
 $adb = Join-Path $sdk 'platform-tools\adb.exe'
 $emulator = Join-Path $sdk 'emulator\emulator.exe'
+$defaultAvd = 'Pixel_9_Pro'
 
 function Fail([string]$message, [int]$code = 2) {
     [Console]::Error.WriteLine($message)
@@ -47,7 +48,8 @@ function Start-InteractiveEmulator {
 
 function Start-AvailableAvd {
     if (-not (Test-Path $emulator)) { Fail "Emulateur Android introuvable : $emulator" }
-    $avd = & $emulator -list-avds | Select-Object -First 1
+    $avds = @(& $emulator -list-avds)
+    $avd = if ($avds -contains $defaultAvd) { $defaultAvd } else { $avds | Select-Object -First 1 }
     if (-not $avd) { Fail "Aucun AVD Android configure." }
     Start-InteractiveEmulator -EmulatorPath $emulator -AvdName $avd -ExtraArguments @('-no-snapshot-save')
     for ($attempt = 1; $attempt -le 60; $attempt++) {
@@ -79,6 +81,7 @@ if ($Plan) {
     Write-Output $(if ($Dummy) { 'Mode : donnees de demonstration' } else { 'Mode : donnees reelles locales' })
     Write-Output 'Prerequis : JDK Android Studio, SDK Android et appareil ADB connecte'
     Write-Output 'Construction : .\\gradlew.bat :app:assembleDebug'
+    Write-Output "AVD prefere : $defaultAvd"
     Write-Output 'Cible : ch.nicolab.cadence/.MainActivity'
     Write-Output 'Verification : activite Android au premier plan'
     exit 0

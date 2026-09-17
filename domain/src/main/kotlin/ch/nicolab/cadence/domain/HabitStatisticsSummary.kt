@@ -50,6 +50,7 @@ data class HabitStatisticsSummary(
     val untilExclusive: LocalDate,
     val previousFrom: LocalDate,
     val days: List<HabitStatisticsDay> = emptyList(),
+    val calendarDays: List<HabitStatisticsDay> = emptyList(),
     val periods: List<HabitStatisticsPeriod> = emptyList(),
     val observablePeriods: Int = evaluatedPeriods,
     val previousObservablePeriods: Int = previousEvaluatedPeriods,
@@ -190,6 +191,12 @@ data class HabitStatisticsSummary(
                 } else null
             } else null
 
+            val calStart = today.minusDays(364)
+            val calendarDays = generateSequence(calStart) { it.plusDays(1) }
+                .takeWhile { it <= today }
+                .map { date -> HabitStatisticsDay(date, dayStatus(habitAt(date), date, entries, pauses, evaluator)) }
+                .toList()
+
             return HabitStatisticsSummary(
                 evaluatedPeriods = current.evaluated,
                 validatedPeriods = current.validated,
@@ -202,6 +209,7 @@ data class HabitStatisticsSummary(
                 untilExclusive = today,
                 previousFrom = previousFrom,
                 days = days,
+                calendarDays = calendarDays,
                 periods = periods,
                 observablePeriods = current.observable,
                 previousObservablePeriods = previous.observable,

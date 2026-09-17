@@ -199,7 +199,7 @@ private fun SavingsTotal(item: HabitCardState, saved: Long, accent: Color, cente
 }
 
 @Composable
-private fun savingsPeriodLabel(period: SavingsPeriod): String = stringResource(when (period) {
+internal fun savingsPeriodLabel(period: SavingsPeriod): String = stringResource(when (period) {
     SavingsPeriod.DAY -> R.string.abst_setup_savings_day
     SavingsPeriod.WEEK -> R.string.abst_setup_savings_week
     SavingsPeriod.MONTH -> R.string.abst_setup_savings_month

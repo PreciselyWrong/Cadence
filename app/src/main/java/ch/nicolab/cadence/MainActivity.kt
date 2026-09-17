@@ -1,11 +1,16 @@
 package ch.nicolab.cadence
 
+import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
+import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
+import ch.nicolab.cadence.domain.AbstinenceStatisticsDayStatus
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.StatisticsConfidence
 import ch.nicolab.cadence.domain.StatisticsTrend
 import ch.nicolab.cadence.ui.components.ActivityCalendar
 import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
+import ch.nicolab.cadence.ui.components.CalendarPeriod
+import ch.nicolab.cadence.ui.components.CalendarPeriodSelector
 import ch.nicolab.cadence.ui.theme.habitAccent
 
 import kotlinx.coroutines.launch
@@ -59,8 +64,19 @@ import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.TrackChanges
-import androidx.compose.material.icons.outlined.TrendingFlat
+import androidx.compose.material.icons.automirrored.outlined.TrendingFlat
+import androidx.compose.material.icons.automirrored.outlined.TrendingDown
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.automirrored.outlined.ShowChart
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.EventBusy
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.LocalFireDepartment
+import androidx.compose.material.icons.outlined.Savings
+import androidx.compose.material.icons.outlined.Speed
+import ch.nicolab.cadence.domain.SavingsPeriod
+import ch.nicolab.cadence.ui.components.MetricCard
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -695,28 +711,47 @@ private fun StatsScreen(
         }
     }
     (regular + trackers + archived.filterNot { it.stored.goal.isAbstinence }).firstOrNull { it.stored.id == detailId }?.let { item ->
+        val tint = habitTint(item)
+        val isTracker = item.stored.goal.isTracker
+        val progress = if (isTracker) 0f else (item.statistics?.successRatePercent ?: 0) / 100f
         CadenceSheet(
             title = item.stored.name,
-            subtitle = stringResource(if (item.stored.goal.isTracker) R.string.tracker_stats_detail_subtitle else R.string.habit_stats_detail_subtitle),
+            subtitle = stringResource(if (isTracker) R.string.tracker_stats_detail_subtitle else R.string.habit_stats_detail_subtitle),
             dismiss = { detailId = null },
+            modifier = Modifier.fillMaxHeight(0.94f),
+            leading = {
+                HabitFacet(
+                    icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                    label = null,
+                    progress = progress,
+                    tint = tint,
+                    trackColor = cadence.sunken,
+                    size = Size.touch,
+                )
+            },
         ) {
             LazyColumn(
-                Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
+                Modifier.fillMaxWidth().weight(1f),
                 verticalArrangement = Arrangement.spacedBy(Space.lg),
             ) {
-                if (!item.stored.goal.isTracker) item { item.statistics?.let { StatisticsNumbers(it) } }
-                item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit) } }
-                if (!item.stored.goal.isTracker) item { StreakLine(item.streak) }
+                if (!isTracker) {
+                    item { item.statistics?.let { HabitStatisticsHero(it, item.streak, tint) } }
+                } else {
+                    item { item.activityStats?.let { TrackerStatisticsHero(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
+                }
+                if (!isTracker) {
+                    item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
+                }
                 item { Hairline() }
-                if (item.stored.goal.isTracker) item { TrackerActivityCalendar(item) }
-                else item { item.statistics?.let { StatisticsCalendar(it.days) } }
-                if (!item.stored.goal.isLimit) {
+                if (isTracker) item { TrackerActivityCalendar(item) }
+                else item { item.statistics?.let { StatisticsCalendar(it.calendarDays) } }
+                if (!item.stored.goal.isLimit && !isTracker) {
                     item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
                 }
                 item { Hairline() }
                 item { Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.ink) }
                 if (item.recentEntries.isEmpty()) item {
-                    Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+                    Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
                 }
                 items(item.recentEntries, key = { "entry-${it.id}" }) { entry ->
                     EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
@@ -757,7 +792,7 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
                     PeriodType.DAY -> R.string.stats_rhythm_daily
                     PeriodType.WEEK -> R.string.stats_rhythm_weekly
                     PeriodType.MONTH -> R.string.stats_rhythm_monthly
-                }), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+                }), style = MaterialTheme.typography.labelMedium, color = palette.inkMuted)
             }
         }
         if (stats == null || stats.evaluatedPeriods == 0) {
@@ -791,7 +826,7 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
             PeriodType.MONTH -> R.string.stats_pulse_months
             null -> R.string.stats_pulse_periods
         }, stats.periods.takeLast(14).size)
-        Text("$reculLabel · $pulseLabel", style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
+        Text("$reculLabel · $pulseLabel", style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             OverviewMetric(stringResource(R.string.habit_stats_goal_count, stats.validatedPeriods, stats.evaluatedPeriods), stringResource(R.string.habit_stats_goals_label))
@@ -804,7 +839,7 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
                 else -> stringResource(R.string.habit_stats_trend_short_stable)
             }
             val trendColor = when {
-                comp == null -> palette.inkFaint
+                comp == null -> palette.inkMuted
                 comp.deltaPercentagePoints > 0 -> palette.success
                 else -> palette.ink
             }
@@ -817,7 +852,7 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
         item.activityStats?.let { activity ->
             Spacer(Modifier.height(Space.sm))
             Text(stringResource(R.string.habit_stats_activity_overview, activity.entries30, activity.activeDays30),
-                style = MaterialTheme.typography.labelSmall, color = palette.inkFaint)
+                style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
         }
     }
 }
@@ -825,22 +860,53 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
 @Composable
 private fun TrackerStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
     val stats = item.activityStats ?: return
+    val palette = cadence
     Panel(onClick = onClick) {
-        Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-        Spacer(Modifier.height(Space.sm))
-        Text(stringResource(R.string.tracker_stats_active_days, stats.activeDays30, stats.calendarDays30),
-            style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-        Text(stringResource(R.string.tracker_stats_entries, stats.entries30),
-            style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.CenterVertically) {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = 0f,
+                tint = habitTint(item),
+                trackColor = palette.sunken,
+                size = Size.badge,
+            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink)
+                Text(stringResource(R.string.today_activities_section), style = MaterialTheme.typography.labelMedium, color = palette.inkMuted)
+            }
+        }
+        Spacer(Modifier.height(Space.xl))
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(stats.activeDays30.toString(), style = MaterialTheme.typography.displayMedium, color = palette.ink)
+            Spacer(Modifier.width(Space.sm))
+            Text(stringResource(R.string.tracker_stats_active_days_short), style = MaterialTheme.typography.labelMedium, color = palette.success)
+        }
+        Spacer(Modifier.height(Space.lg))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
+            OverviewMetric(stats.entries30.toString(), stringResource(R.string.habit_stats_entries_30))
+            if (item.stored.goal.goalType != GoalType.BINARY && stats.entries30 > 0) {
+                OverviewMetric(HabitFormatter.formatWithUnit(stats.totalMinor30, item.stored.goal.goalType, item.stored.goal.unit), stringResource(R.string.habit_stats_total_30))
+            } else {
+                OverviewMetric(stringResource(R.string.tracker_stats_calendar_days, stats.calendarDays30), stringResource(R.string.tracker_stats_observed_label))
+            }
+        }
     }
 }
 
 @Composable
 private fun TrackerActivityCalendar(item: HabitCardState) {
+    var period by rememberSaveable { mutableStateOf(CalendarPeriod.DAYS_90) }
     val today = LocalDate.now()
+    val daysBack = when (period) {
+        CalendarPeriod.DAYS_30 -> 29L
+        CalendarPeriod.DAYS_90 -> 89L
+        CalendarPeriod.YEAR_1 -> 364L
+        CalendarPeriod.ALL_TIME -> ChronoUnit.DAYS.between(item.stored.startsOn, today).coerceAtLeast(0L)
+    }
     val dailyTotals = item.recentEntries.groupBy(HabitEntry::localDate)
         .mapValues { (_, entries) -> entries.sumOf(HabitEntry::valueMinor) }
-    val cells = (89L downTo 0L).map { offset ->
+    val cells = (daysBack downTo 0L).map { offset ->
         val date = today.minusDays(offset)
         val value = dailyTotals[date]
         val label = when {
@@ -856,38 +922,91 @@ private fun TrackerActivityCalendar(item: HabitCardState) {
             detailText = "$date · $label",
         )
     }
-    ActivityCalendar(cells, title = stringResource(R.string.tracker_calendar_title))
+    Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        CalendarPeriodSelector(selected = period, onSelect = { period = it })
+        ActivityCalendar(cells, title = stringResource(R.string.tracker_calendar_title))
+    }
 }
 
 @Composable
-private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, unit: MeasurementUnit?) {
-    SectionLabel(stringResource(R.string.habit_stats_activity_title))
-    Spacer(Modifier.height(Space.sm))
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-        OverviewMetric(stats.entries30.toString(), stringResource(R.string.habit_stats_entries_30), modifier = Modifier.weight(1f))
-        OverviewMetric(stats.activeDays30.toString(), stringResource(R.string.habit_stats_active_days_30), modifier = Modifier.weight(1f))
-    }
-    if (goalType != GoalType.BINARY && stats.entries30 > 0) {
-        Spacer(Modifier.height(Space.md))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-            OverviewMetric(HabitFormatter.formatWithUnit(stats.totalMinor30, goalType, unit),
-                stringResource(R.string.habit_stats_total_30), modifier = Modifier.weight(1f))
-            stats.averagePerActiveDayMinor30?.let { average ->
-                OverviewMetric(formatActivityAverage(average, unit),
-                    stringResource(R.string.habit_stats_average_active_day_30), modifier = Modifier.weight(1f))
+private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, unit: MeasurementUnit?, tint: Color) {
+    val palette = cadence
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.sunken)
+            .padding(Space.lg),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            Text(stringResource(R.string.habit_stats_activity_title), style = MaterialTheme.typography.titleMedium, color = palette.ink)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                MetricCard(
+                    value = stats.entries30.toString(),
+                    label = stringResource(R.string.habit_stats_entries_30),
+                    icon = Icons.Outlined.Check,
+                    iconTint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = "${stats.activeDays30} j",
+                    label = stringResource(R.string.habit_stats_active_days_30),
+                    icon = Icons.Outlined.DateRange,
+                    iconTint = palette.accent,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            if (goalType != GoalType.BINARY && stats.entries30 > 0) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    MetricCard(
+                        value = HabitFormatter.formatWithUnit(stats.totalMinor30, goalType, unit),
+                        label = stringResource(R.string.habit_stats_total_30),
+                        icon = Icons.AutoMirrored.Outlined.ShowChart,
+                        iconTint = tint,
+                        modifier = Modifier.weight(1f),
+                    )
+                    stats.averagePerActiveDayMinor30?.let { average ->
+                        MetricCard(
+                            value = formatActivityAverage(average, unit),
+                            label = stringResource(R.string.habit_stats_average_active_day_30),
+                            icon = Icons.Outlined.Speed,
+                            iconTint = palette.accent,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+                MetricCard(
+                    value = HabitFormatter.formatWithUnit(stats.peakDayMinor30, goalType, unit),
+                    label = stringResource(R.string.habit_stats_peak_day_30),
+                    icon = Icons.Outlined.EmojiEvents,
+                    iconTint = palette.success,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(Radius.Chip)
+                    .background(palette.surface.copy(alpha = 0.5f))
+                    .padding(horizontal = Space.md, vertical = Space.sm),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.inkMuted, modifier = Modifier.size(Size.iconSm))
+                Column {
+                    Text(
+                        stringResource(R.string.tracker_stats_ninety_days, stats.activeDays90, stats.calendarDays90, stats.entries90),
+                        style = MaterialTheme.typography.bodySmall, color = palette.inkMuted,
+                    )
+                    if (goalType != GoalType.BINARY && stats.entries90 > 0) {
+                        Text(
+                            stringResource(R.string.tracker_stats_ninety_total, HabitFormatter.formatWithUnit(stats.totalMinor90, goalType, unit)),
+                            style = MaterialTheme.typography.bodySmall, color = palette.inkMuted,
+                        )
+                    }
+                }
             }
         }
-        Spacer(Modifier.height(Space.md))
-        OverviewMetric(HabitFormatter.formatWithUnit(stats.peakDayMinor30, goalType, unit),
-            stringResource(R.string.habit_stats_peak_day_30))
-    }
-    Spacer(Modifier.height(Space.lg))
-    Text(stringResource(R.string.tracker_stats_ninety_days, stats.activeDays90, stats.calendarDays90, stats.entries90),
-        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-    if (goalType != GoalType.BINARY && stats.entries90 > 0) {
-        Text(stringResource(R.string.tracker_stats_ninety_total,
-            HabitFormatter.formatWithUnit(stats.totalMinor90, goalType, unit)),
-            style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
     }
 }
 
@@ -901,39 +1020,166 @@ private fun formatActivityAverage(minor: Double, unit: MeasurementUnit?): String
 @Composable
 private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit, onCorrect: (HabitEntry) -> Unit, openTracking: () -> Unit) {
     val stats = item.abstinenceStats ?: return
-    CadenceSheet(item.stored.name, stringResource(R.string.abstinence_stats_detail_subtitle), dismiss) {
-        LazyColumn(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
-            verticalArrangement = Arrangement.spacedBy(Space.lg)) {
+    var period by rememberSaveable { mutableStateOf(CalendarPeriod.DAYS_90) }
+    val today = LocalDate.now()
+    val targetFrom = when (period) {
+        CalendarPeriod.DAYS_30 -> today.minusDays(29)
+        CalendarPeriod.DAYS_90 -> today.minusDays(89)
+        CalendarPeriod.YEAR_1 -> today.minusDays(364)
+        CalendarPeriod.ALL_TIME -> item.stored.startsOn
+    }
+    val observedDays = when (period) {
+        CalendarPeriod.DAYS_30 -> stats.observedDays30
+        CalendarPeriod.DAYS_90 -> stats.observedDays90
+        CalendarPeriod.YEAR_1 -> stats.observedDays365
+        CalendarPeriod.ALL_TIME -> stats.observedDaysAllTime
+    }
+    val clearDays = when (period) {
+        CalendarPeriod.DAYS_30 -> stats.clearDays30
+        CalendarPeriod.DAYS_90 -> stats.clearDays90
+        CalendarPeriod.YEAR_1 -> stats.clearDays365
+        CalendarPeriod.ALL_TIME -> stats.clearDaysAllTime
+    }
+    val occurrences = when (period) {
+        CalendarPeriod.DAYS_30 -> stats.occurrences30
+        CalendarPeriod.DAYS_90 -> stats.occurrences90
+        CalendarPeriod.YEAR_1 -> stats.occurrences365
+        CalendarPeriod.ALL_TIME -> stats.occurrencesAllTime
+    }
+    val occurrenceDays = when (period) {
+        CalendarPeriod.DAYS_30 -> stats.occurrenceDays30
+        CalendarPeriod.DAYS_90 -> stats.occurrenceDays90
+        CalendarPeriod.YEAR_1 -> stats.occurrenceDays365
+        CalendarPeriod.ALL_TIME -> stats.occurrenceDaysAllTime
+    }
+
+    val tint = habitTint(item)
+    val spending = item.stored.abstinenceSpendingMinor
+    val spendingPeriod = item.stored.abstinenceSpendingPeriod
+    val currency = item.stored.abstinenceSavingsCurrency
+    val start = item.stored.abstinenceStartedAt
+    val saved = if (spending != null && spendingPeriod != null && currency != null && start != null) {
+        val now = java.time.Instant.now()
+        val activeStart = AbstinenceElapsedCalculator.activeStart(item.stored.id, start, item.recentEntries)
+        AbstinenceSavingsCalculator.calculate(
+            spending,
+            spendingPeriod,
+            activeStart,
+            now,
+            java.time.ZoneId.systemDefault(),
+        )
+    } else null
+    val palette = cadence
+
+    CadenceSheet(
+        title = item.stored.name,
+        subtitle = stringResource(R.string.abstinence_stats_detail_subtitle),
+        dismiss = dismiss,
+        modifier = Modifier.fillMaxHeight(0.94f),
+        leading = {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = 0f,
+                tint = tint,
+                trackColor = cadence.sunken,
+                size = Size.touch,
+            )
+        },
+    ) {
+        LazyColumn(
+            Modifier.fillMaxWidth().weight(1f),
+            verticalArrangement = Arrangement.spacedBy(Space.lg),
+        ) {
             item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    OverviewMetric(stats.currentDays.toString(), stringResource(R.string.habit_stats_abstinence_hero), modifier = Modifier.weight(1f))
-                    OverviewMetric(stats.bestDays.toString(), stringResource(R.string.habit_stats_record_label), modifier = Modifier.weight(1f))
-                }
-            }
-            item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    OverviewMetric(stats.occurrences30.toString(), stringResource(R.string.habit_stats_occurrences_label), modifier = Modifier.weight(1f))
-                    OverviewMetric(stats.occurrenceDays30.toString(), stringResource(R.string.abstinence_stats_occurrence_days), modifier = Modifier.weight(1f))
-                }
-            }
-            item {
-                Text(stringResource(R.string.habit_stats_abstinence_clear, stats.clearDays30, stats.observedDays30),
-                    style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-                Text(stringResource(R.string.abstinence_stats_ninety_days,
-                    stats.clearDays90, stats.observedDays90, stats.occurrences90, stats.occurrenceDays90),
-                    style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-                Spacer(Modifier.height(Space.sm))
-                Text(
-                    stats.averageClearDaysBetweenOccurrences?.let { average ->
-                        stringResource(R.string.abstinence_stats_average_gap, formatAlcoholAverage(average))
-                    } ?: stringResource(R.string.abstinence_stats_average_missing),
-                    style = MaterialTheme.typography.titleMedium, color = cadence.ink,
+                AbstinenceStatisticsHero(
+                    stats = stats,
+                    saved = saved,
+                    spending = spending,
+                    spendingPeriod = spendingPeriod,
+                    currency = currency,
+                    tint = tint,
                 )
             }
-            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+            item {
+                CalendarPeriodSelector(
+                    selected = period,
+                    onSelect = { period = it },
+                )
+            }
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    MetricCard(
+                        value = stringResource(R.string.alcohol_stats_observed_days, clearDays, observedDays),
+                        label = stringResource(R.string.abstinence_stats_clear_days_label),
+                        icon = Icons.Outlined.CheckCircle,
+                        iconTint = palette.success,
+                        modifier = Modifier.weight(1f),
+                    )
+                    MetricCard(
+                        value = occurrences.toString(),
+                        label = stringResource(R.string.abstinence_stats_occurrences_label),
+                        icon = Icons.Outlined.EventBusy,
+                        iconTint = if (occurrences > 0) palette.danger else palette.inkMuted,
+                        valueColor = if (occurrences > 0) palette.danger else palette.ink,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    MetricCard(
+                        value = occurrenceDays.toString(),
+                        label = stringResource(R.string.abstinence_stats_occurrence_days_label),
+                        icon = Icons.Outlined.DateRange,
+                        iconTint = palette.inkMuted,
+                        modifier = Modifier.weight(1f),
+                    )
+                    MetricCard(
+                        value = stats.averageClearDaysBetweenOccurrences?.let { average ->
+                            stringResource(R.string.habit_stats_days_short, formatAlcoholAverage(average))
+                        } ?: "—",
+                        label = stringResource(R.string.abstinence_stats_average_gap_short),
+                        icon = Icons.Outlined.Speed,
+                        iconTint = tint,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                val filteredDays = stats.days.filter { it.date >= targetFrom }
+                val cells = filteredDays.map { day ->
+                    val tone = when (day.status) {
+                        AbstinenceStatisticsDayStatus.CLEAR, AbstinenceStatisticsDayStatus.TODAY_CLEAR -> ActivityCalendarTone.SUCCESS
+                        AbstinenceStatisticsDayStatus.OCCURRENCE, AbstinenceStatisticsDayStatus.TODAY_OCCURRENCE -> ActivityCalendarTone.DANGER
+                        AbstinenceStatisticsDayStatus.PAUSED -> ActivityCalendarTone.NEUTRAL
+                        AbstinenceStatisticsDayStatus.UNOBSERVED -> ActivityCalendarTone.NEUTRAL
+                    }
+                    val dateText = displayAbstinenceDate(day.date)
+                    val label = when (day.status) {
+                        AbstinenceStatisticsDayStatus.CLEAR -> stringResource(R.string.abstinence_stats_clear_day)
+                        AbstinenceStatisticsDayStatus.TODAY_CLEAR -> stringResource(R.string.abstinence_stats_today_clear)
+                        AbstinenceStatisticsDayStatus.OCCURRENCE -> stringResource(R.string.abstinence_stats_occurrence_day)
+                        AbstinenceStatisticsDayStatus.TODAY_OCCURRENCE -> stringResource(R.string.abstinence_stats_today_occurrence)
+                        AbstinenceStatisticsDayStatus.PAUSED -> stringResource(R.string.habit_stats_paused)
+                        AbstinenceStatisticsDayStatus.UNOBSERVED -> stringResource(R.string.tracker_calendar_empty)
+                    }
+                    ActivityCalendarCell(
+                        date = day.date,
+                        tone = tone,
+                        contentDescription = "$dateText : $label",
+                        detailText = "$dateText · $label",
+                    )
+                }
+                ActivityCalendar(
+                    cells = cells,
+                    title = stringResource(R.string.abstinence_stats_calendar_title),
+                    helpText = stringResource(R.string.abstinence_assumption),
+                )
+            }
             item { SectionLabel(stringResource(R.string.abstinence_stats_history)) }
             if (item.recentEntries.isEmpty()) item {
-                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
             }
             items(item.recentEntries, key = { "occurrence-${it.id}" }) { entry ->
                 EntryRow(entry, GoalType.COUNT, null) { onCorrect(entry) }
@@ -1034,8 +1280,8 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
             Spacer(Modifier.height(Space.sm))
             Text(
                 stringResource(R.string.habit_stats_abstinence_clear, it.clearDays30, it.observedDays30),
-                style = MaterialTheme.typography.labelSmall,
-                color = palette.inkFaint,
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.inkMuted,
             )
             Spacer(Modifier.height(Space.xl))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
@@ -1049,30 +1295,27 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
 @Composable
 private fun OverviewMetric(value: String, label: String, color: Color = cadence.ink, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-        Text(value, style = MaterialTheme.typography.titleMedium, color = color)
-        Text(label, style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
+        Text(value, style = MaterialTheme.typography.titleLarge, color = color)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
     }
 }
 
 @Composable
-private fun StatisticsNumbers(summary: HabitStatisticsSummary) {
+private fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitStreak, tint: Color) {
+    val palette = cadence
     if (summary.evaluatedPeriods == 0) {
-        Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = cadence.inkMuted)
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .clip(Radius.Card)
+                .background(palette.sunken)
+                .padding(Space.lg),
+        ) {
+            Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = palette.inkMuted)
+        }
         return
     }
-    val palette = cadence
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.lg), verticalAlignment = Alignment.CenterVertically) {
-        Text(stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0), style = MetricStyle, color = palette.success)
-        Column(Modifier.weight(1f)) {
-            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
-            Text(stringResource(R.string.habit_stats_validated_compact, summary.validatedPeriods, summary.evaluatedPeriods),
-                style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted)
-        }
-    }
-    Spacer(Modifier.height(Space.sm))
-    if (summary.idealPeriods > 0) {
-        Text(stringResource(R.string.habit_stats_ideal, summary.idealPeriods), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-    }
+    val comp = summary.comparison
     val confidenceLabel = when (summary.confidence) {
         StatisticsConfidence.ESTABLISHED -> stringResource(R.string.stats_confidence_established)
         StatisticsConfidence.LIMITED -> stringResource(R.string.stats_confidence_limited)
@@ -1083,12 +1326,6 @@ private fun StatisticsNumbers(summary: HabitStatisticsSummary) {
     } else {
         stringResource(R.string.stats_completeness_detail_single, summary.evaluatedPeriods)
     }
-    Text(
-        text = "$confidenceLabel · $completenessText",
-        style = MaterialTheme.typography.bodySmall,
-        color = palette.inkFaint,
-    )
-    val comp = summary.comparison
     val comparisonText = when {
         comp != null -> when (comp.trend) {
             StatisticsTrend.IMPROVING -> stringResource(R.string.stats_comparison_up, comp.deltaPercentagePoints, comp.previousRatePercent)
@@ -1098,17 +1335,434 @@ private fun StatisticsNumbers(summary: HabitStatisticsSummary) {
         !summary.isHomogeneous -> stringResource(R.string.stats_comparison_inhomogeneous)
         else -> stringResource(R.string.stats_comparison_insufficient)
     }
-    Text(
-        text = comparisonText,
-        style = MaterialTheme.typography.bodySmall,
-        color = palette.inkMuted,
-    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.sunken)
+            .padding(Space.lg),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(Radius.Chip)
+                            .background(palette.successSoft)
+                            .padding(horizontal = Space.md, vertical = Space.sm),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = palette.success,
+                        )
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_success),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = palette.ink,
+                        )
+                        Text(
+                            text = stringResource(R.string.habit_stats_validated_compact, summary.validatedPeriods, summary.evaluatedPeriods),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                if (comp != null) {
+                    val isUp = comp.deltaPercentagePoints > 0
+                    val isDown = comp.deltaPercentagePoints < 0
+                    val chipBg = if (isUp) palette.successSoft else if (isDown) palette.danger.copy(alpha = 0.15f) else palette.surface
+                    val chipColor = if (isUp) palette.success else if (isDown) palette.danger else palette.ink
+                    val trendText = when {
+                        isUp -> stringResource(R.string.habit_stats_trend_short_up, comp.deltaPercentagePoints)
+                        isDown -> stringResource(R.string.habit_stats_trend_short_down, -comp.deltaPercentagePoints)
+                        else -> stringResource(R.string.habit_stats_trend_short_stable)
+                    }
+                    val trendIcon = when {
+                        isUp -> Icons.AutoMirrored.Outlined.TrendingUp
+                        isDown -> Icons.AutoMirrored.Outlined.TrendingDown
+                        else -> Icons.AutoMirrored.Outlined.TrendingFlat
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(start = Space.sm)
+                            .clip(Radius.Pill)
+                            .background(chipBg)
+                            .padding(horizontal = Space.md, vertical = Space.xs),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Space.xs),
+                    ) {
+                        Icon(trendIcon, contentDescription = null, tint = chipColor, modifier = Modifier.size(Size.iconSm))
+                        Text(
+                            trendText,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = chipColor,
+                            maxLines = 1,
+                            softWrap = false,
+                        )
+                    }
+                }
+            }
+
+            val progressRate = ((summary.successRatePercent ?: 0) / 100f).coerceIn(0f, 1f)
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(Size.counterTrack)
+                    .clip(CircleShape)
+                    .background(palette.surface),
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth(fraction = progressRate)
+                        .fillMaxHeight()
+                        .background(palette.success, CircleShape)
+                )
+            }
+
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                MetricCard(
+                    value = streak.current.toString(),
+                    label = stringResource(R.string.habit_stats_streak_label),
+                    icon = Icons.Outlined.LocalFireDepartment,
+                    iconTint = palette.accent,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = summary.idealPeriods.toString(),
+                    label = stringResource(R.string.habit_stats_day_ideal),
+                    icon = Icons.Outlined.EmojiEvents,
+                    iconTint = palette.success,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = summary.evaluatedPeriods.toString(),
+                    label = stringResource(R.string.stats_confidence_label),
+                    icon = Icons.Outlined.DateRange,
+                    iconTint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(Radius.Chip)
+                    .background(palette.surface.copy(alpha = 0.5f))
+                    .padding(horizontal = Space.md, vertical = Space.sm),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.inkMuted, modifier = Modifier.size(Size.iconSm))
+                Text(
+                    text = "$confidenceLabel · $completenessText\n$comparisonText",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = palette.inkMuted,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TrackerStatisticsHero(
+    stats: HabitActivityStats,
+    goalType: GoalType,
+    unit: MeasurementUnit?,
+    tint: Color,
+) {
+    val palette = cadence
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.sunken)
+            .padding(Space.lg),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(Radius.Chip)
+                            .background(tint.copy(alpha = 0.15f))
+                            .padding(horizontal = Space.md, vertical = Space.sm),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_days_short, stats.activeDays30),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = tint,
+                        )
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_active_days_30),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = palette.ink,
+                        )
+                        Text(
+                            text = stringResource(R.string.habit_stats_entries_30),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                Box(
+                    Modifier
+                        .padding(start = Space.sm)
+                        .clip(Radius.Pill)
+                        .background(palette.surface)
+                        .padding(horizontal = Space.md, vertical = Space.xs),
+                ) {
+                    Text(
+                        text = "${stats.entries30} ${stringResource(R.string.habit_stats_goals_label)}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = palette.ink,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
+            }
+
+            val activeRatio = (stats.activeDays30 / 30f).coerceIn(0f, 1f)
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(Size.counterTrack)
+                    .clip(CircleShape)
+                    .background(palette.surface),
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth(fraction = activeRatio)
+                        .fillMaxHeight()
+                        .background(tint, CircleShape)
+                )
+            }
+
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                val totalFormatted = if (goalType != GoalType.BINARY && stats.entries30 > 0) {
+                    HabitFormatter.formatWithUnit(stats.totalMinor30, goalType, unit)
+                } else stats.entries30.toString()
+
+                MetricCard(
+                    value = totalFormatted,
+                    label = stringResource(R.string.habit_stats_total_30),
+                    icon = Icons.AutoMirrored.Outlined.ShowChart,
+                    iconTint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = stats.averagePerActiveDayMinor30?.let { formatActivityAverage(it, unit) } ?: "—",
+                    label = stringResource(R.string.habit_stats_average_active_day_30),
+                    icon = Icons.Outlined.Speed,
+                    iconTint = palette.accent,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = "${stats.activeDays90} j",
+                    label = stringResource(R.string.stats_period_90d),
+                    icon = Icons.Outlined.DateRange,
+                    iconTint = palette.inkMuted,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(Radius.Chip)
+                    .background(palette.surface.copy(alpha = 0.5f))
+                    .padding(horizontal = Space.md, vertical = Space.sm),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.inkMuted, modifier = Modifier.size(Size.iconSm))
+                Text(
+                    text = stringResource(R.string.tracker_stats_ninety_days, stats.activeDays90, stats.calendarDays90, stats.entries90),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = palette.inkMuted,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AbstinenceStatisticsHero(
+    stats: ch.nicolab.cadence.domain.AbstinenceStats,
+    saved: Long?,
+    spending: Long?,
+    spendingPeriod: SavingsPeriod?,
+    currency: String?,
+    tint: Color,
+) {
+    val palette = cadence
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.sunken)
+            .padding(Space.lg),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(Radius.Chip)
+                            .background(palette.successSoft)
+                            .padding(horizontal = Space.md, vertical = Space.sm),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_days_short, stats.currentDays),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = palette.success,
+                        )
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.habit_stats_abstinence_hero),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = palette.ink,
+                        )
+                        Text(
+                            text = stringResource(R.string.habit_stats_active_short),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(start = Space.sm)
+                        .clip(Radius.Pill)
+                        .background(palette.accentSoft)
+                        .padding(horizontal = Space.md, vertical = Space.xs),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Space.xs),
+                ) {
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.accent, modifier = Modifier.size(Size.iconSm))
+                    Text(
+                        text = "${stringResource(R.string.habit_stats_record_label)} : ${stringResource(R.string.habit_stats_days_short, stats.bestDays)}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = palette.accent,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
+            }
+            if (saved != null && spending != null && spendingPeriod != null && currency != null) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(Radius.Chip)
+                        .background(palette.successSoft)
+                        .padding(horizontal = Space.md, vertical = Space.sm),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Outlined.Savings, contentDescription = null, tint = palette.success, modifier = Modifier.size(Size.icon))
+                    Column {
+                        Text(
+                            text = stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = palette.success,
+                        )
+                        Text(
+                            text = stringResource(R.string.abst_savings_basis, formatMoney(spending, currency), savingsPeriodLabel(spendingPeriod)),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = palette.inkMuted,
+                        )
+                    }
+                }
+            }
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                MetricCard(
+                    value = "${stats.clearDays90} / ${stats.observedDays90}",
+                    label = stringResource(R.string.abstinence_stats_clear_days_label),
+                    icon = Icons.Outlined.CheckCircle,
+                    iconTint = palette.success,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = stats.occurrences90.toString(),
+                    label = stringResource(R.string.abstinence_stats_occurrences_label),
+                    icon = Icons.Outlined.EventBusy,
+                    iconTint = if (stats.occurrences90 > 0) palette.danger else palette.inkMuted,
+                    valueColor = if (stats.occurrences90 > 0) palette.danger else palette.ink,
+                    modifier = Modifier.weight(1f),
+                )
+                MetricCard(
+                    value = stats.averageClearDaysBetweenOccurrences?.let { "${formatAlcoholAverage(it)} j" } ?: "—",
+                    label = stringResource(R.string.abstinence_stats_average_gap_short),
+                    icon = Icons.Outlined.Speed,
+                    iconTint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
 }
 
 @Composable
 private fun StatisticsCalendar(days: List<HabitStatisticsDay>) {
     if (days.isEmpty()) return
-    val cells = days.map { day ->
+    var period by rememberSaveable { mutableStateOf(CalendarPeriod.DAYS_90) }
+    val today = LocalDate.now()
+    val from = when (period) {
+        CalendarPeriod.DAYS_30 -> today.minusDays(29)
+        CalendarPeriod.DAYS_90 -> today.minusDays(89)
+        CalendarPeriod.YEAR_1 -> today.minusDays(364)
+        CalendarPeriod.ALL_TIME -> days.minOfOrNull { it.date } ?: today
+    }
+    val filteredDays = days.filter { it.date >= from }
+    val cells = filteredDays.map { day ->
         val tone = when (day.status) {
             HabitStatisticsDayStatus.IDEAL, HabitStatisticsDayStatus.ACTIVITY -> ActivityCalendarTone.SUCCESS
             HabitStatisticsDayStatus.MINIMUM -> ActivityCalendarTone.SUCCESS_SOFT
@@ -1124,11 +1778,17 @@ private fun StatisticsCalendar(days: List<HabitStatisticsDay>) {
             detailText = stringResource(R.string.habit_stats_selected_day, dateText, label),
         )
     }
-    ActivityCalendar(
-        cells = cells,
-        title = stringResource(R.string.habit_stats_calendar),
-        helpText = stringResource(R.string.habit_stats_calendar_help),
-    )
+    Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        CalendarPeriodSelector(
+            selected = period,
+            onSelect = { period = it },
+        )
+        ActivityCalendar(
+            cells = cells,
+            title = stringResource(R.string.habit_stats_calendar),
+            helpText = stringResource(R.string.habit_stats_calendar_help),
+        )
+    }
 }
 
 private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {
@@ -1428,7 +2088,7 @@ private fun HabitOptionsSheet(
         )
         ActionRow(Icons.Outlined.Sell, stringResource(R.string.action_move_to_group), tint, moveToGroup)
         if (item.stored.goal.progression != null) {
-            ActionRow(Icons.Outlined.TrendingFlat, stringResource(R.string.progression_stop), tint, stopProgression)
+            ActionRow(Icons.AutoMirrored.Outlined.TrendingFlat, stringResource(R.string.progression_stop), tint, stopProgression)
         }
         ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate), tint, duplicate)
         ActionRow(Icons.Outlined.KeyboardArrowUp, stringResource(R.string.action_reorder_up), tint, up)

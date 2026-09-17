@@ -53,6 +53,7 @@ object Elevation {
 object Size {
     val counterTrack = 4.dp
     val heatmapCell = 12.dp
+    val iconSm = 16.dp
     val icon = 20.dp
     val iconLarge = 24.dp
     val touch = 48.dp
@@ -61,7 +62,7 @@ object Size {
     val calendarMark = 36.dp
     val statisticsPulse = 48.dp
     val navBar = 64.dp
-    val sheetContent = 480.dp
+    val sheetContent = 760.dp
 }
 
 /** Mouvement court, sans rebond : il explique un changement, il ne décore pas. */

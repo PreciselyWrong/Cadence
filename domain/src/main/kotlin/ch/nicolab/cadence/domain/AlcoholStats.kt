@@ -66,9 +66,15 @@ data class AlcoholStats(
     val todayHasConsumption: Boolean,
     val isPaused: Boolean,
     val days: List<AlcoholStatisticsDay>,
+    val drinkingDays365: Int = drinkingDays90,
+    val drinkingDaysAllTime: Int = drinkingDays90,
+    val standardDrinks365: Int = standardDrinks30,
+    val standardDrinksAllTime: Int = standardDrinks30,
 ) {
     val observedDays30: Int get() = days.takeLast(30).count(AlcoholStatisticsDay::isObserved)
-    val observedDays90: Int get() = days.count(AlcoholStatisticsDay::isObserved)
+    val observedDays90: Int get() = days.takeLast(90).count(AlcoholStatisticsDay::isObserved)
+    val observedDays365: Int get() = days.takeLast(365).count(AlcoholStatisticsDay::isObserved)
+    val observedDaysAllTime: Int get() = days.count(AlcoholStatisticsDay::isObserved)
 }
 
 private fun AlcoholStatisticsDay.isObserved(): Boolean =
@@ -126,17 +132,25 @@ object AlcoholStatsCalculator {
         val activePauses = pauses.filter { it.endExclusive == null || it.endExclusive > startsOn }
         val isPaused = today >= startsOn && activePauses.any { it.includes(today) }
         val todayHasConsumption = !isPaused && consumptionsByDay.containsKey(today)
-        val calendarStart = today.minusDays(CALENDAR_DAYS - 1)
+        val calendarStart = minOf(startsOn, today.minusDays(364))
         val days = generateSequence(calendarStart) { date -> date.plusDays(1).takeIf { it <= today } }
             .map { date -> calendarDay(date, startsOn, today, consumptionsByDay, activePauses) }
             .toList()
 
         val recent30Start = today.minusDays(RECENT_DAYS - 1)
-        val recent90Start = calendarStart
+        val recent90Start = today.minusDays(CALENDAR_DAYS - 1)
+        val recent365Start = today.minusDays(364)
         val recent30 = relevant.filter { it.localDate >= recent30Start && !pausedOn(it.localDate, activePauses) }
         val recent90 = relevant.filter { it.localDate >= recent90Start && !pausedOn(it.localDate, activePauses) }
+        val recent365 = relevant.filter { it.localDate >= recent365Start && !pausedOn(it.localDate, activePauses) }
+        val allTime = relevant.filter { !pausedOn(it.localDate, activePauses) }
         val drinkingDates90 = recent90.map { it.localDate }.toSortedSet()
         val drinkingDays30 = recent30.map { it.localDate }.toSet().size
+        val drinkingDays90 = drinkingDates90.size
+        val drinkingDays365 = recent365.map { it.localDate }.toSet().size
+        val drinkingDaysAllTime = allTime.map { it.localDate }.toSet().size
+        val standardDrinks365 = recent365.filter { it.standardDrinks != null }.sumOf { it.standardDrinks ?: 0 }
+        val standardDrinksAllTime = allTime.filter { it.standardDrinks != null }.sumOf { it.standardDrinks ?: 0 }
         val quantityDays30 = drinkingDays30
         val knownQuantities30 = recent30.filter { it.standardDrinks != null }
         val intervals = drinkingDates90.zipWithNext().mapNotNull { (from, to) ->
@@ -150,7 +164,7 @@ object AlcoholStatsCalculator {
             currentSoberDays = currentAndBest.first,
             bestSoberDays = currentAndBest.second,
             drinkingDays30 = drinkingDays30,
-            drinkingDays90 = drinkingDates90.size,
+            drinkingDays90 = drinkingDays90,
             standardDrinks30 = knownQuantities30.sumOf { it.standardDrinks ?: 0 },
             knownQuantityDays30 = knownQuantities30.map { it.localDate }.toSet().size,
             quantityDays30 = quantityDays30,
@@ -170,6 +184,10 @@ object AlcoholStatsCalculator {
             todayHasConsumption = todayHasConsumption,
             isPaused = isPaused,
             days = days,
+            drinkingDays365 = drinkingDays365,
+            drinkingDaysAllTime = drinkingDaysAllTime,
+            standardDrinks365 = standardDrinks365,
+            standardDrinksAllTime = standardDrinksAllTime,
         )
     }
 

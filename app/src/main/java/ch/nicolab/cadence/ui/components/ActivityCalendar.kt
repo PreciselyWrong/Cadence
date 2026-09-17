@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import ch.nicolab.cadence.R
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Size
@@ -34,6 +36,9 @@ import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 enum class ActivityCalendarTone {
     SUCCESS,
@@ -49,6 +54,50 @@ data class ActivityCalendarCell(
     val detailText: String? = null,
 )
 
+enum class CalendarPeriod(val days: Int?, val labelRes: Int) {
+    DAYS_30(30, R.string.stats_period_30d),
+    DAYS_90(90, R.string.stats_period_90d),
+    YEAR_1(365, R.string.stats_period_1y),
+    ALL_TIME(null, R.string.stats_period_all),
+}
+
+@Composable
+fun CalendarPeriodSelector(
+    selected: CalendarPeriod,
+    onSelect: (CalendarPeriod) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val palette = cadence
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(Radius.Pill)
+            .background(palette.sunken)
+            .padding(Space.xs),
+        horizontalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
+        CalendarPeriod.entries.forEach { period ->
+            val isSelected = period == selected
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(Radius.Pill)
+                    .background(if (isSelected) palette.surface else Color.Transparent)
+                    .clickable { onSelect(period) }
+                    .padding(vertical = Space.sm),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = stringResource(period.labelRes),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (isSelected) palette.accent else palette.inkMuted,
+                    maxLines = 1,
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun ActivityCalendar(
     cells: List<ActivityCalendarCell>,
@@ -62,12 +111,8 @@ fun ActivityCalendar(
     val palette = cadence
     var selectedDateString by rememberSaveable { mutableStateOf<String?>(null) }
     val selectedCell = cells.firstOrNull { it.date.toString() == selectedDateString }
-    val leadingBlanks = remember(cells) {
-        val firstDay = cells.first().date.dayOfWeek.value
-        firstDay - 1
-    }
-    val gridItems = remember(cells, leadingBlanks) {
-        List<ActivityCalendarCell?>(leadingBlanks) { null } + cells
+    val months = remember(cells) {
+        cells.groupBy { YearMonth.from(it.date) }
     }
 
     Column(modifier.testTag("activity_calendar")) {
@@ -81,74 +126,91 @@ fun ActivityCalendar(
             Spacer(Modifier.height(Space.md))
         }
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-            DayOfWeek.entries.forEach { day ->
+        months.forEach { (yearMonth, monthCells) ->
+            if (months.size > 1) {
                 Text(
-                    text = stringResource(HabitLabels.dayShort(day)),
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = palette.inkMuted,
-                    textAlign = TextAlign.Center,
+                    text = formatMonthTitle(yearMonth),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = palette.ink,
                 )
+                Spacer(Modifier.height(Space.xs))
             }
-        }
 
-        gridItems.chunked(7).forEach { week ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-                repeat(7) { index ->
-                    val cell = week.getOrNull(index)
-                    if (cell == null) {
-                        Spacer(Modifier.weight(1f).height(Size.touch))
-                    } else {
-                        val isSelected = cell.date.toString() == selectedDateString
-                        val isToday = cell.date == today
-                        val color = when (cell.tone) {
-                            ActivityCalendarTone.SUCCESS -> palette.success
-                            ActivityCalendarTone.SUCCESS_SOFT -> palette.successSoft
-                            ActivityCalendarTone.DANGER -> palette.danger
-                            ActivityCalendarTone.NEUTRAL -> palette.sunken
-                        }
-                        val textColor = when (cell.tone) {
-                            ActivityCalendarTone.SUCCESS, ActivityCalendarTone.DANGER -> onColorOf(color)
-                            else -> palette.ink
-                        }
+                DayOfWeek.entries.forEach { day ->
+                    Text(
+                        text = stringResource(HabitLabels.dayShort(day)),
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = palette.inkMuted,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
 
-                        val containerModifier = Modifier
-                            .weight(1f)
-                            .height(Size.touch)
-                            .clip(Radius.Control)
-                            .then(
-                                if (isSelected) Modifier.background(palette.accentSoft)
-                                else if (isToday) Modifier.background(palette.sunken)
-                                else Modifier
-                            )
-                            .clickable {
-                                selectedDateString = cell.date.toString()
-                                onCellClick?.invoke(cell)
+            val leadingBlanks = monthCells.first().date.dayOfWeek.value - 1
+            val gridItems = List<ActivityCalendarCell?>(leadingBlanks) { null } + monthCells
+
+            gridItems.chunked(7).forEach { week ->
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
+                    repeat(7) { index ->
+                        val cell = week.getOrNull(index)
+                        if (cell == null) {
+                            Spacer(Modifier.weight(1f).height(Size.touch))
+                        } else {
+                            val isSelected = cell.date.toString() == selectedDateString
+                            val isToday = cell.date == today
+                            val color = when (cell.tone) {
+                                ActivityCalendarTone.SUCCESS -> palette.success
+                                ActivityCalendarTone.SUCCESS_SOFT -> palette.successSoft
+                                ActivityCalendarTone.DANGER -> palette.danger
+                                ActivityCalendarTone.NEUTRAL -> palette.sunken
                             }
-                            .semantics { contentDescription = cell.contentDescription }
-                            .testTag("activity_calendar_cell_${cell.date}")
+                            val textColor = when (cell.tone) {
+                                ActivityCalendarTone.SUCCESS, ActivityCalendarTone.DANGER -> onColorOf(color)
+                                else -> palette.ink
+                            }
 
-                        Box(
-                            modifier = containerModifier,
-                            contentAlignment = Alignment.Center,
-                        ) {
+                            val containerModifier = Modifier
+                                .weight(1f)
+                                .height(Size.touch)
+                                .clip(Radius.Control)
+                                .then(
+                                    if (isSelected) Modifier.background(palette.accentSoft)
+                                    else if (isToday) Modifier.background(palette.sunken)
+                                    else Modifier
+                                )
+                                .clickable {
+                                    selectedDateString = cell.date.toString()
+                                    onCellClick?.invoke(cell)
+                                }
+                                .semantics { contentDescription = cell.contentDescription }
+                                .testTag("activity_calendar_cell_${cell.date}")
+
                             Box(
-                                modifier = Modifier
-                                    .size(Size.calendarMark)
-                                    .clip(Radius.Chip)
-                                    .background(color),
+                                modifier = containerModifier,
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text(
-                                    text = cell.date.dayOfMonth.toString(),
-                                    color = textColor,
-                                    style = MaterialTheme.typography.bodySmall,
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(Size.calendarMark)
+                                        .clip(Radius.Chip)
+                                        .background(color),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = cell.date.dayOfMonth.toString(),
+                                        color = textColor,
+                                        style = MaterialTheme.typography.bodySmall,
+                                    )
+                                }
                             }
                         }
                     }
                 }
+            }
+            if (months.size > 1) {
+                Spacer(Modifier.height(Space.md))
             }
         }
 
@@ -162,4 +224,10 @@ fun ActivityCalendar(
             )
         }
     }
+}
+
+private fun formatMonthTitle(yearMonth: YearMonth): String {
+    val name = yearMonth.month.getDisplayName(TextStyle.FULL, Locale.FRENCH)
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.FRENCH) else it.toString() }
+    return "$name ${yearMonth.year}"
 }

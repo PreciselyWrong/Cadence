@@ -6,6 +6,7 @@
 .DS_Store
 /captures
 /.codex-remote-attachments/
+/.codex-ux/
 .cxx
 local.properties
 local.properties

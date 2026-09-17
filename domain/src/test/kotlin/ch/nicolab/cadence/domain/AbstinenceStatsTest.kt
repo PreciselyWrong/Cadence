@@ -15,7 +15,17 @@ class AbstinenceStatsTest {
         AbstinenceStatsCalculator.compute("h", today.minusDays(days), today, entries, pauses)
 
     @Test fun `only completed civil days count`() {
-        assertEquals(AbstinenceStats(40, 40, 30, 30, 0, 0, false, false, null, 40, 40, 0, 0), stats())
+        val result = stats()
+        assertEquals(40L, result.currentDays)
+        assertEquals(40L, result.bestDays)
+        assertEquals(30, result.observedDays30)
+        assertEquals(30, result.clearDays30)
+        assertEquals(40, result.observedDays90)
+        assertEquals(40, result.clearDays90)
+        assertEquals(40, result.observedDays365)
+        assertEquals(40, result.clearDays365)
+        assertEquals(40, result.observedDaysAllTime)
+        assertEquals(40, result.clearDaysAllTime)
         assertEquals(0L, stats(0).currentDays)
         assertEquals(0, stats(-2).observedDays30)
     }
@@ -29,7 +39,28 @@ class AbstinenceStatsTest {
         assertEquals(2, result.occurrences30)
         assertEquals(3, result.occurrences90)
         assertEquals(2, result.occurrenceDays90)
+        assertEquals(3, result.occurrences365)
+        assertEquals(2, result.occurrenceDays365)
+        assertEquals(3, result.occurrencesAllTime)
+        assertEquals(2, result.occurrenceDaysAllTime)
         assertEquals(40L, stats().currentDays)
+    }
+    @Test fun `calendar days contain statuses for each date up to 365 days`() {
+        val entries = listOf(entry(5), entry(0))
+        val pauses = listOf(HabitPause(today.minusDays(12), today.minusDays(10)))
+        val result = stats(days = 20, entries = entries, pauses = pauses)
+        assertTrue(result.days.size >= 365)
+        val dayMinus25 = result.days.first { it.date == today.minusDays(25) }
+        assertEquals(AbstinenceStatisticsDayStatus.UNOBSERVED, dayMinus25.status)
+        val dayMinus11 = result.days.first { it.date == today.minusDays(11) }
+        assertEquals(AbstinenceStatisticsDayStatus.PAUSED, dayMinus11.status)
+        val dayMinus5 = result.days.first { it.date == today.minusDays(5) }
+        assertEquals(AbstinenceStatisticsDayStatus.OCCURRENCE, dayMinus5.status)
+        assertEquals(1, dayMinus5.occurrences)
+        val dayMinus2 = result.days.first { it.date == today.minusDays(2) }
+        assertEquals(AbstinenceStatisticsDayStatus.CLEAR, dayMinus2.status)
+        val dayToday = result.days.first { it.date == today }
+        assertEquals(AbstinenceStatisticsDayStatus.TODAY_OCCURRENCE, dayToday.status)
     }
     @Test fun `activity frequency uses distinct occurrence days and completed gaps`() {
         val result = stats(entries = listOf(entry(20), entry(10), entry(10, "second"), entry(3)))

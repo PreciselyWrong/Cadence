@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
@@ -181,3 +182,53 @@ fun NavigationSpacer() = Spacer(Modifier.height(Size.navBar + Space.xxl).navigat
 
 @Composable
 internal fun HorizontalGap(width: androidx.compose.ui.unit.Dp) = Spacer(Modifier.width(width))
+
+/**
+ * Tuile de métrique statistique structurée avec icône thématique et couleur d'accent.
+ */
+@Composable
+fun MetricCard(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    iconTint: Color = cadence.inkMuted,
+    valueColor: Color = cadence.ink,
+) {
+    val palette = cadence
+    Column(
+        modifier = modifier
+            .clip(Radius.Chip)
+            .background(palette.surface)
+            .padding(horizontal = Space.md, vertical = Space.sm),
+        verticalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge,
+                color = valueColor,
+                maxLines = 1,
+            )
+            icon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(Size.iconSm),
+                )
+            }
+        }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = palette.inkMuted,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}

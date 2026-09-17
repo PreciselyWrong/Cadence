@@ -35,9 +35,11 @@ class AlcoholStatsTest {
     @Test fun `calendar covers the last ninety days and distinguishes today`() {
         val result = stats(startsOn = today.minusDays(2), consumptions = listOf(consumption(1, 2), consumption(0)))
 
-        assertEquals(90, result.days.size)
+        assertTrue(result.days.size >= 365)
         assertEquals(3, result.observedDays30)
         assertEquals(3, result.observedDays90)
+        assertEquals(3, result.observedDays365)
+        assertEquals(3, result.observedDaysAllTime)
         assertEquals(AlcoholStatisticsDayStatus.UNOBSERVED, result.days.first().status)
         assertEquals(AlcoholStatisticsDayStatus.DRINKING, result.days[result.days.lastIndex - 1].status)
         assertEquals(2, result.days[result.days.lastIndex - 1].standardDrinks)

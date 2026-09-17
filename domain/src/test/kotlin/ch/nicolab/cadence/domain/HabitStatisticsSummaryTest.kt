@@ -42,6 +42,12 @@ class HabitStatisticsSummaryTest {
         assertEquals(HabitStatisticsDayStatus.IDEAL, summary.days[28].status)
     }
 
+    @Test fun `calendar days cover 365 days up to today`() {
+        val summary = HabitStatisticsSummary.compute({ habit() }, today, listOf(entry(1, 5), entry(2, 10), entry(0, 10)), emptyList())
+        assertTrue(summary.calendarDays.size >= 365)
+        assertEquals(today, summary.calendarDays.last().date)
+    }
+
     @Test fun `closed limits reward staying below and historical goal is preserved`() {
         val changed = today.minusDays(10)
         val summary = HabitStatisticsSummary.compute({ day ->

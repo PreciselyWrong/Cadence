@@ -1,3 +1,10 @@
+## [1.0.19] — 17 septembre 2026
+
+### Améliorations
+- Le détail d'une habitude s'ouvre désormais en grand pour lire vos chiffres sans être à l'étroit.
+- Vos séries, moyennes et records ressortent plus clairement avec des cartes colorées et des repères visuels.
+- Les calendriers d'activité permettent de remonter d'un mois à l'année entière, ou depuis le premier jour.
+
 ## [1.0.18] — 17 septembre 2026
 
 ### Nouveautés
