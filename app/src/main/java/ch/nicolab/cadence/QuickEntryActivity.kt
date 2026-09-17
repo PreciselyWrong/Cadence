@@ -99,7 +99,11 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
     val correcting = habits.asSequence().flatMap { it.recentEntries.asSequence() }.firstOrNull { it.id == correctingId }
     val selected = habits.firstOrNull { it.stored.id == selectedId && it.stored.goal.isAbstinence }
     val abstinences = habits.filter { !it.stored.archived && it.stored.goal.isAbstinence && (habitId == null || it.stored.id == habitId) }
-    val pending = habits.filter { !it.stored.goal.isAbstinence && it.evaluation.needsAttentionNow && (habitId == null || it.stored.id == habitId) }
+    val pending = habits.filter {
+        !it.stored.goal.isAbstinence &&
+            (it.evaluation.needsAttentionNow || (it.stored.goal.isTracker && it.evaluation.isPlannedForDate && !it.evaluation.isPaused)) &&
+            (habitId == null || it.stored.id == habitId)
+    }
     if (selected != null) {
         Box(Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)))
         if (selected.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) AlcoholDetailSheet(
@@ -230,12 +234,14 @@ private fun QuickHabit(
     val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            HabitFacet(icon.imageVector, icon.labelFr, habit.evaluation.progressMinor.toFloat() / target, tint, tint.copy(alpha = 0.20f), size = Size.badge)
+            HabitFacet(icon.imageVector, icon.labelFr, if (goal.isTracker) 0f else habit.evaluation.progressMinor.toFloat() / target, tint, tint.copy(alpha = 0.20f), size = Size.badge)
             Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
                 Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
-                    HabitFormatter.formatProgress(habit.evaluation.progressMinor, habit.evaluation.targetMinor, goal.goalType, goal.unit),
+                    if (goal.isTracker) stringResource(R.string.tracker_today_total,
+                        HabitFormatter.formatWithUnit(habit.evaluation.progressMinor, goal.goalType, goal.unit))
+                    else HabitFormatter.formatProgress(habit.evaluation.progressMinor, habit.evaluation.targetMinor, goal.goalType, goal.unit),
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.inkFaint,
                 )

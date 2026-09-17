@@ -188,7 +188,7 @@ class HabitEditorLogicTest {
             goalType = GoalType.BINARY,
             target = "999",
             unit = MeasurementUnit.HOURS,
-            limited = true,
+            direction = GoalDirection.AT_MOST,
             timerEnabled = true,
             minimum = "50",
             progressive = true,
@@ -215,7 +215,7 @@ class HabitEditorLogicTest {
             goalType = GoalType.COUNT,
             unit = MeasurementUnit.GLASS,
             target = "2",
-            limited = true,
+            direction = GoalDirection.AT_MOST,
             minimum = "1",
             frequencyTarget = "2",
         )
@@ -226,6 +226,28 @@ class HabitEditorLogicTest {
         assertNull(success.habit.goal.minimumMinor)
         assertNull(success.habit.goal.frequencyTarget)
         assertEquals(2L, success.habit.goal.targetMinor)
+    }
+
+    @Test
+    fun `targetless activity keeps measurement and strips goal settings`() {
+        val result = validateAndBuildHabit(HabitDraft(
+            id = "tracker", name = "Course", goalType = GoalType.DURATION,
+            unit = MeasurementUnit.MINUTES, direction = GoalDirection.TRACK_ONLY,
+            target = "", minimum = "5", frequencyTarget = "3", progressive = true,
+            progressionStep = "2", scheduleMode = ScheduleMode.INTERVAL_DAYS,
+            timerEnabled = true, reminderTimes = "08:00", conditionalReminders = true,
+        ), existing = null)
+        assertTrue(result is HabitValidationResult.Success)
+        val success = result as HabitValidationResult.Success
+        assertEquals(GoalDirection.TRACK_ONLY, success.habit.goal.direction)
+        assertEquals(0L, success.habit.goal.targetMinor)
+        assertEquals(PeriodType.DAY, success.habit.goal.period)
+        assertEquals(ScheduleMode.EVERY_DAY, success.habit.schedule.mode)
+        assertNull(success.habit.goal.minimumMinor)
+        assertNull(success.habit.goal.frequencyTarget)
+        assertNull(success.habit.goal.progression)
+        assertTrue(success.habit.timerEnabled)
+        assertFalse(success.conditionalReminders)
     }
 
     @Test

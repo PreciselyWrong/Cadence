@@ -82,10 +82,11 @@ enum class ScheduleMode {
     INTERVAL_DAYS,
 }
 
-/** Sens d'un objectif : atteindre une cible, ou rester sous un maximum. */
+/** Sens d'un suivi : atteindre une cible, rester sous un maximum ou seulement noter l'activité. */
 enum class GoalDirection {
     AT_LEAST,
     AT_MOST,
+    TRACK_ONLY,
 }
 
 /** Où se situe une habitude à limiter par rapport à son maximum. */
@@ -101,6 +102,7 @@ enum class LimitStatus {
  *
  * En [GoalDirection.AT_MOST], `targetMinor` devient un maximum : la période réussit tant
  * que la quantité y reste inférieure ou égale.
+ * En [GoalDirection.TRACK_ONLY], la cible est nulle et les saisies ne valident aucune période.
  */
 data class HabitGoal(
     val targetMinor: Long,
@@ -114,8 +116,8 @@ data class HabitGoal(
     val progression: GoalProgression? = null,
 ) {
     init {
-        require(targetMinor > 0 || (targetMinor == 0L && direction == GoalDirection.AT_MOST)) { "Only a limit permits a zero target" }
-        require(targetMinor != 0L || (progression == null && frequencyTarget == null)) { "Abstinence carries no progression or frequency" }
+        require(targetMinor > 0 || (targetMinor == 0L && direction != GoalDirection.AT_LEAST)) { "Only a limit or tracker permits a zero target" }
+        require(targetMinor != 0L || (progression == null && frequencyTarget == null)) { "A zero target carries no progression or frequency" }
         require(frequencyTarget == null || frequencyTarget > 0) { "Frequency target must be positive" }
         minimumMinor?.let {
             require(it > 0) { "Minimum must be positive" }
@@ -126,10 +128,15 @@ data class HabitGoal(
             require(minimumMinor == null) { "A limit carries no minimum" }
             require(goalType != GoalType.BINARY) { "A limit needs a countable goal" }
         }
+        if (direction == GoalDirection.TRACK_ONLY) {
+            require(targetMinor == 0L && period == PeriodType.DAY) { "A tracker has no target and records daily activity" }
+            require(goalType != GoalType.BINARY && minimumMinor == null) { "A tracker needs a measurable entry, not a goal" }
+        }
     }
 
     val isLimit: Boolean get() = direction == GoalDirection.AT_MOST
     val isAbstinence: Boolean get() = isLimit && targetMinor == 0L
+    val isTracker: Boolean get() = direction == GoalDirection.TRACK_ONLY
 
     /** Cible en vigueur à une date, progression comprise. */
     fun targetAt(date: LocalDate): Long = progression?.targetAt(targetMinor, date) ?: targetMinor

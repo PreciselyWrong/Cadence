@@ -88,6 +88,10 @@ internal fun TodayScreen(
     val sections = TodayPresentation.sections(active.map { it.evaluation }, groups, time)
     val now = if (selectedGroupId == null) sections.now else active.map { it.evaluation }
         .filter { it in sections.now || it in sections.later || it in sections.earlier }
+    val goalNow = now.filterNot { it.habit.goal.isTracker }
+    val goalLater = sections.later.filterNot { it.habit.goal.isTracker }
+    val goalEarlier = sections.earlier.filterNot { it.habit.goal.isTracker }
+    val trackers = active.filter { it.stored.goal.isTracker && it.evaluation.isPlannedForDate && !it.evaluation.isPaused }
     val abstinences = active.filter { it.stored.goal.isAbstinence }
     val toComplete = remember(active, timers) { ToCompleteItem.resolve(active, timers) }
 
@@ -123,25 +127,25 @@ internal fun TodayScreen(
                     if (selectedGroupId == null) PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
                 }
             }
-            toComplete.isEmpty() && now.isEmpty() && sections.later.isEmpty() && sections.earlier.isEmpty() && abstinences.isEmpty() -> item {
+            toComplete.isEmpty() && goalNow.isEmpty() && goalLater.isEmpty() && goalEarlier.isEmpty() && trackers.isEmpty() && abstinences.isEmpty() -> item {
                 EmptyState(Icons.Outlined.Check, stringResource(R.string.empty_today_done_title), stringResource(R.string.empty_today_done_message))
             }
         }
-        if (now.isNotEmpty() && selectedGroupId == null && (sections.later.isNotEmpty() || sections.earlier.isNotEmpty())) {
+        if (goalNow.isNotEmpty() && selectedGroupId == null && (goalLater.isNotEmpty() || goalEarlier.isNotEmpty())) {
             item { SectionLabel(stringResource(R.string.today_now)) }
         }
-        items(now, key = { it.habit.id }) { evaluation ->
+        items(goalNow, key = { it.habit.id }) { evaluation ->
             byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
         }
-        if (selectedGroupId == null && sections.later.isNotEmpty()) {
-            item { FoldHeading(stringResource(R.string.today_later_count, sections.later.size), laterOpen) { laterOpen = !laterOpen } }
-            if (laterOpen) items(sections.later, key = { it.habit.id }) { evaluation ->
+        if (selectedGroupId == null && goalLater.isNotEmpty()) {
+            item { FoldHeading(stringResource(R.string.today_later_count, goalLater.size), laterOpen) { laterOpen = !laterOpen } }
+            if (laterOpen) items(goalLater, key = { it.habit.id }) { evaluation ->
                 byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
             }
         }
-        if (selectedGroupId == null && sections.earlier.isNotEmpty()) {
-            item { FoldHeading(stringResource(R.string.today_earlier_count, sections.earlier.size), earlierOpen) { earlierOpen = !earlierOpen } }
-            if (earlierOpen) items(sections.earlier, key = { it.habit.id }) { evaluation ->
+        if (selectedGroupId == null && goalEarlier.isNotEmpty()) {
+            item { FoldHeading(stringResource(R.string.today_earlier_count, goalEarlier.size), earlierOpen) { earlierOpen = !earlierOpen } }
+            if (earlierOpen) items(goalEarlier, key = { it.habit.id }) { evaluation ->
                 byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
             }
         }
@@ -149,6 +153,12 @@ internal fun TodayScreen(
             item { FoldHeading(stringResource(R.string.today_completed_count, sections.completed.size), completedOpen) { completedOpen = !completedOpen } }
             if (completedOpen) items(sections.completed, key = { it.habit.id }) { evaluation ->
                 byId[evaluation.habit.id]?.let { item -> HabitRow(item, done = true, onClick = { quick(item) }, onLongClick = { options(item) }) }
+            }
+        }
+        if (trackers.isNotEmpty()) {
+            item { SectionLabel(stringResource(R.string.today_activities_section)) }
+            items(trackers, key = { it.stored.id }) { item ->
+                TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
             }
         }
         if (abstinences.isNotEmpty()) {
@@ -227,6 +237,7 @@ internal fun conciseHabitStatus(item: HabitCardState): String {
         item.stored.archived -> stringResource(R.string.status_archived)
         !item.stored.active || evaluation.isPaused -> stringResource(R.string.status_paused)
         goal.isAbstinence -> abstinenceStatus(item)
+        goal.isTracker -> stringResource(R.string.tracker_today_total, quantityWithUnit(evaluation.progressMinor, item))
         goal.isLimit -> stringResource(
             if (evaluation.progressMinor > evaluation.targetMinor) R.string.today_limit_exceeded else R.string.today_limit,
             quantityWithUnit(evaluation.progressMinor, item), quantityWithUnit(evaluation.targetMinor, item),

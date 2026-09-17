@@ -45,7 +45,7 @@ internal data class HabitDraft(
     val groupId: String = HabitGroup.ALL_DAY_ID,
     val minimum: String = "",
     val timerEnabled: Boolean = false,
-    val limited: Boolean = false,
+    val direction: GoalDirection = GoalDirection.AT_LEAST,
     val progressive: Boolean = false,
     val progressionStep: String = "",
     val progressionMonthly: Boolean = false,
@@ -64,8 +64,10 @@ internal sealed interface HabitValidationResult {
     data class Error(val messageResId: Int) : HabitValidationResult
 }
 
-internal fun initialHabitDraft(existing: HabitCardState?): HabitDraft {
-    val stored = existing?.stored ?: return HabitDraft()
+internal fun initialHabitDraft(existing: HabitCardState?, initialDirection: GoalDirection = GoalDirection.AT_LEAST): HabitDraft {
+    val stored = existing?.stored ?: return if (initialDirection == GoalDirection.TRACK_ONLY)
+        HabitDraft(goalType = GoalType.COUNT, direction = initialDirection, target = "", unit = MeasurementUnit.COUNT)
+    else HabitDraft()
     val goal = stored.goal
     val custom = goal.unit?.dimension == UnitDimension.CUSTOM
     val unit = goal.unit ?: MeasurementUnit.COUNT
@@ -87,7 +89,7 @@ internal fun initialHabitDraft(existing: HabitCardState?): HabitDraft {
         conditionalReminders = existing.reminders.all { it.conditional },
         frequencyTarget = goal.frequencyTarget?.toString().orEmpty(), intervalDays = stored.schedule.intervalDays.toString(),
         groupId = stored.groupId, minimum = value(goal.minimumMinor), timerEnabled = stored.timerEnabled,
-        limited = goal.isLimit, progressive = goal.progression != null,
+        direction = goal.direction, progressive = goal.progression != null,
         progressionStep = value(goal.progression?.step),
         progressionMonthly = goal.progression?.cadence == ProgressionCadence.MONTHLY,
         progressionCap = value(goal.progression?.capMinor),
@@ -120,13 +122,15 @@ private fun canonicalUnit(unit: MeasurementUnit): MeasurementUnit = when (unit.d
 internal fun validateAndBuildHabit(draft: HabitDraft, existing: HabitCardState?): HabitValidationResult {
     if (draft.name.isBlank()) return error(R.string.form_error_required_name)
     val base = existing?.stored
-    if (draft.scheduleMode == ScheduleMode.SELECTED_DAYS && draft.activeDays.isEmpty()) return error(R.string.form_error_no_day)
+    val tracker = draft.direction == GoalDirection.TRACK_ONLY
+    if (!tracker && draft.scheduleMode == ScheduleMode.SELECTED_DAYS && draft.activeDays.isEmpty()) return error(R.string.form_error_no_day)
     val interval = draft.intervalDays.trim().toIntOrNull()
-    if (draft.scheduleMode == ScheduleMode.INTERVAL_DAYS && (interval == null || interval < 2)) return error(R.string.form_error_interval_days)
+    if (!tracker && draft.scheduleMode == ScheduleMode.INTERVAL_DAYS && (interval == null || interval < 2)) return error(R.string.form_error_interval_days)
     val reminders = draft.reminderTimes.split(',', ' ').map(String::trim).filter(String::isNotBlank)
     if (reminders.any { runCatching { LocalTime.parse(it) }.isFailure }) return error(R.string.form_error_time_format)
 
     val binary = draft.goalType == GoalType.BINARY
+    if (tracker && binary) return error(R.string.form_error_tracker_type)
     val unit = when {
         binary -> null
         !draft.customUnit -> draft.unit
@@ -138,16 +142,16 @@ internal fun validateAndBuildHabit(draft: HabitDraft, existing: HabitCardState?)
     }
     val scale = unit?.scaleToCanonical ?: 1L
     val preservedBinaryGoal = base?.goal?.takeIf { binary && it.goalType == GoalType.BINARY }
-    val target = if (binary) preservedBinaryGoal?.targetMinor ?: 1L
+    val target = if (tracker) 0L else if (binary) preservedBinaryGoal?.targetMinor ?: 1L
     else decimalMinor(draft.target, scale) ?: return error(R.string.form_error_positive_target)
-    val limit = !binary && draft.limited
-    val minimum = if (preservedBinaryGoal != null) preservedBinaryGoal.minimumMinor else if (!binary && !limit && draft.minimum.isNotBlank()) {
+    val limit = !binary && draft.direction == GoalDirection.AT_MOST
+    val minimum = if (tracker) null else if (preservedBinaryGoal != null) preservedBinaryGoal.minimumMinor else if (!binary && !limit && draft.minimum.isNotBlank()) {
         decimalMinor(draft.minimum, scale)?.takeIf { it <= target } ?: return error(R.string.form_error_minimum)
     } else null
-    val frequency = if (!limit && draft.frequencyTarget.isNotBlank()) {
+    val frequency = if (!tracker && !limit && draft.frequencyTarget.isNotBlank()) {
         draft.frequencyTarget.trim().toIntOrNull()?.takeIf { it > 0 } ?: return error(R.string.form_error_positive_frequency)
     } else null
-    val progression = if (preservedBinaryGoal != null) {
+    val progression = if (tracker) null else if (preservedBinaryGoal != null) {
         if (draft.progressive) preservedBinaryGoal.progression else null
     } else if (!binary && draft.progressive) {
         val step = decimalMinor(draft.progressionStep, scale) ?: return error(R.string.form_error_progression_step)
@@ -158,10 +162,10 @@ internal fun validateAndBuildHabit(draft: HabitDraft, existing: HabitCardState?)
             base?.goal?.progression?.startsOn ?: LocalDate.now())
     } else null
     val quick = if (binary) existing?.quickValues?.takeIf(List<Long>::isNotEmpty) ?: listOf(1L)
-    else parseQuickValues(draft.quickValues, scale, target) ?: return error(R.string.form_error_quick_values)
-    val goal = HabitGoal(target, draft.period, draft.goalType, unit, frequency, minimum,
-        if (limit) GoalDirection.AT_MOST else GoalDirection.AT_LEAST, progression)
-    val schedule = HabitSchedule(draft.scheduleMode, draft.activeDays, draft.firstDay, interval ?: 2)
+    else parseQuickValues(draft.quickValues, scale, if (tracker) scale else target) ?: return error(R.string.form_error_quick_values)
+    val goal = HabitGoal(target, if (tracker) PeriodType.DAY else draft.period, draft.goalType, unit, frequency, minimum,
+        if (binary) GoalDirection.AT_LEAST else draft.direction, progression)
+    val schedule = HabitSchedule(if (tracker) ScheduleMode.EVERY_DAY else draft.scheduleMode, draft.activeDays, draft.firstDay, interval ?: 2)
     val habit = base?.copy(
         name = draft.name.trim(), description = draft.description.trim().ifBlank { null }, iconId = draft.iconId,
         colorArgb = draft.colorArgb, groupId = draft.groupId, timerEnabled = draft.timerEnabled && draft.goalType == GoalType.DURATION,
@@ -171,7 +175,7 @@ internal fun validateAndBuildHabit(draft: HabitDraft, existing: HabitCardState?)
         startsOn = LocalDate.now(), groupId = draft.groupId, timerEnabled = draft.timerEnabled && draft.goalType == GoalType.DURATION,
         goal = goal, schedule = schedule,
     )
-    return HabitValidationResult.Success(habit, quick, reminders, draft.conditionalReminders, base == null)
+    return HabitValidationResult.Success(habit, quick, reminders, !tracker && draft.conditionalReminders, base == null)
 }
 
 private fun decimalMinor(raw: String, scale: Long): Long? = runCatching {

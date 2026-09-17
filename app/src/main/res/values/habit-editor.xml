@@ -2,6 +2,14 @@
 <resources>
     <string name="habit_editor_title_new">Nouvelle habitude</string>
     <string name="habit_editor_title_edit">Modifier l’habitude</string>
+    <string name="editor_tracker_title_new">Nouvelle activité</string>
+    <string name="editor_tracker_title_edit">Modifier l’activité</string>
+    <string name="editor_tracking_mode">Type de suivi</string>
+    <string name="editor_mode_goal">Objectif</string>
+    <string name="editor_mode_limit">Limite</string>
+    <string name="editor_mode_tracker">Activité libre</string>
+    <string name="editor_summary_tracker">Notez cette activité quand vous le souhaitez, sans objectif à atteindre.</string>
+    <string name="form_error_tracker_type">Choisissez un nombre, une quantité ou une durée pour cette activité.</string>
     <string name="habit_editor_section_customize">Personnaliser</string>
     <string name="habit_editor_section_refine">Affiner</string>
     <string name="habit_editor_section_organize">Organisation et rappels</string>

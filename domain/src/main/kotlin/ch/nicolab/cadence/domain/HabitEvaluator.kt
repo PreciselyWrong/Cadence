@@ -30,12 +30,12 @@ data class HabitEvaluation(
 
 /** Un jour où l'habitude est attendue : ni archivée, ni hors planning, ni avant son début. */
 fun isPlannedOn(habit: HabitDefinition, date: LocalDate): Boolean =
-    habit.active && !habit.archived && date >= habit.startsOn && when (habit.schedule.mode) {
+    habit.active && !habit.archived && date >= habit.startsOn && (habit.goal.isTracker || when (habit.schedule.mode) {
         ScheduleMode.EVERY_DAY -> true
         ScheduleMode.SELECTED_DAYS -> date.dayOfWeek in habit.schedule.activeDays
         ScheduleMode.FLEXIBLE_PERIOD -> true
         ScheduleMode.INTERVAL_DAYS -> ChronoUnit.DAYS.between(habit.startsOn, date) % habit.schedule.intervalDays == 0L
-    }
+    })
 
 class HabitEvaluator {
     fun evaluate(
@@ -63,14 +63,19 @@ class HabitEvaluator {
             else -> LimitStatus.EXCEEDED
         }
 
-        val completedQuantity = progress >= target
-        val reachedMinimum = progress >= (habit.goal.minimumMinor ?: target)
+        val tracker = habit.goal.isTracker
+        val completedQuantity = !tracker && progress >= target
+        val reachedMinimum = !tracker && progress >= (habit.goal.minimumMinor ?: target)
         val completedFrequency = habit.goal.frequencyTarget == null || sessionCount >= habit.goal.frequencyTarget
 
         // Sous un plafond, la réussite est de ne pas le dépasser; la fréquence ne s'applique pas.
         val validatesPeriod =
-            if (limit) limitStatus != LimitStatus.EXCEEDED else reachedMinimum && completedFrequency
-        val isCompleted = if (limit) validatesPeriod else completedQuantity && completedFrequency
+            if (tracker) false else if (limit) limitStatus != LimitStatus.EXCEEDED else reachedMinimum && completedFrequency
+        val isCompleted = when {
+            tracker -> false
+            limit -> validatesPeriod
+            else -> completedQuantity && completedFrequency
+        }
         val attainment = when {
             limit -> if (validatesPeriod) GoalAttainment.IDEAL else GoalAttainment.TODO
             isCompleted -> GoalAttainment.IDEAL
@@ -84,7 +89,7 @@ class HabitEvaluator {
 
         // Une habitude à limiter reste offerte à la saisie tant qu'il reste de la place :
         // c'est ce qui permet de noter un café, alors qu'il n'y a rien à « accomplir ».
-        val needsAttentionNow = isPlannedForDate && !paused &&
+        val needsAttentionNow = !tracker && isPlannedForDate && !paused &&
             if (limit) habit.goal.isAbstinence || limitStatus == LimitStatus.UNDER else !isCompleted
 
         return HabitEvaluation(
@@ -105,7 +110,7 @@ class HabitEvaluator {
             needsAttentionNow = needsAttentionNow,
             requiresAction = needsAttentionNow,
             // Une période où le minimum est atteint n'est pas un échec, même sans l'idéal.
-            countsAsFailure = isPlannedForDate && !paused && !validatesPeriod,
+            countsAsFailure = !tracker && isPlannedForDate && !paused && !validatesPeriod,
         )
     }
 }

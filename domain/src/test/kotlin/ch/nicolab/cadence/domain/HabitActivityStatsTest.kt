@@ -32,7 +32,12 @@ class HabitActivityStatsTest {
         assertEquals(3, result.activeDays30)
         assertEquals(10L, result.totalMinor30)
         assertEquals(5L, result.peakDayMinor30)
-        assertEquals(3L, result.averagePerActiveDayMinor30)
+        assertEquals(10.0 / 3, result.averagePerActiveDayMinor30!!, 0.000001)
+        assertEquals(5, result.entries90)
+        assertEquals(4, result.activeDays90)
+        assertEquals(20L, result.totalMinor90)
+        assertEquals(30, result.calendarDays30)
+        assertEquals(61, result.calendarDays90)
     }
 
     @Test fun `start date and empty history limit activity window`() {
@@ -47,5 +52,7 @@ class HabitActivityStatsTest {
         assertEquals(0L, result.totalMinor30)
         assertEquals(0L, result.peakDayMinor30)
         assertEquals(null, result.averagePerActiveDayMinor30)
+        assertEquals(3, result.calendarDays30)
+        assertEquals(3, result.calendarDays90)
     }
 }

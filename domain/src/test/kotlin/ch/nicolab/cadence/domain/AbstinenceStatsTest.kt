@@ -15,7 +15,7 @@ class AbstinenceStatsTest {
         AbstinenceStatsCalculator.compute("h", today.minusDays(days), today, entries, pauses)
 
     @Test fun `only completed civil days count`() {
-        assertEquals(AbstinenceStats(40, 40, 30, 30, 0, 0, false, false, null), stats())
+        assertEquals(AbstinenceStats(40, 40, 30, 30, 0, 0, false, false, null, 40, 40, 0, 0), stats())
         assertEquals(0L, stats(0).currentDays)
         assertEquals(0, stats(-2).observedDays30)
     }
@@ -27,6 +27,8 @@ class AbstinenceStatsTest {
         assertEquals(29, result.clearDays30)
         assertEquals(1, result.occurrenceDays30)
         assertEquals(2, result.occurrences30)
+        assertEquals(3, result.occurrences90)
+        assertEquals(2, result.occurrenceDays90)
         assertEquals(40L, stats().currentDays)
     }
     @Test fun `activity frequency uses distinct occurrence days and completed gaps`() {

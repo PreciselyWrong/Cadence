@@ -23,7 +23,7 @@ data class PersistedHabit(
     val createdAtEpochMs: Long = 0L,
     val updatedAtEpochMs: Long = 0L,
     val groupId: String = HabitGroup.ALL_DAY_ID,
-    /** Mode chronomètre proposé dans la saisie rapide; sans effet hors objectif en durée. */
+    /** Mode chronomètre proposé pour un suivi en durée, avec ou sans objectif. */
     val timerEnabled: Boolean = false,
     val abstinenceProfile: AbstinenceProfile = AbstinenceProfile.NONE,
     val abstinenceStartedAt: Instant? = null,

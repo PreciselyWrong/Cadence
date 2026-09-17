@@ -17,6 +17,10 @@ data class AbstinenceStats(
     val todayHasOccurrence: Boolean,
     val isPaused: Boolean,
     val averageClearDaysBetweenOccurrences: Double?,
+    val observedDays90: Int,
+    val clearDays90: Int,
+    val occurrenceDays90: Int,
+    val occurrences90: Int,
 )
 
 /** No entry means no recorded occurrence, never a physiological measurement. */
@@ -48,16 +52,8 @@ object AbstinenceStatsCalculator {
         }
         best = maxOf(best, end - cursor)
         val current = if (todayHasOccurrence || paused) 0L else end - cursor
-        val windowStart = maxOf(start, end - 30)
-        val pausedDays = pauseRanges.sumOf { range ->
-            (minOf(end, range.last + 1) - maxOf(windowStart, range.first)).coerceAtLeast(0)
-        }.toInt()
-        val windowEntries = relevant.filter { entry ->
-            val day = entry.localDate.toEpochDay()
-            day >= windowStart && day < end && !contains(pauseRanges, day)
-        }
-        val observed = (end - windowStart).toInt() - pausedDays
-        val occurrenceDayCount = windowEntries.map { it.localDate }.toSet().size
+        val recent30 = window(maxOf(start, end - 30), end, relevant, pauseRanges)
+        val recent90 = window(maxOf(start, end - 90), end, relevant, pauseRanges)
         val frequencyStart = maxOf(start, end - 89)
         val frequencyDates = relevant.asSequence()
             .map { it.localDate }
@@ -72,9 +68,26 @@ object AbstinenceStatsCalculator {
             else to.toEpochDay() - from.toEpochDay()
         }
         val averageClearDays = intervals.takeIf { it.isNotEmpty() }?.map { it - 1.0 }?.average()
-        return AbstinenceStats(current, best, observed, observed - occurrenceDayCount,
-            occurrenceDayCount, windowEntries.size, todayHasOccurrence, paused,
-            averageClearDays)
+        return AbstinenceStats(current, best, recent30.observedDays, recent30.clearDays,
+            recent30.occurrenceDays, recent30.occurrences, todayHasOccurrence, paused,
+            averageClearDays, recent90.observedDays, recent90.clearDays,
+            recent90.occurrenceDays, recent90.occurrences)
+    }
+
+    private data class WindowCounts(val observedDays: Int, val occurrenceDays: Int, val occurrences: Int) {
+        val clearDays: Int get() = observedDays - occurrenceDays
+    }
+
+    private fun window(from: Long, end: Long, entries: List<HabitEntry>, pauseRanges: List<LongRange>): WindowCounts {
+        val pausedDays = pauseRanges.sumOf { range ->
+            (minOf(end, range.last + 1) - maxOf(from, range.first)).coerceAtLeast(0)
+        }.toInt()
+        val windowEntries = entries.filter { entry ->
+            val day = entry.localDate.toEpochDay()
+            day >= from && day < end && !contains(pauseRanges, day)
+        }
+        return WindowCounts((end - from).toInt() - pausedDays,
+            windowEntries.map(HabitEntry::localDate).toSet().size, windowEntries.size)
     }
 
     private fun contains(ranges: List<LongRange>, day: Long): Boolean {

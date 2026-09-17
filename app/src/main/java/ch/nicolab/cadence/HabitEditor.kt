@@ -42,6 +42,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodCalculator
@@ -79,7 +80,7 @@ private val DraftSaver = mapSaver(
         "custom" to d.customUnit, "customId" to d.customUnitId, "customName" to d.customName, "customSymbol" to d.customSymbol,
         "quick" to d.quickValues, "reminders" to d.reminderTimes, "conditional" to d.conditionalReminders,
         "frequency" to d.frequencyTarget, "minimum" to d.minimum, "group" to d.groupId, "timer" to d.timerEnabled,
-        "limited" to d.limited, "progressive" to d.progressive, "step" to d.progressionStep, "monthly" to d.progressionMonthly, "cap" to d.progressionCap,
+        "direction" to d.direction.name, "progressive" to d.progressive, "step" to d.progressionStep, "monthly" to d.progressionMonthly, "cap" to d.progressionCap,
     ) },
     restore = { m -> HabitDraft(
         id = m["id"] as String, name = m["name"] as String, description = m["description"] as String,
@@ -91,7 +92,7 @@ private val DraftSaver = mapSaver(
         customUnit = m["custom"] as Boolean, customUnitId = (m["customId"] as? String).orEmpty(), customName = m["customName"] as String, customSymbol = m["customSymbol"] as String,
         quickValues = m["quick"] as String, reminderTimes = m["reminders"] as String, conditionalReminders = m["conditional"] as Boolean,
         frequencyTarget = m["frequency"] as String, minimum = m["minimum"] as String, groupId = m["group"] as String, timerEnabled = m["timer"] as Boolean,
-        limited = m["limited"] as Boolean, progressive = m["progressive"] as Boolean, progressionStep = m["step"] as String, progressionMonthly = m["monthly"] as Boolean, progressionCap = m["cap"] as String,
+        direction = GoalDirection.valueOf(m["direction"] as String), progressive = m["progressive"] as Boolean, progressionStep = m["step"] as String, progressionMonthly = m["monthly"] as Boolean, progressionCap = m["cap"] as String,
     ) },
 )
 
@@ -99,9 +100,10 @@ private val DraftSaver = mapSaver(
 @Composable
 internal fun HabitEditor(
     existing: HabitCardState?, groups: List<HabitGroup>, dismiss: () -> Unit, busy: Boolean, saveError: String?,
+    initialDirection: GoalDirection = GoalDirection.AT_LEAST,
     save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit,
 ) {
-    var draft by rememberSaveable(existing?.stored?.id, stateSaver = DraftSaver) { mutableStateOf(initialHabitDraft(existing)) }
+    var draft by rememberSaveable(existing?.stored?.id, initialDirection, stateSaver = DraftSaver) { mutableStateOf(initialHabitDraft(existing, initialDirection)) }
     var customize by rememberSaveable { mutableStateOf(false) }
     var refine by rememberSaveable { mutableStateOf(false) }
     var organize by rememberSaveable { mutableStateOf(false) }
@@ -111,26 +113,46 @@ internal fun HabitEditor(
     val result = remember(draft, existing) { validateAndBuildHabit(draft, existing) }
     val valid = result as? HabitValidationResult.Success
     val binary = draft.goalType == GoalType.BINARY
+    val tracker = draft.direction == GoalDirection.TRACK_ONLY
     val error = if (attempted && result is HabitValidationResult.Error) stringResource(result.messageResId) else saveError
     val previewHabit = valid?.habit ?: (validateAndBuildHabit(draft.copy(name = draft.name.ifBlank { "preview" }), existing) as? HabitValidationResult.Success)?.habit
     CadenceSheet(
-        title = stringResource(if (existing == null) R.string.habit_editor_title_new else R.string.habit_editor_title_edit),
+        title = stringResource(when {
+            tracker && existing == null -> R.string.editor_tracker_title_new
+            tracker -> R.string.editor_tracker_title_edit
+            existing == null -> R.string.habit_editor_title_new
+            else -> R.string.habit_editor_title_edit
+        }),
         subtitle = null, dismiss = { if (!busy) dismiss() },
         leading = { HabitFacet(HabitIconRegistry.getIcon(draft.iconId).imageVector, null, 0f, accent, cadence.sunken, size = Size.badge) },
     ) {
         Column(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(Space.lg)) {
             CadenceField(draft.name, { draft = draft.copy(name = it) }, stringResource(R.string.form_name_label), placeholder = stringResource(R.string.form_name_placeholder), accent = accent)
-            EditorChoices(stringResource(R.string.editor_measure), GoalType.entries, draft.goalType, accent, { stringResource(if (it == GoalType.BINARY) R.string.editor_measure_done else HabitLabels.goalTypeShort(it)) }) { type ->
+            FieldGroup(stringResource(R.string.editor_tracking_mode)) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    GoalDirection.entries.filter { it != GoalDirection.AT_MOST || !binary }.forEach { direction ->
+                        ChoiceChip(stringResource(when (direction) {
+                            GoalDirection.AT_LEAST -> R.string.editor_mode_goal
+                            GoalDirection.AT_MOST -> R.string.editor_mode_limit
+                            GoalDirection.TRACK_ONLY -> R.string.editor_mode_tracker
+                        }), draft.direction == direction, accent = accent) {
+                            val changeFromBinary = direction == GoalDirection.TRACK_ONLY && binary
+                            draft = draft.copy(direction = direction,
+                                goalType = if (changeFromBinary) GoalType.COUNT else draft.goalType,
+                                unit = if (changeFromBinary) MeasurementUnit.COUNT else draft.unit,
+                                target = if (direction != GoalDirection.TRACK_ONLY && (draft.target.isBlank() || draft.target == "0")) "1" else draft.target)
+                        }
+                    }
+                }
+            }
+            EditorChoices(stringResource(R.string.editor_measure), GoalType.entries.filter { !tracker || it != GoalType.BINARY }, draft.goalType, accent, { stringResource(if (it == GoalType.BINARY) R.string.editor_measure_done else HabitLabels.goalTypeShort(it)) }) { type ->
                 if (type != draft.goalType) draft = draft.copy(goalType = type, target = if (type == GoalType.BINARY) "1" else draft.target,
                     unit = when (type) { GoalType.DURATION -> MeasurementUnit.MINUTES; GoalType.COUNT -> MeasurementUnit.COUNT; else -> MeasurementUnit.MILLILITERS },
-                    customUnit = false, limited = false, minimum = "", progressive = false, timerEnabled = type == GoalType.DURATION)
+                    customUnit = false, direction = if (type == GoalType.BINARY) GoalDirection.AT_LEAST else draft.direction,
+                    minimum = "", progressive = false, timerEnabled = type == GoalType.DURATION)
             }
             if (!binary) {
-                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    ChoiceChip(stringResource(R.string.form_direction_at_least), !draft.limited, accent = accent) { draft = draft.copy(limited = false) }
-                    ChoiceChip(stringResource(R.string.form_direction_at_most), draft.limited, accent = accent) { draft = draft.copy(limited = true) }
-                }
-                CadenceField(draft.target, { draft = draft.copy(target = it) }, stringResource(if (draft.limited) R.string.form_limit_label else R.string.form_target_label), accent = accent, decimal = true)
+                if (!tracker) CadenceField(draft.target, { draft = draft.copy(target = it) }, stringResource(if (draft.direction == GoalDirection.AT_MOST) R.string.form_limit_label else R.string.form_target_label), accent = accent, decimal = true)
                 val units = when (draft.goalType) {
                     GoalType.DURATION -> listOf(MeasurementUnit.SECONDS, MeasurementUnit.MINUTES, MeasurementUnit.HOURS)
                     GoalType.COUNT -> MeasurementUnit.BUILT_INS.filter { it.dimension == UnitDimension.COUNT }
@@ -149,17 +171,17 @@ internal fun HabitEditor(
                     CadenceField(draft.customSymbol, { draft = draft.copy(customSymbol = it) }, stringResource(R.string.form_custom_unit_symbol), accent = accent)
                 }
             }
-            EditorChoices(stringResource(R.string.editor_period), PeriodType.entries, draft.period, accent, { stringResource(HabitLabels.periodShort(it)) }) { draft = draft.copy(period = it) }
-            EditorChoices(stringResource(R.string.editor_schedule), ScheduleMode.entries, draft.scheduleMode, accent, { stringResource(HabitLabels.scheduleMode(it)) }) { draft = draft.copy(scheduleMode = it) }
-            if (draft.scheduleMode == ScheduleMode.SELECTED_DAYS) FieldGroup(stringResource(R.string.form_schedule_selected_days)) {
+            if (!tracker) EditorChoices(stringResource(R.string.editor_period), PeriodType.entries, draft.period, accent, { stringResource(HabitLabels.periodShort(it)) }) { draft = draft.copy(period = it) }
+            if (!tracker) EditorChoices(stringResource(R.string.editor_schedule), ScheduleMode.entries, draft.scheduleMode, accent, { stringResource(HabitLabels.scheduleMode(it)) }) { draft = draft.copy(scheduleMode = it) }
+            if (!tracker && draft.scheduleMode == ScheduleMode.SELECTED_DAYS) FieldGroup(stringResource(R.string.form_schedule_selected_days)) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     DayOfWeek.entries.forEach { day -> ChoiceChip(stringResource(HabitLabels.dayShort(day)), day in draft.activeDays, accent = accent) {
                         draft = draft.copy(activeDays = if (day in draft.activeDays) draft.activeDays - day else draft.activeDays + day)
                     } }
                 }
             }
-            if (draft.scheduleMode == ScheduleMode.INTERVAL_DAYS) CadenceField(draft.intervalDays, { draft = draft.copy(intervalDays = it) }, stringResource(R.string.form_schedule_interval_days), numeric = true, accent = accent)
-            if (draft.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+            if (!tracker && draft.scheduleMode == ScheduleMode.INTERVAL_DAYS) CadenceField(draft.intervalDays, { draft = draft.copy(intervalDays = it) }, stringResource(R.string.form_schedule_interval_days), numeric = true, accent = accent)
+            if (!tracker && draft.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
             if (previewHabit != null) Text(habitSummary(previewHabit, context), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
             FoldHeading(stringResource(R.string.habit_editor_section_customize), customize) { customize = !customize }
             if (customize) {
@@ -176,9 +198,9 @@ internal fun HabitEditor(
                 }
                 CadenceField(draft.description, { draft = draft.copy(description = it) }, stringResource(R.string.form_description_label), accent = accent)
             }
-            FoldHeading(stringResource(R.string.habit_editor_section_refine), refine) { refine = !refine }
-            if (refine) {
-                if (!draft.limited || binary) {
+            if (!tracker) FoldHeading(stringResource(R.string.habit_editor_section_refine), refine) { refine = !refine }
+            if (refine && !tracker) {
+                if (draft.direction != GoalDirection.AT_MOST || binary) {
                     if (!binary) CadenceField(draft.minimum, { draft = draft.copy(minimum = it) }, stringResource(R.string.form_minimum_label), support = stringResource(R.string.form_minimum_support), decimal = true, accent = accent)
                     CadenceField(draft.frequencyTarget, { draft = draft.copy(frequencyTarget = it) }, stringResource(R.string.form_frequency_label), support = stringResource(R.string.form_frequency_support), numeric = true, accent = accent)
                 }
@@ -201,7 +223,7 @@ internal fun HabitEditor(
                 if (draft.goalType == GoalType.DURATION) ToggleRow(stringResource(R.string.timer_form_label), draft.timerEnabled, accent) { draft = draft.copy(timerEnabled = it) }
                 if (!binary) CadenceField(draft.quickValues, { draft = draft.copy(quickValues = it) }, stringResource(R.string.form_quick_values_label), support = stringResource(R.string.editor_quick_help), accent = accent)
                 CadenceField(draft.reminderTimes, { draft = draft.copy(reminderTimes = it) }, stringResource(R.string.form_reminders_label), support = stringResource(R.string.form_reminders_support), accent = accent)
-                if (draft.reminderTimes.isNotBlank()) ToggleRow(stringResource(R.string.form_reminders_conditional), draft.conditionalReminders, accent) { draft = draft.copy(conditionalReminders = it) }
+                if (!tracker && draft.reminderTimes.isNotBlank()) ToggleRow(stringResource(R.string.form_reminders_conditional), draft.conditionalReminders, accent) { draft = draft.copy(conditionalReminders = it) }
             }
         }
         Spacer(Modifier.height(Space.lg))
@@ -238,6 +260,7 @@ internal fun formatSelectedDaysFr(days: Set<DayOfWeek>): String =
 
 internal fun habitSummary(habit: PersistedHabit, context: Context): String {
     val goal = habit.goal
+    if (goal.isTracker) return context.getString(R.string.editor_summary_tracker)
     val period = context.getString(
         when (goal.period) {
             PeriodType.DAY -> R.string.editor_summary_day

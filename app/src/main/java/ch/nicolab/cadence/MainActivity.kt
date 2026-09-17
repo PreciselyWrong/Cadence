@@ -91,6 +91,7 @@ import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
 import ch.nicolab.cadence.domain.HabitActivityStats
@@ -138,6 +139,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -178,6 +180,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     var creating by rememberSaveable { mutableStateOf(false) }
     var choosingCreation by rememberSaveable { mutableStateOf(false) }
     var creatingAbstinence by rememberSaveable { mutableStateOf(false) }
+    var creatingTracker by rememberSaveable { mutableStateOf(false) }
     var editIntentHandled by rememberSaveable { mutableStateOf(false) }
     androidx.compose.runtime.LaunchedEffect(editHabitId, habits) {
         if (!editIntentHandled && editHabitId != null) habits.firstOrNull { it.stored.id == editHabitId }?.let {
@@ -371,25 +374,30 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
             viewModel.clearSaveError(); choosingCreation = false; creating = true
         }
         Spacer(Modifier.height(Space.md))
+        SecondaryAction(stringResource(R.string.create_activity), Modifier.fillMaxWidth()) {
+            viewModel.clearSaveError(); choosingCreation = false; creatingTracker = true
+        }
+        Spacer(Modifier.height(Space.md))
         SecondaryAction(stringResource(R.string.create_abstinence), Modifier.fillMaxWidth()) {
             viewModel.clearSaveError(); choosingCreation = false; creatingAbstinence = true
         }
     }
-    if (creating || creatingAbstinence || editor != null) {
-        val dismissEditor = { if (!busy) { creating = false; creatingAbstinence = false; editorId = null } }
+    if (creating || creatingTracker || creatingAbstinence || editor != null) {
+        val dismissEditor = { if (!busy) { creating = false; creatingTracker = false; creatingAbstinence = false; editorId = null } }
         val save: (PersistedHabit, List<Long>, List<String>, Boolean, Boolean) -> Unit = { habit, quickValues, reminderTimes, conditional, isNew ->
             if (!busy) {
                 val needsNotifications = reminderTimes.isNotEmpty() ||
                     (habit.goal.isAbstinence && AbstinenceGuide.milestones(habit.abstinenceProfile).isNotEmpty())
                 if (needsNotifications && android.os.Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                 viewModel.saveHabit(habit, quickValues, reminderTimes, conditional, isNew) {
-                    creating = false; creatingAbstinence = false; editorId = null
+                    creating = false; creatingTracker = false; creatingAbstinence = false; editorId = null
                 }
             }
         }
         if (creatingAbstinence || editor?.stored?.goal?.isAbstinence == true) {
             AbstinenceSetupSheet(editor, groups, dismissEditor, save, busy, saveError)
-        } else HabitEditor(editor, groups, dismissEditor, busy, saveError, save)
+        } else HabitEditor(editor, groups, dismissEditor, busy, saveError,
+            initialDirection = if (creatingTracker) GoalDirection.TRACK_ONLY else GoalDirection.AT_LEAST, save = save)
     }
     deleting?.let { habit -> DeleteDialog({ deleting = null }) { viewModel.deleteHabit(habit.id); deleting = null } }
 }
@@ -457,7 +465,15 @@ private fun HabitsScreen(
                 }
             }
         }
-        items(active, key = { it.stored.id }) { HabitRow(it, onClick = { if (it.stored.goal.isAbstinence) open(it) else options(it) }, onLongClick = { options(it) }) }
+        val activeHabits = active.filter { !it.stored.goal.isTracker && !it.stored.goal.isAbstinence }
+        val activeTrackers = active.filter { it.stored.goal.isTracker }
+        val activeAbstinences = active.filter { it.stored.goal.isAbstinence }
+        if (activeHabits.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_regular_section)) }
+        items(activeHabits, key = { it.stored.id }) { HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) }) }
+        if (activeTrackers.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_activities_section)) }
+        items(activeTrackers, key = { it.stored.id }) { HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) }) }
+        if (activeAbstinences.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+        items(activeAbstinences, key = { it.stored.id }) { HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) }) }
         if (archived.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.habits_archived_section)) }
             items(archived, key = { "archived-${it.stored.id}" }) { HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) }) }
@@ -482,7 +498,7 @@ internal fun HabitRow(
     val palette = cadence
     val tint = habitTint(item)
     val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
-    val ratio = if (item.stored.goal.isAbstinence) 0f else (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
+    val ratio = if (item.stored.goal.isAbstinence || item.stored.goal.isTracker) 0f else (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
     Panel(onClick = onClick, onLongClick = onLongClick) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HabitFacet(
@@ -552,6 +568,8 @@ private fun attainmentLabel(attainment: GoalAttainment): String = stringResource
 private fun progress(item: HabitCardState): String {
     val goal = item.stored.goal
     if (goal.isAbstinence) return abstinenceStatus(item)
+    if (goal.isTracker) return stringResource(R.string.tracker_today_total,
+        HabitFormatter.formatWithUnit(item.evaluation.progressMinor, goal.goalType, goal.unit))
     // `2 / 2` se lirait comme un objectif atteint : un plafond s'annonce comme un maximum.
     if (goal.isLimit) {
         return stringResource(
@@ -628,19 +646,27 @@ private fun StatsScreen(
     onCorrect: (HabitEntry) -> Unit,
 ) {
     val visible = habits.filterNot { it.stored.archived }
-    val regular = visible.filterNot { it.stored.goal.isAbstinence }
+    val archived = habits.filter { it.stored.archived }
+    val regular = visible.filter { !it.stored.goal.isAbstinence && !it.stored.goal.isTracker }
+    val trackers = visible.filter { it.stored.goal.isTracker }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
     var detailId by rememberSaveable { mutableStateOf<String?>(null) }
     var alcoholDetailId by rememberSaveable { mutableStateOf<String?>(null) }
     var abstinenceDetailId by rememberSaveable { mutableStateOf<String?>(null) }
     ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
-        if (visible.isEmpty()) item {
+        if (visible.isEmpty() && archived.isEmpty()) item {
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
         }
         if (regular.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_regular_section)) }
             items(regular, key = { it.stored.id }) { item ->
                 HabitStatisticsOverview(item) { detailId = item.stored.id }
+            }
+        }
+        if (trackers.isNotEmpty()) {
+            item { SectionLabel(stringResource(R.string.today_activities_section)) }
+            items(trackers, key = { it.stored.id }) { item ->
+                TrackerStatisticsOverview(item) { detailId = item.stored.id }
             }
         }
         if (abstinences.isNotEmpty()) {
@@ -652,48 +678,57 @@ private fun StatsScreen(
                 }
             }
         }
+        if (archived.isNotEmpty()) {
+            item { SectionLabel(stringResource(R.string.habits_archived_section)) }
+            items(archived, key = { "stats-archived-${it.stored.id}" }) { item ->
+                Panel(onClick = {
+                    when {
+                        item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL -> alcoholDetailId = item.stored.id
+                        item.stored.goal.isAbstinence -> abstinenceDetailId = item.stored.id
+                        else -> detailId = item.stored.id
+                    }
+                }) {
+                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                    Text(stringResource(R.string.status_archived), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                }
+            }
+        }
     }
-    regular.firstOrNull { it.stored.id == detailId }?.let { item ->
+    (regular + trackers + archived.filterNot { it.stored.goal.isAbstinence }).firstOrNull { it.stored.id == detailId }?.let { item ->
         CadenceSheet(
             title = item.stored.name,
-            subtitle = stringResource(R.string.habit_stats_detail_subtitle),
+            subtitle = stringResource(if (item.stored.goal.isTracker) R.string.tracker_stats_detail_subtitle else R.string.habit_stats_detail_subtitle),
             dismiss = { detailId = null },
         ) {
             LazyColumn(
                 Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
                 verticalArrangement = Arrangement.spacedBy(Space.lg),
             ) {
-                item { item.statistics?.let { StatisticsNumbers(it) } }
+                if (!item.stored.goal.isTracker) item { item.statistics?.let { StatisticsNumbers(it) } }
                 item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit) } }
-                item { StreakLine(item.streak) }
+                if (!item.stored.goal.isTracker) item { StreakLine(item.streak) }
                 item { Hairline() }
-                item { item.statistics?.let { StatisticsCalendar(it.days) } }
+                if (item.stored.goal.isTracker) item { TrackerActivityCalendar(item) }
+                else item { item.statistics?.let { StatisticsCalendar(it.days) } }
                 if (!item.stored.goal.isLimit) {
-                    item { Hairline() }
                     item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
                 }
                 item { Hairline() }
-                item {
-                    Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                    Spacer(Modifier.height(Space.sm))
-                    if (item.recentEntries.isEmpty()) {
-                        Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
-                    } else {
-                        Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                            item.recentEntries.take(VISIBLE_ENTRIES).forEach { entry ->
-                                EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
-                            }
-                        }
-                    }
+                item { Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.ink) }
+                if (item.recentEntries.isEmpty()) item {
+                    Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+                }
+                items(item.recentEntries, key = { "entry-${it.id}" }) { entry ->
+                    EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
                 }
             }
         }
     }
-    abstinences.firstOrNull { it.stored.id == alcoholDetailId }?.let { item ->
+    (abstinences + archived).firstOrNull { it.stored.id == alcoholDetailId }?.let { item ->
         AlcoholStatisticsSheet(item) { alcoholDetailId = null }
     }
-    abstinences.firstOrNull { it.stored.id == abstinenceDetailId }?.let { item ->
-        AbstinenceStatisticsSheet(item, { abstinenceDetailId = null }) {
+    (abstinences + archived).firstOrNull { it.stored.id == abstinenceDetailId }?.let { item ->
+        AbstinenceStatisticsSheet(item, { abstinenceDetailId = null }, onCorrect = onCorrect) {
             abstinenceDetailId = null
             open(item)
         }
@@ -788,6 +823,43 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
 }
 
 @Composable
+private fun TrackerStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
+    val stats = item.activityStats ?: return
+    Panel(onClick = onClick) {
+        Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+        Spacer(Modifier.height(Space.sm))
+        Text(stringResource(R.string.tracker_stats_active_days, stats.activeDays30, stats.calendarDays30),
+            style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+        Text(stringResource(R.string.tracker_stats_entries, stats.entries30),
+            style = MaterialTheme.typography.labelSmall, color = cadence.inkFaint)
+    }
+}
+
+@Composable
+private fun TrackerActivityCalendar(item: HabitCardState) {
+    val today = LocalDate.now()
+    val dailyTotals = item.recentEntries.groupBy(HabitEntry::localDate)
+        .mapValues { (_, entries) -> entries.sumOf(HabitEntry::valueMinor) }
+    val cells = (89L downTo 0L).map { offset ->
+        val date = today.minusDays(offset)
+        val value = dailyTotals[date]
+        val label = when {
+            date < item.stored.startsOn -> stringResource(R.string.tracker_calendar_before)
+            value != null -> stringResource(R.string.tracker_calendar_activity,
+                HabitFormatter.formatWithUnit(value, item.stored.goal.goalType, item.stored.goal.unit))
+            else -> stringResource(R.string.tracker_calendar_empty)
+        }
+        ActivityCalendarCell(
+            date = date,
+            tone = if (value != null) ActivityCalendarTone.SUCCESS else ActivityCalendarTone.NEUTRAL,
+            contentDescription = "$date : $label",
+            detailText = "$date · $label",
+        )
+    }
+    ActivityCalendar(cells, title = stringResource(R.string.tracker_calendar_title))
+}
+
+@Composable
 private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, unit: MeasurementUnit?) {
     SectionLabel(stringResource(R.string.habit_stats_activity_title))
     Spacer(Modifier.height(Space.sm))
@@ -801,7 +873,7 @@ private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, 
             OverviewMetric(HabitFormatter.formatWithUnit(stats.totalMinor30, goalType, unit),
                 stringResource(R.string.habit_stats_total_30), modifier = Modifier.weight(1f))
             stats.averagePerActiveDayMinor30?.let { average ->
-                OverviewMetric(HabitFormatter.formatWithUnit(average, goalType, unit),
+                OverviewMetric(formatActivityAverage(average, unit),
                     stringResource(R.string.habit_stats_average_active_day_30), modifier = Modifier.weight(1f))
             }
         }
@@ -809,11 +881,25 @@ private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, 
         OverviewMetric(HabitFormatter.formatWithUnit(stats.peakDayMinor30, goalType, unit),
             stringResource(R.string.habit_stats_peak_day_30))
     }
+    Spacer(Modifier.height(Space.lg))
+    Text(stringResource(R.string.tracker_stats_ninety_days, stats.activeDays90, stats.calendarDays90, stats.entries90),
+        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    if (goalType != GoalType.BINARY && stats.entries90 > 0) {
+        Text(stringResource(R.string.tracker_stats_ninety_total,
+            HabitFormatter.formatWithUnit(stats.totalMinor90, goalType, unit)),
+            style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+    }
+}
+
+private fun formatActivityAverage(minor: Double, unit: MeasurementUnit?): String {
+    val value = String.format(Locale.FRENCH, "%.1f", minor / (unit?.scaleToCanonical ?: 1L))
+    val symbol = unit?.symbol?.takeIf(String::isNotBlank) ?: return value
+    return "$value $symbol"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit, openTracking: () -> Unit) {
+private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit, onCorrect: (HabitEntry) -> Unit, openTracking: () -> Unit) {
     val stats = item.abstinenceStats ?: return
     CadenceSheet(item.stored.name, stringResource(R.string.abstinence_stats_detail_subtitle), dismiss) {
         LazyColumn(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent),
@@ -833,6 +919,9 @@ private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit,
             item {
                 Text(stringResource(R.string.habit_stats_abstinence_clear, stats.clearDays30, stats.observedDays30),
                     style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                Text(stringResource(R.string.abstinence_stats_ninety_days,
+                    stats.clearDays90, stats.observedDays90, stats.occurrences90, stats.occurrenceDays90),
+                    style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
                 Spacer(Modifier.height(Space.sm))
                 Text(
                     stats.averageClearDaysBetweenOccurrences?.let { average ->
@@ -842,6 +931,13 @@ private fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit,
                 )
             }
             item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+            item { SectionLabel(stringResource(R.string.abstinence_stats_history)) }
+            if (item.recentEntries.isEmpty()) item {
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+            }
+            items(item.recentEntries, key = { "occurrence-${it.id}" }) { entry ->
+                EntryRow(entry, GoalType.COUNT, null) { onCorrect(entry) }
+            }
         }
         Spacer(Modifier.height(Space.sm))
         TextButton(onClick = openTracking) { Text(stringResource(R.string.abstinence_stats_open_tracking)) }
@@ -913,7 +1009,8 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
             }
             Spacer(Modifier.height(Space.xl))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
-                OverviewMetric(stringResource(R.string.alcohol_stats_days_30, alcohol.drinkingDays30), stringResource(R.string.alcohol_stats_drinking_days))
+                OverviewMetric(stringResource(R.string.alcohol_stats_observed_days, alcohol.drinkingDays30, alcohol.observedDays30),
+                    stringResource(R.string.alcohol_stats_drinking_30))
                 OverviewMetric(
                     alcohol.averageDaysBetweenDrinking?.let(::formatAlcoholAverage) ?: "—",
                     stringResource(R.string.alcohol_stats_frequency_label),
@@ -1369,8 +1466,10 @@ private fun QuickSheet(
         dismiss = dismiss,
         leading = { HabitAvatar(item, tint) },
     ) {
-        HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth().padding(bottom = Space.xl))
-        StreakLine(item.streak)
+        if (!item.stored.goal.isTracker) {
+            HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth().padding(bottom = Space.xl))
+            StreakLine(item.streak)
+        }
         Spacer(Modifier.height(Space.xl))
         if (item.stored.timerEnabled && item.stored.goal.goalType == GoalType.DURATION) {
             SectionLabel(stringResource(R.string.timer_section))

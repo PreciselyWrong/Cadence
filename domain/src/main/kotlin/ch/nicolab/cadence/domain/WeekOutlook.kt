@@ -42,6 +42,7 @@ data class WeekOutlook(
             val evaluator = HabitEvaluator()
             val week = PeriodCalculator.window(today, PeriodType.WEEK, DayOfWeekStart)
             val visible = habits.mapNotNull { habit ->
+                if (habit.goal.isTracker) return@mapNotNull null
                 val pauses = pausesOf(habit.id)
                 if (pauses.any { it.includes(today) }) return@mapNotNull null
                 if (!remainsPlannedThisWeek(habit, today, week)) return@mapNotNull null

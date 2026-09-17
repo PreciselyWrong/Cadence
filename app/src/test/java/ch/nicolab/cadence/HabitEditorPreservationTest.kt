@@ -21,6 +21,21 @@ import java.time.LocalDate
 
 class HabitEditorPreservationTest {
     @Test
+    fun `new and reopened targetless activities keep their mode and unit`() {
+        val initial = initialHabitDraft(null, GoalDirection.TRACK_ONLY).copy(name = "Course")
+        val created = success(validateAndBuildHabit(initial, null))
+        assertTrue(created.habit.goal.isTracker)
+        assertEquals(GoalType.COUNT, created.habit.goal.goalType)
+
+        val existing = card(created.habit.copy(goal = created.habit.goal.copy(
+            goalType = GoalType.QUANTITY, unit = MeasurementUnit.KILOMETERS,
+        )))
+        val edited = success(validateAndBuildHabit(initialHabitDraft(existing), existing))
+        assertTrue(edited.habit.goal.isTracker)
+        assertEquals(MeasurementUnit.KILOMETERS, edited.habit.goal.unit)
+    }
+
+    @Test
     fun `editing binary preserves its existing target frequency and quick values`() {
         val existing = card(
             PersistedHabit(
@@ -42,7 +57,7 @@ class HabitEditorPreservationTest {
     fun `limit keeps its progression while stripping incompatible minimum and frequency`() {
         val result = success(validateAndBuildHabit(
             HabitDraft(
-                name = "Café", goalType = GoalType.COUNT, target = "2", limited = true,
+                name = "Café", goalType = GoalType.COUNT, target = "2", direction = ch.nicolab.cadence.domain.GoalDirection.AT_MOST,
                 minimum = "1", frequencyTarget = "2", progressive = true, progressionStep = "1",
             ),
             null,

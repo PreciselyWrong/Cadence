@@ -14,7 +14,9 @@ data class TodaySections(
 object TodayPresentation {
     fun directAmount(evaluation: HabitEvaluation, quickValues: List<Long>): Long? {
         val goal = evaluation.habit.goal
-        if (!available(evaluation) || !evaluation.needsAttentionNow || goal.isAbstinence || (!goal.isLimit && evaluation.isCompleted)) return null
+        if (!available(evaluation) || goal.isAbstinence) return null
+        if (goal.isTracker) return quickValues.firstOrNull { it > 0 } ?: goal.unit?.scaleToCanonical ?: 1L
+        if (!evaluation.needsAttentionNow || (!goal.isLimit && evaluation.isCompleted)) return null
         val remaining = (evaluation.targetMinor - evaluation.progressMinor).coerceAtLeast(0)
         if (goal.isLimit && remaining == 0L) return null
         if (goal.goalType == GoalType.BINARY) return remaining.takeIf { it > 0 } ?: evaluation.targetMinor.coerceAtLeast(1)

@@ -492,7 +492,8 @@ private fun WidgetPreview(
                             Text(
                                 habit.abstinenceStartedAt?.takeIf { habit.goal.isAbstinence }?.let { start ->
                                     AbstinenceElapsedCalculator.calculate(habit.id, start, emptyList(), Instant.now()).formatCompact()
-                                } ?: HabitFormatter.formatCompactProgress(0, habit.goal.targetMinor, habit.goal.goalType, habit.goal.unit),
+                                } ?: if (habit.goal.isTracker) HabitFormatter.formatWithUnit(0, habit.goal.goalType, habit.goal.unit)
+                                else HabitFormatter.formatCompactProgress(0, habit.goal.targetMinor, habit.goal.goalType, habit.goal.unit),
                                 maxLines = 1,
                                 fontSize = valueTextSizeSp.sp,
                                 color = content.copy(alpha = valueOpacity.coerceIn(0, 100) / 100f),

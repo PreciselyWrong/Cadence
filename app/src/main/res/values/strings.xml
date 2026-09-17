@@ -272,7 +272,7 @@
     <string name="empty_today_done_message">Les habitudes prévues sont à jour.</string>
     <string name="empty_habits_title">Votre rythme, à vous</string>
     <string name="empty_habits_message">Créez une première habitude pour commencer.</string>
-    <string name="create_habit_button">Créer une habitude</string>
+    <string name="create_habit_button">Créer un suivi</string>
     <string name="duplicate_suffix">(copie)</string>
     <string name="today_completed_section">Terminé</string>
     <string name="habit_sessions_format">%1$s · %2$d / %3$d séances</string>
@@ -477,9 +477,9 @@
     <string name="alcohol_stats_frequency">Une consommation tous les %1$s jours en moyenne</string>
     <string name="alcohol_stats_frequency_missing">Pas assez de recul pour calculer une fréquence.</string>
     <string name="alcohol_stats_congratulations">Vous dépassez votre intervalle habituel : %1$d jours complets sans consommation notée, contre %2$s en moyenne.</string>
-    <string name="alcohol_stats_days_30">%1$d jours sur 30</string>
-    <string name="alcohol_stats_days_90">%1$d jours sur 90</string>
-    <string name="alcohol_stats_drinking_days">Jours consommés</string>
+    <string name="alcohol_stats_observed_days">%1$d / %2$d</string>
+    <string name="alcohol_stats_drinking_30">jours consommés / suivis · 30 jours</string>
+    <string name="alcohol_stats_drinking_90">jours consommés / suivis · 90 jours</string>
     <string name="alcohol_stats_average_sober_label">jours sans consommation entre deux jours consommés · 90 jours</string>
     <string name="alcohol_stats_average_drinks_label">verres par journée consommée · 30 jours</string>
     <string name="alcohol_stats_known_drinks_label">verres renseignés · 30 jours</string>
@@ -488,6 +488,8 @@
     <string name="alcohol_stats_drinks_30">%1$d verres renseignés</string>
     <string name="alcohol_stats_completeness">Quantité connue pour %1$d journée(s) sur %2$d.</string>
     <string name="alcohol_stats_calendar">Calendrier des consommations</string>
+    <string name="alcohol_stats_full_history">Toutes les consommations notées</string>
+    <string name="alcohol_stats_unknown_history">Quantité non renseignée</string>
     <string name="alcohol_stats_calendar_selected">%1$s · %2$s</string>
     <plurals name="alcohol_drinks_known">
         <item quantity="one">%1$d verre standard</item>

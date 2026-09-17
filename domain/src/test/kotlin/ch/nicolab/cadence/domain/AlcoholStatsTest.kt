@@ -36,6 +36,8 @@ class AlcoholStatsTest {
         val result = stats(startsOn = today.minusDays(2), consumptions = listOf(consumption(1, 2), consumption(0)))
 
         assertEquals(90, result.days.size)
+        assertEquals(3, result.observedDays30)
+        assertEquals(3, result.observedDays90)
         assertEquals(AlcoholStatisticsDayStatus.UNOBSERVED, result.days.first().status)
         assertEquals(AlcoholStatisticsDayStatus.DRINKING, result.days[result.days.lastIndex - 1].status)
         assertEquals(2, result.days[result.days.lastIndex - 1].standardDrinks)
@@ -65,6 +67,8 @@ class AlcoholStatsTest {
         ))
 
         assertEquals(3, result.drinkingDays30)
+        assertEquals(30, result.observedDays30)
+        assertEquals(90, result.observedDays90)
         assertEquals(4, result.drinkingDays90)
         assertEquals(6, result.standardDrinks30)
         assertEquals(2, result.knownQuantityDays30)
@@ -91,6 +95,8 @@ class AlcoholStatsTest {
         )
 
         assertEquals(3, result.drinkingDays30)
+        assertEquals(28, result.observedDays30)
+        assertEquals(88, result.observedDays90)
         assertEquals(1.0, result.averageDaysBetweenDrinking)
         assertEquals(0.0, result.averageSoberDaysBetweenDrinking)
         assertFalse(result.exceedsUsualSoberGap)

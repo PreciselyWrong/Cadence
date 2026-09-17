@@ -76,7 +76,7 @@ data class HabitCardState(
     val dailyHistory: List<DailyStat>,
     /** Tendances calculées sur la même fenêtre, absentes quand l'échantillon ne les porte pas. */
     val insights: HabitInsights,
-    /** Saisies les plus récentes, de la plus récente à la plus ancienne, pour correction. */
+    /** Historique complet, de la plus récente à la plus ancienne, pour lecture et correction. */
     val recentEntries: List<HabitEntry>,
     /** Sauts et suspensions de l'habitude, avec leur identifiant pour les annuler. */
     val pauses: List<IdentifiedPause>,
@@ -96,9 +96,6 @@ data class HabitCardState(
     fun activePause(today: LocalDate): IdentifiedPause? =
         pauses.firstOrNull { !it.pause.isSingleDay && it.pause.includes(today) }
 }
-
-/** Profondeur d'historique proposée à la correction depuis Aujourd'hui et l'historique. */
-private const val RECENT_ENTRIES = 60
 
 data class PeriodStat(
     val label: String,
@@ -689,7 +686,7 @@ class MainViewModel(
                     targetMinor = historicalHabit.goal.targetMinor,
                     planned = isPlannedOn(historicalHabit.definition, day),
                     paused = paused,
-                    dailyGoal = historicalHabit.goal.period == PeriodType.DAY,
+                    dailyGoal = historicalHabit.goal.period == PeriodType.DAY && !historicalHabit.goal.isTracker,
                 ),
             )
         }
@@ -702,13 +699,11 @@ class MainViewModel(
             entryCount = trackingEntries.size,
             dailyHistory = dailyHistory,
             insights = HabitInsightsCalculator.of(trackingEntries, date, insightDays),
-            recentEntries = trackingEntries.sortedByDescending(HabitEntry::occurredAt).let {
-                if (habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) emptyList()
-                else if (habit.goal.isAbstinence) it else it.take(RECENT_ENTRIES)
-            },
+            recentEntries = if (habit.goal.isAbstinence && habit.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL)
+                emptyList() else trackingEntries.sortedByDescending(HabitEntry::occurredAt),
             pauses = identifiedPauses,
             streak = streak,
-            statistics = if (habit.goal.isAbstinence) null else HabitStatisticsSummary.compute(
+            statistics = if (habit.goal.isAbstinence || habit.goal.isTracker) null else HabitStatisticsSummary.compute(
                 habitAt = { day -> versions(day)?.definition }, today = date, entries = trackingEntries, pauses = pauses,
             ),
             activityStats = if (habit.goal.isAbstinence) null else HabitActivityStats.compute(

@@ -129,7 +129,7 @@ data class HabitStatisticsSummary(
                 val date = previousFrom.plusDays(offset)
                 val habit = habitAt(date)
                 if (date >= from) days += HabitStatisticsDay(date, dayStatus(habit, date, entries, pauses, evaluator))
-                if (habit == null || habit.goal.isAbstinence) continue
+                if (habit == null || habit.goal.isAbstinence || habit.goal.isTracker) continue
                 val window = PeriodCalculator.window(date, habit.goal.period, habit.schedule.firstDayOfWeek)
                 if (window.endExclusive != date.plusDays(1)) continue
                 if (date < habit.startsOn) continue
@@ -141,7 +141,7 @@ data class HabitStatisticsSummary(
                     .takeWhile { it < window.endExclusive }
                     .any { day ->
                         val version = habitAt(day)
-                        version != null && !version.goal.isAbstinence && isPlannedOn(version, day) &&
+                        version != null && !version.goal.isAbstinence && !version.goal.isTracker && isPlannedOn(version, day) &&
                             pauses.none { it.includes(day) }
                     }
                 val evaluation = evaluator.evaluate(habit, date,
@@ -218,6 +218,8 @@ data class HabitStatisticsSummary(
             evaluator: HabitEvaluator,
         ): HabitStatisticsDayStatus {
             if (habit == null || habit.goal.isAbstinence || !isPlannedOn(habit, date)) return HabitStatisticsDayStatus.UNPLANNED
+            if (habit.goal.isTracker) return if (entries.any { it.habitId == habit.id && it.localDate == date })
+                HabitStatisticsDayStatus.ACTIVITY else HabitStatisticsDayStatus.NO_ACTIVITY
             if (pauses.any { it.includes(date) }) return HabitStatisticsDayStatus.PAUSED
             if (habit.goal.period != PeriodType.DAY) {
                 return if (entries.any { it.habitId == habit.id && it.localDate == date }) {

@@ -81,7 +81,7 @@ internal fun TimerPanel(
             style = MaterialTheme.typography.headlineSmall,
             color = palette.ink,
         )
-        Text(
+        if (!goal.isTracker) Text(
             stringResource(
                 when (attainment) {
                     GoalAttainment.TODO -> R.string.status_todo

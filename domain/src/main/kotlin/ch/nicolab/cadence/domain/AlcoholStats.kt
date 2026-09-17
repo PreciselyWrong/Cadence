@@ -66,7 +66,13 @@ data class AlcoholStats(
     val todayHasConsumption: Boolean,
     val isPaused: Boolean,
     val days: List<AlcoholStatisticsDay>,
-)
+) {
+    val observedDays30: Int get() = days.takeLast(30).count(AlcoholStatisticsDay::isObserved)
+    val observedDays90: Int get() = days.count(AlcoholStatisticsDay::isObserved)
+}
+
+private fun AlcoholStatisticsDay.isObserved(): Boolean =
+    status != AlcoholStatisticsDayStatus.PAUSED && status != AlcoholStatisticsDayStatus.UNOBSERVED
 
 /**
  * Temps suivi sans prétendre connaître l'heure d'une consommation datée.

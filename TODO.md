@@ -28,6 +28,7 @@
   - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Activités sans objectif, KPI sur 30 et 90 jours et historique complet
 - [x] Activité notée et moyennes détaillées dans les statistiques des habitudes et abstinences
 - [x] Action claire pour renseigner les verres manquants
 - [x] Compteur alcool vivant après une saisie et détail allégé

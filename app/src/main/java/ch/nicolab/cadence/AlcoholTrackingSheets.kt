@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.DateRange
@@ -135,28 +136,22 @@ fun AlcoholDetailSheet(
                 }
             }
             val allKnownConsumptions = item.alcoholConsumptions.filter { it.standardDrinks != null }
-            val knownConsumptions = allKnownConsumptions.take(if (historyExpanded) 12 else 3)
-            if (knownConsumptions.isNotEmpty()) item {
-                Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    SectionLabel(stringResource(R.string.alcohol_history_title))
-                    knownConsumptions.forEach { consumption ->
-                        val drinks = requireNotNull(consumption.standardDrinks)
-                        TertiaryAction(
-                            pluralStringResource(
-                                R.plurals.alcohol_history_item,
-                                drinks,
-                                displayAbstinenceDate(consumption.localDate),
-                                drinks,
-                            ),
-                            Modifier.fillMaxWidth(),
-                        ) { editing = consumption }
-                    }
-                    if (allKnownConsumptions.size > 3) {
-                        TertiaryAction(
-                            stringResource(if (historyExpanded) R.string.alcohol_history_reduce else R.string.alcohol_history_more),
-                            Modifier.fillMaxWidth(),
-                        ) { historyExpanded = !historyExpanded }
-                    }
+            val knownConsumptions = if (historyExpanded) allKnownConsumptions else allKnownConsumptions.take(3)
+            if (knownConsumptions.isNotEmpty()) {
+                item { SectionLabel(stringResource(R.string.alcohol_history_title)) }
+                items(knownConsumptions, key = { "known-${it.id}" }) { consumption ->
+                    val drinks = requireNotNull(consumption.standardDrinks)
+                    TertiaryAction(
+                        pluralStringResource(R.plurals.alcohol_history_item, drinks,
+                            displayAbstinenceDate(consumption.localDate), drinks),
+                        Modifier.fillMaxWidth(),
+                    ) { editing = consumption }
+                }
+                if (allKnownConsumptions.size > 3) item {
+                    TertiaryAction(
+                        stringResource(if (historyExpanded) R.string.alcohol_history_reduce else R.string.alcohol_history_more),
+                        Modifier.fillMaxWidth(),
+                    ) { historyExpanded = !historyExpanded }
                 }
             }
             item { AbstinenceMilestones(AbstinenceProfile.ALCOHOL, stats.currentSoberDays) }
@@ -324,8 +319,10 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
             }
             item {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
-                    AlcoholMetric(stringResource(R.string.alcohol_stats_days_30, stats.drinkingDays30), stringResource(R.string.alcohol_stats_drinking_days), modifier = Modifier.weight(1f))
-                    AlcoholMetric(stringResource(R.string.alcohol_stats_days_90, stats.drinkingDays90), stringResource(R.string.alcohol_stats_drinking_days), modifier = Modifier.weight(1f))
+                    AlcoholMetric(stringResource(R.string.alcohol_stats_observed_days, stats.drinkingDays30, stats.observedDays30),
+                        stringResource(R.string.alcohol_stats_drinking_30), modifier = Modifier.weight(1f))
+                    AlcoholMetric(stringResource(R.string.alcohol_stats_observed_days, stats.drinkingDays90, stats.observedDays90),
+                        stringResource(R.string.alcohol_stats_drinking_90), modifier = Modifier.weight(1f))
                 }
             }
             item {
@@ -339,6 +336,18 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
             item { Hairline() }
             item { AlcoholCalendar(stats.days) }
             item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+            item { SectionLabel(stringResource(R.string.alcohol_stats_full_history)) }
+            if (item.alcoholConsumptions.isEmpty()) item {
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+            }
+            items(item.alcoholConsumptions, key = { "consumption-${it.id}" }) { consumption ->
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(displayAbstinenceDate(consumption.localDate), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+                    Text(consumption.standardDrinks?.let { drinks -> pluralStringResource(R.plurals.alcohol_drinks_known, drinks, drinks) }
+                        ?: stringResource(R.string.alcohol_stats_unknown_history),
+                        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                }
+            }
         }
     }
 }

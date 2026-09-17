@@ -1141,8 +1141,8 @@ class CadenceRepository(
 
             habit.goals.forEach { g ->
                 require(g.habitId == habit.id) { "Goal habitId mismatch" }
-                require(g.targetMinor > 0 || (g.targetMinor == 0L && g.direction == GoalDirection.AT_MOST.name)) {
-                    "Only a limit permits a zero target"
+                require(g.targetMinor > 0 || (g.targetMinor == 0L && g.direction != GoalDirection.AT_LEAST.name)) {
+                    "Only a limit or tracker permits a zero target"
                 }
                 require(g.targetMinor != 0L || (g.progressionStep == null && g.frequencyTarget == null)) {
                     "Abstinence carries no progression or frequency"
@@ -1154,6 +1154,12 @@ class CadenceRepository(
                 require(GoalDirection.entries.any { it.name == g.direction }) { "Goal direction is invalid" }
                 if (g.direction == GoalDirection.AT_MOST.name) {
                     require(g.minimumMinor == null) { "A limit carries no minimum" }
+                }
+                if (g.direction == GoalDirection.TRACK_ONLY.name) {
+                    require(g.targetMinor == 0L && g.period == PeriodType.DAY.name &&
+                        g.goalType != GoalType.BINARY.name && g.minimumMinor == null) {
+                        "A tracker needs a measurable daily entry and no goal"
+                    }
                 }
                 require(g.frequencyTarget == null || g.frequencyTarget > 0) { "Frequency target must be positive" }
                 g.unit?.let { require(it.scaleToCanonical > 0) { "Unit scale must be positive" } }

@@ -39,4 +39,11 @@ class WidgetHabitPresentationTest {
         assertEquals(0.5f, WidgetHabitPresentation.progress(goal, 2, 4))
         assertEquals("2/4", WidgetHabitPresentation.value(goal, 2, 4, null, null))
     }
+
+    @Test
+    fun `targetless activity shows logged amount without a progress ring`() {
+        val goal = HabitGoal(0, PeriodType.DAY, GoalType.COUNT, direction = GoalDirection.TRACK_ONLY)
+        assertEquals(0f, WidgetHabitPresentation.progress(goal, 3, 0))
+        assertEquals("3", WidgetHabitPresentation.value(goal, 3, 0, null, null))
+    }
 }

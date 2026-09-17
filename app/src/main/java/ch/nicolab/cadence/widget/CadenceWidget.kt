@@ -126,7 +126,8 @@ class CadenceWidget : GlanceAppWidget() {
             } else repository.getEntries(habit.id)
             val entries = trackingEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
             val evaluation = evaluator.evaluate(habit.definition, today, entries, pauses)
-            evaluation.takeIf { habit.goal.isAbstinence || it.needsAttentionNow }?.let {
+            evaluation.takeIf { habit.goal.isAbstinence ||
+                (habit.goal.isTracker && it.isPlannedForDate && !it.isPaused) || it.needsAttentionNow }?.let {
                 // Un chronomètre actif s'affiche à la place de la progression : un toucher
                 // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.
                 val running = timers[habit.id]?.takeIf(HabitTimer::isRunning)?.elapsedSecondsAt(now)

@@ -32,7 +32,7 @@ data class HabitGoalEntity(
     val frequencyTarget: Int? = null,
     /** Seuil qui valide la période; nul lorsqu'il se confond avec l'idéal. */
     val minimumMinor: Long? = null,
-    /** `AT_LEAST` pour une cible à atteindre, `AT_MOST` pour un maximum à ne pas dépasser. */
+    /** `AT_LEAST` pour une cible, `AT_MOST` pour un plafond, `TRACK_ONLY` pour une activité libre. */
     @ColumnInfo(defaultValue = "AT_LEAST") val direction: String = "AT_LEAST",
     /** Progression facultative : les quatre colonnes vont ensemble ou sont toutes nulles. */
     val progressionStep: Long? = null,

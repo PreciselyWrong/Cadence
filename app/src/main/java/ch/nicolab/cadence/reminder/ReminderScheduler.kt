@@ -230,7 +230,9 @@ class ReminderReceiver : BroadcastReceiver() {
                         context = context,
                         habit = habit,
                         quickValue = app.repository.getQuickValues(habit.id).minOfOrNull(HabitQuickValueEntity::amountMinor),
-                        message = if (reminder.conditional) {
+                        message = if (habit.goal.isTracker) {
+                            context.getString(R.string.tracker_reminder_message)
+                        } else if (reminder.conditional) {
                             ReminderNotifications.remainingMessage(habit, evaluation.progressMinor)
                         } else {
                             "Votre rappel est prêt"
@@ -318,8 +320,10 @@ object ReminderNotifications {
                 )
             }
         }
-        builder.addAction(0, context.getString(R.string.notification_action_snooze), action(context, habit.id, ACTION_SNOOZE, reminderId = reminderId))
-        builder.addAction(0, context.getString(R.string.notification_action_skip), action(context, habit.id, ACTION_SKIP, reminderId = reminderId))
+        if (!habit.goal.isTracker) {
+            builder.addAction(0, context.getString(R.string.notification_action_snooze), action(context, habit.id, ACTION_SNOOZE, reminderId = reminderId))
+            builder.addAction(0, context.getString(R.string.notification_action_skip), action(context, habit.id, ACTION_SKIP, reminderId = reminderId))
+        }
         NotificationManagerCompat.from(context).notify(notificationId(habit.id), builder.build())
     }
 

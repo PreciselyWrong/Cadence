@@ -43,6 +43,7 @@ object StreakCalculator {
         pauses: List<HabitPause>,
         maxPeriods: Int = MAX_PERIODS,
     ): HabitStreak {
+        if (habitAt(today)?.goal?.isTracker == true) return HabitStreak(0, 0)
         val evaluator = HabitEvaluator()
         var current = 0
         var best = 0
@@ -89,6 +90,7 @@ object StreakCalculator {
             .takeWhile { it < window.endExclusive }
             .toList()
         val plannedDays = days.filter { isPlannedOn(habit, it) && it <= today }
+        if (habit.goal.isTracker) return PeriodOutcome.NEUTRAL
         if (plannedDays.isEmpty()) return PeriodOutcome.NEUTRAL
         if (plannedDays.all { day -> pauses.any { it.includes(day) } }) return PeriodOutcome.NEUTRAL
 
