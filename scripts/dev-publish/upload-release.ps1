@@ -8,6 +8,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 
 $lanBaseUrl = 'http://192.168.1.172:6812'
 $publicBaseUrl = 'https://nicoapps.nicolab.ch'
