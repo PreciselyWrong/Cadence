@@ -18,6 +18,7 @@ import ch.nicolab.cadence.data.local.entities.HabitEntity
 import ch.nicolab.cadence.data.local.entities.HabitEntryEntity
 import ch.nicolab.cadence.data.local.dao.HabitGroupDao
 import ch.nicolab.cadence.data.local.dao.HabitTimerDao
+import ch.nicolab.cadence.data.local.dao.HealthConnectDao
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
@@ -25,6 +26,8 @@ import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
+import ch.nicolab.cadence.data.local.entities.HealthConnectImportEntity
+import ch.nicolab.cadence.data.local.entities.HealthConnectRuleEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.domain.HabitGroup
@@ -42,10 +45,12 @@ import ch.nicolab.cadence.domain.HabitGroup
         HabitPauseEntity::class,
         HabitGroupEntity::class,
         HabitTimerEntity::class,
+        HealthConnectRuleEntity::class,
+        HealthConnectImportEntity::class,
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
     ],
-    version = 22,
+    version = 23,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -58,9 +63,42 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun habitGroupDao(): HabitGroupDao
     abstract fun habitTimerDao(): HabitTimerDao
     abstract fun habitReminderDao(): HabitReminderDao
+    abstract fun healthConnectDao(): HealthConnectDao
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
+        val MIGRATION_22_23 = object : Migration(22, 23) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS health_connect_rules (
+                        habitId TEXT NOT NULL PRIMARY KEY,
+                        exerciseTypes TEXT NOT NULL,
+                        dataOriginPackage TEXT,
+                        enabled INTEGER NOT NULL,
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_health_connect_rules_habitId ON health_connect_rules (habitId)")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS health_connect_imports (
+                        recordId TEXT NOT NULL,
+                        habitId TEXT NOT NULL,
+                        entryId TEXT NOT NULL,
+                        dataOriginPackage TEXT NOT NULL,
+                        state TEXT NOT NULL,
+                        PRIMARY KEY(recordId, habitId),
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_health_connect_imports_habitId ON health_connect_imports (habitId)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_health_connect_imports_entryId ON health_connect_imports (entryId)")
+            }
+        }
+
         val MIGRATION_21_22 = object : Migration(21, 22) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE alcohol_consumptions ADD COLUMN observedAtEpochMs INTEGER")

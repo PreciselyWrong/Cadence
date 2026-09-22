@@ -11,6 +11,8 @@ import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
+import ch.nicolab.cadence.data.local.entities.HealthConnectImportEntity
+import ch.nicolab.cadence.data.local.entities.HealthConnectRuleEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
@@ -26,6 +28,11 @@ import ch.nicolab.cadence.data.local.entities.AbstinenceLogEntity
 import java.time.Clock
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitEntrySource
+import ch.nicolab.cadence.domain.HealthConnectImportKey
+import ch.nicolab.cadence.domain.HealthConnectImportState
+import ch.nicolab.cadence.domain.HealthConnectRule
+import ch.nicolab.cadence.domain.PlannedHealthConnectEntry
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
@@ -245,6 +252,7 @@ class CadenceRepository(
                     valueMinor = entity.valueMinor,
                     sessionId = entity.sessionId,
                     note = entity.note,
+                    source = entity.source,
                 )
             }
         }
@@ -269,6 +277,7 @@ class CadenceRepository(
                 valueMinor = entity.valueMinor,
                 sessionId = entity.sessionId,
                 note = entity.note,
+                source = entity.source,
             )
         }
 
@@ -283,6 +292,7 @@ class CadenceRepository(
                 valueMinor = entity.valueMinor,
                 sessionId = entity.sessionId,
                 note = entity.note,
+                source = entity.source,
             )
         }
 
@@ -435,7 +445,7 @@ class CadenceRepository(
         database.habitDao().updateSortOrder(habitId, sortOrder, System.currentTimeMillis())
     }
 
-    suspend fun addEntry(entry: HabitEntry, source: String = "MANUAL") {
+    suspend fun addEntry(entry: HabitEntry, source: String = entry.source) {
         val entryEntity = HabitEntryEntity(
             id = entry.id,
             habitId = entry.habitId,
@@ -451,12 +461,21 @@ class CadenceRepository(
     }
 
     /**
-     * Réécrit une saisie existante. La source d'origine est conservée quand elle n'est pas
-     * précisée : une correction ne transforme pas une saisie du widget en saisie manuelle.
+     * Réécrit une saisie existante. La source d'origine reste intacte, sauf pour un import
+     * Health Connect : sa correction le détache durablement et en fait une saisie locale.
      */
     suspend fun updateEntry(entry: HabitEntry, source: String? = null) {
-        val existing = database.habitEntryDao().getEntryById(entry.id)
-        addEntry(entry, source ?: existing?.source ?: "MANUAL")
+        database.withTransaction {
+            val existing = database.habitEntryDao().getEntryById(entry.id)
+            val wasImported = existing?.source?.let(HabitEntrySource::isHealthConnect) == true
+            if (wasImported) {
+                database.healthConnectDao().updateImportState(entry.id, HealthConnectImportState.DETACHED.name)
+            }
+            addEntry(
+                entry.copy(source = source ?: if (wasImported) HabitEntrySource.MANUAL else existing?.source ?: HabitEntrySource.MANUAL),
+                source ?: if (wasImported) HabitEntrySource.MANUAL else existing?.source ?: HabitEntrySource.MANUAL,
+            )
+        }
     }
 
     suspend fun getEntry(entryId: String): HabitEntry? =
@@ -470,11 +489,82 @@ class CadenceRepository(
                 valueMinor = entity.valueMinor,
                 sessionId = entity.sessionId,
                 note = entity.note,
+                source = entity.source,
             )
         }
 
     suspend fun deleteEntry(entryId: String) {
-        database.habitEntryDao().deleteEntry(entryId)
+        database.withTransaction {
+            database.healthConnectDao().getImportByEntryId(entryId)?.let {
+                database.healthConnectDao().updateImportState(entryId, HealthConnectImportState.IGNORED.name)
+            }
+            database.habitEntryDao().deleteEntry(entryId)
+        }
+    }
+
+    suspend fun getHealthConnectRules(): List<HealthConnectRule> =
+        database.healthConnectDao().getRules().mapNotNull { entity ->
+            val types = entity.exerciseTypes.split(',').mapNotNull(String::toIntOrNull).toSet()
+            types.takeIf(Set<Int>::isNotEmpty)?.let {
+                HealthConnectRule(entity.habitId, it, entity.dataOriginPackage, entity.enabled)
+            }
+        }
+
+    suspend fun saveHealthConnectRule(rule: HealthConnectRule) {
+        database.healthConnectDao().saveRule(
+            HealthConnectRuleEntity(
+                habitId = rule.habitId,
+                exerciseTypes = rule.exerciseTypes.sorted().joinToString(","),
+                dataOriginPackage = rule.dataOriginPackage,
+                enabled = rule.enabled,
+            ),
+        )
+    }
+
+    suspend fun deleteHealthConnectRule(habitId: String) {
+        database.healthConnectDao().deleteRule(habitId)
+    }
+
+    suspend fun getHealthConnectImports(): Set<HealthConnectImportKey> =
+        database.healthConnectDao().getImports().mapNotNullTo(mutableSetOf()) { entity ->
+            HealthConnectImportState.entries.firstOrNull { it.name == entity.state }?.let {
+                HealthConnectImportKey(entity.recordId, entity.habitId, it)
+            }
+        }
+
+    suspend fun importHealthConnectEntries(entries: List<PlannedHealthConnectEntry>): Int {
+        var imported = 0
+        database.withTransaction {
+            entries.forEach { planned ->
+                if (database.healthConnectDao().getImport(planned.recordId, planned.habitId) != null) return@forEach
+                val habit = getHabitEffectiveAt(planned.habitId, LocalDate.now(clock)) ?: return@forEach
+                if (!habit.active || habit.archived || habit.goal.goalType != GoalType.DURATION) return@forEach
+                val source = HabitEntrySource.healthConnect(planned.dataOriginPackage)
+                database.habitEntryDao().insertEntry(
+                    HabitEntryEntity(
+                        id = planned.entryId,
+                        habitId = planned.habitId,
+                        occurredAtEpochMs = planned.occurredAt.toEpochMilli(),
+                        localDate = planned.localDate.toString(),
+                        observedZoneId = planned.observedZoneId.id,
+                        valueMinor = planned.valueSeconds,
+                        source = source,
+                        sessionId = "health-connect:${planned.recordId}",
+                    ),
+                )
+                database.healthConnectDao().saveImport(
+                    HealthConnectImportEntity(
+                        recordId = planned.recordId,
+                        habitId = planned.habitId,
+                        entryId = planned.entryId,
+                        dataOriginPackage = planned.dataOriginPackage,
+                        state = HealthConnectImportState.IMPORTED.name,
+                    ),
+                )
+                imported++
+            }
+        }
+        return imported
     }
 
     suspend fun addQuickValue(
@@ -805,7 +895,9 @@ class CadenceRepository(
             )
         }
 
-        val backupEntries = database.habitEntryDao().getAllEntries().map { e ->
+        val backupEntries = database.habitEntryDao().getAllEntries()
+            .filterNot { HabitEntrySource.isHealthConnect(it.source) }
+            .map { e ->
             BackupEntryV2(
                 id = e.id,
                 habitId = e.habitId,
@@ -1007,7 +1099,7 @@ class CadenceRepository(
                 )
             }
 
-            docV2.entries.forEach { e ->
+            docV2.entries.filterNot { HabitEntrySource.isHealthConnect(it.source) }.forEach { e ->
                 database.habitEntryDao().insertEntry(
                     HabitEntryEntity(
                         id = e.id,

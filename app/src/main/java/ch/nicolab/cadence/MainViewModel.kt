@@ -21,6 +21,8 @@ import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitTimer
+import ch.nicolab.cadence.domain.HealthConnectImportPlanner
+import ch.nicolab.cadence.domain.HealthConnectRule
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.HabitInsights
 import ch.nicolab.cadence.domain.HabitInsightsCalculator
@@ -39,6 +41,9 @@ import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpPlanner
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
+import ch.nicolab.cadence.health.HealthConnectAvailability
+import ch.nicolab.cadence.health.HealthConnectGateway
+import ch.nicolab.cadence.health.HealthConnectPermissionMissing
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
@@ -105,11 +110,36 @@ data class PeriodStat(
     val excludedByPause: Boolean,
 )
 
+data class HealthConnectSourceOption(
+    val packageName: String,
+    val label: String,
+)
+
+data class HealthConnectUiState(
+    val availability: HealthConnectAvailability = HealthConnectAvailability.UNAVAILABLE,
+    val permissionGranted: Boolean = false,
+    val syncEnabled: Boolean = false,
+    val syncing: Boolean = false,
+    val rules: List<HealthConnectRule> = emptyList(),
+    val sources: List<HealthConnectSourceOption> = emptyList(),
+    val lastImportedCount: Int? = null,
+    val failed: Boolean = false,
+)
+
 class MainViewModel(
     private val app: CadenceApp,
     private val repository: CadenceRepository,
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : ViewModel() {
+    private val healthConnect = HealthConnectGateway(app)
+    private val healthPreferences = app.getSharedPreferences("health_connect", android.content.Context.MODE_PRIVATE)
+    private val healthState = MutableStateFlow(
+        HealthConnectUiState(
+            availability = healthConnect.availability(),
+            syncEnabled = healthPreferences.getBoolean("sync_enabled", false),
+        ),
+    )
+    val healthConnectState: StateFlow<HealthConnectUiState> = healthState
     private val evaluator = HabitEvaluator()
     private val cards = MutableStateFlow<List<HabitCardState>>(emptyList())
     val isLoaded = MutableStateFlow(false)
@@ -140,6 +170,97 @@ class MainViewModel(
             repository.getTimers().values.none { it.isRunning }
         ) returning.value = true
         preferences.edit().putString("last_visit", today.toString()).apply()
+        refreshHealthConnect(autoSync = true)
+    }
+
+    fun onHealthConnectPermissionResult(granted: Set<String>) {
+        val allowed = granted.containsAll(HealthConnectGateway.permissions)
+        if (allowed) healthPreferences.edit().putBoolean("sync_enabled", true).apply()
+        healthState.value = healthState.value.copy(permissionGranted = allowed, syncEnabled = allowed, failed = false)
+        if (allowed) syncHealthConnect()
+    }
+
+    fun setHealthConnectSyncEnabled(enabled: Boolean) {
+        healthPreferences.edit().putBoolean("sync_enabled", enabled).apply()
+        healthState.value = healthState.value.copy(syncEnabled = enabled, failed = false)
+        if (enabled) syncHealthConnect()
+    }
+
+    fun syncHealthConnect() {
+        if (healthState.value.syncing) return
+        viewModelScope.launch { performHealthConnectSync() }
+    }
+
+    fun saveHealthConnectRule(rule: HealthConnectRule, onSaved: () -> Unit = {}) = viewModelScope.launch {
+        val habit = latest.firstOrNull { it.id == rule.habitId }
+        require(habit != null && habit.active && !habit.archived && habit.goal.goalType == GoalType.DURATION)
+        repository.saveHealthConnectRule(rule)
+        healthState.value = healthState.value.copy(rules = repository.getHealthConnectRules(), failed = false)
+        onSaved()
+        if (healthState.value.syncEnabled && healthState.value.permissionGranted) performHealthConnectSync()
+    }
+
+    fun deleteHealthConnectRule(habitId: String) = viewModelScope.launch {
+        repository.deleteHealthConnectRule(habitId)
+        healthState.value = healthState.value.copy(rules = repository.getHealthConnectRules(), failed = false)
+    }
+
+    fun healthConnectManageIntent(): android.content.Intent = healthConnect.manageAccessIntent()
+
+    private suspend fun refreshHealthConnect(autoSync: Boolean) {
+        val availability = healthConnect.availability()
+        val permission = runCatching { healthConnect.hasPermission() }.getOrDefault(false)
+        val enabled = healthPreferences.getBoolean("sync_enabled", false)
+        healthState.value = healthState.value.copy(
+            availability = availability,
+            permissionGranted = permission,
+            syncEnabled = enabled,
+            rules = repository.getHealthConnectRules(),
+            failed = false,
+        )
+        if (autoSync && availability == HealthConnectAvailability.AVAILABLE && permission && enabled) {
+            performHealthConnectSync()
+        }
+    }
+
+    private suspend fun performHealthConnectSync() {
+        if (healthState.value.syncing) return
+        val availability = healthConnect.availability()
+        if (availability != HealthConnectAvailability.AVAILABLE) {
+            healthState.value = healthState.value.copy(availability = availability, syncing = false)
+            return
+        }
+        healthState.value = healthState.value.copy(syncing = true, failed = false)
+        try {
+            if (!healthConnect.hasPermission()) {
+                healthState.value = healthState.value.copy(permissionGranted = false, syncing = false)
+                return
+            }
+            val now = clock.instant()
+            val sessions = healthConnect.readSessions(now.minusSeconds(30L * 24 * 60 * 60), now, clock.zone)
+            val rules = repository.getHealthConnectRules()
+            val planned = HealthConnectImportPlanner.plan(rules, sessions, repository.getHealthConnectImports())
+            val imported = repository.importHealthConnectEntries(planned)
+            val sources = sessions.map { it.dataOriginPackage }.distinct().map { packageName ->
+                HealthConnectSourceOption(
+                    packageName,
+                    healthConnect.applicationLabel(packageName) ?: packageName,
+                )
+            }.sortedBy { it.label.lowercase() }
+            healthState.value = healthState.value.copy(
+                permissionGranted = true,
+                syncing = false,
+                rules = rules,
+                sources = sources,
+                lastImportedCount = imported,
+                failed = false,
+            )
+            if (imported > 0) refreshAll()
+        } catch (_: HealthConnectPermissionMissing) {
+            healthState.value = healthState.value.copy(permissionGranted = false, syncing = false)
+        } catch (_: Exception) {
+            healthState.value = healthState.value.copy(syncing = false, failed = true)
+        }
     }
 
     /** Le reçu cible cette action précise : une saisie ultérieure ne peut pas être annulée à sa place. */

@@ -8,6 +8,10 @@ import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitEntrySource
+import ch.nicolab.cadence.domain.HealthConnectImportState
+import ch.nicolab.cadence.domain.HealthConnectRule
+import ch.nicolab.cadence.domain.PlannedHealthConnectEntry
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.HabitSchedule
@@ -229,6 +233,45 @@ class CadenceDatabaseTest {
         assertEquals(65, repository.getWidgetConfig(101)?.iconOpacity)
         assertEquals(40, repository.getWidgetConfig(101)?.iconSaturation)
         assertEquals(true, repository.getWidgetConfig(101)?.monochromeIcons)
+    }
+
+    @Test
+    fun healthConnectImportsAreIdempotentEditableIgnoredAndExcludedFromBackup() = runBlocking {
+        val habit = PersistedHabit(
+            id = "health-duration",
+            name = "Cardio",
+            active = true,
+            startsOn = LocalDate.of(2026, 1, 1),
+            goal = HabitGoal(1_800, PeriodType.DAY, GoalType.DURATION, MeasurementUnit.SECONDS),
+            schedule = HabitSchedule(mode = ScheduleMode.EVERY_DAY),
+        )
+        repository.addHabit(habit, habit.startsOn)
+        repository.saveHealthConnectRule(HealthConnectRule(habit.id, setOf(56), "com.strava"))
+        val planned = PlannedHealthConnectEntry(
+            recordId = "record-1",
+            habitId = habit.id,
+            entryId = "hc-entry-1",
+            dataOriginPackage = "com.strava",
+            occurredAt = Instant.parse("2026-09-20T08:00:00Z"),
+            localDate = LocalDate.of(2026, 9, 20),
+            observedZoneId = ZoneId.of("Europe/Zurich"),
+            valueSeconds = 2_400,
+        )
+
+        assertEquals(1, repository.importHealthConnectEntries(listOf(planned)))
+        assertEquals(0, repository.importHealthConnectEntries(listOf(planned)))
+        val imported = repository.getEntry(planned.entryId)!!
+        assertEquals("com.strava", HabitEntrySource.healthConnectPackage(imported.source))
+        assertTrue(!repository.exportBackup().contains(planned.entryId))
+
+        repository.updateEntry(imported.copy(valueMinor = 2_500))
+        assertEquals(HabitEntrySource.MANUAL, repository.getEntry(planned.entryId)?.source)
+        assertEquals(HealthConnectImportState.DETACHED, repository.getHealthConnectImports().single().state)
+
+        repository.deleteEntry(planned.entryId)
+        assertEquals(null, repository.getEntry(planned.entryId))
+        assertEquals(HealthConnectImportState.IGNORED, repository.getHealthConnectImports().single().state)
+        assertEquals(0, repository.importHealthConnectEntries(listOf(planned)))
     }
 
     @Test

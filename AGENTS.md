@@ -57,6 +57,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Une activité libre utilise `GoalDirection.TRACK_ONLY` avec une cible nulle et une mesure `COUNT`, `QUANTITY` ou `DURATION`. Elle reste saisissable chaque jour sans réussite, échec, série, planning contraignant ni jauge de progression; sa direction textuelle traverse Room et la sauvegarde sans nouvelle colonne. Ses KPI portent sur 30 jours, avec contexte sur 90 jours, et tout l’historique est consultable dans Statistiques.
 - La zone `À compléter` regroupe uniquement une donnée réellement ouverte : quantité d’alcool inconnue ou chronomètre non terminé. Elle n’invente ni brouillon, ni relance pour une saisie déjà complète.
 - Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
+- Health Connect est une source locale facultative pour les habitudes de durée : Cadence lit au premier plan les séances des 30 derniers jours selon une règle types + application source, importe chaque identifiant une seule fois et n’exporte aucune donnée santé. Corriger une séance la détache de la source; la supprimer l’ignore durablement; suspendre une règle ou la synchronisation conserve l’historique.
 
 ## ⛔ Interdits
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.

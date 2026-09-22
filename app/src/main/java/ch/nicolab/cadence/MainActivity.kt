@@ -24,6 +24,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.health.connect.client.PermissionController
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -109,6 +110,7 @@ import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitEntrySource
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
 import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.HabitStatisticsDay
@@ -121,6 +123,9 @@ import ch.nicolab.cadence.domain.WeekStage
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.MeasurementUnit
+import ch.nicolab.cadence.health.HealthConnectGateway
+import ch.nicolab.cadence.health.HealthConnectRulesSheet
+import ch.nicolab.cadence.health.HealthConnectSettingsPanel
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.components.ActionRow
@@ -190,6 +195,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     val timers by viewModel.timers.collectAsStateWithLifecycle()
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
+    val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableStateOf(Tab.TODAY) }
     var editorId by rememberSaveable { mutableStateOf<String?>(null) }
     val editor = habits.firstOrNull { it.stored.id == editorId }
@@ -217,6 +223,7 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     var movingToGroup by remember { mutableStateOf<HabitCardState?>(null) }
     var deleting by remember { mutableStateOf<PersistedHabit?>(null) }
     var backupMessage by remember { mutableStateOf<String?>(null) }
+    var healthConnectRulesOpen by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val offerReturn by viewModel.offerReturn.collectAsStateWithLifecycle()
     val snackbar = remember { androidx.compose.material3.SnackbarHostState() }
@@ -227,6 +234,10 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     val exportedMessage = stringResource(R.string.backup_exported)
     val importedMessage = stringResource(R.string.backup_imported)
     val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val healthConnectPermission = rememberLauncherForActivityResult(
+        PermissionController.createRequestPermissionResultContract(),
+        viewModel::onHealthConnectPermissionResult,
+    )
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         uri?.let { destination -> viewModel.exportBackup { content -> context.contentResolver.openOutputStream(destination)?.bufferedWriter()?.use { it.write(content) }; backupMessage = exportedMessage } }
     }
@@ -287,6 +298,13 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
                     export = { exportLauncher.launch("cadence-backup.json") },
                     import = { importLauncher.launch(arrayOf("application/json")) },
                     message = backupMessage,
+                    healthConnectState = healthConnectState,
+                    hasDurationHabits = habits.any { it.stored.active && !it.stored.archived && it.stored.goal.goalType == GoalType.DURATION },
+                    connectHealth = { healthConnectPermission.launch(HealthConnectGateway.permissions) },
+                    syncHealth = viewModel::syncHealthConnect,
+                    setHealthSyncEnabled = viewModel::setHealthConnectSyncEnabled,
+                    manageHealthAccess = { runCatching { context.startActivity(viewModel.healthConnectManageIntent()) } },
+                    configureHealth = { healthConnectRulesOpen = true },
                 )
             }
         }
@@ -414,6 +432,16 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
             AbstinenceSetupSheet(editor, groups, dismissEditor, save, busy, saveError)
         } else HabitEditor(editor, groups, dismissEditor, busy, saveError,
             initialDirection = if (creatingTracker) GoalDirection.TRACK_ONLY else GoalDirection.AT_LEAST, save = save)
+    }
+    if (healthConnectRulesOpen) {
+        HealthConnectRulesSheet(
+            habits = habits.filter { it.stored.active && !it.stored.archived && it.stored.goal.goalType == GoalType.DURATION },
+            rules = healthConnectState.rules,
+            sources = healthConnectState.sources,
+            dismiss = { healthConnectRulesOpen = false },
+            save = { viewModel.saveHealthConnectRule(it) },
+            delete = { viewModel.deleteHealthConnectRule(it) },
+        )
     }
     deleting?.let { habit -> DeleteDialog({ deleting = null }) { viewModel.deleteHabit(habit.id); deleting = null } }
 }
@@ -1813,6 +1841,13 @@ private fun SettingsScreen(
     export: () -> Unit,
     import: () -> Unit,
     message: String?,
+    healthConnectState: HealthConnectUiState,
+    hasDurationHabits: Boolean,
+    connectHealth: () -> Unit,
+    syncHealth: () -> Unit,
+    setHealthSyncEnabled: (Boolean) -> Unit,
+    manageHealthAccess: () -> Unit,
+    configureHealth: () -> Unit,
 ) {
     val palette = cadence
     ScreenList(context = stringResource(R.string.settings_data_subtitle), title = stringResource(R.string.tab_settings)) {
@@ -1848,6 +1883,18 @@ private fun SettingsScreen(
                 Spacer(Modifier.height(Space.xs))
                 Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
             }
+        }
+        item { SectionLabel(stringResource(R.string.health_connect_title)) }
+        item {
+            HealthConnectSettingsPanel(
+                state = healthConnectState,
+                hasDurationHabits = hasDurationHabits,
+                connect = connectHealth,
+                sync = syncHealth,
+                setEnabled = setHealthSyncEnabled,
+                manageAccess = manageHealthAccess,
+                configure = configureHealth,
+            )
         }
         item { SectionLabel(stringResource(R.string.settings_data_title)) }
         item {
@@ -2192,6 +2239,17 @@ private fun QuickSheet(
 @Composable
 private fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUnit?, onClick: () -> Unit) {
     val palette = cadence
+    val context = LocalContext.current
+    val healthPackage = HabitEntrySource.healthConnectPackage(entry.source)
+    val healthSource = remember(entry.source) {
+        healthPackage?.let { HealthConnectGateway(context).applicationLabel(it) }
+    }
+    val durationSource = when {
+        goalType != GoalType.DURATION -> null
+        healthPackage != null -> stringResource(R.string.health_connect_entry_source, healthSource ?: healthPackage)
+        entry.source == "TIMER" -> stringResource(R.string.health_connect_entry_timer)
+        else -> stringResource(R.string.health_connect_entry_manual)
+    }
     Row(
         Modifier.fillMaxWidth().clip(Radius.Control).clickable(onClick = onClick).padding(vertical = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
@@ -2208,6 +2266,15 @@ private fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUni
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+            durationSource?.let { sourceLabel ->
+                Text(
+                    sourceLabel,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (healthPackage != null) palette.accent else palette.inkFaint,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
         Text(
             HabitFormatter.formatValue(entry.valueMinor, goalType, unit),
@@ -2249,6 +2316,7 @@ internal fun EntryEditor(
     val badValue = stringResource(R.string.entry_error_value)
     val badDate = stringResource(R.string.entry_error_date)
     val badTime = stringResource(R.string.entry_error_time)
+    val imported = HabitEntrySource.isHealthConnect(entry.source)
 
     CadenceSheet(
         title = stringResource(R.string.entry_edit_title),
@@ -2271,6 +2339,14 @@ internal fun EntryEditor(
             style = MaterialTheme.typography.bodySmall,
             color = palette.inkFaint,
         )
+        if (imported) {
+            Spacer(Modifier.height(Space.sm))
+            Text(
+                stringResource(R.string.health_connect_entry_detach_notice),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.inkMuted,
+            )
+        }
         (error ?: saveError)?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -2294,6 +2370,10 @@ internal fun EntryEditor(
             }
         }
         Spacer(Modifier.height(Space.sm))
-        TertiaryAction(stringResource(R.string.entry_delete), Modifier.fillMaxWidth(), onClick = { if (!busy) { error = null; delete() } })
+        TertiaryAction(
+            stringResource(if (imported) R.string.health_connect_entry_ignore else R.string.entry_delete),
+            Modifier.fillMaxWidth(),
+            onClick = { if (!busy) { error = null; delete() } },
+        )
     }
 }

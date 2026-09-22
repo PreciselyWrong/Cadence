@@ -231,10 +231,29 @@ data class HabitEntry(
     val valueMinor: Long,
     val sessionId: String? = null,
     val note: String? = null,
+    val source: String = HabitEntrySource.MANUAL,
 ) {
     init {
         require(valueMinor > 0) { "Entry value must be positive" }
     }
+}
+
+/** Valeurs persistées de provenance d'une saisie, avec un préfixe stable pour Health Connect. */
+object HabitEntrySource {
+    const val MANUAL = "MANUAL"
+    private const val HEALTH_CONNECT_PREFIX = "HEALTH_CONNECT:"
+
+    fun healthConnect(dataOriginPackage: String): String {
+        require(dataOriginPackage.isNotBlank()) { "Data origin cannot be blank" }
+        return HEALTH_CONNECT_PREFIX + dataOriginPackage
+    }
+
+    fun healthConnectPackage(source: String): String? =
+        source.takeIf { it.startsWith(HEALTH_CONNECT_PREFIX) }
+            ?.removePrefix(HEALTH_CONNECT_PREFIX)
+            ?.takeIf(String::isNotBlank)
+
+    fun isHealthConnect(source: String): Boolean = healthConnectPackage(source) != null
 }
 
 /** Pourquoi une habitude est mise de côté. Aucune de ces raisons ne casse la série. */

@@ -15,6 +15,8 @@ import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import kotlinx.coroutines.runBlocking
@@ -95,8 +97,9 @@ class AlcoholConsumptionPersistenceTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val database = Room.inMemoryDatabaseBuilder(context, CadenceDatabase::class.java).build()
         try {
-            val repository = CadenceRepository(database)
-            val today = LocalDate.now()
+            val now = Instant.parse("2026-09-22T12:00:00Z")
+            val repository = CadenceRepository(database, Clock.fixed(now, ZoneOffset.UTC))
+            val today = LocalDate.of(2026, 9, 22)
             val start = today.minusDays(7)
             val habit = PersistedHabit(
                 id = "alcohol",

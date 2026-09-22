@@ -15,19 +15,9 @@
   - Cadence conserve l'`_ID` CalendarProvider de chaque événement qu'elle a créé pour pouvoir le modifier ou le supprimer sans doublons
   - Choisir dans quel calendrier local écrire (agenda personnel, agenda dédié Cadence…)
   - Vérification : habitude sans horaire, permission refusée, événement supprimé manuellement dans l'agenda, changement de créneau, habitude supprimée et sauvegarde/restauration sans les IDs calendrier
-- [ ] Synchroniser les activités sportives via Health Connect
-  - Connecter Cadence à Health Connect, avec consentement explicite et sans compte Cadence
-  - Associer chaque habitude à une règle de correspondance sur deux axes combinables :
-    - **Type d'exercice** (`ExerciseSessionRecord.exerciseType`) : `RUNNING`, `CYCLING`, `SWIMMING`, `WEIGHTLIFTING`, `OTHER_WORKOUT`… - liste fixe définie par Health Connect, indépendante de l'app source
-    - **Application source** (`metadata.dataOrigin.packageName`) : filtrer par app précise, par exemple Strava uniquement, ou toutes les sources acceptées
-  - Exemples : `RUNNING || CYCLING` → Cardio ; `WEIGHTLIFTING` depuis `com.myfitnesspal` → Musculation
-  - Importer la durée de la séance pour compléter automatiquement l'objectif, minimum et idéal inclus
-  - Continuer d'accepter simultanément le chronomètre Cadence et les saisies manuelles, sans compter deux fois la même séance
-  - Montrer clairement l'origine de chaque durée : app source, chronomètre ou saisie manuelle
-  - Permettre de modifier, ignorer ou désactiver les règles à tout moment sans effacer l'historique importé
-  - Vérification : permission refusée, source déconnectée, import différé, doublons, correction manuelle, fuseaux et sauvegarde/restauration sans données de santé
 
 ## Done
+- [x] Synchronisation des séances sportives via Health Connect
 - [x] Modals de statistiques pleine hauteur, indicateurs colorés et sélecteurs de période
 - [x] Activités sans objectif, KPI sur 30 et 90 jours et historique complet
 - [x] Activité notée et moyennes détaillées dans les statistiques des habitudes et abstinences
