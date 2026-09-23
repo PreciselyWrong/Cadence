@@ -1,4 +1,4 @@
-## [1.0.20] — 17 septembre 2026
+## [1.0.21] — 23 septembre 2026
 
 ### Nouveautés
 - Reliez une habitude de durée à vos séances Health Connect, selon le sport et l’application de votre choix.
@@ -7,6 +7,8 @@
 ### Améliorations
 - Chaque durée indique clairement si elle vient de Health Connect, du chronomètre ou d’une saisie manuelle.
 - Une séance importée peut être corrigée ou ignorée sans revenir à la prochaine synchronisation.
+
+## [1.0.20] — 17 septembre 2026
 
 ### Corrections
 - L'application ne se ferme plus au démarrage pour les profils d'abstinence avec un écart moyen entre les occurrences.
