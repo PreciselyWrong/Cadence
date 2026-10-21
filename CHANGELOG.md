@@ -1,3 +1,11 @@
+## [1.0.22] — 21 octobre 2026
+
+### Améliorations
+- Interface épurée et apaisée d'inspiration Apple : en-tête aéré affichant la date civile et marge haute optimisée sous l'encoche.
+- Bouton d'ajout adouci et suppression des puces de filtre lorsqu'aucun groupe multiple n'est à filtrer.
+- État vide minimaliste recentré sans encadrement lourd.
+- Navigation flottante affinée avec pastille de sélection galbée et typographie équilibrée.
+
 ## [1.0.21] — 23 septembre 2026
 
 ### Nouveautés
