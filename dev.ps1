@@ -30,7 +30,7 @@ function Start-InteractiveEmulator {
         [string[]]$ExtraArguments = @()
     )
     $argsList = @("@$AvdName") + $ExtraArguments
-    if ($IsWindows -or $env:OS -match 'Windows') {
+    if ($env:OS -match 'Windows') {
         $taskName = "DevEmuLaunch_$([guid]::NewGuid().ToString('N').Substring(0,8))"
         $cmdLine = "`"$EmulatorPath`" $($argsList -join ' ')"
         try {
@@ -52,7 +52,7 @@ function Start-AvailableAvd {
     $avd = if ($avds -contains $defaultAvd) { $defaultAvd } else { $avds | Select-Object -First 1 }
     if (-not $avd) { Fail "Aucun AVD Android configure." }
     Start-InteractiveEmulator -EmulatorPath $emulator -AvdName $avd -ExtraArguments @('-no-snapshot-save')
-    for ($attempt = 1; $attempt -le 60; $attempt++) {
+    for ($attempt = 1; $attempt -le 120; $attempt++) {
         $device = Get-ReadyDevice
         if ($device) {
             $serial = ($device -split '\s+')[0]
@@ -61,7 +61,7 @@ function Start-AvailableAvd {
         }
         Start-Sleep -Seconds 1
     }
-    Fail "Emulateur Android non pret apres 60 secondes." 3
+    Fail "Emulateur Android non pret apres 120 secondes." 3
 }
 
 function Wait-ForCadence([string]$serial) {
