@@ -85,8 +85,6 @@ internal fun TodayScreen(
         }
     }
     var completedOpen by rememberSaveable(selectedGroupId) { mutableStateOf(false) }
-    var laterOpen by rememberSaveable(selectedGroupId) { mutableStateOf(false) }
-    var earlierOpen by rememberSaveable(selectedGroupId) { mutableStateOf(false) }
     var adjustOpen by rememberSaveable { mutableStateOf(false) }
     val active = habits.filter { !it.stored.archived && (selectedGroupId == null || it.stored.groupId == selectedGroupId) }
     val byId = active.associateBy { it.stored.id }
@@ -96,6 +94,11 @@ internal fun TodayScreen(
     val goalNow = now.filterNot { it.habit.goal.isTracker }
     val goalLater = sections.later.filterNot { it.habit.goal.isTracker }
     val goalEarlier = sections.earlier.filterNot { it.habit.goal.isTracker }
+    val pendingHabits = if (selectedGroupId == null) {
+        (goalNow + goalLater + goalEarlier).distinctBy { it.habit.id }
+    } else {
+        now.filterNot { it.habit.goal.isTracker }
+    }
     val trackers = active.filter { it.stored.goal.isTracker && it.evaluation.isPlannedForDate && !it.evaluation.isPaused }
     val abstinences = active.filter { it.stored.goal.isAbstinence }
     val toComplete = remember(active, timers) { ToCompleteItem.resolve(active, timers) }
@@ -132,33 +135,12 @@ internal fun TodayScreen(
                     if (selectedGroupId == null) PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
                 }
             }
-            toComplete.isEmpty() && goalNow.isEmpty() && goalLater.isEmpty() && goalEarlier.isEmpty() && trackers.isEmpty() && abstinences.isEmpty() -> item {
+            toComplete.isEmpty() && pendingHabits.isEmpty() && trackers.isEmpty() && abstinences.isEmpty() -> item {
                 EmptyState(Icons.Outlined.Check, stringResource(R.string.empty_today_done_title), stringResource(R.string.empty_today_done_message))
             }
         }
-        if (goalNow.isNotEmpty() && selectedGroupId == null && (goalLater.isNotEmpty() || goalEarlier.isNotEmpty())) {
-            item { SectionLabel(stringResource(R.string.today_now)) }
-        }
-        items(goalNow, key = { it.habit.id }) { evaluation ->
-            byId[evaluation.habit.id]?.let { item ->
-                Box(Modifier.animateItem().fillMaxWidth()) {
-                    TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
-                }
-            }
-        }
-        if (selectedGroupId == null && goalLater.isNotEmpty()) {
-            item { FoldHeading(stringResource(R.string.today_later_count, goalLater.size), laterOpen) { laterOpen = !laterOpen } }
-            if (laterOpen) items(goalLater, key = { it.habit.id }) { evaluation ->
-                byId[evaluation.habit.id]?.let { item ->
-                    Box(Modifier.animateItem().fillMaxWidth()) {
-                        TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
-                    }
-                }
-            }
-        }
-        if (selectedGroupId == null && goalEarlier.isNotEmpty()) {
-            item { FoldHeading(stringResource(R.string.today_earlier_count, goalEarlier.size), earlierOpen) { earlierOpen = !earlierOpen } }
-            if (earlierOpen) items(goalEarlier, key = { it.habit.id }) { evaluation ->
+        if (pendingHabits.isNotEmpty()) {
+            items(pendingHabits, key = { it.habit.id }) { evaluation ->
                 byId[evaluation.habit.id]?.let { item ->
                     Box(Modifier.animateItem().fillMaxWidth()) {
                         TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)

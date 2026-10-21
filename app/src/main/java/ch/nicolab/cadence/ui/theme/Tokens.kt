@@ -30,8 +30,8 @@ object Space {
 object Radius {
     val chip = 12.dp
     val control = 16.dp
-    val card = 24.dp
-    val panel = 28.dp
+    val card = 20.dp
+    val panel = 24.dp
     val sheet = 32.dp
     val pill = 999.dp
 
@@ -57,9 +57,10 @@ object Size {
     val iconSm = 16.dp
     val icon = 20.dp
     val iconLarge = 24.dp
+    val actionSm = 36.dp
     val touch = 48.dp
     val control = 52.dp
-    val badge = 52.dp
+    val badge = 44.dp
     val calendarMark = 36.dp
     val statisticsPulse = 48.dp
     val navBar = 64.dp

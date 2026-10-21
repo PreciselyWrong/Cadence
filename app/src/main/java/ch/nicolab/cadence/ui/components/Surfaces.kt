@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ch.nicolab.cadence.ui.theme.Elevation
 import ch.nicolab.cadence.ui.theme.Motion
 import ch.nicolab.cadence.ui.theme.Radius
@@ -113,7 +114,7 @@ fun Panel(
         shadowElevation = if (floating) Elevation.floating else Elevation.flat,
         tonalElevation = Elevation.flat,
     ) {
-        Column(Modifier.then(interactive).padding(Space.lg), content = content)
+        Column(Modifier.then(interactive).padding(horizontal = Space.lg, vertical = Space.md), content = content)
     }
 }
 
@@ -128,11 +129,27 @@ fun PageHeader(
     action: (@Composable () -> Unit)? = null,
 ) {
     val palette = cadence
-    Row(Modifier.fillMaxWidth().padding(top = Space.xl, bottom = Space.lg), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = Space.xl, bottom = Space.md),
+        verticalAlignment = Alignment.Bottom,
+    ) {
         Column(Modifier.weight(1f)) {
-            Text(context, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+            Text(
+                context.uppercase(),
+                style = MaterialTheme.typography.labelSmall,
+                color = palette.inkFaint,
+                letterSpacing = 0.6.sp,
+            )
             Spacer(Modifier.height(Space.xs))
-            Text(title, style = MaterialTheme.typography.headlineMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                title,
+                style = MaterialTheme.typography.displaySmall,
+                color = palette.ink,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
         action?.invoke()
     }

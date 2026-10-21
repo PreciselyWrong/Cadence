@@ -10,12 +10,12 @@ fun CadencePalette.habitAccent(colorArgb: Int?): Color =
     else Color(colorArgb)
 
 /**
- * Palette de Cadence : un fond très calme, une surface claire, une surface sombre
- * structurante pour la navigation, et un accent indigo électrique employé avec parcimonie.
+ * Palette de Cadence : sobriété Apple-native, contrastes de surfaces nets,
+ * encres franches et accent Indigo électrique employé avec parcimonie.
  */
 @Immutable
 data class CadencePalette(
-    /** Niveau 1 - fond général, jamais blanc pur en clair. */
+    /** Niveau 1 - fond général, blanc cassé propre ou noir absolu. */
     val background: Color,
     /** Niveau 2 - grandes surfaces fonctionnelles. */
     val surface: Color,
@@ -41,44 +41,44 @@ data class CadencePalette(
 )
 
 val LightPalette = CadencePalette(
-    background = Color(0xFFF2F3F8),
+    background = Color(0xFFF2F2F7),
     surface = Color(0xFFFFFFFF),
-    sunken = Color(0xFFE7EAF4),
-    structural = Color(0xFF161A28),
-    onStructural = Color(0xFFF4F5FA),
-    onStructuralMuted = Color(0xFF9AA1BC),
-    accent = Color(0xFF5546EE),
+    sunken = Color(0xFFE5E5EA),
+    structural = Color(0xFF1C1C1E),
+    onStructural = Color(0xFFF2F2F7),
+    onStructuralMuted = Color(0xFF8E8E93),
+    accent = Color(0xFF5E5CE6),
     onAccent = Color(0xFFFFFFFF),
-    accentSoft = Color(0xFFE6E3FF),
-    ink = Color(0xFF121524),
-    inkMuted = Color(0xFF525870),
-    inkFaint = Color(0xFF6B728D),
-    hairline = Color(0xFFD7DCE9),
-    success = Color(0xFF1B9C6B),
-    successSoft = Color(0xFFD8F2E7),
-    warning = Color(0xFFC77C0A),
-    danger = Color(0xFFD93C4E),
+    accentSoft = Color(0xFFEBEBF5),
+    ink = Color(0xFF000000),
+    inkMuted = Color(0xFF636366),
+    inkFaint = Color(0xFF8E8E93),
+    hairline = Color(0xFFE5E5EA),
+    success = Color(0xFF34C759),
+    successSoft = Color(0xFFE8F9ED),
+    warning = Color(0xFFFF9500),
+    danger = Color(0xFFFF3B30),
     isDark = false,
 )
 
 val DarkPalette = CadencePalette(
-    background = Color(0xFF0B0D16),
-    surface = Color(0xFF161A28),
-    sunken = Color(0xFF272E42),
-    structural = Color(0xFF1C2130),
-    onStructural = Color(0xFFF0F2FA),
-    onStructuralMuted = Color(0xFF8A92AC),
-    accent = Color(0xFF8B7BFF),
-    onAccent = Color(0xFF120C3A),
-    accentSoft = Color(0xFF2A2857),
-    ink = Color(0xFFEEF0F8),
-    inkMuted = Color(0xFFAEB8D4),
-    inkFaint = Color(0xFF8E97B4),
-    hairline = Color(0xFF39415A),
-    success = Color(0xFF4CD39A),
-    successSoft = Color(0xFF183D32),
-    warning = Color(0xFFE7A93C),
-    danger = Color(0xFFFF6B7B),
+    background = Color(0xFF000000),
+    surface = Color(0xFF1C1C1E),
+    sunken = Color(0xFF2C2C2E),
+    structural = Color(0xFF2C2C2E),
+    onStructural = Color(0xFFFFFFFF),
+    onStructuralMuted = Color(0xFF8E8E93),
+    accent = Color(0xFF7D7AFF),
+    onAccent = Color(0xFF000000),
+    accentSoft = Color(0xFF2C2C3E),
+    ink = Color(0xFFFFFFFF),
+    inkMuted = Color(0xFF8E8E93),
+    inkFaint = Color(0xFF636366),
+    hairline = Color(0xFF38383A),
+    success = Color(0xFF30D158),
+    successSoft = Color(0xFF13381E),
+    warning = Color(0xFFFF9F0A),
+    danger = Color(0xFFFF453A),
     isDark = true,
 )
 

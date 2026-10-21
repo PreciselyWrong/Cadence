@@ -584,7 +584,7 @@ internal fun HabitRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (actionLabel != null && action != null) {
                 Spacer(Modifier.width(Space.sm))
@@ -597,34 +597,64 @@ internal fun HabitRow(
                     animationSpec = Motion.interactive(),
                     label = "habitActionPress",
                 )
-                Box(
-                    Modifier
-                        .graphicsLayer {
-                            scaleX = actionScale
-                            scaleY = actionScale
-                        }
-                        .clip(Radius.Chip).background(tint.copy(alpha = if (palette.isDark) 0.22f else 0.10f))
-                        .clickable(
-                            interactionSource = actionInteraction,
-                            indication = androidx.compose.foundation.LocalIndication.current,
-                            enabled = actionEnabled,
-                            role = androidx.compose.ui.semantics.Role.Button,
-                            onClick = {
-                                haptic.confirm()
-                                action()
-                            },
-                        )
-                        .heightIn(min = Size.touch).padding(horizontal = Space.md)
-                        .semantics { contentDescription = description },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(actionLabel, style = MaterialTheme.typography.labelLarge, color = if (actionEnabled) tint else palette.inkFaint)
+                val isBinary = item.stored.goal.goalType == GoalType.BINARY
+                if (isBinary) {
+                    Box(
+                        Modifier
+                            .graphicsLayer {
+                                scaleX = actionScale
+                                scaleY = actionScale
+                            }
+                            .size(Size.actionSm)
+                            .clip(CircleShape)
+                            .background(tint.copy(alpha = if (palette.isDark) 0.20f else 0.10f))
+                            .clickable(
+                                interactionSource = actionInteraction,
+                                indication = androidx.compose.foundation.LocalIndication.current,
+                                enabled = actionEnabled,
+                                role = androidx.compose.ui.semantics.Role.Button,
+                                onClick = {
+                                    haptic.confirm()
+                                    action()
+                                },
+                            )
+                            .semantics { contentDescription = description },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(Icons.Outlined.Check, null, tint = if (actionEnabled) tint else palette.inkFaint, modifier = Modifier.size(Size.iconSm))
+                    }
+                } else {
+                    Box(
+                        Modifier
+                            .graphicsLayer {
+                                scaleX = actionScale
+                                scaleY = actionScale
+                            }
+                            .clip(Radius.Pill)
+                            .background(tint.copy(alpha = if (palette.isDark) 0.20f else 0.10f))
+                            .clickable(
+                                interactionSource = actionInteraction,
+                                indication = androidx.compose.foundation.LocalIndication.current,
+                                enabled = actionEnabled,
+                                role = androidx.compose.ui.semantics.Role.Button,
+                                onClick = {
+                                    haptic.confirm()
+                                    action()
+                                },
+                            )
+                            .heightIn(min = Size.actionSm)
+                            .padding(horizontal = Space.md, vertical = Space.xs)
+                            .semantics { contentDescription = description },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(actionLabel, style = MaterialTheme.typography.labelMedium, color = if (actionEnabled) tint else palette.inkFaint)
+                    }
                 }
             }
             if (done) {
                 Spacer(Modifier.width(Space.sm))
-                Box(Modifier.size(Size.iconLarge).clip(CircleShape).background(palette.success.copy(alpha = 0.16f)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
+                Box(Modifier.size(Size.actionSm).clip(CircleShape).background(palette.success.copy(alpha = 0.16f)), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.iconSm))
                 }
             }
         }
