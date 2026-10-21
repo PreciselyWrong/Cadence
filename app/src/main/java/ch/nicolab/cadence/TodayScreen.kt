@@ -58,7 +58,10 @@ import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 import ch.nicolab.cadence.ui.theme.habitAccent
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlinx.coroutines.delay
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -102,13 +105,21 @@ internal fun TodayScreen(
     val trackers = active.filter { it.stored.goal.isTracker && it.evaluation.isPlannedForDate && !it.evaluation.isPaused }
     val abstinences = active.filter { it.stored.goal.isAbstinence }
     val toComplete = remember(active, timers) { ToCompleteItem.resolve(active, timers) }
+    val todayEyebrow = remember {
+        val now = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
+        now.format(formatter).replaceFirstChar { it.uppercase() }
+    }
+    val populatedGroups = remember(groups, habits) {
+        groups.filter { g -> habits.any { it.stored.groupId == g.id && !it.stored.archived } }
+    }
 
     ScreenList(
-        context = stringResource(R.string.today_subtitle),
+        context = todayEyebrow,
         title = stringResource(R.string.today_title),
         action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
     ) {
-        if (groups.size > 1) item { GroupFilter(groups, habits, selectedGroupId, onSelectGroup) }
+        if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (offerReturn) item {
             Column(Modifier.fillMaxWidth().padding(vertical = Space.md), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 Text(stringResource(R.string.today_return_title), style = MaterialTheme.typography.titleMedium, color = cadence.ink)

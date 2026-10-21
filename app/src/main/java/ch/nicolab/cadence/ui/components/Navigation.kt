@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -31,6 +32,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.ui.theme.Elevation
 import ch.nicolab.cadence.ui.theme.Motion
@@ -105,12 +108,13 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
         Column(
             Modifier
                 .fillMaxWidth()
-                .height(Size.touch)
+                .padding(horizontal = Space.xs)
+                .height(42.dp)
                 .graphicsLayer {
                     scaleX = scale
                     scaleY = scale
                 }
-                .clip(Radius.Control)
+                .clip(Radius.Pill)
                 .background(background)
                 .clickable(
                     interactionSource = interactionSource,
@@ -128,15 +132,18 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
                 destination.icon,
                 null,
                 tint = iconTint,
-                modifier = Modifier.size(if (active) Size.icon else Size.iconLarge),
+                modifier = Modifier.size(if (active) Size.iconSm else Size.iconLarge),
             )
-            if (active) Text(
-                destination.shortLabel,
-                style = MaterialTheme.typography.labelSmall,
-                color = palette.onAccent,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (active) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    destination.shortLabel,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                    color = palette.onAccent,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -132,15 +133,15 @@ fun PageHeader(
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(top = Space.xl, bottom = Space.md),
-        verticalAlignment = Alignment.Bottom,
+            .padding(top = Space.lg, bottom = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
             Text(
                 context.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
                 color = palette.inkFaint,
-                letterSpacing = 0.6.sp,
+                letterSpacing = 0.8.sp,
             )
             Spacer(Modifier.height(Space.xs))
             Text(
@@ -175,7 +176,7 @@ fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false
             }
             .size(Size.touch)
             .clip(CircleShape)
-            .background(if (accent) palette.accent else palette.surface)
+            .background(if (accent) palette.accentSoft else palette.surface)
             .clickable(
                 interactionSource = interactionSource,
                 indication = androidx.compose.foundation.LocalIndication.current,
@@ -187,7 +188,7 @@ fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, null, tint = if (accent) palette.onAccent else palette.ink, modifier = Modifier.size(Size.iconLarge))
+        Icon(icon, null, tint = if (accent) palette.accent else palette.ink, modifier = Modifier.size(Size.iconLarge))
     }
 }
 
@@ -234,15 +235,29 @@ fun EmptyState(
     action: (@Composable () -> Unit)? = null,
 ) {
     val palette = cadence
-    Panel {
-        Box(Modifier.size(44.dp).clip(Radius.Chip).background(palette.accentSoft), contentAlignment = Alignment.Center) {
-            Icon(icon, null, tint = palette.accent, modifier = Modifier.size(Size.icon))
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Space.lg, vertical = Space.xxxl),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            Modifier
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(palette.accentSoft),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(icon, null, tint = palette.accent, modifier = Modifier.size(Size.iconLarge))
         }
-        Spacer(Modifier.height(Space.md))
-        Text(title, style = MaterialTheme.typography.titleMedium, color = palette.ink)
+        Spacer(Modifier.height(Space.lg))
+        Text(title, style = MaterialTheme.typography.titleMedium, color = palette.ink, textAlign = TextAlign.Center)
         Spacer(Modifier.height(Space.xs))
-        Text(message, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-        action?.let { Spacer(Modifier.height(Space.lg)); Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) { it() } }
+        Text(message, style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted, textAlign = TextAlign.Center)
+        action?.let {
+            Spacer(Modifier.height(Space.xl))
+            it()
+        }
     }
 }
 

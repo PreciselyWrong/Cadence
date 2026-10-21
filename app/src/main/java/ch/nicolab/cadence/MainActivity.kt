@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -477,7 +478,8 @@ internal fun ScreenList(
     action: (@Composable () -> Unit)? = null,
     content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit,
 ) = LazyColumn(
-    Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = Space.gutter),
+    modifier = Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = Space.gutter),
+    contentPadding = PaddingValues(top = Space.sm, bottom = Space.md),
     verticalArrangement = Arrangement.spacedBy(Space.md),
 ) {
     item { PageHeader(context, title, action) }
@@ -498,12 +500,15 @@ private fun HabitsScreen(
     val visible = habits.inGroup(selectedGroupId)
     val active = visible.filter { !it.stored.archived }
     val archived = visible.filter { it.stored.archived }
+    val populatedGroups = remember(groups, habits) {
+        groups.filter { g -> habits.any { it.stored.groupId == g.id } }
+    }
     ScreenList(
         context = stringResource(R.string.habits_subtitle),
         title = stringResource(R.string.habits_title),
         action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
     ) {
-        if (groups.size > 1) item { GroupFilter(groups, habits, selectedGroupId, onSelectGroup) }
+        if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (active.isEmpty() && archived.isEmpty() && selectedGroupId != null) {
             item {
                 EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.group_filter_empty), stringResource(R.string.empty_habits_message))
@@ -2105,6 +2110,8 @@ internal fun GroupFilter(
     selectedGroupId: String?,
     onSelect: (String?) -> Unit,
 ) {
+    val populatedGroups = groups.filter { group -> habits.any { it.stored.groupId == group.id } }
+    if (populatedGroups.size <= 1) return
     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
         ChoiceChip(stringResource(R.string.group_filter_all), selectedGroupId == null) { onSelect(null) }
         groups.forEach { group ->
