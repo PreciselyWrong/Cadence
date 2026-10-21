@@ -27,7 +27,13 @@ import androidx.activity.viewModels
 import androidx.health.connect.client.PermissionController
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.graphicsLayer
+import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
+import ch.nicolab.cadence.ui.theme.Motion
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -567,9 +573,31 @@ internal fun HabitRow(
             if (actionLabel != null && action != null) {
                 Spacer(Modifier.width(Space.sm))
                 val description = stringResource(R.string.today_action_description, item.stored.name, actionLabel)
+                val haptic = rememberCadenceHaptic()
+                val actionInteraction = remember { MutableInteractionSource() }
+                val actionPressed by actionInteraction.collectIsPressedAsState()
+                val actionScale by animateFloatAsState(
+                    targetValue = if (actionPressed && actionEnabled) 0.94f else 1f,
+                    animationSpec = Motion.interactive(),
+                    label = "habitActionPress",
+                )
                 Box(
-                    Modifier.clip(Radius.Chip).background(tint.copy(alpha = if (palette.isDark) 0.22f else 0.10f))
-                        .clickable(enabled = actionEnabled, role = androidx.compose.ui.semantics.Role.Button, onClick = action)
+                    Modifier
+                        .graphicsLayer {
+                            scaleX = actionScale
+                            scaleY = actionScale
+                        }
+                        .clip(Radius.Chip).background(tint.copy(alpha = if (palette.isDark) 0.22f else 0.10f))
+                        .clickable(
+                            interactionSource = actionInteraction,
+                            indication = androidx.compose.foundation.LocalIndication.current,
+                            enabled = actionEnabled,
+                            role = androidx.compose.ui.semantics.Role.Button,
+                            onClick = {
+                                haptic.confirm()
+                                action()
+                            },
+                        )
                         .heightIn(min = Size.touch).padding(horizontal = Space.md)
                         .semantics { contentDescription = description },
                     contentAlignment = Alignment.Center,

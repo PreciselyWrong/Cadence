@@ -1,8 +1,9 @@
 package ch.nicolab.cadence.ui.theme
 
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
@@ -65,15 +66,32 @@ object Size {
     val sheetContent = 760.dp
 }
 
-/** Mouvement court, sans rebond : il explique un changement, il ne décore pas. */
+/**
+ * Mouvement fluide par ressort, sans rebond : amorti critique (1.0).
+ * Les ressorts sont naturellement interruptibles et préservent la vitesse du geste.
+ */
 object Motion {
-    private val standard = CubicBezierEasing(0.2f, 0f, 0f, 1f)
-
     const val QUICK = 140
     const val NORMAL = 240
     const val EXPRESSIVE = 380
 
-    fun <T> quick(): FiniteAnimationSpec<T> = tween(QUICK, easing = standard)
-    fun <T> normal(): FiniteAnimationSpec<T> = tween(NORMAL, easing = standard)
-    fun <T> expressive(): FiniteAnimationSpec<T> = tween(EXPRESSIVE, easing = standard)
+    fun <T> quick(): SpringSpec<T> = spring(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessMedium,
+    )
+
+    fun <T> normal(): SpringSpec<T> = spring(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessMediumLow,
+    )
+
+    fun <T> expressive(): SpringSpec<T> = spring(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessLow,
+    )
+
+    fun <T> interactive(): SpringSpec<T> = spring(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessHigh,
+    )
 }

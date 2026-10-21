@@ -1,8 +1,11 @@
 package ch.nicolab.cadence.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -24,17 +27,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.ui.theme.Elevation
+import ch.nicolab.cadence.ui.theme.Motion
 import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Space
@@ -55,6 +62,7 @@ fun CadenceScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.(
 /**
  * Niveau 2 - grande surface fonctionnelle. Pas de bordure : la séparation vient du
  * contraste de surface. L'ombre n'apparaît que si la surface est réellement au-dessus.
+ * Répond immédiatement au toucher (pointer-down) par une compression discrète amortie.
  */
 @Composable
 fun Panel(
@@ -66,13 +74,39 @@ fun Panel(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val palette = cadence
-    val interactive = if (onClick != null || onLongClick != null) {
-        Modifier.combinedClickable(onClick = onClick ?: {}, onLongClick = onLongClick)
+    val isInteractive = onClick != null || onLongClick != null
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed && isInteractive) 0.985f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "panelPress",
+    )
+    val haptic = rememberCadenceHaptic()
+    val interactive = if (isInteractive) {
+        Modifier.combinedClickable(
+            interactionSource = interactionSource,
+            indication = androidx.compose.foundation.LocalIndication.current,
+            onClick = onClick ?: {},
+            onLongClick = onLongClick?.let { action ->
+                {
+                    haptic.longPress()
+                    action()
+                }
+            },
+        )
     } else {
         Modifier
     }
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .then(
+                if (isInteractive) Modifier.graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                } else Modifier
+            ),
         shape = shape,
         color = palette.surface,
         contentColor = palette.ink,
@@ -108,12 +142,31 @@ fun PageHeader(
 @Composable
 fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false, onClick: () -> Unit) {
     val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.92f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "headerActionPress",
+    )
     Box(
         Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .size(Size.touch)
             .clip(CircleShape)
             .background(if (accent) palette.accent else palette.surface)
-            .clickable(onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {

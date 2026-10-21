@@ -1,10 +1,12 @@
 package ch.nicolab.cadence.ui.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -33,18 +36,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.KeyboardOptions
 import ch.nicolab.cadence.ui.theme.Motion
 import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Space
 import ch.nicolab.cadence.ui.theme.cadence
 
-/** Action principale. Accent plein, cible tactile confortable. */
+/** Action principale. Accent plein, cible tactile confortable et compression physique au toucher. */
 @Composable
 fun PrimaryAction(
     label: String,
@@ -57,12 +60,32 @@ fun PrimaryAction(
     val fill = accent ?: palette.accent
     val container = if (enabled) fill else palette.sunken
     val content = if (enabled) onColorOf(fill) else palette.inkMuted
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed && enabled) 0.97f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "primaryActionPress",
+    )
     Box(
         modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .heightIn(min = Size.control)
             .clip(Radius.Control)
             .background(container)
-            .clickable(enabled = enabled, onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                enabled = enabled,
+                onClick = {
+                    haptic.confirm()
+                    onClick()
+                },
+            )
             .padding(horizontal = Space.xl),
         contentAlignment = Alignment.Center,
     ) {
@@ -79,12 +102,32 @@ fun SecondaryAction(
     onClick: () -> Unit,
 ) {
     val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed && enabled) 0.97f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "secondaryActionPress",
+    )
     Box(
         modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .heightIn(min = Size.control)
             .clip(Radius.Control)
             .background(palette.sunken)
-            .clickable(enabled = enabled, onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                enabled = enabled,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
             .padding(horizontal = Space.xl),
         contentAlignment = Alignment.Center,
     ) {
@@ -92,29 +135,46 @@ fun SecondaryAction(
     }
 }
 
-/** Action tertiaire : texte, mais avec une cible tactile complète. */
+/** Action tertiaire : texte, mais avec une cible tactile complète et retour physique. */
 @Composable
 fun TertiaryAction(
     label: String,
     modifier: Modifier = Modifier,
     tint: Color? = null,
     onClick: () -> Unit,
-) = Box(
-    modifier.heightIn(min = Size.touch).clip(Radius.Control).clickable(onClick = onClick).padding(horizontal = Space.lg),
-    contentAlignment = Alignment.Center,
 ) {
-    Text(label, style = MaterialTheme.typography.labelLarge, color = tint ?: cadence.inkMuted)
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.96f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "tertiaryActionPress",
+    )
+    Box(
+        modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .heightIn(min = Size.touch)
+            .clip(Radius.Control)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
+            .padding(horizontal = Space.lg),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(label, style = MaterialTheme.typography.labelLarge, color = tint ?: cadence.accent)
+    }
 }
 
-/** Action réellement destructive, et rien d'autre. */
-@Composable
-fun DestructiveAction(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
-    PrimaryAction(label, modifier, accent = cadence.danger, onClick = onClick)
-
-/**
- * Puce de sélection. L'état actif est porté par la surface accentuée, pas par une bordure,
- * et la géométrie se resserre légèrement lorsqu'elle est choisie.
- */
+/** Puce sélectionnable avec retour tactile et transition douce. */
 @Composable
 fun ChoiceChip(
     label: String,
@@ -125,13 +185,32 @@ fun ChoiceChip(
 ) {
     val palette = cadence
     val fill = accent ?: palette.accent
+    val haptic = rememberCadenceHaptic()
     val container by animateColorAsState(if (selected) fill else palette.sunken, Motion.quick(), label = "chip")
     val content by animateColorAsState(if (selected) onColorOf(fill) else palette.ink, Motion.quick(), label = "chipText")
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "choiceChipPress",
+    )
     Box(
         modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(Radius.Chip)
             .background(container)
-            .clickable(onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
             .defaultMinSize(minHeight = 40.dp)
             .padding(horizontal = Space.lg, vertical = Space.md),
         contentAlignment = Alignment.Center,
@@ -147,11 +226,30 @@ fun ChoiceChip(
 fun ValueChip(label: String, accent: Color? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val palette = cadence
     val fill = accent ?: palette.accent
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.94f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "valueChipPress",
+    )
     Box(
         modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(Radius.Chip)
             .background(fill.copy(alpha = if (palette.isDark) 0.24f else 0.14f))
-            .clickable(onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
             .defaultMinSize(minHeight = 44.dp)
             .padding(horizontal = Space.lg, vertical = Space.md),
         contentAlignment = Alignment.Center,
@@ -221,19 +319,30 @@ fun CadenceField(
     }
 }
 
-/** Ligne interrupteur, alignée sur le rythme des autres contrôles. */
+/** Ligne interrupteur, alignée sur le rythme des autres contrôles avec retour haptique. */
 @Composable
 fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked: (Boolean) -> Unit) {
     val palette = cadence
     val fill = accent ?: palette.accent
+    val haptic = rememberCadenceHaptic()
     Row(
-        Modifier.fillMaxWidth().clip(Radius.Control).clickable { onChecked(!checked) }.heightIn(min = Size.touch),
+        Modifier
+            .fillMaxWidth()
+            .clip(Radius.Control)
+            .clickable {
+                haptic.tap()
+                onChecked(!checked)
+            }
+            .heightIn(min = Size.touch),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
         Switch(
-            checked,
-            onChecked,
+            checked = checked,
+            onCheckedChange = {
+                haptic.tap()
+                onChecked(it)
+            },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = onColorOf(fill),
                 checkedTrackColor = fill,
@@ -245,11 +354,35 @@ fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked:
     }
 }
 
-/** Ligne d'action d'un modal : pleine largeur, pastille colorée, libellé lisible. */
+/** Ligne d'action d'un modal : pleine largeur, pastille colorée, libellé lisible et retour physique. */
 @Composable
 fun ActionRow(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {
+    val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "actionRowPress",
+    )
     Row(
-        Modifier.fillMaxWidth().clip(Radius.Control).clickable(onClick = onClick).heightIn(min = Size.touch).padding(horizontal = Space.sm),
+        Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(Radius.Control)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                onClick = {
+                    haptic.tap()
+                    onClick()
+                },
+            )
+            .heightIn(min = Size.touch)
+            .padding(horizontal = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.size(36.dp).clip(Radius.Chip).background(tint.copy(alpha = 0.14f)), contentAlignment = Alignment.Center) {
