@@ -1,6 +1,11 @@
 package ch.nicolab.cadence
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.graphics.graphicsLayer
+import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
+import ch.nicolab.cadence.ui.theme.Motion
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -135,35 +140,57 @@ internal fun TodayScreen(
             item { SectionLabel(stringResource(R.string.today_now)) }
         }
         items(goalNow, key = { it.habit.id }) { evaluation ->
-            byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
+            byId[evaluation.habit.id]?.let { item ->
+                Box(Modifier.animateItem().fillMaxWidth()) {
+                    TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
+                }
+            }
         }
         if (selectedGroupId == null && goalLater.isNotEmpty()) {
             item { FoldHeading(stringResource(R.string.today_later_count, goalLater.size), laterOpen) { laterOpen = !laterOpen } }
             if (laterOpen) items(goalLater, key = { it.habit.id }) { evaluation ->
-                byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
+                byId[evaluation.habit.id]?.let { item ->
+                    Box(Modifier.animateItem().fillMaxWidth()) {
+                        TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
+                    }
+                }
             }
         }
         if (selectedGroupId == null && goalEarlier.isNotEmpty()) {
             item { FoldHeading(stringResource(R.string.today_earlier_count, goalEarlier.size), earlierOpen) { earlierOpen = !earlierOpen } }
             if (earlierOpen) items(goalEarlier, key = { it.habit.id }) { evaluation ->
-                byId[evaluation.habit.id]?.let { item -> TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct) }
+                byId[evaluation.habit.id]?.let { item ->
+                    Box(Modifier.animateItem().fillMaxWidth()) {
+                        TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
+                    }
+                }
             }
         }
         if (sections.completed.isNotEmpty()) {
             item { FoldHeading(stringResource(R.string.today_completed_count, sections.completed.size), completedOpen) { completedOpen = !completedOpen } }
             if (completedOpen) items(sections.completed, key = { it.habit.id }) { evaluation ->
-                byId[evaluation.habit.id]?.let { item -> HabitRow(item, done = true, onClick = { quick(item) }, onLongClick = { options(item) }) }
+                byId[evaluation.habit.id]?.let { item ->
+                    Box(Modifier.animateItem().fillMaxWidth()) {
+                        HabitRow(item, done = true, onClick = { quick(item) }, onLongClick = { options(item) })
+                    }
+                }
             }
         }
         if (trackers.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_activities_section)) }
             items(trackers, key = { it.stored.id }) { item ->
-                TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
+                Box(Modifier.animateItem().fillMaxWidth()) {
+                    TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
+                }
             }
         }
         if (abstinences.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
-            items(abstinences, key = { it.stored.id }) { AbstinenceHomeCard(it, { quick(it) }, { options(it) }) }
+            items(abstinences, key = { it.stored.id }) {
+                Box(Modifier.animateItem().fillMaxWidth()) {
+                    AbstinenceHomeCard(it, { quick(it) }, { options(it) })
+                }
+            }
         }
     }
     if (adjustOpen) CadenceSheet(
@@ -214,13 +241,34 @@ private fun TodayHabitRow(
 @Composable
 internal fun FoldHeading(label: String, expanded: Boolean, toggle: () -> Unit) {
     val state = stringResource(if (expanded) R.string.today_expand else R.string.today_collapse)
+    val haptic = rememberCadenceHaptic()
+    val rotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = Motion.normal(),
+        label = "foldHeadingArrow",
+    )
     Row(
-        Modifier.fillMaxWidth().clip(Radius.Control).clickable(role = Role.Button, onClick = toggle)
-            .heightIn(min = Size.touch).semantics { stateDescription = state }.padding(horizontal = Space.xs),
+        Modifier
+            .fillMaxWidth()
+            .clip(Radius.Control)
+            .clickable(role = Role.Button, onClick = {
+                haptic.tap()
+                toggle()
+            })
+            .heightIn(min = Size.touch)
+            .semantics { stateDescription = state }
+            .padding(horizontal = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(label, Modifier.weight(1f), style = MaterialTheme.typography.labelLarge, color = cadence.inkMuted)
-        Icon(if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown, null, tint = cadence.inkMuted, modifier = Modifier.size(Size.icon))
+        Icon(
+            Icons.Outlined.KeyboardArrowDown,
+            null,
+            tint = cadence.inkMuted,
+            modifier = Modifier
+                .size(Size.icon)
+                .graphicsLayer { rotationZ = rotation },
+        )
     }
 }
 

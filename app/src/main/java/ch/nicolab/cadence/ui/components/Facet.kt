@@ -71,7 +71,7 @@ fun FacetGauge(
     fillAlpha: Float = 0.12f,
     content: @Composable (() -> Unit)? = null,
 ) {
-    val ratio by animateFloatAsState(progress.coerceIn(0f, 1f), Motion.expressive(), label = "facet")
+    val ratio by animateFloatAsState(progress.coerceIn(0f, 1f), Motion.normal(), label = "facet")
     Box(modifier.size(size), contentAlignment = Alignment.Center) {
         Canvas(Modifier.fillMaxSize()) {
             val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)

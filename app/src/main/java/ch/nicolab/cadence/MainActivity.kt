@@ -519,14 +519,30 @@ private fun HabitsScreen(
         val activeTrackers = active.filter { it.stored.goal.isTracker }
         val activeAbstinences = active.filter { it.stored.goal.isAbstinence }
         if (activeHabits.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_regular_section)) }
-        items(activeHabits, key = { it.stored.id }) { HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) }) }
+        items(activeHabits, key = { it.stored.id }) {
+            Box(Modifier.animateItem().fillMaxWidth()) {
+                HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
+            }
+        }
         if (activeTrackers.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_activities_section)) }
-        items(activeTrackers, key = { it.stored.id }) { HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) }) }
+        items(activeTrackers, key = { it.stored.id }) {
+            Box(Modifier.animateItem().fillMaxWidth()) {
+                HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
+            }
+        }
         if (activeAbstinences.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
-        items(activeAbstinences, key = { it.stored.id }) { HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) }) }
+        items(activeAbstinences, key = { it.stored.id }) {
+            Box(Modifier.animateItem().fillMaxWidth()) {
+                HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) })
+            }
+        }
         if (archived.isNotEmpty()) {
             item { SectionLabel(stringResource(R.string.habits_archived_section)) }
-            items(archived, key = { "archived-${it.stored.id}" }) { HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) }) }
+            items(archived, key = { "archived-${it.stored.id}" }) {
+                Box(Modifier.animateItem().fillMaxWidth()) {
+                    HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) })
+                }
+            }
         }
     }
 }
@@ -698,12 +714,14 @@ private fun WeekScreen(
             if (entries.isNotEmpty()) {
                 item(key = "stage-$stage") { SectionLabel(stringResource(labels.getValue(stage))) }
                 items(entries, key = { "$stage-${it.stored.id}" }) { card ->
-                    HabitRow(
-                        card,
-                        done = stage == WeekStage.DONE,
-                        onClick = { quick(card) },
-                        onLongClick = { options(card) },
-                    )
+                    Box(Modifier.animateItem().fillMaxWidth()) {
+                        HabitRow(
+                            card,
+                            done = stage == WeekStage.DONE,
+                            onClick = { quick(card) },
+                            onLongClick = { options(card) },
+                        )
+                    }
                 }
             }
         }
