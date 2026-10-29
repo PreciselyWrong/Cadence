@@ -575,3 +575,8 @@ npm run pre-push
 ---
 
 [← Back to Index](../CLAUDE.md)
+
+### Repeating E2E tests
+
+`bash e2e/bin/run-e2e.sh <spec> --repeat-each=N` runs copies of a test in parallel. Tests that share the e2e user's daily plan (`plan-my-day`) then interfere with their own copies; repeat them with `--workers=1`. The login helper and plan-my-day wait for their API calls instead of relying on the 5-second expect timeout, so they hold up under parallel load.
+

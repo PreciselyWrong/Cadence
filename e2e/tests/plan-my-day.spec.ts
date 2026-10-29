@@ -7,6 +7,9 @@ test.describe('Plan my day', () => {
         context,
         baseURL,
     }) => {
+        // A long flow (plan, start, finish) that shares the backend with the
+        // other workers: give it the slow-test budget.
+        test.slow();
         const appUrl = await login(page, baseURL);
         const name = `Plan me ${Date.now()}`;
 
@@ -39,7 +42,18 @@ test.describe('Plan my day', () => {
         await expect(card).toHaveCount(0);
         await expect(page.getByTestId('capacity')).toContainText('1h planned');
 
-        await page.getByTestId('start-my-day').click();
+        // Starting saves the plan first; under parallel load that can take
+        // longer than the default expect timeout.
+        const [started] = await Promise.all([
+            page.waitForResponse(
+                (r) =>
+                    /\/api\/daily-plan\/[^/]+\/start$/.test(r.url()) &&
+                    r.request().method() === 'POST',
+                { timeout: 30_000 }
+            ),
+            page.getByTestId('start-my-day').click(),
+        ]);
+        expect(started.ok()).toBeTruthy();
         await expect(page).toHaveURL(/\/today$/);
 
         const agenda = page.getByTestId('agenda-list');

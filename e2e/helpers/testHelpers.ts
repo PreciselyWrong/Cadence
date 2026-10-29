@@ -9,7 +9,10 @@ import { Page, expect, Locator } from '@playwright/test';
  * Login to the application
  * Each test remains autonomous - this is just a shared login flow
  */
-export async function login(page: Page, baseURL: string | undefined): Promise<string> {
+export async function login(
+    page: Page,
+    baseURL: string | undefined
+): Promise<string> {
     const appUrl = baseURL ?? process.env.APP_URL ?? 'http://localhost:8080';
 
     await page.goto(appUrl + '/login');
@@ -19,7 +22,18 @@ export async function login(page: Page, baseURL: string | undefined): Promise<st
 
     await page.getByLabel('Email').fill(email);
     await page.getByLabel('Password').fill(password);
-    await page.getByRole('button', { name: /login/i }).click();
+    // Under parallel load the password check can take longer than the
+    // default expect timeout, so wait for the login call itself first.
+    const [response] = await Promise.all([
+        page.waitForResponse(
+            (r) =>
+                r.url().endsWith('/api/login') &&
+                r.request().method() === 'POST',
+            { timeout: 30_000 }
+        ),
+        page.getByRole('button', { name: /login/i }).click(),
+    ]);
+    expect(response.ok()).toBeTruthy();
 
     await expect(page).toHaveURL(/\/today$/);
 
@@ -31,7 +45,10 @@ export async function login(page: Page, baseURL: string | undefined): Promise<st
  */
 export async function waitForElement(
     locator: Locator,
-    options: { timeout?: number; state?: 'visible' | 'hidden' | 'attached' | 'detached' } = {}
+    options: {
+        timeout?: number;
+        state?: 'visible' | 'hidden' | 'attached' | 'detached';
+    } = {}
 ): Promise<void> {
     const timeout = options.timeout ?? 10000;
     const state = options.state ?? 'visible';
@@ -50,7 +67,7 @@ export async function waitForApiResponse(
     const timeout = options.timeout ?? 10000;
 
     await page.waitForResponse(
-        response => {
+        (response) => {
             const url = response.url();
             if (typeof urlPattern === 'string') {
                 return url.includes(urlPattern);
@@ -64,7 +81,10 @@ export async function waitForApiResponse(
 /**
  * Wait for network to be idle after an action
  */
-export async function waitForNetworkIdle(page: Page, options: { timeout?: number } = {}): Promise<void> {
+export async function waitForNetworkIdle(
+    page: Page,
+    options: { timeout?: number } = {}
+): Promise<void> {
     const timeout = options.timeout ?? 10000;
     await page.waitForLoadState('networkidle', { timeout });
 }
@@ -128,7 +148,9 @@ export async function fillInputReliably(
             return; // Success
         } catch (error) {
             if (i === maxRetries - 1) {
-                throw new Error(`Failed to fill input with value "${value}" after ${maxRetries} attempts`);
+                throw new Error(
+                    `Failed to fill input with value "${value}" after ${maxRetries} attempts`
+                );
             }
             // Retry with more aggressive approach
             await inputLocator.click();
@@ -148,9 +170,10 @@ export async function confirmDialog(
 ): Promise<void> {
     const timeout = options.timeout ?? 10000;
 
-    const dialogLocator = typeof dialogTitle === 'string'
-        ? page.locator(`text=${dialogTitle}`)
-        : page.locator(`text=${dialogTitle.source}`);
+    const dialogLocator =
+        typeof dialogTitle === 'string'
+            ? page.locator(`text=${dialogTitle}`)
+            : page.locator(`text=${dialogTitle.source}`);
 
     await dialogLocator.waitFor({ state: 'visible', timeout });
     await page.locator('[data-testid="confirm-dialog-confirm"]').click();
@@ -170,7 +193,7 @@ export async function navigateAndWait(
     if (options.waitForSelector) {
         await page.locator(options.waitForSelector).waitFor({
             state: 'visible',
-            timeout: options.timeout ?? 10000
+            timeout: options.timeout ?? 10000,
         });
     }
 
