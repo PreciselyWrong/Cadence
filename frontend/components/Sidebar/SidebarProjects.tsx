@@ -140,11 +140,13 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                             <PlusIcon className="h-3.5 w-3.5" />
                         </button>
                     )}
-                    {showBadge && activeProjects.length > 0 && (
+                    {activeProjects.length > 0 && (
                         <>
-                            <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
-                                {activeProjects.length}
-                            </span>
+                            {showBadge && (
+                                <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
+                                    {activeProjects.length}
+                                </span>
+                            )}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();

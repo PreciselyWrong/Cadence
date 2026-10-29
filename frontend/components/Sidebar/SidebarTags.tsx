@@ -110,11 +110,13 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                     >
                         <PlusIcon className="h-3.5 w-3.5" />
                     </button>
-                    {showBadge && tags.length > 0 && (
+                    {tags.length > 0 && (
                         <>
-                            <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
-                                {tags.length}
-                            </span>
+                            {showBadge && (
+                                <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
+                                    {tags.length}
+                                </span>
+                            )}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
