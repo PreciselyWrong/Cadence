@@ -177,6 +177,53 @@ function expandRecurringTasks(
     return expandedTasks;
 }
 
+// Calendar: keeps every task as stored and adds the later occurrences of
+// each open recurring parent up to `endDay` (YYYY-MM-DD, user timezone).
+// Days that already have a generated instance are skipped.
+function expandCalendarOccurrences(tasks, endDay, userTimezone = 'UTC') {
+    const moment = require('moment-timezone');
+    const localDay = (date) =>
+        typeof date === 'string'
+            ? date.slice(0, 10)
+            : moment.utc(date).tz(userTimezone).format('YYYY-MM-DD');
+    const instanceDays = new Set(
+        tasks
+            .filter((t) => t.recurring_parent_id && t.due_date)
+            .map((t) => `${t.recurring_parent_id}:${localDay(t.due_date)}`)
+    );
+    const expanded = [];
+
+    tasks.forEach((task) => {
+        expanded.push(task);
+        const isOpenParent =
+            task.recurrence_type &&
+            task.recurrence_type !== 'none' &&
+            !task.recurring_parent_id &&
+            !task.habit_mode &&
+            task.due_date &&
+            ![2, 3, 5, 'done', 'archived', 'cancelled'].includes(task.status);
+        if (!isOpenParent) return;
+
+        // The first occurrence is the parent's own due date.
+        calculateVirtualOccurrences(task, 100, task.due_date, userTimezone)
+            .slice(1)
+            .forEach((occurrence, index) => {
+                const day = localDay(occurrence.due_date);
+                if (day > endDay) return;
+                if (instanceDays.has(`${task.id}:${day}`)) return;
+                expanded.push({
+                    ...(task.toJSON ? task.toJSON() : task),
+                    due_date: occurrence.due_date,
+                    is_virtual_occurrence: true,
+                    occurrence_index: index + 1,
+                    virtual_id: `${task.id}_occurrence_${index + 1}`,
+                });
+            });
+    });
+
+    return expanded;
+}
+
 router.get('/tasks', async (req, res) => {
     const startTime = Date.now();
     resetQueryCounter();
@@ -282,6 +329,17 @@ router.get('/tasks', async (req, res) => {
                 req.query.status,
                 safeTimezone,
                 habitDays
+            );
+        }
+
+        if (
+            type === 'calendar' &&
+            /^\d{4}-\d{2}-\d{2}$/.test(req.query.end || '')
+        ) {
+            tasks = expandCalendarOccurrences(
+                tasks,
+                req.query.end,
+                getSafeTimezone(timezone)
             );
         }
 

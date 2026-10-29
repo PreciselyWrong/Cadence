@@ -124,7 +124,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                         {allDayEvents.map((event) => (
                             <div
                                 key={event.id}
-                                draggable={event.type === 'task'}
+                                draggable={
+                                    event.type === 'task' && !event.readOnly
+                                }
                                 onDragStart={(e) => handleDragStart(event, e)}
                                 onDragEnd={handleDragEnd}
                                 onClick={(e) => {
@@ -182,6 +184,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     key={event.id}
                                     draggable={
                                         event.type === 'task' &&
+                                        !event.readOnly &&
                                         resize.resizingId !== event.id
                                     }
                                     onDragStart={(e) =>

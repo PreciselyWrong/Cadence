@@ -78,6 +78,7 @@ This document explains how recurring tasks work in tududi from a user behavior p
     - Today's occurrence (if due today)
     - Future occurrences (as previews)
     - Typically shows next 6-7 occurrences
+    - On the Calendar page, every occurrence up to the end of the shown month (plus a week) appears; only the current one can be dragged
 
 14. **Each occurrence looks like a separate task in the UI:**
     - But it's really the same task showing at different dates

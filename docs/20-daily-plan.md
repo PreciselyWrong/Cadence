@@ -98,6 +98,7 @@ How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`
 - **Due time otherwise:** a block that starts at the due time and lasts the task's estimate, or one hour without an estimate. Dragging its bottom edge sets the estimate, in 15-minute steps, between 5 minutes and 12 hours.
 - **Whole-day due date:** a bar in the all-day row of the week and day views, from the start date (when it is earlier) to the due date. In the month view the bar appears in each day it covers, on the same row all week. A due time with a start on an earlier day is also drawn as a bar.
 - **Defer until:** a one-hour block at that time, as before.
+- **Recurring tasks:** the task sits at its current due date, and its later occurrences up to the end of the loaded window (the month, padded a week each side) are drawn in a lighter blue. They come from `GET /api/tasks?type=calendar&end=YYYY-MM-DD`, which adds `is_virtual_occurrence` copies of each open recurring task, skipping days that already have a generated instance. A later occurrence cannot be moved or resized: move the current one, and the rest follow its new date.
 
 Moving a block keeps its length: a start-to-due block moves both ends, a bar moves its start and due dates by the same number of days and keeps their times. Dropping on an hour of the week or day view sets the time; dropping in the month view or the all-day row keeps it.
 

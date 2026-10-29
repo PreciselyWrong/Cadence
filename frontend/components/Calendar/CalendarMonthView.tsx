@@ -185,7 +185,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     ) : (
                                         <div
                                             key={event.id}
-                                            draggable={event.type === 'task'}
+                                            draggable={
+                                                event.type === 'task' &&
+                                                !event.readOnly
+                                            }
                                             onDragStart={(e) =>
                                                 handleDragStart(event, e)
                                             }

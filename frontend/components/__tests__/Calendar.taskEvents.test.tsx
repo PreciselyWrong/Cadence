@@ -6,6 +6,7 @@ import CalendarWeekView from '../Calendar/CalendarWeekView';
 import CalendarMonthView from '../Calendar/CalendarMonthView';
 import {
     layoutAllDayWeek,
+    taskIdOf,
     moveUpdate,
     resizeUpdate,
     taskToEvents,
@@ -226,5 +227,21 @@ describe('whole-day bar rows', () => {
             .map((el) => el.parentElement);
         // One bar per covered day (27, 28, 29), each the only item.
         expect(twentySeventh).toHaveLength(3);
+    });
+});
+
+describe('recurring occurrences', () => {
+    it('draws a later occurrence read-only with its own id', () => {
+        const [event] = taskToEvents({
+            id: 4,
+            due_date: '2026-11-05',
+            due_time: '09:00',
+            is_virtual_occurrence: true,
+            occurrence_index: 2,
+        });
+        expect(event.id).toBe('task-4-occ-2');
+        expect(event.readOnly).toBe(true);
+        expect(event.resize).toBeUndefined();
+        expect(taskIdOf(event.id)).toBe('4');
     });
 });

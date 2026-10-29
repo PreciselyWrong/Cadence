@@ -172,7 +172,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                     {allDayBars.map(({ event, from, to }) => (
                         <div
                             key={event.id}
-                            draggable={event.type === 'task'}
+                            draggable={event.type === 'task' && !event.readOnly}
                             onDragStart={(e) => handleDragStart(event, e)}
                             onDragEnd={handleDragEnd}
                             onClick={(e) => {
@@ -239,6 +239,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                             key={event.id}
                                             draggable={
                                                 event.type === 'task' &&
+                                                !event.readOnly &&
                                                 resize.resizingId !== event.id
                                             }
                                             onDragStart={(e) =>

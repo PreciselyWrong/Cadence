@@ -20,6 +20,9 @@ export interface CalendarEvent {
     // estimate when the block is due time + estimate, its due time when the
     // block runs from the start time to the due time.
     resize?: 'estimate' | 'due';
+    // A later occurrence of a recurring task: shown, but not moved or
+    // resized until it becomes the next one.
+    readOnly?: boolean;
 }
 
 export const DEFAULT_TASK_MINUTES = 60;
@@ -40,6 +43,8 @@ export interface CalendarTask {
     defer_until?: string | null;
     estimated_minutes?: number | null;
     completed_at?: string | null;
+    is_virtual_occurrence?: boolean;
+    occurrence_index?: number;
 }
 
 // YYYY-MM-DD plus optional HH:mm, read as local time.
@@ -110,7 +115,26 @@ const dueEvent = (task: CalendarTask): CalendarEvent | null => {
     return { ...base, start: first, end: addDays(dueDay, 1), allDay: true };
 };
 
+// Strips an event id back to the id of the task it draws.
+export const taskIdOf = (eventId: string) =>
+    eventId
+        .replace(/^task(-defer|-created|-fallback)?-/, '')
+        .replace(/-occ-\d+$/, '');
+
 export const taskToEvents = (task: CalendarTask): CalendarEvent[] => {
+    if (task.is_virtual_occurrence) {
+        const due = dueEvent(task);
+        if (!due) return [];
+        return [
+            {
+                ...due,
+                id: `task-${task.id}-occ-${task.occurrence_index ?? 0}`,
+                color: '#93c5fd',
+                resize: undefined,
+                readOnly: true,
+            },
+        ];
+    }
     const events: CalendarEvent[] = [];
     if (task.defer_until) {
         const deferDate = new Date(task.defer_until);

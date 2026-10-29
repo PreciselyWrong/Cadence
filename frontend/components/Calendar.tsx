@@ -41,6 +41,7 @@ import {
     CalendarEvent,
     moveUpdate,
     resizeUpdate,
+    taskIdOf,
     taskToEvents,
 } from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
@@ -106,7 +107,6 @@ const Calendar: React.FC = () => {
     const locale = getLocale(i18n.language);
 
     useEffect(() => {
-        loadTasks();
         loadProjects();
     }, []);
 
@@ -125,6 +125,16 @@ const Calendar: React.FC = () => {
     // a week each side), so paging within a month never refetches.
     const visibleMonth = format(currentDate, 'yyyy-MM');
     const feedUidsKey = feeds.map((feed) => feed.uid).join(',');
+    const windowStart = format(
+        subDays(startOfMonth(currentDate), 7),
+        'yyyy-MM-dd'
+    );
+    const windowEnd = format(addDays(endOfMonth(currentDate), 7), 'yyyy-MM-dd');
+
+    // Recurring tasks add their later occurrences up to the window's end.
+    useEffect(() => {
+        loadTasks();
+    }, [visibleMonth]);
 
     useEffect(() => {
         if (!feedUidsKey) {
@@ -193,9 +203,14 @@ const Calendar: React.FC = () => {
     const loadTasks = async () => {
         setIsLoadingTasks(true);
         try {
-            const response = await fetch(getApiPath('tasks?type=calendar'), {
-                credentials: 'include',
-            });
+            const response = await fetch(
+                getApiPath(
+                    `tasks?type=calendar&start=${windowStart}&end=${windowEnd}`
+                ),
+                {
+                    credentials: 'include',
+                }
+            );
             if (response.ok) {
                 const data = await response.json();
                 let tasks;
@@ -263,11 +278,7 @@ const Calendar: React.FC = () => {
 
     const handleEventClick = (event: CalendarEvent) => {
         if (event.type === 'task') {
-            const taskId = event.id.replace(
-                /^task(-defer|-created|-fallback)?-/,
-                ''
-            );
-            const task = allTasks.find((t) => t.id.toString() === taskId);
+            const task = findTask(event.id);
             if (task) {
                 const taskEntity: Task = {
                     ...task,
@@ -305,11 +316,10 @@ const Calendar: React.FC = () => {
     };
 
     const findTask = (eventId: string) => {
-        const taskId = eventId.replace(
-            /^task(-defer|-created|-fallback)?-/,
-            ''
+        const taskId = taskIdOf(eventId);
+        return allTasks.find(
+            (t) => t.id.toString() === taskId && !t.is_virtual_occurrence
         );
-        return allTasks.find((t) => t.id.toString() === taskId);
     };
 
     // Saves the change, then rebuilds the task's blocks from what the server
@@ -323,6 +333,11 @@ const Calendar: React.FC = () => {
                 task.uid,
                 update as Partial<Task>
             );
+            // A recurring task's later occurrences follow its new date.
+            if (task.recurrence_type && task.recurrence_type !== 'none') {
+                await loadTasks();
+                return;
+            }
             const merged = { ...task, ...update, ...(saved || {}) };
             setAllTasks((prev) =>
                 prev.map((t) => (t.id === task.id ? merged : t))
@@ -344,7 +359,7 @@ const Calendar: React.FC = () => {
     ) => {
         const task = findTask(eventId);
         const event = events.find((e) => e.id === eventId);
-        if (!task?.uid || !event) return;
+        if (!task?.uid || !event || event.readOnly) return;
 
         const newStart = new Date(newDate);
         if (newHour !== undefined && !event.allDay) {
