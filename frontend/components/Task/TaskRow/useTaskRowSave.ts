@@ -2,6 +2,10 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task, PriorityType } from '../../../entities/Task';
 import { updateTask } from '../../../utils/tasksService';
+import {
+    isRecurringMoveCancelled,
+    moveTaskDue,
+} from '../../../utils/recurringMove';
 import { useToast } from '../../Shared/ToastContext';
 import { useStore } from '../../../store/useStore';
 import { resolveTaskTokens, tokenChanges } from '../../../utils/taskTokens';
@@ -46,11 +50,15 @@ export const useTaskRowSave = (
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
 
-    const save = useCallback(
-        async (partial: Partial<Task>, errorKey: string, fallback: string) => {
+    const saveWith = useCallback(
+        async (
+            request: () => Promise<Task>,
+            errorKey: string,
+            fallback: string
+        ) => {
             if (!task.uid) return;
             try {
-                const response = await updateTask(task.uid, partial);
+                const response = await request();
                 const merged: Task = {
                     ...task,
                     ...response,
@@ -58,12 +66,24 @@ export const useTaskRowSave = (
                 };
                 await onTaskUpdate(merged);
             } catch (error) {
+                // A dismissed recurring-move prompt is not a failure.
+                if (isRecurringMoveCancelled(error)) throw error;
                 console.error('TaskRow save failed:', error);
                 showErrorToast(t(errorKey, fallback));
                 throw error;
             }
         },
         [task, onTaskUpdate, showErrorToast, t]
+    );
+
+    const save = useCallback(
+        (partial: Partial<Task>, errorKey: string, fallback: string) =>
+            saveWith(
+                () => updateTask(task.uid as string, partial),
+                errorKey,
+                fallback
+            ),
+        [task.uid, saveWith]
     );
 
     return {
@@ -104,14 +124,17 @@ export const useTaskRowSave = (
                 'Failed to update priority'
             ),
         setDue: (date, time) =>
-            save(
-                {
-                    due_date: date || null,
-                    due_time: date ? time || null : null,
-                },
+            saveWith(
+                () =>
+                    moveTaskDue(task, {
+                        due_date: date || null,
+                        due_time: date ? time || null : null,
+                    }),
                 'task.dueDateUpdateError',
                 'Failed to update due date'
-            ),
+            ).catch((error) => {
+                if (!isRecurringMoveCancelled(error)) throw error;
+            }),
         setStart: async (date, time) => {
             if (
                 isStartAfterDue(

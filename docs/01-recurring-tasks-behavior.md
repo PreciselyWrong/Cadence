@@ -72,6 +72,16 @@ This document explains how recurring tasks work in tududi from a user behavior p
 
 ---
 
+## **Moving an occurrence**
+
+Drag a repeating task to another day and choose how far the change reaches:
+
+- **This occurrence only:** that one day becomes a separate one-off task on the new date. The series keeps its other days, and the moved day is skipped in the series.
+- **This and following:** the series stops before that day. A new series starts on the new date and keeps the same pattern, shifted to the new weekday or day of the month.
+- **All occurrences:** the whole series moves by the same number of days, and its pattern follows.
+
+Skipped days stay skipped when the series advances, so completing a task never brings a moved day back.
+
 ## **Display Rules**
 
 13. **Recurring tasks show up multiple times in your lists:**

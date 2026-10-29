@@ -133,6 +133,35 @@ export const updateTask = async (
     return updated;
 };
 
+export type RecurringMoveScope = 'this' | 'following' | 'all';
+
+export interface MoveOccurrenceResult {
+    task: Task;
+    moved: Task | null;
+}
+
+export const moveTaskOccurrence = async (
+    taskUid: string,
+    body: {
+        scope: RecurringMoveScope;
+        occurrence_date: string;
+        due_date: string;
+    }
+): Promise<MoveOccurrenceResult> => {
+    const response = await fetch(
+        getApiPath(`task/${encodeURIComponent(taskUid)}/move-occurrence`),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: await getPostHeadersWithCsrf(),
+            body: JSON.stringify(body),
+        }
+    );
+
+    await handleAuthResponse(response, 'Failed to move occurrence.');
+    return await response.json();
+};
+
 export const toggleTaskCompletion = async (
     taskUid: string,
     currentTask?: Task

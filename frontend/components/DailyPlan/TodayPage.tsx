@@ -52,6 +52,12 @@ import {
     toggleTaskCompletion,
     updateTask,
 } from '../../utils/tasksService';
+import {
+    isRecurringMoveCancelled,
+    isRecurringTask,
+    moveTaskDue,
+    saveTaskFieldsWithDue,
+} from '../../utils/recurringMove';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
 import NewTask from '../Task/NewTask';
@@ -1060,13 +1066,18 @@ const TodayPage: React.FC = () => {
             )
         );
         try {
-            await updateTask(task.uid as string, update as Partial<Task>);
+            await saveTaskFieldsWithDue(task, update);
+            if (isRecurringTask(task) && 'due_date' in update) {
+                setReloadToken((count) => count + 1);
+            }
         } catch (err) {
-            showErrorToast(
-                err instanceof Error
-                    ? err.message
-                    : t('dailyPlan.saveError', 'Could not save the plan.')
-            );
+            if (!isRecurringMoveCancelled(err)) {
+                showErrorToast(
+                    err instanceof Error
+                        ? err.message
+                        : t('dailyPlan.saveError', 'Could not save the plan.')
+                );
+            }
             setReloadToken((count) => count + 1);
         }
     };
@@ -1173,8 +1184,9 @@ const TodayPage: React.FC = () => {
         if (!task.uid || !date) return;
         const due = addDays(date, when === 'tomorrow' ? 1 : 7);
         try {
-            await updateTask(task.uid, { due_date: due });
+            await moveTaskDue(task, { due_date: due });
         } catch (err) {
+            if (isRecurringMoveCancelled(err)) return;
             showErrorToast(
                 err instanceof Error
                     ? err.message

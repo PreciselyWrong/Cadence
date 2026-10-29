@@ -1,4 +1,27 @@
+const moment = require('moment-timezone');
 const { getWeekdayInTimezone } = require('../../utils/timezone-utils');
+
+const MAX_EXDATE_SKIPS = 366;
+
+const localDateOf = (date, timezone) =>
+    moment.utc(date).tz(timezone).format('YYYY-MM-DD');
+
+// Occurrences the user moved away or removed are stored as local dates in
+// recurrence_exdates; every advance of the series steps over them.
+const nextDueDateSkippingExdates = (task, fromDate, timezone = 'UTC') => {
+    const exdates = new Set(task.recurrence_exdates || []);
+    let next = calculateNextDueDate(task, fromDate, timezone);
+    for (
+        let skips = 0;
+        next &&
+        exdates.has(localDateOf(next, timezone)) &&
+        skips < MAX_EXDATE_SKIPS;
+        skips++
+    ) {
+        next = calculateNextDueDate(task, next, timezone);
+    }
+    return next;
+};
 
 const calculateNextDueDate = (task, fromDate, timezone = 'UTC') => {
     if (
@@ -276,8 +299,8 @@ const calculateVirtualOccurrences = (
     startFrom = null,
     userTimezone = 'UTC'
 ) => {
-    const moment = require('moment-timezone');
     const occurrences = [];
+    const exdates = new Set(task.recurrence_exdates || []);
 
     // Parse start date properly in user's timezone
     let currentDate;
@@ -316,10 +339,14 @@ const calculateVirtualOccurrences = (
             .tz(userTimezone)
             .format('YYYY-MM-DD');
 
-        occurrences.push({
-            due_date: task.due_has_time ? new Date(currentDate) : dateInUserTz,
-            is_virtual: true,
-        });
+        if (!exdates.has(dateInUserTz)) {
+            occurrences.push({
+                due_date: task.due_has_time
+                    ? new Date(currentDate)
+                    : dateInUserTz,
+                is_virtual: true,
+            });
+        }
 
         if (task.due_has_time) {
             // For timed recurrences, advance the calendar date using local
@@ -386,6 +413,8 @@ const calculateVirtualOccurrences = (
 
 module.exports = {
     calculateNextDueDate,
+    nextDueDateSkippingExdates,
+    localDateOf,
     calculateDailyRecurrence,
     calculateWeeklyRecurrence,
     calculateMonthlyRecurrence,

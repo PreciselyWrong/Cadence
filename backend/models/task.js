@@ -115,6 +115,20 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            recurrence_exdates: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                get() {
+                    const rawValue = this.getDataValue('recurrence_exdates');
+                    return rawValue ? JSON.parse(rawValue) : [];
+                },
+                set(value) {
+                    this.setDataValue(
+                        'recurrence_exdates',
+                        value && value.length > 0 ? JSON.stringify(value) : null
+                    );
+                },
+            },
             recurrence_weekday: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

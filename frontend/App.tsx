@@ -71,6 +71,7 @@ import { invalidateProfileCache } from './utils/profileService';
 import { notifySwSession, notifySwClearCache } from './utils/swUtils';
 import { resyncPush } from './utils/pushService';
 import { resetSessionState } from './utils/sessionReset';
+import { RecurringMoveDialogHost } from './components/Task/RecurringMoveDialog';
 import {
     clearSharedText,
     hasPendingSharedText,
@@ -381,6 +382,7 @@ const App: React.FC = () => {
 
     return (
         <Suspense fallback={<LoadingComponent />}>
+            <RecurringMoveDialogHost />
             <Routes>
                 {/* Reachable signed in or out: a browser that already has a
                     session can still open a member's link. */}

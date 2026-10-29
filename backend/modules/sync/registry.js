@@ -31,6 +31,7 @@ const ENTITIES = {
             'recurrence_weekdays',
             'recurrence_month_day',
             'recurrence_week_of_month',
+            'recurrence_exdates',
             'completion_based',
             'order',
             'completed_at',

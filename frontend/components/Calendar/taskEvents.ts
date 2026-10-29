@@ -218,7 +218,7 @@ export const taskToEvents = (
                 ...due,
                 id: `task-${task.id}-occ-${task.occurrence_index ?? 0}`,
                 resize: undefined,
-                readOnly: true,
+                readOnly: false,
             },
         ];
     }

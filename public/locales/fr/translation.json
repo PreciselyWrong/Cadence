@@ -1385,6 +1385,12 @@
     "createError": "Échec de la création de la note"
   },
   "task": {
+    "recurringMove": {
+      "title": "Déplacer une tâche récurrente",
+      "optionThis": "Seulement cette occurrence",
+      "optionFollowing": "Cette occurrence et les suivantes",
+      "optionAll": "Toutes les occurrences"
+    },
     "labels": {
       "tags": "Étiquettes",
       "project": "Projet",

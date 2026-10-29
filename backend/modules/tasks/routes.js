@@ -75,6 +75,8 @@ const {
     skipRecurringOccurrence,
 } = require('./operations/recurring');
 
+const { moveOccurrence } = require('./operations/moveOccurrence');
+const { ValidationError } = require('../../shared/errors');
 const { getTaskMetrics } = require('./queries/metrics-computation');
 const { getSmartTaskCounts } = require('./queries/smart-counts');
 const scopeService = require('../../services/scopeService');
@@ -1248,6 +1250,46 @@ router.post(
         } catch (error) {
             logError('Error skipping recurring occurrence:', error);
             res.status(500).json({ error: 'Failed to skip occurrence' });
+        }
+    }
+);
+
+router.post(
+    '/task/:uid/move-occurrence',
+    requireTaskWriteAccess,
+    async (req, res) => {
+        try {
+            const task = await taskRepository.findByUid(req.params.uid);
+
+            if (!task) {
+                return res.status(404).json({ error: 'Task not found.' });
+            }
+
+            const { task: parent, moved } = await moveOccurrence(task, {
+                scope: req.body.scope,
+                occurrenceDate: req.body.occurrence_date,
+                dueDate: req.body.due_date,
+                timezone: req.currentUser.timezone,
+            });
+
+            const include = { include: TASK_INCLUDES_WITH_SUBTASKS };
+            const serialize = async (id) =>
+                serializeTask(
+                    await taskRepository.findById(id, include),
+                    req.currentUser.timezone,
+                    { skipDisplayNameTransform: true }
+                );
+
+            res.json({
+                task: await serialize(parent.id),
+                moved: moved ? await serialize(moved.id) : null,
+            });
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                return res.status(400).json({ error: error.message });
+            }
+            logError('Error moving recurring occurrence:', error);
+            res.status(500).json({ error: 'Failed to move occurrence' });
         }
     }
 );

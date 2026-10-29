@@ -1468,6 +1468,12 @@
     "createError": "Failed to create note"
   },
   "task": {
+    "recurringMove": {
+      "title": "Move recurring task",
+      "optionThis": "Only this occurrence",
+      "optionFollowing": "This and following occurrences",
+      "optionAll": "All occurrences"
+    },
     "labels": {
       "tags": "Tags",
       "project": "Project",

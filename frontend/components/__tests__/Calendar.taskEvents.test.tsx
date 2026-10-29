@@ -234,7 +234,7 @@ describe('whole-day bar rows', () => {
 });
 
 describe('recurring occurrences', () => {
-    it('draws a later occurrence read-only with its own id', () => {
+    it('draws a later occurrence draggable without resize, with its own id', () => {
         const [event] = taskToEvents({
             id: 4,
             due_date: '2026-11-05',
@@ -243,7 +243,7 @@ describe('recurring occurrences', () => {
             occurrence_index: 2,
         });
         expect(event.id).toBe('task-4-occ-2');
-        expect(event.readOnly).toBe(true);
+        expect(event.readOnly).toBe(false);
         expect(event.resize).toBeUndefined();
         expect(taskIdOf(event.id)).toBe('4');
     });

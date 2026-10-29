@@ -2,7 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
 import { Project } from '../entities/Project';
-import { updateTask } from '../utils/tasksService';
+import {
+    isRecurringMoveCancelled,
+    saveTaskFieldsWithDue,
+} from '../utils/recurringMove';
 import {
     CalendarFeed,
     CalendarRangeEvent,
@@ -489,6 +492,19 @@ const Calendar: React.FC = () => {
         );
     };
 
+    // A virtual occurrence's event id ends in its occurrence index.
+    const findOccurrence = (eventId: string) => {
+        const index = eventId.match(/-occ-(\d+)$/)?.[1];
+        if (index === undefined) return undefined;
+        const taskId = taskIdOf(eventId);
+        return allTasks.find(
+            (t) =>
+                t.id.toString() === taskId &&
+                !!t.is_virtual_occurrence &&
+                (t.occurrence_index ?? 0) === Number(index)
+        );
+    };
+
     // Shows the change at once, saves it, then keeps what the server
     // returns (or reloads everything if the save fails).
     const saveTaskChange = async (
@@ -498,15 +514,18 @@ const Calendar: React.FC = () => {
         const replace = (next: any) =>
             setAllTasks((prev) =>
                 prev.map((t) =>
-                    t.id === task.id && !t.is_virtual_occurrence ? next : t
+                    t.id === task.id &&
+                    !!t.is_virtual_occurrence ===
+                        !!task.is_virtual_occurrence &&
+                    (!task.is_virtual_occurrence ||
+                        t.occurrence_index === task.occurrence_index)
+                        ? next
+                        : t
                 )
             );
         replace({ ...task, ...update });
         try {
-            const saved: any = await updateTask(
-                task.uid,
-                update as Partial<Task>
-            );
+            const saved: any = await saveTaskFieldsWithDue(task, update);
             // A recurring task's later occurrences follow its new date.
             if (task.recurrence_type && task.recurrence_type !== 'none') {
                 await loadTasks();
@@ -514,7 +533,9 @@ const Calendar: React.FC = () => {
             }
             replace({ ...task, ...update, ...(saved || {}) });
         } catch (error) {
-            console.error('Error updating task:', error);
+            if (!isRecurringMoveCancelled(error)) {
+                console.error('Error updating task:', error);
+            }
             await loadTasks();
         }
     };
@@ -537,7 +558,7 @@ const Calendar: React.FC = () => {
             return;
         }
 
-        const task = findTask(eventId);
+        const task = findTask(eventId) ?? findOccurrence(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event || event.readOnly) return;
 

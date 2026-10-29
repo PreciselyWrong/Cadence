@@ -2,6 +2,7 @@ const { Task, RecurringCompletion } = require('../../../models');
 const taskRepository = require('../repository');
 const {
     calculateNextDueDate,
+    nextDueDateSkippingExdates,
     shouldGenerateNextTask,
 } = require('../recurringTaskService');
 const { logEvent } = require('../taskEventService');
@@ -417,7 +418,7 @@ function planOccurrenceAdvance(
     }
 
     const baseDate = completionBased ? now : new Date(originalDueDate);
-    const nextDueDate = calculateNextDueDate(
+    const nextDueDate = nextDueDateSkippingExdates(
         recurrenceContext,
         baseDate,
         getSafeTimezone(timezone)
@@ -516,7 +517,7 @@ async function skipRecurringOccurrence(task, userId, userTimezone) {
     const baseDate = task.completion_based
         ? skippedAt
         : new Date(originalDueDate);
-    const nextDueDate = calculateNextDueDate(
+    const nextDueDate = nextDueDateSkippingExdates(
         recurrenceContext,
         baseDate,
         getSafeTimezone(userTimezone)

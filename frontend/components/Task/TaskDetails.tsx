@@ -16,6 +16,10 @@ import {
     toggleTaskCompletion,
     skipTaskOccurrence,
 } from '../../utils/tasksService';
+import {
+    isRecurringMoveCancelled,
+    moveTaskDue,
+} from '../../utils/recurringMove';
 import { createProject } from '../../utils/projectsService';
 import { fetchAttachments } from '../../utils/attachmentsService';
 import { fetchComments } from '../../utils/commentsService';
@@ -442,7 +446,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await moveTaskDue(task, {
                 due_date: editedDueDate || null,
                 due_time: editedDueDate && editedDueTime ? editedDueTime : null,
             });
@@ -466,12 +470,13 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            setEditedDueDate(task.due_date || '');
+            setIsEditingDueDate(false);
+            if (isRecurringMoveCancelled(error)) return;
             console.error('Error updating due date:', error);
             showErrorToast(
                 t('task.dueDateUpdateError', 'Failed to update due date')
             );
-            setEditedDueDate(task.due_date || '');
-            setIsEditingDueDate(false);
         }
     };
 

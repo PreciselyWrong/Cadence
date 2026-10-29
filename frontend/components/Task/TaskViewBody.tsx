@@ -5,6 +5,11 @@ import { ViewType } from '../../utils/profileService';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useViewType } from '../../hooks/useViewType';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
+import {
+    isRecurringMoveCancelled,
+    isRecurringTask,
+    moveTaskDue,
+} from '../../utils/recurringMove';
 import TaskPriorityBoard, { BoardPriority } from './TaskPriorityBoard';
 import TaskMonthCalendar from './TaskMonthCalendar';
 
@@ -76,7 +81,17 @@ const MinimalTaskViewBody: React.FC<TaskViewBodyProps> = ({
     };
 
     const moveDue = (task: Task, dueDate: string) => {
-        void onTaskUpdate({ ...task, due_date: dueDate });
+        if (!isRecurringTask(task)) {
+            void onTaskUpdate({ ...task, due_date: dueDate });
+            return;
+        }
+        void moveTaskDue(task, { due_date: dueDate })
+            .then((saved) => onTaskUpdate(saved))
+            .catch((error) => {
+                if (!isRecurringMoveCancelled(error)) {
+                    console.error('Failed to move recurring task:', error);
+                }
+            });
     };
 
     return (
