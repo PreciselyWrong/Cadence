@@ -162,32 +162,25 @@ class TagsRepository extends BaseRepository {
         try {
             // Remove associations from junction tables. Sequential on purpose:
             // a transaction owns a single connection, so statements on it
-            // must not be issued concurrently.
+            // must not be issued concurrently. Through the join models, so
+            // the offline sync journal sees each parent lose the tag.
             for (const joinTable of [
                 'tasks_tags',
                 'notes_tags',
                 'projects_tags',
             ]) {
-                await sequelize.query(
-                    `DELETE FROM ${joinTable} WHERE tag_id = ?`,
-                    {
-                        replacements: [tag.id],
-                        type: sequelize.QueryTypes.DELETE,
-                        transaction,
-                    }
-                );
+                await sequelize.models[joinTable].destroy({
+                    where: { tag_id: tag.id },
+                    transaction,
+                });
             }
 
             // Children survive their parent as top-level tags. Done here as
             // well as by the foreign key, which SQLite only enforces when
             // foreign_keys is on.
-            await sequelize.query(
-                'UPDATE tags SET parent_id = NULL WHERE parent_id = ?',
-                {
-                    replacements: [tag.id],
-                    type: sequelize.QueryTypes.UPDATE,
-                    transaction,
-                }
+            await Tag.update(
+                { parent_id: null },
+                { where: { parent_id: tag.id }, transaction }
             );
 
             await tag.destroy({ transaction });

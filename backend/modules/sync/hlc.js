@@ -55,4 +55,10 @@ function observe(value) {
     }
 }
 
-module.exports = { now, observe, parse, isAcceptable };
+// Simulates a restart: the in-memory clock is lost.
+function resetForTests() {
+    lastMs = 0;
+    lastCounter = 0;
+}
+
+module.exports = { now, observe, parse, isAcceptable, resetForTests };

@@ -15,8 +15,6 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
   - Garder de l'amont : score de force, note par check-in, présence dans Aujourd'hui/Plan, outils MCP.
 - API de synchronisation hors ligne ([plan](docs/fork/PLAN-clients-sync.md), § 1 ; [doc](docs/30-offline-sync.md)). Fait : registre, journal, snapshot, pull, push idempotent, fusion par champ, tags, occurrences récurrentes, QR de connexion. Reste (relecture Codex du 2026-10-29) :
   - Concurrence : sérialiser lecture/fusion/écriture par ligne ; sur Postgres, un curseur peut sauter une entrée non commitée (publier le journal dans l'ordre des commits ou borner le curseur) ; dédoublonnage atomique des occurrences.
-  - Horloge serveur perdue au redémarrage : restaurer un plancher depuis les `field_clocks` persistés.
-  - Suppression d'un tag en SQL brut (`tagsRepository.deleteWithAssociations`) : ne rejournalise pas les tâches ni les tags enfants.
   - Compaction du journal, entités habitudes.
 - UI web habitudes : créer, versionner, mettre en pause et saisir depuis le navigateur.
 - App Android depuis le dépôt Cadence (Kotlin, Compose) : toutes les fonctionnalités de Cadence reprises ([liste de parité](docs/fork/CADENCE-PARITY.md)), design au style Tududi ; tâches + habitudes, domaine Cadence en local (Room), file hors ligne, widget Glance, alarmes inexactes, Health Connect. Vérif : mode avion puis retour réseau, serveur à jour sans doublon.

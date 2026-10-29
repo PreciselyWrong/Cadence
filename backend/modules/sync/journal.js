@@ -20,8 +20,11 @@ function stampClocks(entity, instance, options) {
         : syncedKeys(entity).filter((k) => instance.changed(k));
     instance._syncChanged = instance.isNewRecord || changed.length > 0;
     if (changed.length === 0) return;
-    const stamp = hlc.now();
     const clocks = { ...(instance.get('field_clocks') || {}) };
+    // The in-memory clock does not survive a restart; the row's own clocks
+    // do, and the new stamp only has to beat those.
+    Object.values(clocks).forEach(hlc.observe);
+    const stamp = hlc.now();
     for (const key of changed) {
         const field =
             Object.entries(ENTITIES[entity].refs).find(
@@ -54,8 +57,10 @@ function installListHooks(Model, entity) {
                 });
                 if (!parent) continue;
                 if (!options.syncApplied) {
+                    const clocks = parent.get('field_clocks') || {};
+                    Object.values(clocks).forEach(hlc.observe);
                     parent.set('field_clocks', {
-                        ...(parent.get('field_clocks') || {}),
+                        ...clocks,
                         [field]: hlc.now(),
                     });
                 }
@@ -73,8 +78,23 @@ function installListHooks(Model, entity) {
                 options
             )
         );
+        // A delete by the other side (all rows of one tag) names no parent,
+        // so the parents are read before the rows go.
+        Through.addHook('beforeBulkDestroy', async (options) => {
+            if (options.where && list.key in options.where) return;
+            const rows = await Through.findAll({
+                where: options.where,
+                attributes: [list.key],
+                transaction: options.transaction,
+            });
+            options.syncParents = rows.map((r) => r.get(list.key));
+        });
         Through.addHook('afterBulkDestroy', (options) =>
-            touch(parentIds(options.where && options.where[list.key]), options)
+            touch(
+                options.syncParents ??
+                    parentIds(options.where && options.where[list.key]),
+                options
+            )
         );
     }
 }

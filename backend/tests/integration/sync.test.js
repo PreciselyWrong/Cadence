@@ -292,6 +292,78 @@ describe('Offline sync API', () => {
     });
 
     describe('review fixes', () => {
+        it('journals the tasks and child tags touched by a tag deletion', async () => {
+            await push(agent, [
+                upsert(
+                    'op-td1',
+                    'tag',
+                    'clienttag000020',
+                    { name: 'parent' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-td2',
+                    'tag',
+                    'clienttag000021',
+                    { name: 'child', parent_uid: 'clienttag000020' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-td3',
+                    'task',
+                    'clienttask00041',
+                    { name: 'T', tag_uids: ['clienttag000020'] },
+                    hlc(1)
+                ),
+            ]);
+            const before = await agent.get('/api/v1/sync/pull?cursor=0');
+
+            const del = await agent.delete('/api/tag/clienttag000020');
+            expect(del.status).toBeLessThan(300);
+
+            const after = await agent.get(
+                `/api/v1/sync/pull?cursor=${before.body.cursor}`
+            );
+            const last = (uid) =>
+                after.body.changes.filter((c) => c.uid === uid).pop();
+            expect(last('clienttask00041').data.tag_uids).toEqual([]);
+            expect(last('clienttag000021').data.parent_uid).toBeNull();
+            expect(last('clienttag000020').op).toBe('delete');
+        });
+
+        it('lets a web edit beat a stored future clock after a server restart', async () => {
+            const ahead = Date.now() + 60 * 60 * 1000;
+            await push(agent, [
+                upsert(
+                    'op-fc1',
+                    'task',
+                    'clienttask00040',
+                    { name: 'Device' },
+                    hlc(ahead)
+                ),
+            ]);
+            require('../../modules/sync/hlc').resetForTests();
+
+            await agent
+                .patch('/api/task/clienttask00040')
+                .send({ name: 'Web after restart' });
+            const stale = await push(agent, [
+                upsert(
+                    'op-fc2',
+                    'task',
+                    'clienttask00040',
+                    { name: 'Older' },
+                    hlc(ahead - 1000, 0, 'devB')
+                ),
+            ]);
+
+            expect(stale.body.results[0].status).toBe('conflict');
+            const task = await Task.findOne({
+                where: { uid: 'clienttask00040' },
+            });
+            expect(task.name).toBe('Web after restart');
+        });
+
         it('rejects a reference without a value but keeps the batch going', async () => {
             const res = await push(agent, [
                 {
