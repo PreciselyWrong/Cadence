@@ -39,7 +39,6 @@ import { buildTips, rescheduleMissed } from './tips';
 import { useDailyQuote } from './useDailyQuote';
 import {
     DEFAULT_DURATION,
-    busyMinutes,
     dayRange,
     formatDuration,
     itemEnd,
@@ -82,7 +81,6 @@ const TodayPage: React.FC = () => {
         null
     );
     const [events, setEvents] = useState<CalendarEvent[]>([]);
-    const [hasFeeds, setHasFeeds] = useState(false);
     const [showsFeeds, setShowsFeeds] = useState(false);
     const [candidates, setCandidates] = useState<PlanCandidates | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -130,11 +128,10 @@ const TodayPage: React.FC = () => {
     }, [t, focusId]);
 
     // Calendar feeds belong to the Calendar feature; with it off Today shows
-    // no events and no prompt to connect a calendar.
+    // no events.
     const planDate = planResponse?.date;
     useEffect(() => {
         if (!planDate || !calendarEnabled) {
-            setHasFeeds(false);
             setShowsFeeds(false);
             setEvents([]);
             return;
@@ -145,7 +142,6 @@ const TodayPage: React.FC = () => {
             if (cancelled) return;
             // Calendars switched off in Profile -> Calendars stay out of Today.
             const shown = feeds.some((feed) => feed.show_on_calendar);
-            setHasFeeds(feeds.length > 0);
             setShowsFeeds(shown);
             if (!shown) return;
             const day = await fetchCalendarEvents(planDate).catch(() => null);
@@ -312,6 +308,9 @@ const TodayPage: React.FC = () => {
                         : tasks.filter((task) => task.uid !== uid);
                 return {
                     ...current,
+                    tagged_today: current.tagged_today
+                        ? apply(current.tagged_today)
+                        : current.tagged_today,
                     overdue: apply(current.overdue),
                     due_today: apply(current.due_today),
                     in_progress: apply(current.in_progress),
@@ -415,10 +414,6 @@ const TodayPage: React.FC = () => {
                 ? { ...current, plan: { ...current.plan, ai_wrap_up: wrapUp } }
                 : current
         );
-    const freeMinutes = Math.max(
-        0,
-        range.end - range.start - busyMinutes(events, range)
-    );
     const dateLabel = planResponse
         ? new Intl.DateTimeFormat(intlLocale(i18n.language), {
               weekday: 'long',
@@ -516,11 +511,14 @@ const TodayPage: React.FC = () => {
                     <TodayUnplanned
                         candidates={candidates}
                         events={events}
-                        freeMinutes={freeMinutes}
-                        hasFeeds={hasFeeds}
                         showsFeeds={showsFeeds}
                         calendarEnabled={calendarEnabled}
                         hasDraft={items.length > 0}
+                        projects={projects}
+                        onTaskUpdate={async (task) =>
+                            replaceCandidate(task.uid, task)
+                        }
+                        onTaskDelete={handleDeleteTask}
                     />
                 )}
 

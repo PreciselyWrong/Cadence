@@ -57,6 +57,10 @@ jest.mock('../../Task/TaskRow', () => ({
                 }
             />
             <button
+                data-testid={`finish-${task.uid}`}
+                onClick={() => onTaskCompletionToggle({ ...task, status: 2 })}
+            />
+            <button
                 data-testid={`move-${task.uid}`}
                 onClick={() =>
                     onTaskUpdate({ ...task, due_date: '2026-10-01' })
@@ -128,7 +132,7 @@ describe('TodayPage', () => {
         });
     });
 
-    it('asks you to plan when today has no started plan', async () => {
+    it("shows today's tasks without making you plan first", async () => {
         (fetchDailyPlan as jest.Mock).mockResolvedValue({
             date: '2026-09-24',
             plan: null,
@@ -136,20 +140,18 @@ describe('TodayPage', () => {
 
         render(<TodayPage />);
 
-        expect(
-            await screen.findByText("You haven't planned today yet")
-        ).toBeInTheDocument();
+        expect(await screen.findByText('Renew insurance')).toBeInTheDocument();
         expect(screen.getByTestId('plan-your-day')).toHaveAttribute(
             'href',
             '/today/plan'
         );
         expect(
-            screen.queryByText('Skip and show everything')
+            screen.queryByText("You haven't planned today yet")
         ).not.toBeInTheDocument();
-        await waitFor(() => expect(screen.getByText('4')).toBeInTheDocument());
+        expect(screen.queryByText('Add to today')).not.toBeInTheDocument();
     });
 
-    it('offers to connect a calendar when the Calendar feature is on', async () => {
+    it('drops a task from the list once it is done', async () => {
         (fetchDailyPlan as jest.Mock).mockResolvedValue({
             date: '2026-09-24',
             plan: null,
@@ -157,9 +159,13 @@ describe('TodayPage', () => {
 
         render(<TodayPage />);
 
-        expect(
-            await screen.findByText('Connect a calendar')
-        ).toBeInTheDocument();
+        await screen.findByText('Renew insurance');
+        fireEvent.click(screen.getByTestId('finish-o1'));
+        await waitFor(() =>
+            expect(
+                screen.queryByText('Renew insurance')
+            ).not.toBeInTheDocument()
+        );
     });
 
     it('leaves calendars out when the Calendar feature is off', async () => {
@@ -174,7 +180,7 @@ describe('TodayPage', () => {
 
         render(<TodayPage />);
 
-        await waitFor(() => expect(screen.getByText('4')).toBeInTheDocument());
+        await screen.findByText('Renew insurance');
         expect(fetchCalendarFeeds).not.toHaveBeenCalled();
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
         expect(
@@ -197,7 +203,7 @@ describe('TodayPage', () => {
         render(<TodayPage />);
 
         await waitFor(() => expect(fetchCalendarFeeds).toHaveBeenCalled());
-        await waitFor(() => expect(screen.getByText('4')).toBeInTheDocument());
+        await screen.findByText('Renew insurance');
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
         expect(
             screen.queryByText('From your calendar')

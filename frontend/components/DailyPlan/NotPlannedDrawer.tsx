@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRightIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
+import { isTaskDone } from '../../constants/taskStatus';
 import { PlanCandidates } from '../../utils/dailyPlanService';
 import TaskRow from '../Task/TaskRow';
 import { TASK_SHEET_CLASS } from '../Task/taskSheet';
@@ -10,7 +11,10 @@ import { TASK_SHEET_CLASS } from '../Task/taskSheet';
 interface NotPlannedDrawerProps {
     candidates: PlanCandidates | null;
     plannedUids: Set<string>;
-    onAdd: (task: Task) => void;
+    // Left out before the day is planned: rows then only get done or edited.
+    onAdd?: (task: Task) => void;
+    title?: string;
+    defaultOpen?: boolean;
     projects: Project[];
     onTaskUpdate: (task: Task) => Promise<void>;
     onTaskDelete: (taskUid: string) => Promise<void>;
@@ -20,17 +24,24 @@ const NotPlannedDrawer: React.FC<NotPlannedDrawerProps> = ({
     candidates,
     plannedUids,
     onAdd,
+    title,
+    defaultOpen = false,
     projects,
     onTaskUpdate,
     onTaskDelete,
 }) => {
     const { t } = useTranslation();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(defaultOpen);
 
     if (!candidates) return null;
 
     const notPlanned = (tasks: Task[]) =>
-        tasks.filter((task) => task.uid && !plannedUids.has(task.uid));
+        tasks.filter(
+            (task) =>
+                task.uid &&
+                !plannedUids.has(task.uid) &&
+                !isTaskDone(task.status)
+        );
     const groups = [
         {
             key: 'tagged_today',
@@ -81,9 +92,10 @@ const NotPlannedDrawer: React.FC<NotPlannedDrawerProps> = ({
                     className={`h-4 w-4 text-gray-500 transition-transform ${open ? 'rotate-90' : ''}`}
                 />
                 <span className="text-sm text-gray-800 dark:text-gray-200">
-                    {t('dailyPlan.notPlanned', 'Not planned ({{count}})', {
-                        count: total,
-                    })}
+                    {title ??
+                        t('dailyPlan.notPlanned', 'Not planned ({{count}})', {
+                            count: total,
+                        })}
                 </span>
                 {summary && (
                     <span className="truncate text-sm text-gray-500 dark:text-gray-400">
@@ -129,27 +141,29 @@ const NotPlannedDrawer: React.FC<NotPlannedDrawerProps> = ({
                                             />
                                         </div>
                                         {/* Icon only on phones, so the title keeps the row's width. */}
-                                        <button
-                                            type="button"
-                                            onClick={() => onAdd(task)}
-                                            aria-label={t(
-                                                'dailyPlan.addToToday',
-                                                'Add to today'
-                                            )}
-                                            title={t(
-                                                'dailyPlan.addToToday',
-                                                'Add to today'
-                                            )}
-                                            className="mt-1.5 inline-flex min-h-[36px] min-w-[36px] shrink-0 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
-                                        >
-                                            <PlusIcon className="h-4 w-4" />
-                                            <span className="hidden sm:inline">
-                                                {t(
+                                        {onAdd && (
+                                            <button
+                                                type="button"
+                                                onClick={() => onAdd(task)}
+                                                aria-label={t(
                                                     'dailyPlan.addToToday',
                                                     'Add to today'
                                                 )}
-                                            </span>
-                                        </button>
+                                                title={t(
+                                                    'dailyPlan.addToToday',
+                                                    'Add to today'
+                                                )}
+                                                className="mt-1.5 inline-flex min-h-[36px] min-w-[36px] shrink-0 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                                            >
+                                                <PlusIcon className="h-4 w-4" />
+                                                <span className="hidden sm:inline">
+                                                    {t(
+                                                        'dailyPlan.addToToday',
+                                                        'Add to today'
+                                                    )}
+                                                </span>
+                                            </button>
+                                        )}
                                     </div>
                                 ))}
                             </div>

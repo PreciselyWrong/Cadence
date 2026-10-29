@@ -218,7 +218,8 @@
     "open": "Ouvrir",
     "completed": "Terminé",
     "noCompletedTasksToday": "Aucune tâche terminée aujourd'hui.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Marquer comme terminée",
+    "markAsNotDone": "Marquer comme non terminée",
     "notStarted": "Non commencé",
     "done": "Fait",
     "eisenhower": {
@@ -2918,6 +2919,7 @@
     "dueToday": "À faire aujourd'hui",
     "suggested": "Suggérées",
     "notPlanned": "Non planifiées ({{count}})",
+    "todayTasks": "Tâches du jour",
     "nothingElse": "Rien d'autre n'attend.",
     "addToToday": "Ajouter à aujourd'hui",
     "draftKicker": "Presque prêt",

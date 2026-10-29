@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+    render,
+    screen,
+    fireEvent,
+    waitFor,
+    within,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskRow from '../TaskRow';
 import { TaskRowExpansionProvider } from '../TaskRow/TaskRowExpansionContext';
@@ -209,6 +215,42 @@ describe('TaskRow', () => {
         expect(tasksService.fetchTaskByUid).not.toHaveBeenCalled();
     });
 
+    describe('round check on the left', () => {
+        const toggleMock = tasksService.toggleTaskCompletion as jest.Mock;
+        beforeEach(() => toggleMock.mockReset());
+
+        it('shows a circle before the title and no status pill', () => {
+            renderRow(baseTask());
+            const circle = screen.getByRole('checkbox', {
+                name: 'Mark as done',
+            });
+            const title = screen.getByText('Buy tickets');
+            expect(
+                circle.compareDocumentPosition(title) &
+                    Node.DOCUMENT_POSITION_FOLLOWING
+            ).toBeTruthy();
+            expect(screen.queryByTestId('status-control')).toBeNull();
+        });
+
+        it('completes the task without expanding the row', async () => {
+            toggleMock.mockResolvedValue({ ...baseTask(), status: 'done' });
+            const onTaskCompletionToggle = jest.fn();
+            renderRow(baseTask(), { onTaskCompletionToggle });
+            fireEvent.click(
+                screen.getByRole('checkbox', { name: 'Mark as done' })
+            );
+            await waitFor(() =>
+                expect(onTaskCompletionToggle).toHaveBeenCalledWith(
+                    expect.objectContaining({ status: 'done' })
+                )
+            );
+            expect(toggleMock).toHaveBeenCalledTimes(1);
+            expect(
+                screen.queryByPlaceholderText('Task name')
+            ).not.toBeInTheDocument();
+        });
+    });
+
     it('expands into the quick-edit panel on click', () => {
         renderRow(baseTask());
         fireEvent.click(screen.getByText('Buy tickets'));
@@ -239,7 +281,11 @@ describe('TaskRow', () => {
         renderRow(baseTask({ note: '- [ ] milk' }));
         fireEvent.click(screen.getByText('Buy tickets'));
 
-        fireEvent.click(screen.getByRole('checkbox'));
+        fireEvent.click(
+            within(screen.getByTestId('task-row-note-preview')).getByRole(
+                'checkbox'
+            )
+        );
 
         await waitFor(() =>
             expect(updateTaskMock).toHaveBeenCalledWith('task-1', {
@@ -535,6 +581,7 @@ describe('TaskRow', () => {
         );
     });
 
+    // The status menu shows once the row is opened.
     describe('status picked from the status menu (#1805)', () => {
         const updateTaskMock = tasksService.updateTask as jest.Mock;
         beforeEach(() => updateTaskMock.mockReset());
@@ -542,6 +589,7 @@ describe('TaskRow', () => {
         it('leaves saving to the page by default', () => {
             const onTaskUpdate = jest.fn().mockResolvedValue(undefined);
             renderRow(baseTask(), { onTaskUpdate });
+            fireEvent.click(screen.getByText('Buy tickets'));
             fireEvent.click(screen.getByLabelText('pick in_progress'));
             expect(updateTaskMock).not.toHaveBeenCalled();
             expect(onTaskUpdate).toHaveBeenCalledWith(
@@ -556,6 +604,7 @@ describe('TaskRow', () => {
             });
             const onTaskUpdate = jest.fn().mockResolvedValue(undefined);
             renderRow(baseTask(), { onTaskUpdate, saveStatusChanges: true });
+            fireEvent.click(screen.getByText('Buy tickets'));
             fireEvent.click(screen.getByLabelText('pick in_progress'));
             await waitFor(() =>
                 expect(onTaskUpdate).toHaveBeenCalledWith(
@@ -579,6 +628,7 @@ describe('TaskRow', () => {
                 onTaskCompletionToggle,
                 saveStatusChanges: true,
             });
+            fireEvent.click(screen.getByText('Buy tickets'));
             fireEvent.click(screen.getByLabelText('pick done'));
             await waitFor(() =>
                 expect(onTaskCompletionToggle).toHaveBeenCalledWith(
@@ -605,8 +655,8 @@ describe('TaskRow', () => {
             });
             renderRow(baseTask({ subtasks: [subtask] }));
             fireEvent.click(screen.getByTitle('Show subtasks'));
-            const picks = await screen.findAllByLabelText('pick in_progress');
-            fireEvent.click(picks[picks.length - 1]);
+            fireEvent.click(await screen.findByText('Book hotel'));
+            fireEvent.click(await screen.findByLabelText('pick in_progress'));
             await waitFor(() =>
                 expect(updateTaskMock).toHaveBeenCalledWith('sub-1', {
                     status: 'in_progress',

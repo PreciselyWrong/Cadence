@@ -31,6 +31,7 @@ import {
     getYesterdayDateString,
 } from '../../../utils/dateUtils';
 import TaskStatusControl from '../TaskStatusControl';
+import TaskCheckCircle from '../TaskCheckCircle';
 import QuickCaptureInput, {
     QuickCaptureInputHandle,
 } from '../../Inbox/QuickCaptureInput';
@@ -244,14 +245,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         : '#';
 
     const stop = (e: React.MouseEvent) => e.stopPropagation();
+    const showCheck =
+        !hideStatusControl && !task.habit_mode && !!onToggleCompletion;
 
     return (
         <div
-            className={`group flex items-center px-4 ${
-                condenseStatusControl
-                    ? 'flex-wrap justify-end gap-x-3 gap-y-1.5'
-                    : 'gap-3'
-            } ${hasMeta ? 'py-2' : 'py-3'} cursor-pointer`}
+            className={`group flex items-center gap-3 px-4 ${
+                hasMeta ? 'py-2' : 'py-3'
+            } cursor-pointer`}
             role="button"
             tabIndex={0}
             onClick={onActivate}
@@ -262,11 +263,15 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 }
             }}
         >
-            <div
-                className={`flex flex-1 min-w-0 flex-col ${
-                    condenseStatusControl ? 'basis-full' : ''
-                }`}
-            >
+            {showCheck && onToggleCompletion && (
+                <div className={hasMeta ? 'self-start mt-0.5' : ''}>
+                    <TaskCheckCircle
+                        task={task}
+                        onToggle={onToggleCompletion}
+                    />
+                </div>
+            )}
+            <div className="flex flex-1 min-w-0 flex-col">
                 <div className="flex items-center gap-1.5 min-w-0">
                     {task.pinned && (
                         <MapPinSolidIcon
@@ -565,7 +570,8 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 </div>
             )}
 
-            {!hideStatusControl && !task.habit_mode && onToggleCompletion && (
+            {/* The full status menu waits until the row is opened. */}
+            {showCheck && editable && (
                 <div className="flex-shrink-0" onClick={stop}>
                     <TaskStatusControl
                         task={task}

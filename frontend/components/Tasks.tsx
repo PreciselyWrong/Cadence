@@ -81,7 +81,9 @@ const Tasks: React.FC = () => {
     const query = new URLSearchParams(location.search);
     const isUpcomingView =
         query.get('type') === 'upcoming' || location.pathname === '/upcoming';
-    const status = query.get('status');
+    // Open tasks by default, so a ticked task leaves the list; "All" is opt-in.
+    const statusParam = query.get('status');
+    const status = statusParam === 'all' ? null : (statusParam ?? 'active');
     const tag = query.get('tag');
 
     useEffect(() => {
@@ -770,8 +772,9 @@ const Tasks: React.FC = () => {
                                                                     new URLSearchParams(
                                                                         location.search
                                                                     );
-                                                                params.delete(
-                                                                    'status'
+                                                                params.set(
+                                                                    'status',
+                                                                    'all'
                                                                 );
                                                                 navigate(
                                                                     {
@@ -788,9 +791,8 @@ const Tasks: React.FC = () => {
                                                                     new URLSearchParams(
                                                                         location.search
                                                                     );
-                                                                params.set(
-                                                                    'status',
-                                                                    'active'
+                                                                params.delete(
+                                                                    'status'
                                                                 );
                                                                 navigate(
                                                                     {
