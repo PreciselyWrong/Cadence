@@ -17,6 +17,7 @@ import { updateProject } from '../../utils/projectsService';
 import { createTask } from '../../utils/tasksService';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
+import TaskViewBody from '../Task/TaskViewBody';
 import NewTask from '../Task/NewTask';
 import CompletedTasksSection from '../Task/CompletedTasksSection';
 import { isTaskCompleted } from '../../constants/taskStatus';
@@ -809,41 +810,50 @@ const TagDetails: React.FC = () => {
                             />
                         </div>
                     )}
-                    {displayTasks.length > 0 ? (
-                        groupBy === 'project' ? (
-                            <GroupedTaskList
-                                tasks={displayTasks}
-                                groupBy="project"
-                                onTaskUpdate={handleTaskUpdate}
-                                onTaskCompletionToggle={
-                                    handleTaskCompletionToggle
-                                }
-                                onTaskDelete={handleTaskDelete}
-                                projects={projectLookupList}
-                                hideProjectName={false}
-                                onToggleToday={undefined}
-                                showCompletedTasks={showCompletedTasks}
-                                searchQuery={taskSearchQuery}
-                            />
+                    <TaskViewBody
+                        viewKey={`tag:${tag?.name ?? ''}`}
+                        tasks={displayTasks}
+                        onTaskUpdate={handleTaskUpdate}
+                    >
+                        {displayTasks.length > 0 ? (
+                            groupBy === 'project' ? (
+                                <GroupedTaskList
+                                    tasks={displayTasks}
+                                    groupBy="project"
+                                    onTaskUpdate={handleTaskUpdate}
+                                    onTaskCompletionToggle={
+                                        handleTaskCompletionToggle
+                                    }
+                                    onTaskDelete={handleTaskDelete}
+                                    projects={projectLookupList}
+                                    hideProjectName={false}
+                                    onToggleToday={undefined}
+                                    showCompletedTasks={showCompletedTasks}
+                                    searchQuery={taskSearchQuery}
+                                />
+                            ) : (
+                                <TaskList
+                                    tasks={displayTasks}
+                                    onTaskUpdate={handleTaskUpdate}
+                                    onTaskCompletionToggle={
+                                        handleTaskCompletionToggle
+                                    }
+                                    onTaskDelete={handleTaskDelete}
+                                    projects={projectLookupList}
+                                    hideProjectName={false}
+                                    onToggleToday={undefined}
+                                    showCompletedTasks={showCompletedTasks}
+                                />
+                            )
                         ) : (
-                            <TaskList
-                                tasks={displayTasks}
-                                onTaskUpdate={handleTaskUpdate}
-                                onTaskCompletionToggle={
-                                    handleTaskCompletionToggle
-                                }
-                                onTaskDelete={handleTaskDelete}
-                                projects={projectLookupList}
-                                hideProjectName={false}
-                                onToggleToday={undefined}
-                                showCompletedTasks={showCompletedTasks}
-                            />
-                        )
-                    ) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {t('tasks.noTasksAvailable', 'No tasks available.')}
-                        </p>
-                    )}
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {t(
+                                    'tasks.noTasksAvailable',
+                                    'No tasks available.'
+                                )}
+                            </p>
+                        )}
+                    </TaskViewBody>
                     {isMinimal && taskStatusFilter === 'active' && (
                         <CompletedTasksSection
                             list={`tag:${tag?.name ?? ''}`}

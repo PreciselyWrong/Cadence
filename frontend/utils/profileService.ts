@@ -22,6 +22,9 @@ export interface EisenhowerMatrixConfig {
     quadrants: MatrixQuadrant[];
 }
 
+// How a saved view, tag, project or the Tasks list is shown in Minimal.
+export type ViewType = 'list' | 'board' | 'calendar';
+
 interface Profile {
     id: number;
     email: string;
@@ -78,6 +81,8 @@ interface Profile {
             group_by?: 'project' | 'day' | 'status';
             include_open?: boolean;
         } | null;
+        // Keys: `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks`.
+        viewTypes?: Record<string, ViewType>;
     };
 }
 
@@ -156,7 +161,7 @@ export const updateProfile = async (
 };
 
 export const updateUiSettings = async (
-    settings: NonNullable<Profile['ui_settings']>
+    settings: Partial<NonNullable<Profile['ui_settings']>>
 ): Promise<{ success: boolean; ui_settings: Profile['ui_settings'] }> => {
     const response = await fetch(getApiPath('profile/ui-settings'), {
         method: 'PUT',

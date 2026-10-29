@@ -2296,6 +2296,12 @@
     "sharedWithGroups": "Partagé avec des groupes",
     "groupCounts": "{{accepted}} acceptées, {{pending}} en attente"
   },
+  "viewType": {
+    "label": "Affichage",
+    "list": "Liste",
+    "board": "Tableau",
+    "calendar": "Calendrier"
+  },
   "views": {
     "title": "Vues intelligentes",
     "loading": "Chargement des vues...",

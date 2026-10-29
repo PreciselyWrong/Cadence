@@ -389,7 +389,7 @@ A project can have a **parent project** it owns. Use it to split a big project i
 
 ## Timeline View
 
-The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.
+The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser. In Minimal, a **Calendar** tab (a month of the tasks by due date, drag to change the due date) is added, and the List, Board and Calendar choice is remembered for each project in `ui_settings.viewTypes` (see [Lists, Board or Calendar](08-views-system.md#list-board-or-calendar-minimal)).
 
 - **Bars** run from a task's start date to its due date. A task with only a due date shows as a diamond; one with only a start shows as a short faded bar. Tasks with neither sit in a "No dates yet" tray under the chart.
 - **Scheduling:** drag a bar to move both dates, drag either end to change one, drag a diamond to move the due date. Times of day are kept. Drag a task from the tray onto a day to give it that day as start and due. Clicking a bar opens the task.

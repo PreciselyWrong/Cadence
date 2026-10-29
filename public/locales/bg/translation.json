@@ -2290,6 +2290,12 @@
     "sharedWithGroups": "Споделено с групи",
     "groupCounts": "{{accepted}} приети, {{pending}} чакащи"
   },
+  "viewType": {
+    "label": "Изглед",
+    "list": "Списък",
+    "board": "Табло",
+    "calendar": "Календар"
+  },
   "views": {
     "title": "Умни прегледи",
     "loading": "Зареждане на прегледи...",

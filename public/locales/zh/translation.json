@@ -2288,6 +2288,12 @@
     "sharedWithGroups": "已与群组共享",
     "groupCounts": "已接受 {{accepted}} 个，待处理 {{pending}} 个"
   },
+  "viewType": {
+    "label": "视图",
+    "list": "列表",
+    "board": "看板",
+    "calendar": "日历"
+  },
   "views": {
     "title": "智能视图",
     "loading": "加载视图中...",

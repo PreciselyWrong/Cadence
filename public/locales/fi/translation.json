@@ -2290,6 +2290,12 @@
     "sharedWithGroups": "Jaettu ryhmien kanssa",
     "groupCounts": "{{accepted}} hyväksytty, {{pending}} odottaa"
   },
+  "viewType": {
+    "label": "Näkymä",
+    "list": "Lista",
+    "board": "Taulu",
+    "calendar": "Kalenteri"
+  },
   "views": {
     "title": "Älykkäät näkymät",
     "loading": "Ladataan näkymiä...",

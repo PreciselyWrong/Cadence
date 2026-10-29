@@ -2291,6 +2291,12 @@
     "sharedWithGroups": "Delt med grupper",
     "groupCounts": "{{accepted}} akseptert, {{pending}} venter"
   },
+  "viewType": {
+    "label": "Visning",
+    "list": "Liste",
+    "board": "Tavle",
+    "calendar": "Kalender"
+  },
   "views": {
     "title": "Smarte Visninger",
     "loading": "Laster visninger...",

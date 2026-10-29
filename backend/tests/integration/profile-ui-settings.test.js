@@ -316,4 +316,133 @@ describe('PUT /api/profile/ui-settings', () => {
             include_open: false,
         });
     });
+
+    describe('view types (list, board or calendar per view)', () => {
+        it('saves a view type per key', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                viewTypes: {
+                    'tag:work': 'board',
+                    'view:abc123': 'calendar',
+                    tasks: 'list',
+                },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                'tag:work': 'board',
+                'view:abc123': 'calendar',
+                tasks: 'list',
+            });
+        });
+
+        it('drops values other than list, board or calendar', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                viewTypes: {
+                    tasks: 'timeline',
+                    'project:p1': 'board',
+                    'tag:x': 42,
+                    'tag:y': null,
+                },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                'project:p1': 'board',
+            });
+        });
+
+        it('drops keys longer than 120 characters and blank keys', async () => {
+            const longKey = `tag:${'a'.repeat(120)}`;
+            await agent.put('/api/profile/ui-settings').send({
+                viewTypes: {
+                    [longKey]: 'list',
+                    '   ': 'board',
+                    'tag:ok': 'calendar',
+                },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                'tag:ok': 'calendar',
+            });
+        });
+
+        it('keeps a key of exactly 120 characters', async () => {
+            const key = `tag:${'a'.repeat(116)}`;
+            expect(key).toHaveLength(120);
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: { [key]: 'board' } });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                [key]: 'board',
+            });
+        });
+
+        it('merges new choices into the saved map', async () => {
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: { tasks: 'board' } });
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: { 'tag:work': 'calendar' } });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                tasks: 'board',
+                'tag:work': 'calendar',
+            });
+        });
+
+        it('keeps at most 500 entries, dropping the oldest', async () => {
+            const first = {};
+            for (let i = 0; i < 300; i++) first[`tag:old${i}`] = 'list';
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: first });
+
+            const second = {};
+            for (let i = 0; i < 300; i++) second[`tag:new${i}`] = 'board';
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: second });
+
+            const profile = await agent.get('/api/profile');
+            const saved = profile.body.ui_settings.viewTypes;
+            const keys = Object.keys(saved);
+            expect(keys).toHaveLength(500);
+            expect(saved['tag:new299']).toBe('board');
+            expect(saved['tag:old0']).toBeUndefined();
+            expect(saved['tag:old299']).toBe('list');
+        });
+
+        it('ignores a viewTypes value that is not an object', async () => {
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: { tasks: 'board' } });
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: ['board'] });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                tasks: 'board',
+            });
+        });
+
+        it('keeps the view types when the profile form saves', async () => {
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ viewTypes: { tasks: 'calendar' } });
+            await agent.patch('/api/profile').send({
+                ui_settings: { appearance: { density: 'minimal' } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                tasks: 'calendar',
+            });
+        });
+    });
 });

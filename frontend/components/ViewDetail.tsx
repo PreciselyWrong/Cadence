@@ -23,6 +23,7 @@ import { Project, ProjectStatus } from '../entities/Project';
 import { updateProject } from '../utils/projectsService';
 import TaskList from './Task/TaskList';
 import GroupedTaskList from './Task/GroupedTaskList';
+import TaskViewBody from './Task/TaskViewBody';
 import ProjectItem from './Project/ProjectItem';
 import ConfirmDialog from './Shared/ConfirmDialog';
 import { searchUniversal, resolveViewFilters } from '../utils/searchService';
@@ -1183,35 +1184,45 @@ const ViewDetail: React.FC = () => {
                         </div>
                         {displayTasks.length > 0 && (
                             <div className="mb-8">
-                                {groupBy === 'project' ? (
-                                    <GroupedTaskList
-                                        tasks={displayTasks}
-                                        groupBy="project"
-                                        onTaskUpdate={handleTaskUpdate}
-                                        onTaskCompletionToggle={
-                                            handleTaskCompletionToggle
-                                        }
-                                        onTaskDelete={handleTaskDelete}
-                                        projects={projectLookupList}
-                                        hideProjectName={false}
-                                        onToggleToday={undefined}
-                                        showCompletedTasks={showCompletedTasks}
-                                        searchQuery={taskSearchQuery}
-                                    />
-                                ) : (
-                                    <TaskList
-                                        tasks={displayTasks}
-                                        onTaskUpdate={handleTaskUpdate}
-                                        onTaskCompletionToggle={
-                                            handleTaskCompletionToggle
-                                        }
-                                        onTaskDelete={handleTaskDelete}
-                                        projects={projectLookupList}
-                                        hideProjectName={false}
-                                        onToggleToday={undefined}
-                                        showCompletedTasks={showCompletedTasks}
-                                    />
-                                )}
+                                <TaskViewBody
+                                    viewKey={`view:${view?.uid ?? uid ?? ''}`}
+                                    tasks={displayTasks}
+                                    onTaskUpdate={handleTaskUpdate}
+                                >
+                                    {groupBy === 'project' ? (
+                                        <GroupedTaskList
+                                            tasks={displayTasks}
+                                            groupBy="project"
+                                            onTaskUpdate={handleTaskUpdate}
+                                            onTaskCompletionToggle={
+                                                handleTaskCompletionToggle
+                                            }
+                                            onTaskDelete={handleTaskDelete}
+                                            projects={projectLookupList}
+                                            hideProjectName={false}
+                                            onToggleToday={undefined}
+                                            showCompletedTasks={
+                                                showCompletedTasks
+                                            }
+                                            searchQuery={taskSearchQuery}
+                                        />
+                                    ) : (
+                                        <TaskList
+                                            tasks={displayTasks}
+                                            onTaskUpdate={handleTaskUpdate}
+                                            onTaskCompletionToggle={
+                                                handleTaskCompletionToggle
+                                            }
+                                            onTaskDelete={handleTaskDelete}
+                                            projects={projectLookupList}
+                                            hideProjectName={false}
+                                            onToggleToday={undefined}
+                                            showCompletedTasks={
+                                                showCompletedTasks
+                                            }
+                                        />
+                                    )}
+                                </TaskViewBody>
                                 {/* Load more button */}
                                 {hasMore && (
                                     <div className="flex justify-center pt-4">

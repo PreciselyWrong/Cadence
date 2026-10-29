@@ -349,6 +349,10 @@ Tags are automatically created when you add them to a task, note, or project:
 
 ---
 
+## Tasks on a Tag Page: List, Board or Calendar
+
+In Minimal, the Tasks tab of a tag page has the same **List / Board / Calendar** switch as a saved view. The board groups the tag's tasks by priority, and dragging a card changes its priority. The calendar shows them by due date. The choice is saved per tag in `ui_settings.viewTypes` under `tag:<name>`. Dense shows the list only. See [Lists, Board or Calendar](08-views-system.md#list-board-or-calendar-minimal).
+
 ## Tag Display and Rendering
 
 ### In Task Lists

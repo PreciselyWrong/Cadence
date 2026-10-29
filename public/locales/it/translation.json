@@ -2296,6 +2296,12 @@
     "sharedWithGroups": "Condiviso con gruppi",
     "groupCounts": "{{accepted}} accettati, {{pending}} in attesa"
   },
+  "viewType": {
+    "label": "Vista",
+    "list": "Elenco",
+    "board": "Bacheca",
+    "calendar": "Calendario"
+  },
   "views": {
     "title": "Visualizzazioni Intelligenti",
     "loading": "Caricamento visualizzazioni...",

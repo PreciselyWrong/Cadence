@@ -2290,6 +2290,12 @@
     "sharedWithGroups": "Delat med grupper",
     "groupCounts": "{{accepted}} accepterade, {{pending}} väntande"
   },
+  "viewType": {
+    "label": "Vy",
+    "list": "Lista",
+    "board": "Tavla",
+    "calendar": "Kalender"
+  },
   "views": {
     "title": "Smart Vyer",
     "loading": "Laddar vyer...",

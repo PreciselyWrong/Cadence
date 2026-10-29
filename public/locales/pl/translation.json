@@ -2302,6 +2302,12 @@
     "sharedWithGroups": "Udostępnione grupom",
     "groupCounts": "{{accepted}} przyjętych, {{pending}} oczekujących"
   },
+  "viewType": {
+    "label": "Widok",
+    "list": "Lista",
+    "board": "Tablica",
+    "calendar": "Kalendarz"
+  },
   "views": {
     "title": "Inteligentne Widoki",
     "loading": "Ładowanie widoków...",

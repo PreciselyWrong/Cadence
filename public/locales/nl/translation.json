@@ -2290,6 +2290,12 @@
     "sharedWithGroups": "Gedeeld met groepen",
     "groupCounts": "{{accepted}} geaccepteerd, {{pending}} in behandeling"
   },
+  "viewType": {
+    "label": "Weergave",
+    "list": "Lijst",
+    "board": "Bord",
+    "calendar": "Agenda"
+  },
   "views": {
     "title": "Slimme Weergaven",
     "loading": "Weergaven laden...",

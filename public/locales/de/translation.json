@@ -2299,6 +2299,12 @@
     "sharedWithGroups": "Mit Gruppen geteilt",
     "groupCounts": "{{accepted}} angenommen, {{pending}} ausstehend"
   },
+  "viewType": {
+    "label": "Ansicht",
+    "list": "Liste",
+    "board": "Board",
+    "calendar": "Kalender"
+  },
   "views": {
     "title": "Intelligente Ansichten",
     "loading": "Ansichten werden geladen...",

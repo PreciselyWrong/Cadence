@@ -2288,6 +2288,12 @@
     "sharedWithGroups": "Dibagikan dengan grup",
     "groupCounts": "{{accepted}} diterima, {{pending}} tertunda"
   },
+  "viewType": {
+    "label": "Tampilan",
+    "list": "Daftar",
+    "board": "Papan",
+    "calendar": "Kalender"
+  },
   "views": {
     "title": "Tampilan Cerdas",
     "loading": "Memuat tampilan...",

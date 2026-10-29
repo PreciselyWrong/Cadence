@@ -2290,6 +2290,12 @@
     "sharedWithGroups": "Gruplarla paylaşılan",
     "groupCounts": "{{accepted}} kabul edildi, {{pending}} bekliyor"
   },
+  "viewType": {
+    "label": "Görünüm",
+    "list": "Liste",
+    "board": "Pano",
+    "calendar": "Takvim"
+  },
   "views": {
     "title": "Akıllı Görünümler",
     "loading": "Görünümler yükleniyor...",

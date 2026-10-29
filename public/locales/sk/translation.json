@@ -2533,6 +2533,12 @@
         "sharedWithGroups": "Zdieľané so skupinami",
         "groupCounts": "Prijaté: {{accepted}}, čaká sa: {{pending}}"
     },
+    "viewType": {
+        "label": "Zobrazenie",
+        "list": "Zoznam",
+        "board": "Nástenka",
+        "calendar": "Kalendár"
+    },
     "views": {
         "title": "Inteligentné zobrazenia",
         "loading": "Načítavajú sa zobrazenia...",

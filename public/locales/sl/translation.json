@@ -2302,6 +2302,12 @@
     "sharedWithGroups": "Deljeno s skupinami",
     "groupCounts": "{{accepted}} sprejetih, {{pending}} čakajočih"
   },
+  "viewType": {
+    "label": "Pogled",
+    "list": "Seznam",
+    "board": "Tabla",
+    "calendar": "Koledar"
+  },
   "views": {
     "title": "Pametni pogledi",
     "loading": "Nalagam poglede...",

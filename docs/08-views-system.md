@@ -399,6 +399,16 @@ Changes are reflected immediately in the view results.
 
 ---
 
+## **List, Board or Calendar (Minimal)**
+
+In Minimal, a saved view, a tag page, a project and the Tasks list each have a **List / Board / Calendar** switch above the tasks. The list is the default.
+
+- **Board** puts the tasks in four columns by priority: High, Medium, Low and None. Drag a card to another column to change its priority. Click a card to open it in the task pane.
+- **Calendar** shows a month of the tasks by due date. Use the arrows to move between months and Today to come back. Drag a task to another day to change its due date. Defer chips show a task's start day and cannot be moved.
+- The choice is remembered for each view, in the account's `ui_settings.viewTypes`. The keys are `view:<uid>` for a saved view, `tag:<name>` for a tag, `project:<uid>` for a project and `tasks` for the Tasks list. It follows the account across browsers and devices.
+- A project keeps its own **Board** tab (the project's sections), and the project page adds a **Calendar** tab in Minimal. Its **Timeline** tab is still remembered per browser.
+- Dense has no switch: these pages show the list as before.
+
 ## **Eisenhower Matrix Views**
 
 The Eisenhower page (`/eisenhower`, behind the `eisenhower_enabled` feature) shows active tasks in four quadrants. Above the board a picker switches between the built-in matrix and up to 10 custom matrices.

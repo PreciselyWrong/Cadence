@@ -2288,6 +2288,12 @@
     "sharedWithGroups": "グループと共有",
     "groupCounts": "承諾 {{accepted}} 件、保留 {{pending}} 件"
   },
+  "viewType": {
+    "label": "表示",
+    "list": "リスト",
+    "board": "ボード",
+    "calendar": "カレンダー"
+  },
   "views": {
     "title": "スマートビュー",
     "loading": "ビューを読み込んでいます...",

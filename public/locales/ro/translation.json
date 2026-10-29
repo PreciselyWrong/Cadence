@@ -2298,6 +2298,12 @@
     "sharedWithGroups": "Partajat cu grupuri",
     "groupCounts": "{{accepted}} acceptate, {{pending}} în așteptare"
   },
+  "viewType": {
+    "label": "Vizualizare",
+    "list": "Listă",
+    "board": "Panou",
+    "calendar": "Calendar"
+  },
   "views": {
     "title": "Vizualizări inteligente",
     "loading": "Se încarcă vizualizările...",

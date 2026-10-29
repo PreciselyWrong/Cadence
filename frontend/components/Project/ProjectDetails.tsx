@@ -56,6 +56,8 @@ import ProjectModal from './ProjectModal';
 import ProjectTasksSection from './ProjectTasksSection';
 import ProjectTimeline from './Timeline/ProjectTimeline';
 import ProjectBoard from './Board/ProjectBoard';
+import TaskMonthCalendar from '../Task/TaskMonthCalendar';
+import { useViewType } from '../../hooks/useViewType';
 import { orderBoardColumn } from '../../utils/projectSectionsService';
 import ProjectOverviewRail from './ProjectOverviewRail';
 import ProjectAttachmentsWidget from './ProjectAttachmentsWidget';
@@ -69,6 +71,14 @@ import {
 import { saveProjectAsTemplate } from '../../utils/templatesService';
 import TaskModal from '../Task/TaskModal';
 import { comparePinnedTasks } from '../../utils/taskPin';
+
+type ProjectViewTab = 'tasks' | 'timeline' | 'board' | 'calendar';
+
+// Minimal adds Calendar; Dense keeps the three tabs it always had.
+const projectViewTabs = (isMinimal: boolean): ProjectViewTab[] =>
+    isMinimal
+        ? ['tasks', 'board', 'calendar', 'timeline']
+        : ['tasks', 'board', 'timeline'];
 
 const ProjectDetails: React.FC = () => {
     const { uidSlug } = useParams<{ uidSlug: string }>();
@@ -89,24 +99,42 @@ const ProjectDetails: React.FC = () => {
     const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
     const [isTemplateConfirmOpen, setIsTemplateConfirmOpen] = useState(false);
     const [previewNote, setPreviewNote] = useState<Note | null>(null);
-    const [view, setView] = useState<'tasks' | 'timeline' | 'board'>(() => {
+    const [view, setView] = useState<ProjectViewTab>(() => {
         try {
             const stored = localStorage.getItem('project_view');
-            return stored === 'timeline' || stored === 'board'
+            return stored === 'timeline' ||
+                stored === 'board' ||
+                stored === 'calendar'
                 ? stored
                 : 'tasks';
         } catch {
             return 'tasks';
         }
     });
-    const changeView = (next: 'tasks' | 'timeline' | 'board') => {
+    const isMinimal = useIsMinimal();
+    // In Minimal the List / Board / Calendar choice is remembered for this
+    // project in ui_settings.viewTypes (Timeline stays a browser choice).
+    const projectViewKey = `project:${project?.uid ?? ''}`;
+    const {
+        viewType: savedProjectView,
+        setViewType: saveProjectView,
+        loaded: projectViewLoaded,
+    } = useViewType(projectViewKey);
+    const changeView = (next: ProjectViewTab) => {
         setView(next);
         try {
             localStorage.setItem('project_view', next);
         } catch {
             // The chosen view is only a convenience
         }
+        if (isMinimal && next !== 'timeline') {
+            saveProjectView(next === 'tasks' ? 'list' : next);
+        }
     };
+    useEffect(() => {
+        if (!isMinimal || !projectViewLoaded) return;
+        setView(savedProjectView === 'list' ? 'tasks' : savedProjectView);
+    }, [isMinimal, projectViewLoaded, savedProjectView]);
     const [isBannerEditModalOpen, setIsBannerEditModalOpen] = useState(false);
     const attachmentsApi = useMemo(
         () =>
@@ -114,7 +142,6 @@ const ProjectDetails: React.FC = () => {
         [project?.uid]
     );
 
-    const isMinimal = useIsMinimal();
     const [taskStatusFilter, setTaskStatusFilter] = useState<TaskStatusFilter>(
         () => {
             const saved = localStorage.getItem('project_task_status_filter');
@@ -881,34 +908,34 @@ const ProjectDetails: React.FC = () => {
                     <div className="mb-4">
                         <div className="flex items-center justify-between min-h-[2.5rem]">
                             <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                                {(['tasks', 'board', 'timeline'] as const).map(
-                                    (tab) => (
-                                        <button
-                                            key={tab}
-                                            type="button"
-                                            aria-pressed={view === tab}
-                                            data-testid={`project-view-${tab}`}
-                                            onClick={() => changeView(tab)}
-                                            className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
-                                                view === tab
-                                                    ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                                    : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
-                                            }`}
-                                        >
-                                            {tab === 'tasks'
-                                                ? t('tasks.title', 'Tasks')
-                                                : tab === 'board'
-                                                  ? t(
-                                                        'projectBoard.title',
-                                                        'Board'
-                                                    )
-                                                  : t(
-                                                        'projectTimeline.title',
-                                                        'Timeline'
-                                                    )}
-                                        </button>
-                                    )
-                                )}
+                                {projectViewTabs(isMinimal).map((tab) => (
+                                    <button
+                                        key={tab}
+                                        type="button"
+                                        aria-pressed={view === tab}
+                                        data-testid={`project-view-${tab}`}
+                                        onClick={() => changeView(tab)}
+                                        className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
+                                            view === tab
+                                                ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
+                                                : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                        }`}
+                                    >
+                                        {tab === 'tasks'
+                                            ? t('tasks.title', 'Tasks')
+                                            : tab === 'board'
+                                              ? t('projectBoard.title', 'Board')
+                                              : tab === 'calendar'
+                                                ? t(
+                                                      'viewType.calendar',
+                                                      'Calendar'
+                                                  )
+                                                : t(
+                                                      'projectTimeline.title',
+                                                      'Timeline'
+                                                  )}
+                                    </button>
+                                ))}
                             </div>
 
                             {
@@ -1030,6 +1057,17 @@ const ProjectDetails: React.FC = () => {
                                     readOnly={project.access_level === 'ro'}
                                     onOpenTask={setPanelTask}
                                     t={t}
+                                />
+                            ) : view === 'calendar' ? (
+                                <TaskMonthCalendar
+                                    tasks={displayTasks}
+                                    onOpenTask={setPanelTask}
+                                    onMoveDue={(task, dueDate) =>
+                                        handleTaskUpdate({
+                                            ...task,
+                                            due_date: dueDate,
+                                        })
+                                    }
                                 />
                             ) : view === 'timeline' ? (
                                 <ProjectTimeline

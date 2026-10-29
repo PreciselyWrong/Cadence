@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import TaskList from './Task/TaskList';
 import GroupedTaskList from './Task/GroupedTaskList';
+import TaskViewBody from './Task/TaskViewBody';
 import { Task } from '../entities/Task';
 import { getTitleAndIcon } from './Task/getTitleAndIcon';
 import { getDescription } from './Task/getDescription';
@@ -1075,42 +1076,54 @@ const Tasks: React.FC = () => {
                                             </div>
                                         )}
                                     </>
-                                ) : groupBy === 'project' ? (
-                                    <GroupedTaskList
-                                        tasks={displayTasks}
-                                        groupedTasks={null}
-                                        groupBy={groupBy}
-                                        onReorder={handleReorder}
-                                        onTaskCreate={handleTaskCreate}
-                                        onTaskUpdate={handleTaskUpdate}
-                                        onTaskCompletionToggle={
-                                            handleTaskCompletionToggle
-                                        }
-                                        onTaskDelete={handleTaskDelete}
-                                        projects={projects}
-                                        hideProjectName={false}
-                                        onToggleToday={undefined}
-                                        showCompletedTasks={showCompleted}
-                                        searchQuery={taskSearchQuery}
-                                    />
                                 ) : (
-                                    <TaskList
+                                    <TaskViewBody
+                                        viewKey="tasks"
                                         tasks={displayTasks}
-                                        onTaskCreate={handleTaskCreate}
                                         onTaskUpdate={handleTaskUpdate}
-                                        onTaskCompletionToggle={
-                                            handleTaskCompletionToggle
-                                        }
-                                        onTaskDelete={handleTaskDelete}
-                                        projects={projects}
-                                        onToggleToday={undefined}
-                                        showCompletedTasks={showCompleted}
-                                        onReorder={
-                                            isUpcomingView
-                                                ? undefined
-                                                : handleReorder
-                                        }
-                                    />
+                                    >
+                                        {groupBy === 'project' ? (
+                                            <GroupedTaskList
+                                                tasks={displayTasks}
+                                                groupedTasks={null}
+                                                groupBy={groupBy}
+                                                onReorder={handleReorder}
+                                                onTaskCreate={handleTaskCreate}
+                                                onTaskUpdate={handleTaskUpdate}
+                                                onTaskCompletionToggle={
+                                                    handleTaskCompletionToggle
+                                                }
+                                                onTaskDelete={handleTaskDelete}
+                                                projects={projects}
+                                                hideProjectName={false}
+                                                onToggleToday={undefined}
+                                                showCompletedTasks={
+                                                    showCompleted
+                                                }
+                                                searchQuery={taskSearchQuery}
+                                            />
+                                        ) : (
+                                            <TaskList
+                                                tasks={displayTasks}
+                                                onTaskCreate={handleTaskCreate}
+                                                onTaskUpdate={handleTaskUpdate}
+                                                onTaskCompletionToggle={
+                                                    handleTaskCompletionToggle
+                                                }
+                                                onTaskDelete={handleTaskDelete}
+                                                projects={projects}
+                                                onToggleToday={undefined}
+                                                showCompletedTasks={
+                                                    showCompleted
+                                                }
+                                                onReorder={
+                                                    isUpcomingView
+                                                        ? undefined
+                                                        : handleReorder
+                                                }
+                                            />
+                                        )}
+                                    </TaskViewBody>
                                 )}
                                 {/* Load more button - hide in upcoming view */}
                                 {!isUpcomingView && hasMore && (

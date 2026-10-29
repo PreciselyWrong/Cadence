@@ -2296,6 +2296,12 @@
     "sharedWithGroups": "Partilhado com grupos",
     "groupCounts": "{{accepted}} aceites, {{pending}} pendentes"
   },
+  "viewType": {
+    "label": "Vista",
+    "list": "Lista",
+    "board": "Quadro",
+    "calendar": "Calendário"
+  },
   "views": {
     "title": "Visões Inteligentes",
     "loading": "Carregando visões...",

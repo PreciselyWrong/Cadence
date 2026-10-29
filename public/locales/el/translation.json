@@ -2291,6 +2291,12 @@
     "sharedWithGroups": "Μοιρασμένο με ομάδες",
     "groupCounts": "{{accepted}} αποδεκτές, {{pending}} σε εκκρεμότητα"
   },
+  "viewType": {
+    "label": "Προβολή",
+    "list": "Λίστα",
+    "board": "Πίνακας",
+    "calendar": "Ημερολόγιο"
+  },
   "views": {
     "title": "Έξυπνες Προβολές",
     "loading": "Φόρτωση προβολών...",

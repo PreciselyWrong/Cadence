@@ -111,6 +111,39 @@ function sanitizeDensity(density) {
     return DENSITIES.includes(density) ? density : undefined;
 }
 
+const VIEW_TYPES = ['list', 'board', 'calendar'];
+const MAX_VIEW_TYPE_ENTRIES = 500;
+const MAX_VIEW_TYPE_KEY_LENGTH = 120;
+
+// How a saved view, a tag, a project or the Tasks list is shown in Minimal:
+// keyed by `view:<uid>`, `tag:<name>`, `project:<uid>` or `tasks`. Only the
+// three known types are kept, keys are capped in length and the map keeps at
+// most 500 entries (the oldest go first). Dense does not read it.
+function sanitizeViewTypes(raw) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const clean = {};
+    Object.entries(raw).forEach(([key, value]) => {
+        if (typeof key !== 'string') return;
+        const trimmed = key.trim();
+        if (!trimmed || trimmed.length > MAX_VIEW_TYPE_KEY_LENGTH) return;
+        if (!VIEW_TYPES.includes(value)) return;
+        delete clean[trimmed];
+        clean[trimmed] = value;
+    });
+    return clean;
+}
+
+function mergeViewTypes(current, incoming) {
+    const merged = { ...(current || {}), ...incoming };
+    const keys = Object.keys(merged);
+    if (keys.length <= MAX_VIEW_TYPE_ENTRIES) return merged;
+    const kept = {};
+    keys.slice(keys.length - MAX_VIEW_TYPE_ENTRIES).forEach((key) => {
+        kept[key] = merged[key];
+    });
+    return kept;
+}
+
 const MAX_FOCUS_TAGS = 10;
 
 // The Focus chip's saved scope: an area, optionally a project inside it and
@@ -464,6 +497,8 @@ class UsersService {
             if (current?.matrices !== undefined)
                 kept.matrices = current.matrices;
             if (current?.summary !== undefined) kept.summary = current.summary;
+            if (current?.viewTypes !== undefined)
+                kept.viewTypes = current.viewTypes;
             if (current?.calendar !== undefined)
                 kept.calendar = current.calendar;
             let nextUiSettings =
@@ -943,6 +978,7 @@ class UsersService {
             calendar,
             matrices,
             summary,
+            viewTypes,
         } = data;
 
         const currentSettings =
@@ -1004,6 +1040,16 @@ class UsersService {
 
         if (summary !== undefined) {
             newSettings.summary = sanitizeSummary(summary);
+        }
+
+        if (viewTypes !== undefined) {
+            const clean = sanitizeViewTypes(viewTypes);
+            if (clean) {
+                newSettings.viewTypes = mergeViewTypes(
+                    currentSettings.viewTypes,
+                    clean
+                );
+            }
         }
 
         await usersRepository.update(user, { ui_settings: newSettings });

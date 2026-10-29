@@ -2288,6 +2288,12 @@
     "sharedWithGroups": "Chia sẻ với các nhóm",
     "groupCounts": "{{accepted}} đã chấp nhận, {{pending}} đang chờ"
   },
+  "viewType": {
+    "label": "Chế độ xem",
+    "list": "Danh sách",
+    "board": "Bảng",
+    "calendar": "Lịch"
+  },
   "views": {
     "title": "Chế độ xem thông minh",
     "loading": "Đang tải chế độ xem...",

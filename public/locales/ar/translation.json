@@ -2314,6 +2314,12 @@
     "sharedWithGroups": "تمت مشاركته مع مجموعات",
     "groupCounts": "{{accepted}} مقبولة، {{pending}} معلقة"
   },
+  "viewType": {
+    "label": "عرض",
+    "list": "قائمة",
+    "board": "لوحة",
+    "calendar": "تقويم"
+  },
   "views": {
     "title": "عرض ذكي",
     "loading": "جارٍ تحميل العروض...",

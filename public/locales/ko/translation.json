@@ -2288,6 +2288,12 @@
     "sharedWithGroups": "그룹과 공유됨",
     "groupCounts": "수락 {{accepted}}개, 대기 {{pending}}개"
   },
+  "viewType": {
+    "label": "보기",
+    "list": "목록",
+    "board": "보드",
+    "calendar": "캘린더"
+  },
   "views": {
     "title": "스마트 뷰",
     "loading": "뷰 로딩 중...",

@@ -2302,6 +2302,12 @@
     "sharedWithGroups": "Доступно группам",
     "groupCounts": "{{accepted}} приняли, {{pending}} ожидают"
   },
+  "viewType": {
+    "label": "Вид",
+    "list": "Список",
+    "board": "Доска",
+    "calendar": "Календарь"
+  },
   "views": {
     "title": "Умные представления",
     "loading": "Загрузка представлений...",

@@ -2811,6 +2811,12 @@
     "sharedWithGroups": "Shared with groups",
     "groupCounts": "{{accepted}} accepted, {{pending}} pending"
   },
+  "viewType": {
+    "label": "View",
+    "list": "List",
+    "board": "Board",
+    "calendar": "Calendar"
+  },
   "views": {
     "title": "Smart Views",
     "loading": "Loading views...",
