@@ -35,6 +35,8 @@ import { updateTag, deleteTag } from '../../utils/tagsService';
 import { getApiPath } from '../../config/paths';
 import { getCsrfToken } from '../../utils/csrfService';
 import { SortOption } from '../Shared/SortFilterButton';
+import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
+import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import IconSortDropdown from '../Shared/IconSortDropdown';
 
 const TagDetails: React.FC = () => {
@@ -282,6 +284,20 @@ const TagDetails: React.FC = () => {
             'none';
         setGroupBy(savedGroupBy);
     }, []);
+
+    // Edits saved from the task pane: update in place, or drop the task
+    // when this tag was removed from it.
+    useTaskUpdatedEvent((saved) => {
+        if (!tag?.uid) return;
+        if (
+            Array.isArray(saved.tags) &&
+            !saved.tags.some((item) => item.uid === tag.uid)
+        ) {
+            setTasks((prev) => prev.filter((task) => task.uid !== saved.uid));
+            return;
+        }
+        setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
+    });
 
     // Setup native event listener for edit button to avoid React event system conflicts
     useEffect(() => {

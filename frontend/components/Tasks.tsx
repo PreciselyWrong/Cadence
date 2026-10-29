@@ -39,7 +39,7 @@ import { getApiPath } from '../config/paths';
 import { getCsrfToken } from '../utils/csrfService';
 import { isQueuedOfflineResponse } from '../utils/authUtils';
 import { isTaskActive } from '../constants/taskStatus';
-import { TASK_UPDATED_EVENT } from '../contexts/TaskPaneContext';
+import { useTaskUpdatedEvent } from '../hooks/useTaskUpdatedEvent';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -451,19 +451,10 @@ const Tasks: React.FC = () => {
 
     // Edits saved from the right-hand task pane are already on the server;
     // only merge them into the list here, without another PATCH.
-    useEffect(() => {
-        const onTaskUpdated = (event: Event) => {
-            const saved = (event as CustomEvent<Task>).detail;
-            if (!saved?.uid) return;
-            setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
-            setGroupedTasks((prev) =>
-                mergeUpdatedGroupedTasks(prev, saved, saved)
-            );
-        };
-        window.addEventListener(TASK_UPDATED_EVENT, onTaskUpdated);
-        return () =>
-            window.removeEventListener(TASK_UPDATED_EVENT, onTaskUpdated);
-    }, []);
+    useTaskUpdatedEvent((saved) => {
+        setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
+        setGroupedTasks((prev) => mergeUpdatedGroupedTasks(prev, saved, saved));
+    });
 
     const handleTaskUpdate = async (updatedTask: Task) => {
         try {

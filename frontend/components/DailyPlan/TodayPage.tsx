@@ -100,6 +100,7 @@ import {
     taskToEvents,
 } from '../Calendar/taskEvents';
 import { useAiAllowed, useTrialLock } from '../../hooks/useTrialStatus';
+import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import {
     DEFAULT_DAY_END,
     DEFAULT_DAY_START,
@@ -383,6 +384,9 @@ const TodayPage: React.FC = () => {
     const [dayTasks, setDayTasks] = useState<Task[]>([]);
     const [wrapUp, setWrapUp] = useState<AiWrapUp | null>(null);
     const [reloadToken, setReloadToken] = useState(0);
+    // A task saved from the task pane may appear in or leave the candidate
+    // list and the plan, so reload the day rather than patch each list.
+    useTaskUpdatedEvent(() => setReloadToken((count) => count + 1));
     // How many suggestions the server was last asked for; null is the
     // Planning setting. "Show more" raises it and the whole list reloads,
     // so the first entries keep their order and refreshes never shrink it.

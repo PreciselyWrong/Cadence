@@ -37,6 +37,8 @@ import {
     saveTaskOrder,
     updateTask,
 } from '../../utils/tasksService';
+import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
+import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { mergeVisibleOrder } from '../Shared/sortableList';
 import IconSortDropdown from '../Shared/IconSortDropdown';
@@ -169,6 +171,20 @@ const ProjectDetails: React.FC = () => {
             setOrderBy(storedSort);
         }
     }, []);
+
+    // Edits saved from the task pane: update in place, or drop the task
+    // when it was moved to another project.
+    useTaskUpdatedEvent((saved) => {
+        if (!project) return;
+        if (
+            saved.project_uid !== undefined &&
+            saved.project_uid !== project.uid
+        ) {
+            setTasks((prev) => prev.filter((task) => task.uid !== saved.uid));
+            return;
+        }
+        setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
+    });
 
     // Bumped after something is captured, so new tasks and notes show up
     const [reloadKey, setReloadKey] = useState(0);
