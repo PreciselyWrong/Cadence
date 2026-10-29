@@ -217,7 +217,8 @@
     "open": "Öppna",
     "completed": "Avslutad",
     "noCompletedTasksToday": "Inga slutförda uppgifter idag.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Markera som klar",
+    "markAsNotDone": "Markera som ej utförd",
     "notStarted": "Ej påbörjad",
     "done": "Utförd",
     "eisenhower": {
@@ -2912,6 +2913,7 @@
     "dueToday": "Förfaller idag",
     "suggested": "Förslag",
     "notPlanned": "Ej planerade ({{count}})",
+    "todayTasks": "Dagens uppgifter",
     "nothingElse": "Inget annat väntar.",
     "addToToday": "Lägg till idag",
     "draftKicker": "Nästan klart",

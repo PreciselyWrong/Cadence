@@ -219,7 +219,8 @@
     "open": "Відкрити",
     "completed": "Завершено",
     "noCompletedTasksToday": "Сьогодні немає завершених завдань.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Позначити як виконане",
+    "markAsNotDone": "Позначити як невиконане",
     "notStarted": "Не розпочато",
     "done": "Завершено",
     "eisenhower": {
@@ -2926,6 +2927,7 @@
     "dueToday": "Термін сьогодні",
     "suggested": "Запропоновано",
     "notPlanned": "Не заплановано ({{count}})",
+    "todayTasks": "Завдання на сьогодні",
     "nothingElse": "Більше нічого не чекає.",
     "addToToday": "Додати на сьогодні",
     "draftKicker": "Майже готово",

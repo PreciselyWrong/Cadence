@@ -217,7 +217,8 @@
     "open": "Open",
     "completed": "Voltooid",
     "noCompletedTasksToday": "Geen voltooide taken vandaag.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Markeer als gedaan",
+    "markAsNotDone": "Markeer als niet gedaan",
     "notStarted": "Niet Begonnen",
     "done": "Voltooid",
     "eisenhower": {
@@ -2912,6 +2913,7 @@
     "dueToday": "Vandaag gepland",
     "suggested": "Voorgesteld",
     "notPlanned": "Niet gepland ({{count}})",
+    "todayTasks": "Taken voor vandaag",
     "nothingElse": "Er wacht verder niets.",
     "addToToday": "Aan vandaag toevoegen",
     "draftKicker": "Bijna klaar",

@@ -217,7 +217,8 @@
     "open": "Aç",
     "completed": "Tamamlandı",
     "noCompletedTasksToday": "Bugün tamamlanan görev yok.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Tamamlandı olarak işaretle",
+    "markAsNotDone": "Tamamlanmadı olarak işaretle",
     "notStarted": "Başlanmadı",
     "done": "Tamamlandı",
     "eisenhower": {
@@ -2912,6 +2913,7 @@
     "dueToday": "Bugün son gün",
     "suggested": "Önerilen",
     "notPlanned": "Planlanmamış ({{count}})",
+    "todayTasks": "Bugünkü görevler",
     "nothingElse": "Bekleyen başka bir şey yok.",
     "addToToday": "Bugüne ekle",
     "draftKicker": "Neredeyse hazır",

@@ -221,7 +221,8 @@
     "open": "فتح",
     "completed": "مكتمل",
     "noCompletedTasksToday": "لا توجد مهام مكتملة اليوم.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "وضع علامة كمنجزة",
+    "markAsNotDone": "وضع علامة غير منجزة",
     "notStarted": "لم يبدأ بعد",
     "done": "تم",
     "eisenhower": {
@@ -2940,6 +2941,7 @@
     "dueToday": "مستحقة اليوم",
     "suggested": "مقترحة",
     "notPlanned": "غير مخطط لها ({{count}})",
+    "todayTasks": "مهام اليوم",
     "nothingElse": "لا يوجد شيء آخر ينتظر.",
     "addToToday": "أضف إلى اليوم",
     "draftKicker": "على وشك الانتهاء",

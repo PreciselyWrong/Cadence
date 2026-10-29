@@ -217,7 +217,8 @@
     "open": "開く",
     "completed": "完了",
     "noCompletedTasksToday": "本日完了したタスクはありません。",
-    "markAsDone": "Mark as done",
+    "markAsDone": "完了にする",
+    "markAsNotDone": "未完了にする",
     "notStarted": "未開始",
     "done": "完了",
     "eisenhower": {
@@ -2910,6 +2911,7 @@
     "dueToday": "今日が期限",
     "suggested": "おすすめ",
     "notPlanned": "未計画 ({{count}})",
+    "todayTasks": "今日のタスク",
     "nothingElse": "ほかに待っているものはありません。",
     "addToToday": "今日に追加",
     "draftKicker": "あと少し",

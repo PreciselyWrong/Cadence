@@ -217,7 +217,8 @@
     "open": "열기",
     "completed": "완료됨",
     "noCompletedTasksToday": "오늘 완료된 작업이 없습니다.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "완료로 표시",
+    "markAsNotDone": "미완료로 표시",
     "notStarted": "시작되지 않음",
     "done": "완료됨",
     "eisenhower": {
@@ -2910,6 +2911,7 @@
     "dueToday": "오늘 마감",
     "suggested": "추천",
     "notPlanned": "계획되지 않음 ({{count}})",
+    "todayTasks": "오늘의 할 일",
     "nothingElse": "더 기다리는 항목이 없습니다.",
     "addToToday": "오늘에 추가",
     "draftKicker": "거의 다 됐어요",

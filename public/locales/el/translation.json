@@ -890,7 +890,8 @@
     "open": "Άνοιγμα",
     "completed": "Ολοκληρώθηκε",
     "noCompletedTasksToday": "Καμία ολοκληρωμένη εργασία σήμερα.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Σήμανση ως ολοκληρωμένη",
+    "markAsNotDone": "Σήμανση ως μη ολοκληρωμένη",
     "notStarted": "Δεν έχει ξεκινήσει",
     "done": "Ολοκληρώθηκε",
     "eisenhower": {
@@ -2913,6 +2914,7 @@
     "dueToday": "Λήγουν σήμερα",
     "suggested": "Προτεινόμενες",
     "notPlanned": "Χωρίς πλάνο ({{count}})",
+    "todayTasks": "Εργασίες σήμερα",
     "nothingElse": "Τίποτα άλλο δεν περιμένει.",
     "addToToday": "Προσθήκη στο σήμερα",
     "draftKicker": "Σχεδόν έτοιμο",

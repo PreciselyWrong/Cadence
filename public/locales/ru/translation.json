@@ -220,6 +220,7 @@
     "completed": "Завершено",
     "noCompletedTasksToday": "Сегодня нет завершенных задач.",
     "markAsDone": "Отметить как завершённую",
+    "markAsNotDone": "Отметить как не выполненную",
     "notStarted": "Не начато",
     "done": "Выполнено",
     "eisenhower": {
@@ -2926,6 +2927,7 @@
     "dueToday": "Срок сегодня",
     "suggested": "Предложено",
     "notPlanned": "Не запланировано ({{count}})",
+    "todayTasks": "Задачи на сегодня",
     "nothingElse": "Больше ничего не ждёт.",
     "addToToday": "Добавить на сегодня",
     "draftKicker": "Почти готово",

@@ -217,7 +217,8 @@
     "open": "Buka",
     "completed": "Selesai",
     "noCompletedTasksToday": "Tidak ada tugas yang diselesaikan hari ini.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Tandai selesai",
+    "markAsNotDone": "Tandai belum selesai",
     "notStarted": "Belum Dimulai",
     "done": "Selesai",
     "eisenhower": {
@@ -2910,6 +2911,7 @@
     "dueToday": "Jatuh tempo hari ini",
     "suggested": "Disarankan",
     "notPlanned": "Belum direncanakan ({{count}})",
+    "todayTasks": "Tugas hari ini",
     "nothingElse": "Tidak ada lagi yang menunggu.",
     "addToToday": "Tambahkan ke hari ini",
     "draftKicker": "Hampir siap",

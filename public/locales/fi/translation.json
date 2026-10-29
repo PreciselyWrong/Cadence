@@ -217,7 +217,8 @@
     "open": "Avaa",
     "completed": "Valmis",
     "noCompletedTasksToday": "Ei suoritettuja tehtäviä tänään.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Merkitse tehdyksi",
+    "markAsNotDone": "Merkitse keskeneräiseksi",
     "notStarted": "Ei aloitettu",
     "done": "Valmis",
     "eisenhower": {
@@ -2912,6 +2913,7 @@
     "dueToday": "Erääntyy tänään",
     "suggested": "Ehdotetut",
     "notPlanned": "Suunnittelematta ({{count}})",
+    "todayTasks": "Tämän päivän tehtävät",
     "nothingElse": "Muuta ei ole odottamassa.",
     "addToToday": "Lisää tälle päivälle",
     "draftKicker": "Melkein valmis",

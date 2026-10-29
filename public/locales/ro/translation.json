@@ -218,7 +218,8 @@
     "open": "Deschide",
     "completed": "Finalizat",
     "noCompletedTasksToday": "Nicio sarcină finalizată astăzi.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Marchează ca finalizată",
+    "markAsNotDone": "Marchează ca neefectuată",
     "notStarted": "Nefăcut",
     "done": "Finalizat",
     "eisenhower": {
@@ -2921,6 +2922,7 @@
     "dueToday": "Scadente azi",
     "suggested": "Sugerate",
     "notPlanned": "Neplanificate ({{count}})",
+    "todayTasks": "Sarcinile de azi",
     "nothingElse": "Nu mai așteaptă nimic altceva.",
     "addToToday": "Adaugă la azi",
     "draftKicker": "Aproape gata",

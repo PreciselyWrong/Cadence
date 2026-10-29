@@ -19,11 +19,12 @@ The classic Today page was removed; `/today_legacy` now redirects to `/today`. I
 
 | State                                     | What you see                                                                                                                                                           |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No plan, or a plan that was never started | A card with overdue, due today and inbox counts, free hours, today's meetings, **Plan your day** (or **Continue planning** for a draft) |
+| No plan, or a plan that was never started | **Today's tasks**: the day's tasks listed at once (see below), today's meetings, and a small **Plan your day** link (or **Continue planning** for a draft). Planning never blocks the page |
 | Plan started                              | The header shows done/total and time left, then the **Now** card, the agenda (tasks and meetings in time order) and a collapsed **Not planned** list                   |
 
 - **Now card:** the block running right now; otherwise the next planned block; otherwise the first unfinished task without a time. **Mark done** completes the task. **Push to later** removes the time slot and moves the task to the end of the list.
 - **Reordering:** drag an **Anytime** task to move it among the other Anytime tasks; the new order is saved as the plan's item order. Timed tasks stay in time order.
+- **Today's tasks (no plan yet):** the open tasks tagged `#today`, overdue, due today, in progress and suggested, in that order, without any planning step. Completed tasks leave the list. Ticking a task's round check completes it (see [Tasks](00-tasks-behavior.md#marking-tasks-as-done)).
 - **Not planned:** the tasks the Today section lists hold (overdue, due today, in progress, suggested) that are not in the plan. **Add to today** appends one without a time.
 - **Recurring tasks:** completing one moves the same task on to its next due date and reopens it. The plan still shows the day's occurrence as done (crossed out, with the next date) and counts it in `done/total`. This holds while a non-skipped completion falls on the plan's day and the task's due date is after that day, so undoing the completion makes it open again.
 - **Moving a due date:** changing a planned task's due date from the day (or earlier, or none) to a later day from the agenda takes it off the plan, with an undo toast. Changes made elsewhere leave the plan as it is.

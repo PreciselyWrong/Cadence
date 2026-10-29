@@ -218,7 +218,8 @@
     "open": "Åpne",
     "completed": "Fullført",
     "noCompletedTasksToday": "Ingen fullførte oppgaver i dag.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Merk som utført",
+    "markAsNotDone": "Merk som ikke utført",
     "notStarted": "Ikke startet",
     "done": "Ferdig",
     "eisenhower": {
@@ -2917,6 +2918,7 @@
     "dueToday": "Forfaller i dag",
     "suggested": "Foreslått",
     "notPlanned": "Ikke planlagt ({{count}})",
+    "todayTasks": "Dagens oppgaver",
     "nothingElse": "Ingenting annet venter.",
     "addToToday": "Legg til i dag",
     "draftKicker": "Nesten klar",

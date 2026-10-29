@@ -46,6 +46,12 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Statistics | — | Insights → Productivity → **Focus**: total time, sessions, most focused hour, minutes per day and per hour, top tasks |
 | Calendar | — | Focus sessions as orange blocks |
 
+### Today
+
+| | Upstream | This fork |
+|---|---|---|
+| Before planning | — | No planning gate: the day's **tasks are listed at once** under "Today's tasks"; **Plan your day** is a small link. [Docs](docs/20-daily-plan.md) |
+
 ### Projects
 
 | | Upstream | This fork |
@@ -57,6 +63,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | | Upstream | This fork |
 |---|---|---|
 | Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
+| Round check | Checkbox and status menu on each row | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md) |
 | Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
 | Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit |
 | Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit |
@@ -67,7 +74,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
 - New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
-- All new strings are translated into the 26 languages (machine-written, review welcome).
+- All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language.
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).
 - Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
 

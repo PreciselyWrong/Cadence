@@ -217,7 +217,8 @@
     "open": "打开",
     "completed": "已完成",
     "noCompletedTasksToday": "今天没有完成的任务。",
-    "markAsDone": "Mark as done",
+    "markAsDone": "标记为已完成",
+    "markAsNotDone": "标记为未完成",
     "notStarted": "未开始",
     "done": "完成",
     "eisenhower": {
@@ -2910,6 +2911,7 @@
     "dueToday": "今天到期",
     "suggested": "推荐",
     "notPlanned": "未计划 ({{count}})",
+    "todayTasks": "今日任务",
     "nothingElse": "没有其他待办。",
     "addToToday": "加入今天",
     "draftKicker": "快好了",

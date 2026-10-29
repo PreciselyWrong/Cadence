@@ -217,7 +217,8 @@
     "open": "Mở",
     "completed": "Đã hoàn thành",
     "noCompletedTasksToday": "Không có nhiệm vụ hoàn thành hôm nay.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Đánh dấu đã hoàn thành",
+    "markAsNotDone": "Đánh dấu chưa hoàn thành",
     "notStarted": "Chưa bắt đầu",
     "done": "Đã hoàn thành",
     "eisenhower": {
@@ -2910,6 +2911,7 @@
     "dueToday": "Đến hạn hôm nay",
     "suggested": "Gợi ý",
     "notPlanned": "Chưa lên kế hoạch ({{count}})",
+    "todayTasks": "Công việc hôm nay",
     "nothingElse": "Không còn gì đang chờ.",
     "addToToday": "Thêm vào hôm nay",
     "draftKicker": "Sắp xong",

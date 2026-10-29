@@ -24,6 +24,8 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
+| Tasks | Round check before each title (priority ring; completes from the list with undo); Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
+| Today | Day's tasks listed without a planning gate; "Plan your day" is a link | [02-today-page-sections.md](docs/02-today-page-sections.md), [20-daily-plan.md](docs/20-daily-plan.md) |
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
 | Projects | Board tab with free sections and card order (`project_sections`, `tasks.section_id`, `tasks.section_position`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
 | Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |

@@ -219,7 +219,8 @@
     "open": "Odpri",
     "completed": "Dokončano",
     "noCompletedTasksToday": "Danes ni zaključenih nalog.",
-    "markAsDone": "Mark as done",
+    "markAsDone": "Označi kot opravljeno",
+    "markAsNotDone": "Označi kot nedokončano",
     "notStarted": "Niso začeli",
     "done": "Dokončano",
     "eisenhower": {
@@ -2926,6 +2927,7 @@
     "dueToday": "Rok danes",
     "suggested": "Predlagano",
     "notPlanned": "Nenačrtovano ({{count}})",
+    "todayTasks": "Današnje naloge",
     "nothingElse": "Nič drugega ne čaka.",
     "addToToday": "Dodaj v danes",
     "draftKicker": "Skoraj pripravljeno",

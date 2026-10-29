@@ -1,6 +1,6 @@
 # Today Page Sections - Behavior Rules
 
-> The default Today page is now the day plan (see [Daily Plan](20-daily-plan.md)). The classic page that showed these sections was removed. The section lists below are still computed by the backend and feed the planner's candidates, the AI brief and the MCP tools.
+> The default Today page is now the day plan (see [Daily Plan](20-daily-plan.md)). The classic page that showed these sections was removed. The section lists below are still computed by the backend and feed the planner's candidates, the AI brief and the MCP tools. Before a plan is started, the same tasks appear as **Today's tasks**, with no planning gate; completed tasks leave that list.
 
 This document explains how the four main sections of the Today page work in tududi. For technical implementation details, see `/backend/modules/tasks/queries/metrics-queries.js` and `/backend/modules/tasks/queries/metrics-computation.js`.
 
