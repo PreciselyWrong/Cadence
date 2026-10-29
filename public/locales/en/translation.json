@@ -2080,6 +2080,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Could not save view options"
     },
+    "visibleHours": {
+      "title": "Visible hours",
+      "from": "From",
+      "to": "To"
+    },
     "arrange": {
       "title": "Arrange tasks",
       "noDate": "No date",
@@ -3381,6 +3386,7 @@
     "more": "More options",
     "refreshCalendar": "Refresh calendar",
     "refreshCalendarError": "Could not refresh the calendar.",
+    "calendarMenu": "More calendar options",
     "refreshingCalendar": "Refreshing calendar…",
     "switchToList": "Switch to list",
     "switchToTimeline": "Switch to timeline",

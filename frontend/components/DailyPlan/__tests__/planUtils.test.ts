@@ -1,6 +1,7 @@
 import {
     buildAgenda,
     busyMinutes,
+    clampDayHours,
     dayRange,
     findFreeSlot,
     formatDuration,
@@ -151,5 +152,48 @@ describe('buildAgenda', () => {
                 entry.kind === 'task' ? entry.item.task_uid : entry.event.title
             )
         ).toEqual(['a', 'call', 'b', 'c']);
+    });
+});
+
+describe('visible hours on the planning timeline', () => {
+    it('clamps the day to the visible hours', () => {
+        expect(
+            clampDayHours(
+                { start: 8 * 60, end: 18 * 60 },
+                { start: 6, end: 20 }
+            )
+        ).toEqual({ start: 8 * 60, end: 18 * 60 });
+        expect(
+            clampDayHours(
+                { start: 8 * 60, end: 18 * 60 },
+                { start: 9, end: 12 }
+            )
+        ).toEqual({ start: 9 * 60, end: 12 * 60 });
+    });
+
+    it('uses the visible hours when they do not overlap the day', () => {
+        expect(
+            clampDayHours({ start: 8 * 60, end: 9 * 60 }, { start: 0, end: 5 })
+        ).toEqual({ start: 0, end: 5 * 60 });
+    });
+
+    it('widens the range to include a calendar event outside the visible hours', () => {
+        const event = {
+            id: 'e1',
+            title: 'Early call',
+            all_day: false,
+            start_minute: 5 * 60 + 30,
+            end_minute: 6 * 60,
+            busy: true,
+        } as unknown as CalendarEvent;
+        const range = dayRange(
+            [],
+            [event],
+            clampDayHours(
+                { start: 8 * 60, end: 18 * 60 },
+                { start: 9, end: 20 }
+            )
+        );
+        expect(range).toEqual({ start: 5 * 60, end: 18 * 60 });
     });
 });

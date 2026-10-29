@@ -83,6 +83,59 @@ describe('PUT /api/profile/ui-settings', () => {
         });
     });
 
+    describe('visible hours', () => {
+        it('saves a valid visible hours range', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 5, end: 22 } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.calendar.visibleHours).toEqual({
+                start: 5,
+                end: 22,
+            });
+        });
+
+        it('keeps the saved range when a range is invalid', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 5, end: 22 } },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 10, end: 10 } },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 0, end: 25 } },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: -1, end: 4 } },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 2.5, end: 9 } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.calendar.visibleHours).toEqual({
+                start: 5,
+                end: 22,
+            });
+        });
+
+        it('keeps visible hours when the profile form saves', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                calendar: { visibleHours: { start: 6, end: 20 } },
+            });
+            await agent.patch('/api/profile').send({
+                ui_settings: { appearance: { density: 'dense' } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.calendar.visibleHours).toEqual({
+                start: 6,
+                end: 20,
+            });
+        });
+    });
+
     describe('interface density', () => {
         it('saves dense', async () => {
             await agent.put('/api/profile/ui-settings').send({

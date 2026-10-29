@@ -1835,6 +1835,11 @@
       "colorBy_tag": "الوسم",
       "saveError": "تعذّر حفظ خيارات العرض"
     },
+    "visibleHours": {
+      "title": "الساعات المرئية",
+      "from": "من",
+      "to": "إلى"
+    },
     "arrange": {
       "title": "ترتيب المهام",
       "noDate": "بدون تاريخ",
@@ -3084,7 +3089,8 @@
     "nextDay": "اليوم التالي",
     "planning": "التخطيط",
     "completed": "تم إنجاز '{{name}}'.",
-    "panelMode": "اللوحة اليمنى"
+    "panelMode": "اللوحة اليمنى",
+    "calendarMenu": "خيارات تقويم أخرى"
   },
   "capture": {
     "add": "إضافة",

@@ -1745,6 +1745,11 @@
       "colorBy_tag": "タグ",
       "saveError": "表示オプションを保存できませんでした"
     },
+    "visibleHours": {
+      "title": "表示する時間",
+      "from": "開始",
+      "to": "終了"
+    },
     "arrange": {
       "title": "タスクを配置",
       "noDate": "日付なし",
@@ -3054,7 +3059,8 @@
     "nextDay": "次の日",
     "planning": "計画",
     "completed": "「{{name}}」を完了しました。",
-    "panelMode": "右のパネル"
+    "panelMode": "右のパネル",
+    "calendarMenu": "その他のカレンダーオプション"
   },
   "capture": {
     "add": "追加",

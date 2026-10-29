@@ -1815,6 +1815,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Weergaveopties konden niet worden opgeslagen"
     },
+    "visibleHours": {
+      "title": "Zichtbare uren",
+      "from": "Van",
+      "to": "Tot"
+    },
     "arrange": {
       "title": "Taken inplannen",
       "noDate": "Geen datum",
@@ -3056,7 +3061,8 @@
     "nextDay": "Volgende dag",
     "planning": "Planning",
     "completed": "'{{name}}' voltooid.",
-    "panelMode": "Rechterpaneel"
+    "panelMode": "Rechterpaneel",
+    "calendarMenu": "Meer agenda-opties"
   },
   "capture": {
     "add": "Toevoegen",

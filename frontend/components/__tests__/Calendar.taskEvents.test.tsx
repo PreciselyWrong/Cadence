@@ -10,6 +10,9 @@ import {
     moveUpdate,
     resizeUpdate,
     taskToEvents,
+    dropToDueUpdate,
+    slotId,
+    CAL_ALL_DAY_ID,
 } from '../Calendar/taskEvents';
 
 jest.mock('../../utils/profileService', () => ({
@@ -243,5 +246,47 @@ describe('recurring occurrences', () => {
         expect(event.readOnly).toBe(true);
         expect(event.resize).toBeUndefined();
         expect(taskIdOf(event.id)).toBe('4');
+    });
+});
+
+describe('dropToDueUpdate', () => {
+    const day = '2026-10-29';
+    const task = { id: 7, name: 'Call Ana', due_date: day, due_time: null };
+
+    it('sets a due time on the shown day when a list task lands on a slot', () => {
+        expect(dropToDueUpdate(task, slotId(9 * 60), day)).toEqual({
+            due_date: day,
+            due_time: '09:00',
+        });
+    });
+
+    it('turns an all-day block into a timed task when it lands on a slot', () => {
+        const [event] = taskToEvents(task);
+        expect(event.allDay).toBe(true);
+        expect(dropToDueUpdate(task, slotId(14 * 60 + 30), day, event)).toEqual(
+            { due_date: day, due_time: '14:30' }
+        );
+    });
+
+    it('moves a timed block to another slot, keeping its estimate', () => {
+        const timed = { ...task, due_time: '14:00', estimated_minutes: 90 };
+        const [event] = taskToEvents(timed);
+        expect(dropToDueUpdate(timed, slotId(16 * 60), day, event)).toEqual({
+            due_date: day,
+            due_time: '16:00',
+        });
+    });
+
+    it('clears the time when a timed block lands on the all-day row', () => {
+        const timed = { ...task, due_time: '14:00' };
+        const [event] = taskToEvents(timed);
+        expect(dropToDueUpdate(timed, CAL_ALL_DAY_ID, day, event)).toEqual({
+            due_date: day,
+            due_time: null,
+        });
+    });
+
+    it('ignores drops outside the calendar', () => {
+        expect(dropToDueUpdate(task, 'candidates', day)).toBeNull();
     });
 });

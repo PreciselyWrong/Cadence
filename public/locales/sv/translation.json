@@ -1815,6 +1815,11 @@
       "colorBy_tag": "Tagg",
       "saveError": "Kunde inte spara visningsalternativ"
     },
+    "visibleHours": {
+      "title": "Synliga timmar",
+      "from": "Från",
+      "to": "Till"
+    },
     "arrange": {
       "title": "Planera uppgifter",
       "noDate": "Inget datum",
@@ -3056,7 +3061,8 @@
     "nextDay": "Nästa dag",
     "planning": "Planering",
     "completed": "”{{name}}” klar.",
-    "panelMode": "Högerpanel"
+    "panelMode": "Högerpanel",
+    "calendarMenu": "Fler kalenderalternativ"
   },
   "capture": {
     "add": "Lägg till",

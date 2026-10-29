@@ -63,6 +63,7 @@ interface Profile {
             multiDayCount?: number;
             holidayCountry?: string;
             holidayRegion?: string;
+            visibleHours?: { start: number; end: number };
         };
         inbox?: {
             recentlyCapturedExpanded?: boolean;

@@ -1813,6 +1813,11 @@
       "colorBy_tag": "Thẻ",
       "saveError": "Không thể lưu tùy chọn hiển thị"
     },
+    "visibleHours": {
+      "title": "Giờ hiển thị",
+      "from": "Từ",
+      "to": "Đến"
+    },
     "arrange": {
       "title": "Sắp xếp công việc",
       "noDate": "Không có ngày",
@@ -3054,7 +3059,8 @@
     "nextDay": "Ngày sau",
     "planning": "Lên kế hoạch",
     "completed": "Đã hoàn thành '{{name}}'.",
-    "panelMode": "Bảng bên phải"
+    "panelMode": "Bảng bên phải",
+    "calendarMenu": "Tùy chọn lịch khác"
   },
   "capture": {
     "add": "Thêm",

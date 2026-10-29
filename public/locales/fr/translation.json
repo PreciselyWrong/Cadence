@@ -1820,6 +1820,11 @@
       "colorBy_tag": "Étiquette",
       "saveError": "Impossible d'enregistrer les options d'affichage"
     },
+    "visibleHours": {
+      "title": "Heures visibles",
+      "from": "De",
+      "to": "À"
+    },
     "arrange": {
       "title": "Planifier les tâches",
       "noDate": "Sans date",
@@ -3062,7 +3067,8 @@
     "nextDay": "Jour suivant",
     "planning": "Planification",
     "completed": "« {{name}} » terminée.",
-    "panelMode": "Panneau de droite"
+    "panelMode": "Panneau de droite",
+    "calendarMenu": "Plus d’options du calendrier"
   },
   "capture": {
     "add": "Ajouter",

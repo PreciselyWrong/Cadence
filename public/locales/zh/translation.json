@@ -1813,6 +1813,11 @@
       "colorBy_tag": "标签",
       "saveError": "无法保存视图选项"
     },
+    "visibleHours": {
+      "title": "可见时间",
+      "from": "从",
+      "to": "到"
+    },
     "arrange": {
       "title": "安排任务",
       "noDate": "无日期",
@@ -3054,7 +3059,8 @@
     "nextDay": "后一天",
     "planning": "计划",
     "completed": "“{{name}}”已完成。",
-    "panelMode": "右侧面板"
+    "panelMode": "右侧面板",
+    "calendarMenu": "更多日历选项"
   },
   "capture": {
     "add": "添加",

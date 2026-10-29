@@ -30,10 +30,10 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 |---|---|---|
 | Views | Month, Week, Day | **Year** (heatmap), Month, Week, **N days** (2–7), Day, **Agenda** |
 | Task blocks | Always a 1-hour block at midnight of the due day (the due time was ignored) | Drawn at the due time for the task's **estimate**, or from its start time to its due time; whole-day and multi-day tasks are **bars** in an all-day row |
-| Drag & drop | Move only | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h) |
+| Drag & drop | Move only | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h); on Today, drop a task or block on a 15-minute slot or the all-day row |
 | Scheduling | — | **Arrange tasks** panel: undated and overdue tasks, grouped by project, filtered by project/tag/priority, dragged onto a day or an hour |
 | Recurring tasks | Only the next occurrence | **Every occurrence** in the shown month (faded, read-only) |
-| View options | — | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag — saved per user |
+| View options | — | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag, **visible hours** (hide night hours) — saved per user |
 | Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
 | Print | — | Prints only the shown view |
 | Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |

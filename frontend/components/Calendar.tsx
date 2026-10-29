@@ -828,6 +828,7 @@ const Calendar: React.FC = () => {
                                 onEventResize={handleEventResize}
                                 showWeekends={options.showWeekends}
                                 showWeekNumbers={options.showWeekNumbers}
+                                visibleHours={options.visibleHours}
                             />
                         )}
                         {view === 'multi' && (
@@ -840,6 +841,7 @@ const Calendar: React.FC = () => {
                                 onEventResize={handleEventResize}
                                 showWeekends={options.showWeekends}
                                 showWeekNumbers={options.showWeekNumbers}
+                                visibleHours={options.visibleHours}
                                 dayCount={options.multiDayCount}
                             />
                         )}
@@ -860,6 +862,7 @@ const Calendar: React.FC = () => {
                                 onTimeSlotClick={handleTimeSlotClick}
                                 onEventDrop={handleEventDrop}
                                 onEventResize={handleEventResize}
+                                visibleHours={options.visibleHours}
                             />
                         )}
                     </div>

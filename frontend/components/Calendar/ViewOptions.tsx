@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import { CalendarColorBy } from './taskEvents';
+import { VisibleHours, WHOLE_DAY, readVisibleHours } from './visibleHours';
 import {
     HolidayPlace,
     fetchHolidayCountries,
@@ -21,6 +22,7 @@ export interface CalendarOptions {
     multiDayCount: number;
     holidayCountry: string;
     holidayRegion: string;
+    visibleHours: VisibleHours;
 }
 
 export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
@@ -35,6 +37,7 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     multiDayCount: 3,
     holidayCountry: '',
     holidayRegion: '',
+    visibleHours: WHOLE_DAY,
 };
 
 export const MULTI_DAY_COUNTS = [2, 3, 4, 5, 6, 7];
@@ -71,6 +74,7 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
                 : '',
         holidayRegion:
             typeof value.holidayRegion === 'string' ? value.holidayRegion : '',
+        visibleHours: readVisibleHours(value.visibleHours),
     };
 };
 
@@ -331,9 +335,74 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
                             ))}
                         </select>
                     </label>
+                    <VisibleHoursPicker
+                        value={options.visibleHours}
+                        onChange={(visibleHours) =>
+                            onChange({ ...options, visibleHours })
+                        }
+                    />
                 </div>
             )}
         </div>
+    );
+};
+
+// From / To hour selects. The range always keeps at least one hour.
+export const VisibleHoursPicker: React.FC<{
+    value: VisibleHours;
+    onChange: (hours: VisibleHours) => void;
+    className?: string;
+}> = ({ value, onChange, className = '' }) => {
+    const { t } = useTranslation();
+    const selectClass =
+        'rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1';
+    const hourLabel = (hour: number) => `${String(hour).padStart(2, '0')}:00`;
+    return (
+        <fieldset className={`space-y-2 ${className}`}>
+            <legend className="text-sm text-gray-700 dark:text-gray-200 mb-1">
+                {t('calendar.visibleHours.title', 'Visible hours')}
+            </legend>
+            <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                {t('calendar.visibleHours.from', 'From')}
+                <select
+                    value={value.start}
+                    onChange={(e) => {
+                        const start = Number(e.target.value);
+                        onChange({
+                            start,
+                            end: Math.max(value.end, start + 1),
+                        });
+                    }}
+                    className={selectClass}
+                >
+                    {Array.from({ length: 24 }, (_, hour) => (
+                        <option key={hour} value={hour}>
+                            {hourLabel(hour)}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                {t('calendar.visibleHours.to', 'To')}
+                <select
+                    value={value.end}
+                    onChange={(e) => {
+                        const end = Number(e.target.value);
+                        onChange({
+                            start: Math.min(value.start, end - 1),
+                            end,
+                        });
+                    }}
+                    className={selectClass}
+                >
+                    {Array.from({ length: 24 }, (_, i) => i + 1).map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hourLabel(hour)}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        </fieldset>
     );
 };
 

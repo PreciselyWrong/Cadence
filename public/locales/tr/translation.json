@@ -1815,6 +1815,11 @@
       "colorBy_tag": "Etiket",
       "saveError": "Görünüm seçenekleri kaydedilemedi"
     },
+    "visibleHours": {
+      "title": "Görünen saatler",
+      "from": "Başlangıç",
+      "to": "Bitiş"
+    },
     "arrange": {
       "title": "Görevleri yerleştir",
       "noDate": "Tarihsiz",
@@ -3056,7 +3061,8 @@
     "nextDay": "Sonraki gün",
     "planning": "Planlama",
     "completed": "'{{name}}' tamamlandı.",
-    "panelMode": "Sağ panel"
+    "panelMode": "Sağ panel",
+    "calendarMenu": "Diğer takvim seçenekleri"
   },
   "capture": {
     "add": "Ekle",

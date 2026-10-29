@@ -210,6 +210,16 @@ describe('TodayPage', () => {
         expect(window.localStorage.getItem('today.calendarOpen')).toBe('true');
     });
 
+    it('offers 15-minute slots and an all-day row as drop targets in calendar mode', async () => {
+        window.localStorage.setItem('today.panelMode', 'calendar');
+        render(<TodayPage />);
+
+        expect(await screen.findByTestId('cal-allday')).toBeInTheDocument();
+        expect(screen.getByTestId('cal-slot-540')).toBeInTheDocument();
+        expect(screen.getByTestId('cal-slot-555')).toBeInTheDocument();
+        window.localStorage.removeItem('today.panelMode');
+    });
+
     it('leaves calendars out when the Calendar feature is off', async () => {
         mockCalendarEnabled = false;
 

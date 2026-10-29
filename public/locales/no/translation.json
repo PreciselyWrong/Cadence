@@ -1816,6 +1816,11 @@
       "colorBy_tag": "Tagg",
       "saveError": "Kunne ikke lagre visningsvalg"
     },
+    "visibleHours": {
+      "title": "Synlige timer",
+      "from": "Fra",
+      "to": "Til"
+    },
     "arrange": {
       "title": "Planlegg oppgaver",
       "noDate": "Ingen dato",
@@ -3061,7 +3066,8 @@
     "nextDay": "Neste dag",
     "planning": "Planlegging",
     "completed": "'{{name}}' er fullført.",
-    "panelMode": "Høyre panel"
+    "panelMode": "Høyre panel",
+    "calendarMenu": "Flere kalenderalternativer"
   },
   "capture": {
     "add": "Legg til",

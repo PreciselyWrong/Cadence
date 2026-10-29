@@ -1813,6 +1813,11 @@
       "colorBy_tag": "태그",
       "saveError": "보기 옵션을 저장할 수 없습니다"
     },
+    "visibleHours": {
+      "title": "표시할 시간",
+      "from": "시작",
+      "to": "종료"
+    },
     "arrange": {
       "title": "작업 배치",
       "noDate": "날짜 없음",
@@ -3054,7 +3059,8 @@
     "nextDay": "다음 날",
     "planning": "계획",
     "completed": "'{{name}}' 완료.",
-    "panelMode": "오른쪽 패널"
+    "panelMode": "오른쪽 패널",
+    "calendarMenu": "캘린더 추가 옵션"
   },
   "capture": {
     "add": "추가",

@@ -1993,6 +1993,11 @@
             "colorBy_tag": "Štítok",
             "saveError": "Možnosti sa nepodarilo uložiť"
         },
+        "visibleHours": {
+            "title": "Viditeľné hodiny",
+            "from": "Od",
+            "to": "Do"
+        },
         "arrange": {
             "title": "Naplánovať úlohy",
             "noDate": "Bez dátumu",
@@ -3076,7 +3081,8 @@
         "nextDay": "Nasledujúci deň",
         "planning": "Plánovanie",
         "completed": "„{{name}}“ dokončené.",
-        "panelMode": "Pravý panel"
+        "panelMode": "Pravý panel",
+        "calendarMenu": "Ďalšie možnosti kalendára"
     },
     "relations": {
         "title": "Vzťahy",

@@ -1820,6 +1820,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Impossibile salvare le opzioni"
     },
+    "visibleHours": {
+      "title": "Ore visibili",
+      "from": "Da",
+      "to": "A"
+    },
     "arrange": {
       "title": "Organizza attività",
       "noDate": "Senza data",
@@ -3062,7 +3067,8 @@
     "nextDay": "Giorno successivo",
     "planning": "Pianificazione",
     "completed": "«{{name}}» completata.",
-    "panelMode": "Pannello destro"
+    "panelMode": "Pannello destro",
+    "calendarMenu": "Altre opzioni del calendario"
   },
   "capture": {
     "add": "Aggiungi",

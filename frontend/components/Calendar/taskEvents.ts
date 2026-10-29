@@ -288,6 +288,38 @@ export const moveUpdate = (
     return { due_date: dayString(due), due_time: timeString(due) };
 };
 
+// Drop targets of the day calendar in the Today page: 15-minute slots, keyed
+// by minutes from midnight, and the all-day row.
+export const CAL_ALL_DAY_ID = 'cal-allday';
+export const slotId = (minute: number) => `cal-slot:${minute}`;
+const SLOT_PATTERN = /^cal-slot:(\d+)$/;
+
+// The task fields to save when a list task or calendar block is dropped on
+// `overId` in the shown `day`. A slot sets the due time (the server marks the
+// task as timed); the all-day row clears it. `event` is the block dragged, if
+// any; a timed block moved to a slot keeps its duration. Returns null when
+// `overId` is not a calendar target.
+export const dropToDueUpdate = (
+    task: CalendarTask,
+    overId: string,
+    day: string,
+    event?: CalendarEvent
+): Record<string, unknown> | null => {
+    if (overId === CAL_ALL_DAY_ID) {
+        return { due_date: day, due_time: null };
+    }
+    const match = SLOT_PATTERN.exec(overId);
+    if (!match) return null;
+    const minute = Number(match[1]);
+    const time = `${String(Math.floor(minute / 60)).padStart(2, '0')}:${String(
+        minute % 60
+    ).padStart(2, '0')}`;
+    if (event && !event.allDay && !event.id.startsWith('task-defer-')) {
+        return moveUpdate(task, event, localDateTime(day, time)!);
+    }
+    return { due_date: day, due_time: time };
+};
+
 // The task fields to save when the bottom edge of its block is dragged to
 // `newEnd`.
 export const resizeUpdate = (

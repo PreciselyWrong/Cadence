@@ -1815,6 +1815,11 @@
       "colorBy_tag": "Tunniste",
       "saveError": "Asetuksia ei voitu tallentaa"
     },
+    "visibleHours": {
+      "title": "Näkyvät tunnit",
+      "from": "Alkaen",
+      "to": "Päättyen"
+    },
     "arrange": {
       "title": "Järjestä tehtävät",
       "noDate": "Ei päivää",
@@ -3056,7 +3061,8 @@
     "nextDay": "Seuraava päivä",
     "planning": "Suunnittelu",
     "completed": "'{{name}}' tehty.",
-    "panelMode": "Oikea paneeli"
+    "panelMode": "Oikea paneeli",
+    "calendarMenu": "Lisää kalenteriasetuksia"
   },
   "capture": {
     "add": "Lisää",

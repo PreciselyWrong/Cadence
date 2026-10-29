@@ -1822,6 +1822,11 @@
       "colorBy_tag": "Etichetă",
       "saveError": "Nu s-au putut salva opțiunile"
     },
+    "visibleHours": {
+      "title": "Ore vizibile",
+      "from": "De la",
+      "to": "Până la"
+    },
     "arrange": {
       "title": "Aranjează sarcinile",
       "noDate": "Fără dată",
@@ -3065,7 +3070,8 @@
     "nextDay": "Ziua următoare",
     "planning": "Planificare",
     "completed": "„{{name}}” finalizată.",
-    "panelMode": "Panou dreapta"
+    "panelMode": "Panou dreapta",
+    "calendarMenu": "Mai multe opțiuni ale calendarului"
   },
   "capture": {
     "add": "Adaugă",

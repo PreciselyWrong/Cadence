@@ -1,8 +1,10 @@
 import React from 'react';
-import { format, addHours, isToday } from 'date-fns';
+import { addHours, differenceInCalendarDays, format, isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { CalendarEvent, coversDay } from './taskEvents';
+import { CalendarEvent, CAL_ALL_DAY_ID, coversDay, slotId } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
+import { DragBlock, DropTarget } from './DndCalendarParts';
+import { VisibleHours, WHOLE_DAY } from './visibleHours';
 
 interface CalendarDayViewProps {
     currentDate: Date;
@@ -13,6 +15,11 @@ interface CalendarDayViewProps {
     onEventResize?: (eventId: string, newEnd: Date) => void;
     // Hour the time slots start scrolled to, read once on mount.
     scrollToHour?: number;
+    // Hours shown; the grid starts at `start` and ends before `end`.
+    visibleHours?: VisibleHours;
+    // Drag blocks and drop on 15-minute slots with dnd-kit (Today page)
+    // instead of native HTML5 drag. The owning DndContext handles the drop.
+    dndKit?: boolean;
 }
 
 export const HOUR_HEIGHT = 48;
@@ -25,11 +32,19 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     onEventDrop,
     onEventResize,
     scrollToHour,
+    visibleHours = WHOLE_DAY,
+    dndKit = false,
 }) => {
     const { t } = useTranslation();
     const resize = useEventResize(HOUR_HEIGHT, onEventResize);
     const scrollRef = React.useRef<HTMLDivElement>(null);
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const firstHour = visibleHours.start;
+    const windowStart = firstHour * 60;
+    const windowEnd = visibleHours.end * 60;
+    const hours = Array.from(
+        { length: visibleHours.end - firstHour },
+        (_, i) => firstHour + i
+    );
     const [draggedEventId, setDraggedEventId] = React.useState<string | null>(
         null
     );
@@ -44,25 +59,44 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     const overlaps = (a: CalendarEvent, b: CalendarEvent) =>
         a.start < b.end && b.start < a.end;
 
+    const minutesOf = (date: Date) => date.getHours() * 60 + date.getMinutes();
+
+    // The part of an event inside the visible hours, as top and height.
+    const segmentOf = (event: CalendarEvent) => {
+        const startMinutes = minutesOf(event.start);
+        const endMinutes = Math.min(
+            startMinutes +
+                (resize.endOf(event).getTime() - event.start.getTime()) / 60000,
+            24 * 60
+        );
+        const segStart = Math.max(startMinutes, windowStart);
+        const segEnd = Math.min(endMinutes, windowEnd);
+        return {
+            top: ((segStart - windowStart) / 60) * HOUR_HEIGHT,
+            height: Math.max(((segEnd - segStart) / 60) * HOUR_HEIGHT, 24),
+        };
+    };
+
+    // An event that runs past midnight ends at the end of the day.
+    const endOfDayMinutes = (event: CalendarEvent) =>
+        differenceInCalendarDays(event.end, event.start) > 0
+            ? 24 * 60
+            : minutesOf(event.end);
+
+    const shownEvents = dayEvents.filter(
+        (event) =>
+            minutesOf(event.start) < windowEnd &&
+            endOfDayMinutes(event) > windowStart
+    );
+
     const layoutEvent = (event: CalendarEvent) => {
-        const group = dayEvents
+        const group = shownEvents
             .filter((other) => overlaps(event, other))
             .sort((a, b) => a.start.getTime() - b.start.getTime());
         const index = group.findIndex((e) => e.id === event.id);
         const count = group.length;
-        const startMinutes =
-            event.start.getHours() * 60 + event.start.getMinutes();
-        const end = resize.endOf(event);
-        const endMinutes = Math.min(
-            startMinutes + (end.getTime() - event.start.getTime()) / 60000,
-            24 * 60
-        );
         return {
-            top: (startMinutes / 60) * HOUR_HEIGHT,
-            height: Math.max(
-                ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT,
-                24
-            ),
+            ...segmentOf(event),
             left: `calc(0.5rem + ${(100 / count) * index}%)`,
             width: `${count > 1 ? 100 / count - 2 : 100}%`,
         };
@@ -87,10 +121,38 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
 
     React.useEffect(() => {
         if (scrollToHour === undefined || !scrollRef.current) return;
-        scrollRef.current.scrollTop = scrollToHour * HOUR_HEIGHT;
+        scrollRef.current.scrollTop =
+            Math.max(0, scrollToHour - firstHour) * HOUR_HEIGHT;
     }, [scrollToHour]);
 
     const todayClass = isToday(currentDate);
+
+    const blockBody = (event: CalendarEvent) => (
+        <>
+            <div className="font-semibold truncate">{event.title}</div>
+            <div className="text-[10px] opacity-75 mt-0.5">
+                {format(event.start, 'HH:mm')} –{' '}
+                {format(resize.endOf(event), 'HH:mm')}
+            </div>
+            {event.type === 'task' && event.resize && (
+                <ResizeHandle
+                    label={t(
+                        'calendar.resizeTask',
+                        'Change when this task ends'
+                    )}
+                    onPointerDown={(e) => resize.begin(event, e)}
+                />
+            )}
+        </>
+    );
+
+    const blockStyle = (event: CalendarEvent): React.CSSProperties => ({
+        backgroundColor: event.color || '#3b82f6',
+        opacity: event.readOnly ? 0.6 : undefined,
+    });
+
+    const draggable = (event: CalendarEvent) =>
+        event.type === 'task' && !event.readOnly;
 
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">
@@ -123,37 +185,60 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                 </div>
             </div>
 
-            {/* All-day events */}
-            {allDayEvents.length > 0 && (
-                <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
-                    <div className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-2">
-                        {t('calendar.allDay', 'All day')}
-                    </div>
+            {/* All-day events; in dnd-kit mode the row is always a drop target */}
+            {(dndKit || allDayEvents.length > 0) && (
+                <DropTarget
+                    dndKit={dndKit}
+                    id={CAL_ALL_DAY_ID}
+                    testId={dndKit ? 'cal-allday' : undefined}
+                    className={`px-4 py-2 border-b border-gray-100 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 ${dndKit ? 'min-h-[3.25rem]' : ''}`}
+                >
+                    {allDayEvents.length > 0 && (
+                        <div className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-2">
+                            {t('calendar.allDay', 'All day')}
+                        </div>
+                    )}
                     <div className="space-y-1">
-                        {allDayEvents.map((event) => (
-                            <div
-                                key={event.id}
-                                draggable={
-                                    event.type === 'task' && !event.readOnly
-                                }
-                                onDragStart={(e) => handleDragStart(event, e)}
-                                onDragEnd={handleDragEnd}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onEventClick?.(event);
-                                }}
-                                className="text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium"
-                                style={{
-                                    backgroundColor: event.color || '#3b82f6',
-                                    opacity: event.readOnly ? 0.6 : undefined,
-                                }}
-                                title={event.title}
-                            >
-                                {event.title}
-                            </div>
-                        ))}
+                        {allDayEvents.map((event) => {
+                            const body = event.title;
+                            const className =
+                                'text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium';
+                            const click = (e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                onEventClick?.(event);
+                            };
+                            return dndKit ? (
+                                <DragBlock
+                                    key={event.id}
+                                    id={event.id}
+                                    data={{ type: 'calendar-block', event }}
+                                    disabled={!draggable(event)}
+                                    className={className}
+                                    style={blockStyle(event)}
+                                    title={event.title}
+                                    onClick={click}
+                                >
+                                    {body}
+                                </DragBlock>
+                            ) : (
+                                <div
+                                    key={event.id}
+                                    draggable={draggable(event)}
+                                    onDragStart={(e) =>
+                                        handleDragStart(event, e)
+                                    }
+                                    onDragEnd={handleDragEnd}
+                                    onClick={click}
+                                    className={className}
+                                    style={blockStyle(event)}
+                                    title={event.title}
+                                >
+                                    {body}
+                                </div>
+                            );
+                        })}
                     </div>
-                </div>
+                </DropTarget>
             )}
 
             {/* Time slots */}
@@ -173,75 +258,92 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     'HH:mm'
                                 )}
                             </div>
-                            <div
-                                onClick={() =>
-                                    onTimeSlotClick?.(currentDate, hour)
-                                }
-                                onDragOver={(e) => {
-                                    e.preventDefault();
-                                    e.dataTransfer.dropEffect = 'move';
-                                }}
-                                onDrop={(e) => handleDrop(hour, e)}
-                                className="flex-1 cursor-pointer hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative transition-colors"
-                            />
+                            {dndKit ? (
+                                <div
+                                    onClick={() =>
+                                        onTimeSlotClick?.(currentDate, hour)
+                                    }
+                                    className="flex flex-1 flex-col cursor-pointer hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative transition-colors"
+                                >
+                                    {[0, 15, 30, 45].map((quarter) => (
+                                        <DropTarget
+                                            key={quarter}
+                                            dndKit
+                                            id={slotId(hour * 60 + quarter)}
+                                            testId={`cal-slot-${hour * 60 + quarter}`}
+                                            className="flex-1"
+                                        >
+                                            {null}
+                                        </DropTarget>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={() =>
+                                        onTimeSlotClick?.(currentDate, hour)
+                                    }
+                                    onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.dataTransfer.dropEffect = 'move';
+                                    }}
+                                    onDrop={(e) => handleDrop(hour, e)}
+                                    className="flex-1 cursor-pointer hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative transition-colors"
+                                />
+                            )}
                         </div>
                     ))}
                     <div className="absolute inset-y-0 left-20 right-0 pointer-events-none">
-                        {dayEvents.map((event) => {
+                        {shownEvents.map((event) => {
                             const layout = layoutEvent(event);
-                            return (
+                            const className = `absolute text-xs px-2.5 py-1.5 rounded-lg text-white z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${
+                                event.type === 'task' ? 'cursor-move' : ''
+                            } ${draggedEventId === event.id ? 'opacity-40' : ''}`;
+                            const style: React.CSSProperties = {
+                                ...blockStyle(event),
+                                top: layout.top,
+                                height: layout.height,
+                                left: layout.left,
+                                width: layout.width,
+                            };
+                            const click = (e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                if (resize.consumeClick()) return;
+                                onEventClick?.(event);
+                            };
+                            const title = `${event.title} - ${format(event.start, 'HH:mm')} – ${format(event.end, 'HH:mm')}`;
+                            return dndKit ? (
+                                <DragBlock
+                                    key={event.id}
+                                    id={event.id}
+                                    data={{ type: 'calendar-block', event }}
+                                    disabled={
+                                        !draggable(event) ||
+                                        resize.resizingId === event.id
+                                    }
+                                    className={className}
+                                    style={style}
+                                    title={title}
+                                    onClick={click}
+                                >
+                                    {blockBody(event)}
+                                </DragBlock>
+                            ) : (
                                 <div
                                     key={event.id}
                                     draggable={
-                                        event.type === 'task' &&
-                                        !event.readOnly &&
+                                        draggable(event) &&
                                         resize.resizingId !== event.id
                                     }
                                     onDragStart={(e) =>
                                         handleDragStart(event, e)
                                     }
                                     onDragEnd={handleDragEnd}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (resize.consumeClick()) return;
-                                        onEventClick?.(event);
-                                    }}
-                                    className={`absolute text-xs px-2.5 py-1.5 rounded-lg text-white z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${
-                                        event.type === 'task'
-                                            ? 'cursor-move'
-                                            : ''
-                                    } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
-                                    style={{
-                                        backgroundColor:
-                                            event.color || '#3b82f6',
-                                        opacity: event.readOnly
-                                            ? 0.6
-                                            : undefined,
-                                        top: layout.top,
-                                        height: layout.height,
-                                        left: layout.left,
-                                        width: layout.width,
-                                    }}
-                                    title={`${event.title} - ${format(event.start, 'HH:mm')} – ${format(event.end, 'HH:mm')}`}
+                                    onClick={click}
+                                    className={className}
+                                    style={style}
+                                    title={title}
                                 >
-                                    <div className="font-semibold truncate">
-                                        {event.title}
-                                    </div>
-                                    <div className="text-[10px] opacity-75 mt-0.5">
-                                        {format(event.start, 'HH:mm')} –{' '}
-                                        {format(resize.endOf(event), 'HH:mm')}
-                                    </div>
-                                    {event.type === 'task' && event.resize && (
-                                        <ResizeHandle
-                                            label={t(
-                                                'calendar.resizeTask',
-                                                'Change when this task ends'
-                                            )}
-                                            onPointerDown={(e) =>
-                                                resize.begin(event, e)
-                                            }
-                                        />
-                                    )}
+                                    {blockBody(event)}
                                 </div>
                             );
                         })}

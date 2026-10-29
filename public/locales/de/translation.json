@@ -1469,6 +1469,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Ansichtsoptionen konnten nicht gespeichert werden"
     },
+    "visibleHours": {
+      "title": "Sichtbare Stunden",
+      "from": "Von",
+      "to": "Bis"
+    },
     "arrange": {
       "title": "Aufgaben einplanen",
       "noDate": "Ohne Datum",
@@ -3065,7 +3070,8 @@
     "nextDay": "Nächster Tag",
     "planning": "Planung",
     "completed": "„{{name}}“ erledigt.",
-    "panelMode": "Rechte Spalte"
+    "panelMode": "Rechte Spalte",
+    "calendarMenu": "Weitere Kalenderoptionen"
   },
   "capture": {
     "add": "Hinzufügen",

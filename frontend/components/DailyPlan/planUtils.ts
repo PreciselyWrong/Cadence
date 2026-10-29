@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { isTaskDone } from '../../constants/taskStatus';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { DailyPlanItem, DayHours } from '../../utils/dailyPlanService';
+import { VisibleHours } from '../Calendar/visibleHours';
 
 export const DURATION_OPTIONS = [15, 30, 60, 120];
 export const DEFAULT_DURATION = 30;
@@ -105,6 +106,20 @@ export const dayRange = (
         start: Math.floor(start / 60) * 60,
         end: Math.min(MINUTES_PER_DAY, Math.ceil(end / 60) * 60),
     };
+};
+
+// The planning day held to the visible hours. When the two do not overlap,
+// the visible hours are the range. Items outside them still widen it through
+// dayRange.
+export const clampDayHours = (
+    hours: DayHours,
+    visible: VisibleHours
+): DayHours => {
+    const start = Math.max(hours.start, visible.start * 60);
+    const end = Math.min(hours.end, visible.end * 60);
+    return end > start
+        ? { start, end }
+        : { start: visible.start * 60, end: visible.end * 60 };
 };
 
 // Busy time from meetings inside the range, overlapping events merged.

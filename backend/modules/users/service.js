@@ -191,7 +191,27 @@ function sanitizeCalendarOptions(calendar) {
     ) {
         clean.multiDayCount = calendar.multiDayCount;
     }
+    if (isVisibleHours(calendar.visibleHours)) {
+        clean.visibleHours = {
+            start: calendar.visibleHours.start,
+            end: calendar.visibleHours.end,
+        };
+    }
     return clean;
+}
+
+// Whole hours, from 0-23 up to an end of 1-24 that comes after the start.
+function isVisibleHours(hours) {
+    return (
+        !!hours &&
+        Number.isInteger(hours.start) &&
+        Number.isInteger(hours.end) &&
+        hours.start >= 0 &&
+        hours.start <= 23 &&
+        hours.end >= 1 &&
+        hours.end <= 24 &&
+        hours.end > hours.start
+    );
 }
 
 // Custom Eisenhower matrices. The built-in matrix (id 'default') lives in
@@ -444,6 +464,8 @@ class UsersService {
             if (current?.matrices !== undefined)
                 kept.matrices = current.matrices;
             if (current?.summary !== undefined) kept.summary = current.summary;
+            if (current?.calendar !== undefined)
+                kept.calendar = current.calendar;
             let nextUiSettings =
                 ui_settings && Object.keys(kept).length > 0
                     ? { ...ui_settings, ...kept }

@@ -19,6 +19,7 @@ import {
 
 import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
+import { VisibleHours, WHOLE_DAY } from './visibleHours';
 
 interface CalendarWeekViewProps {
     currentDate: Date;
@@ -33,6 +34,7 @@ interface CalendarWeekViewProps {
     // week around it.
     dayCount?: number;
     showWeekNumbers?: boolean;
+    visibleHours?: VisibleHours;
 }
 
 const WEEK_HOUR_HEIGHT = 72;
@@ -47,6 +49,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     showWeekends = true,
     showWeekNumbers = false,
     dayCount,
+    visibleHours = WHOLE_DAY,
 }) => {
     const { t } = useTranslation();
     const resize = useEventResize(WEEK_HOUR_HEIGHT, onEventResize);
@@ -93,7 +96,10 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     const gridColumns = {
         gridTemplateColumns: `repeat(${weekDays.length + 1}, minmax(0, 1fr))`,
     };
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const hours = Array.from(
+        { length: visibleHours.end - visibleHours.start },
+        (_, i) => visibleHours.start + i
+    );
 
     const getEventsForTimeSlot = (day: Date, hour: number) =>
         events.filter(

@@ -1825,6 +1825,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Nie udało się zapisać opcji widoku"
     },
+    "visibleHours": {
+      "title": "Widoczne godziny",
+      "from": "Od",
+      "to": "Do"
+    },
     "arrange": {
       "title": "Rozplanuj zadania",
       "noDate": "Bez daty",
@@ -3070,7 +3075,8 @@
     "nextDay": "Następny dzień",
     "planning": "Planowanie",
     "completed": "Ukończono: „{{name}}”.",
-    "panelMode": "Prawy panel"
+    "panelMode": "Prawy panel",
+    "calendarMenu": "Więcej opcji kalendarza"
   },
   "capture": {
     "add": "Dodaj",

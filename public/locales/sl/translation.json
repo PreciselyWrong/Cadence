@@ -1825,6 +1825,11 @@
       "colorBy_tag": "Oznaka",
       "saveError": "Možnosti ni bilo mogoče shraniti"
     },
+    "visibleHours": {
+      "title": "Vidne ure",
+      "from": "Od",
+      "to": "Do"
+    },
     "arrange": {
       "title": "Razporedi naloge",
       "noDate": "Brez datuma",
@@ -3070,7 +3075,8 @@
     "nextDay": "Naslednji dan",
     "planning": "Načrtovanje",
     "completed": "»{{name}}« dokončano.",
-    "panelMode": "Desni panel"
+    "panelMode": "Desni panel",
+    "calendarMenu": "Več možnosti koledarja"
   },
   "capture": {
     "add": "Dodaj",

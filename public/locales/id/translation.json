@@ -1813,6 +1813,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Tidak dapat menyimpan opsi tampilan"
     },
+    "visibleHours": {
+      "title": "Jam yang ditampilkan",
+      "from": "Dari",
+      "to": "Sampai"
+    },
     "arrange": {
       "title": "Atur tugas",
       "noDate": "Tanpa tanggal",
@@ -3054,7 +3059,8 @@
     "nextDay": "Hari berikutnya",
     "planning": "Perencanaan",
     "completed": "'{{name}}' selesai.",
-    "panelMode": "Panel kanan"
+    "panelMode": "Panel kanan",
+    "calendarMenu": "Opsi kalender lainnya"
   },
   "capture": {
     "add": "Tambah",

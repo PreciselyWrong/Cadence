@@ -20,7 +20,8 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Calendar | Year (heatmap), N days, Agenda views; week numbers; mini calendar; print | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Arrange tasks panel (undated / overdue → drag onto the grid) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Recurring occurrences, habits, focus sessions, public holidays (`date-holidays`) on the grid | [20-daily-plan.md](docs/20-daily-plan.md), [01-recurring-tasks-behavior.md](docs/01-recurring-tasks-behavior.md) |
-| Calendar | View options saved in `ui_settings.calendar`; colour by project / priority / tag | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | View options saved in `ui_settings.calendar`; colour by project / priority / tag; visible hours (`visibleHours`) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Today | Calendar mode drags with dnd-kit onto 15-minute slots and the all-day row (due time set or cleared) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |

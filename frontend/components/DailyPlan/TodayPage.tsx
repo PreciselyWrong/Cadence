@@ -17,7 +17,6 @@ import {
     PointerSensor,
     closestCenter,
     pointerWithin,
-    useDroppable,
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
@@ -74,20 +73,30 @@ import { buildTips, rescheduleMissed } from './tips';
 import CandidateList, { CandidateFilter } from './CandidateList';
 import DayTimeline, { PX_PER_MINUTE } from './DayTimeline';
 import PlanList from './PlanList';
-import CalendarDayView, { HOUR_HEIGHT } from '../Calendar/CalendarDayView';
+import CalendarDayView from '../Calendar/CalendarDayView';
+import {
+    VisibleHours,
+    WHOLE_DAY,
+    readVisibleHours,
+} from '../Calendar/visibleHours';
+import CalendarHoursMenu from './CalendarHoursMenu';
+import { fetchProfile, updateUiSettings } from '../../utils/profileService';
 import {
     CalendarEvent as CalendarBlock,
     CalendarTask,
-    moveUpdate,
+    dropToDueUpdate,
     resizeUpdate,
     taskIdOf,
     taskToEvents,
 } from '../Calendar/taskEvents';
 import { useAiAllowed, useTrialLock } from '../../hooks/useTrialStatus';
 import {
+    DEFAULT_DAY_END,
+    DEFAULT_DAY_START,
     DEFAULT_DURATION,
     SLOT_MINUTES,
     busyMinutes,
+    clampDayHours,
     dayRange,
     findFreeSlot,
     formatDuration,
@@ -291,33 +300,28 @@ const collisionDetection: CollisionDetection = (args) => {
 interface DayCalendarProps {
     date: string;
     events: CalendarBlock[];
-    onEventDrop: (eventId: string, newDate: Date, newHour?: number) => void;
+    visibleHours: VisibleHours;
     onEventResize: (eventId: string, newEnd: Date) => void;
 }
 
-// The day's calendar; a candidate dropped on it becomes due at that hour.
+// The day's calendar. Its slots and blocks are dnd-kit drop targets and
+// draggables of the page's DndContext.
 const DayCalendar: React.FC<DayCalendarProps> = ({
     date,
     events,
-    onEventDrop,
+    visibleHours,
     onEventResize,
-}) => {
-    const { setNodeRef, isOver } = useDroppable({ id: 'calendar' });
-    return (
-        <div
-            ref={setNodeRef}
-            className={`rounded-lg ${isOver ? 'ring-2 ring-blue-300' : ''}`}
-            data-testid="day-calendar"
-        >
-            <CalendarDayView
-                currentDate={new Date(`${date}T12:00:00`)}
-                events={events}
-                onEventDrop={onEventDrop}
-                onEventResize={onEventResize}
-            />
-        </div>
-    );
-};
+}) => (
+    <div className="rounded-lg" data-testid="day-calendar">
+        <CalendarDayView
+            currentDate={new Date(`${date}T12:00:00`)}
+            events={events}
+            onEventResize={onEventResize}
+            visibleHours={visibleHours}
+            dndKit
+        />
+    </div>
+);
 
 const TodayPage: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -337,6 +341,28 @@ const TodayPage: React.FC = () => {
 
     const [date, setDate] = useState<string | null>(null);
     const [dayHours, setDayHours] = useState<DayHours | undefined>();
+    const [visibleHours, setVisibleHours] = useState<VisibleHours>(WHOLE_DAY);
+
+    useEffect(() => {
+        fetchProfile()
+            .then((profile) =>
+                setVisibleHours(
+                    readVisibleHours(
+                        profile.ui_settings?.calendar?.visibleHours
+                    )
+                )
+            )
+            .catch(() => {});
+    }, []);
+
+    const changeVisibleHours = (next: VisibleHours) => {
+        setVisibleHours(next);
+        updateUiSettings({ calendar: { visibleHours: next } }).catch(() =>
+            showErrorToast(
+                t('calendar.options.saveError', 'Could not save view options')
+            )
+        );
+    };
     const [started, setStarted] = useState(false);
     const [items, setItems] = useState<DailyPlanItem[]>([]);
     const [candidates, setCandidates] = useState<PlanCandidates | null>(null);
@@ -656,8 +682,19 @@ const TodayPage: React.FC = () => {
         [dayTasks, feedEvents, date]
     );
     const range = useMemo(
-        () => dayRange(items, feedEvents, dayHours),
-        [items, feedEvents, dayHours]
+        () =>
+            dayRange(
+                items,
+                feedEvents,
+                clampDayHours(
+                    dayHours ?? {
+                        start: DEFAULT_DAY_START,
+                        end: DEFAULT_DAY_END,
+                    },
+                    visibleHours
+                )
+            ),
+        [items, feedEvents, dayHours, visibleHours]
     );
     const freeMinutes = Math.max(
         0,
@@ -959,30 +996,23 @@ const TodayPage: React.FC = () => {
     const findDayTask = (eventId: string) =>
         dayTasks.find((task) => String(task.id) === taskIdOf(eventId));
 
-    // Dragging a block to another hour moves its due time, as on Calendar.
-    const handleCalendarDrop = (
-        eventId: string,
-        newDate: Date,
-        newHour?: number
+    // A list task or calendar block dropped on a slot or the all-day row of
+    // the day calendar: its due date and time follow the drop.
+    const dropOnCalendar = async (
+        task: Task,
+        overId: string,
+        block?: CalendarBlock
     ) => {
-        const task = findDayTask(eventId);
-        const event = calendarEvents.find((e) => e.id === eventId);
-        if (!task?.uid || !event || event.readOnly) return;
-        const newStart = new Date(newDate);
-        if (newHour !== undefined && !event.allDay) {
-            newStart.setHours(newHour, 0, 0, 0);
-        } else {
-            newStart.setHours(
-                event.start.getHours(),
-                event.start.getMinutes(),
-                0,
-                0
-            );
-        }
-        void saveTaskChange(
-            task,
-            moveUpdate(task as unknown as CalendarTask, event, newStart)
+        if (!date) return;
+        const update = dropToDueUpdate(
+            task as unknown as CalendarTask,
+            overId,
+            date,
+            block
         );
+        if (!update) return;
+        await saveTaskChange(task, update);
+        setReloadToken((count) => count + 1);
     };
 
     const handleCalendarResize = (eventId: string, newEnd: Date) => {
@@ -993,24 +1023,6 @@ const TodayPage: React.FC = () => {
     };
 
     // A candidate dropped on an hour of the calendar becomes due then.
-    const scheduleCandidate = async (task: Task, hour: number) => {
-        if (!task.uid || !date) return;
-        const hh = String(hour).padStart(2, '0');
-        try {
-            await updateTask(task.uid, {
-                due_date: date,
-                due_time: `${hh}:00`,
-            } as Partial<Task>);
-            setReloadToken((count) => count + 1);
-        } catch (err) {
-            showErrorToast(
-                err instanceof Error
-                    ? err.message
-                    : t('errors.generic', 'Something went wrong')
-            );
-        }
-    };
-
     // The next page of suggestions: everything loaded so far plus one more
     // page, until the server has nothing left.
     const loadMoreCandidates = useCallback(async () => {
@@ -1290,6 +1302,7 @@ const TodayPage: React.FC = () => {
         const data = active.data.current as
             | { type: 'candidate'; task: Task; duration: number }
             | { type: 'item'; item: DailyPlanItem }
+            | { type: 'calendar-block'; event: CalendarBlock }
             | undefined;
         if (!data || !over) return;
         const overId = String(over.id);
@@ -1299,18 +1312,16 @@ const TodayPage: React.FC = () => {
             return;
         }
 
-        if (overId === 'calendar') {
-            if (data.type !== 'candidate') return;
-            const y = pointerY(activatorEvent);
-            if (y === null) return;
-            const offset = y + delta.y - over.rect.top;
-            const hour = Math.min(
-                23,
-                Math.max(0, Math.floor(offset / HOUR_HEIGHT))
-            );
-            void scheduleCandidate(data.task, hour);
+        if (overId.startsWith('cal-')) {
+            if (data.type === 'candidate') {
+                void dropOnCalendar(data.task, overId);
+            } else if (data.type === 'calendar-block' && !data.event.readOnly) {
+                const task = findDayTask(data.event.id);
+                if (task) void dropOnCalendar(task, overId, data.event);
+            }
             return;
         }
+        if (data.type === 'calendar-block') return;
 
         if (overId === 'timeline') {
             const duration =
@@ -1740,44 +1751,66 @@ const TodayPage: React.FC = () => {
                         </aside>
                         {calendarOpen && date && (
                             <section className="isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 md:max-h-full md:overflow-y-auto dark:bg-gray-900">
-                                <div
-                                    role="group"
-                                    aria-label={t(
-                                        'dailyPlan.panelMode',
-                                        'Right panel'
+                                <div className="mb-4 flex items-center justify-between gap-2">
+                                    <div
+                                        role="group"
+                                        aria-label={t(
+                                            'dailyPlan.panelMode',
+                                            'Right panel'
+                                        )}
+                                        className="inline-flex rounded-lg bg-gray-100 p-0.5 dark:bg-gray-800"
+                                        data-testid="panel-switch"
+                                    >
+                                        <button
+                                            type="button"
+                                            aria-pressed={
+                                                panelMode === 'planning'
+                                            }
+                                            onClick={() =>
+                                                choosePanel('planning')
+                                            }
+                                            className={panelSwitchClass(
+                                                panelMode === 'planning'
+                                            )}
+                                            data-testid="panel-planning"
+                                        >
+                                            {t(
+                                                'dailyPlan.planning',
+                                                'Planning'
+                                            )}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            aria-pressed={
+                                                panelMode === 'calendar'
+                                            }
+                                            onClick={() =>
+                                                choosePanel('calendar')
+                                            }
+                                            className={panelSwitchClass(
+                                                panelMode === 'calendar'
+                                            )}
+                                            data-testid="panel-calendar"
+                                        >
+                                            {t(
+                                                'dailyPlan.calendar',
+                                                'Calendar'
+                                            )}
+                                        </button>
+                                    </div>
+                                    {panelMode === 'calendar' && (
+                                        <CalendarHoursMenu
+                                            value={visibleHours}
+                                            onChange={changeVisibleHours}
+                                        />
                                     )}
-                                    className="mb-4 inline-flex rounded-lg bg-gray-100 p-0.5 dark:bg-gray-800"
-                                    data-testid="panel-switch"
-                                >
-                                    <button
-                                        type="button"
-                                        aria-pressed={panelMode === 'planning'}
-                                        onClick={() => choosePanel('planning')}
-                                        className={panelSwitchClass(
-                                            panelMode === 'planning'
-                                        )}
-                                        data-testid="panel-planning"
-                                    >
-                                        {t('dailyPlan.planning', 'Planning')}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        aria-pressed={panelMode === 'calendar'}
-                                        onClick={() => choosePanel('calendar')}
-                                        className={panelSwitchClass(
-                                            panelMode === 'calendar'
-                                        )}
-                                        data-testid="panel-calendar"
-                                    >
-                                        {t('dailyPlan.calendar', 'Calendar')}
-                                    </button>
                                 </div>
 
                                 {panelMode === 'calendar' ? (
                                     <DayCalendar
                                         date={date}
                                         events={calendarEvents}
-                                        onEventDrop={handleCalendarDrop}
+                                        visibleHours={visibleHours}
                                         onEventResize={handleCalendarResize}
                                     />
                                 ) : (

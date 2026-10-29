@@ -19,7 +19,11 @@ Planning and doing the day happen on one page. There is no start button: the pla
 - **Left column:** the day's candidates, grouped and ordered as in the planner (see **Candidate order** below), each with the round check. The round check completes the task in place; it leaves the list and an undo toast brings it back. Drag a candidate onto the timeline, or press its **+** to place it in the next free slot. On phones the **+** is the way to place a task.
 - **Right panel:** a **Planning** / **Calendar** switch, remembered per browser (`today.panelMode`, default Planning).
   - **Planning:** the timeline (or list) of plan items. Place, resize and remove blocks; calendar events show as busy time. The Now card sits above it when the plan has items, with **Mark done** and **Push to later**.
-  - **Calendar:** the day's calendar in the Calendar page's day view: tasks by their due time and calendar feed events. Drag a task block to another hour to move its due time; drop a candidate on an hour to make it due then.
+  - **Calendar:** the day's calendar in the Calendar page's day view: tasks by their due time and calendar feed events. Dragging uses the same system as the left column (dnd-kit), onto 15-minute slots or the **All day** row:
+    - a candidate, or a block, dropped on a slot becomes due on the shown day at that time (an all-day block becomes timed);
+    - a timed block dropped on another slot moves to that time and keeps its length;
+    - a timed block dropped on the **All day** row loses its time (due that day, whole day).
+    The visible hours (below) limit the grid. The **⋯** menu on the panel header holds **Visible hours**.
 - **Calendar toggle:** hides or shows the right panel, and the task list then takes the full width. Remembered in `today.calendarOpen`; open by default on wide screens.
 - **Day navigation:** the previous and next day arrows and **Today** move between days. The day is kept in the URL as `?date=YYYY-MM-DD` (no parameter means today), so a reload keeps it. Candidates are ranked for today only: another day lists its open tasks due that day, and that day is not started and gets no AI draft.
 - **Starting the day:** placing the first task on today's plan starts the day (`started_at`) once the plan has saved.
@@ -135,6 +139,7 @@ The sliders button next to the view switcher opens **View options**, saved per u
 - **Show focus sessions** (`showFocus`, on): finished focus sessions as orange blocks at the time they ran (see [Focus Sessions](30-focus-sessions.md)).
 - **Show focus sessions** (`showFocus`, on): finished focus sessions as orange blocks (see [Focus Sessions](30-focus-sessions.md)).
 - **Holidays** (`holidayCountry`, `holidayRegion`, none by default): the public holidays of a country, and of one of its regions (canton, state…) when picked, as red whole-day items. They come from the `date-holidays` package on the server: `GET /api/holidays/countries`, `GET /api/holidays/regions?country=CH`, `GET /api/holidays?country=CH&region=VD&start=&end=` (at most 400 days). They are not counted in the Year heatmap.
+- **Visible hours** (`visibleHours`, `{ start, end }`, whole hours, default 0 to 24): the grid starts at `start` and stops before `end`, so night hours can be hidden. `end` is after `start` and at most 24; an invalid range is ignored. The same setting applies to the Calendar page's day, week and N-day views, the Today calendar and the Today planning timeline. The timeline still widens to include a planned item or event outside the visible hours.
 - **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
 
 ## Calendar page: Arrange tasks

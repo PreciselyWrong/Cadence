@@ -1815,6 +1815,11 @@
       "colorBy_tag": "Tag",
       "saveError": "Kunne ikke gemme visningsindstillinger"
     },
+    "visibleHours": {
+      "title": "Synlige timer",
+      "from": "Fra",
+      "to": "Til"
+    },
     "arrange": {
       "title": "Planlæg opgaver",
       "noDate": "Ingen dato",
@@ -3056,7 +3061,8 @@
     "nextDay": "Næste dag",
     "planning": "Planlægning",
     "completed": "'{{name}}' er udført.",
-    "panelMode": "Højre panel"
+    "panelMode": "Højre panel",
+    "calendarMenu": "Flere kalenderindstillinger"
   },
   "capture": {
     "add": "Tilføj",

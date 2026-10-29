@@ -1782,6 +1782,11 @@
       "colorBy_tag": "Etiqueta",
       "saveError": "No se pudieron guardar las opciones"
     },
+    "visibleHours": {
+      "title": "Horas visibles",
+      "from": "Desde",
+      "to": "Hasta"
+    },
     "arrange": {
       "title": "Organizar tareas",
       "noDate": "Sin fecha",
@@ -3049,7 +3054,8 @@
     "nextDay": "Día siguiente",
     "planning": "Planificación",
     "completed": "«{{name}}» completada.",
-    "panelMode": "Panel derecho"
+    "panelMode": "Panel derecho",
+    "calendarMenu": "Más opciones del calendario"
   },
   "capture": {
     "add": "Añadir",
