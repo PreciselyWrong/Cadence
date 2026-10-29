@@ -144,3 +144,79 @@ export const assignToQuadrants = (
 
 export const newMatrixId = (): string =>
     `m_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+
+const PRIORITY_NUMBER: Record<MatrixPriority, number | null> = {
+    none: null,
+    low: 0,
+    medium: 1,
+    high: 2,
+};
+
+export interface QuadrantEdit {
+    // New priority to set, when the target rule needs one.
+    priority?: MatrixPriority;
+    // Tag to add, when the task lacks all of the target rule's tags.
+    addTag?: string;
+}
+
+// Why a drop is refused: several priorities to choose from, a due window
+// or project filter the task misses (never edited), or an earlier quadrant
+// that would catch the edited task first.
+export type QuadrantMoveRefusal = 'priority' | 'due' | 'project' | 'earlier';
+
+export type QuadrantMove =
+    | { ok: true; edit: QuadrantEdit; task: Task }
+    | { ok: false; reason: QuadrantMoveRefusal };
+
+// The edit a task needs to land in quadrant `target` of a custom matrix:
+// set the rule's single priority, add the rule's first tag, and never touch
+// the due date or project. The edited task must match `target` before any
+// other quadrant, since placement is first-match.
+export const editForQuadrant = (
+    task: Task,
+    matrix: EisenhowerMatrixConfig,
+    target: number,
+    ctx: MatchContext = {}
+): QuadrantMove => {
+    const rule = matrix.quadrants[target]?.rule;
+    if (!rule) return { ok: false, reason: 'earlier' };
+    const edit: QuadrantEdit = {};
+    let edited: Task = task;
+
+    if (
+        rule.priorities.length > 0 &&
+        !rule.priorities.includes(taskPriority(task))
+    ) {
+        if (rule.priorities.length !== 1) {
+            return { ok: false, reason: 'priority' };
+        }
+        edit.priority = rule.priorities[0];
+        edited = { ...edited, priority: PRIORITY_NUMBER[edit.priority] };
+    }
+
+    if (!matchesRule(edited, { ...emptyRule(), due: rule.due }, ctx)) {
+        return { ok: false, reason: 'due' };
+    }
+    if (
+        !matchesRule(edited, { ...emptyRule(), projects: rule.projects }, ctx)
+    ) {
+        return { ok: false, reason: 'project' };
+    }
+
+    if (
+        rule.tags.length > 0 &&
+        !matchesRule(edited, { ...emptyRule(), tags: rule.tags }, ctx)
+    ) {
+        edit.addTag = rule.tags[0];
+        edited = {
+            ...edited,
+            tags: [...(edited.tags || []), { name: rule.tags[0] }],
+        };
+    }
+
+    const landed = matrix.quadrants.findIndex((q) =>
+        matchesRule(edited, q.rule, ctx)
+    );
+    if (landed !== target) return { ok: false, reason: 'earlier' };
+    return { ok: true, edit, task: edited };
+};

@@ -266,7 +266,11 @@
         "firstMatchHint": "Her görev, kuralına uyduğu ilk çeyrekte görünür. Boş bir seçim her şeyle eşleşir.",
         "deleteTitle": "Matrisi sil",
         "deleteConfirm": "\"{{name}}\" matrisi silinsin mi? Görevleriniz değişmez."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Kanban Panosu",

@@ -266,7 +266,11 @@
         "firstMatchHint": "Каждая задача попадает в первый квадрант, правилу которого она соответствует. Пустой выбор подходит ко всему.",
         "deleteTitle": "Удалить матрицу",
         "deleteConfirm": "Удалить матрицу «{{name}}»? Ваши задачи не изменятся."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Доска Канбан",

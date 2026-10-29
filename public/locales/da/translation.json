@@ -266,7 +266,11 @@
         "firstMatchHint": "Hver opgave vises i den første kvadrant, hvis regel den opfylder. Et tomt valg passer til alt.",
         "deleteTitle": "Slet matrix",
         "deleteConfirm": "Slet matricen \"{{name}}\"? Dine opgaver ændres ikke."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Kanban Tavle",

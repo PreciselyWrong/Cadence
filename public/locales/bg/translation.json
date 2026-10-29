@@ -266,7 +266,11 @@
         "firstMatchHint": "Всяка задача се показва в първия квадрант, чието правило изпълнява. Празен избор съвпада с всичко.",
         "deleteTitle": "Изтриване на матрица",
         "deleteConfirm": "Да се изтрие ли матрицата „{{name}}“? Задачите ви не се променят."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Канбан дъска",

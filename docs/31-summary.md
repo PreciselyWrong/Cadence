@@ -4,7 +4,7 @@ The Summary page (Insights → Summary, `/insights/summary`) lists what you got 
 
 ## Using it
 
-1. **Period:** Today, This week, Last week, This month, or a custom range (at most 366 days). Weeks start on the first day of the week from your profile.
+1. **Period:** Today, This week, Last week, This month, or a custom range (at most 366 days). Weeks start on the first day of the week from your profile. The preset days are worked out in your profile timezone (`periodRange` in `frontend/components/Insights/summaryExport.ts`, using `getUserTimezone()`), the same timezone the backend reads days in, so "Today" is your profile's today even when the browser runs in another timezone.
 2. **Tasks:** tasks completed in the period. Tick _Include open tasks due in this period_ to add tasks that are still open (not done, archived or cancelled) and due inside it.
 3. **Group by:** project (alphabetical, "No project" last), day (completion day, else due day) or status.
 4. **Export:** Copy as Markdown, Download .md, Download .txt, Download .csv, or Print. Print uses the browser dialog and prints only the summary (see the `@media print` rule at the end of `frontend/styles/tailwind.css`).

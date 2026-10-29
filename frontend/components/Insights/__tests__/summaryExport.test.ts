@@ -68,6 +68,44 @@ describe('periodRange', () => {
             end: '2026-02-28',
         });
     });
+
+    it('uses the profile timezone, not the runner timezone', () => {
+        // 23:30 UTC on Sunday 1 Mar 2026: already Monday 2 Mar in Tokyo,
+        // still Sunday 1 Mar in New York.
+        const now = new Date(Date.UTC(2026, 2, 1, 23, 30));
+        expect(periodRange('today', now, 1, 'Asia/Tokyo')).toEqual({
+            start: '2026-03-02',
+            end: '2026-03-02',
+        });
+        expect(periodRange('today', now, 1, 'America/New_York')).toEqual({
+            start: '2026-03-01',
+            end: '2026-03-01',
+        });
+        expect(periodRange('this_week', now, 1, 'Asia/Tokyo')).toEqual({
+            start: '2026-03-02',
+            end: '2026-03-08',
+        });
+        expect(periodRange('this_week', now, 1, 'America/New_York')).toEqual({
+            start: '2026-02-23',
+            end: '2026-03-01',
+        });
+        expect(periodRange('last_week', now, 1, 'Asia/Tokyo')).toEqual({
+            start: '2026-02-23',
+            end: '2026-03-01',
+        });
+        // 03:00 UTC on 1 Mar is still 28 Feb in New York.
+        const early = new Date(Date.UTC(2026, 2, 1, 3, 0));
+        expect(periodRange('this_month', early, 1, 'America/New_York')).toEqual(
+            {
+                start: '2026-02-01',
+                end: '2026-02-28',
+            }
+        );
+        expect(periodRange('this_month', now, 1, 'Asia/Tokyo')).toEqual({
+            start: '2026-03-01',
+            end: '2026-03-31',
+        });
+    });
 });
 
 describe('groupTasks', () => {

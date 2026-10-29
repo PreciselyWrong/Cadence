@@ -266,7 +266,11 @@
         "firstMatchHint": "Cada tarefa aparece no primeiro quadrante cuja regra ela cumpre. Uma escolha vazia aceita tudo.",
         "deleteTitle": "Excluir matriz",
         "deleteConfirm": "Excluir a matriz \"{{name}}\"? Suas tarefas não mudam."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Quadro Kanban",
