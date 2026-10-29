@@ -8,6 +8,7 @@ import {
     isToday,
     startOfWeek,
     endOfWeek,
+    addDays,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,14 +16,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-interface CalendarEvent {
-    id: string;
-    title: string;
-    start: Date;
-    end: Date;
-    type: 'task' | 'event';
-    color?: string;
-}
+import { CalendarEvent, coversDay } from './taskEvents';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -76,7 +70,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
 
     const getWeekDays = () => {
         const allDays = getAllWeekDays();
-        return [...allDays.slice(firstDayOfWeek), ...allDays.slice(0, firstDayOfWeek)];
+        return [
+            ...allDays.slice(firstDayOfWeek),
+            ...allDays.slice(0, firstDayOfWeek),
+        ];
     };
 
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
@@ -118,10 +115,12 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             {/* Calendar grid */}
             <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600">
                 {days.map((day) => {
-                    const dayEvents = events.filter(
-                        (event) =>
-                            format(event.start, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
-                    );
+                    // Whole-day bars first, so a span keeps its place across days.
+                    const dayEvents = events
+                        .filter((event) => coversDay(event, day))
+                        .sort(
+                            (a, b) => Number(!!b.allDay) - Number(!!a.allDay)
+                        );
                     const isCurrentMonth = isSameMonth(day, currentDate);
                     const isTodayDate = isToday(day);
 
@@ -162,16 +161,32 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     <div
                                         key={event.id}
                                         draggable={event.type === 'task'}
-                                        onDragStart={(e) => handleDragStart(event, e)}
+                                        onDragStart={(e) =>
+                                            handleDragStart(event, e)
+                                        }
                                         onDragEnd={handleDragEnd}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onEventClick?.(event);
                                         }}
                                         className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
-                                            draggedEventId === event.id ? 'opacity-40' : ''
+                                            draggedEventId === event.id
+                                                ? 'opacity-40'
+                                                : ''
+                                        } ${
+                                            event.allDay && event.start < day
+                                                ? '-ml-2 pl-3.5 rounded-l-none'
+                                                : ''
+                                        } ${
+                                            event.allDay &&
+                                            addDays(day, 1) < event.end
+                                                ? '-mr-2 rounded-r-none'
+                                                : ''
                                         }`}
-                                        style={{ backgroundColor: event.color || '#3b82f6' }}
+                                        style={{
+                                            backgroundColor:
+                                                event.color || '#3b82f6',
+                                        }}
                                         title={event.title}
                                     >
                                         {event.title}

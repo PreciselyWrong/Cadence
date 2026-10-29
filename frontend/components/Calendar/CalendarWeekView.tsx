@@ -6,20 +6,16 @@ import {
     eachDayOfInterval,
     isToday,
     addHours,
+    differenceInCalendarDays,
 } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import {
     getFirstDayOfWeek,
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-interface CalendarEvent {
-    id: string;
-    title: string;
-    start: Date;
-    end: Date;
-    type: 'task' | 'event';
-    color?: string;
-}
+import { CalendarEvent } from './taskEvents';
+import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarWeekViewProps {
     currentDate: Date;
@@ -27,7 +23,8 @@ interface CalendarWeekViewProps {
     onDateClick?: (date: Date) => void;
     onEventClick?: (event: CalendarEvent) => void;
     onTimeSlotClick?: (date: Date, hour: number) => void;
-    onEventDrop?: (eventId: string, newDate: Date, newHour: number) => void;
+    onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
+    onEventResize?: (eventId: string, newEnd: Date) => void;
 }
 
 const WEEK_HOUR_HEIGHT = 72;
@@ -38,7 +35,10 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     onEventClick,
     onTimeSlotClick,
     onEventDrop,
+    onEventResize,
 }) => {
+    const { t } = useTranslation();
+    const resize = useEventResize(WEEK_HOUR_HEIGHT, onEventResize);
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
     const [draggedEventId, setDraggedEventId] = useState<string | null>(null);
 
@@ -65,7 +65,9 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     const getEventsForTimeSlot = (day: Date, hour: number) =>
         events.filter(
             (event) =>
-                format(event.start, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd') &&
+                !event.allDay &&
+                format(event.start, 'yyyy-MM-dd') ===
+                    format(day, 'yyyy-MM-dd') &&
                 event.start.getHours() === hour
         );
 
@@ -78,7 +80,29 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
 
     const handleDragEnd = () => setDraggedEventId(null);
 
-    const handleDrop = (day: Date, hour: number, e: React.DragEvent) => {
+    // Whole-day bars, clipped to this week, as grid columns 2..8.
+    const allDayBars = events
+        .filter(
+            (event) =>
+                event.allDay && event.start <= weekEnd && event.end > weekStart
+        )
+        .map((event) => {
+            const from = Math.max(
+                0,
+                differenceInCalendarDays(event.start, weekStart)
+            );
+            const to = Math.min(
+                7,
+                differenceInCalendarDays(event.end, weekStart)
+            );
+            return { event, from, to: Math.max(to, from + 1) };
+        });
+
+    const handleDrop = (
+        day: Date,
+        hour: number | undefined,
+        e: React.DragEvent
+    ) => {
         e.preventDefault();
         e.stopPropagation();
         const eventId = e.dataTransfer.getData('text/plain');
@@ -124,6 +148,51 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 ))}
             </div>
 
+            {allDayBars.length > 0 && (
+                <div
+                    className="grid grid-cols-8 gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+                    data-testid="calendar-all-day-row"
+                >
+                    {weekDays.map((day, index) => (
+                        <div
+                            key={`all-day-drop-${day.toString()}`}
+                            onDragOver={(e) => {
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+                            }}
+                            onDrop={(e) => handleDrop(day, undefined, e)}
+                            style={{
+                                gridColumn: index + 2,
+                                gridRow: `1 / span ${allDayBars.length}`,
+                            }}
+                        />
+                    ))}
+                    {allDayBars.map(({ event, from, to }, row) => (
+                        <div
+                            key={event.id}
+                            draggable={event.type === 'task'}
+                            onDragStart={(e) => handleDragStart(event, e)}
+                            onDragEnd={handleDragEnd}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onEventClick?.(event);
+                            }}
+                            className={`mx-1 text-xs px-2 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 ${
+                                draggedEventId === event.id ? 'opacity-40' : ''
+                            }`}
+                            style={{
+                                backgroundColor: event.color || '#3b82f6',
+                                gridColumn: `${from + 2} / ${to + 2}`,
+                                gridRow: row + 1,
+                            }}
+                            title={event.title}
+                        >
+                            {event.title}
+                        </div>
+                    ))}
+                </div>
+            )}
+
             {/* Time slots */}
             <div className="flex-1 overflow-y-auto">
                 {hours.map((hour) => (
@@ -132,42 +201,66 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                         className="grid grid-cols-8 h-[72px] border-b border-gray-100 dark:border-gray-600"
                     >
                         <div className="py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
-                            {format(addHours(new Date().setHours(hour, 0, 0, 0), 0), 'HH:mm')}
+                            {format(
+                                addHours(new Date().setHours(hour, 0, 0, 0), 0),
+                                'HH:mm'
+                            )}
                         </div>
                         {weekDays.map((day) => {
-                            const timeSlotEvents = getEventsForTimeSlot(day, hour);
+                            const timeSlotEvents = getEventsForTimeSlot(
+                                day,
+                                hour
+                            );
                             const eventCount = timeSlotEvents.length;
 
                             return (
                                 <div
                                     key={`${day.toString()}-${hour}`}
                                     onClick={() => onTimeSlotClick?.(day, hour)}
-                                    onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+                                    onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.dataTransfer.dropEffect = 'move';
+                                    }}
                                     onDrop={(e) => handleDrop(day, hour, e)}
                                     className={`p-1.5 border-l border-gray-100 dark:border-gray-600 cursor-pointer transition-colors hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative ${
-                                        isToday(day) ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''
+                                        isToday(day)
+                                            ? 'bg-blue-50/10 dark:bg-blue-900/5'
+                                            : ''
                                     }`}
                                 >
                                     {timeSlotEvents.map((event, index) => (
                                         <div
                                             key={event.id}
-                                            draggable={event.type === 'task'}
-                                            onDragStart={(e) => handleDragStart(event, e)}
+                                            draggable={
+                                                event.type === 'task' &&
+                                                resize.resizingId !== event.id
+                                            }
+                                            onDragStart={(e) =>
+                                                handleDragStart(event, e)
+                                            }
                                             onDragEnd={handleDragEnd}
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                if (resize.consumeClick())
+                                                    return;
                                                 onEventClick?.(event);
                                             }}
                                             className={`text-xs px-2 py-1.5 rounded-lg text-white absolute z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity ${
-                                                event.type === 'task' ? 'cursor-move' : ''
+                                                event.type === 'task'
+                                                    ? 'cursor-move'
+                                                    : ''
                                             } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
                                             style={{
-                                                backgroundColor: event.color || '#3b82f6',
+                                                backgroundColor:
+                                                    event.color || '#3b82f6',
                                                 left: `${(100 / eventCount) * index}%`,
                                                 width: `${eventCount > 1 ? 100 / eventCount - 1 : 100}%`,
                                                 top: `calc(0.25rem + ${(event.start.getMinutes() / 60) * WEEK_HOUR_HEIGHT}px)`,
                                                 height: Math.max(
-                                                    ((event.end.getTime() - event.start.getTime()) /
+                                                    ((resize
+                                                        .endOf(event)
+                                                        .getTime() -
+                                                        event.start.getTime()) /
                                                         (1000 * 60 * 60)) *
                                                         WEEK_HOUR_HEIGHT -
                                                         8,
@@ -180,8 +273,27 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                                 {event.title}
                                             </div>
                                             <div className="text-[10px] opacity-75 mt-0.5">
-                                                {format(event.start, 'HH:mm')}
+                                                {format(event.start, 'HH:mm')} –{' '}
+                                                {format(
+                                                    resize.endOf(event),
+                                                    'HH:mm'
+                                                )}
                                             </div>
+                                            {event.type === 'task' &&
+                                                event.resize && (
+                                                    <ResizeHandle
+                                                        label={t(
+                                                            'calendar.resizeTask',
+                                                            'Change when this task ends'
+                                                        )}
+                                                        onPointerDown={(e) =>
+                                                            resize.begin(
+                                                                event,
+                                                                e
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                                 </div>

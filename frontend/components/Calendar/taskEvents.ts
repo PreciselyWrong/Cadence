@@ -1,0 +1,201 @@
+import {
+    addDays,
+    addMinutes,
+    differenceInCalendarDays,
+    format,
+} from 'date-fns';
+
+export interface CalendarEvent {
+    id: string;
+    title: string;
+    start: Date;
+    end: Date;
+    type: 'task' | 'event';
+    color?: string;
+    feedUid?: string;
+    // Whole-day item, drawn as a bar in the all-day row. `end` is the
+    // exclusive midnight after the last day.
+    allDay?: boolean;
+    // Which field the bottom edge of a timed task block changes: its
+    // estimate when the block is due time + estimate, its due time when the
+    // block runs from the start time to the due time.
+    resize?: 'estimate' | 'due';
+}
+
+export const DEFAULT_TASK_MINUTES = 60;
+// Same bounds as the estimated_minutes column.
+export const MIN_TASK_MINUTES = 5;
+export const MAX_TASK_MINUTES = 720;
+export const RESIZE_STEP_MINUTES = 15;
+
+export interface CalendarTask {
+    id: number | string;
+    name?: string;
+    original_name?: string;
+    title?: string;
+    due_date?: string | null;
+    due_time?: string | null;
+    start_date?: string | null;
+    start_time?: string | null;
+    defer_until?: string | null;
+    estimated_minutes?: number | null;
+    completed_at?: string | null;
+}
+
+// YYYY-MM-DD plus optional HH:mm, read as local time.
+export const localDateTime = (
+    day: string | null | undefined,
+    time?: string | null
+): Date | null => {
+    if (!day) return null;
+    const [year, month, date] = day.slice(0, 10).split('-').map(Number);
+    if (!year || !month || !date) return null;
+    const [hours, minutes] = time ? time.split(':').map(Number) : [0, 0];
+    const value = new Date(year, month - 1, date, hours || 0, minutes || 0);
+    return isNaN(value.getTime()) ? null : value;
+};
+
+export const taskName = (task: CalendarTask) =>
+    task.original_name || task.name || task.title || `Task ${task.id}`;
+
+export const clampMinutes = (minutes: number) =>
+    Math.min(MAX_TASK_MINUTES, Math.max(MIN_TASK_MINUTES, Math.round(minutes)));
+
+const isSameDay = (a: Date, b: Date) => differenceInCalendarDays(a, b) === 0;
+
+// The block a task's due date draws:
+// - due time + start time earlier the same day: start → due;
+// - due time otherwise: due → due + estimate (an hour without one);
+// - whole-day due: a bar from the start day (if earlier) to the due day.
+const dueEvent = (task: CalendarTask): CalendarEvent | null => {
+    const color = task.completed_at ? '#22c55e' : '#3b82f6';
+    const base = {
+        id: `task-${task.id}`,
+        title: taskName(task),
+        type: 'task' as const,
+        color,
+    };
+    const dueDay = localDateTime(task.due_date);
+    if (!dueDay) return null;
+    const startDay = localDateTime(task.start_date);
+
+    if (task.due_time) {
+        const due = localDateTime(task.due_date, task.due_time)!;
+        const start = task.start_time
+            ? localDateTime(task.start_date, task.start_time)
+            : null;
+        if (start && start < due) {
+            if (isSameDay(start, due)) {
+                return { ...base, start, end: due, resize: 'due' };
+            }
+            return {
+                ...base,
+                start: startDay!,
+                end: addDays(dueDay, 1),
+                allDay: true,
+            };
+        }
+        const minutes = task.estimated_minutes
+            ? clampMinutes(task.estimated_minutes)
+            : DEFAULT_TASK_MINUTES;
+        return {
+            ...base,
+            start: due,
+            end: addMinutes(due, minutes),
+            resize: 'estimate',
+        };
+    }
+
+    const first = startDay && startDay < dueDay ? startDay : dueDay;
+    return { ...base, start: first, end: addDays(dueDay, 1), allDay: true };
+};
+
+export const taskToEvents = (task: CalendarTask): CalendarEvent[] => {
+    const events: CalendarEvent[] = [];
+    if (task.defer_until) {
+        const deferDate = new Date(task.defer_until);
+        if (!isNaN(deferDate.getTime())) {
+            events.push({
+                id: `task-defer-${task.id}`,
+                title: taskName(task),
+                start: deferDate,
+                end: addMinutes(deferDate, DEFAULT_TASK_MINUTES),
+                type: 'task',
+                color: task.completed_at ? '#22c55e' : '#f59e0b',
+            });
+        }
+    }
+    const due = dueEvent(task);
+    if (due) events.push(due);
+    return events;
+};
+
+const dayString = (date: Date) => format(date, 'yyyy-MM-dd');
+const timeString = (date: Date) => format(date, 'HH:mm');
+
+// The task fields to save when its block is moved so it starts at
+// `newStart`. Durations and whole-day spans are kept.
+export const moveUpdate = (
+    task: CalendarTask,
+    event: CalendarEvent,
+    newStart: Date
+): Record<string, unknown> => {
+    if (event.id.startsWith('task-defer-')) {
+        return { defer_until: newStart.toISOString() };
+    }
+    const shift = newStart.getTime() - event.start.getTime();
+    const shifted = (date: Date) => new Date(date.getTime() + shift);
+
+    if (event.allDay) {
+        const dayShift = differenceInCalendarDays(newStart, event.start);
+        const update: Record<string, unknown> = {
+            due_date: dayString(
+                addDays(localDateTime(task.due_date)!, dayShift)
+            ),
+        };
+        if (task.due_time) update.due_time = task.due_time;
+        if (task.start_date) {
+            update.start_date = dayString(
+                addDays(localDateTime(task.start_date)!, dayShift)
+            );
+            if (task.start_time) update.start_time = task.start_time;
+        }
+        return update;
+    }
+
+    if (event.resize === 'due') {
+        const start = shifted(event.start);
+        const due = shifted(event.end);
+        return {
+            start_date: dayString(start),
+            start_time: timeString(start),
+            due_date: dayString(due),
+            due_time: timeString(due),
+        };
+    }
+    const due = shifted(event.start);
+    return { due_date: dayString(due), due_time: timeString(due) };
+};
+
+// The task fields to save when the bottom edge of its block is dragged to
+// `newEnd`.
+export const resizeUpdate = (
+    event: CalendarEvent,
+    newEnd: Date
+): Record<string, unknown> => {
+    const minutes = clampMinutes(
+        (newEnd.getTime() - event.start.getTime()) / 60000
+    );
+    if (event.resize === 'due') {
+        const due = addMinutes(event.start, minutes);
+        return { due_date: dayString(due), due_time: timeString(due) };
+    }
+    return { estimated_minutes: minutes };
+};
+
+// Days of `days` an event covers; timed events cover their start day.
+export const coversDay = (event: CalendarEvent, day: Date) => {
+    if (!event.allDay) return isSameDay(event.start, day);
+    const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+    return event.start <= dayStart && dayStart < event.end;
+};
