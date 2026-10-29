@@ -306,6 +306,7 @@ html.sidebar-resizing * {
         overflow: visible !important;
         height: auto !important;
     }
+}
 
 /* Summary page: print only the summary itself. */
 @media print {
