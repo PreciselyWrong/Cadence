@@ -356,7 +356,11 @@ async function filterTasksByParams(
             `SELECT DISTINCT tasks_tags.task_id
              FROM tasks_tags
              INNER JOIN tags ON tags.id = tasks_tags.tag_id
-             WHERE tags.name = :tagName`,
+             WHERE tags.name = :tagName
+                OR tags.parent_id IN (
+                    SELECT parent_tags.id FROM tags AS parent_tags
+                    WHERE parent_tags.name = :tagName
+                )`,
             {
                 replacements: { tagName: params.tag },
                 type: QueryTypes.SELECT,

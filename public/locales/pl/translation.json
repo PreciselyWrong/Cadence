@@ -1708,7 +1708,12 @@
     "pinnedTag": "Przypięty tag",
     "frequentlyUsed": "Często używane",
     "createTag": "+ Utwórz „{{name}}”",
-    "pinTag": "Przypnij dla szybkiego dostępu"
+    "pinTag": "Przypnij dla szybkiego dostępu",
+    "parentTag": "Tag nadrzędny",
+    "noParent": "Brak (najwyższy poziom)",
+    "parentTagHasChildren": "Ten tag ma tagi podrzędne, więc nie może znaleźć się pod innym tagiem.",
+    "showChildTags": "Pokaż tagi podrzędne",
+    "hideChildTags": "Ukryj tagi podrzędne"
   },
   "recurrence": {
     "none": "Brak",

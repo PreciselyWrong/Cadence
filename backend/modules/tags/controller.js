@@ -43,8 +43,10 @@ const tagsController = {
      */
     async create(req, res, next) {
         try {
-            const { name } = req.body;
-            const tag = await tagsService.create(req.currentUser.id, name);
+            const { name, parent_uid } = req.body;
+            const tag = await tagsService.create(req.currentUser.id, name, {
+                parent_uid,
+            });
             res.status(201).json(tag);
         } catch (error) {
             next(error);
@@ -58,11 +60,11 @@ const tagsController = {
     async update(req, res, next) {
         try {
             const { identifier } = req.params;
-            const { name, pinned, color } = req.body;
+            const { name, pinned, color, parent_uid } = req.body;
             const tag = await tagsService.update(
                 req.currentUser.id,
                 identifier,
-                { name, pinned, color }
+                { name, pinned, color, parent_uid }
             );
             res.json(tag);
         } catch (error) {

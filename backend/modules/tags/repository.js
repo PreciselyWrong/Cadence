@@ -22,6 +22,7 @@ class TagsRepository extends BaseRepository {
                 'tag_type',
                 'pinned',
                 'color',
+                'parent_id',
                 // CAST keeps the counts numeric on PostgreSQL, where COUNT(*)
                 // is a bigint that the driver would otherwise return as a string.
                 [
@@ -75,7 +76,15 @@ class TagsRepository extends BaseRepository {
     async findByUid(userId, uid) {
         return this.model.findOne({
             where: { user_id: userId, uid },
-            attributes: ['id', 'uid', 'name', 'tag_type', 'pinned', 'color'],
+            attributes: [
+                'id',
+                'uid',
+                'name',
+                'tag_type',
+                'pinned',
+                'color',
+                'parent_id',
+            ],
         });
     }
 
@@ -102,12 +111,38 @@ class TagsRepository extends BaseRepository {
     /**
      * Create a new tag for a user.
      */
-    async createForUser(userId, name) {
+    async createForUser(userId, name, parentId = null) {
         return this.model.create({
             name,
             user_id: userId,
             tag_type: 'user',
+            parent_id: parentId,
         });
+    }
+
+    /**
+     * Find a tag by uid regardless of owner (used to validate a parent tag).
+     */
+    async findAnyByUid(uid) {
+        return this.model.findOne({
+            where: { uid },
+            attributes: ['id', 'uid', 'user_id', 'parent_id'],
+        });
+    }
+
+    /**
+     * Find tags by id (used to map parent_id to parent_uid).
+     */
+    async findUidsByIds(ids) {
+        if (ids.length === 0) return [];
+        return this.model.findAll({
+            where: { id: { [Op.in]: ids } },
+            attributes: ['id', 'uid'],
+        });
+    }
+
+    async hasChildren(tagId) {
+        return this.exists({ parent_id: tagId });
     }
 
     async createSystemTag(userId, name) {
@@ -142,6 +177,18 @@ class TagsRepository extends BaseRepository {
                     }
                 );
             }
+
+            // Children survive their parent as top-level tags. Done here as
+            // well as by the foreign key, which SQLite only enforces when
+            // foreign_keys is on.
+            await sequelize.query(
+                'UPDATE tags SET parent_id = NULL WHERE parent_id = ?',
+                {
+                    replacements: [tag.id],
+                    type: sequelize.QueryTypes.UPDATE,
+                    transaction,
+                }
+            );
 
             await tag.destroy({ transaction });
             await transaction.commit();

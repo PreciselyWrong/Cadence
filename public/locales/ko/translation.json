@@ -1702,7 +1702,12 @@
     "pinnedTag": "고정된 태그",
     "frequentlyUsed": "자주 사용",
     "createTag": "+ \"{{name}}\" 만들기",
-    "pinTag": "빠르게 쓰도록 고정"
+    "pinTag": "빠르게 쓰도록 고정",
+    "parentTag": "상위 태그",
+    "noParent": "없음 (최상위)",
+    "parentTagHasChildren": "이 태그에는 하위 태그가 있으므로 다른 태그 아래에 둘 수 없습니다.",
+    "showChildTags": "하위 태그 표시",
+    "hideChildTags": "하위 태그 숨기기"
   },
   "recurrence": {
     "none": "없음",

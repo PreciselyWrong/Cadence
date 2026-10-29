@@ -1835,7 +1835,12 @@
     "pinnedTag": "Angeheftetes Tag",
     "frequentlyUsed": "Häufig verwendet",
     "createTag": "+ „{{name}}“ erstellen",
-    "pinTag": "Für schnellen Zugriff anheften"
+    "pinTag": "Für schnellen Zugriff anheften",
+    "parentTag": "Übergeordnetes Tag",
+    "noParent": "Keines (oberste Ebene)",
+    "parentTagHasChildren": "Dieses Tag hat untergeordnete Tags und kann daher nicht unter ein anderes Tag gestellt werden.",
+    "showChildTags": "Untergeordnete Tags anzeigen",
+    "hideChildTags": "Untergeordnete Tags ausblenden"
   },
   "pomodoro": {
     "play": "Abspielen",

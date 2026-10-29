@@ -1639,7 +1639,12 @@
     "pinnedTag": "Etiqueta fijada",
     "frequentlyUsed": "Usadas con frecuencia",
     "createTag": "+ Crear «{{name}}»",
-    "pinTag": "Fijar para acceso rápido"
+    "pinTag": "Fijar para acceso rápido",
+    "parentTag": "Etiqueta principal",
+    "noParent": "Ninguna (nivel superior)",
+    "parentTagHasChildren": "Esta etiqueta tiene etiquetas hijas, así que no puede ir bajo otra etiqueta.",
+    "showChildTags": "Mostrar etiquetas hijas",
+    "hideChildTags": "Ocultar etiquetas hijas"
   },
   "note": {
     "title": "Título",

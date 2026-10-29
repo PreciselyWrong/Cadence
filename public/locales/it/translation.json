@@ -1706,7 +1706,12 @@
     "pinnedTag": "Tag fissato",
     "frequentlyUsed": "Usati spesso",
     "createTag": "+ Crea «{{name}}»",
-    "pinTag": "Fissa per un accesso rapido"
+    "pinTag": "Fissa per un accesso rapido",
+    "parentTag": "Tag principale",
+    "noParent": "Nessuno (livello superiore)",
+    "parentTagHasChildren": "Questo tag ha tag figli, quindi non può essere messo sotto un altro tag.",
+    "showChildTags": "Mostra tag figli",
+    "hideChildTags": "Nascondi tag figli"
   },
   "recurrence": {
     "none": "Nessuna",

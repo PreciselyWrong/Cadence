@@ -1706,7 +1706,12 @@
     "pinnedTag": "Étiquette épinglée",
     "frequentlyUsed": "Souvent utilisées",
     "createTag": "+ Créer « {{name}} »",
-    "pinTag": "Épingler pour un accès rapide"
+    "pinTag": "Épingler pour un accès rapide",
+    "parentTag": "Étiquette parente",
+    "noParent": "Aucune (niveau supérieur)",
+    "parentTagHasChildren": "Cette étiquette a des étiquettes enfants, elle ne peut donc pas être placée sous une autre étiquette.",
+    "showChildTags": "Afficher les étiquettes enfants",
+    "hideChildTags": "Masquer les étiquettes enfants"
   },
   "recurrence": {
     "none": "Aucun",

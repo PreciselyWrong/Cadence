@@ -1702,7 +1702,12 @@
     "pinnedTag": "Tag disematkan",
     "frequentlyUsed": "Sering digunakan",
     "createTag": "+ Buat \"{{name}}\"",
-    "pinTag": "Sematkan untuk akses cepat"
+    "pinTag": "Sematkan untuk akses cepat",
+    "parentTag": "Tag induk",
+    "noParent": "Tidak ada (tingkat atas)",
+    "parentTagHasChildren": "Tag ini memiliki tag anak, jadi tidak dapat ditempatkan di bawah tag lain.",
+    "showChildTags": "Tampilkan tag anak",
+    "hideChildTags": "Sembunyikan tag anak"
   },
   "recurrence": {
     "none": "Tidak ada",

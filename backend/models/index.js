@@ -175,6 +175,8 @@ Area.hasMany(Task, { foreignKey: 'area_id' });
 
 User.hasMany(Tag, { foreignKey: 'user_id' });
 Tag.belongsTo(User, { foreignKey: 'user_id' });
+Tag.belongsTo(Tag, { as: 'Parent', foreignKey: 'parent_id' });
+Tag.hasMany(Tag, { as: 'Children', foreignKey: 'parent_id' });
 
 User.hasMany(Note, { foreignKey: 'user_id' });
 Note.belongsTo(User, { foreignKey: 'user_id' });

@@ -1712,7 +1712,12 @@
     "pinnedTag": "وسم مثبّت",
     "frequentlyUsed": "الأكثر استخدامًا",
     "createTag": "+ إنشاء \"{{name}}\"",
-    "pinTag": "تثبيت للوصول السريع"
+    "pinTag": "تثبيت للوصول السريع",
+    "parentTag": "الوسم الأصل",
+    "noParent": "بلا (مستوى أعلى)",
+    "parentTagHasChildren": "لهذا الوسم وسوم فرعية، لذا لا يمكن وضعه تحت وسم آخر.",
+    "showChildTags": "إظهار الوسوم الفرعية",
+    "hideChildTags": "إخفاء الوسوم الفرعية"
   },
   "recurrence": {
     "none": "لا شيء",
