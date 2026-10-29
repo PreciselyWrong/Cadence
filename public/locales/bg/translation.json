@@ -1704,11 +1704,20 @@
     "done": "Готово"
   },
   "calendar": {
+    "year": "Година",
+    "weekNumber": "С{{week}}",
+    "yearItems_one": "{{date}}: {{count}} елемента",
+    "yearItems_other": "{{date}}: {{count}} елемента",
+    "miniCalendar": "Мини календар",
+    "previousMonth": "Предишен месец",
+    "nextMonth": "Следващ месец",
     "multiDay_one": "{{count}} дни",
     "multiDay_other": "{{count}} дни",
     "agendaEmpty": "Нищо не е планирано",
     "agenda": "Програма",
     "options": {
+      "showWeekNumbers": "Показване на номерата на седмиците",
+      "showMiniCalendar": "Показване на мини календар",
       "multiDayCount": "Дни в многодневния изглед",
       "title": "Опции за изглед",
       "showCompleted": "Показване на завършени",

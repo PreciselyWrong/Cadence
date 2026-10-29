@@ -140,7 +140,13 @@ const CALENDAR_COLOR_BY = ['default', 'project', 'priority', 'tag'];
 function sanitizeCalendarOptions(calendar) {
     const clean = {};
     if (!calendar || typeof calendar !== 'object') return clean;
-    ['showCompleted', 'showWeekends', 'showRepeats'].forEach((key) => {
+    [
+        'showCompleted',
+        'showWeekends',
+        'showRepeats',
+        'showWeekNumbers',
+        'showMiniCalendar',
+    ].forEach((key) => {
         if (typeof calendar[key] === 'boolean') clean[key] = calendar[key];
     });
     if (CALENDAR_COLOR_BY.includes(calendar.colorBy)) {

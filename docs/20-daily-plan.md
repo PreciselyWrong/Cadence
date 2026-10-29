@@ -117,7 +117,9 @@ Moving a block keeps its length: a start-to-due block moves both ends, a bar mov
 
 ## Calendar page: views
 
-Month, Week, **N days**, Day and **Agenda**.
+**Year**, Month, Week, **N days**, Day and **Agenda**.
+
+- **Year** shows the twelve months as small grids; each day is shaded by how many items it has (whole-day bars count on every day they cover; later recurring occurrences count only inside the loaded month window). Clicking a day opens it in the Day view; the arrows move by a year.
 
 - **N days** is the week grid for 2 to 7 days starting on the current date (View options → *Days in multi-day view*, `ui_settings.calendar.multiDayCount`, 3 by default). The arrows move by that many days. With weekends hidden it counts working days only.
 - **Agenda** lists the month day by day, each day that has something on it under its own heading, whole-day items first. It opens scrolled to today, or the next day with items; the arrows move by a month.
@@ -130,6 +132,8 @@ The sliders button next to the view switcher opens **View options**, saved per u
 - **Show weekends** (`showWeekends`, on): off drops Saturday and Sunday from the month and week views, and the day view steps over them.
 - **Show all repeats** (`showRepeats`, on): off keeps each recurring task at its current due date only.
 - **Days in multi-day view** (`multiDayCount`, 2–7).
+- **Show week numbers** (`showWeekNumbers`, off): ISO week numbers on each month row and in the week grid's corner.
+- **Show mini calendar** (`showMiniCalendar`, off): a small month beside the views on wide screens; clicking a day goes to it.
 - **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
 
 ## Calendar page: Arrange tasks

@@ -1704,11 +1704,20 @@
     "done": "Valmis"
   },
   "calendar": {
+    "year": "Vuosi",
+    "weekNumber": "Vk {{week}}",
+    "yearItems_one": "{{date}}: {{count}} kohdetta",
+    "yearItems_other": "{{date}}: {{count}} kohdetta",
+    "miniCalendar": "Minikalenteri",
+    "previousMonth": "Edellinen kuukausi",
+    "nextMonth": "Seuraava kuukausi",
     "multiDay_one": "{{count}} päivää",
     "multiDay_other": "{{count}} päivää",
     "agendaEmpty": "Ei mitään aikataulutettuna",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Näytä viikkonumerot",
+      "showMiniCalendar": "Näytä minikalenteri",
       "multiDayCount": "Päiviä monipäivänäkymässä",
       "title": "Näkymän asetukset",
       "showCompleted": "Näytä valmiit",

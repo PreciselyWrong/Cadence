@@ -1706,11 +1706,20 @@
     "done": "Concluído"
   },
   "calendar": {
+    "year": "Ano",
+    "weekNumber": "S{{week}}",
+    "yearItems_one": "{{date}}: {{count}} itens",
+    "yearItems_other": "{{date}}: {{count}} itens",
+    "miniCalendar": "Minicalendário",
+    "previousMonth": "Mês anterior",
+    "nextMonth": "Próximo mês",
     "multiDay_one": "{{count}} dias",
     "multiDay_other": "{{count}} dias",
     "agendaEmpty": "Nada agendado",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Mostrar números da semana",
+      "showMiniCalendar": "Mostrar minicalendário",
       "multiDayCount": "Dias na vista de vários dias",
       "title": "Opções de visualização",
       "showCompleted": "Mostrar concluídas",

@@ -1876,11 +1876,20 @@
         "done": "Hotovo"
     },
     "calendar": {
+        "year": "Rok",
+        "weekNumber": "T{{week}}",
+        "yearItems_one": "{{date}}: {{count}} položiek",
+        "yearItems_other": "{{date}}: {{count}} položiek",
+        "miniCalendar": "Minikalendár",
+        "previousMonth": "Predchádzajúci mesiac",
+        "nextMonth": "Nasledujúci mesiac",
         "multiDay_one": "{{count}} dní",
         "multiDay_other": "{{count}} dní",
         "agendaEmpty": "Nič naplánované",
         "agenda": "Agenda",
         "options": {
+            "showWeekNumbers": "Zobraziť čísla týždňov",
+            "showMiniCalendar": "Zobraziť minikalendár",
             "multiDayCount": "Dni vo viacdňovom zobrazení",
             "title": "Možnosti zobrazenia",
             "showCompleted": "Zobraziť dokončené",

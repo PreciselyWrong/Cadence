@@ -1367,11 +1367,20 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "year": "Jahr",
+    "weekNumber": "KW{{week}}",
+    "yearItems_one": "{{date}}: {{count}} Einträge",
+    "yearItems_other": "{{date}}: {{count}} Einträge",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
     "multiDay_one": "{{count}} Tage",
     "multiDay_other": "{{count}} Tage",
     "agendaEmpty": "Nichts geplant",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Kalenderwochen anzeigen",
+      "showMiniCalendar": "Minikalender anzeigen",
       "multiDayCount": "Tage in der Mehrtagesansicht",
       "title": "Ansichtsoptionen",
       "showCompleted": "Erledigte anzeigen",

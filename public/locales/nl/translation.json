@@ -1704,11 +1704,20 @@
     "done": "Klaar"
   },
   "calendar": {
+    "year": "Jaar",
+    "weekNumber": "W{{week}}",
+    "yearItems_one": "{{date}}: {{count}} items",
+    "yearItems_other": "{{date}}: {{count}} items",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Vorige maand",
+    "nextMonth": "Volgende maand",
     "multiDay_one": "{{count}} dagen",
     "multiDay_other": "{{count}} dagen",
     "agendaEmpty": "Niets gepland",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Weeknummers tonen",
+      "showMiniCalendar": "Minikalender tonen",
       "multiDayCount": "Dagen in meerdaagse weergave",
       "title": "Weergaveopties",
       "showCompleted": "Voltooide tonen",

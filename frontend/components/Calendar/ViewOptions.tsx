@@ -8,6 +8,8 @@ export interface CalendarOptions {
     showCompleted: boolean;
     showWeekends: boolean;
     showRepeats: boolean;
+    showWeekNumbers: boolean;
+    showMiniCalendar: boolean;
     colorBy: CalendarColorBy;
     multiDayCount: number;
 }
@@ -16,6 +18,8 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     showCompleted: true,
     showWeekends: true,
     showRepeats: true,
+    showWeekNumbers: false,
+    showMiniCalendar: false,
     colorBy: 'default',
     multiDayCount: 3,
 };
@@ -38,6 +42,8 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
         showCompleted: flag('showCompleted'),
         showWeekends: flag('showWeekends'),
         showRepeats: flag('showRepeats'),
+        showWeekNumbers: flag('showWeekNumbers'),
+        showMiniCalendar: flag('showMiniCalendar'),
         colorBy: COLOR_BY.includes(value.colorBy as CalendarColorBy)
             ? (value.colorBy as CalendarColorBy)
             : 'default',
@@ -93,7 +99,12 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
     }, [open]);
 
     const toggles: {
-        key: 'showCompleted' | 'showWeekends' | 'showRepeats';
+        key:
+            | 'showCompleted'
+            | 'showWeekends'
+            | 'showRepeats'
+            | 'showWeekNumbers'
+            | 'showMiniCalendar';
         label: string;
     }[] = [
         {
@@ -107,6 +118,14 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
         {
             key: 'showRepeats',
             label: t('calendar.options.showRepeats', 'Show all repeats'),
+        },
+        {
+            key: 'showWeekNumbers',
+            label: t('calendar.options.showWeekNumbers', 'Show week numbers'),
+        },
+        {
+            key: 'showMiniCalendar',
+            label: t('calendar.options.showMiniCalendar', 'Show mini calendar'),
         },
     ];
 

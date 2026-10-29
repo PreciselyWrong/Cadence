@@ -1705,11 +1705,20 @@
     "done": "Τέλος"
   },
   "calendar": {
+    "year": "Έτος",
+    "weekNumber": "Ε{{week}}",
+    "yearItems_one": "{{date}}: {{count}} στοιχεία",
+    "yearItems_other": "{{date}}: {{count}} στοιχεία",
+    "miniCalendar": "Μίνι ημερολόγιο",
+    "previousMonth": "Προηγούμενος μήνας",
+    "nextMonth": "Επόμενος μήνας",
     "multiDay_one": "{{count}} ημέρες",
     "multiDay_other": "{{count}} ημέρες",
     "agendaEmpty": "Τίποτα προγραμματισμένο",
     "agenda": "Ατζέντα",
     "options": {
+      "showWeekNumbers": "Εμφάνιση αριθμών εβδομάδων",
+      "showMiniCalendar": "Εμφάνιση μίνι ημερολογίου",
       "multiDayCount": "Ημέρες στην πολυήμερη προβολή",
       "title": "Επιλογές προβολής",
       "showCompleted": "Εμφάνιση ολοκληρωμένων",

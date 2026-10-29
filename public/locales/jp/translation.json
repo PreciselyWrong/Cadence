@@ -1634,11 +1634,20 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "year": "年",
+    "weekNumber": "第{{week}}週",
+    "yearItems_one": "{{date}}: {{count}}件",
+    "yearItems_other": "{{date}}: {{count}}件",
+    "miniCalendar": "ミニカレンダー",
+    "previousMonth": "前の月",
+    "nextMonth": "次の月",
     "multiDay_one": "{{count}}日",
     "multiDay_other": "{{count}}日",
     "agendaEmpty": "予定はありません",
     "agenda": "予定リスト",
     "options": {
+      "showWeekNumbers": "週番号を表示",
+      "showMiniCalendar": "ミニカレンダーを表示",
       "multiDayCount": "複数日表示の日数",
       "title": "表示オプション",
       "showCompleted": "完了済みを表示",

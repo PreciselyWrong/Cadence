@@ -1704,11 +1704,20 @@
     "done": "Færdig"
   },
   "calendar": {
+    "year": "År",
+    "weekNumber": "U{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elementer",
+    "yearItems_other": "{{date}}: {{count}} elementer",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Forrige måned",
+    "nextMonth": "Næste måned",
     "multiDay_one": "{{count}} dage",
     "multiDay_other": "{{count}} dage",
     "agendaEmpty": "Intet planlagt",
     "agenda": "Dagsorden",
     "options": {
+      "showWeekNumbers": "Vis ugenumre",
+      "showMiniCalendar": "Vis minikalender",
       "multiDayCount": "Dage i flerdagesvisning",
       "title": "Visningsindstillinger",
       "showCompleted": "Vis fuldførte",

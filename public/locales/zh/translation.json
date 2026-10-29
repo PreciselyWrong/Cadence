@@ -1702,11 +1702,20 @@
     "done": "完成"
   },
   "calendar": {
+    "year": "年",
+    "weekNumber": "第{{week}}周",
+    "yearItems_one": "{{date}}：{{count}} 项",
+    "yearItems_other": "{{date}}：{{count}} 项",
+    "miniCalendar": "迷你日历",
+    "previousMonth": "上个月",
+    "nextMonth": "下个月",
     "multiDay_one": "{{count}} 天",
     "multiDay_other": "{{count}} 天",
     "agendaEmpty": "暂无安排",
     "agenda": "日程",
     "options": {
+      "showWeekNumbers": "显示周数",
+      "showMiniCalendar": "显示迷你日历",
       "multiDayCount": "多日视图的天数",
       "title": "视图选项",
       "showCompleted": "显示已完成",

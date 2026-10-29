@@ -32,6 +32,8 @@ interface Profile {
             showCompleted?: boolean;
             showWeekends?: boolean;
             showRepeats?: boolean;
+            showWeekNumbers?: boolean;
+            showMiniCalendar?: boolean;
             colorBy?: 'default' | 'project' | 'priority' | 'tag';
             multiDayCount?: number;
         };

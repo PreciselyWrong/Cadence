@@ -1705,11 +1705,20 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "year": "År",
+    "weekNumber": "U{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elementer",
+    "yearItems_other": "{{date}}: {{count}} elementer",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Forrige måned",
+    "nextMonth": "Neste måned",
     "multiDay_one": "{{count}} dager",
     "multiDay_other": "{{count}} dager",
     "agendaEmpty": "Ingenting planlagt",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Vis ukenumre",
+      "showMiniCalendar": "Vis minikalender",
       "multiDayCount": "Dager i flerdagsvisning",
       "title": "Visningsvalg",
       "showCompleted": "Vis fullførte",

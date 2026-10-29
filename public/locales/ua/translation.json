@@ -1482,11 +1482,20 @@
     "startAfterDueError": "Початок не може бути пізніше терміну"
   },
   "calendar": {
+    "year": "Рік",
+    "weekNumber": "Т{{week}}",
+    "yearItems_one": "{{date}}: {{count}} елем.",
+    "yearItems_other": "{{date}}: {{count}} елем.",
+    "miniCalendar": "Міні-календар",
+    "previousMonth": "Попередній місяць",
+    "nextMonth": "Наступний місяць",
     "multiDay_one": "{{count}} дн.",
     "multiDay_other": "{{count}} дн.",
     "agendaEmpty": "Нічого не заплановано",
     "agenda": "Порядок денний",
     "options": {
+      "showWeekNumbers": "Показувати номери тижнів",
+      "showMiniCalendar": "Показувати міні-календар",
       "multiDayCount": "Днів у багатоденному вигляді",
       "title": "Параметри вигляду",
       "showCompleted": "Показувати виконані",

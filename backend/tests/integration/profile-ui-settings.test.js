@@ -60,6 +60,8 @@ describe('PUT /api/profile/ui-settings', () => {
                 showCompleted: false,
                 colorBy: 'project',
                 multiDayCount: 4,
+                showWeekNumbers: true,
+                showMiniCalendar: 'yes',
             },
         });
         await agent.put('/api/profile/ui-settings').send({
@@ -77,6 +79,7 @@ describe('PUT /api/profile/ui-settings', () => {
             showWeekends: false,
             colorBy: 'project',
             multiDayCount: 4,
+            showWeekNumbers: true,
         });
     });
 });

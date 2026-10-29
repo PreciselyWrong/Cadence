@@ -1702,11 +1702,20 @@
     "done": "완료"
   },
   "calendar": {
+    "year": "연도",
+    "weekNumber": "{{week}}주",
+    "yearItems_one": "{{date}}: {{count}}개",
+    "yearItems_other": "{{date}}: {{count}}개",
+    "miniCalendar": "미니 캘린더",
+    "previousMonth": "이전 달",
+    "nextMonth": "다음 달",
     "multiDay_one": "{{count}}일",
     "multiDay_other": "{{count}}일",
     "agendaEmpty": "예정된 항목 없음",
     "agenda": "일정 목록",
     "options": {
+      "showWeekNumbers": "주 번호 표시",
+      "showMiniCalendar": "미니 캘린더 표시",
       "multiDayCount": "여러 날 보기의 일수",
       "title": "보기 옵션",
       "showCompleted": "완료된 항목 표시",

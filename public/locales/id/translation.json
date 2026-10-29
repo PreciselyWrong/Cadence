@@ -1702,11 +1702,20 @@
     "done": "Selesai"
   },
   "calendar": {
+    "year": "Tahun",
+    "weekNumber": "M{{week}}",
+    "yearItems_one": "{{date}}: {{count}} item",
+    "yearItems_other": "{{date}}: {{count}} item",
+    "miniCalendar": "Kalender mini",
+    "previousMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya",
     "multiDay_one": "{{count}} hari",
     "multiDay_other": "{{count}} hari",
     "agendaEmpty": "Tidak ada jadwal",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Tampilkan nomor minggu",
+      "showMiniCalendar": "Tampilkan kalender mini",
       "multiDayCount": "Hari dalam tampilan multi-hari",
       "title": "Opsi tampilan",
       "showCompleted": "Tampilkan yang selesai",

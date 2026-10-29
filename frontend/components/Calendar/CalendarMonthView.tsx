@@ -9,6 +9,7 @@ import {
     startOfWeek,
     endOfWeek,
     addDays,
+    getISOWeek,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,6 +26,7 @@ interface CalendarMonthViewProps {
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (eventId: string, newDate: Date) => void;
     showWeekends?: boolean;
+    showWeekNumbers?: boolean;
 }
 
 const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
@@ -34,6 +36,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     onEventClick,
     onEventDrop,
     showWeekends = true,
+    showWeekNumbers = false,
 }) => {
     const { t } = useTranslation();
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
@@ -168,7 +171,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                       : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600/40'
                             }`}
                         >
-                            <div className="mb-1.5">
+                            <div className="mb-1.5 flex items-center justify-between">
                                 {isTodayDate ? (
                                     <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-xs font-semibold rounded-full">
                                         {format(day, 'd')}
@@ -184,6 +187,24 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         {format(day, 'd')}
                                     </span>
                                 )}
+                                {showWeekNumbers &&
+                                    days
+                                        .slice(
+                                            index - (index % 7),
+                                            index - (index % 7) + 7
+                                        )
+                                        .find((d) => isShown(d.getDay())) ===
+                                        day && (
+                                        <span
+                                            className="text-[10px] font-medium text-gray-400 dark:text-gray-500"
+                                            data-week={getISOWeek(day)}
+                                        >
+                                            {t('calendar.weekNumber', {
+                                                week: getISOWeek(day),
+                                                defaultValue: 'W{{week}}',
+                                            })}
+                                        </span>
+                                    )}
                             </div>
 
                             <div className="space-y-0.5 overflow-hidden flex-1">

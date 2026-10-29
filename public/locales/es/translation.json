@@ -1668,11 +1668,20 @@
     "done": "Hecho"
   },
   "calendar": {
+    "year": "Año",
+    "weekNumber": "S{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elementos",
+    "yearItems_other": "{{date}}: {{count}} elementos",
+    "miniCalendar": "Minicalendario",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
     "multiDay_one": "{{count}} días",
     "multiDay_other": "{{count}} días",
     "agendaEmpty": "Nada programado",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Mostrar números de semana",
+      "showMiniCalendar": "Mostrar minicalendario",
       "multiDayCount": "Días en la vista de varios días",
       "title": "Opciones de vista",
       "showCompleted": "Mostrar completadas",

@@ -1704,11 +1704,20 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "year": "Yıl",
+    "weekNumber": "H{{week}}",
+    "yearItems_one": "{{date}}: {{count}} öğe",
+    "yearItems_other": "{{date}}: {{count}} öğe",
+    "miniCalendar": "Mini takvim",
+    "previousMonth": "Önceki ay",
+    "nextMonth": "Sonraki ay",
     "multiDay_one": "{{count}} gün",
     "multiDay_other": "{{count}} gün",
     "agendaEmpty": "Planlanmış bir şey yok",
     "agenda": "Ajanda",
     "options": {
+      "showWeekNumbers": "Hafta numaralarını göster",
+      "showMiniCalendar": "Mini takvimi göster",
       "multiDayCount": "Çok günlü görünümdeki gün sayısı",
       "title": "Görünüm seçenekleri",
       "showCompleted": "Tamamlananları göster",

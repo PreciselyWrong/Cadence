@@ -9,6 +9,7 @@ import {
     addDays,
     startOfDay,
     endOfDay,
+    getISOWeek,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -31,6 +32,7 @@ interface CalendarWeekViewProps {
     // Multi-day view: this many shown days from currentDate instead of the
     // week around it.
     dayCount?: number;
+    showWeekNumbers?: boolean;
 }
 
 const WEEK_HOUR_HEIGHT = 72;
@@ -43,6 +45,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     onEventDrop,
     onEventResize,
     showWeekends = true,
+    showWeekNumbers = false,
     dayCount,
 }) => {
     const { t } = useTranslation();
@@ -152,8 +155,17 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 className="grid border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10"
                 style={gridColumns}
             >
-                <div className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 border-r border-gray-200 dark:border-gray-600">
-                    {/* time col */}
+                <div
+                    className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 border-r border-gray-200 dark:border-gray-600"
+                    data-week={
+                        showWeekNumbers ? getISOWeek(weekDays[0]) : undefined
+                    }
+                >
+                    {showWeekNumbers &&
+                        t('calendar.weekNumber', {
+                            week: getISOWeek(weekDays[0]),
+                            defaultValue: 'W{{week}}',
+                        })}
                 </div>
                 {weekDays.map((day) => (
                     <div

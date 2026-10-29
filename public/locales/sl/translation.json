@@ -1708,11 +1708,20 @@
     "done": "Končano"
   },
   "calendar": {
+    "year": "Leto",
+    "weekNumber": "T{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elementov",
+    "yearItems_other": "{{date}}: {{count}} elementov",
+    "miniCalendar": "Mini koledar",
+    "previousMonth": "Prejšnji mesec",
+    "nextMonth": "Naslednji mesec",
     "multiDay_one": "{{count}} dni",
     "multiDay_other": "{{count}} dni",
     "agendaEmpty": "Nič načrtovanega",
     "agenda": "Dnevni red",
     "options": {
+      "showWeekNumbers": "Pokaži številke tednov",
+      "showMiniCalendar": "Pokaži mini koledar",
       "multiDayCount": "Dnevi v večdnevnem pogledu",
       "title": "Možnosti pogleda",
       "showCompleted": "Pokaži dokončana",

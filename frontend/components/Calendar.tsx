@@ -27,6 +27,7 @@ import {
     format,
     addWeeks,
     addDays,
+    addMonths,
     startOfMonth,
     endOfMonth,
     subDays,
@@ -36,6 +37,7 @@ import CalendarMonthView from './Calendar/CalendarMonthView';
 import CalendarWeekView from './Calendar/CalendarWeekView';
 import CalendarDayView from './Calendar/CalendarDayView';
 import CalendarAgendaView from './Calendar/CalendarAgendaView';
+import CalendarYearView, { MonthGrid } from './Calendar/CalendarYearView';
 import { getApiPath } from '../config/paths';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -54,7 +56,12 @@ import ViewOptions, {
     readCalendarOptions,
     visibleTasks,
 } from './Calendar/ViewOptions';
-import { fetchProfile, updateUiSettings } from '../utils/profileService';
+import {
+    fetchProfile,
+    getFirstDayOfWeek,
+    getLocaleFirstDayOfWeek,
+    updateUiSettings,
+} from '../utils/profileService';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -102,8 +109,10 @@ const Calendar: React.FC = () => {
     const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [view, setView] = useState<
-        'month' | 'week' | 'multi' | 'day' | 'agenda'
+        'year' | 'month' | 'week' | 'multi' | 'day' | 'agenda'
     >('month');
+    const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
+    const [miniMonth, setMiniMonth] = useState(new Date());
     const [isLoadingTasks, setIsLoadingTasks] = useState(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [allTasks, setAllTasks] = useState<any[]>([]);
@@ -177,6 +186,19 @@ const Calendar: React.FC = () => {
             cancelled = true;
         };
     }, [visibleMonth, feedUidsKey]);
+
+    useEffect(() => {
+        getFirstDayOfWeek()
+            .then(setFirstDayOfWeek)
+            .catch(() =>
+                setFirstDayOfWeek(getLocaleFirstDayOfWeek(navigator.language))
+            );
+    }, []);
+
+    // The mini calendar follows the shown date.
+    useEffect(() => {
+        setMiniMonth(currentDate);
+    }, [visibleMonth]);
 
     useEffect(() => {
         fetchProfile()
@@ -288,6 +310,13 @@ const Calendar: React.FC = () => {
 
     const navigateView = (direction: 'prev' | 'next') => {
         setCurrentDate((prev) => {
+            if (view === 'year') {
+                const newDate = new Date(prev);
+                newDate.setFullYear(
+                    prev.getFullYear() + (direction === 'prev' ? -1 : 1)
+                );
+                return newDate;
+            }
             if (view === 'month' || view === 'agenda') {
                 const newDate = new Date(prev);
                 if (direction === 'prev') {
@@ -450,7 +479,11 @@ const Calendar: React.FC = () => {
                             {t('sidebar.calendar')}
                         </h2>
                         <span className="text-sm text-gray-400 dark:text-gray-500">
-                            {format(currentDate, 'MMMM yyyy', { locale })}
+                            {format(
+                                currentDate,
+                                view === 'year' ? 'yyyy' : 'MMMM yyyy',
+                                { locale }
+                            )}
                         </span>
                     </div>
 
@@ -601,7 +634,70 @@ const Calendar: React.FC = () => {
 
                 {/* Calendar view */}
                 <div className="flex-1 overflow-hidden min-h-0 flex gap-3">
+                    {options.showMiniCalendar && (
+                        <aside
+                            aria-label={t(
+                                'calendar.miniCalendar',
+                                'Mini calendar'
+                            )}
+                            className="hidden lg:block w-56 shrink-0 self-start bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 p-3"
+                        >
+                            <div className="mb-2 flex items-center justify-between">
+                                <button
+                                    type="button"
+                                    aria-label={t(
+                                        'calendar.previousMonth',
+                                        'Previous month'
+                                    )}
+                                    onClick={() =>
+                                        setMiniMonth((m) => addMonths(m, -1))
+                                    }
+                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                >
+                                    <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-500" />
+                                </button>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                    {format(miniMonth, 'MMMM yyyy', { locale })}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label={t(
+                                        'calendar.nextMonth',
+                                        'Next month'
+                                    )}
+                                    onClick={() =>
+                                        setMiniMonth((m) => addMonths(m, 1))
+                                    }
+                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                >
+                                    <ChevronRightIcon className="h-3.5 w-3.5 text-gray-500" />
+                                </button>
+                            </div>
+                            <MonthGrid
+                                month={miniMonth}
+                                weekStartsOn={
+                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                                }
+                                selected={currentDate}
+                                onDayClick={setCurrentDate}
+                                compact
+                            />
+                        </aside>
+                    )}
                     <div className="flex-1 overflow-hidden min-h-0">
+                        {view === 'year' && (
+                            <CalendarYearView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                weekStartsOn={
+                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                                }
+                                onDayClick={(day) => {
+                                    setCurrentDate(day);
+                                    setView('day');
+                                }}
+                            />
+                        )}
                         {view === 'month' && (
                             <CalendarMonthView
                                 currentDate={currentDate}
@@ -610,6 +706,7 @@ const Calendar: React.FC = () => {
                                 onEventClick={handleEventClick}
                                 onEventDrop={handleEventDrop}
                                 showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
                             />
                         )}
                         {view === 'week' && (
@@ -622,6 +719,7 @@ const Calendar: React.FC = () => {
                                 onEventDrop={handleEventDrop}
                                 onEventResize={handleEventResize}
                                 showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
                             />
                         )}
                         {view === 'multi' && (
@@ -633,6 +731,7 @@ const Calendar: React.FC = () => {
                                 onEventDrop={handleEventDrop}
                                 onEventResize={handleEventResize}
                                 showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
                                 dayCount={options.multiDayCount}
                             />
                         )}

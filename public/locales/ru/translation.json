@@ -1708,11 +1708,20 @@
     "done": "Готово"
   },
   "calendar": {
+    "year": "Год",
+    "weekNumber": "Н{{week}}",
+    "yearItems_one": "{{date}}: {{count}} элем.",
+    "yearItems_other": "{{date}}: {{count}} элем.",
+    "miniCalendar": "Мини-календарь",
+    "previousMonth": "Предыдущий месяц",
+    "nextMonth": "Следующий месяц",
     "multiDay_one": "{{count}} дн.",
     "multiDay_other": "{{count}} дн.",
     "agendaEmpty": "Ничего не запланировано",
     "agenda": "Повестка",
     "options": {
+      "showWeekNumbers": "Показывать номера недель",
+      "showMiniCalendar": "Показывать мини-календарь",
       "multiDayCount": "Дней в многодневном виде",
       "title": "Параметры вида",
       "showCompleted": "Показывать выполненные",

@@ -1969,11 +1969,20 @@
     "done": "Done"
   },
   "calendar": {
+    "year": "Year",
+    "weekNumber": "W{{week}}",
+    "yearItems_one": "{{date}}: {{count}} items",
+    "yearItems_other": "{{date}}: {{count}} items",
+    "miniCalendar": "Mini calendar",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
     "multiDay_one": "{{count}} days",
     "multiDay_other": "{{count}} days",
     "agendaEmpty": "Nothing scheduled",
     "agenda": "Agenda",
     "options": {
+      "showWeekNumbers": "Show week numbers",
+      "showMiniCalendar": "Show mini calendar",
       "multiDayCount": "Days in multi-day view",
       "title": "View options",
       "showCompleted": "Show completed",
