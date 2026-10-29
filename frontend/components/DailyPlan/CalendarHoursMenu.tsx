@@ -17,6 +17,7 @@ const CalendarHoursMenu: React.FC<CalendarHoursMenuProps> = ({
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (!open) return;
@@ -24,8 +25,18 @@ const CalendarHoursMenu: React.FC<CalendarHoursMenuProps> = ({
             if (ref.current && !ref.current.contains(e.target as Node))
                 setOpen(false);
         };
+        // Escape closes the menu and hands focus back to its trigger.
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            setOpen(false);
+            triggerRef.current?.focus();
+        };
         document.addEventListener('mousedown', close);
-        return () => document.removeEventListener('mousedown', close);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('mousedown', close);
+            document.removeEventListener('keydown', onKey);
+        };
     }, [open]);
 
     const label = t('dailyPlan.calendarMenu', 'More calendar options');
@@ -33,6 +44,7 @@ const CalendarHoursMenu: React.FC<CalendarHoursMenuProps> = ({
     return (
         <div className="relative" ref={ref}>
             <button
+                ref={triggerRef}
                 type="button"
                 onClick={() => setOpen((current) => !current)}
                 aria-expanded={open}
