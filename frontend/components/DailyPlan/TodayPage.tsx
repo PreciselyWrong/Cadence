@@ -1285,13 +1285,18 @@ const TodayPage: React.FC = () => {
         const data = event.active.data.current as
             | { type: 'candidate'; task: Task }
             | { type: 'item'; item: DailyPlanItem }
+            | { type: 'calendar-block'; event: CalendarBlock }
             | undefined;
         if (!data) return;
         // Timeline blocks and list rows move themselves; only cards leaving
         // the left column and untimed tray items need a floating preview.
         if (data.type === 'candidate') {
             setDragLabel(data.task.name);
-        } else if (mode === 'timeline' && data.item.start_minute === null) {
+        } else if (
+            data.type === 'item' &&
+            mode === 'timeline' &&
+            data.item.start_minute === null
+        ) {
             setDragLabel(data.item.task.name);
         }
     };
