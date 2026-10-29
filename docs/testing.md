@@ -103,7 +103,19 @@ npx playwright test e2e/tests/inbox.spec.ts
 
 # Debug mode
 npx playwright test --debug
+
+# Through the harness, with extra Playwright arguments passed on
+bash e2e/bin/run-e2e.sh plan-my-day --repeat-each=10 --workers=1
 ```
+
+`e2e/bin/run-e2e.sh` sets up everything the suite needs:
+
+- A fresh SQLite database (`backend/db/test.sqlite3`) with the e2e user (`E2E_EMAIL` / `E2E_PASSWORD`, default `test@tududi.com` / `password123`).
+- The backend on `BACKEND_PORT` (default 3310) and the frontend dev server on `FRONTEND_PORT` (default 4180). Tests get `APP_URL` (frontend) and `API_URL` (backend, used by the CalDAV spec), so nothing is hardcoded to 3002/8080.
+- A tiny SMTP sink (`e2e/bin/smtp-sink.js`, `SMTP_SINK_PORT`, default 2525) with email turned on in the backend, so registration can send its verification email and succeed.
+- A Playwright global setup (`e2e/global-setup.ts`) that logs the e2e user in through the API and finishes the welcome page (`POST /api/onboarding/starter` with `{ key: "empty" }`). Without it every login lands on `/welcome` instead of `/today`.
+
+Tests run fully parallel against one shared user, so each test cleans up after itself; a `describe` whose tests build on each other's state uses `test.describe.configure({ mode: 'serial' })`.
 
 ### Pre-Push Checks
 

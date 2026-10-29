@@ -1797,11 +1797,22 @@ const QuickCaptureInput = React.forwardRef<
             if (!name) {
                 return undefined;
             }
-            const existing = projects.find(
-                (project) => project.name.toLowerCase() === name.toLowerCase()
-            );
+            const sameName = (project: Project) =>
+                project.name.toLowerCase() === name.toLowerCase();
+            const existing = projects.find(sameName);
             if (existing) {
                 return existing.uid;
+            }
+            // The projects prop is loaded asynchronously; a capture sent
+            // before it arrives must not create a second project with the
+            // same name, so ask the server before creating one.
+            try {
+                const onServer = (await fetchProjects()).find(sameName);
+                if (onServer) {
+                    return onServer.uid;
+                }
+            } catch (error) {
+                console.error('Failed to look up projects:', error);
             }
             const areaId = focusAreaId();
             const created = await createProject({

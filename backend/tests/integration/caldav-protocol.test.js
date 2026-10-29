@@ -271,6 +271,44 @@ describe('CalDAV Protocol - Phase 3', () => {
             expect(response.text).toContain('getcontenttype');
             expect(response.text).toContain('getlastmodified');
         });
+
+        test('PROPFIND depth 1 returns calendar-data only when asked for', async () => {
+            const withData = `<?xml version="1.0" encoding="utf-8" ?>
+<D:propfind xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+  <D:prop>
+    <D:getetag/>
+    <C:calendar-data/>
+  </D:prop>
+</D:propfind>`;
+
+            const response = await propfind(
+                app,
+                '/caldav/caldav@test.com/tasks/'
+            )
+                .set('Authorization', authHeader)
+                .set('Depth', '1')
+                .set('Content-Type', 'application/xml')
+                .send(withData)
+                .expect(207);
+
+            expect(response.text).toContain('calendar-data');
+            expect(response.text).toContain('BEGIN:VTODO');
+            expect(response.text).toContain('UID:test-task-1');
+
+            const withoutData = await propfind(
+                app,
+                '/caldav/caldav@test.com/tasks/'
+            )
+                .set('Authorization', authHeader)
+                .set('Depth', '1')
+                .set('Content-Type', 'application/xml')
+                .send(
+                    '<?xml version="1.0"?><D:propfind xmlns:D="DAV:"><D:prop><D:getetag/></D:prop></D:propfind>'
+                )
+                .expect(207);
+
+            expect(withoutData.text).not.toContain('BEGIN:VTODO');
+        });
     });
 
     describe('REPORT (calendar-query)', () => {
