@@ -53,4 +53,24 @@ describe('PUT /api/profile/ui-settings', () => {
             false
         );
     });
+
+    it('saves a sanitized summary template', async () => {
+        await agent.put('/api/profile/ui-settings').send({
+            summary: { group_by: 'day', include_open: true, extra: 'x' },
+        });
+        let profile = await agent.get('/api/profile');
+        expect(profile.body.ui_settings.summary).toEqual({
+            group_by: 'day',
+            include_open: true,
+        });
+
+        await agent
+            .put('/api/profile/ui-settings')
+            .send({ summary: { group_by: 'bogus' } });
+        profile = await agent.get('/api/profile');
+        expect(profile.body.ui_settings.summary).toEqual({
+            group_by: 'project',
+            include_open: false,
+        });
+    });
 });

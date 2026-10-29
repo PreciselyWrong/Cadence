@@ -6,6 +6,7 @@ import {
     CalendarDaysIcon,
     CalendarIcon,
     ChartBarIcon,
+    DocumentTextIcon,
     ClockIcon,
     FireIcon,
     FlagIcon,
@@ -253,6 +254,15 @@ const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 title: t('sidebar.reports', 'Reports'),
                 Icon: ChartBarIcon,
                 gradient: 'from-emerald-400 to-teal-600',
+            },
+            {
+                id: 'summary',
+                group: 'sections',
+                orderKey: 'insights',
+                path: '/insights/summary',
+                title: t('sidebar.summary', 'Summary'),
+                Icon: DocumentTextIcon,
+                gradient: 'from-sky-400 to-indigo-600',
             },
             templatesEnabled && {
                 id: 'templates',

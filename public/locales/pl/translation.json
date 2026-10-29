@@ -100,7 +100,8 @@
     "telegramProblem": "Problem z połączeniem z Telegramem",
     "resize": "Zmień szerokość paska bocznego",
     "collapseViews": "Zwiń listę widoków",
-    "expandViews": "Rozwiń listę widoków"
+    "expandViews": "Rozwiń listę widoków",
+    "summary": "Podsumowanie"
   },
   "navigation": {
     "home": "Strona główna",
@@ -3427,5 +3428,56 @@
     "adminRequiredTitle": "Najpierw włącz weryfikację dwuetapową",
     "adminRequiredBody": "To konto widzi wszystkich klientów, więc panel administracyjny otwiera się dopiero po włączeniu weryfikacji dwuetapowej.",
     "adminRequiredAction": "Skonfiguruj"
+  },
+  "summary": {
+    "period": "Okres",
+    "from": "Od",
+    "to": "Do",
+    "groupBy": "Grupuj według",
+    "includeOpen": "Uwzględnij otwarte zadania z terminem w tym okresie",
+    "saveTemplate": "Zapisz jako szablon",
+    "templateSaved": "Szablon zapisany",
+    "templateFailed": "Nie udało się zapisać szablonu",
+    "copyMarkdown": "Kopiuj jako Markdown",
+    "downloadMd": "Pobierz .md",
+    "downloadTxt": "Pobierz .txt",
+    "downloadCsv": "Pobierz .csv",
+    "print": "Drukuj",
+    "copied": "Skopiowano do schowka",
+    "copyFailed": "Nie udało się skopiować do schowka",
+    "exportTitle": "Podsumowanie {{start}} – {{end}}",
+    "counts": "Ukończone: {{completed}}, otwarte: {{open}}",
+    "empty": "Brak zadań w tym okresie.",
+    "noProject": "Bez projektu",
+    "noDate": "Bez daty",
+    "periods": {
+      "today": "Dzisiaj",
+      "this_week": "Ten tydzień",
+      "last_week": "Poprzedni tydzień",
+      "this_month": "Ten miesiąc",
+      "custom": "Własny zakres"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dzień",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Ukończone",
+      "not_started": "Nierozpoczęte",
+      "in_progress": "W toku",
+      "waiting": "Oczekujące",
+      "planned": "Zaplanowane",
+      "archived": "Zarchiwizowane",
+      "cancelled": "Anulowane"
+    },
+    "csv": {
+      "name": "Zadanie",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Ukończono",
+      "due": "Termin",
+      "tags": "Tagi"
+    }
   }
 }

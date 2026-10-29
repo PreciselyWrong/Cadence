@@ -100,7 +100,8 @@
     "telegramProblem": "Problem med Telegram-forbindelsen",
     "resize": "Tilpas sidebjælken",
     "collapseViews": "Skjul listen over visninger",
-    "expandViews": "Vis listen over visninger"
+    "expandViews": "Vis listen over visninger",
+    "summary": "Oversigt"
   },
   "navigation": {
     "home": "Hjem",
@@ -3415,5 +3416,56 @@
     "adminRequiredTitle": "Slå totrinsbekræftelse til først",
     "adminRequiredBody": "Denne konto kan se alle kunder, så administrationspanelet åbner først, når totrinsbekræftelse er slået til.",
     "adminRequiredAction": "Konfigurer det"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Fra",
+    "to": "Til",
+    "groupBy": "Gruppér efter",
+    "includeOpen": "Medtag åbne opgaver med forfald i perioden",
+    "saveTemplate": "Gem som skabelon",
+    "templateSaved": "Skabelon gemt",
+    "templateFailed": "Skabelonen kunne ikke gemmes",
+    "copyMarkdown": "Kopiér som Markdown",
+    "downloadMd": "Download .md",
+    "downloadTxt": "Download .txt",
+    "downloadCsv": "Download .csv",
+    "print": "Udskriv",
+    "copied": "Kopieret til udklipsholderen",
+    "copyFailed": "Kunne ikke kopiere til udklipsholderen",
+    "exportTitle": "Oversigt {{start}} – {{end}}",
+    "counts": "{{completed}} fuldført, {{open}} åbne",
+    "empty": "Ingen opgaver i denne periode.",
+    "noProject": "Intet projekt",
+    "noDate": "Ingen dato",
+    "periods": {
+      "today": "I dag",
+      "this_week": "Denne uge",
+      "last_week": "Sidste uge",
+      "this_month": "Denne måned",
+      "custom": "Tilpasset periode"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Fuldført",
+      "not_started": "Ikke startet",
+      "in_progress": "I gang",
+      "waiting": "Venter",
+      "planned": "Planlagt",
+      "archived": "Arkiveret",
+      "cancelled": "Annulleret"
+    },
+    "csv": {
+      "name": "Opgave",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Fuldført",
+      "due": "Forfald",
+      "tags": "Tags"
+    }
   }
 }

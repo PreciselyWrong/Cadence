@@ -36,6 +36,10 @@ interface Profile {
             project_uid?: string | null;
             tags?: string[];
         } | null;
+        summary?: {
+            group_by?: 'project' | 'day' | 'status';
+            include_open?: boolean;
+        } | null;
     };
 }
 

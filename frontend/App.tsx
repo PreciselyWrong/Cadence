@@ -55,6 +55,7 @@ import EisenhowerMatrix from './components/Eisenhower/EisenhowerMatrix';
 import KanbanBoard from './components/Kanban/KanbanBoard';
 import ProductivityPage from './components/Insights/ProductivityPage';
 import ReportsPage from './components/Insights/ReportsPage';
+import SummaryPage from './components/Insights/SummaryPage';
 import DailyBriefPage from './components/Insights/DailyBriefPage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
@@ -542,6 +543,10 @@ const App: React.FC = () => {
                             <Route
                                 path="/insights/reports"
                                 element={<ReportsPage />}
+                            />
+                            <Route
+                                path="/insights/summary"
+                                element={<SummaryPage />}
                             />
                             <Route path="/inbox" element={<InboxItems />} />
                             <Route path="/habits" element={<Habits />} />

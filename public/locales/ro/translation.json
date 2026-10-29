@@ -100,7 +100,8 @@
     "telegramProblem": "Problemă cu conexiunea Telegram",
     "resize": "Redimensionează bara laterală",
     "collapseViews": "Restrânge lista de vizualizări",
-    "expandViews": "Extinde lista de vizualizări"
+    "expandViews": "Extinde lista de vizualizări",
+    "summary": "Rezumat"
   },
   "navigation": {
     "home": "Acasă",
@@ -3423,5 +3424,56 @@
     "adminRequiredTitle": "Activează mai întâi autentificarea în doi pași",
     "adminRequiredBody": "Acest cont vede toți clienții, așa că panoul de administrare se deschide doar după ce autentificarea în doi pași este activată.",
     "adminRequiredAction": "Configureaz-o"
+  },
+  "summary": {
+    "period": "Perioadă",
+    "from": "De la",
+    "to": "Până la",
+    "groupBy": "Grupează după",
+    "includeOpen": "Include sarcinile deschise scadente în perioadă",
+    "saveTemplate": "Salvează ca șablon",
+    "templateSaved": "Șablon salvat",
+    "templateFailed": "Șablonul nu a putut fi salvat",
+    "copyMarkdown": "Copiază ca Markdown",
+    "downloadMd": "Descarcă .md",
+    "downloadTxt": "Descarcă .txt",
+    "downloadCsv": "Descarcă .csv",
+    "print": "Tipărește",
+    "copied": "Copiat în clipboard",
+    "copyFailed": "Nu s-a putut copia în clipboard",
+    "exportTitle": "Rezumat {{start}} – {{end}}",
+    "counts": "{{completed}} finalizate, {{open}} deschise",
+    "empty": "Nicio sarcină în această perioadă.",
+    "noProject": "Fără proiect",
+    "noDate": "Fără dată",
+    "periods": {
+      "today": "Astăzi",
+      "this_week": "Săptămâna aceasta",
+      "last_week": "Săptămâna trecută",
+      "this_month": "Luna aceasta",
+      "custom": "Interval personalizat"
+    },
+    "groupings": {
+      "project": "Proiect",
+      "day": "Zi",
+      "status": "Stare"
+    },
+    "status": {
+      "done": "Finalizată",
+      "not_started": "Neîncepută",
+      "in_progress": "În desfășurare",
+      "waiting": "În așteptare",
+      "planned": "Planificată",
+      "archived": "Arhivată",
+      "cancelled": "Anulată"
+    },
+    "csv": {
+      "name": "Sarcină",
+      "status": "Stare",
+      "project": "Proiect",
+      "completed": "Finalizată la",
+      "due": "Scadență",
+      "tags": "Etichete"
+    }
   }
 }

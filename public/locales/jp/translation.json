@@ -100,7 +100,8 @@
     "telegramProblem": "Telegram 接続に問題があります",
     "resize": "サイドバーの幅を変更",
     "collapseViews": "ビュー一覧を閉じる",
-    "expandViews": "ビュー一覧を開く"
+    "expandViews": "ビュー一覧を開く",
+    "summary": "サマリー"
   },
   "navigation": {
     "home": "ホーム",
@@ -3412,5 +3413,56 @@
     "adminRequiredTitle": "先に2段階認証をオンにしてください",
     "adminRequiredBody": "このアカウントはすべての顧客を閲覧できるため、管理パネルは2段階認証がオンのときにのみ開きます。",
     "adminRequiredAction": "設定する"
+  },
+  "summary": {
+    "period": "期間",
+    "from": "開始",
+    "to": "終了",
+    "groupBy": "グループ化",
+    "includeOpen": "期間内が期限の未完了タスクを含める",
+    "saveTemplate": "テンプレートとして保存",
+    "templateSaved": "テンプレートを保存しました",
+    "templateFailed": "テンプレートを保存できませんでした",
+    "copyMarkdown": "Markdownとしてコピー",
+    "downloadMd": "ダウンロード .md",
+    "downloadTxt": "ダウンロード .txt",
+    "downloadCsv": "ダウンロード .csv",
+    "print": "印刷",
+    "copied": "クリップボードにコピーしました",
+    "copyFailed": "クリップボードにコピーできませんでした",
+    "exportTitle": "サマリー {{start}} – {{end}}",
+    "counts": "完了 {{completed}} 件、未完了 {{open}} 件",
+    "empty": "この期間のタスクはありません。",
+    "noProject": "プロジェクトなし",
+    "noDate": "日付なし",
+    "periods": {
+      "today": "今日",
+      "this_week": "今週",
+      "last_week": "先週",
+      "this_month": "今月",
+      "custom": "期間を指定"
+    },
+    "groupings": {
+      "project": "プロジェクト",
+      "day": "日",
+      "status": "ステータス"
+    },
+    "status": {
+      "done": "完了",
+      "not_started": "未着手",
+      "in_progress": "進行中",
+      "waiting": "待機中",
+      "planned": "予定",
+      "archived": "アーカイブ済み",
+      "cancelled": "キャンセル"
+    },
+    "csv": {
+      "name": "タスク",
+      "status": "ステータス",
+      "project": "プロジェクト",
+      "completed": "完了日",
+      "due": "期限",
+      "tags": "タグ"
+    }
   }
 }

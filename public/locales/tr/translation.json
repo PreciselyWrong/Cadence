@@ -100,7 +100,8 @@
     "telegramProblem": "Telegram bağlantı sorunu",
     "resize": "Kenar çubuğunu yeniden boyutlandır",
     "collapseViews": "Görünüm listesini daralt",
-    "expandViews": "Görünüm listesini genişlet"
+    "expandViews": "Görünüm listesini genişlet",
+    "summary": "Özet"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -3415,5 +3416,56 @@
     "adminRequiredTitle": "Önce iki adımlı doğrulamayı açın",
     "adminRequiredBody": "Bu hesap tüm müşterileri görebilir, bu yüzden yönetim paneli yalnızca iki adımlı doğrulama açıkken açılır.",
     "adminRequiredAction": "Kur"
+  },
+  "summary": {
+    "period": "Dönem",
+    "from": "Başlangıç",
+    "to": "Bitiş",
+    "groupBy": "Gruplandır",
+    "includeOpen": "Bu dönemde süresi dolan açık görevleri dahil et",
+    "saveTemplate": "Şablon olarak kaydet",
+    "templateSaved": "Şablon kaydedildi",
+    "templateFailed": "Şablon kaydedilemedi",
+    "copyMarkdown": "Markdown olarak kopyala",
+    "downloadMd": "İndir .md",
+    "downloadTxt": "İndir .txt",
+    "downloadCsv": "İndir .csv",
+    "print": "Yazdır",
+    "copied": "Panoya kopyalandı",
+    "copyFailed": "Panoya kopyalanamadı",
+    "exportTitle": "Özet {{start}} – {{end}}",
+    "counts": "{{completed}} tamamlandı, {{open}} açık",
+    "empty": "Bu dönemde görev yok.",
+    "noProject": "Proje yok",
+    "noDate": "Tarih yok",
+    "periods": {
+      "today": "Bugün",
+      "this_week": "Bu hafta",
+      "last_week": "Geçen hafta",
+      "this_month": "Bu ay",
+      "custom": "Özel aralık"
+    },
+    "groupings": {
+      "project": "Proje",
+      "day": "Gün",
+      "status": "Durum"
+    },
+    "status": {
+      "done": "Tamamlandı",
+      "not_started": "Başlanmadı",
+      "in_progress": "Devam ediyor",
+      "waiting": "Bekliyor",
+      "planned": "Planlandı",
+      "archived": "Arşivlendi",
+      "cancelled": "İptal edildi"
+    },
+    "csv": {
+      "name": "Görev",
+      "status": "Durum",
+      "project": "Proje",
+      "completed": "Tamamlanma",
+      "due": "Son tarih",
+      "tags": "Etiketler"
+    }
   }
 }

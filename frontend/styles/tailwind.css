@@ -285,3 +285,24 @@ html.sidebar-resizing * {
     transition: none;
   }
 }
+
+/* Summary page: print only the summary itself. */
+@media print {
+  body:has(#summary-print) * {
+    visibility: hidden;
+  }
+  body:has(#summary-print) #summary-print,
+  body:has(#summary-print) #summary-print * {
+    visibility: visible;
+  }
+  body:has(#summary-print) #summary-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000;
+  }
+  body:has(#summary-print) .no-print {
+    display: none !important;
+  }
+}

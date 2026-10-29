@@ -100,7 +100,8 @@
     "telegramProblem": "Probleem met Telegram-verbinding",
     "resize": "Zijbalk aanpassen",
     "collapseViews": "Lijst met weergaven inklappen",
-    "expandViews": "Lijst met weergaven uitklappen"
+    "expandViews": "Lijst met weergaven uitklappen",
+    "summary": "Samenvatting"
   },
   "navigation": {
     "home": "Home",
@@ -3415,5 +3416,56 @@
     "adminRequiredTitle": "Schakel eerst tweestapsverificatie in",
     "adminRequiredBody": "Dit account kan alle klanten zien, dus het beheerpaneel opent pas als tweestapsverificatie aan staat.",
     "adminRequiredAction": "Instellen"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Van",
+    "to": "Tot",
+    "groupBy": "Groeperen op",
+    "includeOpen": "Open taken met vervaldatum in deze periode meenemen",
+    "saveTemplate": "Opslaan als sjabloon",
+    "templateSaved": "Sjabloon opgeslagen",
+    "templateFailed": "Sjabloon kon niet worden opgeslagen",
+    "copyMarkdown": "Kopiëren als Markdown",
+    "downloadMd": "Downloaden .md",
+    "downloadTxt": "Downloaden .txt",
+    "downloadCsv": "Downloaden .csv",
+    "print": "Afdrukken",
+    "copied": "Gekopieerd naar klembord",
+    "copyFailed": "Kopiëren naar klembord mislukt",
+    "exportTitle": "Samenvatting {{start}} – {{end}}",
+    "counts": "{{completed}} voltooid, {{open}} open",
+    "empty": "Geen taken in deze periode.",
+    "noProject": "Geen project",
+    "noDate": "Geen datum",
+    "periods": {
+      "today": "Vandaag",
+      "this_week": "Deze week",
+      "last_week": "Vorige week",
+      "this_month": "Deze maand",
+      "custom": "Aangepaste periode"
+    },
+    "groupings": {
+      "project": "Project",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Voltooid",
+      "not_started": "Niet gestart",
+      "in_progress": "Bezig",
+      "waiting": "Wachtend",
+      "planned": "Gepland",
+      "archived": "Gearchiveerd",
+      "cancelled": "Geannuleerd"
+    },
+    "csv": {
+      "name": "Taak",
+      "status": "Status",
+      "project": "Project",
+      "completed": "Voltooid op",
+      "due": "Vervaldatum",
+      "tags": "Tags"
+    }
   }
 }

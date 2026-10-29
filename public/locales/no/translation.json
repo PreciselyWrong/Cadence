@@ -100,7 +100,8 @@
     "telegramProblem": "Problem med Telegram-tilkoblingen",
     "resize": "Endre størrelse på sidefeltet",
     "collapseViews": "Skjul listen over visninger",
-    "expandViews": "Vis listen over visninger"
+    "expandViews": "Vis listen over visninger",
+    "summary": "Oppsummering"
   },
   "navigation": {
     "home": "Hjem",
@@ -3420,5 +3421,56 @@
     "adminRequiredTitle": "Slå på tofaktorautentisering først",
     "adminRequiredBody": "Denne kontoen kan se alle kunder, så administrasjonspanelet åpnes bare når tofaktorautentisering er på.",
     "adminRequiredAction": "Sett det opp"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Fra",
+    "to": "Til",
+    "groupBy": "Grupper etter",
+    "includeOpen": "Ta med åpne oppgaver med frist i perioden",
+    "saveTemplate": "Lagre som mal",
+    "templateSaved": "Mal lagret",
+    "templateFailed": "Kunne ikke lagre malen",
+    "copyMarkdown": "Kopier som Markdown",
+    "downloadMd": "Last ned .md",
+    "downloadTxt": "Last ned .txt",
+    "downloadCsv": "Last ned .csv",
+    "print": "Skriv ut",
+    "copied": "Kopiert til utklippstavlen",
+    "copyFailed": "Kunne ikke kopiere til utklippstavlen",
+    "exportTitle": "Oppsummering {{start}} – {{end}}",
+    "counts": "{{completed}} fullført, {{open}} åpne",
+    "empty": "Ingen oppgaver i denne perioden.",
+    "noProject": "Uten prosjekt",
+    "noDate": "Uten dato",
+    "periods": {
+      "today": "I dag",
+      "this_week": "Denne uken",
+      "last_week": "Forrige uke",
+      "this_month": "Denne måneden",
+      "custom": "Egendefinert periode"
+    },
+    "groupings": {
+      "project": "Prosjekt",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Fullført",
+      "not_started": "Ikke startet",
+      "in_progress": "Pågår",
+      "waiting": "Venter",
+      "planned": "Planlagt",
+      "archived": "Arkivert",
+      "cancelled": "Avbrutt"
+    },
+    "csv": {
+      "name": "Oppgave",
+      "status": "Status",
+      "project": "Prosjekt",
+      "completed": "Fullført",
+      "due": "Frist",
+      "tags": "Etiketter"
+    }
   }
 }

@@ -352,6 +352,11 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - Step-up (password or code) for new API keys; admin reset; CalDAV needs an API key once it is on
     - Required for the hosted superadmin before the admin panel opens
 
+40. **[Summary](docs/31-summary.md)**
+    - Insights → Summary: tasks completed in a period (today, this week, last week, this month, custom up to 366 days), optionally open tasks due in it
+    - Group by project, day or status; copy as Markdown, download .md/.txt/.csv, print
+    - `GET /api/reports/summary` in user timezone; template saved in `ui_settings.summary`
+
 ---
 
 ## Project Overview

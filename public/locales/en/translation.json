@@ -99,7 +99,8 @@
     "telegramConnected": "Telegram connected",
     "telegramProblem": "Telegram connection problem",
     "collapseViews": "Collapse views list",
-    "expandViews": "Expand views list"
+    "expandViews": "Expand views list",
+    "summary": "Summary"
   },
   "navigation": {
     "home": "Home",
@@ -3814,5 +3815,56 @@
     "adminRequiredTitle": "Turn on two-factor sign-in first",
     "adminRequiredBody": "This account can see every customer, so the admin panel opens only once two-factor sign-in is on.",
     "adminRequiredAction": "Set it up"
+  },
+  "summary": {
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "groupBy": "Group by",
+    "includeOpen": "Include open tasks due in this period",
+    "saveTemplate": "Save as template",
+    "templateSaved": "Template saved",
+    "templateFailed": "Could not save the template",
+    "copyMarkdown": "Copy as Markdown",
+    "downloadMd": "Download .md",
+    "downloadTxt": "Download .txt",
+    "downloadCsv": "Download .csv",
+    "print": "Print",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Could not copy to clipboard",
+    "exportTitle": "Summary {{start}} – {{end}}",
+    "counts": "{{completed}} completed, {{open}} open",
+    "empty": "No tasks in this period.",
+    "noProject": "No project",
+    "noDate": "No date",
+    "periods": {
+      "today": "Today",
+      "this_week": "This week",
+      "last_week": "Last week",
+      "this_month": "This month",
+      "custom": "Custom range"
+    },
+    "groupings": {
+      "project": "Project",
+      "day": "Day",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Completed",
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "waiting": "Waiting",
+      "planned": "Planned",
+      "archived": "Archived",
+      "cancelled": "Cancelled"
+    },
+    "csv": {
+      "name": "Task",
+      "status": "Status",
+      "project": "Project",
+      "completed": "Completed",
+      "due": "Due",
+      "tags": "Tags"
+    }
   }
 }

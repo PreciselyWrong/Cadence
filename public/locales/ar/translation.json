@@ -100,7 +100,8 @@
     "telegramProblem": "مشكلة في اتصال Telegram",
     "resize": "تغيير حجم الشريط الجانبي",
     "collapseViews": "طي قائمة العروض",
-    "expandViews": "توسيع قائمة العروض"
+    "expandViews": "توسيع قائمة العروض",
+    "summary": "الملخص"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -3439,5 +3440,56 @@
     "adminRequiredTitle": "فعّل المصادقة الثنائية أولًا",
     "adminRequiredBody": "يمكن لهذا الحساب رؤية جميع العملاء، لذا لا تُفتح لوحة الإدارة إلا بعد تفعيل المصادقة الثنائية.",
     "adminRequiredAction": "إعدادها"
+  },
+  "summary": {
+    "period": "الفترة",
+    "from": "من",
+    "to": "إلى",
+    "groupBy": "التجميع حسب",
+    "includeOpen": "تضمين المهام المفتوحة المستحقة في هذه الفترة",
+    "saveTemplate": "حفظ كقالب",
+    "templateSaved": "تم حفظ القالب",
+    "templateFailed": "تعذر حفظ القالب",
+    "copyMarkdown": "نسخ بتنسيق Markdown",
+    "downloadMd": "تنزيل .md",
+    "downloadTxt": "تنزيل .txt",
+    "downloadCsv": "تنزيل .csv",
+    "print": "طباعة",
+    "copied": "تم النسخ إلى الحافظة",
+    "copyFailed": "تعذر النسخ إلى الحافظة",
+    "exportTitle": "الملخص {{start}} – {{end}}",
+    "counts": "{{completed}} مكتملة، {{open}} مفتوحة",
+    "empty": "لا توجد مهام في هذه الفترة.",
+    "noProject": "بدون مشروع",
+    "noDate": "بدون تاريخ",
+    "periods": {
+      "today": "اليوم",
+      "this_week": "هذا الأسبوع",
+      "last_week": "الأسبوع الماضي",
+      "this_month": "هذا الشهر",
+      "custom": "نطاق مخصص"
+    },
+    "groupings": {
+      "project": "المشروع",
+      "day": "اليوم",
+      "status": "الحالة"
+    },
+    "status": {
+      "done": "مكتملة",
+      "not_started": "لم تبدأ",
+      "in_progress": "قيد التنفيذ",
+      "waiting": "في الانتظار",
+      "planned": "مخطط لها",
+      "archived": "مؤرشفة",
+      "cancelled": "ملغاة"
+    },
+    "csv": {
+      "name": "المهمة",
+      "status": "الحالة",
+      "project": "المشروع",
+      "completed": "تاريخ الإكمال",
+      "due": "الاستحقاق",
+      "tags": "الوسوم"
+    }
   }
 }
