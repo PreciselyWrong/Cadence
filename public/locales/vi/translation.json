@@ -190,6 +190,7 @@
     "setInProgress": "Đặt thành đang tiến hành",
     "setNotStarted": "Đặt thành chưa bắt đầu",
     "showSubtasks": "Hiện các công việc con",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Ẩn các công việc con",
     "edit": "Chỉnh sửa công việc",
     "delete": "Xóa công việc",

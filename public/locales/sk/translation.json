@@ -195,6 +195,7 @@
         "setInProgress": "Nastaviť ako prebiehajúce",
         "setNotStarted": "Nastaviť ako nezačaté",
         "showSubtasks": "Zobraziť podúlohy",
+        "moreTags": "+{{count}}",
         "hideSubtasks": "Skryť podúlohy",
         "edit": "Upraviť úlohu",
         "delete": "Odstrániť úlohu",

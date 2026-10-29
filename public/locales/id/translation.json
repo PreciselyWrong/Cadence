@@ -190,6 +190,7 @@
     "setInProgress": "Tandai sebagai sedang berlangsung",
     "setNotStarted": "Tandai sebagai belum dimulai",
     "showSubtasks": "Tampilkan subtugas",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Sembunyikan subtugas",
     "edit": "Edit tugas",
     "delete": "Hapus tugas",

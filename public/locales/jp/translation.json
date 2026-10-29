@@ -190,6 +190,7 @@
     "setInProgress": "進行中に設定",
     "setNotStarted": "未開始に設定",
     "showSubtasks": "サブタスクを表示",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "サブタスクを非表示",
     "edit": "タスクを編集",
     "delete": "タスクを削除",

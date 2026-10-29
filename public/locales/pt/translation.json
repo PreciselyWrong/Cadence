@@ -191,6 +191,7 @@
     "setInProgress": "Definir como em progresso",
     "setNotStarted": "Definir como não iniciado",
     "showSubtasks": "Mostrar subtarefas",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Ocultar subtarefas",
     "edit": "Editar tarefa",
     "delete": "Excluir tarefa",

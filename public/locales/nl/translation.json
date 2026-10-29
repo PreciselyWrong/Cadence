@@ -190,6 +190,7 @@
     "setInProgress": "Instellen op in uitvoering",
     "setNotStarted": "Instellen op niet gestart",
     "showSubtasks": "Toon subtaken",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Verberg subtaken",
     "edit": "Bewerk taak",
     "delete": "Verwijder taak",

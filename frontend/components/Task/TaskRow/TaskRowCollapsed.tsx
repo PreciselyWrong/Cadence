@@ -36,6 +36,7 @@ import QuickCaptureInput, {
     QuickCaptureInputHandle,
 } from '../../Inbox/QuickCaptureInput';
 import { useStore } from '../../../store/useStore';
+import { useIsMinimal } from '../../../hooks/useUiDensity';
 import PriorityBadge, {
     PriorityLevel,
     toPriorityLevel,
@@ -124,6 +125,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     onActionsMenuOpenChange,
 }) => {
     const { t } = useTranslation();
+    const isMinimal = useIsMinimal();
     const currentName = task.original_name || task.name;
     const titleInputRef = useRef<QuickCaptureInputHandle>(null);
     const pressingInsideTitleRef = useRef(false);
@@ -248,11 +250,82 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const showCheck =
         !hideStatusControl && !task.habit_mode && !!onToggleCompletion;
 
+    const today = getTodayDateString();
+    const isDone = isTaskCompleted(task.status);
+    const dueClass = !task.due_date
+        ? ''
+        : !isDone && task.due_date < today
+          ? 'text-red-600 dark:text-red-400'
+          : task.due_date === today
+            ? 'text-blue-600 dark:text-blue-400'
+            : 'text-gray-500 dark:text-gray-400';
+    const isRecurring =
+        (!!task.recurrence_type && task.recurrence_type !== 'none') ||
+        !!task.recurring_parent_id;
+
+    const commentBadge = !editable && commentCount > 0 && (
+        <span
+            className={
+                isMinimal
+                    ? 'flex items-center gap-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0'
+                    : 'ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-400 dark:text-gray-500 flex-shrink-0'
+            }
+            title={t('comments.count', '{{count}} comments', {
+                count: commentCount,
+            })}
+        >
+            <ChatBubbleLeftIcon className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-medium">{commentCount}</span>
+        </span>
+    );
+
+    const subtasksToggle = !editable && hasSubtasks && onSubtasksToggle && (
+        <button
+            type="button"
+            onClick={(e) => {
+                e.stopPropagation();
+                onSubtasksToggle(e);
+            }}
+            aria-pressed={!!showSubtasks}
+            title={
+                showSubtasks
+                    ? t('tasks.hideSubtasks', 'Hide subtasks')
+                    : t('tasks.showSubtasks', 'Show subtasks')
+            }
+            className={
+                isMinimal
+                    ? `flex items-center flex-shrink-0 transition-colors ${
+                          showSubtasks
+                              ? 'text-blue-600 dark:text-blue-400'
+                              : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
+                      }`
+                    : `ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full border transition-colors flex-shrink-0 ${
+                          showSubtasks
+                              ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-100'
+                              : 'text-gray-400 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
+                      }`
+            }
+        >
+            <ListBulletIcon className="h-3.5 w-3.5" />
+            {!isMinimal && (
+                <ChevronDownIcon
+                    className={`h-3 w-3 transition-transform ${
+                        showSubtasks ? 'rotate-180' : ''
+                    }`}
+                />
+            )}
+        </button>
+    );
+
     return (
         <div
-            className={`group flex items-center gap-3 px-4 ${
-                hasMeta ? 'py-2' : 'py-3'
-            } cursor-pointer`}
+            className={
+                isMinimal
+                    ? 'group flex items-center gap-3 px-4 py-2 min-h-[40px] cursor-pointer'
+                    : `group flex items-center gap-3 px-4 ${
+                          hasMeta ? 'py-2' : 'py-3'
+                      } cursor-pointer`
+            }
             role="button"
             tabIndex={0}
             onClick={onActivate}
@@ -264,15 +337,28 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }}
         >
             {showCheck && onToggleCompletion && (
-                <div className={hasMeta ? 'self-start mt-0.5' : ''}>
+                <div
+                    className={hasMeta && !isMinimal ? 'self-start mt-0.5' : ''}
+                >
                     <TaskCheckCircle
                         task={task}
                         onToggle={onToggleCompletion}
                     />
                 </div>
             )}
-            <div className="flex flex-1 min-w-0 flex-col">
-                <div className="flex items-center gap-1.5 min-w-0">
+            <div
+                className={
+                    isMinimal
+                        ? 'flex flex-1 min-w-0 items-center gap-3'
+                        : 'flex flex-1 min-w-0 flex-col'
+                }
+                data-testid={isMinimal ? 'task-row-minimal-line' : undefined}
+            >
+                <div
+                    className={`flex items-center gap-1.5 min-w-0 ${
+                        isMinimal ? 'flex-1' : ''
+                    }`}
+                >
                     {task.pinned && (
                         <MapPinSolidIcon
                             className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400 flex-shrink-0"
@@ -328,9 +414,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     ) : (
                         <span
                             className={`text-[15px] font-normal tracking-tight ${
-                                condenseStatusControl
-                                    ? 'line-clamp-3 break-words leading-snug'
-                                    : 'max-sm:line-clamp-2 max-sm:break-words sm:truncate'
+                                isMinimal
+                                    ? 'min-w-0 truncate'
+                                    : condenseStatusControl
+                                      ? 'line-clamp-3 break-words leading-snug'
+                                      : 'max-sm:line-clamp-2 max-sm:break-words sm:truncate'
                             } ${
                                 isTaskCompleted(task.status)
                                     ? 'text-gray-400 dark:text-gray-500 line-through'
@@ -359,49 +447,61 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             </span>
                         </span>
                     )}
-                    {!editable && commentCount > 0 && (
-                        <span
-                            className="ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-400 dark:text-gray-500 flex-shrink-0"
-                            title={t('comments.count', '{{count}} comments', {
-                                count: commentCount,
-                            })}
-                        >
-                            <ChatBubbleLeftIcon className="h-3.5 w-3.5" />
-                            <span className="text-[11px] font-medium">
-                                {commentCount}
-                            </span>
-                        </span>
-                    )}
-                    {!editable && hasSubtasks && onSubtasksToggle && (
-                        <button
-                            type="button"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onSubtasksToggle(e);
-                            }}
-                            aria-pressed={!!showSubtasks}
-                            title={
-                                showSubtasks
-                                    ? t('tasks.hideSubtasks', 'Hide subtasks')
-                                    : t('tasks.showSubtasks', 'Show subtasks')
-                            }
-                            className={`ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full border transition-colors flex-shrink-0 ${
-                                showSubtasks
-                                    ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-100'
-                                    : 'text-gray-400 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
-                            }`}
-                        >
-                            <ListBulletIcon className="h-3.5 w-3.5" />
-                            <ChevronDownIcon
-                                className={`h-3 w-3 transition-transform ${
-                                    showSubtasks ? 'rotate-180' : ''
-                                }`}
-                            />
-                        </button>
-                    )}
+                    {!isMinimal && commentBadge}
+                    {!isMinimal && subtasksToggle}
                 </div>
 
-                {hasMeta && (
+                {isMinimal && (
+                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
+                        {isRecurring && (
+                            <ArrowPathIcon
+                                className="h-3 w-3 text-gray-400 dark:text-gray-500"
+                                title={t('recurrence.recurring', 'Recurring')}
+                                aria-label={t(
+                                    'recurrence.recurring',
+                                    'Recurring'
+                                )}
+                            />
+                        )}
+                        {subtasksToggle}
+                        {commentBadge}
+                        {!compact && task.tags && task.tags.length > 0 && (
+                            <span className="flex items-center gap-1.5">
+                                {task.tags.slice(0, 2).map((tag) => (
+                                    <span key={tag.uid || tag.name}>
+                                        {`#${tag.name}`}
+                                    </span>
+                                ))}
+                                {task.tags.length > 2 && (
+                                    <span>
+                                        {t('tasks.moreTags', '+{{count}}', {
+                                            count: task.tags.length - 2,
+                                        })}
+                                    </span>
+                                )}
+                            </span>
+                        )}
+                        {!compact && showProject && (
+                            <Link
+                                to={projectHref}
+                                onClick={stop}
+                                className="max-w-[10rem] truncate hover:underline"
+                            >
+                                {project!.name}
+                            </Link>
+                        )}
+                        {!compact && task.due_date && (
+                            <span className={`whitespace-nowrap ${dueClass}`}>
+                                {formatDue(task.due_date)}
+                                {task.due_has_time &&
+                                    task.due_time &&
+                                    ` ${task.due_time}`}
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {hasMeta && !isMinimal && (
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
                         <PriorityBadge priority={task.priority} />
                         {task.parent_task && (

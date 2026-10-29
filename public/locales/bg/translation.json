@@ -190,6 +190,7 @@
     "setInProgress": "Задай в процес",
     "setNotStarted": "Задай като не започната",
     "showSubtasks": "Покажи подзадачи",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Скрий подзадачи",
     "edit": "Редактиране на задача",
     "delete": "Изтриване на задача",

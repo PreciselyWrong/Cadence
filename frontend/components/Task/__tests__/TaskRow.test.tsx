@@ -71,6 +71,10 @@ jest.mock('../../../store/useStore', () => {
     return { useStore };
 });
 
+jest.mock('../../../hooks/useUiDensity', () => ({
+    useIsMinimal: () => false,
+}));
+
 jest.mock('../../../utils/inboxService', () => ({
     analyzeInboxText: jest.fn(async (text: string) => ({
         cleaned_content: text,

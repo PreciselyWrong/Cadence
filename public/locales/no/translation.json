@@ -191,6 +191,7 @@
     "setInProgress": "Sett i gang",
     "setNotStarted": "Sett til ikke startet",
     "showSubtasks": "Vis undertasker",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Skjul undertasker",
     "edit": "Rediger oppgave",
     "delete": "Slett oppgave",

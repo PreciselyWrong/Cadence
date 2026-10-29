@@ -190,6 +190,7 @@
     "setInProgress": "设置为进行中",
     "setNotStarted": "设置为未开始",
     "showSubtasks": "显示子任务",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "隐藏子任务",
     "edit": "编辑任务",
     "delete": "删除任务",

@@ -190,6 +190,7 @@
     "setInProgress": "Markera som pågående",
     "setNotStarted": "Markera som ej påbörjad",
     "showSubtasks": "Visa deluppgifter",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Dölj deluppgifter",
     "edit": "Ändra uppgift",
     "delete": "Ta bort uppgift",

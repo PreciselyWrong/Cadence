@@ -194,6 +194,7 @@
     "setInProgress": "Set in progress",
     "setNotStarted": "Set to not started",
     "showSubtasks": "Show subtasks",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Hide subtasks",
     "edit": "Edit task",
     "delete": "Delete task",

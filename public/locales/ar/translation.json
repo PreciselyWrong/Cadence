@@ -194,6 +194,7 @@
     "setInProgress": "تعيين قيد التنفيذ",
     "setNotStarted": "تعيين لم يبدأ بعد",
     "showSubtasks": "عرض المهام الفرعية",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "إخفاء المهام الفرعية",
     "edit": "تعديل المهمة",
     "delete": "حذف المهمة",

@@ -190,6 +190,7 @@
     "setInProgress": "Aseta käynnissä olevaksi",
     "setNotStarted": "Aseta aloittamatta",
     "showSubtasks": "Näytä alitehtävät",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Piilota alitehtävät",
     "edit": "Muokkaa tehtävää",
     "delete": "Poista tehtävä",

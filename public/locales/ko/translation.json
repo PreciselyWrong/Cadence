@@ -190,6 +190,7 @@
     "setInProgress": "진행 중으로 설정",
     "setNotStarted": "시작되지 않음으로 설정",
     "showSubtasks": "하위 작업 표시",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "하위 작업 숨기기",
     "edit": "작업 편집",
     "delete": "작업 삭제",

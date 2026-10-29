@@ -190,6 +190,7 @@
     "setInProgress": "Sæt i gang",
     "setNotStarted": "Sæt til ikke startet",
     "showSubtasks": "Vis underopgaver",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Skjul underopgaver",
     "edit": "Rediger opgave",
     "delete": "Slet opgave",

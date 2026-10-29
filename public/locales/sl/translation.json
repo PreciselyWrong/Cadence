@@ -192,6 +192,7 @@
     "setInProgress": "Nastavi v poteku",
     "setNotStarted": "Nastavi na ni začeto",
     "showSubtasks": "Prikaži podnaloge",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Skrij podnaloge",
     "edit": "Uredi nalogo",
     "delete": "Izbriši nalogo",

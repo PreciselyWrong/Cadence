@@ -191,6 +191,7 @@
     "setInProgress": "Setează în desfășurare",
     "setNotStarted": "Setează ca neluat în lucru",
     "showSubtasks": "Arată subtask-uri",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Ascunde subtask-uri",
     "edit": "Editează task-ul",
     "delete": "Șterge task-ul",

@@ -190,6 +190,7 @@
     "setInProgress": "Devam ediyor olarak ayarla",
     "setNotStarted": "Başlamadı olarak ayarla",
     "showSubtasks": "Alt görevleri göster",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Alt görevleri gizle",
     "edit": "Görevi düzenle",
     "delete": "Görevi sil",

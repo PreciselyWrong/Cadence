@@ -192,6 +192,7 @@
     "setInProgress": "In Bearbeitung setzen",
     "setNotStarted": "Auf nicht begonnen setzen",
     "showSubtasks": "Unteraufgaben anzeigen",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Unteraufgaben ausblenden",
     "edit": "Aufgabe bearbeiten",
     "delete": "Aufgabe löschen",

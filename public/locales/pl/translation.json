@@ -192,6 +192,7 @@
     "setInProgress": "Ustaw jako w trakcie",
     "setNotStarted": "Ustaw jako nie rozpoczęte",
     "showSubtasks": "Pokaż podzadania",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Ukryj podzadania",
     "edit": "Edytuj zadanie",
     "delete": "Usuń zadanie",

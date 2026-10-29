@@ -870,6 +870,7 @@
     "setInProgress": "Establecer en progreso",
     "setNotStarted": "Establecer como no iniciado",
     "showSubtasks": "Mostrar subtareas",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Ocultar subtareas",
     "edit": "Editar tarea",
     "delete": "Eliminar tarea",

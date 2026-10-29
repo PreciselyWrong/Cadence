@@ -192,6 +192,7 @@
     "setInProgress": "Установить в процессе",
     "setNotStarted": "Установить как не начатую",
     "showSubtasks": "Показать подзадачи",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Скрыть подзадачи",
     "edit": "Редактировать задачу",
     "delete": "Удалить задачу",

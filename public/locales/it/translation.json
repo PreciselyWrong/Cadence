@@ -191,6 +191,7 @@
     "setInProgress": "Imposta in corso",
     "setNotStarted": "Imposta come non iniziata",
     "showSubtasks": "Mostra sottocompiti",
+    "moreTags": "+{{count}}",
     "hideSubtasks": "Nascondi sottocompiti",
     "edit": "Modifica attività",
     "delete": "Elimina attività",
