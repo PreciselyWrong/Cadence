@@ -233,7 +233,39 @@
       "important": "Ważne",
       "notImportant": "Nie Ważne",
       "dropHere": "Upuść tutaj",
-      "urgentHint": "Oznacz zadania jako 'pilne', aby je wyróżnić"
+      "urgentHint": "Oznacz zadania jako 'pilne', aby je wyróżnić",
+      "matrix": {
+        "picker": "Macierz",
+        "default": "Eisenhower (domyślna)",
+        "new": "Nowa macierz",
+        "newName": "Nowa macierz",
+        "limit": "Możesz mieć do {{count}} macierzy.",
+        "editTitle": "Edytuj macierz",
+        "name": "Nazwa macierzy",
+        "quadrant": "Ćwiartka {{number}}",
+        "quadrantName": "Nazwa ćwiartki",
+        "priorities": "Priorytet (dowolny z)",
+        "priority": {
+          "none": "Brak",
+          "low": "Niski",
+          "medium": "Średni",
+          "high": "Wysoki"
+        },
+        "due": "Termin",
+        "dueType": {
+          "any": "Dowolny",
+          "overdue": "Zaległe",
+          "today": "Dzisiaj",
+          "within": "W ciągu N dni",
+          "none": "Bez daty"
+        },
+        "days": "Dni",
+        "tags": "Tagi (dowolny z, oddzielone przecinkami)",
+        "projects": "Projekty (opcjonalnie)",
+        "firstMatchHint": "Każde zadanie trafia do pierwszej ćwiartki, której regułę spełnia. Pusty wybór pasuje do wszystkiego.",
+        "deleteTitle": "Usuń macierz",
+        "deleteConfirm": "Usunąć macierz „{{name}}”? Twoje zadania się nie zmienią."
+      }
     },
     "kanban": {
       "title": "Tablica Kanban",

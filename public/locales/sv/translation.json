@@ -233,7 +233,39 @@
       "important": "Viktigt",
       "notImportant": "Inte viktigt",
       "dropHere": "Släpp här",
-      "urgentHint": "Tagga uppgifter med 'brådskande' för att markera dem som brådskande"
+      "urgentHint": "Tagga uppgifter med 'brådskande' för att markera dem som brådskande",
+      "matrix": {
+        "picker": "Matris",
+        "default": "Eisenhower (standard)",
+        "new": "Ny matris",
+        "newName": "Ny matris",
+        "limit": "Du kan spara upp till {{count}} matriser.",
+        "editTitle": "Redigera matris",
+        "name": "Matrisens namn",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Kvadrantens namn",
+        "priorities": "Prioritet (någon av)",
+        "priority": {
+          "none": "Ingen",
+          "low": "Låg",
+          "medium": "Medel",
+          "high": "Hög"
+        },
+        "due": "Förfallodatum",
+        "dueType": {
+          "any": "Alla",
+          "overdue": "Försenade",
+          "today": "Idag",
+          "within": "Inom N dagar",
+          "none": "Inget datum"
+        },
+        "days": "Dagar",
+        "tags": "Taggar (någon av, kommaseparerade)",
+        "projects": "Projekt (valfritt)",
+        "firstMatchHint": "Varje uppgift visas i den första kvadrant vars regel den uppfyller. Ett tomt val matchar allt.",
+        "deleteTitle": "Ta bort matris",
+        "deleteConfirm": "Ta bort matrisen \"{{name}}\"? Dina uppgifter ändras inte."
+      }
     },
     "kanban": {
       "title": "Kanban-tavla",

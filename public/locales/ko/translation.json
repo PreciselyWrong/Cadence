@@ -233,7 +233,39 @@
       "important": "중요함",
       "notImportant": "중요하지 않음",
       "dropHere": "여기에 드롭",
-      "urgentHint": "'긴급' 태그를 붙여서 긴급한 작업으로 표시하세요"
+      "urgentHint": "'긴급' 태그를 붙여서 긴급한 작업으로 표시하세요",
+      "matrix": {
+        "picker": "매트릭스",
+        "default": "아이젠하워 (기본)",
+        "new": "새 매트릭스",
+        "newName": "새 매트릭스",
+        "limit": "매트릭스는 최대 {{count}}개까지 저장할 수 있습니다.",
+        "editTitle": "매트릭스 편집",
+        "name": "매트릭스 이름",
+        "quadrant": "사분면 {{number}}",
+        "quadrantName": "사분면 이름",
+        "priorities": "우선순위 (하나 이상)",
+        "priority": {
+          "none": "없음",
+          "low": "낮음",
+          "medium": "보통",
+          "high": "높음"
+        },
+        "due": "마감일",
+        "dueType": {
+          "any": "전체",
+          "overdue": "기한 지남",
+          "today": "오늘",
+          "within": "N일 이내",
+          "none": "날짜 없음"
+        },
+        "days": "일",
+        "tags": "태그 (하나 이상, 쉼표로 구분)",
+        "projects": "프로젝트 (선택)",
+        "firstMatchHint": "각 작업은 규칙에 맞는 첫 번째 사분면에만 표시됩니다. 비워 두면 모두 일치합니다.",
+        "deleteTitle": "매트릭스 삭제",
+        "deleteConfirm": "\"{{name}}\" 매트릭스를 삭제할까요? 작업은 변경되지 않습니다."
+      }
     },
     "kanban": {
       "title": "칸반 보드",

@@ -233,7 +233,39 @@
       "important": "Önemli",
       "notImportant": "Önemli Değil",
       "dropHere": "Buraya Bırak",
-      "urgentHint": "'Acil' etiketini kullanarak görevleri acil olarak işaretleyin"
+      "urgentHint": "'Acil' etiketini kullanarak görevleri acil olarak işaretleyin",
+      "matrix": {
+        "picker": "Matris",
+        "default": "Eisenhower (varsayılan)",
+        "new": "Yeni matris",
+        "newName": "Yeni matris",
+        "limit": "En fazla {{count}} matris tutabilirsiniz.",
+        "editTitle": "Matrisi düzenle",
+        "name": "Matris adı",
+        "quadrant": "Çeyrek {{number}}",
+        "quadrantName": "Çeyrek adı",
+        "priorities": "Öncelik (herhangi biri)",
+        "priority": {
+          "none": "Yok",
+          "low": "Düşük",
+          "medium": "Orta",
+          "high": "Yüksek"
+        },
+        "due": "Bitiş tarihi",
+        "dueType": {
+          "any": "Herhangi",
+          "overdue": "Gecikmiş",
+          "today": "Bugün",
+          "within": "N gün içinde",
+          "none": "Tarihsiz"
+        },
+        "days": "Gün",
+        "tags": "Etiketler (herhangi biri, virgülle ayrılmış)",
+        "projects": "Projeler (isteğe bağlı)",
+        "firstMatchHint": "Her görev, kuralına uyduğu ilk çeyrekte görünür. Boş bir seçim her şeyle eşleşir.",
+        "deleteTitle": "Matrisi sil",
+        "deleteConfirm": "\"{{name}}\" matrisi silinsin mi? Görevleriniz değişmez."
+      }
     },
     "kanban": {
       "title": "Kanban Panosu",

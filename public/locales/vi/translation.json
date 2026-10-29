@@ -233,7 +233,39 @@
       "important": "Quan trọng",
       "notImportant": "Không quan trọng",
       "dropHere": "Thả vào đây",
-      "urgentHint": "Gán nhãn cho các nhiệm vụ với 'khẩn cấp' để đánh dấu chúng là khẩn cấp"
+      "urgentHint": "Gán nhãn cho các nhiệm vụ với 'khẩn cấp' để đánh dấu chúng là khẩn cấp",
+      "matrix": {
+        "picker": "Ma trận",
+        "default": "Eisenhower (mặc định)",
+        "new": "Ma trận mới",
+        "newName": "Ma trận mới",
+        "limit": "Bạn có thể giữ tối đa {{count}} ma trận.",
+        "editTitle": "Sửa ma trận",
+        "name": "Tên ma trận",
+        "quadrant": "Ô {{number}}",
+        "quadrantName": "Tên ô",
+        "priorities": "Độ ưu tiên (bất kỳ)",
+        "priority": {
+          "none": "Không",
+          "low": "Thấp",
+          "medium": "Trung bình",
+          "high": "Cao"
+        },
+        "due": "Hạn chót",
+        "dueType": {
+          "any": "Bất kỳ",
+          "overdue": "Quá hạn",
+          "today": "Hôm nay",
+          "within": "Trong N ngày",
+          "none": "Không có ngày"
+        },
+        "days": "Ngày",
+        "tags": "Thẻ (bất kỳ, cách nhau bằng dấu phẩy)",
+        "projects": "Dự án (tùy chọn)",
+        "firstMatchHint": "Mỗi công việc nằm ở ô đầu tiên có quy tắc phù hợp. Lựa chọn trống khớp với mọi thứ.",
+        "deleteTitle": "Xóa ma trận",
+        "deleteConfirm": "Xóa ma trận \"{{name}}\"? Công việc của bạn không thay đổi."
+      }
     },
     "kanban": {
       "title": "Bảng Kanban",

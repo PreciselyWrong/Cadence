@@ -221,7 +221,39 @@
       "important": "Important",
       "notImportant": "Not Important",
       "dropHere": "Drop here",
-      "urgentHint": "Tag tasks with 'urgent' to mark them as urgent"
+      "urgentHint": "Tag tasks with 'urgent' to mark them as urgent",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (default)",
+        "new": "New matrix",
+        "newName": "New matrix",
+        "limit": "You can keep up to {{count}} matrices.",
+        "editTitle": "Edit matrix",
+        "name": "Matrix name",
+        "quadrant": "Quadrant {{number}}",
+        "quadrantName": "Quadrant name",
+        "priorities": "Priority (any of)",
+        "priority": {
+          "none": "None",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "due": "Due date",
+        "dueType": {
+          "any": "Any",
+          "overdue": "Overdue",
+          "today": "Today",
+          "within": "Within N days",
+          "none": "No date"
+        },
+        "days": "Days",
+        "tags": "Tags (any of, comma separated)",
+        "projects": "Projects (optional)",
+        "firstMatchHint": "Each task appears in the first quadrant whose rule it matches. Empty choices match everything.",
+        "deleteTitle": "Delete matrix",
+        "deleteConfirm": "Delete the matrix \"{{name}}\"? Your tasks are not changed."
+      }
     },
     "kanban": {
       "title": "Kanban Board",

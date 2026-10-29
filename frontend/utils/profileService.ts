@@ -1,6 +1,27 @@
 import { handleAuthResponse, getPostHeadersWithCsrf } from './authUtils';
 import { getApiPath } from '../config/paths';
 
+export type MatrixPriority = 'none' | 'low' | 'medium' | 'high';
+export type MatrixDueType = 'any' | 'overdue' | 'today' | 'within' | 'none';
+
+export interface MatrixRule {
+    priorities: MatrixPriority[];
+    due: { type: MatrixDueType; days?: number };
+    tags: string[];
+    projects: string[];
+}
+
+export interface MatrixQuadrant {
+    name: string;
+    rule: MatrixRule;
+}
+
+export interface EisenhowerMatrixConfig {
+    id: string;
+    name: string;
+    quadrants: MatrixQuadrant[];
+}
+
 interface Profile {
     id: number;
     email: string;
@@ -44,6 +65,7 @@ interface Profile {
         inbox?: {
             recentlyCapturedExpanded?: boolean;
         };
+        matrices?: EisenhowerMatrixConfig[];
         focus?: {
             area_uid?: string | null;
             project_uid?: string | null;

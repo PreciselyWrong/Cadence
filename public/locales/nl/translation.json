@@ -233,7 +233,39 @@
       "important": "Belangrijk",
       "notImportant": "Niet Belangrijk",
       "dropHere": "Hier laten vallen",
-      "urgentHint": "Tag taken met 'dringend' om ze als dringend te markeren"
+      "urgentHint": "Tag taken met 'dringend' om ze als dringend te markeren",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (standaard)",
+        "new": "Nieuwe matrix",
+        "newName": "Nieuwe matrix",
+        "limit": "Je kunt maximaal {{count}} matrices bewaren.",
+        "editTitle": "Matrix bewerken",
+        "name": "Naam van de matrix",
+        "quadrant": "Kwadrant {{number}}",
+        "quadrantName": "Naam van het kwadrant",
+        "priorities": "Prioriteit (een van)",
+        "priority": {
+          "none": "Geen",
+          "low": "Laag",
+          "medium": "Gemiddeld",
+          "high": "Hoog"
+        },
+        "due": "Vervaldatum",
+        "dueType": {
+          "any": "Alle",
+          "overdue": "Te laat",
+          "today": "Vandaag",
+          "within": "Binnen N dagen",
+          "none": "Geen datum"
+        },
+        "days": "Dagen",
+        "tags": "Labels (een van, gescheiden door komma's)",
+        "projects": "Projecten (optioneel)",
+        "firstMatchHint": "Elke taak staat in het eerste kwadrant waarvan ze aan de regel voldoet. Een lege keuze past op alles.",
+        "deleteTitle": "Matrix verwijderen",
+        "deleteConfirm": "De matrix \"{{name}}\" verwijderen? Je taken veranderen niet."
+      }
     },
     "kanban": {
       "title": "Kanban Bord",

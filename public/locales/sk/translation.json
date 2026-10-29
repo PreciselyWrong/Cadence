@@ -220,7 +220,39 @@
             "important": "Dôležité",
             "notImportant": "Nie dôležité",
             "dropHere": "Pustite sem",
-            "urgentHint": "Označte úlohy štítkom 'urgent', aby boli naliehavé"
+            "urgentHint": "Označte úlohy štítkom 'urgent', aby boli naliehavé",
+            "matrix": {
+                "picker": "Matica",
+                "default": "Eisenhower (predvolená)",
+                "new": "Nová matica",
+                "newName": "Nová matica",
+                "limit": "Môžete mať najviac {{count}} matíc.",
+                "editTitle": "Upraviť maticu",
+                "name": "Názov matice",
+                "quadrant": "Kvadrant {{number}}",
+                "quadrantName": "Názov kvadrantu",
+                "priorities": "Priorita (ktorákoľvek z)",
+                "priority": {
+                    "none": "Žiadna",
+                    "low": "Nízka",
+                    "medium": "Stredná",
+                    "high": "Vysoká"
+                },
+                "due": "Termín",
+                "dueType": {
+                    "any": "Akýkoľvek",
+                    "overdue": "Po termíne",
+                    "today": "Dnes",
+                    "within": "Do N dní",
+                    "none": "Bez dátumu"
+                },
+                "days": "Dni",
+                "tags": "Štítky (ktorýkoľvek, oddelené čiarkou)",
+                "projects": "Projekty (voliteľné)",
+                "firstMatchHint": "Každá úloha sa zobrazí v prvom kvadrante, ktorého pravidlo spĺňa. Prázdna voľba zodpovedá všetkému.",
+                "deleteTitle": "Odstrániť maticu",
+                "deleteConfirm": "Odstrániť maticu „{{name}}“? Vaše úlohy sa nezmenia."
+            }
         },
         "kanban": {
             "title": "Kanban tabuľa",

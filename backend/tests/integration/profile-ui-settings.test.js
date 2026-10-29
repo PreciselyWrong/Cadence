@@ -82,4 +82,118 @@ describe('PUT /api/profile/ui-settings', () => {
             showWeekNumbers: true,
         });
     });
+
+    describe('matrices', () => {
+        const quadrant = (name, rule) => ({ name, rule });
+
+        it('saves custom matrices, sanitizing the rules', async () => {
+            const res = await agent.put('/api/profile/ui-settings').send({
+                matrices: [
+                    {
+                        id: 'm1',
+                        name: '  Work  ',
+                        evil: 'x',
+                        quadrants: [
+                            quadrant('Now', {
+                                priorities: ['high', 'bogus', 'high', 'none'],
+                                due: { type: 'within', days: 3 },
+                                tags: [' Urgent ', 'urgent', 42],
+                                projects: ['p-uid'],
+                                extra: true,
+                            }),
+                            quadrant('', {
+                                due: { type: 'within', days: 999 },
+                            }),
+                            quadrant('Later', { due: { type: 'weird' } }),
+                            quadrant('Rest', null),
+                        ],
+                    },
+                    { id: 'default', name: 'x', quadrants: [] },
+                ],
+            });
+            expect(res.status).toBe(200);
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.matrices).toEqual([
+                {
+                    id: 'm1',
+                    name: 'Work',
+                    quadrants: [
+                        {
+                            name: 'Now',
+                            rule: {
+                                priorities: ['none', 'high'],
+                                due: { type: 'within', days: 3 },
+                                tags: ['urgent'],
+                                projects: ['p-uid'],
+                            },
+                        },
+                        {
+                            name: 'Q2',
+                            rule: {
+                                priorities: [],
+                                due: { type: 'within', days: 7 },
+                                tags: [],
+                                projects: [],
+                            },
+                        },
+                        {
+                            name: 'Later',
+                            rule: {
+                                priorities: [],
+                                due: { type: 'any' },
+                                tags: [],
+                                projects: [],
+                            },
+                        },
+                        {
+                            name: 'Rest',
+                            rule: {
+                                priorities: [],
+                                due: { type: 'any' },
+                                tags: [],
+                                projects: [],
+                            },
+                        },
+                    ],
+                },
+            ]);
+        });
+
+        it('rejects more than 10 matrices', async () => {
+            const four = [1, 2, 3, 4].map((i) => quadrant(`Q${i}`, {}));
+            const matrices = Array.from({ length: 11 }, (_, i) => ({
+                id: `m${i}`,
+                name: `M${i}`,
+                quadrants: four,
+            }));
+            const res = await agent
+                .put('/api/profile/ui-settings')
+                .send({ matrices });
+            expect(res.status).toBe(400);
+        });
+
+        it('rejects a matrix without four quadrants', async () => {
+            const res = await agent.put('/api/profile/ui-settings').send({
+                matrices: [{ id: 'm1', name: 'M', quadrants: [] }],
+            });
+            expect(res.status).toBe(400);
+        });
+
+        it('keeps matrices when another ui setting is saved', async () => {
+            const four = [1, 2, 3, 4].map((i) => quadrant(`Q${i}`, {}));
+            await agent.put('/api/profile/ui-settings').send({
+                matrices: [{ id: 'm1', name: 'M', quadrants: four }],
+            });
+            await agent
+                .put('/api/profile/ui-settings')
+                .send({ inbox: { recentlyCapturedExpanded: true } });
+            await agent
+                .patch('/api/profile')
+                .send({ ui_settings: { inbox: {} } });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.matrices).toHaveLength(1);
+        });
+    });
 });

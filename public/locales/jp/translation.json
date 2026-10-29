@@ -233,7 +233,39 @@
       "important": "重要",
       "notImportant": "重要ではない",
       "dropHere": "ここにドロップ",
-      "urgentHint": "'緊急' タグを付けて、タスクを緊急としてマークします"
+      "urgentHint": "'緊急' タグを付けて、タスクを緊急としてマークします",
+      "matrix": {
+        "picker": "マトリクス",
+        "default": "アイゼンハワー（デフォルト）",
+        "new": "新しいマトリクス",
+        "newName": "新しいマトリクス",
+        "limit": "マトリクスは最大 {{count}} 個まで保存できます。",
+        "editTitle": "マトリクスを編集",
+        "name": "マトリクス名",
+        "quadrant": "象限 {{number}}",
+        "quadrantName": "象限名",
+        "priorities": "優先度（いずれか）",
+        "priority": {
+          "none": "なし",
+          "low": "低",
+          "medium": "中",
+          "high": "高"
+        },
+        "due": "期限",
+        "dueType": {
+          "any": "すべて",
+          "overdue": "期限切れ",
+          "today": "今日",
+          "within": "N 日以内",
+          "none": "期限なし"
+        },
+        "days": "日",
+        "tags": "タグ（いずれか、カンマ区切り）",
+        "projects": "プロジェクト（任意）",
+        "firstMatchHint": "各タスクはルールに一致する最初の象限にだけ表示されます。空の選択はすべてに一致します。",
+        "deleteTitle": "マトリクスを削除",
+        "deleteConfirm": "マトリクス「{{name}}」を削除しますか？タスクは変更されません。"
+      }
     },
     "kanban": {
       "title": "カンバンボード",

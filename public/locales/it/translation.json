@@ -233,7 +233,39 @@
       "important": "Importante",
       "notImportant": "Non Importante",
       "dropHere": "Trascina qui",
-      "urgentHint": "Contrassegna le attività con 'urgente' per marcarle come urgenti"
+      "urgentHint": "Contrassegna le attività con 'urgente' per marcarle come urgenti",
+      "matrix": {
+        "picker": "Matrice",
+        "default": "Eisenhower (predefinita)",
+        "new": "Nuova matrice",
+        "newName": "Nuova matrice",
+        "limit": "Puoi tenere fino a {{count}} matrici.",
+        "editTitle": "Modifica matrice",
+        "name": "Nome della matrice",
+        "quadrant": "Quadrante {{number}}",
+        "quadrantName": "Nome del quadrante",
+        "priorities": "Priorità (una qualsiasi)",
+        "priority": {
+          "none": "Nessuna",
+          "low": "Bassa",
+          "medium": "Media",
+          "high": "Alta"
+        },
+        "due": "Scadenza",
+        "dueType": {
+          "any": "Qualsiasi",
+          "overdue": "In ritardo",
+          "today": "Oggi",
+          "within": "Entro N giorni",
+          "none": "Senza data"
+        },
+        "days": "Giorni",
+        "tags": "Tag (uno qualsiasi, separati da virgole)",
+        "projects": "Progetti (facoltativo)",
+        "firstMatchHint": "Ogni attività compare nel primo quadrante di cui rispetta la regola. Una scelta vuota corrisponde a tutto.",
+        "deleteTitle": "Elimina matrice",
+        "deleteConfirm": "Eliminare la matrice \"{{name}}\"? Le tue attività non cambiano."
+      }
     },
     "kanban": {
       "title": "Bacheca Kanban",

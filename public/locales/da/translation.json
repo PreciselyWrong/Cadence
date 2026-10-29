@@ -233,7 +233,39 @@
       "important": "Vigtig",
       "notImportant": "Ikke Vigtig",
       "dropHere": "Slip her",
-      "urgentHint": "Tag opgaver med 'hastende' for at markere dem som hastende"
+      "urgentHint": "Tag opgaver med 'hastende' for at markere dem som hastende",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (standard)",
+        "new": "Ny matrix",
+        "newName": "Ny matrix",
+        "limit": "Du kan gemme op til {{count}} matricer.",
+        "editTitle": "Rediger matrix",
+        "name": "Matrixens navn",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Kvadrantens navn",
+        "priorities": "Prioritet (en af)",
+        "priority": {
+          "none": "Ingen",
+          "low": "Lav",
+          "medium": "Middel",
+          "high": "Høj"
+        },
+        "due": "Forfaldsdato",
+        "dueType": {
+          "any": "Alle",
+          "overdue": "Forfaldne",
+          "today": "I dag",
+          "within": "Inden for N dage",
+          "none": "Ingen dato"
+        },
+        "days": "Dage",
+        "tags": "Tags (et af, adskilt med komma)",
+        "projects": "Projekter (valgfrit)",
+        "firstMatchHint": "Hver opgave vises i den første kvadrant, hvis regel den opfylder. Et tomt valg passer til alt.",
+        "deleteTitle": "Slet matrix",
+        "deleteConfirm": "Slet matricen \"{{name}}\"? Dine opgaver ændres ikke."
+      }
     },
     "kanban": {
       "title": "Kanban Tavle",
