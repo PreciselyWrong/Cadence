@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Atur prioritas",
       "setDueDate": "Atur tanggal jatuh tempo"
+    },
+    "contextMenu": {
+      "label": "Tindakan tugas",
+      "priority": "Prioritas",
+      "date": "Tanggal",
+      "today": "Hari ini",
+      "tomorrow": "Besok",
+      "nextWeek": "Minggu depan",
+      "clearDate": "Hapus tanggal",
+      "moveToProject": "Pindahkan ke proyek"
     }
   },
   "timeline": {

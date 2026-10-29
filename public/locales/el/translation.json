@@ -972,6 +972,16 @@
     "quickEdit": {
       "setPriority": "Ορισμός προτεραιότητας",
       "setDueDate": "Ορισμός ημερομηνίας λήξης"
+    },
+    "contextMenu": {
+      "label": "Ενέργειες εργασίας",
+      "priority": "Προτεραιότητα",
+      "date": "Ημερομηνία",
+      "today": "Σήμερα",
+      "tomorrow": "Αύριο",
+      "nextWeek": "Επόμενη εβδομάδα",
+      "clearDate": "Εκκαθάριση ημερομηνίας",
+      "moveToProject": "Μετακίνηση σε έργο"
     }
   },
   "timeline": {

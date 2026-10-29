@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Đặt độ ưu tiên",
       "setDueDate": "Đặt ngày đến hạn"
+    },
+    "contextMenu": {
+      "label": "Thao tác công việc",
+      "priority": "Độ ưu tiên",
+      "date": "Ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "nextWeek": "Tuần sau",
+      "clearDate": "Xóa ngày",
+      "moveToProject": "Chuyển vào dự án"
     }
   },
   "timeline": {

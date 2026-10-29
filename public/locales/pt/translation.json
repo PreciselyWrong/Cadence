@@ -296,6 +296,16 @@
     "quickEdit": {
       "setPriority": "Definir prioridade",
       "setDueDate": "Definir data de vencimento"
+    },
+    "contextMenu": {
+      "label": "Ações da tarefa",
+      "priority": "Prioridade",
+      "date": "Data",
+      "today": "Hoje",
+      "tomorrow": "Amanhã",
+      "nextWeek": "Próxima semana",
+      "clearDate": "Limpar data",
+      "moveToProject": "Mover para projeto"
     }
   },
   "timeline": {

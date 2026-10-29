@@ -299,6 +299,16 @@
     "quickEdit": {
       "setPriority": "تحديد الأولوية",
       "setDueDate": "تحديد تاريخ الاستحقاق"
+    },
+    "contextMenu": {
+      "label": "إجراءات المهمة",
+      "priority": "الأولوية",
+      "date": "التاريخ",
+      "today": "اليوم",
+      "tomorrow": "غدًا",
+      "nextWeek": "الأسبوع القادم",
+      "clearDate": "مسح التاريخ",
+      "moveToProject": "نقل إلى مشروع"
     }
   },
   "timeline": {

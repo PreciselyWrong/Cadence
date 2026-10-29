@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Priorität setzen",
       "setDueDate": "Fälligkeitsdatum setzen"
+    },
+    "contextMenu": {
+      "label": "Aktionen für die Aufgabe",
+      "priority": "Priorität",
+      "date": "Datum",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "nextWeek": "Nächste Woche",
+      "clearDate": "Datum entfernen",
+      "moveToProject": "In Projekt verschieben"
     }
   },
   "timeline": {

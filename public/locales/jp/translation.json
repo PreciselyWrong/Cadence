@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "優先度を設定",
       "setDueDate": "期限日を設定"
+    },
+    "contextMenu": {
+      "label": "タスクの操作",
+      "priority": "優先度",
+      "date": "日付",
+      "today": "今日",
+      "tomorrow": "明日",
+      "nextWeek": "来週",
+      "clearDate": "日付をクリア",
+      "moveToProject": "プロジェクトに移動"
     }
   },
   "timeline": {

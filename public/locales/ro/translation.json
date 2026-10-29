@@ -296,6 +296,16 @@
     "quickEdit": {
       "setPriority": "Setează prioritatea",
       "setDueDate": "Setează data scadentă"
+    },
+    "contextMenu": {
+      "label": "Acțiuni pentru sarcină",
+      "priority": "Prioritate",
+      "date": "Dată",
+      "today": "Azi",
+      "tomorrow": "Mâine",
+      "nextWeek": "Săptămâna viitoare",
+      "clearDate": "Șterge data",
+      "moveToProject": "Mută în proiect"
     }
   },
   "timeline": {

@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Ange prioritet",
       "setDueDate": "Ange förfallodatum"
+    },
+    "contextMenu": {
+      "label": "Åtgärder för uppgiften",
+      "priority": "Prioritet",
+      "date": "Datum",
+      "today": "Idag",
+      "tomorrow": "Imorgon",
+      "nextWeek": "Nästa vecka",
+      "clearDate": "Rensa datum",
+      "moveToProject": "Flytta till projekt"
     }
   },
   "timeline": {

@@ -179,6 +179,17 @@ describe('TaskRowCollapsed in minimal mode', () => {
         );
     });
 
+    it('opens the row context menu on right click', () => {
+        const onContextMenu = jest.fn();
+        renderRow(baseTask(), { onContextMenu });
+
+        const row = screen
+            .getByText('Write report')
+            .closest('[role="button"]')!;
+        fireEvent.contextMenu(row);
+        expect(onContextMenu).toHaveBeenCalledTimes(1);
+    });
+
     it('shows no subtasks chevron for a task without subtasks', () => {
         renderRow(baseTask(), { hasSubtasks: false });
 
@@ -199,6 +210,14 @@ describe('TaskRowCollapsed in dense mode', () => {
         expect(
             screen.queryByTestId('task-row-minimal-line')
         ).not.toBeInTheDocument();
+    });
+
+    it('ignores right click so the browser menu stays', () => {
+        const onContextMenu = jest.fn();
+        renderRow(baseTask(), { onContextMenu });
+
+        fireEvent.contextMenu(screen.getByText('Write report'));
+        expect(onContextMenu).not.toHaveBeenCalled();
     });
 
     it('keeps the subtasks toggle without a chevron', () => {

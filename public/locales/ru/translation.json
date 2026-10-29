@@ -297,6 +297,16 @@
     "quickEdit": {
       "setPriority": "Задать приоритет",
       "setDueDate": "Задать срок"
+    },
+    "contextMenu": {
+      "label": "Действия с задачей",
+      "priority": "Приоритет",
+      "date": "Дата",
+      "today": "Сегодня",
+      "tomorrow": "Завтра",
+      "nextWeek": "Следующая неделя",
+      "clearDate": "Убрать дату",
+      "moveToProject": "Переместить в проект"
     }
   },
   "timeline": {

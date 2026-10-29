@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Angiv prioritet",
       "setDueDate": "Angiv forfaldsdato"
+    },
+    "contextMenu": {
+      "label": "Handlinger for opgaven",
+      "priority": "Prioritet",
+      "date": "Dato",
+      "today": "I dag",
+      "tomorrow": "I morgen",
+      "nextWeek": "Næste uge",
+      "clearDate": "Ryd dato",
+      "moveToProject": "Flyt til projekt"
     }
   },
   "timeline": {

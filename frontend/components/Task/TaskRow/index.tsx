@@ -35,6 +35,7 @@ import { isTaskOverdueInTodayPlan } from '../../../utils/dateUtils';
 import { getApiPath } from '../../../config/paths';
 import TaskRowCollapsed from './TaskRowCollapsed';
 import TaskRowExpanded from './TaskRowExpanded';
+import MinimalContextMenu from './MinimalContextMenu';
 import { useTaskRowExpansion } from './TaskRowExpansionContext';
 import { useTaskRowSave } from './useTaskRowSave';
 import { useTaskPane } from '../../../contexts/TaskPaneContext';
@@ -108,6 +109,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
     const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+    const [contextMenuAt, setContextMenuAt] = useState<{
+        x: number;
+        y: number;
+    } | null>(null);
 
     const [subtasks, setSubtasks] = useState<Task[]>(task.subtasks || []);
     const [loadingSubtasks, setLoadingSubtasks] = useState(false);
@@ -282,6 +287,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
         },
         [task, onTaskUpdate, showErrorToast, t]
     );
+
+    const openContextMenu = useCallback((e: React.MouseEvent) => {
+        setContextMenuAt({ x: e.clientX, y: e.clientY });
+    }, []);
 
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -494,6 +503,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
                             : undefined
                     }
                     onActionsMenuOpenChange={setIsActionsMenuOpen}
+                    onContextMenu={
+                        isMinimal && task.uid ? openContextMenu : undefined
+                    }
                 />
 
                 {panelMounted && (
@@ -611,6 +623,18 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         )}
                     </div>
                 )}
+
+            {isMinimal && task.uid && contextMenuAt && (
+                <MinimalContextMenu
+                    x={contextMenuAt.x}
+                    y={contextMenuAt.y}
+                    task={displayTask}
+                    projects={projectList}
+                    onTaskUpdate={onTaskUpdate}
+                    onDelete={() => setIsConfirmDialogOpen(true)}
+                    onClose={() => setContextMenuAt(null)}
+                />
+            )}
 
             {isBlockedConfirmOpen && (
                 <ConfirmDialog

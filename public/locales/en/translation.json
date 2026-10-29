@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Set priority",
       "setDueDate": "Set due date"
+    },
+    "contextMenu": {
+      "label": "Task actions",
+      "priority": "Priority",
+      "date": "Date",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextWeek": "Next week",
+      "clearDate": "Clear date",
+      "moveToProject": "Move to project"
     }
   },
   "comments": {

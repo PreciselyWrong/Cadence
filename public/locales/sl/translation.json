@@ -297,6 +297,16 @@
     "quickEdit": {
       "setPriority": "Nastavi prioriteto",
       "setDueDate": "Nastavi rok"
+    },
+    "contextMenu": {
+      "label": "Dejanja naloge",
+      "priority": "Prioriteta",
+      "date": "Datum",
+      "today": "Danes",
+      "tomorrow": "Jutri",
+      "nextWeek": "Naslednji teden",
+      "clearDate": "Počisti datum",
+      "moveToProject": "Premakni v projekt"
     }
   },
   "timeline": {

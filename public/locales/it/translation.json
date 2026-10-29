@@ -296,6 +296,16 @@
     "quickEdit": {
       "setPriority": "Imposta priorità",
       "setDueDate": "Imposta scadenza"
+    },
+    "contextMenu": {
+      "label": "Azioni attività",
+      "priority": "Priorità",
+      "date": "Data",
+      "today": "Oggi",
+      "tomorrow": "Domani",
+      "nextWeek": "Settimana prossima",
+      "clearDate": "Rimuovi data",
+      "moveToProject": "Sposta in progetto"
     }
   },
   "timeline": {

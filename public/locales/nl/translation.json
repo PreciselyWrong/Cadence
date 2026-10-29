@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Prioriteit instellen",
       "setDueDate": "Vervaldatum instellen"
+    },
+    "contextMenu": {
+      "label": "Taakacties",
+      "priority": "Prioriteit",
+      "date": "Datum",
+      "today": "Vandaag",
+      "tomorrow": "Morgen",
+      "nextWeek": "Volgende week",
+      "clearDate": "Datum wissen",
+      "moveToProject": "Verplaatsen naar project"
     }
   },
   "timeline": {

@@ -296,6 +296,16 @@
         "quickEdit": {
             "setPriority": "Nastaviť prioritu",
             "setDueDate": "Nastaviť termín"
+        },
+        "contextMenu": {
+            "label": "Akcie úlohy",
+            "priority": "Priorita",
+            "date": "Dátum",
+            "today": "Dnes",
+            "tomorrow": "Zajtra",
+            "nextWeek": "Budúci týždeň",
+            "clearDate": "Vymazať dátum",
+            "moveToProject": "Presunúť do projektu"
         }
     },
     "comments": {

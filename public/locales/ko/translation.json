@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "우선순위 설정",
       "setDueDate": "마감일 설정"
+    },
+    "contextMenu": {
+      "label": "작업 동작",
+      "priority": "우선순위",
+      "date": "날짜",
+      "today": "오늘",
+      "tomorrow": "내일",
+      "nextWeek": "다음 주",
+      "clearDate": "날짜 지우기",
+      "moveToProject": "프로젝트로 이동"
     }
   },
   "timeline": {

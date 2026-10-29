@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "设置优先级",
       "setDueDate": "设置截止日期"
+    },
+    "contextMenu": {
+      "label": "任务操作",
+      "priority": "优先级",
+      "date": "日期",
+      "today": "今天",
+      "tomorrow": "明天",
+      "nextWeek": "下周",
+      "clearDate": "清除日期",
+      "moveToProject": "移到项目"
     }
   },
   "timeline": {

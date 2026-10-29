@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Aseta prioriteetti",
       "setDueDate": "Aseta eräpäivä"
+    },
+    "contextMenu": {
+      "label": "Tehtävän toiminnot",
+      "priority": "Prioriteetti",
+      "date": "Päivämäärä",
+      "today": "Tänään",
+      "tomorrow": "Huomenna",
+      "nextWeek": "Ensi viikko",
+      "clearDate": "Tyhjennä päivämäärä",
+      "moveToProject": "Siirrä projektiin"
     }
   },
   "timeline": {

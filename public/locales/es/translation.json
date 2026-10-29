@@ -973,6 +973,16 @@
     "quickEdit": {
       "setPriority": "Establecer prioridad",
       "setDueDate": "Establecer fecha límite"
+    },
+    "contextMenu": {
+      "label": "Acciones de la tarea",
+      "priority": "Prioridad",
+      "date": "Fecha",
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "nextWeek": "Próxima semana",
+      "clearDate": "Quitar fecha",
+      "moveToProject": "Mover a proyecto"
     }
   },
   "timeline": {

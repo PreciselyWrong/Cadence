@@ -295,6 +295,16 @@
     "quickEdit": {
       "setPriority": "Öncelik ayarla",
       "setDueDate": "Bitiş tarihi ayarla"
+    },
+    "contextMenu": {
+      "label": "Görev işlemleri",
+      "priority": "Öncelik",
+      "date": "Tarih",
+      "today": "Bugün",
+      "tomorrow": "Yarın",
+      "nextWeek": "Gelecek hafta",
+      "clearDate": "Tarihi temizle",
+      "moveToProject": "Projeye taşı"
     }
   },
   "timeline": {

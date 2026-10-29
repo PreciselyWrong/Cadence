@@ -70,6 +70,8 @@ interface TaskRowCollapsedProps {
     onDelete?: (e: React.MouseEvent) => void;
     onTogglePin?: () => void;
     onActionsMenuOpenChange?: (open: boolean) => void;
+    // Right click on a minimal row, when it is not expanded.
+    onContextMenu?: (e: React.MouseEvent) => void;
 }
 
 const tagColorStyle = (color?: string): React.CSSProperties | undefined => {
@@ -158,6 +160,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     onDelete,
     onTogglePin,
     onActionsMenuOpenChange,
+    onContextMenu,
 }) => {
     const { t } = useTranslation();
     const isMinimal = useIsMinimal();
@@ -348,6 +351,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }
             role="button"
             tabIndex={0}
+            onContextMenu={
+                isMinimal && onContextMenu && !editable
+                    ? (e) => {
+                          e.preventDefault();
+                          onContextMenu(e);
+                      }
+                    : undefined
+            }
             onClick={onActivate}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
