@@ -81,6 +81,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Round check | Checkbox and status menu on each row | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. In Minimal, rows are one line with a priority flag and due date you can set in place. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md) |
 | Task pane | Inline quick-edit on the row | In Minimal, a row click opens the task in a **right-hand pane** and you edit it in place (title, check, priority, due date, project, tags, note, subtasks); the URL keeps `?task=<uid>`, Escape closes it. Dense keeps the inline expansion. [Docs](docs/00-tasks-behavior.md) |
 | Row gestures | Subtasks through a list icon; no row menu; no keyboard moves between rows | In Minimal, a **chevron** before the check opens a row's subtasks, and group headers in project and day lists collapse. **Right-click** a row for priority, date (today, tomorrow, next week, clear), project, pin and delete. Arrow keys move between rows; Space completes, Enter opens, **D** and **P** open the date and priority pickers. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
+| Drag to reorder | — | In Minimal, drag a row in the Tasks, project or tag list to set its order; it is saved per account and list and the list sorts by **Custom**. [Docs](docs/00-tasks-behavior.md) |
 | Add and completed | Add box at the top of the page; completed tasks mixed into the list | In Minimal, Today, Tasks, project and tag lists start with a **+ Add task** field (Enter adds to that list) and end with a collapsed **Completed (N)** section. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
 | Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
 | Quick add | English dates only | **French dates** too (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), **`!1`–`!3`** sets priority (high, medium, low), and **`^list`** is an alias of `+project`, matched without regard to case or accents. [Docs](docs/04-inbox-page.md) |
@@ -92,6 +93,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 ### Under the hood
 
+- Manual order of lists: the existing `user_task_orders` table gains a `tag:<id>` scope next to `all` and `project:<id>` (no new column); `GET` and `PUT /api/tasks/order` accept `scope=tag&tag_uid=`.
 - New column: `views.project_uid` (migration `20261029170000-add-project-uid-to-views`); the view search reads it through the existing `project_uid` scope.
 - New `ui_settings` key: `viewTypes` (a map of `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks` to `list`, `board` or `calendar`; at most 500 entries, sanitised in `updateUiSettings`).
 - New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.

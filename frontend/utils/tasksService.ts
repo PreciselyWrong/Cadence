@@ -175,7 +175,9 @@ export const toggleTaskCompletion = async (
 };
 
 export type TaskOrderScope =
-    { scope: 'all' } | { scope: 'project'; project_uid: string };
+    | { scope: 'all' }
+    | { scope: 'project'; project_uid: string }
+    | { scope: 'tag'; tag_uid: string };
 
 export const skipTaskOccurrence = async (taskUid: string): Promise<Task> => {
     const response = await fetch(

@@ -14,7 +14,13 @@ import { Task } from '../../entities/Task';
 import { Note } from '../../entities/Note';
 import { Project, ProjectStatus } from '../../entities/Project';
 import { updateProject } from '../../utils/projectsService';
-import { createTask } from '../../utils/tasksService';
+import {
+    createTask,
+    fetchTaskOrder,
+    saveTaskOrder,
+} from '../../utils/tasksService';
+import { sortByTaskOrder } from '../../utils/taskOrder';
+import { mergeVisibleOrder } from '../Shared/sortableList';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
 import TaskViewBody from '../Task/TaskViewBody';
@@ -67,6 +73,8 @@ const TagDetails: React.FC = () => {
     >('active');
     const [groupBy, setGroupBy] = useState<'none' | 'project'>('none');
     const [orderBy, setOrderBy] = useState<string>('created_at:desc');
+    // Saved manual order of this tag's tasks (Minimal only).
+    const [taskOrder, setTaskOrder] = useState<string[]>([]);
 
     // Filter projects by current tag and status filter
     const projects = allProjects.filter((project: any) => {
@@ -142,6 +150,10 @@ const TagDetails: React.FC = () => {
         { value: 'priority:desc', label: t('sort.priority', 'Priority') },
         { value: 'status:desc', label: t('sort.status', 'Status') },
         { value: 'created_at:desc', label: t('sort.created_at', 'Created At') },
+        // Dense keeps its sorts; a drag under Minimal starts this order.
+        ...(isMinimal
+            ? [{ value: 'custom:asc', label: t('sort.custom', 'Custom') }]
+            : []),
     ];
 
     // Filter and sort tasks
@@ -180,9 +192,17 @@ const TagDetails: React.FC = () => {
             );
         }
 
-        // Sort tasks
+        // Sort tasks. A custom order only exists under Minimal; Dense falls
+        // back to newest first.
+        if (isMinimal && orderBy.startsWith('custom:')) {
+            return sortByTaskOrder(filteredTasks, taskOrder);
+        }
+        const sortKey =
+            !isMinimal && orderBy.startsWith('custom:')
+                ? 'created_at:desc'
+                : orderBy;
         const sortedTasks = [...filteredTasks].sort((a, b) => {
-            const [field, direction] = orderBy.split(':');
+            const [field, direction] = sortKey.split(':');
             const isAsc = direction === 'asc';
 
             let valueA, valueB;
@@ -231,7 +251,15 @@ const TagDetails: React.FC = () => {
         });
 
         return sortedTasks;
-    }, [tasks, taskStatusFilter, taskSearchQuery, orderBy, t]);
+    }, [
+        tasks,
+        taskStatusFilter,
+        taskSearchQuery,
+        orderBy,
+        taskOrder,
+        isMinimal,
+        t,
+    ]);
 
     useEffect(() => {
         const fetchTagData = async () => {
@@ -476,6 +504,37 @@ const TagDetails: React.FC = () => {
         setOrderBy(order);
         localStorage.setItem('order_by', order);
     };
+
+    // Dragging a task saves a manual order for this tag and switches the
+    // list to it, starting from the order on screen (Minimal only).
+    const handleTaskReorder = async (orderedUids: string[]) => {
+        if (!tag?.uid) return;
+        const prevOrder = taskOrder;
+        const prevOrderBy = orderBy;
+        const fullOrder = sortByTaskOrder(tasks, taskOrder)
+            .filter((task) => task.uid)
+            .map((task) => task.uid as string);
+        const newOrder = mergeVisibleOrder(fullOrder, orderedUids);
+        setTaskOrder(newOrder);
+        if (!orderBy.startsWith('custom:')) handleSortChange('custom:asc');
+        try {
+            await saveTaskOrder({ scope: 'tag', tag_uid: tag.uid }, newOrder);
+        } catch (error) {
+            console.error('Error saving task order:', error);
+            setTaskOrder(prevOrder);
+            handleSortChange(prevOrderBy);
+            showErrorToast(
+                t('tasks.reorderError', 'Failed to save task order')
+            );
+        }
+    };
+
+    useEffect(() => {
+        if (!isMinimal || !tag?.uid) return;
+        fetchTaskOrder({ scope: 'tag', tag_uid: tag.uid })
+            .then(setTaskOrder)
+            .catch(() => setTaskOrder([]));
+    }, [isMinimal, tag?.uid]);
 
     const handleGroupByChange = (value: 'none' | 'project') => {
         setGroupBy(value);
@@ -843,6 +902,11 @@ const TagDetails: React.FC = () => {
                                     hideProjectName={false}
                                     onToggleToday={undefined}
                                     showCompletedTasks={showCompletedTasks}
+                                    onReorder={
+                                        isMinimal
+                                            ? handleTaskReorder
+                                            : undefined
+                                    }
                                 />
                             )
                         ) : (

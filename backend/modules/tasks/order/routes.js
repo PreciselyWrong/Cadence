@@ -4,7 +4,7 @@ const service = require('./service');
 
 const router = express.Router();
 
-// GET /api/tasks/order?scope=all|project&project_uid=...
+// GET /api/tasks/order?scope=all|project|tag&project_uid=...|tag_uid=...
 router.get('/tasks/order', async (req, res, next) => {
     try {
         res.json(
@@ -15,7 +15,7 @@ router.get('/tasks/order', async (req, res, next) => {
     }
 });
 
-// PUT /api/tasks/order { scope, project_uid?, task_uids, base_order_by? }
+// PUT /api/tasks/order { scope, project_uid?, tag_uid?, task_uids, base_order_by? }
 router.put('/tasks/order', async (req, res, next) => {
     try {
         res.json(

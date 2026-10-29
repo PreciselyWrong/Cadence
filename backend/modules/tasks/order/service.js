@@ -1,7 +1,13 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { Task, Project, UserTaskOrder, sequelize } = require('../../../models');
+const {
+    Task,
+    Project,
+    Tag,
+    UserTaskOrder,
+    sequelize,
+} = require('../../../models');
 const permissionsService = require('../../../services/permissionsService');
 const { NotFoundError, ValidationError } = require('../../../shared/errors');
 
@@ -10,12 +16,28 @@ const ALL_SCOPE = 'all';
 const BASE_ORDER_BY =
     /^(created_at|updated_at|name|priority|status|due_date|completed_at):(asc|desc)$/;
 
-// Resolves the list a request orders: the All Tasks page, or one project's
-// tasks (which needs read access to that project).
-async function resolveScope(userId, { scope, project_uid: projectUid }) {
+// Resolves the list a request orders: the All Tasks page, one project's
+// tasks (which needs read access to that project), or one of the user's
+// tags. A tag order covers the visible tasks sent with it; tags have no
+// sharing, so the tag must belong to the user.
+async function resolveScope(
+    userId,
+    { scope, project_uid: projectUid, tag_uid: tagUid }
+) {
     if (scope === ALL_SCOPE) return { key: ALL_SCOPE, projectId: null };
+    if (scope === 'tag') {
+        if (typeof tagUid !== 'string' || !tagUid) {
+            throw new ValidationError('tag_uid is required.');
+        }
+        const tag = await Tag.findOne({
+            where: { uid: tagUid, user_id: userId },
+            attributes: ['id'],
+        });
+        if (!tag) throw new NotFoundError('Tag not found.');
+        return { key: `tag:${tag.id}`, projectId: null };
+    }
     if (scope !== 'project') {
-        throw new ValidationError("scope must be 'all' or 'project'.");
+        throw new ValidationError("scope must be 'all', 'project' or 'tag'.");
     }
     if (typeof projectUid !== 'string' || !projectUid) {
         throw new ValidationError('project_uid is required.');

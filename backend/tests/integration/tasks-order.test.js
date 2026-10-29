@@ -181,6 +181,65 @@ describe('Tasks manual order', () => {
         expect(noProject.status).toBe(400);
     });
 
+    describe('tag lists', () => {
+        let tag;
+
+        beforeEach(async () => {
+            tag = (await ownerAgent.post('/api/tag').send({ name: 'Errands' }))
+                .body;
+        });
+
+        it('keeps a tag list order apart from All Tasks and projects', async () => {
+            const [a, b, c, d] = tasks.map((t) => t.uid);
+            const put = await ownerAgent.put('/api/tasks/order').send({
+                scope: 'tag',
+                tag_uid: tag.uid,
+                task_uids: [d, c, b, a],
+            });
+            expect(put.status).toBe(200);
+
+            const get = await ownerAgent.get(
+                `/api/tasks/order?scope=tag&tag_uid=${tag.uid}`
+            );
+            expect(get.body.task_uids).toEqual([d, c, b, a]);
+            const allOrder = await ownerAgent.get('/api/tasks/order?scope=all');
+            expect(allOrder.body.task_uids).toEqual([]);
+        });
+
+        it('hides another user tag and rejects a missing tag_uid', async () => {
+            const get = await memberAgent.get(
+                `/api/tasks/order?scope=tag&tag_uid=${tag.uid}`
+            );
+            expect(get.status).toBe(404);
+
+            const put = await memberAgent.put('/api/tasks/order').send({
+                scope: 'tag',
+                tag_uid: tag.uid,
+                task_uids: [tasks[0].uid],
+            });
+            expect(put.status).toBe(404);
+
+            const noTag = await ownerAgent
+                .put('/api/tasks/order')
+                .send({ scope: 'tag', task_uids: [] });
+            expect(noTag.status).toBe(400);
+            expect(await UserTaskOrder.count()).toBe(0);
+        });
+
+        it('rejects a task the user cannot see in a tag order', async () => {
+            const memberTask = (
+                await memberAgent.post('/api/task').send({ name: 'Private' })
+            ).body;
+            const res = await ownerAgent.put('/api/tasks/order').send({
+                scope: 'tag',
+                tag_uid: tag.uid,
+                task_uids: [tasks[0].uid, memberTask.uid],
+            });
+            expect(res.status).toBe(404);
+            expect(await UserTaskOrder.count()).toBe(0);
+        });
+    });
+
     it('drops order rows when a task is deleted', async () => {
         await ownerAgent.put('/api/tasks/order').send({
             scope: 'all',
