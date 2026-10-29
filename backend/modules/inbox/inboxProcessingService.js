@@ -91,9 +91,12 @@ const tokenizeText = (text) => {
 
         if (
             char === '"' &&
-            (i === 0 || text[i - 1] === '+' || text[i - 1] === '@')
+            (i === 0 ||
+                text[i - 1] === '+' ||
+                text[i - 1] === '^' ||
+                text[i - 1] === '@')
         ) {
-            // Start of a quoted string after + or @
+            // Start of a quoted string after +, ^ or @
             inQuotes = true;
             currentToken += char;
         } else if (char === '"' && inQuotes) {
@@ -178,6 +181,17 @@ const parseHashtags = (text) => {
  * @param {string} text - Text to parse
  * @returns {string[]} Array of project names
  */
+// Quick-add tokens that belong to a consecutive group: #tag, +project,
+// ^list (an alias of +project) and the !1-!3 priorities.
+const PRIORITY_TOKEN = /^![123]$/;
+const isTagGroupToken = (token) =>
+    token.startsWith('#') ||
+    token.startsWith('+') ||
+    token.startsWith('^') ||
+    PRIORITY_TOKEN.test(token);
+const isProjectToken = (token) =>
+    token.startsWith('+') || token.startsWith('^');
+
 const parseProjectRefs = (text) => {
     const trimmedText = text.trim();
     const matches = [];
@@ -189,20 +203,19 @@ const parseProjectRefs = (text) => {
     let i = 0;
     while (i < tokens.length) {
         // Check if current token starts a tag/project group
-        if (tokens[i].startsWith('#') || tokens[i].startsWith('+')) {
+        if (isTagGroupToken(tokens[i])) {
             // Found start of a group, collect all consecutive tags/projects
             let groupEnd = i;
             while (
                 groupEnd < tokens.length &&
-                (tokens[groupEnd].startsWith('#') ||
-                    tokens[groupEnd].startsWith('+'))
+                isTagGroupToken(tokens[groupEnd])
             ) {
                 groupEnd++;
             }
 
             // Process all project references in this group
             for (let j = i; j < groupEnd; j++) {
-                if (tokens[j].startsWith('+')) {
+                if (isProjectToken(tokens[j])) {
                     let projectName = tokens[j].substring(1);
 
                     // Handle quoted project names
@@ -242,12 +255,9 @@ const cleanTextFromTagsAndProjects = (text) => {
     let i = 0;
     while (i < tokens.length) {
         // Check if current token starts a tag/project group
-        if (tokens[i].startsWith('#') || tokens[i].startsWith('+')) {
+        if (isTagGroupToken(tokens[i])) {
             // Skip this entire consecutive group
-            while (
-                i < tokens.length &&
-                (tokens[i].startsWith('#') || tokens[i].startsWith('+'))
-            ) {
+            while (i < tokens.length && isTagGroupToken(tokens[i])) {
                 i++;
             }
         } else {

@@ -133,14 +133,15 @@ The system automatically analyzes your input and extracts metadata:
 
 ### 2. Project References
 
-**Syntax:** `+projectname` or `+"project with spaces"`
+**Syntax:** `+projectname` or `+"project with spaces"`, and `^listname` or `^"list with spaces"` (`^` is an alias of `+`)
 
 **Rules:**
-- Must start with `+` followed by project name
+- Must start with `+` (or `^`) followed by project name
 - No spaces: `+HomeRenovation`
 - With spaces: `+"Home Renovation"` (use quotes)
-- Valid: `+work`, `+Q1Planning`, `+"Client Project"`
+- Valid: `+work`, `+Q1Planning`, `+"Client Project"`, `^Maison`
 - Can appear anywhere in the text
+- A name matches without regard to case or accents, and a unique start of a name is enough: `^mais` finds `Maison`. When several projects start with the same letters nothing matches, and the name is created as typed
 
 **Behavior:**
 - If project exists, it's linked automatically
@@ -172,12 +173,15 @@ Write a date in plain English and it becomes the task's due date:
 - `Call plumber tomorrow`, `Submit form today`
 - `Book table next fri`, `Pay invoice on monday`
 - `Follow up in 3 days`, `Renew passport Oct 12`
+- French works too: `Appeler Paul demain 15h`, `Dentiste demain à 9h`, `après-demain`, `lundi`, `dans 3 jours`, `le 12`, `avant vendredi`, `d'ici vendredi`
 
 **Rules:**
 - Dates are worked out in your timezone. For an item that sat in the inbox, relative dates count from when it was captured: "tomorrow" in an item added on Monday means Tuesday, even if you convert it on Wednesday.
 - Only one date is used. With more than one, the last one wins.
 - The date words are removed from the task name. A phrase with a time (`tomorrow at 3pm`) still sets the date but stays in the name, because due dates have no time.
-- Bare words that are usually just words are ignored: `may`, `march`, `sun`, `sat`, `wed`, and numbers on their own. Nothing inside a `#tag`, `+project`, `@person` or URL is read as a date.
+- Bare words that are usually just words are ignored: `may`, `march`, `sun`, `sat`, `wed`, `mai`, `mars`, and numbers on their own. Nothing inside a `#tag`, `+project`, `^list`, `@person` or URL is read as a date.
+- Where English and French dates both appear, the one that starts first is used. The French `le` on its own is never a date; `le 12` is the next 12th (this month if it is still ahead, otherwise next month).
+- A French time (`demain 15h`, `demain à 9h`, `15h30`) sets the due time and the whole phrase leaves the name. An English time (`3pm`) still stays in the name, as it always has. A bare `15h` with no day is not a date.
 - A calendar chip under the input shows the date. Its × keeps the words as plain text and nothing is parsed from that phrase.
 
 ### 5. Recurrence
@@ -228,6 +232,16 @@ After parsing, the system creates "cleaned content":
 - Opening an inbox item shows the cleaned text in its edit box. The stripped words are carried: they show as chips (date, tags, project, person, area), count when the item is saved as a task, note or project, and are added back to the end of the first line when the edited text is saved. A chip's × removes that word. Saving the box untouched changes nothing
 
 ---
+
+### 9. Priority (`!1`, `!2`, `!3`)
+
+**Syntax:** `!1` high, `!2` medium, `!3` low
+
+**Rules:**
+- Only these three exact tokens count, each preceded by the start of the text or a space and followed by a space or the end: `!0`, `!4`, `!12` and `wow!1` are plain words
+- The first one in the text sets the task's priority; the token is removed from the name
+- Notes have no priority, so the token stays in a note's title
+- Shown in red in the input
 
 ## Intelligent Suggestions
 

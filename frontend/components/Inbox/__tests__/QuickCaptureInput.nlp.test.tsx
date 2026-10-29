@@ -7,11 +7,7 @@ import { Task } from '../../../entities/Task';
 jest.mock('react-i18next', () => ({
     initReactI18next: { type: '3rdParty', init: jest.fn() },
     useTranslation: () => ({
-        t: (
-            key: string,
-            fallback?: string,
-            values?: Record<string, string>
-        ) =>
+        t: (key: string, fallback?: string, values?: Record<string, string>) =>
             (fallback || key).replace(
                 /\{\{(\w+)\}\}/g,
                 (_, name) => values?.[name] ?? ''
@@ -26,15 +22,17 @@ jest.mock('../../Shared/ToastContext', () => ({
     }),
 }));
 
-jest.mock('../../../store/useStore', () => ({
-    useStore: () => ({
+jest.mock('../../../store/useStore', () => {
+    // Read with getState() too, as the focus and task helpers do.
+    const state = () => ({
         tagsStore: {
             getTags: () => [],
             setTags: jest.fn(),
             refreshTags: jest.fn(),
         },
-    }),
-}));
+    });
+    return { useStore: Object.assign(state, { getState: state }) };
+});
 
 jest.mock('../../../utils/csrfService', () => ({
     getCsrfToken: jest.fn().mockResolvedValue('test-token'),
@@ -199,6 +197,108 @@ describe('QuickCaptureInput dates and @people', () => {
 
         expect(screen.getByTestId('quick-capture-input')).toHaveValue(
             'Call @"Maria Lopez" '
+        );
+    });
+});
+
+describe('QuickCaptureInput French quick add', () => {
+    const originalFetch = global.fetch;
+    const fetchMock = jest.fn();
+    let analysis: Record<string, unknown>;
+    const projects = [{ id: 5, uid: 'maison-uid', name: 'Maison' }];
+    const text = 'Appeler Paul demain 15h #perso !1 ^Maison';
+
+    const frenchAnalysis = {
+        ...baseAnalysis,
+        cleaned_content: 'Appeler Paul',
+        parsed_tags: ['perso'],
+        parsed_projects: ['Maison'],
+        parsed_due_date: '2026-09-26',
+        parsed_due_time: '15:00',
+        parsed_date_text: 'demain 15h',
+        suggested_type: 'task',
+    };
+
+    // The caret defaults to the end; a caret after ^Maison opens the project
+    // suggestions, which take Enter, so the Enter test moves it away.
+    const typeAndAnalyze = async (value: string, caret = value.length) => {
+        fireEvent.change(screen.getByTestId('quick-capture-input'), {
+            target: { value, selectionStart: caret },
+        });
+        await act(async () => {
+            jest.advanceTimersByTime(300);
+        });
+    };
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+        analysis = { ...baseAnalysis, cleaned_content: '' };
+        fetchMock.mockReset();
+        fetchMock.mockImplementation(async (url: string) => {
+            if (url.includes('inbox/analyze-text')) {
+                return jsonResponse(analysis);
+            }
+            return jsonResponse({});
+        });
+        global.fetch = fetchMock;
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        global.fetch = originalFetch;
+    });
+
+    it('highlights !1, ^list and #tag and shows the date chip', async () => {
+        render(
+            <MemoryRouter>
+                <QuickCaptureInput
+                    openTaskModal={jest.fn()}
+                    projects={projects}
+                    unified
+                />
+            </MemoryRouter>
+        );
+        analysis = frenchAnalysis;
+
+        await typeAndAnalyze(text);
+
+        expect(screen.getAllByText('!1')[0]).toHaveClass('text-red-600');
+        expect(screen.getAllByText('^Maison')[0]).toHaveClass('text-green-700');
+        expect(screen.getAllByText('#perso')[0]).toHaveClass('text-blue-600');
+        expect(screen.getByTestId('selected-due-date')).toHaveTextContent(
+            'Sep 26 15:00'
+        );
+    });
+
+    it('creates the task on Enter with name, tags, priority, project and date', async () => {
+        const onTaskCreate = jest.fn<Promise<void>, [Task]>(async () => {});
+        render(
+            <MemoryRouter>
+                <QuickCaptureInput
+                    openTaskModal={jest.fn()}
+                    onTaskCreate={onTaskCreate}
+                    projects={projects}
+                />
+            </MemoryRouter>
+        );
+        analysis = frenchAnalysis;
+
+        await typeAndAnalyze(text, 'Appeler Paul demain 15h'.length);
+        await act(async () => {
+            fireEvent.keyDown(screen.getByTestId('quick-capture-input'), {
+                key: 'Enter',
+            });
+        });
+
+        expect(onTaskCreate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'Appeler Paul',
+                tags: [{ name: 'perso' }],
+                priority: 'high',
+                project_uid: 'maison-uid',
+                due_date: '2026-09-26',
+                due_time: '15:00',
+            })
         );
     });
 });

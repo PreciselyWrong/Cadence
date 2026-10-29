@@ -28,6 +28,22 @@ describe('inbox natural-language parsing', () => {
             ['Follow up in 3 days', '2026-09-28', 'in 3 days'],
             ['Renew passport Oct 12', '2026-10-12', 'Oct 12'],
             ['Pay invoice on monday', '2026-09-28', 'on monday'],
+            ['Appeler Paul demain 15h', '2026-09-26', 'demain 15h'],
+            ['Dentiste demain à 9h', '2026-09-26', 'demain à 9h'],
+            ['Appeler Paul après-demain', '2026-09-27', 'après-demain'],
+            ['Payer la facture lundi', '2026-09-28', 'lundi'],
+            ['Rappeler Marie dans 3 jours', '2026-09-28', 'dans 3 jours'],
+            ['Payer le loyer le 12', '2026-10-12', 'le 12'],
+            [
+                'Envoyer le rapport avant vendredi',
+                '2026-10-02',
+                'avant vendredi',
+            ],
+            [
+                'Rendre le dossier d’ici vendredi',
+                '2026-10-02',
+                'd’ici vendredi',
+            ],
         ])('parses "%s"', (text, date, phrase) => {
             const result = parseDueDate(text, options);
             expect(result).toMatchObject({ date, text: phrase });
@@ -43,6 +59,10 @@ describe('inbox natural-language parsing', () => {
             '+"Tomorrow Project" stuff',
             'Read https://example.com/2026/10/12/post',
             'Plan the march',
+            'Le chat dort',
+            'Je mai bien',
+            'Acheter du mais',
+            'Appeler Paul 15h',
         ])('ignores "%s"', (text) => {
             expect(parseDueDate(text, options)).toBeNull();
         });
@@ -71,6 +91,32 @@ describe('inbox natural-language parsing', () => {
                 options
             );
             expect(result.text).toBe('tomorrow at 3pm');
+        });
+
+        it('reads a French time as the due time and cuts the phrase', () => {
+            const result = parseDueDate('Appeler Paul demain 15h', options);
+            expect(result).toMatchObject({
+                date: '2026-09-26',
+                time: '15:00',
+                text: 'demain 15h',
+                removable: true,
+            });
+            expect(
+                parseDueDate('Appeler Paul demain 15h30', options).time
+            ).toBe('15:30');
+        });
+
+        it('reads "le 12" as the next 12th and rolls to next month', () => {
+            expect(parseDueDate('Payer le loyer le 12', options).date).toBe(
+                '2026-10-12'
+            );
+            const earlier = new Date('2026-09-05T10:00:00Z');
+            expect(
+                parseDueDate('Payer le loyer le 12', {
+                    referenceDate: earlier,
+                    timezone: 'UTC',
+                }).date
+            ).toBe('2026-09-12');
         });
 
         it('returns no time for a date-only phrase', () => {
@@ -269,6 +315,28 @@ describe('inbox natural-language parsing', () => {
             expect(result.cleaned_content).toBe('Call');
             expect(result.parsed_projects).toEqual(['Home']);
             expect(result.suggested_reason).toBe('person_detected');
+        });
+
+        it('reads ^list as a project and cuts ^list and !1 from the title', () => {
+            const result = processInboxItem(
+                'Appeler Paul demain 15h #perso !1 ^Maison',
+                options
+            );
+            expect(result).toMatchObject({
+                cleaned_content: 'Appeler Paul',
+                parsed_tags: ['perso'],
+                parsed_projects: ['Maison'],
+                parsed_due_date: '2026-09-26',
+            });
+        });
+
+        it('cuts a French phrase with its time out of the title', () => {
+            const result = processInboxItem('Appeler Paul demain 15h', options);
+            expect(result).toMatchObject({
+                cleaned_content: 'Appeler Paul',
+                parsed_due_date: '2026-09-26',
+                parsed_due_time: '15:00',
+            });
         });
 
         it('still treats a URL with a date as a bookmark candidate', () => {

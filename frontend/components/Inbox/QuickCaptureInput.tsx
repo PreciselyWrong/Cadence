@@ -37,7 +37,14 @@ import {
     splitFirstLine,
 } from '../../utils/captureText';
 import type { CaptureProject } from '../../utils/captureUi';
-import { InboxTokenKind, splitInboxTokens } from '../../utils/inboxTokens';
+import {
+    InboxTokenKind,
+    isProjectToken,
+    isTagGroupToken,
+    matchProjectName,
+    priorityFromText,
+    splitInboxTokens,
+} from '../../utils/inboxTokens';
 import {
     isTouchDevice,
     updateCaptureSettings,
@@ -220,7 +227,18 @@ const TOKEN_TEXT_CLASS: Record<InboxTokenKind, string> = {
     project: 'text-green-700 dark:text-green-400',
     person: 'text-indigo-600 dark:text-indigo-400',
     area: 'text-purple-600 dark:text-purple-400',
+    priority: 'text-red-600 dark:text-red-400',
 };
+
+// A +project or ^list being typed at the caret: the trigger and its name.
+const PROJECT_QUERY_PATTERN = /[+^](?:"([^"]*)"|([\p{L}\p{N}_\s]*))$/u;
+
+// Replaces the project being typed with the chosen name, keeping its trigger.
+const withProjectName = (text: string, name: string): string =>
+    text.replace(
+        PROJECT_QUERY_PATTERN,
+        (match) => `${match.charAt(0)}${name} `
+    );
 
 const QuickCaptureInput = React.forwardRef<
     QuickCaptureInputHandle,
@@ -562,18 +580,17 @@ const QuickCaptureInput = React.forwardRef<
 
             let i = 0;
             while (i < tokens.length) {
-                if (tokens[i].startsWith('#') || tokens[i].startsWith('+')) {
+                if (isTagGroupToken(tokens[i])) {
                     let groupEnd = i;
                     while (
                         groupEnd < tokens.length &&
-                        (tokens[groupEnd].startsWith('#') ||
-                            tokens[groupEnd].startsWith('+'))
+                        isTagGroupToken(tokens[groupEnd])
                     ) {
                         groupEnd++;
                     }
 
                     for (let j = i; j < groupEnd; j++) {
-                        if (tokens[j].startsWith('+')) {
+                        if (isProjectToken(tokens[j])) {
                             let projectName = tokens[j].substring(1);
 
                             if (
@@ -685,7 +702,10 @@ const QuickCaptureInput = React.forwardRef<
 
                 if (
                     char === '"' &&
-                    (i === 0 || text[i - 1] === '+' || text[i - 1] === '@')
+                    (i === 0 ||
+                        text[i - 1] === '+' ||
+                        text[i - 1] === '^' ||
+                        text[i - 1] === '@')
                 ) {
                     inQuotes = true;
                     currentToken += char;
@@ -752,15 +772,16 @@ const QuickCaptureInput = React.forwardRef<
         ): string => {
             const beforeCursor = text.substring(0, position);
             const afterCursor = text.substring(position);
-            const projectMatch = beforeCursor.match(
-                /\+(?:"([^"]*)"|([a-zA-Z0-9_\s]*))$/
-            );
+            const projectMatch = beforeCursor.match(PROJECT_QUERY_PATTERN);
 
             if (!projectMatch) return '';
 
             const projectQuery = projectMatch[1] || projectMatch[2] || '';
 
-            const projectStart = beforeCursor.lastIndexOf('+');
+            const projectStart = Math.max(
+                beforeCursor.lastIndexOf('+'),
+                beforeCursor.lastIndexOf('^')
+            );
             const textBeforeProject = text.substring(0, projectStart).trim();
             const textAfterCursor = afterCursor.trim();
 
@@ -775,8 +796,8 @@ const QuickCaptureInput = React.forwardRef<
             const wordsBeforeProject = textBeforeProject
                 .split(/\s+/)
                 .filter((word) => word.length > 0);
-            const allWordsAreTagsOrProjects = wordsBeforeProject.every(
-                (word) => word.startsWith('#') || word.startsWith('+')
+            const allWordsAreTagsOrProjects = wordsBeforeProject.every((word) =>
+                isTagGroupToken(word)
             );
 
             if (allWordsAreTagsOrProjects) {
@@ -909,11 +930,11 @@ const QuickCaptureInput = React.forwardRef<
         const removeProjectFromText = (projectToRemove: string) => {
             const escaped = escapeRegExp(projectToRemove);
             const quotedPattern = new RegExp(
-                `(^|\\s)\\+"${escaped}"(?=$|\\s)`,
+                `(^|\\s)[+^]"${escaped}"(?=$|\\s)`,
                 'gi'
             );
             const simplePattern = new RegExp(
-                `(^|\\s)\\+${escaped}(?=$|\\s)`,
+                `(^|\\s)[+^]${escaped}(?=$|\\s)`,
                 'gi'
             );
             stripFromText(quotedPattern, simplePattern);
@@ -996,7 +1017,7 @@ const QuickCaptureInput = React.forwardRef<
         ) => {
             const beforeCursor = inputText.substring(0, cursorPos);
             const hashtagMatch = beforeCursor.match(/#([a-zA-Z0-9_]*)$/);
-            const projectMatch = beforeCursor.match(/\+[a-zA-Z0-9_\s]*$/);
+            const projectMatch = beforeCursor.match(PROJECT_QUERY_PATTERN);
             const personMatch = beforeCursor.match(PERSON_QUERY_PATTERN);
 
             if (personMatch) {
@@ -1010,7 +1031,10 @@ const QuickCaptureInput = React.forwardRef<
             }
 
             if (projectMatch) {
-                const triggerPos = beforeCursor.lastIndexOf('+');
+                const triggerPos = Math.max(
+                    beforeCursor.lastIndexOf('+'),
+                    beforeCursor.lastIndexOf('^')
+                );
                 return getCaretViewportCoords(input, triggerPos);
             }
 
@@ -1136,6 +1160,7 @@ const QuickCaptureInput = React.forwardRef<
                 setSelectedSuggestionIndex(-1);
             } else if (
                 (newText.charAt(newCursorPosition - 1) === '+' ||
+                    newText.charAt(newCursorPosition - 1) === '^' ||
                     projectQuery) &&
                 projectQuery !== ''
             ) {
@@ -1232,6 +1257,8 @@ const QuickCaptureInput = React.forwardRef<
             return text
                 .replace(/#[a-zA-Z0-9_-]+/g, '')
                 .replace(/\+(?:"[^"]+"|\S+)/g, '')
+                .replace(/(^|\s)\^(?:"[^"]+"|\S+)/g, '$1')
+                .replace(/(^|\s)![123](?=\s|$)/g, '$1')
                 .trim();
         };
 
@@ -1250,10 +1277,7 @@ const QuickCaptureInput = React.forwardRef<
                 return undefined;
             }
             const projectName = projectRefsList[0];
-            const matchingProject = projects.find(
-                (project) =>
-                    project.name.toLowerCase() === projectName.toLowerCase()
-            );
+            const matchingProject = matchProjectName(projects, projectName);
             return matchingProject ? matchingProject.uid : undefined;
         };
 
@@ -1371,16 +1395,14 @@ const QuickCaptureInput = React.forwardRef<
         const handleProjectSelect = (projectName: string) => {
             const beforeCursor = inputText.substring(0, cursorPosition);
             const afterCursor = inputText.substring(cursorPosition);
-            const projectMatch = beforeCursor.match(
-                /\+(?:"([^"]*)"|([a-zA-Z0-9_\s]*))$/
-            );
+            const projectMatch = beforeCursor.match(PROJECT_QUERY_PATTERN);
 
             if (projectMatch && unified) {
                 addPicked('project', projectName);
                 const dropped = dropTrigger(
                     beforeCursor,
                     afterCursor,
-                    /\+(?:"([^"]*)"|([a-zA-Z0-9_\s]*))$/
+                    PROJECT_QUERY_PATTERN
                 );
                 setInputText(dropped.text);
                 closeSuggestions();
@@ -1400,10 +1422,8 @@ const QuickCaptureInput = React.forwardRef<
                     : projectName;
 
                 const newText =
-                    beforeCursor.replace(
-                        /\+(?:"([^"]*)"|([a-zA-Z0-9_\s]*))$/,
-                        `+${formattedProjectName} `
-                    ) + afterCursor;
+                    withProjectName(beforeCursor, formattedProjectName) +
+                    afterCursor;
                 setInputText(newText);
                 setShowProjectSuggestions(false);
                 setFilteredProjects([]);
@@ -1412,9 +1432,9 @@ const QuickCaptureInput = React.forwardRef<
                 setTimeout(() => {
                     if (inputRef.current) {
                         inputRef.current.focus();
-                        const newCursorPos = beforeCursor.replace(
-                            /\+(?:"([^"]*)"|([a-zA-Z0-9_\s]*))$/,
-                            `+${formattedProjectName} `
+                        const newCursorPos = withProjectName(
+                            beforeCursor,
+                            formattedProjectName
                         ).length;
                         inputRef.current.setSelectionRange(
                             newCursorPos,
@@ -1530,10 +1550,9 @@ const QuickCaptureInput = React.forwardRef<
                         if (analysisResult.parsed_projects.length > 0) {
                             const projectName =
                                 analysisResult.parsed_projects[0];
-                            const matchingProject = projects.find(
-                                (project) =>
-                                    project.name.toLowerCase() ===
-                                    projectName.toLowerCase()
+                            const matchingProject = matchProjectName(
+                                projects,
+                                projectName
                             );
                             if (matchingProject) {
                                 projectUid = matchingProject.uid;
@@ -1551,7 +1570,8 @@ const QuickCaptureInput = React.forwardRef<
                             {
                                 name: cleanedText,
                                 status: 'not_started',
-                                priority: 'low',
+                                priority:
+                                    priorityFromText(trimmedText) ?? 'low',
                                 tags: taskTags,
                                 project_uid: projectUid,
                                 area_id: focusAreaIdForTask(
@@ -1636,10 +1656,9 @@ const QuickCaptureInput = React.forwardRef<
                         if (analysisResult.parsed_projects.length > 0) {
                             const projectName =
                                 analysisResult.parsed_projects[0];
-                            const matchingProject = projects.find(
-                                (project) =>
-                                    project.name.toLowerCase() ===
-                                    projectName.toLowerCase()
+                            const matchingProject = matchProjectName(
+                                projects,
+                                projectName
                             );
                             if (matchingProject) {
                                 noteProjectUid = matchingProject.uid;
@@ -1797,9 +1816,7 @@ const QuickCaptureInput = React.forwardRef<
             if (!name) {
                 return undefined;
             }
-            const sameName = (project: Project) =>
-                project.name.toLowerCase() === name.toLowerCase();
-            const existing = projects.find(sameName);
+            const existing = matchProjectName(projects, name);
             if (existing) {
                 return existing.uid;
             }
@@ -1807,7 +1824,7 @@ const QuickCaptureInput = React.forwardRef<
             // before it arrives must not create a second project with the
             // same name, so ask the server before creating one.
             try {
-                const onServer = (await fetchProjects()).find(sameName);
+                const onServer = matchProjectName(await fetchProjects(), name);
                 if (onServer) {
                     return onServer.uid;
                 }
@@ -1931,6 +1948,7 @@ const QuickCaptureInput = React.forwardRef<
                     {
                         name: title,
                         note: rest || undefined,
+                        priority: priorityFromText(first) ?? 'low',
                         status: 'not_started',
                         tags: tagObjects,
                         project_uid: projectUid,
@@ -2637,7 +2655,10 @@ const QuickCaptureInput = React.forwardRef<
                                                 {
                                                     name: cleaned,
                                                     status: 'not_started',
-                                                    priority: null,
+                                                    priority:
+                                                        priorityFromText(
+                                                            composerFooterContext.text
+                                                        ) ?? null,
                                                     tags: taskTags,
                                                     project_uid: projectUid,
                                                     completed_at: null,

@@ -41,11 +41,29 @@ const ORDINALS = {
 };
 
 // Bare words chrono reads as dates but that are usually just words.
-const AMBIGUOUS_DATE_WORDS = new Set(['sun', 'sat', 'wed', 'mar', 'may']);
+const AMBIGUOUS_DATE_WORDS = new Set([
+    'sun',
+    'sat',
+    'wed',
+    'mar',
+    'may',
+    'mars',
+    'mai',
+]);
 
-// Words that only introduce a due date ("until next thursday", "due by fri")
+// Words that only introduce a due date ("until next thursday", "due by fri",
+// "avant vendredi", "d'ici lundi")
 const DATE_LEAD_PATTERN =
-    /(^|\s)((?:due\s+(?:by|on|before)|due|until|till|by|before)\s+)$/i;
+    /(^|\s)((?:due\s+(?:by|on|before)|due|until|till|by|before|avant|pour|d['’]ici|jusqu['’](?:à|au))\s+)$/i;
+
+// chrono's French parser reads "après-demain" as "demain", so it is masked to
+// "demain" and two days are added back.
+const AFTER_TOMORROW_PATTERN = /\bapr[èe]s[- ]demain\b/gi;
+
+// "le 12" alone (chrono needs a month for it). Not followed by a month name
+// or a time, which chrono reads on its own.
+const FRENCH_LE_DAY_PATTERN =
+    /(^|\s)le\s+(\d{1,2})(?:er)?(?=[\s.,;:!?]|$)(?!\s*(?:janv|f[ée]vr|mars|avr|mai|juin|juil|ao[uû]t|sept|oct|nov|d[ée]c))/gi;
 
 const WEEKDAY_PATTERN =
     '(?:sunday|monday|tuesday|wednesday|thursday|friday|saturday|sun|mon|tues|tue|wed|thurs|thur|thu|fri|sat)';
@@ -228,6 +246,120 @@ const parseRecurrence = (text, { timezone = 'UTC' } = {}) => {
     return null;
 };
 
+const addDaysToDate = (dateStr, days) => {
+    const date = new Date(`${dateStr}T00:00:00Z`);
+    date.setUTCDate(date.getUTCDate() + days);
+    return formatUtcDate(date);
+};
+
+// Next date with this day of the month, today included, in the user timezone.
+const nextDayOfMonth = (day, referenceDate, timezone) => {
+    if (day < 1 || day > 31) return null;
+    const today = moment.tz(referenceDate, timezone);
+    for (let offset = 0; offset < 13; offset++) {
+        const month = today.clone().startOf('month').add(offset, 'months');
+        if (day > month.daysInMonth()) continue;
+        const candidate = month.clone().date(day);
+        if (candidate.isBefore(today, 'day')) continue;
+        return candidate.format('YYYY-MM-DD');
+    }
+    return null;
+};
+
+// One chrono result as a candidate: date, optional time and the span of the
+// original text it covers (end is exclusive).
+const chronoCandidate = (result, { index, dayOffset = 0, fr = false }) => {
+    const start = result.start;
+    const date = addDaysToDate(
+        [
+            String(start.get('year')).padStart(4, '0'),
+            String(start.get('month')).padStart(2, '0'),
+            String(start.get('day')).padStart(2, '0'),
+        ].join('-'),
+        dayOffset
+    );
+    const hasTime = start.isCertain('hour');
+    return {
+        date,
+        time: hasTime
+            ? [
+                  String(start.get('hour')).padStart(2, '0'),
+                  String(start.get('minute') ?? 0).padStart(2, '0'),
+              ].join(':')
+            : null,
+        hasTime,
+        index,
+        end: result.index + result.text.length,
+        text: result.text,
+        fr,
+    };
+};
+
+// A bare "15h" is a time in French; English chrono reads it as a day.
+const BARE_FRENCH_TIME = /^\d{1,2}h\d{0,2}$/i;
+
+const isUsableChronoResult = (result) => {
+    const start = result.start;
+    if (!start.isCertain('day') && !start.isCertain('weekday')) return false;
+    const phrase = result.text.trim();
+    return (
+        !AMBIGUOUS_DATE_WORDS.has(phrase.toLowerCase()) &&
+        !BARE_FRENCH_TIME.test(phrase)
+    );
+};
+
+// English candidates, as before: the last usable match wins.
+const englishCandidates = (masked, reference) =>
+    chrono.casual
+        .parse(masked, reference, { forwardDate: true })
+        .filter(isUsableChronoResult)
+        .map((result) => chronoCandidate(result, { index: result.index }));
+
+// French candidates from chrono's French parser, plus "le 12".
+const frenchCandidates = (masked, reference, { referenceDate, timezone }) => {
+    const spans = [];
+    const prepared = masked.replace(AFTER_TOMORROW_PATTERN, (match, offset) => {
+        spans.push({ index: offset, end: offset + match.length });
+        return ' '.repeat(match.length - 'demain'.length) + 'demain';
+    });
+    const chronoList = chrono.fr.casual
+        .parse(prepared, reference, { forwardDate: true })
+        .filter(isUsableChronoResult)
+        .map((result) => {
+            const span = spans.find(
+                (s) => result.index === s.end - 'demain'.length
+            );
+            return span
+                ? chronoCandidate(result, {
+                      index: span.index,
+                      // chrono has already moved "demain" to tomorrow
+                      dayOffset: 1,
+                      fr: true,
+                  })
+                : chronoCandidate(result, { index: result.index, fr: true });
+        });
+
+    const dayCandidates = [];
+    for (const match of masked.matchAll(FRENCH_LE_DAY_PATTERN)) {
+        const date = nextDayOfMonth(
+            parseInt(match[2], 10),
+            referenceDate,
+            timezone
+        );
+        if (!date) continue;
+        dayCandidates.push({
+            date,
+            time: null,
+            hasTime: false,
+            index: match.index + match[1].length,
+            end: match.index + match[0].length,
+            text: match[0].slice(match[1].length),
+            fr: true,
+        });
+    }
+    return [...chronoList, ...dayCandidates].sort((a, b) => a.index - b.index);
+};
+
 const parseDueDate = (
     text,
     { referenceDate = new Date(), timezone = 'UTC' } = {}
@@ -237,43 +369,34 @@ const parseDueDate = (
         instant: referenceDate,
         timezone: moment.tz(referenceDate, timezone).utcOffset(),
     };
-    const results = chrono.casual
-        .parse(masked, reference, { forwardDate: true })
-        .filter((result) => {
-            const start = result.start;
-            if (!start.isCertain('day') && !start.isCertain('weekday')) {
-                return false;
-            }
-            return !AMBIGUOUS_DATE_WORDS.has(result.text.trim().toLowerCase());
-        });
-    if (results.length === 0) return null;
+    const english = englishCandidates(masked, reference);
+    const french = frenchCandidates(masked, reference, {
+        referenceDate,
+        timezone,
+    });
+    // The earliest-starting match wins; English wins a tie.
+    const englishPick = english[english.length - 1] || null;
+    const frenchPick = french[french.length - 1] || null;
+    if (!englishPick && !frenchPick) return null;
+    const candidate =
+        !englishPick || (frenchPick && frenchPick.index < englishPick.index)
+            ? frenchPick
+            : englishPick;
 
-    const result = results[results.length - 1];
-    const date = [
-        String(result.start.get('year')).padStart(4, '0'),
-        String(result.start.get('month')).padStart(2, '0'),
-        String(result.start.get('day')).padStart(2, '0'),
-    ].join('-');
-
-    const time = result.start.isCertain('hour')
-        ? [
-              String(result.start.get('hour')).padStart(2, '0'),
-              String(result.start.get('minute') ?? 0).padStart(2, '0'),
-          ].join(':')
-        : null;
-
-    const removable = !result.start.isCertain('hour');
+    // A time in French ("demain 15h") is read as the due time and the whole
+    // phrase is cut from the title. English times stay in the title.
+    const removable = !candidate.hasTime || candidate.fr;
     // "until", "by" or "due" right before a cut phrase goes with it, so the
     // title does not end in "pay the bill until".
     const lead = removable
-        ? DATE_LEAD_PATTERN.exec(masked.slice(0, result.index))
+        ? DATE_LEAD_PATTERN.exec(masked.slice(0, candidate.index))
         : null;
-    const index = lead ? lead.index + lead[1].length : result.index;
+    const index = lead ? lead.index + lead[1].length : candidate.index;
 
     return {
-        date,
-        time,
-        text: text.slice(index, result.index + result.text.length),
+        date: candidate.date,
+        time: candidate.time,
+        text: text.slice(index, candidate.end),
         index,
         // The time is attached to the item, so the phrase stays in the title.
         removable,
