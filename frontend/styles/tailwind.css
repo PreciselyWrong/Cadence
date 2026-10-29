@@ -147,6 +147,56 @@
   display: none; /* Chrome/Safari */
 }
 
+/* Thin, discreet scrollbars everywhere. Firefox gets the standard properties
+   only inside @supports: Chromium 121+ would otherwise ignore the
+   ::-webkit-scrollbar rules below in favour of scrollbar-color. */
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(209 213 219 / 0.7) transparent; /* gray-300 */
+  }
+
+  .dark * {
+    scrollbar-color: rgb(75 85 99 / 0.6) transparent; /* gray-600 */
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219 / 0.7); /* gray-300 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156 163 175 / 0.9); /* gray-400 */
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(75 85 99 / 0.6); /* gray-600 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(107 114 128 / 0.8); /* gray-500 */
+}
+
 /* Project name and description line clamp */
 .project-name-clamp {
   display: -webkit-box !important;
