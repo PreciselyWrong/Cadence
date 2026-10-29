@@ -6,6 +6,7 @@ import {
     TrashIcon,
 } from '@heroicons/react/24/outline';
 import type { ApiKeySummary } from '../../../utils/apiKeysService';
+import DeviceConnectQr from './DeviceConnectQr';
 
 interface ApiKeysTabProps {
     isActive: boolean;
@@ -157,6 +158,7 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                             {t('profile.apiKeys.copyButton', 'Copy key')}
                         </button>
                     </div>
+                    <DeviceConnectQr token={generatedApiToken} />
                 </div>
             )}
 
@@ -307,7 +309,7 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                                                                 key.id ||
                                                             Boolean(
                                                                 pendingDeleteId ===
-                                                                    key.id
+                                                                key.id
                                                             )
                                                         }
                                                         className={`inline-flex items-center justify-center px-3 py-1.5 rounded-md border text-xs font-medium ${

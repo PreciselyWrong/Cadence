@@ -810,7 +810,9 @@
       "noExpiry": "Aucune",
       "revokedLabel": "Révoquée",
       "revokeButton": "Révoquer",
-      "deleteAria": "Supprimer la clé API"
+      "deleteAria": "Supprimer la clé API",
+      "connectQrLabel": "Code QR pour connecter un appareil",
+      "connectQrHelp": "Scannez ce code depuis l'app Tududi sur votre téléphone ou votre ordinateur pour la connecter avec cette clé."
     },
     "fetchError": "Impossible de charger le profil.",
     "pollingStatusError": "Impossible de récupérer l'état de l'interrogation.",

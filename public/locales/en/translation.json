@@ -838,7 +838,9 @@
       "noExpiry": "None",
       "revokedLabel": "Revoked",
       "revokeButton": "Revoke",
-      "deleteAria": "Delete API key"
+      "deleteAria": "Delete API key",
+      "connectQrLabel": "QR code to connect a device",
+      "connectQrHelp": "Scan this code from the Tududi app on your phone or computer to connect it with this key."
     },
     "fetchError": "Failed to fetch profile data.",
     "pollingStatusError": "Failed to fetch polling status.",
