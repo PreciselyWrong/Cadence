@@ -1,6 +1,6 @@
 # Fork Tutudi : décisions et références
 
-Fichiers propres au fork : `TODO.md` et `docs/fork/`. `docs/` et `CLAUDE.md` restent ceux de l'amont, pour éviter les conflits de fusion.
+Fichiers propres au fork : `AGENTS.md`, `TODO.md` et `docs/fork/`. `docs/` et `CLAUDE.md` restent ceux de l'amont, pour éviter les conflits de fusion.
 
 ## Objectif
 
