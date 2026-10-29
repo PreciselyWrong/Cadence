@@ -4,13 +4,12 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Synchro Google (module `google-sync`, branche `claude/intelligent-johnson-3dex2s`) : créer le client OAuth (Calendar + Tasks API, app « En production »), définir `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, puis 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min. Voir `docs/33-google-sync.md`.
+- Synchro Google (module `google-sync`, fusionné dans `main`) : créer le client OAuth (Calendar + Tasks API, app « En production »), définir `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, puis 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min. Voir `docs/33-google-sync.md`.
 - Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
 
 ## Next
 
-- Refonte TickTick, étapes 3 à 5 : gestes sur les lignes, type de vue par vue, écarts calendrier (détail dans le prompt de reprise).
-- Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
+- Refonte TickTick, étape 4 : comparer avec TickTick 8.0.20 lancé en local, écran par écran, lister et corriger les écarts du calendrier (les étapes 1 à 3 et 5 sont dans `main`). À trancher : réordonner les tâches sans heure et retirer du plan en déplaçant la date depuis l'agenda (retirés de l'ancien Aujourd'hui).
 - Module habits Cadence côté serveur : schéma, moteur JS, migration des habitudes Tududi existantes en version 1. Vérif : Jest vert sur toutes les fixtures, SQLite et Postgres.
   - Combler les manques de l'amont : versions d'objectif (le passé n'est pas réinterprété), `AT_MOST` > 0 et `TRACK_ONLY`, minimum vs idéal, fréquence + quantité combinées, pauses multi-jours avec motif et reprise anticipée, fuseau observé par saisie, `startsOn`, quantités entières à précision explicite, groupes à plages libres (chevauchement, passage de minuit), chronos, progression de cible, profils d'abstinence, stats 30 jours avec confiance.
   - Garder de l'amont : score de force, note par check-in, présence dans Aujourd'hui/Plan, outils MCP.
