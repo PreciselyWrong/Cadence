@@ -1,6 +1,7 @@
 'use strict';
 
 const projectsService = require('./service');
+const permissionsService = require('../../services/permissionsService');
 const { UnauthorizedError } = require('../../shared/errors');
 const { getAuthenticatedUserId } = require('../../utils/request-utils');
 const { extractUidFromSlug } = require('../../utils/slug-utils');
@@ -65,7 +66,13 @@ const projectsController = {
             const uid = extractUidFromSlug(req.params.uidSlug);
             const timezone = req.currentUser?.timezone;
             const project = await projectsService.getByUid(uid, timezone);
-            res.json(project);
+            // The viewer's access ('ro' | 'rw' | 'admin'), so the page can
+            // hide write controls from read-only viewers.
+            const userId = req.currentUser?.id || req.session?.userId;
+            const accessLevel = userId
+                ? await permissionsService.getAccess(userId, 'project', uid)
+                : 'none';
+            res.json({ ...project, access_level: accessLevel });
         } catch (error) {
             next(error);
         }

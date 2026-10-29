@@ -53,6 +53,8 @@ export interface Project {
     updated_at?: string;
     share_count?: number;
     is_shared?: boolean;
+    // The viewer's access to the project (project page only).
+    access_level?: 'none' | 'ro' | 'rw' | 'admin';
     task_status?: ProjectTaskStatus;
     completion_percentage?: number;
     is_stalled?: boolean;

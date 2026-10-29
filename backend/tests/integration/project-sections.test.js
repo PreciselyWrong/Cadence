@@ -242,4 +242,123 @@ describe('Project sections (board columns)', () => {
         expect(row.section_id).toBeNull();
         expect(await ProjectSection.count()).toBe(1);
     });
+
+    describe('card order', () => {
+        const makeTask = async (name, projectUid = project.uid) =>
+            (
+                await ownerAgent
+                    .post('/api/task')
+                    .send({ name, project_uid: projectUid })
+            ).body;
+
+        it('orders a column, moves listed cards into it and returns section_position', async () => {
+            const section = (
+                await ownerAgent.post(base()).send({ name: 'Column' })
+            ).body;
+            const a = await makeTask('A');
+            const b = await makeTask('B');
+            const c = await makeTask('C');
+
+            const res = await writerAgent
+                .put(`${base()}/${section.uid}/order`)
+                .send({ task_uids: [c.uid, a.uid] });
+            expect(res.status).toBe(200);
+
+            const page = await ownerAgent.get(`/api/project/${project.uid}`);
+            const tasks = page.body.Tasks || page.body.tasks;
+            const byUid = Object.fromEntries(tasks.map((t) => [t.uid, t]));
+            expect(byUid[c.uid]).toMatchObject({
+                section_uid: section.uid,
+                section_position: 0,
+            });
+            expect(byUid[a.uid]).toMatchObject({
+                section_uid: section.uid,
+                section_position: 1,
+            });
+            expect(byUid[b.uid].section_uid).toBeNull();
+            expect(byUid[b.uid].section_position ?? null).toBeNull();
+
+            const back = await ownerAgent
+                .put(`/api/project/${project.uid}/unsectioned/order`)
+                .send({ task_uids: [a.uid, b.uid] });
+            expect(back.status).toBe(200);
+            const rowA = await Task.findOne({ where: { uid: a.uid } });
+            expect(rowA.section_id).toBeNull();
+            expect(rowA.section_position).toBe(0);
+
+            // PATCH to another column sends the card to the end
+            const patched = await ownerAgent
+                .patch(`/api/task/${a.uid}`)
+                .send({ section_uid: section.uid });
+            expect(patched.status).toBe(200);
+            expect(
+                (await Task.findOne({ where: { uid: a.uid } })).section_position
+            ).toBeNull();
+        });
+
+        it('refuses bad lists and tasks of another project', async () => {
+            const section = (
+                await ownerAgent.post(base()).send({ name: 'Column' })
+            ).body;
+            const a = await makeTask('A');
+            const other = (
+                await ownerAgent.post('/api/project').send({ name: 'Other' })
+            ).body;
+            const foreign = await makeTask('F', other.uid);
+            const url = `${base()}/${section.uid}/order`;
+
+            expect(
+                (await ownerAgent.put(url).send({ task_uids: 'x' })).status
+            ).toBe(400);
+            expect(
+                (await ownerAgent.put(url).send({ task_uids: [a.uid, a.uid] }))
+                    .status
+            ).toBe(400);
+            expect(
+                (
+                    await ownerAgent
+                        .put(url)
+                        .send({ task_uids: [a.uid, foreign.uid] })
+                ).status
+            ).toBe(400);
+            expect(
+                (
+                    await ownerAgent
+                        .put(`${base()}/nope/order`)
+                        .send({ task_uids: [a.uid] })
+                ).status
+            ).toBe(404);
+        });
+
+        it('forbids read-only collaborators and outsiders', async () => {
+            const section = (
+                await ownerAgent.post(base()).send({ name: 'Column' })
+            ).body;
+            const a = await makeTask('A');
+            const ro = await readerAgent
+                .put(`${base()}/${section.uid}/order`)
+                .send({ task_uids: [a.uid] });
+            expect(ro.status).toBe(403);
+            const roNone = await readerAgent
+                .put(`/api/project/${project.uid}/unsectioned/order`)
+                .send({ task_uids: [a.uid] });
+            expect(roNone.status).toBe(403);
+            const out = await outsiderAgent
+                .put(`/api/project/${project.uid}/unsectioned/order`)
+                .send({ task_uids: [a.uid] });
+            expect([403, 404]).toContain(out.status);
+        });
+    });
+
+    it('returns the viewer access level on the project page', async () => {
+        const levels = await Promise.all(
+            [ownerAgent, writerAgent, readerAgent].map(async (agent) => {
+                const res = await agent.get(`/api/project/${project.uid}`);
+                return res.body.access_level;
+            })
+        );
+        expect(levels[0]).toMatch(/^(rw|admin)$/);
+        expect(levels[1]).toBe('rw');
+        expect(levels[2]).toBe('ro');
+    });
 });

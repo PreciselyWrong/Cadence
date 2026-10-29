@@ -52,6 +52,7 @@ import ProjectModal from './ProjectModal';
 import ProjectTasksSection from './ProjectTasksSection';
 import ProjectTimeline from './Timeline/ProjectTimeline';
 import ProjectBoard from './Board/ProjectBoard';
+import { orderBoardColumn } from '../../utils/projectSectionsService';
 import ProjectOverviewRail from './ProjectOverviewRail';
 import ProjectAttachmentsWidget from './ProjectAttachmentsWidget';
 import { ownerAttachmentsApi } from '../../utils/attachmentsService';
@@ -271,6 +272,33 @@ const ProjectDetails: React.FC = () => {
             await updateTask(task.uid, { section_uid: sectionUid });
         } catch (error) {
             setSection(previous);
+            throw error;
+        }
+    };
+
+    // Puts the listed tasks, in order, into a board column and saves it.
+    const handleColumnOrder = async (
+        sectionUid: string | null,
+        taskUids: string[]
+    ) => {
+        if (!project?.uid) return;
+        const previous = tasks;
+        const index = new Map(taskUids.map((uid, i) => [uid, i]));
+        setTasks(
+            tasks.map((item) =>
+                item.uid && index.has(item.uid)
+                    ? {
+                          ...item,
+                          section_uid: sectionUid,
+                          section_position: index.get(item.uid),
+                      }
+                    : item
+            )
+        );
+        try {
+            await orderBoardColumn(project.uid, sectionUid, taskUids);
+        } catch (error) {
+            setTasks(previous);
             throw error;
         }
     };
@@ -941,6 +969,8 @@ const ProjectDetails: React.FC = () => {
                                     project={project}
                                     tasks={displayTasks}
                                     onMoveTask={handleTaskSectionChange}
+                                    onOrderColumn={handleColumnOrder}
+                                    readOnly={project.access_level === 'ro'}
                                     onOpenTask={setPanelTask}
                                     t={t}
                                 />

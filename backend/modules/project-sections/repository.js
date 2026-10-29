@@ -117,10 +117,46 @@ const projectSectionsRepository = {
     },
 
     // Tasks of the section go back to "no section".
+    // Puts the listed tasks, in this order, into the column (sectionId null =
+    // Unsectioned). Every uid must be a task of the project, listed once.
+    // Tasks already in the column but not listed keep their position.
+    async orderTasks(projectId, sectionId, orderedUids) {
+        if (new Set(orderedUids).size !== orderedUids.length) return false;
+        return sequelize.transaction(async (transaction) => {
+            const tasks = orderedUids.length
+                ? await Task.findAll({
+                      where: { project_id: projectId, uid: orderedUids },
+                      attributes: [
+                          'id',
+                          'uid',
+                          'section_id',
+                          'section_position',
+                      ],
+                      transaction,
+                  })
+                : [];
+            if (tasks.length !== orderedUids.length) return false;
+            const byUid = new Map(tasks.map((t) => [t.uid, t]));
+            for (let i = 0; i < orderedUids.length; i++) {
+                const task = byUid.get(orderedUids[i]);
+                if (
+                    task.section_position !== i ||
+                    (task.section_id || null) !== sectionId
+                ) {
+                    await Task.update(
+                        { section_id: sectionId, section_position: i },
+                        { where: { id: task.id }, transaction }
+                    );
+                }
+            }
+            return true;
+        });
+    },
+
     async destroy(section) {
         return sequelize.transaction(async (transaction) => {
             await Task.update(
-                { section_id: null },
+                { section_id: null, section_position: null },
                 { where: { section_id: section.id }, transaction }
             );
             await section.destroy({ transaction });
