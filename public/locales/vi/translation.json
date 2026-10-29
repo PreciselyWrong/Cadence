@@ -1382,6 +1382,12 @@
     "createError": "Tạo ghi chú thất bại"
   },
   "task": {
+    "recurringMove": {
+      "title": "Di chuyển việc lặp lại",
+      "optionThis": "Chỉ lần này",
+      "optionFollowing": "Lần này và các lần sau",
+      "optionAll": "Tất cả các lần"
+    },
     "labels": {
       "tags": "Thẻ",
       "project": "Dự án",

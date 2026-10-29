@@ -1382,6 +1382,12 @@
     "createError": "创建笔记失败"
   },
   "task": {
+    "recurringMove": {
+      "title": "移动重复任务",
+      "optionThis": "仅此一次",
+      "optionFollowing": "此次及之后",
+      "optionAll": "所有重复"
+    },
     "labels": {
       "tags": "标签",
       "project": "项目",

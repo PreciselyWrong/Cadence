@@ -1383,6 +1383,12 @@
     "createError": "Kunde inte skapa anteckning"
   },
   "task": {
+    "recurringMove": {
+      "title": "Flytta återkommande uppgift",
+      "optionThis": "Endast denna förekomst",
+      "optionFollowing": "Denna och följande förekomster",
+      "optionAll": "Alla förekomster"
+    },
     "labels": {
       "tags": "Taggar",
       "project": "Projekt",

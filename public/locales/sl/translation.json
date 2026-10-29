@@ -1387,6 +1387,12 @@
     "createError": "Ustvarjanje opombe ni uspelo"
   },
   "task": {
+    "recurringMove": {
+      "title": "Premakni ponavljajoče se opravilo",
+      "optionThis": "Samo to ponovitev",
+      "optionFollowing": "To in naslednje ponovitve",
+      "optionAll": "Vse ponovitve"
+    },
     "labels": {
       "tags": "Oznake",
       "project": "Projekt",

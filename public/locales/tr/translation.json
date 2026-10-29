@@ -1383,6 +1383,12 @@
     "createError": "Not oluşturulamadı"
   },
   "task": {
+    "recurringMove": {
+      "title": "Tekrarlanan görevi taşı",
+      "optionThis": "Yalnızca bu tekrar",
+      "optionFollowing": "Bu ve sonraki tekrarlar",
+      "optionAll": "Tüm tekrarlar"
+    },
     "labels": {
       "tags": "Etiketler",
       "project": "Proje",

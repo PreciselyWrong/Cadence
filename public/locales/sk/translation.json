@@ -1415,6 +1415,12 @@
         "createError": "Poznámku sa nepodarilo vytvoriť"
     },
     "task": {
+        "recurringMove": {
+            "title": "Presunúť opakujúcu sa úlohu",
+            "optionThis": "Iba tento výskyt",
+            "optionFollowing": "Tento a nasledujúce výskyty",
+            "optionAll": "Všetky výskyty"
+        },
         "labels": {
             "tags": "Štítky",
             "project": "Projekt",
