@@ -8,6 +8,44 @@ This documentation is designed for AI assistants and developers working with the
 
 ---
 
+## This Fork (PreciselyWrong/tududi)
+
+This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tududi), branched at `99ef695`. It brings the calendar and planning views closer to TickTick while staying mergeable with upstream.
+
+### What the fork adds
+
+| Area | Fork feature | Docs |
+|---|---|---|
+| Calendar | Real task length (estimate or start→due), resize, multi-day bars, all-day row | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Year (heatmap), N days, Agenda views; week numbers; mini calendar; print | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Arrange tasks panel (undated / overdue → drag onto the grid) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Recurring occurrences, habits, focus sessions, public holidays (`date-holidays`) on the grid | [20-daily-plan.md](docs/20-daily-plan.md), [01-recurring-tasks-behavior.md](docs/01-recurring-tasks-behavior.md) |
+| Calendar | View options saved in `ui_settings.calendar`; colour by project / priority / tag | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
+| Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
+| Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
+| Projects | Board tab with free sections (`project_sections`, `tasks.section_id`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
+| Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |
+
+### Rules for agents working on the fork
+
+1. **Keep the README up to date.** `README.md` has a section "🍴 What this fork adds" with Upstream / This fork tables and an "Under the hood" list (tables, columns, endpoints, docs). Any change that adds, removes or changes a fork feature updates that section in the same commit. Also keep the table above in sync.
+2. **Docs with every behaviour change.** Update the matching `docs/*.md` page (and the documentation index below when a page is added). Behaviour docs describe rules, not code.
+3. **All 26 languages.** Every new UI string goes into all `public/locales/*/translation.json`. Keep each file's own indentation (`sk` uses 4 spaces, the others 2), keep key order, and check that every file still parses as JSON. Translations written by an agent are flagged as unreviewed in the README.
+4. **Migrations.** One file per change in `backend/migrations`, with a timestamp no other migration uses (check `ls backend/migrations` before naming it). Use `backend/utils/migration-utils` helpers so they are idempotent and dialect-safe. Verify the upgrade path on SQLite and PostgreSQL: schema created by upstream `99ef695`, then `npx sequelize-cli db:migrate` with this branch.
+5. **New tables** go into `backend/tests/helpers/setup.js` `CLEANUP_TABLES` and into `backend/services/accountErasureService.js`.
+6. **New `ui_settings` keys** are whitelisted and sanitized in `backend/modules/users/service.js` (`updateUiSettings`) and kept by the profile save (`kept`), and typed in `frontend/utils/profileService.ts`.
+7. **Tests first, then the full run.** Backend integration + frontend RTL for each behaviour; before pushing, run the backend suite, `npm run frontend:test`, `npx tsc --noEmit -p .`, `npm run lint` and `npm run build`.
+8. **Stay close to upstream.** Small, focused commits in upstream style so they can be offered back to chrisvel/tududi. Don't reformat files you don't otherwise change.
+9. **TickTick is a reference for behaviour only.** Never copy its code, assets (SVG/PNG) or texts into this MIT repository.
+
+### Syncing with upstream
+
+`git fetch https://github.com/chrisvel/tududi main`, merge it into the fork branch, resolve locale conflicts key by key (merge the JSON, don't pick one side), check migration timestamps are still unique, run the full checks above, and update the base commit mentioned in this section and in the README.
+
+---
+
 ## Quick Start
 
 Tududi is a self-hosted task management system with hierarchical organization (Areas > Goals > Projects > Tasks), smart recurring tasks, and multi-channel integration.
@@ -449,5 +487,5 @@ Tududi is a self-hosted task management system designed around hierarchical orga
 ---
 
 **Document Version:** 1.0.0
-**Last Updated:** 2026-09-20
+**Last Updated:** 2026-10-29
 **Maintainer:** Update when architecture changes or patterns evolve

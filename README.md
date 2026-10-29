@@ -68,6 +68,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome).
+- Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).
 - Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
 
 ---
