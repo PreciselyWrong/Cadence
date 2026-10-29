@@ -1704,6 +1704,7 @@
     "done": "Valmis"
   },
   "calendar": {
+    "print": "Tulosta",
     "year": "Vuosi",
     "weekNumber": "Vk {{week}}",
     "yearItems_one": "{{date}}: {{count}} kohdetta",

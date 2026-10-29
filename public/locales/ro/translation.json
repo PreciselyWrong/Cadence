@@ -1708,6 +1708,7 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "print": "Imprimă",
     "year": "An",
     "weekNumber": "S{{week}}",
     "yearItems_one": "{{date}}: {{count}} elemente",

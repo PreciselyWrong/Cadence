@@ -1482,6 +1482,7 @@
     "startAfterDueError": "Початок не може бути пізніше терміну"
   },
   "calendar": {
+    "print": "Друк",
     "year": "Рік",
     "weekNumber": "Т{{week}}",
     "yearItems_one": "{{date}}: {{count}} елем.",

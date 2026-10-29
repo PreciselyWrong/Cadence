@@ -22,6 +22,7 @@ import {
     ClockIcon,
     FolderIcon,
     TagIcon,
+    PrinterIcon,
 } from '@heroicons/react/24/outline';
 import {
     format,
@@ -347,6 +348,17 @@ const Calendar: React.FC = () => {
 
     const goToToday = () => setCurrentDate(new Date());
 
+    // Prints only the shown view (see the print rules in tailwind.css).
+    const printCalendar = () => {
+        document.body.classList.add('printing-calendar');
+        const done = () => {
+            document.body.classList.remove('printing-calendar');
+            window.removeEventListener('afterprint', done);
+        };
+        window.addEventListener('afterprint', done);
+        window.print();
+    };
+
     const handleDateClick = () => {};
 
     const handleEventClick = (event: CalendarEvent) => {
@@ -519,6 +531,16 @@ const Calendar: React.FC = () => {
                             ))}
                         </div>
 
+                        <button
+                            type="button"
+                            onClick={printCalendar}
+                            aria-label={t('calendar.print', 'Print')}
+                            title={t('calendar.print', 'Print')}
+                            className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
+                        >
+                            <PrinterIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                        </button>
+
                         <ViewOptions
                             options={options}
                             onChange={changeOptions}
@@ -685,7 +707,10 @@ const Calendar: React.FC = () => {
                             />
                         </aside>
                     )}
-                    <div className="flex-1 overflow-hidden min-h-0">
+                    <div
+                        className="flex-1 overflow-hidden min-h-0"
+                        data-print-area
+                    >
                         {view === 'year' && (
                             <CalendarYearView
                                 currentDate={currentDate}

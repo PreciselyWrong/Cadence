@@ -1702,6 +1702,7 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "print": "In",
     "year": "Năm",
     "weekNumber": "T{{week}}",
     "yearItems_one": "{{date}}: {{count}} mục",

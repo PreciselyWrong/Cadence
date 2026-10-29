@@ -1705,6 +1705,7 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "print": "Skriv ut",
     "year": "År",
     "weekNumber": "U{{week}}",
     "yearItems_one": "{{date}}: {{count}} elementer",

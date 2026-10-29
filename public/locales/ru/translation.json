@@ -1708,6 +1708,7 @@
     "done": "Готово"
   },
   "calendar": {
+    "print": "Печать",
     "year": "Год",
     "weekNumber": "Н{{week}}",
     "yearItems_one": "{{date}}: {{count}} элем.",

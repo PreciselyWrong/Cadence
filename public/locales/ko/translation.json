@@ -1702,6 +1702,7 @@
     "done": "완료"
   },
   "calendar": {
+    "print": "인쇄",
     "year": "연도",
     "weekNumber": "{{week}}주",
     "yearItems_one": "{{date}}: {{count}}개",

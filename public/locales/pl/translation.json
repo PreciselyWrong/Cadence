@@ -1708,6 +1708,7 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "print": "Drukuj",
     "year": "Rok",
     "weekNumber": "T{{week}}",
     "yearItems_one": "{{date}}: {{count}} elem.",

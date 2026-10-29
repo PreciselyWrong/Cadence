@@ -1706,6 +1706,7 @@
     "done": "Concluído"
   },
   "calendar": {
+    "print": "Imprimir",
     "year": "Ano",
     "weekNumber": "S{{week}}",
     "yearItems_one": "{{date}}: {{count}} itens",

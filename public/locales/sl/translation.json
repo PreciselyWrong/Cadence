@@ -1708,6 +1708,7 @@
     "done": "Končano"
   },
   "calendar": {
+    "print": "Natisni",
     "year": "Leto",
     "weekNumber": "T{{week}}",
     "yearItems_one": "{{date}}: {{count}} elementov",

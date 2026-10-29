@@ -1702,6 +1702,7 @@
     "done": "Selesai"
   },
   "calendar": {
+    "print": "Cetak",
     "year": "Tahun",
     "weekNumber": "M{{week}}",
     "yearItems_one": "{{date}}: {{count}} item",

@@ -1876,6 +1876,7 @@
         "done": "Hotovo"
     },
     "calendar": {
+        "print": "Tlačiť",
         "year": "Rok",
         "weekNumber": "T{{week}}",
         "yearItems_one": "{{date}}: {{count}} položiek",

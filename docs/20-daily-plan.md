@@ -124,6 +124,8 @@ Moving a block keeps its length: a start-to-due block moves both ends, a bar mov
 - **N days** is the week grid for 2 to 7 days starting on the current date (View options → *Days in multi-day view*, `ui_settings.calendar.multiDayCount`, 3 by default). The arrows move by that many days. With weekends hidden it counts working days only.
 - **Agenda** lists the month day by day, each day that has something on it under its own heading, whole-day items first. It opens scrolled to today, or the next day with items; the arrows move by a month.
 
+The printer button prints only the shown view, without the sidebar and toolbar.
+
 ## Calendar page: View options
 
 The sliders button next to the view switcher opens **View options**, saved per user in `ui_settings.calendar` (`PUT /api/profile/ui-settings` with `{ calendar: {...} }`):

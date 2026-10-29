@@ -1969,6 +1969,7 @@
     "done": "Done"
   },
   "calendar": {
+    "print": "Print",
     "year": "Year",
     "weekNumber": "W{{week}}",
     "yearItems_one": "{{date}}: {{count}} items",

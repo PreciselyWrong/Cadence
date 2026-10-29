@@ -100,6 +100,18 @@ describe('Calendar page feeds', () => {
         (updateCalendarFeed as jest.Mock).mockResolvedValue({});
     });
 
+    it('prints only the calendar area', async () => {
+        const print = jest.fn();
+        window.print = print;
+        renderCalendar();
+        await screen.findByText('Standup');
+        fireEvent.click(screen.getByRole('button', { name: 'Print' }));
+        expect(print).toHaveBeenCalled();
+        expect(document.body).toHaveClass('printing-calendar');
+        window.dispatchEvent(new Event('afterprint'));
+        expect(document.body).not.toHaveClass('printing-calendar');
+    });
+
     it('offers every view in the switcher', async () => {
         renderCalendar();
         await screen.findByText('Standup');

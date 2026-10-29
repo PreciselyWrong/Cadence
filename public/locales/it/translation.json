@@ -1706,6 +1706,7 @@
     "done": "Fatto"
   },
   "calendar": {
+    "print": "Stampa",
     "year": "Anno",
     "weekNumber": "S{{week}}",
     "yearItems_one": "{{date}}: {{count}} elementi",

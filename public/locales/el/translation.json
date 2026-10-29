@@ -1705,6 +1705,7 @@
     "done": "Τέλος"
   },
   "calendar": {
+    "print": "Εκτύπωση",
     "year": "Έτος",
     "weekNumber": "Ε{{week}}",
     "yearItems_one": "{{date}}: {{count}} στοιχεία",

@@ -1712,6 +1712,7 @@
     "done": "تم"
   },
   "calendar": {
+    "print": "طباعة",
     "year": "السنة",
     "weekNumber": "أ{{week}}",
     "yearItems_one": "{{date}}: {{count}} عناصر",

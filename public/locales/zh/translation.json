@@ -1702,6 +1702,7 @@
     "done": "完成"
   },
   "calendar": {
+    "print": "打印",
     "year": "年",
     "weekNumber": "第{{week}}周",
     "yearItems_one": "{{date}}：{{count}} 项",

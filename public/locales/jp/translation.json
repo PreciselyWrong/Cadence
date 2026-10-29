@@ -1634,6 +1634,7 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "print": "印刷",
     "year": "年",
     "weekNumber": "第{{week}}週",
     "yearItems_one": "{{date}}: {{count}}件",

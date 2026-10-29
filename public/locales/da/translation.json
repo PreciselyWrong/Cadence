@@ -1704,6 +1704,7 @@
     "done": "Færdig"
   },
   "calendar": {
+    "print": "Udskriv",
     "year": "År",
     "weekNumber": "U{{week}}",
     "yearItems_one": "{{date}}: {{count}} elementer",

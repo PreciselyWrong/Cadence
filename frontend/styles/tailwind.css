@@ -285,3 +285,25 @@ html.sidebar-resizing * {
     transition: none;
   }
 }
+
+/* Printing the Calendar page prints only the calendar itself. */
+@media print {
+    body.printing-calendar * {
+        visibility: hidden;
+    }
+    body.printing-calendar [data-print-area],
+    body.printing-calendar [data-print-area] * {
+        visibility: visible;
+    }
+    body.printing-calendar [data-print-area] {
+        position: absolute;
+        inset: 0;
+        overflow: visible !important;
+        height: auto !important;
+    }
+    body.printing-calendar [data-print-area] .overflow-y-auto,
+    body.printing-calendar [data-print-area] .overflow-hidden {
+        overflow: visible !important;
+        height: auto !important;
+    }
+}

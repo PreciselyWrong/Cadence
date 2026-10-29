@@ -1704,6 +1704,7 @@
     "done": "Готово"
   },
   "calendar": {
+    "print": "Печат",
     "year": "Година",
     "weekNumber": "С{{week}}",
     "yearItems_one": "{{date}}: {{count}} елемента",

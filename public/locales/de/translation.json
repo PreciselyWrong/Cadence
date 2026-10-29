@@ -1367,6 +1367,7 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "print": "Drucken",
     "year": "Jahr",
     "weekNumber": "KW{{week}}",
     "yearItems_one": "{{date}}: {{count}} Einträge",
