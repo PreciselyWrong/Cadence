@@ -27,10 +27,13 @@ const TagInput: React.FC<TagInputProps> = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Update internal tags state when initialTags prop changes
+    // Resync only when the saved names change. Callers pass a new array on
+    // every render, and a re-render before a save lands would otherwise reset
+    // the tags being edited and drop the ones added since.
+    const initialKey = JSON.stringify(initialTags || []);
     useEffect(() => {
-        setTags(initialTags || []);
-    }, [initialTags]);
+        setTags(JSON.parse(initialKey));
+    }, [initialKey]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
