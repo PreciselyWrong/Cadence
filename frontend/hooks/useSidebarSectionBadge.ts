@@ -7,7 +7,8 @@ import { useIsMinimal } from './useUiDensity';
 export const useSidebarSectionBadge = (id: SectionBadgeId): boolean => {
     const isMinimal = useIsMinimal();
     const enabled = useStore(
-        (state) => state.userSettingsStore.sidebarMinimal.sectionBadges[id]
+        (state) =>
+            state.userSettingsStore.sidebarMinimal?.sectionBadges?.[id] ?? true
     );
     return !isMinimal || enabled;
 };
