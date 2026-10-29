@@ -24,6 +24,11 @@ import {
 } from '../../../utils/tasksService';
 
 // A stable t, like i18next's: the page reloads when t changes.
+jest.mock('../../Shared/MarkdownRenderer', () => ({
+    __esModule: true,
+    default: ({ content }: { content: string }) => <div>{content}</div>,
+}));
+
 jest.mock('react-i18next', () => {
     const t = (
         _key: string,

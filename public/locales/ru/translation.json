@@ -186,6 +186,7 @@
     "noTasksAvailable": "Нет доступных задач.",
     "searchPlaceholder": "Поиск задач...",
     "addNewTask": "Добавить новую задачу",
+    "addTaskInline": "+ Добавить задачу",
     "metrics": "Метрики",
     "myPlanToday": "Мой план на сегодня",
     "noPlanToday": "На сегодня пока нет запланированных задач",

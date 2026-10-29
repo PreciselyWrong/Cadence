@@ -184,6 +184,7 @@
     "noTasksAvailable": "Inga tillgängliga uppgifter.",
     "searchPlaceholder": "Sök uppgifter...",
     "addNewTask": "Lägg till ny uppgift",
+    "addTaskInline": "+ Lägg till uppgift",
     "metrics": "Mätvärden",
     "myPlanToday": "Min plan för idag",
     "noPlanToday": "Inga uppgifter har planerats för idag.",

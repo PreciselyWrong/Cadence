@@ -184,6 +184,7 @@
     "noTasksAvailable": "Mevcut görev yok.",
     "searchPlaceholder": "Görevleri ara...",
     "addNewTask": "Yeni Görev Ekle",
+    "addTaskInline": "+ Görev ekle",
     "metrics": "Metrikler",
     "myPlanToday": "Bugünkü Planım",
     "noPlanToday": "Bugün için henüz planlanmış görev yok",

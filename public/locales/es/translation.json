@@ -861,6 +861,7 @@
     "noTasksAvailable": "No hay tareas disponibles para hoy.",
     "searchPlaceholder": "Buscar tareas...",
     "addNewTask": "Añadir Nueva Tarea",
+    "addTaskInline": "+ Añadir tarea",
     "myPlanToday": "Mi Plan para Hoy",
     "noPlanToday": "Aún no hay tareas planificadas para hoy",
     "addToPlanHint": "Usa los iconos + junto a las tareas sugeridas para añadirlas a tu plan de hoy",

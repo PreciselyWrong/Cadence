@@ -185,6 +185,7 @@
     "noTasksAvailable": "Nu sunt disponibile taskuri.",
     "searchPlaceholder": "Caută taskuri...",
     "addNewTask": "Adaugă un nou task",
+    "addTaskInline": "+ Adaugă sarcină",
     "metrics": "Metri",
     "myPlanToday": "Planul meu pentru astăzi",
     "noPlanToday": "Nu sunt taskuri planificate pentru astăzi încă",

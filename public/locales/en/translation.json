@@ -188,6 +188,7 @@
     "noTasksAvailable": "No tasks available.",
     "searchPlaceholder": "Search tasks...",
     "addNewTask": "Add New Task",
+    "addTaskInline": "+ Add task",
     "metrics": "Metrics",
     "myPlanToday": "My Plan for Today",
     "noPlanToday": "No tasks planned for today yet",

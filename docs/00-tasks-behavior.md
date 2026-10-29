@@ -134,6 +134,21 @@ In Minimal mode a click on a task row opens the task in a pane on the right. On 
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
 - Dense mode keeps the inline expansion on the row.
 
+## **Minimal Lists: Add Field and Completed Section**
+
+In Minimal mode, four task lists share two pieces at their top and bottom. Dense mode shows neither.
+
+- **Lists:** Today (candidate list), Tasks (All tasks and smart lists), a project's Tasks tab, and a tag's Tasks tab.
+- **"+ Add task" field** at the top. Enter creates the task and clears the field; Escape clears it; a blank name does nothing. A failed create puts the text back and shows an error. The new task inherits its list:
+    - Project: the project.
+    - Tag: the tag.
+    - Tasks with `?tag=`: that tag.
+    - Today: a due date on the day being planned (today unless another day is open).
+- **Completed (N)** section at the bottom, with a chevron. It is collapsed by default; a click shows the list's completed tasks, with the same row actions. The open state is remembered per list in the browser (not on the server).
+- The section appears only while the list shows open tasks. With "Completed" or "All" selected, the completed tasks are already in the list, so the section is not repeated.
+- Today's section lists the tasks completed today, whatever day is open.
+- Completing or reopening a task updates the count. Today and Tasks reload the section's tasks from the server; project and tag lists use the tasks already loaded.
+
 ## **Subtasks**
 
 ### Subtask Hierarchy

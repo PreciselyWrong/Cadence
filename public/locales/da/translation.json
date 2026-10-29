@@ -184,6 +184,7 @@
     "noTasksAvailable": "Ingen opgaver tilgængelige.",
     "searchPlaceholder": "Søg opgaver...",
     "addNewTask": "Tilføj Ny Opgave",
+    "addTaskInline": "+ Tilføj opgave",
     "metrics": "Målinger",
     "myPlanToday": "Min Plan for I Dag",
     "noPlanToday": "Ingen opgaver planlagt for i dag endnu",

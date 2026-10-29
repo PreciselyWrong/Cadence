@@ -181,6 +181,7 @@
     "noTasksAvailable": "今日のタスクはありません。",
     "searchPlaceholder": "タスクを検索...",
     "addNewTask": "新しいタスクを追加",
+    "addTaskInline": "+ タスクを追加",
     "myPlanToday": "今日の私の計画",
     "noPlanToday": "今日はまだ予定されたタスクがありません",
     "addToPlanHint": "タスクの横にあるカレンダーアイコンを使用して、今日の計画に追加します",

@@ -184,6 +184,7 @@
     "noTasksAvailable": "사용 가능한 작업이 없습니다.",
     "searchPlaceholder": "작업 검색...",
     "addNewTask": "새 작업 추가",
+    "addTaskInline": "+ 작업 추가",
     "metrics": "지표",
     "myPlanToday": "오늘의 계획",
     "noPlanToday": "오늘 계획된 작업이 없습니다.",

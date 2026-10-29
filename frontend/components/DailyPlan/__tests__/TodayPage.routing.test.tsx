@@ -21,6 +21,11 @@ const NEXT = new Intl.DateTimeFormat('en-CA', { timeZone: 'UTC' }).format(
     new Date(Date.now() + 24 * 60 * 60 * 1000)
 );
 
+jest.mock('../../Shared/MarkdownRenderer', () => ({
+    __esModule: true,
+    default: ({ content }: { content: string }) => <div>{content}</div>,
+}));
+
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback: string | Record<string, unknown>) =>
         typeof fallback === 'string'

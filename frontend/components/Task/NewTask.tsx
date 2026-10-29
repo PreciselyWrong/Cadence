@@ -5,9 +5,10 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline';
 
 interface NewTaskProps {
     onTaskCreate: (taskName: string) => Promise<void>;
+    placeholder?: string;
 }
 
-const NewTask: React.FC<NewTaskProps> = ({ onTaskCreate }) => {
+const NewTask: React.FC<NewTaskProps> = ({ onTaskCreate, placeholder }) => {
     const [taskName, setTaskName] = useState<string>('');
     const { showErrorToast } = useToast();
     const { t } = useTranslation();
@@ -19,6 +20,10 @@ const NewTask: React.FC<NewTaskProps> = ({ onTaskCreate }) => {
     const handleKeyDown = async (
         event: React.KeyboardEvent<HTMLInputElement>
     ) => {
+        if (event.key === 'Escape') {
+            setTaskName('');
+            return;
+        }
         if (event.key === 'Enter' && taskName.trim()) {
             const taskText = taskName.trim();
             setTaskName('');
@@ -48,10 +53,10 @@ const NewTask: React.FC<NewTaskProps> = ({ onTaskCreate }) => {
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     className="font-semibold text-base text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 bg-transparent dark:bg-transparent focus:outline-none focus:ring-0 w-full appearance-none"
-                    placeholder={t(
-                        'tasks.addNewTask',
-                        'Προσθήκη Νέας Εργασίας'
-                    )}
+                    placeholder={
+                        placeholder ??
+                        t('tasks.addNewTask', 'Προσθήκη Νέας Εργασίας')
+                    }
                     data-testid="new-task-input"
                 />
             </div>

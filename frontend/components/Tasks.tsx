@@ -6,7 +6,17 @@ import GroupedTaskList from './Task/GroupedTaskList';
 import { Task } from '../entities/Task';
 import { getTitleAndIcon } from './Task/getTitleAndIcon';
 import { getDescription } from './Task/getDescription';
-import { createTask, GroupedTasks, saveTaskOrder } from '../utils/tasksService';
+import {
+    createTask,
+    fetchTasks,
+    GroupedTasks,
+    saveTaskOrder,
+} from '../utils/tasksService';
+import { useIsMinimal } from '../hooks/useUiDensity';
+import NewTask from './Task/NewTask';
+import CompletedTasksSection, {
+    useCompletedTasks,
+} from './Task/CompletedTasksSection';
 import {
     mergeUpdatedGroupedTasks,
     mergeUpdatedTaskList,
@@ -378,6 +388,40 @@ const Tasks: React.FC = () => {
             search: `?${params.toString()}`,
         });
     };
+
+    // Minimal "+ Add task" field: the task joins the list it was typed in
+    // (a `?tag=` list tags it).
+    const handleInlineCreate = async (name: string) => {
+        await handleTaskCreate({
+            name,
+            status: 'not_started',
+            completed_at: null,
+            ...(tag ? { tags: [tag] } : {}),
+        } as unknown as Partial<Task>);
+    };
+
+    // Minimal "Completed" section: only on open-task lists. The other status
+    // filters already show completed tasks inline.
+    const isMinimal = useIsMinimal();
+    const showCompletedSection =
+        isMinimal && !isUpcomingView && status === 'active';
+    const [completedRevision, setCompletedRevision] = useState(0);
+    const loadCompletedTasks = async (): Promise<Task[]> => {
+        const params = new URLSearchParams(location.search);
+        params.set('status', 'done');
+        params.delete('offset');
+        params.delete('limit');
+        const result = await fetchTasks(`?${params.toString()}`);
+        return result.tasks;
+    };
+    const [completedTasks] = useCompletedTasks(
+        showCompletedSection,
+        loadCompletedTasks,
+        `${location.search}|${completedRevision}|${tasks
+            .map((task) => `${task.uid}:${task.status}`)
+            .join(',')}`
+    );
+    const completedListKey = `tasks:${location.pathname}:${query.get('type') ?? ''}:${tag ?? ''}`;
 
     const handleTaskCreate = async (taskData: Partial<Task>) => {
         try {
@@ -945,6 +989,15 @@ const Tasks: React.FC = () => {
                     </div>
                 )}
 
+                {isMinimal && !isUpcomingView && (
+                    <div className="mb-3">
+                        <NewTask
+                            onTaskCreate={handleInlineCreate}
+                            placeholder={t('tasks.addTaskInline', '+ Add task')}
+                        />
+                    </div>
+                )}
+
                 {loading ? (
                     <p>{t('common.loading', 'Loading...')}</p>
                 ) : error ? (
@@ -1156,6 +1209,26 @@ const Tasks: React.FC = () => {
                                     <FocusEmptyHint className="mt-6" />
                                 </div>
                             </div>
+                        )}
+                        {showCompletedSection && (
+                            <CompletedTasksSection
+                                list={completedListKey}
+                                count={completedTasks.length}
+                            >
+                                <TaskList
+                                    tasks={completedTasks}
+                                    onTaskUpdate={handleTaskUpdate}
+                                    onTaskCompletionToggle={(task) => {
+                                        handleTaskCompletionToggle(task);
+                                        setCompletedRevision((n) => n + 1);
+                                    }}
+                                    onTaskDelete={handleTaskDelete}
+                                    projects={projects}
+                                    hideProjectName={false}
+                                    onToggleToday={undefined}
+                                    showCompletedTasks
+                                />
+                            </CompletedTasksSection>
                         )}
                     </>
                 )}

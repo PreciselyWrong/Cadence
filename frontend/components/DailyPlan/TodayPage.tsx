@@ -46,9 +46,17 @@ import {
     createTask,
     fetchCalendarTasks,
     fetchTaskByUid,
+    deleteTask,
+    fetchTasks,
     toggleTaskCompletion,
     updateTask,
 } from '../../utils/tasksService';
+import { useIsMinimal } from '../../hooks/useUiDensity';
+import TaskList from '../Task/TaskList';
+import NewTask from '../Task/NewTask';
+import CompletedTasksSection, {
+    useCompletedTasks,
+} from '../Task/CompletedTasksSection';
 import { onCaptureSaved, openCapture } from '../../utils/captureUi';
 import { processInboxItem } from '../../utils/inboxService';
 import { getUserTimezone } from '../../utils/dateUtils';
@@ -418,6 +426,19 @@ const TodayPage: React.FC = () => {
     const [drafting, setDrafting] = useState(false);
     const [draftChoiceOpen, setDraftChoiceOpen] = useState(false);
     const [moreOpen, setMoreOpen] = useState(false);
+    // Minimal "Completed" section at the foot of the candidate list: the
+    // tasks completed today, reloaded when the day's tasks change.
+    const isMinimal = useIsMinimal();
+    const [completedToday] = useCompletedTasks(
+        isMinimal,
+        () =>
+            fetchTasks('?type=today').then(
+                (result) => result.tasks_completed_today ?? []
+            ),
+        `${reloadToken}|${items.map((item) => item.task_uid).join(',')}|${dayTasks
+            .map((task) => `${task.uid}:${task.status}`)
+            .join(',')}`
+    );
     const draftMenuRef = useDismiss(
         draftChoiceOpen,
         useCallback(() => setDraftChoiceOpen(false), [])
@@ -1118,6 +1139,18 @@ const TodayPage: React.FC = () => {
         }
     };
 
+    // Minimal "+ Add task" field on the candidate list: the task is due on the
+    // day being planned (today, unless another day is open).
+    const handleInlineCreate = async (name: string) => {
+        await createTask({
+            name,
+            due_date: date ?? todayString(),
+            status: TASK_STATUS.NOT_STARTED,
+            completed_at: null,
+        } as unknown as Task);
+        setReloadToken((n) => n + 1);
+    };
+
     const handleAddInbox = async (entry: InboxCandidate) => {
         try {
             const task = await createTask({
@@ -1785,6 +1818,17 @@ const TodayPage: React.FC = () => {
                                 calendarOpen ? 'md:w-[400px]' : 'md:w-full'
                             }`}
                         >
+                            {isMinimal && (
+                                <div className="mb-4">
+                                    <NewTask
+                                        onTaskCreate={handleInlineCreate}
+                                        placeholder={t(
+                                            'tasks.addTaskInline',
+                                            '+ Add task'
+                                        )}
+                                    />
+                                </div>
+                            )}
                             <CandidateList
                                 candidates={candidates}
                                 planned={plannedMap}
@@ -1810,6 +1854,36 @@ const TodayPage: React.FC = () => {
                                 loadingMore={loadingMore}
                                 today={date ?? ''}
                             />
+                            {isMinimal && (
+                                <CompletedTasksSection
+                                    list="today"
+                                    count={completedToday.length}
+                                >
+                                    <TaskList
+                                        tasks={completedToday}
+                                        onTaskUpdate={async (task) => {
+                                            if (task.uid) {
+                                                await updateTask(
+                                                    task.uid,
+                                                    task
+                                                );
+                                            }
+                                            setReloadToken((n) => n + 1);
+                                        }}
+                                        onTaskCompletionToggle={() =>
+                                            setReloadToken((n) => n + 1)
+                                        }
+                                        onTaskDelete={async (uid) => {
+                                            await deleteTask(uid);
+                                            setReloadToken((n) => n + 1);
+                                        }}
+                                        projects={[]}
+                                        hideProjectName
+                                        onToggleToday={undefined}
+                                        showCompletedTasks
+                                    />
+                                </CompletedTasksSection>
+                            )}
                         </aside>
                         {calendarOpen && date && (
                             <section className="isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 md:max-h-full md:overflow-y-auto dark:bg-gray-900">

@@ -14,7 +14,12 @@ import { Task } from '../../entities/Task';
 import { Note } from '../../entities/Note';
 import { Project, ProjectStatus } from '../../entities/Project';
 import { updateProject } from '../../utils/projectsService';
+import { createTask } from '../../utils/tasksService';
+import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
+import NewTask from '../Task/NewTask';
+import CompletedTasksSection from '../Task/CompletedTasksSection';
+import { isTaskCompleted } from '../../constants/taskStatus';
 import GroupedTaskList from '../Task/GroupedTaskList';
 import ProjectItem from '../Project/ProjectItem';
 import ProjectShareModal from '../Project/ProjectShareModal';
@@ -53,6 +58,7 @@ const TagDetails: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'tasks' | 'notes' | 'projects'>(
         'tasks'
     );
+    const isMinimal = useIsMinimal();
     const [taskStatusFilter, setTaskStatusFilter] = useState<
         'all' | 'active' | 'completed'
     >('active');
@@ -319,6 +325,18 @@ const TagDetails: React.FC = () => {
         } catch (error) {
             console.error('Error updating task:', error);
         }
+    };
+
+    // Minimal "+ Add task" field: the new task gets this tag.
+    const handleInlineCreate = async (name: string) => {
+        if (!tag?.name) return;
+        const created = await createTask({
+            name,
+            tags: [tag.name],
+            status: 'not_started',
+            completed_at: null,
+        } as unknown as Task);
+        setTasks((prev) => [created, ...prev]);
     };
 
     const handleTaskDelete = async (taskUid: string) => {
@@ -764,6 +782,17 @@ const TagDetails: React.FC = () => {
                             }
                         />
                     </div>
+                    {isMinimal && (
+                        <div className="mb-3">
+                            <NewTask
+                                onTaskCreate={handleInlineCreate}
+                                placeholder={t(
+                                    'tasks.addTaskInline',
+                                    '+ Add task'
+                                )}
+                            />
+                        </div>
+                    )}
                     {displayTasks.length > 0 ? (
                         groupBy === 'project' ? (
                             <GroupedTaskList
@@ -798,6 +827,31 @@ const TagDetails: React.FC = () => {
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                             {t('tasks.noTasksAvailable', 'No tasks available.')}
                         </p>
+                    )}
+                    {isMinimal && taskStatusFilter === 'active' && (
+                        <CompletedTasksSection
+                            list={`tag:${tag?.name ?? ''}`}
+                            count={
+                                tasks.filter((task) =>
+                                    isTaskCompleted(task.status)
+                                ).length
+                            }
+                        >
+                            <TaskList
+                                tasks={tasks.filter((task) =>
+                                    isTaskCompleted(task.status)
+                                )}
+                                onTaskUpdate={handleTaskUpdate}
+                                onTaskCompletionToggle={
+                                    handleTaskCompletionToggle
+                                }
+                                onTaskDelete={handleTaskDelete}
+                                projects={projectLookupList}
+                                hideProjectName={false}
+                                onToggleToday={undefined}
+                                showCompletedTasks
+                            />
+                        </CompletedTasksSection>
                     )}
                 </div>
             )}

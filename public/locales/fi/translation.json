@@ -184,6 +184,7 @@
     "noTasksAvailable": "Ei saatavilla olevia tehtäviä.",
     "searchPlaceholder": "Hae tehtäviä...",
     "addNewTask": "Lisää uusi tehtävä",
+    "addTaskInline": "+ Lisää tehtävä",
     "metrics": "Metrikat",
     "myPlanToday": "Suunnitelmani tänään",
     "noPlanToday": "Ei vielä suunniteltuja tehtäviä tänään",

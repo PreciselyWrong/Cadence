@@ -31,11 +31,13 @@ import {
     fetchProjects,
 } from '../../utils/projectsService';
 import {
+    createTask,
     deleteTask,
     fetchTaskOrder,
     saveTaskOrder,
     updateTask,
 } from '../../utils/tasksService';
+import { useIsMinimal } from '../../hooks/useUiDensity';
 import { mergeVisibleOrder } from '../Shared/sortableList';
 import IconSortDropdown from '../Shared/IconSortDropdown';
 import LoadingSpinner from '../Shared/LoadingSpinner';
@@ -110,6 +112,7 @@ const ProjectDetails: React.FC = () => {
         [project?.uid]
     );
 
+    const isMinimal = useIsMinimal();
     const [taskStatusFilter, setTaskStatusFilter] = useState<TaskStatusFilter>(
         () => {
             const saved = localStorage.getItem('project_task_status_filter');
@@ -357,6 +360,18 @@ const ProjectDetails: React.FC = () => {
                 )
             );
         }
+    };
+
+    // Minimal "+ Add task" field: the new task joins this project.
+    const handleInlineCreate = async (name: string) => {
+        if (!project?.uid) return;
+        const created = await createTask({
+            name,
+            project_uid: project.uid,
+            status: 'not_started',
+            completed_at: null,
+        } as Task);
+        setTasks((prev) => [created, ...prev]);
     };
 
     const handleTaskDelete = async (taskUid: string | undefined) => {
@@ -1026,6 +1041,13 @@ const ProjectDetails: React.FC = () => {
                                             }
                                             taskSearchQuery={taskSearchQuery}
                                             onTaskReorder={handleTaskReorder}
+                                            onInlineCreate={
+                                                isMinimal
+                                                    ? handleInlineCreate
+                                                    : undefined
+                                            }
+                                            completedTasks={tasks}
+                                            completedListKey={`project:${project.uid}`}
                                             t={t}
                                         />
                                     </div>

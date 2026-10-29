@@ -192,6 +192,7 @@
     "noTasksAvailable": "Keine Aufgaben verfügbar.",
     "searchPlaceholder": "Aufgaben suchen...",
     "addNewTask": "Neue Aufgabe hinzufügen",
+    "addTaskInline": "+ Aufgabe hinzufügen",
     "metrics": "Metriken",
     "setInProgress": "In Bearbeitung setzen",
     "setNotStarted": "Auf nicht begonnen setzen",

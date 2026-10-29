@@ -19,6 +19,11 @@ let aiEnabled = false;
 let calendarEnabled = true;
 
 // A stable t, like the real one: the planner reloads when t changes.
+jest.mock('../../Shared/MarkdownRenderer', () => ({
+    __esModule: true,
+    default: ({ content }: { content: string }) => <div>{content}</div>,
+}));
+
 jest.mock('react-i18next', () => {
     const t = (
         _key: string,

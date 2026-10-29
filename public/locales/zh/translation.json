@@ -184,6 +184,7 @@
     "noTasksAvailable": "没有可用的任务。",
     "searchPlaceholder": "搜索任务...",
     "addNewTask": "添加新任务",
+    "addTaskInline": "+ 添加任务",
     "metrics": "指标",
     "myPlanToday": "我今天的计划",
     "noPlanToday": "今天还没有计划任务",
