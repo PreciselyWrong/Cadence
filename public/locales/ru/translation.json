@@ -267,10 +267,10 @@
         "deleteTitle": "Удалить матрицу",
         "deleteConfirm": "Удалить матрицу «{{name}}»? Ваши задачи не изменятся."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Этот квадрант допускает несколько приоритетов, поэтому задачу нельзя перетащить сюда.",
+      "dropRefusedDue": "Срок задачи не подходит для этого квадранта; лучше измените дату.",
+      "dropRefusedProject": "Проект задачи не подходит для этого квадранта.",
+      "dropRefusedEarlier": "После изменения задача всё равно попала бы в более ранний квадрант."
     },
     "kanban": {
       "title": "Доска Канбан",

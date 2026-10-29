@@ -267,10 +267,10 @@
         "deleteTitle": "删除矩阵",
         "deleteConfirm": "删除矩阵“{{name}}”？你的任务不会改变。"
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "此象限允许多个优先级，因此无法通过拖动移到这里。",
+      "dropRefusedDue": "任务的截止日期不符合此象限，请改为修改日期。",
+      "dropRefusedProject": "任务的项目不符合此象限。",
+      "dropRefusedEarlier": "修改后任务仍会落入前面的象限。"
     },
     "kanban": {
       "title": "看板",

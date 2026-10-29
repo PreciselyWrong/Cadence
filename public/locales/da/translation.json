@@ -267,10 +267,10 @@
         "deleteTitle": "Slet matrix",
         "deleteConfirm": "Slet matricen \"{{name}}\"? Dine opgaver ændres ikke."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Denne kvadrant tillader flere prioriteter, så opgaven kan ikke trækkes hertil.",
+      "dropRefusedDue": "Forfaldsdatoen passer ikke til denne kvadrant; ændr datoen i stedet.",
+      "dropRefusedProject": "Opgavens projekt passer ikke til denne kvadrant.",
+      "dropRefusedEarlier": "Efter ændringen ville opgaven stadig havne i en tidligere kvadrant."
     },
     "kanban": {
       "title": "Kanban Tavle",

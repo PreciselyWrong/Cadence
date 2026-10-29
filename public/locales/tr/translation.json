@@ -267,10 +267,10 @@
         "deleteTitle": "Matrisi sil",
         "deleteConfirm": "\"{{name}}\" matrisi silinsin mi? Görevleriniz değişmez."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Bu çeyrek birden fazla önceliğe izin veriyor, bu yüzden görev buraya sürüklenemez.",
+      "dropRefusedDue": "Görevin son tarihi bu çeyreğe uymuyor; bunun yerine tarihi değiştir.",
+      "dropRefusedProject": "Görevin projesi bu çeyreğe uymuyor.",
+      "dropRefusedEarlier": "Değişiklikten sonra görev yine önceki bir çeyreğe düşerdi."
     },
     "kanban": {
       "title": "Kanban Panosu",

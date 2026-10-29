@@ -267,10 +267,10 @@
         "deleteTitle": "マトリクスを削除",
         "deleteConfirm": "マトリクス「{{name}}」を削除しますか？タスクは変更されません。"
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "この象限は複数の優先度を許可しているため、ドラッグでは移動できません。",
+      "dropRefusedDue": "期限がこの象限に合いません。日付を変更してください。",
+      "dropRefusedProject": "タスクのプロジェクトがこの象限に合いません。",
+      "dropRefusedEarlier": "変更しても、タスクはより前の象限に入ってしまいます。"
     },
     "kanban": {
       "title": "カンバンボード",

@@ -267,10 +267,10 @@
         "deleteTitle": "Supprimer la matrice",
         "deleteConfirm": "Supprimer la matrice « {{name}} » ? Vos tâches ne sont pas modifiées."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Ce quadrant accepte plusieurs priorités : la tâche ne peut pas y être déplacée par glisser-déposer.",
+      "dropRefusedDue": "L’échéance de la tâche ne correspond pas à ce quadrant ; modifiez plutôt la date.",
+      "dropRefusedProject": "Le projet de la tâche ne correspond pas à ce quadrant.",
+      "dropRefusedEarlier": "Après la modification, la tâche irait toujours dans un quadrant précédent."
     },
     "kanban": {
       "title": "Tableau Kanban",

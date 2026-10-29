@@ -267,10 +267,10 @@
         "deleteTitle": "حذف المصفوفة",
         "deleteConfirm": "حذف المصفوفة \"{{name}}\"؟ لن تتغير مهامك."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "يقبل هذا الربع عدة أولويات، لذا لا يمكن نقل المهمة إليه بالسحب.",
+      "dropRefusedDue": "موعد المهمة لا يناسب هذا الربع؛ غيّر التاريخ بدلًا من ذلك.",
+      "dropRefusedProject": "مشروع المهمة لا يناسب هذا الربع.",
+      "dropRefusedEarlier": "بعد التغيير ستبقى المهمة في ربع سابق."
     },
     "kanban": {
       "title": "لوحة كانبان",

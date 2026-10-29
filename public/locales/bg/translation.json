@@ -267,10 +267,10 @@
         "deleteTitle": "Изтриване на матрица",
         "deleteConfirm": "Да се изтрие ли матрицата „{{name}}“? Задачите ви не се променят."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Този квадрант допуска няколко приоритета, затова задачата не може да се премести тук с плъзгане.",
+      "dropRefusedDue": "Крайният срок не отговаря на този квадрант; променете датата.",
+      "dropRefusedProject": "Проектът на задачата не отговаря на този квадрант.",
+      "dropRefusedEarlier": "След промяната задачата пак би попаднала в по-ранен квадрант."
     },
     "kanban": {
       "title": "Канбан дъска",

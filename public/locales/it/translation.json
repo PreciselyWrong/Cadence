@@ -267,10 +267,10 @@
         "deleteTitle": "Elimina matrice",
         "deleteConfirm": "Eliminare la matrice \"{{name}}\"? Le tue attività non cambiano."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Questo quadrante ammette più priorità, quindi l’attività non può essere trascinata qui.",
+      "dropRefusedDue": "La scadenza non corrisponde a questo quadrante; cambia invece la data.",
+      "dropRefusedProject": "Il progetto dell’attività non corrisponde a questo quadrante.",
+      "dropRefusedEarlier": "Dopo la modifica l’attività finirebbe comunque in un quadrante precedente."
     },
     "kanban": {
       "title": "Bacheca Kanban",

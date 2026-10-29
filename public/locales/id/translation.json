@@ -267,10 +267,10 @@
         "deleteTitle": "Hapus matriks",
         "deleteConfirm": "Hapus matriks \"{{name}}\"? Tugas Anda tidak berubah."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Kuadran ini mengizinkan beberapa prioritas, jadi tugas tidak bisa diseret ke sini.",
+      "dropRefusedDue": "Tenggat tugas tidak cocok dengan kuadran ini; ubah tanggalnya saja.",
+      "dropRefusedProject": "Proyek tugas tidak cocok dengan kuadran ini.",
+      "dropRefusedEarlier": "Setelah diubah, tugas tetap akan masuk ke kuadran sebelumnya."
     },
     "kanban": {
       "title": "Papan Kanban",

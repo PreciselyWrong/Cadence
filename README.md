@@ -57,15 +57,15 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | | Upstream | This fork |
 |---|---|---|
 | Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
-| Tags | Flat list | **Nested tags** (one level of tag folders); filtering by a parent also matches its children |
-| Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, reorder, delete columns, drag tasks between them |
-| Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects) |
+| Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
+| Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit |
+| Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit |
 | Period summary | — | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template |
 
 ### Under the hood
 
-- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
-- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
+- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome).
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).

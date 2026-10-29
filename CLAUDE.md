@@ -25,7 +25,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
-| Projects | Board tab with free sections (`project_sections`, `tasks.section_id`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
+| Projects | Board tab with free sections and card order (`project_sections`, `tasks.section_id`, `tasks.section_position`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
 | Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |
 
 ### Rules for agents working on the fork

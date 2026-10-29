@@ -267,10 +267,10 @@
         "deleteTitle": "Matrix löschen",
         "deleteConfirm": "Die Matrix „{{name}}“ löschen? Deine Aufgaben bleiben unverändert."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Dieser Quadrant erlaubt mehrere Prioritäten, daher kann die Aufgabe nicht hierher gezogen werden.",
+      "dropRefusedDue": "Das Fälligkeitsdatum passt nicht zu diesem Quadranten; ändere stattdessen das Datum.",
+      "dropRefusedProject": "Das Projekt der Aufgabe passt nicht zu diesem Quadranten.",
+      "dropRefusedEarlier": "Nach der Änderung würde die Aufgabe weiterhin in einem früheren Quadranten landen."
     },
     "kanban": {
       "title": "Kanban-Board",

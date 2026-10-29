@@ -940,10 +940,10 @@
         "deleteTitle": "Διαγραφή πίνακα",
         "deleteConfirm": "Διαγραφή του πίνακα «{{name}}»; Οι εργασίες σας δεν αλλάζουν."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Αυτό το τεταρτημόριο επιτρέπει πολλές προτεραιότητες, οπότε η εργασία δεν μπορεί να μεταφερθεί εδώ με σύρσιμο.",
+      "dropRefusedDue": "Η προθεσμία δεν ταιριάζει σε αυτό το τεταρτημόριο· αλλάξτε την ημερομηνία.",
+      "dropRefusedProject": "Το έργο της εργασίας δεν ταιριάζει σε αυτό το τεταρτημόριο.",
+      "dropRefusedEarlier": "Μετά την αλλαγή η εργασία θα κατέληγε πάλι σε προηγούμενο τεταρτημόριο."
     },
     "kanban": {
       "title": "Πίνακας Kanban",

@@ -267,10 +267,10 @@
         "deleteTitle": "매트릭스 삭제",
         "deleteConfirm": "\"{{name}}\" 매트릭스를 삭제할까요? 작업은 변경되지 않습니다."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "이 사분면은 여러 우선순위를 허용하므로 드래그로 옮길 수 없습니다.",
+      "dropRefusedDue": "작업의 기한이 이 사분면에 맞지 않습니다. 대신 날짜를 바꾸세요.",
+      "dropRefusedProject": "작업의 프로젝트가 이 사분면에 맞지 않습니다.",
+      "dropRefusedEarlier": "변경 후에도 작업이 앞쪽 사분면에 들어갑니다."
     },
     "kanban": {
       "title": "칸반 보드",

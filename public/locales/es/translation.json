@@ -940,10 +940,10 @@
         "deleteTitle": "Eliminar matriz",
         "deleteConfirm": "¿Eliminar la matriz «{{name}}»? Tus tareas no cambian."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Este cuadrante admite varias prioridades, así que la tarea no puede moverse aquí arrastrándola.",
+      "dropRefusedDue": "La fecha límite no encaja en este cuadrante; cambia la fecha en su lugar.",
+      "dropRefusedProject": "El proyecto de la tarea no encaja en este cuadrante.",
+      "dropRefusedEarlier": "Tras el cambio, la tarea seguiría cayendo en un cuadrante anterior."
     },
     "kanban": {
       "title": "Tablero Kanban",

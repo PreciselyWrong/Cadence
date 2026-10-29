@@ -254,10 +254,10 @@
                 "deleteTitle": "Odstrániť maticu",
                 "deleteConfirm": "Odstrániť maticu „{{name}}“? Vaše úlohy sa nezmenia."
             },
-            "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-            "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-            "dropRefusedProject": "The task's project does not fit this quadrant.",
-            "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+            "dropRefusedPriority": "Tento kvadrant povoľuje viac priorít, preto sem úlohu nemožno presunúť.",
+            "dropRefusedDue": "Termín úlohy nezodpovedá tomuto kvadrantu; zmeňte radšej dátum.",
+            "dropRefusedProject": "Projekt úlohy nezodpovedá tomuto kvadrantu.",
+            "dropRefusedEarlier": "Po zmene by úloha aj tak skončila v predchádzajúcom kvadrante."
         },
         "kanban": {
             "title": "Kanban tabuľa",

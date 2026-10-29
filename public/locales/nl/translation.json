@@ -267,10 +267,10 @@
         "deleteTitle": "Matrix verwijderen",
         "deleteConfirm": "De matrix \"{{name}}\" verwijderen? Je taken veranderen niet."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Dit kwadrant staat meerdere prioriteiten toe, dus de taak kan hier niet naartoe worden gesleept.",
+      "dropRefusedDue": "De deadline past niet bij dit kwadrant; wijzig liever de datum.",
+      "dropRefusedProject": "Het project van de taak past niet bij dit kwadrant.",
+      "dropRefusedEarlier": "Na de wijziging zou de taak nog steeds in een eerder kwadrant terechtkomen."
     },
     "kanban": {
       "title": "Kanban Bord",

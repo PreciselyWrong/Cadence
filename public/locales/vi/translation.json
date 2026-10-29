@@ -267,10 +267,10 @@
         "deleteTitle": "Xóa ma trận",
         "deleteConfirm": "Xóa ma trận \"{{name}}\"? Công việc của bạn không thay đổi."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Ô này cho phép nhiều mức ưu tiên nên không thể kéo công việc vào đây.",
+      "dropRefusedDue": "Hạn của công việc không hợp với ô này; hãy đổi ngày thay vào đó.",
+      "dropRefusedProject": "Dự án của công việc không hợp với ô này.",
+      "dropRefusedEarlier": "Sau khi đổi, công việc vẫn rơi vào một ô trước đó."
     },
     "kanban": {
       "title": "Bảng Kanban",

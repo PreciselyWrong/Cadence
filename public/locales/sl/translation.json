@@ -267,10 +267,10 @@
         "deleteTitle": "Izbriši matriko",
         "deleteConfirm": "Izbrišem matriko »{{name}}«? Vaše naloge ostanejo nespremenjene."
       },
-      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
-      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
-      "dropRefusedProject": "The task's project does not fit this quadrant.",
-      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
+      "dropRefusedPriority": "Ta kvadrant dovoljuje več prioritet, zato opravila ni mogoče povleči sem.",
+      "dropRefusedDue": "Rok opravila ne ustreza temu kvadrantu; raje spremenite datum.",
+      "dropRefusedProject": "Projekt opravila ne ustreza temu kvadrantu.",
+      "dropRefusedEarlier": "Po spremembi bi opravilo še vedno pristalo v prejšnjem kvadrantu."
     },
     "kanban": {
       "title": "Kanban tabla",
