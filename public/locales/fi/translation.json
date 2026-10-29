@@ -3095,6 +3095,7 @@
       "skippedCount": "Jätetty pois ({{count}})"
     },
     "lateWarning": "Aika meni ohi, eikä tehtävä ole valmis",
+    "movedOffPlan": "'{{name}}' ei ole enää tänään eräpäivä, joten se poistui tämän päivän suunnitelmasta.",
     "tips": {
       "title": "Suunnitteluvinkit",
       "missed": "{{count}} suunniteltua lohkoa on jo mennyt",

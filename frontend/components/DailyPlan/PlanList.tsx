@@ -13,15 +13,19 @@ import {
     SparklesIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { Task } from '../../entities/Task';
 import { DailyPlanItem } from '../../utils/dailyPlanService';
 import DurationChips from './DurationChips';
 import { formatMinute } from './planUtils';
+
+type RescheduleWhen = 'tomorrow' | 'next_week';
 
 interface PlanListProps {
     items: DailyPlanItem[];
     onDurationChange: (taskUid: string, duration: number) => void;
     onTimeChange: (taskUid: string, startMinute: number | null) => void;
     onRemove: (taskUid: string) => void;
+    onReschedule: (task: Task, when: RescheduleWhen) => void;
     aiReasons?: Record<string, string>;
 }
 
@@ -38,8 +42,17 @@ const PlanRow: React.FC<{
     onDurationChange: (duration: number) => void;
     onTimeChange: (startMinute: number | null) => void;
     onRemove: () => void;
+    onReschedule: (when: RescheduleWhen) => void;
     aiReason?: string;
-}> = ({ item, index, onDurationChange, onTimeChange, onRemove, aiReason }) => {
+}> = ({
+    item,
+    index,
+    onDurationChange,
+    onTimeChange,
+    onRemove,
+    onReschedule,
+    aiReason,
+}) => {
     const { t } = useTranslation();
     const location = useLocation();
     const {
@@ -128,6 +141,20 @@ const PlanRow: React.FC<{
                 />
                 <button
                     type="button"
+                    onClick={() => onReschedule('tomorrow')}
+                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                >
+                    {t('dailyPlan.tomorrow', 'Tomorrow')}
+                </button>
+                <button
+                    type="button"
+                    onClick={() => onReschedule('next_week')}
+                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                >
+                    {t('dailyPlan.nextWeek', 'Next week')}
+                </button>
+                <button
+                    type="button"
                     onClick={onRemove}
                     aria-label={t(
                         'dailyPlan.removeFromPlan',
@@ -147,6 +174,7 @@ const PlanList: React.FC<PlanListProps> = ({
     onDurationChange,
     onTimeChange,
     onRemove,
+    onReschedule,
     aiReasons,
 }) => {
     const { t } = useTranslation();
@@ -184,6 +212,9 @@ const PlanList: React.FC<PlanListProps> = ({
                                     onTimeChange(item.task_uid, start)
                                 }
                                 onRemove={() => onRemove(item.task_uid)}
+                                onReschedule={(when) =>
+                                    onReschedule(item.task, when)
+                                }
                                 aiReason={aiReasons?.[item.task_uid]}
                             />
                         ))}

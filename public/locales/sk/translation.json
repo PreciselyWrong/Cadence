@@ -3114,6 +3114,7 @@
             "skippedCount": "Vynechané ({{count}})"
         },
         "lateWarning": "Čas uplynul a ešte nie je hotové",
+        "movedOffPlan": "'{{name}}' už nemá termín dnes, preto zmizla z dnešného plánu.",
         "tips": {
             "title": "Tipy na plánovanie",
             "missed": "Už uplynulo naplánovaných blokov: {{count}}",

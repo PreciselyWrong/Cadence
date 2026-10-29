@@ -3109,6 +3109,7 @@
       "skippedCount": "Izpuščeno ({{count}})"
     },
     "lateWarning": "Čas je minil, opravilo pa ni opravljeno",
+    "movedOffPlan": "'{{name}}' ni več zapadla danes, zato je izstopila iz današnjega načrta.",
     "tips": {
       "title": "Nasveti za načrtovanje",
       "missed": "Načrtovanih blokov, ki so že minili: {{count}}",

@@ -3093,6 +3093,7 @@
       "skippedCount": "Tidak dimasukkan ({{count}})"
     },
     "lateWarning": "Waktunya sudah lewat dan belum selesai",
+    "movedOffPlan": "'{{name}}' tidak lagi jatuh tempo hari ini, jadi keluar dari rencana hari ini.",
     "tips": {
       "title": "Tips perencanaan",
       "missed": "{{count}} blok terencana sudah terlewat",

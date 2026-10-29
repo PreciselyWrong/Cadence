@@ -3093,6 +3093,7 @@
       "skippedCount": "見送り ({{count}})"
     },
     "lateWarning": "時間が過ぎたのにまだ完了していません",
+    "movedOffPlan": "「{{name}}」は今日が期限ではなくなったため、今日の計画から外れました。",
     "tips": {
       "title": "計画のヒント",
       "missed": "計画したブロックのうち {{count}} 件がすでに過ぎています",

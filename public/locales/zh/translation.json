@@ -3093,6 +3093,7 @@
       "skippedCount": "未纳入 ({{count}})"
     },
     "lateWarning": "时间已过但尚未完成",
+    "movedOffPlan": "'{{name}}' 不再是今天到期，因此已移出今日计划。",
     "tips": {
       "title": "规划提示",
       "missed": "已有 {{count}} 个计划时段错过",

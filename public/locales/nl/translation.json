@@ -3095,6 +3095,7 @@
       "skippedCount": "Weggelaten ({{count}})"
     },
     "lateWarning": "Tijd voorbij en nog niet klaar",
+    "movedOffPlan": "'{{name}}' staat niet meer voor vandaag en is uit het plan van vandaag gehaald.",
     "tips": {
       "title": "Plantips",
       "missed": "{{count}} geplande blokken zijn al voorbij",

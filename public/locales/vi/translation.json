@@ -3093,6 +3093,7 @@
       "skippedCount": "Bị bỏ qua ({{count}})"
     },
     "lateWarning": "Đã quá giờ mà chưa xong",
+    "movedOffPlan": "'{{name}}' không còn đến hạn hôm nay, nên đã rời khỏi kế hoạch hôm nay.",
     "tips": {
       "title": "Mẹo lên kế hoạch",
       "missed": "{{count}} khối đã lên kế hoạch đã trôi qua",

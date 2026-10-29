@@ -3095,6 +3095,7 @@
       "skippedCount": "Dışarıda kalanlar ({{count}})"
     },
     "lateWarning": "Zaman geçti ve henüz yapılmadı",
+    "movedOffPlan": "'{{name}}' artık bugün teslim tarihi değil, bu yüzden bugünün planından çıkarıldı.",
     "tips": {
       "title": "Planlama ipuçları",
       "missed": "{{count}} planlı blok çoktan geçti",

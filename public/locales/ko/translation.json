@@ -3093,6 +3093,7 @@
       "skippedCount": "제외됨 ({{count}})"
     },
     "lateWarning": "시간이 지났는데 아직 끝나지 않았습니다",
+    "movedOffPlan": "'{{name}}'의 마감일이 오늘이 아니게 되어 오늘 계획에서 빠졌습니다.",
     "tips": {
       "title": "계획 팁",
       "missed": "계획한 블록 {{count}}개가 이미 지났습니다",

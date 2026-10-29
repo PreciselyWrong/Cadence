@@ -21,6 +21,7 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { mergeVisibleOrder } from '../Shared/sortableList';
 import { Task } from '../../entities/Task';
 import {
     AiWrapUp,
@@ -250,6 +251,17 @@ const addDays = (date: string, days: number) => {
     const d = new Date(`${date}T12:00:00`);
     d.setDate(d.getDate() + days);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+// True when a due date on or before the day (or none) became a later one.
+const movedPastDay = (
+    before: string | null | undefined,
+    after: string | null | undefined,
+    day: string
+): boolean => {
+    const later = (date: string | null | undefined) =>
+        !!date && date.slice(0, 10) > day;
+    return !later(before) && later(after);
 };
 
 // Pointer position for drops; keyboard drags have none.
@@ -888,6 +900,23 @@ const TodayPage: React.FC = () => {
         updateItem(taskUid, { start_minute: start, duration_minutes: length });
     };
 
+    // Moves an untimed task to another untimed task's place. Timed tasks keep
+    // their slots in the saved order, so only the untimed ones change places.
+    const reorderUntimed = (activeUid: string, overUid: string) => {
+        const untimed = items
+            .filter((item) => item.start_minute === null)
+            .map((item) => item.task_uid);
+        const from = untimed.indexOf(activeUid);
+        const to = untimed.indexOf(overUid);
+        if (from < 0 || to < 0 || from === to) return;
+        const order = mergeVisibleOrder(
+            items.map((item) => item.task_uid),
+            arrayMove(untimed, from, to)
+        );
+        const byUid = new Map(items.map((item) => [item.task_uid, item]));
+        persist(order.map((uid) => byUid.get(uid) as DailyPlanItem));
+    };
+
     const replaceCandidate = useCallback(
         (uid: string | undefined, updated: Task | null) =>
             setCandidates((current) => {
@@ -1110,23 +1139,51 @@ const TodayPage: React.FC = () => {
         }
     }, [candidates, focus, isToday, loadingMore, showErrorToast, t]);
 
+    // A planned task whose due date moves past this day leaves the day's plan,
+    // with an undo that puts it back.
+    const leavePlanIfMovedPast = (
+        taskUid: string,
+        nextDue: string | null | undefined
+    ) => {
+        const item = plannedMap.get(taskUid);
+        if (
+            !date ||
+            !item ||
+            isItemDone(item) ||
+            !movedPastDay(item.task.due_date, nextDue, date)
+        ) {
+            return;
+        }
+        const previous = items;
+        persist(items.filter((i) => i.task_uid !== taskUid));
+        showUndoToast(
+            t(
+                'dailyPlan.movedOffPlan',
+                "'{{name}}' is no longer due today, so it left today's plan.",
+                { name: item.task.name }
+            ),
+            () => persist(previous)
+        );
+    };
+
     const handleReschedule = async (
         task: Task,
         when: 'tomorrow' | 'next_week'
     ) => {
         if (!task.uid || !date) return;
+        const due = addDays(date, when === 'tomorrow' ? 1 : 7);
         try {
-            await updateTask(task.uid, {
-                due_date: addDays(date, when === 'tomorrow' ? 1 : 7),
-            });
-            removeCandidate(task.uid);
+            await updateTask(task.uid, { due_date: due });
         } catch (err) {
             showErrorToast(
                 err instanceof Error
                     ? err.message
                     : t('errors.generic', 'Something went wrong')
             );
+            return;
         }
+        removeCandidate(task.uid);
+        leavePlanIfMovedPast(task.uid, due);
     };
 
     const handleDrop = async (task: Task) => {
@@ -1435,6 +1492,17 @@ const TodayPage: React.FC = () => {
             } else {
                 placeItem(data.item.task_uid, start);
             }
+            return;
+        }
+
+        // Timeline tray: untimed rows swap places among the untimed ones.
+        if (
+            mode === 'timeline' &&
+            data.type === 'item' &&
+            data.item.start_minute === null &&
+            overId.startsWith('item:')
+        ) {
+            reorderUntimed(data.item.task_uid, overId.slice('item:'.length));
             return;
         }
 
@@ -2122,6 +2190,7 @@ const TodayPage: React.FC = () => {
                                                 onShowAllHours={() =>
                                                     setShowAllHours(true)
                                                 }
+                                                onReschedule={handleReschedule}
                                             />
                                         ) : (
                                             <PlanList
@@ -2144,6 +2213,7 @@ const TodayPage: React.FC = () => {
                                                     placeItem(uid, start)
                                                 }
                                                 onRemove={removeItem}
+                                                onReschedule={handleReschedule}
                                             />
                                         )}
                                     </>

@@ -3095,6 +3095,7 @@
       "skippedCount": "Utelämnade ({{count}})"
     },
     "lateWarning": "Tiden har passerat och det är inte klart",
+    "movedOffPlan": "'{{name}}' har inte längre förfallodag idag, så den togs bort från dagens plan.",
     "tips": {
       "title": "Planeringstips",
       "missed": "{{count}} planerade block har redan passerat",

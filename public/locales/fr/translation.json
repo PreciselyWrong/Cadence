@@ -3101,6 +3101,7 @@
       "skippedCount": "Laissées de côté ({{count}})"
     },
     "lateWarning": "L'heure est passée et ce n'est pas encore fait",
+    "movedOffPlan": "« {{name}} » n'est plus due aujourd'hui, elle a donc quitté le plan du jour.",
     "tips": {
       "title": "Conseils de planification",
       "missed": "{{count}} blocs prévus sont déjà passés",

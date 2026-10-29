@@ -3104,6 +3104,7 @@
       "skippedCount": "Ausgelassen ({{count}})"
     },
     "lateWarning": "Zeit vorbei und noch nicht erledigt",
+    "movedOffPlan": "„{{name}}“ ist heute nicht mehr fällig und wurde aus dem Tagesplan entfernt.",
     "tips": {
       "title": "Planungstipps",
       "missed": "{{count}} geplante Blöcke sind schon vorbei",

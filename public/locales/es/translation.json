@@ -3088,6 +3088,7 @@
       "skippedCount": "Fuera del plan ({{count}})"
     },
     "lateWarning": "Ya pasó la hora y aún no está hecha",
+    "movedOffPlan": "'{{name}}' ya no vence hoy, así que salió del plan de hoy.",
     "tips": {
       "title": "Consejos de planificación",
       "missed": "{{count}} bloques planificados ya pasaron",

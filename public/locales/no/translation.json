@@ -3100,6 +3100,7 @@
       "skippedCount": "Utelatt ({{count}})"
     },
     "lateWarning": "Tiden har gått, og det er ikke gjort",
+    "movedOffPlan": "'{{name}}' har ikke lenger frist i dag, så den ble fjernet fra dagens plan.",
     "tips": {
       "title": "Planleggingstips",
       "missed": "{{count}} planlagte blokker har allerede passert",

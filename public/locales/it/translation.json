@@ -3101,6 +3101,7 @@
       "skippedCount": "Escluse ({{count}})"
     },
     "lateWarning": "Orario passato e non ancora fatta",
+    "movedOffPlan": "'{{name}}' non scade più oggi, quindi è uscita dal piano di oggi.",
     "tips": {
       "title": "Consigli di pianificazione",
       "missed": "{{count}} blocchi pianificati sono già passati",

@@ -63,7 +63,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 | | Upstream | This fork |
 |---|---|---|
-| Planning | — | Planning happens on Today: candidates on the left (round check completes, **+** or drag places), and on the right a **Planning** / **Calendar** switch (remembered per browser). The calendar toggle hides the panel |
+| Planning | — | Planning happens on Today: candidates on the left (round check completes, **+** or drag places), and on the right a **Planning** / **Calendar** switch (remembered per browser). The calendar toggle hides the panel. Drag the untimed tasks ("Today, no time yet") into order, saved with the plan; **Tomorrow** / **Next week** move a planned task's due date and take it off today's plan (Undo brings it back) |
 | Days | — | **‹** / **›** move between days and **Today** returns, kept in the URL as `?date=` [Docs](docs/20-daily-plan.md) |
 
 ### Projects

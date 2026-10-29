@@ -3109,6 +3109,7 @@
       "skippedCount": "Pominięte ({{count}})"
     },
     "lateWarning": "Czas minął, a zadanie nie jest zrobione",
+    "movedOffPlan": "'{{name}}' nie ma już terminu na dziś, więc została usunięta z dzisiejszego planu.",
     "tips": {
       "title": "Wskazówki do planowania",
       "missed": "{{count}} zaplanowane bloki już minęły",

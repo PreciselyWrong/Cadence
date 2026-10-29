@@ -2,7 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
+import {
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { SparklesIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Task } from '../../entities/Task';
 import { DailyPlanItem } from '../../utils/dailyPlanService';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import {
@@ -18,6 +25,8 @@ import type { CalendarEvent as CalendarBlock } from '../Calendar/taskEvents';
 export const PX_PER_HOUR = 64;
 export const PX_PER_MINUTE = PX_PER_HOUR / 60;
 
+type RescheduleWhen = 'tomorrow' | 'next_week';
+
 interface DayTimelineProps {
     items: DailyPlanItem[];
     events: CalendarEvent[];
@@ -25,6 +34,7 @@ interface DayTimelineProps {
     now: number | null;
     onResize: (taskUid: string, duration: number) => void;
     onRemove: (taskUid: string) => void;
+    onReschedule: (task: Task, when: RescheduleWhen) => void;
     aiReasons?: Record<string, string>;
     // Unplanned timed tasks that fall above or below the visible hours.
     hiddenEarlier?: CalendarBlock[];
@@ -178,6 +188,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
     now,
     onResize,
     onRemove,
+    onReschedule,
     aiReasons,
     hiddenEarlier = [],
     hiddenLater = [],
@@ -372,27 +383,46 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                 <UnscheduledTray
                     items={items.filter((item) => item.start_minute === null)}
                     onRemove={onRemove}
+                    onReschedule={onReschedule}
                 />
             )}
         </div>
     );
 };
 
-const TrayItem: React.FC<{ item: DailyPlanItem; onRemove: () => void }> = ({
-    item,
-    onRemove,
-}) => {
+// A sortable row: dropped on the timeline it gets a time, dropped on another
+// row it takes that row's place in the day's order.
+const TrayItem: React.FC<{
+    item: DailyPlanItem;
+    onRemove: () => void;
+    onReschedule: (when: RescheduleWhen) => void;
+}> = ({ item, onRemove, onReschedule }) => {
     const { t } = useTranslation();
-    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({
         id: `item:${item.task_uid}`,
         data: { type: 'item', item },
     });
     return (
         <div
             ref={setNodeRef}
+            style={{
+                // The drag overlay carries the row; the row stays in place.
+                transform: isDragging
+                    ? undefined
+                    : CSS.Transform.toString(transform),
+                transition,
+            }}
             className={`flex items-center gap-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-[13px] dark:bg-blue-900/30 ${
                 isDragging ? 'opacity-40' : ''
             }`}
+            data-testid={`tray-${item.task_uid}`}
         >
             <span
                 className="min-w-0 flex-1 cursor-grab truncate text-gray-900 active:cursor-grabbing dark:text-gray-100"
@@ -404,6 +434,20 @@ const TrayItem: React.FC<{ item: DailyPlanItem; onRemove: () => void }> = ({
             <span className="text-xs text-gray-500">
                 {formatDuration(item.duration_minutes)}
             </span>
+            <button
+                type="button"
+                onClick={() => onReschedule('tomorrow')}
+                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+            >
+                {t('dailyPlan.tomorrow', 'Tomorrow')}
+            </button>
+            <button
+                type="button"
+                onClick={() => onReschedule('next_week')}
+                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+            >
+                {t('dailyPlan.nextWeek', 'Next week')}
+            </button>
             <button
                 type="button"
                 onClick={onRemove}
@@ -419,20 +463,27 @@ const TrayItem: React.FC<{ item: DailyPlanItem; onRemove: () => void }> = ({
 const UnscheduledTray: React.FC<{
     items: DailyPlanItem[];
     onRemove: (taskUid: string) => void;
-}> = ({ items, onRemove }) => {
+    onReschedule: (task: Task, when: RescheduleWhen) => void;
+}> = ({ items, onRemove, onReschedule }) => {
     const { t } = useTranslation();
     return (
         <div className="ml-14 flex flex-col gap-2 rounded-lg bg-gray-50 p-3 dark:bg-gray-800/40">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {t('dailyPlan.noTimeYet', 'Today, no time yet')}
             </p>
-            {items.map((item) => (
-                <TrayItem
-                    key={item.task_uid}
-                    item={item}
-                    onRemove={() => onRemove(item.task_uid)}
-                />
-            ))}
+            <SortableContext
+                items={items.map((item) => `item:${item.task_uid}`)}
+                strategy={verticalListSortingStrategy}
+            >
+                {items.map((item) => (
+                    <TrayItem
+                        key={item.task_uid}
+                        item={item}
+                        onRemove={() => onRemove(item.task_uid)}
+                        onReschedule={(when) => onReschedule(item.task, when)}
+                    />
+                ))}
+            </SortableContext>
         </div>
     );
 };

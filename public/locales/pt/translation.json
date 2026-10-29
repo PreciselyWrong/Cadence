@@ -3101,6 +3101,7 @@
       "skippedCount": "Deixadas de fora ({{count}})"
     },
     "lateWarning": "A hora passou e ainda não está feita",
+    "movedOffPlan": "'{{name}}' já não vence hoje, por isso saiu do plano de hoje.",
     "tips": {
       "title": "Dicas de planeamento",
       "missed": "{{count}} blocos planeados já passaram",

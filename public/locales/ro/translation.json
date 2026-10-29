@@ -3104,6 +3104,7 @@
       "skippedCount": "Lăsate deoparte ({{count}})"
     },
     "lateWarning": "Timpul a trecut și nu e gata",
+    "movedOffPlan": "'{{name}}' nu mai are termen azi, așa că a ieșit din planul de azi.",
     "tips": {
       "title": "Sfaturi de planificare",
       "missed": "{{count}} blocuri planificate au trecut deja",

@@ -3095,6 +3095,7 @@
       "skippedCount": "Udeladt ({{count}})"
     },
     "lateWarning": "Tiden er gået, og det er ikke gjort",
+    "movedOffPlan": "'{{name}}' har ikke længere forfald i dag, så den blev fjernet fra dagens plan.",
     "tips": {
       "title": "Planlægningstips",
       "missed": "{{count}} planlagte blokke er allerede passeret",
