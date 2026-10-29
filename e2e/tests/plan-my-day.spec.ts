@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../helpers/testHelpers';
+import { loginAsNewUser } from '../helpers/testHelpers';
 
 test.describe('Plan my day', () => {
     test('plans a task, starts the day and marks it done', async ({
@@ -10,11 +10,11 @@ test.describe('Plan my day', () => {
         // A long flow (plan, start, finish) that shares the backend with the
         // other workers: give it the slow-test budget.
         test.slow();
-        const appUrl = await login(page, baseURL);
+        const appUrl = await loginAsNewUser(page, baseURL);
         const name = `Plan me ${Date.now()}`;
 
-        // Start from an empty day: other tests share this user.
-        await context.request.delete(`${appUrl}/api/daily-plan/today`);
+        // A user of its own, so its day plan is not shared with other
+        // tests or with parallel copies of this one.
 
         const today = await page.evaluate(() => {
             const d = new Date();

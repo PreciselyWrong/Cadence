@@ -39,6 +39,12 @@ function buildSequelizeOptions({ logging } = {}) {
                 acquire: 60000,
             },
             define: DEFINE_OPTIONS,
+            // A deferred transaction that reads and then writes cannot wait
+            // for the write lock (busy_timeout does not apply to that
+            // upgrade) and fails at once with SQLITE_BUSY when another
+            // connection is writing. IMMEDIATE takes the write lock up
+            // front, so concurrent transactions wait their turn instead.
+            transactionType: 'IMMEDIATE',
         };
     }
 

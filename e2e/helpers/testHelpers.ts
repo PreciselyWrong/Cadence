@@ -41,6 +41,45 @@ export async function login(
 }
 
 /**
+ * Signs the page in as a fresh user of its own, for tests whose data (such
+ * as today's plan) would clash with other tests or with copies of the same
+ * test running in parallel. The shared e2e user creates it through the
+ * admin API; onboarding is finished so the login lands on /today.
+ */
+export async function loginAsNewUser(
+    page: Page,
+    baseURL: string | undefined
+): Promise<string> {
+    const appUrl = await login(page, baseURL);
+    const email = `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@tududi.test`;
+    const password = 'password123';
+
+    const created = await page.request.post(`${appUrl}/api/admin/users`, {
+        data: { email, password, name: 'E2E' },
+    });
+    expect(created.ok(), await created.text()).toBeTruthy();
+
+    await page.request.post(`${appUrl}/api/logout`);
+    await page.context().clearCookies();
+
+    const signedIn = await page.request.post(`${appUrl}/api/login`, {
+        data: { email, password },
+    });
+    expect(signedIn.ok(), await signedIn.text()).toBeTruthy();
+    const starter = await page.request.post(
+        `${appUrl}/api/onboarding/starter`,
+        {
+            data: { key: 'empty' },
+        }
+    );
+    expect(starter.ok(), await starter.text()).toBeTruthy();
+
+    await page.goto(`${appUrl}/today`);
+    await expect(page).toHaveURL(/\/today$/);
+    return appUrl;
+}
+
+/**
  * Wait for an element to be visible with better error messages
  */
 export async function waitForElement(
