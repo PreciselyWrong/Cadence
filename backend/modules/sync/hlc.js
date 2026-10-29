@@ -33,6 +33,10 @@ function now() {
     if (ms > lastMs) {
         lastMs = ms;
         lastCounter = 0;
+    } else if (lastCounter >= 9999) {
+        // The counter has four digits; a fifth would break string ordering.
+        lastMs += 1;
+        lastCounter = 0;
     } else {
         lastCounter += 1;
     }

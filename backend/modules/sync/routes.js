@@ -42,7 +42,10 @@ router.get('/sync/snapshot', async (req, res, next) => {
                 req.currentUser.id,
                 entity,
                 readInt(req.query.after, 0),
-                readInt(req.query.limit, 500, syncService.PAGE_MAX) || 500
+                readInt(req.query.limit, 500, syncService.PAGE_MAX) || 500,
+                req.query.cursor === undefined
+                    ? null
+                    : readInt(req.query.cursor, 0)
             )
         );
     } catch (error) {

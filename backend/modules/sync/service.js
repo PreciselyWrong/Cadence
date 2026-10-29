@@ -73,9 +73,11 @@ async function pull(userId, cursor, limit) {
 
 // The cursor is read before the rows: a write landing during the snapshot
 // is then pulled again afterwards rather than lost.
-async function snapshot(userId, entity, after, limit) {
+async function snapshot(userId, entity, after, limit, startCursor = null) {
     const def = ENTITIES[entity];
-    const cursor = await latestCursor(userId);
+    // Later pages carry the first page's cursor back, so a row edited
+    // between pages is pulled again instead of skipped.
+    const cursor = startCursor ?? (await latestCursor(userId));
     const rows = await models()[def.model].findAll({
         where: { user_id: userId, id: { [Op.gt]: after } },
         order: [['id', 'ASC']],
@@ -159,6 +161,12 @@ function validateFields(def, fields) {
             return `unknown_field:${key}`;
         }
         if (
+            key in def.refs &&
+            !(typeof entry?.value === 'string' || entry?.value === null)
+        ) {
+            return `invalid_reference:${key}`;
+        }
+        if (
             key in lists &&
             !(
                 Array.isArray(entry?.value) &&
@@ -221,6 +229,11 @@ async function applyUpsert(userId, op) {
         }
         const column = def.refs[key]?.column ?? key;
         values[column] = key in def.refs ? refs.columns[key] : entry.value;
+    }
+
+    if (def.validate) {
+        const invalidValue = await def.validate(row, values, userId);
+        if (invalidValue) return rejected(invalidValue);
     }
 
     try {

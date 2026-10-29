@@ -832,7 +832,9 @@
         "prefix": "Prefix",
         "status": "Stare"
       },
-      "title": "Chei API"
+      "title": "Chei API",
+      "connectQrLabel": "Cod QR pentru conectarea unui dispozitiv",
+      "connectQrHelp": "Scanează acest cod din aplicația Tududi de pe telefon sau computer pentru a o conecta cu această cheie."
     },
     "calendarDescription": "Activează vizualizarea Calendar pentru a vedea sarcinile după termen pe zi, săptămână și lună.",
     "connected": {

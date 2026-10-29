@@ -829,7 +829,9 @@
         "prefix": "プレフィックス",
         "status": "状態"
       },
-      "title": "APIキー"
+      "title": "APIキー",
+      "connectQrLabel": "デバイスを接続するQRコード",
+      "connectQrHelp": "スマートフォンまたはパソコンのTududiアプリでこのコードをスキャンすると、このキーで接続されます。"
     },
     "calendarDescription": "カレンダービューを有効にして、タスクを期限ごとに日・週・月で表示します。",
     "connected": {

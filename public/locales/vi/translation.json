@@ -829,7 +829,9 @@
         "prefix": "Tiền tố",
         "status": "Trạng thái"
       },
-      "title": "Khóa API"
+      "title": "Khóa API",
+      "connectQrLabel": "Mã QR để kết nối thiết bị",
+      "connectQrHelp": "Quét mã này từ ứng dụng Tududi trên điện thoại hoặc máy tính để kết nối bằng khóa này."
     },
     "calendarDescription": "Bật chế độ xem Lịch để xem công việc theo ngày đến hạn trong ngày, tuần và tháng.",
     "connected": {

@@ -829,7 +829,9 @@
         "prefix": "Prefiks",
         "status": "Status"
       },
-      "title": "Kunci API"
+      "title": "Kunci API",
+      "connectQrLabel": "Kode QR untuk menghubungkan perangkat",
+      "connectQrHelp": "Pindai kode ini dari aplikasi Tududi di ponsel atau komputer Anda untuk menghubungkannya dengan kunci ini."
     },
     "calendarDescription": "Aktifkan tampilan Kalender untuk melihat tugas berdasarkan tanggal jatuh tempo per hari, minggu, dan bulan.",
     "connected": {

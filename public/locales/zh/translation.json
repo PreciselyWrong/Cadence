@@ -829,7 +829,9 @@
         "prefix": "前缀",
         "status": "状态"
       },
-      "title": "API 密钥"
+      "title": "API 密钥",
+      "connectQrLabel": "用于连接设备的二维码",
+      "connectQrHelp": "在手机或电脑上的 Tududi 应用中扫描此码，即可用此密钥连接。"
     },
     "calendarDescription": "启用日历视图,按截止日期以日、周、月查看任务。",
     "connected": {

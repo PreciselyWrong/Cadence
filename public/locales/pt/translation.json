@@ -830,7 +830,9 @@
         "prefix": "Prefixo",
         "status": "Estado"
       },
-      "title": "Chaves de API"
+      "title": "Chaves de API",
+      "connectQrLabel": "Código QR para ligar um dispositivo",
+      "connectQrHelp": "Leia este código na app Tududi do seu telemóvel ou computador para a ligar com esta chave."
     },
     "calendarDescription": "Ativar a vista Calendário para ver as tarefas por data de vencimento por dia, semana e mês.",
     "connected": {

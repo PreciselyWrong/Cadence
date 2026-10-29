@@ -837,7 +837,9 @@
             "noExpiry": "Žiadna",
             "revokedLabel": "Zrušený",
             "revokeButton": "Zrušiť",
-            "deleteAria": "Odstrániť API kľúč"
+            "deleteAria": "Odstrániť API kľúč",
+            "connectQrLabel": "QR kód na pripojenie zariadenia",
+            "connectQrHelp": "Naskenujte tento kód v aplikácii Tududi v telefóne alebo počítači a pripojte ju týmto kľúčom."
         },
         "fetchError": "Údaje profilu sa nepodarilo načítať.",
         "pollingStatusError": "Stav dotazovania sa nepodarilo načítať.",

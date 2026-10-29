@@ -831,7 +831,9 @@
         "prefix": "Prefiks",
         "status": "Status"
       },
-      "title": "Klucze API"
+      "title": "Klucze API",
+      "connectQrLabel": "Kod QR do połączenia urządzenia",
+      "connectQrHelp": "Zeskanuj ten kod w aplikacji Tududi na telefonie lub komputerze, aby połączyć ją za pomocą tego klucza."
     },
     "calendarDescription": "Włącz widok Kalendarza, aby widzieć zadania według terminu w ujęciu dnia, tygodnia i miesiąca.",
     "connected": {

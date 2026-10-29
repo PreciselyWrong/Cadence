@@ -1177,7 +1177,9 @@
       "noExpiry": "Keine",
       "revokedLabel": "Widerrufen",
       "revokeButton": "Widerrufen",
-      "deleteAria": "API-Schlüssel löschen"
+      "deleteAria": "API-Schlüssel löschen",
+      "connectQrLabel": "QR-Code zum Verbinden eines Geräts",
+      "connectQrHelp": "Scanne diesen Code in der Tududi-App auf deinem Telefon oder Computer, um sie mit diesem Schlüssel zu verbinden."
     },
     "fetchError": "Profildaten konnten nicht geladen werden.",
     "pollingStatusError": "Abfragestatus konnte nicht geladen werden.",

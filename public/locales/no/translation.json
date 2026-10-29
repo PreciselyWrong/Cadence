@@ -830,7 +830,9 @@
         "prefix": "Prefiks",
         "status": "Status"
       },
-      "title": "API-nøkler"
+      "title": "API-nøkler",
+      "connectQrLabel": "QR-kode for å koble til en enhet",
+      "connectQrHelp": "Skann denne koden fra Tududi-appen på telefonen eller datamaskinen for å koble den til med denne nøkkelen."
     },
     "calendarDescription": "Slå på Kalender-visningen for å se oppgaver etter forfallsdato per dag, uke og måned.",
     "connected": {

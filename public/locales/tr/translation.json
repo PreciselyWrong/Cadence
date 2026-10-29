@@ -829,7 +829,9 @@
         "prefix": "Önek",
         "status": "Durum"
       },
-      "title": "API anahtarları"
+      "title": "API anahtarları",
+      "connectQrLabel": "Bir cihazı bağlamak için QR kodu",
+      "connectQrHelp": "Bu anahtarla bağlamak için telefonunuzdaki veya bilgisayarınızdaki Tududi uygulamasından bu kodu tarayın."
     },
     "calendarDescription": "Görevleri son tarihe göre gün, hafta ve ay olarak görmek için Takvim görünümünü etkinleştir.",
     "connected": {

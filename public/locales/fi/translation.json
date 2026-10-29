@@ -829,7 +829,9 @@
         "prefix": "Etuliite",
         "status": "Tila"
       },
-      "title": "API-avaimet"
+      "title": "API-avaimet",
+      "connectQrLabel": "QR-koodi laitteen yhdistämiseen",
+      "connectQrHelp": "Skannaa tämä koodi Tududi-sovelluksella puhelimellasi tai tietokoneellasi yhdistääksesi sen tällä avaimella."
     },
     "calendarDescription": "Ota käyttöön Kalenteri-näkymä, jossa tehtävät näkyvät eräpäivän mukaan päivä-, viikko- ja kuukausinäkymässä.",
     "connected": {

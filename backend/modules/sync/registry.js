@@ -60,6 +60,21 @@ const ENTITIES = {
     },
     project: {
         model: 'Project',
+        // Same cleanup as the web: its tasks, notes and sub-projects go too.
+        destroy: async (row) => {
+            const projectsRepository = require('../projects/repository');
+            await projectsRepository.deleteWithOrphaning(row, row.user_id);
+        },
+        validate: async (row, values) => {
+            if (!row || !values.parent_project_id) return null;
+            const { assertNoCycle } = require('../projects/hierarchy');
+            try {
+                await assertNoCycle(row.id, values.parent_project_id);
+                return null;
+            } catch {
+                return 'invalid_hierarchy';
+            }
+        },
         version: 1,
         fields: [
             'name',
@@ -100,6 +115,18 @@ const ENTITIES = {
     },
     tag: {
         model: 'Tag',
+        // One level of nesting, as in tags/service.js.
+        validate: async (row, values) => {
+            if (!values.parent_id) return null;
+            const { Tag } = require('../../models');
+            if (row && values.parent_id === row.id) return 'invalid_hierarchy';
+            const parent = await Tag.findByPk(values.parent_id);
+            if (parent.parent_id) return 'invalid_hierarchy';
+            if (row && (await Tag.count({ where: { parent_id: row.id } }))) {
+                return 'invalid_hierarchy';
+            }
+            return null;
+        },
         version: 1,
         fields: ['name', 'color', 'pinned'],
         refs: {
@@ -108,6 +135,14 @@ const ENTITIES = {
     },
     note: {
         model: 'Note',
+        // Attachment files leave the disk with the row.
+        destroy: async (row) => {
+            const {
+                noteAttachments,
+            } = require('../../services/entityAttachments');
+            await noteAttachments.removeAll(row.id);
+            await row.destroy();
+        },
         version: 1,
         fields: ['title', 'content', 'color', 'background', 'pin_to_sidebar'],
         refs: {

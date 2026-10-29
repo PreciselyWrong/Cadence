@@ -668,7 +668,9 @@
       "noExpiry": "Ninguna",
       "revokedLabel": "Revocada",
       "revokeButton": "Revocar",
-      "deleteAria": "Eliminar clave API"
+      "deleteAria": "Eliminar clave API",
+      "connectQrLabel": "Código QR para conectar un dispositivo",
+      "connectQrHelp": "Escanea este código desde la app Tududi en tu teléfono u ordenador para conectarla con esta clave."
     },
     "fetchError": "No se pudieron cargar los datos del perfil.",
     "pollingStatusError": "No se pudo obtener el estado de sondeo.",

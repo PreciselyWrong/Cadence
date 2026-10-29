@@ -291,6 +291,118 @@ describe('Offline sync API', () => {
         expect(stale.body.results[0].status).toBe('conflict');
     });
 
+    describe('review fixes', () => {
+        it('rejects a reference without a value but keeps the batch going', async () => {
+            const res = await push(agent, [
+                {
+                    op_id: 'op-rv1',
+                    entity: 'task',
+                    uid: 'clienttask00030',
+                    action: 'upsert',
+                    fields: {
+                        name: { value: 'x', hlc: hlc(1) },
+                        project_uid: { hlc: hlc(1) },
+                    },
+                },
+                upsert(
+                    'op-rv2',
+                    'task',
+                    'clienttask00031',
+                    { name: 'ok' },
+                    hlc(1)
+                ),
+            ]);
+
+            expect(res.status).toBe(200);
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'rejected',
+                'applied',
+            ]);
+        });
+
+        it('keeps the cursor given by the first snapshot page', async () => {
+            await agent.post('/api/project').send({ name: 'P1' });
+            const first = await agent.get(
+                '/api/v1/sync/snapshot?entity=project&limit=1'
+            );
+            await agent.post('/api/project').send({ name: 'P2' });
+
+            const next = await agent.get(
+                `/api/v1/sync/snapshot?entity=project&limit=1&after=${first.body.next || 0}&cursor=${first.body.cursor}`
+            );
+
+            expect(next.body.cursor).toBe(first.body.cursor);
+        });
+
+        it('deletes a project through sync like the web does, tasks included', async () => {
+            await push(agent, [
+                upsert(
+                    'op-pd1',
+                    'project',
+                    'clientproj00030',
+                    { name: 'P' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-pd2',
+                    'task',
+                    'clienttask00032',
+                    { name: 'T', project_uid: 'clientproj00030' },
+                    hlc(1)
+                ),
+            ]);
+
+            await push(agent, [
+                {
+                    op_id: 'op-pd3',
+                    entity: 'project',
+                    uid: 'clientproj00030',
+                    action: 'delete',
+                    hlc: hlc(2),
+                },
+            ]);
+
+            expect(
+                await Project.count({ where: { uid: 'clientproj00030' } })
+            ).toBe(0);
+            expect(
+                await Task.count({ where: { uid: 'clienttask00032' } })
+            ).toBe(0);
+        });
+
+        it('refuses to nest a tag under a child tag', async () => {
+            const res = await push(agent, [
+                upsert(
+                    'op-n1',
+                    'tag',
+                    'clienttag000010',
+                    { name: 'a' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-n2',
+                    'tag',
+                    'clienttag000011',
+                    { name: 'b', parent_uid: 'clienttag000010' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-n3',
+                    'tag',
+                    'clienttag000012',
+                    { name: 'c', parent_uid: 'clienttag000011' },
+                    hlc(1)
+                ),
+            ]);
+
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'applied',
+                'rejected',
+            ]);
+        });
+    });
+
     describe('recurring occurrences', () => {
         const dailyTask = (uid, due) =>
             upsert(

@@ -829,7 +829,9 @@
         "prefix": "Voorvoegsel",
         "status": "Status"
       },
-      "title": "API-sleutels"
+      "title": "API-sleutels",
+      "connectQrLabel": "QR-code om een apparaat te koppelen",
+      "connectQrHelp": "Scan deze code vanuit de Tududi-app op je telefoon of computer om die met deze sleutel te koppelen."
     },
     "calendarDescription": "Schakel de Kalender-weergave in om taken per vervaldatum te zien per dag, week en maand.",
     "connected": {

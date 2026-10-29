@@ -831,7 +831,9 @@
         "prefix": "Predpona",
         "status": "Stanje"
       },
-      "title": "API ključi"
+      "title": "API ključi",
+      "connectQrLabel": "Koda QR za povezavo naprave",
+      "connectQrHelp": "To kodo skenirajte v aplikaciji Tududi na telefonu ali računalniku, da jo povežete s tem ključem."
     },
     "calendarDescription": "Omogoči pogled Koledar za prikaz opravil po roku na dan, teden in mesec.",
     "connected": {
