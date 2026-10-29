@@ -118,7 +118,8 @@
     "tomorrow": "내일",
     "next7Days": "다음 7일",
     "more": "더보기",
-    "toggleFolder": "프로젝트 표시 또는 숨기기"
+    "toggleFolder": "프로젝트 표시 또는 숨기기",
+    "customize": "사이드바 사용자 지정"
   },
   "navigation": {
     "home": "홈",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "봇에 메시지를 보낼 수 있는 사람을 정합니다. 비워 두면 모든 사용자를 허용합니다.",
     "telegramRequiredForSummaries": "작업 요약을 사용하려면 Telegram 연동을 설정해야 합니다.",
     "templatesDescription": "프로젝트 구조를 저장하고 재사용할 수 있는 프로젝트 템플릿을 사용합니다.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "스마트 목록",
+    "sidebarRailTitle": "아이콘 레일과 더보기",
+    "sidebarBadgesTitle": "개수 배지",
+    "sidebarShowCount": "{{name}} 개수 표시",
+    "sidebarCountBadge": "개수",
+    "sidebarPlace": "{{name}} 위치",
+    "sidebarPlaceRail": "아이콘 레일",
+    "sidebarPlaceMore": "더보기 메뉴",
+    "sidebarPlaceHidden": "숨김",
+    "sidebarMoveUp": "{{name}} 위로 이동",
+    "sidebarMoveDown": "{{name}} 아래로 이동",
+    "sidebarReset": "기본값으로 재설정",
+    "sidebarMinimalTitle": "미니멀 사이드바",
+    "sidebarMinimalHint": "이 설정은 미니멀 사이드바에만 적용됩니다. Dense는 자체 레이아웃을 유지합니다."
   },
   "productivity": {
     "stalledProjects": "정체된 프로젝트",

@@ -117,7 +117,8 @@
     "tomorrow": "Tomorrow",
     "next7Days": "Next 7 days",
     "more": "More",
-    "toggleFolder": "Show or hide projects"
+    "toggleFolder": "Show or hide projects",
+    "customize": "Customize sidebar"
   },
   "navigation": {
     "home": "Home",
@@ -964,7 +965,21 @@
       "botName": "Bot Name:"
     },
     "telegramRequiredForSummaries": "Telegram integration must be set up to use task summaries.",
-    "sendSummaryFailed": "Failed to send the summary."
+    "sendSummaryFailed": "Failed to send the summary.",
+    "sidebarSmartListsTitle": "Smart lists",
+    "sidebarRailTitle": "Icon rail and More",
+    "sidebarBadgesTitle": "Count badges",
+    "sidebarShowCount": "Show count for {{name}}",
+    "sidebarCountBadge": "Count",
+    "sidebarPlace": "Place of {{name}}",
+    "sidebarPlaceRail": "Icon rail",
+    "sidebarPlaceMore": "More menu",
+    "sidebarPlaceHidden": "Hidden",
+    "sidebarMoveUp": "Move {{name}} up",
+    "sidebarMoveDown": "Move {{name}} down",
+    "sidebarReset": "Reset to default",
+    "sidebarMinimalTitle": "Minimal sidebar",
+    "sidebarMinimalHint": "These settings change the Minimal sidebar only. Dense keeps its own layout."
   },
   "productivity": {
     "nothingYet": "Nothing to review yet.",

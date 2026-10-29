@@ -120,7 +120,8 @@
     "tomorrow": "Завтра",
     "next7Days": "Наступні 7 днів",
     "more": "Ще",
-    "toggleFolder": "Показати або приховати проєкти"
+    "toggleFolder": "Показати або приховати проєкти",
+    "customize": "Налаштувати бічну панель"
   },
   "navigation": {
     "home": "Головна",
@@ -1426,7 +1427,21 @@
     "telegramAllowedUsersDescription": "Хто може писати вашому боту. Залиште порожнім, щоб дозволити всім.",
     "telegramRequiredForSummaries": "Для зведень завдань потрібно налаштувати інтеграцію з Telegram.",
     "templatesDescription": "Увімкнути Шаблони проєктів, щоб зберігати й повторно використовувати структуру проєктів.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Розумні списки",
+    "sidebarRailTitle": "Панель значків і Ще",
+    "sidebarBadgesTitle": "Лічильники",
+    "sidebarShowCount": "Показувати лічильник для «{{name}}»",
+    "sidebarCountBadge": "Лічильник",
+    "sidebarPlace": "Розташування «{{name}}»",
+    "sidebarPlaceRail": "Панель значків",
+    "sidebarPlaceMore": "Меню «Ще»",
+    "sidebarPlaceHidden": "Приховано",
+    "sidebarMoveUp": "Перемістити «{{name}}» вгору",
+    "sidebarMoveDown": "Перемістити «{{name}}» вниз",
+    "sidebarReset": "Скинути до типових",
+    "sidebarMinimalTitle": "Мінімальна бічна панель",
+    "sidebarMinimalHint": "Ці налаштування змінюють лише мінімальну бічну панель. Dense зберігає свій макет."
   },
   "task": {
     "suggestions": {

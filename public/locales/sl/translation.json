@@ -120,7 +120,8 @@
     "tomorrow": "Jutri",
     "next7Days": "Naslednjih 7 dni",
     "more": "Več",
-    "toggleFolder": "Prikaži ali skrij projekte"
+    "toggleFolder": "Prikaži ali skrij projekte",
+    "customize": "Prilagodi stransko vrstico"
   },
   "navigation": {
     "home": "Domov",
@@ -939,7 +940,21 @@
     "telegramAllowedUsersDescription": "Kdo lahko piše tvojemu botu. Pusti prazno, da dovoliš vsem.",
     "telegramRequiredForSummaries": "Za povzetke opravil mora biti nastavljena integracija s Telegramom.",
     "templatesDescription": "Omogoči Predloge projektov za shranjevanje in ponovno uporabo struktur projektov.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Pametni seznami",
+    "sidebarRailTitle": "Vrstica ikon in Več",
+    "sidebarBadgesTitle": "Značke s števci",
+    "sidebarShowCount": "Pokaži število za {{name}}",
+    "sidebarCountBadge": "Število",
+    "sidebarPlace": "Mesto za {{name}}",
+    "sidebarPlaceRail": "Vrstica ikon",
+    "sidebarPlaceMore": "Meni Več",
+    "sidebarPlaceHidden": "Skrito",
+    "sidebarMoveUp": "Premakni {{name}} navzgor",
+    "sidebarMoveDown": "Premakni {{name}} navzdol",
+    "sidebarReset": "Ponastavi na privzeto",
+    "sidebarMinimalTitle": "Minimalna stranska vrstica",
+    "sidebarMinimalHint": "Te nastavitve spreminjajo samo minimalno stransko vrstico. Dense ohranja svoj izgled."
   },
   "productivity": {
     "stalledProjects": "Zastali projekti",

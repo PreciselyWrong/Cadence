@@ -118,7 +118,8 @@
     "tomorrow": "明天",
     "next7Days": "未来7天",
     "more": "更多",
-    "toggleFolder": "显示或隐藏项目"
+    "toggleFolder": "显示或隐藏项目",
+    "customize": "自定义侧边栏"
   },
   "navigation": {
     "home": "首页",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "控制谁可以给你的机器人发消息。留空则允许所有用户。",
     "telegramRequiredForSummaries": "必须先设置 Telegram 集成才能使用任务摘要。",
     "templatesDescription": "启用项目模板,保存并复用项目结构。",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "智能列表",
+    "sidebarRailTitle": "图标栏与更多",
+    "sidebarBadgesTitle": "计数徽章",
+    "sidebarShowCount": "显示 {{name}} 的计数",
+    "sidebarCountBadge": "计数",
+    "sidebarPlace": "{{name}} 的位置",
+    "sidebarPlaceRail": "图标栏",
+    "sidebarPlaceMore": "“更多”菜单",
+    "sidebarPlaceHidden": "隐藏",
+    "sidebarMoveUp": "上移 {{name}}",
+    "sidebarMoveDown": "下移 {{name}}",
+    "sidebarReset": "恢复默认",
+    "sidebarMinimalTitle": "极简侧边栏",
+    "sidebarMinimalHint": "这些设置仅影响极简侧边栏，Dense 保持其自有布局。"
   },
   "productivity": {
     "stalledProjects": "停滞项目",

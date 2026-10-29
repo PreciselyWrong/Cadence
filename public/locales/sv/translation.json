@@ -118,7 +118,8 @@
     "tomorrow": "I morgon",
     "next7Days": "Nästa 7 dagar",
     "more": "Mer",
-    "toggleFolder": "Visa eller dölj projekt"
+    "toggleFolder": "Visa eller dölj projekt",
+    "customize": "Anpassa sidofältet"
   },
   "navigation": {
     "home": "Hem",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Styr vem som kan skicka meddelanden till din bot. Lämna tomt för att tillåta alla.",
     "telegramRequiredForSummaries": "Telegram-integrationen måste vara konfigurerad för att använda uppgiftssammanfattningar.",
     "templatesDescription": "Aktivera Projektmallar för att spara och återanvända projektstrukturer.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Smarta listor",
+    "sidebarRailTitle": "Ikonlist och Mer",
+    "sidebarBadgesTitle": "Räknarmärken",
+    "sidebarShowCount": "Visa antal för {{name}}",
+    "sidebarCountBadge": "Antal",
+    "sidebarPlace": "Placering av {{name}}",
+    "sidebarPlaceRail": "Ikonlist",
+    "sidebarPlaceMore": "Menyn Mer",
+    "sidebarPlaceHidden": "Dold",
+    "sidebarMoveUp": "Flytta {{name}} upp",
+    "sidebarMoveDown": "Flytta {{name}} ned",
+    "sidebarReset": "Återställ till standard",
+    "sidebarMinimalTitle": "Minimalt sidofält",
+    "sidebarMinimalHint": "Dessa inställningar ändrar bara det minimala sidofältet. Dense behåller sin egen layout."
   },
   "productivity": {
     "stalledProjects": "Stagnerade projekt",

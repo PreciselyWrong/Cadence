@@ -118,7 +118,8 @@
     "tomorrow": "Morgen",
     "next7Days": "Nächste 7 Tage",
     "more": "Mehr",
-    "toggleFolder": "Projekte ein- oder ausblenden"
+    "toggleFolder": "Projekte ein- oder ausblenden",
+    "customize": "Seitenleiste anpassen"
   },
   "navigation": {
     "home": "Startseite",
@@ -1305,7 +1306,21 @@
       "botName": "Bot-Name:"
     },
     "telegramRequiredForSummaries": "Für Aufgabenzusammenfassungen muss die Telegram-Integration eingerichtet sein.",
-    "sidebarSectionDescription": "Den Bereich {{name}} in der Seitenleiste anzeigen."
+    "sidebarSectionDescription": "Den Bereich {{name}} in der Seitenleiste anzeigen.",
+    "sidebarSmartListsTitle": "Intelligente Listen",
+    "sidebarRailTitle": "Symbolleiste und Mehr",
+    "sidebarBadgesTitle": "Anzahl-Abzeichen",
+    "sidebarShowCount": "Anzahl für {{name}} anzeigen",
+    "sidebarCountBadge": "Anzahl",
+    "sidebarPlace": "Position von {{name}}",
+    "sidebarPlaceRail": "Symbolleiste",
+    "sidebarPlaceMore": "Menü „Mehr“",
+    "sidebarPlaceHidden": "Ausgeblendet",
+    "sidebarMoveUp": "{{name}} nach oben verschieben",
+    "sidebarMoveDown": "{{name}} nach unten verschieben",
+    "sidebarReset": "Auf Standard zurücksetzen",
+    "sidebarMinimalTitle": "Minimale Seitenleiste",
+    "sidebarMinimalHint": "Diese Einstellungen ändern nur die minimale Seitenleiste. Dense behält sein eigenes Layout."
   },
   "task": {
     "suggestions": {

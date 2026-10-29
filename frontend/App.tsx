@@ -204,6 +204,11 @@ const App: React.FC = () => {
                     .userSettingsStore.setFocus(
                         sanitizeFocus(data.user.ui_settings?.focus)
                     );
+                useStore
+                    .getState()
+                    .userSettingsStore.setSidebarMinimal(
+                        data.user.sidebar_settings
+                    );
             } else {
                 setCurrentUser(null);
                 setUserInStorage(null);

@@ -120,7 +120,8 @@
     "tomorrow": "Jutro",
     "next7Days": "Następne 7 dni",
     "more": "Więcej",
-    "toggleFolder": "Pokaż lub ukryj projekty"
+    "toggleFolder": "Pokaż lub ukryj projekty",
+    "customize": "Dostosuj pasek boczny"
   },
   "navigation": {
     "home": "Strona główna",
@@ -939,7 +940,21 @@
     "telegramAllowedUsersDescription": "Kto może pisać do Twojego bota. Zostaw puste, aby zezwolić wszystkim.",
     "telegramRequiredForSummaries": "Aby korzystać z podsumowań zadań, trzeba skonfigurować integrację z Telegramem.",
     "templatesDescription": "Włącz Szablony projektów, aby zapisywać i ponownie używać struktur projektów.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Inteligentne listy",
+    "sidebarRailTitle": "Pasek ikon i Więcej",
+    "sidebarBadgesTitle": "Odznaki z liczbą",
+    "sidebarShowCount": "Pokaż liczbę dla: {{name}}",
+    "sidebarCountBadge": "Liczba",
+    "sidebarPlace": "Miejsce: {{name}}",
+    "sidebarPlaceRail": "Pasek ikon",
+    "sidebarPlaceMore": "Menu Więcej",
+    "sidebarPlaceHidden": "Ukryte",
+    "sidebarMoveUp": "Przesuń {{name}} w górę",
+    "sidebarMoveDown": "Przesuń {{name}} w dół",
+    "sidebarReset": "Przywróć domyślne",
+    "sidebarMinimalTitle": "Minimalny pasek boczny",
+    "sidebarMinimalHint": "Te ustawienia zmieniają tylko minimalny pasek boczny. Dense zachowuje własny układ."
   },
   "productivity": {
     "stalledProjects": "Zatrzymane projekty",

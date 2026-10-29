@@ -118,7 +118,8 @@
     "tomorrow": "明日",
     "next7Days": "今後7日間",
     "more": "その他",
-    "toggleFolder": "プロジェクトの表示・非表示"
+    "toggleFolder": "プロジェクトの表示・非表示",
+    "customize": "サイドバーをカスタマイズ"
   },
   "navigation": {
     "home": "ホーム",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "ボットにメッセージを送れる人を指定します。空欄にするとすべてのユーザーを許可します。",
     "telegramRequiredForSummaries": "タスクのサマリーを使うにはTelegram連携の設定が必要です。",
     "templatesDescription": "プロジェクト構成を保存して再利用できるプロジェクトテンプレートを有効にします。",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "スマートリスト",
+    "sidebarRailTitle": "アイコンバーと「その他」",
+    "sidebarBadgesTitle": "件数バッジ",
+    "sidebarShowCount": "{{name}} の件数を表示",
+    "sidebarCountBadge": "件数",
+    "sidebarPlace": "{{name}} の場所",
+    "sidebarPlaceRail": "アイコンバー",
+    "sidebarPlaceMore": "「その他」メニュー",
+    "sidebarPlaceHidden": "非表示",
+    "sidebarMoveUp": "{{name}} を上へ移動",
+    "sidebarMoveDown": "{{name}} を下へ移動",
+    "sidebarReset": "デフォルトに戻す",
+    "sidebarMinimalTitle": "ミニマルなサイドバー",
+    "sidebarMinimalHint": "この設定はミニマルなサイドバーのみに適用されます。Dense は独自のレイアウトを維持します。"
   },
   "modals": {
     "confirmDelete": "本当に削除してよろしいですか？",

@@ -119,7 +119,8 @@
     "tomorrow": "Demain",
     "next7Days": "7 prochains jours",
     "more": "Plus",
-    "toggleFolder": "Afficher ou masquer les projets"
+    "toggleFolder": "Afficher ou masquer les projets",
+    "customize": "Personnaliser la barre latérale"
   },
   "navigation": {
     "home": "Accueil",
@@ -938,7 +939,21 @@
       "botName": "Nom du bot :"
     },
     "telegramRequiredForSummaries": "L'intégration Telegram doit être configurée pour utiliser les résumés de tâches.",
-    "sidebarSectionDescription": "Afficher la section {{name}} dans la barre latérale."
+    "sidebarSectionDescription": "Afficher la section {{name}} dans la barre latérale.",
+    "sidebarSmartListsTitle": "Listes intelligentes",
+    "sidebarRailTitle": "Barre d’icônes et Plus",
+    "sidebarBadgesTitle": "Pastilles de compteur",
+    "sidebarShowCount": "Afficher le compteur de {{name}}",
+    "sidebarCountBadge": "Compteur",
+    "sidebarPlace": "Emplacement de {{name}}",
+    "sidebarPlaceRail": "Barre d’icônes",
+    "sidebarPlaceMore": "Menu Plus",
+    "sidebarPlaceHidden": "Masqué",
+    "sidebarMoveUp": "Monter {{name}}",
+    "sidebarMoveDown": "Descendre {{name}}",
+    "sidebarReset": "Rétablir par défaut",
+    "sidebarMinimalTitle": "Barre latérale minimale",
+    "sidebarMinimalHint": "Ces réglages ne modifient que la barre latérale minimale. Dense garde sa propre disposition."
   },
   "productivity": {
     "stalledProjects": "Projets Bloqués",

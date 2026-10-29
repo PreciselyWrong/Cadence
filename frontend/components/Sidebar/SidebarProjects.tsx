@@ -11,6 +11,7 @@ import { useCan } from '../../hooks/useCan';
 import { Project } from '../../entities/Project';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { flattenProjectTree } from '../../utils/projectTree';
 
 interface SidebarProjectsProps {
@@ -36,6 +37,8 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
     const { t } = useTranslation();
     const canCreateProjects = useCan('create_projects');
     const [isExpanded, setIsExpanded] = useSidebarSectionExpanded('projects');
+
+    const showBadge = useSidebarSectionBadge('projects');
 
     const projects = useStore((state) => state.projectsStore.projects);
     const hasLoaded = useStore((state) => state.projectsStore.hasLoaded);
@@ -121,7 +124,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                             <PlusIcon className="h-3.5 w-3.5" />
                         </button>
                     )}
-                    {activeProjects.length > 0 && (
+                    {showBadge && activeProjects.length > 0 && (
                         <>
                             <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
                                 {activeProjects.length}

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SidebarTab from '../SidebarTab';
+import { useStore } from '../../../../store/useStore';
 import {
     DEFAULT_LINK_ORDER,
     DEFAULT_SECTION_ORDER,
@@ -39,6 +40,41 @@ const renderTab = (
 };
 
 describe('SidebarTab', () => {
+    beforeEach(() => {
+        // The layout preview below is the Dense editor; Minimal has its own.
+        useStore.setState((state: any) => ({
+            userSettingsStore: {
+                ...state.userSettingsStore,
+                uiDensity: 'dense',
+            },
+        }));
+    });
+
+    it('shows the Minimal editor instead of the preview in Minimal', () => {
+        useStore.setState((state: any) => ({
+            userSettingsStore: {
+                ...state.userSettingsStore,
+                uiDensity: 'minimal',
+            },
+        }));
+
+        render(
+            <SidebarTab
+                isActive
+                visibleSections={{}}
+                linkOrder={[...DEFAULT_LINK_ORDER]}
+                sectionOrder={[...DEFAULT_SECTION_ORDER]}
+                onToggleSection={jest.fn()}
+                onReorder={jest.fn()}
+            />
+        );
+
+        expect(
+            screen.getByTestId('sidebar-minimal-editor')
+        ).toBeInTheDocument();
+        expect(screen.queryByTestId('sidebar-preview')).toBeNull();
+    });
+
     it('renders nothing when the tab is not active', () => {
         const { container } = renderTab({ isActive: false });
 

@@ -118,7 +118,8 @@
     "tomorrow": "Yarın",
     "next7Days": "Sonraki 7 gün",
     "more": "Daha fazla",
-    "toggleFolder": "Projeleri göster veya gizle"
+    "toggleFolder": "Projeleri göster veya gizle",
+    "customize": "Kenar çubuğunu özelleştir"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Botuna kimlerin mesaj gönderebileceğini belirle. Herkese izin vermek için boş bırak.",
     "telegramRequiredForSummaries": "Görev özetlerini kullanmak için Telegram entegrasyonu kurulmalı.",
     "templatesDescription": "Proje yapılarını kaydedip yeniden kullanmak için Proje Şablonlarını etkinleştir.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Akıllı listeler",
+    "sidebarRailTitle": "Simge çubuğu ve Diğer",
+    "sidebarBadgesTitle": "Sayı rozetleri",
+    "sidebarShowCount": "{{name}} için sayıyı göster",
+    "sidebarCountBadge": "Sayı",
+    "sidebarPlace": "{{name}} konumu",
+    "sidebarPlaceRail": "Simge çubuğu",
+    "sidebarPlaceMore": "Diğer menüsü",
+    "sidebarPlaceHidden": "Gizli",
+    "sidebarMoveUp": "{{name}} öğesini yukarı taşı",
+    "sidebarMoveDown": "{{name}} öğesini aşağı taşı",
+    "sidebarReset": "Varsayılana sıfırla",
+    "sidebarMinimalTitle": "Minimal kenar çubuğu",
+    "sidebarMinimalHint": "Bu ayarlar yalnızca minimal kenar çubuğunu değiştirir. Dense kendi düzenini korur."
   },
   "productivity": {
     "stalledProjects": "Duraklayan Projeler",

@@ -119,7 +119,8 @@
     "tomorrow": "Amanhã",
     "next7Days": "Próximos 7 dias",
     "more": "Mais",
-    "toggleFolder": "Mostrar ou ocultar projetos"
+    "toggleFolder": "Mostrar ou ocultar projetos",
+    "customize": "Personalizar barra lateral"
   },
   "navigation": {
     "home": "Início",
@@ -938,7 +939,21 @@
     "telegramAllowedUsersDescription": "Controle quem pode enviar mensagens ao seu bot. Deixe em branco para permitir todos.",
     "telegramRequiredForSummaries": "Para usar os resumos de tarefas, a integração com o Telegram tem de estar configurada.",
     "templatesDescription": "Ativar Modelos de projeto para guardar e reutilizar estruturas de projetos.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Listas inteligentes",
+    "sidebarRailTitle": "Barra de ícones e Mais",
+    "sidebarBadgesTitle": "Emblemas de contagem",
+    "sidebarShowCount": "Mostrar contagem de {{name}}",
+    "sidebarCountBadge": "Contagem",
+    "sidebarPlace": "Local de {{name}}",
+    "sidebarPlaceRail": "Barra de ícones",
+    "sidebarPlaceMore": "Menu Mais",
+    "sidebarPlaceHidden": "Oculto",
+    "sidebarMoveUp": "Mover {{name}} para cima",
+    "sidebarMoveDown": "Mover {{name}} para baixo",
+    "sidebarReset": "Repor predefinições",
+    "sidebarMinimalTitle": "Barra lateral mínima",
+    "sidebarMinimalHint": "Estas definições alteram apenas a barra lateral mínima. O Dense mantém o seu próprio layout."
   },
   "productivity": {
     "stalledProjects": "Projetos Parados",

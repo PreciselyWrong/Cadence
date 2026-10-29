@@ -118,7 +118,8 @@
     "tomorrow": "Ngày mai",
     "next7Days": "7 ngày tới",
     "more": "Thêm",
-    "toggleFolder": "Hiện hoặc ẩn dự án"
+    "toggleFolder": "Hiện hoặc ẩn dự án",
+    "customize": "Tùy chỉnh thanh bên"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Kiểm soát ai có thể nhắn tin cho bot của bạn. Để trống để cho phép tất cả.",
     "telegramRequiredForSummaries": "Cần thiết lập tích hợp Telegram để dùng bản tóm tắt công việc.",
     "templatesDescription": "Bật Mẫu dự án để lưu và dùng lại cấu trúc dự án.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Danh sách thông minh",
+    "sidebarRailTitle": "Thanh biểu tượng và Khác",
+    "sidebarBadgesTitle": "Huy hiệu số đếm",
+    "sidebarShowCount": "Hiện số đếm cho {{name}}",
+    "sidebarCountBadge": "Số đếm",
+    "sidebarPlace": "Vị trí của {{name}}",
+    "sidebarPlaceRail": "Thanh biểu tượng",
+    "sidebarPlaceMore": "Menu Khác",
+    "sidebarPlaceHidden": "Ẩn",
+    "sidebarMoveUp": "Di chuyển {{name}} lên",
+    "sidebarMoveDown": "Di chuyển {{name}} xuống",
+    "sidebarReset": "Khôi phục mặc định",
+    "sidebarMinimalTitle": "Thanh bên tối giản",
+    "sidebarMinimalHint": "Các cài đặt này chỉ thay đổi thanh bên tối giản. Dense giữ bố cục riêng."
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",

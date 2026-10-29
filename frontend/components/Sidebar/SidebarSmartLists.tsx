@@ -27,6 +27,15 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
     const { t } = useTranslation();
     const [counts, setCounts] = useState<SmartTaskCounts | null>(null);
     const inboxCount = useStore((state) => state.inboxStore.pagination.total);
+    // Which lists show, in what order, and which show a count badge.
+    const config = useStore(
+        (state) => state.userSettingsStore.sidebarMinimal.smartLists
+    );
+    // Counts are only fetched when a visible badge needs one (Inbox has its
+    // own count in the store).
+    const needsCounts = config.some(
+        (item) => item.visible && item.showCount && item.key !== 'inbox'
+    );
 
     useEffect(() => {
         loadInboxItemsToStore(false).catch(console.error);
@@ -35,6 +44,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
     // Refetch on every navigation so a task finished on another page is
     // reflected once the user moves on.
     useEffect(() => {
+        if (!needsCounts) return;
         let cancelled = false;
         fetchSmartTaskCounts()
             .then((result) => {
@@ -44,9 +54,9 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         return () => {
             cancelled = true;
         };
-    }, [location.pathname, location.search]);
+    }, [location.pathname, location.search, needsCounts]);
 
-    const rows = [
+    const allRows = [
         {
             id: 'today',
             path: '/today',
@@ -83,6 +93,14 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         },
     ];
 
+    const rowById = new Map(allRows.map((row) => [row.id, row]));
+    const rows = config
+        .filter((item) => item.visible && rowById.has(item.key))
+        .map((item) => ({
+            ...rowById.get(item.key)!,
+            showCount: item.showCount,
+        }));
+
     return (
         <ul className="flex flex-col gap-px" aria-label="Smart lists">
             {rows.map((row) => (
@@ -112,7 +130,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                         <span className="flex-1 min-w-0 truncate text-left">
                             {row.title}
                         </span>
-                        {row.count !== undefined && (
+                        {row.showCount && row.count !== undefined && (
                             <span className="text-[12px] tabular-nums text-gray-400 dark:text-[oklch(60%_0.01_250)]">
                                 {row.count > 99 ? '99+' : row.count}
                             </span>

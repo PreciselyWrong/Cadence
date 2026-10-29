@@ -118,7 +118,8 @@
     "tomorrow": "I morgen",
     "next7Days": "Næste 7 dage",
     "more": "Mere",
-    "toggleFolder": "Vis eller skjul projekter"
+    "toggleFolder": "Vis eller skjul projekter",
+    "customize": "Tilpas sidebar"
   },
   "navigation": {
     "home": "Hjem",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Styr, hvem der kan skrive til din bot. Lad feltet stå tomt for at tillade alle.",
     "telegramRequiredForSummaries": "Telegram-integrationen skal være sat op for at bruge opgaveopsummeringer.",
     "templatesDescription": "Aktivér Projektskabeloner for at gemme og genbruge projektstrukturer.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Smarte lister",
+    "sidebarRailTitle": "Ikonlinje og Mere",
+    "sidebarBadgesTitle": "Antalsmærker",
+    "sidebarShowCount": "Vis antal for {{name}}",
+    "sidebarCountBadge": "Antal",
+    "sidebarPlace": "Placering af {{name}}",
+    "sidebarPlaceRail": "Ikonlinje",
+    "sidebarPlaceMore": "Menuen Mere",
+    "sidebarPlaceHidden": "Skjult",
+    "sidebarMoveUp": "Flyt {{name}} op",
+    "sidebarMoveDown": "Flyt {{name}} ned",
+    "sidebarReset": "Gendan standard",
+    "sidebarMinimalTitle": "Minimal sidebar",
+    "sidebarMinimalHint": "Disse indstillinger ændrer kun den minimale sidebar. Dense beholder sin egen layout."
   },
   "productivity": {
     "stalledProjects": "Stagnerede Projekter",

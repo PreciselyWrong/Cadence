@@ -118,7 +118,8 @@
         "tomorrow": "Zajtra",
         "next7Days": "Najbližších 7 dní",
         "more": "Viac",
-        "toggleFolder": "Zobraziť alebo skryť projekty"
+        "toggleFolder": "Zobraziť alebo skryť projekty",
+        "customize": "Prispôsobiť bočný panel"
     },
     "navigation": {
         "home": "Domov",
@@ -962,7 +963,21 @@
             "botName": "Názov bota:"
         },
         "telegramRequiredForSummaries": "Na používanie súhrnov úloh musí byť nastavená integrácia s Telegramom.",
-        "sendSummaryFailed": "Súhrn sa nepodarilo odoslať."
+        "sendSummaryFailed": "Súhrn sa nepodarilo odoslať.",
+        "sidebarSmartListsTitle": "Inteligentné zoznamy",
+        "sidebarRailTitle": "Lišta ikon a Viac",
+        "sidebarBadgesTitle": "Odznaky s počtom",
+        "sidebarShowCount": "Zobraziť počet pre {{name}}",
+        "sidebarCountBadge": "Počet",
+        "sidebarPlace": "Umiestnenie: {{name}}",
+        "sidebarPlaceRail": "Lišta ikon",
+        "sidebarPlaceMore": "Ponuka Viac",
+        "sidebarPlaceHidden": "Skryté",
+        "sidebarMoveUp": "Presunúť {{name}} nahor",
+        "sidebarMoveDown": "Presunúť {{name}} nadol",
+        "sidebarReset": "Obnoviť predvolené",
+        "sidebarMinimalTitle": "Minimálny bočný panel",
+        "sidebarMinimalHint": "Tieto nastavenia menia iba minimálny bočný panel. Dense si zachováva vlastné rozloženie."
     },
     "productivity": {
         "nothingYet": "Zatiaľ nie je čo kontrolovať.",

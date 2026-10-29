@@ -119,7 +119,8 @@
     "tomorrow": "Mañana",
     "next7Days": "Próximos 7 días",
     "more": "Más",
-    "toggleFolder": "Mostrar u ocultar proyectos"
+    "toggleFolder": "Mostrar u ocultar proyectos",
+    "customize": "Personalizar la barra lateral"
   },
   "navigation": {
     "home": "Inicio",
@@ -796,7 +797,21 @@
       "botName": "Nombre del bot:"
     },
     "telegramRequiredForSummaries": "Para usar los resúmenes de tareas hay que configurar la integración con Telegram.",
-    "sidebarSectionDescription": "Mostrar la sección {{name}} en la barra lateral."
+    "sidebarSectionDescription": "Mostrar la sección {{name}} en la barra lateral.",
+    "sidebarSmartListsTitle": "Listas inteligentes",
+    "sidebarRailTitle": "Barra de iconos y Más",
+    "sidebarBadgesTitle": "Insignias de recuento",
+    "sidebarShowCount": "Mostrar recuento de {{name}}",
+    "sidebarCountBadge": "Recuento",
+    "sidebarPlace": "Ubicación de {{name}}",
+    "sidebarPlaceRail": "Barra de iconos",
+    "sidebarPlaceMore": "Menú Más",
+    "sidebarPlaceHidden": "Oculto",
+    "sidebarMoveUp": "Subir {{name}}",
+    "sidebarMoveDown": "Bajar {{name}}",
+    "sidebarReset": "Restablecer valores predeterminados",
+    "sidebarMinimalTitle": "Barra lateral mínima",
+    "sidebarMinimalHint": "Estos ajustes solo cambian la barra lateral mínima. Dense mantiene su propio diseño."
   },
   "errors": {
     "required": "Este campo es obligatorio",

@@ -120,7 +120,8 @@
     "tomorrow": "Завтра",
     "next7Days": "Следующие 7 дней",
     "more": "Ещё",
-    "toggleFolder": "Показать или скрыть проекты"
+    "toggleFolder": "Показать или скрыть проекты",
+    "customize": "Настроить боковую панель"
   },
   "navigation": {
     "home": "Главная",
@@ -939,7 +940,21 @@
     "telegramAllowedUsersDescription": "Кто может писать вашему боту. Оставьте пустым, чтобы разрешить всем.",
     "telegramRequiredForSummaries": "Для сводок по задачам нужно настроить интеграцию с Telegram.",
     "templatesDescription": "Включить Шаблоны проектов, чтобы сохранять и повторно использовать структуру проектов.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Умные списки",
+    "sidebarRailTitle": "Панель значков и Ещё",
+    "sidebarBadgesTitle": "Счётчики",
+    "sidebarShowCount": "Показывать счётчик для «{{name}}»",
+    "sidebarCountBadge": "Счётчик",
+    "sidebarPlace": "Расположение «{{name}}»",
+    "sidebarPlaceRail": "Панель значков",
+    "sidebarPlaceMore": "Меню «Ещё»",
+    "sidebarPlaceHidden": "Скрыто",
+    "sidebarMoveUp": "Переместить «{{name}}» вверх",
+    "sidebarMoveDown": "Переместить «{{name}}» вниз",
+    "sidebarReset": "Сбросить по умолчанию",
+    "sidebarMinimalTitle": "Минимальная боковая панель",
+    "sidebarMinimalHint": "Эти настройки меняют только минимальную боковую панель. Dense сохраняет свой макет."
   },
   "productivity": {
     "stalledProjects": "Приостановленные проекты",

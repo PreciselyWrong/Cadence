@@ -10,6 +10,7 @@ import { Area } from '../../entities/Area';
 import { useTranslation } from 'react-i18next';
 import { useCan } from '../../hooks/useCan';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useStore } from '../../store/useStore';
 import { flattenProjectTree } from '../../utils/projectTree';
@@ -51,6 +52,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
 
     // Minimal shows each area as a folder that opens onto its projects.
     const isMinimal = useIsMinimal();
+    const showBadge = useSidebarSectionBadge('areas');
     const projects = useStore((state) => state.projectsStore.projects);
     const hasLoadedProjects = useStore(
         (state) => state.projectsStore.hasLoaded
@@ -191,7 +193,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                             <PlusIcon className="h-3.5 w-3.5" />
                         </button>
                     )}
-                    {areas.length > 0 && (
+                    {showBadge && areas.length > 0 && (
                         <>
                             <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
                                 {areas.length}

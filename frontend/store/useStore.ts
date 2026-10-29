@@ -16,6 +16,11 @@ import {
     resolveOrder,
 } from '../utils/sidebarLayout';
 import {
+    DEFAULT_MINIMAL_SIDEBAR,
+    MinimalSidebarSettings,
+    resolveMinimalSidebar,
+} from '../utils/minimalSidebar';
+import {
     SIDEBAR_DEFAULT_PERCENT,
     clampSidebarPercent,
 } from '../utils/sidebarWidth';
@@ -153,6 +158,9 @@ interface UserSettingsStore {
     }) => void;
     sidebarWidthPercent: number;
     setSidebarWidthPercent: (percent: number | undefined) => void;
+    // Minimal sidebar: smart lists, icon rail placement, count badges
+    sidebarMinimal: MinimalSidebarSettings;
+    setSidebarMinimal: (saved: unknown) => void;
     // The Focus chip's scope (see utils/focus.ts); null when none is set
     focus: Focus | null;
     setFocus: (focus: Focus | null) => void;
@@ -1178,6 +1186,14 @@ export const useStore = create<StoreState>((set: any) => ({
                 userSettingsStore: {
                     ...state.userSettingsStore,
                     focus,
+                },
+            })),
+        sidebarMinimal: DEFAULT_MINIMAL_SIDEBAR,
+        setSidebarMinimal: (saved) =>
+            set((state) => ({
+                userSettingsStore: {
+                    ...state.userSettingsStore,
+                    sidebarMinimal: resolveMinimalSidebar(saved),
                 },
             })),
     },

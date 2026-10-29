@@ -118,7 +118,8 @@
     "tomorrow": "Huomenna",
     "next7Days": "Seuraavat 7 päivää",
     "more": "Lisää",
-    "toggleFolder": "Näytä tai piilota projektit"
+    "toggleFolder": "Näytä tai piilota projektit",
+    "customize": "Mukauta sivupalkki"
   },
   "navigation": {
     "home": "Koti",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Määritä, kuka voi lähettää viestejä botillesi. Jätä tyhjäksi salliaksesi kaikki.",
     "telegramRequiredForSummaries": "Tehtäväyhteenvetojen käyttö vaatii Telegram-integraation määrittämisen.",
     "templatesDescription": "Ota käyttöön Projektimallit projektirakenteiden tallentamiseen ja uudelleenkäyttöön.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Älykkäät listat",
+    "sidebarRailTitle": "Kuvakepalkki ja Lisää",
+    "sidebarBadgesTitle": "Määrämerkit",
+    "sidebarShowCount": "Näytä määrä: {{name}}",
+    "sidebarCountBadge": "Määrä",
+    "sidebarPlace": "Sijainti: {{name}}",
+    "sidebarPlaceRail": "Kuvakepalkki",
+    "sidebarPlaceMore": "Lisää-valikko",
+    "sidebarPlaceHidden": "Piilotettu",
+    "sidebarMoveUp": "Siirrä {{name}} ylös",
+    "sidebarMoveDown": "Siirrä {{name}} alas",
+    "sidebarReset": "Palauta oletukset",
+    "sidebarMinimalTitle": "Minimaalinen sivupalkki",
+    "sidebarMinimalHint": "Nämä asetukset muuttavat vain minimaalista sivupalkkia. Dense säilyttää oman asettelunsa."
   },
   "productivity": {
     "stalledProjects": "Jumiutuneet projektit",

@@ -118,7 +118,8 @@
     "tomorrow": "I morgen",
     "next7Days": "Neste 7 dager",
     "more": "Mer",
-    "toggleFolder": "Vis eller skjul prosjekter"
+    "toggleFolder": "Vis eller skjul prosjekter",
+    "customize": "Tilpass sidefeltet"
   },
   "navigation": {
     "home": "Hjem",
@@ -938,7 +939,21 @@
     "telegramAllowedUsersDescription": "Styr hvem som kan sende meldinger til boten din. La feltet stå tomt for å tillate alle.",
     "telegramRequiredForSummaries": "Telegram-integrasjonen må være satt opp for å bruke oppgavesammendrag.",
     "templatesDescription": "Slå på Prosjektmaler for å lagre og gjenbruke prosjektstrukturer.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Smarte lister",
+    "sidebarRailTitle": "Ikonlinje og Mer",
+    "sidebarBadgesTitle": "Antallsmerker",
+    "sidebarShowCount": "Vis antall for {{name}}",
+    "sidebarCountBadge": "Antall",
+    "sidebarPlace": "Plassering av {{name}}",
+    "sidebarPlaceRail": "Ikonlinje",
+    "sidebarPlaceMore": "Mer-menyen",
+    "sidebarPlaceHidden": "Skjult",
+    "sidebarMoveUp": "Flytt {{name}} opp",
+    "sidebarMoveDown": "Flytt {{name}} ned",
+    "sidebarReset": "Tilbakestill til standard",
+    "sidebarMinimalTitle": "Minimalt sidefelt",
+    "sidebarMinimalHint": "Disse innstillingene endrer bare det minimale sidefeltet. Dense beholder sitt eget oppsett."
   },
   "productivity": {
     "stalledProjects": "Stagnerte prosjekter",

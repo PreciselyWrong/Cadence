@@ -119,7 +119,8 @@
     "tomorrow": "Mâine",
     "next7Days": "Următoarele 7 zile",
     "more": "Mai multe",
-    "toggleFolder": "Afișează sau ascunde proiectele"
+    "toggleFolder": "Afișează sau ascunde proiectele",
+    "customize": "Personalizează bara laterală"
   },
   "navigation": {
     "home": "Acasă",
@@ -940,7 +941,21 @@
     "telegramAllowedUsersDescription": "Controlează cine poate trimite mesaje botului tău. Lasă gol pentru a permite tuturor.",
     "telegramRequiredForSummaries": "Pentru rezumatele sarcinilor trebuie configurată integrarea Telegram.",
     "templatesDescription": "Activează Șabloanele de proiect pentru a salva și refolosi structuri de proiecte.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Liste inteligente",
+    "sidebarRailTitle": "Bară de iconițe și Mai multe",
+    "sidebarBadgesTitle": "Insigne cu numărător",
+    "sidebarShowCount": "Afișează numărul pentru {{name}}",
+    "sidebarCountBadge": "Număr",
+    "sidebarPlace": "Locul pentru {{name}}",
+    "sidebarPlaceRail": "Bară de iconițe",
+    "sidebarPlaceMore": "Meniul Mai multe",
+    "sidebarPlaceHidden": "Ascuns",
+    "sidebarMoveUp": "Mută {{name}} în sus",
+    "sidebarMoveDown": "Mută {{name}} în jos",
+    "sidebarReset": "Revino la implicit",
+    "sidebarMinimalTitle": "Bară laterală minimală",
+    "sidebarMinimalHint": "Aceste setări modifică doar bara laterală minimală. Dense își păstrează propriul aspect."
   },
   "productivity": {
     "stalledProjects": "Proiecte Blocate",

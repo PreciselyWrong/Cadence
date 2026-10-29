@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
     BookOpenIcon,
     CalendarDaysIcon,
+    AdjustmentsHorizontalIcon,
     ChartBarIcon,
     EllipsisHorizontalIcon,
     FireIcon,
@@ -24,6 +25,7 @@ import { getAssetPath } from '../../config/paths';
 import { useStore } from '../../store/useStore';
 import type { SidebarVisibleSections } from '../Profile/types';
 import SidebarPanelIcon from './SidebarPanelIcon';
+import type { RailPlace } from '../../utils/minimalSidebar';
 
 type RailItemId =
     | 'today'
@@ -183,34 +185,14 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
     },
 };
 
-// Primary icons stay visible; everything else sits behind the More menu.
-const PRIMARY_IDS: RailItemId[] = [
-    'today',
-    'inbox',
-    'calendar',
-    'notes',
-    'habits',
-    'views',
-    'areas',
-    'goals',
-    'people',
-    'insights',
-];
-const OVERFLOW_IDS: RailItemId[] = [
-    'allTasks',
-    'assignedToMe',
-    'everyone',
-    'boards',
-    'templates',
-    'access',
-];
-
 interface SidebarRailMinimalProps {
     handleNavClick: (path: string, title: string) => void;
     location: Location;
     canOpenAccess: boolean;
     // Only the collapsed rail shows the button that reopens the panel.
     onExpand?: () => void;
+    // Opens the Profile sidebar tab where the layout is edited.
+    onCustomize?: () => void;
 }
 
 const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
@@ -218,6 +200,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     location,
     canOpenAccess,
     onExpand,
+    onCustomize,
 }) => {
     const { t } = useTranslation();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -237,6 +220,11 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     );
     const visibleSections = useStore(
         (state) => state.userSettingsStore.sidebarVisibleSections
+    );
+    // Where each item sits: on the rail, in More, or hidden (saved in the
+    // Profile sidebar tab; the defaults keep the primary icons on the rail).
+    const railSettings = useStore(
+        (state) => state.userSettingsStore.sidebarMinimal.rail
     );
 
     useEffect(() => {
@@ -290,8 +278,12 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
         handleNavClick(item.path, itemTitle(item));
     };
 
-    const primary = PRIMARY_IDS.filter(isVisible).map((id) => RAIL_ITEMS[id]);
-    const overflow = OVERFLOW_IDS.filter(isVisible).map((id) => RAIL_ITEMS[id]);
+    const placed = (place: RailPlace) =>
+        railSettings
+            .filter((item) => item.place === place && isVisible(item.key))
+            .map((item) => RAIL_ITEMS[item.key]);
+    const primary = placed('rail');
+    const overflow = placed('more');
 
     return (
         <div className="flex flex-col items-center h-full pt-4 pb-3 w-rail flex-shrink-0">
@@ -337,7 +329,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                     </button>
                 ))}
 
-                {overflow.length > 0 && (
+                {(overflow.length > 0 || onCustomize) && (
                     <div ref={moreRef} className="relative mt-1">
                         <button
                             type="button"
@@ -369,6 +361,25 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                                         </button>
                                     </li>
                                 ))}
+                                {onCustomize && (
+                                    <li className="mt-1 border-t border-gray-200 pt-1 dark:border-gray-700">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsMoreOpen(false);
+                                                onCustomize();
+                                            }}
+                                            data-testid="sidebar-rail-customize"
+                                            className="w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                        >
+                                            <AdjustmentsHorizontalIcon className="h-[16px] w-[16px] flex-shrink-0" />
+                                            {t(
+                                                'sidebar.customize',
+                                                'Customize sidebar'
+                                            )}
+                                        </button>
+                                    </li>
+                                )}
                             </ul>
                         )}
                     </div>

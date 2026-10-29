@@ -119,7 +119,8 @@
     "tomorrow": "Domani",
     "next7Days": "Prossimi 7 giorni",
     "more": "Altro",
-    "toggleFolder": "Mostra o nascondi progetti"
+    "toggleFolder": "Mostra o nascondi progetti",
+    "customize": "Personalizza la barra laterale"
   },
   "navigation": {
     "home": "Home",
@@ -938,7 +939,21 @@
       "botName": "Nome del bot:"
     },
     "telegramRequiredForSummaries": "Per usare i riepiloghi delle attività serve l'integrazione Telegram.",
-    "sidebarSectionDescription": "Mostra la sezione {{name}} nella barra laterale."
+    "sidebarSectionDescription": "Mostra la sezione {{name}} nella barra laterale.",
+    "sidebarSmartListsTitle": "Elenchi intelligenti",
+    "sidebarRailTitle": "Barra icone e Altro",
+    "sidebarBadgesTitle": "Badge con conteggio",
+    "sidebarShowCount": "Mostra conteggio per {{name}}",
+    "sidebarCountBadge": "Conteggio",
+    "sidebarPlace": "Posizione di {{name}}",
+    "sidebarPlaceRail": "Barra icone",
+    "sidebarPlaceMore": "Menu Altro",
+    "sidebarPlaceHidden": "Nascosto",
+    "sidebarMoveUp": "Sposta {{name}} su",
+    "sidebarMoveDown": "Sposta {{name}} giù",
+    "sidebarReset": "Ripristina predefiniti",
+    "sidebarMinimalTitle": "Barra laterale minima",
+    "sidebarMinimalHint": "Queste impostazioni modificano solo la barra laterale minima. Dense mantiene il proprio layout."
   },
   "productivity": {
     "stalledProjects": "Progetti Bloccati",

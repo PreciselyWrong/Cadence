@@ -118,7 +118,8 @@
     "tomorrow": "Αύριο",
     "next7Days": "Επόμενες 7 ημέρες",
     "more": "Περισσότερα",
-    "toggleFolder": "Εμφάνιση ή απόκρυψη έργων"
+    "toggleFolder": "Εμφάνιση ή απόκρυψη έργων",
+    "customize": "Προσαρμογή πλευρικής στήλης"
   },
   "navigation": {
     "home": "Αρχική",
@@ -795,7 +796,21 @@
     "telegramAllowedUsersDescription": "Όρισε ποιος μπορεί να στέλνει μηνύματα στο bot σου. Άφησέ το κενό για να επιτρέπονται όλοι.",
     "telegramRequiredForSummaries": "Για τις συνόψεις εργασιών πρέπει να έχει ρυθμιστεί το Telegram.",
     "templatesDescription": "Ενεργοποίηση Προτύπων Έργων για αποθήκευση και επαναχρησιμοποίηση δομών έργων.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Έξυπνες λίστες",
+    "sidebarRailTitle": "Γραμμή εικονιδίων και Περισσότερα",
+    "sidebarBadgesTitle": "Ενδείξεις πλήθους",
+    "sidebarShowCount": "Εμφάνιση πλήθους για {{name}}",
+    "sidebarCountBadge": "Πλήθος",
+    "sidebarPlace": "Θέση του {{name}}",
+    "sidebarPlaceRail": "Γραμμή εικονιδίων",
+    "sidebarPlaceMore": "Μενού Περισσότερα",
+    "sidebarPlaceHidden": "Κρυφό",
+    "sidebarMoveUp": "Μετακίνηση του {{name}} πάνω",
+    "sidebarMoveDown": "Μετακίνηση του {{name}} κάτω",
+    "sidebarReset": "Επαναφορά προεπιλογών",
+    "sidebarMinimalTitle": "Minimal πλευρική στήλη",
+    "sidebarMinimalHint": "Αυτές οι ρυθμίσεις αλλάζουν μόνο την minimal πλευρική στήλη. Η Dense διατηρεί τη δική της διάταξη."
   },
   "errors": {
     "required": "Αυτό το πεδίο είναι υποχρεωτικό",

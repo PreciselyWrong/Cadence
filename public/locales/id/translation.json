@@ -118,7 +118,8 @@
     "tomorrow": "Besok",
     "next7Days": "7 hari ke depan",
     "more": "Lainnya",
-    "toggleFolder": "Tampilkan atau sembunyikan proyek"
+    "toggleFolder": "Tampilkan atau sembunyikan proyek",
+    "customize": "Sesuaikan sidebar"
   },
   "navigation": {
     "home": "Beranda",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Atur siapa yang bisa mengirim pesan ke bot-mu. Kosongkan untuk mengizinkan semua pengguna.",
     "telegramRequiredForSummaries": "Integrasi Telegram harus diatur untuk memakai ringkasan tugas.",
     "templatesDescription": "Aktifkan Templat Proyek untuk menyimpan dan memakai ulang struktur proyek.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Daftar pintar",
+    "sidebarRailTitle": "Rel ikon dan Lainnya",
+    "sidebarBadgesTitle": "Lencana jumlah",
+    "sidebarShowCount": "Tampilkan jumlah untuk {{name}}",
+    "sidebarCountBadge": "Jumlah",
+    "sidebarPlace": "Letak {{name}}",
+    "sidebarPlaceRail": "Rel ikon",
+    "sidebarPlaceMore": "Menu Lainnya",
+    "sidebarPlaceHidden": "Tersembunyi",
+    "sidebarMoveUp": "Pindahkan {{name}} ke atas",
+    "sidebarMoveDown": "Pindahkan {{name}} ke bawah",
+    "sidebarReset": "Atur ulang ke default",
+    "sidebarMinimalTitle": "Sidebar minimal",
+    "sidebarMinimalHint": "Pengaturan ini hanya mengubah sidebar minimal. Dense tetap memakai tata letaknya sendiri."
   },
   "productivity": {
     "stalledProjects": "Proyek Terhenti",

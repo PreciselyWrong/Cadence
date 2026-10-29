@@ -11,6 +11,7 @@ import { useStore } from '../../store/useStore';
 import { createTagUrl } from '../../utils/slugUtils';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { buildTagTree } from '../../utils/tagTree';
 
 interface SidebarTagsProps {
@@ -28,6 +29,8 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
 }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useSidebarSectionExpanded('tags');
+
+    const showBadge = useSidebarSectionBadge('tags');
 
     const tags = useStore((state) => state.tagsStore.tags);
     const hasLoaded = useStore((state) => state.tagsStore.hasLoaded);
@@ -107,7 +110,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                     >
                         <PlusIcon className="h-3.5 w-3.5" />
                     </button>
-                    {tags.length > 0 && (
+                    {showBadge && tags.length > 0 && (
                         <>
                             <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
                                 {tags.length}

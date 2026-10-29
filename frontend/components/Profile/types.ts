@@ -67,6 +67,10 @@ export interface SidebarSettings {
     widthPercent?: number;
     linkOrder?: string[];
     sectionOrder?: string[];
+    // Minimal sidebar (see utils/minimalSidebar.ts)
+    smartLists?: { key: string; visible: boolean; showCount: boolean }[];
+    rail?: { key: string; place: 'rail' | 'more' | 'hidden' }[];
+    sectionBadges?: Record<string, boolean>;
 }
 
 export interface NotificationPreferences {

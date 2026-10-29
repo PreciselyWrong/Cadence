@@ -118,7 +118,8 @@
     "tomorrow": "Morgen",
     "next7Days": "Komende 7 dagen",
     "more": "Meer",
-    "toggleFolder": "Projecten tonen of verbergen"
+    "toggleFolder": "Projecten tonen of verbergen",
+    "customize": "Zijbalk aanpassen"
   },
   "navigation": {
     "home": "Home",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Bepaal wie berichten naar je bot mag sturen. Laat leeg om iedereen toe te staan.",
     "telegramRequiredForSummaries": "Voor taaksamenvattingen moet de Telegram-integratie zijn ingesteld.",
     "templatesDescription": "Schakel Projectsjablonen in om projectstructuren op te slaan en te hergebruiken.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Slimme lijsten",
+    "sidebarRailTitle": "Pictogrammenbalk en Meer",
+    "sidebarBadgesTitle": "Tellerlabels",
+    "sidebarShowCount": "Aantal tonen voor {{name}}",
+    "sidebarCountBadge": "Aantal",
+    "sidebarPlace": "Plaats van {{name}}",
+    "sidebarPlaceRail": "Pictogrammenbalk",
+    "sidebarPlaceMore": "Menu Meer",
+    "sidebarPlaceHidden": "Verborgen",
+    "sidebarMoveUp": "{{name}} omhoog verplaatsen",
+    "sidebarMoveDown": "{{name}} omlaag verplaatsen",
+    "sidebarReset": "Terugzetten naar standaard",
+    "sidebarMinimalTitle": "Minimale zijbalk",
+    "sidebarMinimalHint": "Deze instellingen wijzigen alleen de minimale zijbalk. Dense behoudt zijn eigen indeling."
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",

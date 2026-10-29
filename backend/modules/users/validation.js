@@ -102,6 +102,9 @@ function validateSidebarSettings(body) {
         widthPercent,
         linkOrder,
         sectionOrder,
+        smartLists,
+        rail,
+        sectionBadges,
     } = body;
     const result = {};
 
@@ -166,6 +169,108 @@ function validateSidebarSettings(body) {
         result.visibleSections = visibleSections;
     }
 
+    if (smartLists !== undefined) {
+        result.smartLists = sanitizeSmartLists(smartLists);
+    }
+    if (rail !== undefined) {
+        result.rail = sanitizeRail(rail);
+    }
+    if (sectionBadges !== undefined) {
+        result.sectionBadges = sanitizeSectionBadges(sectionBadges);
+    }
+
+    return result;
+}
+
+// Minimal sidebar: the smart lists, icon rail placement and section count
+// badges. Unknown keys are dropped; the client fills in defaults for any
+// item missing from the saved list, so a new item still appears.
+const MINIMAL_SMART_LIST_KEYS = ['today', 'tomorrow', 'next7', 'inbox'];
+const MINIMAL_RAIL_KEYS = [
+    'today',
+    'inbox',
+    'calendar',
+    'notes',
+    'habits',
+    'views',
+    'areas',
+    'goals',
+    'people',
+    'insights',
+    'allTasks',
+    'assignedToMe',
+    'everyone',
+    'boards',
+    'templates',
+    'access',
+];
+const MINIMAL_RAIL_PLACES = ['rail', 'more', 'hidden'];
+const MINIMAL_SECTION_BADGE_KEYS = ['favorites', 'projects', 'areas', 'tags'];
+
+// Missing flags count as on; anything else is read as a boolean the way the
+// feature flags are ('false', '0', 0 and false are off).
+const coerceFlag = (value) =>
+    value === undefined
+        ? true
+        : !(
+              value === false ||
+              value === 'false' ||
+              value === '0' ||
+              value === 0
+          );
+
+const isPlainObject = (value) =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
+
+function sanitizeSmartLists(value) {
+    if (!Array.isArray(value) || value.length > SIDEBAR_ORDER_MAX_ITEMS) {
+        throw new ValidationError(
+            `smartLists must be an array of at most ${SIDEBAR_ORDER_MAX_ITEMS} entries`
+        );
+    }
+    const seen = new Set();
+    const result = [];
+    for (const entry of value) {
+        if (!isPlainObject(entry)) continue;
+        const { key } = entry;
+        if (!MINIMAL_SMART_LIST_KEYS.includes(key) || seen.has(key)) continue;
+        seen.add(key);
+        result.push({
+            key,
+            visible: coerceFlag(entry.visible),
+            showCount: coerceFlag(entry.showCount),
+        });
+    }
+    return result;
+}
+
+function sanitizeRail(value) {
+    if (!Array.isArray(value) || value.length > SIDEBAR_ORDER_MAX_ITEMS) {
+        throw new ValidationError(
+            `rail must be an array of at most ${SIDEBAR_ORDER_MAX_ITEMS} entries`
+        );
+    }
+    const seen = new Set();
+    const result = [];
+    for (const entry of value) {
+        if (!isPlainObject(entry)) continue;
+        const { key, place } = entry;
+        if (!MINIMAL_RAIL_KEYS.includes(key) || seen.has(key)) continue;
+        if (!MINIMAL_RAIL_PLACES.includes(place)) continue;
+        seen.add(key);
+        result.push({ key, place });
+    }
+    return result;
+}
+
+function sanitizeSectionBadges(value) {
+    if (!isPlainObject(value)) {
+        throw new ValidationError('sectionBadges must be an object');
+    }
+    const result = {};
+    for (const key of MINIMAL_SECTION_BADGE_KEYS) {
+        if (key in value) result[key] = coerceFlag(value[key]);
+    }
     return result;
 }
 

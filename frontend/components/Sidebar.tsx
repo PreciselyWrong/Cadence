@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getAssetPath } from '../config/paths';
 import { Area } from '../entities/Area';
 import { Note } from '../entities/Note';
@@ -90,6 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useTranslation();
     const habitsEnabled = useStore(
         (state) => state.userSettingsStore.habitsEnabled
     );
@@ -126,6 +128,10 @@ const Sidebar: React.FC<SidebarProps> = ({
             setIsSidebarOpen(false);
         }
     };
+
+    // The Minimal layout is edited in the Profile sidebar tab.
+    const openSidebarSettings = () =>
+        handleNavClick('/profile?section=sidebar', 'Profile');
 
     const sectionElements: Record<SidebarSectionId, JSX.Element> = {
         favorites: (
@@ -225,6 +231,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             location={location}
                             canOpenAccess={canOpenAccess(currentUser)}
                             onExpand={() => setIsSidebarOpen(true)}
+                            onCustomize={openSidebarSettings}
                         />
                     ) : (
                         <SidebarRail
@@ -244,6 +251,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             handleNavClick={handleNavClick}
                             location={location}
                             canOpenAccess={canOpenAccess(currentUser)}
+                            onCustomize={openSidebarSettings}
                         />
                     )}
                     <div
@@ -330,6 +338,22 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 </div>
                             )}
                         </div>
+
+                        {isMinimal && (
+                            <div className="px-2.5 pb-1">
+                                <button
+                                    type="button"
+                                    onClick={openSidebarSettings}
+                                    data-testid="sidebar-customize"
+                                    className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-[oklch(24%_0.015_250)]"
+                                >
+                                    {t(
+                                        'sidebar.customize',
+                                        'Customize sidebar'
+                                    )}
+                                </button>
+                            </div>
+                        )}
 
                         <SidebarTrialCard />
                         <SidebarFooter

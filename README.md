@@ -48,7 +48,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 | | Upstream | This fork |
 |---|---|---|
-| Sidebar (Minimal) | One long list of every section | Smart lists with counts (Today, Tomorrow, Next 7 days, Inbox), Projects and Tags with Areas as folders, and an icon rail with a More menu. Dense keeps the upstream sidebar. [Docs](docs/32-sidebar.md) |
+| Sidebar (Minimal) | One long list of every section | Smart lists with counts (Today, Tomorrow, Next 7 days, Inbox), Projects and Tags with Areas as folders, and an icon rail with a More menu. Smart lists, rail placement and count badges can be customised in Profile → Sidebar. Dense keeps the upstream sidebar. [Docs](docs/32-sidebar.md) |
 
 ### Focus
 
@@ -91,6 +91,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 - New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
 - New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences; `GET /api/tasks/smart-counts` returns the Today, Tomorrow and Next 7 days counts, and `GET /api/tasks?type=tomorrow` lists tomorrow.
+- Minimal sidebar: `users.sidebar_settings` holds `smartLists` (show, count badge, order), `rail` (`rail` / `more` / `hidden` per item, in order) and `sectionBadges`; sanitized in `backend/modules/users/validation.js` on `PUT /api/profile/sidebar-settings`, defaults filled in by `frontend/utils/minimalSidebar.ts`.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language. So are `tasks.addTaskInline` (the "+ Add task" field) and the `tasks.contextMenu.*` strings of the row menu.
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).

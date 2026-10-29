@@ -118,7 +118,8 @@
     "tomorrow": "Утре",
     "next7Days": "Следващите 7 дни",
     "more": "Още",
-    "toggleFolder": "Показване или скриване на проектите"
+    "toggleFolder": "Показване или скриване на проектите",
+    "customize": "Персонализиране на страničnata лента"
   },
   "navigation": {
     "home": "Начало",
@@ -937,7 +938,21 @@
     "telegramAllowedUsersDescription": "Кой може да пише на бота ти. Остави празно, за да разрешиш всички.",
     "telegramRequiredForSummaries": "За обобщенията на задачи трябва да е настроена интеграцията с Telegram.",
     "templatesDescription": "Включи Шаблони на проекти, за да запазваш и преизползваш структури на проекти.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "Умни списъци",
+    "sidebarRailTitle": "Икони и меню „Още“",
+    "sidebarBadgesTitle": "Значки с броя",
+    "sidebarShowCount": "Показване на броя за {{name}}",
+    "sidebarCountBadge": "Брой",
+    "sidebarPlace": "Място на {{name}}",
+    "sidebarPlaceRail": "Икони отстрани",
+    "sidebarPlaceMore": "Меню „Още“",
+    "sidebarPlaceHidden": "Скрит",
+    "sidebarMoveUp": "Преместване на {{name}} нагоре",
+    "sidebarMoveDown": "Преместване на {{name}} надолу",
+    "sidebarReset": "Възстановяване на стандартното",
+    "sidebarMinimalTitle": "Минимална странична лента",
+    "sidebarMinimalHint": "Тези настройки променят само минималната странична лента. Dense запазва своя изглед."
   },
   "productivity": {
     "stalledProjects": "Забавени проекти",

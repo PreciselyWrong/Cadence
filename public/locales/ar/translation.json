@@ -122,7 +122,8 @@
     "tomorrow": "غداً",
     "next7Days": "الأيام السبعة القادمة",
     "more": "المزيد",
-    "toggleFolder": "إظهار المشاريع أو إخفاؤها"
+    "toggleFolder": "إظهار المشاريع أو إخفاؤها",
+    "customize": "تخصيص الشريط الجانبي"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -941,7 +942,21 @@
     "telegramAllowedUsersDescription": "تحكّم في من يمكنه مراسلة البوت. اتركه فارغًا للسماح للجميع.",
     "telegramRequiredForSummaries": "يجب إعداد تكامل Telegram لاستخدام ملخصات المهام.",
     "templatesDescription": "تفعيل قوالب المشاريع لحفظ هياكل المشاريع وإعادة استخدامها.",
-    "aiApiKeyPlaceholder": "sk-..."
+    "aiApiKeyPlaceholder": "sk-...",
+    "sidebarSmartListsTitle": "القوائم الذكية",
+    "sidebarRailTitle": "شريط الأيقونات والمزيد",
+    "sidebarBadgesTitle": "شارات العدد",
+    "sidebarShowCount": "إظهار العدد لـ {{name}}",
+    "sidebarCountBadge": "العدد",
+    "sidebarPlace": "موضع {{name}}",
+    "sidebarPlaceRail": "شريط الأيقونات",
+    "sidebarPlaceMore": "قائمة المزيد",
+    "sidebarPlaceHidden": "مخفي",
+    "sidebarMoveUp": "نقل {{name}} لأعلى",
+    "sidebarMoveDown": "نقل {{name}} لأسفل",
+    "sidebarReset": "استعادة الافتراضي",
+    "sidebarMinimalTitle": "الشريط الجانبي المبسط",
+    "sidebarMinimalHint": "تغيّر هذه الإعدادات الشريط الجانبي المبسط فقط. يحتفظ وضع Dense بتخطيطه الخاص."
   },
   "productivity": {
     "stalledProjects": "المشاريع المتوقفة",
