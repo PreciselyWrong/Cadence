@@ -21,6 +21,8 @@ const renderTab = (contentBackground: string | null) => {
             onAppearanceChange={jest.fn()}
             contentBackground={contentBackground}
             onContentBackgroundChange={onContentBackgroundChange}
+            density="minimal"
+            onDensityChange={jest.fn()}
         />
     );
     return { onContentBackgroundChange };
@@ -65,5 +67,45 @@ describe('AppearanceTab background', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'None' }));
         expect(onContentBackgroundChange).toHaveBeenLastCalledWith(null);
+    });
+});
+
+describe('AppearanceTab interface density', () => {
+    const renderDensity = (density: 'minimal' | 'dense') => {
+        const onDensityChange = jest.fn();
+        render(
+            <AppearanceTab
+                isActive
+                formData={{ appearance: 'light' } as ProfileFormData}
+                onAppearanceChange={jest.fn()}
+                contentBackground={null}
+                onContentBackgroundChange={jest.fn()}
+                density={density}
+                onDensityChange={onDensityChange}
+            />
+        );
+        return { onDensityChange };
+    };
+
+    it('marks the saved density and explains it', () => {
+        renderDensity('minimal');
+
+        expect(screen.getByRole('button', { name: 'Minimal' })).toHaveAttribute(
+            'aria-pressed',
+            'true'
+        );
+        expect(
+            screen.getByText(
+                'Minimal hides extras for a calm list; Dense shows every control.'
+            )
+        ).toBeInTheDocument();
+    });
+
+    it('reports dense when Dense is picked', () => {
+        const { onDensityChange } = renderDensity('minimal');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Dense' }));
+
+        expect(onDensityChange).toHaveBeenCalledWith('dense');
     });
 });

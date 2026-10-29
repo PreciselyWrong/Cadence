@@ -820,6 +820,10 @@
     "aiProfileDescription": "Contesto facoltativo per l'IA: il tuo ruolo, il tuo campo o ciò che rende più personali riepiloghi e analisi (es. «Ricercatrice attenta alle scadenze dei bandi e ai periodi d'esame»).",
     "aiProfilePlaceholder": "es. Ricercatrice. Il mio lavoro ruota attorno a scadenze dei bandi, revisioni di articoli e cicli didattici, non a sprint o rilasci.",
     "systemMode": "Sistema",
+    "interfaceDensity": "Interfaccia",
+    "densityMinimal": "Minimale",
+    "densityDense": "Densa",
+    "densityDescription": "Minimale nasconde il superfluo per un elenco essenziale; Densa mostra tutti i comandi.",
     "connected": {
       "loadError": "Impossibile caricare gli account collegati",
       "linkError": "Impossibile avviare il collegamento dell'account",

@@ -908,6 +908,10 @@
     "sidebarSectionDescription": "Pokaż sekcję {{name}} na pasku bocznym.",
     "sidebarShowItem": "Pokaż: {{name}}",
     "systemMode": "Systemowy",
+    "interfaceDensity": "Interfejs",
+    "densityMinimal": "Minimalny",
+    "densityDense": "Gęsty",
+    "densityDescription": "Minimalny ukrywa dodatki dla spokojniejszej listy; Gęsty pokazuje wszystkie elementy sterujące.",
     "telegram": {
       "botName": "Nazwa bota:"
     },

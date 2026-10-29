@@ -118,6 +118,8 @@ interface InboxStore {
     resetPagination: () => void;
 }
 
+export type UiDensity = 'minimal' | 'dense';
+
 interface UserSettingsStore {
     eisenhowerEnabled: boolean;
     setEisenhowerEnabled: (enabled: boolean) => void;
@@ -139,6 +141,8 @@ interface UserSettingsStore {
     setAiAssistantEnabled: (enabled: boolean) => void;
     contentBackground: string | null;
     setContentBackground: (background: string | null) => void;
+    uiDensity: UiDensity;
+    setUiDensity: (density: UiDensity) => void;
     sidebarVisibleSections: SidebarVisibleSections;
     setSidebarVisibleSections: (sections: SidebarVisibleSections) => void;
     sidebarLinkOrder: string[];
@@ -1126,6 +1130,14 @@ export const useStore = create<StoreState>((set: any) => ({
                 userSettingsStore: {
                     ...state.userSettingsStore,
                     contentBackground: background,
+                },
+            })),
+        uiDensity: 'minimal',
+        setUiDensity: (density) =>
+            set((state) => ({
+                userSettingsStore: {
+                    ...state.userSettingsStore,
+                    uiDensity: density,
                 },
             })),
         sidebarVisibleSections: {},

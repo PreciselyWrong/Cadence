@@ -164,10 +164,12 @@ to an account, so it cannot be used to discover who has signed up - Declining re
     - Avatar image (upload/delete)
 
 17. **User preferences stored in profile:**
-    - **Appearance:** Light or dark theme
+    - **Appearance:** Light or dark theme, and the interface density (see below)
     - **Language:** One of 25 supported languages
     - **Timezone:** User's timezone for date/time display
     - **First day of week:** 0 (Sunday) to 6 (Saturday)
+
+    **Interface density** (Profile > Appearance > Interface) is stored as `ui_settings.appearance.density`. `minimal` (the default) is the calmer TickTick-style list that hides extras; `dense` shows every control, as upstream does. Minimal hides, it never deletes anything. Only `minimal` and `dense` are kept; any other value is dropped, and a profile save keeps the density already saved when the form omits it. The setting is loaded into the store on login so the app applies it without a reload.
 
 18. **Feature toggles (Profile > Features & Add-ons):**
     - Habits, Eisenhower Matrix, Kanban Board, Calendar and Templates

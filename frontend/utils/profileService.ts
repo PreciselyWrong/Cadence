@@ -48,7 +48,9 @@ interface Profile {
                 showCompleted?: boolean;
             };
         };
-        appearance?: Record<string, unknown>;
+        appearance?: Record<string, unknown> & {
+            density?: 'minimal' | 'dense';
+        };
         calendar?: {
             showCompleted?: boolean;
             showWeekends?: boolean;

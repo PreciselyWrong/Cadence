@@ -83,6 +83,53 @@ describe('PUT /api/profile/ui-settings', () => {
         });
     });
 
+    describe('interface density', () => {
+        it('saves dense', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { density: 'dense' },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.density).toBe('dense');
+        });
+
+        it('drops an invalid density and keeps the saved one', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { density: 'dense' },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { density: 'compact' },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.density).toBe('dense');
+        });
+
+        it('keeps density when the profile form saves without it', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { density: 'dense' },
+            });
+            await agent.patch('/api/profile').send({
+                ui_settings: { appearance: { theme: 'dark' } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance).toEqual({
+                theme: 'dark',
+                density: 'dense',
+            });
+        });
+
+        it('drops an invalid density from a profile save', async () => {
+            await agent.patch('/api/profile').send({
+                ui_settings: { appearance: { density: 'compact' } },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.density).toBeUndefined();
+        });
+    });
+
     describe('matrices', () => {
         const quadrant = (name, rule) => ({ name, rule });
 

@@ -20,6 +20,7 @@ export interface Features {
 export interface UiSettingsAppearance {
     theme?: 'light' | 'dark' | 'system';
     contentBackground?: string | null;
+    density?: 'minimal' | 'dense';
 }
 
 export interface UiSettings {

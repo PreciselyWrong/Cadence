@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Показвай раздела {{name}} в страничната лента.",
     "sidebarShowItem": "Показвай: {{name}}",
     "systemMode": "Системна",
+    "interfaceDensity": "Интерфейс",
+    "densityMinimal": "Минимален",
+    "densityDense": "Плътен",
+    "densityDescription": "Минималният скрива допълнителното за спокоен списък; Плътният показва всички контроли.",
     "telegram": {
       "botName": "Име на бота:"
     },

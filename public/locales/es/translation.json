@@ -694,6 +694,10 @@
     "aiProfileDescription": "Contexto opcional para la IA: tu rol, tu área o lo que ayude a personalizar los resúmenes (p. ej. «Investigadora centrada en plazos de becas y periodos de evaluación»).",
     "aiProfilePlaceholder": "p. ej. Investigadora. Mi trabajo gira en torno a plazos de becas, revisiones de artículos y ciclos docentes, no a sprints ni despliegues.",
     "systemMode": "Sistema",
+    "interfaceDensity": "Interfaz",
+    "densityMinimal": "Mínima",
+    "densityDense": "Densa",
+    "densityDescription": "Mínima oculta lo superfluo para una lista tranquila; Densa muestra todos los controles.",
     "connected": {
       "loadError": "No se pudieron cargar las cuentas conectadas",
       "linkError": "No se pudo iniciar la vinculación de la cuenta",

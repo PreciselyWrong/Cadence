@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "在侧边栏显示 {{name}} 板块。",
     "sidebarShowItem": "显示 {{name}}",
     "systemMode": "跟随系统",
+    "interfaceDensity": "界面",
+    "densityMinimal": "极简",
+    "densityDense": "密集",
+    "densityDescription": "极简模式隐藏多余元素，让列表更清爽；密集模式显示所有控件。",
     "telegram": {
       "botName": "机器人名称:"
     },

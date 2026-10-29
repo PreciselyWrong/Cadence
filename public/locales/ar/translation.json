@@ -910,6 +910,10 @@
     "sidebarSectionDescription": "إظهار قسم {{name}} في الشريط الجانبي.",
     "sidebarShowItem": "إظهار {{name}}",
     "systemMode": "النظام",
+    "interfaceDensity": "الواجهة",
+    "densityMinimal": "بسيط",
+    "densityDense": "كثيف",
+    "densityDescription": "البسيط يخفي الإضافات لقائمة هادئة، والكثيف يعرض كل عناصر التحكم.",
     "telegram": {
       "botName": "اسم البوت:"
     },

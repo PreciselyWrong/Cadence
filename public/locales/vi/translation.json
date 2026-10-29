@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Hiển thị mục {{name}} trên thanh bên.",
     "sidebarShowItem": "Hiển thị {{name}}",
     "systemMode": "Hệ thống",
+    "interfaceDensity": "Giao diện",
+    "densityMinimal": "Tối giản",
+    "densityDense": "Dày đặc",
+    "densityDescription": "Tối giản ẩn các thành phần phụ để danh sách gọn gàng; Dày đặc hiển thị mọi điều khiển.",
     "telegram": {
       "botName": "Tên bot:"
     },

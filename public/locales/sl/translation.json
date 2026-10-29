@@ -908,6 +908,10 @@
     "sidebarSectionDescription": "Prikaži razdelek {{name}} v stranski vrstici.",
     "sidebarShowItem": "Prikaži: {{name}}",
     "systemMode": "Sistemska",
+    "interfaceDensity": "Vmesnik",
+    "densityMinimal": "Minimalen",
+    "densityDense": "Gosto",
+    "densityDescription": "Minimalen skrije dodatke za mirnejši seznam; Gosto prikaže vse kontrole.",
     "telegram": {
       "botName": "Ime bota:"
     },

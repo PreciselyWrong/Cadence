@@ -602,6 +602,11 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                             contentBackground:
                                 data.ui_settings?.appearance
                                     ?.contentBackground ?? null,
+                            density:
+                                data.ui_settings?.appearance?.density ===
+                                'dense'
+                                    ? 'dense'
+                                    : 'minimal',
                         },
                     },
                     notification_preferences:
@@ -1355,6 +1360,14 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     );
             }
 
+            if (formData.ui_settings?.appearance?.density !== undefined) {
+                useStore
+                    .getState()
+                    .userSettingsStore.setUiDensity(
+                        formData.ui_settings.appearance.density
+                    );
+            }
+
             if (updatedProfile.sidebar_settings?.visibleSections) {
                 useStore
                     .getState()
@@ -1590,6 +1603,23 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                                         ?.appearance || {}),
                                                     contentBackground:
                                                         background,
+                                                },
+                                            },
+                                        }))
+                                    }
+                                    density={
+                                        formData.ui_settings?.appearance
+                                            ?.density ?? 'minimal'
+                                    }
+                                    onDensityChange={(density) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            ui_settings: {
+                                                ...(prev.ui_settings || {}),
+                                                appearance: {
+                                                    ...(prev.ui_settings
+                                                        ?.appearance || {}),
+                                                    density,
                                                 },
                                             },
                                         }))

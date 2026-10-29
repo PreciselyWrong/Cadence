@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "{{name}} bölümünü kenar çubuğunda göster.",
     "sidebarShowItem": "Göster: {{name}}",
     "systemMode": "Sistem",
+    "interfaceDensity": "Arayüz",
+    "densityMinimal": "Minimal",
+    "densityDense": "Yoğun",
+    "densityDescription": "Minimal, sakin bir liste için ek öğeleri gizler; Yoğun tüm denetimleri gösterir.",
     "telegram": {
       "botName": "Bot adı:"
     },

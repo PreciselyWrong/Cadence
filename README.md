@@ -38,6 +38,12 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Print | — | Prints only the shown view |
 | Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
 
+### Appearance
+
+| | Upstream | This fork |
+|---|---|---|
+| Interface density | One look, every control visible | **Minimal** (default, calmer TickTick-style list) or **Dense** (upstream's look), chosen in Profile → Appearance and saved in `ui_settings.appearance.density` |
+
 ### Focus
 
 | | Upstream | This fork |

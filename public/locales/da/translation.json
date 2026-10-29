@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Vis sektionen {{name}} i sidepanelet.",
     "sidebarShowItem": "Vis {{name}}",
     "systemMode": "System",
+    "interfaceDensity": "Grænseflade",
+    "densityMinimal": "Minimal",
+    "densityDense": "Tæt",
+    "densityDescription": "Minimal skjuler ekstra for en rolig liste; Tæt viser alle knapper.",
     "telegram": {
       "botName": "Botnavn:"
     },

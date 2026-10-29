@@ -780,6 +780,10 @@
     "sidebarSectionDescription": "Εμφάνιση της ενότητας {{name}} στην πλαϊνή στήλη.",
     "sidebarShowItem": "Εμφάνιση: {{name}}",
     "systemMode": "Σύστημα",
+    "interfaceDensity": "Διεπαφή",
+    "densityMinimal": "Ελάχιστη",
+    "densityDense": "Πυκνή",
+    "densityDescription": "Η ελάχιστη προβολή κρύβει τα επιπλέον για μια ήρεμη λίστα· η πυκνή εμφανίζει όλα τα στοιχεία ελέγχου.",
     "telegram": {
       "botName": "Όνομα bot:"
     },

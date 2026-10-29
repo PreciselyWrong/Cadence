@@ -907,6 +907,10 @@
     "sidebarSectionDescription": "Mostrar a secção {{name}} na barra lateral.",
     "sidebarShowItem": "Mostrar {{name}}",
     "systemMode": "Sistema",
+    "interfaceDensity": "Interface",
+    "densityMinimal": "Mínima",
+    "densityDense": "Densa",
+    "densityDescription": "Mínima oculta o extra para uma lista calma; Densa mostra todos os controles.",
     "telegram": {
       "botName": "Nome do bot:"
     },

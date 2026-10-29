@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "사이드바에 {{name}} 섹션을 표시합니다.",
     "sidebarShowItem": "{{name}} 표시",
     "systemMode": "시스템",
+    "interfaceDensity": "인터페이스",
+    "densityMinimal": "미니멀",
+    "densityDense": "밀집",
+    "densityDescription": "미니멀은 부가 요소를 숨겨 차분한 목록을 만들고, 밀집은 모든 컨트롤을 표시합니다.",
     "telegram": {
       "botName": "봇 이름:"
     },

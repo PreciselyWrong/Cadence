@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "De sectie {{name}} tonen in de zijbalk.",
     "sidebarShowItem": "{{name}} tonen",
     "systemMode": "Systeem",
+    "interfaceDensity": "Interface",
+    "densityMinimal": "Minimaal",
+    "densityDense": "Compact",
+    "densityDescription": "Minimaal verbergt extra's voor een rustige lijst; Compact toont alle bedieningselementen.",
     "telegram": {
       "botName": "Botnaam:"
     },

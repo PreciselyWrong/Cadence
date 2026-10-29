@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "サイドバーに{{name}}セクションを表示します。",
     "sidebarShowItem": "{{name}} を表示",
     "systemMode": "システム",
+    "interfaceDensity": "インターフェース",
+    "densityMinimal": "ミニマル",
+    "densityDense": "高密度",
+    "densityDescription": "ミニマルは余分な要素を隠して落ち着いたリストにします。高密度はすべての操作項目を表示します。",
     "telegram": {
       "botName": "ボット名:"
     },

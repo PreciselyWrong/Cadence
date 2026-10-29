@@ -1391,6 +1391,10 @@
     "sidebarSectionDescription": "Показувати розділ {{name}} на бічній панелі.",
     "sidebarShowItem": "Показувати: {{name}}",
     "systemMode": "Системна",
+    "interfaceDensity": "Інтерфейс",
+    "densityMinimal": "Мінімальний",
+    "densityDense": "Щільний",
+    "densityDescription": "Мінімальний приховує зайве для спокійного списку; Щільний показує всі елементи керування.",
     "telegram": {
       "botName": "Ім'я бота:"
     },

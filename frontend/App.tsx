@@ -181,6 +181,13 @@ const App: React.FC = () => {
                     );
                 useStore
                     .getState()
+                    .userSettingsStore.setUiDensity(
+                        data.user.ui_settings?.appearance?.density === 'dense'
+                            ? 'dense'
+                            : 'minimal'
+                    );
+                useStore
+                    .getState()
                     .userSettingsStore.setSidebarVisibleSections(
                         data.user.sidebar_settings?.visibleSections ?? {}
                     );

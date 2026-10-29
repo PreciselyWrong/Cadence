@@ -104,6 +104,13 @@ async function safeDeleteFile(filePath) {
     await fs.unlink(resolvedPath).catch(() => {});
 }
 
+const DENSITIES = ['minimal', 'dense'];
+
+// Only the two known interface densities are stored; anything else is ignored.
+function sanitizeDensity(density) {
+    return DENSITIES.includes(density) ? density : undefined;
+}
+
 const MAX_FOCUS_TAGS = 10;
 
 // The Focus chip's saved scope: an area, optionally a project inside it and
@@ -437,10 +444,27 @@ class UsersService {
             if (current?.matrices !== undefined)
                 kept.matrices = current.matrices;
             if (current?.summary !== undefined) kept.summary = current.summary;
-            allowedUpdates.ui_settings =
+            let nextUiSettings =
                 ui_settings && Object.keys(kept).length > 0
                     ? { ...ui_settings, ...kept }
                     : ui_settings;
+            // A profile save replaces the column, so keep the saved density
+            // when the form omits it, and drop any value that is not valid.
+            if (nextUiSettings?.appearance) {
+                const { density, ...appearanceRest } =
+                    nextUiSettings.appearance;
+                const savedDensity =
+                    sanitizeDensity(density) ??
+                    sanitizeDensity(current?.appearance?.density);
+                nextUiSettings = {
+                    ...nextUiSettings,
+                    appearance: {
+                        ...appearanceRest,
+                        ...(savedDensity ? { density: savedDensity } : {}),
+                    },
+                };
+            }
+            allowedUpdates.ui_settings = nextUiSettings;
         }
         if (notification_preferences !== undefined)
             allowedUpdates.notification_preferences = notification_preferences;
@@ -925,10 +949,13 @@ class UsersService {
         };
 
         if (appearance !== undefined) {
+            const { density, ...appearanceRest } = appearance || {};
             newSettings.appearance = {
                 ...(currentSettings.appearance || {}),
-                ...appearance,
+                ...appearanceRest,
             };
+            const savedDensity = sanitizeDensity(density);
+            if (savedDensity) newSettings.appearance.density = savedDensity;
         }
 
         if (inbox !== undefined) {

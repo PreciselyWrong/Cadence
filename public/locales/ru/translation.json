@@ -908,6 +908,10 @@
     "sidebarSectionDescription": "Показывать раздел {{name}} в боковой панели.",
     "sidebarShowItem": "Показывать: {{name}}",
     "systemMode": "Системная",
+    "interfaceDensity": "Интерфейс",
+    "densityMinimal": "Минимальный",
+    "densityDense": "Плотный",
+    "densityDescription": "Минимальный скрывает лишнее для спокойного списка; Плотный показывает все элементы управления.",
     "telegram": {
       "botName": "Имя бота:"
     },

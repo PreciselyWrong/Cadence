@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import type { ProfileFormData } from '../types';
+import type { UiDensity } from '../../../store/useStore';
 import {
     CONTENT_BACKGROUNDS,
     contentBackgroundUrl,
@@ -21,6 +22,8 @@ interface AppearanceTabProps {
     onAppearanceChange: (appearance: 'light' | 'dark' | 'system') => void;
     contentBackground: string | null;
     onContentBackgroundChange: (background: string | null) => void;
+    density: UiDensity;
+    onDensityChange: (density: UiDensity) => void;
 }
 
 interface BackgroundCardProps {
@@ -82,6 +85,8 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
     onAppearanceChange,
     contentBackground,
     onContentBackgroundChange,
+    density,
+    onDensityChange,
 }) => {
     const { t } = useTranslation();
 
@@ -137,6 +142,45 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         {t('profile.systemMode', 'System')}
                     </button>
                 </div>
+            </div>
+
+            {/* Interface density */}
+            <div className="mb-8">
+                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                    {t('profile.interfaceDensity', 'Interface')}
+                </h4>
+                <div className="inline-flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
+                    {(
+                        [
+                            ['minimal', t('profile.densityMinimal', 'Minimal')],
+                            ['dense', t('profile.densityDense', 'Dense')],
+                        ] as const
+                    ).map(([value, label], index) => (
+                        <button
+                            key={value}
+                            type="button"
+                            aria-pressed={density === value}
+                            onClick={() => onDensityChange(value)}
+                            className={`flex items-center justify-center px-5 py-2 text-sm font-medium transition-colors ${
+                                index > 0
+                                    ? 'border-l border-gray-300 dark:border-gray-600'
+                                    : ''
+                            } ${
+                                density === value
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                    {t(
+                        'profile.densityDescription',
+                        'Minimal hides extras for a calm list; Dense shows every control.'
+                    )}
+                </p>
             </div>
 
             {/* Background */}

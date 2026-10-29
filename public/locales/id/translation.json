@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Tampilkan bagian {{name}} di bilah sisi.",
     "sidebarShowItem": "Tampilkan {{name}}",
     "systemMode": "Sistem",
+    "interfaceDensity": "Antarmuka",
+    "densityMinimal": "Minimal",
+    "densityDense": "Padat",
+    "densityDescription": "Minimal menyembunyikan tambahan untuk daftar yang tenang; Padat menampilkan semua kontrol.",
     "telegram": {
       "botName": "Nama bot:"
     },

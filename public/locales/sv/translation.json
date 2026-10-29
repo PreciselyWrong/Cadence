@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Visa sektionen {{name}} i sidofältet.",
     "sidebarShowItem": "Visa {{name}}",
     "systemMode": "System",
+    "interfaceDensity": "Gränssnitt",
+    "densityMinimal": "Minimal",
+    "densityDense": "Tät",
+    "densityDescription": "Minimal döljer extra för en lugn lista; Tät visar alla kontroller.",
     "telegram": {
       "botName": "Botnamn:"
     },

@@ -906,6 +906,10 @@
     "sidebarSectionDescription": "Näytä {{name}}-osio sivupalkissa.",
     "sidebarShowItem": "Näytä: {{name}}",
     "systemMode": "Järjestelmä",
+    "interfaceDensity": "Käyttöliittymä",
+    "densityMinimal": "Minimaalinen",
+    "densityDense": "Tiivis",
+    "densityDescription": "Minimaalinen piilottaa ylimääräiset elementit rauhallista listaa varten; Tiivis näyttää kaikki säätimet.",
     "telegram": {
       "botName": "Botin nimi:"
     },
