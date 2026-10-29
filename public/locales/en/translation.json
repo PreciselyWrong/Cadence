@@ -1767,7 +1767,12 @@
     "pinnedTag": "Pinned tag",
     "frequentlyUsed": "Frequently used",
     "createTag": "+ Create \"{{name}}\"",
-    "pinTag": "Pin for quick access"
+    "pinTag": "Pin for quick access",
+    "parentTag": "Parent tag",
+    "noParent": "None (top level)",
+    "parentTagHasChildren": "This tag has child tags, so it cannot go under another tag.",
+    "showChildTags": "Show child tags",
+    "hideChildTags": "Hide child tags"
   },
   "habits": {
     "completeHabit": "Complete habit",

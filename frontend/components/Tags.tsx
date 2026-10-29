@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import {
+    ChevronRightIcon,
+    MagnifyingGlassIcon,
+} from '@heroicons/react/24/outline';
 import ConfirmDialog from './Shared/ConfirmDialog';
 import NewItemButton from './Shared/NewItemButton';
 import TagModal from './Tag/TagModal';
@@ -13,6 +16,15 @@ import {
     updateTag,
 } from '../utils/tagsService';
 import { useStore } from '../store/useStore';
+import { buildTagTree } from '../utils/tagTree';
+
+// Removing a tag also lifts its children to the top level, as the API does.
+const withoutTag = (tags: Tag[], tagUid: string): Tag[] =>
+    tags
+        .filter((tag) => tag.uid !== tagUid)
+        .map((tag) =>
+            tag.parent_uid === tagUid ? { ...tag, parent_uid: null } : tag
+        );
 
 const Tags: React.FC = () => {
     const { t } = useTranslation();
@@ -27,6 +39,17 @@ const Tags: React.FC = () => {
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [isTagModalOpen, setIsTagModalOpen] = useState<boolean>(false);
     const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+    const [collapsedParents, setCollapsedParents] = useState<Set<string>>(
+        () => new Set()
+    );
+
+    const toggleParent = (uid: string) =>
+        setCollapsedParents((prev) => {
+            const next = new Set(prev);
+            if (next.has(uid)) next.delete(uid);
+            else next.add(uid);
+            return next;
+        });
 
     useEffect(() => {
         if (!hasLoaded && !isLoading && !isError) {
@@ -38,7 +61,7 @@ const Tags: React.FC = () => {
         if (!tagToDelete) return;
         try {
             await apiDeleteTag(tagToDelete.uid!);
-            setTags(tags.filter((tag) => tag.uid !== tagToDelete.uid));
+            setTags(withoutTag(tags, tagToDelete.uid!));
             setIsConfirmDialogOpen(false);
             setTagToDelete(null);
         } catch (err) {
@@ -87,28 +110,87 @@ const Tags: React.FC = () => {
         setTagToDelete(null);
     };
 
-    const filteredTags = tags.filter((tag) =>
-        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const query = searchQuery.toLowerCase();
+    const matches = (tag: Tag) => tag.name.toLowerCase().includes(query);
 
-    const groupedTags = filteredTags.reduce(
-        (groups, tag) => {
-            const firstLetter = tag.name.charAt(0).toUpperCase();
+    // Child tags sit under their parent. A search keeps a parent when it or
+    // any of its children match, and shows the matching children.
+    const filteredTree = buildTagTree(tags)
+        .map(({ tag, children }) => ({
+            tag,
+            children: matches(tag) ? children : children.filter(matches),
+            hasChildren: children.length > 0,
+        }))
+        .filter(({ tag, children }) => matches(tag) || children.length > 0);
+
+    const groupedTags = filteredTree.reduce(
+        (groups, node) => {
+            const firstLetter = node.tag.name.charAt(0).toUpperCase();
             if (!groups[firstLetter]) {
                 groups[firstLetter] = [];
             }
-            groups[firstLetter].push(tag);
+            groups[firstLetter].push(node);
             return groups;
         },
-        {} as Record<string, typeof tags>
+        {} as Record<string, typeof filteredTree>
     );
 
     const sortedGroupKeys = Object.keys(groupedTags).sort();
-    sortedGroupKeys.forEach((letter) => {
-        groupedTags[letter].sort((a, b) =>
-            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+
+    const renderNode = ({
+        tag,
+        children,
+        hasChildren,
+    }: (typeof filteredTree)[number]) => {
+        const uid = tag.uid || '';
+        const isCollapsed = !query && collapsedParents.has(uid);
+        return (
+            <div key={tag.uid || tag.id}>
+                <div className="relative">
+                    {hasChildren && (
+                        <button
+                            type="button"
+                            onClick={() => toggleParent(uid)}
+                            aria-expanded={!isCollapsed}
+                            aria-label={
+                                isCollapsed
+                                    ? t('tags.showChildTags', 'Show child tags')
+                                    : t('tags.hideChildTags', 'Hide child tags')
+                            }
+                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-0.5 text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-200 focus:outline-none"
+                            data-testid={`tag-toggle-${uid}`}
+                        >
+                            <ChevronRightIcon
+                                className="h-3 w-3 transition-transform duration-150"
+                                style={{
+                                    transform: isCollapsed
+                                        ? 'none'
+                                        : 'rotate(90deg)',
+                                }}
+                            />
+                        </button>
+                    )}
+                    <TagRow
+                        tag={tag}
+                        onEdit={handleEditTag}
+                        onDelete={openConfirmDialog}
+                    />
+                </div>
+                {!isCollapsed && children.length > 0 && (
+                    <div className="pl-6" data-testid={`tag-children-${uid}`}>
+                        {children.map((child) => (
+                            <TagRow
+                                key={child.uid || child.id}
+                                tag={child}
+                                onEdit={handleEditTag}
+                                onDelete={openConfirmDialog}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
         );
-    });
+    };
 
     if (isLoading) {
         return (
@@ -194,7 +276,7 @@ const Tags: React.FC = () => {
                 </div>
 
                 {/* Tags grid, grouped alphabetically */}
-                {filteredTags.length === 0 ? (
+                {filteredTree.length === 0 ? (
                     <p className="text-gray-700 dark:text-gray-300">
                         {t('tags.noTagsFound', 'No tags found.')}
                     </p>
@@ -209,15 +291,9 @@ const Tags: React.FC = () => {
                                 <div
                                     className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
                                 >
-                                    {groupedTags[letter].map((tag) => (
-                                        <div key={tag.uid || tag.id}>
-                                            <TagRow
-                                                tag={tag}
-                                                onEdit={handleEditTag}
-                                                onDelete={openConfirmDialog}
-                                            />
-                                        </div>
-                                    ))}
+                                    {groupedTags[letter].map((node) =>
+                                        renderNode(node)
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -236,9 +312,7 @@ const Tags: React.FC = () => {
                         onDelete={async (tagUid) => {
                             try {
                                 await apiDeleteTag(tagUid);
-                                setTags(
-                                    tags.filter((tag) => tag.uid !== tagUid)
-                                );
+                                setTags(withoutTag(tags, tagUid));
                                 setIsTagModalOpen(false);
                                 setSelectedTag(null);
                             } catch (error) {

@@ -1649,7 +1649,12 @@
     "pinnedTag": "Tag fixada",
     "frequentlyUsed": "Usadas com frequência",
     "createTag": "+ Criar \"{{name}}\"",
-    "pinTag": "Fixar para acesso rápido"
+    "pinTag": "Fixar para acesso rápido",
+    "parentTag": "Etiqueta principal",
+    "noParent": "Nenhuma (nível superior)",
+    "parentTagHasChildren": "Esta etiqueta tem etiquetas filhas, por isso não pode ficar sob outra etiqueta.",
+    "showChildTags": "Mostrar etiquetas filhas",
+    "hideChildTags": "Ocultar etiquetas filhas"
   },
   "recurrence": {
     "none": "Nenhum",

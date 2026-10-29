@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useStore } from '../../store/useStore';
 import { createTagUrl } from '../../utils/slugUtils';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
+import { buildTagTree } from '../../utils/tagTree';
 
 interface SidebarTagsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -39,8 +40,8 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
 
     const isActive = (path: string) => location.pathname === path;
 
-    const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+    const itemClass = (path: string, nested = false) =>
+        `group flex justify-between items-center rounded-[8px] ${nested ? 'pl-[44px]' : 'pl-[30px]'} pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
         }`;
 
@@ -53,7 +54,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
     };
 
     const navigate = (tag: Tag) =>
-        handleNavClick(getTagPath(tag), tag.name, <TagIcon className="h-4 w-4 mr-2" />);
+        handleNavClick(
+            getTagPath(tag),
+            tag.name,
+            <TagIcon className="h-4 w-4 mr-2" />
+        );
 
     return (
         <div className="flex flex-col">
@@ -75,7 +80,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleNavClick('/tags', t('sidebar.tags'), <TagIcon className="h-4 w-4 mr-2" />);
+                        handleNavClick(
+                            '/tags',
+                            t('sidebar.tags'),
+                            <TagIcon className="h-4 w-4 mr-2" />
+                        );
                     }}
                 >
                     <TagIcon className="h-[14px] w-[14px]" />
@@ -108,7 +117,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"
-                                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                                    style={{
+                                        transform: isExpanded
+                                            ? 'rotate(90deg)'
+                                            : 'none',
+                                    }}
                                 />
                             </button>
                         </>
@@ -118,17 +131,23 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
 
             {isExpanded && (
                 <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
-                    {tags.map((tag) => (
-                        <div
-                            key={tag.uid || tag.id}
-                            className={itemClass(getTagPath(tag))}
-                            onClick={() => navigate(tag)}
-                        >
-                            <span className="truncate min-w-0">
-                                {tag.name}
-                            </span>
-                        </div>
-                    ))}
+                    {buildTagTree(tags).flatMap(({ tag, children }) =>
+                        [tag, ...children].map((item) => (
+                            <div
+                                key={item.uid || item.id}
+                                className={itemClass(
+                                    getTagPath(item),
+                                    item !== tag
+                                )}
+                                onClick={() => navigate(item)}
+                                data-testid={`sidebar-tag-${item.uid || item.id}`}
+                            >
+                                <span className="truncate min-w-0">
+                                    {item.name}
+                                </span>
+                            </div>
+                        ))
+                    )}
                 </div>
             )}
         </div>

@@ -1648,7 +1648,12 @@
     "pinnedTag": "Festet merkelapp",
     "frequentlyUsed": "Ofte brukt",
     "createTag": "+ Opprett «{{name}}»",
-    "pinTag": "Fest for rask tilgang"
+    "pinTag": "Fest for rask tilgang",
+    "parentTag": "Overordnet tagg",
+    "noParent": "Ingen (øverste nivå)",
+    "parentTagHasChildren": "Denne taggen har underordnede tagger og kan derfor ikke plasseres under en annen tagg.",
+    "showChildTags": "Vis underordnede tagger",
+    "hideChildTags": "Skjul underordnede tagger"
   },
   "recurrence": {
     "none": "Ingen",

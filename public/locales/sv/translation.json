@@ -1647,7 +1647,12 @@
     "pinnedTag": "Fäst tagg",
     "frequentlyUsed": "Används ofta",
     "createTag": "+ Skapa ”{{name}}”",
-    "pinTag": "Fäst för snabb åtkomst"
+    "pinTag": "Fäst för snabb åtkomst",
+    "parentTag": "Överordnad tagg",
+    "noParent": "Ingen (översta nivån)",
+    "parentTagHasChildren": "Den här taggen har underordnade taggar och kan därför inte placeras under en annan tagg.",
+    "showChildTags": "Visa underordnade taggar",
+    "hideChildTags": "Dölj underordnade taggar"
   },
   "recurrence": {
     "none": "Ingen",

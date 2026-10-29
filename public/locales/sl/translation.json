@@ -1651,7 +1651,12 @@
     "pinnedTag": "Pripeta oznaka",
     "frequentlyUsed": "Pogosto uporabljene",
     "createTag": "+ Ustvari »{{name}}«",
-    "pinTag": "Pripni za hiter dostop"
+    "pinTag": "Pripni za hiter dostop",
+    "parentTag": "Nadrejena oznaka",
+    "noParent": "Brez (najvišja raven)",
+    "parentTagHasChildren": "Ta oznaka ima podrejene oznake, zato je ni mogoče postaviti pod drugo oznako.",
+    "showChildTags": "Pokaži podrejene oznake",
+    "hideChildTags": "Skrij podrejene oznake"
   },
   "recurrence": {
     "none": "Noben",
