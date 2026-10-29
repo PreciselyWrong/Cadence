@@ -144,6 +144,37 @@ function mergeViewTypes(current, incoming) {
     return kept;
 }
 
+// Chips of a minimal task row, in default order (mirrors
+// frontend/constants/taskRowFields.ts). A saved list keeps its order, drops
+// unknown keys, repeats and non-boolean visibility, and appends any chip it
+// leaves out as visible, so a chip added later still shows up.
+const TASK_ROW_FIELD_KEYS = [
+    'recurrence',
+    'comments',
+    'tags',
+    'project',
+    'priority',
+    'due',
+];
+
+function sanitizeTaskRowFields(rowFields) {
+    const saved = [];
+    if (Array.isArray(rowFields)) {
+        for (const entry of rowFields) {
+            if (!entry || typeof entry !== 'object') continue;
+            const { key, visible } = entry;
+            if (!TASK_ROW_FIELD_KEYS.includes(key)) continue;
+            if (typeof visible !== 'boolean') continue;
+            if (saved.some((field) => field.key === key)) continue;
+            saved.push({ key, visible });
+        }
+    }
+    const missing = TASK_ROW_FIELD_KEYS.filter(
+        (key) => !saved.some((field) => field.key === key)
+    ).map((key) => ({ key, visible: true }));
+    return [...saved, ...missing];
+}
+
 const MAX_FOCUS_TAGS = 10;
 
 // The Focus chip's saved scope: an area, optionally a project inside it and
@@ -508,7 +539,7 @@ class UsersService {
             // A profile save replaces the column, so keep the saved density
             // when the form omits it, and drop any value that is not valid.
             if (nextUiSettings?.appearance) {
-                const { density, ...appearanceRest } =
+                const { density, rowFields, ...appearanceRest } =
                     nextUiSettings.appearance;
                 const savedDensity =
                     sanitizeDensity(density) ??
@@ -518,6 +549,11 @@ class UsersService {
                     appearance: {
                         ...appearanceRest,
                         ...(savedDensity ? { density: savedDensity } : {}),
+                        ...(rowFields !== undefined
+                            ? { rowFields: sanitizeTaskRowFields(rowFields) }
+                            : current?.appearance?.rowFields
+                              ? { rowFields: current.appearance.rowFields }
+                              : {}),
                     },
                 };
             }
@@ -1007,13 +1043,17 @@ class UsersService {
         };
 
         if (appearance !== undefined) {
-            const { density, ...appearanceRest } = appearance || {};
+            const { density, rowFields, ...appearanceRest } = appearance || {};
             newSettings.appearance = {
                 ...(currentSettings.appearance || {}),
                 ...appearanceRest,
             };
             const savedDensity = sanitizeDensity(density);
             if (savedDensity) newSettings.appearance.density = savedDensity;
+            if (rowFields !== undefined) {
+                newSettings.appearance.rowFields =
+                    sanitizeTaskRowFields(rowFields);
+            }
         }
 
         if (inbox !== undefined) {

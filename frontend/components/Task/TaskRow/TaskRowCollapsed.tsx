@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -33,12 +33,16 @@ import {
 } from '../../../utils/dateUtils';
 import TaskStatusControl from '../TaskStatusControl';
 import TaskCheckCircle from '../TaskCheckCircle';
-import MinimalQuickEdits from './MinimalQuickEdits';
+import { MinimalDueEdit, MinimalPriorityEdit } from './MinimalQuickEdits';
 import QuickCaptureInput, {
     QuickCaptureInputHandle,
 } from '../../Inbox/QuickCaptureInput';
 import { useStore } from '../../../store/useStore';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
+import {
+    TaskRowFieldKey,
+    normalizeTaskRowFields,
+} from '../../../constants/taskRowFields';
 import { MINIMAL_ROW_ATTRIBUTE } from '../useMinimalRowKeyboard';
 import PriorityBadge, {
     PriorityLevel,
@@ -170,6 +174,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const rowRef = useRef<HTMLDivElement>(null);
     const pressingInsideTitleRef = useRef(false);
     const projects = useStore((state: any) => state.projectsStore?.projects);
+    const savedRowFields = useStore(
+        (state: any) => state.userSettingsStore?.taskRowFields
+    );
+    const rowFields = useMemo(
+        () => normalizeTaskRowFields(savedRowFields),
+        [savedRowFields]
+    );
     const [draftName, setDraftName] = useState(currentName);
     const actionsMenuRef = useRef<HTMLDivElement>(null);
     const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
@@ -366,6 +377,72 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         </button>
     );
 
+    // The details on a minimal row, by key. Each renders only when it has
+    // something to show; the list below orders them and hides unchecked ones.
+    const minimalChips: Record<TaskRowFieldKey, React.ReactNode> = {
+        recurrence: isRecurring ? (
+            <ArrowPathIcon
+                className="h-3 w-3 text-gray-400 dark:text-gray-500"
+                title={t('recurrence.recurring', 'Recurring')}
+                aria-label={t('recurrence.recurring', 'Recurring')}
+            />
+        ) : null,
+        comments: commentBadge,
+        tags:
+            !compact && task.tags && task.tags.length > 0 ? (
+                <span className="flex items-center gap-1.5">
+                    {task.tags.slice(0, 2).map((tag) => (
+                        <span key={tag.uid || tag.name}>{`#${tag.name}`}</span>
+                    ))}
+                    {task.tags.length > 2 && (
+                        <span>
+                            {t('tasks.moreTags', '+{{count}}', {
+                                count: task.tags.length - 2,
+                            })}
+                        </span>
+                    )}
+                </span>
+            ) : null,
+        project:
+            !compact && showProject ? (
+                <Link
+                    to={projectHref}
+                    onClick={stop}
+                    className="max-w-[10rem] truncate hover:underline"
+                >
+                    {project!.name}
+                </Link>
+            ) : null,
+        priority:
+            !compact && onFieldUpdate && !editable ? (
+                <MinimalPriorityEdit
+                    task={task}
+                    onFieldUpdate={onFieldUpdate}
+                />
+            ) : null,
+        due:
+            !compact && onFieldUpdate && !editable ? (
+                <MinimalDueEdit
+                    task={task}
+                    onFieldUpdate={onFieldUpdate}
+                    dueClass={dueClass}
+                    dueText={
+                        task.due_date
+                            ? `${formatDue(task.due_date)}${
+                                  task.due_has_time && task.due_time
+                                      ? ` ${task.due_time}`
+                                      : ''
+                              }`
+                            : null
+                    }
+                />
+            ) : !compact && task.due_date ? (
+                <span className={`whitespace-nowrap ${dueClass}`}>
+                    {formatDue(task.due_date)}
+                    {task.due_has_time && task.due_time && ` ${task.due_time}`}
+                </span>
+            ) : null,
+    };
     return (
         <div
             ref={rowRef}
@@ -517,70 +594,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
 
                 {isMinimal && (
                     <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
-                        {isRecurring && (
-                            <ArrowPathIcon
-                                className="h-3 w-3 text-gray-400 dark:text-gray-500"
-                                title={t('recurrence.recurring', 'Recurring')}
-                                aria-label={t(
-                                    'recurrence.recurring',
-                                    'Recurring'
-                                )}
-                            />
-                        )}
-                        {commentBadge}
-                        {!compact && task.tags && task.tags.length > 0 && (
-                            <span className="flex items-center gap-1.5">
-                                {task.tags.slice(0, 2).map((tag) => (
-                                    <span key={tag.uid || tag.name}>
-                                        {`#${tag.name}`}
-                                    </span>
-                                ))}
-                                {task.tags.length > 2 && (
-                                    <span>
-                                        {t('tasks.moreTags', '+{{count}}', {
-                                            count: task.tags.length - 2,
-                                        })}
-                                    </span>
-                                )}
-                            </span>
-                        )}
-                        {!compact && showProject && (
-                            <Link
-                                to={projectHref}
-                                onClick={stop}
-                                className="max-w-[10rem] truncate hover:underline"
-                            >
-                                {project!.name}
-                            </Link>
-                        )}
-                        {!compact &&
-                            task.due_date &&
-                            !(onFieldUpdate && !editable) && (
-                                <span
-                                    className={`whitespace-nowrap ${dueClass}`}
-                                >
-                                    {formatDue(task.due_date)}
-                                    {task.due_has_time &&
-                                        task.due_time &&
-                                        ` ${task.due_time}`}
-                                </span>
-                            )}
-                        {!compact && onFieldUpdate && !editable && (
-                            <MinimalQuickEdits
-                                task={task}
-                                onFieldUpdate={onFieldUpdate}
-                                dueClass={dueClass}
-                                dueText={
-                                    task.due_date
-                                        ? `${formatDue(task.due_date)}${
-                                              task.due_has_time && task.due_time
-                                                  ? ` ${task.due_time}`
-                                                  : ''
-                                          }`
-                                        : null
-                                }
-                            />
-                        )}
+                        {rowFields
+                            .filter((field) => field.visible)
+                            .map((field) => (
+                                <React.Fragment key={field.key}>
+                                    {minimalChips[field.key]}
+                                </React.Fragment>
+                            ))}
                     </div>
                 )}
 

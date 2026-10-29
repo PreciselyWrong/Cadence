@@ -977,7 +977,19 @@
         "sidebarMoveDown": "Presunúť {{name}} nadol",
         "sidebarReset": "Obnoviť predvolené",
         "sidebarMinimalTitle": "Minimálny bočný panel",
-        "sidebarMinimalHint": "Tieto nastavenia menia iba minimálny bočný panel. Dense si zachováva vlastné rozloženie."
+        "sidebarMinimalHint": "Tieto nastavenia menia iba minimálny bočný panel. Dense si zachováva vlastné rozloženie.",
+        "taskRowDetails": "Podrobnosti riadku úlohy",
+        "taskRowDetailsDescription": "Vyberte, ktoré podrobnosti sa zobrazia vpravo v minimalistickom riadku úlohy a v akom poradí.",
+        "taskRowMoveUp": "Presunúť nahor",
+        "taskRowMoveDown": "Presunúť nadol",
+        "taskRowFields": {
+            "recurrence": "Opakovaná",
+            "comments": "Komentáre",
+            "tags": "Štítky",
+            "project": "Projekt",
+            "priority": "Príznak priority",
+            "due": "Termín"
+        }
     },
     "productivity": {
         "nothingYet": "Zatiaľ nie je čo kontrolovať.",

@@ -171,6 +171,8 @@ to an account, so it cannot be used to discover who has signed up - Declining re
 
     **Interface density** (Profile > Appearance > Interface) is stored as `ui_settings.appearance.density`. `minimal` (the default) is the calmer TickTick-style list that hides extras; `dense` shows every control, as upstream does. Minimal hides, it never deletes anything. Only `minimal` and `dense` are kept; any other value is dropped, and a profile save keeps the density already saved when the form omits it. The setting is loaded into the store on login so the app applies it without a reload.
 
+**Task row details** (Profile > Appearance, shown only while the density is Minimal) choose the chips on the right of a minimal task row and their order: recurrence icon, comment count, tags, project, priority flag and due date. Each chip has a checkbox and up/down buttons. The choice is stored as `ui_settings.appearance.rowFields`, an ordered list of `{ key, visible }`. The server keeps only the known keys, drops repeats and non-boolean visibility, and appends any chip the list leaves out as visible, so a chip added in a later release still appears. The default is every chip, in the order above, which is how the row looked before this setting existed. Hiding the priority flag or the due date also removes its in-place editor from the row.
+
 18. **Feature toggles (Profile > Features & Add-ons):**
     - Habits, Eisenhower Matrix, Kanban Board, Calendar and Templates
     - Pomodoro timer

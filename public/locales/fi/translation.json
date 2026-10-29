@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Siirrä {{name}} alas",
     "sidebarReset": "Palauta oletukset",
     "sidebarMinimalTitle": "Minimaalinen sivupalkki",
-    "sidebarMinimalHint": "Nämä asetukset muuttavat vain minimaalista sivupalkkia. Dense säilyttää oman asettelunsa."
+    "sidebarMinimalHint": "Nämä asetukset muuttavat vain minimaalista sivupalkkia. Dense säilyttää oman asettelunsa.",
+    "taskRowDetails": "Tehtäväriviin liittyvät tiedot",
+    "taskRowDetailsDescription": "Valitse, mitkä tiedot näkyvät minimaalisen tehtävärivin oikealla puolella ja missä järjestyksessä.",
+    "taskRowMoveUp": "Siirrä ylös",
+    "taskRowMoveDown": "Siirrä alas",
+    "taskRowFields": {
+      "recurrence": "Toistuva",
+      "comments": "Kommentit",
+      "tags": "Tunnisteet",
+      "project": "Projekti",
+      "priority": "Prioriteettilippu",
+      "due": "Eräpäivä"
+    }
   },
   "productivity": {
     "stalledProjects": "Jumiutuneet projektit",

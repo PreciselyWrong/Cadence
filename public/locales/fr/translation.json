@@ -953,7 +953,19 @@
     "sidebarMoveDown": "Descendre {{name}}",
     "sidebarReset": "Rétablir par défaut",
     "sidebarMinimalTitle": "Barre latérale minimale",
-    "sidebarMinimalHint": "Ces réglages ne modifient que la barre latérale minimale. Dense garde sa propre disposition."
+    "sidebarMinimalHint": "Ces réglages ne modifient que la barre latérale minimale. Dense garde sa propre disposition.",
+    "taskRowDetails": "Détails de la ligne de tâche",
+    "taskRowDetailsDescription": "Choisissez les détails affichés à droite d'une ligne de tâche minimale, et leur ordre.",
+    "taskRowMoveUp": "Monter",
+    "taskRowMoveDown": "Descendre",
+    "taskRowFields": {
+      "recurrence": "Récurrente",
+      "comments": "Commentaires",
+      "tags": "Étiquettes",
+      "project": "Projet",
+      "priority": "Drapeau de priorité",
+      "due": "Date d'échéance"
+    }
   },
   "productivity": {
     "stalledProjects": "Projets Bloqués",

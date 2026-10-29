@@ -953,7 +953,19 @@
     "sidebarMoveDown": "Flytt {{name}} ned",
     "sidebarReset": "Tilbakestill til standard",
     "sidebarMinimalTitle": "Minimalt sidefelt",
-    "sidebarMinimalHint": "Disse innstillingene endrer bare det minimale sidefeltet. Dense beholder sitt eget oppsett."
+    "sidebarMinimalHint": "Disse innstillingene endrer bare det minimale sidefeltet. Dense beholder sitt eget oppsett.",
+    "taskRowDetails": "Detaljer for oppgaveraden",
+    "taskRowDetailsDescription": "Velg hvilke detaljer som vises til høyre på en minimal oppgaverad, og i hvilken rekkefølge.",
+    "taskRowMoveUp": "Flytt opp",
+    "taskRowMoveDown": "Flytt ned",
+    "taskRowFields": {
+      "recurrence": "Gjentakende",
+      "comments": "Kommentarer",
+      "tags": "Etiketter",
+      "project": "Prosjekt",
+      "priority": "Prioritetsflagg",
+      "due": "Forfallsdato"
+    }
   },
   "productivity": {
     "stalledProjects": "Stagnerte prosjekter",

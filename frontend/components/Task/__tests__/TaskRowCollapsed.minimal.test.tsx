@@ -48,8 +48,15 @@ jest.mock('../../../i18n', () => ({
     default: { language: 'en' },
 }));
 
+const mockTaskRowFields: { current: unknown } = { current: undefined };
+
 jest.mock('../../../store/useStore', () => {
-    const state: any = { projectsStore: { projects: [] } };
+    const state: any = {
+        projectsStore: { projects: [] },
+        get userSettingsStore() {
+            return { taskRowFields: mockTaskRowFields.current };
+        },
+    };
     const useStore: any = (selector: any) => selector(state);
     useStore.getState = () => state;
     return { useStore };
@@ -387,5 +394,82 @@ describe('TaskRowCollapsed quick edits in minimal mode', () => {
         expect(
             screen.queryByRole('button', { name: 'Set priority' })
         ).not.toBeInTheDocument();
+    });
+
+    describe('chips chosen in Profile -> Appearance', () => {
+        beforeEach(() => {
+            (useIsMinimal as jest.Mock).mockReturnValue(true);
+        });
+
+        afterEach(() => {
+            mockTaskRowFields.current = undefined;
+        });
+
+        const withQuickEdits = (task: Task) =>
+            renderRow(task, { onFieldUpdate: jest.fn() });
+        const minimalTask = () =>
+            baseTask({
+                due_date: '2030-01-15',
+                tags: [{ uid: 't1', name: 'perso' }] as Task['tags'],
+            });
+        const follows = (a: Element, b: Element) =>
+            !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+        const flagOf = (container: HTMLElement) =>
+            container.querySelector('[data-quick-edit="priority"]');
+        const dueOf = (container: HTMLElement) =>
+            container.querySelector('[data-quick-edit="due"]');
+
+        it('keeps the default order when no preference is saved', () => {
+            const { container } = withQuickEdits(minimalTask());
+            const tag = screen.getByText('#perso');
+            const project = screen.getByText('Work Project');
+            const flag = flagOf(container)!;
+            const due = dueOf(container)!;
+            expect(follows(tag, project)).toBe(true);
+            expect(follows(project, flag)).toBe(true);
+            expect(follows(flag, due)).toBe(true);
+        });
+
+        it('does not render a chip the user hid', () => {
+            mockTaskRowFields.current = [
+                { key: 'tags', visible: false },
+                { key: 'project', visible: true },
+                { key: 'priority', visible: false },
+                { key: 'due', visible: false },
+                { key: 'recurrence', visible: true },
+                { key: 'comments', visible: true },
+            ];
+            const { container } = withQuickEdits(minimalTask());
+            expect(screen.queryByText('#perso')).not.toBeInTheDocument();
+            expect(screen.getByText('Work Project')).toBeInTheDocument();
+            expect(flagOf(container)).toBeNull();
+            expect(dueOf(container)).toBeNull();
+            expect(screen.queryByText(/2030/)).not.toBeInTheDocument();
+        });
+
+        it('keeps the flag and date editable in place while they are shown', () => {
+            const { container } = withQuickEdits(minimalTask());
+            expect(flagOf(container)).not.toBeNull();
+            expect(dueOf(container)).not.toBeNull();
+        });
+
+        it('renders the chips in the saved order', () => {
+            mockTaskRowFields.current = [
+                { key: 'due', visible: true },
+                { key: 'priority', visible: true },
+                { key: 'project', visible: true },
+                { key: 'tags', visible: true },
+                { key: 'recurrence', visible: true },
+                { key: 'comments', visible: true },
+            ];
+            const { container } = withQuickEdits(minimalTask());
+            const tag = screen.getByText('#perso');
+            const project = screen.getByText('Work Project');
+            const flag = flagOf(container)!;
+            const due = dueOf(container)!;
+            expect(follows(due, flag)).toBe(true);
+            expect(follows(flag, project)).toBe(true);
+            expect(follows(project, tag)).toBe(true);
+        });
     });
 });

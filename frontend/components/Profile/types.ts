@@ -17,10 +17,13 @@ export interface Features {
     templates_enabled: boolean;
 }
 
+import type { TaskRowField } from '../../constants/taskRowFields';
+
 export interface UiSettingsAppearance {
     theme?: 'light' | 'dark' | 'system';
     contentBackground?: string | null;
     density?: 'minimal' | 'dense';
+    rowFields?: TaskRowField[];
 }
 
 export interface UiSettings {

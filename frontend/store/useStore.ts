@@ -10,6 +10,7 @@ import { Goal } from '../entities/Goal';
 import { Person } from '../entities/Person';
 import type { SidebarVisibleSections } from '../components/Profile/types';
 import type { Focus } from '../utils/focus';
+import type { TaskRowField } from '../constants/taskRowFields';
 import {
     DEFAULT_LINK_ORDER,
     DEFAULT_SECTION_ORDER,
@@ -148,6 +149,10 @@ interface UserSettingsStore {
     setContentBackground: (background: string | null) => void;
     uiDensity: UiDensity;
     setUiDensity: (density: UiDensity) => void;
+    // Chips shown on a minimal task row, in order (see
+    // constants/taskRowFields.ts); null means the default order, all shown
+    taskRowFields: TaskRowField[] | null;
+    setTaskRowFields: (fields: TaskRowField[] | null) => void;
     sidebarVisibleSections: SidebarVisibleSections;
     setSidebarVisibleSections: (sections: SidebarVisibleSections) => void;
     sidebarLinkOrder: string[];
@@ -1141,6 +1146,14 @@ export const useStore = create<StoreState>((set: any) => ({
                 },
             })),
         uiDensity: 'minimal',
+        taskRowFields: null,
+        setTaskRowFields: (fields) =>
+            set((state) => ({
+                userSettingsStore: {
+                    ...state.userSettingsStore,
+                    taskRowFields: fields,
+                },
+            })),
         setUiDensity: (density) =>
             set((state) => ({
                 userSettingsStore: {

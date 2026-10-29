@@ -445,4 +445,85 @@ describe('PUT /api/profile/ui-settings', () => {
             });
         });
     });
+
+    describe('task row details (appearance.rowFields)', () => {
+        const DEFAULT_ORDER = [
+            'recurrence',
+            'comments',
+            'tags',
+            'project',
+            'priority',
+            'due',
+        ];
+
+        it('saves the chosen order and visibility', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: {
+                    rowFields: [
+                        { key: 'due', visible: false },
+                        { key: 'priority', visible: true },
+                    ],
+                },
+            });
+
+            const profile = await agent.get('/api/profile');
+            const rowFields = profile.body.ui_settings.appearance.rowFields;
+            expect(rowFields.slice(0, 2)).toEqual([
+                { key: 'due', visible: false },
+                { key: 'priority', visible: true },
+            ]);
+            expect(rowFields.map((f) => f.key).sort()).toEqual(
+                [...DEFAULT_ORDER].sort()
+            );
+        });
+
+        it('drops unknown keys, non-boolean visibility and repeats, and appends missing chips', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: {
+                    rowFields: [
+                        { key: 'due', visible: false },
+                        { key: 'nope', visible: true },
+                        { key: 'priority', visible: 'no' },
+                        { key: 'due', visible: true },
+                        { key: 'tags', visible: false },
+                    ],
+                },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.rowFields).toEqual([
+                { key: 'due', visible: false },
+                { key: 'tags', visible: false },
+                { key: 'recurrence', visible: true },
+                { key: 'comments', visible: true },
+                { key: 'project', visible: true },
+                { key: 'priority', visible: true },
+            ]);
+        });
+
+        it('falls back to the default order for a value that is not a list', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { rowFields: 'tags' },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.rowFields).toEqual(
+                DEFAULT_ORDER.map((key) => ({ key, visible: true }))
+            );
+        });
+
+        it('keeps the other appearance settings', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { contentBackground: 'misty-forest' },
+            });
+            await agent.put('/api/profile/ui-settings').send({
+                appearance: { rowFields: [{ key: 'tags', visible: false }] },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.appearance.contentBackground).toBe(
+                'misty-forest'
+            );
+        });
+    });
 });

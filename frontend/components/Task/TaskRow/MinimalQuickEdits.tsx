@@ -18,32 +18,34 @@ const FLAG_TONE: Record<PriorityLevel, string> = {
 const HOVER_ONLY =
     'opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100';
 
-interface MinimalQuickEditsProps {
+// The wrapper stops clicks and keys from reaching the row, which would
+// otherwise expand it (portal menus bubble too).
+const stop = (e: React.SyntheticEvent) => e.stopPropagation();
+
+interface MinimalQuickEditProps {
     task: Task;
     onFieldUpdate: (task: Task) => Promise<void>;
+}
+
+interface MinimalDueEditProps extends MinimalQuickEditProps {
     dueText: string | null;
     dueClass: string;
 }
 
-// Priority flag and due date on a minimal row. Each control reuses the editor
-// and save path of the expanded row. The wrapper stops clicks and keys from
-// reaching the row, which would otherwise expand it (portal menus bubble too).
-const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
+// Priority flag on a minimal row. It reuses the editor and save path of the
+// expanded row.
+export const MinimalPriorityEdit: React.FC<MinimalQuickEditProps> = ({
     task,
     onFieldUpdate,
-    dueText,
-    dueClass,
 }) => {
     const { t } = useTranslation();
     const setters = useTaskRowSave(task, onFieldUpdate);
     const level = toPriorityLevel(task.priority);
     const setPriorityLabel = t('tasks.quickEdit.setPriority', 'Set priority');
-    const setDueLabel = t('tasks.quickEdit.setDueDate', 'Set due date');
-    const stop = (e: React.SyntheticEvent) => e.stopPropagation();
 
     return (
         <div
-            className="flex flex-shrink-0 items-center gap-2"
+            className="flex flex-shrink-0 items-center"
             onClick={stop}
             onKeyDown={stop}
         >
@@ -69,7 +71,28 @@ const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
                     </button>
                 )}
             />
+        </div>
+    );
+};
 
+// Due date on a minimal row. Shows the date, or a calendar icon when there is
+// none, and edits it in place.
+export const MinimalDueEdit: React.FC<MinimalDueEditProps> = ({
+    task,
+    onFieldUpdate,
+    dueText,
+    dueClass,
+}) => {
+    const { t } = useTranslation();
+    const setters = useTaskRowSave(task, onFieldUpdate);
+    const setDueLabel = t('tasks.quickEdit.setDueDate', 'Set due date');
+
+    return (
+        <div
+            className="flex flex-shrink-0 items-center"
+            onClick={stop}
+            onKeyDown={stop}
+        >
             <DateTimePicker
                 value={fromDueParts(
                     task.due_date,
@@ -114,5 +137,18 @@ const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
         </div>
     );
 };
+
+// Priority flag and due date together, as the task page shows them.
+type MinimalQuickEditsProps = MinimalDueEditProps;
+
+const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = (props) => (
+    <div className="flex flex-shrink-0 items-center gap-2">
+        <MinimalPriorityEdit
+            task={props.task}
+            onFieldUpdate={props.onFieldUpdate}
+        />
+        <MinimalDueEdit {...props} />
+    </div>
+);
 
 export default MinimalQuickEdits;

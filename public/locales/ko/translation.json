@@ -952,7 +952,19 @@
     "sidebarMoveDown": "{{name}} 아래로 이동",
     "sidebarReset": "기본값으로 재설정",
     "sidebarMinimalTitle": "미니멀 사이드바",
-    "sidebarMinimalHint": "이 설정은 미니멀 사이드바에만 적용됩니다. Dense는 자체 레이아웃을 유지합니다."
+    "sidebarMinimalHint": "이 설정은 미니멀 사이드바에만 적용됩니다. Dense는 자체 레이아웃을 유지합니다.",
+    "taskRowDetails": "작업 행 세부 정보",
+    "taskRowDetailsDescription": "최소 작업 행의 오른쪽에 표시할 항목과 그 순서를 선택합니다.",
+    "taskRowMoveUp": "위로 이동",
+    "taskRowMoveDown": "아래로 이동",
+    "taskRowFields": {
+      "recurrence": "반복",
+      "comments": "댓글",
+      "tags": "태그",
+      "project": "프로젝트",
+      "priority": "우선순위 표시",
+      "due": "마감일"
+    }
   },
   "productivity": {
     "stalledProjects": "정체된 프로젝트",

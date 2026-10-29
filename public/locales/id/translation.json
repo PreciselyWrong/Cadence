@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Pindahkan {{name}} ke bawah",
     "sidebarReset": "Atur ulang ke default",
     "sidebarMinimalTitle": "Sidebar minimal",
-    "sidebarMinimalHint": "Pengaturan ini hanya mengubah sidebar minimal. Dense tetap memakai tata letaknya sendiri."
+    "sidebarMinimalHint": "Pengaturan ini hanya mengubah sidebar minimal. Dense tetap memakai tata letaknya sendiri.",
+    "taskRowDetails": "Detail baris tugas",
+    "taskRowDetailsDescription": "Pilih detail mana yang ditampilkan di sisi kanan baris tugas minimal, dan urutannya.",
+    "taskRowMoveUp": "Pindahkan ke atas",
+    "taskRowMoveDown": "Pindahkan ke bawah",
+    "taskRowFields": {
+      "recurrence": "Berulang",
+      "comments": "Komentar",
+      "tags": "Tag",
+      "project": "Proyek",
+      "priority": "Penanda prioritas",
+      "due": "Tanggal jatuh tempo"
+    }
   },
   "productivity": {
     "stalledProjects": "Proyek Terhenti",

@@ -955,7 +955,19 @@
     "sidebarMoveDown": "Mută {{name}} în jos",
     "sidebarReset": "Revino la implicit",
     "sidebarMinimalTitle": "Bară laterală minimală",
-    "sidebarMinimalHint": "Aceste setări modifică doar bara laterală minimală. Dense își păstrează propriul aspect."
+    "sidebarMinimalHint": "Aceste setări modifică doar bara laterală minimală. Dense își păstrează propriul aspect.",
+    "taskRowDetails": "Detalii pentru rândul de sarcină",
+    "taskRowDetailsDescription": "Alegeți ce detalii apar în dreapta unui rând de sarcină minimal și în ce ordine.",
+    "taskRowMoveUp": "Mută sus",
+    "taskRowMoveDown": "Mută jos",
+    "taskRowFields": {
+      "recurrence": "Recurentă",
+      "comments": "Comentarii",
+      "tags": "Etichete",
+      "project": "Proiect",
+      "priority": "Indicator de prioritate",
+      "due": "Data scadentă"
+    }
   },
   "productivity": {
     "stalledProjects": "Proiecte Blocate",

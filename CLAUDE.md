@@ -34,7 +34,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
 | Projects | Board tab with free sections and card order (`project_sections`, `tasks.section_id`, `tasks.section_position`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
 | Projects | Sub-projects, any depth, area follows the parent (`projects.parent_project_id`) | [06-projects.md](docs/06-projects.md) |
-| Appearance | Minimal (default) or Dense interface (`ui_settings.appearance.density`) | [08-user-management.md](docs/08-user-management.md) |
+| Appearance | Minimal (default) or Dense interface (`ui_settings.appearance.density`); Minimal row chips chosen and ordered (`ui_settings.appearance.rowFields`) | [08-user-management.md](docs/08-user-management.md), [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |
 | Sidebar | Minimal: smart lists with counts, Areas as folders, icon rail with a More menu; smart lists, rail placement and count badges customisable in Profile → Sidebar; Dense is upstream | [32-sidebar.md](docs/32-sidebar.md) |
 | Views | Minimal: List / Board (by priority) / Calendar (month by due date) switch on saved views, tag pages, projects and Tasks, remembered in `ui_settings.viewTypes`; New view from the sidebar (name, project, tag, priority, due, status; `views.project_uid`); Dense is upstream | [08-views-system.md](docs/08-views-system.md) |

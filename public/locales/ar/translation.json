@@ -956,7 +956,19 @@
     "sidebarMoveDown": "نقل {{name}} لأسفل",
     "sidebarReset": "استعادة الافتراضي",
     "sidebarMinimalTitle": "الشريط الجانبي المبسط",
-    "sidebarMinimalHint": "تغيّر هذه الإعدادات الشريط الجانبي المبسط فقط. يحتفظ وضع Dense بتخطيطه الخاص."
+    "sidebarMinimalHint": "تغيّر هذه الإعدادات الشريط الجانبي المبسط فقط. يحتفظ وضع Dense بتخطيطه الخاص.",
+    "taskRowDetails": "تفاصيل صف المهمة",
+    "taskRowDetailsDescription": "اختر التفاصيل التي تظهر على يمين صف المهمة المختصر وترتيبها.",
+    "taskRowMoveUp": "نقل لأعلى",
+    "taskRowMoveDown": "نقل لأسفل",
+    "taskRowFields": {
+      "recurrence": "متكرر",
+      "comments": "التعليقات",
+      "tags": "الوسوم",
+      "project": "المشروع",
+      "priority": "علامة الأولوية",
+      "due": "تاريخ الاستحقاق"
+    }
   },
   "productivity": {
     "stalledProjects": "المشاريع المتوقفة",

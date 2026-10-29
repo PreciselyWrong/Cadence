@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Di chuyển {{name}} xuống",
     "sidebarReset": "Khôi phục mặc định",
     "sidebarMinimalTitle": "Thanh bên tối giản",
-    "sidebarMinimalHint": "Các cài đặt này chỉ thay đổi thanh bên tối giản. Dense giữ bố cục riêng."
+    "sidebarMinimalHint": "Các cài đặt này chỉ thay đổi thanh bên tối giản. Dense giữ bố cục riêng.",
+    "taskRowDetails": "Chi tiết dòng công việc",
+    "taskRowDetailsDescription": "Chọn chi tiết nào hiển thị bên phải dòng công việc tối giản, và theo thứ tự nào.",
+    "taskRowMoveUp": "Di chuyển lên",
+    "taskRowMoveDown": "Di chuyển xuống",
+    "taskRowFields": {
+      "recurrence": "Lặp lại",
+      "comments": "Bình luận",
+      "tags": "Thẻ",
+      "project": "Dự án",
+      "priority": "Cờ ưu tiên",
+      "due": "Ngày đến hạn"
+    }
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",

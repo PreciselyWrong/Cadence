@@ -954,7 +954,19 @@
     "sidebarMoveDown": "Переместить «{{name}}» вниз",
     "sidebarReset": "Сбросить по умолчанию",
     "sidebarMinimalTitle": "Минимальная боковая панель",
-    "sidebarMinimalHint": "Эти настройки меняют только минимальную боковую панель. Dense сохраняет свой макет."
+    "sidebarMinimalHint": "Эти настройки меняют только минимальную боковую панель. Dense сохраняет свой макет.",
+    "taskRowDetails": "Детали строки задачи",
+    "taskRowDetailsDescription": "Выберите, какие детали показывать справа в минимальной строке задачи, и в каком порядке.",
+    "taskRowMoveUp": "Вверх",
+    "taskRowMoveDown": "Вниз",
+    "taskRowFields": {
+      "recurrence": "Повторяется",
+      "comments": "Комментарии",
+      "tags": "Метки",
+      "project": "Проект",
+      "priority": "Флажок приоритета",
+      "due": "Срок"
+    }
   },
   "productivity": {
     "stalledProjects": "Приостановленные проекты",

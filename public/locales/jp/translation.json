@@ -952,7 +952,19 @@
     "sidebarMoveDown": "{{name}} を下へ移動",
     "sidebarReset": "デフォルトに戻す",
     "sidebarMinimalTitle": "ミニマルなサイドバー",
-    "sidebarMinimalHint": "この設定はミニマルなサイドバーのみに適用されます。Dense は独自のレイアウトを維持します。"
+    "sidebarMinimalHint": "この設定はミニマルなサイドバーのみに適用されます。Dense は独自のレイアウトを維持します。",
+    "taskRowDetails": "タスク行の詳細",
+    "taskRowDetailsDescription": "ミニマルなタスク行の右側に表示する項目と、その順番を選びます。",
+    "taskRowMoveUp": "上へ",
+    "taskRowMoveDown": "下へ",
+    "taskRowFields": {
+      "recurrence": "繰り返し",
+      "comments": "コメント",
+      "tags": "タグ",
+      "project": "プロジェクト",
+      "priority": "優先度フラグ",
+      "due": "期限日"
+    }
   },
   "modals": {
     "confirmDelete": "本当に削除してよろしいですか？",

@@ -153,6 +153,10 @@ In Minimal mode, task rows and their lists take the gestures below. Dense mode h
     - D opens the row's due date picker; P opens its priority picker.
     - A key pressed on a control inside the row (the chevron, for example) keeps that control's meaning.
 
+## **Minimal Row Details**
+
+The right side of a Minimal row shows, in order: the recurrence icon, the comment count, the first two tags as `#name` (then `+N`), the project name, the priority flag and the due date. Profile > Appearance > Task row details lets the user hide any of them and move them into a different order. The priority flag and due date keep their in-place editors while they are shown. A hidden chip is not rendered at all. Dense rows do not use this setting. See [08-user-management.md](08-user-management.md) for how the choice is stored.
+
 ## **Minimal Lists: Add Field and Completed Section**
 
 In Minimal mode, four task lists share two pieces at their top and bottom. Dense mode shows neither.

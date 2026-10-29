@@ -602,6 +602,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                             contentBackground:
                                 data.ui_settings?.appearance
                                     ?.contentBackground ?? null,
+                            rowFields: data.ui_settings?.appearance?.rowFields,
                             density:
                                 data.ui_settings?.appearance?.density ===
                                 'dense'
@@ -1360,6 +1361,14 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     );
             }
 
+            if (formData.ui_settings?.appearance?.rowFields !== undefined) {
+                useStore
+                    .getState()
+                    .userSettingsStore.setTaskRowFields(
+                        formData.ui_settings.appearance.rowFields
+                    );
+            }
+
             if (formData.ui_settings?.appearance?.density !== undefined) {
                 useStore
                     .getState()
@@ -1620,6 +1629,23 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                                     ...(prev.ui_settings
                                                         ?.appearance || {}),
                                                     density,
+                                                },
+                                            },
+                                        }))
+                                    }
+                                    taskRowFields={
+                                        formData.ui_settings?.appearance
+                                            ?.rowFields ?? null
+                                    }
+                                    onTaskRowFieldsChange={(fields) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            ui_settings: {
+                                                ...(prev.ui_settings || {}),
+                                                appearance: {
+                                                    ...(prev.ui_settings
+                                                        ?.appearance || {}),
+                                                    rowFields: fields,
                                                 },
                                             },
                                         }))

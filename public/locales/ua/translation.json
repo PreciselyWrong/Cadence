@@ -1441,7 +1441,19 @@
     "sidebarMoveDown": "Перемістити «{{name}}» вниз",
     "sidebarReset": "Скинути до типових",
     "sidebarMinimalTitle": "Мінімальна бічна панель",
-    "sidebarMinimalHint": "Ці налаштування змінюють лише мінімальну бічну панель. Dense зберігає свій макет."
+    "sidebarMinimalHint": "Ці налаштування змінюють лише мінімальну бічну панель. Dense зберігає свій макет.",
+    "taskRowDetails": "Деталі рядка завдання",
+    "taskRowDetailsDescription": "Оберіть, які деталі показувати праворуч у мінімальному рядку завдання, і в якому порядку.",
+    "taskRowMoveUp": "Вгору",
+    "taskRowMoveDown": "Вниз",
+    "taskRowFields": {
+      "recurrence": "Повторюване",
+      "comments": "Коментарі",
+      "tags": "Мітки",
+      "project": "Проєкт",
+      "priority": "Прапорець пріоритету",
+      "due": "Термін"
+    }
   },
   "task": {
     "suggestions": {

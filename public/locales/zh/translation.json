@@ -952,7 +952,19 @@
     "sidebarMoveDown": "下移 {{name}}",
     "sidebarReset": "恢复默认",
     "sidebarMinimalTitle": "极简侧边栏",
-    "sidebarMinimalHint": "这些设置仅影响极简侧边栏，Dense 保持其自有布局。"
+    "sidebarMinimalHint": "这些设置仅影响极简侧边栏，Dense 保持其自有布局。",
+    "taskRowDetails": "任务行详情",
+    "taskRowDetailsDescription": "选择在极简任务行右侧显示哪些信息以及显示顺序。",
+    "taskRowMoveUp": "上移",
+    "taskRowMoveDown": "下移",
+    "taskRowFields": {
+      "recurrence": "重复",
+      "comments": "评论",
+      "tags": "标签",
+      "project": "项目",
+      "priority": "优先级旗标",
+      "due": "截止日期"
+    }
   },
   "productivity": {
     "stalledProjects": "停滞项目",

@@ -7,6 +7,9 @@ import {
     SwatchIcon,
     PhotoIcon,
     NoSymbolIcon,
+    ArrowDownIcon,
+    ArrowUpIcon,
+    Bars3BottomLeftIcon,
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import type { ProfileFormData } from '../types';
@@ -15,6 +18,12 @@ import {
     CONTENT_BACKGROUNDS,
     contentBackgroundUrl,
 } from '../../../constants/contentBackgrounds';
+import {
+    DEFAULT_TASK_ROW_FIELDS,
+    TaskRowField,
+    TaskRowFieldKey,
+    normalizeTaskRowFields,
+} from '../../../constants/taskRowFields';
 
 interface AppearanceTabProps {
     isActive: boolean;
@@ -24,7 +33,27 @@ interface AppearanceTabProps {
     onContentBackgroundChange: (background: string | null) => void;
     density: UiDensity;
     onDensityChange: (density: UiDensity) => void;
+    taskRowFields?: TaskRowField[] | null;
+    onTaskRowFieldsChange?: (fields: TaskRowField[]) => void;
 }
+
+const TASK_ROW_FIELD_LABELS: Record<
+    TaskRowFieldKey,
+    { key: string; fallback: string }
+> = {
+    recurrence: {
+        key: 'profile.taskRowFields.recurrence',
+        fallback: 'Recurring',
+    },
+    comments: { key: 'profile.taskRowFields.comments', fallback: 'Comments' },
+    tags: { key: 'profile.taskRowFields.tags', fallback: 'Tags' },
+    project: { key: 'profile.taskRowFields.project', fallback: 'Project' },
+    priority: {
+        key: 'profile.taskRowFields.priority',
+        fallback: 'Priority flag',
+    },
+    due: { key: 'profile.taskRowFields.due', fallback: 'Due date' },
+};
 
 interface BackgroundCardProps {
     label: string;
@@ -87,10 +116,30 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
     onContentBackgroundChange,
     density,
     onDensityChange,
+    taskRowFields,
+    onTaskRowFieldsChange,
 }) => {
     const { t } = useTranslation();
 
     if (!isActive) return null;
+
+    const rowFields = normalizeTaskRowFields(
+        taskRowFields ?? DEFAULT_TASK_ROW_FIELDS
+    );
+    const moveRowField = (index: number, direction: -1 | 1) => {
+        const target = index + direction;
+        if (target < 0 || target >= rowFields.length) return;
+        const next = [...rowFields];
+        [next[index], next[target]] = [next[target], next[index]];
+        onTaskRowFieldsChange?.(next);
+    };
+    const toggleRowField = (index: number, visible: boolean) => {
+        onTaskRowFieldsChange?.(
+            rowFields.map((field, i) =>
+                i === index ? { ...field, visible } : field
+            )
+        );
+    };
 
     return (
         <div>
@@ -182,6 +231,77 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                     )}
                 </p>
             </div>
+
+            {/* Task row details: only for the minimal list rows */}
+            {density === 'minimal' && (
+                <div className="mb-8">
+                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <Bars3BottomLeftIcon className="w-4 h-4" />
+                        {t('profile.taskRowDetails', 'Task row details')}
+                    </h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                        {t(
+                            'profile.taskRowDetailsDescription',
+                            'Choose which details show on the right of a minimal task row, and in what order.'
+                        )}
+                    </p>
+                    <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-md border border-gray-200 dark:border-gray-700">
+                        {rowFields.map((field, index) => {
+                            const label = TASK_ROW_FIELD_LABELS[field.key];
+                            const name = t(label.key, label.fallback);
+                            return (
+                                <li
+                                    key={field.key}
+                                    className="flex items-center gap-3 px-3 py-2"
+                                >
+                                    <label className="flex flex-1 items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+                                        <input
+                                            type="checkbox"
+                                            checked={field.visible}
+                                            onChange={(e) =>
+                                                toggleRowField(
+                                                    index,
+                                                    e.target.checked
+                                                )
+                                            }
+                                            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        {name}
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => moveRowField(index, -1)}
+                                        disabled={index === 0}
+                                        aria-label={`${t('profile.taskRowMoveUp', 'Move up')}: ${name}`}
+                                        title={t(
+                                            'profile.taskRowMoveUp',
+                                            'Move up'
+                                        )}
+                                        className="p-1 rounded text-gray-500 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700"
+                                    >
+                                        <ArrowUpIcon className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => moveRowField(index, 1)}
+                                        disabled={
+                                            index === rowFields.length - 1
+                                        }
+                                        aria-label={`${t('profile.taskRowMoveDown', 'Move down')}: ${name}`}
+                                        title={t(
+                                            'profile.taskRowMoveDown',
+                                            'Move down'
+                                        )}
+                                        className="p-1 rounded text-gray-500 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700"
+                                    >
+                                        <ArrowDownIcon className="h-4 w-4" />
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            )}
 
             {/* Background */}
             <div className="mb-8">

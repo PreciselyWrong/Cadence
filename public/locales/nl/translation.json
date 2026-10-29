@@ -952,7 +952,19 @@
     "sidebarMoveDown": "{{name}} omlaag verplaatsen",
     "sidebarReset": "Terugzetten naar standaard",
     "sidebarMinimalTitle": "Minimale zijbalk",
-    "sidebarMinimalHint": "Deze instellingen wijzigen alleen de minimale zijbalk. Dense behoudt zijn eigen indeling."
+    "sidebarMinimalHint": "Deze instellingen wijzigen alleen de minimale zijbalk. Dense behoudt zijn eigen indeling.",
+    "taskRowDetails": "Details van de taakregel",
+    "taskRowDetailsDescription": "Kies welke details rechts op een minimale taakregel worden getoond, en in welke volgorde.",
+    "taskRowMoveUp": "Omhoog",
+    "taskRowMoveDown": "Omlaag",
+    "taskRowFields": {
+      "recurrence": "Herhalend",
+      "comments": "Reacties",
+      "tags": "Tags",
+      "project": "Project",
+      "priority": "Prioriteitsvlag",
+      "due": "Vervaldatum"
+    }
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",

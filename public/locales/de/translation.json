@@ -1320,7 +1320,19 @@
     "sidebarMoveDown": "{{name}} nach unten verschieben",
     "sidebarReset": "Auf Standard zurücksetzen",
     "sidebarMinimalTitle": "Minimale Seitenleiste",
-    "sidebarMinimalHint": "Diese Einstellungen ändern nur die minimale Seitenleiste. Dense behält sein eigenes Layout."
+    "sidebarMinimalHint": "Diese Einstellungen ändern nur die minimale Seitenleiste. Dense behält sein eigenes Layout.",
+    "taskRowDetails": "Details der Aufgabenzeile",
+    "taskRowDetailsDescription": "Wählen Sie, welche Details rechts in einer minimalen Aufgabenzeile erscheinen, und in welcher Reihenfolge.",
+    "taskRowMoveUp": "Nach oben",
+    "taskRowMoveDown": "Nach unten",
+    "taskRowFields": {
+      "recurrence": "Wiederkehrend",
+      "comments": "Kommentare",
+      "tags": "Tags",
+      "project": "Projekt",
+      "priority": "Prioritätsmarkierung",
+      "due": "Fälligkeitsdatum"
+    }
   },
   "task": {
     "suggestions": {

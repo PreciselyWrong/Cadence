@@ -206,6 +206,11 @@ const App: React.FC = () => {
                     );
                 useStore
                     .getState()
+                    .userSettingsStore.setTaskRowFields(
+                        data.user.ui_settings?.appearance?.rowFields ?? null
+                    );
+                useStore
+                    .getState()
                     .userSettingsStore.setSidebarMinimal(
                         data.user.sidebar_settings
                     );

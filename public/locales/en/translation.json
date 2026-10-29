@@ -979,7 +979,19 @@
     "sidebarMoveDown": "Move {{name}} down",
     "sidebarReset": "Reset to default",
     "sidebarMinimalTitle": "Minimal sidebar",
-    "sidebarMinimalHint": "These settings change the Minimal sidebar only. Dense keeps its own layout."
+    "sidebarMinimalHint": "These settings change the Minimal sidebar only. Dense keeps its own layout.",
+    "taskRowDetails": "Task row details",
+    "taskRowDetailsDescription": "Choose which details show on the right of a minimal task row, and in what order.",
+    "taskRowMoveUp": "Move up",
+    "taskRowMoveDown": "Move down",
+    "taskRowFields": {
+      "recurrence": "Recurring",
+      "comments": "Comments",
+      "tags": "Tags",
+      "project": "Project",
+      "priority": "Priority flag",
+      "due": "Due date"
+    }
   },
   "productivity": {
     "nothingYet": "Nothing to review yet.",

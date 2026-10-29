@@ -954,7 +954,19 @@
     "sidebarMoveDown": "Premakni {{name}} navzdol",
     "sidebarReset": "Ponastavi na privzeto",
     "sidebarMinimalTitle": "Minimalna stranska vrstica",
-    "sidebarMinimalHint": "Te nastavitve spreminjajo samo minimalno stransko vrstico. Dense ohranja svoj izgled."
+    "sidebarMinimalHint": "Te nastavitve spreminjajo samo minimalno stransko vrstico. Dense ohranja svoj izgled.",
+    "taskRowDetails": "Podrobnosti vrstice naloge",
+    "taskRowDetailsDescription": "Izberite, katere podrobnosti se prikažejo na desni strani minimalne vrstice naloge, in vrstni red.",
+    "taskRowMoveUp": "Premakni gor",
+    "taskRowMoveDown": "Premakni dol",
+    "taskRowFields": {
+      "recurrence": "Ponavljajoče",
+      "comments": "Komentarji",
+      "tags": "Oznake",
+      "project": "Projekt",
+      "priority": "Zastavica prednosti",
+      "due": "Rok"
+    }
   },
   "productivity": {
     "stalledProjects": "Zastali projekti",

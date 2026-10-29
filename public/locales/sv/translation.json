@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Flytta {{name}} ned",
     "sidebarReset": "Återställ till standard",
     "sidebarMinimalTitle": "Minimalt sidofält",
-    "sidebarMinimalHint": "Dessa inställningar ändrar bara det minimala sidofältet. Dense behåller sin egen layout."
+    "sidebarMinimalHint": "Dessa inställningar ändrar bara det minimala sidofältet. Dense behåller sin egen layout.",
+    "taskRowDetails": "Detaljer för uppgiftsraden",
+    "taskRowDetailsDescription": "Välj vilka detaljer som visas till höger på en minimal uppgiftsrad, och i vilken ordning.",
+    "taskRowMoveUp": "Flytta upp",
+    "taskRowMoveDown": "Flytta ner",
+    "taskRowFields": {
+      "recurrence": "Återkommande",
+      "comments": "Kommentarer",
+      "tags": "Taggar",
+      "project": "Projekt",
+      "priority": "Prioritetsflagga",
+      "due": "Förfallodatum"
+    }
   },
   "productivity": {
     "stalledProjects": "Stagnerade projekt",

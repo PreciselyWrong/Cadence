@@ -954,7 +954,19 @@
     "sidebarMoveDown": "Przesuń {{name}} w dół",
     "sidebarReset": "Przywróć domyślne",
     "sidebarMinimalTitle": "Minimalny pasek boczny",
-    "sidebarMinimalHint": "Te ustawienia zmieniają tylko minimalny pasek boczny. Dense zachowuje własny układ."
+    "sidebarMinimalHint": "Te ustawienia zmieniają tylko minimalny pasek boczny. Dense zachowuje własny układ.",
+    "taskRowDetails": "Szczegóły wiersza zadania",
+    "taskRowDetailsDescription": "Wybierz, które szczegóły pokazywać po prawej stronie minimalnego wiersza zadania i w jakiej kolejności.",
+    "taskRowMoveUp": "Przesuń w górę",
+    "taskRowMoveDown": "Przesuń w dół",
+    "taskRowFields": {
+      "recurrence": "Cykliczne",
+      "comments": "Komentarze",
+      "tags": "Tagi",
+      "project": "Projekt",
+      "priority": "Znacznik priorytetu",
+      "due": "Termin"
+    }
   },
   "productivity": {
     "stalledProjects": "Zatrzymane projekty",

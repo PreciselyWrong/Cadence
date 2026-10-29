@@ -952,7 +952,19 @@
     "sidebarMoveDown": "{{name}} öğesini aşağı taşı",
     "sidebarReset": "Varsayılana sıfırla",
     "sidebarMinimalTitle": "Minimal kenar çubuğu",
-    "sidebarMinimalHint": "Bu ayarlar yalnızca minimal kenar çubuğunu değiştirir. Dense kendi düzenini korur."
+    "sidebarMinimalHint": "Bu ayarlar yalnızca minimal kenar çubuğunu değiştirir. Dense kendi düzenini korur.",
+    "taskRowDetails": "Görev satırı ayrıntıları",
+    "taskRowDetailsDescription": "Minimal bir görev satırının sağında hangi ayrıntıların gösterileceğini ve sırasını seçin.",
+    "taskRowMoveUp": "Yukarı taşı",
+    "taskRowMoveDown": "Aşağı taşı",
+    "taskRowFields": {
+      "recurrence": "Yinelenen",
+      "comments": "Yorumlar",
+      "tags": "Etiketler",
+      "project": "Proje",
+      "priority": "Öncelik bayrağı",
+      "due": "Bitiş tarihi"
+    }
   },
   "productivity": {
     "stalledProjects": "Duraklayan Projeler",

@@ -953,7 +953,19 @@
     "sidebarMoveDown": "Sposta {{name}} giù",
     "sidebarReset": "Ripristina predefiniti",
     "sidebarMinimalTitle": "Barra laterale minima",
-    "sidebarMinimalHint": "Queste impostazioni modificano solo la barra laterale minima. Dense mantiene il proprio layout."
+    "sidebarMinimalHint": "Queste impostazioni modificano solo la barra laterale minima. Dense mantiene il proprio layout.",
+    "taskRowDetails": "Dettagli della riga attività",
+    "taskRowDetailsDescription": "Scegli quali dettagli mostrare a destra di una riga attività minimale e in che ordine.",
+    "taskRowMoveUp": "Sposta su",
+    "taskRowMoveDown": "Sposta giù",
+    "taskRowFields": {
+      "recurrence": "Ricorrente",
+      "comments": "Commenti",
+      "tags": "Tag",
+      "project": "Progetto",
+      "priority": "Bandierina priorità",
+      "due": "Scadenza"
+    }
   },
   "productivity": {
     "stalledProjects": "Progetti Bloccati",

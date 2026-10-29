@@ -953,7 +953,19 @@
     "sidebarMoveDown": "Mover {{name}} para baixo",
     "sidebarReset": "Repor predefinições",
     "sidebarMinimalTitle": "Barra lateral mínima",
-    "sidebarMinimalHint": "Estas definições alteram apenas a barra lateral mínima. O Dense mantém o seu próprio layout."
+    "sidebarMinimalHint": "Estas definições alteram apenas a barra lateral mínima. O Dense mantém o seu próprio layout.",
+    "taskRowDetails": "Detalhes da linha de tarefa",
+    "taskRowDetailsDescription": "Escolha quais detalhes aparecem à direita de uma linha de tarefa mínima e em que ordem.",
+    "taskRowMoveUp": "Mover para cima",
+    "taskRowMoveDown": "Mover para baixo",
+    "taskRowFields": {
+      "recurrence": "Recorrente",
+      "comments": "Comentários",
+      "tags": "Etiquetas",
+      "project": "Projeto",
+      "priority": "Bandeira de prioridade",
+      "due": "Data de vencimento"
+    }
   },
   "productivity": {
     "stalledProjects": "Projetos Parados",

@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Преместване на {{name}} надолу",
     "sidebarReset": "Възстановяване на стандартното",
     "sidebarMinimalTitle": "Минимална странична лента",
-    "sidebarMinimalHint": "Тези настройки променят само минималната странична лента. Dense запазва своя изглед."
+    "sidebarMinimalHint": "Тези настройки променят само минималната странична лента. Dense запазва своя изглед.",
+    "taskRowDetails": "Подробности на реда на задачата",
+    "taskRowDetailsDescription": "Изберете кои подробности да се показват вдясно на минималния ред на задача и в какъв ред.",
+    "taskRowMoveUp": "Нагоре",
+    "taskRowMoveDown": "Надолу",
+    "taskRowFields": {
+      "recurrence": "Повтаряща се",
+      "comments": "Коментари",
+      "tags": "Етикети",
+      "project": "Проект",
+      "priority": "Флаг за приоритет",
+      "due": "Краен срок"
+    }
   },
   "productivity": {
     "stalledProjects": "Забавени проекти",

@@ -810,7 +810,19 @@
     "sidebarMoveDown": "Μετακίνηση του {{name}} κάτω",
     "sidebarReset": "Επαναφορά προεπιλογών",
     "sidebarMinimalTitle": "Minimal πλευρική στήλη",
-    "sidebarMinimalHint": "Αυτές οι ρυθμίσεις αλλάζουν μόνο την minimal πλευρική στήλη. Η Dense διατηρεί τη δική της διάταξη."
+    "sidebarMinimalHint": "Αυτές οι ρυθμίσεις αλλάζουν μόνο την minimal πλευρική στήλη. Η Dense διατηρεί τη δική της διάταξη.",
+    "taskRowDetails": "Στοιχεία γραμμής εργασίας",
+    "taskRowDetailsDescription": "Επιλέξτε ποια στοιχεία εμφανίζονται στα δεξιά μιας γραμμής εργασίας και με ποια σειρά.",
+    "taskRowMoveUp": "Μετακίνηση πάνω",
+    "taskRowMoveDown": "Μετακίνηση κάτω",
+    "taskRowFields": {
+      "recurrence": "Επαναλαμβανόμενη",
+      "comments": "Σχόλια",
+      "tags": "Ετικέτες",
+      "project": "Έργο",
+      "priority": "Σημαία προτεραιότητας",
+      "due": "Ημερομηνία λήξης"
+    }
   },
   "errors": {
     "required": "Αυτό το πεδίο είναι υποχρεωτικό",

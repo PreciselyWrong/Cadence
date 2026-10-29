@@ -952,7 +952,19 @@
     "sidebarMoveDown": "Flyt {{name}} ned",
     "sidebarReset": "Gendan standard",
     "sidebarMinimalTitle": "Minimal sidebar",
-    "sidebarMinimalHint": "Disse indstillinger ændrer kun den minimale sidebar. Dense beholder sin egen layout."
+    "sidebarMinimalHint": "Disse indstillinger ændrer kun den minimale sidebar. Dense beholder sin egen layout.",
+    "taskRowDetails": "Detaljer for opgaverækken",
+    "taskRowDetailsDescription": "Vælg hvilke detaljer der vises til højre på en opgaverække i minimal visning, og i hvilken rækkefølge.",
+    "taskRowMoveUp": "Flyt op",
+    "taskRowMoveDown": "Flyt ned",
+    "taskRowFields": {
+      "recurrence": "Gentagen",
+      "comments": "Kommentarer",
+      "tags": "Tags",
+      "project": "Projekt",
+      "priority": "Prioritetsflag",
+      "due": "Forfaldsdato"
+    }
   },
   "productivity": {
     "stalledProjects": "Stagnerede Projekter",
