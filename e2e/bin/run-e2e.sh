@@ -11,6 +11,7 @@ BACKEND_HEALTH="${BACKEND_URL}/api/health"
 APP_URL_DEFAULT="http://${FRONTEND_HOST}:${FRONTEND_PORT}"
 FRONTEND_URL="${APP_URL:-$APP_URL_DEFAULT}"
 FRONTEND_ORIGIN="${FRONTEND_ORIGIN:-$FRONTEND_URL}"
+SMTP_SINK_PORT="${SMTP_SINK_PORT:-2525}"
 
 # Colors
 red() { printf "\033[31m%s\033[0m\n" "$*"; }
@@ -37,8 +38,17 @@ cd "$ROOT_DIR"
 yellow "Removing old test database..."
 rm -f backend/db/test.sqlite3
 
+yellow "Starting SMTP sink on 127.0.0.1:${SMTP_SINK_PORT}..."
+SMTP_SINK_PORT="$SMTP_SINK_PORT" node e2e/bin/smtp-sink.js >/dev/null 2>&1 &
+SMTP_PID=$!
+
 yellow "Starting backend with test database..."
 (cd backend && \
+ENABLE_EMAIL=true \
+EMAIL_SMTP_HOST=127.0.0.1 \
+EMAIL_SMTP_PORT="$SMTP_SINK_PORT" \
+EMAIL_SMTP_SECURE=false \
+EMAIL_FROM_ADDRESS=e2e@tududi.test \
 NODE_ENV=test \
 PORT=$BACKEND_PORT \
 HOST=$BACKEND_HOST \
@@ -54,6 +64,7 @@ cleanup() {
   # Attempt graceful group termination
   if [ -n "${FRONTEND_PID:-}" ]; then kill -TERM -$FRONTEND_PID >/dev/null 2>&1 || true; fi
   if [ -n "${BACKEND_PID:-}" ]; then kill -TERM -$BACKEND_PID >/dev/null 2>&1 || true; fi
+  if [ -n "${SMTP_PID:-}" ]; then kill $SMTP_PID >/dev/null 2>&1 || true; fi
 
   # Kill by known ports (best-effort)
   if command -v lsof >/dev/null 2>&1; then
@@ -114,15 +125,16 @@ cd "$ROOT_DIR"
 
 yellow "Running Playwright tests..."
 APP_URL="$FRONTEND_URL" \
+API_URL="$BACKEND_URL" \
 E2E_EMAIL="${E2E_EMAIL:-test@tududi.com}" \
 E2E_PASSWORD="${E2E_PASSWORD:-password123}" \
 bash -c '
   if [ "${E2E_MODE:-}" = "ui" ]; then
-    npx playwright test --ui --config=e2e/playwright.config.ts
+    npx playwright test --ui --config=e2e/playwright.config.ts "$@"
   elif [ "${E2E_MODE:-}" = "headed" ]; then
     # Respect E2E_SLOWMO and run only Chromium sequentially
-    npx playwright test --headed --project=Chromium --workers=1 --config=e2e/playwright.config.ts
+    npx playwright test --headed --project=Chromium --workers=1 --config=e2e/playwright.config.ts "$@"
   else
-    npx playwright test --config=e2e/playwright.config.ts
+    npx playwright test --config=e2e/playwright.config.ts "$@"
   fi
-'
+' _ "$@"

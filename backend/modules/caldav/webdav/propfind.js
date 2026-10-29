@@ -157,6 +157,15 @@ async function buildTaskResponse(
             'D:getlastmodified': new Date(task.updated_at).toUTCString(),
         };
 
+        // Clients that list a collection with PROPFIND (rather than a
+        // calendar-query REPORT) can ask for the VTODO bodies directly.
+        const wantsCalendarData =
+            propfindRequest.type === 'prop' &&
+            propfindRequest.props.some((prop) => prop.name === 'calendar-data');
+        if (wantsCalendarData) {
+            props['C:calendar-data'] = vtodo;
+        }
+
         const propstat = buildPropstat(props);
         return buildResponse(href, propstat);
     } catch (error) {

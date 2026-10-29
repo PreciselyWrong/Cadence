@@ -4,10 +4,13 @@ import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 test.describe('CalDAV Client Compatibility', () => {
     const baseURL = process.env.APP_URL ?? 'http://localhost:8080';
     const apiURL = process.env.API_URL ?? 'http://localhost:3002';
+    const email = process.env.E2E_EMAIL || 'test@tududi.com';
     const testUser = {
-        email: process.env.E2E_EMAIL || 'test@tududi.com',
+        email,
         password: process.env.E2E_PASSWORD || 'password123',
-        username: 'test'
+        // The CalDAV path segment is the account email (users have no
+        // separate username); the server rejects any other value with 403.
+        username: email
     };
 
     let authHeader: string;
@@ -161,6 +164,8 @@ test.describe('CalDAV Client Compatibility', () => {
     });
 
     test.describe('GET/PUT/DELETE - Task Operations', () => {
+        // Each test builds on the task the previous one created.
+        test.describe.configure({ mode: 'serial' });
         let taskUID: string;
 
         test('should create task via PUT', async ({ request }) => {
@@ -264,6 +269,8 @@ END:VCALENDAR`;
     });
 
     test.describe('Recurring Tasks', () => {
+        // Each test builds on the task the previous one created.
+        test.describe.configure({ mode: 'serial' });
         let recurringUID: string;
 
         test('should create recurring task with RRULE', async ({ request }) => {
