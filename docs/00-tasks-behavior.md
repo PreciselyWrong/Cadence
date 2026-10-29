@@ -148,6 +148,7 @@ In Minimal mode, task rows and their lists take the gestures below. Dense mode h
     - Delete, after the usual confirmation.
     - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.
 - **Drag to reorder:** grab a row in the Tasks list (no explicit sort), a project's task list or a tag's task list and drop it at a new place. The order is saved for this account and that list, survives a reload, and the list then sorts by **Custom**. A first drag made under another sort starts from that sort. A tag's order is kept apart from All Tasks and each project (`user_task_orders`, scopes `all`, `project:<id>`, `tag:<id>`); a tag can only be ordered by its owner. Rows not in the saved order come first, newest first.
+- **Drop on a project:** drag a row from a Minimal list over a project in the sidebar's Projects section. The project lights up while the pointer is over it; releasing there moves the task to that project, and the row stays where it was in its list. The click that ends the drag does not open the project. Only active projects are targets (the list shows them). Lists without drag (the upcoming view, the Today list) do not take the drop.
 - **Keyboard:** the list keeps one row in the Tab order. Arrow Up and Arrow Down move focus between rows, subtask rows included. They do nothing while focus is in a text field.
     - Enter opens the task in the right-hand pane.
     - Space completes the task, or reopens it, with the same undo toast as the round check.

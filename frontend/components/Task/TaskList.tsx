@@ -1,6 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    closestCenter,
+    DragEndEvent,
+    DragMoveEvent,
+} from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -19,6 +24,14 @@ import { Task } from '../../entities/Task';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
 import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
+import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useOptionalToast } from '../Shared/ToastContext';
+import {
+    announceProjectHover,
+    dragPointer,
+    moveTaskToProject,
+    projectUidAt,
+} from './taskProjectDrop';
 
 interface TaskListProps {
     tasks: Task[];
@@ -55,6 +68,8 @@ const TaskList: React.FC<TaskListProps> = ({
     const { t } = useTranslation();
     const sensors = useSortableSensors();
     const { listRef, onListKeyDown, onListFocus } = useMinimalRowKeyboard();
+    const isMinimal = useIsMinimal();
+    const toast = useOptionalToast();
 
     // Conditionally filter tasks based on showCompletedTasks prop
     const filteredTasks = showCompletedTasks
@@ -115,8 +130,38 @@ const TaskList: React.FC<TaskListProps> = ({
 
     const uids = filteredTasks.map((task) => task.uid as string);
 
-    const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    // Minimal only: the sidebar project under the pointer is highlighted.
+    const handleDragMove = ({ activatorEvent, delta }: DragMoveEvent) => {
+        if (!isMinimal) return;
+        announceProjectHover(projectUidAt(dragPointer(activatorEvent, delta)));
+    };
+
+    const handleDragEnd = ({
+        active,
+        over,
+        activatorEvent,
+        delta,
+    }: DragEndEvent) => {
         resetSortableCursor();
+        announceProjectHover(null);
+        // Released over a sidebar project: the row moves there and keeps its
+        // place in this list. The click that ends the drag must not open
+        // the project it lands on.
+        const projectUid = isMinimal
+            ? projectUidAt(dragPointer(activatorEvent, delta))
+            : null;
+        if (projectUid) {
+            swallowNextClick();
+            const task = filteredTasks.find((item) => item.uid === active.id);
+            if (task) {
+                moveTaskToProject(task, projectUid).catch(() => {
+                    toast?.showErrorToast(
+                        t('task.updateError', 'Failed to update task')
+                    );
+                });
+            }
+            return;
+        }
         if (!over || active.id === over.id) return;
         swallowNextClick();
         const from = uids.indexOf(active.id as string);
@@ -130,6 +175,7 @@ const TaskList: React.FC<TaskListProps> = ({
             sensors={sensors}
             collisionDetection={closestCenter}
             {...sortableCursorHandlers}
+            onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
         >
             <SortableContext

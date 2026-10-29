@@ -85,6 +85,10 @@ export const useToast = () => {
     return context;
 };
 
+// For components that also render outside a ToastProvider (tests of lists):
+// undefined there, so the caller skips the toast.
+export const useOptionalToast = () => useContext(ToastContext);
+
 const ToastComponent: React.FC<{
     message: string | React.ReactNode;
     type: 'success' | 'error';

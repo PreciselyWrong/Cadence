@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Location } from 'react-router-dom';
 import {
     FolderIcon,
@@ -13,6 +13,7 @@ import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { flattenProjectTree } from '../../utils/projectTree';
+import { TASK_DRAG_HOVER_EVENT } from '../Task/taskProjectDrop';
 
 interface SidebarProjectsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -64,13 +65,28 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
     const isActive = (path: string) => location.pathname === path;
 
-    const rowSize = useIsMinimal()
+    const isMinimal = useIsMinimal();
+    const rowSize = isMinimal
         ? 'py-[7px] text-[14px]'
         : 'py-[4px] text-[13.5px]';
 
-    const itemClass = (path: string) =>
+    // Project uid under a task dragged from a Minimal list (see TaskList).
+    const [dropUid, setDropUid] = useState<string | null>(null);
+    useEffect(() => {
+        if (!isMinimal) return;
+        const onHover = (event: Event) =>
+            setDropUid((event as CustomEvent<string | null>).detail ?? null);
+        window.addEventListener(TASK_DRAG_HOVER_EVENT, onHover);
+        return () => window.removeEventListener(TASK_DRAG_HOVER_EVENT, onHover);
+    }, [isMinimal]);
+
+    const itemClass = (path: string, projectUid?: string) =>
         `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
+        } ${
+            projectUid && dropUid === projectUid
+                ? 'ring-2 ring-inset ring-blue-500 bg-blue-50 dark:bg-blue-500/20'
+                : ''
         }`;
 
     const navigate = (project: Project) =>
@@ -158,8 +174,12 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                             ({ project, depth }) => (
                                 <div
                                     key={project.uid}
+                                    data-project-drop-uid={
+                                        isMinimal ? project.uid : undefined
+                                    }
                                     className={itemClass(
-                                        getProjectPath(project)
+                                        getProjectPath(project),
+                                        project.uid
                                     )}
                                     style={
                                         depth > 0
