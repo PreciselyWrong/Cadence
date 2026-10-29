@@ -294,6 +294,7 @@
     "assignedTo": "Tildelt til",
     "subtasks": "Undertasker",
     "openFullPage": "Åpne full visning",
+    "openPanel": "Åpne i sidepanelet",
     "quickEdit": {
       "setPriority": "Sett prioritet",
       "setDueDate": "Sett forfallsdato"
@@ -1490,6 +1491,8 @@
     "noDueDate": "Ingen forfallsdato",
     "notRecurring": "Denne oppgaven er ikke gjentakende ennå.",
     "clickToEditTitle": "Klikk for å redigere tittel",
+    "copyLink": "Kopier lenke til oppgaven",
+    "linkCopied": "Lenke kopiert",
     "clickToEditContent": "Klikk for å redigere innhold",
     "clickToAddContent": "Klikk for å legge til innhold",
     "clickToEditSubtasks": "Klikk for å redigere deloppgaver",
@@ -2958,7 +2961,9 @@
     "upcoming": "Denne uken",
     "noDate": "Ingen dato",
     "nothing": "Ingenting akkurat nå",
-    "empty": "Ingenting delt er på akkurat nå. Del et område, prosjekt eller mål, eller tildel noen en oppgave, for å se det her."
+    "empty": "Ingenting delt er på akkurat nå. Del et område, prosjekt eller mål, eller tildel noen en oppgave, for å se det her.",
+    "sortableColumn": "sorterbar kolonne",
+    "reorderFailed": "Kunne ikke lagre rekkefølgen på kolonnene."
   },
   "people": {
     "addMember": "Legg til medlem",

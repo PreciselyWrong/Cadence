@@ -83,6 +83,7 @@ import {
     getLocaleFirstDayOfWeek,
     updateUiSettings,
 } from '../utils/profileService';
+import { openTaskPanel } from '../store/taskPanelStore';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -702,9 +703,7 @@ const Calendar: React.FC = () => {
             setIsEventDetailModalOpen(false);
             const targetUid = selectedTask.uid;
             setSelectedTask(null);
-            navigate(`/task/${targetUid}`, {
-                state: { from: location.pathname + location.search },
-            });
+            openTaskPanel(targetUid);
         }
     };
 

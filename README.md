@@ -22,7 +22,7 @@ More screenshots are [available here](#screenshots).
 
 ## 🍴 What this fork adds
 
-This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
+This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` (last synced with upstream `f04288d`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
 
 ### Calendar
 

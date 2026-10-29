@@ -9,6 +9,7 @@ import { useIsMinimal } from './hooks/useUiDensity';
 import Navbar from './components/Navbar';
 import Breadcrumbs from './components/Shared/Breadcrumbs';
 import CaptureHost from './components/Capture/CaptureHost';
+import TaskPanelHost from './components/Task/TaskPanelHost';
 import { openCapture } from './utils/captureUi';
 import Sidebar, { SIDEBAR_CANVAS } from './components/Sidebar';
 import './styles/tailwind.css';
@@ -634,6 +635,7 @@ const Layout: React.FC<LayoutProps> = ({
                         )}
 
                         <CaptureHost sidebarOpen={isSidebarOpen} />
+                        <TaskPanelHost />
                     </>
                 )}
             </SidebarProvider>

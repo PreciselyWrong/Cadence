@@ -40,6 +40,11 @@ import { useTaskRowExpansion } from './TaskRowExpansionContext';
 import { useTaskRowSave } from './useTaskRowSave';
 import { useTaskPane } from '../../../contexts/TaskPaneContext';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
+import {
+    openTaskPanel,
+    TASK_PANEL_SAVED_EVENT,
+    TaskPanelSavedDetail,
+} from '../../../store/taskPanelStore';
 
 const getPriorityBorderClassName = (
     priority?: Task['priority'] | number
@@ -67,6 +72,8 @@ export interface TaskRowProps {
     onTaskDelete: (taskUid: string) => void;
     projects: Project[];
     hideProjectName?: boolean;
+    // Set on an area's own page, where every row is in that area.
+    hideAreaName?: boolean;
     onToggleToday?: (taskId: number, task?: Task) => Promise<void>;
     isUpcomingView?: boolean;
     showCompletedTasks?: boolean;
@@ -89,6 +96,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     onTaskDelete,
     projects,
     hideProjectName = false,
+    hideAreaName = false,
     isUpcomingView = false,
     showCompletedTasks = false,
     isInCompletedSection = false,
@@ -158,14 +166,36 @@ const TaskRow: React.FC<TaskRowProps> = ({
                 onRelationsChanged
             );
     }, [task.uid]);
+    // Saves from the task side panel land here, so the row shows them even
+    // when the page keeps its own copy of the list.
+    const [panelSaved, setPanelSaved] = useState<Task | null>(null);
+    useEffect(() => {
+        setPanelSaved(null);
+    }, [task]);
+    useEffect(() => {
+        const uid = task.uid;
+        if (!uid || task.is_virtual_occurrence) return;
+        const onPanelSaved = (event: Event) => {
+            const saved = (event as CustomEvent<TaskPanelSavedDetail>).detail
+                ?.task;
+            if (saved?.uid === uid) setPanelSaved(saved);
+        };
+        window.addEventListener(TASK_PANEL_SAVED_EVENT, onPanelSaved);
+        return () =>
+            window.removeEventListener(TASK_PANEL_SAVED_EVENT, onPanelSaved);
+    }, [task.uid, task.is_virtual_occurrence]);
     const displayTask = useMemo(
-        () => (blockedOverride ? { ...task, ...blockedOverride } : task),
-        [task, blockedOverride]
+        () => ({
+            ...task,
+            ...(panelSaved || {}),
+            ...(blockedOverride || {}),
+        }),
+        [task, panelSaved, blockedOverride]
     );
 
     const canExpand = !disableExpand && !task.habit_mode && !!task.uid;
     const isMinimal = useIsMinimal();
-    const { openTask, openTaskUid } = useTaskPane();
+    const { openTask: openPane, openTaskUid } = useTaskPane();
     const isPaneOpen = isMinimal && !!task.uid && openTaskUid === task.uid;
     // Virtual occurrences of a recurring task share the parent's uid, so
     // expansion is keyed by the per-occurrence id when there is one.
@@ -224,9 +254,15 @@ const TaskRow: React.FC<TaskRowProps> = ({
     // A task created by a CalDAV client keeps the uid that client chose,
     // which may hold characters the router cannot take unencoded.
     const encodedUid = encodeURIComponent(task.uid);
-    const fullPagePath = task.habit_mode
-        ? `/habit/${encodedUid}`
-        : `/task/${encodedUid}`;
+    // Tasks open in the side panel; habits keep their own page.
+    const openTask = () => {
+        if (!task.uid) return;
+        if (task.habit_mode) {
+            navigate(`/habit/${encodedUid}`, fromState);
+        } else {
+            openTaskPanel(task.uid);
+        }
+    };
 
     const loadSubtasks = useCallback(async () => {
         if (!task.uid) return;
@@ -245,13 +281,13 @@ const TaskRow: React.FC<TaskRowProps> = ({
         if (canExpand) {
             // Minimal rows open the task in the right-hand pane instead.
             if (isMinimal) {
-                openTask(task.uid);
+                openPane(task.uid);
                 return;
             }
             toggle();
             return;
         }
-        if (task.uid) navigate(fullPagePath, fromState);
+        openTask();
     };
 
     const handleSubtasksToggle = async (e: React.MouseEvent) => {
@@ -468,6 +504,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     task={displayTask}
                     project={project}
                     hideProjectName={hideProjectName}
+                    hideAreaName={hideAreaName}
                     hideStatusControl={hideStatusControl}
                     condenseStatusControl={isUpcomingView}
                     compact={compact}
@@ -487,11 +524,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     editable={isExpanded}
                     onSaveTitle={setters.setTitle}
                     onEscape={collapse}
-                    onEdit={
-                        task.uid
-                            ? () => navigate(fullPagePath, fromState)
-                            : undefined
-                    }
+                    onEdit={task.uid ? openTask : undefined}
                     onDelete={task.uid ? handleDeleteClick : undefined}
                     onTogglePin={
                         task.uid
@@ -516,7 +549,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         open={isExpanded}
                         onExited={handlePanelExited}
                         onDelete={handleDeleteClick}
-                        fullPagePath={fullPagePath}
+                        onOpenPanel={() => {
+                            collapse();
+                            openTask();
+                        }}
                         subtasksOpen={showSubtasks}
                         onToggleSubtasks={() => {
                             void handleSubtasksToggle({

@@ -19,7 +19,7 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 - Import des données Cadence vers Tududi. Vérif : séries et stats identiques avant et après.
 - Cible Linux Compose Desktop : mêmes écrans sur Fedora.
 - Passer la production sur le Postgres d'Unraid (export puis import) et lancer les tests sur Postgres.
-- Ajouter le remote `upstream` (`chrisvel/tududi`) et fusionner chaque semaine. Proposer en PR les ajouts génériques (vues calendrier, flux ICS de la branche `claude/new-session-sgffz7`).
+- Fusionner l'amont (`chrisvel/tududi`) chaque semaine (dernière synchro : `f04288d`, v1.14.0). Proposer en PR les ajouts génériques (vues calendrier, flux ICS de la branche `claude/new-session-sgffz7`).
 - TODO.md des dépôts dans Tududi, édition live des deux côtés : un conteneur clone depuis Gitea/GitHub, lit `Now`/`Next`/`Ideas` ; une modification dans Tududi est commitée et poussée, un push dans le dépôt est relu (webhook). Les conflits sont signalés sans écrire. Vérif : une modif de chaque côté apparaît de l'autre sans perte.
 
 ## Ideas

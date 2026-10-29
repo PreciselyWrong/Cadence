@@ -293,6 +293,7 @@
     "assignedTo": "Assigned to",
     "subtasks": "Subtasks",
     "openFullPage": "Open full view",
+    "openPanel": "Open in side panel",
     "quickEdit": {
       "setPriority": "Set priority",
       "setDueDate": "Set due date"
@@ -1535,6 +1536,8 @@
     "instanceOf": "This is an instance of a recurring task",
     "parentTask": "Parent Task",
     "clickToEditTitle": "Click to edit title",
+    "copyLink": "Copy link to task",
+    "linkCopied": "Link copied",
     "clickToEditContent": "Click to edit content",
     "clickToAddContent": "Click to add content",
     "clickToEditSubtasks": "Click to edit subtasks",
@@ -3280,7 +3283,9 @@
     "nothing": "Nothing right now",
     "empty": "Nothing shared is on right now. Share an area, project or goal, or assign someone a task, to see it here.",
     "dropHere": "Drop to assign",
-    "reassignFailed": "Could not assign this task."
+    "reassignFailed": "Could not assign this task.",
+    "sortableColumn": "sortable column",
+    "reorderFailed": "Could not save the column order."
   },
   "people": {
     "addMember": "Add member",

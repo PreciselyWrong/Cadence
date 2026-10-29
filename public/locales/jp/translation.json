@@ -293,6 +293,7 @@
     "assignedTo": "割り当て先",
     "subtasks": "サブタスク",
     "openFullPage": "全画面表示を開く",
+    "openPanel": "サイドパネルで開く",
     "quickEdit": {
       "setPriority": "優先度を設定",
       "setDueDate": "期限日を設定"
@@ -1718,6 +1719,8 @@
     "recurringSetup": "繰り返し設定",
     "notRecurring": "このタスクはまだ繰り返しではありません。",
     "clickToEditTitle": "タイトルを編集するにはクリック",
+    "copyLink": "タスクへのリンクをコピー",
+    "linkCopied": "リンクをコピーしました",
     "clickToEditContent": "内容を編集するにはクリック",
     "clickToAddContent": "内容を追加するにはクリック",
     "clickToEditSubtasks": "サブタスクを編集するにはクリック",
@@ -2951,7 +2954,9 @@
     "upcoming": "今週",
     "noDate": "日付なし",
     "nothing": "今は何もありません",
-    "empty": "現在共有されているものはありません。ここに表示するために、エリア、プロジェクト、または目標を共有するか、誰かにタスクを割り当ててください。"
+    "empty": "現在共有されているものはありません。ここに表示するために、エリア、プロジェクト、または目標を共有するか、誰かにタスクを割り当ててください。",
+    "sortableColumn": "並べ替え可能な列",
+    "reorderFailed": "列の順序を保存できませんでした。"
   },
   "people": {
     "addMember": "メンバーを追加",

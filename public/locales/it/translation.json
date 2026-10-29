@@ -294,6 +294,7 @@
     "assignedTo": "Assegnato a",
     "subtasks": "Sottoattività",
     "openFullPage": "Apri vista completa",
+    "openPanel": "Apri nel pannello laterale",
     "quickEdit": {
       "setPriority": "Imposta priorità",
       "setDueDate": "Imposta scadenza"
@@ -1490,6 +1491,8 @@
     "recurringSetup": "Impostazione ricorrente",
     "notRecurring": "Questo compito non è ancora ricorrente.",
     "clickToEditTitle": "Clicca per modificare il titolo",
+    "copyLink": "Copia link all'attività",
+    "linkCopied": "Link copiato",
     "clickToEditContent": "Clicca per modificare il contenuto",
     "clickToAddContent": "Clicca per aggiungere contenuto",
     "clickToEditSubtasks": "Clicca per modificare i sottocompiti",
@@ -2959,7 +2962,9 @@
     "upcoming": "Questa settimana",
     "noDate": "Nessuna data",
     "nothing": "Niente in questo momento",
-    "empty": "Niente condiviso è attualmente disponibile. Condividi un'area, un progetto o un obiettivo, oppure assegna a qualcuno un'attività per vederlo qui."
+    "empty": "Niente condiviso è attualmente disponibile. Condividi un'area, un progetto o un obiettivo, oppure assegna a qualcuno un'attività per vederlo qui.",
+    "sortableColumn": "colonna ordinabile",
+    "reorderFailed": "Impossibile salvare l'ordine delle colonne."
   },
   "people": {
     "addMember": "Aggiungi membro",

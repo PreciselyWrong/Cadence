@@ -10,7 +10,7 @@ This documentation is designed for AI assistants and developers working with the
 
 ## This Fork (PreciselyWrong/tududi)
 
-This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tududi), branched at `99ef695`. It brings the calendar and planning views closer to TickTick while staying mergeable with upstream.
+This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tududi), branched at `99ef695` and last synced with upstream `f04288d` (v1.14.0). It brings the calendar and planning views closer to TickTick while staying mergeable with upstream.
 
 ### What the fork adds
 

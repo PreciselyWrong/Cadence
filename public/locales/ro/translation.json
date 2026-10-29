@@ -294,6 +294,7 @@
     "assignedTo": "Atribuit lui",
     "subtasks": "Subtask-uri",
     "openFullPage": "Deschide vizualizarea completă",
+    "openPanel": "Deschide în panoul lateral",
     "quickEdit": {
       "setPriority": "Setează prioritatea",
       "setDueDate": "Setează data scadentă"
@@ -1452,6 +1453,8 @@
     "recurringSetup": "Configurare recurentă",
     "notRecurring": "Această sarcină nu este încă recurentă.",
     "clickToEditTitle": "Fă clic pentru a edita titlul",
+    "copyLink": "Copiază linkul sarcinii",
+    "linkCopied": "Link copiat",
     "clickToEditContent": "Fă clic pentru a edita conținutul",
     "clickToAddContent": "Fă clic pentru a adăuga conținut",
     "clickToEditSubtasks": "Fă clic pentru a edita subtasks",
@@ -2962,7 +2965,9 @@
     "upcoming": "Săptămâna aceasta",
     "noDate": "Nicio dată",
     "nothing": "Nimic în acest moment",
-    "empty": "Nimic împărtășit nu este activ acum. Împărtășește o zonă, un proiect sau un obiectiv, sau atribuie cuiva o sarcină, pentru a-l vedea aici."
+    "empty": "Nimic împărtășit nu este activ acum. Împărtășește o zonă, un proiect sau un obiectiv, sau atribuie cuiva o sarcină, pentru a-l vedea aici.",
+    "sortableColumn": "coloană sortabilă",
+    "reorderFailed": "Ordinea coloanelor nu a putut fi salvată."
   },
   "people": {
     "addMember": "Adaugă membru",

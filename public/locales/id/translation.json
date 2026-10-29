@@ -293,6 +293,7 @@
     "assignedTo": "Ditetapkan untuk",
     "subtasks": "Subtugas",
     "openFullPage": "Buka tampilan penuh",
+    "openPanel": "Buka di panel samping",
     "quickEdit": {
       "setPriority": "Atur prioritas",
       "setDueDate": "Atur tanggal jatuh tempo"
@@ -1487,6 +1488,8 @@
     "recurringSetup": "Pengaturan Berulang",
     "notRecurring": "Tugas ini belum berulang.",
     "clickToEditTitle": "Klik untuk mengedit judul",
+    "copyLink": "Salin tautan tugas",
+    "linkCopied": "Tautan disalin",
     "clickToEditContent": "Klik untuk mengedit konten",
     "clickToAddContent": "Klik untuk menambah konten",
     "clickToEditSubtasks": "Klik untuk mengedit subtugas",
@@ -2951,7 +2954,9 @@
     "upcoming": "Minggu ini",
     "noDate": "Tidak ada tanggal",
     "nothing": "Tidak ada saat ini",
-    "empty": "Tidak ada yang dibagikan saat ini. Bagikan area, proyek, atau tujuan, atau tugaskan seseorang sebuah tugas, untuk melihatnya di sini."
+    "empty": "Tidak ada yang dibagikan saat ini. Bagikan area, proyek, atau tujuan, atau tugaskan seseorang sebuah tugas, untuk melihatnya di sini.",
+    "sortableColumn": "kolom yang dapat diurutkan",
+    "reorderFailed": "Tidak dapat menyimpan urutan kolom."
   },
   "people": {
     "addMember": "Tambah anggota",

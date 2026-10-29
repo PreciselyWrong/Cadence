@@ -293,6 +293,7 @@
     "assignedTo": "Atanan",
     "subtasks": "Alt görevler",
     "openFullPage": "Tam görünümü aç",
+    "openPanel": "Yan panelde aç",
     "quickEdit": {
       "setPriority": "Öncelik ayarla",
       "setDueDate": "Bitiş tarihi ayarla"
@@ -1449,6 +1450,8 @@
     "recurringSetup": "Tekrarlayan Ayar",
     "notRecurring": "Bu görev henüz tekrarlanmıyor.",
     "clickToEditTitle": "Başlığı düzenlemek için tıklayın",
+    "copyLink": "Görev bağlantısını kopyala",
+    "linkCopied": "Bağlantı kopyalandı",
     "clickToEditContent": "İçeriği düzenlemek için tıklayın",
     "clickToAddContent": "İçerik eklemek için tıklayın",
     "clickToEditSubtasks": "Alt görevleri düzenlemek için tıklayın",
@@ -2953,7 +2956,9 @@
     "upcoming": "Bu hafta",
     "noDate": "Tarih yok",
     "nothing": "Şu anda hiçbir şey yok",
-    "empty": "Şu anda paylaşılan hiçbir şey yok. Burada görmek için bir alan, proje veya hedef paylaşın veya birine görev atayın."
+    "empty": "Şu anda paylaşılan hiçbir şey yok. Burada görmek için bir alan, proje veya hedef paylaşın veya birine görev atayın.",
+    "sortableColumn": "sıralanabilir sütun",
+    "reorderFailed": "Sütun sırası kaydedilemedi."
   },
   "people": {
     "addMember": "Üye ekle",
