@@ -233,7 +233,39 @@
       "important": "Wichtig",
       "notImportant": "Nicht Wichtig",
       "dropHere": "Hier ablegen",
-      "urgentHint": "Kennzeichnen Sie Aufgaben mit 'dringend', um sie als dringend zu markieren"
+      "urgentHint": "Kennzeichnen Sie Aufgaben mit 'dringend', um sie als dringend zu markieren",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (Standard)",
+        "new": "Neue Matrix",
+        "newName": "Neue Matrix",
+        "limit": "Du kannst bis zu {{count}} Matrizen behalten.",
+        "editTitle": "Matrix bearbeiten",
+        "name": "Name der Matrix",
+        "quadrant": "Quadrant {{number}}",
+        "quadrantName": "Name des Quadranten",
+        "priorities": "Priorität (eine davon)",
+        "priority": {
+          "none": "Keine",
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch"
+        },
+        "due": "Fälligkeit",
+        "dueType": {
+          "any": "Beliebig",
+          "overdue": "Überfällig",
+          "today": "Heute",
+          "within": "In N Tagen",
+          "none": "Ohne Datum"
+        },
+        "days": "Tage",
+        "tags": "Tags (einer davon, durch Kommas getrennt)",
+        "projects": "Projekte (optional)",
+        "firstMatchHint": "Jede Aufgabe erscheint im ersten Quadranten, dessen Regel sie erfüllt. Leere Auswahl passt auf alles.",
+        "deleteTitle": "Matrix löschen",
+        "deleteConfirm": "Die Matrix „{{name}}“ löschen? Deine Aufgaben bleiben unverändert."
+      }
     },
     "kanban": {
       "title": "Kanban-Board",

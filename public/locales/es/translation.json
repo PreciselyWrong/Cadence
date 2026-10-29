@@ -906,7 +906,39 @@
       "important": "Importante",
       "notImportant": "No Importante",
       "dropHere": "Suelta aquí",
-      "urgentHint": "Etiqueta las tareas con 'urgente' para marcarlas como urgentes"
+      "urgentHint": "Etiqueta las tareas con 'urgente' para marcarlas como urgentes",
+      "matrix": {
+        "picker": "Matriz",
+        "default": "Eisenhower (predeterminada)",
+        "new": "Nueva matriz",
+        "newName": "Nueva matriz",
+        "limit": "Puedes guardar hasta {{count}} matrices.",
+        "editTitle": "Editar matriz",
+        "name": "Nombre de la matriz",
+        "quadrant": "Cuadrante {{number}}",
+        "quadrantName": "Nombre del cuadrante",
+        "priorities": "Prioridad (cualquiera de)",
+        "priority": {
+          "none": "Ninguna",
+          "low": "Baja",
+          "medium": "Media",
+          "high": "Alta"
+        },
+        "due": "Vencimiento",
+        "dueType": {
+          "any": "Cualquiera",
+          "overdue": "Vencidas",
+          "today": "Hoy",
+          "within": "En los próximos N días",
+          "none": "Sin fecha"
+        },
+        "days": "Días",
+        "tags": "Etiquetas (cualquiera, separadas por comas)",
+        "projects": "Proyectos (opcional)",
+        "firstMatchHint": "Cada tarea aparece en el primer cuadrante cuya regla cumple. Una opción vacía coincide con todo.",
+        "deleteTitle": "Eliminar matriz",
+        "deleteConfirm": "¿Eliminar la matriz «{{name}}»? Tus tareas no cambian."
+      }
     },
     "kanban": {
       "title": "Tablero Kanban",

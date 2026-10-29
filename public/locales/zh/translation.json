@@ -233,7 +233,39 @@
       "important": "重要",
       "notImportant": "不重要",
       "dropHere": "放在这里",
-      "urgentHint": "标记任务为 '紧急' 以将其标记为紧急"
+      "urgentHint": "标记任务为 '紧急' 以将其标记为紧急",
+      "matrix": {
+        "picker": "矩阵",
+        "default": "艾森豪威尔（默认）",
+        "new": "新建矩阵",
+        "newName": "新矩阵",
+        "limit": "最多可保存 {{count}} 个矩阵。",
+        "editTitle": "编辑矩阵",
+        "name": "矩阵名称",
+        "quadrant": "象限 {{number}}",
+        "quadrantName": "象限名称",
+        "priorities": "优先级（任一）",
+        "priority": {
+          "none": "无",
+          "low": "低",
+          "medium": "中",
+          "high": "高"
+        },
+        "due": "截止日期",
+        "dueType": {
+          "any": "任意",
+          "overdue": "已逾期",
+          "today": "今天",
+          "within": "N 天内",
+          "none": "无日期"
+        },
+        "days": "天",
+        "tags": "标签（任一，用逗号分隔）",
+        "projects": "项目（可选）",
+        "firstMatchHint": "每个任务只出现在第一个符合规则的象限中。留空表示匹配全部。",
+        "deleteTitle": "删除矩阵",
+        "deleteConfirm": "删除矩阵“{{name}}”？你的任务不会改变。"
+      }
     },
     "kanban": {
       "title": "看板",

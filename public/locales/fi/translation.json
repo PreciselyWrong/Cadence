@@ -233,7 +233,39 @@
       "important": "Tärkeä",
       "notImportant": "Ei tärkeä",
       "dropHere": "Tiputa tähän",
-      "urgentHint": "Merkitse tehtävät 'kiireelliseksi' merkitäksesi ne kiireellisiksi"
+      "urgentHint": "Merkitse tehtävät 'kiireelliseksi' merkitäksesi ne kiireellisiksi",
+      "matrix": {
+        "picker": "Matriisi",
+        "default": "Eisenhower (oletus)",
+        "new": "Uusi matriisi",
+        "newName": "Uusi matriisi",
+        "limit": "Voit säilyttää enintään {{count}} matriisia.",
+        "editTitle": "Muokkaa matriisia",
+        "name": "Matriisin nimi",
+        "quadrant": "Lohko {{number}}",
+        "quadrantName": "Lohkon nimi",
+        "priorities": "Prioriteetti (jokin näistä)",
+        "priority": {
+          "none": "Ei mitään",
+          "low": "Matala",
+          "medium": "Keskitaso",
+          "high": "Korkea"
+        },
+        "due": "Määräpäivä",
+        "dueType": {
+          "any": "Mikä tahansa",
+          "overdue": "Myöhässä",
+          "today": "Tänään",
+          "within": "N päivän sisällä",
+          "none": "Ei päivää"
+        },
+        "days": "Päivää",
+        "tags": "Tunnisteet (jokin näistä, pilkuilla eroteltuna)",
+        "projects": "Projektit (valinnainen)",
+        "firstMatchHint": "Jokainen tehtävä näkyy ensimmäisessä lohkossa, jonka säännön se täyttää. Tyhjä valinta sopii kaikkeen.",
+        "deleteTitle": "Poista matriisi",
+        "deleteConfirm": "Poistetaanko matriisi \"{{name}}\"? Tehtäväsi eivät muutu."
+      }
     },
     "kanban": {
       "title": "Kanban-taulu",

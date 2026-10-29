@@ -234,7 +234,39 @@
       "important": "Viktig",
       "notImportant": "Ikke viktig",
       "dropHere": "Slipp her",
-      "urgentHint": "Merk oppgaver med 'urgent' for å markere dem som urgente"
+      "urgentHint": "Merk oppgaver med 'urgent' for å markere dem som urgente",
+      "matrix": {
+        "picker": "Matrise",
+        "default": "Eisenhower (standard)",
+        "new": "Ny matrise",
+        "newName": "Ny matrise",
+        "limit": "Du kan beholde opptil {{count}} matriser.",
+        "editTitle": "Rediger matrise",
+        "name": "Navn på matrisen",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Navn på kvadranten",
+        "priorities": "Prioritet (en av)",
+        "priority": {
+          "none": "Ingen",
+          "low": "Lav",
+          "medium": "Middels",
+          "high": "Høy"
+        },
+        "due": "Forfallsdato",
+        "dueType": {
+          "any": "Alle",
+          "overdue": "Forfalt",
+          "today": "I dag",
+          "within": "Innen N dager",
+          "none": "Ingen dato"
+        },
+        "days": "Dager",
+        "tags": "Tagger (en av, skilt med komma)",
+        "projects": "Prosjekter (valgfritt)",
+        "firstMatchHint": "Hver oppgave vises i den første kvadranten der den oppfyller regelen. Et tomt valg passer til alt.",
+        "deleteTitle": "Slett matrise",
+        "deleteConfirm": "Slette matrisen «{{name}}»? Oppgavene dine endres ikke."
+      }
     },
     "kanban": {
       "title": "Kanban-tavle",

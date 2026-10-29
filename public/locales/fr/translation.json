@@ -233,7 +233,39 @@
       "important": "Important",
       "notImportant": "Pas Important",
       "dropHere": "Déposez ici",
-      "urgentHint": "Taguez les tâches avec 'urgent' pour les marquer comme urgentes"
+      "urgentHint": "Taguez les tâches avec 'urgent' pour les marquer comme urgentes",
+      "matrix": {
+        "picker": "Matrice",
+        "default": "Eisenhower (par défaut)",
+        "new": "Nouvelle matrice",
+        "newName": "Nouvelle matrice",
+        "limit": "Vous pouvez garder jusqu'à {{count}} matrices.",
+        "editTitle": "Modifier la matrice",
+        "name": "Nom de la matrice",
+        "quadrant": "Quadrant {{number}}",
+        "quadrantName": "Nom du quadrant",
+        "priorities": "Priorité (au moins une)",
+        "priority": {
+          "none": "Aucune",
+          "low": "Basse",
+          "medium": "Moyenne",
+          "high": "Haute"
+        },
+        "due": "Échéance",
+        "dueType": {
+          "any": "Toutes",
+          "overdue": "En retard",
+          "today": "Aujourd'hui",
+          "within": "Dans les N jours",
+          "none": "Sans date"
+        },
+        "days": "Jours",
+        "tags": "Étiquettes (au moins une, séparées par des virgules)",
+        "projects": "Projets (facultatif)",
+        "firstMatchHint": "Chaque tâche apparaît dans le premier quadrant dont elle respecte la règle. Un choix vide accepte tout.",
+        "deleteTitle": "Supprimer la matrice",
+        "deleteConfirm": "Supprimer la matrice « {{name}} » ? Vos tâches ne sont pas modifiées."
+      }
     },
     "kanban": {
       "title": "Tableau Kanban",

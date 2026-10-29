@@ -233,7 +233,39 @@
       "important": "Pomembno",
       "notImportant": "Ni pomembno",
       "dropHere": "Spusti tukaj",
-      "urgentHint": "Označi naloge z 'nujno', da jih označiš kot nujne"
+      "urgentHint": "Označi naloge z 'nujno', da jih označiš kot nujne",
+      "matrix": {
+        "picker": "Matrika",
+        "default": "Eisenhower (privzeta)",
+        "new": "Nova matrika",
+        "newName": "Nova matrika",
+        "limit": "Shranite lahko največ {{count}} matrik.",
+        "editTitle": "Uredi matriko",
+        "name": "Ime matrike",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Ime kvadranta",
+        "priorities": "Prioriteta (katera koli)",
+        "priority": {
+          "none": "Brez",
+          "low": "Nizka",
+          "medium": "Srednja",
+          "high": "Visoka"
+        },
+        "due": "Rok",
+        "dueType": {
+          "any": "Kateri koli",
+          "overdue": "Zamujene",
+          "today": "Danes",
+          "within": "V N dneh",
+          "none": "Brez datuma"
+        },
+        "days": "Dni",
+        "tags": "Oznake (katera koli, ločene z vejico)",
+        "projects": "Projekti (neobvezno)",
+        "firstMatchHint": "Vsaka naloga se prikaže v prvem kvadrantu, katerega pravilu ustreza. Prazna izbira ustreza vsemu.",
+        "deleteTitle": "Izbriši matriko",
+        "deleteConfirm": "Izbrišem matriko »{{name}}«? Vaše naloge ostanejo nespremenjene."
+      }
     },
     "kanban": {
       "title": "Kanban tabla",

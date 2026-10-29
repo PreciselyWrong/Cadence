@@ -233,7 +233,39 @@
       "important": "Penting",
       "notImportant": "Tidak Penting",
       "dropHere": "Jatuhkan di sini",
-      "urgentHint": "Tandai tugas dengan 'mendesak' untuk menandainya sebagai mendesak"
+      "urgentHint": "Tandai tugas dengan 'mendesak' untuk menandainya sebagai mendesak",
+      "matrix": {
+        "picker": "Matriks",
+        "default": "Eisenhower (bawaan)",
+        "new": "Matriks baru",
+        "newName": "Matriks baru",
+        "limit": "Anda dapat menyimpan hingga {{count}} matriks.",
+        "editTitle": "Edit matriks",
+        "name": "Nama matriks",
+        "quadrant": "Kuadran {{number}}",
+        "quadrantName": "Nama kuadran",
+        "priorities": "Prioritas (salah satu)",
+        "priority": {
+          "none": "Tidak ada",
+          "low": "Rendah",
+          "medium": "Sedang",
+          "high": "Tinggi"
+        },
+        "due": "Tenggat",
+        "dueType": {
+          "any": "Apa saja",
+          "overdue": "Terlambat",
+          "today": "Hari ini",
+          "within": "Dalam N hari",
+          "none": "Tanpa tanggal"
+        },
+        "days": "Hari",
+        "tags": "Tag (salah satu, dipisahkan koma)",
+        "projects": "Proyek (opsional)",
+        "firstMatchHint": "Setiap tugas muncul di kuadran pertama yang aturannya cocok. Pilihan kosong cocok dengan semuanya.",
+        "deleteTitle": "Hapus matriks",
+        "deleteConfirm": "Hapus matriks \"{{name}}\"? Tugas Anda tidak berubah."
+      }
     },
     "kanban": {
       "title": "Papan Kanban",
