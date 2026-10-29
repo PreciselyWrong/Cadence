@@ -142,6 +142,49 @@ describe('TaskRowCollapsed in minimal mode', () => {
         fireEvent.click(screen.getByTitle('Show subtasks'));
         expect(onSubtasksToggle).toHaveBeenCalledTimes(1);
     });
+
+    it('shows a chevron before the check circle that toggles subtasks', () => {
+        const onSubtasksToggle = jest.fn();
+        const onActivate = jest.fn();
+        renderRow(baseTask(), {
+            hasSubtasks: true,
+            showSubtasks: false,
+            onSubtasksToggle,
+            onActivate,
+        });
+
+        const chevron = screen.getByTitle('Show subtasks');
+        const check = screen.getByTestId('task-check-circle');
+        expect(
+            chevron.compareDocumentPosition(check) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+        expect(chevron).toHaveAttribute('aria-expanded', 'false');
+
+        fireEvent.click(chevron);
+        expect(onSubtasksToggle).toHaveBeenCalledTimes(1);
+        expect(onActivate).not.toHaveBeenCalled();
+    });
+
+    it('marks the chevron expanded while subtasks are shown', () => {
+        renderRow(baseTask(), {
+            hasSubtasks: true,
+            showSubtasks: true,
+            onSubtasksToggle: jest.fn(),
+        });
+
+        expect(screen.getByTitle('Hide subtasks')).toHaveAttribute(
+            'aria-expanded',
+            'true'
+        );
+    });
+
+    it('shows no subtasks chevron for a task without subtasks', () => {
+        renderRow(baseTask(), { hasSubtasks: false });
+
+        expect(screen.queryByTitle('Show subtasks')).not.toBeInTheDocument();
+        expect(screen.queryByTitle('Hide subtasks')).not.toBeInTheDocument();
+    });
 });
 
 describe('TaskRowCollapsed in dense mode', () => {
@@ -156,6 +199,24 @@ describe('TaskRowCollapsed in dense mode', () => {
         expect(
             screen.queryByTestId('task-row-minimal-line')
         ).not.toBeInTheDocument();
+    });
+
+    it('keeps the subtasks toggle without a chevron', () => {
+        const onSubtasksToggle = jest.fn();
+        renderRow(baseTask(), {
+            hasSubtasks: true,
+            showSubtasks: false,
+            onSubtasksToggle,
+        });
+
+        const toggle = screen.getByTitle('Show subtasks');
+        expect(toggle).not.toHaveAttribute('aria-expanded');
+        expect(toggle).toHaveAttribute('aria-pressed', 'false');
+        const check = screen.getByTestId('task-check-circle');
+        expect(
+            toggle.compareDocumentPosition(check) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeFalsy();
     });
 });
 

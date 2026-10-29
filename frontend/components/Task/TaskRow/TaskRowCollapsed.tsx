@@ -9,6 +9,7 @@ import {
     CheckIcon,
     ListBulletIcon,
     ChevronDownIcon,
+    ChevronRightIcon,
     ChatBubbleLeftIcon,
     NoSymbolIcon,
     EllipsisVerticalIcon,
@@ -290,6 +291,8 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         </span>
     );
 
+    // Minimal rows show a chevron before the check circle; Dense keeps the
+    // list icon after the title.
     const subtasksToggle = !editable && hasSubtasks && onSubtasksToggle && (
         <button
             type="button"
@@ -297,7 +300,8 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 e.stopPropagation();
                 onSubtasksToggle(e);
             }}
-            aria-pressed={!!showSubtasks}
+            aria-pressed={!isMinimal ? !!showSubtasks : undefined}
+            aria-expanded={isMinimal ? !!showSubtasks : undefined}
             title={
                 showSubtasks
                     ? t('tasks.hideSubtasks', 'Hide subtasks')
@@ -305,11 +309,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }
             className={
                 isMinimal
-                    ? `flex items-center flex-shrink-0 transition-colors ${
-                          showSubtasks
-                              ? 'text-blue-600 dark:text-blue-400'
-                              : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
-                      }`
+                    ? 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
                     : `ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full border transition-colors flex-shrink-0 ${
                           showSubtasks
                               ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-100'
@@ -317,13 +317,22 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                       }`
             }
         >
-            <ListBulletIcon className="h-3.5 w-3.5" />
-            {!isMinimal && (
-                <ChevronDownIcon
-                    className={`h-3 w-3 transition-transform ${
-                        showSubtasks ? 'rotate-180' : ''
+            {isMinimal ? (
+                <ChevronRightIcon
+                    className={`h-3.5 w-3.5 transition-transform ${
+                        showSubtasks ? 'rotate-90' : ''
                     }`}
+                    aria-hidden="true"
                 />
+            ) : (
+                <>
+                    <ListBulletIcon className="h-3.5 w-3.5" />
+                    <ChevronDownIcon
+                        className={`h-3 w-3 transition-transform ${
+                            showSubtasks ? 'rotate-180' : ''
+                        }`}
+                    />
+                </>
             )}
         </button>
     );
@@ -347,6 +356,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 }
             }}
         >
+            {isMinimal && subtasksToggle}
             {showCheck && onToggleCompletion && (
                 <div
                     className={hasMeta && !isMinimal ? 'self-start mt-0.5' : ''}
@@ -474,7 +484,6 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                 )}
                             />
                         )}
-                        {subtasksToggle}
                         {commentBadge}
                         {!compact && task.tags && task.tags.length > 0 && (
                             <span className="flex items-center gap-1.5">

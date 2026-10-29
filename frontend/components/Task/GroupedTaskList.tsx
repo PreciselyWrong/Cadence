@@ -24,6 +24,8 @@ import { Task } from '../../entities/Task';
 import { GroupedTasks } from '../../utils/tasksService';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
+import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useCollapsedGroups } from './useCollapsedGroups';
 
 interface GroupedTaskListProps {
     tasks: Task[];
@@ -130,6 +132,12 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     onReorder,
 }) => {
     const { t } = useTranslation();
+    // Minimal lists let a group header collapse its tasks. The state is kept
+    // per list (path and query) and group.
+    const isMinimal = useIsMinimal();
+    const { isCollapsed, toggle: toggleSection } = useCollapsedGroups(
+        `${window.location.pathname}${window.location.search}|${groupBy}`
+    );
 
     const [expandedRecurringGroups, setExpandedRecurringGroups] = useState<
         Set<number>
@@ -385,63 +393,100 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                             {/* Day column header */}
                                             <div className="pb-3 mb-4">
                                                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                                    {groupName}
+                                                    {isMinimal ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                toggleSection(
+                                                                    groupName
+                                                                )
+                                                            }
+                                                            aria-expanded={
+                                                                !isCollapsed(
+                                                                    groupName
+                                                                )
+                                                            }
+                                                            className="flex w-full items-center gap-1.5 text-left"
+                                                        >
+                                                            <ChevronRightIcon
+                                                                className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                                    isCollapsed(
+                                                                        groupName
+                                                                    )
+                                                                        ? ''
+                                                                        : 'rotate-90'
+                                                                }`}
+                                                                aria-hidden="true"
+                                                            />
+                                                            {groupName}
+                                                        </button>
+                                                    ) : (
+                                                        groupName
+                                                    )}
                                                 </h3>
                                             </div>
 
                                             {/* Day column tasks */}
-                                            <div
-                                                className={
-                                                    dayTasks.length > 0
-                                                        ? TASK_SHEET_CLASS
-                                                        : ''
-                                                }
-                                            >
-                                                {dayTasks.map((task) => (
-                                                    <div
-                                                        key={
-                                                            task.virtual_id ??
-                                                            task.id
-                                                        }
-                                                        className="relative hover:z-[10000] focus-within:z-[10000]"
-                                                    >
-                                                        <TaskItem
-                                                            task={task}
-                                                            onTaskUpdate={
-                                                                onTaskUpdate
+                                            {!(
+                                                isMinimal &&
+                                                isCollapsed(groupName)
+                                            ) && (
+                                                <div
+                                                    className={
+                                                        dayTasks.length > 0
+                                                            ? TASK_SHEET_CLASS
+                                                            : ''
+                                                    }
+                                                >
+                                                    {dayTasks.map((task) => (
+                                                        <div
+                                                            key={
+                                                                task.virtual_id ??
+                                                                task.id
                                                             }
-                                                            onTaskCompletionToggle={
-                                                                onTaskCompletionToggle
-                                                            }
-                                                            onTaskDelete={
-                                                                onTaskDelete
-                                                            }
-                                                            projects={projects}
-                                                            hideProjectName={
-                                                                hideProjectName
-                                                            }
-                                                            onToggleToday={
-                                                                onToggleToday
-                                                            }
-                                                            isUpcomingView={
-                                                                true
-                                                            }
-                                                            showCompletedTasks={
-                                                                showCompletedTasks
-                                                            }
-                                                        />
-                                                    </div>
-                                                ))}
+                                                            className="relative hover:z-[10000] focus-within:z-[10000]"
+                                                        >
+                                                            <TaskItem
+                                                                task={task}
+                                                                onTaskUpdate={
+                                                                    onTaskUpdate
+                                                                }
+                                                                onTaskCompletionToggle={
+                                                                    onTaskCompletionToggle
+                                                                }
+                                                                onTaskDelete={
+                                                                    onTaskDelete
+                                                                }
+                                                                projects={
+                                                                    projects
+                                                                }
+                                                                hideProjectName={
+                                                                    hideProjectName
+                                                                }
+                                                                onToggleToday={
+                                                                    onToggleToday
+                                                                }
+                                                                isUpcomingView={
+                                                                    true
+                                                                }
+                                                                showCompletedTasks={
+                                                                    showCompletedTasks
+                                                                }
+                                                            />
+                                                        </div>
+                                                    ))}
 
-                                                {/* Empty state for columns with no tasks */}
-                                                {dayTasks.length === 0 && (
-                                                    <div className="text-center py-8 text-gray-400 dark:text-gray-600">
-                                                        <p className="text-sm">
-                                                            No tasks scheduled
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
+                                                    {/* Empty state for columns with no tasks */}
+                                                    {dayTasks.length === 0 && (
+                                                        <div className="text-center py-8 text-gray-400 dark:text-gray-600">
+                                                            <p className="text-sm">
+                                                                No tasks
+                                                                scheduled
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 }
@@ -492,48 +537,56 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                         'tasks.unknownProject',
                                         'Unknown project'
                                     ));
+                          const sectionCollapsed =
+                              isMinimal && isCollapsed(key);
                           return (
                               <div
                                   key={key}
                                   className={`space-y-1.5 pb-4 mb-2 border-b border-gray-200/50 dark:border-gray-800/60 last:border-b-0 ${index > 0 ? 'pt-4' : ''}`}
                               >
-                                  <div className="flex items-center justify-between px-1 text-base font-semibold text-gray-900 dark:text-gray-100">
-                                      <span className="truncate">
-                                          {projectName}
-                                      </span>
-                                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                                          {projectTasks.length}{' '}
-                                          {t('tasks.tasks', 'tasks')}
-                                      </span>
-                                  </div>
-                                  {onReorder &&
-                                  projectTasks.every((task) => task.uid) ? (
-                                      <SortableTaskGroup
-                                          tasks={projectTasks}
-                                          onReorder={onReorder}
-                                          renderTask={(task) => (
-                                              <TaskItem
-                                                  task={task}
-                                                  onTaskUpdate={onTaskUpdate}
-                                                  onTaskCompletionToggle={
-                                                      onTaskCompletionToggle
-                                                  }
-                                                  onTaskDelete={onTaskDelete}
-                                                  projects={projects}
-                                                  hideProjectName={
-                                                      hideProjectName
-                                                  }
-                                                  onToggleToday={onToggleToday}
+                                  {isMinimal ? (
+                                      <button
+                                          type="button"
+                                          onClick={() => toggleSection(key)}
+                                          aria-expanded={!sectionCollapsed}
+                                          className="flex w-full items-center justify-between gap-2 px-1 text-left text-base font-semibold text-gray-900 dark:text-gray-100"
+                                      >
+                                          <span className="flex min-w-0 items-center gap-1.5">
+                                              <ChevronRightIcon
+                                                  className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                      sectionCollapsed
+                                                          ? ''
+                                                          : 'rotate-90'
+                                                  }`}
+                                                  aria-hidden="true"
                                               />
-                                          )}
-                                      />
+                                              <span className="truncate">
+                                                  {projectName}
+                                              </span>
+                                          </span>
+                                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+                                              {projectTasks.length}{' '}
+                                              {t('tasks.tasks', 'tasks')}
+                                          </span>
+                                      </button>
                                   ) : (
-                                      <div className={TASK_SHEET_CLASS}>
-                                          {projectTasks.map((task) => (
-                                              <div
-                                                  key={task.id}
-                                                  className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-[10000] focus-within:z-[10000]"
-                                              >
+                                      <div className="flex items-center justify-between px-1 text-base font-semibold text-gray-900 dark:text-gray-100">
+                                          <span className="truncate">
+                                              {projectName}
+                                          </span>
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                              {projectTasks.length}{' '}
+                                              {t('tasks.tasks', 'tasks')}
+                                          </span>
+                                      </div>
+                                  )}
+                                  {!sectionCollapsed &&
+                                      (onReorder &&
+                                      projectTasks.every((task) => task.uid) ? (
+                                          <SortableTaskGroup
+                                              tasks={projectTasks}
+                                              onReorder={onReorder}
+                                              renderTask={(task) => (
                                                   <TaskItem
                                                       task={task}
                                                       onTaskUpdate={
@@ -553,10 +606,38 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                           onToggleToday
                                                       }
                                                   />
-                                              </div>
-                                          ))}
-                                      </div>
-                                  )}
+                                              )}
+                                          />
+                                      ) : (
+                                          <div className={TASK_SHEET_CLASS}>
+                                              {projectTasks.map((task) => (
+                                                  <div
+                                                      key={task.id}
+                                                      className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-[10000] focus-within:z-[10000]"
+                                                  >
+                                                      <TaskItem
+                                                          task={task}
+                                                          onTaskUpdate={
+                                                              onTaskUpdate
+                                                          }
+                                                          onTaskCompletionToggle={
+                                                              onTaskCompletionToggle
+                                                          }
+                                                          onTaskDelete={
+                                                              onTaskDelete
+                                                          }
+                                                          projects={projects}
+                                                          hideProjectName={
+                                                              hideProjectName
+                                                          }
+                                                          onToggleToday={
+                                                              onToggleToday
+                                                          }
+                                                      />
+                                                  </div>
+                                              ))}
+                                          </div>
+                                      ))}
                               </div>
                           );
                       }
