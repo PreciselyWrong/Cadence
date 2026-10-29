@@ -3,6 +3,31 @@ import { MemoryRouter } from 'react-router-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import MarkdownRenderer from '../MarkdownRenderer';
 
+// react-markdown ships as ESM only; this stand-in renders plain text and
+// [text](href) links through the renderer's own `a` component.
+jest.mock('react-markdown', () => {
+    return function ReactMarkdown({ children, components }: any) {
+        const A = components?.a || 'a';
+        const parts = (children as string).split(/(\[[^\]]+\]\([^)]+\))/);
+        return (
+            <div className="markdown-content">
+                {parts.map((part: string, index: number) => {
+                    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+                    return match ? (
+                        <A key={index} href={match[2]}>
+                            {match[1]}
+                        </A>
+                    ) : (
+                        part
+                    );
+                })}
+            </div>
+        );
+    };
+});
+jest.mock('remark-gfm', () => ({}));
+jest.mock('rehype-highlight', () => ({}));
+
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (_key: string, fallback: string) => fallback,
