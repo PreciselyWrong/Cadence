@@ -17,7 +17,11 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('../TaskItem', () => ({
     __esModule: true,
-    default: ({ task }: { task: Task }) => <div>{task.name}</div>,
+    default: ({ task }: { task: Task }) => (
+        <div data-minimal-task-row="" tabIndex={0}>
+            {task.name}
+        </div>
+    ),
 }));
 
 const STORAGE_KEY = 'tududi.collapsedTaskGroups';
@@ -112,6 +116,23 @@ describe('GroupedTaskList project headers in minimal mode', () => {
 
         getItem.mockRestore();
         setItem.mockRestore();
+    });
+});
+
+describe('GroupedTaskList keyboard in minimal mode', () => {
+    beforeEach(() => {
+        window.localStorage.clear();
+        (useIsMinimal as jest.Mock).mockReturnValue(true);
+    });
+
+    it('moves focus between task rows across project groups', () => {
+        renderGrouped();
+
+        const alphaRow = screen.getByText('Alpha one');
+        alphaRow.focus();
+        fireEvent.keyDown(alphaRow, { key: 'ArrowDown' });
+
+        expect(screen.getByText('Beta one')).toHaveFocus();
     });
 });
 

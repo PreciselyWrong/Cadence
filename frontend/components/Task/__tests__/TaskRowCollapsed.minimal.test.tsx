@@ -198,6 +198,104 @@ describe('TaskRowCollapsed in minimal mode', () => {
     });
 });
 
+describe('TaskRowCollapsed keyboard in minimal mode', () => {
+    const rowOf = () =>
+        screen
+            .getByText('Write report')
+            .closest('[role="button"]') as HTMLElement;
+
+    beforeEach(() => {
+        (useIsMinimal as jest.Mock).mockReturnValue(true);
+    });
+
+    it('toggles completion on Space instead of opening the task', () => {
+        const onActivate = jest.fn();
+        const onToggleCompletion = jest.fn();
+        renderRow(baseTask(), { onActivate, onToggleCompletion });
+
+        fireEvent.keyDown(rowOf(), { key: ' ' });
+
+        expect(onToggleCompletion).toHaveBeenCalledTimes(1);
+        expect(onActivate).not.toHaveBeenCalled();
+    });
+
+    it('opens the task on Enter', () => {
+        const onActivate = jest.fn();
+        const onToggleCompletion = jest.fn();
+        renderRow(baseTask(), { onActivate, onToggleCompletion });
+
+        fireEvent.keyDown(rowOf(), { key: 'Enter' });
+
+        expect(onActivate).toHaveBeenCalledTimes(1);
+        expect(onToggleCompletion).not.toHaveBeenCalled();
+    });
+
+    it('leaves Space alone when it comes from a control inside the row', () => {
+        const onToggleCompletion = jest.fn();
+        const onSubtasksToggle = jest.fn();
+        renderRow(baseTask(), {
+            onToggleCompletion,
+            hasSubtasks: true,
+            showSubtasks: false,
+            onSubtasksToggle,
+        });
+
+        fireEvent.keyDown(screen.getByTitle('Show subtasks'), { key: ' ' });
+
+        expect(onToggleCompletion).not.toHaveBeenCalled();
+    });
+
+    it('opens the date picker on D and the priority picker on P', () => {
+        renderRow(baseTask({ due_date: null, priority: null }), {
+            onFieldUpdate: jest.fn().mockResolvedValue(undefined),
+            onToggleCompletion: jest.fn(),
+        });
+        const dateTrigger = screen.getByRole('button', {
+            name: 'Set due date',
+        });
+        const priorityTrigger = screen.getByRole('button', {
+            name: 'Set priority',
+        });
+
+        fireEvent.keyDown(rowOf(), { key: 'd' });
+        expect(dateTrigger).toHaveAttribute('aria-expanded', 'true');
+
+        fireEvent.keyDown(rowOf(), { key: 'P' });
+        expect(priorityTrigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('ignores D and P without quick edits on the row', () => {
+        const onActivate = jest.fn();
+        renderRow(baseTask(), { onActivate, onToggleCompletion: jest.fn() });
+
+        expect(() => {
+            fireEvent.keyDown(rowOf(), { key: 'd' });
+            fireEvent.keyDown(rowOf(), { key: 'p' });
+        }).not.toThrow();
+        expect(onActivate).not.toHaveBeenCalled();
+    });
+});
+
+describe('TaskRowCollapsed keyboard in dense mode', () => {
+    beforeEach(() => {
+        (useIsMinimal as jest.Mock).mockReturnValue(false);
+    });
+
+    it('keeps Space opening the task and never completes it', () => {
+        const onActivate = jest.fn();
+        const onToggleCompletion = jest.fn();
+        renderRow(baseTask(), { onActivate, onToggleCompletion });
+
+        fireEvent.keyDown(
+            screen.getByText('Write report').closest('[role="button"]')!,
+            { key: ' ' }
+        );
+
+        expect(onActivate).toHaveBeenCalledTimes(1);
+        expect(onToggleCompletion).not.toHaveBeenCalled();
+    });
+});
+
 describe('TaskRowCollapsed in dense mode', () => {
     beforeEach(() => {
         (useIsMinimal as jest.Mock).mockReturnValue(false);

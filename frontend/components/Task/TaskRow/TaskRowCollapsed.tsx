@@ -39,6 +39,7 @@ import QuickCaptureInput, {
 } from '../../Inbox/QuickCaptureInput';
 import { useStore } from '../../../store/useStore';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
+import { MINIMAL_ROW_ATTRIBUTE } from '../useMinimalRowKeyboard';
 import PriorityBadge, {
     PriorityLevel,
     toPriorityLevel,
@@ -166,6 +167,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const isMinimal = useIsMinimal();
     const currentName = task.original_name || task.name;
     const titleInputRef = useRef<QuickCaptureInputHandle>(null);
+    const rowRef = useRef<HTMLDivElement>(null);
     const pressingInsideTitleRef = useRef(false);
     const projects = useStore((state: any) => state.projectsStore?.projects);
     const [draftName, setDraftName] = useState(currentName);
@@ -273,6 +275,30 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const showCheck =
         !hideStatusControl && !task.habit_mode && !!onToggleCompletion;
 
+    // Minimal rows: Enter opens the task, Space toggles completion, D and P
+    // open the inline date and priority pickers. Keys pressed on a control
+    // inside the row keep that control's meaning.
+    const handleMinimalKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        const key = e.key.toLowerCase();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            onActivate(e);
+        } else if (e.key === ' ') {
+            e.preventDefault();
+            if (showCheck && onToggleCompletion) onToggleCompletion();
+        } else if (!editable && (key === 'd' || key === 'p')) {
+            const trigger = rowRef.current?.querySelector<HTMLButtonElement>(
+                `[data-quick-edit="${key === 'd' ? 'due' : 'priority'}"]`
+            );
+            if (trigger) {
+                e.preventDefault();
+                trigger.click();
+            }
+        }
+    };
+
     const dueClass = dueToneClass(task);
     const isRecurring =
         (!!task.recurrence_type && task.recurrence_type !== 'none') ||
@@ -342,6 +368,8 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
 
     return (
         <div
+            ref={rowRef}
+            {...(isMinimal ? { [MINIMAL_ROW_ATTRIBUTE]: '' } : {})}
             className={
                 isMinimal
                     ? 'group flex items-center gap-3 px-4 py-2 min-h-[40px] cursor-pointer'
@@ -361,6 +389,10 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }
             onClick={onActivate}
             onKeyDown={(e) => {
+                if (isMinimal) {
+                    handleMinimalKeyDown(e);
+                    return;
+                }
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     onActivate(e);

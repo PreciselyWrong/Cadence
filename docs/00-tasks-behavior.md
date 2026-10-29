@@ -134,6 +134,25 @@ In Minimal mode a click on a task row opens the task in a pane on the right. On 
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
 - Dense mode keeps the inline expansion on the row.
 
+## **Minimal Row Gestures**
+
+In Minimal mode, task rows and their lists take the gestures below. Dense mode has none of them and keeps its own controls.
+
+- **Subtasks chevron:** a row with subtasks shows a small chevron before its round check. A click shows the subtasks indented below the row; a second click hides them. Rows start collapsed. Subtask rows take the same gestures.
+- **Collapsible groups:** in a grouped list, a project group header or a day column header collapses its tasks on a click. The state is kept per list (its path and query) and per group, in this browser only.
+- **Right-click menu:** a right-click on a row that is not open opens a menu at the cursor:
+    - Priority: None, Low, Medium or High.
+    - Date: Today, Tomorrow, Next week (the next Monday after today) or Clear date. Setting a date clears any time of day on the task.
+    - Move to project: No project, or one of your projects.
+    - Pin or Unpin.
+    - Delete, after the usual confirmation.
+    - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.
+- **Keyboard:** the list keeps one row in the Tab order. Arrow Up and Arrow Down move focus between rows, subtask rows included. They do nothing while focus is in a text field.
+    - Enter opens the task in the right-hand pane.
+    - Space completes the task, or reopens it, with the same undo toast as the round check.
+    - D opens the row's due date picker; P opens its priority picker.
+    - A key pressed on a control inside the row (the chevron, for example) keeps that control's meaning.
+
 ## **Minimal Lists: Add Field and Completed Section**
 
 In Minimal mode, four task lists share two pieces at their top and bottom. Dense mode shows neither.

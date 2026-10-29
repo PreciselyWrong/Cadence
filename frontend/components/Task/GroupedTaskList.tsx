@@ -25,6 +25,7 @@ import { GroupedTasks } from '../../utils/tasksService';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
 import { useCollapsedGroups } from './useCollapsedGroups';
 
 interface GroupedTaskListProps {
@@ -135,6 +136,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     // Minimal lists let a group header collapse its tasks. The state is kept
     // per list (path and query) and group.
     const isMinimal = useIsMinimal();
+    const { listRef, onListKeyDown, onListFocus } = useMinimalRowKeyboard();
     const { isCollapsed, toggle: toggleSection } = useCollapsedGroups(
         `${window.location.pathname}${window.location.search}|${groupBy}`
     );
@@ -347,7 +349,12 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     // Render day-based grouping if available
     if (shouldUseDayGrouping) {
         return (
-            <div className="task-board-container">
+            <div
+                className="task-board-container"
+                ref={listRef}
+                onKeyDown={onListKeyDown}
+                onFocus={onListFocus}
+            >
                 {Object.keys(filteredGroupedTasks).length === 0 ? (
                     <div className="flex justify-center items-center mt-4">
                         <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
@@ -501,6 +508,9 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     // Legacy: Render recurring task grouping
     return (
         <div
+            ref={listRef}
+            onKeyDown={onListKeyDown}
+            onFocus={onListFocus}
             className={`task-list-container ${
                 groupBy === 'project' && groupedByProject
                     ? 'space-y-1.5'

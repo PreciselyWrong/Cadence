@@ -27,6 +27,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Round check before each title (priority ring; completes from the list with undo); Minimal rows set priority and due date in place; Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Minimal: a row click opens the task in a right-hand pane, edited in place (`?task=<uid>`); Dense keeps inline expansion | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
+| Tasks | Minimal row gestures: chevron before the check toggles subtasks, collapsible project and day group headers, right-click menu (priority, date, project, pin, delete), arrow keys between rows, Space completes, Enter opens, D and P open the date and priority pickers | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Minimal: "+ Add task" field at the top of Today, Tasks, project and tag lists (creates into that list); collapsed "Completed (N)" section at the bottom | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Today | Day's tasks listed without a planning gate; "Plan your day" is a link | [02-today-page-sections.md](docs/02-today-page-sections.md), [20-daily-plan.md](docs/20-daily-plan.md) |
 | Today | Planning on one page: candidates left, Planning / Calendar switch right (toggle hides the panel), previous / next day arrows kept in `?date=` | [20-daily-plan.md](docs/20-daily-plan.md) |

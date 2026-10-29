@@ -55,6 +55,7 @@ const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
                         type="button"
                         onClick={onClick}
                         aria-label={setPriorityLabel}
+                        data-quick-edit="priority"
                         title={setPriorityLabel}
                         aria-haspopup="menu"
                         aria-expanded={isOpen}
@@ -86,6 +87,7 @@ const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
                             aria-haspopup="dialog"
                             aria-expanded={isOpen}
                             aria-label={setDueLabel}
+                            data-quick-edit="due"
                             className={`whitespace-nowrap rounded hover:underline focus:outline-none ${dueClass}`}
                         >
                             {dueText}
@@ -97,6 +99,7 @@ const MinimalQuickEdits: React.FC<MinimalQuickEditsProps> = ({
                             aria-haspopup="dialog"
                             aria-expanded={isOpen}
                             aria-label={setDueLabel}
+                            data-quick-edit="due"
                             title={setDueLabel}
                             className={`flex flex-shrink-0 items-center text-gray-400 transition-opacity focus:outline-none dark:text-gray-500 ${HOVER_ONLY}`}
                         >

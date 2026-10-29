@@ -18,6 +18,7 @@ import { Project } from '../../entities/Project';
 import { Task } from '../../entities/Task';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
+import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
 
 interface TaskListProps {
     tasks: Task[];
@@ -53,6 +54,7 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
     const { t } = useTranslation();
     const sensors = useSortableSensors();
+    const { listRef, onListKeyDown, onListFocus } = useMinimalRowKeyboard();
 
     // Conditionally filter tasks based on showCompletedTasks prop
     const filteredTasks = showCompletedTasks
@@ -93,6 +95,9 @@ const TaskList: React.FC<TaskListProps> = ({
     if (!sortable) {
         return (
             <div
+                ref={listRef}
+                onKeyDown={onListKeyDown}
+                onFocus={onListFocus}
                 className={`task-list-container overflow-visible ${TASK_SHEET_CLASS}`}
             >
                 {filteredTasks.map((task) => (
@@ -132,6 +137,9 @@ const TaskList: React.FC<TaskListProps> = ({
                 strategy={verticalListSortingStrategy}
             >
                 <div
+                    ref={listRef}
+                    onKeyDown={onListKeyDown}
+                    onFocus={onListFocus}
                     className={`task-list-container overflow-visible ${TASK_SHEET_CLASS}`}
                 >
                     {filteredTasks.map((task) => (
