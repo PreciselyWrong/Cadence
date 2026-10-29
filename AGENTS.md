@@ -6,11 +6,11 @@ Fork personnel de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin 
 
 Pile : React 18 + TypeScript (webpack, Tailwind, Zustand + SWR) ; Express + Sequelize ; SQLite par défaut ou PostgreSQL via `DATABASE_URL`. Dev : deux serveurs (front `:8080` proxifie `/api` vers back `:3002`) ; prod : Express sert `/dist`.
 
-Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `docs/fork/`. `CLAUDE.md` et `docs/` sont ceux de l'amont.
+Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `docs/fork/`. `CLAUDE.md` reste identique à l'amont ; `docs/` est celui de l'amont plus les pages de comportement du fork.
 
-## Règles du fork (`CLAUDE.md`, section « This Fork (PreciselyWrong/tududi) »)
+## Règles du fork (`docs/fork/FORK.md`)
 
-- tenir à jour la section README « 🍴 What this fork adds » et le tableau des fonctionnalités du fork dans `CLAUDE.md` à chaque changement du fork ;
+- tenir à jour la section README « 🍴 What this fork adds » et le tableau des fonctionnalités du fork dans `docs/fork/FORK.md` à chaque changement du fork ;
 - mettre à jour la page `docs/*.md` correspondante à chaque changement de comportement ;
 - ajouter chaque nouvelle chaîne d'interface dans les 26 `public/locales/*/translation.json` ;
 - donner à chaque migration un horodatage unique et vérifier la mise à niveau sur SQLite et PostgreSQL ;
@@ -24,6 +24,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `docs/fork/`. `CLAUDE.md` et 
 | Objectif du fork, décisions, pièges, références | `docs/fork/DECISIONS.md` |
 | Feuille de route | `TODO.md` (`Now`, `Next`, `Ideas`) |
 | Vue d'ensemble, index des docs de l'amont | `CLAUDE.md` |
+| Fonctionnalités du fork, règles, synchro amont | `docs/fork/FORK.md` |
 | Architecture, requêtes, auth | `docs/architecture.md` |
 | Nouveau module backend, repository | `docs/backend-patterns.md`, `docs/code-conventions.md` |
 | Modèle, migration, SQLite/Postgres | `docs/database.md`, `docs/16-postgresql.md`, `docs/backups.md` |
@@ -71,7 +72,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Tous les scripts : 
 
 ## ⛔ Interdits
 
-- ⛔ Mettre du contenu propre au fork dans `CLAUDE.md` ou `docs/` hors `docs/fork/` — conflits à chaque fusion hebdomadaire de l'amont.
+- ⛔ Mettre du contenu propre au fork dans `CLAUDE.md`, ou dans `docs/` hors `docs/fork/` autre que les pages de comportement (règle 2 de `docs/fork/FORK.md`) — conflits à chaque fusion hebdomadaire de l'amont.
 - ⛔ Appeler `queryInterface.createTable/addColumn/addIndex` directement dans une migration — utiliser les `safe*` de `backend/utils/migration-utils.js` : les migrations doivent être idempotentes (installs neuves créées par `sync()`) et tourner sur SQLite et Postgres.
 - ⛔ `PRAGMA`, `sqlite_master`, `AUTOINCREMENT`, booléens `0`/`1` dans une nouvelle migration — Postgres ne rejoue pas ce SQL (voir `docs/database.md`).
 - ⛔ Modifier une migration déjà publiée — les bases existantes ne la rejouent pas.

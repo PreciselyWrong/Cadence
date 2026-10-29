@@ -102,7 +102,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - Minimal row chips: `ui_settings.appearance.rowFields` is an ordered `{ key, visible }` list, sanitized in `backend/modules/users/service.js` (known keys, boolean visibility, missing chips appended visible); see [08-user-management.md](docs/08-user-management.md).
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language. So are `tasks.addTaskInline` (the "+ Add task" field) and the `tasks.contextMenu.*` strings of the row menu, the `profile.taskRow*` strings (row chip names), and the `viewType.*` strings (List, Board, Calendar) and the `newView.*` strings.
-- Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).
+- Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and [docs/fork/FORK.md](docs/fork/FORK.md).
 - Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
 
 ---

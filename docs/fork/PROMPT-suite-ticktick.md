@@ -8,7 +8,7 @@ Tu reprends la refonte de Tududi (fork `PreciselyWrong/tududi`) pour qu'il resse
 
 ## À lire d'abord
 
-- `AGENTS.md`, puis la section « This Fork (PreciselyWrong/tududi) » de `CLAUDE.md`. Ses règles s'appliquent toutes : section README « 🍴 What this fork adds » et tableau du fork à jour, page `docs/` à chaque changement de comportement, toute nouvelle chaîne dans les 26 `public/locales/*/translation.json`, horodatages de migration uniques, clés `ui_settings` filtrées dans `backend/modules/users/service.js`.
+- `AGENTS.md`, puis `docs/fork/FORK.md`. Ses règles s'appliquent toutes : section README « 🍴 What this fork adds » et tableau du fork à jour, page `docs/` à chaque changement de comportement, toute nouvelle chaîne dans les 26 `public/locales/*/translation.json`, horodatages de migration uniques, clés `ui_settings` filtrées dans `backend/modules/users/service.js`.
 - `docs/fork/DECISIONS.md`, en particulier la refonte UI sur place et le réglage `ui_settings.appearance.density` : `minimal` par défaut, `dense` pour l'affichage de l'amont. Chaque changement visuel passe par `useIsMinimal()` (`frontend/hooks/useUiDensity.ts`). En mode `dense`, rien ne change.
 - TickTick sert de référence pour le comportement uniquement : on n'en copie ni le code, ni les icônes, ni les assets, ni les textes. TickTick 8.0.20 est installé dans `/opt/TickTick`, on peut le lancer pour comparer.
 
@@ -68,10 +68,8 @@ Chaque étape vaut un commit (ou une branche) et est vérifiée dans le navigate
    - Le panneau de détail ne met à jour la liste en direct que sur `Tasks.tsx`. Écouter l'événement `tududi:task-updated` dans Aujourd'hui, À venir, la page Projet et la page Tag.
    - Le menu « Heures visibles » ne se ferme pas avec Échap.
    - Mode Planning : pas encore de barre « ▲ N earlier » pour les tâches horodatées non planifiées hors de la plage. Pas de bouton « Afficher toutes les heures » dans le menu « ⋯ ».
-   - Fonctions de l'ancien Aujourd'hui retirées, à confirmer avec Nicolas avant de les rétablir : réordonner les tâches sans heure, retirer du plan en déplaçant la date depuis l'agenda.
+   - Fonctions de l'ancien Aujourd'hui à rétablir (accord de Nicolas) : réordonner les tâches sans heure, retirer du plan en déplaçant la date depuis l'agenda.
    - Les nouvelles traductions (26 langues) sont écrites par des agents. Le README doit les signaler comme non relues.
-   - Arbitrer avec Nicolas : `CLAUDE.md` (amont du fork) demande d'y mettre le contenu propre au fork, alors que `AGENTS.md` l'interdit. Aligner l'un sur l'autre.
-   - Mode de `scripts/docker-entrypoint.sh` (passé exécutable) : en attente dans l'arbre de travail, ni commité ni annulé. Demander à Nicolas.
 6. Ensuite, le `Now`/`Next` de `TODO.md` : fixtures dorées des habitudes Cadence, module habits côté serveur, etc.
 
 Commence par confirmer à Nicolas l'étape 1 et son critère de vérification, puis lance le premier sous-agent Haiku.
