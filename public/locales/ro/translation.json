@@ -281,6 +281,18 @@
     "noActivity": "Nicio activitate încă"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonează-te la sarcinile tale",
+      "description": "O adresă privată care arată sarcinile deschise cu termen în Google Calendar, Apple Calendar sau Outlook. Oricine are adresa poate citi aceste sarcini.",
+      "address": "Adresa fluxului",
+      "copy": "Copiază",
+      "copied": "Adresă copiată",
+      "once": "Copiaz-o acum: e afișată o singură dată. O adresă nouă o dezactivează pe cea veche.",
+      "create": "Creează o adresă",
+      "rotate": "Creează o adresă nouă",
+      "disable": "Dezactivează",
+      "error": "Fluxul de sarcini nu a putut fi actualizat"
+    },
     "settings": "Setări profil",
     "language": "Limba",
     "theme": "Temă",

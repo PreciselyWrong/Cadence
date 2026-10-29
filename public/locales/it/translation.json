@@ -281,6 +281,18 @@
     "noActivity": "Nessuna attività ancora"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Iscriviti alle tue attività",
+      "description": "Un indirizzo privato che mostra le tue attività aperte con scadenza in Google Calendar, Apple Calendar o Outlook. Chiunque abbia l'indirizzo può leggere quelle attività.",
+      "address": "Indirizzo del feed",
+      "copy": "Copia",
+      "copied": "Indirizzo copiato",
+      "once": "Copialo ora: viene mostrato una sola volta. Un nuovo indirizzo disattiva il precedente.",
+      "create": "Crea un indirizzo",
+      "rotate": "Crea un nuovo indirizzo",
+      "disable": "Disattiva",
+      "error": "Impossibile aggiornare il feed delle attività"
+    },
     "settings": "Impostazioni Profilo",
     "language": "Lingua",
     "theme": "Tema",

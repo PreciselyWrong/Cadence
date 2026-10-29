@@ -303,6 +303,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Subscribe to your tasks",
+      "description": "A private address that shows your open tasks with a due date in Google Calendar, Apple Calendar or Outlook. Anyone with the address can read those tasks.",
+      "address": "Feed address",
+      "copy": "Copy",
+      "copied": "Address copied",
+      "once": "Copy it now: it is shown only once. Making a new address stops the old one.",
+      "create": "Make an address",
+      "rotate": "Make a new address",
+      "disable": "Turn off",
+      "error": "Could not update the task feed"
+    },
     "settings": "Profile Settings",
     "sidebarSectionDescription": "Show the {{name}} section in the sidebar.",
     "sidebarLayoutDescription": "This is a preview of your sidebar. Use the switches to choose what appears, and drag the handles to change the order.",

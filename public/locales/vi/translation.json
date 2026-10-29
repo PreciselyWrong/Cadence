@@ -281,6 +281,18 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Đăng ký công việc của bạn",
+      "description": "Một địa chỉ riêng hiển thị các công việc còn mở có hạn trong Google Calendar, Apple Calendar hoặc Outlook. Ai có địa chỉ đều đọc được các công việc đó.",
+      "address": "Địa chỉ nguồn",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép địa chỉ",
+      "once": "Hãy sao chép ngay: chỉ hiển thị một lần. Địa chỉ mới sẽ vô hiệu địa chỉ cũ.",
+      "create": "Tạo địa chỉ",
+      "rotate": "Tạo địa chỉ mới",
+      "disable": "Tắt",
+      "error": "Không thể cập nhật nguồn công việc"
+    },
     "settings": "Cài đặt hồ sơ",
     "language": "Ngôn ngữ",
     "theme": "Chủ đề",

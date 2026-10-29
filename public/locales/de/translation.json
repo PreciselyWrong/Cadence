@@ -649,6 +649,18 @@
     "startsOn": "Beginnt am {{date}}"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Aufgaben abonnieren",
+      "description": "Eine private Adresse, die deine offenen Aufgaben mit Fälligkeit in Google Kalender, Apple Kalender oder Outlook zeigt. Wer die Adresse hat, kann diese Aufgaben lesen.",
+      "address": "Feed-Adresse",
+      "copy": "Kopieren",
+      "copied": "Adresse kopiert",
+      "once": "Jetzt kopieren: Sie wird nur einmal angezeigt. Eine neue Adresse deaktiviert die alte.",
+      "create": "Adresse erstellen",
+      "rotate": "Neue Adresse erstellen",
+      "disable": "Deaktivieren",
+      "error": "Aufgaben-Feed konnte nicht aktualisiert werden"
+    },
     "title": "Profil-Einstellungen",
     "appearance": "Erscheinungsbild",
     "language": "Sprache",

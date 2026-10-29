@@ -281,6 +281,18 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonneren op je taken",
+      "description": "Een privéadres dat je open taken met een deadline toont in Google Agenda, Apple Agenda of Outlook. Iedereen met het adres kan die taken lezen.",
+      "address": "Feedadres",
+      "copy": "Kopiëren",
+      "copied": "Adres gekopieerd",
+      "once": "Kopieer het nu: het wordt maar één keer getoond. Een nieuw adres zet het oude uit.",
+      "create": "Adres maken",
+      "rotate": "Nieuw adres maken",
+      "disable": "Uitzetten",
+      "error": "Takenfeed kon niet worden bijgewerkt"
+    },
     "settings": "Profielinstellingen",
     "language": "Taal",
     "theme": "Thema",

@@ -281,6 +281,18 @@
     "noActivity": "아직 활동이 없습니다"
   },
   "profile": {
+    "taskFeed": {
+      "title": "내 작업 구독",
+      "description": "기한이 있는 열린 작업을 Google 캘린더, Apple 캘린더 또는 Outlook에 표시하는 비공개 주소입니다. 주소를 아는 사람은 누구나 작업을 볼 수 있습니다.",
+      "address": "피드 주소",
+      "copy": "복사",
+      "copied": "주소를 복사했습니다",
+      "once": "지금 복사하세요. 한 번만 표시됩니다. 새 주소를 만들면 이전 주소는 꺼집니다.",
+      "create": "주소 만들기",
+      "rotate": "새 주소 만들기",
+      "disable": "끄기",
+      "error": "작업 피드를 업데이트할 수 없습니다"
+    },
     "settings": "프로필 설정",
     "language": "언어",
     "theme": "테마",

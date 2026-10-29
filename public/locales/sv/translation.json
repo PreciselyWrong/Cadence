@@ -281,6 +281,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Prenumerera på dina uppgifter",
+      "description": "En privat adress som visar dina öppna uppgifter med förfallodatum i Google Kalender, Apple Kalender eller Outlook. Alla med adressen kan läsa uppgifterna.",
+      "address": "Flödesadress",
+      "copy": "Kopiera",
+      "copied": "Adressen kopierad",
+      "once": "Kopiera den nu: den visas bara en gång. En ny adress stänger av den gamla.",
+      "create": "Skapa en adress",
+      "rotate": "Skapa en ny adress",
+      "disable": "Stäng av",
+      "error": "Kunde inte uppdatera uppgiftsflödet"
+    },
     "settings": "Profilinställningar",
     "language": "Språk",
     "theme": "Tema",

@@ -281,6 +281,18 @@
     "noActivity": "还没有活动"
   },
   "profile": {
+    "taskFeed": {
+      "title": "订阅你的任务",
+      "description": "一个私密地址，可在 Google 日历、Apple 日历或 Outlook 中显示有截止日期的未完成任务。任何拥有该地址的人都能读取这些任务。",
+      "address": "订阅地址",
+      "copy": "复制",
+      "copied": "地址已复制",
+      "once": "请立即复制：它只显示一次。创建新地址会停用旧地址。",
+      "create": "创建地址",
+      "rotate": "创建新地址",
+      "disable": "关闭",
+      "error": "无法更新任务订阅"
+    },
     "settings": "个人资料设置",
     "language": "语言",
     "theme": "主题",

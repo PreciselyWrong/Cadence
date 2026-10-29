@@ -281,6 +281,18 @@
     "noActivity": "Ingen aktivitet endnu"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonnér på dine opgaver",
+      "description": "En privat adresse, der viser dine åbne opgaver med forfaldsdato i Google Kalender, Apple Kalender eller Outlook. Alle med adressen kan læse opgaverne.",
+      "address": "Feedadresse",
+      "copy": "Kopiér",
+      "copied": "Adresse kopieret",
+      "once": "Kopiér den nu: den vises kun én gang. En ny adresse slår den gamle fra.",
+      "create": "Opret en adresse",
+      "rotate": "Opret en ny adresse",
+      "disable": "Slå fra",
+      "error": "Kunne ikke opdatere opgavefeedet"
+    },
     "settings": "Profilindstillinger",
     "language": "Sprog",
     "theme": "Tema",

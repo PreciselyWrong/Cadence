@@ -282,6 +282,18 @@
     "noActivity": "Ingen aktivitet ennå"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonner på oppgavene dine",
+      "description": "En privat adresse som viser åpne oppgaver med frist i Google Kalender, Apple Kalender eller Outlook. Alle med adressen kan lese oppgavene.",
+      "address": "Feedadresse",
+      "copy": "Kopier",
+      "copied": "Adresse kopiert",
+      "once": "Kopier den nå: den vises bare én gang. En ny adresse slår av den gamle.",
+      "create": "Lag en adresse",
+      "rotate": "Lag en ny adresse",
+      "disable": "Slå av",
+      "error": "Kunne ikke oppdatere oppgavefeeden"
+    },
     "settings": "Profilinnstillinger",
     "language": "Språk",
     "theme": "Tema",

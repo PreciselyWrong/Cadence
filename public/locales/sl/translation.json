@@ -281,6 +281,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Naroči se na svoja opravila",
+      "description": "Zasebni naslov, ki prikaže odprta opravila z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere ta opravila.",
+      "address": "Naslov vira",
+      "copy": "Kopiraj",
+      "copied": "Naslov kopiran",
+      "once": "Kopirajte ga zdaj: prikaže se samo enkrat. Nov naslov izklopi starega.",
+      "create": "Ustvari naslov",
+      "rotate": "Ustvari nov naslov",
+      "disable": "Izklopi",
+      "error": "Vira opravil ni bilo mogoče posodobiti"
+    },
     "settings": "Nastavitve profila",
     "language": "Jezik",
     "theme": "Tema",

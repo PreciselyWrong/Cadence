@@ -281,6 +281,18 @@
     "noActivity": "Ei vielä aktiivisuutta"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Tilaa tehtäväsi",
+      "description": "Yksityinen osoite, joka näyttää avoimet tehtäväsi määräpäivineen Google Kalenterissa, Apple Kalenterissa tai Outlookissa. Kuka tahansa osoitteen tietävä voi lukea tehtävät.",
+      "address": "Syötteen osoite",
+      "copy": "Kopioi",
+      "copied": "Osoite kopioitu",
+      "once": "Kopioi se nyt: se näytetään vain kerran. Uusi osoite poistaa vanhan käytöstä.",
+      "create": "Luo osoite",
+      "rotate": "Luo uusi osoite",
+      "disable": "Poista käytöstä",
+      "error": "Tehtäväsyötettä ei voitu päivittää"
+    },
     "settings": "Profiilin asetukset",
     "language": "Kieli",
     "theme": "Teema",

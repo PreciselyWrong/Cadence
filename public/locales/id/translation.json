@@ -281,6 +281,18 @@
     "noActivity": "Belum ada aktivitas"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Berlangganan tugas Anda",
+      "description": "Alamat pribadi yang menampilkan tugas terbuka dengan tenggat di Google Calendar, Apple Calendar, atau Outlook. Siapa pun yang punya alamat ini dapat membaca tugas tersebut.",
+      "address": "Alamat feed",
+      "copy": "Salin",
+      "copied": "Alamat disalin",
+      "once": "Salin sekarang: hanya ditampilkan sekali. Alamat baru menonaktifkan yang lama.",
+      "create": "Buat alamat",
+      "rotate": "Buat alamat baru",
+      "disable": "Matikan",
+      "error": "Tidak dapat memperbarui feed tugas"
+    },
     "settings": "Pengaturan Profil",
     "language": "Bahasa",
     "theme": "Tema",

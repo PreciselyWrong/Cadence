@@ -281,6 +281,18 @@
     "noActivity": "まだアクティビティはありません"
   },
   "profile": {
+    "taskFeed": {
+      "title": "タスクを購読",
+      "description": "期限付きの未完了タスクを Google カレンダー、Apple カレンダー、Outlook に表示する非公開アドレスです。アドレスを知っている人は誰でもタスクを読めます。",
+      "address": "フィードのアドレス",
+      "copy": "コピー",
+      "copied": "アドレスをコピーしました",
+      "once": "今コピーしてください。一度しか表示されません。新しいアドレスを作ると古いものは無効になります。",
+      "create": "アドレスを作成",
+      "rotate": "新しいアドレスを作成",
+      "disable": "オフにする",
+      "error": "タスクフィードを更新できませんでした"
+    },
     "taskIntelligence": "タスクインテリジェンス",
     "enableTaskIntelligence": "タスクインテリジェンスアシスタントを有効にする",
     "enableTaskSummary": "タスクサマリーを有効にする",

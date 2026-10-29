@@ -10,6 +10,7 @@ import {
     deleteCalendarFeed,
     updateCalendarFeed,
 } from '../../utils/calendarFeedsService';
+import TaskFeedSection from './TaskFeedSection';
 
 interface CalendarFeedsManagerProps {
     feeds: CalendarFeed[];
@@ -297,6 +298,8 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                         : t('profile.calendars.add', 'Connect')}
                 </button>
             </section>
+
+            <TaskFeedSection />
 
             {toDelete && (
                 <ConfirmDialog

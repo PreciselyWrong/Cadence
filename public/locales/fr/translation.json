@@ -281,6 +281,18 @@
     "noActivity": "Aucune activité pour le moment"
   },
   "profile": {
+    "taskFeed": {
+      "title": "S'abonner à vos tâches",
+      "description": "Une adresse privée qui affiche vos tâches ouvertes avec une échéance dans Google Agenda, Apple Calendrier ou Outlook. Toute personne qui a l'adresse peut lire ces tâches.",
+      "address": "Adresse du flux",
+      "copy": "Copier",
+      "copied": "Adresse copiée",
+      "once": "Copiez-la maintenant : elle n'est affichée qu'une fois. Une nouvelle adresse désactive l'ancienne.",
+      "create": "Créer une adresse",
+      "rotate": "Créer une nouvelle adresse",
+      "disable": "Désactiver",
+      "error": "Impossible de mettre à jour le flux de tâches"
+    },
     "settings": "Paramètres du profil",
     "language": "Langue",
     "theme": "Thème",

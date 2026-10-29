@@ -405,6 +405,7 @@ const goalsModule = require('./modules/goals');
 const dailyPlanModule = require('./modules/daily-plan');
 const onboardingModule = require('./modules/onboarding');
 const calendarFeedsModule = require('./modules/calendar-feeds');
+const taskFeedModule = require('./modules/task-feed');
 const authModule = require('./modules/auth');
 const backupModule = require('./modules/backup');
 const featureFlagsModule = require('./modules/feature-flags');
@@ -528,6 +529,8 @@ const registerApiRoutes = (basePath) => {
     // Public note links: reachable without signing in
     app.use(basePath, notesModule.publicRoutes);
     app.use(basePath, blogModule.routes);
+    // Task feed (.ics): the secret address is the key
+    app.use(basePath, taskFeedModule.publicRoutes);
 
     app.use(basePath, requireAuth);
     // Instances that sell access close everything past this point until the
@@ -545,6 +548,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, dailyPlanModule.routes);
     app.use(basePath, onboardingModule.routes);
     app.use(basePath, calendarFeedsModule.routes);
+    app.use(basePath, taskFeedModule.routes);
     app.use(basePath, notesModule.routes);
     app.use(basePath, tagsModule.routes);
     app.use(basePath, usersModule.routes);

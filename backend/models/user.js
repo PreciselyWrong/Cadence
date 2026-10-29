@@ -267,6 +267,13 @@ module.exports = (sequelize) => {
                 allowNull: true,
                 defaultValue: null,
             },
+            // SHA-256 of the secret task feed token (see modules/task-feed).
+            task_feed_token_hash: {
+                type: DataTypes.STRING(64),
+                allowNull: true,
+                defaultValue: null,
+                unique: true,
+            },
             ai_profile: {
                 type: DataTypes.TEXT,
                 allowNull: true,

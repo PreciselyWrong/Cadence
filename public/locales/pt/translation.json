@@ -281,6 +281,18 @@
     "noActivity": "Nenhuma atividade ainda"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Assinar suas tarefas",
+      "description": "Um endereço privado que mostra suas tarefas abertas com prazo no Google Agenda, Apple Calendário ou Outlook. Qualquer pessoa com o endereço pode ler essas tarefas.",
+      "address": "Endereço do feed",
+      "copy": "Copiar",
+      "copied": "Endereço copiado",
+      "once": "Copie agora: ele é mostrado só uma vez. Um novo endereço desativa o antigo.",
+      "create": "Criar um endereço",
+      "rotate": "Criar um novo endereço",
+      "disable": "Desativar",
+      "error": "Não foi possível atualizar o feed de tarefas"
+    },
     "settings": "Configurações do Perfil",
     "language": "Idioma",
     "theme": "Tema",

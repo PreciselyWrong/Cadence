@@ -300,6 +300,18 @@
         }
     },
     "profile": {
+        "taskFeed": {
+            "title": "Odoberať svoje úlohy",
+            "description": "Súkromná adresa, ktorá zobrazí otvorené úlohy s termínom v Kalendári Google, Apple alebo Outlooku. Ktokoľvek s adresou môže tieto úlohy čítať.",
+            "address": "Adresa kanála",
+            "copy": "Kopírovať",
+            "copied": "Adresa skopírovaná",
+            "once": "Skopírujte ju teraz: zobrazí sa iba raz. Nová adresa vypne starú.",
+            "create": "Vytvoriť adresu",
+            "rotate": "Vytvoriť novú adresu",
+            "disable": "Vypnúť",
+            "error": "Kanál úloh sa nepodarilo aktualizovať"
+        },
         "settings": "Nastavenia profilu",
         "sidebarSectionDescription": "Zobraziť sekciu {{name}} v bočnom paneli.",
         "sidebarLayoutDescription": "Toto je náhľad vášho bočného panela. Prepínačmi vyberte, čo sa zobrazí, a potiahnutím úchytov zmeňte poradie.",
@@ -1864,35 +1876,35 @@
         "done": "Hotovo"
     },
     "calendar": {
-      "multiDay_one": "{{count}} dní",
-      "multiDay_other": "{{count}} dní",
-      "agendaEmpty": "Nič naplánované",
-      "agenda": "Agenda",
-      "options": {
-        "multiDayCount": "Dni vo viacdňovom zobrazení",
-        "title": "Možnosti zobrazenia",
-        "showCompleted": "Zobraziť dokončené",
-        "showWeekends": "Zobraziť víkendy",
-        "showRepeats": "Zobraziť všetky opakovania",
-        "colorBy": "Farba podľa",
-        "colorBy_default": "Predvolené",
-        "colorBy_project": "Projekt",
-        "colorBy_priority": "Priorita",
-        "colorBy_tag": "Štítok",
-        "saveError": "Možnosti sa nepodarilo uložiť"
-      },
-      "arrange": {
-        "title": "Naplánovať úlohy",
-        "noDate": "Bez dátumu",
-        "overdue": "Po termíne",
-        "filterProject": "Projekt",
-        "filterTag": "Štítok",
-        "filterPriority": "Priorita",
-        "emptyNoDate": "Žiadne úlohy bez dátumu na naplánovanie",
-        "emptyOverdue": "Žiadne úlohy po termíne na naplánovanie",
-        "noProject": "Bez projektu"
-      },
-      "resizeTask": "Zmeniť koniec tejto úlohy",
+        "multiDay_one": "{{count}} dní",
+        "multiDay_other": "{{count}} dní",
+        "agendaEmpty": "Nič naplánované",
+        "agenda": "Agenda",
+        "options": {
+            "multiDayCount": "Dni vo viacdňovom zobrazení",
+            "title": "Možnosti zobrazenia",
+            "showCompleted": "Zobraziť dokončené",
+            "showWeekends": "Zobraziť víkendy",
+            "showRepeats": "Zobraziť všetky opakovania",
+            "colorBy": "Farba podľa",
+            "colorBy_default": "Predvolené",
+            "colorBy_project": "Projekt",
+            "colorBy_priority": "Priorita",
+            "colorBy_tag": "Štítok",
+            "saveError": "Možnosti sa nepodarilo uložiť"
+        },
+        "arrange": {
+            "title": "Naplánovať úlohy",
+            "noDate": "Bez dátumu",
+            "overdue": "Po termíne",
+            "filterProject": "Projekt",
+            "filterTag": "Štítok",
+            "filterPriority": "Priorita",
+            "emptyNoDate": "Žiadne úlohy bez dátumu na naplánovanie",
+            "emptyOverdue": "Žiadne úlohy po termíne na naplánovanie",
+            "noProject": "Bez projektu"
+        },
+        "resizeTask": "Zmeniť koniec tejto úlohy",
         "month": "Mesiac",
         "week": "Týždeň",
         "day": "Deň",
@@ -3187,10 +3199,10 @@
         }
     },
     "projectTimeline": {
-      "colorBy": "Farba podľa",
-      "colorByStatus": "Farba: stav",
-      "colorByPriority": "Farba: priorita",
-      "colorByTag": "Farba: štítok",
+        "colorBy": "Farba podľa",
+        "colorByStatus": "Farba: stav",
+        "colorByPriority": "Farba: priorita",
+        "colorByTag": "Farba: štítok",
         "title": "Časová os",
         "days": "Dni",
         "weeks": "Týždne",

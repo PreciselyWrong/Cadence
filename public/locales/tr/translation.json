@@ -281,6 +281,18 @@
     "noActivity": "Henüz etkinlik yok"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Görevlerine abone ol",
+      "description": "Son tarihi olan açık görevlerini Google Takvim, Apple Takvim veya Outlook’ta gösteren özel bir adres. Adrese sahip herkes bu görevleri okuyabilir.",
+      "address": "Akış adresi",
+      "copy": "Kopyala",
+      "copied": "Adres kopyalandı",
+      "once": "Şimdi kopyala: yalnızca bir kez gösterilir. Yeni bir adres eskisini kapatır.",
+      "create": "Adres oluştur",
+      "rotate": "Yeni adres oluştur",
+      "disable": "Kapat",
+      "error": "Görev akışı güncellenemedi"
+    },
     "settings": "Profil Ayarları",
     "language": "Dil",
     "theme": "Tema",

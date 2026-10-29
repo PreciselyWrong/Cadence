@@ -90,6 +90,19 @@ Profile → **Calendars**, or the **Calendars** button on the Calendar page, con
 
 ---
 
+## Task feed (subscribe from another calendar)
+
+Profile → **Calendars** (and the Calendars dialog on the Calendar page) has **Subscribe to your tasks**. *Make an address* creates a secret `https://…/api/feeds/tasks/tf_….ics` address to paste into Google Calendar ("From URL"), Apple Calendar or Outlook. The address is shown once; only a SHA-256 of the token is stored (`users.task_feed_token_hash`). *Make a new address* replaces it and the old one stops working; *Turn off* removes it.
+
+The feed lists the user's own tasks with a due date from 60 days ago to 400 days ahead, except done, archived and cancelled ones, drawn the same way as on the Calendar page: a timed task from its start time (same day) or its due time for its estimate (an hour without one), a whole-day task as an all-day event from its start day to its due day. Recurring tasks appear at their current due date only.
+
+| Method | Path | |
+|---|---|---|
+| GET | `/api/profile/task-feed` | `{ enabled }` |
+| POST | `/api/profile/task-feed` | new address: `{ enabled: true, path }` |
+| DELETE | `/api/profile/task-feed` | `{ enabled: false }` |
+| GET | `/api/feeds/tasks/:token.ics` | the feed, no sign-in; 404 for an unknown token |
+
 ## Calendar page: task blocks
 
 How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`):

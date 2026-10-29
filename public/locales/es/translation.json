@@ -192,6 +192,18 @@
     "registration_email_sent": "Verifica tu dirección de correo para activar tu cuenta. Te hemos enviado un enlace, revisa tu bandeja de entrada."
   },
   "profile": {
+    "taskFeed": {
+      "title": "Suscribirse a tus tareas",
+      "description": "Una dirección privada que muestra tus tareas abiertas con fecha límite en Google Calendar, Apple Calendar u Outlook. Cualquiera con la dirección puede leer esas tareas.",
+      "address": "Dirección del feed",
+      "copy": "Copiar",
+      "copied": "Dirección copiada",
+      "once": "Cópiala ahora: solo se muestra una vez. Una nueva dirección desactiva la anterior.",
+      "create": "Crear una dirección",
+      "rotate": "Crear una nueva dirección",
+      "disable": "Desactivar",
+      "error": "No se pudo actualizar el feed de tareas"
+    },
     "title": "Configuración de Perfil",
     "appearance": "Apariencia",
     "language": "Idioma",

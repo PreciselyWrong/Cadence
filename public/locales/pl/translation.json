@@ -281,6 +281,18 @@
     "noActivity": "Brak aktywności"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Subskrybuj swoje zadania",
+      "description": "Prywatny adres pokazujący otwarte zadania z terminem w Kalendarzu Google, Kalendarzu Apple lub Outlooku. Każdy, kto zna adres, może czytać te zadania.",
+      "address": "Adres kanału",
+      "copy": "Kopiuj",
+      "copied": "Adres skopiowany",
+      "once": "Skopiuj go teraz: jest pokazywany tylko raz. Nowy adres wyłącza stary.",
+      "create": "Utwórz adres",
+      "rotate": "Utwórz nowy adres",
+      "disable": "Wyłącz",
+      "error": "Nie udało się zaktualizować kanału zadań"
+    },
     "settings": "Ustawienia profilu",
     "language": "Język",
     "theme": "Motyw",
