@@ -115,7 +115,11 @@
     "resize": "Ridimensiona la barra laterale",
     "collapseViews": "Comprimi l'elenco delle viste",
     "expandViews": "Espandi l'elenco delle viste",
-    "summary": "Riepilogo"
+    "summary": "Riepilogo",
+    "tomorrow": "Domani",
+    "next7Days": "Prossimi 7 giorni",
+    "more": "Altro",
+    "toggleFolder": "Mostra o nascondi progetti"
   },
   "navigation": {
     "home": "Home",

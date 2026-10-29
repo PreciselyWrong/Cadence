@@ -114,7 +114,11 @@
     "resize": "Đổi kích thước thanh bên",
     "collapseViews": "Thu gọn danh sách chế độ xem",
     "expandViews": "Mở rộng danh sách chế độ xem",
-    "summary": "Tóm tắt"
+    "summary": "Tóm tắt",
+    "tomorrow": "Ngày mai",
+    "next7Days": "7 ngày tới",
+    "more": "Thêm",
+    "toggleFolder": "Hiện hoặc ẩn dự án"
   },
   "navigation": {
     "home": "Trang chủ",

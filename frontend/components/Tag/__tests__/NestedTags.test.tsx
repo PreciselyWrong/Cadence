@@ -39,6 +39,7 @@ jest.mock('../../../store/useStore', () => {
             hasLoaded: true,
             loadTags: jest.fn(),
         },
+        userSettingsStore: { uiDensity: 'dense' },
     });
     return {
         useStore: (selector?: (s: any) => unknown) =>

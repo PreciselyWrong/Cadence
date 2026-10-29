@@ -76,6 +76,7 @@ const {
 } = require('./operations/recurring');
 
 const { getTaskMetrics } = require('./queries/metrics-computation');
+const { getSmartTaskCounts } = require('./queries/smart-counts');
 const scopeService = require('../../services/scopeService');
 const dailyPlanService = require('../daily-plan/service');
 
@@ -504,6 +505,19 @@ router.get('/tasks/metrics', async (req, res) => {
         res.json(response);
     } catch (error) {
         logError('Error fetching task metrics:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.get('/tasks/smart-counts', async (req, res) => {
+    try {
+        const counts = await getSmartTaskCounts(
+            req.currentUser.id,
+            req.currentUser.timezone
+        );
+        res.json(counts);
+    } catch (error) {
+        logError('Error fetching smart task counts:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

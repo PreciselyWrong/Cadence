@@ -116,11 +116,14 @@ const setVisibleSections = (visible: Record<string, boolean>) =>
     });
 
 describe('Sidebar section visibility', () => {
+    // Dense keeps every section in the panel; minimal moves most to the rail
+    // (see SidebarMinimal.test.tsx).
     beforeEach(() => {
         act(() => {
             useStore.setState((state: any) => ({
                 userSettingsStore: {
                     ...state.userSettingsStore,
+                    uiDensity: 'dense',
                     habitsEnabled: true,
                 },
             }));

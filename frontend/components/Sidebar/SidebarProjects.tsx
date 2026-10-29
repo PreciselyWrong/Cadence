@@ -10,6 +10,7 @@ import { useStore } from '../../store/useStore';
 import { useCan } from '../../hooks/useCan';
 import { Project } from '../../entities/Project';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
+import { useIsMinimal } from '../../hooks/useUiDensity';
 import { flattenProjectTree } from '../../utils/projectTree';
 
 interface SidebarProjectsProps {
@@ -19,7 +20,7 @@ interface SidebarProjectsProps {
     openProjectModal: () => void;
 }
 
-const getProjectPath = (project: Project) => {
+export const getProjectPath = (project: Project) => {
     const slug = project.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -60,8 +61,12 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
     const isActive = (path: string) => location.pathname === path;
 
+    const rowSize = useIsMinimal()
+        ? 'py-[7px] text-[14px]'
+        : 'py-[4px] text-[13.5px]';
+
     const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
         }`;
 

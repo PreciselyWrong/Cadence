@@ -114,7 +114,11 @@
     "resize": "Kenar çubuğunu yeniden boyutlandır",
     "collapseViews": "Görünüm listesini daralt",
     "expandViews": "Görünüm listesini genişlet",
-    "summary": "Özet"
+    "summary": "Özet",
+    "tomorrow": "Yarın",
+    "next7Days": "Sonraki 7 gün",
+    "more": "Daha fazla",
+    "toggleFolder": "Projeleri göster veya gizle"
   },
   "navigation": {
     "home": "Ana Sayfa",

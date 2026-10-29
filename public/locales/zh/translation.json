@@ -114,7 +114,11 @@
     "resize": "调整侧边栏宽度",
     "collapseViews": "收起视图列表",
     "expandViews": "展开视图列表",
-    "summary": "摘要"
+    "summary": "摘要",
+    "tomorrow": "明天",
+    "next7Days": "未来7天",
+    "more": "更多",
+    "toggleFolder": "显示或隐藏项目"
   },
   "navigation": {
     "home": "首页",

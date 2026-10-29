@@ -77,6 +77,21 @@ export const fetchTasks = async (
     };
 };
 
+export interface SmartTaskCounts {
+    today: number;
+    tomorrow: number;
+    next7: number;
+}
+
+export const fetchSmartTaskCounts = async (): Promise<SmartTaskCounts> => {
+    const response = await fetch(getApiPath('tasks/smart-counts'), {
+        credentials: 'include',
+        headers: getDefaultHeaders(),
+    });
+    await handleAuthResponse(response, 'Failed to fetch task counts.');
+    return response.json();
+};
+
 export const createTask = async (taskData: Task): Promise<Task> => {
     const response = await fetch(getApiPath('task'), {
         method: 'POST',

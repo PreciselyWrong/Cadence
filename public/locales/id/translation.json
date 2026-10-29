@@ -114,7 +114,11 @@
     "resize": "Ubah ukuran bilah sisi",
     "collapseViews": "Ciutkan daftar tampilan",
     "expandViews": "Luaskan daftar tampilan",
-    "summary": "Ringkasan"
+    "summary": "Ringkasan",
+    "tomorrow": "Besok",
+    "next7Days": "7 hari ke depan",
+    "more": "Lainnya",
+    "toggleFolder": "Tampilkan atau sembunyikan proyek"
   },
   "navigation": {
     "home": "Beranda",

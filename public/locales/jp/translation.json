@@ -114,7 +114,11 @@
     "resize": "サイドバーの幅を変更",
     "collapseViews": "ビュー一覧を閉じる",
     "expandViews": "ビュー一覧を開く",
-    "summary": "サマリー"
+    "summary": "サマリー",
+    "tomorrow": "明日",
+    "next7Days": "今後7日間",
+    "more": "その他",
+    "toggleFolder": "プロジェクトの表示・非表示"
   },
   "navigation": {
     "home": "ホーム",

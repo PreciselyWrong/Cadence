@@ -114,7 +114,11 @@
     "resize": "Seitenleiste anpassen",
     "collapseViews": "Ansichtenliste einklappen",
     "expandViews": "Ansichtenliste ausklappen",
-    "summary": "Zusammenfassung"
+    "summary": "Zusammenfassung",
+    "tomorrow": "Morgen",
+    "next7Days": "Nächste 7 Tage",
+    "more": "Mehr",
+    "toggleFolder": "Projekte ein- oder ausblenden"
   },
   "navigation": {
     "home": "Startseite",

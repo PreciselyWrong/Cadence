@@ -115,7 +115,11 @@
     "resize": "Redimensionează bara laterală",
     "collapseViews": "Restrânge lista de vizualizări",
     "expandViews": "Extinde lista de vizualizări",
-    "summary": "Rezumat"
+    "summary": "Rezumat",
+    "tomorrow": "Mâine",
+    "next7Days": "Următoarele 7 zile",
+    "more": "Mai multe",
+    "toggleFolder": "Afișează sau ascunde proiectele"
   },
   "navigation": {
     "home": "Acasă",

@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+    FolderIcon,
     Squares2X2Icon,
     ChevronRightIcon,
     PlusIcon,
@@ -8,7 +9,11 @@ import { Location } from 'react-router-dom';
 import { Area } from '../../entities/Area';
 import { useTranslation } from 'react-i18next';
 import { useCan } from '../../hooks/useCan';
+import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
+import { useStore } from '../../store/useStore';
+import { flattenProjectTree } from '../../utils/projectTree';
+import { getProjectPath } from './SidebarProjects';
 
 interface SidebarAreasProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -43,6 +48,92 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
     }, [location.pathname, areas.length]);
 
     const isAreasPageActive = location.pathname === '/areas';
+
+    // Minimal shows each area as a folder that opens onto its projects.
+    const isMinimal = useIsMinimal();
+    const projects = useStore((state) => state.projectsStore.projects);
+    const hasLoadedProjects = useStore(
+        (state) => state.projectsStore.hasLoaded
+    );
+    const loadProjects = useStore((state) => state.projectsStore.loadProjects);
+    const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        if (isMinimal && !hasLoadedProjects) loadProjects();
+    }, [isMinimal, hasLoadedProjects, loadProjects]);
+
+    const renderFolder = (area: Area) => {
+        const folderOpen = openFolders[area.uid] === true;
+        const areaProjects = flattenProjectTree(
+            projects.filter(
+                (p) =>
+                    p.area_id === area.id &&
+                    p.status !== 'done' &&
+                    p.status !== 'cancelled'
+            )
+        );
+        return (
+            <div key={area.uid}>
+                <div
+                    className={`flex items-center gap-[4px] rounded-[8px] pl-[6px] pr-[10px] h-[34px] text-[14px] text-gray-700 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+                        location.pathname === getAreaPath(area)
+                            ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]'
+                            : ''
+                    }`}
+                >
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setOpenFolders((prev) => ({
+                                ...prev,
+                                [area.uid]: !folderOpen,
+                            }))
+                        }
+                        aria-expanded={folderOpen}
+                        aria-label={t(
+                            'sidebar.toggleFolder',
+                            'Show or hide projects'
+                        )}
+                        className="p-1 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                    >
+                        <ChevronRightIcon
+                            className="h-3 w-3 transition-transform duration-150"
+                            style={{
+                                transform: folderOpen
+                                    ? 'rotate(90deg)'
+                                    : 'none',
+                            }}
+                        />
+                    </button>
+                    <span
+                        className="flex-1 min-w-0 truncate cursor-pointer"
+                        onClick={() => navigate(area)}
+                    >
+                        {area.name}
+                    </span>
+                </div>
+                {folderOpen &&
+                    areaProjects.map(({ project, depth }) => (
+                        <div
+                            key={project.uid}
+                            className="flex items-center rounded-[8px] h-[34px] pr-[10px] text-[14px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)]"
+                            style={{ paddingLeft: 30 + depth * 12 }}
+                            onClick={() =>
+                                handleNavClick(
+                                    getProjectPath(project),
+                                    project.name,
+                                    <FolderIcon className="h-4 w-4 mr-2" />
+                                )
+                            }
+                        >
+                            <span className="truncate min-w-0">
+                                {project.name}
+                            </span>
+                        </div>
+                    ))}
+            </div>
+        );
+    };
 
     const itemClass = (path: string) =>
         `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
@@ -130,17 +221,21 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
             {isExpanded && (
                 <li className="p-0 list-none">
                     <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
-                        {areas.map((area) => (
-                            <div
-                                key={area.uid}
-                                className={itemClass(getAreaPath(area))}
-                                onClick={() => navigate(area)}
-                            >
-                                <span className="truncate min-w-0">
-                                    {area.name}
-                                </span>
-                            </div>
-                        ))}
+                        {areas.map((area) =>
+                            isMinimal ? (
+                                renderFolder(area)
+                            ) : (
+                                <div
+                                    key={area.uid}
+                                    className={itemClass(getAreaPath(area))}
+                                    onClick={() => navigate(area)}
+                                >
+                                    <span className="truncate min-w-0">
+                                        {area.name}
+                                    </span>
+                                </div>
+                            )
+                        )}
                     </div>
                 </li>
             )}

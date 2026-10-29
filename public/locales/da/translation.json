@@ -114,7 +114,11 @@
     "resize": "Tilpas sidebjælken",
     "collapseViews": "Skjul listen over visninger",
     "expandViews": "Vis listen over visninger",
-    "summary": "Oversigt"
+    "summary": "Oversigt",
+    "tomorrow": "I morgen",
+    "next7Days": "Næste 7 dage",
+    "more": "Mere",
+    "toggleFolder": "Vis eller skjul projekter"
   },
   "navigation": {
     "home": "Hjem",

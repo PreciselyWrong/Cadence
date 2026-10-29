@@ -114,7 +114,11 @@
     "resize": "Muuta sivupalkin kokoa",
     "collapseViews": "Pienennä näkymäluettelo",
     "expandViews": "Laajenna näkymäluettelo",
-    "summary": "Yhteenveto"
+    "summary": "Yhteenveto",
+    "tomorrow": "Huomenna",
+    "next7Days": "Seuraavat 7 päivää",
+    "more": "Lisää",
+    "toggleFolder": "Näytä tai piilota projektit"
   },
   "navigation": {
     "home": "Koti",

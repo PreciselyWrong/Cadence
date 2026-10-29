@@ -114,7 +114,11 @@
     "resize": "Zijbalk aanpassen",
     "collapseViews": "Lijst met weergaven inklappen",
     "expandViews": "Lijst met weergaven uitklappen",
-    "summary": "Samenvatting"
+    "summary": "Samenvatting",
+    "tomorrow": "Morgen",
+    "next7Days": "Komende 7 dagen",
+    "more": "Meer",
+    "toggleFolder": "Projecten tonen of verbergen"
   },
   "navigation": {
     "home": "Home",

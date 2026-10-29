@@ -33,6 +33,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Projects | Sub-projects, any depth, area follows the parent (`projects.parent_project_id`) | [06-projects.md](docs/06-projects.md) |
 | Appearance | Minimal (default) or Dense interface (`ui_settings.appearance.density`) | [08-user-management.md](docs/08-user-management.md) |
 | Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |
+| Sidebar | Minimal: smart lists with counts, Areas as folders, icon rail with a More menu; Dense is upstream | [32-sidebar.md](docs/32-sidebar.md) |
 
 ### Rules for agents working on the fork
 
@@ -405,6 +406,11 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - Insights → Summary: tasks completed in a period (today, this week, last week, this month, custom up to 366 days), optionally open tasks due in it
     - Group by project, day or status; copy as Markdown, download .md/.txt/.csv, print
     - `GET /api/reports/summary` in user timezone; template saved in `ui_settings.summary`
+
+41. **[Sidebar (Minimal)](docs/32-sidebar.md)**
+    - Smart lists at the top (Today, Tomorrow, Next 7 days, Inbox) with open-task counts from `GET /api/tasks/smart-counts`
+    - Projects and Tags in the panel, Areas as folders; Goals, Notes, People and the rest in the icon rail with a More menu
+    - `GET /api/tasks?type=tomorrow`; Dense keeps the upstream sidebar
 
 ---
 

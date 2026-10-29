@@ -116,7 +116,11 @@
     "resize": "Zmień szerokość paska bocznego",
     "collapseViews": "Zwiń listę widoków",
     "expandViews": "Rozwiń listę widoków",
-    "summary": "Podsumowanie"
+    "summary": "Podsumowanie",
+    "tomorrow": "Jutro",
+    "next7Days": "Następne 7 dni",
+    "more": "Więcej",
+    "toggleFolder": "Pokaż lub ukryj projekty"
   },
   "navigation": {
     "home": "Strona główna",

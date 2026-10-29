@@ -114,7 +114,11 @@
     "resize": "Endre størrelse på sidefeltet",
     "collapseViews": "Skjul listen over visninger",
     "expandViews": "Vis listen over visninger",
-    "summary": "Oppsummering"
+    "summary": "Oppsummering",
+    "tomorrow": "I morgen",
+    "next7Days": "Neste 7 dager",
+    "more": "Mer",
+    "toggleFolder": "Vis eller skjul prosjekter"
   },
   "navigation": {
     "home": "Hjem",

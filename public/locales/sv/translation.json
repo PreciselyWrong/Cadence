@@ -114,7 +114,11 @@
     "resize": "Ändra storlek på sidofältet",
     "collapseViews": "Fäll ihop listan med vyer",
     "expandViews": "Fäll ut listan med vyer",
-    "summary": "Sammanfattning"
+    "summary": "Sammanfattning",
+    "tomorrow": "I morgon",
+    "next7Days": "Nästa 7 dagar",
+    "more": "Mer",
+    "toggleFolder": "Visa eller dölj projekt"
   },
   "navigation": {
     "home": "Hem",

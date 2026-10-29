@@ -16,6 +16,7 @@ const {
     getSafeTimezone,
     getUpcomingRangeInUTC,
     getTodayBoundsInUTC,
+    getTomorrowBoundsInUTC,
 } = require('../../../utils/timezone-utils');
 
 // `page` ({ limit, offset }) switches to database pagination: the result is
@@ -249,6 +250,40 @@ async function filterTasksByParams(
             } else if (!params.client_side_filtering) {
                 whereClause.status = { [Op.notIn]: [Task.STATUS.DONE] };
             }
+            break;
+        }
+        case 'tomorrow': {
+            // Same shape as Today's due-date rule: recurring instances count,
+            // recurring patterns do not.
+            const tomorrowBounds = getTomorrowBoundsInUTC(
+                getSafeTimezone(userTimezone)
+            );
+            const dueTomorrow = {
+                due_date: {
+                    [Op.between]: [tomorrowBounds.start, tomorrowBounds.end],
+                },
+            };
+            whereClause[Op.or] = [
+                {
+                    [Op.and]: [
+                        { recurring_parent_id: null },
+                        {
+                            [Op.or]: [
+                                { recurrence_type: 'none' },
+                                { recurrence_type: null },
+                            ],
+                        },
+                        dueTomorrow,
+                    ],
+                },
+                {
+                    [Op.and]: [
+                        { recurring_parent_id: { [Op.ne]: null } },
+                        dueTomorrow,
+                    ],
+                },
+            ];
+            whereClause.status = { [Op.notIn]: [Task.STATUS.DONE] };
             break;
         }
         case 'next':

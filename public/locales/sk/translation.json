@@ -114,7 +114,11 @@
         "telegramProblem": "Problém s pripojením k Telegramu",
         "collapseViews": "Zbaliť zoznam zobrazení",
         "expandViews": "Rozbaliť zoznam zobrazení",
-        "summary": "Súhrn"
+        "summary": "Súhrn",
+        "tomorrow": "Zajtra",
+        "next7Days": "Najbližších 7 dní",
+        "more": "Viac",
+        "toggleFolder": "Zobraziť alebo skryť projekty"
     },
     "navigation": {
         "home": "Domov",

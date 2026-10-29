@@ -114,7 +114,11 @@
     "resize": "사이드바 크기 조정",
     "collapseViews": "뷰 목록 접기",
     "expandViews": "뷰 목록 펼치기",
-    "summary": "요약"
+    "summary": "요약",
+    "tomorrow": "내일",
+    "next7Days": "다음 7일",
+    "more": "더보기",
+    "toggleFolder": "프로젝트 표시 또는 숨기기"
   },
   "navigation": {
     "home": "홈",

@@ -116,7 +116,11 @@
     "resize": "Spremeni širino stranske vrstice",
     "collapseViews": "Strni seznam pogledov",
     "expandViews": "Razširi seznam pogledov",
-    "summary": "Povzetek"
+    "summary": "Povzetek",
+    "tomorrow": "Jutri",
+    "next7Days": "Naslednjih 7 dni",
+    "more": "Več",
+    "toggleFolder": "Prikaži ali skrij projekte"
   },
   "navigation": {
     "home": "Domov",

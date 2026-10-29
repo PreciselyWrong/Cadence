@@ -23,6 +23,10 @@ import SidebarBookmarks from './Sidebar/SidebarBookmarks';
 import SidebarResizeHandle from './Sidebar/SidebarResizeHandle';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
 import SidebarRail from './Sidebar/SidebarRail';
+import SidebarRailMinimal from './Sidebar/SidebarRailMinimal';
+import SidebarSmartLists from './Sidebar/SidebarSmartLists';
+import { useIsMinimal } from '../hooks/useUiDensity';
+import { canOpenAccess } from '../entities/Role';
 import { KeyboardShortcutsConfig } from '../utils/keyboardShortcutsService';
 import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
@@ -56,6 +60,14 @@ interface SidebarProps {
 
 // The sidebar sits on the app canvas; the page is a panel beside it.
 export const SIDEBAR_CANVAS = 'bg-gray-200 dark:bg-gray-900';
+
+// Minimal keeps only these lists in the panel; the rest live in the icon rail.
+const MINIMAL_LIST_SECTIONS: SidebarSectionId[] = [
+    'favorites',
+    'projects',
+    'areas',
+    'tags',
+];
 
 const Sidebar: React.FC<SidebarProps> = ({
     isSidebarOpen,
@@ -98,6 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const sectionOrder = useStore(
         (state) => state.userSettingsStore.sidebarSectionOrder
     );
+    const isMinimal = useIsMinimal();
     const isSectionVisible = (key: keyof SidebarVisibleSections) =>
         visibleSections[key] !== false;
 
@@ -206,86 +219,135 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* Collapsed on tablet and desktop: an icon rail */}
             {!isSidebarOpen && (
                 <div className="hidden sm:block h-full">
-                    <SidebarRail
-                        handleNavClick={handleNavClick}
-                        location={location}
-                        isDarkMode={isDarkMode}
-                        openTaskModal={openTaskModal}
-                        onExpand={() => setIsSidebarOpen(true)}
-                    />
+                    {isMinimal ? (
+                        <SidebarRailMinimal
+                            handleNavClick={handleNavClick}
+                            location={location}
+                            canOpenAccess={canOpenAccess(currentUser)}
+                            onExpand={() => setIsSidebarOpen(true)}
+                        />
+                    ) : (
+                        <SidebarRail
+                            handleNavClick={handleNavClick}
+                            location={location}
+                            isDarkMode={isDarkMode}
+                            openTaskModal={openTaskModal}
+                            onExpand={() => setIsSidebarOpen(true)}
+                        />
+                    )}
                 </div>
             )}
             {isSidebarOpen && (
-                <div className="flex flex-col h-full">
-                    <SidebarResizeHandle />
-                    <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
-                        <Link to="/" className="flex items-center no-underline">
-                            <img
-                                src={getAssetPath(
-                                    isDarkMode
-                                        ? 'wide-logo-light.png'
-                                        : 'wide-logo-dark.png'
+                <div className={isMinimal ? 'flex h-full' : 'contents'}>
+                    {isMinimal && (
+                        <SidebarRailMinimal
+                            handleNavClick={handleNavClick}
+                            location={location}
+                            canOpenAccess={canOpenAccess(currentUser)}
+                        />
+                    )}
+                    <div
+                        className={
+                            isMinimal
+                                ? 'flex flex-col h-full min-w-0 flex-1'
+                                : 'flex flex-col h-full'
+                        }
+                    >
+                        <SidebarResizeHandle />
+                        <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
+                            <Link
+                                to="/"
+                                className="flex items-center no-underline"
+                            >
+                                <img
+                                    src={getAssetPath(
+                                        isDarkMode
+                                            ? 'wide-logo-light.png'
+                                            : 'wide-logo-dark.png'
+                                    )}
+                                    alt="tududi"
+                                    className="h-8 w-auto"
+                                />
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                aria-label="Collapse Sidebar"
+                                data-testid="sidebar-collapse"
+                            >
+                                <SidebarPanelIcon className="h-5 w-5" />
+                            </button>
+                        </div>
+                        <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
+                            {/* Sidebar Contents */}
+                            <div className="mb-[22px]">
+                                {isMinimal ? (
+                                    <SidebarSmartLists
+                                        handleNavClick={handleNavClick}
+                                        location={location}
+                                    />
+                                ) : (
+                                    <SidebarNav
+                                        handleNavClick={handleNavClick}
+                                        location={location}
+                                        isDarkMode={isDarkMode}
+                                        openTaskModal={openTaskModal}
+                                    />
                                 )}
-                                alt="tududi"
-                                className="h-8 w-auto"
-                            />
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => setIsSidebarOpen(false)}
-                            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                            aria-label="Collapse Sidebar"
-                            data-testid="sidebar-collapse"
-                        >
-                            <SidebarPanelIcon className="h-5 w-5" />
-                        </button>
-                    </div>
-                    <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
-                        {/* Sidebar Contents */}
-                        <div className="mb-[22px]">
-                            <SidebarNav
-                                handleNavClick={handleNavClick}
-                                location={location}
-                                isDarkMode={isDarkMode}
-                                openTaskModal={openTaskModal}
-                            />
-                        </div>
-                        {sectionOrder.map((id) => {
-                            if (!isSectionVisible(id as SidebarSectionId)) {
-                                return null;
-                            }
-                            if (id === 'habits' && !habitsEnabled) return null;
-                            return (
-                                <div key={id} className="mb-[6px]">
-                                    {sectionElements[id as SidebarSectionId]}
+                            </div>
+                            {sectionOrder.map((id) => {
+                                if (!isSectionVisible(id as SidebarSectionId)) {
+                                    return null;
+                                }
+                                if (id === 'habits' && !habitsEnabled)
+                                    return null;
+                                if (
+                                    isMinimal &&
+                                    !MINIMAL_LIST_SECTIONS.includes(
+                                        id as SidebarSectionId
+                                    )
+                                ) {
+                                    return null;
+                                }
+                                return (
+                                    <div key={id} className="mb-[6px]">
+                                        {
+                                            sectionElements[
+                                                id as SidebarSectionId
+                                            ]
+                                        }
+                                    </div>
+                                );
+                            })}
+                            {!isMinimal && (
+                                <div className="mb-[6px]">
+                                    <SidebarAdmin
+                                        handleNavClick={handleNavClick}
+                                        location={location}
+                                        currentUser={currentUser}
+                                    />
                                 </div>
-                            );
-                        })}
-                        <div className="mb-[6px]">
-                            <SidebarAdmin
-                                handleNavClick={handleNavClick}
-                                location={location}
-                                currentUser={currentUser}
-                            />
+                            )}
                         </div>
-                    </div>
 
-                    <SidebarTrialCard />
-                    <SidebarFooter
-                        currentUser={currentUser}
-                        isDarkMode={isDarkMode}
-                        toggleDarkMode={toggleDarkMode}
-                        isSidebarOpen={isSidebarOpen}
-                        setIsSidebarOpen={setIsSidebarOpen}
-                        isDropdownOpen={isDropdownOpen}
-                        toggleDropdown={toggleDropdown}
-                        openTaskModal={openTaskModal}
-                        openProjectModal={openProjectModal}
-                        onCreateNote={onCreateNote}
-                        openAreaModal={openAreaModal}
-                        openTagModal={openTagModal}
-                        keyboardShortcuts={keyboardShortcuts}
-                    />
+                        <SidebarTrialCard />
+                        <SidebarFooter
+                            currentUser={currentUser}
+                            isDarkMode={isDarkMode}
+                            toggleDarkMode={toggleDarkMode}
+                            isSidebarOpen={isSidebarOpen}
+                            setIsSidebarOpen={setIsSidebarOpen}
+                            isDropdownOpen={isDropdownOpen}
+                            toggleDropdown={toggleDropdown}
+                            openTaskModal={openTaskModal}
+                            openProjectModal={openProjectModal}
+                            onCreateNote={onCreateNote}
+                            openAreaModal={openAreaModal}
+                            openTagModal={openTagModal}
+                            keyboardShortcuts={keyboardShortcuts}
+                        />
+                    </div>
                 </div>
             )}
         </div>

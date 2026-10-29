@@ -70,6 +70,19 @@ function getTodayBoundsInUTC(userTimezone) {
 }
 
 /**
+ * Get tomorrow's bounds in UTC for a user's timezone
+ * @param {string} userTimezone - User's timezone
+ * @returns {Object} { start: Date, end: Date } - UTC Date objects
+ */
+function getTomorrowBoundsInUTC(userTimezone) {
+    const tomorrowInUserTz = moment
+        .tz(userTimezone)
+        .add(1, 'day')
+        .format('YYYY-MM-DD');
+    return getDayBoundsInUTC(tomorrowInUserTz, userTimezone);
+}
+
+/**
  * Get date range for "upcoming" tasks (next N days) in user timezone
  * Includes today through N days ahead
  * @param {string} userTimezone - User's timezone
@@ -292,6 +305,7 @@ module.exports = {
     getCurrentDateInTimezone,
     getDayBoundsInUTC,
     getTodayBoundsInUTC,
+    getTomorrowBoundsInUTC,
     getUpcomingRangeInUTC,
     isToday,
     isOverdue,

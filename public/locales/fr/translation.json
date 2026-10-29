@@ -115,7 +115,11 @@
     "resize": "Redimensionner la barre latérale",
     "collapseViews": "Replier la liste des vues",
     "expandViews": "Déplier la liste des vues",
-    "summary": "Résumé"
+    "summary": "Résumé",
+    "tomorrow": "Demain",
+    "next7Days": "7 prochains jours",
+    "more": "Plus",
+    "toggleFolder": "Afficher ou masquer les projets"
   },
   "navigation": {
     "home": "Accueil",

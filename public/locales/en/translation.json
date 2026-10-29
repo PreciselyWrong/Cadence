@@ -113,7 +113,11 @@
     "telegramProblem": "Telegram connection problem",
     "collapseViews": "Collapse views list",
     "expandViews": "Expand views list",
-    "summary": "Summary"
+    "summary": "Summary",
+    "tomorrow": "Tomorrow",
+    "next7Days": "Next 7 days",
+    "more": "More",
+    "toggleFolder": "Show or hide projects"
   },
   "navigation": {
     "home": "Home",
