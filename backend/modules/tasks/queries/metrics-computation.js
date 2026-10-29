@@ -18,6 +18,7 @@ const {
     fetchTasksCompletedToday,
 } = require('./metrics-queries');
 const { compareCandidates } = require('../../daily-plan/ranking');
+const { comparePinned } = require('../core/comparators');
 const { isSuggestible } = require('../../daily-plan/planningSettings');
 const habitService = require('../../habits/habitService');
 
@@ -47,6 +48,12 @@ const getPriorityValue = (priority) => {
 };
 
 const multiCriteriaTaskSort = (a, b) => {
+    // 0. Pinned tasks first
+    const pinnedDiff = comparePinned(a, b);
+    if (pinnedDiff !== 0) {
+        return pinnedDiff;
+    }
+
     // 1. Priority
     const priorityDiff =
         getPriorityValue(b.priority) - getPriorityValue(a.priority);

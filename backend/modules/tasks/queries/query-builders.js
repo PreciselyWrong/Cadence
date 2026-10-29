@@ -11,6 +11,7 @@ const permissionsService = require('../../../services/permissionsService');
 const scopeService = require('../../../services/scopeService');
 const { blockedCondition } = require('../relations/service');
 const { customOrderClause } = require('../order/service');
+const { PINNED_ORDER } = require('../core/comparators');
 const {
     getSafeTimezone,
     getUpcomingRangeInUTC,
@@ -350,6 +351,9 @@ async function filterTasksByParams(
             orderClause = [[orderColumn, orderDirection.toUpperCase()]];
         }
     }
+
+    // Pinned tasks stay on top of whichever order the list uses.
+    orderClause = [PINNED_ORDER, ...orderClause];
 
     if (params.tag) {
         const taggedTaskIds = await sequelize.query(

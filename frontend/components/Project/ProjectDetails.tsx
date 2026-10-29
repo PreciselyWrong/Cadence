@@ -62,6 +62,7 @@ import {
 } from '../../constants/taskStatus';
 import { saveProjectAsTemplate } from '../../utils/templatesService';
 import TaskModal from '../Task/TaskModal';
+import { comparePinnedTasks } from '../../utils/taskPin';
 
 const ProjectDetails: React.FC = () => {
     const { uidSlug } = useParams<{ uidSlug: string }>();
@@ -493,6 +494,8 @@ const ProjectDetails: React.FC = () => {
 
     const compareTasks = useCallback(
         (a: Task, b: Task) => {
+            const pinned = comparePinnedTasks(a, b);
+            if (pinned !== 0) return pinned;
             if (orderBy.startsWith('custom:')) {
                 const posA = a.uid ? taskPositions.get(a.uid) : undefined;
                 const posB = b.uid ? taskPositions.get(b.uid) : undefined;

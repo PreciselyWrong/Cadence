@@ -1458,7 +1458,11 @@
     "noStartDate": "Fără dată de început",
     "startDateUpdated": "Data de început a fost actualizată",
     "startDateUpdateError": "Data de început nu a putut fi actualizată",
-    "startAfterDueError": "Începutul nu poate fi după termen"
+    "startAfterDueError": "Începutul nu poate fi după termen",
+    "pin": "Fixează",
+    "unpin": "Anulează fixarea",
+    "pinned": "Fixată",
+    "pinUpdateError": "Actualizarea fixării a eșuat"
   },
   "projects": {
     "loading": "Se încarcă proiectele...",

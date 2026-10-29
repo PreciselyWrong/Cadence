@@ -1454,7 +1454,11 @@
     "noStartDate": "无开始日期",
     "startDateUpdated": "开始日期已更新",
     "startDateUpdateError": "无法更新开始日期",
-    "startAfterDueError": "开始时间不能晚于截止日期"
+    "startAfterDueError": "开始时间不能晚于截止日期",
+    "pin": "置顶",
+    "unpin": "取消置顶",
+    "pinned": "已置顶",
+    "pinUpdateError": "更新置顶失败"
   },
   "projects": {
     "loading": "加载项目中...",

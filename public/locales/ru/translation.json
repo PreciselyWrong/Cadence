@@ -1457,7 +1457,11 @@
     "noStartDate": "Нет даты начала",
     "startDateUpdated": "Дата начала обновлена",
     "startDateUpdateError": "Не удалось обновить дату начала",
-    "startAfterDueError": "Начало не может быть позже срока"
+    "startAfterDueError": "Начало не может быть позже срока",
+    "pin": "Закрепить",
+    "unpin": "Открепить",
+    "pinned": "Закреплена",
+    "pinUpdateError": "Не удалось обновить закрепление"
   },
   "projects": {
     "loading": "Загрузка проектов...",

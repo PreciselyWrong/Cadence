@@ -7,6 +7,7 @@ const {
 } = require('../../../utils/timezone-utils');
 const { getTaskIncludeConfigLight } = require('./query-builders');
 const permissionsService = require('../../../services/permissionsService');
+const { PINNED_ORDER } = require('../core/comparators');
 
 // Statuses that indicate a task is in the "today plan" (actively being worked on)
 // Used to exclude from overdue/due-today sections to avoid duplicates
@@ -87,6 +88,7 @@ async function fetchTasksInProgress(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -163,6 +165,7 @@ async function fetchTodayPlanTasks(visibleTasksWhere, somedayExcludedIds = []) {
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -260,6 +263,7 @@ async function fetchTasksDueToday(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -337,6 +341,7 @@ async function fetchOverdueTasks(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -409,6 +414,7 @@ async function fetchNonProjectTasks(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -448,6 +454,7 @@ async function fetchProjectTasks(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],
@@ -484,6 +491,7 @@ async function fetchSomedayFallbackTasks(
         },
         include: getTaskIncludeConfigLight(),
         order: [
+            PINNED_ORDER,
             ['priority', 'DESC NULLS LAST'],
             ['due_date', 'ASC NULLS FIRST'],
             ['project_id', 'ASC NULLS FIRST'],

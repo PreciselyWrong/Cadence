@@ -1542,7 +1542,11 @@
     "noStartDate": "No start date",
     "startDateUpdated": "Start date updated",
     "startDateUpdateError": "Failed to update start date",
-    "startAfterDueError": "Start cannot be after the due date"
+    "startAfterDueError": "Start cannot be after the due date",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "pinned": "Pinned",
+    "pinUpdateError": "Failed to update pin"
   },
   "subtasks": {
     "placeholder": "Add a subtask..."

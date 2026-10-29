@@ -48,6 +48,8 @@ export interface Task {
     defer_until?: string;
     reminder_at?: string;
     estimated_minutes?: number | null;
+    pinned?: boolean;
+    pinned_at?: string | null;
     note?: string;
     tags?: Tag[];
     project_id?: number;

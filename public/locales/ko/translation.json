@@ -1454,7 +1454,11 @@
     "noStartDate": "시작일 없음",
     "startDateUpdated": "시작일이 업데이트되었습니다",
     "startDateUpdateError": "시작일을 업데이트하지 못했습니다",
-    "startAfterDueError": "시작일은 마감일 이후일 수 없습니다"
+    "startAfterDueError": "시작일은 마감일 이후일 수 없습니다",
+    "pin": "고정",
+    "unpin": "고정 해제",
+    "pinned": "고정됨",
+    "pinUpdateError": "고정을 업데이트하지 못했습니다"
   },
   "projects": {
     "loading": "프로젝트 로딩 중...",

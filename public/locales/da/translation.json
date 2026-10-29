@@ -1455,7 +1455,11 @@
     "noStartDate": "Ingen startdato",
     "startDateUpdated": "Startdato opdateret",
     "startDateUpdateError": "Kunne ikke opdatere startdato",
-    "startAfterDueError": "Start kan ikke ligge efter forfaldsdatoen"
+    "startAfterDueError": "Start kan ikke ligge efter forfaldsdatoen",
+    "pin": "Fastgør",
+    "unpin": "Frigør",
+    "pinned": "Fastgjort",
+    "pinUpdateError": "Kunne ikke opdatere fastgørelse"
   },
   "projects": {
     "loading": "Indlæser projekter...",

@@ -1455,7 +1455,11 @@
     "noStartDate": "Inget startdatum",
     "startDateUpdated": "Startdatum uppdaterat",
     "startDateUpdateError": "Det gick inte att uppdatera startdatum",
-    "startAfterDueError": "Start kan inte vara efter förfallodatumet"
+    "startAfterDueError": "Start kan inte vara efter förfallodatumet",
+    "pin": "Fäst",
+    "unpin": "Lossa",
+    "pinned": "Fäst",
+    "pinUpdateError": "Det gick inte att uppdatera fästningen"
   },
   "projects": {
     "loading": "Laddar projekt...",

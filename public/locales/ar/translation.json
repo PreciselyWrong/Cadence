@@ -1459,7 +1459,11 @@
     "noStartDate": "لا يوجد تاريخ بدء",
     "startDateUpdated": "تم تحديث تاريخ البدء",
     "startDateUpdateError": "تعذر تحديث تاريخ البدء",
-    "startAfterDueError": "لا يمكن أن يكون البدء بعد تاريخ الاستحقاق"
+    "startAfterDueError": "لا يمكن أن يكون البدء بعد تاريخ الاستحقاق",
+    "pin": "تثبيت",
+    "unpin": "إلغاء التثبيت",
+    "pinned": "مثبتة",
+    "pinUpdateError": "فشل تحديث التثبيت"
   },
   "projects": {
     "loading": "جارٍ تحميل المشاريع...",

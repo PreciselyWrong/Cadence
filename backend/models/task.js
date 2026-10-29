@@ -61,6 +61,11 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // Set while the task is pinned to the top of its lists.
+            pinned_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
             estimated_minutes: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

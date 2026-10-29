@@ -1432,7 +1432,11 @@
     "noStartDate": "Sin fecha de inicio",
     "startDateUpdated": "Fecha de inicio actualizada",
     "startDateUpdateError": "No se pudo actualizar la fecha de inicio",
-    "startAfterDueError": "El inicio no puede ser posterior a la fecha de vencimiento"
+    "startAfterDueError": "El inicio no puede ser posterior a la fecha de vencimiento",
+    "pin": "Fijar",
+    "unpin": "Desfijar",
+    "pinned": "Fijada",
+    "pinUpdateError": "No se pudo actualizar la fijación"
   },
   "dateIndicators": {
     "today": "HOY",

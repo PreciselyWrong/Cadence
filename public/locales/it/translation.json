@@ -1456,7 +1456,11 @@
     "noStartDate": "Nessuna data di inizio",
     "startDateUpdated": "Data di inizio aggiornata",
     "startDateUpdateError": "Impossibile aggiornare la data di inizio",
-    "startAfterDueError": "L'inizio non può essere dopo la scadenza"
+    "startAfterDueError": "L'inizio non può essere dopo la scadenza",
+    "pin": "Fissa",
+    "unpin": "Sblocca",
+    "pinned": "Fissata",
+    "pinUpdateError": "Impossibile aggiornare il fissaggio"
   },
   "projects": {
     "loading": "Caricamento progetti...",

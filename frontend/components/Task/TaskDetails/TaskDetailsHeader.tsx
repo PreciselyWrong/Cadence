@@ -45,6 +45,7 @@ interface TaskDetailsHeaderProps {
     autoEditTitle?: boolean;
     ancestorChain?: Array<{ uid: string; name: string }>;
     onEdit?: () => void;
+    onTogglePin?: () => void;
 }
 
 const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
@@ -55,6 +56,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
     onDelete,
     onSkipOccurrence,
     onEdit,
+    onTogglePin,
     getProjectLink,
     getTagLink,
     activePill,
@@ -858,6 +860,26 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                         'task.editDetails',
                                                         'Edit details'
                                                     )}
+                                                </button>
+                                            )}
+                                            {onTogglePin && (
+                                                <button
+                                                    className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setActionsMenuOpen(
+                                                            false
+                                                        );
+                                                        onTogglePin();
+                                                    }}
+                                                >
+                                                    {task.pinned
+                                                        ? t(
+                                                              'task.unpin',
+                                                              'Unpin'
+                                                          )
+                                                        : t('task.pin', 'Pin')}
                                                 </button>
                                             )}
                                             {onSkipOccurrence && (

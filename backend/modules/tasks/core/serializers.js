@@ -184,6 +184,7 @@ async function serializeTask(
                 ? task.completed_at.toISOString()
                 : new Date(task.completed_at).toISOString()
             : null,
+        pinned: Boolean(taskJson.pinned_at),
         today_move_count: todayMoveCount,
         parent_task: parentTaskInfo,
         blocked_by_count: blockedByCount,

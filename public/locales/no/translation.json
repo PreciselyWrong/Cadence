@@ -1456,7 +1456,11 @@
     "noStartDate": "Ingen startdato",
     "startDateUpdated": "Startdato oppdatert",
     "startDateUpdateError": "Kunne ikke oppdatere startdato",
-    "startAfterDueError": "Start kan ikke være etter forfallsdatoen"
+    "startAfterDueError": "Start kan ikke være etter forfallsdatoen",
+    "pin": "Fest",
+    "unpin": "Løsne",
+    "pinned": "Festet",
+    "pinUpdateError": "Kunne ikke oppdatere festing"
   },
   "projects": {
     "loading": "Laster prosjekter...",
