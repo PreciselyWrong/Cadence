@@ -11,6 +11,10 @@ jest.mock('react-i18next', () => ({
 }));
 
 const fetchSummary = jest.fn();
+jest.mock('../../../utils/dateUtils', () => ({
+    getUserTimezone: () => undefined,
+}));
+
 jest.mock('../../../utils/summaryService', () => ({
     fetchSummary: (...args: unknown[]) => fetchSummary(...args),
 }));

@@ -35,6 +35,10 @@ jest.mock('../../../utils/csrfService', () => ({
     getCsrfToken: jest.fn().mockResolvedValue('token'),
 }));
 
+jest.mock('../../Shared/ToastContext', () => ({
+    useToast: () => ({ showErrorToast: jest.fn() }),
+}));
+
 jest.mock('../../Task/TaskItem', () => ({
     __esModule: true,
     default: ({ task }: any) => <div data-testid="task">{task.name}</div>,

@@ -266,7 +266,11 @@
         "firstMatchHint": "Chaque tâche apparaît dans le premier quadrant dont elle respecte la règle. Un choix vide accepte tout.",
         "deleteTitle": "Supprimer la matrice",
         "deleteConfirm": "Supprimer la matrice « {{name}} » ? Vos tâches ne sont pas modifiées."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Tableau Kanban",

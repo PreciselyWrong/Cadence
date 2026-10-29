@@ -266,7 +266,11 @@
         "firstMatchHint": "Mỗi công việc nằm ở ô đầu tiên có quy tắc phù hợp. Lựa chọn trống khớp với mọi thứ.",
         "deleteTitle": "Xóa ma trận",
         "deleteConfirm": "Xóa ma trận \"{{name}}\"? Công việc của bạn không thay đổi."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Bảng Kanban",

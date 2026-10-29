@@ -266,7 +266,11 @@
         "firstMatchHint": "Jede Aufgabe erscheint im ersten Quadranten, dessen Regel sie erfüllt. Leere Auswahl passt auf alles.",
         "deleteTitle": "Matrix löschen",
         "deleteConfirm": "Die Matrix „{{name}}“ löschen? Deine Aufgaben bleiben unverändert."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Kanban-Board",

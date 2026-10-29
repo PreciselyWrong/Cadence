@@ -939,7 +939,11 @@
         "firstMatchHint": "Κάθε εργασία εμφανίζεται στο πρώτο τεταρτημόριο του οποίου τον κανόνα πληροί. Μια κενή επιλογή ταιριάζει με όλα.",
         "deleteTitle": "Διαγραφή πίνακα",
         "deleteConfirm": "Διαγραφή του πίνακα «{{name}}»; Οι εργασίες σας δεν αλλάζουν."
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Πίνακας Kanban",

@@ -2,6 +2,7 @@ import { Task } from '../../../entities/Task';
 import {
     assignToQuadrants,
     DEFAULT_MATRIX,
+    editForQuadrant,
     emptyRule,
     matchesRule,
     taskPriority,
@@ -131,5 +132,85 @@ describe('assignToQuadrants', () => {
             [],
             [],
         ]);
+    });
+});
+
+describe('editForQuadrant', () => {
+    const ctx = { now: NOW };
+    const matrix: EisenhowerMatrixConfig = {
+        id: 'm',
+        name: 'M',
+        quadrants: [
+            {
+                name: 'Hot',
+                rule: { ...emptyRule(), priorities: ['high'], tags: ['hot'] },
+            },
+            {
+                name: 'Today',
+                rule: { ...emptyRule(), due: { type: 'today' } },
+            },
+            {
+                name: 'Mid',
+                rule: { ...emptyRule(), priorities: ['medium', 'high'] },
+            },
+            { name: 'Rest', rule: emptyRule() },
+        ],
+    };
+
+    it('sets the single priority and adds the first tag', () => {
+        const move = editForQuadrant(task({ priority: 0 }), matrix, 0, ctx);
+        expect(move.ok).toBe(true);
+        if (!move.ok) return;
+        expect(move.edit).toEqual({ priority: 'high', addTag: 'hot' });
+        expect(move.task.priority).toBe(2);
+        expect(move.task.tags).toEqual([{ name: 'hot' }]);
+    });
+
+    it('needs no edit when the task already fits', () => {
+        const move = editForQuadrant(task({ priority: 0 }), matrix, 3, ctx);
+        expect(move).toEqual({
+            ok: true,
+            edit: {},
+            task: task({ priority: 0 }),
+        });
+    });
+
+    it('refuses a due window the task misses', () => {
+        expect(editForQuadrant(task(), matrix, 1, ctx)).toEqual({
+            ok: false,
+            reason: 'due',
+        });
+        const dueToday = task({ due_date: '2026-10-29' });
+        expect(editForQuadrant(dueToday, matrix, 1, ctx).ok).toBe(true);
+    });
+
+    it('refuses a rule with several priorities the task lacks', () => {
+        expect(editForQuadrant(task({ priority: 0 }), matrix, 2, ctx)).toEqual({
+            ok: false,
+            reason: 'priority',
+        });
+    });
+
+    it('refuses when an earlier quadrant would catch the task', () => {
+        const hot = task({ priority: 2, tags: [{ name: 'hot' }] as any });
+        expect(editForQuadrant(hot, matrix, 3, ctx)).toEqual({
+            ok: false,
+            reason: 'earlier',
+        });
+        const dueToday = task({ priority: 0, due_date: '2026-10-29' });
+        expect(editForQuadrant(dueToday, matrix, 3, ctx).ok).toBe(false);
+    });
+
+    it('refuses a project filter the task misses', () => {
+        const m: EisenhowerMatrixConfig = {
+            ...matrix,
+            quadrants: [
+                { name: 'P', rule: { ...emptyRule(), projects: ['p1'] } },
+            ],
+        };
+        expect(editForQuadrant(task(), m, 0, ctx)).toEqual({
+            ok: false,
+            reason: 'project',
+        });
     });
 });

@@ -266,7 +266,11 @@
         "firstMatchHint": "各タスクはルールに一致する最初の象限にだけ表示されます。空の選択はすべてに一致します。",
         "deleteTitle": "マトリクスを削除",
         "deleteConfirm": "マトリクス「{{name}}」を削除しますか？タスクは変更されません。"
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "カンバンボード",

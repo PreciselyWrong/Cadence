@@ -43,29 +43,60 @@ export function toDateString(d: Date): string {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-// The start and end day of a period, counted from `now` in local time.
+// The calendar day `now` falls on in `timeZone`, as a UTC-midnight Date.
+function zonedToday(now: Date, timeZone?: string): Date {
+    if (timeZone) {
+        try {
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }).formatToParts(now);
+            const get = (type: string) =>
+                Number(parts.find((p) => p.type === type)?.value);
+            return new Date(
+                Date.UTC(get('year'), get('month') - 1, get('day'))
+            );
+        } catch {
+            // Unknown timezone: fall back to the browser's local day.
+        }
+    }
+    return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+}
+
+const utcDateString = (d: Date) =>
+    `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+
+// The start and end day of a period, counted from `now` in the profile
+// timezone (the one the backend reads days in). Without a timezone the
+// browser's local time is used.
 export function periodRange(
     period: Exclude<SummaryPeriod, 'custom'>,
     now: Date = new Date(),
-    firstDayOfWeek = 1
+    firstDayOfWeek = 1,
+    timeZone?: string
 ): { start: string; end: string } {
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const today = zonedToday(now, timeZone);
+    const y = today.getUTCFullYear();
+    const m = today.getUTCMonth();
     if (period === 'today') {
-        const s = toDateString(today);
+        const s = utcDateString(today);
         return { start: s, end: s };
     }
     if (period === 'this_month') {
-        const first = new Date(today.getFullYear(), today.getMonth(), 1);
-        const last = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        return { start: toDateString(first), end: toDateString(last) };
+        return {
+            start: utcDateString(new Date(Date.UTC(y, m, 1))),
+            end: utcDateString(new Date(Date.UTC(y, m + 1, 0))),
+        };
     }
-    const offset = (today.getDay() - firstDayOfWeek + 7) % 7;
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - offset);
-    if (period === 'last_week') weekStart.setDate(weekStart.getDate() - 7);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    return { start: toDateString(weekStart), end: toDateString(weekEnd) };
+    const offset = (today.getUTCDay() - firstDayOfWeek + 7) % 7;
+    const startDay =
+        today.getUTCDate() - offset - (period === 'last_week' ? 7 : 0);
+    return {
+        start: utcDateString(new Date(Date.UTC(y, m, startDay))),
+        end: utcDateString(new Date(Date.UTC(y, m, startDay + 6))),
+    };
 }
 
 const STATUS_ORDER = [

@@ -266,7 +266,11 @@
         "firstMatchHint": "每个任务只出现在第一个符合规则的象限中。留空表示匹配全部。",
         "deleteTitle": "删除矩阵",
         "deleteConfirm": "删除矩阵“{{name}}”？你的任务不会改变。"
-      }
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "看板",

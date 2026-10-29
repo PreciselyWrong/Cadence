@@ -10,6 +10,7 @@ import { getCsrfToken } from '../../utils/csrfService';
 import { TASK_SHEET_CLASS } from '../Task/taskSheet';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import MatrixEditorModal from './MatrixEditorModal';
+import { useToast } from '../Shared/ToastContext';
 import {
     EisenhowerMatrixConfig,
     fetchProfile,
@@ -19,7 +20,9 @@ import {
     assignToQuadrants,
     DEFAULT_MATRIX,
     DEFAULT_MATRIX_ID,
+    editForQuadrant,
     MAX_MATRICES,
+    QuadrantMoveRefusal,
     newMatrixId,
     URGENT_TAG,
 } from './matrixRules';
@@ -59,6 +62,7 @@ const QUADRANT_AXES: Record<string, { important: boolean; urgent: boolean }> = {
 
 const EisenhowerMatrix: React.FC = () => {
     const { t } = useTranslation();
+    const { showErrorToast } = useToast();
     const projects: Project[] = useStore(
         (state: any) => state.projectsStore.projects
     );
@@ -172,6 +176,12 @@ const EisenhowerMatrix: React.FC = () => {
         fetchTasks();
     }, []);
 
+    const projectUid = useMemo(() => {
+        const uidById = new Map(projects.map((p) => [p.id, p.uid]));
+        return (task: Task) =>
+            task.project_id ? uidById.get(task.project_id) : undefined;
+    }, [projects]);
+
     const quadrants: Quadrant[] = useMemo(() => {
         const active = tasks.filter((t) => {
             const done =
@@ -181,17 +191,15 @@ const EisenhowerMatrix: React.FC = () => {
                 t.status === 3;
             return !done;
         });
-        const uidById = new Map(projects.map((p) => [p.id, p.uid]));
         const buckets = assignToQuadrants(active, activeMatrix, {
-            projectUid: (task) =>
-                task.project_id ? uidById.get(task.project_id) : undefined,
+            projectUid,
         });
         return QUADRANT_KEYS.map((key, i) => ({
             key,
             label: isDefault ? undefined : activeMatrix.quadrants[i]?.name,
             tasks: buckets[i] || [],
         }));
-    }, [tasks, activeMatrix, isDefault, projects]);
+    }, [tasks, activeMatrix, isDefault, projectUid]);
 
     function quadrantLabel(key: string): string {
         const labels: Record<string, string> = {
@@ -292,6 +300,48 @@ const EisenhowerMatrix: React.FC = () => {
         await handleTaskUpdate(updatedTask);
     };
 
+    // Custom matrices: apply the simple edit (priority, tag) that lands the
+    // task in the target quadrant, or explain why it cannot.
+    const moveTaskToCustomQuadrant = async (task: Task, targetKey: string) => {
+        const target = QUADRANT_KEYS.indexOf(targetKey);
+        const move = editForQuadrant(task, activeMatrix, target, {
+            projectUid,
+        });
+        if ('reason' in move) {
+            const messages: Record<QuadrantMoveRefusal, string> = {
+                priority: t(
+                    'tasks.eisenhower.dropRefusedPriority',
+                    'This quadrant allows several priorities, so the task cannot be moved here by dragging.'
+                ),
+                due: t(
+                    'tasks.eisenhower.dropRefusedDue',
+                    "The task's due date does not fit this quadrant; change the date instead."
+                ),
+                project: t(
+                    'tasks.eisenhower.dropRefusedProject',
+                    "The task's project does not fit this quadrant."
+                ),
+                earlier: t(
+                    'tasks.eisenhower.dropRefusedEarlier',
+                    'After the change the task would still land in an earlier quadrant.'
+                ),
+            };
+            showErrorToast(messages[move.reason]);
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { subtasks: _subtasks, ...taskWithoutSubtasks } = move.task;
+        const updatedTask: Task = {
+            ...taskWithoutSubtasks,
+            name: task.original_name || task.name,
+        };
+        setTasks((prev) =>
+            prev.map((t) => (t.id === task.id ? updatedTask : t))
+        );
+        await handleTaskUpdate(updatedTask);
+    };
+
     // ── Drag handlers ──────────────────────────────────────────────────────────
 
     const onDragStart = (e: React.DragEvent, task: Task) => {
@@ -332,9 +382,7 @@ const EisenhowerMatrix: React.FC = () => {
         dragEnterCounters.current[targetKey] = 0;
         setDragOverQuadrant(null);
 
-        // Moving a task rewrites its priority and 'urgent' tag, which only
-        // means something on the built-in matrix.
-        if (draggingTaskId === null || !isDefault) return;
+        if (draggingTaskId === null) return;
         const task = tasks.find((t) => t.id === draggingTaskId);
         if (!task) return;
 
@@ -344,7 +392,10 @@ const EisenhowerMatrix: React.FC = () => {
         )?.key;
         if (sourceKey === targetKey) return;
 
-        await moveTaskToQuadrant(task, targetKey);
+        // The built-in matrix rewrites priority and the 'urgent' tag; custom
+        // matrices apply the edit their target rule asks for.
+        if (isDefault) await moveTaskToQuadrant(task, targetKey);
+        else await moveTaskToCustomQuadrant(task, targetKey);
         setDraggingTaskId(null);
     };
 
@@ -476,7 +527,7 @@ const EisenhowerMatrix: React.FC = () => {
                                 {cellTasks.map((task) => (
                                     <div
                                         key={task.id}
-                                        draggable={isDefault}
+                                        draggable
                                         onDragStart={(e) =>
                                             onDragStart(e, task)
                                         }

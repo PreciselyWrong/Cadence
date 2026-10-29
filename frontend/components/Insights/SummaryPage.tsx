@@ -15,6 +15,7 @@ import {
     SummaryGroupBy,
     SummaryPeriod,
 } from './summaryExport';
+import { getUserTimezone } from '../../utils/dateUtils';
 import { fetchSummary, SummaryResponse } from '../../utils/summaryService';
 import {
     fetchProfile,
@@ -77,7 +78,12 @@ const SummaryPage: React.FC = () => {
         () =>
             period === 'custom'
                 ? { start: customStart, end: customEnd }
-                : periodRange(period, new Date(), firstDayOfWeek),
+                : periodRange(
+                      period,
+                      new Date(),
+                      firstDayOfWeek,
+                      getUserTimezone()
+                  ),
         [period, customStart, customEnd, firstDayOfWeek]
     );
 
