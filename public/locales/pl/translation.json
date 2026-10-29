@@ -1425,7 +1425,11 @@
     "noStartDate": "Brak daty rozpoczęcia",
     "startDateUpdated": "Data rozpoczęcia zaktualizowana",
     "startDateUpdateError": "Nie udało się zaktualizować daty rozpoczęcia",
-    "startAfterDueError": "Początek nie może być po terminie"
+    "startAfterDueError": "Początek nie może być po terminie",
+    "pin": "Przypnij",
+    "unpin": "Odepnij",
+    "pinned": "Przypięte",
+    "pinUpdateError": "Nie udało się zaktualizować przypięcia"
   },
   "projects": {
     "loading": "Ładowanie projektów...",

@@ -1425,7 +1425,11 @@
     "noStartDate": "Brez datuma začetka",
     "startDateUpdated": "Datum začetka posodobljen",
     "startDateUpdateError": "Datuma začetka ni bilo mogoče posodobiti",
-    "startAfterDueError": "Začetek ne more biti po roku"
+    "startAfterDueError": "Začetek ne more biti po roku",
+    "pin": "Pripni",
+    "unpin": "Odpni",
+    "pinned": "Pripeto",
+    "pinUpdateError": "Posodobitev pripenjanja ni uspela"
   },
   "projects": {
     "loading": "Nalagam projekte...",

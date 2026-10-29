@@ -1447,7 +1447,11 @@
     "noStartDate": "Χωρίς ημερομηνία έναρξης",
     "startDateUpdated": "Η ημερομηνία έναρξης ενημερώθηκε",
     "startDateUpdateError": "Αποτυχία ενημέρωσης ημερομηνίας έναρξης",
-    "startAfterDueError": "Η έναρξη δεν μπορεί να είναι μετά την προθεσμία"
+    "startAfterDueError": "Η έναρξη δεν μπορεί να είναι μετά την προθεσμία",
+    "pin": "Καρφίτσωμα",
+    "unpin": "Ξεκαρφίτσωμα",
+    "pinned": "Καρφιτσωμένη",
+    "pinUpdateError": "Αποτυχία ενημέρωσης καρφιτσώματος"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",

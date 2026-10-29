@@ -1644,7 +1644,11 @@
     "noStartDate": "開始日なし",
     "startDateUpdated": "開始日を更新しました",
     "startDateUpdateError": "開始日を更新できませんでした",
-    "startAfterDueError": "開始日は期限より後にできません"
+    "startAfterDueError": "開始日は期限より後にできません",
+    "pin": "ピン留め",
+    "unpin": "ピン留めを解除",
+    "pinned": "ピン留め済み",
+    "pinUpdateError": "ピン留めの更新に失敗しました"
   },
   "calendar": {
     "focusSession": "集中",

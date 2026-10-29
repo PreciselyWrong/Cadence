@@ -1422,7 +1422,11 @@
     "noStartDate": "Tidak ada tanggal mulai",
     "startDateUpdated": "Tanggal mulai diperbarui",
     "startDateUpdateError": "Gagal memperbarui tanggal mulai",
-    "startAfterDueError": "Mulai tidak boleh setelah tanggal jatuh tempo"
+    "startAfterDueError": "Mulai tidak boleh setelah tanggal jatuh tempo",
+    "pin": "Sematkan",
+    "unpin": "Lepas sematan",
+    "pinned": "Disematkan",
+    "pinUpdateError": "Gagal memperbarui sematan"
   },
   "projects": {
     "loading": "Memuat proyek...",

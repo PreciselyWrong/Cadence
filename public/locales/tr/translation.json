@@ -1423,7 +1423,11 @@
     "noStartDate": "Başlangıç tarihi yok",
     "startDateUpdated": "Başlangıç tarihi güncellendi",
     "startDateUpdateError": "Başlangıç tarihi güncellenemedi",
-    "startAfterDueError": "Başlangıç, bitiş tarihinden sonra olamaz"
+    "startAfterDueError": "Başlangıç, bitiş tarihinden sonra olamaz",
+    "pin": "Sabitle",
+    "unpin": "Sabitlemeyi kaldır",
+    "pinned": "Sabitlendi",
+    "pinUpdateError": "Sabitleme güncellenemedi"
   },
   "projects": {
     "loading": "Projeler yükleniyor...",

@@ -1424,7 +1424,11 @@
     "noStartDate": "Aucune date de début",
     "startDateUpdated": "Date de début mise à jour",
     "startDateUpdateError": "Impossible de mettre à jour la date de début",
-    "startAfterDueError": "Le début ne peut pas être après l'échéance"
+    "startAfterDueError": "Le début ne peut pas être après l'échéance",
+    "pin": "Épingler",
+    "unpin": "Désépingler",
+    "pinned": "Épinglée",
+    "pinUpdateError": "Impossible de mettre à jour l'épingle"
   },
   "projects": {
     "loading": "Chargement des projets...",

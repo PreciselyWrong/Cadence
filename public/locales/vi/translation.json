@@ -1422,7 +1422,11 @@
     "noStartDate": "Không có ngày bắt đầu",
     "startDateUpdated": "Đã cập nhật ngày bắt đầu",
     "startDateUpdateError": "Không thể cập nhật ngày bắt đầu",
-    "startAfterDueError": "Ngày bắt đầu không thể sau hạn chót"
+    "startAfterDueError": "Ngày bắt đầu không thể sau hạn chót",
+    "pin": "Ghim",
+    "unpin": "Bỏ ghim",
+    "pinned": "Đã ghim",
+    "pinUpdateError": "Không thể cập nhật ghim"
   },
   "projects": {
     "loading": "Đang tải dự án...",

@@ -14,8 +14,13 @@ import {
     EllipsisVerticalIcon,
     PencilIcon,
     TrashIcon,
+    MapPinIcon,
 } from '@heroicons/react/24/outline';
-import { FolderIcon, FireIcon } from '@heroicons/react/24/solid';
+import {
+    FolderIcon,
+    FireIcon,
+    MapPinIcon as MapPinSolidIcon,
+} from '@heroicons/react/24/solid';
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import { isTaskCompleted } from '../../../constants/taskStatus';
@@ -56,6 +61,7 @@ interface TaskRowCollapsedProps {
     onEscape?: () => void;
     onEdit?: () => void;
     onDelete?: (e: React.MouseEvent) => void;
+    onTogglePin?: () => void;
     onActionsMenuOpenChange?: (open: boolean) => void;
 }
 
@@ -113,6 +119,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     onEscape,
     onEdit,
     onDelete,
+    onTogglePin,
     onActionsMenuOpenChange,
 }) => {
     const { t } = useTranslation();
@@ -261,6 +268,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 }`}
             >
                 <div className="flex items-center gap-1.5 min-w-0">
+                    {task.pinned && (
+                        <MapPinSolidIcon
+                            className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400 flex-shrink-0"
+                            title={t('task.pinned', 'Pinned')}
+                            aria-label={t('task.pinned', 'Pinned')}
+                            data-testid="task-pinned-icon"
+                        />
+                    )}
                     {task.habit_mode && (
                         <FireIcon
                             className="h-4 w-4 text-orange-500 flex-shrink-0"
@@ -473,7 +488,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 )}
             </div>
 
-            {!editable && (onEdit || onDelete) && (
+            {!editable && (onEdit || onDelete || onTogglePin) && (
                 <div
                     ref={actionsMenuRef}
                     className="relative flex-shrink-0"
@@ -513,6 +528,22 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                 >
                                     <PencilIcon className="h-4 w-4" />
                                     {t('common.edit', 'Edit')}
+                                </button>
+                            )}
+                            {onTogglePin && (
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setIsActionsMenuOpen(false);
+                                        onTogglePin();
+                                    }}
+                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    <MapPinIcon className="h-4 w-4" />
+                                    {task.pinned
+                                        ? t('task.unpin', 'Unpin')
+                                        : t('task.pin', 'Pin')}
                                 </button>
                             )}
                             {onDelete && (

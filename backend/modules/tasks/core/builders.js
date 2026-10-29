@@ -383,6 +383,12 @@ function buildUpdateAttributes(body, task, timezone) {
         attrs.involves = Array.isArray(body.involves) ? body.involves : [];
     }
 
+    if (body.pinned !== undefined) {
+        const pinned = body.pinned === true || body.pinned === 'true';
+        if (!pinned) attrs.pinned_at = null;
+        else if (!task.pinned_at) attrs.pinned_at = new Date();
+    }
+
     applyDueTime(attrs, body, timezone, task.due_date);
     applyStart(attrs, body, timezone, task.start_date);
     applyReminderAt(attrs, body);

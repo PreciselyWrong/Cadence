@@ -1423,7 +1423,11 @@
     "noStartDate": "Ei aloituspäivää",
     "startDateUpdated": "Aloituspäivä päivitetty",
     "startDateUpdateError": "Aloituspäivän päivitys epäonnistui",
-    "startAfterDueError": "Aloitus ei voi olla eräpäivän jälkeen"
+    "startAfterDueError": "Aloitus ei voi olla eräpäivän jälkeen",
+    "pin": "Kiinnitä",
+    "unpin": "Irrota",
+    "pinned": "Kiinnitetty",
+    "pinUpdateError": "Kiinnityksen päivitys epäonnistui"
   },
   "projects": {
     "loading": "Ladataan projekteja...",

@@ -1423,7 +1423,11 @@
     "noStartDate": "Geen startdatum",
     "startDateUpdated": "Startdatum bijgewerkt",
     "startDateUpdateError": "Startdatum bijwerken mislukt",
-    "startAfterDueError": "De start kan niet na de vervaldatum liggen"
+    "startAfterDueError": "De start kan niet na de vervaldatum liggen",
+    "pin": "Vastzetten",
+    "unpin": "Losmaken",
+    "pinned": "Vastgezet",
+    "pinUpdateError": "Vastzetten bijwerken mislukt"
   },
   "projects": {
     "loading": "Projecten laden...",

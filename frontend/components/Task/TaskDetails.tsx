@@ -1616,6 +1616,19 @@ const TaskDetails: React.FC = () => {
         }
     };
 
+    const handleTogglePin = async () => {
+        if (!task?.uid) return;
+        try {
+            taskModifiedRef.current = true;
+            await updateTask(task.uid, { pinned: !task.pinned });
+            const updatedTask = await fetchTaskByUid(uid!);
+            tasksStore.updateTaskInStore(updatedTask);
+        } catch (error) {
+            console.error('Error updating pin:', error);
+            showErrorToast(t('task.pinUpdateError', 'Failed to update pin'));
+        }
+    };
+
     if (loading) {
         return <LoadingScreen />;
     }
@@ -1678,6 +1691,7 @@ const TaskDetails: React.FC = () => {
                     autoEditTitle={isNewTask}
                     ancestorChain={ancestorChain}
                     onEdit={() => setIsTaskPanelOpen(true)}
+                    onTogglePin={handleTogglePin}
                 />
 
                 {aiAssistantEnabled && (

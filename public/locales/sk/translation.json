@@ -1452,7 +1452,11 @@
         "noStartDate": "Bez dátumu začiatku",
         "startDateUpdated": "Dátum začiatku bol aktualizovaný",
         "startDateUpdateError": "Dátum začiatku sa nepodarilo aktualizovať",
-        "startAfterDueError": "Začiatok nemôže byť po termíne"
+        "startAfterDueError": "Začiatok nemôže byť po termíne",
+        "pin": "Pripnúť",
+        "unpin": "Odopnúť",
+        "pinned": "Pripnutá",
+        "pinUpdateError": "Nepodarilo sa aktualizovať pripnutie"
     },
     "subtasks": {
         "placeholder": "Pridajte podúlohu..."

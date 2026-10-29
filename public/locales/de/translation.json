@@ -1377,7 +1377,11 @@
     "noStartDate": "Kein Startdatum",
     "startDateUpdated": "Startdatum aktualisiert",
     "startDateUpdateError": "Startdatum konnte nicht aktualisiert werden",
-    "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
+    "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen",
+    "pin": "Anheften",
+    "unpin": "Lösen",
+    "pinned": "Angeheftet",
+    "pinUpdateError": "Anheften konnte nicht aktualisiert werden"
   },
   "calendar": {
     "focusSession": "Fokus",

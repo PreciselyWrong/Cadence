@@ -1424,7 +1424,11 @@
     "noStartDate": "Sem data de início",
     "startDateUpdated": "Data de início atualizada",
     "startDateUpdateError": "Falha ao atualizar a data de início",
-    "startAfterDueError": "O início não pode ser depois da data de vencimento"
+    "startAfterDueError": "O início não pode ser depois da data de vencimento",
+    "pin": "Fixar",
+    "unpin": "Desafixar",
+    "pinned": "Fixada",
+    "pinUpdateError": "Falha ao atualizar a fixação"
   },
   "projects": {
     "loading": "Carregando projetos...",

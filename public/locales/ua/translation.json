@@ -1492,7 +1492,11 @@
     "noStartDate": "Немає дати початку",
     "startDateUpdated": "Дату початку оновлено",
     "startDateUpdateError": "Не вдалося оновити дату початку",
-    "startAfterDueError": "Початок не може бути пізніше терміну"
+    "startAfterDueError": "Початок не може бути пізніше терміну",
+    "pin": "Закріпити",
+    "unpin": "Відкріпити",
+    "pinned": "Закріплено",
+    "pinUpdateError": "Не вдалося оновити закріплення"
   },
   "calendar": {
     "focusSession": "Фокус",
