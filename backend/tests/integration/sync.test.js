@@ -256,6 +256,101 @@ describe('Offline sync API', () => {
         expect(typeof snap.body.cursor).toBe('number');
     });
 
+    describe('recurring occurrences', () => {
+        const dailyTask = (uid, due) =>
+            upsert(
+                `op-mk-${uid}`,
+                'task',
+                uid,
+                {
+                    name: 'Water plants',
+                    recurrence_type: 'daily',
+                    recurrence_interval: 1,
+                    due_date: due,
+                },
+                hlc(1)
+            );
+        const occurrence = (opId, uid, action, date) => ({
+            op_id: opId,
+            entity: 'task',
+            uid,
+            action,
+            occurrence_date: date,
+            hlc: hlc(5, 0, opId),
+        });
+
+        it('completes an occurrence once, even from two offline devices', async () => {
+            await push(agent, [
+                dailyTask('clientrecur0001', '2026-11-02T09:00:00.000Z'),
+            ]);
+
+            const a = await push(agent, [
+                occurrence(
+                    'devA-1',
+                    'clientrecur0001',
+                    'complete_occurrence',
+                    '2026-11-02T09:00:00.000Z'
+                ),
+            ]);
+            const b = await push(agent, [
+                occurrence(
+                    'devB-1',
+                    'clientrecur0001',
+                    'complete_occurrence',
+                    '2026-11-02T09:00:00.000Z'
+                ),
+            ]);
+
+            expect(a.body.results[0].status).toBe('applied');
+            expect(b.body.results[0].status).toBe('applied');
+            const task = await Task.findOne({
+                where: { uid: 'clientrecur0001' },
+            });
+            expect(new Date(task.due_date).toISOString()).toBe(
+                '2026-11-03T09:00:00.000Z'
+            );
+            const { RecurringCompletion } = require('../../models');
+            expect(
+                await RecurringCompletion.count({ where: { task_id: task.id } })
+            ).toBe(1);
+        });
+
+        it('skips an occurrence and refuses an occurrence that is not due', async () => {
+            await push(agent, [
+                dailyTask('clientrecur0002', '2026-11-02T09:00:00.000Z'),
+            ]);
+
+            const skip = await push(agent, [
+                occurrence(
+                    'op-sk',
+                    'clientrecur0002',
+                    'skip_occurrence',
+                    '2026-11-02T09:00:00.000Z'
+                ),
+            ]);
+            const stale = await push(agent, [
+                occurrence(
+                    'op-st',
+                    'clientrecur0002',
+                    'complete_occurrence',
+                    '2026-11-10T09:00:00.000Z'
+                ),
+            ]);
+
+            expect(skip.body.results[0].status).toBe('applied');
+            expect(stale.body.results[0]).toMatchObject({
+                status: 'rejected',
+                reason: 'occurrence_not_due',
+            });
+            const task = await Task.findOne({
+                where: { uid: 'clientrecur0002' },
+            });
+            expect(new Date(task.due_date).toISOString()).toBe(
+                '2026-11-03T09:00:00.000Z'
+            );
+        });
+    });
+
     describe('tags', () => {
         it('sets task tags by uid and pulls them back', async () => {
             const res = await push(agent, [

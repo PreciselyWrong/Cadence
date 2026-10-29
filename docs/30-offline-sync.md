@@ -45,11 +45,11 @@ A pushed op:
 - **Echo.** A pulled change carries the `op_id` that produced it, so a device can skip its own writes.
 - **Isolation.** Each user pulls only their own journal, and a reference must point to one of their own rows. `scope_key` is kept for sharing projects later.
 - **Tags** sync as `tag_uids` lists on tasks, projects and notes, merged as a whole. A tag change from any path re-journals the parent.
+- **Recurring tasks.** `{op_id, entity: "task", uid, action: "complete_occurrence" | "skip_occurrence", occurrence_date, hlc}` acts on the occurrence due at `occurrence_date`. An occurrence already recorded is answered `applied` without moving the task again, so two offline devices completing the same day advance it once. An occurrence that is not the current due date is rejected (`occurrence_not_due`).
 - **Account erasure** deletes the journal, the ops and the conflicts.
 
 ## Not yet covered
 
-- A semantic op to complete one occurrence of a recurring task (`task.complete_occurrence`).
 - Habits (Cadence tables).
 - Journal compaction.
 - Shared projects.

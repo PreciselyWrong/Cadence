@@ -5,6 +5,7 @@ const { SCHEMA_VERSION, ENTITIES, listsOf } = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { runWithOp } = require('./context');
+const { applyOccurrence } = require('./occurrences');
 
 const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
 const OP_ID_FORMAT = /^[A-Za-z0-9_.:-]{1,100}$/;
@@ -15,7 +16,13 @@ const models = () => require('../../models');
 function describe() {
     return {
         schema_version: SCHEMA_VERSION,
-        capabilities: ['field_merge', 'tombstones', 'snapshot', 'op_echo'],
+        capabilities: [
+            'field_merge',
+            'tombstones',
+            'snapshot',
+            'op_echo',
+            'occurrence_ops',
+        ],
         entities: Object.entries(ENTITIES).map(([name, def]) => ({
             name,
             version: def.version,
@@ -281,6 +288,12 @@ async function applyOp(userId, op) {
     }
     if (op.action === 'upsert') return applyUpsert(userId, op);
     if (op.action === 'delete') return applyDelete(userId, op);
+    if (
+        op.entity === 'task' &&
+        (op.action === 'complete_occurrence' || op.action === 'skip_occurrence')
+    ) {
+        return applyOccurrence(userId, op);
+    }
     return rejected('unknown_action');
 }
 
