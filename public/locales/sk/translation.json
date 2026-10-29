@@ -111,7 +111,8 @@
         "telegramConnected": "Telegram pripojený",
         "telegramProblem": "Problém s pripojením k Telegramu",
         "collapseViews": "Zbaliť zoznam zobrazení",
-        "expandViews": "Rozbaliť zoznam zobrazení"
+        "expandViews": "Rozbaliť zoznam zobrazení",
+        "summary": "Súhrn"
     },
     "navigation": {
         "home": "Domov",
@@ -3558,5 +3559,56 @@
         "adminRequiredTitle": "Najprv zapnite dvojfaktorové overenie",
         "adminRequiredBody": "Tento účet vidí všetkých zákazníkov, preto sa panel správcu otvorí až po zapnutí dvojfaktorového overenia.",
         "adminRequiredAction": "Nastaviť"
+    },
+    "summary": {
+        "period": "Obdobie",
+        "from": "Od",
+        "to": "Do",
+        "groupBy": "Zoskupiť podľa",
+        "includeOpen": "Zahrnúť otvorené úlohy s termínom v tomto období",
+        "saveTemplate": "Uložiť ako šablónu",
+        "templateSaved": "Šablóna uložená",
+        "templateFailed": "Šablónu sa nepodarilo uložiť",
+        "copyMarkdown": "Kopírovať ako Markdown",
+        "downloadMd": "Stiahnuť .md",
+        "downloadTxt": "Stiahnuť .txt",
+        "downloadCsv": "Stiahnuť .csv",
+        "print": "Tlačiť",
+        "copied": "Skopírované do schránky",
+        "copyFailed": "Nepodarilo sa skopírovať do schránky",
+        "exportTitle": "Súhrn {{start}} – {{end}}",
+        "counts": "Dokončené: {{completed}}, otvorené: {{open}}",
+        "empty": "V tomto období nie sú žiadne úlohy.",
+        "noProject": "Bez projektu",
+        "noDate": "Bez dátumu",
+        "periods": {
+            "today": "Dnes",
+            "this_week": "Tento týždeň",
+            "last_week": "Minulý týždeň",
+            "this_month": "Tento mesiac",
+            "custom": "Vlastné obdobie"
+        },
+        "groupings": {
+            "project": "Projekt",
+            "day": "Deň",
+            "status": "Stav"
+        },
+        "status": {
+            "done": "Dokončená",
+            "not_started": "Nezačatá",
+            "in_progress": "Prebieha",
+            "waiting": "Čaká",
+            "planned": "Naplánovaná",
+            "archived": "Archivovaná",
+            "cancelled": "Zrušená"
+        },
+        "csv": {
+            "name": "Úloha",
+            "status": "Stav",
+            "project": "Projekt",
+            "completed": "Dokončené",
+            "due": "Termín",
+            "tags": "Štítky"
+        }
     }
 }

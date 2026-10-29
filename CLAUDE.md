@@ -355,11 +355,12 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
 39. **[Focus Sessions](docs/30-focus-sessions.md)**
     - The top-bar tomato timer records finished sessions (and early stops of 5 minutes or more)
     - Shown on the Calendar and in Insights → Productivity → Focus statistics
-
-39. **[Focus Sessions](docs/30-focus-sessions.md)**
-    - The top-bar tomato timer records finished sessions (and early stops of 5 minutes or more)
-    - Shown on the Calendar and in Insights → Productivity → Focus statistics
     - `focus_sessions` table and `/api/focus-sessions` endpoints
+
+40. **[Summary](docs/31-summary.md)**
+    - Insights → Summary: tasks completed in a period (today, this week, last week, this month, custom up to 366 days), optionally open tasks due in it
+    - Group by project, day or status; copy as Markdown, download .md/.txt/.csv, print
+    - `GET /api/reports/summary` in user timezone; template saved in `ui_settings.summary`
 
 ---
 

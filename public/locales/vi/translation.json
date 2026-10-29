@@ -113,7 +113,8 @@
     "telegramProblem": "Sự cố kết nối Telegram",
     "resize": "Đổi kích thước thanh bên",
     "collapseViews": "Thu gọn danh sách chế độ xem",
-    "expandViews": "Mở rộng danh sách chế độ xem"
+    "expandViews": "Mở rộng danh sách chế độ xem",
+    "summary": "Tóm tắt"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -3527,5 +3528,56 @@
     "adminRequiredTitle": "Hãy bật xác minh hai bước trước",
     "adminRequiredBody": "Tài khoản này xem được mọi khách hàng, nên bảng quản trị chỉ mở khi xác minh hai bước đã bật.",
     "adminRequiredAction": "Thiết lập"
+  },
+  "summary": {
+    "period": "Khoảng thời gian",
+    "from": "Từ",
+    "to": "Đến",
+    "groupBy": "Nhóm theo",
+    "includeOpen": "Bao gồm công việc chưa xong đến hạn trong khoảng này",
+    "saveTemplate": "Lưu làm mẫu",
+    "templateSaved": "Đã lưu mẫu",
+    "templateFailed": "Không thể lưu mẫu",
+    "copyMarkdown": "Sao chép dạng Markdown",
+    "downloadMd": "Tải xuống .md",
+    "downloadTxt": "Tải xuống .txt",
+    "downloadCsv": "Tải xuống .csv",
+    "print": "In",
+    "copied": "Đã sao chép vào bộ nhớ tạm",
+    "copyFailed": "Không thể sao chép vào bộ nhớ tạm",
+    "exportTitle": "Tóm tắt {{start}} – {{end}}",
+    "counts": "{{completed}} đã xong, {{open}} chưa xong",
+    "empty": "Không có công việc nào trong khoảng này.",
+    "noProject": "Không có dự án",
+    "noDate": "Không có ngày",
+    "periods": {
+      "today": "Hôm nay",
+      "this_week": "Tuần này",
+      "last_week": "Tuần trước",
+      "this_month": "Tháng này",
+      "custom": "Khoảng tùy chỉnh"
+    },
+    "groupings": {
+      "project": "Dự án",
+      "day": "Ngày",
+      "status": "Trạng thái"
+    },
+    "status": {
+      "done": "Đã xong",
+      "not_started": "Chưa bắt đầu",
+      "in_progress": "Đang làm",
+      "waiting": "Đang chờ",
+      "planned": "Đã lên kế hoạch",
+      "archived": "Đã lưu trữ",
+      "cancelled": "Đã hủy"
+    },
+    "csv": {
+      "name": "Công việc",
+      "status": "Trạng thái",
+      "project": "Dự án",
+      "completed": "Hoàn thành",
+      "due": "Hạn",
+      "tags": "Thẻ"
+    }
   }
 }

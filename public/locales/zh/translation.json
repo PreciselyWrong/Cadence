@@ -113,7 +113,8 @@
     "telegramProblem": "Telegram 连接出现问题",
     "resize": "调整侧边栏宽度",
     "collapseViews": "收起视图列表",
-    "expandViews": "展开视图列表"
+    "expandViews": "展开视图列表",
+    "summary": "摘要"
   },
   "navigation": {
     "home": "首页",
@@ -3527,5 +3528,56 @@
     "adminRequiredTitle": "请先开启两步验证",
     "adminRequiredBody": "此账户可以查看所有客户，因此只有开启两步验证后才能打开管理面板。",
     "adminRequiredAction": "立即设置"
+  },
+  "summary": {
+    "period": "时间段",
+    "from": "从",
+    "to": "到",
+    "groupBy": "分组方式",
+    "includeOpen": "包含在此期间到期的未完成任务",
+    "saveTemplate": "保存为模板",
+    "templateSaved": "模板已保存",
+    "templateFailed": "无法保存模板",
+    "copyMarkdown": "复制为 Markdown",
+    "downloadMd": "下载 .md",
+    "downloadTxt": "下载 .txt",
+    "downloadCsv": "下载 .csv",
+    "print": "打印",
+    "copied": "已复制到剪贴板",
+    "copyFailed": "无法复制到剪贴板",
+    "exportTitle": "摘要 {{start}} – {{end}}",
+    "counts": "已完成 {{completed}} 项，未完成 {{open}} 项",
+    "empty": "此期间没有任务。",
+    "noProject": "无项目",
+    "noDate": "无日期",
+    "periods": {
+      "today": "今天",
+      "this_week": "本周",
+      "last_week": "上周",
+      "this_month": "本月",
+      "custom": "自定义范围"
+    },
+    "groupings": {
+      "project": "项目",
+      "day": "日期",
+      "status": "状态"
+    },
+    "status": {
+      "done": "已完成",
+      "not_started": "未开始",
+      "in_progress": "进行中",
+      "waiting": "等待中",
+      "planned": "已计划",
+      "archived": "已归档",
+      "cancelled": "已取消"
+    },
+    "csv": {
+      "name": "任务",
+      "status": "状态",
+      "project": "项目",
+      "completed": "完成时间",
+      "due": "截止日期",
+      "tags": "标签"
+    }
   }
 }

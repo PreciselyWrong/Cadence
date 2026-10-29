@@ -23,6 +23,19 @@ function sanitizeFeatures(raw) {
     return result;
 }
 
+const SUMMARY_GROUPINGS = ['project', 'day', 'status'];
+
+// The Summary page template: a saved grouping and include-open choice.
+function sanitizeSummary(raw) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    return {
+        group_by: SUMMARY_GROUPINGS.includes(raw.group_by)
+            ? raw.group_by
+            : 'project',
+        include_open: raw.include_open === true,
+    };
+}
+
 function maskAiSettings(user) {
     const encrypted = user.ai_api_key || '';
     let plaintext = '';
@@ -423,6 +436,7 @@ class UsersService {
             if (current?.focus !== undefined) kept.focus = current.focus;
             if (current?.matrices !== undefined)
                 kept.matrices = current.matrices;
+            if (current?.summary !== undefined) kept.summary = current.summary;
             allowedUpdates.ui_settings =
                 ui_settings && Object.keys(kept).length > 0
                     ? { ...ui_settings, ...kept }
@@ -875,7 +889,15 @@ class UsersService {
             throw new NotFoundError('User not found.');
         }
 
-        const { project, appearance, inbox, focus, calendar, matrices } = data;
+        const {
+            project,
+            appearance,
+            inbox,
+            focus,
+            calendar,
+            matrices,
+            summary,
+        } = data;
 
         const currentSettings =
             user.ui_settings && typeof user.ui_settings === 'object'
@@ -929,6 +951,10 @@ class UsersService {
 
         if (matrices !== undefined) {
             newSettings.matrices = sanitizeMatrices(matrices);
+        }
+
+        if (summary !== undefined) {
+            newSettings.summary = sanitizeSummary(summary);
         }
 
         await usersRepository.update(user, { ui_settings: newSettings });

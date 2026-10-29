@@ -113,7 +113,8 @@
     "telegramProblem": "Masalah koneksi Telegram",
     "resize": "Ubah ukuran bilah sisi",
     "collapseViews": "Ciutkan daftar tampilan",
-    "expandViews": "Luaskan daftar tampilan"
+    "expandViews": "Luaskan daftar tampilan",
+    "summary": "Ringkasan"
   },
   "navigation": {
     "home": "Beranda",
@@ -3527,5 +3528,56 @@
     "adminRequiredTitle": "Aktifkan verifikasi dua langkah terlebih dahulu",
     "adminRequiredBody": "Akun ini bisa melihat semua pelanggan, jadi panel admin hanya terbuka setelah verifikasi dua langkah aktif.",
     "adminRequiredAction": "Atur sekarang"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Dari",
+    "to": "Sampai",
+    "groupBy": "Kelompokkan menurut",
+    "includeOpen": "Sertakan tugas terbuka yang jatuh tempo dalam periode ini",
+    "saveTemplate": "Simpan sebagai templat",
+    "templateSaved": "Templat disimpan",
+    "templateFailed": "Tidak dapat menyimpan templat",
+    "copyMarkdown": "Salin sebagai Markdown",
+    "downloadMd": "Unduh .md",
+    "downloadTxt": "Unduh .txt",
+    "downloadCsv": "Unduh .csv",
+    "print": "Cetak",
+    "copied": "Disalin ke papan klip",
+    "copyFailed": "Tidak dapat menyalin ke papan klip",
+    "exportTitle": "Ringkasan {{start}} – {{end}}",
+    "counts": "{{completed}} selesai, {{open}} terbuka",
+    "empty": "Tidak ada tugas dalam periode ini.",
+    "noProject": "Tanpa proyek",
+    "noDate": "Tanpa tanggal",
+    "periods": {
+      "today": "Hari ini",
+      "this_week": "Minggu ini",
+      "last_week": "Minggu lalu",
+      "this_month": "Bulan ini",
+      "custom": "Rentang khusus"
+    },
+    "groupings": {
+      "project": "Proyek",
+      "day": "Hari",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Selesai",
+      "not_started": "Belum dimulai",
+      "in_progress": "Sedang berjalan",
+      "waiting": "Menunggu",
+      "planned": "Direncanakan",
+      "archived": "Diarsipkan",
+      "cancelled": "Dibatalkan"
+    },
+    "csv": {
+      "name": "Tugas",
+      "status": "Status",
+      "project": "Proyek",
+      "completed": "Selesai",
+      "due": "Jatuh tempo",
+      "tags": "Tag"
+    }
   }
 }

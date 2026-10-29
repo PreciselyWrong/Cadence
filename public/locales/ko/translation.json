@@ -113,7 +113,8 @@
     "telegramProblem": "Telegram 연결 문제",
     "resize": "사이드바 크기 조정",
     "collapseViews": "뷰 목록 접기",
-    "expandViews": "뷰 목록 펼치기"
+    "expandViews": "뷰 목록 펼치기",
+    "summary": "요약"
   },
   "navigation": {
     "home": "홈",
@@ -3527,5 +3528,56 @@
     "adminRequiredTitle": "먼저 2단계 인증을 켜세요",
     "adminRequiredBody": "이 계정은 모든 고객을 볼 수 있으므로, 관리자 패널은 2단계 인증을 켠 후에만 열립니다.",
     "adminRequiredAction": "설정하기"
+  },
+  "summary": {
+    "period": "기간",
+    "from": "시작",
+    "to": "종료",
+    "groupBy": "그룹화 기준",
+    "includeOpen": "기간 내 마감인 미완료 작업 포함",
+    "saveTemplate": "템플릿으로 저장",
+    "templateSaved": "템플릿이 저장되었습니다",
+    "templateFailed": "템플릿을 저장할 수 없습니다",
+    "copyMarkdown": "Markdown으로 복사",
+    "downloadMd": "다운로드 .md",
+    "downloadTxt": "다운로드 .txt",
+    "downloadCsv": "다운로드 .csv",
+    "print": "인쇄",
+    "copied": "클립보드에 복사했습니다",
+    "copyFailed": "클립보드에 복사할 수 없습니다",
+    "exportTitle": "요약 {{start}} – {{end}}",
+    "counts": "완료 {{completed}}개, 미완료 {{open}}개",
+    "empty": "이 기간에 작업이 없습니다.",
+    "noProject": "프로젝트 없음",
+    "noDate": "날짜 없음",
+    "periods": {
+      "today": "오늘",
+      "this_week": "이번 주",
+      "last_week": "지난주",
+      "this_month": "이번 달",
+      "custom": "사용자 지정 기간"
+    },
+    "groupings": {
+      "project": "프로젝트",
+      "day": "날짜",
+      "status": "상태"
+    },
+    "status": {
+      "done": "완료",
+      "not_started": "시작 안 함",
+      "in_progress": "진행 중",
+      "waiting": "대기 중",
+      "planned": "계획됨",
+      "archived": "보관됨",
+      "cancelled": "취소됨"
+    },
+    "csv": {
+      "name": "작업",
+      "status": "상태",
+      "project": "프로젝트",
+      "completed": "완료일",
+      "due": "마감일",
+      "tags": "태그"
+    }
   }
 }

@@ -113,7 +113,8 @@
     "telegramProblem": "Problem mit der Telegram-Verbindung",
     "resize": "Seitenleiste anpassen",
     "collapseViews": "Ansichtenliste einklappen",
-    "expandViews": "Ansichtenliste ausklappen"
+    "expandViews": "Ansichtenliste ausklappen",
+    "summary": "Zusammenfassung"
   },
   "navigation": {
     "home": "Startseite",
@@ -3540,5 +3541,56 @@
     "adminRequiredTitle": "Schalten Sie zuerst die Zwei-Faktor-Anmeldung ein",
     "adminRequiredBody": "Dieses Konto kann alle Kunden sehen. Deshalb öffnet sich der Admin-Bereich erst, wenn die Zwei-Faktor-Anmeldung eingeschaltet ist.",
     "adminRequiredAction": "Einrichten"
+  },
+  "summary": {
+    "period": "Zeitraum",
+    "from": "Von",
+    "to": "Bis",
+    "groupBy": "Gruppieren nach",
+    "includeOpen": "Offene Aufgaben mit Fälligkeit im Zeitraum einbeziehen",
+    "saveTemplate": "Als Vorlage speichern",
+    "templateSaved": "Vorlage gespeichert",
+    "templateFailed": "Vorlage konnte nicht gespeichert werden",
+    "copyMarkdown": "Als Markdown kopieren",
+    "downloadMd": "Herunterladen .md",
+    "downloadTxt": "Herunterladen .txt",
+    "downloadCsv": "Herunterladen .csv",
+    "print": "Drucken",
+    "copied": "In die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen",
+    "exportTitle": "Zusammenfassung {{start}} – {{end}}",
+    "counts": "{{completed}} erledigt, {{open}} offen",
+    "empty": "Keine Aufgaben in diesem Zeitraum.",
+    "noProject": "Kein Projekt",
+    "noDate": "Kein Datum",
+    "periods": {
+      "today": "Heute",
+      "this_week": "Diese Woche",
+      "last_week": "Letzte Woche",
+      "this_month": "Dieser Monat",
+      "custom": "Eigener Zeitraum"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Tag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Erledigt",
+      "not_started": "Nicht begonnen",
+      "in_progress": "In Arbeit",
+      "waiting": "Wartend",
+      "planned": "Geplant",
+      "archived": "Archiviert",
+      "cancelled": "Abgebrochen"
+    },
+    "csv": {
+      "name": "Aufgabe",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Erledigt am",
+      "due": "Fällig",
+      "tags": "Tags"
+    }
   }
 }

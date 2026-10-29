@@ -159,6 +159,7 @@ describe('AppLauncherModal', () => {
                 'kanban',
                 'productivity',
                 'reports',
+                'summary',
             ]);
             expect(idsIn('bottom')).toEqual(['templates', 'access']);
         });
@@ -174,9 +175,10 @@ describe('AppLauncherModal', () => {
             renderModal();
 
             expect(idsIn('links').slice(0, 2)).toEqual(['tasks', 'today']);
-            expect(idsIn('sections').slice(0, 5)).toEqual([
+            expect(idsIn('sections').slice(0, 6)).toEqual([
                 'productivity',
                 'reports',
+                'summary',
                 'notes',
                 'eisenhower',
                 'kanban',

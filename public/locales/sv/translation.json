@@ -113,7 +113,8 @@
     "telegramProblem": "Problem med Telegram-anslutningen",
     "resize": "Ändra storlek på sidofältet",
     "collapseViews": "Fäll ihop listan med vyer",
-    "expandViews": "Fäll ut listan med vyer"
+    "expandViews": "Fäll ut listan med vyer",
+    "summary": "Sammanfattning"
   },
   "navigation": {
     "home": "Hem",
@@ -3531,5 +3532,56 @@
     "adminRequiredTitle": "Slå på tvåfaktorsautentisering först",
     "adminRequiredBody": "Det här kontot kan se alla kunder, så adminpanelen öppnas först när tvåfaktorsautentisering är på.",
     "adminRequiredAction": "Konfigurera"
+  },
+  "summary": {
+    "period": "Period",
+    "from": "Från",
+    "to": "Till",
+    "groupBy": "Gruppera efter",
+    "includeOpen": "Ta med öppna uppgifter med förfallodatum i perioden",
+    "saveTemplate": "Spara som mall",
+    "templateSaved": "Mallen har sparats",
+    "templateFailed": "Det gick inte att spara mallen",
+    "copyMarkdown": "Kopiera som Markdown",
+    "downloadMd": "Ladda ner .md",
+    "downloadTxt": "Ladda ner .txt",
+    "downloadCsv": "Ladda ner .csv",
+    "print": "Skriv ut",
+    "copied": "Kopierat till urklipp",
+    "copyFailed": "Det gick inte att kopiera till urklipp",
+    "exportTitle": "Sammanfattning {{start}} – {{end}}",
+    "counts": "{{completed}} klara, {{open}} öppna",
+    "empty": "Inga uppgifter under den här perioden.",
+    "noProject": "Inget projekt",
+    "noDate": "Inget datum",
+    "periods": {
+      "today": "Idag",
+      "this_week": "Den här veckan",
+      "last_week": "Förra veckan",
+      "this_month": "Den här månaden",
+      "custom": "Anpassad period"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Klar",
+      "not_started": "Ej påbörjad",
+      "in_progress": "Pågår",
+      "waiting": "Väntar",
+      "planned": "Planerad",
+      "archived": "Arkiverad",
+      "cancelled": "Avbruten"
+    },
+    "csv": {
+      "name": "Uppgift",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Klar",
+      "due": "Förfaller",
+      "tags": "Taggar"
+    }
   }
 }

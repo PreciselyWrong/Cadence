@@ -113,7 +113,8 @@
     "telegramProblem": "Težava s povezavo Telegram",
     "resize": "Spremeni širino stranske vrstice",
     "collapseViews": "Strni seznam pogledov",
-    "expandViews": "Razširi seznam pogledov"
+    "expandViews": "Razširi seznam pogledov",
+    "summary": "Povzetek"
   },
   "navigation": {
     "home": "Domov",
@@ -3543,5 +3544,56 @@
     "adminRequiredTitle": "Najprej vklopite dvostopenjsko preverjanje",
     "adminRequiredBody": "Ta račun vidi vse stranke, zato se skrbniška plošča odpre šele, ko je dvostopenjsko preverjanje vklopljeno.",
     "adminRequiredAction": "Nastavi"
+  },
+  "summary": {
+    "period": "Obdobje",
+    "from": "Od",
+    "to": "Do",
+    "groupBy": "Združi po",
+    "includeOpen": "Vključi odprta opravila z rokom v tem obdobju",
+    "saveTemplate": "Shrani kot predlogo",
+    "templateSaved": "Predloga shranjena",
+    "templateFailed": "Predloge ni bilo mogoče shraniti",
+    "copyMarkdown": "Kopiraj kot Markdown",
+    "downloadMd": "Prenesi .md",
+    "downloadTxt": "Prenesi .txt",
+    "downloadCsv": "Prenesi .csv",
+    "print": "Natisni",
+    "copied": "Kopirano v odložišče",
+    "copyFailed": "Kopiranje v odložišče ni uspelo",
+    "exportTitle": "Povzetek {{start}} – {{end}}",
+    "counts": "Dokončano: {{completed}}, odprto: {{open}}",
+    "empty": "V tem obdobju ni opravil.",
+    "noProject": "Brez projekta",
+    "noDate": "Brez datuma",
+    "periods": {
+      "today": "Danes",
+      "this_week": "Ta teden",
+      "last_week": "Prejšnji teden",
+      "this_month": "Ta mesec",
+      "custom": "Obdobje po meri"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dan",
+      "status": "Stanje"
+    },
+    "status": {
+      "done": "Dokončano",
+      "not_started": "Ni začeto",
+      "in_progress": "V teku",
+      "waiting": "Čaka",
+      "planned": "Načrtovano",
+      "archived": "Arhivirano",
+      "cancelled": "Preklicano"
+    },
+    "csv": {
+      "name": "Opravilo",
+      "status": "Stanje",
+      "project": "Projekt",
+      "completed": "Dokončano",
+      "due": "Rok",
+      "tags": "Oznake"
+    }
   }
 }

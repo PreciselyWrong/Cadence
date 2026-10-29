@@ -113,7 +113,8 @@
     "telegramProblem": "Проблема с подключением Telegram",
     "resize": "Изменить ширину боковой панели",
     "collapseViews": "Свернуть список представлений",
-    "expandViews": "Развернуть список представлений"
+    "expandViews": "Развернуть список представлений",
+    "summary": "Сводка"
   },
   "navigation": {
     "home": "Главная",
@@ -3543,5 +3544,56 @@
     "adminRequiredTitle": "Сначала включите двухфакторную аутентификацию",
     "adminRequiredBody": "Этому аккаунту видны все клиенты, поэтому панель администратора открывается только после включения двухфакторной аутентификации.",
     "adminRequiredAction": "Настроить"
+  },
+  "summary": {
+    "period": "Период",
+    "from": "С",
+    "to": "По",
+    "groupBy": "Группировать по",
+    "includeOpen": "Включить открытые задачи со сроком в этом периоде",
+    "saveTemplate": "Сохранить как шаблон",
+    "templateSaved": "Шаблон сохранён",
+    "templateFailed": "Не удалось сохранить шаблон",
+    "copyMarkdown": "Копировать как Markdown",
+    "downloadMd": "Скачать .md",
+    "downloadTxt": "Скачать .txt",
+    "downloadCsv": "Скачать .csv",
+    "print": "Печать",
+    "copied": "Скопировано в буфер обмена",
+    "copyFailed": "Не удалось скопировать в буфер обмена",
+    "exportTitle": "Сводка {{start}} – {{end}}",
+    "counts": "Выполнено: {{completed}}, открыто: {{open}}",
+    "empty": "Нет задач за этот период.",
+    "noProject": "Без проекта",
+    "noDate": "Без даты",
+    "periods": {
+      "today": "Сегодня",
+      "this_week": "Эта неделя",
+      "last_week": "Прошлая неделя",
+      "this_month": "Этот месяц",
+      "custom": "Свой период"
+    },
+    "groupings": {
+      "project": "Проект",
+      "day": "День",
+      "status": "Статус"
+    },
+    "status": {
+      "done": "Выполнена",
+      "not_started": "Не начата",
+      "in_progress": "В работе",
+      "waiting": "Ожидает",
+      "planned": "Запланирована",
+      "archived": "В архиве",
+      "cancelled": "Отменена"
+    },
+    "csv": {
+      "name": "Задача",
+      "status": "Статус",
+      "project": "Проект",
+      "completed": "Выполнена",
+      "due": "Срок",
+      "tags": "Теги"
+    }
   }
 }

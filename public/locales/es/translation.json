@@ -113,7 +113,8 @@
     "telegramProblem": "Problema de conexión con Telegram",
     "resize": "Cambiar tamaño de la barra lateral",
     "collapseViews": "Contraer la lista de vistas",
-    "expandViews": "Expandir la lista de vistas"
+    "expandViews": "Expandir la lista de vistas",
+    "summary": "Resumen"
   },
   "navigation": {
     "home": "Inicio",
@@ -3522,5 +3523,56 @@
     "adminRequiredTitle": "Activa primero la autenticación de dos factores",
     "adminRequiredBody": "Esta cuenta puede ver a todos los clientes, así que el panel de administración solo se abre cuando la autenticación de dos factores está activada.",
     "adminRequiredAction": "Configurarla"
+  },
+  "summary": {
+    "period": "Periodo",
+    "from": "Desde",
+    "to": "Hasta",
+    "groupBy": "Agrupar por",
+    "includeOpen": "Incluir tareas abiertas que vencen en el periodo",
+    "saveTemplate": "Guardar como plantilla",
+    "templateSaved": "Plantilla guardada",
+    "templateFailed": "No se pudo guardar la plantilla",
+    "copyMarkdown": "Copiar como Markdown",
+    "downloadMd": "Descargar .md",
+    "downloadTxt": "Descargar .txt",
+    "downloadCsv": "Descargar .csv",
+    "print": "Imprimir",
+    "copied": "Copiado al portapapeles",
+    "copyFailed": "No se pudo copiar al portapapeles",
+    "exportTitle": "Resumen {{start}} – {{end}}",
+    "counts": "{{completed}} completadas, {{open}} abiertas",
+    "empty": "No hay tareas en este periodo.",
+    "noProject": "Sin proyecto",
+    "noDate": "Sin fecha",
+    "periods": {
+      "today": "Hoy",
+      "this_week": "Esta semana",
+      "last_week": "Semana pasada",
+      "this_month": "Este mes",
+      "custom": "Rango personalizado"
+    },
+    "groupings": {
+      "project": "Proyecto",
+      "day": "Día",
+      "status": "Estado"
+    },
+    "status": {
+      "done": "Completada",
+      "not_started": "Sin empezar",
+      "in_progress": "En curso",
+      "waiting": "En espera",
+      "planned": "Planificada",
+      "archived": "Archivada",
+      "cancelled": "Cancelada"
+    },
+    "csv": {
+      "name": "Tarea",
+      "status": "Estado",
+      "project": "Proyecto",
+      "completed": "Completada",
+      "due": "Vencimiento",
+      "tags": "Etiquetas"
+    }
   }
 }

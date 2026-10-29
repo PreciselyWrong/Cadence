@@ -113,7 +113,8 @@
     "telegramProblem": "Telegram-yhteydessä on ongelma",
     "resize": "Muuta sivupalkin kokoa",
     "collapseViews": "Pienennä näkymäluettelo",
-    "expandViews": "Laajenna näkymäluettelo"
+    "expandViews": "Laajenna näkymäluettelo",
+    "summary": "Yhteenveto"
   },
   "navigation": {
     "home": "Koti",
@@ -3531,5 +3532,56 @@
     "adminRequiredTitle": "Ota ensin kaksivaiheinen tunnistautuminen käyttöön",
     "adminRequiredBody": "Tällä tilillä näkee kaikki asiakkaat, joten hallintapaneeli avautuu vasta, kun kaksivaiheinen tunnistautuminen on käytössä.",
     "adminRequiredAction": "Ota käyttöön"
+  },
+  "summary": {
+    "period": "Ajanjakso",
+    "from": "Alkaen",
+    "to": "Asti",
+    "groupBy": "Ryhmittely",
+    "includeOpen": "Sisällytä avoimet tehtävät, joiden määräpäivä on jaksolla",
+    "saveTemplate": "Tallenna mallipohjaksi",
+    "templateSaved": "Mallipohja tallennettu",
+    "templateFailed": "Mallipohjaa ei voitu tallentaa",
+    "copyMarkdown": "Kopioi Markdownina",
+    "downloadMd": "Lataa .md",
+    "downloadTxt": "Lataa .txt",
+    "downloadCsv": "Lataa .csv",
+    "print": "Tulosta",
+    "copied": "Kopioitu leikepöydälle",
+    "copyFailed": "Kopiointi leikepöydälle epäonnistui",
+    "exportTitle": "Yhteenveto {{start}} – {{end}}",
+    "counts": "{{completed}} valmista, {{open}} avointa",
+    "empty": "Ei tehtäviä tällä jaksolla.",
+    "noProject": "Ei projektia",
+    "noDate": "Ei päivämäärää",
+    "periods": {
+      "today": "Tänään",
+      "this_week": "Tämä viikko",
+      "last_week": "Viime viikko",
+      "this_month": "Tämä kuukausi",
+      "custom": "Mukautettu jakso"
+    },
+    "groupings": {
+      "project": "Projekti",
+      "day": "Päivä",
+      "status": "Tila"
+    },
+    "status": {
+      "done": "Valmis",
+      "not_started": "Ei aloitettu",
+      "in_progress": "Käynnissä",
+      "waiting": "Odottaa",
+      "planned": "Suunniteltu",
+      "archived": "Arkistoitu",
+      "cancelled": "Peruttu"
+    },
+    "csv": {
+      "name": "Tehtävä",
+      "status": "Tila",
+      "project": "Projekti",
+      "completed": "Valmistunut",
+      "due": "Määräpäivä",
+      "tags": "Tunnisteet"
+    }
   }
 }

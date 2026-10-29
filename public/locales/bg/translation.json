@@ -113,7 +113,8 @@
     "telegramProblem": "Проблем с връзката с Telegram",
     "resize": "Преоразмери страничната лента",
     "collapseViews": "Свий списъка с изгледи",
-    "expandViews": "Разгъни списъка с изгледи"
+    "expandViews": "Разгъни списъка с изгледи",
+    "summary": "Обобщение"
   },
   "navigation": {
     "home": "Начало",
@@ -3531,5 +3532,56 @@
     "adminRequiredTitle": "Първо включете двуфакторното удостоверяване",
     "adminRequiredBody": "Този акаунт вижда всички клиенти, затова административният панел се отваря само след като двуфакторното удостоверяване е включено.",
     "adminRequiredAction": "Настрой"
+  },
+  "summary": {
+    "period": "Период",
+    "from": "От",
+    "to": "До",
+    "groupBy": "Групиране по",
+    "includeOpen": "Включи отворените задачи с краен срок в периода",
+    "saveTemplate": "Запази като шаблон",
+    "templateSaved": "Шаблонът е запазен",
+    "templateFailed": "Шаблонът не можа да бъде запазен",
+    "copyMarkdown": "Копирай като Markdown",
+    "downloadMd": "Изтегли .md",
+    "downloadTxt": "Изтегли .txt",
+    "downloadCsv": "Изтегли .csv",
+    "print": "Печат",
+    "copied": "Копирано в клипборда",
+    "copyFailed": "Неуспешно копиране в клипборда",
+    "exportTitle": "Обобщение {{start}} – {{end}}",
+    "counts": "{{completed}} завършени, {{open}} отворени",
+    "empty": "Няма задачи в този период.",
+    "noProject": "Без проект",
+    "noDate": "Без дата",
+    "periods": {
+      "today": "Днес",
+      "this_week": "Тази седмица",
+      "last_week": "Миналата седмица",
+      "this_month": "Този месец",
+      "custom": "Избран период"
+    },
+    "groupings": {
+      "project": "Проект",
+      "day": "Ден",
+      "status": "Статус"
+    },
+    "status": {
+      "done": "Завършена",
+      "not_started": "Незапочната",
+      "in_progress": "В процес",
+      "waiting": "Чакаща",
+      "planned": "Планирана",
+      "archived": "Архивирана",
+      "cancelled": "Отменена"
+    },
+    "csv": {
+      "name": "Задача",
+      "status": "Статус",
+      "project": "Проект",
+      "completed": "Завършена на",
+      "due": "Краен срок",
+      "tags": "Етикети"
+    }
   }
 }

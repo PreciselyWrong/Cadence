@@ -113,7 +113,8 @@
     "telegramProblem": "Problema di connessione Telegram",
     "resize": "Ridimensiona la barra laterale",
     "collapseViews": "Comprimi l'elenco delle viste",
-    "expandViews": "Espandi l'elenco delle viste"
+    "expandViews": "Espandi l'elenco delle viste",
+    "summary": "Riepilogo"
   },
   "navigation": {
     "home": "Home",
@@ -3535,5 +3536,56 @@
     "adminRequiredTitle": "Attiva prima l'autenticazione a due fattori",
     "adminRequiredBody": "Questo account può vedere tutti i clienti, quindi il pannello di amministrazione si apre solo quando l'autenticazione a due fattori è attiva.",
     "adminRequiredAction": "Configurala"
+  },
+  "summary": {
+    "period": "Periodo",
+    "from": "Da",
+    "to": "A",
+    "groupBy": "Raggruppa per",
+    "includeOpen": "Includi le attività aperte in scadenza nel periodo",
+    "saveTemplate": "Salva come modello",
+    "templateSaved": "Modello salvato",
+    "templateFailed": "Impossibile salvare il modello",
+    "copyMarkdown": "Copia come Markdown",
+    "downloadMd": "Scarica .md",
+    "downloadTxt": "Scarica .txt",
+    "downloadCsv": "Scarica .csv",
+    "print": "Stampa",
+    "copied": "Copiato negli appunti",
+    "copyFailed": "Impossibile copiare negli appunti",
+    "exportTitle": "Riepilogo {{start}} – {{end}}",
+    "counts": "{{completed}} completate, {{open}} aperte",
+    "empty": "Nessuna attività in questo periodo.",
+    "noProject": "Nessun progetto",
+    "noDate": "Nessuna data",
+    "periods": {
+      "today": "Oggi",
+      "this_week": "Questa settimana",
+      "last_week": "Settimana scorsa",
+      "this_month": "Questo mese",
+      "custom": "Intervallo personalizzato"
+    },
+    "groupings": {
+      "project": "Progetto",
+      "day": "Giorno",
+      "status": "Stato"
+    },
+    "status": {
+      "done": "Completata",
+      "not_started": "Non iniziata",
+      "in_progress": "In corso",
+      "waiting": "In attesa",
+      "planned": "Pianificata",
+      "archived": "Archiviata",
+      "cancelled": "Annullata"
+    },
+    "csv": {
+      "name": "Attività",
+      "status": "Stato",
+      "project": "Progetto",
+      "completed": "Completata il",
+      "due": "Scadenza",
+      "tags": "Tag"
+    }
   }
 }
