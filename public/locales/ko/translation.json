@@ -2294,6 +2294,24 @@
     "board": "보드",
     "calendar": "캘린더"
   },
+  "newView": {
+    "title": "새 보기",
+    "name": "이름",
+    "project": "프로젝트",
+    "tag": "태그",
+    "priority": "우선순위",
+    "due": "마감일",
+    "status": "상태",
+    "any": "전체",
+    "dueToday": "오늘",
+    "dueNext7Days": "다음 7일",
+    "dueOverdue": "기한 지남",
+    "dueNoDate": "마감일 없음",
+    "statusOpen": "미완료",
+    "statusDone": "완료",
+    "create": "보기 만들기",
+    "createError": "보기를 만들 수 없습니다"
+  },
   "views": {
     "title": "스마트 뷰",
     "loading": "뷰 로딩 중...",

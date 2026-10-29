@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Location } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+    PlusIcon,
     QueueListIcon,
     ChevronRightIcon,
 } from '@heroicons/react/24/outline';
@@ -26,6 +27,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { getApiPath } from '../../config/paths';
 import { getCsrfToken } from '../../utils/csrfService';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
+import { useIsMinimal } from '../../hooks/useUiDensity';
+import NewViewDialog from './NewViewDialog';
 
 interface View {
     id: number;
@@ -106,6 +109,8 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
 }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useSidebarSectionExpanded('views');
+    const [isNewViewOpen, setIsNewViewOpen] = useState(false);
+    const isMinimal = useIsMinimal();
     const [pinnedViews, setPinnedViews] = useState<View[]>([]);
     const [sidebarSettings, setSidebarSettings] = useState<{
         pinnedViewsOrder: string[];
@@ -292,6 +297,21 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
                     <QueueListIcon className="h-[14px] w-[14px]" />
                     {t('sidebar.views')}
                 </span>
+                {isMinimal && (
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsNewViewOpen(true);
+                        }}
+                        className="ml-auto p-1 -m-1 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                        aria-label={t('newView.title', 'New view')}
+                        title={t('newView.title', 'New view')}
+                        data-testid="new-view-sidebar-button"
+                    >
+                        <PlusIcon className="h-3.5 w-3.5" />
+                    </button>
+                )}
                 {orderedViews.length > 0 && (
                     <div className="flex items-center gap-1">
                         <span className="h-3.5 w-3.5" aria-hidden="true" />
@@ -301,12 +321,26 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
                                 setIsExpanded((v) => !v);
                             }}
                             aria-expanded={isExpanded}
-                                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
-                            aria-label={isExpanded ? t('sidebar.collapseViews', 'Collapse views list') : t('sidebar.expandViews', 'Expand views list')}
+                            className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                            aria-label={
+                                isExpanded
+                                    ? t(
+                                          'sidebar.collapseViews',
+                                          'Collapse views list'
+                                      )
+                                    : t(
+                                          'sidebar.expandViews',
+                                          'Expand views list'
+                                      )
+                            }
                         >
                             <ChevronRightIcon
                                 className="h-3 w-3 transition-transform duration-150"
-                                style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                                style={{
+                                    transform: isExpanded
+                                        ? 'rotate(90deg)'
+                                        : 'none',
+                                }}
                             />
                         </button>
                     </div>
@@ -339,14 +373,27 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
                                                 <QueueListIcon className="h-5 w-5 mr-2" />
                                             )
                                         }
-                                        onTogglePin={(e) =>
-                                            togglePin(view, e)
-                                        }
+                                        onTogglePin={(e) => togglePin(view, e)}
                                     />
                                 ))}
                             </SortableContext>
                         </DndContext>
                     </div>
+                </li>
+            )}
+            {isMinimal && isNewViewOpen && (
+                <li className="list-none">
+                    <NewViewDialog
+                        onClose={() => setIsNewViewOpen(false)}
+                        onCreated={(view) => {
+                            setIsNewViewOpen(false);
+                            handleNavClick(
+                                `/views/${view.uid}`,
+                                view.name,
+                                <QueueListIcon className="h-5 w-5 mr-2" />
+                            );
+                        }}
+                    />
                 </li>
             )}
         </ul>

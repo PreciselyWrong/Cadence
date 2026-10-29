@@ -13,7 +13,7 @@ interface SearchParams {
     excludeSubtasks?: boolean;
     status?: 'active' | 'completed' | 'all';
     taskStatus?: string;
-    // Focus scope for live search; saved Views never pass it
+    // Focus scope for live search, or the project a saved view is narrowed to
     scope?: { area_uid?: string; project_uid?: string };
 }
 

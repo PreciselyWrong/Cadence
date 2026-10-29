@@ -18,4 +18,13 @@ function validateTaskStatus(taskStatus) {
     return taskStatus;
 }
 
-module.exports = { validateName, validateTaskStatus };
+// A view can be narrowed to one project by its uid; blank means all projects.
+function validateProjectUid(projectUid) {
+    if (projectUid === undefined || projectUid === null) return null;
+    if (typeof projectUid !== 'string' || projectUid.trim().length > 64) {
+        throw new ValidationError('Invalid project');
+    }
+    return projectUid.trim() || null;
+}
+
+module.exports = { validateName, validateTaskStatus, validateProjectUid };

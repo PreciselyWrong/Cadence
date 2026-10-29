@@ -2296,6 +2296,24 @@
     "board": "Taulu",
     "calendar": "Kalenteri"
   },
+  "newView": {
+    "title": "Uusi näkymä",
+    "name": "Nimi",
+    "project": "Projekti",
+    "tag": "Tunniste",
+    "priority": "Prioriteetti",
+    "due": "Eräpäivä",
+    "status": "Tila",
+    "any": "Kaikki",
+    "dueToday": "Tänään",
+    "dueNext7Days": "Seuraavat 7 päivää",
+    "dueOverdue": "Myöhässä",
+    "dueNoDate": "Ei eräpäivää",
+    "statusOpen": "Avoimet",
+    "statusDone": "Valmiit",
+    "create": "Luo näkymä",
+    "createError": "Näkymää ei voitu luoda"
+  },
   "views": {
     "title": "Älykkäät näkymät",
     "loading": "Ladataan näkymiä...",

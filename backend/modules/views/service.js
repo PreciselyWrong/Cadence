@@ -1,7 +1,11 @@
 'use strict';
 
 const viewsRepository = require('./repository');
-const { validateName, validateTaskStatus } = require('./validation');
+const {
+    validateName,
+    validateTaskStatus,
+    validateProjectUid,
+} = require('./validation');
 const { NotFoundError } = require('../../shared/errors');
 
 class ViewsService {
@@ -33,6 +37,7 @@ class ViewsService {
             extras,
             recurring,
             task_status,
+            project_uid,
         } = data;
 
         const validatedName = validateName(name);
@@ -48,6 +53,7 @@ class ViewsService {
             extras: extras || [],
             recurring: recurring || null,
             task_status: validateTaskStatus(task_status),
+            project_uid: validateProjectUid(project_uid),
             is_pinned: false,
         });
     }
@@ -70,6 +76,7 @@ class ViewsService {
             recurring,
             task_status,
             is_pinned,
+            project_uid,
         } = data;
 
         const updates = {};
@@ -84,6 +91,8 @@ class ViewsService {
         if (recurring !== undefined) updates.recurring = recurring;
         if (task_status !== undefined)
             updates.task_status = validateTaskStatus(task_status);
+        if (project_uid !== undefined)
+            updates.project_uid = validateProjectUid(project_uid);
         if (is_pinned !== undefined) updates.is_pinned = is_pinned;
 
         await viewsRepository.update(view, updates);

@@ -2308,6 +2308,24 @@
     "board": "Tabla",
     "calendar": "Koledar"
   },
+  "newView": {
+    "title": "Nov pogled",
+    "name": "Ime",
+    "project": "Projekt",
+    "tag": "Oznaka",
+    "priority": "Prioriteta",
+    "due": "Rok",
+    "status": "Stanje",
+    "any": "Vse",
+    "dueToday": "Danes",
+    "dueNext7Days": "Naslednjih 7 dni",
+    "dueOverdue": "Zapadle",
+    "dueNoDate": "Brez roka",
+    "statusOpen": "Odprte",
+    "statusDone": "Opravljene",
+    "create": "Ustvari pogled",
+    "createError": "Pogleda ni bilo mogoče ustvariti"
+  },
   "views": {
     "title": "Pametni pogledi",
     "loading": "Nalagam poglede...",

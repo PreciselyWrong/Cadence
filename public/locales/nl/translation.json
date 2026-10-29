@@ -2296,6 +2296,24 @@
     "board": "Bord",
     "calendar": "Agenda"
   },
+  "newView": {
+    "title": "Nieuwe weergave",
+    "name": "Naam",
+    "project": "Project",
+    "tag": "Label",
+    "priority": "Prioriteit",
+    "due": "Deadline",
+    "status": "Status",
+    "any": "Alle",
+    "dueToday": "Vandaag",
+    "dueNext7Days": "Komende 7 dagen",
+    "dueOverdue": "Te laat",
+    "dueNoDate": "Geen deadline",
+    "statusOpen": "Open",
+    "statusDone": "Gedaan",
+    "create": "Weergave maken",
+    "createError": "Weergave kon niet worden gemaakt"
+  },
   "views": {
     "title": "Slimme Weergaven",
     "loading": "Weergaven laden...",

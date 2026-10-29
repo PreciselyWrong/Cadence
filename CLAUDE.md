@@ -37,7 +37,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Appearance | Minimal (default) or Dense interface (`ui_settings.appearance.density`) | [08-user-management.md](docs/08-user-management.md) |
 | Insights | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`) | [08-views-system.md](docs/08-views-system.md), [31-summary.md](docs/31-summary.md) |
 | Sidebar | Minimal: smart lists with counts, Areas as folders, icon rail with a More menu; smart lists, rail placement and count badges customisable in Profile → Sidebar; Dense is upstream | [32-sidebar.md](docs/32-sidebar.md) |
-| Views | Minimal: List / Board (by priority) / Calendar (month by due date) switch on saved views, tag pages, projects and Tasks, remembered in `ui_settings.viewTypes`; Dense is upstream | [08-views-system.md](docs/08-views-system.md) |
+| Views | Minimal: List / Board (by priority) / Calendar (month by due date) switch on saved views, tag pages, projects and Tasks, remembered in `ui_settings.viewTypes`; New view from the sidebar (name, project, tag, priority, due, status; `views.project_uid`); Dense is upstream | [08-views-system.md](docs/08-views-system.md) |
 | Inbox / quick add | French dates (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), `!1`–`!3` priority, `^list` as an alias of `+project` (accent-insensitive, unique prefix) | [04-inbox-page.md](docs/04-inbox-page.md) |
 
 ### Rules for agents working on the fork

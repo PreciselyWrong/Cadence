@@ -46,6 +46,7 @@ interface View {
     tags: string[];
     extras: string[] | null;
     task_status: string | null;
+    project_uid?: string | null;
     is_pinned: boolean;
 }
 
@@ -456,6 +457,9 @@ const ViewDetail: React.FC = () => {
                 taskStatus: normalizedView.task_status || undefined,
                 due: normalizedView.due || undefined,
                 defer: normalizedView.defer || undefined,
+                scope: normalizedView.project_uid
+                    ? { project_uid: normalizedView.project_uid }
+                    : undefined,
                 tags:
                     normalizedView.tags && normalizedView.tags.length > 0
                         ? normalizedView.tags

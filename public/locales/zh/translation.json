@@ -2294,6 +2294,24 @@
     "board": "看板",
     "calendar": "日历"
   },
+  "newView": {
+    "title": "新建视图",
+    "name": "名称",
+    "project": "项目",
+    "tag": "标签",
+    "priority": "优先级",
+    "due": "截止日期",
+    "status": "状态",
+    "any": "全部",
+    "dueToday": "今天",
+    "dueNext7Days": "未来 7 天",
+    "dueOverdue": "已逾期",
+    "dueNoDate": "无截止日期",
+    "statusOpen": "未完成",
+    "statusDone": "已完成",
+    "create": "创建视图",
+    "createError": "无法创建视图"
+  },
   "views": {
     "title": "智能视图",
     "loading": "加载视图中...",

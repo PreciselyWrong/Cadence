@@ -2294,6 +2294,24 @@
     "board": "Papan",
     "calendar": "Kalender"
   },
+  "newView": {
+    "title": "Tampilan baru",
+    "name": "Nama",
+    "project": "Proyek",
+    "tag": "Tag",
+    "priority": "Prioritas",
+    "due": "Tenggat",
+    "status": "Status",
+    "any": "Semua",
+    "dueToday": "Hari ini",
+    "dueNext7Days": "7 hari ke depan",
+    "dueOverdue": "Terlambat",
+    "dueNoDate": "Tanpa tenggat",
+    "statusOpen": "Terbuka",
+    "statusDone": "Selesai",
+    "create": "Buat tampilan",
+    "createError": "Tampilan tidak dapat dibuat"
+  },
   "views": {
     "title": "Tampilan Cerdas",
     "loading": "Memuat tampilan...",

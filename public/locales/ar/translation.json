@@ -2320,6 +2320,24 @@
     "board": "لوحة",
     "calendar": "تقويم"
   },
+  "newView": {
+    "title": "عرض جديد",
+    "name": "الاسم",
+    "project": "المشروع",
+    "tag": "الوسم",
+    "priority": "الأولوية",
+    "due": "الاستحقاق",
+    "status": "الحالة",
+    "any": "الكل",
+    "dueToday": "اليوم",
+    "dueNext7Days": "آخر 7 أيام",
+    "dueOverdue": "متأخرة",
+    "dueNoDate": "بلا تاريخ",
+    "statusOpen": "مفتوحة",
+    "statusDone": "منجزة",
+    "create": "إنشاء العرض",
+    "createError": "تعذّر إنشاء العرض"
+  },
   "views": {
     "title": "عرض ذكي",
     "loading": "جارٍ تحميل العروض...",

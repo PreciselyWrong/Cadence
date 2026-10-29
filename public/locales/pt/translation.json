@@ -2302,6 +2302,24 @@
     "board": "Quadro",
     "calendar": "Calendário"
   },
+  "newView": {
+    "title": "Nova vista",
+    "name": "Nome",
+    "project": "Projeto",
+    "tag": "Etiqueta",
+    "priority": "Prioridade",
+    "due": "Prazo",
+    "status": "Estado",
+    "any": "Todas",
+    "dueToday": "Hoje",
+    "dueNext7Days": "Próximos 7 dias",
+    "dueOverdue": "Atrasadas",
+    "dueNoDate": "Sem prazo",
+    "statusOpen": "Abertas",
+    "statusDone": "Concluídas",
+    "create": "Criar vista",
+    "createError": "Não foi possível criar a vista"
+  },
   "views": {
     "title": "Visões Inteligentes",
     "loading": "Carregando visões...",

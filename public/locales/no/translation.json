@@ -2297,6 +2297,24 @@
     "board": "Tavle",
     "calendar": "Kalender"
   },
+  "newView": {
+    "title": "Ny visning",
+    "name": "Navn",
+    "project": "Prosjekt",
+    "tag": "Tagg",
+    "priority": "Prioritet",
+    "due": "Frist",
+    "status": "Status",
+    "any": "Alle",
+    "dueToday": "I dag",
+    "dueNext7Days": "Neste 7 dager",
+    "dueOverdue": "Forfalt",
+    "dueNoDate": "Ingen frist",
+    "statusOpen": "Åpne",
+    "statusDone": "Fullført",
+    "create": "Opprett visning",
+    "createError": "Visningen kunne ikke opprettes"
+  },
   "views": {
     "title": "Smarte Visninger",
     "loading": "Laster visninger...",

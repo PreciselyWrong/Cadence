@@ -2294,6 +2294,24 @@
     "board": "Bảng",
     "calendar": "Lịch"
   },
+  "newView": {
+    "title": "Chế độ xem mới",
+    "name": "Tên",
+    "project": "Dự án",
+    "tag": "Thẻ",
+    "priority": "Độ ưu tiên",
+    "due": "Hạn",
+    "status": "Trạng thái",
+    "any": "Tất cả",
+    "dueToday": "Hôm nay",
+    "dueNext7Days": "7 ngày tới",
+    "dueOverdue": "Quá hạn",
+    "dueNoDate": "Không có hạn",
+    "statusOpen": "Đang mở",
+    "statusDone": "Đã xong",
+    "create": "Tạo chế độ xem",
+    "createError": "Không thể tạo chế độ xem"
+  },
   "views": {
     "title": "Chế độ xem thông minh",
     "loading": "Đang tải chế độ xem...",

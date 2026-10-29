@@ -2539,6 +2539,24 @@
         "board": "Nástenka",
         "calendar": "Kalendár"
     },
+    "newView": {
+        "title": "Nové zobrazenie",
+        "name": "Názov",
+        "project": "Projekt",
+        "tag": "Štítok",
+        "priority": "Priorita",
+        "due": "Termín",
+        "status": "Stav",
+        "any": "Všetky",
+        "dueToday": "Dnes",
+        "dueNext7Days": "Najbližších 7 dní",
+        "dueOverdue": "Po termíne",
+        "dueNoDate": "Bez termínu",
+        "statusOpen": "Otvorené",
+        "statusDone": "Hotové",
+        "create": "Vytvoriť zobrazenie",
+        "createError": "Zobrazenie sa nepodarilo vytvoriť"
+    },
     "views": {
         "title": "Inteligentné zobrazenia",
         "loading": "Načítavajú sa zobrazenia...",

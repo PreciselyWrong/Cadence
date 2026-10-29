@@ -619,4 +619,100 @@ describe('Views Routes', () => {
             expect(response.status).toBe(404);
         });
     });
+
+    describe('project scope', () => {
+        let launch, garden;
+
+        beforeEach(async () => {
+            const { Project, Task: TaskModel } = require('../../models');
+            launch = await Project.create({
+                name: 'Launch',
+                user_id: user.id,
+            });
+            garden = await Project.create({
+                name: 'Garden',
+                user_id: user.id,
+            });
+            await TaskModel.create({
+                name: 'Write launch post',
+                user_id: user.id,
+                project_id: launch.id,
+            });
+            await TaskModel.create({
+                name: 'Plant tomatoes',
+                user_id: user.id,
+                project_id: garden.id,
+            });
+        });
+
+        it('stores the project uid when a view is created', async () => {
+            const response = await agent.post('/api/views').send({
+                name: 'Launch tasks',
+                filters: ['Task'],
+                project_uid: launch.uid,
+            });
+
+            expect(response.status).toBe(201);
+            expect(response.body.project_uid).toBe(launch.uid);
+
+            const fetched = await agent.get(`/api/views/${response.body.uid}`);
+            expect(fetched.body.project_uid).toBe(launch.uid);
+        });
+
+        it('keeps a view without a project on all projects', async () => {
+            const response = await agent.post('/api/views').send({
+                name: 'Everywhere',
+                filters: ['Task'],
+            });
+
+            expect(response.status).toBe(201);
+            expect(response.body.project_uid).toBeNull();
+        });
+
+        it('sets and clears the project uid on update', async () => {
+            const created = await agent
+                .post('/api/views')
+                .send({ name: 'Switch', filters: ['Task'] });
+
+            await agent
+                .patch(`/api/views/${created.body.uid}`)
+                .send({ project_uid: garden.uid });
+            let fetched = await agent.get(`/api/views/${created.body.uid}`);
+            expect(fetched.body.project_uid).toBe(garden.uid);
+
+            await agent
+                .patch(`/api/views/${created.body.uid}`)
+                .send({ project_uid: null });
+            fetched = await agent.get(`/api/views/${created.body.uid}`);
+            expect(fetched.body.project_uid).toBeNull();
+        });
+
+        it('rejects a project uid that is not a string', async () => {
+            const response = await agent.post('/api/views').send({
+                name: 'Broken',
+                filters: ['Task'],
+                project_uid: { uid: 'x' },
+            });
+
+            expect(response.status).toBe(400);
+        });
+
+        it('search narrowed by the view project finds only that project', async () => {
+            const created = await agent.post('/api/views').send({
+                name: 'Launch only',
+                filters: ['Task'],
+                project_uid: launch.uid,
+            });
+
+            const search = await agent.get('/api/search').query({
+                filters: 'Task',
+                project_uid: created.body.project_uid,
+                excludeSubtasks: 'true',
+                status: 'all',
+            });
+
+            const names = search.body.results.map((row) => row.name).sort();
+            expect(names).toEqual(['Write launch post']);
+        });
+    });
 });

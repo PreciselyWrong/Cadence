@@ -2305,6 +2305,24 @@
     "board": "Board",
     "calendar": "Kalender"
   },
+  "newView": {
+    "title": "Neue Ansicht",
+    "name": "Name",
+    "project": "Projekt",
+    "tag": "Tag",
+    "priority": "Priorität",
+    "due": "Fällig",
+    "status": "Status",
+    "any": "Alle",
+    "dueToday": "Heute",
+    "dueNext7Days": "Nächste 7 Tage",
+    "dueOverdue": "Überfällig",
+    "dueNoDate": "Ohne Fälligkeit",
+    "statusOpen": "Offen",
+    "statusDone": "Erledigt",
+    "create": "Ansicht erstellen",
+    "createError": "Ansicht konnte nicht erstellt werden"
+  },
   "views": {
     "title": "Intelligente Ansichten",
     "loading": "Ansichten werden geladen...",

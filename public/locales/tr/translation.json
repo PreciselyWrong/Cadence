@@ -2296,6 +2296,24 @@
     "board": "Pano",
     "calendar": "Takvim"
   },
+  "newView": {
+    "title": "Yeni görünüm",
+    "name": "Ad",
+    "project": "Proje",
+    "tag": "Etiket",
+    "priority": "Öncelik",
+    "due": "Bitiş tarihi",
+    "status": "Durum",
+    "any": "Tümü",
+    "dueToday": "Bugün",
+    "dueNext7Days": "Sonraki 7 gün",
+    "dueOverdue": "Gecikmiş",
+    "dueNoDate": "Tarihi yok",
+    "statusOpen": "Açık",
+    "statusDone": "Tamamlanan",
+    "create": "Görünüm oluştur",
+    "createError": "Görünüm oluşturulamadı"
+  },
   "views": {
     "title": "Akıllı Görünümler",
     "loading": "Görünümler yükleniyor...",

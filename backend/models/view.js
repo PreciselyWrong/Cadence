@@ -85,6 +85,10 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            project_uid: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
             is_pinned: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,

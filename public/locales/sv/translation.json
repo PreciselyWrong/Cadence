@@ -2296,6 +2296,24 @@
     "board": "Tavla",
     "calendar": "Kalender"
   },
+  "newView": {
+    "title": "Ny vy",
+    "name": "Namn",
+    "project": "Projekt",
+    "tag": "Tagg",
+    "priority": "Prioritet",
+    "due": "Förfallodatum",
+    "status": "Status",
+    "any": "Alla",
+    "dueToday": "I dag",
+    "dueNext7Days": "Nästa 7 dagar",
+    "dueOverdue": "Försenade",
+    "dueNoDate": "Inget datum",
+    "statusOpen": "Öppna",
+    "statusDone": "Klara",
+    "create": "Skapa vy",
+    "createError": "Vyn kunde inte skapas"
+  },
   "views": {
     "title": "Smart Vyer",
     "loading": "Laddar vyer...",

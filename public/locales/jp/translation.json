@@ -2294,6 +2294,24 @@
     "board": "ボード",
     "calendar": "カレンダー"
   },
+  "newView": {
+    "title": "新しいビュー",
+    "name": "名前",
+    "project": "プロジェクト",
+    "tag": "タグ",
+    "priority": "優先度",
+    "due": "期限",
+    "status": "ステータス",
+    "any": "すべて",
+    "dueToday": "今日",
+    "dueNext7Days": "今後7日間",
+    "dueOverdue": "期限切れ",
+    "dueNoDate": "期限なし",
+    "statusOpen": "未完了",
+    "statusDone": "完了",
+    "create": "ビューを作成",
+    "createError": "ビューを作成できませんでした"
+  },
   "views": {
     "title": "スマートビュー",
     "loading": "ビューを読み込んでいます...",

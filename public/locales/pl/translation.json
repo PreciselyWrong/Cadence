@@ -2308,6 +2308,24 @@
     "board": "Tablica",
     "calendar": "Kalendarz"
   },
+  "newView": {
+    "title": "Nowy widok",
+    "name": "Nazwa",
+    "project": "Projekt",
+    "tag": "Tag",
+    "priority": "Priorytet",
+    "due": "Termin",
+    "status": "Status",
+    "any": "Wszystkie",
+    "dueToday": "Dziś",
+    "dueNext7Days": "Następne 7 dni",
+    "dueOverdue": "Przeterminowane",
+    "dueNoDate": "Bez terminu",
+    "statusOpen": "Otwarte",
+    "statusDone": "Zakończone",
+    "create": "Utwórz widok",
+    "createError": "Nie udało się utworzyć widoku"
+  },
   "views": {
     "title": "Inteligentne Widoki",
     "loading": "Ładowanie widoków...",

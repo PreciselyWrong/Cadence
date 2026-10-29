@@ -2302,6 +2302,24 @@
     "board": "Bacheca",
     "calendar": "Calendario"
   },
+  "newView": {
+    "title": "Nuova vista",
+    "name": "Nome",
+    "project": "Progetto",
+    "tag": "Etichetta",
+    "priority": "Priorità",
+    "due": "Scadenza",
+    "status": "Stato",
+    "any": "Tutte",
+    "dueToday": "Oggi",
+    "dueNext7Days": "Prossimi 7 giorni",
+    "dueOverdue": "In ritardo",
+    "dueNoDate": "Senza scadenza",
+    "statusOpen": "Aperte",
+    "statusDone": "Completate",
+    "create": "Crea vista",
+    "createError": "Impossibile creare la vista"
+  },
   "views": {
     "title": "Visualizzazioni Intelligenti",
     "loading": "Caricamento visualizzazioni...",

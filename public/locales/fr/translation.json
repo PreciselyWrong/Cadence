@@ -2302,6 +2302,24 @@
     "board": "Tableau",
     "calendar": "Calendrier"
   },
+  "newView": {
+    "title": "Nouvelle vue",
+    "name": "Nom",
+    "project": "Projet",
+    "tag": "Étiquette",
+    "priority": "Priorité",
+    "due": "Échéance",
+    "status": "Statut",
+    "any": "Toutes",
+    "dueToday": "Aujourd’hui",
+    "dueNext7Days": "7 prochains jours",
+    "dueOverdue": "En retard",
+    "dueNoDate": "Sans échéance",
+    "statusOpen": "Ouvertes",
+    "statusDone": "Terminées",
+    "create": "Créer la vue",
+    "createError": "Impossible de créer la vue"
+  },
   "views": {
     "title": "Vues intelligentes",
     "loading": "Chargement des vues...",

@@ -2817,6 +2817,24 @@
     "board": "Board",
     "calendar": "Calendar"
   },
+  "newView": {
+    "title": "New view",
+    "name": "Name",
+    "project": "Project",
+    "tag": "Tag",
+    "priority": "Priority",
+    "due": "Due",
+    "status": "Status",
+    "any": "Any",
+    "dueToday": "Today",
+    "dueNext7Days": "Next 7 days",
+    "dueOverdue": "Overdue",
+    "dueNoDate": "No due date",
+    "statusOpen": "Open",
+    "statusDone": "Done",
+    "create": "Create view",
+    "createError": "Could not create the view"
+  },
   "views": {
     "title": "Smart Views",
     "loading": "Loading views...",

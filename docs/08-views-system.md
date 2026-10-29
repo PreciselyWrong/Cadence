@@ -63,6 +63,19 @@ The view does **NOT** save:
 
 ---
 
+### From the Sidebar (Minimal)
+
+In Minimal, the Views section of the sidebar has a **+** button (New view). It opens a small dialog without a search first:
+
+- **Name** (required).
+- **Project**, **Tag** and **Priority**: each one narrows the view when chosen, or matches any when left as Any.
+- **Due**: Today, Next 7 days, Overdue or No due date.
+- **Status**: Open (the default, not-done tasks) or Done.
+
+The view always lists tasks only. Saving opens the new view. Dense keeps the upstream flow, which creates views from Universal Search.
+
+A view narrowed to a project is stored in `project_uid`. The project is checked for read access when the view runs; a project you can no longer read returns no tasks.
+
 ## **Accessing Views**
 
 ### View List Page
@@ -198,6 +211,7 @@ When you open a view, it displays:
 | `defer` | String | Defer filter: "deferred", "not_deferred", etc. (nullable) |
 | `tags` | JSON Array | Tag names to filter by |
 | `extras` | JSON Array | Extra filters: "recurring", "not_recurring", "overdue", "has_content", "no_content", "deferred", "not_deferred", "has_tags", "no_tags", "no_due_date", "assigned_to_project", "no_project" |
+| `project_uid` | String | Project the view is narrowed to (nullable: all projects) |
 | `is_pinned` | Boolean | Whether view is pinned to sidebar |
 | `created_at` | DateTime | When view was created |
 | `updated_at` | DateTime | Last modified time |
