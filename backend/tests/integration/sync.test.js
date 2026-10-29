@@ -256,6 +256,103 @@ describe('Offline sync API', () => {
         expect(typeof snap.body.cursor).toBe('number');
     });
 
+    describe('tags', () => {
+        it('sets task tags by uid and pulls them back', async () => {
+            const res = await push(agent, [
+                upsert(
+                    'op-tg1',
+                    'tag',
+                    'clienttag000001',
+                    { name: 'home' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-tg2',
+                    'tag',
+                    'clienttag000002',
+                    { name: 'calls' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-tg3',
+                    'task',
+                    'clienttask00010',
+                    {
+                        name: 'Tagged',
+                        tag_uids: ['clienttag000001', 'clienttag000002'],
+                    },
+                    hlc(2)
+                ),
+            ]);
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'applied',
+                'applied',
+            ]);
+
+            const task = await Task.findOne({
+                where: { uid: 'clienttask00010' },
+            });
+            const names = (await task.getTags()).map((t) => t.name).sort();
+            expect(names).toEqual(['calls', 'home']);
+
+            const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+            const last = pulled.body.changes
+                .filter((c) => c.uid === 'clienttask00010')
+                .pop();
+            expect([...last.data.tag_uids].sort()).toEqual([
+                'clienttag000001',
+                'clienttag000002',
+            ]);
+        });
+
+        it('journals a tag change made from the web', async () => {
+            const created = await agent
+                .post('/api/task')
+                .send({ name: 'Web tags' });
+            const before = await agent.get('/api/v1/sync/pull?cursor=0');
+
+            await agent
+                .patch(`/api/task/${created.body.uid}`)
+                .send({ tags: [{ name: 'errands' }] });
+
+            const after = await agent.get(
+                `/api/v1/sync/pull?cursor=${before.body.cursor}`
+            );
+            const change = after.body.changes
+                .filter((c) => c.uid === created.body.uid)
+                .pop();
+            expect(change).toBeDefined();
+            expect(change.data.tag_uids).toHaveLength(1);
+            expect(change.data.field_clocks.tag_uids).toBeDefined();
+        });
+
+        it("refuses another user's tag", async () => {
+            const other = await signIn('othertags@example.com');
+            await push(other.agent, [
+                upsert(
+                    'op-ot',
+                    'tag',
+                    'othertag0000001',
+                    { name: 'x' },
+                    hlc(1)
+                ),
+            ]);
+
+            const res = await push(agent, [
+                upsert(
+                    'op-ot2',
+                    'task',
+                    'clienttask00011',
+                    { name: 'T', tag_uids: ['othertag0000001'] },
+                    hlc(2)
+                ),
+            ]);
+
+            expect(res.body.results[0].status).toBe('rejected');
+        });
+    });
+
     it('rejects unknown entities and fields without failing the batch', async () => {
         const res = await push(agent, [
             upsert(

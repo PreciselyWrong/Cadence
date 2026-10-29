@@ -1,6 +1,6 @@
 'use strict';
 
-const { ENTITIES, entityForModel } = require('./registry');
+const { ENTITIES, entityForModel, listsOf } = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { currentOpId } = require('./context');
@@ -32,12 +32,60 @@ function stampClocks(entity, instance, options) {
     instance.set('field_clocks', clocks);
 }
 
+function parentIds(value) {
+    if (Array.isArray(value)) return value;
+    if (value !== null && typeof value === 'object') {
+        return Object.values(value).flat();
+    }
+    return value === undefined ? [] : [value];
+}
+
+// Tags sit in join tables, which a row's own hooks never see. A change
+// there re-journals the parent with its new list, stamped like any field.
+function installListHooks(Model, entity) {
+    for (const [field, list] of Object.entries(listsOf(entity))) {
+        const Through = Model.sequelize.models[list.through];
+        if (!Through) continue;
+
+        const touch = async (ids, options) => {
+            for (const id of new Set(ids)) {
+                const parent = await Model.findByPk(id, {
+                    transaction: options.transaction,
+                });
+                if (!parent) continue;
+                if (!options.syncApplied) {
+                    parent.set('field_clocks', {
+                        ...(parent.get('field_clocks') || {}),
+                        [field]: hlc.now(),
+                    });
+                }
+                parent.changed('updated_at', true);
+                await parent.save({
+                    syncApplied: true,
+                    transaction: options.transaction,
+                });
+            }
+        };
+
+        Through.addHook('afterBulkCreate', (rows, options) =>
+            touch(
+                rows.map((r) => r.get(list.key)),
+                options
+            )
+        );
+        Through.addHook('afterBulkDestroy', (options) =>
+            touch(parentIds(options.where && options.where[list.key]), options)
+        );
+    }
+}
+
 function install(models) {
     const { SyncChange } = models;
 
     for (const Model of Object.values(models)) {
         const entity = entityForModel(Model.name);
         if (!entity) continue;
+        installListHooks(Model, entity);
 
         // Bulk writes skip instance hooks unless asked; without them a
         // Task.update({...}, {where}) would never reach the devices.

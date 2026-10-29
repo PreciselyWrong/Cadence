@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { SCHEMA_VERSION, ENTITIES } = require('./registry');
+const { SCHEMA_VERSION, ENTITIES, listsOf } = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { runWithOp } = require('./context');
@@ -22,6 +22,12 @@ function describe() {
             fields: def.fields,
             refs: Object.fromEntries(
                 Object.entries(def.refs).map(([key, ref]) => [key, ref.entity])
+            ),
+            lists: Object.fromEntries(
+                Object.entries(listsOf(name)).map(([key, list]) => [
+                    key,
+                    list.entity,
+                ])
             ),
         })),
     };
@@ -97,13 +103,62 @@ async function resolveRefs(def, userId, fields) {
     return { columns };
 }
 
+async function resolveLists(def, userId, fields) {
+    const ids = {};
+    for (const [key, list] of Object.entries(def.lists || {})) {
+        if (!(key in fields)) continue;
+        const uids = [...new Set(fields[key].value)];
+        const found = await models()[ENTITIES[list.entity].model].findAll({
+            where: { uid: uids, user_id: userId },
+            attributes: ['id'],
+        });
+        if (found.length !== uids.length) {
+            return { error: `invalid_reference:${key}` };
+        }
+        ids[key] = found.map((r) => r.id);
+    }
+    return { ids };
+}
+
+async function writeLists(def, row, lists) {
+    const { sequelize } = models();
+    for (const [key, ids] of Object.entries(lists)) {
+        const list = def.lists[key];
+        const Through = sequelize.models[list.through];
+        await Through.destroy({
+            where: { [list.key]: row.id },
+            syncApplied: true,
+        });
+        if (ids.length > 0) {
+            await Through.bulkCreate(
+                ids.map((id) => ({ [list.key]: row.id, [list.otherKey]: id })),
+                { syncApplied: true }
+            );
+        }
+    }
+}
+
 function validateFields(def, fields) {
     if (!fields || typeof fields !== 'object' || Array.isArray(fields)) {
         return 'invalid_fields';
     }
+    const lists = def.lists || {};
     for (const [key, entry] of Object.entries(fields)) {
-        if (!def.fields.includes(key) && !(key in def.refs)) {
+        if (
+            !def.fields.includes(key) &&
+            !(key in def.refs) &&
+            !(key in lists)
+        ) {
             return `unknown_field:${key}`;
+        }
+        if (
+            key in lists &&
+            !(
+                Array.isArray(entry?.value) &&
+                entry.value.every((u) => typeof u === 'string')
+            )
+        ) {
+            return `invalid_list:${key}`;
         }
         if (!entry || !hlc.isAcceptable(entry.hlc)) {
             return `invalid_clock:${key}`;
@@ -137,9 +192,12 @@ async function applyUpsert(userId, op) {
 
     const refs = await resolveRefs(def, userId, op.fields);
     if (refs.error) return rejected(refs.error);
+    const lists = await resolveLists(def, userId, op.fields);
+    if (lists.error) return rejected(lists.error);
 
     const clocks = { ...(row?.field_clocks || {}) };
     const values = {};
+    const listValues = {};
     const rejectedFields = [];
     for (const [key, entry] of Object.entries(op.fields)) {
         const current = clocks[key];
@@ -149,14 +207,19 @@ async function applyUpsert(userId, op) {
             continue;
         }
         clocks[key] = entry.hlc;
+        hlc.observe(entry.hlc);
+        if (key in lists.ids) {
+            listValues[key] = lists.ids[key];
+            continue;
+        }
         const column = def.refs[key]?.column ?? key;
         values[column] = key in def.refs ? refs.columns[key] : entry.value;
-        hlc.observe(entry.hlc);
     }
 
     try {
-        if (!row) {
-            await Model.create(
+        let target = row;
+        if (!target) {
+            target = await Model.create(
                 {
                     ...values,
                     uid: op.uid,
@@ -166,9 +229,14 @@ async function applyUpsert(userId, op) {
                 { syncApplied: true }
             );
         } else if (Object.keys(values).length > 0) {
-            row.set({ ...values, field_clocks: clocks });
-            await row.save({ syncApplied: true });
+            target.set({ ...values, field_clocks: clocks });
+            await target.save({ syncApplied: true });
+        } else if (Object.keys(listValues).length > 0) {
+            // Only a list changed: its clock still has to be stored.
+            target.set('field_clocks', clocks);
+            await target.save({ syncApplied: true });
         }
+        await writeLists(def, target, listValues);
     } catch (error) {
         if (error.name && error.name.startsWith('Sequelize')) {
             return rejected('invalid_value');

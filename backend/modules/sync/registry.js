@@ -3,7 +3,8 @@
 // The single list of what syncs. Adding an entity means adding an entry
 // here (and a field_clocks column on its table); the protocol, journal and
 // merge stay as they are. `refs` are exposed to clients by uid, never by
-// the numeric id.
+// the numeric id. `lists` are many-to-many sets, exposed as arrays of uids
+// and merged as a whole.
 const SCHEMA_VERSION = 1;
 
 const ENTITIES = {
@@ -38,6 +39,14 @@ const ENTITIES = {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },
             parent_task_uid: { column: 'parent_task_id', entity: 'task' },
+        },
+        lists: {
+            tag_uids: {
+                through: 'tasks_tags',
+                key: 'task_id',
+                otherKey: 'tag_id',
+                entity: 'tag',
+            },
         },
         // Removes events, tags, relations and attachments with the row.
         destroy: async (row) => {
@@ -74,6 +83,14 @@ const ENTITIES = {
                 entity: 'project',
             },
         },
+        lists: {
+            tag_uids: {
+                through: 'projects_tags',
+                key: 'project_id',
+                otherKey: 'tag_id',
+                entity: 'tag',
+            },
+        },
     },
     area: {
         model: 'Area',
@@ -96,6 +113,14 @@ const ENTITIES = {
         refs: {
             project_uid: { column: 'project_id', entity: 'project' },
         },
+        lists: {
+            tag_uids: {
+                through: 'notes_tags',
+                key: 'note_id',
+                otherKey: 'tag_id',
+                entity: 'tag',
+            },
+        },
     },
     inbox_item: {
         model: 'InboxItem',
@@ -113,4 +138,5 @@ module.exports = {
     SCHEMA_VERSION,
     ENTITIES,
     entityForModel: (modelName) => byModel.get(modelName) ?? null,
+    listsOf: (entity) => ENTITIES[entity].lists || {},
 };

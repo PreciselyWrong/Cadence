@@ -48,7 +48,7 @@ A pushed op:
 
 ## Not yet covered
 
-- Task tags (many-to-many).
+- Tags sync as `tag_uids` lists on tasks, projects and notes, merged as a whole.
 - A semantic op to complete one occurrence of a recurring task (`task.complete_occurrence`).
 - Habits (Cadence tables).
 - Journal compaction.
