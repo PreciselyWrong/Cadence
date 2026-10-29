@@ -137,6 +137,7 @@ The sliders button next to the view switcher opens **View options**, saved per u
 - **Days in multi-day view** (`multiDayCount`, 2–7).
 - **Show week numbers** (`showWeekNumbers`, off): ISO week numbers on each month row and in the week grid's corner.
 - **Show mini calendar** (`showMiniCalendar`, off): a small month beside the views on wide screens; clicking a day goes to it.
+- **Holidays** (`holidayCountry`, `holidayRegion`, none by default): the public holidays of a country, and of one of its regions (canton, state…) when picked, as red whole-day items. They come from the `date-holidays` package on the server: `GET /api/holidays/countries`, `GET /api/holidays/regions?country=CH`, `GET /api/holidays?country=CH&region=VD&start=&end=` (at most 400 days). They are not counted in the Year heatmap.
 - **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
 
 ## Calendar page: Arrange tasks

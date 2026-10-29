@@ -1725,6 +1725,10 @@
     "agendaEmpty": "لا شيء مجدول",
     "agenda": "جدول الأعمال",
     "options": {
+      "holidays": "العطل الرسمية",
+      "holidaysNone": "لا شيء",
+      "holidayRegion": "المنطقة",
+      "holidayRegionAll": "البلد بأكمله",
       "showHabits": "إظهار العادات",
       "showWeekNumbers": "إظهار أرقام الأسابيع",
       "showMiniCalendar": "إظهار التقويم المصغّر",

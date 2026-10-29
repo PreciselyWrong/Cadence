@@ -1715,6 +1715,10 @@
     "agendaEmpty": "Không có gì được lên lịch",
     "agenda": "Lịch trình",
     "options": {
+      "holidays": "Ngày lễ",
+      "holidaysNone": "Không",
+      "holidayRegion": "Vùng",
+      "holidayRegionAll": "Cả nước",
       "showHabits": "Hiện thói quen",
       "showWeekNumbers": "Hiện số tuần",
       "showMiniCalendar": "Hiện lịch nhỏ",

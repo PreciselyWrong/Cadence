@@ -1681,6 +1681,10 @@
     "agendaEmpty": "Nada programado",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Festivos",
+      "holidaysNone": "Ninguno",
+      "holidayRegion": "Región",
+      "holidayRegionAll": "Todo el país",
       "showHabits": "Mostrar hábitos",
       "showWeekNumbers": "Mostrar números de semana",
       "showMiniCalendar": "Mostrar minicalendario",

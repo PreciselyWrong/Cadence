@@ -1717,6 +1717,10 @@
     "agendaEmpty": "Intet planlagt",
     "agenda": "Dagsorden",
     "options": {
+      "holidays": "Helligdage",
+      "holidaysNone": "Ingen",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Hele landet",
       "showHabits": "Vis vaner",
       "showWeekNumbers": "Vis ugenumre",
       "showMiniCalendar": "Vis minikalender",

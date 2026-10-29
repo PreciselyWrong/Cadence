@@ -1717,6 +1717,10 @@
     "agendaEmpty": "Ei mitään aikataulutettuna",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Pyhäpäivät",
+      "holidaysNone": "Ei mitään",
+      "holidayRegion": "Alue",
+      "holidayRegionAll": "Koko maa",
       "showHabits": "Näytä tavat",
       "showWeekNumbers": "Näytä viikkonumerot",
       "showMiniCalendar": "Näytä minikalenteri",

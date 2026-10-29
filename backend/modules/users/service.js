@@ -134,6 +134,8 @@ function sanitizeFocus(focus) {
     return clean;
 }
 
+const { isCountry, isRegion } = require('../holidays/service');
+
 const CALENDAR_COLOR_BY = ['default', 'project', 'priority', 'tag'];
 
 // Calendar page View options: known switches only.
@@ -152,6 +154,14 @@ function sanitizeCalendarOptions(calendar) {
     });
     if (CALENDAR_COLOR_BY.includes(calendar.colorBy)) {
         clean.colorBy = calendar.colorBy;
+    }
+    // Public holidays: a country code, optionally a region; '' turns them off.
+    if (calendar.holidayCountry === '' || isCountry(calendar.holidayCountry)) {
+        clean.holidayCountry = calendar.holidayCountry;
+        clean.holidayRegion = '';
+    }
+    if (calendar.holidayRegion === '' || isRegion(calendar.holidayRegion)) {
+        clean.holidayRegion = calendar.holidayRegion;
     }
     if (
         Number.isInteger(calendar.multiDayCount) &&

@@ -1721,6 +1721,10 @@
     "agendaEmpty": "Nič načrtovanega",
     "agenda": "Dnevni red",
     "options": {
+      "holidays": "Prazniki",
+      "holidaysNone": "Brez",
+      "holidayRegion": "Regija",
+      "holidayRegionAll": "Vsa država",
       "showHabits": "Pokaži navade",
       "showWeekNumbers": "Pokaži številke tednov",
       "showMiniCalendar": "Pokaži mini koledar",

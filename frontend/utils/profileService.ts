@@ -37,6 +37,8 @@ interface Profile {
             showMiniCalendar?: boolean;
             colorBy?: 'default' | 'project' | 'priority' | 'tag';
             multiDayCount?: number;
+            holidayCountry?: string;
+            holidayRegion?: string;
         };
         inbox?: {
             recentlyCapturedExpanded?: boolean;

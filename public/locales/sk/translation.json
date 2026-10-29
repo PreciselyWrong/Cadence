@@ -1889,6 +1889,10 @@
         "agendaEmpty": "Nič naplánované",
         "agenda": "Agenda",
         "options": {
+            "holidays": "Sviatky",
+            "holidaysNone": "Žiadne",
+            "holidayRegion": "Región",
+            "holidayRegionAll": "Celá krajina",
             "showHabits": "Zobraziť návyky",
             "showWeekNumbers": "Zobraziť čísla týždňov",
             "showMiniCalendar": "Zobraziť minikalendár",

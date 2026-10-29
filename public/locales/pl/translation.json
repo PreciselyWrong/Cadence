@@ -1721,6 +1721,10 @@
     "agendaEmpty": "Nic nie zaplanowano",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Święta",
+      "holidaysNone": "Brak",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Cały kraj",
       "showHabits": "Pokaż nawyki",
       "showWeekNumbers": "Pokaż numery tygodni",
       "showMiniCalendar": "Pokaż minikalendarz",

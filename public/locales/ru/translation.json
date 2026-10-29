@@ -1721,6 +1721,10 @@
     "agendaEmpty": "Ничего не запланировано",
     "agenda": "Повестка",
     "options": {
+      "holidays": "Праздники",
+      "holidaysNone": "Нет",
+      "holidayRegion": "Регион",
+      "holidayRegionAll": "Вся страна",
       "showHabits": "Показывать привычки",
       "showWeekNumbers": "Показывать номера недель",
       "showMiniCalendar": "Показывать мини-календарь",

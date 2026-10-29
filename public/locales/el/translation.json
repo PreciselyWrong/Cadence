@@ -1718,6 +1718,10 @@
     "agendaEmpty": "Τίποτα προγραμματισμένο",
     "agenda": "Ατζέντα",
     "options": {
+      "holidays": "Αργίες",
+      "holidaysNone": "Καμία",
+      "holidayRegion": "Περιοχή",
+      "holidayRegionAll": "Όλη η χώρα",
       "showHabits": "Εμφάνιση συνηθειών",
       "showWeekNumbers": "Εμφάνιση αριθμών εβδομάδων",
       "showMiniCalendar": "Εμφάνιση μίνι ημερολογίου",

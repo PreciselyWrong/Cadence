@@ -1721,6 +1721,10 @@
     "agendaEmpty": "Nimic programat",
     "agenda": "Agendă",
     "options": {
+      "holidays": "Sărbători",
+      "holidaysNone": "Niciuna",
+      "holidayRegion": "Regiune",
+      "holidayRegionAll": "Toată țara",
       "showHabits": "Afișează obiceiurile",
       "showWeekNumbers": "Afișează numerele săptămânilor",
       "showMiniCalendar": "Afișează mini calendarul",

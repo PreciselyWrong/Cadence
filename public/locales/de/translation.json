@@ -1380,6 +1380,10 @@
     "agendaEmpty": "Nichts geplant",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Feiertage",
+      "holidaysNone": "Keine",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Ganzes Land",
       "showHabits": "Gewohnheiten anzeigen",
       "showWeekNumbers": "Kalenderwochen anzeigen",
       "showMiniCalendar": "Minikalender anzeigen",

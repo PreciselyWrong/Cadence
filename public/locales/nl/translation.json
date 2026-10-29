@@ -1717,6 +1717,10 @@
     "agendaEmpty": "Niets gepland",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Feestdagen",
+      "holidaysNone": "Geen",
+      "holidayRegion": "Regio",
+      "holidayRegionAll": "Heel het land",
       "showHabits": "Gewoonten tonen",
       "showWeekNumbers": "Weeknummers tonen",
       "showMiniCalendar": "Minikalender tonen",

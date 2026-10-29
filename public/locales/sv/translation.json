@@ -1717,6 +1717,10 @@
     "agendaEmpty": "Inget planerat",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Helgdagar",
+      "holidaysNone": "Inga",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Hela landet",
       "showHabits": "Visa vanor",
       "showWeekNumbers": "Visa veckonummer",
       "showMiniCalendar": "Visa minikalender",

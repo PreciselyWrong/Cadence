@@ -32,6 +32,8 @@ import {
     startOfMonth,
     endOfMonth,
     subDays,
+    startOfYear,
+    endOfYear,
 } from 'date-fns';
 import { el, enUS, es, ja, uk, de } from 'date-fns/locale';
 import CalendarMonthView from './Calendar/CalendarMonthView';
@@ -49,6 +51,7 @@ import {
     taskToEvents,
 } from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
+import { Holiday, fetchHolidays } from '../utils/holidaysService';
 import ArrangePanel, { ARRANGE_DRAG_PREFIX } from './Calendar/ArrangePanel';
 import ViewOptions, {
     CalendarOptions,
@@ -100,6 +103,20 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         color: event.color || '#6b7280',
         feedUid: event.feed_uid,
         allDay: !!event.all_day,
+    };
+};
+
+const holidayToEvent = (holiday: Holiday): CalendarEvent => {
+    const start = localDate(holiday.date);
+    return {
+        id: `holiday-${holiday.date}`,
+        title: holiday.name,
+        start,
+        end: addDays(start, 1),
+        type: 'event',
+        color: '#ef4444',
+        allDay: true,
+        readOnly: true,
     };
 };
 
@@ -226,10 +243,42 @@ const Calendar: React.FC = () => {
         [allTasks, options]
     );
 
+    // Public holidays of the chosen country for the loaded window.
+    const [holidays, setHolidays] = useState<Holiday[]>([]);
+    useEffect(() => {
+        if (!options.holidayCountry) {
+            setHolidays([]);
+            return;
+        }
+        let cancelled = false;
+        fetchHolidays(
+            options.holidayCountry,
+            options.holidayRegion,
+            view === 'year'
+                ? format(startOfYear(currentDate), 'yyyy-MM-dd')
+                : windowStart,
+            view === 'year'
+                ? format(endOfYear(currentDate), 'yyyy-MM-dd')
+                : windowEnd
+        )
+            .then((list) => !cancelled && setHolidays(list))
+            .catch(() => !cancelled && setHolidays([]));
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        options.holidayCountry,
+        options.holidayRegion,
+        windowStart,
+        windowEnd,
+        view === 'year' ? currentDate.getFullYear() : 0,
+    ]);
+
     const shownFeedUids = new Set(
         feeds.filter((feed) => feed.show_on_calendar).map((feed) => feed.uid)
     );
     const calendarEvents = [
+        ...holidays.map(holidayToEvent),
         ...events,
         ...feedEvents
             .filter((event) => shownFeedUids.has(event.feed_uid))
@@ -714,7 +763,7 @@ const Calendar: React.FC = () => {
                         {view === 'year' && (
                             <CalendarYearView
                                 currentDate={currentDate}
-                                events={calendarEvents}
+                                events={events}
                                 weekStartsOn={
                                     firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
                                 }

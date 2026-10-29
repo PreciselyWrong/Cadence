@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import { CalendarColorBy } from './taskEvents';
+import {
+    HolidayPlace,
+    fetchHolidayCountries,
+    fetchHolidayRegions,
+} from '../../utils/holidaysService';
 
 export interface CalendarOptions {
     showCompleted: boolean;
@@ -13,6 +18,8 @@ export interface CalendarOptions {
     showMiniCalendar: boolean;
     colorBy: CalendarColorBy;
     multiDayCount: number;
+    holidayCountry: string;
+    holidayRegion: string;
 }
 
 export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
@@ -24,6 +31,8 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     showMiniCalendar: false,
     colorBy: 'default',
     multiDayCount: 3,
+    holidayCountry: '',
+    holidayRegion: '',
 };
 
 export const MULTI_DAY_COUNTS = [2, 3, 4, 5, 6, 7];
@@ -53,6 +62,12 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
         multiDayCount: MULTI_DAY_COUNTS.includes(value.multiDayCount as number)
             ? (value.multiDayCount as number)
             : DEFAULT_CALENDAR_OPTIONS.multiDayCount,
+        holidayCountry:
+            typeof value.holidayCountry === 'string'
+                ? value.holidayCountry
+                : '',
+        holidayRegion:
+            typeof value.holidayRegion === 'string' ? value.holidayRegion : '',
     };
 };
 
@@ -85,6 +100,83 @@ export const visibleTasks = <
 
 export const isWeekend = (day: Date) =>
     day.getDay() === 0 || day.getDay() === 6;
+
+// Country (and region) whose public holidays the calendar marks.
+const HolidayPicker: React.FC<{
+    country: string;
+    region: string;
+    onChange: (country: string, region: string) => void;
+}> = ({ country, region, onChange }) => {
+    const { t } = useTranslation();
+    const [countries, setCountries] = useState<HolidayPlace[]>([]);
+    const [regions, setRegions] = useState<HolidayPlace[]>([]);
+
+    useEffect(() => {
+        fetchHolidayCountries()
+            .then(setCountries)
+            .catch(() => setCountries([]));
+    }, []);
+
+    useEffect(() => {
+        if (!country) {
+            setRegions([]);
+            return;
+        }
+        fetchHolidayRegions(country)
+            .then(setRegions)
+            .catch(() => setRegions([]));
+    }, [country]);
+
+    const selectClass =
+        'max-w-[8rem] rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1';
+
+    return (
+        <>
+            <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                {t('calendar.options.holidays', 'Holidays')}
+                <select
+                    value={country}
+                    onChange={(e) => onChange(e.target.value, '')}
+                    className={selectClass}
+                >
+                    <option value="">
+                        {t('calendar.options.holidaysNone', 'None')}
+                    </option>
+                    {country && !countries.some((c) => c.code === country) && (
+                        <option value={country}>{country}</option>
+                    )}
+                    {countries.map((c) => (
+                        <option key={c.code} value={c.code}>
+                            {c.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            {regions.length > 0 && (
+                <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                    {t('calendar.options.holidayRegion', 'Region')}
+                    <select
+                        value={region}
+                        onChange={(e) => onChange(country, e.target.value)}
+                        className={selectClass}
+                    >
+                        <option value="">
+                            {t(
+                                'calendar.options.holidayRegionAll',
+                                'Whole country'
+                            )}
+                        </option>
+                        {regions.map((r) => (
+                            <option key={r.code} value={r.code}>
+                                {r.name}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+            )}
+        </>
+    );
+};
 
 interface ViewOptionsProps {
     options: CalendarOptions;
@@ -198,6 +290,17 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
                             ))}
                         </select>
                     </label>
+                    <HolidayPicker
+                        country={options.holidayCountry}
+                        region={options.holidayRegion}
+                        onChange={(holidayCountry, holidayRegion) =>
+                            onChange({
+                                ...options,
+                                holidayCountry,
+                                holidayRegion,
+                            })
+                        }
+                    />
                     <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
                         {t(
                             'calendar.options.multiDayCount',

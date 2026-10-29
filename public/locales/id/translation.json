@@ -1715,6 +1715,10 @@
     "agendaEmpty": "Tidak ada jadwal",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Hari libur",
+      "holidaysNone": "Tidak ada",
+      "holidayRegion": "Wilayah",
+      "holidayRegionAll": "Seluruh negara",
       "showHabits": "Tampilkan kebiasaan",
       "showWeekNumbers": "Tampilkan nomor minggu",
       "showMiniCalendar": "Tampilkan kalender mini",

@@ -1647,6 +1647,10 @@
     "agendaEmpty": "予定はありません",
     "agenda": "予定リスト",
     "options": {
+      "holidays": "祝日",
+      "holidaysNone": "なし",
+      "holidayRegion": "地域",
+      "holidayRegionAll": "国全体",
       "showHabits": "習慣を表示",
       "showWeekNumbers": "週番号を表示",
       "showMiniCalendar": "ミニカレンダーを表示",

@@ -1718,6 +1718,10 @@
     "agendaEmpty": "Ingenting planlagt",
     "agenda": "Agenda",
     "options": {
+      "holidays": "Helligdager",
+      "holidaysNone": "Ingen",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Hele landet",
       "showHabits": "Vis vaner",
       "showWeekNumbers": "Vis ukenumre",
       "showMiniCalendar": "Vis minikalender",

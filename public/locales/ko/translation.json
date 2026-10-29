@@ -1715,6 +1715,10 @@
     "agendaEmpty": "예정된 항목 없음",
     "agenda": "일정 목록",
     "options": {
+      "holidays": "공휴일",
+      "holidaysNone": "없음",
+      "holidayRegion": "지역",
+      "holidayRegionAll": "전국",
       "showHabits": "습관 표시",
       "showWeekNumbers": "주 번호 표시",
       "showMiniCalendar": "미니 캘린더 표시",

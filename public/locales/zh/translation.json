@@ -1715,6 +1715,10 @@
     "agendaEmpty": "暂无安排",
     "agenda": "日程",
     "options": {
+      "holidays": "法定节假日",
+      "holidaysNone": "无",
+      "holidayRegion": "地区",
+      "holidayRegionAll": "全国",
       "showHabits": "显示习惯",
       "showWeekNumbers": "显示周数",
       "showMiniCalendar": "显示迷你日历",

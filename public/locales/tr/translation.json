@@ -1717,6 +1717,10 @@
     "agendaEmpty": "Planlanmış bir şey yok",
     "agenda": "Ajanda",
     "options": {
+      "holidays": "Resmî tatiller",
+      "holidaysNone": "Yok",
+      "holidayRegion": "Bölge",
+      "holidayRegionAll": "Tüm ülke",
       "showHabits": "Alışkanlıkları göster",
       "showWeekNumbers": "Hafta numaralarını göster",
       "showMiniCalendar": "Mini takvimi göster",
