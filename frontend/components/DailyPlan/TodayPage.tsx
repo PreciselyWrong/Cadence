@@ -105,6 +105,7 @@ import {
     minuteOfDay,
     overlapsItems,
     plannedMinutes,
+    taskLength,
     intlLocale,
 } from './planUtils';
 
@@ -735,7 +736,7 @@ const TodayPage: React.FC = () => {
 
     const durationFor = (task: Task) =>
         (task.uid && durations[task.uid]) ||
-        task.estimated_minutes ||
+        taskLength(task) ||
         (task.uid && aiEstimates[task.uid]) ||
         DEFAULT_DURATION;
 
@@ -1015,11 +1016,20 @@ const TodayPage: React.FC = () => {
         setReloadToken((count) => count + 1);
     };
 
+    // The saved length is the task's own length in Calendar mode, so the
+    // list row follows it and an unsaved chip choice no longer overrides it.
     const handleCalendarResize = (eventId: string, newEnd: Date) => {
         const task = findDayTask(eventId);
         const event = calendarEvents.find((e) => e.id === eventId);
         if (!task?.uid || !event || event.readOnly) return;
-        void saveTaskChange(task, resizeUpdate(event, newEnd));
+        const update = resizeUpdate(event, newEnd) as Partial<Task>;
+        void saveTaskChange(task, update);
+        replaceCandidate(task.uid, { ...task, ...update } as Task);
+        setDurations((current) =>
+            Object.fromEntries(
+                Object.entries(current).filter(([uid]) => uid !== task.uid)
+            )
+        );
     };
 
     // A candidate dropped on an hour of the calendar becomes due then.

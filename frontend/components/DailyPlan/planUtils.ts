@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { DailyPlanItem, DayHours } from '../../utils/dailyPlanService';
@@ -153,6 +154,31 @@ export const busyMinutes = (
 
 export const plannedMinutes = (items: DailyPlanItem[]): number =>
     items.reduce((sum, item) => sum + item.duration_minutes, 0);
+
+const toMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+};
+
+// Calendar mode's length for an unplanned task: the start-to-due span when
+// both times fall on one day (what a due-edge resize writes), else its
+// estimate. Planned blocks use their plan item's duration instead.
+export const taskLength = (
+    task: Pick<
+        Task,
+        | 'start_date'
+        | 'start_time'
+        | 'due_date'
+        | 'due_time'
+        | 'estimated_minutes'
+    >
+): number | undefined => {
+    if (task.start_time && task.due_time && task.start_date === task.due_date) {
+        const span = toMinutes(task.due_time) - toMinutes(task.start_time);
+        if (span > 0) return span;
+    }
+    return task.estimated_minutes || undefined;
+};
 
 export const overlapsItems = (
     items: DailyPlanItem[],

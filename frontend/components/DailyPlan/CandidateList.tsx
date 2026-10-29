@@ -11,7 +11,7 @@ import {
 } from '../../utils/dailyPlanService';
 import DurationChips from './DurationChips';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
-import { DEFAULT_DURATION, formatDuration } from './planUtils';
+import { DEFAULT_DURATION, formatDuration, taskLength } from './planUtils';
 
 export type CandidateFilter =
     | 'all'
@@ -374,7 +374,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                 group={group}
                                 duration={
                                     durations[task.uid as string] ??
-                                    task.estimated_minutes ??
+                                    taskLength(task) ??
                                     aiEstimates[task.uid as string] ??
                                     DEFAULT_DURATION
                                 }

@@ -8,6 +8,7 @@ import {
     formatMinute,
     freeGaps,
     pickCurrentItem,
+    taskLength,
 } from '../planUtils';
 import { DailyPlanItem } from '../../../utils/dailyPlanService';
 import { CalendarEvent } from '../../../utils/calendarFeedsService';
@@ -195,5 +196,28 @@ describe('visible hours on the planning timeline', () => {
             )
         );
         expect(range).toEqual({ start: 5 * 60, end: 18 * 60 });
+    });
+});
+
+describe('taskLength', () => {
+    const base = { due_date: '2026-10-29', due_time: '16:00' };
+
+    it('is the start-to-due span when both times fall on one day', () => {
+        expect(
+            taskLength({
+                ...base,
+                start_date: '2026-10-29',
+                start_time: '15:15',
+                estimated_minutes: 30,
+            })
+        ).toBe(45);
+    });
+
+    it('is the estimate for a timed task without a start time', () => {
+        expect(taskLength({ ...base, estimated_minutes: 90 })).toBe(90);
+    });
+
+    it('is undefined when neither a span nor an estimate exists', () => {
+        expect(taskLength({ due_date: '2026-10-29' })).toBeUndefined();
     });
 });
