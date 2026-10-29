@@ -5,20 +5,28 @@ const router = express.Router();
 const { requireQuota } = require('../../middleware/entitlements');
 const habitsController = require('./controller');
 const { requireAuth } = require('../../middleware/auth');
+const idempotency = require('../../middleware/idempotency');
 
 router.get('/habits', requireAuth, habitsController.getAll);
 router.post(
     '/habits',
     requireAuth,
+    idempotency,
     requireQuota('task'),
     habitsController.create
 );
 router.post(
     '/habits/:uid/complete',
     requireAuth,
+    idempotency,
     habitsController.logCompletion
 );
-router.post('/habits/:uid/skip', requireAuth, habitsController.skipDay);
+router.post(
+    '/habits/:uid/skip',
+    requireAuth,
+    idempotency,
+    habitsController.skipDay
+);
 router.get(
     '/habits/:uid/completions',
     requireAuth,

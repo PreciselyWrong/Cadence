@@ -15,6 +15,7 @@ const habitsController = {
         res.json(
             await habitsService.getAll(req.currentUser.id, {
                 archived: req.query.archived === 'true',
+                updatedSince: req.query.updated_since,
             })
         );
     }),
@@ -25,10 +26,14 @@ const habitsController = {
         );
     }),
 
+    // 201 when created; 200 with the existing habit when the uid was sent
+    // before.
     create: handle(async (req, res) => {
-        res.status(201).json(
-            await habitsService.create(req.currentUser.id, req.body)
+        const { habit, created } = await habitsService.create(
+            req.currentUser.id,
+            req.body
         );
+        res.status(created ? 201 : 200).json({ habit });
     }),
 
     logCompletion: handle(async (req, res) => {
@@ -52,13 +57,14 @@ const habitsController = {
     }),
 
     getCompletions: handle(async (req, res) => {
-        const { start_date, end_date } = req.query;
+        const { start_date, end_date, updated_since } = req.query;
         res.json(
             await habitsService.getCompletions(
                 req.currentUser.id,
                 req.params.uid,
                 start_date,
-                end_date
+                end_date,
+                updated_since
             )
         );
     }),

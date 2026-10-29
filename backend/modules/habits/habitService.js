@@ -5,7 +5,8 @@ const { Op } = require('sequelize');
 const moment = require('moment-timezone');
 const engine = require('./habitEngine');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
-const { ValidationError } = require('../../shared/errors');
+const { ValidationError, ConflictError } = require('../../shared/errors');
+const { uid: generateUid } = require('../../utils/uid');
 
 const ARCHIVED_STATUS = 3;
 const CANCELLED_STATUS = 5;
@@ -123,6 +124,21 @@ class HabitService {
         if (!task.habit_mode) {
             throw new Error('Task is not a habit');
         }
+        // A retried check-in (same uid) returns the row it made before.
+        if (options.uid) {
+            const known = await RecurringCompletion.findOne({
+                where: { uid: options.uid },
+            });
+            if (known) {
+                if (known.task_id !== task.id) {
+                    throw new ConflictError(
+                        'This uid is already used by another check-in'
+                    );
+                }
+                const evaluation = await this.refresh(task, ctx);
+                return { completion: known, task, evaluation };
+            }
+        }
         const completedAt = options.completedAt
             ? new Date(options.completedAt)
             : new Date();
@@ -160,6 +176,7 @@ class HabitService {
         }
 
         const completion = await RecurringCompletion.create({
+            uid: options.uid || generateUid(),
             task_id: task.id,
             completed_at: completedAt,
             original_due_date: completedAt,

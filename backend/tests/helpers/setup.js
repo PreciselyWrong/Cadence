@@ -53,6 +53,7 @@ const CLEANUP_TABLES = [
     'google_accounts',
     'comments',
     'recurring_completions',
+    'idempotency_keys',
     'caldav_occurrence_overrides',
     'caldav_sync_state',
     'caldav_remote_calendars',

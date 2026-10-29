@@ -77,6 +77,7 @@ const ApiToken = require('./api_token')(sequelize);
 const Setting = require('./setting')(sequelize);
 const Notification = require('./notification')(sequelize);
 const RecurringCompletion = require('./recurringCompletion')(sequelize);
+const IdempotencyKey = require('./idempotency_key')(sequelize);
 const TaskAttachment = require('./task_attachment')(sequelize);
 const InboxItemAttachment = require('./inbox_item_attachment')(sequelize);
 const ProjectAttachment = require('./project_attachment')(sequelize);
@@ -746,6 +747,7 @@ module.exports = {
     Setting,
     Notification,
     RecurringCompletion,
+    IdempotencyKey,
     TaskAttachment,
     InboxItemAttachment,
     ProjectAttachment,

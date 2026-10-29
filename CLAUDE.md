@@ -24,6 +24,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Today | Calendar mode drags with dnd-kit onto 15-minute slots and the all-day row (due time set or cleared) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Two-way Google Calendar + Google Tasks sync (`backend/modules/google-sync/`, `google_*` tables) | [33-google-sync.md](docs/33-google-sync.md) |
+| Habits / offline sync | Habit and check-in `uid` chosen by the client (a repeat returns the existing row), `Idempotency-Key` on habit create, check-in and skip (`idempotency_keys`, 24 h), `updated_since` + `server_time` on habit and check-in lists; MCP habit tools take the uid | [21-habits.md](docs/21-habits.md#offline-sync) |
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Round check before each title (priority ring; completes from the list with undo); Minimal rows set priority and due date in place; Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
