@@ -3045,7 +3045,12 @@
     "durationHoursMinutes": "{{hours}}시간 {{minutes}}분",
     "calendar": "캘린더",
     "showCalendar": "캘린더 표시",
-    "hideCalendar": "캘린더 숨기기"
+    "hideCalendar": "캘린더 숨기기",
+    "previousDay": "이전 날",
+    "nextDay": "다음 날",
+    "planning": "계획",
+    "completed": "'{{name}}' 완료.",
+    "panelMode": "오른쪽 패널"
   },
   "capture": {
     "add": "추가",

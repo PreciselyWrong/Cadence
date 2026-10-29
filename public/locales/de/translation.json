@@ -3056,7 +3056,12 @@
     "durationHoursMinutes": "{{hours}} Std. {{minutes}} Min.",
     "calendar": "Kalender",
     "showCalendar": "Kalender anzeigen",
-    "hideCalendar": "Kalender ausblenden"
+    "hideCalendar": "Kalender ausblenden",
+    "previousDay": "Vorheriger Tag",
+    "nextDay": "Nächster Tag",
+    "planning": "Planung",
+    "completed": "„{{name}}“ erledigt.",
+    "panelMode": "Rechte Spalte"
   },
   "capture": {
     "add": "Hinzufügen",

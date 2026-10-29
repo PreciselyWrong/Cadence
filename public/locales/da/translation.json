@@ -3047,7 +3047,12 @@
     "durationHoursMinutes": "{{hours}} t {{minutes}} min",
     "calendar": "Kalender",
     "showCalendar": "Vis kalender",
-    "hideCalendar": "Skjul kalender"
+    "hideCalendar": "Skjul kalender",
+    "previousDay": "Forrige dag",
+    "nextDay": "Næste dag",
+    "planning": "Planlægning",
+    "completed": "'{{name}}' er udført.",
+    "panelMode": "Højre panel"
   },
   "capture": {
     "add": "Tilføj",

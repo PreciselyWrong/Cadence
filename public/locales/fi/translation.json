@@ -3047,7 +3047,12 @@
     "durationHoursMinutes": "{{hours}} h {{minutes}} min",
     "calendar": "Kalenteri",
     "showCalendar": "Näytä kalenteri",
-    "hideCalendar": "Piilota kalenteri"
+    "hideCalendar": "Piilota kalenteri",
+    "previousDay": "Edellinen päivä",
+    "nextDay": "Seuraava päivä",
+    "planning": "Suunnittelu",
+    "completed": "'{{name}}' tehty.",
+    "panelMode": "Oikea paneeli"
   },
   "capture": {
     "add": "Lisää",

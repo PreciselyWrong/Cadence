@@ -3047,7 +3047,12 @@
     "durationHoursMinutes": "{{hours}} ч {{minutes}} мин",
     "calendar": "Календар",
     "showCalendar": "Показване на календара",
-    "hideCalendar": "Скриване на календара"
+    "hideCalendar": "Скриване на календара",
+    "previousDay": "Предишен ден",
+    "nextDay": "Следващ ден",
+    "planning": "Планиране",
+    "completed": "„{{name}}“ е завършена.",
+    "panelMode": "Дясен панел"
   },
   "capture": {
     "add": "Добави",

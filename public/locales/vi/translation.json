@@ -3045,7 +3045,12 @@
     "durationHoursMinutes": "{{hours}} giờ {{minutes}} phút",
     "calendar": "Lịch",
     "showCalendar": "Hiện lịch",
-    "hideCalendar": "Ẩn lịch"
+    "hideCalendar": "Ẩn lịch",
+    "previousDay": "Ngày trước",
+    "nextDay": "Ngày sau",
+    "planning": "Lên kế hoạch",
+    "completed": "Đã hoàn thành '{{name}}'.",
+    "panelMode": "Bảng bên phải"
   },
   "capture": {
     "add": "Thêm",

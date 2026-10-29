@@ -3397,7 +3397,12 @@
     "durationHoursMinutes": "{{hours}}h {{minutes}}m",
     "calendar": "Calendar",
     "showCalendar": "Show calendar",
-    "hideCalendar": "Hide calendar"
+    "hideCalendar": "Hide calendar",
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "planning": "Planning",
+    "completed": "'{{name}}' completed.",
+    "panelMode": "Right panel"
   },
   "relations": {
     "title": "Relations",

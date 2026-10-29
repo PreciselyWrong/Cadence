@@ -3053,7 +3053,12 @@
     "durationHoursMinutes": "{{hours}} h {{minutes}}",
     "calendar": "Calendrier",
     "showCalendar": "Afficher le calendrier",
-    "hideCalendar": "Masquer le calendrier"
+    "hideCalendar": "Masquer le calendrier",
+    "previousDay": "Jour précédent",
+    "nextDay": "Jour suivant",
+    "planning": "Planification",
+    "completed": "« {{name}} » terminée.",
+    "panelMode": "Panneau de droite"
   },
   "capture": {
     "add": "Ajouter",

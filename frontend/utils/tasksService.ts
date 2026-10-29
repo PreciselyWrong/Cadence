@@ -242,6 +242,22 @@ export const fetchTaskById = async (taskId: number): Promise<Task> => {
     return await response.json();
 };
 
+// The tasks the Calendar page draws between start and end (YYYY-MM-DD),
+// including later occurrences of recurring tasks.
+export const fetchCalendarTasks = async (
+    start: string,
+    end: string
+): Promise<Task[]> => {
+    const response = await fetch(
+        getApiPath(`tasks?type=calendar&start=${start}&end=${end}`),
+        { credentials: 'include' }
+    );
+    if (!response.ok) return [];
+    const data = await response.json();
+    if (Array.isArray(data)) return data;
+    return data?.tasks ?? data?.data ?? [];
+};
+
 export const fetchTaskByUid = async (uid: string): Promise<Task> => {
     const response = await fetch(
         getApiPath(`task/${encodeURIComponent(uid)}`),

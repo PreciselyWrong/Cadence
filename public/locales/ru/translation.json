@@ -3061,7 +3061,12 @@
     "durationHoursMinutes": "{{hours}} ч {{minutes}} мин",
     "calendar": "Календарь",
     "showCalendar": "Показать календарь",
-    "hideCalendar": "Скрыть календарь"
+    "hideCalendar": "Скрыть календарь",
+    "previousDay": "Предыдущий день",
+    "nextDay": "Следующий день",
+    "planning": "Планирование",
+    "completed": "«{{name}}» выполнено.",
+    "panelMode": "Правая панель"
   },
   "capture": {
     "add": "Добавить",

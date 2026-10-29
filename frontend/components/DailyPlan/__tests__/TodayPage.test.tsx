@@ -8,16 +8,20 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TodayPage from '../TodayPage';
-import DurationChips from '../DurationChips';
 import {
     fetchDailyPlan,
     fetchPlanCandidates,
     saveDailyPlanItems,
+    startDailyPlan,
 } from '../../../utils/dailyPlanService';
 import {
     fetchCalendarEvents,
     fetchCalendarFeeds,
 } from '../../../utils/calendarFeedsService';
+import {
+    fetchCalendarTasks,
+    toggleTaskCompletion,
+} from '../../../utils/tasksService';
 
 // A stable t, like i18next's: the page reloads when t changes.
 jest.mock('react-i18next', () => {
@@ -39,48 +43,28 @@ jest.mock('react-i18next', () => {
     return { useTranslation: () => ({ t, i18n }) };
 });
 
+// The day lives in ?date=; the setter only records it, the test re-renders.
+let mockSearch = '';
+const mockSetSearchParams = jest.fn((next: Record<string, string>) => {
+    mockSearch = next.date ? `?date=${next.date}` : '';
+});
 jest.mock('react-router-dom', () => ({
     Link: ({ children, to, ...rest }: any) => (
         <a href={to} {...rest}>
             {children}
         </a>
     ),
-}));
-
-jest.mock('../../Task/TaskRow', () => ({
-    __esModule: true,
-    default: ({ task, onTaskUpdate, onTaskCompletionToggle }: any) => (
-        <div data-testid="task-row">
-            {task.name}
-            <button
-                data-testid={`complete-${task.uid}`}
-                onClick={() =>
-                    onTaskCompletionToggle({
-                        ...task,
-                        status: 0,
-                        due_date: '2026-10-01',
-                    })
-                }
-            />
-            <button
-                data-testid={`finish-${task.uid}`}
-                onClick={() => onTaskCompletionToggle({ ...task, status: 2 })}
-            />
-            <button
-                data-testid={`move-${task.uid}`}
-                onClick={() =>
-                    onTaskUpdate({ ...task, due_date: '2026-10-01' })
-                }
-            />
-        </div>
-    ),
+    useLocation: () => ({ pathname: '/today' }),
+    useSearchParams: () => [
+        new URLSearchParams(mockSearch),
+        mockSetSearchParams,
+    ],
 }));
 
 let mockCalendarEnabled = true;
 jest.mock('../../../store/useStore', () => ({
     useStore: (selector: any) =>
         selector({
-            projectsStore: { projects: [] },
             userSettingsStore: {
                 aiAssistantEnabled: false,
                 calendarEnabled: mockCalendarEnabled,
@@ -103,7 +87,8 @@ jest.mock('../../../utils/dateUtils', () => ({
 
 jest.mock('../../../utils/tasksService', () => ({
     toggleTaskCompletion: jest.fn(),
-    updateTask: jest.fn(),
+    updateTask: jest.fn().mockResolvedValue({}),
+    fetchCalendarTasks: jest.fn(),
 }));
 
 jest.mock('../../../utils/dailyPlanService', () => ({
@@ -111,6 +96,7 @@ jest.mock('../../../utils/dailyPlanService', () => ({
     fetchDailyPlan: jest.fn(),
     fetchPlanCandidates: jest.fn(),
     saveDailyPlanItems: jest.fn(),
+    startDailyPlan: jest.fn(),
 }));
 
 jest.mock('../../../utils/calendarFeedsService', () => ({
@@ -121,626 +107,176 @@ jest.mock('../../../utils/calendarFeedsService', () => ({
 const candidates = {
     in_progress: [],
     overdue: [{ uid: 'o1', name: 'Renew insurance', status: 0 }],
-    due_today: [],
+    due_today: [{ uid: 'd1', name: 'Pay invoice', status: 0 }],
     suggested: [],
     inbox: [],
-    inbox_count: 4,
+    inbox_count: 0,
 };
+
+// Candidates come from the server only for the real today.
+const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'UTC' }).format(
+    new Date()
+);
+const emptyDay = { date: TODAY, plan: null };
 
 describe('TodayPage', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        window.localStorage.clear();
         mockCalendarEnabled = true;
+        (fetchDailyPlan as jest.Mock).mockResolvedValue(emptyDay);
         (fetchPlanCandidates as jest.Mock).mockResolvedValue(candidates);
-        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([]);
+        (fetchCalendarTasks as jest.Mock).mockResolvedValue([]);
+        mockSearch = '';
+        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
+            { uid: 'f1', name: 'Work', show_on_calendar: true },
+        ]);
         (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+            date: TODAY,
             events: [],
             errors: [],
         });
-    });
-
-    it("shows today's tasks without making you plan first", async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
+        (saveDailyPlanItems as jest.Mock).mockResolvedValue({
+            date: TODAY,
             plan: null,
         });
-
-        render(<TodayPage />);
-
-        expect(await screen.findByText('Renew insurance')).toBeInTheDocument();
-        expect(screen.getByTestId('plan-your-day')).toHaveAttribute(
-            'href',
-            '/today/plan'
-        );
-        expect(
-            screen.queryByText("You haven't planned today yet")
-        ).not.toBeInTheDocument();
-        expect(screen.queryByText('Add to today')).not.toBeInTheDocument();
+        (startDailyPlan as jest.Mock).mockResolvedValue({});
     });
 
-    it('drops a task from the list once it is done', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: null,
-        });
-
+    it('shows candidates on Today without a planning gate', async () => {
         render(<TodayPage />);
 
-        await screen.findByText('Renew insurance');
-        fireEvent.click(screen.getByTestId('finish-o1'));
+        expect(await screen.findByTestId('candidate-o1')).toBeInTheDocument();
+        expect(screen.getByTestId('candidate-d1')).toBeInTheDocument();
+        expect(screen.getByTestId('day-timeline')).toBeInTheDocument();
+        expect(screen.queryByTestId('plan-your-day')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('start-my-day')).not.toBeInTheDocument();
+    });
+
+    it('completes a candidate from its round check and removes it', async () => {
+        (toggleTaskCompletion as jest.Mock).mockResolvedValue({
+            uid: 'o1',
+            name: 'Renew insurance',
+            status: 2,
+        });
+        render(<TodayPage />);
+
+        const card = await screen.findByTestId('candidate-o1');
+        fireEvent.click(within(card).getByTestId('task-check-circle'));
+
         await waitFor(() =>
-            expect(
-                screen.queryByText('Renew insurance')
-            ).not.toBeInTheDocument()
+            expect(screen.queryByTestId('candidate-o1')).not.toBeInTheDocument()
         );
+        expect(toggleTaskCompletion).toHaveBeenCalledWith(
+            'o1',
+            expect.objectContaining({ uid: 'o1' })
+        );
+        expect(mockShowUndoToast).toHaveBeenCalled();
+    });
+
+    it('saves a placed candidate and starts the day once', async () => {
+        render(<TodayPage />);
+
+        fireEvent.click(await screen.findByTestId('add-d1'));
+        await waitFor(() =>
+            expect(saveDailyPlanItems).toHaveBeenCalledWith(TODAY, [
+                expect.objectContaining({
+                    task_uid: 'd1',
+                    start_minute: expect.any(Number),
+                }),
+            ])
+        );
+        await waitFor(() => expect(startDailyPlan).toHaveBeenCalledWith(TODAY));
+
+        fireEvent.click(screen.getByTestId('add-o1'));
+        await waitFor(() =>
+            expect(saveDailyPlanItems).toHaveBeenCalledTimes(2)
+        );
+        expect(startDailyPlan).toHaveBeenCalledTimes(1);
+    });
+
+    it('hides the calendar and remembers the choice', async () => {
+        render(<TodayPage />);
+
+        await screen.findByTestId('day-timeline');
+        fireEvent.click(screen.getByTitle('Hide calendar'));
+
+        expect(screen.queryByTestId('day-timeline')).not.toBeInTheDocument();
+        expect(window.localStorage.getItem('today.calendarOpen')).toBe('false');
+        expect(screen.getByTestId('candidate-o1')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTitle('Show calendar'));
+        expect(await screen.findByTestId('day-timeline')).toBeInTheDocument();
+        expect(window.localStorage.getItem('today.calendarOpen')).toBe('true');
     });
 
     it('leaves calendars out when the Calendar feature is off', async () => {
         mockCalendarEnabled = false;
-        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
-            { uid: 'f1', name: 'Work' },
-        ]);
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: null,
-        });
 
         render(<TodayPage />);
 
-        await screen.findByText('Renew insurance');
+        await screen.findByTestId('candidate-o1');
         expect(fetchCalendarFeeds).not.toHaveBeenCalled();
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
-        expect(
-            screen.queryByText('Connect a calendar')
-        ).not.toBeInTheDocument();
-        expect(
-            screen.queryByText('From your calendar')
-        ).not.toBeInTheDocument();
     });
 
-    it('leaves out calendars switched off in Profile', async () => {
+    it('leaves events of calendars hidden from Calendar out of the timeline', async () => {
         (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
             { uid: 'f1', name: 'Work', show_on_calendar: false },
         ]);
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: null,
-        });
 
         render(<TodayPage />);
 
-        await waitFor(() => expect(fetchCalendarFeeds).toHaveBeenCalled());
-        await screen.findByText('Renew insurance');
+        await screen.findByTestId('candidate-o1');
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
-        expect(
-            screen.queryByText('From your calendar')
-        ).not.toBeInTheDocument();
-        expect(
-            screen.queryByText('Connect a calendar')
-        ).not.toBeInTheDocument();
     });
 
-    it('offers to continue a draft plan', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: {
-                uid: 'p',
-                date: '2026-09-24',
-                started_at: null,
-                items: [
-                    {
-                        task_uid: 't1',
-                        position: 0,
-                        start_minute: 600,
-                        duration_minutes: 30,
-                        task: { uid: 't1', name: 'Write spec', status: 0 },
-                    },
-                ],
-            },
+    it('moves the day with the arrows and keeps it in ?date=', async () => {
+        (fetchDailyPlan as jest.Mock).mockImplementation(
+            async (date?: string) => ({ date: date ?? TODAY, plan: null })
+        );
+        const tomorrow = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'UTC',
+        }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
+        (fetchCalendarTasks as jest.Mock).mockImplementation(
+            async (start: string) =>
+                start === tomorrow
+                    ? [
+                          {
+                              uid: 'n1',
+                              id: 9,
+                              name: 'Next day task',
+                              status: 0,
+                              due_date: tomorrow,
+                          },
+                      ]
+                    : []
+        );
+
+        const { rerender } = render(<TodayPage />);
+        await screen.findByTestId('candidate-o1');
+        fireEvent.click(screen.getByTestId('day-next'));
+
+        expect(mockSetSearchParams).toHaveBeenLastCalledWith({
+            date: tomorrow,
         });
+        rerender(<TodayPage />);
+        expect(await screen.findByTestId('candidate-n1')).toBeInTheDocument();
+        expect(fetchDailyPlan).toHaveBeenLastCalledWith(tomorrow, {});
+        expect(screen.queryByTestId('candidate-o1')).not.toBeInTheDocument();
 
+        fireEvent.click(screen.getByTestId('day-today'));
+        expect(mockSetSearchParams).toHaveBeenLastCalledWith({});
+    });
+
+    it('switches the right panel to the calendar and remembers it', async () => {
         render(<TodayPage />);
 
-        expect(
-            await screen.findByText('Continue planning')
-        ).toBeInTheDocument();
-    });
+        await screen.findByTestId('day-timeline');
+        fireEvent.click(screen.getByTestId('panel-calendar'));
 
-    it('warns about a timed task whose slot has passed', async () => {
-        jest.useFakeTimers({ doNotFake: ['setTimeout', 'setInterval'] });
-        jest.setSystemTime(new Date('2026-09-24T12:00:00Z'));
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: {
-                uid: 'p',
-                date: '2026-09-24',
-                started_at: '2026-09-24T06:00:00Z',
-                items: [
-                    {
-                        task_uid: 'late',
-                        position: 0,
-                        start_minute: 480,
-                        duration_minutes: 30,
-                        task: { uid: 'late', name: 'Missed it', status: 0 },
-                    },
-                    {
-                        task_uid: 'done',
-                        position: 1,
-                        start_minute: 540,
-                        duration_minutes: 30,
-                        task: { uid: 'done', name: 'Did it', status: 2 },
-                    },
-                    {
-                        task_uid: 'later',
-                        position: 2,
-                        start_minute: 900,
-                        duration_minutes: 30,
-                        task: { uid: 'later', name: 'Not yet', status: 0 },
-                    },
-                ],
-            },
-        });
-
-        render(<TodayPage />);
-
-        expect(await screen.findByTestId('late-late')).toBeInTheDocument();
-        expect(screen.queryByTestId('late-done')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('late-later')).not.toBeInTheDocument();
-        const order = Array.from(
-            screen.getByTestId('agenda-list').children
-        ).map((el) => el.getAttribute('data-testid'));
-        expect(order).toEqual([
-            'agenda-task-late',
-            'agenda-task-done',
-            'now-marker',
-            'agenda-task-later',
-        ]);
-        jest.useRealTimers();
-    });
-
-    it('shows only the plan once the day is started', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: {
-                uid: 'p',
-                date: '2026-09-24',
-                started_at: '2026-09-24T06:00:00Z',
-                items: [
-                    {
-                        task_uid: 't1',
-                        position: 0,
-                        start_minute: null,
-                        duration_minutes: 60,
-                        task: { uid: 't1', name: 'Write spec', status: 0 },
-                    },
-                    {
-                        task_uid: 't2',
-                        position: 1,
-                        start_minute: null,
-                        duration_minutes: 30,
-                        task: { uid: 't2', name: 'Pay invoice', status: 2 },
-                    },
-                ],
-            },
-        });
-
-        render(<TodayPage />);
-
-        expect(await screen.findByTestId('now-card')).toHaveTextContent(
-            'Write spec'
-        );
-        expect(screen.getByText('1 of 2 done · 1h left')).toBeInTheDocument();
-        expect(screen.queryByTestId('today-unplanned')).not.toBeInTheDocument();
-        expect(
-            await screen.findByTestId('not-planned-toggle')
-        ).toHaveTextContent('Not planned (1)');
-    });
-
-    const startedPlan = (items: any[]) => ({
-        date: '2026-09-24',
-        plan: {
-            uid: 'p',
-            date: '2026-09-24',
-            started_at: '2026-09-24T06:00:00Z',
-            items: items.map((item, position) => ({
-                position,
-                start_minute: null,
-                duration_minutes: 30,
-                ...item,
-            })),
-        },
-    });
-
-    it('shows a recurring task completed today as done', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue(
-            startedPlan([
-                {
-                    task_uid: 'r1',
-                    occurrence_done: true,
-                    task: {
-                        uid: 'r1',
-                        name: 'Water plants',
-                        status: 0,
-                        recurrence_type: 'daily',
-                        due_date: '2026-09-25',
-                    },
-                },
-                {
-                    task_uid: 't1',
-                    task: { uid: 't1', name: 'Write spec', status: 0 },
-                },
-            ])
-        );
-
-        render(<TodayPage />);
-
-        const row = await screen.findByTestId('occurrence-done-r1');
-        expect(row).toHaveTextContent('Water plants');
-        expect(row).toHaveTextContent('Next on Sep 25');
-        expect(screen.getByText('1 of 2 done · 30m left')).toBeInTheDocument();
-    });
-
-    it('marks the day done when a recurring task moves on', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue(
-            startedPlan([
-                {
-                    task_uid: 'r1',
-                    task: {
-                        uid: 'r1',
-                        name: 'Water plants',
-                        status: 0,
-                        recurrence_type: 'daily',
-                        due_date: '2026-09-24',
-                    },
-                },
-            ])
-        );
-
-        render(<TodayPage />);
-
-        fireEvent.click(await screen.findByTestId('complete-r1'));
-
-        expect(
-            await screen.findByTestId('occurrence-done-r1')
-        ).toBeInTheDocument();
-        expect(screen.getByText('1 of 1 done')).toBeInTheDocument();
-        expect(saveDailyPlanItems).not.toHaveBeenCalled();
-    });
-
-    it('marks the day done when a planned habit is checked in', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue(
-            startedPlan([
-                {
-                    task_uid: 'h1',
-                    task: {
-                        uid: 'h1',
-                        name: 'Stretch',
-                        status: 0,
-                        habit_mode: true,
-                        recurrence_type: 'daily',
-                        habit_frequency_period: 'weekly',
-                        habit_target_count: 3,
-                        habit_progress: {
-                            period_start: '2026-09-21',
-                            period_end: '2026-09-27',
-                            today: '2026-09-24',
-                            first_day: '2026-09-01',
-                            progress: 1,
-                            check_ins: 1,
-                            today_check_ins: 1,
-                            goal: 3,
-                            met: false,
-                            skipped: false,
-                            scheduled_today: true,
-                            multiple_per_day: false,
-                        },
-                    },
-                },
-            ])
-        );
-
-        render(<TodayPage />);
-
-        fireEvent.click(await screen.findByTestId('complete-h1'));
-
-        expect(
-            await screen.findByTestId('occurrence-done-h1')
-        ).toBeInTheDocument();
-        expect(screen.getByText('1 of 1 done')).toBeInTheDocument();
-    });
-
-    it('takes a task off the plan when its due date moves later', async () => {
-        const plan = startedPlan([
-            {
-                task_uid: 't1',
-                task: {
-                    uid: 't1',
-                    name: 'Write spec',
-                    status: 0,
-                    due_date: '2026-09-24',
-                },
-            },
-            {
-                task_uid: 't2',
-                task: { uid: 't2', name: 'Pay invoice', status: 0 },
-            },
-        ]);
-        (fetchDailyPlan as jest.Mock).mockResolvedValue(plan);
-        (saveDailyPlanItems as jest.Mock).mockResolvedValue(
-            startedPlan([plan.plan.items[1]])
-        );
-
-        render(<TodayPage />);
-
-        fireEvent.click(await screen.findByTestId('move-t1'));
-
-        await waitFor(() =>
-            expect(saveDailyPlanItems).toHaveBeenCalledWith('2026-09-24', [
-                { task_uid: 't2', start_minute: null, duration_minutes: 30 },
-            ])
-        );
-        expect(screen.queryByTestId('agenda-task-t1')).not.toBeInTheDocument();
-        expect(mockShowUndoToast).toHaveBeenCalledWith(
-            "'Write spec' is no longer due today, so it left today's plan.",
-            expect.any(Function)
-        );
-    });
-
-    it('keeps a task on the plan when its due date was already later', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue(
-            startedPlan([
-                {
-                    task_uid: 't1',
-                    task: {
-                        uid: 't1',
-                        name: 'Write spec',
-                        status: 0,
-                        due_date: '2026-09-28',
-                    },
-                },
-            ])
-        );
-
-        render(<TodayPage />);
-
-        fireEvent.click(await screen.findByTestId('move-t1'));
-
-        expect(screen.getByTestId('agenda-task-t1')).toBeInTheDocument();
-        expect(saveDailyPlanItems).not.toHaveBeenCalled();
-    });
-
-    it('lets you drag the Anytime tasks but not the timed ones', async () => {
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: {
-                uid: 'p',
-                date: '2026-09-24',
-                started_at: '2026-09-24T06:00:00Z',
-                items: [
-                    {
-                        task_uid: 'timed',
-                        position: 0,
-                        start_minute: 600,
-                        duration_minutes: 30,
-                        task: { uid: 'timed', name: 'Standup', status: 0 },
-                    },
-                    {
-                        task_uid: 'a1',
-                        position: 1,
-                        start_minute: null,
-                        duration_minutes: 30,
-                        task: { uid: 'a1', name: 'Write spec', status: 0 },
-                    },
-                    {
-                        task_uid: 'a2',
-                        position: 2,
-                        start_minute: null,
-                        duration_minutes: 30,
-                        task: { uid: 'a2', name: 'Pay invoice', status: 0 },
-                    },
-                ],
-            },
-        });
-
-        render(<TodayPage />);
-
-        expect(
-            await screen.findByTestId('sortable-agenda-task-a1')
-        ).toHaveAttribute('aria-roledescription', 'sortable task');
-        expect(
-            screen.getByTestId('sortable-agenda-task-a2')
-        ).toBeInTheDocument();
-        expect(
-            screen.queryByTestId('sortable-agenda-task-timed')
-        ).not.toBeInTheDocument();
-    });
-});
-
-describe('DurationChips', () => {
-    it('marks the selected length and reports clicks', () => {
-        const onChange = jest.fn();
-        render(<DurationChips value={30} onChange={onChange} />);
-
-        expect(screen.getByRole('radio', { name: '30m' })).toHaveAttribute(
-            'aria-checked',
-            'true'
-        );
-        fireEvent.click(screen.getByRole('radio', { name: '2h' }));
-        expect(onChange).toHaveBeenCalledWith(120);
-    });
-});
-
-describe('TodayPage calendar panel', () => {
-    const feedEvent = {
-        uid: 'e1',
-        title: 'Dentist',
-        all_day: false,
-        busy: true,
-        start: '2026-09-24T10:00:00',
-        end: '2026-09-24T11:00:00',
-        start_minute: 10 * 60,
-        end_minute: 11 * 60,
-        feed_uid: 'f1',
-        feed_name: 'Work',
-        color: null,
-    };
-    const timedTask = {
-        uid: 'd1',
-        id: 5,
-        name: 'Call the bank',
-        status: 0,
-        due_date: '2026-09-24',
-        due_time: '14:00',
-        due_has_time: true,
-    };
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-        mockCalendarEnabled = true;
-        localStorage.clear();
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: null,
-        });
-        (fetchPlanCandidates as jest.Mock).mockResolvedValue({
-            ...candidates,
-            due_today: [timedTask],
-        });
-        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
-            {
-                uid: 'f1',
-                name: 'Work',
-                url_host: 'example.com',
-                color: null,
-                last_fetched_at: null,
-                last_error: null,
-                show_on_calendar: true,
-            },
-        ]);
-        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            events: [feedEvent],
-            errors: [],
-        });
-    });
-
-    it('starts closed, then opens and stays open after a re-render', async () => {
-        const { unmount } = render(<TodayPage />);
-        const toggle = await screen.findByRole('button', { name: 'Calendar' });
-
-        expect(toggle).toHaveAttribute('aria-pressed', 'false');
-        expect(
-            screen.queryByTestId('today-calendar-panel')
-        ).not.toBeInTheDocument();
-
-        fireEvent.click(toggle);
-
-        expect(screen.getByTestId('today-calendar-panel')).toBeInTheDocument();
-        expect(toggle).toHaveAttribute('aria-pressed', 'true');
-        expect(localStorage.getItem('today.calendarOpen')).toBe('true');
-
-        unmount();
-        render(<TodayPage />);
-
-        expect(
-            await screen.findByTestId('today-calendar-panel')
-        ).toBeInTheDocument();
-        expect(
-            screen.getByRole('button', { name: 'Calendar' })
-        ).toHaveAttribute('aria-pressed', 'true');
-    });
-
-    it('shows a feed event and a timed task due today in the panel', async () => {
-        localStorage.setItem('today.calendarOpen', 'true');
-        render(<TodayPage />);
-
-        const panel = await screen.findByTestId('today-calendar-panel');
-
-        await waitFor(() =>
-            expect(within(panel).getByText('Dentist')).toBeInTheDocument()
-        );
-        expect(within(panel).getByText('Call the bank')).toBeInTheDocument();
-    });
-
-    it('does not show the panel until it is opened', async () => {
-        render(<TodayPage />);
-
-        await screen.findByRole('button', { name: 'Calendar' });
-
-        expect(
-            screen.queryByTestId('today-calendar-panel')
-        ).not.toBeInTheDocument();
-    });
-});
-
-describe('TodayPage calendar panel drag', () => {
-    const plannedTask = {
-        uid: 'p1',
-        id: 7,
-        name: 'Write report',
-        status: 0,
-        due_date: '2026-09-24',
-        estimated_minutes: 30,
-    };
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-        mockCalendarEnabled = true;
-        localStorage.setItem('today.calendarOpen', 'true');
-        (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
-            plan: {
-                started_at: '2026-09-24T08:00:00Z',
-                ai_wrap_up: null,
-                items: [
-                    {
-                        task_uid: 'p1',
-                        position: 0,
-                        start_minute: 10 * 60,
-                        duration_minutes: 30,
-                        task: plannedTask,
-                    },
-                ],
-            },
-        });
-        (fetchPlanCandidates as jest.Mock).mockResolvedValue(candidates);
-        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([]);
-        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
-            events: [],
-            errors: [],
-        });
-        (saveDailyPlanItems as jest.Mock).mockImplementation(
-            async (date: string) => ({
-                date,
-                plan: {
-                    started_at: '2026-09-24T08:00:00Z',
-                    ai_wrap_up: null,
-                    items: [],
-                },
-            })
-        );
-    });
-
-    it('moves a planned block to another hour and saves its start', async () => {
-        render(<TodayPage />);
-        const panel = await screen.findByTestId('today-calendar-panel');
-        const block = await within(panel).findByText('Write report');
-
-        fireEvent.dragStart(block, {
-            dataTransfer: { setData: jest.fn(), getData: () => 'plan-p1' },
-        });
-        const hourSlot = within(panel).getByText('14:00').nextElementSibling!;
-        fireEvent.drop(hourSlot, {
-            dataTransfer: { getData: () => 'plan-p1' },
-        });
-
-        await waitFor(() =>
-            expect(saveDailyPlanItems).toHaveBeenCalledWith('2026-09-24', [
-                expect.objectContaining({
-                    task_uid: 'p1',
-                    start_minute: 14 * 60,
-                }),
-            ])
-        );
+        expect(await screen.findByTestId('day-calendar')).toBeInTheDocument();
+        expect(screen.queryByTestId('day-timeline')).not.toBeInTheDocument();
+        expect(window.localStorage.getItem('today.panelMode')).toBe('calendar');
     });
 });

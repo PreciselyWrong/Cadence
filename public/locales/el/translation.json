@@ -3048,7 +3048,12 @@
     "durationHoursMinutes": "{{hours}}ω {{minutes}}λ",
     "calendar": "Ημερολόγιο",
     "showCalendar": "Εμφάνιση ημερολογίου",
-    "hideCalendar": "Απόκρυψη ημερολογίου"
+    "hideCalendar": "Απόκρυψη ημερολογίου",
+    "previousDay": "Προηγούμενη ημέρα",
+    "nextDay": "Επόμενη ημέρα",
+    "planning": "Σχεδιασμός",
+    "completed": "Το «{{name}}» ολοκληρώθηκε.",
+    "panelMode": "Δεξί πάνελ"
   },
   "capture": {
     "add": "Προσθήκη",

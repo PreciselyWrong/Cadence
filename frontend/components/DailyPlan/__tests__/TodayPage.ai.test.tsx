@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PlanMyDay from '../PlanMyDay';
+import TodayPage from '../TodayPage';
 import {
     draftDayWithAi,
     estimateWithAi,
@@ -9,6 +9,11 @@ import {
     fetchPlanCandidates,
 } from '../../../utils/dailyPlanService';
 import { fetchCalendarEvents } from '../../../utils/calendarFeedsService';
+
+// Candidates come from the server only for the real today.
+const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'UTC' }).format(
+    new Date()
+);
 
 let aiEnabled = false;
 let calendarEnabled = true;
@@ -35,7 +40,8 @@ jest.mock('react-i18next', () => {
 
 jest.mock('react-router-dom', () => ({
     useNavigate: () => jest.fn(),
-    useLocation: () => ({ pathname: '/today/plan' }),
+    useLocation: () => ({ pathname: '/today' }),
+    useSearchParams: () => [new URLSearchParams(''), jest.fn()],
     Link: ({ to, children, className }: any) => (
         <a href={to} className={className}>
             {children}
@@ -65,6 +71,7 @@ jest.mock('../../../utils/dateUtils', () => ({
 }));
 
 jest.mock('../../../utils/tasksService', () => ({
+    fetchCalendarTasks: jest.fn().mockResolvedValue([]),
     createTask: jest.fn(),
     updateTask: jest.fn().mockResolvedValue({}),
 }));
@@ -74,6 +81,9 @@ jest.mock('../../../utils/inboxService', () => ({
 }));
 
 jest.mock('../../../utils/calendarFeedsService', () => ({
+    fetchCalendarFeeds: jest
+        .fn()
+        .mockResolvedValue([{ uid: 'f1', show_on_calendar: true }]),
     fetchCalendarEvents: jest
         .fn()
         .mockResolvedValue({ events: [], errors: [] }),
@@ -108,15 +118,15 @@ const existing = {
     task: { uid: 'kept', name: 'Already planned', status: 0 },
 };
 
-describe('PlanMyDay AI help', () => {
+describe('TodayPage AI help', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         calendarEnabled = true;
         (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
+            date: TODAY,
             plan: {
                 uid: 'p',
-                date: '2026-09-24',
+                date: TODAY,
                 started_at: null,
                 items: [existing],
             },
@@ -127,7 +137,7 @@ describe('PlanMyDay AI help', () => {
 
     it('shows no AI controls while the AI assistant is off', async () => {
         aiEnabled = false;
-        render(<PlanMyDay />);
+        render(<TodayPage />);
 
         expect(await screen.findByText('Pay invoice')).toBeInTheDocument();
         expect(screen.queryByTestId('ai-draft-button')).not.toBeInTheDocument();
@@ -136,10 +146,10 @@ describe('PlanMyDay AI help', () => {
     });
 
     it('loads calendar events while the Calendar feature is on', async () => {
-        render(<PlanMyDay />);
+        render(<TodayPage />);
 
         await waitFor(() =>
-            expect(fetchCalendarEvents).toHaveBeenCalledWith('2026-09-24')
+            expect(fetchCalendarEvents).toHaveBeenCalledWith(TODAY)
         );
         fireEvent.click(screen.getByTestId('plan-more'));
         expect(screen.getByTestId('plan-refresh-calendar')).toBeInTheDocument();
@@ -147,7 +157,7 @@ describe('PlanMyDay AI help', () => {
 
     it('leaves calendars out while the Calendar feature is off', async () => {
         calendarEnabled = false;
-        render(<PlanMyDay />);
+        render(<TodayPage />);
 
         expect(await screen.findByText('Pay invoice')).toBeInTheDocument();
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
@@ -160,7 +170,7 @@ describe('PlanMyDay AI help', () => {
     it('fills free time with a draft and undoes it', async () => {
         aiEnabled = true;
         (draftDayWithAi as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
+            date: TODAY,
             mode: 'fill',
             summary: 'One quick win',
             items: [
@@ -174,7 +184,7 @@ describe('PlanMyDay AI help', () => {
             ],
             skipped: [],
         });
-        render(<PlanMyDay />);
+        render(<TodayPage />);
 
         await waitFor(() => expect(estimateWithAi).toHaveBeenCalledWith(['a']));
         fireEvent.click(await screen.findByTestId('ai-draft-button'));
@@ -183,7 +193,7 @@ describe('PlanMyDay AI help', () => {
         expect(await screen.findByTestId('ai-draft-banner')).toHaveTextContent(
             'One quick win'
         );
-        expect(draftDayWithAi).toHaveBeenCalledWith('2026-09-24', 'fill');
+        expect(draftDayWithAi).toHaveBeenCalledWith(TODAY, 'fill');
         expect(screen.getByTestId('capacity')).toHaveTextContent('45m planned');
 
         fireEvent.click(screen.getByTestId('ai-draft-undo'));
@@ -194,7 +204,7 @@ describe('PlanMyDay AI help', () => {
 
     it('reloads the task list when the planner comes back into view', async () => {
         aiEnabled = false;
-        render(<PlanMyDay />);
+        render(<TodayPage />);
         expect(await screen.findByText('Pay invoice')).toBeInTheDocument();
 
         (fetchPlanCandidates as jest.Mock).mockResolvedValue({

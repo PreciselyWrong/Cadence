@@ -3061,7 +3061,12 @@
     "durationHoursMinutes": "{{hours}} godz. {{minutes}} min",
     "calendar": "Kalendarz",
     "showCalendar": "Pokaż kalendarz",
-    "hideCalendar": "Ukryj kalendarz"
+    "hideCalendar": "Ukryj kalendarz",
+    "previousDay": "Poprzedni dzień",
+    "nextDay": "Następny dzień",
+    "planning": "Planowanie",
+    "completed": "Ukończono: „{{name}}”.",
+    "panelMode": "Prawy panel"
   },
   "capture": {
     "add": "Dodaj",

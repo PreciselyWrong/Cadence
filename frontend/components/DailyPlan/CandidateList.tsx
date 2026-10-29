@@ -10,6 +10,7 @@ import {
     PlanCandidates,
 } from '../../utils/dailyPlanService';
 import DurationChips from './DurationChips';
+import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { DEFAULT_DURATION, formatDuration } from './planUtils';
 
 export type CandidateFilter =
@@ -32,6 +33,8 @@ interface CandidateListProps {
     aiEstimates?: Record<string, number>;
     onDurationChange: (taskUid: string, minutes: number) => void;
     onAdd: (task: Task) => void;
+    // The round check: completes the task, and the page takes it off the list.
+    onComplete: (task: Task) => void;
     onRemove: (taskUid: string) => void;
     onReschedule: (task: Task, when: 'tomorrow' | 'next_week') => void;
     onDrop: (task: Task) => void;
@@ -69,6 +72,7 @@ interface CandidateCardProps {
     today: string;
     onDurationChange: (minutes: number) => void;
     onAdd: () => void;
+    onComplete: () => void;
     onReschedule: (when: 'tomorrow' | 'next_week') => void;
     onDrop: () => void;
 }
@@ -84,6 +88,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     today,
     onDurationChange,
     onAdd,
+    onComplete,
     onReschedule,
     onDrop,
 }) => {
@@ -127,6 +132,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
             data-testid={`candidate-${task.uid}`}
         >
             <div className="flex items-center gap-2.5">
+                <TaskCheckCircle task={task} onToggle={onComplete} />
                 <div
                     className="flex min-w-0 flex-1 cursor-grab flex-col active:cursor-grabbing"
                     {...listeners}
@@ -221,6 +227,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
     aiEstimates = {},
     onDurationChange,
     onAdd,
+    onComplete,
     onReschedule,
     onDrop,
     onAddInbox,
@@ -385,6 +392,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                     )
                                 }
                                 onAdd={() => onAdd(task)}
+                                onComplete={() => onComplete(task)}
                                 onReschedule={(when) =>
                                     onReschedule(task, when)
                                 }

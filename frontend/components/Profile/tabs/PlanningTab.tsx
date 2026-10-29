@@ -564,7 +564,7 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
                     'How Plan my day lays out your day and which tasks it offers you.'
                 )}{' '}
                 <Link
-                    to="/today/plan"
+                    to="/today"
                     className="text-blue-600 hover:underline dark:text-blue-400"
                 >
                     {t('profile.planning.open', 'Plan my day')}

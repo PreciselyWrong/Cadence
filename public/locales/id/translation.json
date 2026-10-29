@@ -3045,7 +3045,12 @@
     "durationHoursMinutes": "{{hours}} j {{minutes}} mnt",
     "calendar": "Kalender",
     "showCalendar": "Tampilkan kalender",
-    "hideCalendar": "Sembunyikan kalender"
+    "hideCalendar": "Sembunyikan kalender",
+    "previousDay": "Hari sebelumnya",
+    "nextDay": "Hari berikutnya",
+    "planning": "Perencanaan",
+    "completed": "'{{name}}' selesai.",
+    "panelMode": "Panel kanan"
   },
   "capture": {
     "add": "Tambah",

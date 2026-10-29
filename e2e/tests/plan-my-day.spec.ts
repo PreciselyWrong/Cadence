@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 import { loginAsNewUser } from '../helpers/testHelpers';
 
 test.describe('Plan my day', () => {
-    test('plans a task, starts the day and marks it done', async ({
+    test('plans a task on Today, the day starts itself and the task is marked done', async ({
         page,
         context,
         baseURL,
     }) => {
-        // A long flow (plan, start, finish) that shares the backend with the
+        // A long flow (plan, finish) that shares the backend with the
         // other workers: give it the slow-test budget.
         test.slow();
         const appUrl = await loginAsNewUser(page, baseURL);
@@ -26,39 +26,25 @@ test.describe('Plan my day', () => {
         expect(created.ok()).toBeTruthy();
         const task = await created.json();
 
+        // Planning happens on Today itself: no separate planner page.
         await page.goto(`${appUrl}/today`);
-        await expect(page.getByTestId('today-unplanned')).toBeVisible();
-
-        await page.getByTestId('plan-your-day').click();
-        await expect(page).toHaveURL(/\/today\/plan$/);
-
         const card = page.getByTestId(`candidate-${task.uid}`);
         await expect(card).toBeVisible({ timeout: 10000 });
+
         await page.getByTestId(`add-${task.uid}`).click();
 
-        // It takes the next free slot, or the untimed tray late in the day,
-        // with the task's 1h estimate either way.
-        // Planned tasks leave the shortlist; they live on the timeline now.
+        // It takes the next free slot, with the task's 1h estimate. Planned
+        // tasks leave the list; they live on the timeline now.
         await expect(card).toHaveCount(0);
         await expect(page.getByTestId('capacity')).toContainText('1h planned');
 
-        // Starting saves the plan first; under parallel load that can take
-        // longer than the default expect timeout.
-        const [started] = await Promise.all([
-            page.waitForResponse(
-                (r) =>
-                    /\/api\/daily-plan\/[^/]+\/start$/.test(r.url()) &&
-                    r.request().method() === 'POST',
-                { timeout: 30_000 }
-            ),
-            page.getByTestId('start-my-day').click(),
-        ]);
-        expect(started.ok()).toBeTruthy();
-        await expect(page).toHaveURL(/\/today$/);
-
-        const agenda = page.getByTestId('agenda-list');
-        await expect(agenda).toContainText(name);
-        await expect(page.getByTestId('now-card')).toContainText(name);
+        // Placing the first task starts the day by itself; the plan is saved
+        // first, and under parallel load that can take longer than the
+        // default expect timeout.
+        await expect(page.getByTestId('now-card')).toContainText(name, {
+            timeout: 30_000,
+        });
+        await expect(page.getByTestId('day-timeline')).toBeVisible();
 
         await page.getByTestId('now-card-done').click();
         await expect(

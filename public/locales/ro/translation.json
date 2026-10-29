@@ -3056,7 +3056,12 @@
     "durationHoursMinutes": "{{hours}} h {{minutes}} min",
     "calendar": "Calendar",
     "showCalendar": "Afișează calendarul",
-    "hideCalendar": "Ascunde calendarul"
+    "hideCalendar": "Ascunde calendarul",
+    "previousDay": "Ziua anterioară",
+    "nextDay": "Ziua următoare",
+    "planning": "Planificare",
+    "completed": "„{{name}}” finalizată.",
+    "panelMode": "Panou dreapta"
   },
   "capture": {
     "add": "Adaugă",

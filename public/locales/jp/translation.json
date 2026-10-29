@@ -3045,7 +3045,12 @@
     "durationHoursMinutes": "{{hours}}時間{{minutes}}分",
     "calendar": "カレンダー",
     "showCalendar": "カレンダーを表示",
-    "hideCalendar": "カレンダーを非表示"
+    "hideCalendar": "カレンダーを非表示",
+    "previousDay": "前の日",
+    "nextDay": "次の日",
+    "planning": "計画",
+    "completed": "「{{name}}」を完了しました。",
+    "panelMode": "右のパネル"
   },
   "capture": {
     "add": "追加",

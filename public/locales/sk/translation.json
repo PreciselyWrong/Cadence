@@ -3067,7 +3067,12 @@
         "durationHoursMinutes": "{{hours}} h {{minutes}} min",
         "calendar": "Kalendár",
         "showCalendar": "Zobraziť kalendár",
-        "hideCalendar": "Skryť kalendár"
+        "hideCalendar": "Skryť kalendár",
+        "previousDay": "Predchádzajúci deň",
+        "nextDay": "Nasledujúci deň",
+        "planning": "Plánovanie",
+        "completed": "„{{name}}“ dokončené.",
+        "panelMode": "Pravý panel"
     },
     "relations": {
         "title": "Vzťahy",

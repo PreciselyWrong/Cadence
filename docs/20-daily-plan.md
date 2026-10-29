@@ -6,10 +6,7 @@ This document explains how the Today page, the "Plan my day" planner and calenda
 
 ## Overview
 
-Today has two modes:
-
-1. **Planning** (`/today/plan`): a full-screen planner. Pick tasks, give each a rough length and place them in free time around your meetings.
-2. **Doing** (`/today`): only what you committed to, in order, with the current block on top.
+Today is one page (`/today`). Its left column lists the day's candidate tasks; its right panel shows either the **Planning** timeline, where tasks are placed in free time around your meetings, or the day's **Calendar**. `/today/plan` redirects to `/today`.
 
 The classic Today page was removed; `/today_legacy` now redirects to `/today`. Its section lists (Overdue, Planned, Suggested, Completed) still feed the planner's candidates, see [Today Page Sections](02-today-page-sections.md). Its charts (overview counts, completions, area balance) moved to the **Overview** tab of Insights > Reports.
 
@@ -17,24 +14,20 @@ The classic Today page was removed; `/today_legacy` now redirects to `/today`. I
 
 ## Today (`/today`)
 
-| State                                     | What you see                                                                                                                                                           |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No plan, or a plan that was never started | **Today's tasks**: the day's tasks listed at once (see below), today's meetings, and a small **Plan your day** link (or **Continue planning** for a draft). Planning never blocks the page |
-| Plan started                              | The header shows done/total and time left, then the **Now** card, the agenda (tasks and meetings in time order) and a collapsed **Not planned** list                   |
+Planning and doing the day happen on one page. There is no start button: the plan saves as you edit it.
 
-- **Now card:** the block running right now; otherwise the next planned block; otherwise the first unfinished task without a time. **Mark done** completes the task. **Push to later** removes the time slot and moves the task to the end of the list.
-- **Reordering:** drag an **Anytime** task to move it among the other Anytime tasks; the new order is saved as the plan's item order. Timed tasks stay in time order.
-- **Today's tasks (no plan yet):** the open tasks tagged `#today`, overdue, due today, in progress and suggested, in that order, without any planning step. Completed tasks leave the list. Ticking a task's round check completes it (see [Tasks](00-tasks-behavior.md#marking-tasks-as-done)).
-- **Not planned:** the tasks the Today section lists hold (overdue, due today, in progress, suggested) that are not in the plan. **Add to today** appends one without a time.
-- **Recurring tasks:** completing one moves the same task on to its next due date and reopens it. The plan still shows the day's occurrence as done (crossed out, with the next date) and counts it in `done/total`. This holds while a non-skipped completion falls on the plan's day and the task's due date is after that day, so undoing the completion makes it open again.
-- **Moving a due date:** changing a planned task's due date from the day (or earlier, or none) to a later day from the agenda takes it off the plan, with an undo toast. Changes made elsewhere leave the plan as it is.
-- **Replan** reopens the planner. Starting the day again keeps the first start time.
-- **Calendar panel:** the **Calendar** button in the Today header opens today's hours beside the list (below `lg`, a full-width section above it). The panel shows the calendar feed events (only when a shown calendar is connected), the planned blocks with a start time, and the tasks due today with a time. Drag a planned block to another hour to change its start; drag a due-today task to change its due time, as on the Calendar page. It opens scrolled to the current hour, and the choice is remembered per browser (`today.calendarOpen` in localStorage, closed by default).
-- The sidebar shows `done/total` next to Today once the day is started.
+- **Left column:** the day's candidates, grouped and ordered as in the planner (see **Candidate order** below), each with the round check. The round check completes the task in place; it leaves the list and an undo toast brings it back. Drag a candidate onto the timeline, or press its **+** to place it in the next free slot. On phones the **+** is the way to place a task.
+- **Right panel:** a **Planning** / **Calendar** switch, remembered per browser (`today.panelMode`, default Planning).
+  - **Planning:** the timeline (or list) of plan items. Place, resize and remove blocks; calendar events show as busy time. The Now card sits above it when the plan has items, with **Mark done** and **Push to later**.
+  - **Calendar:** the day's calendar in the Calendar page's day view: tasks by their due time and calendar feed events. Drag a task block to another hour to move its due time; drop a candidate on an hour to make it due then.
+- **Calendar toggle:** hides or shows the right panel, and the task list then takes the full width. Remembered in `today.calendarOpen`; open by default on wide screens.
+- **Day navigation:** the previous and next day arrows and **Today** move between days. The day is kept in the URL as `?date=YYYY-MM-DD` (no parameter means today), so a reload keeps it. Candidates are ranked for today only: another day lists its open tasks due that day, and that day is not started and gets no AI draft.
+- **Starting the day:** placing the first task on today's plan starts the day (`started_at`) once the plan has saved.
+- **Progress:** the header shows done/total and time left once the plan has items, and the sidebar shows it too.
+- **Recurring tasks:** completing one moves the same task on to its next due date and reopens it. The plan still shows the day's occurrence as done (crossed out, with the next date) and counts it in `done/total`.
+- **AI help:** the planning tips and **Draft with AI** appear on today only. The day wrap-up is offered once the last timed block has ended, or when everything is done.
 
----
-
-## Planner (`/today/plan`)
+## Planner (on Today)
 
 - **Left column:** a short list, "What could you do today?": five candidates at a time in a fixed order (see **Candidate order** below), each shown as its name and one grey line. The name opens the task. **Show 5 more** adds five and keeps going: once the loaded suggestions run out it asks the server for the next twenty, until every open task that qualifies has been shown. **Browse** opens the per-group filters and the inbox. Tasks already planned leave the list. Resting the pointer on a row for a moment, or focusing it (always on touch screens), opens its 15m / 30m / 1h / 2h chips and, for overdue tasks, **Tomorrow**, **Next week** (moves the due date) and **Drop** (cancels the task). The short delay keeps rows from opening and closing while the mouse passes over them.
 - Task names on the timeline and in the list view also open the task.
@@ -154,7 +147,7 @@ Drag a task onto the calendar to schedule it: onto a day in the month view (or t
 
 | Table                    | Purpose                                                                                                                 |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `daily_plans`            | One row per user per local date (`plan_date`), with `started_at` set by **Start my day**                                |
+| `daily_plans`            | One row per user per local date (`plan_date`), with `started_at` set when the first task is placed                                |
 | `daily_plan_items`       | The tasks in a plan: `position`, `start_minute` (minutes after local midnight, null for untimed) and `duration_minutes` |
 | `daily_plans.ai_wrap_up` | The stored AI wrap-up for that day (JSON, optional)                                                                     |
 | `calendar_feeds`         | Name, color, encrypted URL, host, last fetch time and last error, and `show_on_calendar`                                |

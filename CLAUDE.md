@@ -26,7 +26,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Round check before each title (priority ring; completes from the list with undo); Minimal rows set priority and due date in place; Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Today | Day's tasks listed without a planning gate; "Plan your day" is a link | [02-today-page-sections.md](docs/02-today-page-sections.md), [20-daily-plan.md](docs/20-daily-plan.md) |
-| Today | Day calendar panel beside Today (toggle, remembered per browser) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Today | Planning on one page: candidates left, Planning / Calendar switch right (toggle hides the panel), previous / next day arrows kept in `?date=` | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
 | Projects | Board tab with free sections and card order (`project_sections`, `tasks.section_id`, `tasks.section_position`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
 | Projects | Sub-projects, any depth, area follows the parent (`projects.parent_project_id`) | [06-projects.md](docs/06-projects.md) |
@@ -345,7 +345,7 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - Admin, user and guest roles with capabilities, and the admin Access page
 
 29. **[Daily Plan](docs/20-daily-plan.md)**
-    - Today in two modes: planning (`/today/plan`) and doing (`/today`); `/today_legacy` redirects to `/today`
+    - Today is one page (`/today`) with planning built in; `/today/plan` and `/today_legacy` redirect to `/today`
     - Timeline and list planning, task estimates, the Now card
     - Read-only iCal calendar feeds (Google secret address), encrypted and SSRF-guarded
     - Daily plan API and schema

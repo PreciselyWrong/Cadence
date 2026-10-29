@@ -42,7 +42,7 @@ const renderList = (
     extra: Partial<React.ComponentProps<typeof CandidateList>> = {}
 ) =>
     render(
-        <MemoryRouter initialEntries={['/today/plan']}>
+        <MemoryRouter initialEntries={['/today']}>
             <CandidateList
                 {...extra}
                 candidates={list}
@@ -52,6 +52,7 @@ const renderList = (
                 durations={{}}
                 onDurationChange={jest.fn()}
                 onAdd={jest.fn()}
+                onComplete={jest.fn()}
                 onRemove={jest.fn()}
                 onReschedule={jest.fn()}
                 onDrop={jest.fn()}

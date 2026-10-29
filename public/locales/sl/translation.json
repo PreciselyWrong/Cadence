@@ -3061,7 +3061,12 @@
     "durationHoursMinutes": "{{hours}} h {{minutes}} min",
     "calendar": "Koledar",
     "showCalendar": "Prikaži koledar",
-    "hideCalendar": "Skrij koledar"
+    "hideCalendar": "Skrij koledar",
+    "previousDay": "Prejšnji dan",
+    "nextDay": "Naslednji dan",
+    "planning": "Načrtovanje",
+    "completed": "»{{name}}« dokončano.",
+    "panelMode": "Desni panel"
   },
   "capture": {
     "add": "Dodaj",

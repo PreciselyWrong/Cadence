@@ -15,7 +15,7 @@ interface CalendarDayViewProps {
     scrollToHour?: number;
 }
 
-const HOUR_HEIGHT = 48;
+export const HOUR_HEIGHT = 48;
 
 const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     currentDate,

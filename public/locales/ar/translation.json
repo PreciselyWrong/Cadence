@@ -3075,7 +3075,12 @@
     "durationHoursMinutes": "{{hours}} س {{minutes}} د",
     "calendar": "التقويم",
     "showCalendar": "إظهار التقويم",
-    "hideCalendar": "إخفاء التقويم"
+    "hideCalendar": "إخفاء التقويم",
+    "previousDay": "اليوم السابق",
+    "nextDay": "اليوم التالي",
+    "planning": "التخطيط",
+    "completed": "تم إنجاز '{{name}}'.",
+    "panelMode": "اللوحة اليمنى"
   },
   "capture": {
     "add": "إضافة",

@@ -3047,7 +3047,12 @@
     "durationHoursMinutes": "{{hours}} u {{minutes}} min",
     "calendar": "Agenda",
     "showCalendar": "Agenda tonen",
-    "hideCalendar": "Agenda verbergen"
+    "hideCalendar": "Agenda verbergen",
+    "previousDay": "Vorige dag",
+    "nextDay": "Volgende dag",
+    "planning": "Planning",
+    "completed": "'{{name}}' voltooid.",
+    "panelMode": "Rechterpaneel"
   },
   "capture": {
     "add": "Toevoegen",

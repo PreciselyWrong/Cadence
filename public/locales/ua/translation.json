@@ -3061,7 +3061,12 @@
     "durationHoursMinutes": "{{hours}} год {{minutes}} хв",
     "calendar": "Календар",
     "showCalendar": "Показати календар",
-    "hideCalendar": "Приховати календар"
+    "hideCalendar": "Приховати календар",
+    "previousDay": "Попередній день",
+    "nextDay": "Наступний день",
+    "planning": "Планування",
+    "completed": "«{{name}}» виконано.",
+    "panelMode": "Права панель"
   },
   "capture": {
     "add": "Додати",

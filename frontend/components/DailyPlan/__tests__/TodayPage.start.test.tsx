@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PlanMyDay from '../PlanMyDay';
+import TodayPage from '../TodayPage';
 import {
     estimateWithAi,
     fetchDailyPlan,
@@ -9,6 +9,11 @@ import {
     saveDailyPlanItems,
     startDailyPlan,
 } from '../../../utils/dailyPlanService';
+
+// Candidates come from the server only for the real today.
+const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'UTC' }).format(
+    new Date()
+);
 
 let aiEnabled = false;
 let calendarEnabled = true;
@@ -35,7 +40,8 @@ jest.mock('react-i18next', () => {
 
 jest.mock('react-router-dom', () => ({
     useNavigate: () => jest.fn(),
-    useLocation: () => ({ pathname: '/today/plan' }),
+    useLocation: () => ({ pathname: '/today' }),
+    useSearchParams: () => [new URLSearchParams(''), jest.fn()],
     Link: ({ to, children, className }: any) => (
         <a href={to} className={className}>
             {children}
@@ -65,6 +71,7 @@ jest.mock('../../../utils/dateUtils', () => ({
 }));
 
 jest.mock('../../../utils/tasksService', () => ({
+    fetchCalendarTasks: jest.fn().mockResolvedValue([]),
     createTask: jest.fn(),
     updateTask: jest.fn().mockResolvedValue({}),
 }));
@@ -108,16 +115,16 @@ const existing = {
     task: { uid: 'kept', name: 'Already planned', status: 0 },
 };
 
-describe('PlanMyDay start while saving', () => {
+describe('TodayPage start while saving', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         aiEnabled = false;
         calendarEnabled = false;
         (fetchDailyPlan as jest.Mock).mockResolvedValue({
-            date: '2026-09-24',
+            date: TODAY,
             plan: {
                 uid: 'p',
-                date: '2026-09-24',
+                date: TODAY,
                 started_at: null,
                 items: [existing],
             },
@@ -135,7 +142,7 @@ describe('PlanMyDay start while saving', () => {
                     finishSave = () => resolve({});
                 })
         );
-        render(<PlanMyDay />);
+        render(<TodayPage />);
         await screen.findByText('Pay invoice');
 
         jest.useFakeTimers();
@@ -147,7 +154,6 @@ describe('PlanMyDay start while saving', () => {
         jest.useRealTimers();
         expect(saveDailyPlanItems).toHaveBeenCalledTimes(1);
 
-        fireEvent.click(screen.getByTestId('start-my-day'));
         await act(async () => {
             await Promise.resolve();
         });
@@ -160,6 +166,6 @@ describe('PlanMyDay start while saving', () => {
         await act(async () => {
             await Promise.resolve();
         });
-        expect(startDailyPlan).toHaveBeenCalledWith('2026-09-24');
+        expect(startDailyPlan).toHaveBeenCalledWith(TODAY);
     });
 });

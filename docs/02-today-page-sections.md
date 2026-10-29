@@ -8,6 +8,8 @@ This document explains how the four main sections of the Today page work in tudu
 
 ## Overview
 
+> The Today page is now one page with the planner (see [Daily Plan](20-daily-plan.md)). Its section lists (Overdue, Planned, Suggested, Completed) feed the candidate list in the left column, which is ranked and filtered as the planner describes.
+
 The Today page is divided into **four main sections** that organize your tasks:
 
 1. **Overdue** - Tasks past their due date that need attention

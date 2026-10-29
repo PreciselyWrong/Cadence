@@ -3052,7 +3052,12 @@
     "durationHoursMinutes": "{{hours}} t {{minutes}} min",
     "calendar": "Kalender",
     "showCalendar": "Vis kalender",
-    "hideCalendar": "Skjul kalender"
+    "hideCalendar": "Skjul kalender",
+    "previousDay": "Forrige dag",
+    "nextDay": "Neste dag",
+    "planning": "Planlegging",
+    "completed": "'{{name}}' er fullført.",
+    "panelMode": "Høyre panel"
   },
   "capture": {
     "add": "Legg til",

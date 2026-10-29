@@ -79,7 +79,6 @@ const PublicNotePage = lazy(
     () => import('./components/PublicNote/PublicNotePage')
 );
 const BlogApp = lazy(() => import('./components/Blog/BlogApp'));
-const PlanMyDay = lazy(() => import('./components/DailyPlan/PlanMyDay'));
 const Welcome = lazy(() => import('./components/Onboarding/Welcome'));
 // Lazy load Tasks component to prevent issues with tags loading
 const Tasks = lazy(() => import('./components/Tasks'));
@@ -466,20 +465,7 @@ const App: React.FC = () => {
                             />
                             <Route
                                 path="/today/plan"
-                                element={
-                                    <Suspense
-                                        fallback={
-                                            <div className="p-4">
-                                                {i18n.t(
-                                                    'common.loading',
-                                                    'Loading...'
-                                                )}
-                                            </div>
-                                        }
-                                    >
-                                        <PlanMyDay />
-                                    </Suspense>
-                                }
+                                element={<Navigate to="/today" replace />}
                             />
                             <Route
                                 path="/task/:uid"

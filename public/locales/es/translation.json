@@ -3040,7 +3040,12 @@
     "durationHoursMinutes": "{{hours}} h {{minutes}} min",
     "calendar": "Calendario",
     "showCalendar": "Mostrar calendario",
-    "hideCalendar": "Ocultar calendario"
+    "hideCalendar": "Ocultar calendario",
+    "previousDay": "Día anterior",
+    "nextDay": "Día siguiente",
+    "planning": "Planificación",
+    "completed": "«{{name}}» completada.",
+    "panelMode": "Panel derecho"
   },
   "capture": {
     "add": "Añadir",

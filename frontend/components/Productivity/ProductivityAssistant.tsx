@@ -210,12 +210,10 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
 
             // 6. Stuck projects (not updated in a month)
             const stuckProjects = projects.filter((project) => {
-                if (
-                    !(
-                        project.status === 'planned' ||
-                        project.status === 'in_progress'
-                    )
-                )
+                if (!(
+                    project.status === 'planned' ||
+                    project.status === 'in_progress'
+                ))
                     return false;
 
                 // Projects don't have date fields in the interface, so we'll check if they have recent tasks
@@ -282,7 +280,9 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
         if (!isProject) {
             // Handle task click - navigate to task details page
             if (item.uid) {
-                navigate(`/task/${item.uid}`, { state: { from: location.pathname + location.search } });
+                navigate(`/task/${item.uid}`, {
+                    state: { from: location.pathname + location.search },
+                });
             }
         } else {
             // Handle project click - navigate to project page
@@ -334,7 +334,7 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                     {
                         label: t('productivity.planDay', 'Plan your day'),
                         icon: CalendarDaysIcon,
-                        to: '/today/plan',
+                        to: '/today',
                     },
                     {
                         label: t('productivity.goToTasks', 'Go to tasks'),
@@ -354,7 +354,9 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                     className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                 >
                     <div className="flex items-start space-x-3 mb-3">
-                        <insight.icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${insight.color}`} />
+                        <insight.icon
+                            className={`h-5 w-5 mt-0.5 flex-shrink-0 ${insight.color}`}
+                        />
                         <div>
                             <h4 className="font-medium text-gray-900 dark:text-gray-100">
                                 {insight.title}{' '}
@@ -388,14 +390,21 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                             >
                                 {expandedInsights.has(index)
                                     ? t('common.showLess', 'Show less')
-                                    : t('productivity.andMore', '... and {{count}} more', { count: insight.items.length - 3 })}
+                                    : t(
+                                          'productivity.andMore',
+                                          '... and {{count}} more',
+                                          { count: insight.items.length - 3 }
+                                      )}
                             </button>
                         )}
                     </div>
                 </div>
             ))}
             <p className="text-xs text-gray-400 dark:text-gray-500 pt-2">
-                {t('productivity.suggestion', 'Click on any item above to open it and make improvements.')}
+                {t(
+                    'productivity.suggestion',
+                    'Click on any item above to open it and make improvements.'
+                )}
             </p>
         </div>
     );
