@@ -99,6 +99,35 @@ const sheetTitleWeightClass = (
     }
 };
 
+type Translate = (key: string, fallback: string) => string;
+
+// Relative names for today, tomorrow and yesterday; otherwise a short date.
+export const formatDueLabel = (d: string, t: Translate): string => {
+    if (d === getTodayDateString()) return t('dateIndicators.today', 'TODAY');
+    if (d === getTomorrowDateString())
+        return t('dateIndicators.tomorrow', 'TOMORROW');
+    if (d === getYesterdayDateString())
+        return t('dateIndicators.yesterday', 'YESTERDAY');
+    const date = parseDateString(d);
+    return date
+        ? date.toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+          })
+        : d;
+};
+
+// Colour only flags what still needs doing: overdue red, today blue.
+export const dueToneClass = (task: Task): string => {
+    const today = getTodayDateString();
+    if (!task.due_date || isTaskCompleted(task.status))
+        return 'text-gray-500 dark:text-gray-400';
+    if (task.due_date < today) return 'text-red-600 dark:text-red-400';
+    if (task.due_date === today) return 'text-blue-600 dark:text-blue-400';
+    return 'text-gray-500 dark:text-gray-400';
+};
+
 const slug = (s: string) =>
     s
         .toLowerCase()
@@ -184,22 +213,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         }
     };
 
-    const formatDue = (d: string) => {
-        if (d === getTodayDateString())
-            return t('dateIndicators.today', 'TODAY');
-        if (d === getTomorrowDateString())
-            return t('dateIndicators.tomorrow', 'TOMORROW');
-        if (d === getYesterdayDateString())
-            return t('dateIndicators.yesterday', 'YESTERDAY');
-        const date = parseDateString(d);
-        return date
-            ? date.toLocaleDateString(undefined, {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-              })
-            : d;
-    };
+    const formatDue = (d: string) => formatDueLabel(d, t);
 
     const formatDefer = (v: string): string | null => {
         const date = new Date(v);
@@ -255,17 +269,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const showCheck =
         !hideStatusControl && !task.habit_mode && !!onToggleCompletion;
 
-    const today = getTodayDateString();
-    const isDone = isTaskCompleted(task.status);
-    // Colour only flags what still needs doing: overdue red, today blue.
-    const dueClass =
-        !task.due_date || isDone
-            ? 'text-gray-500 dark:text-gray-400'
-            : task.due_date < today
-              ? 'text-red-600 dark:text-red-400'
-              : task.due_date === today
-                ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-500 dark:text-gray-400';
+    const dueClass = dueToneClass(task);
     const isRecurring =
         (!!task.recurrence_type && task.recurrence_type !== 'none') ||
         !!task.recurring_parent_id;

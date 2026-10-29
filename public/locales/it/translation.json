@@ -3636,5 +3636,17 @@
     "newColumn": "Nuova colonna",
     "loadError": "Impossibile caricare le colonne",
     "saveError": "Impossibile salvare la bacheca"
+  },
+  "taskPane": {
+    "label": "Dettagli attività",
+    "close": "Chiudi",
+    "openFullPage": "Apri pagina completa",
+    "titleLabel": "Titolo attività",
+    "project": "Progetto",
+    "noProject": "Nessun progetto",
+    "tags": "Tag",
+    "note": "Nota",
+    "subtasks": "Sottoattività",
+    "loadError": "Impossibile caricare questa attività."
   }
 }

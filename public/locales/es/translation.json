@@ -3623,5 +3623,17 @@
     "newColumn": "Nueva columna",
     "loadError": "No se pudieron cargar las columnas",
     "saveError": "No se pudo guardar el tablero"
+  },
+  "taskPane": {
+    "label": "Detalles de la tarea",
+    "close": "Cerrar",
+    "openFullPage": "Abrir página completa",
+    "titleLabel": "Título de la tarea",
+    "project": "Proyecto",
+    "noProject": "Sin proyecto",
+    "tags": "Etiquetas",
+    "note": "Nota",
+    "subtasks": "Subtareas",
+    "loadError": "No se pudo cargar esta tarea."
   }
 }

@@ -3636,5 +3636,17 @@
     "newColumn": "Nova coluna",
     "loadError": "Não foi possível carregar as colunas",
     "saveError": "Não foi possível salvar o quadro"
+  },
+  "taskPane": {
+    "label": "Detalhes da tarefa",
+    "close": "Fechar",
+    "openFullPage": "Abrir página completa",
+    "titleLabel": "Título da tarefa",
+    "project": "Projeto",
+    "noProject": "Nenhum projeto",
+    "tags": "Etiquetas",
+    "note": "Nota",
+    "subtasks": "Subtarefas",
+    "loadError": "Não foi possível carregar esta tarefa."
   }
 }

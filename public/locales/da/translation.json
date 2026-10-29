@@ -3629,5 +3629,17 @@
     "newColumn": "Ny kolonne",
     "loadError": "Kunne ikke indlæse kolonner",
     "saveError": "Kunne ikke gemme tavlen"
+  },
+  "taskPane": {
+    "label": "Opgavedetaljer",
+    "close": "Luk",
+    "openFullPage": "Åbn fuld side",
+    "titleLabel": "Opgavetitel",
+    "project": "Projekt",
+    "noProject": "Intet projekt",
+    "tags": "Tags",
+    "note": "Note",
+    "subtasks": "Underopgaver",
+    "loadError": "Opgaven kunne ikke indlæses."
   }
 }

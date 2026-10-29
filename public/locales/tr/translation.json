@@ -3629,5 +3629,17 @@
     "newColumn": "Yeni sütun",
     "loadError": "Sütunlar yüklenemedi",
     "saveError": "Pano kaydedilemedi"
+  },
+  "taskPane": {
+    "label": "Görev ayrıntıları",
+    "close": "Kapat",
+    "openFullPage": "Tam sayfayı aç",
+    "titleLabel": "Görev başlığı",
+    "project": "Proje",
+    "noProject": "Proje yok",
+    "tags": "Etiketler",
+    "note": "Not",
+    "subtasks": "Alt görevler",
+    "loadError": "Bu görev yüklenemedi."
   }
 }

@@ -3625,5 +3625,17 @@
     "newColumn": "새 열",
     "loadError": "열을 불러올 수 없습니다",
     "saveError": "보드를 저장할 수 없습니다"
+  },
+  "taskPane": {
+    "label": "작업 상세",
+    "close": "닫기",
+    "openFullPage": "전체 페이지 열기",
+    "titleLabel": "작업 제목",
+    "project": "프로젝트",
+    "noProject": "프로젝트 없음",
+    "tags": "태그",
+    "note": "메모",
+    "subtasks": "하위 작업",
+    "loadError": "이 작업을 불러올 수 없습니다."
   }
 }

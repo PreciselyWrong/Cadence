@@ -37,6 +37,8 @@ import TaskRowCollapsed from './TaskRowCollapsed';
 import TaskRowExpanded from './TaskRowExpanded';
 import { useTaskRowExpansion } from './TaskRowExpansionContext';
 import { useTaskRowSave } from './useTaskRowSave';
+import { useTaskPane } from '../../../contexts/TaskPaneContext';
+import { useIsMinimal } from '../../../hooks/useUiDensity';
 
 const getPriorityBorderClassName = (
     priority?: Task['priority'] | number
@@ -157,6 +159,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
     );
 
     const canExpand = !disableExpand && !task.habit_mode && !!task.uid;
+    const isMinimal = useIsMinimal();
+    const { openTask, openTaskUid } = useTaskPane();
+    const isPaneOpen = isMinimal && !!task.uid && openTaskUid === task.uid;
     // Virtual occurrences of a recurring task share the parent's uid, so
     // expansion is keyed by the per-occurrence id when there is one.
     const { isExpanded, toggle, collapse } = useTaskRowExpansion(
@@ -233,6 +238,11 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
     const handleActivate = () => {
         if (canExpand) {
+            // Minimal rows open the task in the right-hand pane instead.
+            if (isMinimal) {
+                openTask(task.uid);
+                return;
+            }
             toggle();
             return;
         }
@@ -435,7 +445,11 @@ const TaskRow: React.FC<TaskRowProps> = ({
             }`}
         >
             <div
-                className={`rounded-lg shadow-sm bg-white dark:bg-gray-900 relative overflow-visible transition-colors duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 [.task-sheet_&]:rounded-[10px] [.task-sheet_&]:bg-transparent [.task-sheet_&]:shadow-none [.task-sheet_&]:border-l-0 [.task-sheet_&]:ring-0 [.task-sheet_&]:hover:ring-0 dark:[.task-sheet_&]:bg-transparent ${priorityBorderClass} ${
+                className={`rounded-lg shadow-sm ${
+                    isPaneOpen
+                        ? 'bg-blue-50 dark:bg-blue-950/40'
+                        : 'bg-white dark:bg-gray-900'
+                } relative overflow-visible transition-colors duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 [.task-sheet_&]:rounded-[10px] [.task-sheet_&]:bg-transparent [.task-sheet_&]:shadow-none [.task-sheet_&]:border-l-0 [.task-sheet_&]:ring-0 [.task-sheet_&]:hover:ring-0 dark:[.task-sheet_&]:bg-transparent ${priorityBorderClass} ${
                     isExpanded
                         ? 'ring-1 ring-blue-400/70 dark:ring-blue-600/70'
                         : ''

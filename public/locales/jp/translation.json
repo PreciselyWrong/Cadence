@@ -3626,5 +3626,17 @@
     "newColumn": "新しい列",
     "loadError": "列を読み込めませんでした",
     "saveError": "ボードを保存できませんでした"
+  },
+  "taskPane": {
+    "label": "タスクの詳細",
+    "close": "閉じる",
+    "openFullPage": "フルページを開く",
+    "titleLabel": "タスクのタイトル",
+    "project": "プロジェクト",
+    "noProject": "プロジェクトなし",
+    "tags": "タグ",
+    "note": "メモ",
+    "subtasks": "サブタスク",
+    "loadError": "このタスクを読み込めませんでした。"
   }
 }

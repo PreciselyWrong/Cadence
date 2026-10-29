@@ -3625,5 +3625,17 @@
     "newColumn": "新列",
     "loadError": "无法加载列",
     "saveError": "无法保存看板"
+  },
+  "taskPane": {
+    "label": "任务详情",
+    "close": "关闭",
+    "openFullPage": "打开完整页面",
+    "titleLabel": "任务标题",
+    "project": "项目",
+    "noProject": "无项目",
+    "tags": "标签",
+    "note": "备注",
+    "subtasks": "子任务",
+    "loadError": "无法加载此任务。"
   }
 }

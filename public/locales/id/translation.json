@@ -3625,5 +3625,17 @@
     "newColumn": "Kolom baru",
     "loadError": "Tidak dapat memuat kolom",
     "saveError": "Tidak dapat menyimpan papan"
+  },
+  "taskPane": {
+    "label": "Detail tugas",
+    "close": "Tutup",
+    "openFullPage": "Buka halaman lengkap",
+    "titleLabel": "Judul tugas",
+    "project": "Proyek",
+    "noProject": "Tanpa proyek",
+    "tags": "Tag",
+    "note": "Catatan",
+    "subtasks": "Subtugas",
+    "loadError": "Tugas ini tidak dapat dimuat."
   }
 }

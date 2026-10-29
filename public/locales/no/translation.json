@@ -3634,5 +3634,17 @@
     "newColumn": "Ny kolonne",
     "loadError": "Kunne ikke laste kolonner",
     "saveError": "Kunne ikke lagre tavlen"
+  },
+  "taskPane": {
+    "label": "Oppgavedetaljer",
+    "close": "Lukk",
+    "openFullPage": "Åpne hele siden",
+    "titleLabel": "Oppgavetittel",
+    "project": "Prosjekt",
+    "noProject": "Ingen prosjekt",
+    "tags": "Etiketter",
+    "note": "Notat",
+    "subtasks": "Underoppgaver",
+    "loadError": "Kunne ikke laste denne oppgaven."
   }
 }

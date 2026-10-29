@@ -3662,5 +3662,17 @@
         "newColumn": "Nový stĺpec",
         "loadError": "Stĺpce sa nepodarilo načítať",
         "saveError": "Tabuľu sa nepodarilo uložiť"
+    },
+    "taskPane": {
+        "label": "Podrobnosti úlohy",
+        "close": "Zavrieť",
+        "openFullPage": "Otvoriť celú stránku",
+        "titleLabel": "Názov úlohy",
+        "project": "Projekt",
+        "noProject": "Žiadny projekt",
+        "tags": "Štítky",
+        "note": "Poznámka",
+        "subtasks": "Podúlohy",
+        "loadError": "Túto úlohu sa nepodarilo načítať."
     }
 }

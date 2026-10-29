@@ -124,6 +124,16 @@ This document explains how tasks work in tududi from a user behavior perspective
 
 ---
 
+## **Task Pane (Minimal)**
+
+In Minimal mode a click on a task row opens the task in a pane on the right. On phones the pane is a full-screen sheet with a close button.
+
+- Edits happen in place, with no save button: title (saves on blur or Enter), round check, priority, due date, project, tags, note and subtasks.
+- The open task is kept in the URL as `?task=<uid>`, so a reload keeps it. Opening or closing replaces the history entry instead of adding one.
+- Escape closes the pane. "Open full page" goes to the task page.
+- A saved change is merged into the Tasks list without another request. Other lists update when they reload.
+- Dense mode keeps the inline expansion on the row.
+
 ## **Subtasks**
 
 ### Subtask Hierarchy

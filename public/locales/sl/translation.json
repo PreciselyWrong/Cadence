@@ -3647,5 +3647,17 @@
     "newColumn": "Nov stolpec",
     "loadError": "Stolpcev ni bilo mogoče naložiti",
     "saveError": "Table ni bilo mogoče shraniti"
+  },
+  "taskPane": {
+    "label": "Podrobnosti naloge",
+    "close": "Zapri",
+    "openFullPage": "Odpri celotno stran",
+    "titleLabel": "Naslov naloge",
+    "project": "Projekt",
+    "noProject": "Brez projekta",
+    "tags": "Oznake",
+    "note": "Opomba",
+    "subtasks": "Podnaloge",
+    "loadError": "Te naloge ni bilo mogoče naložiti."
   }
 }

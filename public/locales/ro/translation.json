@@ -3640,5 +3640,17 @@
     "newColumn": "Coloană nouă",
     "loadError": "Coloanele nu au putut fi încărcate",
     "saveError": "Panoul nu a putut fi salvat"
+  },
+  "taskPane": {
+    "label": "Detalii sarcină",
+    "close": "Închide",
+    "openFullPage": "Deschide pagina completă",
+    "titleLabel": "Titlul sarcinii",
+    "project": "Proiect",
+    "noProject": "Fără proiect",
+    "tags": "Etichete",
+    "note": "Notiță",
+    "subtasks": "Subsarcini",
+    "loadError": "Nu s-a putut încărca această sarcină."
   }
 }

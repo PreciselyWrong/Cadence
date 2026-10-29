@@ -4028,5 +4028,17 @@
     "newColumn": "New column",
     "loadError": "Could not load columns",
     "saveError": "Could not save the board"
+  },
+  "taskPane": {
+    "label": "Task details",
+    "close": "Close",
+    "openFullPage": "Open full page",
+    "titleLabel": "Task title",
+    "project": "Project",
+    "noProject": "No project",
+    "tags": "Tags",
+    "note": "Note",
+    "subtasks": "Subtasks",
+    "loadError": "Could not load this task."
   }
 }

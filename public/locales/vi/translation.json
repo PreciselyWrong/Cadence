@@ -3625,5 +3625,17 @@
     "newColumn": "Cột mới",
     "loadError": "Không thể tải các cột",
     "saveError": "Không thể lưu bảng"
+  },
+  "taskPane": {
+    "label": "Chi tiết công việc",
+    "close": "Đóng",
+    "openFullPage": "Mở trang đầy đủ",
+    "titleLabel": "Tiêu đề công việc",
+    "project": "Dự án",
+    "noProject": "Không có dự án",
+    "tags": "Thẻ",
+    "note": "Ghi chú",
+    "subtasks": "Công việc con",
+    "loadError": "Không thể tải công việc này."
   }
 }

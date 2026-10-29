@@ -3629,5 +3629,17 @@
     "newColumn": "Uusi sarake",
     "loadError": "Sarakkeiden lataus epäonnistui",
     "saveError": "Taulun tallennus epäonnistui"
+  },
+  "taskPane": {
+    "label": "Tehtävän tiedot",
+    "close": "Sulje",
+    "openFullPage": "Avaa koko sivu",
+    "titleLabel": "Tehtävän otsikko",
+    "project": "Projekti",
+    "noProject": "Ei projektia",
+    "tags": "Tunnisteet",
+    "note": "Muistiinpano",
+    "subtasks": "Alitehtävät",
+    "loadError": "Tehtävää ei voitu ladata."
   }
 }

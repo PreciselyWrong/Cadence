@@ -3629,5 +3629,17 @@
     "newColumn": "Nieuwe kolom",
     "loadError": "Kolommen konden niet worden geladen",
     "saveError": "Bord kon niet worden opgeslagen"
+  },
+  "taskPane": {
+    "label": "Taakdetails",
+    "close": "Sluiten",
+    "openFullPage": "Volledige pagina openen",
+    "titleLabel": "Taaktitel",
+    "project": "Project",
+    "noProject": "Geen project",
+    "tags": "Tags",
+    "note": "Notitie",
+    "subtasks": "Subtaken",
+    "loadError": "Deze taak kon niet worden geladen."
   }
 }

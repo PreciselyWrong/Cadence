@@ -3629,5 +3629,17 @@
     "newColumn": "Ny kolumn",
     "loadError": "Kunde inte läsa in kolumner",
     "saveError": "Kunde inte spara tavlan"
+  },
+  "taskPane": {
+    "label": "Uppgiftsdetaljer",
+    "close": "Stäng",
+    "openFullPage": "Öppna hela sidan",
+    "titleLabel": "Uppgiftens titel",
+    "project": "Projekt",
+    "noProject": "Inget projekt",
+    "tags": "Taggar",
+    "note": "Anteckning",
+    "subtasks": "Deluppgifter",
+    "loadError": "Den här uppgiften kunde inte laddas."
   }
 }

@@ -38,6 +38,11 @@ jest.mock('../components/Capture/CaptureHost', () => ({
     default: () => null,
 }));
 
+jest.mock('../components/Task/TaskPane', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 jest.mock('../components/Project/ProjectModal', () => ({
     __esModule: true,
     default: () => null,

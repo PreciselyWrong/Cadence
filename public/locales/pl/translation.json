@@ -3647,5 +3647,17 @@
     "newColumn": "Nowa kolumna",
     "loadError": "Nie udało się wczytać kolumn",
     "saveError": "Nie udało się zapisać tablicy"
+  },
+  "taskPane": {
+    "label": "Szczegóły zadania",
+    "close": "Zamknij",
+    "openFullPage": "Otwórz pełną stronę",
+    "titleLabel": "Tytuł zadania",
+    "project": "Projekt",
+    "noProject": "Brak projektu",
+    "tags": "Tagi",
+    "note": "Notatka",
+    "subtasks": "Podzadania",
+    "loadError": "Nie udało się wczytać tego zadania."
   }
 }

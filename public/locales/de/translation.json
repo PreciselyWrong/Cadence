@@ -3638,5 +3638,17 @@
     "newColumn": "Neue Spalte",
     "loadError": "Spalten konnten nicht geladen werden",
     "saveError": "Board konnte nicht gespeichert werden"
+  },
+  "taskPane": {
+    "label": "Aufgabendetails",
+    "close": "Schließen",
+    "openFullPage": "Vollständige Seite öffnen",
+    "titleLabel": "Aufgabentitel",
+    "project": "Projekt",
+    "noProject": "Kein Projekt",
+    "tags": "Tags",
+    "note": "Notiz",
+    "subtasks": "Unteraufgaben",
+    "loadError": "Diese Aufgabe konnte nicht geladen werden."
   }
 }

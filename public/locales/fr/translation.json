@@ -3636,5 +3636,17 @@
     "newColumn": "Nouvelle colonne",
     "loadError": "Impossible de charger les colonnes",
     "saveError": "Impossible d'enregistrer le tableau"
+  },
+  "taskPane": {
+    "label": "Détails de la tâche",
+    "close": "Fermer",
+    "openFullPage": "Ouvrir la page complète",
+    "titleLabel": "Titre de la tâche",
+    "project": "Projet",
+    "noProject": "Aucun projet",
+    "tags": "Étiquettes",
+    "note": "Note",
+    "subtasks": "Sous-tâches",
+    "loadError": "Impossible de charger cette tâche."
   }
 }
