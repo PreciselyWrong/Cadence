@@ -23,7 +23,26 @@ export interface CalendarEvent {
     // A later occurrence of a recurring task: shown, but not moved or
     // resized until it becomes the next one.
     readOnly?: boolean;
+    // An event of a writable Google calendar: moved, resized and edited
+    // like a task, saved to Google (fork).
+    editable?: boolean;
+    google?: {
+        calendarUid: string;
+        eventId: string;
+        allDay: boolean;
+        // The whole event, not just the piece drawn on one day.
+        start: string;
+        end: string;
+        recurring: boolean;
+        htmlLink?: string | null;
+        location?: string | null;
+        description?: string | null;
+    };
 }
+
+// Tasks and editable Google events can be dragged and resized.
+export const isMovable = (event: CalendarEvent) =>
+    event.type === 'task' || Boolean(event.editable);
 
 export const DEFAULT_TASK_MINUTES = 60;
 // Same bounds as the estimated_minutes column.

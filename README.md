@@ -37,6 +37,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
 | Print | — | Prints only the shown view |
 | Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
+| Google Calendar & Tasks | Read-only iCal feeds | **Two-way sync**: every Google calendar shown, hidden or edited from Tududi (create, move, resize, delete); dated tasks on a **"Tududi" calendar** in Google; **all tasks** with Google Tasks (one list per project). Changes follow within ~2 minutes |
 
 ### Focus
 
@@ -64,12 +65,12 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 ### Under the hood
 
-- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
-- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
+- New tables / columns: `google_accounts`, `google_calendars`, `google_events`, `google_tasklists`, `google_task_links`, `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/google*` (connect, settings, sync, calendars, events), `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
-- All new strings are translated into the 26 languages (machine-written, review welcome).
+- All new strings are translated into the 26 languages (machine-written, review welcome); the Google sync strings so far only in French, German, Spanish and Italian (English elsewhere).
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).
-- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md), [Google sync](docs/32-google-sync.md).
 
 ---
 

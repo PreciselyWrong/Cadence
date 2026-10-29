@@ -17,6 +17,7 @@ Un seul système personnel (tâches, projets, habitudes, notes, capture) sans no
 - **Base : PostgreSQL** (supporté par l'amont depuis la #1466) sur l'instance déjà présente sur Unraid. Tests sur SQLite et sur Postgres. Migrations via `safeAddColumns` / `safeAddIndex`.
 - **TODO des dépôts** : le `TODO.md` de chaque dépôt fait foi ; Tududi l'affiche et le met à jour via Git (clone, commit/push), jamais en montant `~/Dev`. Raison : le PC est inaccessible en semaine, et monter `~/Dev` exposerait des secrets.
 - **IA** : facultative et différée. Capture et opérations de base sans modèle ; Hermes enrichit en lot et passe par le MCP. Mnemoteca n'est pas une source de vérité.
+- **Google Tasks : une liste par projet**, la liste par défaut = tâches sans projet. Supprimer une liste dans Google délie les tâches au lieu de les supprimer. Tâches récurrentes : seule la prochaine occurrence part chez Google. Supprimer l'événement d'une tâche dans Google retire la date ; supprimer une tâche Google supprime la tâche. Conflit : la modification la plus récente gagne (hash des champs synchronisés des deux côtés).
 - **Agenda : synchro Google par l'API v3, pas par CalDAV.** Raison : le CalDAV de Google ne gère pas les VTODO et exige OAuth2 ; les flux ICS sont à sens unique et Google ne les relit que toutes les 8 à 24 h.
 
 ## Pièges

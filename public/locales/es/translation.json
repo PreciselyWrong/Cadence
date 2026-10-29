@@ -787,7 +787,26 @@
       "botName": "Nombre del bot:"
     },
     "telegramRequiredForSummaries": "Para usar los resúmenes de tareas hay que configurar la integración con Telegram.",
-    "sidebarSectionDescription": "Mostrar la sección {{name}} en la barra lateral."
+    "sidebarSectionDescription": "Mostrar la sección {{name}} en la barra lateral.",
+    "google": {
+      "error": "Google no respondió",
+      "title": "Google Calendar y Tasks",
+      "description": "Sincronización en ambos sentidos: tus calendarios de Google aparecen aquí y se editan desde Tududi, las tareas con fecha van a un calendario «Tududi» en Google y todas tus tareas se sincronizan con Google Tasks. Los cambios de un lado llegan al otro en pocos minutos.",
+      "notConfigured": "No configurado en este servidor: el administrador define GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET.",
+      "connect": "Conectar Google",
+      "lastSync": "sincronizado {{time}}",
+      "firstSync": "primera sincronización en curso…",
+      "syncEvents": "Calendarios y tareas con fecha en un calendario «Tududi»",
+      "syncTasks": "Todas las tareas con Google Tasks (una lista por proyecto)",
+      "calendars": "Mostrados en Calendario y Hoy",
+      "readOnly": "solo lectura",
+      "synced": "Sincronizado con Google",
+      "syncing": "Sincronizando…",
+      "syncNow": "Sincronizar ahora",
+      "disconnect": "Desconectar",
+      "disconnectTitle": "Desconectar Google",
+      "disconnectMessage": "¿Dejar de sincronizar con Google? Tus tareas siguen en Tududi y lo que ya está en Google se queda allí."
+    }
   },
   "errors": {
     "required": "Este campo es obligatorio",
@@ -1813,7 +1832,26 @@
     "medium": "Media",
     "low": "Baja",
     "time": "Tiempo",
-    "allDay": "Todo el día"
+    "allDay": "Todo el día",
+    "google": {
+      "endBeforeStart": "El final es anterior al inicio",
+      "editEvent": "Editar evento",
+      "newEvent": "Nuevo evento",
+      "title": "Título",
+      "calendar": "Calendario",
+      "allDay": "Todo el día",
+      "start": "Inicio",
+      "end": "Fin",
+      "location": "Lugar",
+      "description": "Descripción",
+      "recurringNote": "Evento repetido: los cambios solo afectan a esta vez. Edita la serie en Google Calendar.",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "openInGoogle": "Abrir en Google",
+      "connected": "Google conectado",
+      "connectError": "Google no se conectó",
+      "saveError": "No se pudo guardar el evento"
+    }
   },
   "productivity": {
     "stalledProjects": "Proyectos Estancados",

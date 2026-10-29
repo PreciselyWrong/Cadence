@@ -11,6 +11,19 @@ import {
     updateCalendarFeed,
 } from '../utils/calendarFeedsService';
 import CalendarFeedsManager from './CalendarFeeds/CalendarFeedsManager';
+import {
+    GoogleCalendar,
+    GoogleEventInput,
+    GoogleStatus,
+    createGoogleEvent,
+    deleteGoogleEvent,
+    fetchGoogleStatus,
+    updateGoogleCalendar,
+    updateGoogleEvent,
+} from '../utils/googleSyncService';
+import GoogleEventModal, {
+    GoogleEventDraft,
+} from './Calendar/GoogleEventModal';
 import { useToast } from './Shared/ToastContext';
 import {
     ChevronLeftIcon,
@@ -98,7 +111,7 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
     const end = event.all_day
         ? localDate(event.date, 24 * 60)
         : localDate(event.date, event.end_minute ?? event.start_minute ?? 0);
-    return {
+    const shown: CalendarEvent = {
         id: `feed-${event.feed_uid}-${event.uid}-${event.date}-${event.start_minute ?? 'all-day'}`,
         title: event.title || event.feed_name,
         start,
@@ -107,6 +120,67 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         color: event.color || '#6b7280',
         feedUid: event.feed_uid,
         allDay: !!event.all_day,
+    };
+    if (event.source !== 'google' || !event.calendar_uid || !event.event_id) {
+        return shown;
+    }
+    // A piece drawn on another day than the event's start is not resized:
+    // its bottom edge is not the event's end.
+    const singleDay =
+        !event.all_day &&
+        format(new Date(event.start), 'yyyy-MM-dd') === event.date &&
+        format(new Date(event.end), 'yyyy-MM-dd') === event.date;
+    return {
+        ...shown,
+        id: `gevt-${event.calendar_uid}-${event.event_id}-${event.date}-${event.start_minute ?? 'all-day'}`,
+        editable: !!event.editable,
+        resize: event.editable && singleDay ? 'due' : undefined,
+        google: {
+            calendarUid: event.calendar_uid,
+            eventId: event.event_id,
+            allDay: !!event.all_day,
+            start: event.start,
+            end: event.end,
+            recurring: !!event.recurring,
+            htmlLink: event.html_link,
+            location: event.location,
+            description: event.description,
+        },
+    };
+};
+
+const dayOf = (value: string) => {
+    const [year, month, date] = value.split('-').map(Number);
+    return new Date(year, month - 1, date);
+};
+
+// Where a whole Google event lands when the piece drawn on one day is
+// dropped at `newStart`.
+const shiftGoogleEvent = (
+    event: CalendarEvent,
+    newStart: Date
+): GoogleEventInput => {
+    const google = event.google!;
+    if (google.allDay) {
+        const days = Math.round(
+            (newStart.getTime() -
+                localDate(format(event.start, 'yyyy-MM-dd')).getTime()) /
+                86400000
+        );
+        return {
+            all_day: true,
+            start_date: format(
+                addDays(dayOf(google.start), days),
+                'yyyy-MM-dd'
+            ),
+            end_date: format(addDays(dayOf(google.end), days), 'yyyy-MM-dd'),
+        };
+    }
+    const delta = newStart.getTime() - event.start.getTime();
+    return {
+        all_day: false,
+        start: new Date(new Date(google.start).getTime() + delta).toISOString(),
+        end: new Date(new Date(google.end).getTime() + delta).toISOString(),
     };
 };
 
@@ -136,7 +210,7 @@ const holidayToEvent = (holiday: Holiday): CalendarEvent => {
 
 const Calendar: React.FC = () => {
     const { t, i18n } = useTranslation();
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -155,6 +229,12 @@ const Calendar: React.FC = () => {
     const [feedEvents, setFeedEvents] = useState<CalendarRangeEvent[]>([]);
     const [feedErrors, setFeedErrors] = useState<string[]>([]);
     const [isManagerOpen, setIsManagerOpen] = useState(false);
+    const [googleStatus, setGoogleStatus] = useState<GoogleStatus | null>(null);
+    const [googleDraft, setGoogleDraft] = useState<GoogleEventDraft | null>(
+        null
+    );
+    // Bumped to reload calendar events after a change.
+    const [feedsVersion, setFeedsVersion] = useState(0);
     const [isArrangeOpen, setIsArrangeOpen] = useState(false);
     const [options, setOptions] = useState<CalendarOptions>(
         DEFAULT_CALENDAR_OPTIONS
@@ -177,10 +257,54 @@ const Calendar: React.FC = () => {
             .finally(() => setFeedsLoading(false));
     }, []);
 
+    // Google: load the connection; after Google sends the browser back
+    // here, say how it went and pick up the first sync once it is done.
+    useEffect(() => {
+        const loadGoogle = () =>
+            fetchGoogleStatus()
+                .then((status) => {
+                    setGoogleStatus(status);
+                    setFeedsVersion((v) => v + 1);
+                })
+                .catch(() => {});
+        loadGoogle();
+        const params = new URLSearchParams(location.search);
+        const result = params.get('google');
+        if (!result) return;
+        if (result === 'connected') {
+            showSuccessToast(
+                t('calendar.google.connected', 'Google connected')
+            );
+        } else {
+            showErrorToast(
+                params.get('message') ||
+                    t(
+                        'calendar.google.connectError',
+                        'Google was not connected'
+                    )
+            );
+        }
+        navigate(location.pathname, { replace: true });
+        if (result === 'connected') {
+            const timer = setTimeout(loadGoogle, 8000);
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    const googleCalendars: GoogleCalendar[] = googleStatus?.sync_events
+        ? (googleStatus.calendars || []).filter(
+              (calendar) => !calendar.is_tududi
+          )
+        : [];
+    const writableGoogle = googleCalendars.filter((c) => c.writable);
+
     // Month, week and day views all draw from one month-sized window (padded
     // a week each side), so paging within a month never refetches.
     const visibleMonth = format(currentDate, 'yyyy-MM');
-    const feedUidsKey = feeds.map((feed) => feed.uid).join(',');
+    const feedUidsKey = [
+        ...feeds.map((feed) => feed.uid),
+        ...googleCalendars.map((calendar) => calendar.feed_uid),
+    ].join(',');
     const windowStart = format(
         subDays(startOfMonth(currentDate), 7),
         'yyyy-MM-dd'
@@ -217,7 +341,7 @@ const Calendar: React.FC = () => {
         return () => {
             cancelled = true;
         };
-    }, [visibleMonth, feedUidsKey]);
+    }, [visibleMonth, feedUidsKey, feedsVersion]);
 
     useEffect(() => {
         getFirstDayOfWeek()
@@ -304,9 +428,14 @@ const Calendar: React.FC = () => {
         view === 'year' ? currentDate.getFullYear() : 0,
     ]);
 
-    const shownFeedUids = new Set(
-        feeds.filter((feed) => feed.show_on_calendar).map((feed) => feed.uid)
-    );
+    const shownFeedUids = new Set([
+        ...feeds
+            .filter((feed) => feed.show_on_calendar)
+            .map((feed) => feed.uid),
+        ...googleCalendars
+            .filter((calendar) => calendar.show_on_calendar)
+            .map((calendar) => calendar.feed_uid),
+    ]);
     const calendarEvents = [
         ...holidays.map(holidayToEvent),
         ...focusSessions.map((session) =>
@@ -343,6 +472,59 @@ const Calendar: React.FC = () => {
                 )
             );
         }
+    };
+
+    const toggleGoogleCalendar = async (calendar: GoogleCalendar) => {
+        const apply = (value: boolean) =>
+            setGoogleStatus((current) =>
+                current
+                    ? {
+                          ...current,
+                          calendars: current.calendars.map((c) =>
+                              c.uid === calendar.uid
+                                  ? { ...c, show_on_calendar: value }
+                                  : c
+                          ),
+                      }
+                    : current
+            );
+        const next = !calendar.show_on_calendar;
+        apply(next);
+        try {
+            await updateGoogleCalendar(calendar.uid, {
+                show_on_calendar: next,
+            });
+        } catch {
+            apply(!next);
+            showErrorToast(
+                t(
+                    'profile.calendars.toggleError',
+                    'Could not update that calendar'
+                )
+            );
+        }
+    };
+
+    const saveGoogleChange = async (
+        event: CalendarEvent,
+        input: GoogleEventInput
+    ) => {
+        const google = event.google!;
+        try {
+            await updateGoogleEvent(google.calendarUid, google.eventId, input);
+        } catch (error) {
+            showErrorToast(
+                error instanceof Error
+                    ? error.message
+                    : t('calendar.google.saveError', 'Could not save the event')
+            );
+        }
+        setFeedsVersion((v) => v + 1);
+    };
+
+    const openGoogleDraft = (draft: GoogleEventDraft) => {
+        if (!writableGoogle.length) return;
+        setGoogleDraft(draft);
     };
 
     const loadTasks = async () => {
@@ -441,9 +623,43 @@ const Calendar: React.FC = () => {
         window.print();
     };
 
-    const handleDateClick = () => {};
+    // A day clicked: a new all-day event in Google.
+    const handleDateClick = (date: Date) => {
+        const start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+        openGoogleDraft({
+            title: '',
+            allDay: true,
+            start,
+            end: addDays(start, 1),
+        });
+    };
 
     const handleEventClick = (event: CalendarEvent) => {
+        if (event.google) {
+            if (!event.editable) {
+                if (event.google.htmlLink) {
+                    window.open(event.google.htmlLink, '_blank', 'noopener');
+                }
+                return;
+            }
+            const google = event.google;
+            setGoogleDraft({
+                calendarUid: google.calendarUid,
+                eventId: google.eventId,
+                title: event.title,
+                allDay: google.allDay,
+                start: google.allDay
+                    ? dayOf(google.start)
+                    : new Date(google.start),
+                end: google.allDay ? dayOf(google.end) : new Date(google.end),
+                location: google.location,
+                description: google.description,
+                htmlLink: google.htmlLink,
+                recurring: google.recurring,
+            });
+            return;
+        }
         if (event.type === 'task') {
             const task = findTask(event.id);
             if (task) {
@@ -469,7 +685,17 @@ const Calendar: React.FC = () => {
         }
     };
 
-    const handleTimeSlotClick = () => {};
+    // An empty hour clicked: a new one-hour event in Google.
+    const handleTimeSlotClick = (date: Date, hour: number) => {
+        const start = new Date(date);
+        start.setHours(hour, 0, 0, 0);
+        openGoogleDraft({
+            title: '',
+            allDay: false,
+            start,
+            end: new Date(start.getTime() + 60 * 60 * 1000),
+        });
+    };
 
     const handleEditTask = () => {
         if (selectedTask?.uid) {
@@ -537,6 +763,31 @@ const Calendar: React.FC = () => {
             return;
         }
 
+        const googleEvent = calendarEvents.find(
+            (e) => e.id === eventId && e.google
+        );
+        if (googleEvent) {
+            if (!googleEvent.editable) return;
+            const newStart = new Date(newDate);
+            if (newHour !== undefined && !googleEvent.allDay) {
+                newStart.setHours(newHour, 0, 0, 0);
+            } else if (googleEvent.allDay) {
+                newStart.setHours(0, 0, 0, 0);
+            } else {
+                newStart.setHours(
+                    googleEvent.start.getHours(),
+                    googleEvent.start.getMinutes(),
+                    0,
+                    0
+                );
+            }
+            await saveGoogleChange(
+                googleEvent,
+                shiftGoogleEvent(googleEvent, newStart)
+            );
+            return;
+        }
+
         const task = findTask(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event || event.readOnly) return;
@@ -557,6 +808,18 @@ const Calendar: React.FC = () => {
     };
 
     const handleEventResize = async (eventId: string, newEnd: Date) => {
+        const googleEvent = calendarEvents.find(
+            (e) => e.id === eventId && e.google
+        );
+        if (googleEvent) {
+            if (!googleEvent.editable || googleEvent.google!.allDay) return;
+            await saveGoogleChange(googleEvent, {
+                all_day: false,
+                start: googleEvent.google!.start,
+                end: newEnd.toISOString(),
+            });
+            return;
+        }
         const task = findTask(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event?.resize) return;
@@ -694,6 +957,48 @@ const Calendar: React.FC = () => {
                                 }}
                             />
                             {feed.name}
+                        </button>
+                    ))}
+                    {googleCalendars.map((calendar) => (
+                        <button
+                            key={calendar.uid}
+                            type="button"
+                            role="switch"
+                            aria-checked={calendar.show_on_calendar}
+                            onClick={() => void toggleGoogleCalendar(calendar)}
+                            title={
+                                calendar.show_on_calendar
+                                    ? t(
+                                          'calendar.hideCalendar',
+                                          'Hide {{name}}',
+                                          {
+                                              name: calendar.name,
+                                          }
+                                      )
+                                    : t(
+                                          'calendar.showCalendar',
+                                          'Show {{name}}',
+                                          {
+                                              name: calendar.name,
+                                          }
+                                      )
+                            }
+                            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
+                                calendar.show_on_calendar
+                                    ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+                                    : 'bg-transparent text-gray-400 line-through hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-gray-800'
+                            }`}
+                        >
+                            <span
+                                className="h-2.5 w-2.5 rounded-full"
+                                style={{
+                                    backgroundColor: calendar.show_on_calendar
+                                        ? calendar.color || '#6b7280'
+                                        : 'transparent',
+                                    boxShadow: `inset 0 0 0 2px ${calendar.color || '#6b7280'}`,
+                                }}
+                            />
+                            {calendar.name}
                         </button>
                     ))}
                     <button
@@ -877,7 +1182,49 @@ const Calendar: React.FC = () => {
                         feeds={feeds}
                         loading={feedsLoading}
                         onFeedsChange={(update) => setFeeds(update)}
+                        googleStatus={googleStatus}
+                        onGoogleStatusChange={(status) => {
+                            setGoogleStatus(status);
+                            setFeedsVersion((v) => v + 1);
+                        }}
                         onClose={() => setIsManagerOpen(false)}
+                    />
+                )}
+
+                {googleDraft && (
+                    <GoogleEventModal
+                        draft={googleDraft}
+                        calendars={googleCalendars}
+                        onClose={() => setGoogleDraft(null)}
+                        onSave={async (calendarUid, input) => {
+                            if (
+                                googleDraft.eventId &&
+                                googleDraft.calendarUid
+                            ) {
+                                await updateGoogleEvent(
+                                    googleDraft.calendarUid,
+                                    googleDraft.eventId,
+                                    input
+                                );
+                            } else {
+                                await createGoogleEvent({
+                                    ...input,
+                                    calendar_uid: calendarUid,
+                                });
+                            }
+                            setFeedsVersion((v) => v + 1);
+                        }}
+                        onDelete={
+                            googleDraft.eventId && googleDraft.calendarUid
+                                ? async () => {
+                                      await deleteGoogleEvent(
+                                          googleDraft.calendarUid!,
+                                          googleDraft.eventId!
+                                      );
+                                      setFeedsVersion((v) => v + 1);
+                                  }
+                                : undefined
+                        }
                     />
                 )}
 
@@ -901,6 +1248,8 @@ interface CalendarsModalProps {
     feeds: CalendarFeed[];
     loading: boolean;
     onFeedsChange: (update: (feeds: CalendarFeed[]) => CalendarFeed[]) => void;
+    googleStatus: GoogleStatus | null;
+    onGoogleStatusChange: (status: GoogleStatus) => void;
     onClose: () => void;
 }
 
@@ -908,6 +1257,8 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
     feeds,
     loading,
     onFeedsChange,
+    googleStatus,
+    onGoogleStatusChange,
     onClose,
 }) => {
     const { t } = useTranslation();
@@ -958,6 +1309,8 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
                         feeds={feeds}
                         loading={loading}
                         onFeedsChange={onFeedsChange}
+                        googleStatus={googleStatus}
+                        onGoogleStatusChange={onGoogleStatusChange}
                     />
                 </div>
             </div>

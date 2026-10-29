@@ -17,7 +17,12 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
+import {
+    CalendarEvent,
+    coversDay,
+    layoutAllDayWeek,
+    isMovable,
+} from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarWeekViewProps {
@@ -221,7 +226,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                     {allDayBars.map(({ event, from, to }) => (
                         <div
                             key={event.id}
-                            draggable={event.type === 'task' && !event.readOnly}
+                            draggable={isMovable(event) && !event.readOnly}
                             onDragStart={(e) => handleDragStart(event, e)}
                             onDragEnd={handleDragEnd}
                             onClick={(e) => {
@@ -289,7 +294,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                         <div
                                             key={event.id}
                                             draggable={
-                                                event.type === 'task' &&
+                                                isMovable(event) &&
                                                 !event.readOnly &&
                                                 resize.resizingId !== event.id
                                             }
@@ -304,7 +309,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                                 onEventClick?.(event);
                                             }}
                                             className={`text-xs px-2 py-1.5 rounded-lg text-white absolute z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity ${
-                                                event.type === 'task'
+                                                isMovable(event)
                                                     ? 'cursor-move'
                                                     : ''
                                             } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
@@ -340,7 +345,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                                     'HH:mm'
                                                 )}
                                             </div>
-                                            {event.type === 'task' &&
+                                            {isMovable(event) &&
                                                 event.resize && (
                                                     <ResizeHandle
                                                         label={t(

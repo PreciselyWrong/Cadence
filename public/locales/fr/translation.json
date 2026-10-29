@@ -912,7 +912,26 @@
       "botName": "Nom du bot :"
     },
     "telegramRequiredForSummaries": "L'intégration Telegram doit être configurée pour utiliser les résumés de tâches.",
-    "sidebarSectionDescription": "Afficher la section {{name}} dans la barre latérale."
+    "sidebarSectionDescription": "Afficher la section {{name}} dans la barre latérale.",
+    "google": {
+      "error": "Google n'a pas répondu",
+      "title": "Google Agenda et Tasks",
+      "description": "Synchronisation dans les deux sens : vos agendas Google s'affichent ici et se modifient depuis Tududi, les tâches datées vont dans un agenda « Tududi » sur Google, et toutes vos tâches se synchronisent avec Google Tasks. Les changements d'un côté suivent de l'autre en quelques minutes.",
+      "notConfigured": "Pas configuré sur ce serveur : l'administrateur définit GOOGLE_CLIENT_ID et GOOGLE_CLIENT_SECRET.",
+      "connect": "Connecter Google",
+      "lastSync": "synchronisé {{time}}",
+      "firstSync": "première synchronisation en cours…",
+      "syncEvents": "Agendas, et tâches datées dans un agenda « Tududi »",
+      "syncTasks": "Toutes les tâches avec Google Tasks (une liste par projet)",
+      "calendars": "Affichés dans Calendrier et Aujourd'hui",
+      "readOnly": "lecture seule",
+      "synced": "Synchronisé avec Google",
+      "syncing": "Synchronisation…",
+      "syncNow": "Synchroniser",
+      "disconnect": "Déconnecter",
+      "disconnectTitle": "Déconnecter Google",
+      "disconnectMessage": "Arrêter la synchronisation avec Google ? Vos tâches restent dans Tududi et tout ce qui est déjà sur Google y reste."
+    }
   },
   "productivity": {
     "stalledProjects": "Projets Bloqués",
@@ -1851,7 +1870,26 @@
     "medium": "Moyen",
     "low": "Bas",
     "time": "Temps",
-    "allDay": "Toute la journée"
+    "allDay": "Toute la journée",
+    "google": {
+      "endBeforeStart": "La fin est avant le début",
+      "editEvent": "Modifier l'événement",
+      "newEvent": "Nouvel événement",
+      "title": "Titre",
+      "calendar": "Agenda",
+      "allDay": "Toute la journée",
+      "start": "Début",
+      "end": "Fin",
+      "location": "Lieu",
+      "description": "Description",
+      "recurringNote": "Événement répété : les changements ne touchent que cette occurrence. Modifiez la série dans Google Agenda.",
+      "save": "Enregistrer",
+      "delete": "Supprimer",
+      "openInGoogle": "Ouvrir dans Google",
+      "connected": "Google connecté",
+      "connectError": "Google n'a pas été connecté",
+      "saveError": "Impossible d'enregistrer l'événement"
+    }
   },
   "pages": {
     "notFound": {

@@ -78,6 +78,8 @@ Tasks have an optional `estimated_minutes` (5 to 720), set from the **Estimate**
 
 ## Calendar feeds
 
+For two-way sync with a Google account (all calendars editable from here, tasks on a "Tududi" calendar and in Google Tasks), see [Google sync](32-google-sync.md); its calendars appear as chips next to the iCal feeds, and clicking an empty hour or day creates a Google event.
+
 Profile → **Calendars**, or the **Calendars** button on the Calendar page, connects read-only iCal feeds, such as Google Calendar's "Secret address in iCal format". Apple Calendar, Outlook and Fastmail links work too, and `webcal://` links are accepted.
 
 - **Calendar page:** each connected calendar is a chip above the month, week and day views. Click a chip to show or hide that calendar's events; the choice is saved per calendar (`show_on_calendar`, on by default). The same switch is in Profile → Calendars. A hidden calendar is also left out of Today, Plan my day and the AI draft, so its meetings no longer block time there.

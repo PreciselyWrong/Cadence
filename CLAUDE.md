@@ -22,6 +22,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Calendar | Recurring occurrences, habits, focus sessions, public holidays (`date-holidays`) on the grid | [20-daily-plan.md](docs/20-daily-plan.md), [01-recurring-tasks-behavior.md](docs/01-recurring-tasks-behavior.md) |
 | Calendar | View options saved in `ui_settings.calendar`; colour by project / priority / tag | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Two-way Google Calendar + Google Tasks sync (`backend/modules/google-sync/`, `google_*` tables) | [32-google-sync.md](docs/32-google-sync.md) |
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |

@@ -1,7 +1,7 @@
 import React from 'react';
 import { format, addHours, isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { CalendarEvent, coversDay } from './taskEvents';
+import { CalendarEvent, coversDay, isMovable } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarDayViewProps {
@@ -124,9 +124,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                         {allDayEvents.map((event) => (
                             <div
                                 key={event.id}
-                                draggable={
-                                    event.type === 'task' && !event.readOnly
-                                }
+                                draggable={isMovable(event) && !event.readOnly}
                                 onDragStart={(e) => handleDragStart(event, e)}
                                 onDragEnd={handleDragEnd}
                                 onClick={(e) => {
@@ -184,7 +182,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                 <div
                                     key={event.id}
                                     draggable={
-                                        event.type === 'task' &&
+                                        isMovable(event) &&
                                         !event.readOnly &&
                                         resize.resizingId !== event.id
                                     }
@@ -198,9 +196,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                         onEventClick?.(event);
                                     }}
                                     className={`absolute text-xs px-2.5 py-1.5 rounded-lg text-white z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${
-                                        event.type === 'task'
-                                            ? 'cursor-move'
-                                            : ''
+                                        isMovable(event) ? 'cursor-move' : ''
                                     } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
                                     style={{
                                         backgroundColor:
@@ -222,7 +218,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                         {format(event.start, 'HH:mm')} –{' '}
                                         {format(resize.endOf(event), 'HH:mm')}
                                     </div>
-                                    {event.type === 'task' && event.resize && (
+                                    {isMovable(event) && event.resize && (
                                         <ResizeHandle
                                             label={t(
                                                 'calendar.resizeTask',
