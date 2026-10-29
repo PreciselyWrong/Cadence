@@ -20,6 +20,48 @@ More screenshots are [available here](#screenshots).
 
 ---
 
+## 🍴 What this fork adds
+
+This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
+
+### Calendar
+
+| | Upstream | This fork |
+|---|---|---|
+| Views | Month, Week, Day | **Year** (heatmap), Month, Week, **N days** (2–7), Day, **Agenda** |
+| Task blocks | Always a 1-hour block at midnight of the due day (the due time was ignored) | Drawn at the due time for the task's **estimate**, or from its start time to its due time; whole-day and multi-day tasks are **bars** in an all-day row |
+| Drag & drop | Move only | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h) |
+| Scheduling | — | **Arrange tasks** panel: undated and overdue tasks, grouped by project, filtered by project/tag/priority, dragged onto a day or an hour |
+| Recurring tasks | Only the next occurrence | **Every occurrence** in the shown month (faded, read-only) |
+| View options | — | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag — saved per user |
+| Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
+| Print | — | Prints only the shown view |
+| Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
+
+### Focus
+
+| | Upstream | This fork |
+|---|---|---|
+| Tomato timer | A countdown, nothing kept | Finished sessions (and early stops of 5 min or more) are **recorded** |
+| Statistics | — | Insights → Productivity → **Focus**: total time, sessions, most focused hour, minutes per day and per hour, top tasks |
+| Calendar | — | Focus sessions as orange blocks |
+
+### Projects
+
+| | Upstream | This fork |
+|---|---|---|
+| Timeline | Bars coloured by status | Also **colour by priority or tag** |
+
+### Under the hood
+
+- New tables / columns: `focus_sessions`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
+- Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
+- All new strings are translated into the 26 languages (machine-written, review welcome).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline](docs/06-projects.md#timeline-view).
+
+---
+
 ## 💖 Enjoying tududi?
 
 Help keep it free and actively developed by [buying me a coffee](https://coff.ee/chrisveleris) ☕, [becoming a sponsor](https://github.com/sponsors/chrisvel), or [supporting on Patreon](https://www.patreon.com/ChrisVeleris). You can also support the project by purchasing a **hosted subscription** for a hassle-free, managed solution. Every contribution helps maintain this project and build new features!
