@@ -4,7 +4,7 @@
     "lastDays_one": "{{count}} gün",
     "lastDays_other": "{{count}} gün",
     "error": "Odak istatistikleri yüklenemedi",
-    "empty": "Henüz odak oturumu yok. Üst çubuktaki domatesi başlat; biten oturumlar burada sayılır.",
+    "empty": "Henüz odak oturumu yok. Üst çubuktaki Pomodoro zamanlayıcısını başlatın; biten oturumlar burada sayılır.",
     "total": "Odak süresi",
     "sessions": "Oturumlar",
     "bestHour": "En odaklı saat",
@@ -268,7 +268,7 @@
         "deleteConfirm": "\"{{name}}\" matrisi silinsin mi? Görevleriniz değişmez."
       },
       "dropRefusedPriority": "Bu çeyrek birden fazla önceliğe izin veriyor, bu yüzden görev buraya sürüklenemez.",
-      "dropRefusedDue": "Görevin son tarihi bu çeyreğe uymuyor; bunun yerine tarihi değiştir.",
+      "dropRefusedDue": "Görevin son tarihi bu çeyreğe uymuyor; bunun yerine tarihi değiştirin.",
       "dropRefusedProject": "Görevin projesi bu çeyreğe uymuyor.",
       "dropRefusedEarlier": "Değişiklikten sonra görev yine önceki bir çeyreğe düşerdi."
     },
@@ -332,12 +332,12 @@
   },
   "profile": {
     "taskFeed": {
-      "title": "Görevlerine abone ol",
-      "description": "Son tarihi olan açık görevlerini Google Takvim, Apple Takvim veya Outlook’ta gösteren özel bir adres. Adrese sahip herkes bu görevleri okuyabilir.",
+      "title": "Görevlerinize abone olun",
+      "description": "Son tarihi olan açık görevlerinizi Google Takvim, Apple Takvim veya Outlook'ta gösteren özel bir adres. Adrese sahip herkes bu görevleri okuyabilir.",
       "address": "Akış adresi",
       "copy": "Kopyala",
       "copied": "Adres kopyalandı",
-      "once": "Şimdi kopyala: yalnızca bir kez gösterilir. Yeni bir adres eskisini kapatır.",
+      "once": "Şimdi kopyalayın: yalnızca bir kez gösterilir. Yeni bir adres eskisini kapatır.",
       "create": "Adres oluştur",
       "rotate": "Yeni adres oluştur",
       "disable": "Kapat",

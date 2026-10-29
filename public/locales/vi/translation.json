@@ -4,7 +4,7 @@
     "lastDays_one": "{{count}} ngày",
     "lastDays_other": "{{count}} ngày",
     "error": "Không thể tải thống kê tập trung",
-    "empty": "Chưa có phiên tập trung. Bật đồng hồ cà chua ở thanh trên; các phiên hoàn thành được tính ở đây.",
+    "empty": "Chưa có phiên tập trung. Bật đồng hồ Pomodoro ở thanh trên; các phiên hoàn thành được tính ở đây.",
     "total": "Thời gian tập trung",
     "sessions": "Phiên",
     "bestHour": "Giờ tập trung nhất",
@@ -268,7 +268,7 @@
         "deleteConfirm": "Xóa ma trận \"{{name}}\"? Công việc của bạn không thay đổi."
       },
       "dropRefusedPriority": "Ô này cho phép nhiều mức ưu tiên nên không thể kéo công việc vào đây.",
-      "dropRefusedDue": "Hạn của công việc không hợp với ô này; hãy đổi ngày thay vào đó.",
+      "dropRefusedDue": "Hạn của công việc không hợp với ô này; hãy đổi ngày.",
       "dropRefusedProject": "Dự án của công việc không hợp với ô này.",
       "dropRefusedEarlier": "Sau khi đổi, công việc vẫn rơi vào một ô trước đó."
     },

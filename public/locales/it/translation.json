@@ -2,15 +2,16 @@
   "focusStats": {
     "title": "Focus",
     "lastDays_one": "{{count}} giorno",
+    "lastDays_many": "{{count}} giorni",
     "lastDays_other": "{{count}} giorni",
     "error": "Impossibile caricare le statistiche di focus",
-    "empty": "Ancora nessuna sessione di focus. Avvia il pomodoro nella barra in alto; le sessioni concluse vengono contate qui.",
+    "empty": "Ancora nessuna sessione di focus. Avvia il timer Pomodoro nella barra in alto; le sessioni concluse vengono contate qui.",
     "total": "Tempo di focus",
     "sessions": "Sessioni",
-    "bestHour": "Ora più concentrata",
+    "bestHour": "Ora di maggiore concentrazione",
     "perDay": "Minuti al giorno",
     "perHour": "Minuti per ora del giorno",
-    "topTasks": "Attività più seguite"
+    "topTasks": "Attività con più focus"
   },
   "common": {
     "deleting": "Eliminazione...",
@@ -255,7 +256,7 @@
         "due": "Scadenza",
         "dueType": {
           "any": "Qualsiasi",
-          "overdue": "In ritardo",
+          "overdue": "Scadute",
           "today": "Oggi",
           "within": "Entro N giorni",
           "none": "Senza data"
@@ -265,12 +266,12 @@
         "projects": "Progetti (facoltativo)",
         "firstMatchHint": "Ogni attività compare nel primo quadrante di cui rispetta la regola. Una scelta vuota corrisponde a tutto.",
         "deleteTitle": "Elimina matrice",
-        "deleteConfirm": "Eliminare la matrice \"{{name}}\"? Le tue attività non cambiano."
+        "deleteConfirm": "Eliminare la matrice «{{name}}»? Le tue attività non cambiano."
       },
-      "dropRefusedPriority": "Questo quadrante ammette più priorità, quindi l’attività non può essere trascinata qui.",
+      "dropRefusedPriority": "Questo quadrante ammette più priorità, quindi l'attività non può essere trascinata qui.",
       "dropRefusedDue": "La scadenza non corrisponde a questo quadrante; cambia invece la data.",
-      "dropRefusedProject": "Il progetto dell’attività non corrisponde a questo quadrante.",
-      "dropRefusedEarlier": "Dopo la modifica l’attività finirebbe comunque in un quadrante precedente."
+      "dropRefusedProject": "Il progetto dell'attività non corrisponde a questo quadrante.",
+      "dropRefusedEarlier": "Dopo la modifica l'attività finirebbe comunque in un quadrante precedente."
     },
     "kanban": {
       "title": "Bacheca Kanban",
@@ -1716,7 +1717,7 @@
     "frequentlyUsed": "Usati spesso",
     "createTag": "+ Crea «{{name}}»",
     "pinTag": "Fissa per un accesso rapido",
-    "parentTag": "Tag principale",
+    "parentTag": "Tag padre",
     "noParent": "Nessuno (livello superiore)",
     "parentTagHasChildren": "Questo tag ha tag figli, quindi non può essere messo sotto un altro tag.",
     "showChildTags": "Mostra tag figli",
@@ -1769,12 +1770,14 @@
     "print": "Stampa",
     "year": "Anno",
     "weekNumber": "S{{week}}",
-    "yearItems_one": "{{date}}: {{count}} elementi",
+    "yearItems_one": "{{date}}: {{count}} elemento",
+    "yearItems_many": "{{date}}: {{count}} elementi",
     "yearItems_other": "{{date}}: {{count}} elementi",
     "miniCalendar": "Mini calendario",
     "previousMonth": "Mese precedente",
     "nextMonth": "Mese successivo",
     "multiDay_one": "{{count}} giorni",
+    "multiDay_many": "{{count}} giorni",
     "multiDay_other": "{{count}} giorni",
     "agendaEmpty": "Niente in programma",
     "agenda": "Agenda",
@@ -1802,12 +1805,12 @@
     "arrange": {
       "title": "Organizza attività",
       "noDate": "Senza data",
-      "overdue": "In ritardo",
+      "overdue": "Scadute",
       "filterProject": "Progetto",
       "filterTag": "Tag",
       "filterPriority": "Priorità",
       "emptyNoDate": "Nessuna attività senza data da pianificare",
-      "emptyOverdue": "Nessuna attività in ritardo da pianificare",
+      "emptyOverdue": "Nessuna attività scaduta da pianificare",
       "noProject": "Nessun progetto"
     },
     "resizeTask": "Cambia quando finisce questa attività",

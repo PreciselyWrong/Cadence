@@ -4,7 +4,7 @@
     "lastDays_one": "{{count}} dag",
     "lastDays_other": "{{count}} dager",
     "error": "Kunne ikke laste fokusstatistikk",
-    "empty": "Ingen fokusøkter ennå. Start tomaten i topplinjen; fullførte økter telles her.",
+    "empty": "Ingen fokusøkter ennå. Start Pomodoro-timeren i topplinjen; fullførte økter telles her.",
     "total": "Fokustid",
     "sessions": "Økter",
     "bestHour": "Mest fokuserte time",
@@ -256,7 +256,7 @@
         "due": "Forfallsdato",
         "dueType": {
           "any": "Alle",
-          "overdue": "Forfalt",
+          "overdue": "Forsinket",
           "today": "I dag",
           "within": "Innen N dager",
           "none": "Ingen dato"
@@ -1768,7 +1768,7 @@
     "print": "Skriv ut",
     "year": "År",
     "weekNumber": "U{{week}}",
-    "yearItems_one": "{{date}}: {{count}} elementer",
+    "yearItems_one": "{{date}}: {{count}} element",
     "yearItems_other": "{{date}}: {{count}} elementer",
     "miniCalendar": "Minikalender",
     "previousMonth": "Forrige måned",
@@ -1795,18 +1795,18 @@
       "colorBy_default": "Standard",
       "colorBy_project": "Prosjekt",
       "colorBy_priority": "Prioritet",
-      "colorBy_tag": "Etikett",
+      "colorBy_tag": "Tagg",
       "saveError": "Kunne ikke lagre visningsvalg"
     },
     "arrange": {
       "title": "Planlegg oppgaver",
       "noDate": "Ingen dato",
-      "overdue": "Forfalt",
+      "overdue": "Forsinket",
       "filterProject": "Prosjekt",
-      "filterTag": "Etikett",
+      "filterTag": "Tagg",
       "filterPriority": "Prioritet",
       "emptyNoDate": "Ingen oppgaver uten dato å planlegge",
-      "emptyOverdue": "Ingen forfalte oppgaver å planlegge",
+      "emptyOverdue": "Ingen forsinkede oppgaver å planlegge",
       "noProject": "Ingen prosjekt"
     },
     "resizeTask": "Endre når oppgaven slutter",
@@ -3258,7 +3258,7 @@
     "colorBy": "Farge etter",
     "colorByStatus": "Farge: status",
     "colorByPriority": "Farge: prioritet",
-    "colorByTag": "Farge: etikett",
+    "colorByTag": "Farge: tagg",
     "title": "Tidslinje",
     "days": "Dager",
     "weeks": "Uker",
@@ -3590,7 +3590,7 @@
       "project": "Prosjekt",
       "completed": "Fullført",
       "due": "Frist",
-      "tags": "Etiketter"
+      "tags": "Tagger"
     }
   },
   "projectBoard": {

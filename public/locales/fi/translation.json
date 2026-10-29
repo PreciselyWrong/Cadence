@@ -4,7 +4,7 @@
     "lastDays_one": "{{count}} päivä",
     "lastDays_other": "{{count}} päivää",
     "error": "Keskittymistilastoja ei voitu ladata",
-    "empty": "Ei vielä keskittymisjaksoja. Käynnistä tomaatti yläpalkista; päättyneet jaksot lasketaan tähän.",
+    "empty": "Ei vielä keskittymisjaksoja. Käynnistä Pomodoro-ajastin yläpalkista; päättyneet jaksot lasketaan tähän.",
     "total": "Keskittymisaika",
     "sessions": "Jaksot",
     "bestHour": "Keskittynein tunti",
@@ -243,8 +243,8 @@
         "limit": "Voit säilyttää enintään {{count}} matriisia.",
         "editTitle": "Muokkaa matriisia",
         "name": "Matriisin nimi",
-        "quadrant": "Lohko {{number}}",
-        "quadrantName": "Lohkon nimi",
+        "quadrant": "Neljännes {{number}}",
+        "quadrantName": "Neljänneksen nimi",
         "priorities": "Prioriteetti (jokin näistä)",
         "priority": {
           "none": "Ei mitään",
@@ -252,10 +252,10 @@
           "medium": "Keskitaso",
           "high": "Korkea"
         },
-        "due": "Määräpäivä",
+        "due": "Eräpäivä",
         "dueType": {
           "any": "Mikä tahansa",
-          "overdue": "Myöhässä",
+          "overdue": "Erääntyneet",
           "today": "Tänään",
           "within": "N päivän sisällä",
           "none": "Ei päivää"
@@ -263,12 +263,12 @@
         "days": "Päivää",
         "tags": "Tunnisteet (jokin näistä, pilkuilla eroteltuna)",
         "projects": "Projektit (valinnainen)",
-        "firstMatchHint": "Jokainen tehtävä näkyy ensimmäisessä lohkossa, jonka säännön se täyttää. Tyhjä valinta sopii kaikkeen.",
+        "firstMatchHint": "Jokainen tehtävä näkyy ensimmäisessä neljänneksessä, jonka säännön se täyttää. Tyhjä valinta sopii kaikkeen.",
         "deleteTitle": "Poista matriisi",
         "deleteConfirm": "Poistetaanko matriisi \"{{name}}\"? Tehtäväsi eivät muutu."
       },
       "dropRefusedPriority": "Tämä neljännes sallii useita prioriteetteja, joten tehtävää ei voi vetää tänne.",
-      "dropRefusedDue": "Määräpäivä ei sovi tähän neljännekseen; muuta päivämäärää.",
+      "dropRefusedDue": "Eräpäivä ei sovi tähän neljännekseen; muuta päivämäärää.",
       "dropRefusedProject": "Tehtävän projekti ei sovi tähän neljännekseen.",
       "dropRefusedEarlier": "Muutoksen jälkeen tehtävä päätyisi silti aiempaan neljännekseen."
     },
@@ -333,7 +333,7 @@
   "profile": {
     "taskFeed": {
       "title": "Tilaa tehtäväsi",
-      "description": "Yksityinen osoite, joka näyttää avoimet tehtäväsi määräpäivineen Google Kalenterissa, Apple Kalenterissa tai Outlookissa. Kuka tahansa osoitteen tietävä voi lukea tehtävät.",
+      "description": "Yksityinen osoite, joka näyttää avoimet tehtäväsi eräpäivineen Google Kalenterissa, Apple Kalenterissa tai Outlookissa. Kuka tahansa osoitteen tietävä voi lukea tehtävät.",
       "address": "Syötteen osoite",
       "copy": "Kopioi",
       "copied": "Osoite kopioitu",
@@ -1767,7 +1767,7 @@
     "print": "Tulosta",
     "year": "Vuosi",
     "weekNumber": "Vk {{week}}",
-    "yearItems_one": "{{date}}: {{count}} kohdetta",
+    "yearItems_one": "{{date}}: {{count}} kohde",
     "yearItems_other": "{{date}}: {{count}} kohdetta",
     "miniCalendar": "Minikalenteri",
     "previousMonth": "Edellinen kuukausi",
@@ -1800,12 +1800,12 @@
     "arrange": {
       "title": "Järjestä tehtävät",
       "noDate": "Ei päivää",
-      "overdue": "Myöhässä",
+      "overdue": "Erääntyneet",
       "filterProject": "Projekti",
       "filterTag": "Tunniste",
       "filterPriority": "Prioriteetti",
       "emptyNoDate": "Ei ajoitettavia päiväämättömiä tehtäviä",
-      "emptyOverdue": "Ei ajoitettavia myöhässä olevia tehtäviä",
+      "emptyOverdue": "Ei ajoitettavia erääntyneitä tehtäviä",
       "noProject": "Ei projektia"
     },
     "resizeTask": "Muuta tehtävän päättymisaikaa",
@@ -3542,7 +3542,7 @@
     "from": "Alkaen",
     "to": "Asti",
     "groupBy": "Ryhmittely",
-    "includeOpen": "Sisällytä avoimet tehtävät, joiden määräpäivä on jaksolla",
+    "includeOpen": "Sisällytä avoimet tehtävät, joiden eräpäivä on jaksolla",
     "saveTemplate": "Tallenna mallipohjaksi",
     "templateSaved": "Mallipohja tallennettu",
     "templateFailed": "Mallipohjaa ei voitu tallentaa",
@@ -3584,7 +3584,7 @@
       "status": "Tila",
       "project": "Projekti",
       "completed": "Valmistunut",
-      "due": "Määräpäivä",
+      "due": "Eräpäivä",
       "tags": "Tunnisteet"
     }
   },

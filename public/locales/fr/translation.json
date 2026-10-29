@@ -2,15 +2,16 @@
   "focusStats": {
     "title": "Focus",
     "lastDays_one": "{{count}} jour",
+    "lastDays_many": "{{count}} jours",
     "lastDays_other": "{{count}} jours",
     "error": "Impossible de charger les statistiques de focus",
-    "empty": "Aucune session de focus pour l’instant. Lancez la tomate dans la barre du haut ; les sessions terminées sont comptées ici.",
+    "empty": "Aucune session de focus pour l'instant. Lancez le minuteur Pomodoro dans la barre du haut ; les sessions terminées sont comptées ici.",
     "total": "Temps de focus",
     "sessions": "Sessions",
-    "bestHour": "Heure la plus concentrée",
+    "bestHour": "Heure de plus grande concentration",
     "perDay": "Minutes par jour",
     "perHour": "Minutes par heure de la journée",
-    "topTasks": "Tâches les plus travaillées"
+    "topTasks": "Tâches les plus travaillées en focus"
   },
   "common": {
     "deleting": "Suppression...",
@@ -248,9 +249,9 @@
         "priorities": "Priorité (au moins une)",
         "priority": {
           "none": "Aucune",
-          "low": "Basse",
+          "low": "Faible",
           "medium": "Moyenne",
-          "high": "Haute"
+          "high": "Élevée"
         },
         "due": "Échéance",
         "dueType": {
@@ -268,7 +269,7 @@
         "deleteConfirm": "Supprimer la matrice « {{name}} » ? Vos tâches ne sont pas modifiées."
       },
       "dropRefusedPriority": "Ce quadrant accepte plusieurs priorités : la tâche ne peut pas y être déplacée par glisser-déposer.",
-      "dropRefusedDue": "L’échéance de la tâche ne correspond pas à ce quadrant ; modifiez plutôt la date.",
+      "dropRefusedDue": "L'échéance de la tâche ne correspond pas à ce quadrant ; modifiez plutôt la date.",
       "dropRefusedProject": "Le projet de la tâche ne correspond pas à ce quadrant.",
       "dropRefusedEarlier": "Après la modification, la tâche irait toujours dans un quadrant précédent."
     },
@@ -1769,12 +1770,14 @@
     "print": "Imprimer",
     "year": "Année",
     "weekNumber": "S{{week}}",
-    "yearItems_one": "{{date}} : {{count}} éléments",
+    "yearItems_one": "{{date}} : {{count}} élément",
+    "yearItems_many": "{{date}} : {{count}} éléments",
     "yearItems_other": "{{date}} : {{count}} éléments",
     "miniCalendar": "Mini-calendrier",
     "previousMonth": "Mois précédent",
     "nextMonth": "Mois suivant",
     "multiDay_one": "{{count}} jours",
+    "multiDay_many": "{{count}} jours",
     "multiDay_other": "{{count}} jours",
     "agendaEmpty": "Rien de prévu",
     "agenda": "Agenda",
@@ -3546,7 +3549,7 @@
     "from": "Du",
     "to": "Au",
     "groupBy": "Grouper par",
-    "includeOpen": "Inclure les tâches ouvertes échues dans la période",
+    "includeOpen": "Inclure les tâches ouvertes dont l'échéance tombe dans cette période",
     "saveTemplate": "Enregistrer comme modèle",
     "templateSaved": "Modèle enregistré",
     "templateFailed": "Impossible d'enregistrer le modèle",

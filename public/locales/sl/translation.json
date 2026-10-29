@@ -2,15 +2,17 @@
   "focusStats": {
     "title": "Osredotočenost",
     "lastDays_one": "{{count}} dan",
+    "lastDays_two": "{{count}} dneva",
+    "lastDays_few": "{{count}} dni",
     "lastDays_other": "{{count}} dni",
     "error": "Statistike osredotočenosti ni bilo mogoče naložiti",
-    "empty": "Še ni sej. Zaženite paradižnik v zgornji vrstici; končane seje se štejejo tukaj.",
+    "empty": "Še ni sej osredotočenosti. Zaženite Pomodoro časomer v zgornji vrstici; končane seje se štejejo tukaj.",
     "total": "Čas osredotočenosti",
     "sessions": "Seje",
     "bestHour": "Najbolj osredotočena ura",
     "perDay": "Minute na dan",
     "perHour": "Minute po urah dneva",
-    "topTasks": "Opravila z največ osredotočenosti"
+    "topTasks": "Naloge z največ osredotočenosti"
   },
   "common": {
     "deleting": "Brisanje...",
@@ -255,7 +257,7 @@
         "due": "Rok",
         "dueType": {
           "any": "Kateri koli",
-          "overdue": "Zamujene",
+          "overdue": "Zapadle",
           "today": "Danes",
           "within": "V N dneh",
           "none": "Brez datuma"
@@ -267,10 +269,10 @@
         "deleteTitle": "Izbriši matriko",
         "deleteConfirm": "Izbrišem matriko »{{name}}«? Vaše naloge ostanejo nespremenjene."
       },
-      "dropRefusedPriority": "Ta kvadrant dovoljuje več prioritet, zato opravila ni mogoče povleči sem.",
-      "dropRefusedDue": "Rok opravila ne ustreza temu kvadrantu; raje spremenite datum.",
-      "dropRefusedProject": "Projekt opravila ne ustreza temu kvadrantu.",
-      "dropRefusedEarlier": "Po spremembi bi opravilo še vedno pristalo v prejšnjem kvadrantu."
+      "dropRefusedPriority": "Ta kvadrant dovoljuje več prioritet, zato naloge ni mogoče povleči sem.",
+      "dropRefusedDue": "Rok naloge ne ustreza temu kvadrantu; raje spremenite datum.",
+      "dropRefusedProject": "Projekt naloge ne ustreza temu kvadrantu.",
+      "dropRefusedEarlier": "Po spremembi bi naloga še vedno pristala v prejšnjem kvadrantu."
     },
     "kanban": {
       "title": "Kanban tabla",
@@ -332,8 +334,8 @@
   },
   "profile": {
     "taskFeed": {
-      "title": "Naroči se na svoja opravila",
-      "description": "Zasebni naslov, ki prikaže odprta opravila z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere ta opravila.",
+      "title": "Naroči se na svoje naloge",
+      "description": "Zasebni naslov, ki prikaže odprte naloge z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere te naloge.",
       "address": "Naslov vira",
       "copy": "Kopiraj",
       "copied": "Naslov kopiran",
@@ -341,7 +343,7 @@
       "create": "Ustvari naslov",
       "rotate": "Ustvari nov naslov",
       "disable": "Izklopi",
-      "error": "Vira opravil ni bilo mogoče posodobiti"
+      "error": "Vira nalog ni bilo mogoče posodobiti"
     },
     "settings": "Nastavitve profila",
     "language": "Jezik",
@@ -1771,15 +1773,19 @@
     "print": "Natisni",
     "year": "Leto",
     "weekNumber": "T{{week}}",
-    "yearItems_one": "{{date}}: {{count}} elementov",
+    "yearItems_one": "{{date}}: {{count}} element",
+    "yearItems_two": "{{date}}: {{count}} elementa",
+    "yearItems_few": "{{date}}: {{count}} elementi",
     "yearItems_other": "{{date}}: {{count}} elementov",
     "miniCalendar": "Mini koledar",
     "previousMonth": "Prejšnji mesec",
     "nextMonth": "Naslednji mesec",
-    "multiDay_one": "{{count}} dni",
+    "multiDay_one": "{{count}} dan",
+    "multiDay_two": "{{count}} dneva",
+    "multiDay_few": "{{count}} dni",
     "multiDay_other": "{{count}} dni",
     "agendaEmpty": "Nič načrtovanega",
-    "agenda": "Dnevni red",
+    "agenda": "Razpored",
     "options": {
       "showFocus": "Pokaži seje osredotočenosti",
       "holidays": "Prazniki",
@@ -1791,7 +1797,7 @@
       "showMiniCalendar": "Pokaži mini koledar",
       "multiDayCount": "Dnevi v večdnevnem pogledu",
       "title": "Možnosti pogleda",
-      "showCompleted": "Pokaži dokončana",
+      "showCompleted": "Pokaži dokončane",
       "showWeekends": "Pokaži vikende",
       "showRepeats": "Pokaži vse ponovitve",
       "colorBy": "Barva po",
@@ -1802,17 +1808,17 @@
       "saveError": "Možnosti ni bilo mogoče shraniti"
     },
     "arrange": {
-      "title": "Razporedi opravila",
+      "title": "Razporedi naloge",
       "noDate": "Brez datuma",
-      "overdue": "Zapadla",
+      "overdue": "Zapadle",
       "filterProject": "Projekt",
       "filterTag": "Oznaka",
       "filterPriority": "Prioriteta",
-      "emptyNoDate": "Ni opravil brez datuma za razporeditev",
-      "emptyOverdue": "Ni zapadlih opravil za razporeditev",
+      "emptyNoDate": "Ni nalog brez datuma za razporeditev",
+      "emptyOverdue": "Ni zapadlih nalog za razporeditev",
       "noProject": "Brez projekta"
     },
-    "resizeTask": "Spremeni, kdaj se opravilo konča",
+    "resizeTask": "Spremeni, kdaj se naloga konča",
     "month": "Mesec",
     "week": "Teden",
     "day": "Dan",
@@ -3554,7 +3560,7 @@
     "from": "Od",
     "to": "Do",
     "groupBy": "Združi po",
-    "includeOpen": "Vključi odprta opravila z rokom v tem obdobju",
+    "includeOpen": "Vključi odprte naloge z rokom v tem obdobju",
     "saveTemplate": "Shrani kot predlogo",
     "templateSaved": "Predloga shranjena",
     "templateFailed": "Predloge ni bilo mogoče shraniti",
@@ -3567,7 +3573,7 @@
     "copyFailed": "Kopiranje v odložišče ni uspelo",
     "exportTitle": "Povzetek {{start}} – {{end}}",
     "counts": "Dokončano: {{completed}}, odprto: {{open}}",
-    "empty": "V tem obdobju ni opravil.",
+    "empty": "V tem obdobju ni nalog.",
     "noProject": "Brez projekta",
     "noDate": "Brez datuma",
     "periods": {
@@ -3592,7 +3598,7 @@
       "cancelled": "Preklicano"
     },
     "csv": {
-      "name": "Opravilo",
+      "name": "Naloga",
       "status": "Stanje",
       "project": "Projekt",
       "completed": "Dokončano",
@@ -3603,7 +3609,7 @@
   "projectBoard": {
     "title": "Tabla",
     "unsectioned": "Brez razdelka",
-    "empty": "Ni opravil",
+    "empty": "Ni nalog",
     "addColumn": "Dodaj stolpec",
     "addLeft": "Dodaj stolpec levo",
     "addRight": "Dodaj stolpec desno",
@@ -3612,7 +3618,7 @@
     "rename": "Preimenuj",
     "delete": "Izbriši",
     "deleteTitle": "Izbriši stolpec",
-    "deleteMessage": "Izbrišem »{{name}}«? Njegova opravila gredo v Brez razdelka.",
+    "deleteMessage": "Izbrišem »{{name}}«? Njegove naloge gredo v Brez razdelka.",
     "columnName": "Ime stolpca",
     "columnActions": "Dejanja stolpca",
     "newColumn": "Nov stolpec",

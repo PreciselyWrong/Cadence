@@ -2032,7 +2032,7 @@
     "print": "Print",
     "year": "Year",
     "weekNumber": "W{{week}}",
-    "yearItems_one": "{{date}}: {{count}} items",
+    "yearItems_one": "{{date}}: {{count}} item",
     "yearItems_other": "{{date}}: {{count}} items",
     "miniCalendar": "Mini calendar",
     "previousMonth": "Previous month",

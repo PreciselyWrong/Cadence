@@ -2,9 +2,10 @@
   "focusStats": {
     "title": "Foco",
     "lastDays_one": "{{count}} dia",
+    "lastDays_many": "{{count}} dias",
     "lastDays_other": "{{count}} dias",
     "error": "Não foi possível carregar as estatísticas de foco",
-    "empty": "Ainda não há sessões de foco. Inicie o tomate na barra superior; as sessões concluídas são contadas aqui.",
+    "empty": "Ainda não há sessões de foco. Inicie o cronômetro Pomodoro na barra superior; as sessões concluídas são contadas aqui.",
     "total": "Tempo de foco",
     "sessions": "Sessões",
     "bestHour": "Hora de maior foco",
@@ -267,10 +268,10 @@
         "deleteTitle": "Excluir matriz",
         "deleteConfirm": "Excluir a matriz \"{{name}}\"? Suas tarefas não mudam."
       },
-      "dropRefusedPriority": "Este quadrante aceita várias prioridades, por isso a tarefa não pode ser arrastada para aqui.",
+      "dropRefusedPriority": "Este quadrante aceita várias prioridades, por isso a tarefa não pode ser arrastada para cá.",
       "dropRefusedDue": "O prazo da tarefa não se encaixa neste quadrante; altere a data.",
       "dropRefusedProject": "O projeto da tarefa não se encaixa neste quadrante.",
-      "dropRefusedEarlier": "Após a alteração, a tarefa continuaria a cair num quadrante anterior."
+      "dropRefusedEarlier": "Após a alteração, a tarefa continuaria caindo em um quadrante anterior."
     },
     "kanban": {
       "title": "Quadro Kanban",
@@ -1716,7 +1717,7 @@
     "frequentlyUsed": "Usadas com frequência",
     "createTag": "+ Criar \"{{name}}\"",
     "pinTag": "Fixar para acesso rápido",
-    "parentTag": "Etiqueta principal",
+    "parentTag": "Etiqueta pai",
     "noParent": "Nenhuma (nível superior)",
     "parentTagHasChildren": "Esta etiqueta tem etiquetas filhas, por isso não pode ficar sob outra etiqueta.",
     "showChildTags": "Mostrar etiquetas filhas",
@@ -1769,12 +1770,14 @@
     "print": "Imprimir",
     "year": "Ano",
     "weekNumber": "S{{week}}",
-    "yearItems_one": "{{date}}: {{count}} itens",
+    "yearItems_one": "{{date}}: {{count}} item",
+    "yearItems_many": "{{date}}: {{count}} itens",
     "yearItems_other": "{{date}}: {{count}} itens",
     "miniCalendar": "Minicalendário",
     "previousMonth": "Mês anterior",
     "nextMonth": "Próximo mês",
     "multiDay_one": "{{count}} dias",
+    "multiDay_many": "{{count}} dias",
     "multiDay_other": "{{count}} dias",
     "agendaEmpty": "Nada agendado",
     "agenda": "Agenda",
@@ -1787,7 +1790,7 @@
       "showHabits": "Mostrar hábitos",
       "showWeekNumbers": "Mostrar números da semana",
       "showMiniCalendar": "Mostrar minicalendário",
-      "multiDayCount": "Dias na vista de vários dias",
+      "multiDayCount": "Dias na visualização de vários dias",
       "title": "Opções de visualização",
       "showCompleted": "Mostrar concluídas",
       "showWeekends": "Mostrar fins de semana",
@@ -1806,8 +1809,8 @@
       "filterProject": "Projeto",
       "filterTag": "Etiqueta",
       "filterPriority": "Prioridade",
-      "emptyNoDate": "Sem tarefas sem data para agendar",
-      "emptyOverdue": "Sem tarefas atrasadas para agendar",
+      "emptyNoDate": "Nenhuma tarefa sem data para agendar",
+      "emptyOverdue": "Nenhuma tarefa atrasada para agendar",
       "noProject": "Sem projeto"
     },
     "resizeTask": "Alterar quando esta tarefa termina",
@@ -3594,7 +3597,7 @@
   },
   "projectBoard": {
     "title": "Quadro",
-    "unsectioned": "Sem secção",
+    "unsectioned": "Sem seção",
     "empty": "Sem tarefas",
     "addColumn": "Adicionar coluna",
     "addLeft": "Adicionar coluna à esquerda",
@@ -3602,13 +3605,13 @@
     "moveLeft": "Mover para a esquerda",
     "moveRight": "Mover para a direita",
     "rename": "Renomear",
-    "delete": "Eliminar",
-    "deleteTitle": "Eliminar coluna",
-    "deleteMessage": "Eliminar \"{{name}}\"? As tarefas passam para Sem secção.",
+    "delete": "Excluir",
+    "deleteTitle": "Excluir coluna",
+    "deleteMessage": "Excluir \"{{name}}\"? As tarefas passam para Sem seção.",
     "columnName": "Nome da coluna",
     "columnActions": "Ações da coluna",
     "newColumn": "Nova coluna",
     "loadError": "Não foi possível carregar as colunas",
-    "saveError": "Não foi possível guardar o quadro"
+    "saveError": "Não foi possível salvar o quadro"
   }
 }

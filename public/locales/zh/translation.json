@@ -9,7 +9,7 @@
     "sessions": "次数",
     "bestHour": "最专注的时段",
     "perDay": "每天分钟数",
-    "perHour": "按小时分钟数",
+    "perHour": "各时段分钟数",
     "topTasks": "专注最多的任务"
   },
   "common": {

@@ -2,9 +2,11 @@
     "focusStats": {
         "title": "Sústredenie",
         "lastDays_one": "{{count}} deň",
+        "lastDays_few": "{{count}} dni",
+        "lastDays_many": "{{count}} dňa",
         "lastDays_other": "{{count}} dní",
         "error": "Štatistiky sústredenia sa nepodarilo načítať",
-        "empty": "Zatiaľ žiadne sedenia. Spustite paradajku v hornej lište; dokončené sedenia sa počítajú tu.",
+        "empty": "Zatiaľ žiadne sedenia sústredenia. Spustite časovač Pomodoro v hornej lište; dokončené sedenia sa počítajú tu.",
         "total": "Čas sústredenia",
         "sessions": "Sedenia",
         "bestHour": "Najsústredenejšia hodina",
@@ -1939,12 +1941,16 @@
         "print": "Tlačiť",
         "year": "Rok",
         "weekNumber": "T{{week}}",
-        "yearItems_one": "{{date}}: {{count}} položiek",
+        "yearItems_one": "{{date}}: {{count}} položka",
+        "yearItems_few": "{{date}}: {{count}} položky",
+        "yearItems_many": "{{date}}: {{count}} položky",
         "yearItems_other": "{{date}}: {{count}} položiek",
         "miniCalendar": "Minikalendár",
         "previousMonth": "Predchádzajúci mesiac",
         "nextMonth": "Nasledujúci mesiac",
-        "multiDay_one": "{{count}} dní",
+        "multiDay_one": "{{count}} deň",
+        "multiDay_few": "{{count}} dni",
+        "multiDay_many": "{{count}} dňa",
         "multiDay_other": "{{count}} dní",
         "agendaEmpty": "Nič naplánované",
         "agenda": "Agenda",
@@ -3616,7 +3622,7 @@
         }
     },
     "projectBoard": {
-        "title": "Nástenka",
+        "title": "Tabuľa",
         "unsectioned": "Bez sekcie",
         "empty": "Žiadne úlohy",
         "addColumn": "Pridať stĺpec",
@@ -3632,6 +3638,6 @@
         "columnActions": "Akcie stĺpca",
         "newColumn": "Nový stĺpec",
         "loadError": "Stĺpce sa nepodarilo načítať",
-        "saveError": "Nástenku sa nepodarilo uložiť"
+        "saveError": "Tabuľu sa nepodarilo uložiť"
     }
 }

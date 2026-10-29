@@ -4,7 +4,7 @@
     "lastDays_one": "{{count}} dag",
     "lastDays_other": "{{count}} dagar",
     "error": "Kunde inte läsa in fokusstatistik",
-    "empty": "Inga fokuspass än. Starta tomaten i toppfältet; avslutade pass räknas här.",
+    "empty": "Inga fokuspass än. Starta Pomodoro-timern i toppfältet; avslutade pass räknas här.",
     "total": "Fokustid",
     "sessions": "Pass",
     "bestHour": "Mest fokuserade timme",
@@ -255,7 +255,7 @@
         "due": "Förfallodatum",
         "dueType": {
           "any": "Alla",
-          "overdue": "Försenade",
+          "overdue": "Förfallna",
           "today": "Idag",
           "within": "Inom N dagar",
           "none": "Inget datum"
@@ -1800,12 +1800,12 @@
     "arrange": {
       "title": "Planera uppgifter",
       "noDate": "Inget datum",
-      "overdue": "Försenade",
+      "overdue": "Förfallna",
       "filterProject": "Projekt",
       "filterTag": "Tagg",
       "filterPriority": "Prioritet",
       "emptyNoDate": "Inga uppgifter utan datum att planera",
-      "emptyOverdue": "Inga försenade uppgifter att planera",
+      "emptyOverdue": "Inga förfallna uppgifter att planera",
       "noProject": "Inget projekt"
     },
     "resizeTask": "Ändra när uppgiften slutar",
