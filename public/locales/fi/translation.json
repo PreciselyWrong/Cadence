@@ -286,7 +286,11 @@
     "habit": "Tapa",
     "assignedTo": "Osoitettu",
     "subtasks": "Ala-tehtävät",
-    "openFullPage": "Avaa koko näkymä"
+    "openFullPage": "Avaa koko näkymä",
+    "quickEdit": {
+      "setPriority": "Aseta prioriteetti",
+      "setDueDate": "Aseta eräpäivä"
+    }
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",

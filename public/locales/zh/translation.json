@@ -286,7 +286,11 @@
     "habit": "习惯",
     "assignedTo": "分配给",
     "subtasks": "子任务",
-    "openFullPage": "打开完整视图"
+    "openFullPage": "打开完整视图",
+    "quickEdit": {
+      "setPriority": "设置优先级",
+      "setDueDate": "设置截止日期"
+    }
   },
   "timeline": {
     "activityTimeline": "活动时间线",

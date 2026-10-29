@@ -3,12 +3,33 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskRowCollapsed from '../TaskRow/TaskRowCollapsed';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
-import { getTodayDateString } from '../../../utils/dateUtils';
+import {
+    getTodayDateString,
+    getTomorrowDateString,
+} from '../../../utils/dateUtils';
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
+import * as tasksService from '../../../utils/tasksService';
 
 jest.mock('../../../hooks/useUiDensity', () => ({
     useIsMinimal: jest.fn(),
+}));
+
+jest.mock('../../../utils/tasksService', () => ({
+    updateTask: jest.fn(),
+}));
+
+jest.mock('../../Shared/ToastContext', () => ({
+    useToast: () => ({
+        showSuccessToast: jest.fn(),
+        showErrorToast: jest.fn(),
+        showUndoToast: jest.fn(),
+    }),
+}));
+
+jest.mock('../../../utils/profileService', () => ({
+    getFirstDayOfWeek: jest.fn().mockResolvedValue(1),
+    getLocaleFirstDayOfWeek: jest.fn().mockReturnValue(1),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -134,6 +155,59 @@ describe('TaskRowCollapsed in dense mode', () => {
         expect(screen.getByText('High')).toBeInTheDocument();
         expect(
             screen.queryByTestId('task-row-minimal-line')
+        ).not.toBeInTheDocument();
+    });
+});
+
+describe('TaskRowCollapsed quick edits in minimal mode', () => {
+    const renderEditable = (task: Task) => {
+        const onActivate = jest.fn();
+        const onFieldUpdate = jest.fn().mockResolvedValue(undefined);
+        renderRow(task, { onActivate, onFieldUpdate });
+        return { onActivate, onFieldUpdate };
+    };
+
+    beforeEach(() => {
+        (useIsMinimal as jest.Mock).mockReturnValue(true);
+        (tasksService.updateTask as jest.Mock).mockReset();
+        (tasksService.updateTask as jest.Mock).mockResolvedValue({});
+    });
+
+    it('opens the priority menu and saves High once without expanding the row', async () => {
+        const { onActivate } = renderEditable(baseTask({ priority: null }));
+
+        fireEvent.click(screen.getByRole('button', { name: 'Set priority' }));
+        fireEvent.click(await screen.findByTestId('priority-option-high'));
+
+        expect(tasksService.updateTask).toHaveBeenCalledTimes(1);
+        expect(tasksService.updateTask).toHaveBeenCalledWith('task-1', {
+            priority: 'high',
+        });
+        expect(onActivate).not.toHaveBeenCalled();
+    });
+
+    it('opens the date picker and saves Tomorrow without expanding the row', async () => {
+        const { onActivate } = renderEditable(baseTask({ due_date: null }));
+
+        fireEvent.click(screen.getByRole('button', { name: 'Set due date' }));
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Tomorrow' })
+        );
+
+        expect(tasksService.updateTask).toHaveBeenCalledTimes(1);
+        expect(tasksService.updateTask).toHaveBeenCalledWith(
+            'task-1',
+            expect.objectContaining({ due_date: getTomorrowDateString() })
+        );
+        expect(onActivate).not.toHaveBeenCalled();
+    });
+
+    it('shows no priority flag in dense mode', () => {
+        (useIsMinimal as jest.Mock).mockReturnValue(false);
+        renderEditable(baseTask({ priority: 'high' }));
+
+        expect(
+            screen.queryByRole('button', { name: 'Set priority' })
         ).not.toBeInTheDocument();
     });
 });

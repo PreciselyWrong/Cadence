@@ -963,7 +963,11 @@
     "habit": "Συνήθεια",
     "assignedTo": "Ανατεθειμένο σε",
     "subtasks": "Υποκαθήκοντα",
-    "openFullPage": "Άνοιγμα πλήρους προβολής"
+    "openFullPage": "Άνοιγμα πλήρους προβολής",
+    "quickEdit": {
+      "setPriority": "Ορισμός προτεραιότητας",
+      "setDueDate": "Ορισμός ημερομηνίας λήξης"
+    }
   },
   "timeline": {
     "activityTimeline": "Χρονοδιάγραμμα Δραστηριότητας",

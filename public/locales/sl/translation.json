@@ -288,7 +288,11 @@
     "habit": "Navada",
     "assignedTo": "Dodeljeno",
     "subtasks": "Podnaloge",
-    "openFullPage": "Odpri celoten pogled"
+    "openFullPage": "Odpri celoten pogled",
+    "quickEdit": {
+      "setPriority": "Nastavi prioriteto",
+      "setDueDate": "Nastavi rok"
+    }
   },
   "timeline": {
     "activityTimeline": "Časovnica aktivnosti",

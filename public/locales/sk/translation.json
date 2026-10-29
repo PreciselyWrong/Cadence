@@ -287,7 +287,11 @@
         "habit": "Návyk",
         "assignedTo": "Priradené",
         "subtasks": "Podúlohy",
-        "openFullPage": "Otvoriť celé zobrazenie"
+        "openFullPage": "Otvoriť celé zobrazenie",
+        "quickEdit": {
+            "setPriority": "Nastaviť prioritu",
+            "setDueDate": "Nastaviť termín"
+        }
     },
     "comments": {
         "count": "Komentáre: {{count}}",

@@ -286,7 +286,11 @@
     "habit": "Alışkanlık",
     "assignedTo": "Atanan",
     "subtasks": "Alt görevler",
-    "openFullPage": "Tam görünümü aç"
+    "openFullPage": "Tam görünümü aç",
+    "quickEdit": {
+      "setPriority": "Öncelik ayarla",
+      "setDueDate": "Bitiş tarihi ayarla"
+    }
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",

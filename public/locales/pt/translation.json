@@ -287,7 +287,11 @@
     "habit": "Hábito",
     "assignedTo": "Atribuído a",
     "subtasks": "Subtarefas",
-    "openFullPage": "Abrir visualização completa"
+    "openFullPage": "Abrir visualização completa",
+    "quickEdit": {
+      "setPriority": "Definir prioridade",
+      "setDueDate": "Definir data de vencimento"
+    }
   },
   "timeline": {
     "activityTimeline": "Linha do Tempo de Atividades",

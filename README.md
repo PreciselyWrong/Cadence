@@ -71,7 +71,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | | Upstream | This fork |
 |---|---|---|
 | Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
-| Round check | Checkbox and status menu on each row | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. In Minimal, rows are one line. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md) |
+| Round check | Checkbox and status menu on each row | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. In Minimal, rows are one line with a priority flag and due date you can set in place. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md) |
 | Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
 | Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit |
 | Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit |

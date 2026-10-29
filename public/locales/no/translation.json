@@ -287,7 +287,11 @@
     "habit": "Vane",
     "assignedTo": "Tildelt til",
     "subtasks": "Undertasker",
-    "openFullPage": "Åpne full visning"
+    "openFullPage": "Åpne full visning",
+    "quickEdit": {
+      "setPriority": "Sett prioritet",
+      "setDueDate": "Sett forfallsdato"
+    }
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",

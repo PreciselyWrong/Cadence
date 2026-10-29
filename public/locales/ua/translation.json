@@ -288,7 +288,11 @@
     "habit": "Звичка",
     "assignedTo": "Призначено",
     "subtasks": "Підзадачі",
-    "openFullPage": "Відкрити повний перегляд"
+    "openFullPage": "Відкрити повний перегляд",
+    "quickEdit": {
+      "setPriority": "Встановити пріоритет",
+      "setDueDate": "Встановити термін"
+    }
   },
   "timeline": {
     "activityTimeline": "Хронологія Активності",

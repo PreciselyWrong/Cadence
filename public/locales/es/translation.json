@@ -964,7 +964,11 @@
     "habit": "Hábito",
     "assignedTo": "Asignado a",
     "subtasks": "Subtareas",
-    "openFullPage": "Abrir vista completa"
+    "openFullPage": "Abrir vista completa",
+    "quickEdit": {
+      "setPriority": "Establecer prioridad",
+      "setDueDate": "Establecer fecha límite"
+    }
   },
   "timeline": {
     "activityTimeline": "Línea de Tiempo de Actividad",

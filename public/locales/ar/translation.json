@@ -290,7 +290,11 @@
     "habit": "عادة",
     "assignedTo": "مخصص لـ",
     "subtasks": "المهام الفرعية",
-    "openFullPage": "فتح العرض الكامل"
+    "openFullPage": "فتح العرض الكامل",
+    "quickEdit": {
+      "setPriority": "تحديد الأولوية",
+      "setDueDate": "تحديد تاريخ الاستحقاق"
+    }
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",

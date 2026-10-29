@@ -288,7 +288,11 @@
     "habit": "Nawyk",
     "assignedTo": "Przypisane do",
     "subtasks": "Podzadania",
-    "openFullPage": "Otwórz pełny widok"
+    "openFullPage": "Otwórz pełny widok",
+    "quickEdit": {
+      "setPriority": "Ustaw priorytet",
+      "setDueDate": "Ustaw termin"
+    }
   },
   "timeline": {
     "activityTimeline": "Oś czasu aktywności",

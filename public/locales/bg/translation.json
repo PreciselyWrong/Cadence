@@ -286,7 +286,11 @@
     "habit": "Навик",
     "assignedTo": "Назначено на",
     "subtasks": "Подзадачи",
-    "openFullPage": "Отвори пълен изглед"
+    "openFullPage": "Отвори пълен изглед",
+    "quickEdit": {
+      "setPriority": "Задай приоритет",
+      "setDueDate": "Задай срок"
+    }
   },
   "timeline": {
     "activityTimeline": "Хронология на активността",

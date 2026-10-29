@@ -286,7 +286,11 @@
     "habit": "Vana",
     "assignedTo": "Tilldelat till",
     "subtasks": "Deluppgifter",
-    "openFullPage": "Öppna fullständig vy"
+    "openFullPage": "Öppna fullständig vy",
+    "quickEdit": {
+      "setPriority": "Ange prioritet",
+      "setDueDate": "Ange förfallodatum"
+    }
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",

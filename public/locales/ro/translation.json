@@ -287,7 +287,11 @@
     "habit": "Obicei",
     "assignedTo": "Atribuit lui",
     "subtasks": "Subtask-uri",
-    "openFullPage": "Deschide vizualizarea completă"
+    "openFullPage": "Deschide vizualizarea completă",
+    "quickEdit": {
+      "setPriority": "Setează prioritatea",
+      "setDueDate": "Setează data scadentă"
+    }
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",

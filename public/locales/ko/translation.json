@@ -286,7 +286,11 @@
     "habit": "습관",
     "assignedTo": "할당됨",
     "subtasks": "하위 작업",
-    "openFullPage": "전체 보기 열기"
+    "openFullPage": "전체 보기 열기",
+    "quickEdit": {
+      "setPriority": "우선순위 설정",
+      "setDueDate": "마감일 설정"
+    }
   },
   "timeline": {
     "activityTimeline": "활동 타임라인",

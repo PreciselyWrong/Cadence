@@ -32,6 +32,7 @@ import {
 } from '../../../utils/dateUtils';
 import TaskStatusControl from '../TaskStatusControl';
 import TaskCheckCircle from '../TaskCheckCircle';
+import MinimalQuickEdits from './MinimalQuickEdits';
 import QuickCaptureInput, {
     QuickCaptureInputHandle,
 } from '../../Inbox/QuickCaptureInput';
@@ -52,6 +53,9 @@ interface TaskRowCollapsedProps {
     onActivate: (e: React.MouseEvent | React.KeyboardEvent) => void;
     onToggleCompletion?: () => void;
     onTaskUpdate?: (task: Task) => Promise<void>;
+    // Saves a field edit (priority, due date) made from the minimal row.
+    // Without it the row shows no quick-edit controls.
+    onFieldUpdate?: (task: Task) => Promise<void>;
     onMenuOpenChange?: (open: boolean) => void;
     hasSubtasks?: boolean;
     showSubtasks?: boolean;
@@ -111,6 +115,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     onActivate,
     onToggleCompletion,
     onTaskUpdate,
+    onFieldUpdate,
     onMenuOpenChange,
     hasSubtasks,
     showSubtasks,
@@ -492,13 +497,33 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                 {project!.name}
                             </Link>
                         )}
-                        {!compact && task.due_date && (
-                            <span className={`whitespace-nowrap ${dueClass}`}>
-                                {formatDue(task.due_date)}
-                                {task.due_has_time &&
-                                    task.due_time &&
-                                    ` ${task.due_time}`}
-                            </span>
+                        {!compact &&
+                            task.due_date &&
+                            !(onFieldUpdate && !editable) && (
+                                <span
+                                    className={`whitespace-nowrap ${dueClass}`}
+                                >
+                                    {formatDue(task.due_date)}
+                                    {task.due_has_time &&
+                                        task.due_time &&
+                                        ` ${task.due_time}`}
+                                </span>
+                            )}
+                        {!compact && onFieldUpdate && !editable && (
+                            <MinimalQuickEdits
+                                task={task}
+                                onFieldUpdate={onFieldUpdate}
+                                dueClass={dueClass}
+                                dueText={
+                                    task.due_date
+                                        ? `${formatDue(task.due_date)}${
+                                              task.due_has_time && task.due_time
+                                                  ? ` ${task.due_time}`
+                                                  : ''
+                                          }`
+                                        : null
+                                }
+                            />
                         )}
                     </div>
                 )}

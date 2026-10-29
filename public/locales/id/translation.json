@@ -286,7 +286,11 @@
     "habit": "Kebiasaan",
     "assignedTo": "Ditetapkan untuk",
     "subtasks": "Subtugas",
-    "openFullPage": "Buka tampilan penuh"
+    "openFullPage": "Buka tampilan penuh",
+    "quickEdit": {
+      "setPriority": "Atur prioritas",
+      "setDueDate": "Atur tanggal jatuh tempo"
+    }
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",

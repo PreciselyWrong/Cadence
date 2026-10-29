@@ -286,7 +286,11 @@
     "habit": "Gewoonte",
     "assignedTo": "Toegewezen aan",
     "subtasks": "Subtaken",
-    "openFullPage": "Volledige weergave openen"
+    "openFullPage": "Volledige weergave openen",
+    "quickEdit": {
+      "setPriority": "Prioriteit instellen",
+      "setDueDate": "Vervaldatum instellen"
+    }
   },
   "timeline": {
     "activityTimeline": "Activiteit Tijdlijn",

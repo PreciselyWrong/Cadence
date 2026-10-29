@@ -286,7 +286,11 @@
     "habit": "Habit",
     "assignedTo": "Assigned to",
     "subtasks": "Subtasks",
-    "openFullPage": "Open full view"
+    "openFullPage": "Open full view",
+    "quickEdit": {
+      "setPriority": "Set priority",
+      "setDueDate": "Set due date"
+    }
   },
   "comments": {
     "count": "{{count}} comments",

@@ -286,7 +286,11 @@
     "habit": "Thói quen",
     "assignedTo": "Giao cho",
     "subtasks": "Công việc con",
-    "openFullPage": "Mở chế độ xem đầy đủ"
+    "openFullPage": "Mở chế độ xem đầy đủ",
+    "quickEdit": {
+      "setPriority": "Đặt độ ưu tiên",
+      "setDueDate": "Đặt ngày đến hạn"
+    }
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",

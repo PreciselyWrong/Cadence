@@ -451,6 +451,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     onActivate={handleActivate}
                     onToggleCompletion={handleToggleCompletion}
                     onTaskUpdate={handleStatusUpdate}
+                    onFieldUpdate={onTaskUpdate}
                     onMenuOpenChange={setIsStatusMenuOpen}
                     hasSubtasks={shouldShowSubtasksIcon}
                     showSubtasks={showSubtasks}
