@@ -206,6 +206,7 @@ async function exportOwnData(userId) {
         data.tag_uids = (project.Tags || []).map((t) => t.uid);
         data.area_uid = areaUid[data.area_id] || null;
         data.goal_uid = goalUid[data.goal_id] || null;
+        data.parent_project_uid = projectUid[data.parent_project_id] || null;
         data.cover_image = await readUploadedImage(
             project.image_url,
             'projects'
@@ -515,6 +516,20 @@ const IMPORT_STAT_KEYS = [
     'views',
 ];
 
+// True when following parent links from uid comes back to uid. The backup's
+// own links are checked, so a looped backup is refused before anything saves.
+function projectChainLoops(uid, parentByUid) {
+    const seen = new Set();
+    let current = parentByUid.get(uid);
+    while (current) {
+        if (current === uid) return true;
+        if (seen.has(current)) return false;
+        seen.add(current);
+        current = parentByUid.get(current);
+    }
+    return false;
+}
+
 // Imports one account's own records. ctx is shared across the accounts of
 // an instance restore: userIdByUid resolves member links and personUids maps a
 // backup's person uid to the restored one for assignments across accounts.
@@ -787,6 +802,9 @@ async function importOwnData(
                   null
                 : null;
 
+        // Parents are linked after every project row exists, because a
+        // backup may list a sub-project before its parent.
+        const subProjectLinks = [];
         for (const project of d.projects || []) {
             const { row, created } = await upsertByUid(
                 Project,
@@ -854,6 +872,28 @@ async function importOwnData(
                     .filter(Boolean);
                 if (tagIds.length) await row.setTags(tagIds, { transaction });
             }
+            if (created && project.parent_project_uid) {
+                subProjectLinks.push({
+                    row,
+                    uid: project.uid,
+                    parentUid: project.parent_project_uid,
+                });
+            }
+        }
+
+        const parentByUid = new Map(
+            (d.projects || []).map((p) => [p.uid, p.parent_project_uid])
+        );
+        for (const link of subProjectLinks) {
+            const parentId = uidMaps.projects[link.parentUid];
+            if (!parentId) continue;
+            if (projectChainLoops(link.uid, parentByUid)) {
+                throw new Error('Backup sub-project links form a loop');
+            }
+            await link.row.update(
+                { parent_project_id: parentId },
+                { transaction }
+            );
         }
 
         const createdTasks = new Map();

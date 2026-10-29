@@ -42,6 +42,12 @@ class ProjectsRepository extends BaseRepository {
             where: whereClause,
             include: [
                 {
+                    model: Project,
+                    as: 'ParentProject',
+                    required: false,
+                    attributes: ['uid'],
+                },
+                {
                     model: Task,
                     required: false,
                     attributes: ['id', 'status'],
@@ -117,6 +123,12 @@ class ProjectsRepository extends BaseRepository {
         return this.model.findOne({
             where: { uid },
             include: [
+                {
+                    model: Project,
+                    as: 'ParentProject',
+                    required: false,
+                    attributes: ['uid'],
+                },
                 {
                     model: Task,
                     required: false,
@@ -206,6 +218,12 @@ class ProjectsRepository extends BaseRepository {
         return this.model.findOne({
             where: { uid },
             include: [
+                {
+                    model: Project,
+                    as: 'ParentProject',
+                    required: false,
+                    attributes: ['uid'],
+                },
                 {
                     model: Tag,
                     attributes: ['id', 'name', 'uid', 'color'],
@@ -354,6 +372,15 @@ class ProjectsRepository extends BaseRepository {
             where: { project_id: project.id, user_id: userId },
             transaction,
         });
+
+        // Sub-projects become top-level projects
+        await Project.update(
+            { parent_project_id: null },
+            {
+                where: { parent_project_id: project.id, user_id: userId },
+                transaction,
+            }
+        );
 
         // Orphan notes (they are reference material and may be useful without the project)
         await Note.update(

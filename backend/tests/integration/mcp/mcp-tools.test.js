@@ -2561,6 +2561,33 @@ describe('MCP Tools Integration', () => {
         });
 
         describe('create_project', () => {
+            it('should create a sub-project in its parent project area', async () => {
+                const area = await Area.create({
+                    name: 'MCP Hierarchy Area',
+                    user_id: user.id,
+                });
+                const parent = await Project.create({
+                    name: 'MCP Parent',
+                    user_id: user.id,
+                    area_id: area.id,
+                });
+
+                const response = await callMcpTool(
+                    apiTokenValue,
+                    'create_project',
+                    {
+                        name: 'MCP Child',
+                        parent_project_uid: parent.uid,
+                    }
+                );
+
+                expect(response.status).toBe(200);
+                const { content, isError } = getToolContent(response);
+                expect(isError).toBe(false);
+                expect(content.project.parent_project_uid).toBe(parent.uid);
+                expect(content.project.area).toBe('MCP Hierarchy Area');
+            });
+
             it('should create a project with required fields', async () => {
                 const response = await callMcpTool(
                     apiTokenValue,

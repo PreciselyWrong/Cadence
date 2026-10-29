@@ -529,4 +529,47 @@ describe('Backup export and import round trip (format 2)', () => {
         );
         expect(content).toBe('note bytes');
     });
+
+    it('carries sub-project links through and sets each parent after all projects exist', async () => {
+        const child = await Project.create({
+            name: 'Sub launch',
+            user_id: source.id,
+            area_id: seeded.area.id,
+            parent_project_id: seeded.project.id,
+        });
+        const grandchild = await Project.create({
+            name: 'Sub sub launch',
+            user_id: source.id,
+            area_id: seeded.area.id,
+            parent_project_id: child.id,
+        });
+
+        const backup = await exportUserData(source.id);
+        const exported = backup.data.projects.find(
+            (p) => p.uid === grandchild.uid
+        );
+        expect(exported.parent_project_uid).toBe(child.uid);
+        expect(
+            backup.data.projects.find((p) => p.uid === seeded.project.uid)
+                .parent_project_uid
+        ).toBeNull();
+
+        // The child is listed before its parent in the backup, so the parent
+        // link can only be set once every project row exists.
+        backup.data.projects.reverse();
+        await importUserData(target.id, backup);
+
+        const importedChild = await Project.findOne({
+            where: { user_id: target.id, name: 'Sub launch' },
+        });
+        const importedParent = await Project.findOne({
+            where: { user_id: target.id, name: 'Launch' },
+        });
+        const importedGrandchild = await Project.findOne({
+            where: { user_id: target.id, name: 'Sub sub launch' },
+        });
+        expect(importedChild.parent_project_id).toBe(importedParent.id);
+        expect(importedGrandchild.parent_project_id).toBe(importedChild.id);
+        expect(importedParent.parent_project_id).toBeNull();
+    });
 });

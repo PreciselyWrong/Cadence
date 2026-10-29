@@ -108,6 +108,16 @@ module.exports = (sequelize) => {
                 allowNull: false,
                 defaultValue: false,
             },
+            // A sub-project's parent. Its area follows the parent's (see
+            // projects/hierarchy.js).
+            parent_project_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'projects',
+                    key: 'id',
+                },
+            },
             // 'area' lets the project's area and goal shares reach it;
             // 'restricted' keeps it to its owner, the area owner and people
             // added to the project itself.

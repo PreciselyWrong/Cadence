@@ -33,6 +33,12 @@ const {
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
 const { Project, Area } = require('../../models');
+const {
+    resolveParent,
+    resolveParentChange,
+    areaFollowingParent,
+    cascadeArea,
+} = require('./hierarchy');
 
 const PRIORITY_VALUES = { low: 0, medium: 1, high: 2 };
 
@@ -59,6 +65,30 @@ function validateVisibility(visibility) {
         );
     }
     return visibility;
+}
+
+// The API speaks in parent_project_uid; the row keeps parent_project_id.
+// Strips the included ParentProject so only the uid is sent.
+function withParentUid(projectJson) {
+    const { ParentProject, ...rest } = projectJson;
+    return { ...rest, parent_project_uid: ParentProject?.uid ?? null };
+}
+
+// A parent's area moved: its sub-projects, at any depth, move with it, and
+// each one re-syncs the shares it gets from its new area.
+async function cascadeAreaToDescendants(projectId, areaId) {
+    const rows = await cascadeArea(projectId, areaId);
+    for (const row of rows) {
+        await syncContainerShares(
+            row.id,
+            {
+                area_id: row.area_id,
+                goal_id: row.goal_id,
+                visibility: row.visibility,
+            },
+            { area_id: areaId }
+        );
+    }
 }
 
 // Whether the user may restrict the project or open it back up to its area:
@@ -322,7 +352,7 @@ class ProjectsService {
         const enhancedProjects = projects
             .map((project) => {
                 const taskStatus = calculateTaskStatus(project.Tasks);
-                const projectJson = project.toJSON();
+                const projectJson = withParentUid(project.toJSON());
                 const shareCount = shareCountMap[project.uid] || 0;
 
                 const isOwner = project.user_id === userId;
@@ -421,7 +451,7 @@ class ProjectsService {
     /**
      * Get project by UID.
      */
-    async getByUid(uid, userTimezone) {
+    async getByUid(uid, userTimezone, userId) {
         const validatedUid = validateUid(uid);
         const project =
             await projectsRepository.findByUidWithIncludes(validatedUid);
@@ -431,7 +461,7 @@ class ProjectsService {
         }
 
         const safeTimezone = getSafeTimezone(userTimezone);
-        const projectJson = project.toJSON();
+        const projectJson = withParentUid(project.toJSON());
 
         // Same blocked flags the task serializer adds, so the "Blocked" badge
         // on the project page comes from the server and survives a reload.
@@ -489,11 +519,25 @@ class ProjectsService {
             ? await projectsRepository.getSharedProjectUids([project.uid])
             : new Set();
 
+        // Direct children only, and only the ones this user can see.
+        const visibleWhere =
+            await permissionsService.ownershipOrPermissionWhere(
+                'project',
+                userId
+            );
+        const subProjects = await Project.findAll({
+            where: { ...visibleWhere, parent_project_id: project.id },
+            attributes: ['uid', 'name', 'status'],
+            order: [['name', 'ASC']],
+            raw: true,
+        });
+
         return {
             ...projectJson,
             tags: sortTags(projectJson.Tags),
             Tasks: normalizedTasks,
             Notes: normalizedNotes,
+            SubProjects: subProjects,
             due_date_at: formatDate(project.due_date_at),
             ...startFields(project, userTimezone),
             task_links: await getBlockLinks(projectJson.Tasks || []),
@@ -537,12 +581,17 @@ class ProjectsService {
         const validatedName = validateName(name);
         const tagsData = tags || Tags;
         const projectUid = generateUid();
+        const parent = data.parent_project_uid
+            ? await resolveParent(userId, data.parent_project_uid)
+            : null;
 
         const projectData = {
             uid: projectUid,
             name: validatedName,
             description: description || '',
-            area_id: area_id || null,
+            // A sub-project lives in its parent's area; any area_id sent is ignored.
+            area_id: parent ? parent.area_id : area_id || null,
+            parent_project_id: parent ? parent.id : null,
             goal_id: goal_id || null,
             is_maintenance: is_maintenance || false,
             pin_to_sidebar: false,
@@ -577,6 +626,7 @@ class ProjectsService {
         return {
             ...project.toJSON(),
             uid: projectUid,
+            parent_project_uid: parent ? parent.uid : null,
             tags: [],
             due_date_at: formatDate(project.due_date_at),
             ...startFields(project, userTimezone),
@@ -649,7 +699,26 @@ class ProjectsService {
         if (status !== undefined) updateData.status = status;
         else if (state !== undefined) updateData.status = state;
 
-        if (area_id !== undefined) {
+        const parentChange = await resolveParentChange(
+            project,
+            userId,
+            data.parent_project_uid
+        );
+        if (parentChange) {
+            updateData.parent_project_id = parentChange.parent_project_id;
+        }
+
+        const effectiveParentId =
+            parentChange !== undefined
+                ? parentChange.parent_project_id
+                : project.parent_project_id;
+        if (effectiveParentId) {
+            // A sub-project's area is its parent's; area_id sent here is ignored.
+            if (isOwner) {
+                updateData.area_id =
+                    await areaFollowingParent(effectiveParentId);
+            }
+        } else if (area_id !== undefined) {
             const resolvedAreaId = area_id === '' ? null : area_id;
             if (isOwner) {
                 // Owner controls the canonical area for all users
@@ -674,10 +743,17 @@ class ProjectsService {
             goal_id: isOwner ? updateData.goal_id : undefined,
             visibility: updateData.visibility,
         });
+        if (
+            isOwner &&
+            updateData.area_id !== undefined &&
+            updateData.area_id != before.area_id
+        ) {
+            await cascadeAreaToDescendants(project.id, updateData.area_id);
+        }
 
         const projectWithAssociations =
             await projectsRepository.findByUidWithTagsAndArea(validatedUid);
-        const projectJson = projectWithAssociations.toJSON();
+        const projectJson = withParentUid(projectWithAssociations.toJSON());
 
         return {
             ...projectJson,
@@ -735,3 +811,5 @@ module.exports.updateProjectTags = updateProjectTags;
 module.exports.validateVisibility = validateVisibility;
 module.exports.prepareVisibilityChange = prepareVisibilityChange;
 module.exports.syncContainerShares = syncContainerShares;
+module.exports.cascadeAreaToDescendants = cascadeAreaToDescendants;
+module.exports.withParentUid = withParentUid;

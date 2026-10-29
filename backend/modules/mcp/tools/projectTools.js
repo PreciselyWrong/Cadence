@@ -8,7 +8,13 @@ const {
     validateVisibility,
     prepareVisibilityChange,
     syncContainerShares,
+    cascadeAreaToDescendants,
 } = require('../../projects/service');
+const {
+    resolveParent,
+    resolveParentChange,
+    areaFollowingParent,
+} = require('../../projects/hierarchy');
 const permissionsService = require('../../../services/permissionsService');
 const rolesService = require('../../../services/rolesService');
 const {
@@ -112,10 +118,19 @@ function serializeGoal(goal) {
     return goal ? { id: goal.id, uid: goal.uid, title: goal.title } : null;
 }
 
+const parentInputProperty = {
+    parent_project_uid: {
+        type: ['string', 'null'],
+        description:
+            'UID of the parent project (makes this a sub-project). The sub-project takes the parent area and ignores area_id. Pass null to detach.',
+    },
+};
+
 const projectIncludes = [
     { model: Area, as: 'Area' },
     { model: Tag, as: 'Tags' },
     { model: Goal, as: 'Goal', attributes: ['id', 'uid', 'title'] },
+    { model: Project, as: 'ParentProject', attributes: ['uid'] },
 ];
 
 function registerProjectTools(server, context, tools) {
@@ -184,6 +199,7 @@ function registerProjectTools(server, context, tools) {
                     priority: proj.priority,
                     area: proj.Area ? proj.Area.name : null,
                     goal: serializeGoal(proj.Goal),
+                    parent_project_uid: proj.ParentProject?.uid ?? null,
                     is_maintenance: !!proj.is_maintenance,
                     visibility: proj.visibility,
                     visibility: proj.visibility,
@@ -259,6 +275,7 @@ function registerProjectTools(server, context, tools) {
                 priority: proj.priority,
                 area: proj.Area ? proj.Area.name : null,
                 goal: serializeGoal(proj.Goal),
+                parent_project_uid: proj.ParentProject?.uid ?? null,
                 is_maintenance: !!proj.is_maintenance,
                 visibility: proj.visibility,
                 tags: proj.Tags ? proj.Tags.map((t) => t.name) : [],
@@ -331,19 +348,25 @@ function registerProjectTools(server, context, tools) {
                 },
                 ...goalInputProperties,
                 ...visibilityInputProperty,
+                ...parentInputProperty,
             },
             required: ['name'],
         },
         handler: async (params) => {
             const goalId = await resolveGoalId(params, context.userId);
             assertNotGoalAndMaintenance(params, goalId);
+            const parent = params.parent_project_uid
+                ? await resolveParent(context.userId, params.parent_project_uid)
+                : null;
             const projectData = {
                 user_id: context.userId,
                 name: params.name,
                 description: params.description || '',
                 priority: params.priority !== undefined ? params.priority : 1,
                 status: params.status || 'not_started',
-                area_id: params.area_id || null,
+                // A sub-project lives in its parent's area; area_id is ignored.
+                area_id: parent ? parent.area_id : params.area_id || null,
+                parent_project_id: parent ? parent.id : null,
                 due_date_at: params.due_date_at || null,
                 image_url: params.image_url || null,
                 goal_id: goalId || null,
@@ -391,6 +414,7 @@ function registerProjectTools(server, context, tools) {
                 priority: reloadedProject.priority,
                 area: reloadedProject.Area ? reloadedProject.Area.name : null,
                 goal: serializeGoal(reloadedProject.Goal),
+                parent_project_uid: reloadedProject.ParentProject?.uid ?? null,
                 is_maintenance: !!reloadedProject.is_maintenance,
                 visibility: reloadedProject.visibility,
                 tags: reloadedProject.Tags
@@ -468,6 +492,7 @@ function registerProjectTools(server, context, tools) {
                 },
                 ...goalInputProperties,
                 ...visibilityInputProperty,
+                ...parentInputProperty,
             },
             required: ['uid'],
         },
@@ -506,7 +531,6 @@ function registerProjectTools(server, context, tools) {
             if (params.priority !== undefined)
                 updates.priority = params.priority;
             if (params.status !== undefined) updates.status = params.status;
-            if (params.area_id !== undefined) updates.area_id = params.area_id;
             if (params.pinned !== undefined)
                 updates.pin_to_sidebar = params.pinned;
             if (params.image_url !== undefined)
@@ -529,6 +553,28 @@ function registerProjectTools(server, context, tools) {
                 project.user_id !== context.userId
             ) {
                 throw new Error('Only the project owner can change its goal');
+            }
+
+            const parentChange = await resolveParentChange(
+                project,
+                context.userId,
+                params.parent_project_uid
+            );
+            if (parentChange) {
+                updates.parent_project_id = parentChange.parent_project_id;
+            }
+            const effectiveParentId =
+                parentChange !== undefined
+                    ? parentChange.parent_project_id
+                    : project.parent_project_id;
+            if (effectiveParentId) {
+                // A sub-project's area is its parent's; area_id is ignored.
+                if (project.user_id === context.userId) {
+                    updates.area_id =
+                        await areaFollowingParent(effectiveParentId);
+                }
+            } else if (params.area_id !== undefined) {
+                updates.area_id = params.area_id;
             }
 
             if (
@@ -554,6 +600,13 @@ function registerProjectTools(server, context, tools) {
             await project.update(updates);
 
             await syncContainerShares(project.id, before, updates);
+            if (
+                project.user_id === context.userId &&
+                updates.area_id !== undefined &&
+                updates.area_id != before.area_id
+            ) {
+                await cascadeAreaToDescendants(project.id, updates.area_id);
+            }
 
             const reloadedProject = await Project.findByPk(project.id, {
                 include: projectIncludes,
@@ -568,6 +621,7 @@ function registerProjectTools(server, context, tools) {
                 priority: reloadedProject.priority,
                 area: reloadedProject.Area ? reloadedProject.Area.name : null,
                 goal: serializeGoal(reloadedProject.Goal),
+                parent_project_uid: reloadedProject.ParentProject?.uid ?? null,
                 is_maintenance: !!reloadedProject.is_maintenance,
                 visibility: reloadedProject.visibility,
                 tags: reloadedProject.Tags

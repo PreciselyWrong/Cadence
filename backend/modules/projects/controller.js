@@ -65,10 +65,14 @@ const projectsController = {
         try {
             const uid = extractUidFromSlug(req.params.uidSlug);
             const timezone = req.currentUser?.timezone;
-            const project = await projectsService.getByUid(uid, timezone);
             // The viewer's access ('ro' | 'rw' | 'admin'), so the page can
             // hide write controls from read-only viewers.
             const userId = req.currentUser?.id || req.session?.userId;
+            const project = await projectsService.getByUid(
+                uid,
+                timezone,
+                userId
+            );
             const accessLevel = userId
                 ? await permissionsService.getAccess(userId, 'project', uid)
                 : 'none';
