@@ -1818,6 +1818,12 @@
       "from": "Từ",
       "to": "Đến"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} sớm hơn",
+        "later": "{{count}} muộn hơn",
+        "show": "Hiện tất cả giờ",
+        "hide": "Ẩn các giờ sớm và muộn"
+    },
     "arrange": {
       "title": "Sắp xếp công việc",
       "noDate": "Không có ngày",

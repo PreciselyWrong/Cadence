@@ -1830,6 +1830,12 @@
       "from": "Od",
       "to": "Do"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} prej",
+        "later": "{{count}} kasneje",
+        "show": "Pokaži vse ure",
+        "hide": "Skrij zgodnje in pozne ure"
+    },
     "arrange": {
       "title": "Razporedi naloge",
       "noDate": "Brez datuma",

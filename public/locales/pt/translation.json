@@ -1825,6 +1825,12 @@
       "from": "De",
       "to": "Até"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} antes",
+        "later": "{{count}} depois",
+        "show": "Mostrar todas as horas",
+        "hide": "Ocultar horas cedo e tarde"
+    },
     "arrange": {
       "title": "Organizar tarefas",
       "noDate": "Sem data",

@@ -1821,6 +1821,12 @@
       "from": "Fra",
       "to": "Til"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} tidligere",
+        "later": "{{count}} senere",
+        "show": "Vis alle timer",
+        "hide": "Skjul tidlige og sene timer"
+    },
     "arrange": {
       "title": "Planlegg oppgaver",
       "noDate": "Ingen dato",

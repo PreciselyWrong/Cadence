@@ -1820,6 +1820,12 @@
       "from": "Başlangıç",
       "to": "Bitiş"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} daha erken",
+        "later": "{{count}} daha geç",
+        "show": "Tüm saatleri göster",
+        "hide": "Erken ve geç saatleri gizle"
+    },
     "arrange": {
       "title": "Görevleri yerleştir",
       "noDate": "Tarihsiz",

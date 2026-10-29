@@ -1818,6 +1818,12 @@
       "from": "从",
       "to": "到"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} 个更早",
+        "later": "{{count}} 个更晚",
+        "show": "显示所有时间",
+        "hide": "隐藏较早和较晚的时间"
+    },
     "arrange": {
       "title": "安排任务",
       "noDate": "无日期",

@@ -2085,6 +2085,12 @@
       "from": "From",
       "to": "To"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} earlier",
+        "later": "{{count}} later",
+        "show": "Show all hours",
+        "hide": "Hide early and late hours"
+    },
     "arrange": {
       "title": "Arrange tasks",
       "noDate": "No date",

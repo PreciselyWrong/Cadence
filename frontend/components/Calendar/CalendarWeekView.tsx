@@ -19,7 +19,11 @@ import {
 
 import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
-import { VisibleHours, WHOLE_DAY } from './visibleHours';
+import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
+import HiddenHoursBar, {
+    HIDDEN_HOURS_STRIPES,
+    HideHoursButton,
+} from './HiddenHoursBar';
 
 interface CalendarWeekViewProps {
     currentDate: Date;
@@ -96,10 +100,20 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     const gridColumns = {
         gridTemplateColumns: `repeat(${weekDays.length + 1}, minmax(0, 1fr))`,
     };
+    const [showAll, setShowAll] = useState(false);
+    const restricted = visibleHours.start > 0 || visibleHours.end < 24;
+    const shownHours = showAll ? WHOLE_DAY : visibleHours;
     const hours = Array.from(
-        { length: visibleHours.end - visibleHours.start },
-        (_, i) => visibleHours.start + i
+        { length: shownHours.end - shownHours.start },
+        (_, i) => shownHours.start + i
     );
+    const isHidden = (hour: number) =>
+        hour < visibleHours.start || hour >= visibleHours.end;
+    const outsideByDay = weekDays.map((day) =>
+        countOutside(events, day, visibleHours)
+    );
+    const anyEarlier = outsideByDay.some((o) => o.before.length > 0);
+    const anyLater = outsideByDay.some((o) => o.after.length > 0);
 
     const getEventsForTimeSlot = (day: Date, hour: number) =>
         events.filter(
@@ -255,13 +269,41 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 </div>
             )}
 
+            {restricted && showAll && (
+                <HideHoursButton onClick={() => setShowAll(false)} />
+            )}
+            {restricted && !showAll && anyEarlier && (
+                <div
+                    className="grid border-b border-gray-100 dark:border-gray-600"
+                    style={gridColumns}
+                >
+                    <div />
+                    {outsideByDay.map((outside, index) => (
+                        <div key={`earlier-${weekDays[index].toString()}`}>
+                            {outside.before.length > 0 && (
+                                <HiddenHoursBar
+                                    compact
+                                    direction="earlier"
+                                    events={outside.before}
+                                    onClick={() => setShowAll(true)}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+
             {/* Time slots */}
             <div className="flex-1 overflow-y-auto">
                 {hours.map((hour) => (
                     <div
                         key={hour}
                         className="grid h-[72px] border-b border-gray-100 dark:border-gray-600"
-                        style={gridColumns}
+                        style={
+                            showAll && isHidden(hour)
+                                ? { ...gridColumns, ...HIDDEN_HOURS_STRIPES }
+                                : gridColumns
+                        }
                     >
                         <div className="py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                             {format(
@@ -369,6 +411,26 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                     </div>
                 ))}
             </div>
+            {restricted && !showAll && anyLater && (
+                <div
+                    className="grid border-t border-gray-100 dark:border-gray-600"
+                    style={gridColumns}
+                >
+                    <div />
+                    {outsideByDay.map((outside, index) => (
+                        <div key={`later-${weekDays[index].toString()}`}>
+                            {outside.after.length > 0 && (
+                                <HiddenHoursBar
+                                    compact
+                                    direction="later"
+                                    events={outside.after}
+                                    onClick={() => setShowAll(true)}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

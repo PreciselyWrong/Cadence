@@ -1827,6 +1827,12 @@
       "from": "De la",
       "to": "Până la"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} mai devreme",
+        "later": "{{count}} mai târziu",
+        "show": "Arată toate orele",
+        "hide": "Ascunde orele devreme și târziu"
+    },
     "arrange": {
       "title": "Aranjează sarcinile",
       "noDate": "Fără dată",

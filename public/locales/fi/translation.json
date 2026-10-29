@@ -1820,6 +1820,12 @@
       "from": "Alkaen",
       "to": "Päättyen"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} aiemmin",
+        "later": "{{count}} myöhemmin",
+        "show": "Näytä kaikki tunnit",
+        "hide": "Piilota aikaiset ja myöhäiset tunnit"
+    },
     "arrange": {
       "title": "Järjestä tehtävät",
       "noDate": "Ei päivää",

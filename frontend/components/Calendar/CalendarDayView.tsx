@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { CalendarEvent, CAL_ALL_DAY_ID, coversDay, slotId } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
-import { VisibleHours, WHOLE_DAY } from './visibleHours';
+import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
+import HiddenHoursBar, {
+    HIDDEN_HOURS_STRIPES,
+    HideHoursButton,
+} from './HiddenHoursBar';
 
 interface CalendarDayViewProps {
     currentDate: Date;
@@ -38,13 +42,19 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     const { t } = useTranslation();
     const resize = useEventResize(HOUR_HEIGHT, onEventResize);
     const scrollRef = React.useRef<HTMLDivElement>(null);
-    const firstHour = visibleHours.start;
+    const [showAll, setShowAll] = React.useState(false);
+    const restricted = visibleHours.start > 0 || visibleHours.end < 24;
+    const shownHours = showAll ? WHOLE_DAY : visibleHours;
+    const firstHour = shownHours.start;
     const windowStart = firstHour * 60;
-    const windowEnd = visibleHours.end * 60;
+    const windowEnd = shownHours.end * 60;
     const hours = Array.from(
-        { length: visibleHours.end - firstHour },
+        { length: shownHours.end - firstHour },
         (_, i) => firstHour + i
     );
+    const outside = countOutside(events, currentDate, visibleHours);
+    const isHidden = (hour: number) =>
+        hour < visibleHours.start || hour >= visibleHours.end;
     const [draggedEventId, setDraggedEventId] = React.useState<string | null>(
         null
     );
@@ -241,6 +251,17 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                 </DropTarget>
             )}
 
+            {restricted && showAll && (
+                <HideHoursButton onClick={() => setShowAll(false)} />
+            )}
+            {restricted && !showAll && outside.before.length > 0 && (
+                <HiddenHoursBar
+                    direction="earlier"
+                    events={outside.before}
+                    onClick={() => setShowAll(true)}
+                />
+            )}
+
             {/* Time slots */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto">
                 <div className="relative">
@@ -248,6 +269,11 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                         <div
                             key={hour}
                             className="flex h-[48px] border-b border-gray-100 dark:border-gray-600"
+                            style={
+                                showAll && isHidden(hour)
+                                    ? HIDDEN_HOURS_STRIPES
+                                    : undefined
+                            }
                         >
                             <div className="w-20 py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
                                 {format(
@@ -350,6 +376,13 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     </div>
                 </div>
             </div>
+            {restricted && !showAll && outside.after.length > 0 && (
+                <HiddenHoursBar
+                    direction="later"
+                    events={outside.after}
+                    onClick={() => setShowAll(true)}
+                />
+            )}
         </div>
     );
 };

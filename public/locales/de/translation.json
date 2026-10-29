@@ -1474,6 +1474,12 @@
       "from": "Von",
       "to": "Bis"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} früher",
+        "later": "{{count}} später",
+        "show": "Alle Stunden anzeigen",
+        "hide": "Frühe und späte Stunden ausblenden"
+    },
     "arrange": {
       "title": "Aufgaben einplanen",
       "noDate": "Ohne Datum",

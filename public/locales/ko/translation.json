@@ -1818,6 +1818,12 @@
       "from": "시작",
       "to": "종료"
     },
+    "hiddenHours": {
+        "earlier": "{{count}}개 이른 시간",
+        "later": "{{count}}개 늦은 시간",
+        "show": "모든 시간 표시",
+        "hide": "이른 시간과 늦은 시간 숨기기"
+    },
     "arrange": {
       "title": "작업 배치",
       "noDate": "날짜 없음",

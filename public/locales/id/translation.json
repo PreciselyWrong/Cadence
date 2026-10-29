@@ -1818,6 +1818,12 @@
       "from": "Dari",
       "to": "Sampai"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} lebih awal",
+        "later": "{{count}} lebih lambat",
+        "show": "Tampilkan semua jam",
+        "hide": "Sembunyikan jam awal dan akhir"
+    },
     "arrange": {
       "title": "Atur tugas",
       "noDate": "Tanpa tanggal",

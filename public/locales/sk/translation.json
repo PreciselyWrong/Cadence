@@ -1998,6 +1998,12 @@
             "from": "Od",
             "to": "Do"
         },
+        "hiddenHours": {
+            "earlier": "{{count}} skôr",
+            "later": "{{count}} neskôr",
+            "show": "Zobraziť všetky hodiny",
+            "hide": "Skryť skoré a neskoré hodiny"
+        },
         "arrange": {
             "title": "Naplánovať úlohy",
             "noDate": "Bez dátumu",

@@ -1830,6 +1830,12 @@
       "from": "Od",
       "to": "Do"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} wcześniej",
+        "later": "{{count}} później",
+        "show": "Pokaż wszystkie godziny",
+        "hide": "Ukryj wczesne i późne godziny"
+    },
     "arrange": {
       "title": "Rozplanuj zadania",
       "noDate": "Bez daty",

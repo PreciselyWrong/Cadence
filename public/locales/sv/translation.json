@@ -1820,6 +1820,12 @@
       "from": "Från",
       "to": "Till"
     },
+    "hiddenHours": {
+        "earlier": "{{count}} tidigare",
+        "later": "{{count}} senare",
+        "show": "Visa alla timmar",
+        "hide": "Dölj tidiga och sena timmar"
+    },
     "arrange": {
       "title": "Planera uppgifter",
       "noDate": "Inget datum",
