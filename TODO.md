@@ -4,10 +4,12 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
+- Refonte façon TickTick, étape 2 : ajout rapide en langage naturel. Prompt de reprise et liste du reste : [docs/fork/PROMPT-suite-ticktick.md](docs/fork/PROMPT-suite-ticktick.md). Vérif : « Appeler Paul demain 15h #perso !1 ^Maison » surligne 4 éléments et crée la tâche complète.
 
 ## Next
 
+- Refonte TickTick, étapes 3 à 5 : gestes sur les lignes, type de vue par vue, écarts calendrier (détail dans le prompt de reprise).
+- Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
 - Module habits Cadence côté serveur : schéma, moteur JS, migration des habitudes Tududi existantes en version 1. Vérif : Jest vert sur toutes les fixtures, SQLite et Postgres.
   - Combler les manques de l'amont : versions d'objectif (le passé n'est pas réinterprété), `AT_MOST` > 0 et `TRACK_ONLY`, minimum vs idéal, fréquence + quantité combinées, pauses multi-jours avec motif et reprise anticipée, fuseau observé par saisie, `startsOn`, quantités entières à précision explicite, groupes à plages libres (chevauchement, passage de minuit), chronos, progression de cible, profils d'abstinence, stats 30 jours avec confiance.
   - Garder de l'amont : score de force, note par check-in, présence dans Aujourd'hui/Plan, outils MCP.
@@ -18,7 +20,6 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 - Cible Linux Compose Desktop : mêmes écrans sur Fedora.
 - Passer la production sur le Postgres d'Unraid (export puis import) et lancer les tests sur Postgres.
 - Ajouter le remote `upstream` (`chrisvel/tududi`) et fusionner chaque semaine. Proposer en PR les ajouts génériques (vues calendrier, flux ICS de la branche `claude/new-session-sgffz7`).
-- Refonte UI/UX : minimaliste par défaut (façon TickTick), avec un mode dense en option qui garde toutes les fonctionnalités. Vérif : chaque fonctionnalité atteignable en mode dense ; le mode minimal masque sans supprimer.
 - TODO.md des dépôts dans Tududi, édition live des deux côtés : un conteneur clone depuis Gitea/GitHub, lit `Now`/`Next`/`Ideas` ; une modification dans Tududi est commitée et poussée, un push dans le dépôt est relu (webhook). Les conflits sont signalés sans écrire. Vérif : une modif de chaque côté apparaît de l'autre sans perte.
 
 ## Ideas
