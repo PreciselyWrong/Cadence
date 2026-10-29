@@ -1365,6 +1365,12 @@
     "startsOn": "Empieza el {{date}}"
   },
   "task": {
+    "recurringMove": {
+      "title": "Mover tarea recurrente",
+      "optionThis": "Solo esta repetición",
+      "optionFollowing": "Esta y las siguientes repeticiones",
+      "optionAll": "Todas las repeticiones"
+    },
     "labels": {
       "tags": "Etiquetas",
       "project": "Proyecto",

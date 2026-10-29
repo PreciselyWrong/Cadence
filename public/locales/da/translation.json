@@ -1383,6 +1383,12 @@
     "createError": "Fejl ved oprettelse af note"
   },
   "task": {
+    "recurringMove": {
+      "title": "Flyt gentagen opgave",
+      "optionThis": "Kun denne forekomst",
+      "optionFollowing": "Denne og følgende forekomster",
+      "optionAll": "Alle forekomster"
+    },
     "labels": {
       "tags": "Tags",
       "project": "Projekt",

@@ -1387,6 +1387,12 @@
     "createError": "Nie udało się utworzyć notatki"
   },
   "task": {
+    "recurringMove": {
+      "title": "Przenieś zadanie cykliczne",
+      "optionThis": "Tylko to wystąpienie",
+      "optionFollowing": "To i kolejne wystąpienia",
+      "optionAll": "Wszystkie wystąpienia"
+    },
     "labels": {
       "tags": "Tagi",
       "project": "Projekt",

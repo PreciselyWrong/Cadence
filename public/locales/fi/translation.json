@@ -1383,6 +1383,12 @@
     "createError": "Muistiinpanon luominen epäonnistui"
   },
   "task": {
+    "recurringMove": {
+      "title": "Siirrä toistuva tehtävä",
+      "optionThis": "Vain tämä toistokerta",
+      "optionFollowing": "Tämä ja seuraavat toistokerrat",
+      "optionAll": "Kaikki toistokerrat"
+    },
     "labels": {
       "tags": "Tunnisteet",
       "project": "Projekti",

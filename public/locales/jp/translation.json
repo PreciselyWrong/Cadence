@@ -1613,6 +1613,12 @@
     "startsOn": "{{date}} に開始"
   },
   "task": {
+    "recurringMove": {
+      "title": "繰り返しタスクを移動",
+      "optionThis": "この回のみ",
+      "optionFollowing": "この回以降",
+      "optionAll": "すべての回"
+    },
     "suggestions": {
       "short": "何をする必要があるかについて、より具体的に記述してください",
       "noVerb": "どの具体的なアクションを取る必要がありますか？動詞から始めてみてください。",

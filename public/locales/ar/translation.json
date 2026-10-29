@@ -1391,6 +1391,12 @@
     "createError": "فشل في إنشاء الملاحظة"
   },
   "task": {
+    "recurringMove": {
+      "title": "نقل مهمة متكررة",
+      "optionThis": "هذا الموعد فقط",
+      "optionFollowing": "هذا الموعد والمواعيد التالية",
+      "optionAll": "كل المواعيد"
+    },
     "labels": {
       "tags": "الوسوم",
       "project": "المشروع",

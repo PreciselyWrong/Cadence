@@ -1383,6 +1383,12 @@
     "createError": "Aanmaken van notitie is mislukt"
   },
   "task": {
+    "recurringMove": {
+      "title": "Terugkerende taak verplaatsen",
+      "optionThis": "Alleen deze keer",
+      "optionFollowing": "Deze en volgende keren",
+      "optionAll": "Alle keren"
+    },
     "labels": {
       "tags": "Labels",
       "project": "Project",

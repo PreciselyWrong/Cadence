@@ -1385,6 +1385,12 @@
     "createError": "Falha ao criar nota"
   },
   "task": {
+    "recurringMove": {
+      "title": "Mover tarefa recorrente",
+      "optionThis": "Apenas esta ocorrência",
+      "optionFollowing": "Esta e as ocorrências seguintes",
+      "optionAll": "Todas as ocorrências"
+    },
     "labels": {
       "tags": "Tags",
       "project": "Projeto",

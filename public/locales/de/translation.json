@@ -1337,6 +1337,12 @@
     }
   },
   "task": {
+    "recurringMove": {
+      "title": "Wiederkehrende Aufgabe verschieben",
+      "optionThis": "Nur dieses Vorkommen",
+      "optionFollowing": "Dieses und folgende Vorkommen",
+      "optionAll": "Alle Vorkommen"
+    },
     "suggestions": {
       "short": "Versuchen Sie, spezifischer zu beschreiben, was getan werden muss",
       "noVerb": "Welche spezifische Handlung müssen Sie durchführen? Versuchen Sie, mit einem Verb zu beginnen.",

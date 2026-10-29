@@ -1382,6 +1382,12 @@
     "createError": "Gagal membuat catatan"
   },
   "task": {
+    "recurringMove": {
+      "title": "Pindahkan tugas berulang",
+      "optionThis": "Hanya kemunculan ini",
+      "optionFollowing": "Kemunculan ini dan berikutnya",
+      "optionAll": "Semua kemunculan"
+    },
     "labels": {
       "tags": "Tag",
       "project": "Proyek",

@@ -1385,6 +1385,12 @@
     "createError": "Errore nella creazione della nota"
   },
   "task": {
+    "recurringMove": {
+      "title": "Sposta attività ricorrente",
+      "optionThis": "Solo questa ricorrenza",
+      "optionFollowing": "Questa e le ricorrenze successive",
+      "optionAll": "Tutte le ricorrenze"
+    },
     "labels": {
       "tags": "Tag",
       "project": "Progetto",

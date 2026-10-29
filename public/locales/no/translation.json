@@ -1384,6 +1384,12 @@
     "createError": "Kunne ikke opprette notat"
   },
   "task": {
+    "recurringMove": {
+      "title": "Flytt gjentakende oppgave",
+      "optionThis": "Bare denne forekomsten",
+      "optionFollowing": "Denne og følgende forekomster",
+      "optionAll": "Alle forekomster"
+    },
     "labels": {
       "tags": "Merker",
       "project": "Prosjekt",

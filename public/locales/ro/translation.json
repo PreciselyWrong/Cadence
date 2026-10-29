@@ -1387,6 +1387,12 @@
     "createError": "Crearea notei a eșuat"
   },
   "task": {
+    "recurringMove": {
+      "title": "Mută sarcina recurentă",
+      "optionThis": "Doar această apariție",
+      "optionFollowing": "Aceasta și aparițiile următoare",
+      "optionAll": "Toate aparițiile"
+    },
     "labels": {
       "tags": "Etichete",
       "project": "Proiect",

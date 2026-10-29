@@ -1382,6 +1382,12 @@
     "createError": "메모 생성에 실패했습니다"
   },
   "task": {
+    "recurringMove": {
+      "title": "반복 작업 이동",
+      "optionThis": "이 일정만",
+      "optionFollowing": "이 일정 및 이후 일정",
+      "optionAll": "모든 일정"
+    },
     "labels": {
       "tags": "태그",
       "project": "프로젝트",
