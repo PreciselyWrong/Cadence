@@ -1,16 +1,17 @@
 name: Custom Docker image
 
-# Builds this fork's image from main and pushes it to
-# ghcr.io/<owner>/tududi, so every merged change lands in the image without
-# touching the upstream release pipeline (docker-publish.yml).
+# Builds this fork's image on every push, whatever the branch, and pushes it
+# to ghcr.io/<owner>/tududi, without touching the upstream release pipeline
+# (docker-publish.yml).
 #
-# Tags: :latest (main), :sha-<short> (every build), :<branch> on a manual run.
+# Tags: :latest always follows the last push (the version in development),
+# :sha-<short> pins one build.
 # Uses the workflow's own GITHUB_TOKEN; no secret to configure.
 
 on:
   push:
     branches:
-      - main
+      - '**'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +19,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: custom-image-${{ github.ref }}
+  group: custom-image
   cancel-in-progress: true
 
 jobs:
@@ -39,8 +40,7 @@ jobs:
         with:
           images: ${{ steps.image.outputs.name }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
+            type=raw,value=latest
             type=sha
 
       - name: Set up Docker Buildx
