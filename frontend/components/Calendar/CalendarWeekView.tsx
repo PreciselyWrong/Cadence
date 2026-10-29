@@ -6,6 +6,9 @@ import {
     eachDayOfInterval,
     isToday,
     addHours,
+    addDays,
+    startOfDay,
+    endOfDay,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,6 +28,9 @@ interface CalendarWeekViewProps {
     onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
     onEventResize?: (eventId: string, newEnd: Date) => void;
     showWeekends?: boolean;
+    // Multi-day view: this many shown days from currentDate instead of the
+    // week around it.
+    dayCount?: number;
 }
 
 const WEEK_HOUR_HEIGHT = 72;
@@ -37,6 +43,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     onEventDrop,
     onEventResize,
     showWeekends = true,
+    dayCount,
 }) => {
     const { t } = useTranslation();
     const resize = useEventResize(WEEK_HOUR_HEIGHT, onEventResize);
@@ -54,18 +61,31 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
         loadFirstDayOfWeek();
     }, []);
 
-    const weekStart = startOfWeek(currentDate, {
-        weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
-    });
-    const weekEnd = endOfWeek(currentDate, {
-        weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
-    });
-    const weekDays = eachDayOfInterval({
-        start: weekStart,
-        end: weekEnd,
-    }).filter(
-        (day) => showWeekends || (day.getDay() !== 0 && day.getDay() !== 6)
-    );
+    const isShown = (day: Date) =>
+        showWeekends || (day.getDay() !== 0 && day.getDay() !== 6);
+    let weekStart: Date;
+    let weekEnd: Date;
+    let weekDays: Date[];
+    if (dayCount) {
+        weekDays = [];
+        let day = startOfDay(currentDate);
+        while (weekDays.length < dayCount) {
+            if (isShown(day)) weekDays.push(day);
+            day = addDays(day, 1);
+        }
+        weekStart = weekDays[0];
+        weekEnd = endOfDay(weekDays[weekDays.length - 1]);
+    } else {
+        weekStart = startOfWeek(currentDate, {
+            weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+        });
+        weekEnd = endOfWeek(currentDate, {
+            weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+        });
+        weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd }).filter(
+            isShown
+        );
+    }
     // Time column plus one column per shown day.
     const gridColumns = {
         gridTemplateColumns: `repeat(${weekDays.length + 1}, minmax(0, 1fr))`,
@@ -201,6 +221,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             }`}
                             style={{
                                 backgroundColor: event.color || '#3b82f6',
+                                opacity: event.readOnly ? 0.6 : undefined,
                                 gridColumn: `${from + 2} / ${to + 2}`,
                                 gridRow: (allDayRows.get(event.id) ?? 0) + 1,
                                 // Let a drop reach the day cell beneath.
@@ -278,6 +299,9 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                             style={{
                                                 backgroundColor:
                                                     event.color || '#3b82f6',
+                                                opacity: event.readOnly
+                                                    ? 0.6
+                                                    : undefined,
                                                 left: `${(100 / eventCount) * index}%`,
                                                 width: `${eventCount > 1 ? 100 / eventCount - 1 : 100}%`,
                                                 top: `calc(0.25rem + ${(event.start.getMinutes() / 60) * WEEK_HOUR_HEIGHT}px)`,

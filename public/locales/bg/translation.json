@@ -1692,7 +1692,12 @@
     "done": "Готово"
   },
   "calendar": {
+    "multiDay_one": "{{count}} дни",
+    "multiDay_other": "{{count}} дни",
+    "agendaEmpty": "Нищо не е планирано",
+    "agenda": "Програма",
     "options": {
+      "multiDayCount": "Дни в многодневния изглед",
       "title": "Опции за изглед",
       "showCompleted": "Показване на завършени",
       "showWeekends": "Показване на почивни дни",

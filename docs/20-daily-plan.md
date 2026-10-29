@@ -102,6 +102,13 @@ How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`
 
 Moving a block keeps its length: a start-to-due block moves both ends, a bar moves its start and due dates by the same number of days and keeps their times. Dropping on an hour of the week or day view sets the time; dropping in the month view or the all-day row keeps it.
 
+## Calendar page: views
+
+Month, Week, **N days**, Day and **Agenda**.
+
+- **N days** is the week grid for 2 to 7 days starting on the current date (View options → *Days in multi-day view*, `ui_settings.calendar.multiDayCount`, 3 by default). The arrows move by that many days. With weekends hidden it counts working days only.
+- **Agenda** lists the month day by day, each day that has something on it under its own heading, whole-day items first. It opens scrolled to today, or the next day with items; the arrows move by a month.
+
 ## Calendar page: View options
 
 The sliders button next to the view switcher opens **View options**, saved per user in `ui_settings.calendar` (`PUT /api/profile/ui-settings` with `{ calendar: {...} }`):
@@ -109,6 +116,7 @@ The sliders button next to the view switcher opens **View options**, saved per u
 - **Show completed** (`showCompleted`, on by default): done tasks stay on the calendar in green.
 - **Show weekends** (`showWeekends`, on): off drops Saturday and Sunday from the month and week views, and the day view steps over them.
 - **Show all repeats** (`showRepeats`, on): off keeps each recurring task at its current due date only.
+- **Days in multi-day view** (`multiDayCount`, 2–7).
 - **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
 
 ## Calendar page: Arrange tasks

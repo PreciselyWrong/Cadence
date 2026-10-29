@@ -1693,7 +1693,12 @@
     "done": "Τέλος"
   },
   "calendar": {
+    "multiDay_one": "{{count}} ημέρες",
+    "multiDay_other": "{{count}} ημέρες",
+    "agendaEmpty": "Τίποτα προγραμματισμένο",
+    "agenda": "Ατζέντα",
     "options": {
+      "multiDayCount": "Ημέρες στην πολυήμερη προβολή",
       "title": "Επιλογές προβολής",
       "showCompleted": "Εμφάνιση ολοκληρωμένων",
       "showWeekends": "Εμφάνιση Σαββατοκύριακων",

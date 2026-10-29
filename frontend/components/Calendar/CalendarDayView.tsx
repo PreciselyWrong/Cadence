@@ -136,6 +136,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                 className="text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium"
                                 style={{
                                     backgroundColor: event.color || '#3b82f6',
+                                    opacity: event.readOnly ? 0.6 : undefined,
                                 }}
                                 title={event.title}
                             >
@@ -204,6 +205,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     style={{
                                         backgroundColor:
                                             event.color || '#3b82f6',
+                                        opacity: event.readOnly
+                                            ? 0.6
+                                            : undefined,
                                         top: layout.top,
                                         height: layout.height,
                                         left: layout.left,

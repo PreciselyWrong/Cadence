@@ -1692,7 +1692,12 @@
     "done": "Klar"
   },
   "calendar": {
+    "multiDay_one": "{{count}} dagar",
+    "multiDay_other": "{{count}} dagar",
+    "agendaEmpty": "Inget planerat",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Dagar i flerdagarsvy",
       "title": "Visningsalternativ",
       "showCompleted": "Visa slutförda",
       "showWeekends": "Visa helger",

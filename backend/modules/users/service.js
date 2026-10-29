@@ -146,6 +146,13 @@ function sanitizeCalendarOptions(calendar) {
     if (CALENDAR_COLOR_BY.includes(calendar.colorBy)) {
         clean.colorBy = calendar.colorBy;
     }
+    if (
+        Number.isInteger(calendar.multiDayCount) &&
+        calendar.multiDayCount >= 2 &&
+        calendar.multiDayCount <= 7
+    ) {
+        clean.multiDayCount = calendar.multiDayCount;
+    }
     return clean;
 }
 

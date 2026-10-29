@@ -35,6 +35,7 @@ import { el, enUS, es, ja, uk, de } from 'date-fns/locale';
 import CalendarMonthView from './Calendar/CalendarMonthView';
 import CalendarWeekView from './Calendar/CalendarWeekView';
 import CalendarDayView from './Calendar/CalendarDayView';
+import CalendarAgendaView from './Calendar/CalendarAgendaView';
 import { getApiPath } from '../config/paths';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -100,7 +101,9 @@ const Calendar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [view, setView] = useState<'month' | 'week' | 'day'>('month');
+    const [view, setView] = useState<
+        'month' | 'week' | 'multi' | 'day' | 'agenda'
+    >('month');
     const [isLoadingTasks, setIsLoadingTasks] = useState(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [allTasks, setAllTasks] = useState<any[]>([]);
@@ -285,7 +288,7 @@ const Calendar: React.FC = () => {
 
     const navigateView = (direction: 'prev' | 'next') => {
         setCurrentDate((prev) => {
-            if (view === 'month') {
+            if (view === 'month' || view === 'agenda') {
                 const newDate = new Date(prev);
                 if (direction === 'prev') {
                     newDate.setMonth(prev.getMonth() - 1);
@@ -297,6 +300,11 @@ const Calendar: React.FC = () => {
                 return direction === 'prev'
                     ? addWeeks(prev, -1)
                     : addWeeks(prev, 1);
+            } else if (view === 'multi') {
+                return addDays(
+                    prev,
+                    (direction === 'prev' ? -1 : 1) * options.multiDayCount
+                );
             } else {
                 // Without weekends, the day view steps over them.
                 let next = addDays(prev, direction === 'prev' ? -1 : 1);
@@ -449,21 +457,32 @@ const Calendar: React.FC = () => {
                     <div className="flex flex-wrap items-center gap-2">
                         {/* View selector */}
                         <div className="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
-                            {(['month', 'week', 'day'] as const).map(
-                                (viewType) => (
-                                    <button
-                                        key={viewType}
-                                        onClick={() => setView(viewType)}
-                                        className={`px-3 py-1.5 text-sm font-medium capitalize rounded-md transition-all duration-150 ${
-                                            view === viewType
-                                                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm'
-                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                                        }`}
-                                    >
-                                        {t(`calendar.${viewType}`)}
-                                    </button>
-                                )
-                            )}
+                            {(
+                                [
+                                    'month',
+                                    'week',
+                                    'multi',
+                                    'day',
+                                    'agenda',
+                                ] as const
+                            ).map((viewType) => (
+                                <button
+                                    key={viewType}
+                                    onClick={() => setView(viewType)}
+                                    className={`px-3 py-1.5 text-sm font-medium capitalize rounded-md transition-all duration-150 ${
+                                        view === viewType
+                                            ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm'
+                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                    }`}
+                                >
+                                    {viewType === 'multi'
+                                        ? t('calendar.multiDay', {
+                                              count: options.multiDayCount,
+                                              defaultValue: '{{count}} days',
+                                          })
+                                        : t(`calendar.${viewType}`, viewType)}
+                                </button>
+                            ))}
                         </div>
 
                         <ViewOptions
@@ -602,6 +621,27 @@ const Calendar: React.FC = () => {
                                 onTimeSlotClick={handleTimeSlotClick}
                                 onEventDrop={handleEventDrop}
                                 onEventResize={handleEventResize}
+                                showWeekends={options.showWeekends}
+                            />
+                        )}
+                        {view === 'multi' && (
+                            <CalendarWeekView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                                showWeekends={options.showWeekends}
+                                dayCount={options.multiDayCount}
+                            />
+                        )}
+                        {view === 'agenda' && (
+                            <CalendarAgendaView
+                                start={startOfMonth(currentDate)}
+                                end={endOfMonth(currentDate)}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
                                 showWeekends={options.showWeekends}
                             />
                         )}

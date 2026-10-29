@@ -1692,7 +1692,12 @@
     "done": "Klaar"
   },
   "calendar": {
+    "multiDay_one": "{{count}} dagen",
+    "multiDay_other": "{{count}} dagen",
+    "agendaEmpty": "Niets gepland",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Dagen in meerdaagse weergave",
       "title": "Weergaveopties",
       "showCompleted": "Voltooide tonen",
       "showWeekends": "Weekenden tonen",

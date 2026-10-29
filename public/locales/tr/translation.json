@@ -1692,7 +1692,12 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "multiDay_one": "{{count}} gün",
+    "multiDay_other": "{{count}} gün",
+    "agendaEmpty": "Planlanmış bir şey yok",
+    "agenda": "Ajanda",
     "options": {
+      "multiDayCount": "Çok günlü görünümdeki gün sayısı",
       "title": "Görünüm seçenekleri",
       "showCompleted": "Tamamlananları göster",
       "showWeekends": "Hafta sonlarını göster",

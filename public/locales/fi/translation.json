@@ -1692,7 +1692,12 @@
     "done": "Valmis"
   },
   "calendar": {
+    "multiDay_one": "{{count}} päivää",
+    "multiDay_other": "{{count}} päivää",
+    "agendaEmpty": "Ei mitään aikataulutettuna",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Päiviä monipäivänäkymässä",
       "title": "Näkymän asetukset",
       "showCompleted": "Näytä valmiit",
       "showWeekends": "Näytä viikonloput",

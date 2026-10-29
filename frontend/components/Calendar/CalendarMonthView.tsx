@@ -229,6 +229,9 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                             style={{
                                                 backgroundColor:
                                                     event.color || '#3b82f6',
+                                                opacity: event.readOnly
+                                                    ? 0.6
+                                                    : undefined,
                                             }}
                                             title={event.title}
                                         >

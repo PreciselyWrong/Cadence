@@ -1690,7 +1690,12 @@
     "done": "完成"
   },
   "calendar": {
+    "multiDay_one": "{{count}} 天",
+    "multiDay_other": "{{count}} 天",
+    "agendaEmpty": "暂无安排",
+    "agenda": "日程",
     "options": {
+      "multiDayCount": "多日视图的天数",
       "title": "视图选项",
       "showCompleted": "显示已完成",
       "showWeekends": "显示周末",

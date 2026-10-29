@@ -1957,7 +1957,12 @@
     "done": "Done"
   },
   "calendar": {
+    "multiDay_one": "{{count}} days",
+    "multiDay_other": "{{count}} days",
+    "agendaEmpty": "Nothing scheduled",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Days in multi-day view",
       "title": "View options",
       "showCompleted": "Show completed",
       "showWeekends": "Show weekends",

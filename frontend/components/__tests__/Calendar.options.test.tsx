@@ -3,7 +3,8 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CalendarWeekView from '../Calendar/CalendarWeekView';
 import CalendarMonthView from '../Calendar/CalendarMonthView';
-import { taskColor } from '../Calendar/taskEvents';
+import { taskColor, taskToEvents } from '../Calendar/taskEvents';
+import CalendarAgendaView from '../Calendar/CalendarAgendaView';
 import {
     DEFAULT_CALENDAR_OPTIONS,
     readCalendarOptions,
@@ -90,5 +91,56 @@ describe('view options', () => {
         expect(screen.queryByText('Sat')).not.toBeInTheDocument();
         // 31 Oct 2026 is a Saturday.
         expect(screen.queryByText('31')).not.toBeInTheDocument();
+    });
+});
+
+describe('multi-day and agenda views', () => {
+    it('shows N days from the current date, skipping weekends when hidden', async () => {
+        render(
+            <CalendarWeekView
+                currentDate={new Date(2026, 9, 30)}
+                events={[]}
+                dayCount={3}
+                showWeekends={false}
+            />
+        );
+        // Fri 30 Oct, then Mon 2 and Tue 3 Nov.
+        await screen.findByText('Fri');
+        expect(screen.getByText('Mon')).toBeInTheDocument();
+        expect(screen.getByText('Tue')).toBeInTheDocument();
+        expect(screen.queryByText('Sat')).not.toBeInTheDocument();
+        expect(screen.queryByText('Wed')).not.toBeInTheDocument();
+    });
+
+    it('lists the window day by day in order', () => {
+        render(
+            <CalendarAgendaView
+                start={new Date(2026, 9, 1)}
+                end={new Date(2026, 9, 31)}
+                events={[
+                    ...taskToEvents({
+                        id: 1,
+                        name: 'Later',
+                        due_date: '2026-10-20',
+                        due_time: '10:00',
+                    }),
+                    ...taskToEvents({
+                        id: 2,
+                        name: 'Trip',
+                        due_date: '2026-10-06',
+                        start_date: '2026-10-05',
+                    }),
+                ]}
+            />
+        );
+        const headings = screen
+            .getAllByRole('heading')
+            .map((h) => h.textContent);
+        expect(headings).toEqual([
+            'Monday 5 October',
+            'Tuesday 6 October',
+            'Tuesday 20 October',
+        ]);
+        expect(screen.getByText('10:00 – 11:00')).toBeInTheDocument();
     });
 });

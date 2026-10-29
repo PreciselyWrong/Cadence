@@ -1690,7 +1690,12 @@
     "done": "Selesai"
   },
   "calendar": {
+    "multiDay_one": "{{count}} hari",
+    "multiDay_other": "{{count}} hari",
+    "agendaEmpty": "Tidak ada jadwal",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Hari dalam tampilan multi-hari",
       "title": "Opsi tampilan",
       "showCompleted": "Tampilkan yang selesai",
       "showWeekends": "Tampilkan akhir pekan",

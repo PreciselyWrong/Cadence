@@ -56,10 +56,19 @@ describe('PUT /api/profile/ui-settings', () => {
 
     it('saves the calendar view options, dropping unknown values', async () => {
         await agent.put('/api/profile/ui-settings').send({
-            calendar: { showCompleted: false, colorBy: 'project' },
+            calendar: {
+                showCompleted: false,
+                colorBy: 'project',
+                multiDayCount: 4,
+            },
         });
         await agent.put('/api/profile/ui-settings').send({
-            calendar: { showWeekends: false, colorBy: 'rainbow', extra: 1 },
+            calendar: {
+                showWeekends: false,
+                colorBy: 'rainbow',
+                multiDayCount: 30,
+                extra: 1,
+            },
         });
 
         const profile = await agent.get('/api/profile');
@@ -67,6 +76,7 @@ describe('PUT /api/profile/ui-settings', () => {
             showCompleted: false,
             showWeekends: false,
             colorBy: 'project',
+            multiDayCount: 4,
         });
     });
 });

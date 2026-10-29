@@ -1700,7 +1700,12 @@
     "done": "تم"
   },
   "calendar": {
+    "multiDay_one": "{{count}} أيام",
+    "multiDay_other": "{{count}} أيام",
+    "agendaEmpty": "لا شيء مجدول",
+    "agenda": "جدول الأعمال",
     "options": {
+      "multiDayCount": "عدد الأيام في العرض المتعدد",
       "title": "خيارات العرض",
       "showCompleted": "إظهار المكتملة",
       "showWeekends": "إظهار عطلة نهاية الأسبوع",

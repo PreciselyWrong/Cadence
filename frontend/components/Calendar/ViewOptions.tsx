@@ -9,6 +9,7 @@ export interface CalendarOptions {
     showWeekends: boolean;
     showRepeats: boolean;
     colorBy: CalendarColorBy;
+    multiDayCount: number;
 }
 
 export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
@@ -16,7 +17,10 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     showWeekends: true,
     showRepeats: true,
     colorBy: 'default',
+    multiDayCount: 3,
 };
+
+export const MULTI_DAY_COUNTS = [2, 3, 4, 5, 6, 7];
 
 const COLOR_BY: CalendarColorBy[] = ['default', 'project', 'priority', 'tag'];
 
@@ -37,6 +41,9 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
         colorBy: COLOR_BY.includes(value.colorBy as CalendarColorBy)
             ? (value.colorBy as CalendarColorBy)
             : 'default',
+        multiDayCount: MULTI_DAY_COUNTS.includes(value.multiDayCount as number)
+            ? (value.multiDayCount as number)
+            : DEFAULT_CALENDAR_OPTIONS.multiDayCount,
     };
 };
 
@@ -155,6 +162,28 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
                             {COLOR_BY.map((key) => (
                                 <option key={key} value={key}>
                                     {t(`calendar.options.colorBy_${key}`, key)}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                        {t(
+                            'calendar.options.multiDayCount',
+                            'Days in multi-day view'
+                        )}
+                        <select
+                            value={options.multiDayCount}
+                            onChange={(e) =>
+                                onChange({
+                                    ...options,
+                                    multiDayCount: Number(e.target.value),
+                                })
+                            }
+                            className="rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1"
+                        >
+                            {MULTI_DAY_COUNTS.map((count) => (
+                                <option key={count} value={count}>
+                                    {count}
                                 </option>
                             ))}
                         </select>

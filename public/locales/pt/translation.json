@@ -1694,7 +1694,12 @@
     "done": "Concluído"
   },
   "calendar": {
+    "multiDay_one": "{{count}} dias",
+    "multiDay_other": "{{count}} dias",
+    "agendaEmpty": "Nada agendado",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Dias na vista de vários dias",
       "title": "Opções de visualização",
       "showCompleted": "Mostrar concluídas",
       "showWeekends": "Mostrar fins de semana",

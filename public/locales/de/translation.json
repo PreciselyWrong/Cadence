@@ -1355,7 +1355,12 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "multiDay_one": "{{count}} Tage",
+    "multiDay_other": "{{count}} Tage",
+    "agendaEmpty": "Nichts geplant",
+    "agenda": "Agenda",
     "options": {
+      "multiDayCount": "Tage in der Mehrtagesansicht",
       "title": "Ansichtsoptionen",
       "showCompleted": "Erledigte anzeigen",
       "showWeekends": "Wochenenden anzeigen",

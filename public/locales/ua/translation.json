@@ -1470,7 +1470,12 @@
     "startAfterDueError": "Початок не може бути пізніше терміну"
   },
   "calendar": {
+    "multiDay_one": "{{count}} дн.",
+    "multiDay_other": "{{count}} дн.",
+    "agendaEmpty": "Нічого не заплановано",
+    "agenda": "Порядок денний",
     "options": {
+      "multiDayCount": "Днів у багатоденному вигляді",
       "title": "Параметри вигляду",
       "showCompleted": "Показувати виконані",
       "showWeekends": "Показувати вихідні",

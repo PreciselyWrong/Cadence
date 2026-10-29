@@ -1690,7 +1690,12 @@
     "done": "완료"
   },
   "calendar": {
+    "multiDay_one": "{{count}}일",
+    "multiDay_other": "{{count}}일",
+    "agendaEmpty": "예정된 항목 없음",
+    "agenda": "일정 목록",
     "options": {
+      "multiDayCount": "여러 날 보기의 일수",
       "title": "보기 옵션",
       "showCompleted": "완료된 항목 표시",
       "showWeekends": "주말 표시",

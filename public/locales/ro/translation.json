@@ -1696,7 +1696,12 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "multiDay_one": "{{count}} zile",
+    "multiDay_other": "{{count}} zile",
+    "agendaEmpty": "Nimic programat",
+    "agenda": "Agendă",
     "options": {
+      "multiDayCount": "Zile în vizualizarea pe mai multe zile",
       "title": "Opțiuni de afișare",
       "showCompleted": "Afișează finalizate",
       "showWeekends": "Afișează weekendurile",

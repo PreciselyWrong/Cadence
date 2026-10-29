@@ -1864,7 +1864,12 @@
         "done": "Hotovo"
     },
     "calendar": {
+      "multiDay_one": "{{count}} dní",
+      "multiDay_other": "{{count}} dní",
+      "agendaEmpty": "Nič naplánované",
+      "agenda": "Agenda",
       "options": {
+        "multiDayCount": "Dni vo viacdňovom zobrazení",
         "title": "Možnosti zobrazenia",
         "showCompleted": "Zobraziť dokončené",
         "showWeekends": "Zobraziť víkendy",

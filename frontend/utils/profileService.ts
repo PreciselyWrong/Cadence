@@ -33,6 +33,7 @@ interface Profile {
             showWeekends?: boolean;
             showRepeats?: boolean;
             colorBy?: 'default' | 'project' | 'priority' | 'tag';
+            multiDayCount?: number;
         };
         inbox?: {
             recentlyCapturedExpanded?: boolean;

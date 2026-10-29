@@ -1692,7 +1692,12 @@
     "done": "Færdig"
   },
   "calendar": {
+    "multiDay_one": "{{count}} dage",
+    "multiDay_other": "{{count}} dage",
+    "agendaEmpty": "Intet planlagt",
+    "agenda": "Dagsorden",
     "options": {
+      "multiDayCount": "Dage i flerdagesvisning",
       "title": "Visningsindstillinger",
       "showCompleted": "Vis fuldførte",
       "showWeekends": "Vis weekender",
