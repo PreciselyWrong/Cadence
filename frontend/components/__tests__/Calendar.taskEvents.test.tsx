@@ -205,7 +205,7 @@ describe('whole-day bar rows', () => {
         { id: 'a', due_date: '2026-10-28', start_date: '2026-10-26' },
         { id: 'b', due_date: '2026-10-29', start_date: '2026-10-27' },
         { id: 'c', due_date: '2026-10-30', start_date: '2026-10-29' },
-    ].flatMap(taskToEvents);
+    ].flatMap((task) => taskToEvents(task));
 
     it('reuses a row once the bar above has ended', () => {
         const rows = layoutAllDayWeek(bars, new Date(2026, 9, 26));

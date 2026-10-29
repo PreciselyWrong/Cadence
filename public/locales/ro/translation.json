@@ -1696,6 +1696,18 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "options": {
+      "title": "Opțiuni de afișare",
+      "showCompleted": "Afișează finalizate",
+      "showWeekends": "Afișează weekendurile",
+      "showRepeats": "Afișează toate repetările",
+      "colorBy": "Culoare după",
+      "colorBy_default": "Implicit",
+      "colorBy_project": "Proiect",
+      "colorBy_priority": "Prioritate",
+      "colorBy_tag": "Etichetă",
+      "saveError": "Nu s-au putut salva opțiunile"
+    },
     "arrange": {
       "title": "Aranjează sarcinile",
       "noDate": "Fără dată",

@@ -1700,6 +1700,18 @@
     "done": "تم"
   },
   "calendar": {
+    "options": {
+      "title": "خيارات العرض",
+      "showCompleted": "إظهار المكتملة",
+      "showWeekends": "إظهار عطلة نهاية الأسبوع",
+      "showRepeats": "إظهار كل التكرارات",
+      "colorBy": "التلوين حسب",
+      "colorBy_default": "افتراضي",
+      "colorBy_project": "المشروع",
+      "colorBy_priority": "الأولوية",
+      "colorBy_tag": "الوسم",
+      "saveError": "تعذّر حفظ خيارات العرض"
+    },
     "arrange": {
       "title": "ترتيب المهام",
       "noDate": "بدون تاريخ",

@@ -1470,6 +1470,18 @@
     "startAfterDueError": "Початок не може бути пізніше терміну"
   },
   "calendar": {
+    "options": {
+      "title": "Параметри вигляду",
+      "showCompleted": "Показувати виконані",
+      "showWeekends": "Показувати вихідні",
+      "showRepeats": "Показувати всі повторення",
+      "colorBy": "Колір за",
+      "colorBy_default": "Типово",
+      "colorBy_project": "Проєкт",
+      "colorBy_priority": "Пріоритет",
+      "colorBy_tag": "Тег",
+      "saveError": "Не вдалося зберегти параметри"
+    },
     "arrange": {
       "title": "Розподілити завдання",
       "noDate": "Без дати",

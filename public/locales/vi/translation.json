@@ -1690,6 +1690,18 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "options": {
+      "title": "Tùy chọn hiển thị",
+      "showCompleted": "Hiện việc đã xong",
+      "showWeekends": "Hiện cuối tuần",
+      "showRepeats": "Hiện mọi lần lặp",
+      "colorBy": "Tô màu theo",
+      "colorBy_default": "Mặc định",
+      "colorBy_project": "Dự án",
+      "colorBy_priority": "Ưu tiên",
+      "colorBy_tag": "Thẻ",
+      "saveError": "Không thể lưu tùy chọn hiển thị"
+    },
     "arrange": {
       "title": "Sắp xếp công việc",
       "noDate": "Không có ngày",

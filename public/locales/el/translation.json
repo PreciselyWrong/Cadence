@@ -1693,6 +1693,18 @@
     "done": "Τέλος"
   },
   "calendar": {
+    "options": {
+      "title": "Επιλογές προβολής",
+      "showCompleted": "Εμφάνιση ολοκληρωμένων",
+      "showWeekends": "Εμφάνιση Σαββατοκύριακων",
+      "showRepeats": "Εμφάνιση όλων των επαναλήψεων",
+      "colorBy": "Χρώμα κατά",
+      "colorBy_default": "Προεπιλογή",
+      "colorBy_project": "Έργο",
+      "colorBy_priority": "Προτεραιότητα",
+      "colorBy_tag": "Ετικέτα",
+      "saveError": "Δεν ήταν δυνατή η αποθήκευση"
+    },
     "arrange": {
       "title": "Τακτοποίηση εργασιών",
       "noDate": "Χωρίς ημερομηνία",

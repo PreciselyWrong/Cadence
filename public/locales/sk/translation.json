@@ -1864,6 +1864,18 @@
         "done": "Hotovo"
     },
     "calendar": {
+      "options": {
+        "title": "Možnosti zobrazenia",
+        "showCompleted": "Zobraziť dokončené",
+        "showWeekends": "Zobraziť víkendy",
+        "showRepeats": "Zobraziť všetky opakovania",
+        "colorBy": "Farba podľa",
+        "colorBy_default": "Predvolené",
+        "colorBy_project": "Projekt",
+        "colorBy_priority": "Priorita",
+        "colorBy_tag": "Štítok",
+        "saveError": "Možnosti sa nepodarilo uložiť"
+      },
       "arrange": {
         "title": "Naplánovať úlohy",
         "noDate": "Bez dátumu",

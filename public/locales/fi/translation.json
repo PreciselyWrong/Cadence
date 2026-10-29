@@ -1692,6 +1692,18 @@
     "done": "Valmis"
   },
   "calendar": {
+    "options": {
+      "title": "Näkymän asetukset",
+      "showCompleted": "Näytä valmiit",
+      "showWeekends": "Näytä viikonloput",
+      "showRepeats": "Näytä kaikki toistot",
+      "colorBy": "Väri",
+      "colorBy_default": "Oletus",
+      "colorBy_project": "Projekti",
+      "colorBy_priority": "Prioriteetti",
+      "colorBy_tag": "Tunniste",
+      "saveError": "Asetuksia ei voitu tallentaa"
+    },
     "arrange": {
       "title": "Järjestä tehtävät",
       "noDate": "Ei päivää",

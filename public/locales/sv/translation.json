@@ -1692,6 +1692,18 @@
     "done": "Klar"
   },
   "calendar": {
+    "options": {
+      "title": "Visningsalternativ",
+      "showCompleted": "Visa slutförda",
+      "showWeekends": "Visa helger",
+      "showRepeats": "Visa alla upprepningar",
+      "colorBy": "Färg efter",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Prioritet",
+      "colorBy_tag": "Tagg",
+      "saveError": "Kunde inte spara visningsalternativ"
+    },
     "arrange": {
       "title": "Planera uppgifter",
       "noDate": "Inget datum",

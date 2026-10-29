@@ -1692,6 +1692,18 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "options": {
+      "title": "Görünüm seçenekleri",
+      "showCompleted": "Tamamlananları göster",
+      "showWeekends": "Hafta sonlarını göster",
+      "showRepeats": "Tüm tekrarları göster",
+      "colorBy": "Renklendirme",
+      "colorBy_default": "Varsayılan",
+      "colorBy_project": "Proje",
+      "colorBy_priority": "Öncelik",
+      "colorBy_tag": "Etiket",
+      "saveError": "Görünüm seçenekleri kaydedilemedi"
+    },
     "arrange": {
       "title": "Görevleri yerleştir",
       "noDate": "Tarihsiz",

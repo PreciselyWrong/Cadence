@@ -1957,6 +1957,18 @@
     "done": "Done"
   },
   "calendar": {
+    "options": {
+      "title": "View options",
+      "showCompleted": "Show completed",
+      "showWeekends": "Show weekends",
+      "showRepeats": "Show all repeats",
+      "colorBy": "Colour by",
+      "colorBy_default": "Default",
+      "colorBy_project": "Project",
+      "colorBy_priority": "Priority",
+      "colorBy_tag": "Tag",
+      "saveError": "Could not save view options"
+    },
     "arrange": {
       "title": "Arrange tasks",
       "noDate": "No date",

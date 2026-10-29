@@ -1696,6 +1696,18 @@
     "done": "Končano"
   },
   "calendar": {
+    "options": {
+      "title": "Možnosti pogleda",
+      "showCompleted": "Pokaži dokončana",
+      "showWeekends": "Pokaži vikende",
+      "showRepeats": "Pokaži vse ponovitve",
+      "colorBy": "Barva po",
+      "colorBy_default": "Privzeto",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Prioriteta",
+      "colorBy_tag": "Oznaka",
+      "saveError": "Možnosti ni bilo mogoče shraniti"
+    },
     "arrange": {
       "title": "Razporedi opravila",
       "noDate": "Brez datuma",

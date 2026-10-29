@@ -1692,6 +1692,18 @@
     "done": "Færdig"
   },
   "calendar": {
+    "options": {
+      "title": "Visningsindstillinger",
+      "showCompleted": "Vis fuldførte",
+      "showWeekends": "Vis weekender",
+      "showRepeats": "Vis alle gentagelser",
+      "colorBy": "Farve efter",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Prioritet",
+      "colorBy_tag": "Mærke",
+      "saveError": "Kunne ikke gemme visningsindstillinger"
+    },
     "arrange": {
       "title": "Planlæg opgaver",
       "noDate": "Ingen dato",

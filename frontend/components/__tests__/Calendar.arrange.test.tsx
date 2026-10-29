@@ -9,7 +9,7 @@ const tasks = [
         name: 'Undated',
         status: 0,
         due_date: null,
-        project: { name: 'Home' },
+        Project: { name: 'Home' },
     },
     { id: 2, name: 'Late', status: 0, due_date: '2026-10-20', priority: 2 },
     { id: 3, name: 'Future', status: 0, due_date: '2026-11-20' },

@@ -1693,6 +1693,18 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "options": {
+      "title": "Visningsvalg",
+      "showCompleted": "Vis fullførte",
+      "showWeekends": "Vis helger",
+      "showRepeats": "Vis alle gjentakelser",
+      "colorBy": "Farge etter",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Prosjekt",
+      "colorBy_priority": "Prioritet",
+      "colorBy_tag": "Etikett",
+      "saveError": "Kunne ikke lagre visningsvalg"
+    },
     "arrange": {
       "title": "Planlegg oppgaver",
       "noDate": "Ingen dato",

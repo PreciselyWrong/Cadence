@@ -1355,6 +1355,18 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "options": {
+      "title": "Ansichtsoptionen",
+      "showCompleted": "Erledigte anzeigen",
+      "showWeekends": "Wochenenden anzeigen",
+      "showRepeats": "Alle Wiederholungen anzeigen",
+      "colorBy": "Färben nach",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Priorität",
+      "colorBy_tag": "Tag",
+      "saveError": "Ansichtsoptionen konnten nicht gespeichert werden"
+    },
     "arrange": {
       "title": "Aufgaben einplanen",
       "noDate": "Ohne Datum",

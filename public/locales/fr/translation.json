@@ -1694,6 +1694,18 @@
     "done": "Fait"
   },
   "calendar": {
+    "options": {
+      "title": "Options d'affichage",
+      "showCompleted": "Afficher les terminées",
+      "showWeekends": "Afficher les week-ends",
+      "showRepeats": "Afficher toutes les répétitions",
+      "colorBy": "Couleur selon",
+      "colorBy_default": "Par défaut",
+      "colorBy_project": "Projet",
+      "colorBy_priority": "Priorité",
+      "colorBy_tag": "Étiquette",
+      "saveError": "Impossible d'enregistrer les options d'affichage"
+    },
     "arrange": {
       "title": "Planifier les tâches",
       "noDate": "Sans date",

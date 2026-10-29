@@ -24,6 +24,7 @@ interface CalendarMonthViewProps {
     onDateClick?: (date: Date) => void;
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (eventId: string, newDate: Date) => void;
+    showWeekends?: boolean;
 }
 
 const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
@@ -32,6 +33,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     onDateClick,
     onEventClick,
     onEventDrop,
+    showWeekends = true,
 }) => {
     const { t } = useTranslation();
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
@@ -68,12 +70,17 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
         t('weekdays.saturday', 'Sat'),
     ];
 
+    const isShown = (dayOfWeek: number) =>
+        showWeekends || (dayOfWeek !== 0 && dayOfWeek !== 6);
     const getWeekDays = () => {
         const allDays = getAllWeekDays();
-        return [
-            ...allDays.slice(firstDayOfWeek),
-            ...allDays.slice(0, firstDayOfWeek),
-        ];
+        return [0, 1, 2, 3, 4, 5, 6]
+            .map((offset) => (firstDayOfWeek + offset) % 7)
+            .filter(isShown)
+            .map((dayOfWeek) => allDays[dayOfWeek]);
+    };
+    const gridColumns = {
+        gridTemplateColumns: `repeat(${showWeekends ? 7 : 5}, minmax(0, 1fr))`,
     };
 
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
@@ -101,7 +108,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">
             {/* Weekday headers */}
-            <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+            <div
+                style={gridColumns}
+                className="grid border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+            >
                 {getWeekDays().map((day) => (
                     <div
                         key={day}
@@ -113,8 +123,12 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             </div>
 
             {/* Calendar grid */}
-            <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600">
+            <div
+                style={gridColumns}
+                className="grid flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600"
+            >
                 {days.map((day, index) => {
+                    if (!isShown(day.getDay())) return null;
                     // Whole-day bars keep their week row; empty rows are
                     // kept as gaps so a span lines up across days.
                     const rows = layoutAllDayWeek(

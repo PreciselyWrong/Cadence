@@ -1690,6 +1690,18 @@
     "done": "Selesai"
   },
   "calendar": {
+    "options": {
+      "title": "Opsi tampilan",
+      "showCompleted": "Tampilkan yang selesai",
+      "showWeekends": "Tampilkan akhir pekan",
+      "showRepeats": "Tampilkan semua pengulangan",
+      "colorBy": "Warna berdasarkan",
+      "colorBy_default": "Bawaan",
+      "colorBy_project": "Proyek",
+      "colorBy_priority": "Prioritas",
+      "colorBy_tag": "Tag",
+      "saveError": "Tidak dapat menyimpan opsi tampilan"
+    },
     "arrange": {
       "title": "Atur tugas",
       "noDate": "Tanpa tanggal",

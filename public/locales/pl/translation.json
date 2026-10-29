@@ -1696,6 +1696,18 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "options": {
+      "title": "Opcje widoku",
+      "showCompleted": "Pokaż ukończone",
+      "showWeekends": "Pokaż weekendy",
+      "showRepeats": "Pokaż wszystkie powtórzenia",
+      "colorBy": "Kolor według",
+      "colorBy_default": "Domyślny",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Priorytet",
+      "colorBy_tag": "Tag",
+      "saveError": "Nie udało się zapisać opcji widoku"
+    },
     "arrange": {
       "title": "Rozplanuj zadania",
       "noDate": "Bez daty",

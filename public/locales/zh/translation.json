@@ -1690,6 +1690,18 @@
     "done": "完成"
   },
   "calendar": {
+    "options": {
+      "title": "视图选项",
+      "showCompleted": "显示已完成",
+      "showWeekends": "显示周末",
+      "showRepeats": "显示所有重复",
+      "colorBy": "颜色依据",
+      "colorBy_default": "默认",
+      "colorBy_project": "项目",
+      "colorBy_priority": "优先级",
+      "colorBy_tag": "标签",
+      "saveError": "无法保存视图选项"
+    },
     "arrange": {
       "title": "安排任务",
       "noDate": "无日期",

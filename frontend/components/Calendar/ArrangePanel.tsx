@@ -19,6 +19,7 @@ export interface ArrangeTask {
     parent_task_id?: number | null;
     is_virtual_occurrence?: boolean;
     habit_mode?: boolean;
+    Project?: { id?: number; name?: string } | null;
     project?: { id?: number; name?: string } | null;
     project_id?: number | null;
     tags?: { name: string }[];
@@ -29,6 +30,9 @@ export interface ArrangeFilter {
     tag: string;
     priority: string;
 }
+
+// Task lists send the project as `Project`.
+const projectOf = (task: ArrangeTask) => task.Project ?? task.project;
 
 const PRIORITY_NAMES = ['low', 'medium', 'high'];
 const priorityName = (priority: any) =>
@@ -56,7 +60,10 @@ export const arrangeTasks = (
         const day = task.due_date ? task.due_date.slice(0, 10) : null;
         if (tab === 'nodate' ? day !== null : !day || day >= today)
             return false;
-        if (filter.project && (task.project?.name || '') !== filter.project) {
+        if (
+            filter.project &&
+            (projectOf(task)?.name || '') !== filter.project
+        ) {
             return false;
         }
         if (
@@ -98,7 +105,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
     );
     const shown = arrangeTasks(tabTasks, tab, today, filter);
     const projectNames = Array.from(
-        new Set(tabTasks.map((task) => task.project?.name).filter(Boolean))
+        new Set(tabTasks.map((task) => projectOf(task)?.name).filter(Boolean))
     ).sort() as string[];
     const tagNames = Array.from(
         new Set(
@@ -109,7 +116,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
     const noProject = t('calendar.arrange.noProject', 'No project');
     const groups = new Map<string, ArrangeTask[]>();
     shown.forEach((task) => {
-        const key = task.project?.name || noProject;
+        const key = projectOf(task)?.name || noProject;
         groups.set(key, [...(groups.get(key) || []), task]);
     });
 

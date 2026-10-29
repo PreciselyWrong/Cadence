@@ -1622,6 +1622,18 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "options": {
+      "title": "表示オプション",
+      "showCompleted": "完了済みを表示",
+      "showWeekends": "週末を表示",
+      "showRepeats": "すべての繰り返しを表示",
+      "colorBy": "色分け",
+      "colorBy_default": "既定",
+      "colorBy_project": "プロジェクト",
+      "colorBy_priority": "優先度",
+      "colorBy_tag": "タグ",
+      "saveError": "表示オプションを保存できませんでした"
+    },
     "arrange": {
       "title": "タスクを配置",
       "noDate": "日付なし",

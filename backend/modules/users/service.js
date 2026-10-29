@@ -134,6 +134,21 @@ function sanitizeFocus(focus) {
     return clean;
 }
 
+const CALENDAR_COLOR_BY = ['default', 'project', 'priority', 'tag'];
+
+// Calendar page View options: known switches only.
+function sanitizeCalendarOptions(calendar) {
+    const clean = {};
+    if (!calendar || typeof calendar !== 'object') return clean;
+    ['showCompleted', 'showWeekends', 'showRepeats'].forEach((key) => {
+        if (typeof calendar[key] === 'boolean') clean[key] = calendar[key];
+    });
+    if (CALENDAR_COLOR_BY.includes(calendar.colorBy)) {
+        clean.colorBy = calendar.colorBy;
+    }
+    return clean;
+}
+
 class UsersService {
     // The user directory is an admin view. Regular users share by typing an
     // exact email, so they never need (and must not get) the full list.
@@ -750,7 +765,7 @@ class UsersService {
             throw new NotFoundError('User not found.');
         }
 
-        const { project, appearance, inbox, focus } = data;
+        const { project, appearance, inbox, focus, calendar } = data;
 
         const currentSettings =
             user.ui_settings && typeof user.ui_settings === 'object'
@@ -793,6 +808,13 @@ class UsersService {
 
         if (focus !== undefined) {
             newSettings.focus = sanitizeFocus(focus);
+        }
+
+        if (calendar !== undefined) {
+            newSettings.calendar = {
+                ...(currentSettings.calendar || {}),
+                ...sanitizeCalendarOptions(calendar),
+            };
         }
 
         await usersRepository.update(user, { ui_settings: newSettings });

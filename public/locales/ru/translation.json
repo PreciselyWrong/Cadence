@@ -1696,6 +1696,18 @@
     "done": "Готово"
   },
   "calendar": {
+    "options": {
+      "title": "Параметры вида",
+      "showCompleted": "Показывать выполненные",
+      "showWeekends": "Показывать выходные",
+      "showRepeats": "Показывать все повторения",
+      "colorBy": "Цвет по",
+      "colorBy_default": "По умолчанию",
+      "colorBy_project": "Проект",
+      "colorBy_priority": "Приоритет",
+      "colorBy_tag": "Тег",
+      "saveError": "Не удалось сохранить параметры вида"
+    },
     "arrange": {
       "title": "Распределить задачи",
       "noDate": "Без даты",

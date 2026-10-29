@@ -6,7 +6,6 @@ import {
     eachDayOfInterval,
     isToday,
     addHours,
-    differenceInCalendarDays,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -14,7 +13,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-import { CalendarEvent, layoutAllDayWeek } from './taskEvents';
+import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarWeekViewProps {
@@ -25,6 +24,7 @@ interface CalendarWeekViewProps {
     onTimeSlotClick?: (date: Date, hour: number) => void;
     onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
     onEventResize?: (eventId: string, newEnd: Date) => void;
+    showWeekends?: boolean;
 }
 
 const WEEK_HOUR_HEIGHT = 72;
@@ -36,6 +36,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     onTimeSlotClick,
     onEventDrop,
     onEventResize,
+    showWeekends = true,
 }) => {
     const { t } = useTranslation();
     const resize = useEventResize(WEEK_HOUR_HEIGHT, onEventResize);
@@ -59,7 +60,16 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     const weekEnd = endOfWeek(currentDate, {
         weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
     });
-    const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+    const weekDays = eachDayOfInterval({
+        start: weekStart,
+        end: weekEnd,
+    }).filter(
+        (day) => showWeekends || (day.getDay() !== 0 && day.getDay() !== 6)
+    );
+    // Time column plus one column per shown day.
+    const gridColumns = {
+        gridTemplateColumns: `repeat(${weekDays.length + 1}, minmax(0, 1fr))`,
+    };
     const hours = Array.from({ length: 24 }, (_, i) => i);
 
     const getEventsForTimeSlot = (day: Date, hour: number) =>
@@ -81,22 +91,25 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     const handleDragEnd = () => setDraggedEventId(null);
 
     // Whole-day bars, clipped to this week, as grid columns 2..8.
+    // Whole-day bars across the shown days, as grid columns 2 and on.
     const allDayBars = events
-        .filter(
-            (event) =>
-                event.allDay && event.start <= weekEnd && event.end > weekStart
-        )
+        .filter((event) => event.allDay)
         .map((event) => {
-            const from = Math.max(
-                0,
-                differenceInCalendarDays(event.start, weekStart)
-            );
-            const to = Math.min(
-                7,
-                differenceInCalendarDays(event.end, weekStart)
-            );
-            return { event, from, to: Math.max(to, from + 1) };
-        });
+            const covered = weekDays
+                .map((day, index) => (coversDay(event, day) ? index : -1))
+                .filter((index) => index >= 0);
+            return covered.length
+                ? {
+                      event,
+                      from: covered[0],
+                      to: covered[covered.length - 1] + 1,
+                  }
+                : null;
+        })
+        .filter(
+            (bar): bar is { event: CalendarEvent; from: number; to: number } =>
+                bar !== null
+        );
 
     const allDayRows = layoutAllDayWeek(events, weekStart);
 
@@ -115,7 +128,10 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">
             {/* Day headers */}
-            <div className="grid grid-cols-8 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+            <div
+                className="grid border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10"
+                style={gridColumns}
+            >
                 <div className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 border-r border-gray-200 dark:border-gray-600">
                     {/* time col */}
                 </div>
@@ -152,7 +168,8 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
 
             {allDayBars.length > 0 && (
                 <div
-                    className="grid grid-cols-8 gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+                    style={gridColumns}
                     data-testid="calendar-all-day-row"
                 >
                     {weekDays.map((day, index) => (
@@ -204,7 +221,8 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 {hours.map((hour) => (
                     <div
                         key={hour}
-                        className="grid grid-cols-8 h-[72px] border-b border-gray-100 dark:border-gray-600"
+                        className="grid h-[72px] border-b border-gray-100 dark:border-gray-600"
+                        style={gridColumns}
                     >
                         <div className="py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                             {format(

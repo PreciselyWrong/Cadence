@@ -53,4 +53,20 @@ describe('PUT /api/profile/ui-settings', () => {
             false
         );
     });
+
+    it('saves the calendar view options, dropping unknown values', async () => {
+        await agent.put('/api/profile/ui-settings').send({
+            calendar: { showCompleted: false, colorBy: 'project' },
+        });
+        await agent.put('/api/profile/ui-settings').send({
+            calendar: { showWeekends: false, colorBy: 'rainbow', extra: 1 },
+        });
+
+        const profile = await agent.get('/api/profile');
+        expect(profile.body.ui_settings.calendar).toEqual({
+            showCompleted: false,
+            showWeekends: false,
+            colorBy: 'project',
+        });
+    });
 });

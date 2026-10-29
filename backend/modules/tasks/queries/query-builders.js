@@ -75,7 +75,7 @@ async function filterTasksByParams(
         },
         {
             model: Project,
-            attributes: ['id', 'name', 'status', 'uid'],
+            attributes: ['id', 'name', 'status', 'uid', 'color'],
             required: false,
         },
         {

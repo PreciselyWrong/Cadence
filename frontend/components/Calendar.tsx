@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
 import { Project } from '../entities/Project';
@@ -46,6 +46,14 @@ import {
 } from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
 import ArrangePanel, { ARRANGE_DRAG_PREFIX } from './Calendar/ArrangePanel';
+import ViewOptions, {
+    CalendarOptions,
+    DEFAULT_CALENDAR_OPTIONS,
+    isWeekend,
+    readCalendarOptions,
+    visibleTasks,
+} from './Calendar/ViewOptions';
+import { fetchProfile, updateUiSettings } from '../utils/profileService';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -93,7 +101,6 @@ const Calendar: React.FC = () => {
     const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [view, setView] = useState<'month' | 'week' | 'day'>('month');
-    const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [isLoadingTasks, setIsLoadingTasks] = useState(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [allTasks, setAllTasks] = useState<any[]>([]);
@@ -105,6 +112,9 @@ const Calendar: React.FC = () => {
     const [feedErrors, setFeedErrors] = useState<string[]>([]);
     const [isManagerOpen, setIsManagerOpen] = useState(false);
     const [isArrangeOpen, setIsArrangeOpen] = useState(false);
+    const [options, setOptions] = useState<CalendarOptions>(
+        DEFAULT_CALENDAR_OPTIONS
+    );
 
     const locale = getLocale(i18n.language);
 
@@ -164,6 +174,31 @@ const Calendar: React.FC = () => {
             cancelled = true;
         };
     }, [visibleMonth, feedUidsKey]);
+
+    useEffect(() => {
+        fetchProfile()
+            .then((profile) =>
+                setOptions(readCalendarOptions(profile.ui_settings?.calendar))
+            )
+            .catch(() => {});
+    }, []);
+
+    const changeOptions = (next: CalendarOptions) => {
+        setOptions(next);
+        updateUiSettings({ calendar: next }).catch(() =>
+            showErrorToast(
+                t('calendar.options.saveError', 'Could not save view options')
+            )
+        );
+    };
+
+    const events = useMemo(
+        () =>
+            visibleTasks(allTasks, options).flatMap((task) =>
+                taskToEvents(task, options.colorBy)
+            ),
+        [allTasks, options]
+    );
 
     const shownFeedUids = new Set(
         feeds.filter((feed) => feed.show_on_calendar).map((feed) => feed.uid)
@@ -226,7 +261,6 @@ const Calendar: React.FC = () => {
                     tasks = [];
                 }
                 setAllTasks(tasks);
-                setEvents(convertTasksToEvents(tasks));
             }
         } catch (error) {
             console.error('Error loading tasks:', error);
@@ -234,9 +268,6 @@ const Calendar: React.FC = () => {
             setIsLoadingTasks(false);
         }
     };
-
-    const convertTasksToEvents = (tasks: any[]): CalendarEvent[] =>
-        Array.isArray(tasks) ? tasks.flatMap(taskToEvents) : [];
 
     const loadProjects = async () => {
         try {
@@ -267,9 +298,12 @@ const Calendar: React.FC = () => {
                     ? addWeeks(prev, -1)
                     : addWeeks(prev, 1);
             } else {
-                return direction === 'prev'
-                    ? addDays(prev, -1)
-                    : addDays(prev, 1);
+                // Without weekends, the day view steps over them.
+                let next = addDays(prev, direction === 'prev' ? -1 : 1);
+                while (!options.showWeekends && isWeekend(next)) {
+                    next = addDays(next, direction === 'prev' ? -1 : 1);
+                }
+                return next;
             }
         });
     };
@@ -324,12 +358,19 @@ const Calendar: React.FC = () => {
         );
     };
 
-    // Saves the change, then rebuilds the task's blocks from what the server
+    // Shows the change at once, saves it, then keeps what the server
     // returns (or reloads everything if the save fails).
     const saveTaskChange = async (
         task: any,
         update: Record<string, unknown>
     ) => {
+        const replace = (next: any) =>
+            setAllTasks((prev) =>
+                prev.map((t) =>
+                    t.id === task.id && !t.is_virtual_occurrence ? next : t
+                )
+            );
+        replace({ ...task, ...update });
         try {
             const saved: any = await updateTask(
                 task.uid,
@@ -340,14 +381,7 @@ const Calendar: React.FC = () => {
                 await loadTasks();
                 return;
             }
-            const merged = { ...task, ...update, ...(saved || {}) };
-            setAllTasks((prev) =>
-                prev.map((t) => (t.id === task.id ? merged : t))
-            );
-            setEvents((prev) => [
-                ...prev.filter((e) => findTask(e.id)?.id !== task.id),
-                ...taskToEvents(merged),
-            ]);
+            replace({ ...task, ...update, ...(saved || {}) });
         } catch (error) {
             console.error('Error updating task:', error);
             await loadTasks();
@@ -388,29 +422,13 @@ const Calendar: React.FC = () => {
             );
         }
 
-        const update = moveUpdate(task, event, newStart);
-        const duration = event.end.getTime() - event.start.getTime();
-        setEvents((prev) =>
-            prev.map((e) =>
-                e.id === eventId
-                    ? {
-                          ...e,
-                          start: newStart,
-                          end: new Date(newStart.getTime() + duration),
-                      }
-                    : e
-            )
-        );
-        await saveTaskChange(task, update);
+        await saveTaskChange(task, moveUpdate(task, event, newStart));
     };
 
     const handleEventResize = async (eventId: string, newEnd: Date) => {
         const task = findTask(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event?.resize) return;
-        setEvents((prev) =>
-            prev.map((e) => (e.id === eventId ? { ...e, end: newEnd } : e))
-        );
         await saveTaskChange(task, resizeUpdate(event, newEnd));
     };
 
@@ -447,6 +465,11 @@ const Calendar: React.FC = () => {
                                 )
                             )}
                         </div>
+
+                        <ViewOptions
+                            options={options}
+                            onChange={changeOptions}
+                        />
 
                         {/* Navigation */}
                         <button
@@ -567,6 +590,7 @@ const Calendar: React.FC = () => {
                                 onDateClick={handleDateClick}
                                 onEventClick={handleEventClick}
                                 onEventDrop={handleEventDrop}
+                                showWeekends={options.showWeekends}
                             />
                         )}
                         {view === 'week' && (
@@ -578,6 +602,7 @@ const Calendar: React.FC = () => {
                                 onTimeSlotClick={handleTimeSlotClick}
                                 onEventDrop={handleEventDrop}
                                 onEventResize={handleEventResize}
+                                showWeekends={options.showWeekends}
                             />
                         )}
                         {view === 'day' && (

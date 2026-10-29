@@ -45,7 +45,70 @@ export interface CalendarTask {
     completed_at?: string | null;
     is_virtual_occurrence?: boolean;
     occurrence_index?: number;
+    priority?: string | number | null;
+    Project?: {
+        id?: number | string;
+        name?: string;
+        color?: string | null;
+    } | null;
+    tags?: { name: string; color?: string | null }[];
 }
+
+export type CalendarColorBy = 'default' | 'project' | 'priority' | 'tag';
+
+const PALETTE = [
+    '#3b82f6',
+    '#8b5cf6',
+    '#ec4899',
+    '#14b8a6',
+    '#f97316',
+    '#84cc16',
+    '#06b6d4',
+    '#a855f7',
+];
+const PRIORITY_COLORS: Record<string, string> = {
+    high: '#ef4444',
+    medium: '#f59e0b',
+    low: '#3b82f6',
+};
+const PRIORITY_NAMES = ['low', 'medium', 'high'];
+const NEUTRAL = '#6b7280';
+
+const paletteColor = (key: string) => {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++)
+        hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    return PALETTE[Math.abs(hash) % PALETTE.length];
+};
+
+// Block colour: green once done; otherwise by the chosen key, with the
+// project's or tag's own colour when it has one.
+export const taskColor = (
+    task: CalendarTask,
+    colorBy: CalendarColorBy = 'default'
+) => {
+    if (task.completed_at) return '#22c55e';
+    if (colorBy === 'project') {
+        const project = task.Project;
+        if (!project) return NEUTRAL;
+        return (
+            project.color || paletteColor(String(project.id ?? project.name))
+        );
+    }
+    if (colorBy === 'priority') {
+        const name =
+            typeof task.priority === 'number'
+                ? PRIORITY_NAMES[task.priority]
+                : task.priority || '';
+        return PRIORITY_COLORS[name] || NEUTRAL;
+    }
+    if (colorBy === 'tag') {
+        const tag = task.tags?.[0];
+        if (!tag) return NEUTRAL;
+        return tag.color || paletteColor(tag.name);
+    }
+    return '#3b82f6';
+};
 
 // YYYY-MM-DD plus optional HH:mm, read as local time.
 export const localDateTime = (
@@ -72,8 +135,11 @@ const isSameDay = (a: Date, b: Date) => differenceInCalendarDays(a, b) === 0;
 // - due time + start time earlier the same day: start → due;
 // - due time otherwise: due → due + estimate (an hour without one);
 // - whole-day due: a bar from the start day (if earlier) to the due day.
-const dueEvent = (task: CalendarTask): CalendarEvent | null => {
-    const color = task.completed_at ? '#22c55e' : '#3b82f6';
+const dueEvent = (
+    task: CalendarTask,
+    colorBy: CalendarColorBy = 'default'
+): CalendarEvent | null => {
+    const color = taskColor(task, colorBy);
     const base = {
         id: `task-${task.id}`,
         title: taskName(task),
@@ -121,15 +187,17 @@ export const taskIdOf = (eventId: string) =>
         .replace(/^task(-defer|-created|-fallback)?-/, '')
         .replace(/-occ-\d+$/, '');
 
-export const taskToEvents = (task: CalendarTask): CalendarEvent[] => {
+export const taskToEvents = (
+    task: CalendarTask,
+    colorBy: CalendarColorBy = 'default'
+): CalendarEvent[] => {
     if (task.is_virtual_occurrence) {
-        const due = dueEvent(task);
+        const due = dueEvent(task, colorBy);
         if (!due) return [];
         return [
             {
                 ...due,
                 id: `task-${task.id}-occ-${task.occurrence_index ?? 0}`,
-                color: '#93c5fd',
                 resize: undefined,
                 readOnly: true,
             },
@@ -149,7 +217,7 @@ export const taskToEvents = (task: CalendarTask): CalendarEvent[] => {
             });
         }
     }
-    const due = dueEvent(task);
+    const due = dueEvent(task, colorBy);
     if (due) events.push(due);
     return events;
 };

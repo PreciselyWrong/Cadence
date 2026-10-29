@@ -102,6 +102,15 @@ How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`
 
 Moving a block keeps its length: a start-to-due block moves both ends, a bar moves its start and due dates by the same number of days and keeps their times. Dropping on an hour of the week or day view sets the time; dropping in the month view or the all-day row keeps it.
 
+## Calendar page: View options
+
+The sliders button next to the view switcher opens **View options**, saved per user in `ui_settings.calendar` (`PUT /api/profile/ui-settings` with `{ calendar: {...} }`):
+
+- **Show completed** (`showCompleted`, on by default): done tasks stay on the calendar in green.
+- **Show weekends** (`showWeekends`, on): off drops Saturday and Sunday from the month and week views, and the day view steps over them.
+- **Show all repeats** (`showRepeats`, on): off keeps each recurring task at its current due date only.
+- **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
+
 ## Calendar page: Arrange tasks
 
 The **Arrange tasks** button opens a side panel with two tabs: **No date** (open tasks without a due date) and **Overdue** (open tasks due before today). Done and cancelled tasks, subtasks, habits and recurring previews are left out. Tasks are grouped by project in sections that fold, and can be narrowed by project, tag and priority.

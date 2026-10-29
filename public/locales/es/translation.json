@@ -1656,6 +1656,18 @@
     "done": "Hecho"
   },
   "calendar": {
+    "options": {
+      "title": "Opciones de vista",
+      "showCompleted": "Mostrar completadas",
+      "showWeekends": "Mostrar fines de semana",
+      "showRepeats": "Mostrar todas las repeticiones",
+      "colorBy": "Color por",
+      "colorBy_default": "Predeterminado",
+      "colorBy_project": "Proyecto",
+      "colorBy_priority": "Prioridad",
+      "colorBy_tag": "Etiqueta",
+      "saveError": "No se pudieron guardar las opciones"
+    },
     "arrange": {
       "title": "Organizar tareas",
       "noDate": "Sin fecha",

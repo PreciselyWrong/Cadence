@@ -1692,6 +1692,18 @@
     "done": "Готово"
   },
   "calendar": {
+    "options": {
+      "title": "Опции за изглед",
+      "showCompleted": "Показване на завършени",
+      "showWeekends": "Показване на почивни дни",
+      "showRepeats": "Показване на всички повторения",
+      "colorBy": "Цвят по",
+      "colorBy_default": "По подразбиране",
+      "colorBy_project": "Проект",
+      "colorBy_priority": "Приоритет",
+      "colorBy_tag": "Етикет",
+      "saveError": "Неуспешно запазване на опциите"
+    },
     "arrange": {
       "title": "Подреждане на задачи",
       "noDate": "Без дата",

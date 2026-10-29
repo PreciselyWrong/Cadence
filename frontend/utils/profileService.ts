@@ -28,6 +28,12 @@ interface Profile {
             };
         };
         appearance?: Record<string, unknown>;
+        calendar?: {
+            showCompleted?: boolean;
+            showWeekends?: boolean;
+            showRepeats?: boolean;
+            colorBy?: 'default' | 'project' | 'priority' | 'tag';
+        };
         inbox?: {
             recentlyCapturedExpanded?: boolean;
         };

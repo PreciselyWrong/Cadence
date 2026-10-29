@@ -1694,6 +1694,18 @@
     "done": "Fatto"
   },
   "calendar": {
+    "options": {
+      "title": "Opzioni di visualizzazione",
+      "showCompleted": "Mostra completate",
+      "showWeekends": "Mostra fine settimana",
+      "showRepeats": "Mostra tutte le ripetizioni",
+      "colorBy": "Colore per",
+      "colorBy_default": "Predefinito",
+      "colorBy_project": "Progetto",
+      "colorBy_priority": "Priorità",
+      "colorBy_tag": "Tag",
+      "saveError": "Impossibile salvare le opzioni"
+    },
     "arrange": {
       "title": "Organizza attività",
       "noDate": "Senza data",

@@ -1692,6 +1692,18 @@
     "done": "Klaar"
   },
   "calendar": {
+    "options": {
+      "title": "Weergaveopties",
+      "showCompleted": "Voltooide tonen",
+      "showWeekends": "Weekenden tonen",
+      "showRepeats": "Alle herhalingen tonen",
+      "colorBy": "Kleur op",
+      "colorBy_default": "Standaard",
+      "colorBy_project": "Project",
+      "colorBy_priority": "Prioriteit",
+      "colorBy_tag": "Tag",
+      "saveError": "Weergaveopties konden niet worden opgeslagen"
+    },
     "arrange": {
       "title": "Taken inplannen",
       "noDate": "Geen datum",

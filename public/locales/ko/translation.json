@@ -1690,6 +1690,18 @@
     "done": "완료"
   },
   "calendar": {
+    "options": {
+      "title": "보기 옵션",
+      "showCompleted": "완료된 항목 표시",
+      "showWeekends": "주말 표시",
+      "showRepeats": "모든 반복 표시",
+      "colorBy": "색상 기준",
+      "colorBy_default": "기본",
+      "colorBy_project": "프로젝트",
+      "colorBy_priority": "우선순위",
+      "colorBy_tag": "태그",
+      "saveError": "보기 옵션을 저장할 수 없습니다"
+    },
     "arrange": {
       "title": "작업 배치",
       "noDate": "날짜 없음",
