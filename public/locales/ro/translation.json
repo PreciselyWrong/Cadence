@@ -1721,6 +1721,7 @@
     "agendaEmpty": "Nimic programat",
     "agenda": "Agendă",
     "options": {
+      "showHabits": "Afișează obiceiurile",
       "showWeekNumbers": "Afișează numerele săptămânilor",
       "showMiniCalendar": "Afișează mini calendarul",
       "multiDayCount": "Zile în vizualizarea pe mai multe zile",

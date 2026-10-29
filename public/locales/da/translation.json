@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Intet planlagt",
     "agenda": "Dagsorden",
     "options": {
+      "showHabits": "Vis vaner",
       "showWeekNumbers": "Vis ugenumre",
       "showMiniCalendar": "Vis minikalender",
       "multiDayCount": "Dage i flerdagesvisning",

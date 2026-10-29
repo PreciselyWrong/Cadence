@@ -144,3 +144,36 @@ describe('multi-day and agenda views', () => {
         expect(screen.getByText('10:00 – 11:00')).toBeInTheDocument();
     });
 });
+
+describe('habits on the calendar', () => {
+    const habit = { id: 9, name: 'Water', habit_mode: true, status: 0 };
+    const checkIn = {
+        ...habit,
+        due_date: '2026-10-30',
+        is_virtual_occurrence: true,
+        occurrence_index: 1,
+    };
+
+    it('draws a check-in day as a read-only whole-day item', () => {
+        const [event] = taskToEvents(checkIn);
+        expect(event).toMatchObject({
+            id: 'task-9-habit-1',
+            allDay: true,
+            readOnly: true,
+            start: new Date(2026, 9, 30),
+            end: new Date(2026, 9, 31),
+        });
+    });
+
+    it('shows only check-in days, and none when habits are off', () => {
+        expect(
+            visibleTasks([habit, checkIn], DEFAULT_CALENDAR_OPTIONS)
+        ).toEqual([checkIn]);
+        expect(
+            visibleTasks([habit, checkIn], {
+                ...DEFAULT_CALENDAR_OPTIONS,
+                showHabits: false,
+            })
+        ).toEqual([]);
+    });
+});

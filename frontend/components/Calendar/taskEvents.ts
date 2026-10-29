@@ -45,6 +45,7 @@ export interface CalendarTask {
     completed_at?: string | null;
     is_virtual_occurrence?: boolean;
     occurrence_index?: number;
+    habit_mode?: boolean;
     priority?: string | number | null;
     Project?: {
         id?: number | string;
@@ -73,6 +74,7 @@ const PRIORITY_COLORS: Record<string, string> = {
 };
 const PRIORITY_NAMES = ['low', 'medium', 'high'];
 const NEUTRAL = '#6b7280';
+export const HABIT_COLOR = '#8b5cf6';
 
 const paletteColor = (key: string) => {
     let hash = 0;
@@ -185,12 +187,29 @@ const dueEvent = (
 export const taskIdOf = (eventId: string) =>
     eventId
         .replace(/^task(-defer|-created|-fallback)?-/, '')
-        .replace(/-occ-\d+$/, '');
+        .replace(/-(occ|habit)-\d+$/, '');
 
 export const taskToEvents = (
     task: CalendarTask,
     colorBy: CalendarColorBy = 'default'
 ): CalendarEvent[] => {
+    // A habit's check-in day: a whole-day item in the habit colour.
+    if (task.is_virtual_occurrence && task.habit_mode) {
+        const day = localDateTime(task.due_date);
+        if (!day) return [];
+        return [
+            {
+                id: `task-${task.id}-habit-${task.occurrence_index ?? 0}`,
+                title: taskName(task),
+                start: day,
+                end: addDays(day, 1),
+                type: 'task',
+                color: HABIT_COLOR,
+                allDay: true,
+                readOnly: true,
+            },
+        ];
+    }
     if (task.is_virtual_occurrence) {
         const due = dueEvent(task, colorBy);
         if (!due) return [];

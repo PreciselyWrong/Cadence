@@ -86,4 +86,23 @@ describe('GET /api/tasks?type=calendar recurring occurrences', () => {
         expect(listed.due_date).toBeNull();
         expect(listed).toHaveProperty('tags');
     });
+
+    it('adds a whole-day item for each day a habit asks for a check-in', async () => {
+        const created = await agent.post('/api/habits').send({ name: 'Water' });
+        expect(created.status).toBe(201);
+        const moment = require('moment-timezone');
+        const end = moment.utc().add(6, 'days').format('YYYY-MM-DD');
+
+        const res = await agent.get(`/api/tasks?type=calendar&end=${end}`);
+        const days = res.body.tasks
+            .filter(
+                (t) =>
+                    t.uid === created.body.habit.uid && t.is_virtual_occurrence
+            )
+            .map((t) => t.due_date);
+        // A daily habit: today and the next six days.
+        expect(days).toHaveLength(7);
+        expect(days[0]).toBe(moment.utc().format('YYYY-MM-DD'));
+        expect(days[6]).toBe(end);
+    });
 });

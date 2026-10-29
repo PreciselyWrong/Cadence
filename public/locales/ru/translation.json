@@ -1721,6 +1721,7 @@
     "agendaEmpty": "Ничего не запланировано",
     "agenda": "Повестка",
     "options": {
+      "showHabits": "Показывать привычки",
       "showWeekNumbers": "Показывать номера недель",
       "showMiniCalendar": "Показывать мини-календарь",
       "multiDayCount": "Дней в многодневном виде",

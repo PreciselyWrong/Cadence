@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Niets gepland",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Gewoonten tonen",
       "showWeekNumbers": "Weeknummers tonen",
       "showMiniCalendar": "Minikalender tonen",
       "multiDayCount": "Dagen in meerdaagse weergave",

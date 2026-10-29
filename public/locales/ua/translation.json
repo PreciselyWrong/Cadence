@@ -1495,6 +1495,7 @@
     "agendaEmpty": "Нічого не заплановано",
     "agenda": "Порядок денний",
     "options": {
+      "showHabits": "Показувати звички",
       "showWeekNumbers": "Показувати номери тижнів",
       "showMiniCalendar": "Показувати міні-календар",
       "multiDayCount": "Днів у багатоденному вигляді",

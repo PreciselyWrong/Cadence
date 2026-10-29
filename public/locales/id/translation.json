@@ -1715,6 +1715,7 @@
     "agendaEmpty": "Tidak ada jadwal",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Tampilkan kebiasaan",
       "showWeekNumbers": "Tampilkan nomor minggu",
       "showMiniCalendar": "Tampilkan kalender mini",
       "multiDayCount": "Hari dalam tampilan multi-hari",

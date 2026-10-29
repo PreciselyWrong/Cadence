@@ -1721,6 +1721,7 @@
     "agendaEmpty": "Nič načrtovanega",
     "agenda": "Dnevni red",
     "options": {
+      "showHabits": "Pokaži navade",
       "showWeekNumbers": "Pokaži številke tednov",
       "showMiniCalendar": "Pokaži mini koledar",
       "multiDayCount": "Dnevi v večdnevnem pogledu",

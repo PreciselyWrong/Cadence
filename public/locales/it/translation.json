@@ -1719,6 +1719,7 @@
     "agendaEmpty": "Niente in programma",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Mostra abitudini",
       "showWeekNumbers": "Mostra numeri della settimana",
       "showMiniCalendar": "Mostra mini calendario",
       "multiDayCount": "Giorni nella vista multi-giorno",

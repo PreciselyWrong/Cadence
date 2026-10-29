@@ -8,6 +8,7 @@ export interface CalendarOptions {
     showCompleted: boolean;
     showWeekends: boolean;
     showRepeats: boolean;
+    showHabits: boolean;
     showWeekNumbers: boolean;
     showMiniCalendar: boolean;
     colorBy: CalendarColorBy;
@@ -18,6 +19,7 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     showCompleted: true,
     showWeekends: true,
     showRepeats: true,
+    showHabits: true,
     showWeekNumbers: false,
     showMiniCalendar: false,
     colorBy: 'default',
@@ -42,6 +44,7 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
         showCompleted: flag('showCompleted'),
         showWeekends: flag('showWeekends'),
         showRepeats: flag('showRepeats'),
+        showHabits: flag('showHabits'),
         showWeekNumbers: flag('showWeekNumbers'),
         showMiniCalendar: flag('showMiniCalendar'),
         colorBy: COLOR_BY.includes(value.colorBy as CalendarColorBy)
@@ -59,12 +62,17 @@ export const visibleTasks = <
         status?: any;
         completed_at?: string | null;
         is_virtual_occurrence?: boolean;
+        habit_mode?: boolean;
     },
 >(
     tasks: T[],
     options: CalendarOptions
 ): T[] =>
     tasks.filter((task) => {
+        // A habit shows through its check-in days, never as a task block.
+        if (task.habit_mode) {
+            return options.showHabits && !!task.is_virtual_occurrence;
+        }
         if (!options.showRepeats && task.is_virtual_occurrence) return false;
         if (
             !options.showCompleted &&
@@ -104,7 +112,8 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
             | 'showWeekends'
             | 'showRepeats'
             | 'showWeekNumbers'
-            | 'showMiniCalendar';
+            | 'showMiniCalendar'
+            | 'showHabits';
         label: string;
     }[] = [
         {
@@ -118,6 +127,10 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
         {
             key: 'showRepeats',
             label: t('calendar.options.showRepeats', 'Show all repeats'),
+        },
+        {
+            key: 'showHabits',
+            label: t('calendar.options.showHabits', 'Show habits'),
         },
         {
             key: 'showWeekNumbers',

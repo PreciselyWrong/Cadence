@@ -133,6 +133,7 @@ The sliders button next to the view switcher opens **View options**, saved per u
 - **Show completed** (`showCompleted`, on by default): done tasks stay on the calendar in green.
 - **Show weekends** (`showWeekends`, on): off drops Saturday and Sunday from the month and week views, and the day view steps over them.
 - **Show all repeats** (`showRepeats`, on): off keeps each recurring task at its current due date only.
+- **Show habits** (`showHabits`, on): each habit appears as a purple whole-day item on every day it asks for a check-in, from today up to the end of the loaded window (at most 62 days); off hides habits. `GET /api/tasks?type=calendar&end=` adds those days as `is_virtual_occurrence` copies of the habit.
 - **Days in multi-day view** (`multiDayCount`, 2–7).
 - **Show week numbers** (`showWeekNumbers`, off): ISO week numbers on each month row and in the week grid's corner.
 - **Show mini calendar** (`showMiniCalendar`, off): a small month beside the views on wide screens; clicking a day goes to it.

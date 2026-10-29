@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Planlanmış bir şey yok",
     "agenda": "Ajanda",
     "options": {
+      "showHabits": "Alışkanlıkları göster",
       "showWeekNumbers": "Hafta numaralarını göster",
       "showMiniCalendar": "Mini takvimi göster",
       "multiDayCount": "Çok günlü görünümdeki gün sayısı",

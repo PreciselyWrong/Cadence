@@ -1380,6 +1380,7 @@
     "agendaEmpty": "Nichts geplant",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Gewohnheiten anzeigen",
       "showWeekNumbers": "Kalenderwochen anzeigen",
       "showMiniCalendar": "Minikalender anzeigen",
       "multiDayCount": "Tage in der Mehrtagesansicht",

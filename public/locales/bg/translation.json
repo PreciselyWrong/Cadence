@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Нищо не е планирано",
     "agenda": "Програма",
     "options": {
+      "showHabits": "Показване на навиците",
       "showWeekNumbers": "Показване на номерата на седмиците",
       "showMiniCalendar": "Показване на мини календар",
       "multiDayCount": "Дни в многодневния изглед",

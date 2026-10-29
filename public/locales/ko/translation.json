@@ -1715,6 +1715,7 @@
     "agendaEmpty": "예정된 항목 없음",
     "agenda": "일정 목록",
     "options": {
+      "showHabits": "습관 표시",
       "showWeekNumbers": "주 번호 표시",
       "showMiniCalendar": "미니 캘린더 표시",
       "multiDayCount": "여러 날 보기의 일수",

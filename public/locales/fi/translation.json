@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Ei mitään aikataulutettuna",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Näytä tavat",
       "showWeekNumbers": "Näytä viikkonumerot",
       "showMiniCalendar": "Näytä minikalenteri",
       "multiDayCount": "Päiviä monipäivänäkymässä",

@@ -1715,6 +1715,7 @@
     "agendaEmpty": "Không có gì được lên lịch",
     "agenda": "Lịch trình",
     "options": {
+      "showHabits": "Hiện thói quen",
       "showWeekNumbers": "Hiện số tuần",
       "showMiniCalendar": "Hiện lịch nhỏ",
       "multiDayCount": "Số ngày trong chế độ nhiều ngày",

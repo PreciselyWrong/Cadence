@@ -1717,6 +1717,7 @@
     "agendaEmpty": "Inget planerat",
     "agenda": "Agenda",
     "options": {
+      "showHabits": "Visa vanor",
       "showWeekNumbers": "Visa veckonummer",
       "showMiniCalendar": "Visa minikalender",
       "multiDayCount": "Dagar i flerdagarsvy",

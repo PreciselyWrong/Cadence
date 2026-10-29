@@ -1647,6 +1647,7 @@
     "agendaEmpty": "予定はありません",
     "agenda": "予定リスト",
     "options": {
+      "showHabits": "習慣を表示",
       "showWeekNumbers": "週番号を表示",
       "showMiniCalendar": "ミニカレンダーを表示",
       "multiDayCount": "複数日表示の日数",
