@@ -252,13 +252,15 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
 
     const today = getTodayDateString();
     const isDone = isTaskCompleted(task.status);
-    const dueClass = !task.due_date
-        ? ''
-        : !isDone && task.due_date < today
-          ? 'text-red-600 dark:text-red-400'
-          : task.due_date === today
-            ? 'text-blue-600 dark:text-blue-400'
-            : 'text-gray-500 dark:text-gray-400';
+    // Colour only flags what still needs doing: overdue red, today blue.
+    const dueClass =
+        !task.due_date || isDone
+            ? 'text-gray-500 dark:text-gray-400'
+            : task.due_date < today
+              ? 'text-red-600 dark:text-red-400'
+              : task.due_date === today
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-gray-500 dark:text-gray-400';
     const isRecurring =
         (!!task.recurrence_type && task.recurrence_type !== 'none') ||
         !!task.recurring_parent_id;

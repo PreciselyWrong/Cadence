@@ -97,6 +97,11 @@ describe('TaskRowCollapsed in minimal mode', () => {
         );
     });
 
+    it('leaves the date of a completed task grey', () => {
+        renderRow(baseTask({ due_date: getTodayDateString(), status: 'done' }));
+        expect(screen.getByText(/today/i)).not.toHaveClass('text-blue-600');
+    });
+
     it('keeps the project name on the same line as the title', () => {
         renderRow(baseTask());
 
