@@ -502,7 +502,12 @@ A tag can sit under a **parent tag**, like folders of tags (`work` > `calls`,
 - Filtering tasks (`GET /api/tasks?tag=work`) or notes
   (`GET /api/notes?tag=work`) by a parent tag also returns items tagged with
   any of its child tags. Filtering by a child tag returns only that child
-- Universal search and the Focus chip still match the exact tags you pick
+- Universal search (`GET /api/search?tags=...`), saved views (which run
+  through search) and the Focus chip (`tags` scope param) treat each listed
+  parent tag the same way: it stands for the parent or any of its children.
+  Several listed tags still use AND: an item matches when, for every listed
+  tag, it carries that tag or one of its children (`work,urgent` matches a
+  task tagged `calls` + `urgent`)
 
 **Where nesting shows:**
 - Tags page: children grouped under their parent, collapsible

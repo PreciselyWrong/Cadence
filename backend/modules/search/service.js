@@ -307,8 +307,9 @@ class SearchService {
         if (matchingIds) {
             conditions.id = { [Op.in]: matchingIds };
         }
+        // The tag include also matches child tags of a listed parent.
         const { include, tagInclude } = this.buildTaskInclude(
-            tagIds,
+            await searchRepository.expandWithChildTagIds(tagIds),
             params.extras
         );
 
@@ -433,7 +434,9 @@ class SearchService {
                 required: true,
             };
             if (tagIds.length > 0) {
-                tagInclude.where = { id: { [Op.in]: tagIds } };
+                const tagFilterIds =
+                    await searchRepository.expandWithChildTagIds(tagIds);
+                tagInclude.where = { id: { [Op.in]: tagFilterIds } };
             }
             include.push(tagInclude);
         }
@@ -562,9 +565,11 @@ class SearchService {
 
         const include = [];
         if (tagIds.length > 0) {
+            const tagFilterIds =
+                await searchRepository.expandWithChildTagIds(tagIds);
             include.push({
                 model: Tag,
-                where: { id: { [Op.in]: tagIds } },
+                where: { id: { [Op.in]: tagFilterIds } },
                 through: { attributes: [] },
                 attributes: [],
                 required: true,

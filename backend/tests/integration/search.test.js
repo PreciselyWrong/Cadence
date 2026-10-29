@@ -839,6 +839,90 @@ describe('Universal Search Routes', () => {
             });
         });
 
+        describe('Filter by nested tags', () => {
+            let names;
+
+            beforeEach(async () => {
+                const work = await Tag.create({
+                    user_id: user.id,
+                    name: 'work',
+                });
+                const calls = await Tag.create({
+                    user_id: user.id,
+                    name: 'calls',
+                    parent_id: work.id,
+                });
+                const urgent = await Tag.create({
+                    user_id: user.id,
+                    name: 'urgent',
+                });
+
+                const make = async (name, tags) => {
+                    const task = await Task.create({
+                        user_id: user.id,
+                        name,
+                        status: 0,
+                    });
+                    for (const tag of tags) await task.addTag(tag);
+                    return task;
+                };
+                await make('Parent only', [work]);
+                await make('Child only', [calls]);
+                await make('Child and urgent', [calls, urgent]);
+                await make('Urgent only', [urgent]);
+
+                const note = await Note.create({
+                    user_id: user.id,
+                    title: 'Call notes',
+                    content: 'x',
+                });
+                await note.addTag(calls);
+                const project = await Project.create({
+                    user_id: user.id,
+                    name: 'Call project',
+                });
+                await project.addTag(calls);
+
+                names = async (query) => {
+                    const res = await agent.get('/api/search').query(query);
+                    expect(res.status).toBe(200);
+                    return res.body.results
+                        .map((r) => r.name || r.title)
+                        .sort();
+                };
+            });
+
+            it('a parent tag matches items tagged with a child', async () => {
+                expect(await names({ tags: 'work', filters: 'Task' })).toEqual([
+                    'Child and urgent',
+                    'Child only',
+                    'Parent only',
+                ]);
+                expect(await names({ tags: 'work', filters: 'Note' })).toEqual([
+                    'Call notes',
+                ]);
+                expect(
+                    await names({ tags: 'work', filters: 'Project' })
+                ).toEqual(['Call project']);
+            });
+
+            it('a child tag matches only itself', async () => {
+                expect(await names({ tags: 'calls', filters: 'Task' })).toEqual(
+                    ['Child and urgent', 'Child only']
+                );
+            });
+
+            it('keeps AND across listed tags', async () => {
+                expect(
+                    await names({ tags: 'work,urgent', filters: 'Task' })
+                ).toEqual(['Child and urgent']);
+                // A parent and its child both listed: the child satisfies both
+                expect(
+                    await names({ tags: 'work,calls', filters: 'Task' })
+                ).toEqual(['Child and urgent', 'Child only']);
+            });
+        });
+
         describe('Combined Filters', () => {
             beforeEach(async () => {
                 const now = moment();
