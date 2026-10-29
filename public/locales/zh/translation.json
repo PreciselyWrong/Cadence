@@ -1690,6 +1690,7 @@
     "done": "完成"
   },
   "calendar": {
+    "resizeTask": "更改此任务的结束时间",
     "month": "月份",
     "week": "周",
     "day": "天",

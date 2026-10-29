@@ -1696,6 +1696,7 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "resizeTask": "Schimbă când se termină această sarcină",
     "month": "Lună",
     "week": "Săptămână",
     "day": "Zi",

@@ -96,7 +96,7 @@ How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`
 
 - **Due time, start time earlier the same day:** a block from the start time to the due time. Dragging its bottom edge changes the due time.
 - **Due time otherwise:** a block that starts at the due time and lasts the task's estimate, or one hour without an estimate. Dragging its bottom edge sets the estimate, in 15-minute steps, between 5 minutes and 12 hours.
-- **Whole-day due date:** a bar in the all-day row of the week and day views, from the start date (when it is earlier) to the due date. In the month view the bar appears in each day it covers. A due time with a start on an earlier day is also drawn as a bar.
+- **Whole-day due date:** a bar in the all-day row of the week and day views, from the start date (when it is earlier) to the due date. In the month view the bar appears in each day it covers, on the same row all week. A due time with a start on an earlier day is also drawn as a bar.
 - **Defer until:** a one-hour block at that time, as before.
 
 Moving a block keeps its length: a start-to-due block moves both ends, a bar moves its start and due dates by the same number of days and keeps their times. Dropping on an hour of the week or day view sets the time; dropping in the month view or the all-day row keeps it.

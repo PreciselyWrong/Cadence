@@ -1692,6 +1692,7 @@
     "done": "Klaar"
   },
   "calendar": {
+    "resizeTask": "Wijzig wanneer deze taak eindigt",
     "month": "Maand",
     "week": "Week",
     "day": "Dag",

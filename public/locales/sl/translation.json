@@ -1696,6 +1696,7 @@
     "done": "Končano"
   },
   "calendar": {
+    "resizeTask": "Spremeni, kdaj se opravilo konča",
     "month": "Mesec",
     "week": "Teden",
     "day": "Dan",

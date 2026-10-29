@@ -1622,6 +1622,7 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "resizeTask": "このタスクの終了時刻を変更",
     "month": "月",
     "week": "週",
     "day": "日",

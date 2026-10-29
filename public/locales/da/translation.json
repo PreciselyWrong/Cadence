@@ -1692,6 +1692,7 @@
     "done": "Færdig"
   },
   "calendar": {
+    "resizeTask": "Skift hvornår opgaven slutter",
     "month": "Måned",
     "week": "Uge",
     "day": "Dag",

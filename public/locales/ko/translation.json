@@ -1690,6 +1690,7 @@
     "done": "완료"
   },
   "calendar": {
+    "resizeTask": "이 작업의 종료 시간 변경",
     "month": "월",
     "week": "주",
     "day": "일",

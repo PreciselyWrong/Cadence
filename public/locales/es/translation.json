@@ -1656,6 +1656,7 @@
     "done": "Hecho"
   },
   "calendar": {
+    "resizeTask": "Cambiar cuándo termina esta tarea",
     "month": "Mes",
     "week": "Semana",
     "day": "Día",

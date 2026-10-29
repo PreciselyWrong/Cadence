@@ -1692,6 +1692,7 @@
     "done": "Valmis"
   },
   "calendar": {
+    "resizeTask": "Muuta tehtävän päättymisaikaa",
     "month": "Kuukausi",
     "week": "Viikko",
     "day": "Päivä",

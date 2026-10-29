@@ -1693,6 +1693,7 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "resizeTask": "Endre når oppgaven slutter",
     "month": "Måned",
     "week": "Uke",
     "day": "Dag",

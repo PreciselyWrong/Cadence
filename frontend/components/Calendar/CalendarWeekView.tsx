@@ -14,7 +14,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-import { CalendarEvent } from './taskEvents';
+import { CalendarEvent, layoutAllDayWeek } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarWeekViewProps {
@@ -98,6 +98,8 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
             return { event, from, to: Math.max(to, from + 1) };
         });
 
+    const allDayRows = layoutAllDayWeek(events, weekStart);
+
     const handleDrop = (
         day: Date,
         hour: number | undefined,
@@ -167,7 +169,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             }}
                         />
                     ))}
-                    {allDayBars.map(({ event, from, to }, row) => (
+                    {allDayBars.map(({ event, from, to }) => (
                         <div
                             key={event.id}
                             draggable={event.type === 'task'}
@@ -183,7 +185,11 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             style={{
                                 backgroundColor: event.color || '#3b82f6',
                                 gridColumn: `${from + 2} / ${to + 2}`,
-                                gridRow: row + 1,
+                                gridRow: (allDayRows.get(event.id) ?? 0) + 1,
+                                // Let a drop reach the day cell beneath.
+                                pointerEvents: draggedEventId
+                                    ? 'none'
+                                    : undefined,
                             }}
                             title={event.title}
                         >

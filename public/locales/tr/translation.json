@@ -1692,6 +1692,7 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "resizeTask": "Bu görevin bitişini değiştir",
     "month": "Ay",
     "week": "Hafta",
     "day": "Gün",

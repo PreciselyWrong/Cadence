@@ -16,7 +16,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-import { CalendarEvent, coversDay } from './taskEvents';
+import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -114,13 +114,29 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
 
             {/* Calendar grid */}
             <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600">
-                {days.map((day) => {
-                    // Whole-day bars first, so a span keeps its place across days.
-                    const dayEvents = events
-                        .filter((event) => coversDay(event, day))
-                        .sort(
-                            (a, b) => Number(!!b.allDay) - Number(!!a.allDay)
-                        );
+                {days.map((day, index) => {
+                    // Whole-day bars keep their week row; empty rows are
+                    // kept as gaps so a span lines up across days.
+                    const rows = layoutAllDayWeek(
+                        events,
+                        days[Math.floor(index / 7) * 7]
+                    );
+                    const bars = events.filter(
+                        (event) => event.allDay && coversDay(event, day)
+                    );
+                    const slots: (CalendarEvent | null)[] = [];
+                    bars.forEach((bar) => {
+                        slots[rows.get(bar.id) ?? slots.length] = bar;
+                    });
+                    const dayEvents: (CalendarEvent | null)[] = [
+                        ...Array.from(slots, (slot) => slot ?? null),
+                        ...events.filter(
+                            (event) => !event.allDay && coversDay(event, day)
+                        ),
+                    ];
+                    const hiddenCount = dayEvents
+                        .slice(3)
+                        .filter(Boolean).length;
                     const isCurrentMonth = isSameMonth(day, currentDate);
                     const isTodayDate = isToday(day);
 
@@ -157,44 +173,55 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                             </div>
 
                             <div className="space-y-0.5 overflow-hidden flex-1">
-                                {dayEvents.slice(0, 3).map((event) => (
-                                    <div
-                                        key={event.id}
-                                        draggable={event.type === 'task'}
-                                        onDragStart={(e) =>
-                                            handleDragStart(event, e)
-                                        }
-                                        onDragEnd={handleDragEnd}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onEventClick?.(event);
-                                        }}
-                                        className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
-                                            draggedEventId === event.id
-                                                ? 'opacity-40'
-                                                : ''
-                                        } ${
-                                            event.allDay && event.start < day
-                                                ? '-ml-2 pl-3.5 rounded-l-none'
-                                                : ''
-                                        } ${
-                                            event.allDay &&
-                                            addDays(day, 1) < event.end
-                                                ? '-mr-2 rounded-r-none'
-                                                : ''
-                                        }`}
-                                        style={{
-                                            backgroundColor:
-                                                event.color || '#3b82f6',
-                                        }}
-                                        title={event.title}
-                                    >
-                                        {event.title}
-                                    </div>
-                                ))}
-                                {dayEvents.length > 3 && (
+                                {dayEvents.slice(0, 3).map((event, slot) =>
+                                    event === null ? (
+                                        <div
+                                            key={`gap-${slot}`}
+                                            aria-hidden="true"
+                                            className="text-xs py-1 invisible"
+                                        >
+                                            &nbsp;
+                                        </div>
+                                    ) : (
+                                        <div
+                                            key={event.id}
+                                            draggable={event.type === 'task'}
+                                            onDragStart={(e) =>
+                                                handleDragStart(event, e)
+                                            }
+                                            onDragEnd={handleDragEnd}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onEventClick?.(event);
+                                            }}
+                                            className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
+                                                draggedEventId === event.id
+                                                    ? 'opacity-40'
+                                                    : ''
+                                            } ${
+                                                event.allDay &&
+                                                event.start < day
+                                                    ? '-ml-2 pl-3.5 rounded-l-none'
+                                                    : ''
+                                            } ${
+                                                event.allDay &&
+                                                addDays(day, 1) < event.end
+                                                    ? '-mr-2 rounded-r-none'
+                                                    : ''
+                                            }`}
+                                            style={{
+                                                backgroundColor:
+                                                    event.color || '#3b82f6',
+                                            }}
+                                            title={event.title}
+                                        >
+                                            {event.title}
+                                        </div>
+                                    )
+                                )}
+                                {hiddenCount > 0 && (
                                     <div className="text-xs text-gray-400 dark:text-gray-500 px-1 font-medium">
-                                        +{dayEvents.length - 3}
+                                        +{hiddenCount}
                                     </div>
                                 )}
                             </div>

@@ -199,3 +199,28 @@ export const coversDay = (event: CalendarEvent, day: Date) => {
     const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate());
     return event.start <= dayStart && dayStart < event.end;
 };
+
+// Gives each whole-day bar of the week starting `weekStart` a row, lowest
+// free first, so a bar sits on the same row on every day it covers.
+export const layoutAllDayWeek = (
+    events: CalendarEvent[],
+    weekStart: Date
+): Map<string, number> => {
+    const weekEnd = addDays(weekStart, 7);
+    const bars = events
+        .filter((e) => e.allDay && e.start < weekEnd && e.end > weekStart)
+        .sort(
+            (a, b) =>
+                a.start.getTime() - b.start.getTime() ||
+                b.end.getTime() - a.end.getTime()
+        );
+    const rowEnds: Date[] = [];
+    const rows = new Map<string, number>();
+    bars.forEach((bar) => {
+        let row = rowEnds.findIndex((end) => end <= bar.start);
+        if (row === -1) row = rowEnds.length;
+        rowEnds[row] = bar.end;
+        rows.set(bar.id, row);
+    });
+    return rows;
+};

@@ -1694,6 +1694,7 @@
     "done": "Fatto"
   },
   "calendar": {
+    "resizeTask": "Cambia quando finisce questa attività",
     "month": "Mese",
     "week": "Settimana",
     "day": "Giorno",

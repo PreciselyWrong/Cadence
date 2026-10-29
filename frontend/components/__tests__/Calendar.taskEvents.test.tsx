@@ -3,7 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CalendarDayView from '../Calendar/CalendarDayView';
 import CalendarWeekView from '../Calendar/CalendarWeekView';
-import { moveUpdate, resizeUpdate, taskToEvents } from '../Calendar/taskEvents';
+import CalendarMonthView from '../Calendar/CalendarMonthView';
+import {
+    layoutAllDayWeek,
+    moveUpdate,
+    resizeUpdate,
+    taskToEvents,
+} from '../Calendar/taskEvents';
 
 jest.mock('../../utils/profileService', () => ({
     getFirstDayOfWeek: jest.fn().mockResolvedValue(1),
@@ -190,5 +196,35 @@ describe('calendar views with task blocks', () => {
         expect(row).toContainElement(bar);
         // Week starts Monday 26th: Tue 27 → Fri 30 is columns 3..7.
         expect(bar.style.gridColumn).toBe('3 / 7');
+    });
+});
+
+describe('whole-day bar rows', () => {
+    const bars = [
+        { id: 'a', due_date: '2026-10-28', start_date: '2026-10-26' },
+        { id: 'b', due_date: '2026-10-29', start_date: '2026-10-27' },
+        { id: 'c', due_date: '2026-10-30', start_date: '2026-10-29' },
+    ].flatMap(taskToEvents);
+
+    it('reuses a row once the bar above has ended', () => {
+        const rows = layoutAllDayWeek(bars, new Date(2026, 9, 26));
+        expect(rows.get('task-a')).toBe(0);
+        expect(rows.get('task-b')).toBe(1);
+        expect(rows.get('task-c')).toBe(0);
+    });
+
+    it('keeps a span on its row in the month view, leaving a gap', async () => {
+        render(
+            <CalendarMonthView
+                currentDate={new Date(2026, 9, 15)}
+                events={[bars[1]]}
+            />
+        );
+        await screen.findAllByTitle(bars[1].title);
+        const twentySeventh = screen
+            .getAllByTitle(bars[1].title)
+            .map((el) => el.parentElement);
+        // One bar per covered day (27, 28, 29), each the only item.
+        expect(twentySeventh).toHaveLength(3);
     });
 });

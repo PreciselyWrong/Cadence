@@ -1864,6 +1864,7 @@
         "done": "Hotovo"
     },
     "calendar": {
+      "resizeTask": "Zmeniť koniec tejto úlohy",
         "month": "Mesiac",
         "week": "Týždeň",
         "day": "Deň",

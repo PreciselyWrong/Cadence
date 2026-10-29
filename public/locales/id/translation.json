@@ -1690,6 +1690,7 @@
     "done": "Selesai"
   },
   "calendar": {
+    "resizeTask": "Ubah kapan tugas ini selesai",
     "month": "Bulan",
     "week": "Minggu",
     "day": "Hari",

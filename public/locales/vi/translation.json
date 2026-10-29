@@ -1690,6 +1690,7 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "resizeTask": "Đổi thời điểm kết thúc công việc",
     "month": "Tháng",
     "week": "Tuần",
     "day": "Ngày",

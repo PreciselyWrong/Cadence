@@ -1355,6 +1355,7 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "resizeTask": "Ende dieser Aufgabe ändern",
     "month": "Monat",
     "week": "Woche",
     "day": "Tag",

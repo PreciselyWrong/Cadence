@@ -1692,6 +1692,7 @@
     "done": "Klar"
   },
   "calendar": {
+    "resizeTask": "Ändra när uppgiften slutar",
     "month": "Månad",
     "week": "Vecka",
     "day": "Dag",
