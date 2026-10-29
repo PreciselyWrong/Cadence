@@ -27,6 +27,15 @@ export interface CalendarEvent {
     feed_uid: string;
     feed_name: string;
     color: string | null;
+    // Set on events of a connected Google calendar (fork).
+    source?: 'google';
+    calendar_uid?: string;
+    event_id?: string;
+    editable?: boolean;
+    location?: string | null;
+    description?: string | null;
+    html_link?: string | null;
+    recurring?: boolean;
 }
 
 export interface CalendarRangeEvent extends CalendarEvent {

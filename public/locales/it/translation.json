@@ -940,6 +940,25 @@
     },
     "telegramRequiredForSummaries": "Per usare i riepiloghi delle attività serve l'integrazione Telegram.",
     "sidebarSectionDescription": "Mostra la sezione {{name}} nella barra laterale.",
+    "google": {
+      "error": "Google non ha risposto",
+      "title": "Google Calendar e Tasks",
+      "description": "Sincronizzazione in entrambe le direzioni: i tuoi calendari Google compaiono qui e si modificano da Tududi, le attività con data vanno in un calendario «Tududi» su Google e tutte le attività si sincronizzano con Google Tasks. Le modifiche da una parte arrivano all'altra in pochi minuti.",
+      "notConfigured": "Non configurato su questo server: l'amministratore imposta GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET.",
+      "connect": "Collega Google",
+      "lastSync": "sincronizzato {{time}}",
+      "firstSync": "prima sincronizzazione in corso…",
+      "syncEvents": "Calendari e attività con data in un calendario «Tududi»",
+      "syncTasks": "Tutte le attività con Google Tasks (una lista per progetto)",
+      "calendars": "Mostrati in Calendario e Oggi",
+      "readOnly": "sola lettura",
+      "synced": "Sincronizzato con Google",
+      "syncing": "Sincronizzazione…",
+      "syncNow": "Sincronizza ora",
+      "disconnect": "Scollega",
+      "disconnectTitle": "Scollega Google",
+      "disconnectMessage": "Interrompere la sincronizzazione con Google? Le attività restano in Tududi e ciò che è già su Google resta lì."
+    },
     "sidebarSmartListsTitle": "Elenchi intelligenti",
     "sidebarRailTitle": "Barra icone e Altro",
     "sidebarBadgesTitle": "Badge con conteggio",
@@ -1864,10 +1883,10 @@
       "to": "A"
     },
     "hiddenHours": {
-        "earlier": "{{count}} prima",
-        "later": "{{count}} dopo",
-        "show": "Mostra tutte le ore",
-        "hide": "Nascondi le ore iniziali e finali"
+      "earlier": "{{count}} prima",
+      "later": "{{count}} dopo",
+      "show": "Mostra tutte le ore",
+      "hide": "Nascondi le ore iniziali e finali"
     },
     "arrange": {
       "title": "Organizza attività",
@@ -1921,7 +1940,26 @@
     "medium": "Media",
     "low": "Bassa",
     "time": "Ora",
-    "allDay": "Tutto il giorno"
+    "allDay": "Tutto il giorno",
+    "google": {
+      "endBeforeStart": "La fine è prima dell'inizio",
+      "editEvent": "Modifica evento",
+      "newEvent": "Nuovo evento",
+      "title": "Titolo",
+      "calendar": "Calendario",
+      "allDay": "Tutto il giorno",
+      "start": "Inizio",
+      "end": "Fine",
+      "location": "Luogo",
+      "description": "Descrizione",
+      "recurringNote": "Evento ripetuto: le modifiche valgono solo per questa occorrenza. Modifica la serie in Google Calendar.",
+      "save": "Salva",
+      "delete": "Elimina",
+      "openInGoogle": "Apri in Google",
+      "connected": "Google collegato",
+      "connectError": "Google non è stato collegato",
+      "saveError": "Impossibile salvare l'evento"
+    }
   },
   "pages": {
     "notFound": {

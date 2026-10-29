@@ -4,7 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Refonte façon TickTick, étape 2 : ajout rapide en langage naturel. Prompt de reprise et liste du reste : [docs/fork/PROMPT-suite-ticktick.md](docs/fork/PROMPT-suite-ticktick.md). Vérif : « Appeler Paul demain 15h #perso !1 ^Maison » surligne 4 éléments et crée la tâche complète.
+- Synchro Google (module `google-sync`, branche `claude/intelligent-johnson-3dex2s`) : créer le client OAuth (Calendar + Tasks API, app « En production »), définir `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, puis 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min. Voir `docs/33-google-sync.md`.
+- Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
 
 ## Next
 

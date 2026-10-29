@@ -23,6 +23,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Calendar | View options saved in `ui_settings.calendar`; colour by project / priority / tag; visible hours (`visibleHours`) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Today | Calendar mode drags with dnd-kit onto 15-minute slots and the all-day row (due time set or cleared) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Calendar | Secret `.ics` feed of the user's tasks (`users.task_feed_token_hash`) | [20-daily-plan.md](docs/20-daily-plan.md) |
+| Calendar | Two-way Google Calendar + Google Tasks sync (`backend/modules/google-sync/`, `google_*` tables) | [33-google-sync.md](docs/33-google-sync.md) |
 | Focus | Tomato timer records `focus_sessions`; focus statistics in Insights | [30-focus-sessions.md](docs/30-focus-sessions.md) |
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Round check before each title (priority ring; completes from the list with undo); Minimal rows set priority and due date in place; Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |

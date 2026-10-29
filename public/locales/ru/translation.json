@@ -941,6 +941,25 @@
     "telegramRequiredForSummaries": "Для сводок по задачам нужно настроить интеграцию с Telegram.",
     "templatesDescription": "Включить Шаблоны проектов, чтобы сохранять и повторно использовать структуру проектов.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Умные списки",
     "sidebarRailTitle": "Панель значков и Ещё",
     "sidebarBadgesTitle": "Счётчики",
@@ -1869,10 +1888,10 @@
       "to": "По"
     },
     "hiddenHours": {
-        "earlier": "{{count}} раньше",
-        "later": "{{count}} позже",
-        "show": "Показать все часы",
-        "hide": "Скрыть ранние и поздние часы"
+      "earlier": "{{count}} раньше",
+      "later": "{{count}} позже",
+      "show": "Показать все часы",
+      "hide": "Скрыть ранние и поздние часы"
     },
     "arrange": {
       "title": "Распределить задачи",
@@ -1926,7 +1945,26 @@
     "medium": "Средний",
     "low": "Низкий",
     "time": "Время",
-    "allDay": "Весь день"
+    "allDay": "Весь день",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {

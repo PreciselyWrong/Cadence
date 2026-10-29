@@ -180,6 +180,24 @@ describe('TodayPage', () => {
     });
 
     it('saves a placed candidate and starts the day once', async () => {
+        // A free slot must remain today, so the clock reads 08:00.
+        jest.useFakeTimers({
+            now: new Date(`${TODAY}T08:00:00Z`),
+            doNotFake: [
+                'setTimeout',
+                'clearTimeout',
+                'setInterval',
+                'clearInterval',
+                'setImmediate',
+                'clearImmediate',
+                'queueMicrotask',
+                'nextTick',
+                'requestAnimationFrame',
+                'cancelAnimationFrame',
+                'performance',
+                'hrtime',
+            ],
+        });
         render(<TodayPage />);
 
         fireEvent.click(await screen.findByTestId('add-d1'));
@@ -198,6 +216,7 @@ describe('TodayPage', () => {
             expect(saveDailyPlanItems).toHaveBeenCalledTimes(2)
         );
         expect(startDailyPlan).toHaveBeenCalledTimes(1);
+        jest.useRealTimers();
     });
 
     it('hides the calendar and remembers the choice', async () => {

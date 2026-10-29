@@ -1307,6 +1307,25 @@
     },
     "telegramRequiredForSummaries": "Für Aufgabenzusammenfassungen muss die Telegram-Integration eingerichtet sein.",
     "sidebarSectionDescription": "Den Bereich {{name}} in der Seitenleiste anzeigen.",
+    "google": {
+      "error": "Google hat nicht geantwortet",
+      "title": "Google Kalender und Tasks",
+      "description": "Synchronisierung in beide Richtungen: Ihre Google-Kalender erscheinen hier und lassen sich in Tududi bearbeiten, Aufgaben mit Datum landen in einem Kalender „Tududi“ bei Google, und alle Aufgaben werden mit Google Tasks abgeglichen. Änderungen auf einer Seite folgen innerhalb weniger Minuten.",
+      "notConfigured": "Auf diesem Server nicht eingerichtet: Die Administration setzt GOOGLE_CLIENT_ID und GOOGLE_CLIENT_SECRET.",
+      "connect": "Google verbinden",
+      "lastSync": "synchronisiert {{time}}",
+      "firstSync": "erste Synchronisierung läuft…",
+      "syncEvents": "Kalender und Aufgaben mit Datum in einem Kalender „Tududi“",
+      "syncTasks": "Alle Aufgaben mit Google Tasks (eine Liste pro Projekt)",
+      "calendars": "In Kalender und Heute angezeigt",
+      "readOnly": "nur lesen",
+      "synced": "Mit Google synchronisiert",
+      "syncing": "Synchronisiere…",
+      "syncNow": "Jetzt synchronisieren",
+      "disconnect": "Trennen",
+      "disconnectTitle": "Google trennen",
+      "disconnectMessage": "Synchronisierung mit Google beenden? Ihre Aufgaben bleiben in Tududi, und was schon bei Google ist, bleibt dort."
+    },
     "sidebarSmartListsTitle": "Intelligente Listen",
     "sidebarRailTitle": "Symbolleiste und Mehr",
     "sidebarBadgesTitle": "Anzahl-Abzeichen",
@@ -1513,10 +1532,10 @@
       "to": "Bis"
     },
     "hiddenHours": {
-        "earlier": "{{count}} früher",
-        "later": "{{count}} später",
-        "show": "Alle Stunden anzeigen",
-        "hide": "Frühe und späte Stunden ausblenden"
+      "earlier": "{{count}} früher",
+      "later": "{{count}} später",
+      "show": "Alle Stunden anzeigen",
+      "hide": "Frühe und späte Stunden ausblenden"
     },
     "arrange": {
       "title": "Aufgaben einplanen",
@@ -1570,7 +1589,26 @@
     "medium": "Mittel",
     "low": "Niedrig",
     "time": "Zeit",
-    "allDay": "Ganztägig"
+    "allDay": "Ganztägig",
+    "google": {
+      "endBeforeStart": "Das Ende liegt vor dem Beginn",
+      "editEvent": "Termin bearbeiten",
+      "newEvent": "Neuer Termin",
+      "title": "Titel",
+      "calendar": "Kalender",
+      "allDay": "Ganztägig",
+      "start": "Beginn",
+      "end": "Ende",
+      "location": "Ort",
+      "description": "Beschreibung",
+      "recurringNote": "Wiederkehrender Termin: Änderungen gelten nur für diesen Termin. Die Serie bearbeiten Sie in Google Kalender.",
+      "save": "Speichern",
+      "delete": "Löschen",
+      "openInGoogle": "In Google öffnen",
+      "connected": "Google verbunden",
+      "connectError": "Google wurde nicht verbunden",
+      "saveError": "Termin konnte nicht gespeichert werden"
+    }
   },
   "weekdaysShort": {
     "monday": "Mo",
