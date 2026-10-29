@@ -1690,6 +1690,17 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "arrange": {
+      "title": "Sắp xếp công việc",
+      "noDate": "Không có ngày",
+      "overdue": "Quá hạn",
+      "filterProject": "Dự án",
+      "filterTag": "Thẻ",
+      "filterPriority": "Ưu tiên",
+      "emptyNoDate": "Không có công việc chưa có ngày để lên lịch",
+      "emptyOverdue": "Không có công việc quá hạn để lên lịch",
+      "noProject": "Không có dự án"
+    },
     "resizeTask": "Đổi thời điểm kết thúc công việc",
     "month": "Tháng",
     "week": "Tuần",

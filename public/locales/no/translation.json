@@ -1693,6 +1693,17 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "arrange": {
+      "title": "Planlegg oppgaver",
+      "noDate": "Ingen dato",
+      "overdue": "Forfalt",
+      "filterProject": "Prosjekt",
+      "filterTag": "Etikett",
+      "filterPriority": "Prioritet",
+      "emptyNoDate": "Ingen oppgaver uten dato å planlegge",
+      "emptyOverdue": "Ingen forfalte oppgaver å planlegge",
+      "noProject": "Ingen prosjekt"
+    },
     "resizeTask": "Endre når oppgaven slutter",
     "month": "Måned",
     "week": "Uke",

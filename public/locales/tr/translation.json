@@ -1692,6 +1692,17 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "arrange": {
+      "title": "Görevleri yerleştir",
+      "noDate": "Tarihsiz",
+      "overdue": "Gecikmiş",
+      "filterProject": "Proje",
+      "filterTag": "Etiket",
+      "filterPriority": "Öncelik",
+      "emptyNoDate": "Planlanacak tarihsiz görev yok",
+      "emptyOverdue": "Planlanacak gecikmiş görev yok",
+      "noProject": "Proje yok"
+    },
     "resizeTask": "Bu görevin bitişini değiştir",
     "month": "Ay",
     "week": "Hafta",

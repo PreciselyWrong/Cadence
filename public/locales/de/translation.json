@@ -1355,6 +1355,17 @@
     "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
   },
   "calendar": {
+    "arrange": {
+      "title": "Aufgaben einplanen",
+      "noDate": "Ohne Datum",
+      "overdue": "Überfällig",
+      "filterProject": "Projekt",
+      "filterTag": "Tag",
+      "filterPriority": "Priorität",
+      "emptyNoDate": "Keine Aufgaben ohne Datum zum Einplanen",
+      "emptyOverdue": "Keine überfälligen Aufgaben zum Einplanen",
+      "noProject": "Kein Projekt"
+    },
     "resizeTask": "Ende dieser Aufgabe ändern",
     "month": "Monat",
     "week": "Woche",

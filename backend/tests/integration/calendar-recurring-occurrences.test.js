@@ -71,4 +71,19 @@ describe('GET /api/tasks?type=calendar recurring occurrences', () => {
         );
         expect(occurrencesOf(res.body, task.id)).toHaveLength(0);
     });
+
+    it('lists undated tasks for the arrange panel', async () => {
+        const task = await Task.create({
+            user_id: user.id,
+            name: 'Someday',
+            status: 0,
+        });
+        const res = await agent.get(
+            '/api/tasks?type=calendar&start=2030-03-01&end=2030-03-31'
+        );
+        const listed = res.body.tasks.find((t) => t.id === task.id);
+        expect(listed).toBeDefined();
+        expect(listed.due_date).toBeNull();
+        expect(listed).toHaveProperty('tags');
+    });
 });

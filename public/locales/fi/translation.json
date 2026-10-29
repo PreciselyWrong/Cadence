@@ -1692,6 +1692,17 @@
     "done": "Valmis"
   },
   "calendar": {
+    "arrange": {
+      "title": "Järjestä tehtävät",
+      "noDate": "Ei päivää",
+      "overdue": "Myöhässä",
+      "filterProject": "Projekti",
+      "filterTag": "Tunniste",
+      "filterPriority": "Prioriteetti",
+      "emptyNoDate": "Ei ajoitettavia päiväämättömiä tehtäviä",
+      "emptyOverdue": "Ei ajoitettavia myöhässä olevia tehtäviä",
+      "noProject": "Ei projektia"
+    },
     "resizeTask": "Muuta tehtävän päättymisaikaa",
     "month": "Kuukausi",
     "week": "Viikko",

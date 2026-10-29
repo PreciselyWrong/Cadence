@@ -1957,6 +1957,17 @@
     "done": "Done"
   },
   "calendar": {
+    "arrange": {
+      "title": "Arrange tasks",
+      "noDate": "No date",
+      "overdue": "Overdue",
+      "filterProject": "Project",
+      "filterTag": "Tag",
+      "filterPriority": "Priority",
+      "emptyNoDate": "No undated tasks to schedule",
+      "emptyOverdue": "No overdue tasks to schedule",
+      "noProject": "No project"
+    },
     "resizeTask": "Change when this task ends",
     "month": "Month",
     "week": "Week",

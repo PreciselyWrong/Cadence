@@ -1690,6 +1690,17 @@
     "done": "완료"
   },
   "calendar": {
+    "arrange": {
+      "title": "작업 배치",
+      "noDate": "날짜 없음",
+      "overdue": "기한 지남",
+      "filterProject": "프로젝트",
+      "filterTag": "태그",
+      "filterPriority": "우선순위",
+      "emptyNoDate": "예약할 날짜 없는 작업이 없습니다",
+      "emptyOverdue": "예약할 기한 지난 작업이 없습니다",
+      "noProject": "프로젝트 없음"
+    },
     "resizeTask": "이 작업의 종료 시간 변경",
     "month": "월",
     "week": "주",

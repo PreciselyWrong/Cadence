@@ -1694,6 +1694,17 @@
     "done": "Fatto"
   },
   "calendar": {
+    "arrange": {
+      "title": "Organizza attività",
+      "noDate": "Senza data",
+      "overdue": "In ritardo",
+      "filterProject": "Progetto",
+      "filterTag": "Tag",
+      "filterPriority": "Priorità",
+      "emptyNoDate": "Nessuna attività senza data da pianificare",
+      "emptyOverdue": "Nessuna attività in ritardo da pianificare",
+      "noProject": "Nessun progetto"
+    },
     "resizeTask": "Cambia quando finisce questa attività",
     "month": "Mese",
     "week": "Settimana",

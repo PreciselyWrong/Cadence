@@ -1696,6 +1696,17 @@
     "done": "Končano"
   },
   "calendar": {
+    "arrange": {
+      "title": "Razporedi opravila",
+      "noDate": "Brez datuma",
+      "overdue": "Zapadla",
+      "filterProject": "Projekt",
+      "filterTag": "Oznaka",
+      "filterPriority": "Prioriteta",
+      "emptyNoDate": "Ni opravil brez datuma za razporeditev",
+      "emptyOverdue": "Ni zapadlih opravil za razporeditev",
+      "noProject": "Brez projekta"
+    },
     "resizeTask": "Spremeni, kdaj se opravilo konča",
     "month": "Mesec",
     "week": "Teden",

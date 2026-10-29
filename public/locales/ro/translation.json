@@ -1696,6 +1696,17 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "arrange": {
+      "title": "Aranjează sarcinile",
+      "noDate": "Fără dată",
+      "overdue": "Întârziate",
+      "filterProject": "Proiect",
+      "filterTag": "Etichetă",
+      "filterPriority": "Prioritate",
+      "emptyNoDate": "Nicio sarcină fără dată de programat",
+      "emptyOverdue": "Nicio sarcină întârziată de programat",
+      "noProject": "Fără proiect"
+    },
     "resizeTask": "Schimbă când se termină această sarcină",
     "month": "Lună",
     "week": "Săptămână",

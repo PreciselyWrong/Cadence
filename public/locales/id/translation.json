@@ -1690,6 +1690,17 @@
     "done": "Selesai"
   },
   "calendar": {
+    "arrange": {
+      "title": "Atur tugas",
+      "noDate": "Tanpa tanggal",
+      "overdue": "Terlambat",
+      "filterProject": "Proyek",
+      "filterTag": "Tag",
+      "filterPriority": "Prioritas",
+      "emptyNoDate": "Tidak ada tugas tanpa tanggal untuk dijadwalkan",
+      "emptyOverdue": "Tidak ada tugas terlambat untuk dijadwalkan",
+      "noProject": "Tanpa proyek"
+    },
     "resizeTask": "Ubah kapan tugas ini selesai",
     "month": "Bulan",
     "week": "Minggu",

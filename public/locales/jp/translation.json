@@ -1622,6 +1622,17 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "arrange": {
+      "title": "タスクを配置",
+      "noDate": "日付なし",
+      "overdue": "期限切れ",
+      "filterProject": "プロジェクト",
+      "filterTag": "タグ",
+      "filterPriority": "優先度",
+      "emptyNoDate": "予定に入れる日付なしのタスクはありません",
+      "emptyOverdue": "予定に入れる期限切れのタスクはありません",
+      "noProject": "プロジェクトなし"
+    },
     "resizeTask": "このタスクの終了時刻を変更",
     "month": "月",
     "week": "週",

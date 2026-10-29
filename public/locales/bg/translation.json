@@ -1692,6 +1692,17 @@
     "done": "Готово"
   },
   "calendar": {
+    "arrange": {
+      "title": "Подреждане на задачи",
+      "noDate": "Без дата",
+      "overdue": "Просрочени",
+      "filterProject": "Проект",
+      "filterTag": "Етикет",
+      "filterPriority": "Приоритет",
+      "emptyNoDate": "Няма задачи без дата за планиране",
+      "emptyOverdue": "Няма просрочени задачи за планиране",
+      "noProject": "Без проект"
+    },
     "resizeTask": "Промяна на края на задачата",
     "month": "Месец",
     "week": "Седмица",

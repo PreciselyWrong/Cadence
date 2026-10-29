@@ -1692,6 +1692,17 @@
     "done": "Klar"
   },
   "calendar": {
+    "arrange": {
+      "title": "Planera uppgifter",
+      "noDate": "Inget datum",
+      "overdue": "Försenade",
+      "filterProject": "Projekt",
+      "filterTag": "Tagg",
+      "filterPriority": "Prioritet",
+      "emptyNoDate": "Inga uppgifter utan datum att planera",
+      "emptyOverdue": "Inga försenade uppgifter att planera",
+      "noProject": "Inget projekt"
+    },
     "resizeTask": "Ändra när uppgiften slutar",
     "month": "Månad",
     "week": "Vecka",

@@ -1694,6 +1694,17 @@
     "done": "Fait"
   },
   "calendar": {
+    "arrange": {
+      "title": "Planifier les tâches",
+      "noDate": "Sans date",
+      "overdue": "En retard",
+      "filterProject": "Projet",
+      "filterTag": "Étiquette",
+      "filterPriority": "Priorité",
+      "emptyNoDate": "Aucune tâche sans date à planifier",
+      "emptyOverdue": "Aucune tâche en retard à planifier",
+      "noProject": "Sans projet"
+    },
     "resizeTask": "Changer la fin de cette tâche",
     "month": "Mois",
     "week": "Semaine",

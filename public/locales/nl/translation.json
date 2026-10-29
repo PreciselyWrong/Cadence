@@ -1692,6 +1692,17 @@
     "done": "Klaar"
   },
   "calendar": {
+    "arrange": {
+      "title": "Taken inplannen",
+      "noDate": "Geen datum",
+      "overdue": "Achterstallig",
+      "filterProject": "Project",
+      "filterTag": "Tag",
+      "filterPriority": "Prioriteit",
+      "emptyNoDate": "Geen taken zonder datum om in te plannen",
+      "emptyOverdue": "Geen achterstallige taken om in te plannen",
+      "noProject": "Geen project"
+    },
     "resizeTask": "Wijzig wanneer deze taak eindigt",
     "month": "Maand",
     "week": "Week",

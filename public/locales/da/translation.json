@@ -1692,6 +1692,17 @@
     "done": "Færdig"
   },
   "calendar": {
+    "arrange": {
+      "title": "Planlæg opgaver",
+      "noDate": "Ingen dato",
+      "overdue": "Forfaldne",
+      "filterProject": "Projekt",
+      "filterTag": "Mærke",
+      "filterPriority": "Prioritet",
+      "emptyNoDate": "Ingen opgaver uden dato at planlægge",
+      "emptyOverdue": "Ingen forfaldne opgaver at planlægge",
+      "noProject": "Intet projekt"
+    },
     "resizeTask": "Skift hvornår opgaven slutter",
     "month": "Måned",
     "week": "Uge",

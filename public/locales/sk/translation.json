@@ -1864,6 +1864,17 @@
         "done": "Hotovo"
     },
     "calendar": {
+      "arrange": {
+        "title": "Naplánovať úlohy",
+        "noDate": "Bez dátumu",
+        "overdue": "Po termíne",
+        "filterProject": "Projekt",
+        "filterTag": "Štítok",
+        "filterPriority": "Priorita",
+        "emptyNoDate": "Žiadne úlohy bez dátumu na naplánovanie",
+        "emptyOverdue": "Žiadne úlohy po termíne na naplánovanie",
+        "noProject": "Bez projektu"
+      },
       "resizeTask": "Zmeniť koniec tejto úlohy",
         "month": "Mesiac",
         "week": "Týždeň",

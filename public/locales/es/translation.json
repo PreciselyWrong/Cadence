@@ -1656,6 +1656,17 @@
     "done": "Hecho"
   },
   "calendar": {
+    "arrange": {
+      "title": "Organizar tareas",
+      "noDate": "Sin fecha",
+      "overdue": "Vencidas",
+      "filterProject": "Proyecto",
+      "filterTag": "Etiqueta",
+      "filterPriority": "Prioridad",
+      "emptyNoDate": "No hay tareas sin fecha para programar",
+      "emptyOverdue": "No hay tareas vencidas para programar",
+      "noProject": "Sin proyecto"
+    },
     "resizeTask": "Cambiar cuándo termina esta tarea",
     "month": "Mes",
     "week": "Semana",

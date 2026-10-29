@@ -1700,6 +1700,17 @@
     "done": "تم"
   },
   "calendar": {
+    "arrange": {
+      "title": "ترتيب المهام",
+      "noDate": "بدون تاريخ",
+      "overdue": "متأخرة",
+      "filterProject": "المشروع",
+      "filterTag": "الوسم",
+      "filterPriority": "الأولوية",
+      "emptyNoDate": "لا توجد مهام بدون تاريخ لجدولتها",
+      "emptyOverdue": "لا توجد مهام متأخرة لجدولتها",
+      "noProject": "بدون مشروع"
+    },
     "resizeTask": "تغيير وقت انتهاء هذه المهمة",
     "month": "شهر",
     "week": "أسبوع",

@@ -1694,6 +1694,17 @@
     "done": "Concluído"
   },
   "calendar": {
+    "arrange": {
+      "title": "Organizar tarefas",
+      "noDate": "Sem data",
+      "overdue": "Atrasadas",
+      "filterProject": "Projeto",
+      "filterTag": "Etiqueta",
+      "filterPriority": "Prioridade",
+      "emptyNoDate": "Sem tarefas sem data para agendar",
+      "emptyOverdue": "Sem tarefas atrasadas para agendar",
+      "noProject": "Sem projeto"
+    },
     "resizeTask": "Alterar quando esta tarefa termina",
     "month": "Mês",
     "week": "Semana",

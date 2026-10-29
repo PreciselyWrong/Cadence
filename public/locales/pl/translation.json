@@ -1696,6 +1696,17 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "arrange": {
+      "title": "Rozplanuj zadania",
+      "noDate": "Bez daty",
+      "overdue": "Zaległe",
+      "filterProject": "Projekt",
+      "filterTag": "Tag",
+      "filterPriority": "Priorytet",
+      "emptyNoDate": "Brak zadań bez daty do zaplanowania",
+      "emptyOverdue": "Brak zaległych zadań do zaplanowania",
+      "noProject": "Bez projektu"
+    },
     "resizeTask": "Zmień koniec tego zadania",
     "month": "Miesiąc",
     "week": "Tydzień",

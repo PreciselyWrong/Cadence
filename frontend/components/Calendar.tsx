@@ -45,6 +45,7 @@ import {
     taskToEvents,
 } from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
+import ArrangePanel, { ARRANGE_DRAG_PREFIX } from './Calendar/ArrangePanel';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -103,6 +104,7 @@ const Calendar: React.FC = () => {
     const [feedEvents, setFeedEvents] = useState<CalendarRangeEvent[]>([]);
     const [feedErrors, setFeedErrors] = useState<string[]>([]);
     const [isManagerOpen, setIsManagerOpen] = useState(false);
+    const [isArrangeOpen, setIsArrangeOpen] = useState(false);
 
     const locale = getLocale(i18n.language);
 
@@ -357,6 +359,19 @@ const Calendar: React.FC = () => {
         newDate: Date,
         newHour?: number
     ) => {
+        if (eventId.startsWith(ARRANGE_DRAG_PREFIX)) {
+            const task = findTask(eventId.slice(ARRANGE_DRAG_PREFIX.length));
+            if (!task?.uid) return;
+            const update: Record<string, unknown> = {
+                due_date: format(newDate, 'yyyy-MM-dd'),
+            };
+            if (newHour !== undefined) {
+                update.due_time = `${String(newHour).padStart(2, '0')}:00`;
+            }
+            await saveTaskChange(task, update);
+            return;
+        }
+
         const task = findTask(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event || event.readOnly) return;
@@ -503,6 +518,19 @@ const Calendar: React.FC = () => {
                     ))}
                     <button
                         type="button"
+                        onClick={() => setIsArrangeOpen((open) => !open)}
+                        aria-pressed={isArrangeOpen}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
+                            isArrangeOpen
+                                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'
+                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        }`}
+                    >
+                        <ClockIcon className="h-4 w-4" />
+                        {t('calendar.arrange.title', 'Arrange tasks')}
+                    </button>
+                    <button
+                        type="button"
                         onClick={() => setIsManagerOpen(true)}
                         className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
                     >
@@ -530,35 +558,44 @@ const Calendar: React.FC = () => {
                 )}
 
                 {/* Calendar view */}
-                <div className="flex-1 overflow-hidden min-h-0">
-                    {view === 'month' && (
-                        <CalendarMonthView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onDateClick={handleDateClick}
-                            onEventClick={handleEventClick}
-                            onEventDrop={handleEventDrop}
-                        />
-                    )}
-                    {view === 'week' && (
-                        <CalendarWeekView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onDateClick={handleDateClick}
-                            onEventClick={handleEventClick}
-                            onTimeSlotClick={handleTimeSlotClick}
-                            onEventDrop={handleEventDrop}
-                            onEventResize={handleEventResize}
-                        />
-                    )}
-                    {view === 'day' && (
-                        <CalendarDayView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onEventClick={handleEventClick}
-                            onTimeSlotClick={handleTimeSlotClick}
-                            onEventDrop={handleEventDrop}
-                            onEventResize={handleEventResize}
+                <div className="flex-1 overflow-hidden min-h-0 flex gap-3">
+                    <div className="flex-1 overflow-hidden min-h-0">
+                        {view === 'month' && (
+                            <CalendarMonthView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onDateClick={handleDateClick}
+                                onEventClick={handleEventClick}
+                                onEventDrop={handleEventDrop}
+                            />
+                        )}
+                        {view === 'week' && (
+                            <CalendarWeekView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onDateClick={handleDateClick}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                            />
+                        )}
+                        {view === 'day' && (
+                            <CalendarDayView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                            />
+                        )}
+                    </div>
+
+                    {isArrangeOpen && (
+                        <ArrangePanel
+                            tasks={allTasks}
+                            onClose={() => setIsArrangeOpen(false)}
                         />
                     )}
                 </div>
