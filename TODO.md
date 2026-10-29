@@ -18,12 +18,13 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 - Cible Linux Compose Desktop : mêmes écrans sur Fedora.
 - Passer la production sur le Postgres d'Unraid (export puis import) et lancer les tests sur Postgres.
 - Ajouter le remote `upstream` (`chrisvel/tududi`) et fusionner chaque semaine. Proposer en PR les ajouts génériques (vues calendrier, flux ICS de la branche `claude/new-session-sgffz7`).
+- Refonte UI/UX : minimaliste par défaut (façon TickTick), avec un mode dense en option qui garde toutes les fonctionnalités. Vérif : chaque fonctionnalité atteignable en mode dense ; le mode minimal masque sans supprimer.
+- TODO.md des dépôts dans Tududi, édition live des deux côtés : un conteneur clone depuis Gitea/GitHub, lit `Now`/`Next`/`Ideas` ; une modification dans Tududi est commitée et poussée, un push dans le dépôt est relu (webhook). Les conflits sont signalés sans écrire. Vérif : une modif de chaque côté apparaît de l'autre sans perte.
 
 ## Ideas
 
 - Capture Android : partage vers l'inbox en moins d'une seconde, puis galerie des découvertes (aperçu OpenGraph, README GitHub) avec décision rapide : tester, rattacher, reporter, jeter.
 - Enrichissement déterministe sans IA (OpenGraph, README, étoiles), puis Hermes en lot différé (résumé, projet, doublons, résurgence).
-- TODO.md des dépôts affichés dans Tududi via un conteneur qui clone depuis Gitea/GitHub, lit `Now`/`Next`/`Ideas`, commit/push, et signale les conflits sans écrire.
 - Migration TickTick via son MCP, une fois les rappels prouvés pendant quelques semaines.
 - Vues outliner et galerie dans les clients.
 - À décider : l'app vit-elle dans le dépôt Cadence transformé (historique et design system conservés, recommandé) ou dans un nouveau dépôt ?
