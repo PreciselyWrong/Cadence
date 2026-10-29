@@ -3172,6 +3172,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Kolor według",
+    "colorByStatus": "Kolor: status",
+    "colorByPriority": "Kolor: priorytet",
+    "colorByTag": "Kolor: tag",
     "title": "Oś czasu",
     "days": "Dni",
     "weeks": "Tygodnie",

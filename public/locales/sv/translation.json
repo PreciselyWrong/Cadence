@@ -3162,6 +3162,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Färg efter",
+    "colorByStatus": "Färg: status",
+    "colorByPriority": "Färg: prioritet",
+    "colorByTag": "Färg: tagg",
     "title": "Tidslinje",
     "days": "Dagar",
     "weeks": "Veckor",

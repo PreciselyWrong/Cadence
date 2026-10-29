@@ -3165,6 +3165,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Colore per",
+    "colorByStatus": "Colore: stato",
+    "colorByPriority": "Colore: priorità",
+    "colorByTag": "Colore: tag",
     "title": "Cronologia",
     "days": "Giorni",
     "weeks": "Settimane",

@@ -3182,6 +3182,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "التلوين حسب",
+    "colorByStatus": "اللون: الحالة",
+    "colorByPriority": "اللون: الأولوية",
+    "colorByTag": "اللون: الوسم",
     "title": "الجدول الزمني",
     "days": "أيام",
     "weeks": "أسابيع",

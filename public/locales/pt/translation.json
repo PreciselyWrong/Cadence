@@ -3165,6 +3165,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Cor por",
+    "colorByStatus": "Cor: estado",
+    "colorByPriority": "Cor: prioridade",
+    "colorByTag": "Cor: etiqueta",
     "title": "Linha do tempo",
     "days": "Dias",
     "weeks": "Semanas",

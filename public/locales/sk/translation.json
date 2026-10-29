@@ -3187,6 +3187,10 @@
         }
     },
     "projectTimeline": {
+      "colorBy": "Farba podľa",
+      "colorByStatus": "Farba: stav",
+      "colorByPriority": "Farba: priorita",
+      "colorByTag": "Farba: štítok",
         "title": "Časová os",
         "days": "Dni",
         "weeks": "Týždne",

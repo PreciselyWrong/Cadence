@@ -3159,6 +3159,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "色分け",
+    "colorByStatus": "色: ステータス",
+    "colorByPriority": "色: 優先度",
+    "colorByTag": "色: タグ",
     "title": "タイムライン",
     "days": "日",
     "weeks": "週",

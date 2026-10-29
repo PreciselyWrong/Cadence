@@ -3159,6 +3159,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Tô màu theo",
+    "colorByStatus": "Màu: trạng thái",
+    "colorByPriority": "Màu: ưu tiên",
+    "colorByTag": "Màu: thẻ",
     "title": "Dòng thời gian",
     "days": "Ngày",
     "weeks": "Tuần",

@@ -3162,6 +3162,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Väri",
+    "colorByStatus": "Väri: tila",
+    "colorByPriority": "Väri: prioriteetti",
+    "colorByTag": "Väri: tunniste",
     "title": "Aikajana",
     "days": "Päivät",
     "weeks": "Viikot",

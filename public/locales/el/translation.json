@@ -3163,6 +3163,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Χρώμα κατά",
+    "colorByStatus": "Χρώμα: κατάσταση",
+    "colorByPriority": "Χρώμα: προτεραιότητα",
+    "colorByTag": "Χρώμα: ετικέτα",
     "title": "Χρονολόγιο",
     "days": "Ημέρες",
     "weeks": "Εβδομάδες",

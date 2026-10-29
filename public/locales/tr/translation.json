@@ -3162,6 +3162,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Renklendirme",
+    "colorByStatus": "Renk: durum",
+    "colorByPriority": "Renk: öncelik",
+    "colorByTag": "Renk: etiket",
     "title": "Zaman çizelgesi",
     "days": "Günler",
     "weeks": "Haftalar",

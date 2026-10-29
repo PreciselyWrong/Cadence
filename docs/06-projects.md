@@ -379,6 +379,7 @@ The project page has two tabs above the tasks: **Tasks** (the list) and **Timeli
 - **Scheduling:** drag a bar to move both dates, drag either end to change one, drag a diamond to move the due date. Times of day are kept. Drag a task from the tray onto a day to give it that day as start and due. Clicking a bar opens the task.
 - **Arrows** show "blocks" relations between the project's tasks (`task_links` on `GET /api/project/:uid`, as `{ from_uid, to_uid }` pairs).
 - **Highlight the path** marks the chain of blocking tasks that sets the finish (from the linked task that ends last, back through the blocker that ends latest) and shows spare days on open tasks off that chain: days until what they block starts, or until the project's due date.
+- **Colour:** status (default), priority (red, amber, blue) or the first tag's colour. Done tasks, overdue ones and the highlighted path keep their own colours. The choice is remembered per browser.
 - **Scale:** Days, Weeks or Months. A line marks today, dashed lines mark the project's start and due date, and open tasks past their due date are orange.
 - The chart follows the page's status filter and search.
 

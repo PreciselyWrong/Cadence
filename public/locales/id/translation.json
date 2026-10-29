@@ -3159,6 +3159,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Warna berdasarkan",
+    "colorByStatus": "Warna: status",
+    "colorByPriority": "Warna: prioritas",
+    "colorByTag": "Warna: tag",
     "title": "Linimasa",
     "days": "Hari",
     "weeks": "Minggu",

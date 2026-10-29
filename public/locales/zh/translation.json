@@ -3159,6 +3159,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "颜色依据",
+    "colorByStatus": "颜色：状态",
+    "colorByPriority": "颜色：优先级",
+    "colorByTag": "颜色：标签",
     "title": "时间线",
     "days": "天",
     "weeks": "周",

@@ -3169,6 +3169,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Culoare după",
+    "colorByStatus": "Culoare: stare",
+    "colorByPriority": "Culoare: prioritate",
+    "colorByTag": "Culoare: etichetă",
     "title": "Cronologie",
     "days": "Zile",
     "weeks": "Săptămâni",

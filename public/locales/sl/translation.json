@@ -3172,6 +3172,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Barva po",
+    "colorByStatus": "Barva: stanje",
+    "colorByPriority": "Barva: prioriteta",
+    "colorByTag": "Barva: oznaka",
     "title": "Časovnica",
     "days": "Dnevi",
     "weeks": "Tedni",

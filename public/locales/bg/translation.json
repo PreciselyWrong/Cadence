@@ -3162,6 +3162,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Цвят по",
+    "colorByStatus": "Цвят: статус",
+    "colorByPriority": "Цвят: приоритет",
+    "colorByTag": "Цвят: етикет",
     "title": "Времева линия",
     "days": "Дни",
     "weeks": "Седмици",

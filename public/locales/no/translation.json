@@ -3167,6 +3167,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Farge etter",
+    "colorByStatus": "Farge: status",
+    "colorByPriority": "Farge: prioritet",
+    "colorByTag": "Farge: etikett",
     "title": "Tidslinje",
     "days": "Dager",
     "weeks": "Uker",

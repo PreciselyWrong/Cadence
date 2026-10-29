@@ -3162,6 +3162,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Kleur op",
+    "colorByStatus": "Kleur: status",
+    "colorByPriority": "Kleur: prioriteit",
+    "colorByTag": "Kleur: tag",
     "title": "Tijdlijn",
     "days": "Dagen",
     "weeks": "Weken",

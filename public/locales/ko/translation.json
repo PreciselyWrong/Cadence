@@ -3159,6 +3159,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "색상 기준",
+    "colorByStatus": "색상: 상태",
+    "colorByPriority": "색상: 우선순위",
+    "colorByTag": "색상: 태그",
     "title": "타임라인",
     "days": "일",
     "weeks": "주",
