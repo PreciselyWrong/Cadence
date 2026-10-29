@@ -3034,7 +3034,10 @@
     },
     "durationMinutes": "{{minutes}}分",
     "durationHours": "{{hours}}時間",
-    "durationHoursMinutes": "{{hours}}時間{{minutes}}分"
+    "durationHoursMinutes": "{{hours}}時間{{minutes}}分",
+    "calendar": "カレンダー",
+    "showCalendar": "カレンダーを表示",
+    "hideCalendar": "カレンダーを非表示"
   },
   "capture": {
     "add": "追加",

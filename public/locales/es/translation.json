@@ -3029,7 +3029,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
-    "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+    "calendar": "Calendario",
+    "showCalendar": "Mostrar calendario",
+    "hideCalendar": "Ocultar calendario"
   },
   "capture": {
     "add": "Añadir",

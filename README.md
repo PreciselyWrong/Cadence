@@ -57,6 +57,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | | Upstream | This fork |
 |---|---|---|
 | Before planning | — | No planning gate: the day's **tasks are listed at once** under "Today's tasks"; **Plan your day** is a small link. [Docs](docs/20-daily-plan.md) |
+| Day calendar | — | Day calendar panel beside Today (toggle, remembered per browser) [Docs](docs/20-daily-plan.md) |
 
 ### Projects
 

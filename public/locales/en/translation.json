@@ -3386,7 +3386,10 @@
     },
     "durationMinutes": "{{minutes}}m",
     "durationHours": "{{hours}}h",
-    "durationHoursMinutes": "{{hours}}h {{minutes}}m"
+    "durationHoursMinutes": "{{hours}}h {{minutes}}m",
+    "calendar": "Calendar",
+    "showCalendar": "Show calendar",
+    "hideCalendar": "Hide calendar"
   },
   "relations": {
     "title": "Relations",

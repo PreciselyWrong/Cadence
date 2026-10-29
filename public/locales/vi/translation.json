@@ -3034,7 +3034,10 @@
     },
     "durationMinutes": "{{minutes}} phút",
     "durationHours": "{{hours}} giờ",
-    "durationHoursMinutes": "{{hours}} giờ {{minutes}} phút"
+    "durationHoursMinutes": "{{hours}} giờ {{minutes}} phút",
+    "calendar": "Lịch",
+    "showCalendar": "Hiện lịch",
+    "hideCalendar": "Ẩn lịch"
   },
   "capture": {
     "add": "Thêm",

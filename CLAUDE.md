@@ -26,6 +26,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Tasks | Pinned tasks (`tasks.pinned_at`) | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Tasks | Round check before each title (priority ring; completes from the list with undo); Task and Upcoming lists open on open tasks, `status=all` is explicit | [00-tasks-behavior.md](docs/00-tasks-behavior.md) |
 | Today | Day's tasks listed without a planning gate; "Plan your day" is a link | [02-today-page-sections.md](docs/02-today-page-sections.md), [20-daily-plan.md](docs/20-daily-plan.md) |
+| Today | Day calendar panel beside Today (toggle, remembered per browser) | [20-daily-plan.md](docs/20-daily-plan.md) |
 | Tags | Nested tags, one level (`tags.parent_id`) | [09-tags-system.md](docs/09-tags-system.md) |
 | Projects | Board tab with free sections and card order (`project_sections`, `tasks.section_id`, `tasks.section_position`); timeline colour by priority / tag | [06-projects.md](docs/06-projects.md) |
 | Appearance | Minimal (default) or Dense interface (`ui_settings.appearance.density`) | [08-user-management.md](docs/08-user-management.md) |

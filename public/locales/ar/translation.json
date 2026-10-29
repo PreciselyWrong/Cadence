@@ -3064,7 +3064,10 @@
     },
     "durationMinutes": "{{minutes}} د",
     "durationHours": "{{hours}} س",
-    "durationHoursMinutes": "{{hours}} س {{minutes}} د"
+    "durationHoursMinutes": "{{hours}} س {{minutes}} د",
+    "calendar": "التقويم",
+    "showCalendar": "إظهار التقويم",
+    "hideCalendar": "إخفاء التقويم"
   },
   "capture": {
     "add": "إضافة",

@@ -3045,7 +3045,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
-    "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+    "calendar": "Calendar",
+    "showCalendar": "Afișează calendarul",
+    "hideCalendar": "Ascunde calendarul"
   },
   "capture": {
     "add": "Adaugă",

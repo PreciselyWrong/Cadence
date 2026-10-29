@@ -3036,7 +3036,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} u",
-    "durationHoursMinutes": "{{hours}} u {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} u {{minutes}} min",
+    "calendar": "Agenda",
+    "showCalendar": "Agenda tonen",
+    "hideCalendar": "Agenda verbergen"
   },
   "capture": {
     "add": "Toevoegen",

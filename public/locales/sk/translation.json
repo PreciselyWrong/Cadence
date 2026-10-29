@@ -3056,7 +3056,10 @@
         },
         "durationMinutes": "{{minutes}} min",
         "durationHours": "{{hours}} h",
-        "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+        "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+        "calendar": "Kalendár",
+        "showCalendar": "Zobraziť kalendár",
+        "hideCalendar": "Skryť kalendár"
     },
     "relations": {
         "title": "Vzťahy",

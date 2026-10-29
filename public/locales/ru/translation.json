@@ -3050,7 +3050,10 @@
     },
     "durationMinutes": "{{minutes}} мин",
     "durationHours": "{{hours}} ч",
-    "durationHoursMinutes": "{{hours}} ч {{minutes}} мин"
+    "durationHoursMinutes": "{{hours}} ч {{minutes}} мин",
+    "calendar": "Календарь",
+    "showCalendar": "Показать календарь",
+    "hideCalendar": "Скрыть календарь"
   },
   "capture": {
     "add": "Добавить",

@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+    render,
+    screen,
+    fireEvent,
+    waitFor,
+    within,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TodayPage from '../TodayPage';
 import DurationChips from '../DurationChips';
@@ -97,6 +103,7 @@ jest.mock('../../../utils/dateUtils', () => ({
 
 jest.mock('../../../utils/tasksService', () => ({
     toggleTaskCompletion: jest.fn(),
+    updateTask: jest.fn(),
 }));
 
 jest.mock('../../../utils/dailyPlanService', () => ({
@@ -560,5 +567,180 @@ describe('DurationChips', () => {
         );
         fireEvent.click(screen.getByRole('radio', { name: '2h' }));
         expect(onChange).toHaveBeenCalledWith(120);
+    });
+});
+
+describe('TodayPage calendar panel', () => {
+    const feedEvent = {
+        uid: 'e1',
+        title: 'Dentist',
+        all_day: false,
+        busy: true,
+        start: '2026-09-24T10:00:00',
+        end: '2026-09-24T11:00:00',
+        start_minute: 10 * 60,
+        end_minute: 11 * 60,
+        feed_uid: 'f1',
+        feed_name: 'Work',
+        color: null,
+    };
+    const timedTask = {
+        uid: 'd1',
+        id: 5,
+        name: 'Call the bank',
+        status: 0,
+        due_date: '2026-09-24',
+        due_time: '14:00',
+        due_has_time: true,
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockCalendarEnabled = true;
+        localStorage.clear();
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: '2026-09-24',
+            plan: null,
+        });
+        (fetchPlanCandidates as jest.Mock).mockResolvedValue({
+            ...candidates,
+            due_today: [timedTask],
+        });
+        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
+            {
+                uid: 'f1',
+                name: 'Work',
+                url_host: 'example.com',
+                color: null,
+                last_fetched_at: null,
+                last_error: null,
+                show_on_calendar: true,
+            },
+        ]);
+        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+            date: '2026-09-24',
+            events: [feedEvent],
+            errors: [],
+        });
+    });
+
+    it('starts closed, then opens and stays open after a re-render', async () => {
+        const { unmount } = render(<TodayPage />);
+        const toggle = await screen.findByRole('button', { name: 'Calendar' });
+
+        expect(toggle).toHaveAttribute('aria-pressed', 'false');
+        expect(
+            screen.queryByTestId('today-calendar-panel')
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(toggle);
+
+        expect(screen.getByTestId('today-calendar-panel')).toBeInTheDocument();
+        expect(toggle).toHaveAttribute('aria-pressed', 'true');
+        expect(localStorage.getItem('today.calendarOpen')).toBe('true');
+
+        unmount();
+        render(<TodayPage />);
+
+        expect(
+            await screen.findByTestId('today-calendar-panel')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Calendar' })
+        ).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    it('shows a feed event and a timed task due today in the panel', async () => {
+        localStorage.setItem('today.calendarOpen', 'true');
+        render(<TodayPage />);
+
+        const panel = await screen.findByTestId('today-calendar-panel');
+
+        await waitFor(() =>
+            expect(within(panel).getByText('Dentist')).toBeInTheDocument()
+        );
+        expect(within(panel).getByText('Call the bank')).toBeInTheDocument();
+    });
+
+    it('does not show the panel until it is opened', async () => {
+        render(<TodayPage />);
+
+        await screen.findByRole('button', { name: 'Calendar' });
+
+        expect(
+            screen.queryByTestId('today-calendar-panel')
+        ).not.toBeInTheDocument();
+    });
+});
+
+describe('TodayPage calendar panel drag', () => {
+    const plannedTask = {
+        uid: 'p1',
+        id: 7,
+        name: 'Write report',
+        status: 0,
+        due_date: '2026-09-24',
+        estimated_minutes: 30,
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockCalendarEnabled = true;
+        localStorage.setItem('today.calendarOpen', 'true');
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: '2026-09-24',
+            plan: {
+                started_at: '2026-09-24T08:00:00Z',
+                ai_wrap_up: null,
+                items: [
+                    {
+                        task_uid: 'p1',
+                        position: 0,
+                        start_minute: 10 * 60,
+                        duration_minutes: 30,
+                        task: plannedTask,
+                    },
+                ],
+            },
+        });
+        (fetchPlanCandidates as jest.Mock).mockResolvedValue(candidates);
+        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([]);
+        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+            events: [],
+            errors: [],
+        });
+        (saveDailyPlanItems as jest.Mock).mockImplementation(
+            async (date: string) => ({
+                date,
+                plan: {
+                    started_at: '2026-09-24T08:00:00Z',
+                    ai_wrap_up: null,
+                    items: [],
+                },
+            })
+        );
+    });
+
+    it('moves a planned block to another hour and saves its start', async () => {
+        render(<TodayPage />);
+        const panel = await screen.findByTestId('today-calendar-panel');
+        const block = await within(panel).findByText('Write report');
+
+        fireEvent.dragStart(block, {
+            dataTransfer: { setData: jest.fn(), getData: () => 'plan-p1' },
+        });
+        const hourSlot = within(panel).getByText('14:00').nextElementSibling!;
+        fireEvent.drop(hourSlot, {
+            dataTransfer: { getData: () => 'plan-p1' },
+        });
+
+        await waitFor(() =>
+            expect(saveDailyPlanItems).toHaveBeenCalledWith('2026-09-24', [
+                expect.objectContaining({
+                    task_uid: 'p1',
+                    start_minute: 14 * 60,
+                }),
+            ])
+        );
     });
 });

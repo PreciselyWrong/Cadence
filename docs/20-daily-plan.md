@@ -29,6 +29,7 @@ The classic Today page was removed; `/today_legacy` now redirects to `/today`. I
 - **Recurring tasks:** completing one moves the same task on to its next due date and reopens it. The plan still shows the day's occurrence as done (crossed out, with the next date) and counts it in `done/total`. This holds while a non-skipped completion falls on the plan's day and the task's due date is after that day, so undoing the completion makes it open again.
 - **Moving a due date:** changing a planned task's due date from the day (or earlier, or none) to a later day from the agenda takes it off the plan, with an undo toast. Changes made elsewhere leave the plan as it is.
 - **Replan** reopens the planner. Starting the day again keeps the first start time.
+- **Calendar panel:** the **Calendar** button in the Today header opens today's hours beside the list (below `lg`, a full-width section above it). The panel shows the calendar feed events (only when a shown calendar is connected), the planned blocks with a start time, and the tasks due today with a time. Drag a planned block to another hour to change its start; drag a due-today task to change its due time, as on the Calendar page. It opens scrolled to the current hour, and the choice is remembered per browser (`today.calendarOpen` in localStorage, closed by default).
 - The sidebar shows `done/total` next to Today once the day is started.
 
 ---

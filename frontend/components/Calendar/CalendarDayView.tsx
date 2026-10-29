@@ -11,6 +11,8 @@ interface CalendarDayViewProps {
     onTimeSlotClick?: (date: Date, hour: number) => void;
     onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
     onEventResize?: (eventId: string, newEnd: Date) => void;
+    // Hour the time slots start scrolled to, read once on mount.
+    scrollToHour?: number;
 }
 
 const HOUR_HEIGHT = 48;
@@ -22,9 +24,11 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     onTimeSlotClick,
     onEventDrop,
     onEventResize,
+    scrollToHour,
 }) => {
     const { t } = useTranslation();
     const resize = useEventResize(HOUR_HEIGHT, onEventResize);
+    const scrollRef = React.useRef<HTMLDivElement>(null);
     const hours = Array.from({ length: 24 }, (_, i) => i);
     const [draggedEventId, setDraggedEventId] = React.useState<string | null>(
         null
@@ -80,6 +84,11 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
         if (eventId && onEventDrop) onEventDrop(eventId, currentDate, hour);
         setDraggedEventId(null);
     };
+
+    React.useEffect(() => {
+        if (scrollToHour === undefined || !scrollRef.current) return;
+        scrollRef.current.scrollTop = scrollToHour * HOUR_HEIGHT;
+    }, [scrollToHour]);
 
     const todayClass = isToday(currentDate);
 
@@ -148,7 +157,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
             )}
 
             {/* Time slots */}
-            <div className="flex-1 overflow-y-auto">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto">
                 <div className="relative">
                     {hours.map((hour) => (
                         <div

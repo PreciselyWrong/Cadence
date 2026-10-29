@@ -3050,7 +3050,10 @@
     },
     "durationMinutes": "{{minutes}} хв",
     "durationHours": "{{hours}} год",
-    "durationHoursMinutes": "{{hours}} год {{minutes}} хв"
+    "durationHoursMinutes": "{{hours}} год {{minutes}} хв",
+    "calendar": "Календар",
+    "showCalendar": "Показати календар",
+    "hideCalendar": "Приховати календар"
   },
   "capture": {
     "add": "Додати",

@@ -3036,7 +3036,10 @@
     },
     "durationMinutes": "{{minutes}} dk",
     "durationHours": "{{hours}} sa",
-    "durationHoursMinutes": "{{hours}} sa {{minutes}} dk"
+    "durationHoursMinutes": "{{hours}} sa {{minutes}} dk",
+    "calendar": "Takvim",
+    "showCalendar": "Takvimi göster",
+    "hideCalendar": "Takvimi gizle"
   },
   "capture": {
     "add": "Ekle",

@@ -3041,7 +3041,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} t",
-    "durationHoursMinutes": "{{hours}} t {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} t {{minutes}} min",
+    "calendar": "Kalender",
+    "showCalendar": "Vis kalender",
+    "hideCalendar": "Skjul kalender"
   },
   "capture": {
     "add": "Legg til",

@@ -3034,7 +3034,10 @@
     },
     "durationMinutes": "{{minutes}}分钟",
     "durationHours": "{{hours}}小时",
-    "durationHoursMinutes": "{{hours}}小时{{minutes}}分钟"
+    "durationHoursMinutes": "{{hours}}小时{{minutes}}分钟",
+    "calendar": "日历",
+    "showCalendar": "显示日历",
+    "hideCalendar": "隐藏日历"
   },
   "capture": {
     "add": "添加",

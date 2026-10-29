@@ -3036,7 +3036,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
-    "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+    "calendar": "Kalender",
+    "showCalendar": "Visa kalender",
+    "hideCalendar": "Dölj kalender"
   },
   "capture": {
     "add": "Lägg till",

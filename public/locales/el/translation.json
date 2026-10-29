@@ -3037,7 +3037,10 @@
     },
     "durationMinutes": "{{minutes}}λ",
     "durationHours": "{{hours}}ω",
-    "durationHoursMinutes": "{{hours}}ω {{minutes}}λ"
+    "durationHoursMinutes": "{{hours}}ω {{minutes}}λ",
+    "calendar": "Ημερολόγιο",
+    "showCalendar": "Εμφάνιση ημερολογίου",
+    "hideCalendar": "Απόκρυψη ημερολογίου"
   },
   "capture": {
     "add": "Προσθήκη",

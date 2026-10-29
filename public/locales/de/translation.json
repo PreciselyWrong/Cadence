@@ -3045,7 +3045,10 @@
     },
     "durationMinutes": "{{minutes}} Min.",
     "durationHours": "{{hours}} Std.",
-    "durationHoursMinutes": "{{hours}} Std. {{minutes}} Min."
+    "durationHoursMinutes": "{{hours}} Std. {{minutes}} Min.",
+    "calendar": "Kalender",
+    "showCalendar": "Kalender anzeigen",
+    "hideCalendar": "Kalender ausblenden"
   },
   "capture": {
     "add": "Hinzufügen",

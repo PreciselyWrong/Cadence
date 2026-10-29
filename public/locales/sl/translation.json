@@ -3050,7 +3050,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
-    "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+    "calendar": "Koledar",
+    "showCalendar": "Prikaži koledar",
+    "hideCalendar": "Skrij koledar"
   },
   "capture": {
     "add": "Dodaj",

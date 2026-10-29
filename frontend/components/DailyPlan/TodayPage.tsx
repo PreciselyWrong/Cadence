@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import {
     AiWrapUp,
@@ -25,7 +25,11 @@ import {
     fetchCalendarEvents,
     fetchCalendarFeeds,
 } from '../../utils/calendarFeedsService';
-import { deleteTask, toggleTaskCompletion } from '../../utils/tasksService';
+import {
+    deleteTask,
+    toggleTaskCompletion,
+    updateTask,
+} from '../../utils/tasksService';
 import { getUserTimezone } from '../../utils/dateUtils';
 import { isTaskDone } from '../../constants/taskStatus';
 import { isHabitDoneForNow } from '../../utils/habitUtils';
@@ -47,6 +51,34 @@ import {
     intlLocale,
 } from './planUtils';
 import { useAiAllowed } from '../../hooks/useTrialStatus';
+import TodayCalendarPanel, {
+    DUE_EVENT_PREFIX,
+    PLAN_EVENT_PREFIX,
+} from './TodayCalendarPanel';
+import {
+    CalendarEvent as CalendarBlock,
+    CalendarTask,
+    moveUpdate,
+} from '../Calendar/taskEvents';
+
+const CALENDAR_OPEN_KEY = 'today.calendarOpen';
+
+// Remembered per browser; storage can be blocked (private windows).
+const readCalendarOpen = (): boolean => {
+    try {
+        return window.localStorage.getItem(CALENDAR_OPEN_KEY) === 'true';
+    } catch {
+        return false;
+    }
+};
+
+const writeCalendarOpen = (open: boolean) => {
+    try {
+        window.localStorage.setItem(CALENDAR_OPEN_KEY, String(open));
+    } catch {
+        // The choice only lasts for this page view.
+    }
+};
 
 const isRecurring = (task: Task): boolean =>
     !task.habit_mode &&
@@ -85,6 +117,7 @@ const TodayPage: React.FC = () => {
     const [candidates, setCandidates] = useState<PlanCandidates | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [busyUid, setBusyUid] = useState<string | null>(null);
+    const [calendarOpen, setCalendarOpen] = useState(readCalendarOpen);
     const [now, setNow] = useState(() =>
         minuteOfDay(new Date(), getUserTimezone())
     );
@@ -368,6 +401,49 @@ const TodayPage: React.FC = () => {
         [items, replaceItems]
     );
 
+    // Drag a planned block to another hour, or a timed task due today: the
+    // plan item keeps its own start, the task moves like it does on Calendar.
+    const handleCalendarMove = async (block: CalendarBlock, newStart: Date) => {
+        if (block.id.startsWith(PLAN_EVENT_PREFIX)) {
+            const uid = block.id.slice(PLAN_EVENT_PREFIX.length);
+            const minute = newStart.getHours() * 60 + newStart.getMinutes();
+            replaceItems(
+                itemsRef.current.map((item) =>
+                    item.task_uid === uid
+                        ? { ...item, start_minute: minute }
+                        : item
+                )
+            );
+            return;
+        }
+        const uid = block.id.slice(DUE_EVENT_PREFIX.length);
+        const task = candidates?.due_today.find((t) => t.uid === uid);
+        if (!task) return;
+        try {
+            const saved = await updateTask(
+                uid,
+                moveUpdate(
+                    task as unknown as CalendarTask,
+                    block,
+                    newStart
+                ) as Partial<Task>
+            );
+            replaceCandidate(uid, saved);
+        } catch (err) {
+            showErrorToast(
+                err instanceof Error
+                    ? err.message
+                    : t('dailyPlan.saveError', 'Could not save the plan.')
+            );
+        }
+    };
+
+    const toggleCalendar = () => {
+        const next = !calendarOpen;
+        setCalendarOpen(next);
+        writeCalendarOpen(next);
+    };
+
     const doneCount = items.filter(isItemDone).length;
     const minutesLeft = items
         .filter((item) => !isItemDone(item))
@@ -473,100 +549,159 @@ const TodayPage: React.FC = () => {
                             </Link>
                         </div>
                     )}
+                    <button
+                        type="button"
+                        aria-pressed={calendarOpen}
+                        title={
+                            calendarOpen
+                                ? t('dailyPlan.hideCalendar', 'Hide calendar')
+                                : t('dailyPlan.showCalendar', 'Show calendar')
+                        }
+                        onClick={toggleCalendar}
+                        className={`inline-flex min-h-[34px] items-center gap-1.5 rounded-lg px-3.5 text-sm font-medium ${
+                            calendarOpen
+                                ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50'
+                                : 'bg-gray-100 text-gray-900 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                    >
+                        <CalendarDaysIcon
+                            className="h-4 w-4"
+                            aria-hidden="true"
+                        />
+                        {t('dailyPlan.calendar', 'Calendar')}
+                    </button>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    {started && (
-                        <div
-                            className="h-1 rounded-full bg-gray-200 dark:bg-gray-700"
-                            role="progressbar"
-                            aria-valuenow={progress}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                        >
-                            <div
-                                className="h-1 rounded-full bg-blue-600 transition-all"
-                                style={{ width: `${progress}%` }}
-                            />
+                <div
+                    className={`flex flex-col gap-5 ${
+                        calendarOpen
+                            ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6'
+                            : ''
+                    }`}
+                >
+                    {calendarOpen && (
+                        <TodayCalendarPanel
+                            date={planResponse?.date ?? null}
+                            feedEvents={events}
+                            dueTodayTasks={(candidates?.due_today ?? []).filter(
+                                (task) => task.due_has_time
+                            )}
+                            planItems={items}
+                            now={now}
+                            onMove={handleCalendarMove}
+                        />
+                    )}
+                    <div className="flex min-w-0 flex-col gap-5">
+                        <div className="flex flex-col gap-2">
+                            {started && (
+                                <div
+                                    className="h-1 rounded-full bg-gray-200 dark:bg-gray-700"
+                                    role="progressbar"
+                                    aria-valuenow={progress}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                >
+                                    <div
+                                        className="h-1 rounded-full bg-blue-600 transition-all"
+                                        style={{ width: `${progress}%` }}
+                                    />
+                                </div>
+                            )}
+                            {quote && (
+                                <p className="text-gray-400 font-light dark:text-gray-500">
+                                    {quote}
+                                </p>
+                            )}
                         </div>
-                    )}
-                    {quote && (
-                        <p className="text-gray-400 font-light dark:text-gray-500">
-                            {quote}
-                        </p>
-                    )}
+
+                        {error && (
+                            <p className="text-red-600 dark:text-red-400">
+                                {error}
+                            </p>
+                        )}
+
+                        {!planResponse && !error && (
+                            <p className="text-gray-500 dark:text-gray-400">
+                                {t('common.loading', 'Loading...')}
+                            </p>
+                        )}
+
+                        {planResponse && !started && (
+                            <TodayUnplanned
+                                candidates={candidates}
+                                events={events}
+                                showsFeeds={showsFeeds}
+                                calendarEnabled={calendarEnabled}
+                                hasDraft={items.length > 0}
+                                projects={projects}
+                                onTaskUpdate={async (task) =>
+                                    replaceCandidate(task.uid, task)
+                                }
+                                onTaskDelete={handleDeleteTask}
+                            />
+                        )}
+
+                        {planResponse && started && (
+                            <TodayPlanned
+                                items={items}
+                                events={events}
+                                candidates={candidates}
+                                now={now}
+                                busyUid={busyUid}
+                                onToggleDone={handleToggleDone}
+                                onPushLater={handlePushLater}
+                                onAdd={handleAdd}
+                                projects={projects}
+                                onPlannedTaskUpdate={syncPlannedTask}
+                                onPlannedTaskComplete={syncCompletedTask}
+                                onPlannedTaskDelete={handleDeleteTask}
+                                onReorderUntimed={(orderedUids) => {
+                                    const byUid = new Map(
+                                        items.map((item) => [
+                                            item.task_uid,
+                                            item,
+                                        ])
+                                    );
+                                    replaceItems(
+                                        mergeVisibleOrder(
+                                            items.map((item) => item.task_uid),
+                                            orderedUids
+                                        ).map(
+                                            (uid) =>
+                                                byUid.get(uid) as DailyPlanItem
+                                        )
+                                    );
+                                }}
+                                onCandidateUpdate={async (task) =>
+                                    replaceCandidate(task.uid, task)
+                                }
+                                onCandidateDelete={handleDeleteTask}
+                                tips={tips}
+                                onMoveMissed={() =>
+                                    replaceItems(
+                                        rescheduleMissed(
+                                            items,
+                                            events,
+                                            range,
+                                            now
+                                        )
+                                    )
+                                }
+                                onPlaceTip={(tip) =>
+                                    handleAdd(tip.task, tip.start)
+                                }
+                                wrapUp={{
+                                    show:
+                                        aiEnabled &&
+                                        (dayIsOver || !!plan?.ai_wrap_up),
+                                    date: planResponse.date,
+                                    value: plan?.ai_wrap_up ?? null,
+                                    onGenerated: setWrapUp,
+                                }}
+                            />
+                        )}
+                    </div>
                 </div>
-
-                {error && (
-                    <p className="text-red-600 dark:text-red-400">{error}</p>
-                )}
-
-                {!planResponse && !error && (
-                    <p className="text-gray-500 dark:text-gray-400">
-                        {t('common.loading', 'Loading...')}
-                    </p>
-                )}
-
-                {planResponse && !started && (
-                    <TodayUnplanned
-                        candidates={candidates}
-                        events={events}
-                        showsFeeds={showsFeeds}
-                        calendarEnabled={calendarEnabled}
-                        hasDraft={items.length > 0}
-                        projects={projects}
-                        onTaskUpdate={async (task) =>
-                            replaceCandidate(task.uid, task)
-                        }
-                        onTaskDelete={handleDeleteTask}
-                    />
-                )}
-
-                {planResponse && started && (
-                    <TodayPlanned
-                        items={items}
-                        events={events}
-                        candidates={candidates}
-                        now={now}
-                        busyUid={busyUid}
-                        onToggleDone={handleToggleDone}
-                        onPushLater={handlePushLater}
-                        onAdd={handleAdd}
-                        projects={projects}
-                        onPlannedTaskUpdate={syncPlannedTask}
-                        onPlannedTaskComplete={syncCompletedTask}
-                        onPlannedTaskDelete={handleDeleteTask}
-                        onReorderUntimed={(orderedUids) => {
-                            const byUid = new Map(
-                                items.map((item) => [item.task_uid, item])
-                            );
-                            replaceItems(
-                                mergeVisibleOrder(
-                                    items.map((item) => item.task_uid),
-                                    orderedUids
-                                ).map((uid) => byUid.get(uid) as DailyPlanItem)
-                            );
-                        }}
-                        onCandidateUpdate={async (task) =>
-                            replaceCandidate(task.uid, task)
-                        }
-                        onCandidateDelete={handleDeleteTask}
-                        tips={tips}
-                        onMoveMissed={() =>
-                            replaceItems(
-                                rescheduleMissed(items, events, range, now)
-                            )
-                        }
-                        onPlaceTip={(tip) => handleAdd(tip.task, tip.start)}
-                        wrapUp={{
-                            show:
-                                aiEnabled && (dayIsOver || !!plan?.ai_wrap_up),
-                            date: planResponse.date,
-                            value: plan?.ai_wrap_up ?? null,
-                            onGenerated: setWrapUp,
-                        }}
-                    />
-                )}
             </div>
         </div>
     );

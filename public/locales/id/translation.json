@@ -3034,7 +3034,10 @@
     },
     "durationMinutes": "{{minutes}} mnt",
     "durationHours": "{{hours}} j",
-    "durationHoursMinutes": "{{hours}} j {{minutes}} mnt"
+    "durationHoursMinutes": "{{hours}} j {{minutes}} mnt",
+    "calendar": "Kalender",
+    "showCalendar": "Tampilkan kalender",
+    "hideCalendar": "Sembunyikan kalender"
   },
   "capture": {
     "add": "Tambah",

@@ -3050,7 +3050,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} godz.",
-    "durationHoursMinutes": "{{hours}} godz. {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} godz. {{minutes}} min",
+    "calendar": "Kalendarz",
+    "showCalendar": "Pokaż kalendarz",
+    "hideCalendar": "Ukryj kalendarz"
   },
   "capture": {
     "add": "Dodaj",

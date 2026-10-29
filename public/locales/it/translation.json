@@ -3042,7 +3042,10 @@
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
-    "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    "durationHoursMinutes": "{{hours}} h {{minutes}} min",
+    "calendar": "Calendario",
+    "showCalendar": "Mostra calendario",
+    "hideCalendar": "Nascondi calendario"
   },
   "capture": {
     "add": "Aggiungi",
