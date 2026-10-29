@@ -84,6 +84,26 @@ export const reorderProjectSections = async (
     return response.json();
 };
 
+// Saves the card order of one board column (null = Unsectioned). Listed
+// tasks also move into that column.
+export const orderBoardColumn = async (
+    projectUid: string,
+    sectionUid: string | null,
+    taskUids: string[]
+): Promise<void> => {
+    const url = sectionUid
+        ? `${base(projectUid)}/${encodeURIComponent(sectionUid)}/order`
+        : getApiPath(
+              `project/${encodeURIComponent(projectUid)}/unsectioned/order`
+          );
+    await send(
+        url,
+        'PUT',
+        { task_uids: taskUids },
+        'Failed to order the column.'
+    );
+};
+
 export const deleteProjectSection = async (
     projectUid: string,
     sectionUid: string

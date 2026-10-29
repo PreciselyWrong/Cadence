@@ -201,6 +201,11 @@ module.exports = (sequelize) => {
                 },
                 onDelete: 'SET NULL',
             },
+            // Order of the card in its board column; null sorts last.
+            section_position: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
             parent_task_id: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

@@ -127,6 +127,46 @@ router.put(
     }
 );
 
+async function orderColumn(req, res, sectionId) {
+    try {
+        const uids = req.body?.task_uids;
+        if (
+            !Array.isArray(uids) ||
+            uids.length > 1000 ||
+            !uids.every((u) => typeof u === 'string')
+        ) {
+            return res.status(400).json({ error: 'task_uids must be a list' });
+        }
+        const ok = await repository.orderTasks(req.project.id, sectionId, uids);
+        if (!ok) {
+            return res.status(400).json({
+                error: 'task_uids must list tasks of this project once',
+            });
+        }
+        res.json({ task_uids: uids });
+    } catch (error) {
+        logError('Error ordering board column:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+// Card order of the Unsectioned column; listed tasks also move into it.
+router.put(
+    '/project/:projectUid/unsectioned/order',
+    access('rw'),
+    loadProject,
+    (req, res) => orderColumn(req, res, null)
+);
+
+// Card order of a column; listed tasks also move into it.
+router.put(
+    '/project/:projectUid/sections/:sectionUid/order',
+    access('rw'),
+    loadProject,
+    loadSection,
+    (req, res) => orderColumn(req, res, req.section.id)
+);
+
 router.patch(
     '/project/:projectUid/sections/:sectionUid',
     access('rw'),

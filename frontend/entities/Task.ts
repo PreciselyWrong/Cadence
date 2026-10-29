@@ -61,6 +61,7 @@ export interface Task {
     goal_id?: number | null;
     goal_uid?: string | null;
     section_uid?: string | null;
+    section_position?: number | null;
     created_at?: string;
     updated_at?: string;
     recurrence_type?: RecurrenceType;

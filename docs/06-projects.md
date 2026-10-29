@@ -389,9 +389,11 @@ The **Board** tab shows the project's tasks in columns the project defines itsel
 
 - The first column, **Unsectioned**, holds every task without a section. It cannot be renamed, moved or deleted.
 - **Add column** at the end of the board adds a column at the right. Each column's menu can **rename** it (or double-click the name), **add a column to the left or right**, **move it left or right**, and **delete** it after a confirmation. Deleting a column never deletes tasks: they go back to Unsectioned.
-- **Drag a card** to another column to move the task there. Clicking a card opens the task.
+- **Drag a card** to another column to move the task there, or onto another card to put it just above that card (in the same column this reorders it). Dropping on the column's empty space puts it at the end. Clicking a card opens the task.
+- **Card order** is saved per column in `tasks.section_position`. Cards are sorted by it; cards without a position (new tasks, or tasks moved with a plain `PATCH`) come after, in the page's order.
+- **Drag a column header** onto another column to put it in that column's place (dropping on Unsectioned makes it the first column). The column menu's move left/right still works.
 - The board follows the page's status filter and search.
-- **Permissions:** anyone who can read the project sees its columns; changing columns or moving cards needs read-write access.
+- **Permissions:** anyone who can read the project sees its columns; changing columns or moving cards needs read-write access. Read-only viewers get the board without the add column button, the column menus, renaming or dragging. The project page knows this from `access_level` (`ro`, `rw` or `admin`) in `GET /api/project/:uid`.
 - A task belongs to at most one section of its own project. When a task moves to another project it leaves its old column (unless a column of the new project is chosen in the same request).
 
 **Data and API.** Sections live in `project_sections` (`uid`, `project_id` with cascade delete, `name`, `position`); tasks carry a nullable `section_id` (set to null when the section goes). Task payloads, including the project page's tasks, return `section_uid`.
@@ -403,8 +405,12 @@ The **Board** tab shows the project's tasks in columns the project defines itsel
 | `PATCH` | `/api/project/:uid/sections/:sectionUid` | RW | `{ name }` |
 | `PUT` | `/api/project/:uid/sections/order` | RW | `{ section_uids: [...] }` (every section once) |
 | `DELETE` | `/api/project/:uid/sections/:sectionUid` | RW | - (its tasks become unsectioned) |
+| `PUT` | `/api/project/:uid/sections/:sectionUid/order` | RW | `{ task_uids: [...] }` (card order of the column) |
+| `PUT` | `/api/project/:uid/unsectioned/order` | RW | `{ task_uids: [...] }` (card order of Unsectioned) |
 
-Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400.
+The two `order` calls take the column's cards in order: each listed task gets `section_position` 0, 1, 2... and moves into that column if it was elsewhere, so one call both moves and places a card. Every uid must be a task of the project, listed once (400 otherwise). Cards of the column that are not listed (for example hidden by a filter) keep their position.
+
+Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400. A task that changes column this way loses its `section_position` and goes to the end of the column.
 
 ## Tasks and Notes in Projects
 

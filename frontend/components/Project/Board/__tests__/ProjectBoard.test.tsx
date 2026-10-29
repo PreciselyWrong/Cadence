@@ -190,4 +190,141 @@ describe('ProjectBoard', () => {
             's2'
         );
     });
+
+    const dataTransfer = () => ({ setData: jest.fn(), effectAllowed: '' });
+
+    const renderWithOrder = (
+        list: any[],
+        extra: Record<string, unknown> = {}
+    ) => {
+        const onOrderColumn = jest.fn().mockResolvedValue(undefined);
+        render(
+            <ProjectBoard
+                project={{ uid: 'p1', name: 'P' } as any}
+                tasks={list}
+                onMoveTask={jest.fn()}
+                onOrderColumn={onOrderColumn}
+                onOpenTask={jest.fn()}
+                t={t}
+                {...extra}
+            />
+        );
+        return onOrderColumn;
+    };
+
+    const ordered = [
+        { uid: 'x', name: 'X', status: 0, section_uid: 's1' },
+        {
+            uid: 'y',
+            name: 'Y',
+            status: 0,
+            section_uid: 's1',
+            section_position: 1,
+        },
+        {
+            uid: 'z',
+            name: 'Z',
+            status: 0,
+            section_uid: 's1',
+            section_position: 0,
+        },
+    ];
+
+    it('sorts cards by section_position, nulls last', async () => {
+        renderWithOrder(ordered);
+        await screen.findByText('Doing');
+        const cards = within(screen.getByTestId('board-column-s1'))
+            .getAllByTestId(/^board-card-/)
+            .map((el) => el.textContent);
+        expect(cards).toEqual(['Z', 'Y', 'X']);
+    });
+
+    it('reorders a card inside its column by dropping it on another card', async () => {
+        const onOrderColumn = renderWithOrder(ordered);
+        await screen.findByText('Doing');
+        const dt = dataTransfer();
+        await act(async () => {
+            fireEvent.dragStart(screen.getByTestId('board-card-x'), {
+                dataTransfer: dt,
+            });
+            fireEvent.dragOver(screen.getByTestId('board-card-z'), {
+                dataTransfer: dt,
+            });
+            fireEvent.drop(screen.getByTestId('board-card-z'), {
+                dataTransfer: dt,
+            });
+        });
+        expect(onOrderColumn).toHaveBeenCalledWith('s1', ['x', 'z', 'y']);
+    });
+
+    it('drops a card at a chosen place in another column', async () => {
+        const onOrderColumn = renderWithOrder([
+            ...ordered,
+            { uid: 'n', name: 'N', status: 0 },
+        ]);
+        await screen.findByText('Doing');
+        const dt = dataTransfer();
+        await act(async () => {
+            fireEvent.dragStart(screen.getByTestId('board-card-n'), {
+                dataTransfer: dt,
+            });
+            fireEvent.drop(screen.getByTestId('board-card-y'), {
+                dataTransfer: dt,
+            });
+        });
+        expect(onOrderColumn).toHaveBeenCalledWith('s1', ['z', 'n', 'y', 'x']);
+
+        onOrderColumn.mockClear();
+        await act(async () => {
+            fireEvent.dragStart(screen.getByTestId('board-card-n'), {
+                dataTransfer: dt,
+            });
+            fireEvent.drop(screen.getByTestId('board-column-s2'), {
+                dataTransfer: dt,
+            });
+        });
+        expect(onOrderColumn).toHaveBeenCalledWith('s2', ['n']);
+    });
+
+    it('drags a column onto another to reorder the columns', async () => {
+        mocked.reorderProjectSections.mockResolvedValue([]);
+        renderWithOrder(ordered);
+        await screen.findByText('Doing');
+        const dt = dataTransfer();
+        await act(async () => {
+            fireEvent.dragStart(screen.getByTestId('board-column-header-s2'), {
+                dataTransfer: dt,
+            });
+            fireEvent.drop(screen.getByTestId('board-column-s1'), {
+                dataTransfer: dt,
+            });
+        });
+        expect(mocked.reorderProjectSections).toHaveBeenCalledWith('p1', [
+            's2',
+            's1',
+        ]);
+    });
+
+    it('hides write controls and dragging for read-only viewers', async () => {
+        const onOrderColumn = renderWithOrder(ordered, { readOnly: true });
+        await screen.findByText('Doing');
+        expect(screen.queryByTestId('board-add-column')).toBeNull();
+        expect(screen.queryByTestId('board-menu-s1')).toBeNull();
+        const card = screen.getByTestId('board-card-x');
+        expect(card).toHaveAttribute('draggable', 'false');
+        expect(screen.getByTestId('board-column-header-s1')).toHaveAttribute(
+            'draggable',
+            'false'
+        );
+        fireEvent.doubleClick(screen.getByText('Doing'));
+        expect(screen.queryByLabelText('Column name')).toBeNull();
+        const dt = dataTransfer();
+        await act(async () => {
+            fireEvent.dragStart(card, { dataTransfer: dt });
+            fireEvent.drop(screen.getByTestId('board-column-s2'), {
+                dataTransfer: dt,
+            });
+        });
+        expect(onOrderColumn).not.toHaveBeenCalled();
+    });
 });

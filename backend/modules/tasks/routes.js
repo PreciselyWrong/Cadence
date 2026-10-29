@@ -911,11 +911,19 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
             } else {
                 taskAttributes.section_id = null;
             }
+            // A card moved to another column goes to its end.
+            if (
+                (taskAttributes.section_id || null) !==
+                (task.section_id || null)
+            ) {
+                taskAttributes.section_position = null;
+            }
         } else if (
             task.section_id &&
             (finalProjectId || null) !== (task.project_id || null)
         ) {
             taskAttributes.section_id = null;
+            taskAttributes.section_position = null;
         }
 
         if (taskAttributes.assigned_to) {
