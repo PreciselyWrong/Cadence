@@ -3610,5 +3610,24 @@
             "due": "Termín",
             "tags": "Štítky"
         }
+    },
+    "projectBoard": {
+        "title": "Nástenka",
+        "unsectioned": "Bez sekcie",
+        "empty": "Žiadne úlohy",
+        "addColumn": "Pridať stĺpec",
+        "addLeft": "Pridať stĺpec vľavo",
+        "addRight": "Pridať stĺpec vpravo",
+        "moveLeft": "Posunúť doľava",
+        "moveRight": "Posunúť doprava",
+        "rename": "Premenovať",
+        "delete": "Odstrániť",
+        "deleteTitle": "Odstrániť stĺpec",
+        "deleteMessage": "Odstrániť „{{name}}“? Jeho úlohy sa presunú do Bez sekcie.",
+        "columnName": "Názov stĺpca",
+        "columnActions": "Akcie stĺpca",
+        "newColumn": "Nový stĺpec",
+        "loadError": "Stĺpce sa nepodarilo načítať",
+        "saveError": "Nástenku sa nepodarilo uložiť"
     }
 }

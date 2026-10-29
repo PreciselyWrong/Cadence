@@ -3588,5 +3588,24 @@
       "due": "Frist",
       "tags": "Etiketter"
     }
+  },
+  "projectBoard": {
+    "title": "Tavle",
+    "unsectioned": "Uten seksjon",
+    "empty": "Ingen oppgaver",
+    "addColumn": "Legg til kolonne",
+    "addLeft": "Legg til kolonne til venstre",
+    "addRight": "Legg til kolonne til høyre",
+    "moveLeft": "Flytt til venstre",
+    "moveRight": "Flytt til høyre",
+    "rename": "Gi nytt navn",
+    "delete": "Slett",
+    "deleteTitle": "Slett kolonne",
+    "deleteMessage": "Slette «{{name}}»? Oppgavene flyttes til Uten seksjon.",
+    "columnName": "Kolonnenavn",
+    "columnActions": "Kolonnehandlinger",
+    "newColumn": "Ny kolonne",
+    "loadError": "Kunne ikke laste kolonner",
+    "saveError": "Kunne ikke lagre tavlen"
   }
 }

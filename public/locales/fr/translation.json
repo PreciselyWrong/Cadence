@@ -3587,5 +3587,24 @@
       "due": "Échéance",
       "tags": "Étiquettes"
     }
+  },
+  "projectBoard": {
+    "title": "Tableau",
+    "unsectioned": "Sans section",
+    "empty": "Aucune tâche",
+    "addColumn": "Ajouter une colonne",
+    "addLeft": "Ajouter une colonne à gauche",
+    "addRight": "Ajouter une colonne à droite",
+    "moveLeft": "Déplacer à gauche",
+    "moveRight": "Déplacer à droite",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "deleteTitle": "Supprimer la colonne",
+    "deleteMessage": "Supprimer « {{name}} » ? Ses tâches passent dans Sans section.",
+    "columnName": "Nom de la colonne",
+    "columnActions": "Actions de la colonne",
+    "newColumn": "Nouvelle colonne",
+    "loadError": "Impossible de charger les colonnes",
+    "saveError": "Impossible d'enregistrer le tableau"
   }
 }

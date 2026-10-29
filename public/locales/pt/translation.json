@@ -3587,5 +3587,24 @@
       "due": "Prazo",
       "tags": "Etiquetas"
     }
+  },
+  "projectBoard": {
+    "title": "Quadro",
+    "unsectioned": "Sem secção",
+    "empty": "Sem tarefas",
+    "addColumn": "Adicionar coluna",
+    "addLeft": "Adicionar coluna à esquerda",
+    "addRight": "Adicionar coluna à direita",
+    "moveLeft": "Mover para a esquerda",
+    "moveRight": "Mover para a direita",
+    "rename": "Renomear",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar coluna",
+    "deleteMessage": "Eliminar \"{{name}}\"? As tarefas passam para Sem secção.",
+    "columnName": "Nome da coluna",
+    "columnActions": "Ações da coluna",
+    "newColumn": "Nova coluna",
+    "loadError": "Não foi possível carregar as colunas",
+    "saveError": "Não foi possível guardar o quadro"
   }
 }

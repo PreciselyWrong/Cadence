@@ -10,6 +10,7 @@ const orderRouter = require('./order/routes');
 const { Task, TaskAttachment, Project } = require('../../models');
 const { numericIdParam } = require('../../middleware/numericIdParam');
 const taskRepository = require('./repository');
+const projectSectionsRepository = require('../project-sections/repository');
 const {
     resetQueryCounter,
     getQueryStats,
@@ -883,6 +884,38 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
             } else {
                 taskAttributes.goal_id = null;
             }
+        }
+
+        // Board column. It must belong to the task's (new) project, and a
+        // task that changes project leaves its old project's column.
+        const finalProjectId =
+            taskAttributes.project_id !== undefined
+                ? taskAttributes.project_id
+                : task.project_id;
+        if (req.body.section_uid !== undefined) {
+            const sectionUid = req.body.section_uid;
+            if (sectionUid) {
+                const section = await projectSectionsRepository.findByUid(
+                    String(sectionUid)
+                );
+                if (
+                    !section ||
+                    !finalProjectId ||
+                    section.project_id !== finalProjectId
+                ) {
+                    return res.status(400).json({
+                        error: "Section does not belong to the task's project.",
+                    });
+                }
+                taskAttributes.section_id = section.id;
+            } else {
+                taskAttributes.section_id = null;
+            }
+        } else if (
+            task.section_id &&
+            (finalProjectId || null) !== (task.project_id || null)
+        ) {
+            taskAttributes.section_id = null;
         }
 
         if (taskAttributes.assigned_to) {

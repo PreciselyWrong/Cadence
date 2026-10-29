@@ -3579,5 +3579,24 @@
       "due": "Jatuh tempo",
       "tags": "Tag"
     }
+  },
+  "projectBoard": {
+    "title": "Papan",
+    "unsectioned": "Tanpa bagian",
+    "empty": "Tidak ada tugas",
+    "addColumn": "Tambah kolom",
+    "addLeft": "Tambah kolom di kiri",
+    "addRight": "Tambah kolom di kanan",
+    "moveLeft": "Geser ke kiri",
+    "moveRight": "Geser ke kanan",
+    "rename": "Ganti nama",
+    "delete": "Hapus",
+    "deleteTitle": "Hapus kolom",
+    "deleteMessage": "Hapus \"{{name}}\"? Tugasnya pindah ke Tanpa bagian.",
+    "columnName": "Nama kolom",
+    "columnActions": "Tindakan kolom",
+    "newColumn": "Kolom baru",
+    "loadError": "Tidak dapat memuat kolom",
+    "saveError": "Tidak dapat menyimpan papan"
   }
 }

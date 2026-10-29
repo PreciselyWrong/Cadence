@@ -12,6 +12,7 @@ const {
     TaskAttachment,
     UserProjectArea,
     UserProjectOrder,
+    ProjectSection,
     sequelize,
 } = require('../../models');
 const { projectAttachments } = require('../../services/entityAttachments');
@@ -128,6 +129,12 @@ class ProjectsRepository extends BaseRepository {
                             model: Tag,
                             attributes: ['id', 'name', 'uid', 'color'],
                             through: { attributes: [] },
+                            required: false,
+                        },
+                        {
+                            model: ProjectSection,
+                            as: 'Section',
+                            attributes: ['uid'],
                             required: false,
                         },
                         {

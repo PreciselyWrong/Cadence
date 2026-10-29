@@ -85,6 +85,7 @@ const CLEANUP_TABLES = [
     'backups',
     'inbox_items',
     'tasks',
+    'project_sections',
     'notes',
     'tags',
     'user_project_areas',

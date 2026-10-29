@@ -3583,5 +3583,24 @@
       "due": "Son tarih",
       "tags": "Etiketler"
     }
+  },
+  "projectBoard": {
+    "title": "Pano",
+    "unsectioned": "Bölümsüz",
+    "empty": "Görev yok",
+    "addColumn": "Sütun ekle",
+    "addLeft": "Sola sütun ekle",
+    "addRight": "Sağa sütun ekle",
+    "moveLeft": "Sola taşı",
+    "moveRight": "Sağa taşı",
+    "rename": "Yeniden adlandır",
+    "delete": "Sil",
+    "deleteTitle": "Sütunu sil",
+    "deleteMessage": "\"{{name}}\" silinsin mi? Görevleri Bölümsüz'e taşınır.",
+    "columnName": "Sütun adı",
+    "columnActions": "Sütun işlemleri",
+    "newColumn": "Yeni sütun",
+    "loadError": "Sütunlar yüklenemedi",
+    "saveError": "Pano kaydedilemedi"
   }
 }

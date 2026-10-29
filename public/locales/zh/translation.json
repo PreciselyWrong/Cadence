@@ -3579,5 +3579,24 @@
       "due": "截止日期",
       "tags": "标签"
     }
+  },
+  "projectBoard": {
+    "title": "看板",
+    "unsectioned": "未分组",
+    "empty": "暂无任务",
+    "addColumn": "添加列",
+    "addLeft": "在左侧添加列",
+    "addRight": "在右侧添加列",
+    "moveLeft": "左移",
+    "moveRight": "右移",
+    "rename": "重命名",
+    "delete": "删除",
+    "deleteTitle": "删除列",
+    "deleteMessage": "删除“{{name}}”？其中的任务将移至未分组。",
+    "columnName": "列名称",
+    "columnActions": "列操作",
+    "newColumn": "新列",
+    "loadError": "无法加载列",
+    "saveError": "无法保存看板"
   }
 }

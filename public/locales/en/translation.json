@@ -3982,5 +3982,24 @@
       "due": "Due",
       "tags": "Tags"
     }
+  },
+  "projectBoard": {
+    "title": "Board",
+    "unsectioned": "Unsectioned",
+    "empty": "No tasks",
+    "addColumn": "Add column",
+    "addLeft": "Add column to the left",
+    "addRight": "Add column to the right",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteTitle": "Delete column",
+    "deleteMessage": "Delete \"{{name}}\"? Its tasks move to Unsectioned.",
+    "columnName": "Column name",
+    "columnActions": "Column actions",
+    "newColumn": "New column",
+    "loadError": "Could not load columns",
+    "saveError": "Could not save the board"
   }
 }

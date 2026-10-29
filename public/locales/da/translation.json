@@ -3583,5 +3583,24 @@
       "due": "Forfald",
       "tags": "Tags"
     }
+  },
+  "projectBoard": {
+    "title": "Tavle",
+    "unsectioned": "Uden sektion",
+    "empty": "Ingen opgaver",
+    "addColumn": "Tilføj kolonne",
+    "addLeft": "Tilføj kolonne til venstre",
+    "addRight": "Tilføj kolonne til højre",
+    "moveLeft": "Flyt til venstre",
+    "moveRight": "Flyt til højre",
+    "rename": "Omdøb",
+    "delete": "Slet",
+    "deleteTitle": "Slet kolonne",
+    "deleteMessage": "Slet \"{{name}}\"? Dens opgaver flyttes til Uden sektion.",
+    "columnName": "Kolonnenavn",
+    "columnActions": "Kolonnehandlinger",
+    "newColumn": "Ny kolonne",
+    "loadError": "Kunne ikke indlæse kolonner",
+    "saveError": "Kunne ikke gemme tavlen"
   }
 }

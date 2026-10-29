@@ -3583,5 +3583,24 @@
       "due": "Vervaldatum",
       "tags": "Tags"
     }
+  },
+  "projectBoard": {
+    "title": "Bord",
+    "unsectioned": "Zonder sectie",
+    "empty": "Geen taken",
+    "addColumn": "Kolom toevoegen",
+    "addLeft": "Kolom links toevoegen",
+    "addRight": "Kolom rechts toevoegen",
+    "moveLeft": "Naar links",
+    "moveRight": "Naar rechts",
+    "rename": "Hernoemen",
+    "delete": "Verwijderen",
+    "deleteTitle": "Kolom verwijderen",
+    "deleteMessage": "\"{{name}}\" verwijderen? De taken gaan naar Zonder sectie.",
+    "columnName": "Kolomnaam",
+    "columnActions": "Kolomacties",
+    "newColumn": "Nieuwe kolom",
+    "loadError": "Kolommen konden niet worden geladen",
+    "saveError": "Bord kon niet worden opgeslagen"
   }
 }

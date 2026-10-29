@@ -3592,5 +3592,24 @@
       "due": "Fällig",
       "tags": "Tags"
     }
+  },
+  "projectBoard": {
+    "title": "Board",
+    "unsectioned": "Ohne Abschnitt",
+    "empty": "Keine Aufgaben",
+    "addColumn": "Spalte hinzufügen",
+    "addLeft": "Spalte links hinzufügen",
+    "addRight": "Spalte rechts hinzufügen",
+    "moveLeft": "Nach links",
+    "moveRight": "Nach rechts",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "deleteTitle": "Spalte löschen",
+    "deleteMessage": "„{{name}}“ löschen? Ihre Aufgaben wandern nach Ohne Abschnitt.",
+    "columnName": "Spaltenname",
+    "columnActions": "Spaltenaktionen",
+    "newColumn": "Neue Spalte",
+    "loadError": "Spalten konnten nicht geladen werden",
+    "saveError": "Board konnte nicht gespeichert werden"
   }
 }

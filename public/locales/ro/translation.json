@@ -3591,5 +3591,24 @@
       "due": "Scadență",
       "tags": "Etichete"
     }
+  },
+  "projectBoard": {
+    "title": "Panou",
+    "unsectioned": "Fără secțiune",
+    "empty": "Nicio sarcină",
+    "addColumn": "Adaugă coloană",
+    "addLeft": "Adaugă coloană la stânga",
+    "addRight": "Adaugă coloană la dreapta",
+    "moveLeft": "Mută la stânga",
+    "moveRight": "Mută la dreapta",
+    "rename": "Redenumește",
+    "delete": "Șterge",
+    "deleteTitle": "Șterge coloana",
+    "deleteMessage": "Ștergi „{{name}}”? Sarcinile ei trec la Fără secțiune.",
+    "columnName": "Numele coloanei",
+    "columnActions": "Acțiuni coloană",
+    "newColumn": "Coloană nouă",
+    "loadError": "Coloanele nu au putut fi încărcate",
+    "saveError": "Panoul nu a putut fi salvat"
   }
 }

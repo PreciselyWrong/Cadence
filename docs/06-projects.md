@@ -373,7 +373,7 @@ No Area
 
 ## Timeline View
 
-The project page has two tabs above the tasks: **Tasks** (the list) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.
+The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.
 
 - **Bars** run from a task's start date to its due date. A task with only a due date shows as a diamond; one with only a start shows as a short faded bar. Tasks with neither sit in a "No dates yet" tray under the chart.
 - **Scheduling:** drag a bar to move both dates, drag either end to change one, drag a diamond to move the due date. Times of day are kept. Drag a task from the tray onto a day to give it that day as start and due. Clicking a bar opens the task.
@@ -382,6 +382,29 @@ The project page has two tabs above the tasks: **Tasks** (the list) and **Timeli
 - **Colour:** status (default), priority (red, amber, blue) or the first tag's colour. Done tasks, overdue ones and the highlighted path keep their own colours. The choice is remembered per browser.
 - **Scale:** Days, Weeks or Months. A line marks today, dashed lines mark the project's start and due date, and open tasks past their due date are orange.
 - The chart follows the page's status filter and search.
+
+## Board View
+
+The **Board** tab shows the project's tasks in columns the project defines itself (sections, like TickTick columns), separate from task status.
+
+- The first column, **Unsectioned**, holds every task without a section. It cannot be renamed, moved or deleted.
+- **Add column** at the end of the board adds a column at the right. Each column's menu can **rename** it (or double-click the name), **add a column to the left or right**, **move it left or right**, and **delete** it after a confirmation. Deleting a column never deletes tasks: they go back to Unsectioned.
+- **Drag a card** to another column to move the task there. Clicking a card opens the task.
+- The board follows the page's status filter and search.
+- **Permissions:** anyone who can read the project sees its columns; changing columns or moving cards needs read-write access.
+- A task belongs to at most one section of its own project. When a task moves to another project it leaves its old column (unless a column of the new project is chosen in the same request).
+
+**Data and API.** Sections live in `project_sections` (`uid`, `project_id` with cascade delete, `name`, `position`); tasks carry a nullable `section_id` (set to null when the section goes). Task payloads, including the project page's tasks, return `section_uid`.
+
+| Method | Path | Access | Body |
+|---|---|---|---|
+| `GET` | `/api/project/:uid/sections` | RO | - |
+| `POST` | `/api/project/:uid/sections` | RW | `{ name, position? }` (inserted at `position`, end when omitted) |
+| `PATCH` | `/api/project/:uid/sections/:sectionUid` | RW | `{ name }` |
+| `PUT` | `/api/project/:uid/sections/order` | RW | `{ section_uids: [...] }` (every section once) |
+| `DELETE` | `/api/project/:uid/sections/:sectionUid` | RW | - (its tasks become unsectioned) |
+
+Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400.
 
 ## Tasks and Notes in Projects
 

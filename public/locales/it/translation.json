@@ -3587,5 +3587,24 @@
       "due": "Scadenza",
       "tags": "Tag"
     }
+  },
+  "projectBoard": {
+    "title": "Bacheca",
+    "unsectioned": "Senza sezione",
+    "empty": "Nessuna attività",
+    "addColumn": "Aggiungi colonna",
+    "addLeft": "Aggiungi colonna a sinistra",
+    "addRight": "Aggiungi colonna a destra",
+    "moveLeft": "Sposta a sinistra",
+    "moveRight": "Sposta a destra",
+    "rename": "Rinomina",
+    "delete": "Elimina",
+    "deleteTitle": "Elimina colonna",
+    "deleteMessage": "Eliminare «{{name}}»? Le sue attività passano in Senza sezione.",
+    "columnName": "Nome colonna",
+    "columnActions": "Azioni colonna",
+    "newColumn": "Nuova colonna",
+    "loadError": "Impossibile caricare le colonne",
+    "saveError": "Impossibile salvare la bacheca"
   }
 }

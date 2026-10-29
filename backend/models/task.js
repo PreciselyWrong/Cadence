@@ -192,6 +192,15 @@ module.exports = (sequelize) => {
                     key: 'id',
                 },
             },
+            section_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'project_sections',
+                    key: 'id',
+                },
+                onDelete: 'SET NULL',
+            },
             parent_task_id: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

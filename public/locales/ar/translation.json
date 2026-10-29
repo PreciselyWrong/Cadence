@@ -3607,5 +3607,24 @@
       "due": "الاستحقاق",
       "tags": "الوسوم"
     }
+  },
+  "projectBoard": {
+    "title": "اللوحة",
+    "unsectioned": "بدون قسم",
+    "empty": "لا توجد مهام",
+    "addColumn": "إضافة عمود",
+    "addLeft": "إضافة عمود إلى اليسار",
+    "addRight": "إضافة عمود إلى اليمين",
+    "moveLeft": "نقل إلى اليسار",
+    "moveRight": "نقل إلى اليمين",
+    "rename": "إعادة تسمية",
+    "delete": "حذف",
+    "deleteTitle": "حذف العمود",
+    "deleteMessage": "حذف \"{{name}}\"؟ تنتقل مهامه إلى بدون قسم.",
+    "columnName": "اسم العمود",
+    "columnActions": "إجراءات العمود",
+    "newColumn": "عمود جديد",
+    "loadError": "تعذر تحميل الأعمدة",
+    "saveError": "تعذر حفظ اللوحة"
   }
 }

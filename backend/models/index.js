@@ -94,6 +94,7 @@ const CalDAVRemoteCalendar = require('./caldav_remote_calendar')(sequelize);
 const CalendarToken = require('./calendar_token')(sequelize);
 const CalendarFeed = require('./calendar_feed')(sequelize);
 const FocusSession = require('./focus_session')(sequelize);
+const ProjectSection = require('./project_section')(sequelize);
 const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
@@ -453,6 +454,20 @@ User.hasMany(FocusSession, { foreignKey: 'user_id', as: 'FocusSessions' });
 FocusSession.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
 FocusSession.belongsTo(Task, { foreignKey: 'task_id', as: 'Task' });
 
+// Board columns of a project; deleting a section leaves its tasks unsectioned.
+Project.hasMany(ProjectSection, {
+    foreignKey: 'project_id',
+    as: 'Sections',
+    onDelete: 'CASCADE',
+});
+ProjectSection.belongsTo(Project, { foreignKey: 'project_id' });
+ProjectSection.hasMany(Task, { foreignKey: 'section_id', as: 'Tasks' });
+Task.belongsTo(ProjectSection, {
+    foreignKey: 'section_id',
+    as: 'Section',
+    onDelete: 'SET NULL',
+});
+
 // UserProjectArea associations (per-user area placement for shared projects)
 User.hasMany(UserProjectArea, {
     foreignKey: 'user_id',
@@ -721,6 +736,7 @@ module.exports = {
     CalendarToken,
     CalendarFeed,
     FocusSession,
+    ProjectSection,
     DailyPlan,
     DailyPlanItem,
     Person,
