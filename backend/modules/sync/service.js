@@ -1,0 +1,256 @@
+'use strict';
+
+const { Op } = require('sequelize');
+const { SCHEMA_VERSION, ENTITIES } = require('./registry');
+const { serializeRow } = require('./serialize');
+const hlc = require('./hlc');
+const { runWithOp } = require('./context');
+
+const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
+const OP_ID_FORMAT = /^[A-Za-z0-9_.:-]{1,100}$/;
+const PAGE_MAX = 1000;
+
+const models = () => require('../../models');
+
+function describe() {
+    return {
+        schema_version: SCHEMA_VERSION,
+        capabilities: ['field_merge', 'tombstones', 'snapshot', 'op_echo'],
+        entities: Object.entries(ENTITIES).map(([name, def]) => ({
+            name,
+            version: def.version,
+            fields: def.fields,
+            refs: Object.fromEntries(
+                Object.entries(def.refs).map(([key, ref]) => [key, ref.entity])
+            ),
+        })),
+    };
+}
+
+const rejected = (reason) => ({ status: 'rejected', reason });
+
+async function latestCursor(userId) {
+    const max = await models().SyncChange.max('id', {
+        where: { user_id: userId },
+    });
+    return max || 0;
+}
+
+async function pull(userId, cursor, limit) {
+    const rows = await models().SyncChange.findAll({
+        where: { user_id: userId, id: { [Op.gt]: cursor } },
+        order: [['id', 'ASC']],
+        limit: limit + 1,
+    });
+    const page = rows.slice(0, limit);
+    return {
+        schema_version: SCHEMA_VERSION,
+        cursor: page.length ? page[page.length - 1].id : cursor,
+        has_more: rows.length > limit,
+        changes: page.map((c) => ({
+            seq: c.id,
+            entity: c.entity,
+            uid: c.uid,
+            op: c.op,
+            data: c.data,
+            op_id: c.op_id,
+        })),
+    };
+}
+
+// The cursor is read before the rows: a write landing during the snapshot
+// is then pulled again afterwards rather than lost.
+async function snapshot(userId, entity, after, limit) {
+    const def = ENTITIES[entity];
+    const cursor = await latestCursor(userId);
+    const rows = await models()[def.model].findAll({
+        where: { user_id: userId, id: { [Op.gt]: after } },
+        order: [['id', 'ASC']],
+        limit: limit + 1,
+    });
+    const page = rows.slice(0, limit);
+    return {
+        schema_version: SCHEMA_VERSION,
+        entity,
+        cursor,
+        next: rows.length > limit ? page[page.length - 1].id : null,
+        rows: await Promise.all(page.map((r) => serializeRow(entity, r))),
+    };
+}
+
+async function resolveRefs(def, userId, fields) {
+    const columns = {};
+    for (const [key, ref] of Object.entries(def.refs)) {
+        if (!(key in fields)) continue;
+        const uid = fields[key].value;
+        if (uid === null) {
+            columns[key] = null;
+            continue;
+        }
+        const target = await models()[ENTITIES[ref.entity].model].findOne({
+            where: { uid, user_id: userId },
+            attributes: ['id'],
+        });
+        if (!target) return { error: `invalid_reference:${key}` };
+        columns[key] = target.id;
+    }
+    return { columns };
+}
+
+function validateFields(def, fields) {
+    if (!fields || typeof fields !== 'object' || Array.isArray(fields)) {
+        return 'invalid_fields';
+    }
+    for (const [key, entry] of Object.entries(fields)) {
+        if (!def.fields.includes(key) && !(key in def.refs)) {
+            return `unknown_field:${key}`;
+        }
+        if (!entry || !hlc.isAcceptable(entry.hlc)) {
+            return `invalid_clock:${key}`;
+        }
+    }
+    return null;
+}
+
+async function wasDeleted(userId, entity, uid) {
+    const last = await models().SyncChange.findOne({
+        where: { user_id: userId, entity, uid },
+        order: [['id', 'DESC']],
+        attributes: ['op'],
+    });
+    return last?.op === 'delete';
+}
+
+async function applyUpsert(userId, op) {
+    const def = ENTITIES[op.entity];
+    const invalid = validateFields(def, op.fields);
+    if (invalid) return rejected(invalid);
+
+    const Model = models()[def.model];
+    const row = await Model.findOne({ where: { uid: op.uid } });
+    if (row && row.user_id !== userId) return rejected('forbidden');
+    // Delete wins: an edit made offline to a row removed elsewhere must
+    // not bring it back.
+    if (!row && (await wasDeleted(userId, op.entity, op.uid))) {
+        return rejected('deleted');
+    }
+
+    const refs = await resolveRefs(def, userId, op.fields);
+    if (refs.error) return rejected(refs.error);
+
+    const clocks = { ...(row?.field_clocks || {}) };
+    const values = {};
+    const rejectedFields = [];
+    for (const [key, entry] of Object.entries(op.fields)) {
+        const current = clocks[key];
+        // `>=` keeps a replay of the same op idempotent.
+        if (row && current && entry.hlc < current) {
+            rejectedFields.push(key);
+            continue;
+        }
+        clocks[key] = entry.hlc;
+        const column = def.refs[key]?.column ?? key;
+        values[column] = key in def.refs ? refs.columns[key] : entry.value;
+        hlc.observe(entry.hlc);
+    }
+
+    try {
+        if (!row) {
+            await Model.create(
+                {
+                    ...values,
+                    uid: op.uid,
+                    user_id: userId,
+                    field_clocks: clocks,
+                },
+                { syncApplied: true }
+            );
+        } else if (Object.keys(values).length > 0) {
+            row.set({ ...values, field_clocks: clocks });
+            await row.save({ syncApplied: true });
+        }
+    } catch (error) {
+        if (error.name && error.name.startsWith('Sequelize')) {
+            return rejected('invalid_value');
+        }
+        throw error;
+    }
+
+    if (rejectedFields.length === 0) return { status: 'applied' };
+
+    await models().SyncConflict.bulkCreate(
+        rejectedFields.map((field) => ({
+            user_id: userId,
+            entity: op.entity,
+            uid: op.uid,
+            field,
+            losing_value: op.fields[field].value ?? null,
+            losing_hlc: op.fields[field].hlc,
+            winning_hlc: row.field_clocks[field],
+            op_id: op.op_id,
+        }))
+    );
+    return { status: 'conflict', rejected_fields: rejectedFields };
+}
+
+async function applyDelete(userId, op) {
+    if (!hlc.isAcceptable(op.hlc)) return rejected('invalid_clock');
+    const def = ENTITIES[op.entity];
+    const row = await models()[def.model].findOne({ where: { uid: op.uid } });
+    if (!row) return { status: 'applied' };
+    if (row.user_id !== userId) return rejected('forbidden');
+    hlc.observe(op.hlc);
+    if (def.destroy) await def.destroy(row);
+    else await row.destroy();
+    return { status: 'applied' };
+}
+
+async function applyOp(userId, op) {
+    if (!op || typeof op !== 'object') return rejected('invalid_op');
+    if (!ENTITIES[op.entity]) return rejected('unknown_entity');
+    if (typeof op.uid !== 'string' || !UID_FORMAT.test(op.uid)) {
+        return rejected('invalid_uid');
+    }
+    if (op.action === 'upsert') return applyUpsert(userId, op);
+    if (op.action === 'delete') return applyDelete(userId, op);
+    return rejected('unknown_action');
+}
+
+// Operations apply one after the other, in the order the device made them;
+// one bad op is answered as rejected without stopping the batch.
+async function push(userId, ops) {
+    const { SyncOp } = models();
+    const results = [];
+    for (const op of ops) {
+        const opId = op && op.op_id;
+        if (typeof opId !== 'string' || !OP_ID_FORMAT.test(opId)) {
+            results.push({ op_id: opId ?? null, ...rejected('invalid_op_id') });
+            continue;
+        }
+        const seen = await SyncOp.findOne({
+            where: { user_id: userId, op_id: opId },
+        });
+        if (seen) {
+            results.push(seen.result);
+            continue;
+        }
+        const outcome = await runWithOp(opId, () => applyOp(userId, op));
+        const result = { op_id: opId, ...outcome };
+        try {
+            await SyncOp.create({ user_id: userId, op_id: opId, result });
+        } catch (error) {
+            // The same op raced in from a parallel request: answer as that
+            // request did.
+            if (error.name !== 'SequelizeUniqueConstraintError') throw error;
+            const winner = await SyncOp.findOne({
+                where: { user_id: userId, op_id: opId },
+            });
+            results.push(winner.result);
+            continue;
+        }
+        results.push(result);
+    }
+    return { schema_version: SCHEMA_VERSION, results };
+}
+
+module.exports = { describe, pull, snapshot, push, PAGE_MAX };

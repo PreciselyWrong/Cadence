@@ -119,6 +119,9 @@ const ImportJob = require('./import_job')(sequelize);
 const UserMfa = require('./user_mfa')(sequelize);
 const UserRecoveryCode = require('./user_recovery_code')(sequelize);
 const Account = require('./account')(sequelize);
+const SyncChange = require('./sync_change')(sequelize);
+const SyncOp = require('./sync_op')(sequelize);
+const SyncConflict = require('./sync_conflict')(sequelize);
 const { selfPersonName } = require('../utils/selfPersonName');
 
 User.hasOne(BillingAccount, { foreignKey: 'user_id', as: 'BillingAccount' });
@@ -703,6 +706,18 @@ User.addHook('afterCreate', async (user, options) => {
     );
 });
 
+// Every write path (REST, MCP, Telegram, CalDAV, imports) feeds the offline
+// sync journal through model hooks, not route by route.
+require('../modules/sync/journal').install({
+    Task,
+    Project,
+    Area,
+    Tag,
+    Note,
+    InboxItem,
+    SyncChange,
+});
+
 module.exports = {
     sequelize,
     User,
@@ -769,4 +784,7 @@ module.exports = {
     ImportJob,
     UserMfa,
     UserRecoveryCode,
+    SyncChange,
+    SyncOp,
+    SyncConflict,
 };

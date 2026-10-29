@@ -352,6 +352,11 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - Step-up (password or code) for new API keys; admin reset; CalDAV needs an API key once it is on
     - Required for the hosted superadmin before the admin panel opens
 
+39. **[Offline Sync](docs/30-offline-sync.md)**
+    - `/api/v1/sync`: meta, snapshot, pull by cursor, idempotent push
+    - Entity registry, change journal from model hooks, client-chosen uids
+    - Field-by-field merge by hybrid logical clock; conflicts kept
+
 ---
 
 ## Project Overview

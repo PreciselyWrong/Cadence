@@ -10,6 +10,12 @@ module.exports = (sequelize) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
+            // Offline sync: the hybrid logical clock of each field's last
+            // write, used to merge edits field by field.
+            field_clocks: {
+                type: DataTypes.JSON,
+                allowNull: true,
+            },
             uid: {
                 type: DataTypes.STRING,
                 allowNull: false,

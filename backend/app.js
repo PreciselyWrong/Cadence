@@ -413,6 +413,7 @@ const backupModule = require('./modules/backup');
 const featureFlagsModule = require('./modules/feature-flags');
 const demoModule = require('./modules/demo');
 const habitsModule = require('./modules/habits');
+const syncModule = require('./modules/sync');
 const inboxModule = require('./modules/inbox');
 const notesModule = require('./modules/notes');
 const notificationsModule = require('./modules/notifications');
@@ -543,6 +544,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, tasksModule.routes);
     app.use(basePath, commentsModule.routes);
     app.use(basePath, habitsModule.routes);
+    app.use(basePath, syncModule.routes);
     app.use(basePath, projectsModule.routes);
     app.use(basePath, projectSectionsModule.routes);
     app.use(basePath, adminModule.routes);

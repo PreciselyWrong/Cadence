@@ -38,6 +38,9 @@ const {
     CalendarToken,
     CalendarFeed,
     FocusSession,
+    SyncChange,
+    SyncOp,
+    SyncConflict,
     ProjectSection,
     DailyPlan,
     DailyPlanItem,
@@ -290,6 +293,11 @@ async function eraseUserAccount(userId) {
             { where: { triggered_by_user_id: userId }, ...tx }
         );
         await BillingAccount.destroy(byUser);
+        // Last: the deletions above write tombstones, and the journal holds
+        // copies of the rows themselves.
+        await SyncChange.destroy(byUser);
+        await SyncOp.destroy(byUser);
+        await SyncConflict.destroy(byUser);
 
         // A hosted account this one owned goes with it; its members stay.
         await require('./accountsService').releaseOwnedAccount(userId, tx);
