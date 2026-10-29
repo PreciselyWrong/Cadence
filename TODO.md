@@ -8,6 +8,12 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Next
 
+- Synchro Google Agenda bidirectionnelle, comme TickTick (module `google-calendar` propre au fork, OAuth2 + Calendar API v3, pas CalDAV).
+  - Tous les agendas du compte (`calendarList`) visibles dans Tududi, affichables/masquables, couleur Google. Événements créés, déplacés, redimensionnés, supprimés depuis Tududi → Google ; l'inverse aussi. Agendas en lecture seule (fériés, partages en lecture) affichés sans édition.
+  - Un agenda secondaire « Tududi » créé dans Google : chaque tâche datée y est un événement. Déplacer ou renommer l'événement dans Google modifie la tâche ; le supprimer retire la date, jamais la tâche.
+  - Lecture incrémentale par `syncToken` (410 → resynchro complète), notifications `events.watch` si l'instance est exposée en HTTPS, sinon interrogation toutes les 2 min. Table de correspondance tâche ↔ `eventId` + `etag` ; conflit : le `updated` le plus récent gagne.
+  - Remplace le flux iCal pour Google (on le garde pour les autres fournisseurs).
+  - Vérif : modifier dans Google → visible dans Tududi en < 2 min, et l'inverse ; aucun doublon après 3 jours d'usage mixte ; 410 et révocation du jeton gérés.
 - Module habits Cadence côté serveur : schéma, moteur JS, migration des habitudes Tududi existantes en version 1. Vérif : Jest vert sur toutes les fixtures, SQLite et Postgres.
   - Combler les manques de l'amont : versions d'objectif (le passé n'est pas réinterprété), `AT_MOST` > 0 et `TRACK_ONLY`, minimum vs idéal, fréquence + quantité combinées, pauses multi-jours avec motif et reprise anticipée, fuseau observé par saisie, `startsOn`, quantités entières à précision explicite, groupes à plages libres (chevauchement, passage de minuit), chronos, progression de cible, profils d'abstinence, stats 30 jours avec confiance.
   - Garder de l'amont : score de force, note par check-in, présence dans Aujourd'hui/Plan, outils MCP.
