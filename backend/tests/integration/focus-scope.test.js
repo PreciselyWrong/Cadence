@@ -133,6 +133,72 @@ describe('Focus scope on list endpoints', () => {
             expect(unknownTag.body.tasks).toEqual([]);
         });
 
+        it('a parent tag also matches child tags, with AND across tags', async () => {
+            const work = await Tag.create({ name: 'job', user_id: user.id });
+            const calls = await Tag.create({
+                name: 'calls',
+                user_id: user.id,
+                parent_id: work.id,
+            });
+            const urgent = await Tag.create({
+                name: 'urgent',
+                user_id: user.id,
+            });
+            await inWorkProject.addTag(calls);
+            await inWorkProject.addTag(urgent);
+            await directInWork.addTag(work);
+            await inHomeProject.addTag(calls);
+            await loose.addTag(urgent);
+
+            const parent = await agent
+                .get('/api/tasks')
+                .query({ type: 'all', tags: 'job' });
+            expect(names(parent.body.tasks)).toEqual([
+                'Expense report',
+                'Plant tomatoes',
+                'Write launch post',
+            ]);
+
+            const both = await agent
+                .get('/api/tasks')
+                .query({ type: 'all', tags: 'job,urgent' });
+            expect(names(both.body.tasks)).toEqual(['Write launch post']);
+
+            const scoped = await agent
+                .get('/api/tasks')
+                .query({ type: 'all', area_uid: work.uid, tags: 'job' });
+            expect(scoped.status).toBe(200);
+        });
+
+        it('Today lists follow nested Focus tags', async () => {
+            const parentTag = await Tag.create({
+                name: 'job',
+                user_id: user.id,
+            });
+            const child = await Tag.create({
+                name: 'calls',
+                user_id: user.id,
+                parent_id: parentTag.id,
+            });
+            const today = moment.utc().startOf('day').add(9, 'hours').toDate();
+            await inWorkProject.update({ due_date: today });
+            await inHomeProject.update({ due_date: today });
+            await loose.update({ due_date: today });
+            await inWorkProject.addTag(child);
+            await loose.addTag(parentTag);
+
+            const res = await agent.get('/api/tasks').query({
+                type: 'today',
+                include_lists: 'true',
+                tags: 'job',
+            });
+            expect(res.status).toBe(200);
+            expect(names(res.body.tasks_due_today)).toEqual([
+                'Call mum',
+                'Write launch post',
+            ]);
+        });
+
         it('an unknown area matches nothing instead of failing', async () => {
             const res = await agent
                 .get('/api/tasks')

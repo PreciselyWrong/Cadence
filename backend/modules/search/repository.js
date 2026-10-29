@@ -20,14 +20,35 @@ class SearchRepository {
         return tags.map((tag) => tag.id);
     }
 
-    // Find ids of owner rows in a tag join table that carry every tag in
-    // tagIds (AND semantics), not just any one of them.
+    // Return tagIds plus the ids of their child tags (nested tags are one
+    // level deep), so a parent tag also matches items tagged with a child.
+    async expandWithChildTagIds(tagIds) {
+        if (tagIds.length === 0) return [];
+        const children = await Tag.findAll({
+            where: { parent_id: { [Op.in]: tagIds } },
+            attributes: ['id'],
+        });
+        return [...new Set([...tagIds, ...children.map((tag) => tag.id)])];
+    }
+
+    // Find ids of owner rows in a tag join table that match every tag in
+    // tagIds (AND semantics). Each listed tag is matched by itself or by any
+    // of its child tags, so a row tagged only with a child of a listed parent
+    // still satisfies that parent.
     async findIdsWithAllTags(joinTable, ownerColumn, tagIds) {
         const rows = await sequelize.query(
-            `SELECT ${ownerColumn} AS owner_id FROM ${joinTable}
-             WHERE tag_id IN (:tagIds)
-             GROUP BY ${ownerColumn}
-             HAVING COUNT(DISTINCT tag_id) = :tagCount`,
+            `SELECT matched.owner_id AS owner_id FROM (
+                 SELECT jt.${ownerColumn} AS owner_id, jt.tag_id AS group_id
+                   FROM ${joinTable} jt
+                  WHERE jt.tag_id IN (:tagIds)
+                 UNION
+                 SELECT jt.${ownerColumn} AS owner_id, t.parent_id AS group_id
+                   FROM ${joinTable} jt
+                   JOIN tags t ON t.id = jt.tag_id
+                  WHERE t.parent_id IN (:tagIds)
+             ) matched
+             GROUP BY matched.owner_id
+             HAVING COUNT(DISTINCT matched.group_id) = :tagCount`,
             {
                 replacements: { tagIds, tagCount: tagIds.length },
                 type: QueryTypes.SELECT,

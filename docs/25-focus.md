@@ -43,7 +43,7 @@ The client sends the Focus as plain query params on each list request; the serve
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `area_uid`    | Items in the area: tasks carrying the area directly or through their project, projects in the area (with per-user placement of shared projects), notes of those projects |
 | `project_uid` | Items of the project. With `area_uid`, the project must sit in that area or nothing matches                                                                              |
-| `tags`        | Comma-separated tag names; an item must carry every one. An unknown tag matches nothing                                                                                  |
+| `tags`        | Comma-separated tag names; an item must carry every one, where a parent tag is also satisfied by any of its child tags (see Nested Tags in 09-tags-system.md). An unknown tag matches nothing                                                                                  |
 
 Endpoints that accept them:
 
