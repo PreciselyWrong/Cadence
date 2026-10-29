@@ -12,6 +12,8 @@ import {
     freeGaps,
 } from './planUtils';
 import CalendarBadge from './CalendarBadge';
+import HiddenHoursBar from '../Calendar/HiddenHoursBar';
+import type { CalendarEvent as CalendarBlock } from '../Calendar/taskEvents';
 
 export const PX_PER_HOUR = 64;
 export const PX_PER_MINUTE = PX_PER_HOUR / 60;
@@ -24,6 +26,10 @@ interface DayTimelineProps {
     onResize: (taskUid: string, duration: number) => void;
     onRemove: (taskUid: string) => void;
     aiReasons?: Record<string, string>;
+    // Unplanned timed tasks that fall above or below the visible hours.
+    hiddenEarlier?: CalendarBlock[];
+    hiddenLater?: CalendarBlock[];
+    onShowAllHours?: () => void;
 }
 
 interface BlockProps {
@@ -173,6 +179,9 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
     onResize,
     onRemove,
     aiReasons,
+    hiddenEarlier = [],
+    hiddenLater = [],
+    onShowAllHours,
 }) => {
     const { t } = useTranslation();
     const { setNodeRef, isOver } = useDroppable({ id: 'timeline' });
@@ -205,6 +214,16 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                     {t('dailyPlan.allDay', 'All day')}:{' '}
                     {allDay.map((e) => e.title).join(', ')}
                 </p>
+            )}
+
+            {onShowAllHours && hiddenEarlier.length > 0 && (
+                <div className="ml-14">
+                    <HiddenHoursBar
+                        direction="earlier"
+                        events={hiddenEarlier}
+                        onClick={onShowAllHours}
+                    />
+                </div>
             )}
 
             <div className="relative ml-14" style={{ height }}>
@@ -338,6 +357,16 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                     )}
                 </div>
             </div>
+
+            {onShowAllHours && hiddenLater.length > 0 && (
+                <div className="ml-14">
+                    <HiddenHoursBar
+                        direction="later"
+                        events={hiddenLater}
+                        onClick={onShowAllHours}
+                    />
+                </div>
+            )}
 
             {items.some((item) => item.start_minute === null) && (
                 <UnscheduledTray

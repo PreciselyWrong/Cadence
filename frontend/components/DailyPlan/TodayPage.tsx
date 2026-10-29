@@ -54,6 +54,8 @@ import { processInboxItem } from '../../utils/inboxService';
 import { getUserTimezone } from '../../utils/dateUtils';
 import { isHabitDoneForNow } from '../../utils/habitUtils';
 import { TASK_STATUS, isTaskDone } from '../../constants/taskStatus';
+import { countOutside } from '../Calendar/visibleHours';
+import { parseISO } from 'date-fns';
 import { useToast } from '../Shared/ToastContext';
 import { useStore } from '../../store/useStore';
 import { useDailyPlanProgress } from '../../store/dailyPlanStore';
@@ -343,6 +345,9 @@ const TodayPage: React.FC = () => {
     const [date, setDate] = useState<string | null>(null);
     const [dayHours, setDayHours] = useState<DayHours | undefined>();
     const [visibleHours, setVisibleHours] = useState<VisibleHours>(WHOLE_DAY);
+    // Planning timeline only: "Show all hours" in the more menu, or a click
+    // on an earlier / later bar. Session state, not saved.
+    const [showAllHours, setShowAllHours] = useState(false);
 
     useEffect(() => {
         fetchProfile()
@@ -684,18 +689,20 @@ const TodayPage: React.FC = () => {
     );
     const range = useMemo(
         () =>
-            dayRange(
-                items,
-                feedEvents,
-                clampDayHours(
-                    dayHours ?? {
-                        start: DEFAULT_DAY_START,
-                        end: DEFAULT_DAY_END,
-                    },
-                    visibleHours
-                )
-            ),
-        [items, feedEvents, dayHours, visibleHours]
+            showAllHours
+                ? dayRange(items, feedEvents, { start: 0, end: 24 * 60 })
+                : dayRange(
+                      items,
+                      feedEvents,
+                      clampDayHours(
+                          dayHours ?? {
+                              start: DEFAULT_DAY_START,
+                              end: DEFAULT_DAY_END,
+                          },
+                          visibleHours
+                      )
+                  ),
+        [items, feedEvents, dayHours, visibleHours, showAllHours]
     );
     const freeMinutes = Math.max(
         0,
@@ -706,6 +713,22 @@ const TodayPage: React.FC = () => {
         () => new Map(items.map((item) => [item.task_uid, item])),
         [items]
     );
+    // Open timed tasks that are not in the plan, outside the visible hours.
+    const hiddenHours = useMemo(() => {
+        const unplanned = dayTasks
+            .filter(
+                (task) =>
+                    !plannedMap.has(task.uid as string) &&
+                    !isTaskDone(task.status)
+            )
+            .flatMap((task) => taskToEvents(task as unknown as CalendarTask));
+        return countOutside(
+            unplanned,
+            date ? parseISO(date) : new Date(),
+            visibleHours
+        );
+    }, [dayTasks, plannedMap, date, visibleHours]);
+    const restrictedHours = visibleHours.start > 0 || visibleHours.end < 24;
 
     const setMode = (next: Mode) => {
         setPreferredMode(next);
@@ -1582,6 +1605,30 @@ const TodayPage: React.FC = () => {
                                             )}
                                         </button>
                                     )}
+                                    {mode === 'timeline' &&
+                                        (restrictedHours || showAllHours) && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setMoreOpen(false);
+                                                    setShowAllHours(
+                                                        (current) => !current
+                                                    );
+                                                }}
+                                                className="rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                                data-testid="plan-show-all-hours"
+                                            >
+                                                {showAllHours
+                                                    ? t(
+                                                          'calendar.hiddenHours.hide',
+                                                          'Hide early and late hours'
+                                                      )
+                                                    : t(
+                                                          'calendar.hiddenHours.show',
+                                                          'Show all hours'
+                                                      )}
+                                            </button>
+                                        )}
                                     {!narrow && (
                                         <button
                                             type="button"
@@ -1984,6 +2031,19 @@ const TodayPage: React.FC = () => {
                                                     )
                                                 }
                                                 onRemove={removeItem}
+                                                hiddenEarlier={
+                                                    showAllHours
+                                                        ? []
+                                                        : hiddenHours.before
+                                                }
+                                                hiddenLater={
+                                                    showAllHours
+                                                        ? []
+                                                        : hiddenHours.after
+                                                }
+                                                onShowAllHours={() =>
+                                                    setShowAllHours(true)
+                                                }
                                             />
                                         ) : (
                                             <PlanList
