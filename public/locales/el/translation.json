@@ -1010,6 +1010,10 @@
     "noActivity": "Δεν υπάρχει δραστηριότητα ακόμη"
   },
   "projects": {
+    "parentProject": "Γονικό έργο",
+    "noParent": "Χωρίς γονικό έργο",
+    "subProjects": "Υποέργα",
+    "areaFollowsParent": "Ο τομέας ακολουθεί το γονικό έργο",
     "loading": "Φόρτωση έργων...",
     "error": "Σφάλμα φόρτωσης έργων",
     "searchPlaceholder": "Αναζήτηση έργων...",

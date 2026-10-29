@@ -1474,6 +1474,10 @@
     "pinUpdateError": "Kunne ikke oppdatere festing"
   },
   "projects": {
+    "parentProject": "Overordnet prosjekt",
+    "noParent": "Ingen overordnet prosjekt",
+    "subProjects": "Underprosjekter",
+    "areaFollowsParent": "Området følger det overordnede prosjektet",
     "loading": "Laster prosjekter...",
     "error": "Feil ved lasting av prosjekter",
     "searchPlaceholder": "Søk prosjekter...",

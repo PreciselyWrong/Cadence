@@ -63,6 +63,7 @@ import { fetchProfile, updateUiSettings } from '../utils/profileService';
 import ProjectsListSettings, {
     ProjectsListFilters,
 } from './Project/ProjectsListSettings';
+import { flattenProjectTree } from '../utils/projectTree';
 
 // Custom order: projects without a position (new ones) come first, newest
 // first, then the rest by the position the user dragged them to.
@@ -653,8 +654,15 @@ const Projects: React.FC = () => {
         // Apply sorting
         filteredProjects.sort((a, b) => compareProjects(a, b, orderBy));
 
+        // The list shows sub-projects right under their parent
+        if (viewMode === 'list') {
+            return flattenProjectTree(filteredProjects).map(
+                (node) => node.project
+            );
+        }
         return filteredProjects;
     }, [
+        viewMode,
         projects,
         statusFilter,
         actualAreaFilter,
@@ -664,6 +672,26 @@ const Projects: React.FC = () => {
         searchQuery,
         orderBy,
     ]);
+
+    const subProjectDepthByUid = useMemo(() => {
+        if (viewMode !== 'list') return new Map<string, number>();
+        return new Map(
+            flattenProjectTree(displayProjects).map((node) => [
+                node.project.uid as string,
+                node.depth,
+            ])
+        );
+    }, [viewMode, displayProjects]);
+
+    const renderProjectRow = (project: Project) => {
+        const depth = subProjectDepthByUid.get(project.uid as string) ?? 0;
+        if (depth === 0) return renderProjectItem(project);
+        return (
+            <div style={{ paddingLeft: depth * 24 }}>
+                {renderProjectItem(project)}
+            </div>
+        );
+    };
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
         resetSortableCursor();
@@ -1100,7 +1128,7 @@ const Projects: React.FC = () => {
                                         )}
                                         testIdPrefix="sortable-project"
                                     >
-                                        {renderProjectItem(project)}
+                                        {renderProjectRow(project)}
                                     </SortableItem>
                                 ))}
                             </div>
@@ -1111,7 +1139,7 @@ const Projects: React.FC = () => {
                         {tableHeader}
                         {displayProjects.map((project) => (
                             <React.Fragment key={project.id}>
-                                {renderProjectItem(project)}
+                                {renderProjectRow(project)}
                             </React.Fragment>
                         ))}
                     </div>

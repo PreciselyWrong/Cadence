@@ -5,7 +5,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getCsrfToken } from '../../utils/csrfService';
 import {
@@ -817,6 +817,32 @@ const ProjectDetails: React.FC = () => {
                     onClose={() => setIsImportOpen(false)}
                     onImported={() => setReloadKey((key) => key + 1)}
                 />
+            )}
+
+            {project.SubProjects && project.SubProjects.length > 0 && (
+                <section
+                    aria-labelledby="sub-projects-heading"
+                    className="mb-4 pl-2 sm:pl-3"
+                >
+                    <h2
+                        id="sub-projects-heading"
+                        className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                    >
+                        {t('projects.subProjects', 'Sub-projects')}
+                    </h2>
+                    <ul className="flex flex-wrap gap-2">
+                        {project.SubProjects.map((subProject) => (
+                            <li key={subProject.uid}>
+                                <Link
+                                    to={`/project/${subProject.uid}`}
+                                    className="inline-block rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                                >
+                                    {subProject.name}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
             )}
 
             <div className="w-full">

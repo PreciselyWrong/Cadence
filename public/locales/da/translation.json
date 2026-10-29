@@ -1473,6 +1473,10 @@
     "pinUpdateError": "Kunne ikke opdatere fastgørelse"
   },
   "projects": {
+    "parentProject": "Overordnet projekt",
+    "noParent": "Intet overordnet projekt",
+    "subProjects": "Underprojekter",
+    "areaFollowsParent": "Området følger det overordnede projekt",
     "loading": "Indlæser projekter...",
     "error": "Fejl ved indlæsning af projekter",
     "searchPlaceholder": "Søg projekter...",

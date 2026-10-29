@@ -1477,6 +1477,10 @@
     "pinUpdateError": "Nie udało się zaktualizować przypięcia"
   },
   "projects": {
+    "parentProject": "Projekt nadrzędny",
+    "noParent": "Brak projektu nadrzędnego",
+    "subProjects": "Podprojekty",
+    "areaFollowsParent": "Obszar podąża za projektem nadrzędnym",
     "loading": "Ładowanie projektów...",
     "error": "Błąd podczas ładowania projektów",
     "searchPlaceholder": "Szukaj projektów...",

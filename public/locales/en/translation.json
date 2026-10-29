@@ -1563,6 +1563,10 @@
     "placeholder": "Add a subtask..."
   },
   "projects": {
+    "parentProject": "Parent project",
+    "noParent": "No parent",
+    "subProjects": "Sub-projects",
+    "areaFollowsParent": "Area follows the parent project",
     "table": {
       "name": "Name",
       "status": "Status",

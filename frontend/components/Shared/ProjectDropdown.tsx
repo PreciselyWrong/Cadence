@@ -19,6 +19,14 @@ interface ProjectDropdownProps {
     onClearProject?: () => void;
 }
 
+// A sub-project is labelled "Parent / Child" so it is easy to tell apart.
+const projectLabel = (project: Project, all: Project[]): string => {
+    const parent = project.parent_project_uid
+        ? all.find((p) => p.uid === project.parent_project_uid)
+        : undefined;
+    return parent ? `${parent.name} / ${project.name}` : project.name;
+};
+
 const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
     projectName,
     onProjectSearch,
@@ -269,7 +277,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
                                         )}
                                     </div>
                                     <span className="flex-1 truncate">
-                                        {project.name}
+                                        {projectLabel(project, allProjects)}
                                     </span>
                                 </button>
                             ))

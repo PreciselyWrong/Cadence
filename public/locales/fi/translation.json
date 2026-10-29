@@ -1473,6 +1473,10 @@
     "pinUpdateError": "Kiinnityksen päivitys epäonnistui"
   },
   "projects": {
+    "parentProject": "Pääprojekti",
+    "noParent": "Ei pääprojektia",
+    "subProjects": "Alaprojektit",
+    "areaFollowsParent": "Alue seuraa pääprojektia",
     "loading": "Ladataan projekteja...",
     "error": "Virhe projekteja ladattaessa",
     "searchPlaceholder": "Hae projekteja...",

@@ -32,6 +32,10 @@ export interface Project {
     goal?: Goal | null;
     Goal?: Goal | null;
     is_maintenance?: boolean;
+    // A sub-project's parent; its area follows the parent's.
+    parent_project_uid?: string | null;
+    // Direct sub-projects the viewer can see (project page only).
+    SubProjects?: { uid: string; name: string; status: ProjectStatus }[];
     tags?: Tag[];
     priority?: PriorityType;
     tasks?: Task[];

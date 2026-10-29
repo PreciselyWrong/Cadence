@@ -52,6 +52,8 @@ jest.mock('../../../utils/goalsService', () => ({
     fetchGoals: jest.fn().mockResolvedValue([]),
 }));
 
+let mockStoreProjects: any[] = [];
+
 jest.mock('../../../store/useStore', () => ({
     useStore: () => ({
         tagsStore: {
@@ -61,6 +63,7 @@ jest.mock('../../../store/useStore', () => ({
             loadTags: jest.fn(),
             addNewTags: jest.fn(),
         },
+        projectsStore: { projects: mockStoreProjects },
     }),
 }));
 
@@ -103,6 +106,28 @@ describe('ProjectModal side panel', () => {
         expect(screen.getByTestId('project-name-input')).toBeInTheDocument();
         expect(screen.getByTestId('datepicker')).toBeInTheDocument();
         expect(screen.getByTestId('priority-dropdown')).toBeInTheDocument();
+    });
+
+    it('takes the parent area when a parent project is chosen', async () => {
+        mockStoreProjects = [{ uid: 'parent-uid', name: 'Parent', area_id: 7 }];
+        const { onSave } = renderModal();
+        fireEvent.change(screen.getByLabelText('Parent project'), {
+            target: { value: 'parent-uid' },
+        });
+        fireEvent.change(screen.getByTestId('project-name-input'), {
+            target: { value: 'Child' },
+        });
+        fireEvent.click(screen.getByTestId('project-save-button'));
+        await flush();
+        mockStoreProjects = [];
+
+        expect(onSave).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'Child',
+                parent_project_uid: 'parent-uid',
+                area_id: 7,
+            })
+        );
     });
 
     it('saves the entered name', async () => {

@@ -1477,6 +1477,10 @@
     "pinUpdateError": "Posodobitev pripenjanja ni uspela"
   },
   "projects": {
+    "parentProject": "Nadrejeni projekt",
+    "noParent": "Brez nadrejenega projekta",
+    "subProjects": "Podprojekti",
+    "areaFollowsParent": "Območje sledi nadrejenemu projektu",
     "loading": "Nalagam projekte...",
     "error": "Napaka pri nalaganju projektov",
     "searchPlaceholder": "Išči projekte...",

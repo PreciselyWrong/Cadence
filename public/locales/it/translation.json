@@ -1475,6 +1475,10 @@
     "pinUpdateError": "Impossibile aggiornare il fissaggio"
   },
   "projects": {
+    "parentProject": "Progetto padre",
+    "noParent": "Nessun progetto padre",
+    "subProjects": "Sottoprogetti",
+    "areaFollowsParent": "L'area segue il progetto padre",
     "loading": "Caricamento progetti...",
     "error": "Errore nel caricamento dei progetti",
     "searchPlaceholder": "Cerca progetti...",

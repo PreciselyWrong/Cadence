@@ -1472,6 +1472,10 @@
     "pinUpdateError": "更新置顶失败"
   },
   "projects": {
+    "parentProject": "父项目",
+    "noParent": "无父项目",
+    "subProjects": "子项目",
+    "areaFollowsParent": "区域跟随父项目",
     "loading": "加载项目中...",
     "error": "加载项目时出错",
     "searchPlaceholder": "搜索项目...",

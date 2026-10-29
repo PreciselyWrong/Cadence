@@ -1475,6 +1475,10 @@
     "pinUpdateError": "Impossible de mettre à jour l'épingle"
   },
   "projects": {
+    "parentProject": "Projet parent",
+    "noParent": "Aucun projet parent",
+    "subProjects": "Sous-projets",
+    "areaFollowsParent": "La zone suit le projet parent",
     "loading": "Chargement des projets...",
     "error": "Erreur lors du chargement des projets",
     "searchPlaceholder": "Rechercher des projets...",

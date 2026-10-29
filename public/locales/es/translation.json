@@ -1011,6 +1011,10 @@
     "noActivity": "Sin actividad aún"
   },
   "projects": {
+    "parentProject": "Proyecto principal",
+    "noParent": "Sin proyecto principal",
+    "subProjects": "Subproyectos",
+    "areaFollowsParent": "El área sigue al proyecto principal",
     "loading": "Cargando proyectos...",
     "error": "Error al cargar proyectos",
     "searchPlaceholder": "Buscar proyectos...",

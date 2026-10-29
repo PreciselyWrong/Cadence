@@ -1475,6 +1475,10 @@
     "pinUpdateError": "Falha ao atualizar a fixação"
   },
   "projects": {
+    "parentProject": "Projeto pai",
+    "noParent": "Sem projeto pai",
+    "subProjects": "Subprojetos",
+    "areaFollowsParent": "A área segue o projeto pai",
     "loading": "Carregando projetos...",
     "error": "Erro ao carregar projetos",
     "searchPlaceholder": "Pesquisar projetos...",

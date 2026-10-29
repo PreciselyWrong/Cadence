@@ -27,6 +27,7 @@ import {
     SidePanelSection,
     sidePanelInputClass,
 } from '../SidePanel/SidePanelParts';
+import { descendantUids, flattenProjectTree } from '../../utils/projectTree';
 
 interface ProjectModalProps {
     isOpen: boolean;
@@ -81,7 +82,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 }) => {
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
-    const { tagsStore } = useStore();
+    const { tagsStore, projectsStore } = useStore();
+    const allProjects = projectsStore.projects;
     // Avoid calling getTags() during component initialization to prevent remounting
     const availableTags = tagsStore.tags;
     const { addNewTags } = tagsStore;
@@ -133,6 +135,30 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             tags: newTags.map((name) => ({ name })),
         }));
     }, []);
+
+    // A project cannot sit under itself or one of its own sub-projects.
+    const parentChoices = React.useMemo(() => {
+        const excluded = project?.uid
+            ? descendantUids(allProjects, project.uid)
+            : new Set<string>();
+        const candidates = allProjects.filter(
+            (candidate) =>
+                candidate.uid !== undefined &&
+                candidate.uid !== project?.uid &&
+                !excluded.has(candidate.uid)
+        );
+        return flattenProjectTree(candidates);
+    }, [allProjects, project?.uid]);
+
+    const handleParentChange = (parentUid: string) => {
+        const parent = allProjects.find((p) => p.uid === parentUid);
+        setFormData((prev) => ({
+            ...prev,
+            parent_project_uid: parentUid || null,
+            // The sub-project takes the parent's area
+            area_id: parent ? (parent.area_id ?? null) : prev.area_id,
+        }));
+    };
 
     const handleDueDateChange = (value: string) => {
         setFormData((prev) => ({
@@ -254,7 +280,9 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             (formData.start_time ?? null) !== (project.start_time ?? null) ||
             formData.color !== project.color ||
             formData.goal_id !== project.goal_id ||
-            formData.is_maintenance !== project.is_maintenance;
+            formData.is_maintenance !== project.is_maintenance ||
+            (formData.parent_project_uid ?? null) !==
+                (project.parent_project_uid ?? null);
 
         const originalTags = project.tags?.map((tag) => tag.name) || [];
         const tagsChanged =
@@ -354,14 +382,58 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                     />
                 </SidePanelSection>
 
+                <SidePanelSection
+                    title={t('projects.parentProject', 'Parent project')}
+                >
+                    <select
+                        aria-label={t(
+                            'projects.parentProject',
+                            'Parent project'
+                        )}
+                        className={sidePanelInputClass}
+                        value={formData.parent_project_uid ?? ''}
+                        onChange={(e) => handleParentChange(e.target.value)}
+                    >
+                        <option value="">
+                            {t('projects.noParent', 'No parent')}
+                        </option>
+                        {parentChoices.map(({ project: choice, depth }) => (
+                            <option key={choice.uid} value={choice.uid}>
+                                {'\u00A0\u00A0'.repeat(depth)}
+                                {choice.name}
+                            </option>
+                        ))}
+                    </select>
+                </SidePanelSection>
+
                 <SidePanelSection title={t('common.area', 'Area')}>
-                    <AreaDropdown
-                        value={formData.area_id || null}
-                        onChange={(value) =>
-                            setFormData((prev) => ({ ...prev, area_id: value }))
+                    <div
+                        aria-disabled={!!formData.parent_project_uid}
+                        className={
+                            formData.parent_project_uid
+                                ? 'pointer-events-none opacity-60'
+                                : undefined
                         }
-                        areas={areas}
-                    />
+                    >
+                        <AreaDropdown
+                            value={formData.area_id || null}
+                            onChange={(value) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    area_id: value,
+                                }))
+                            }
+                            areas={areas}
+                        />
+                    </div>
+                    {formData.parent_project_uid && (
+                        <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                            {t(
+                                'projects.areaFollowsParent',
+                                'Area follows the parent project'
+                            )}
+                        </p>
+                    )}
                 </SidePanelSection>
 
                 <SidePanelSection title={t('projects.goalTitle', 'Goal')}>

@@ -371,6 +371,22 @@ No Area
 
 ---
 
+## Sub-projects
+
+A project can have a **parent project** it owns. Use it to split a big project into smaller ones (`projects.parent_project_id`).
+
+- Any depth: a sub-project can have sub-projects of its own.
+- **Area follows the parent.** A sub-project always sits in its parent's area. The area it is sent is ignored, and the Area picker is locked while a parent is chosen. Moving a parent to another area moves all of its sub-projects, at any depth, with it.
+- **Cycles are refused.** A project cannot become its own parent or be placed under one of its own sub-projects. A parent owned by someone else is refused too.
+- **Only the owner** can set or clear the parent. Sharing is not inherited: sharing a parent does not share its sub-projects.
+- **Own tasks stay separate.** A project page shows only its own tasks, plus a compact **Sub-projects** list linking to its direct sub-projects. Sub-project tasks are not merged into the parent.
+- **Deleting a parent** keeps its sub-projects; they become top-level projects.
+- The project list and sidebar show sub-projects indented under their parent. In dropdowns they read "Parent / Child".
+- API and MCP: `parent_project_uid` on create and update (`null` detaches). Lists and project pages return `parent_project_uid`; the project page also returns `SubProjects` (direct children the viewer can see).
+- Backups carry `parent_project_uid`; on import the parent links are set after every project exists.
+
+---
+
 ## Timeline View
 
 The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.

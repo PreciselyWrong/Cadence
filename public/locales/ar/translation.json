@@ -1481,6 +1481,10 @@
     "pinUpdateError": "فشل تحديث التثبيت"
   },
   "projects": {
+    "parentProject": "المشروع الأب",
+    "noParent": "بدون مشروع أب",
+    "subProjects": "المشاريع الفرعية",
+    "areaFollowsParent": "المنطقة تتبع المشروع الأب",
     "loading": "جارٍ تحميل المشاريع...",
     "error": "خطأ في تحميل المشاريع",
     "searchPlaceholder": "ابحث عن المشاريع...",

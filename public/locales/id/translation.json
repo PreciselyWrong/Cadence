@@ -1472,6 +1472,10 @@
     "pinUpdateError": "Gagal memperbarui sematan"
   },
   "projects": {
+    "parentProject": "Proyek induk",
+    "noParent": "Tanpa proyek induk",
+    "subProjects": "Sub-proyek",
+    "areaFollowsParent": "Area mengikuti proyek induk",
     "loading": "Memuat proyek...",
     "error": "Kesalahan memuat proyek",
     "searchPlaceholder": "Cari proyek...",

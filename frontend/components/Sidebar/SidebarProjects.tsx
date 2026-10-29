@@ -10,6 +10,7 @@ import { useStore } from '../../store/useStore';
 import { useCan } from '../../hooks/useCan';
 import { Project } from '../../entities/Project';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
+import { flattenProjectTree } from '../../utils/projectTree';
 
 interface SidebarProjectsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -50,7 +51,9 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
     );
 
     useEffect(() => {
-        if (activeProjects.some((p) => getProjectPath(p) === location.pathname)) {
+        if (
+            activeProjects.some((p) => getProjectPath(p) === location.pathname)
+        ) {
             setIsExpanded(true);
         }
     }, [location.pathname, activeProjects.length]);
@@ -89,7 +92,11 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleNavClick('/projects', t('sidebar.projects'), <FolderIcon className="h-4 w-4 mr-2" />);
+                        handleNavClick(
+                            '/projects',
+                            t('sidebar.projects'),
+                            <FolderIcon className="h-4 w-4 mr-2" />
+                        );
                     }}
                 >
                     <FolderIcon className="h-[14px] w-[14px]" />
@@ -124,7 +131,11 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"
-                                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                                    style={{
+                                        transform: isExpanded
+                                            ? 'rotate(90deg)'
+                                            : 'none',
+                                    }}
                                 />
                             </button>
                         </>
@@ -135,17 +146,26 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
             {isExpanded && (
                 <li className="p-0 list-none">
                     <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
-                        {activeProjects.map((project) => (
-                            <div
-                                key={project.uid}
-                                className={itemClass(getProjectPath(project))}
-                                onClick={() => navigate(project)}
-                            >
-                                <span className="truncate min-w-0">
-                                    {project.name}
-                                </span>
-                            </div>
-                        ))}
+                        {flattenProjectTree(activeProjects).map(
+                            ({ project, depth }) => (
+                                <div
+                                    key={project.uid}
+                                    className={itemClass(
+                                        getProjectPath(project)
+                                    )}
+                                    style={
+                                        depth > 0
+                                            ? { marginLeft: depth * 12 }
+                                            : undefined
+                                    }
+                                    onClick={() => navigate(project)}
+                                >
+                                    <span className="truncate min-w-0">
+                                        {project.name}
+                                    </span>
+                                </div>
+                            )
+                        )}
                     </div>
                 </li>
             )}

@@ -1507,6 +1507,10 @@
         "placeholder": "Pridajte podúlohu..."
     },
     "projects": {
+        "parentProject": "Nadradený projekt",
+        "noParent": "Bez nadradeného projektu",
+        "subProjects": "Podprojekty",
+        "areaFollowsParent": "Oblasť nasleduje nadradený projekt",
         "addProject": "Pridať projekt",
         "loading": "Načítavajú sa projekty...",
         "error": "Chyba pri načítaní projektov",

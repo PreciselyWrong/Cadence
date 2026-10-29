@@ -64,6 +64,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | | Upstream | This fork |
 |---|---|---|
 | Timeline | Bars coloured by status | Also **colour by priority or tag** |
+| Sub-projects | Flat list of projects | **Sub-projects**, any depth; a sub-project takes its parent's area; listed on the parent page, indented in the list and sidebar |
 
 ### Tasks, tags and boards
 
@@ -78,7 +79,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 ### Under the hood
 
-- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
 - New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language.

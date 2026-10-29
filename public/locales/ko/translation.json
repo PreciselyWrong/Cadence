@@ -1472,6 +1472,10 @@
     "pinUpdateError": "고정을 업데이트하지 못했습니다"
   },
   "projects": {
+    "parentProject": "상위 프로젝트",
+    "noParent": "상위 프로젝트 없음",
+    "subProjects": "하위 프로젝트",
+    "areaFollowsParent": "영역은 상위 프로젝트를 따릅니다",
     "loading": "프로젝트 로딩 중...",
     "error": "프로젝트 로딩 오류",
     "searchPlaceholder": "프로젝트 검색...",

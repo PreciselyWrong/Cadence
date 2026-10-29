@@ -1472,6 +1472,10 @@
     "pinUpdateError": "Không thể cập nhật ghim"
   },
   "projects": {
+    "parentProject": "Dự án cha",
+    "noParent": "Không có dự án cha",
+    "subProjects": "Dự án con",
+    "areaFollowsParent": "Khu vực theo dự án cha",
     "loading": "Đang tải dự án...",
     "error": "Lỗi khi tải dự án",
     "searchPlaceholder": "Tìm kiếm dự án...",

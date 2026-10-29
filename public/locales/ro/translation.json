@@ -1477,6 +1477,10 @@
     "pinUpdateError": "Actualizarea fixării a eșuat"
   },
   "projects": {
+    "parentProject": "Proiect părinte",
+    "noParent": "Fără proiect părinte",
+    "subProjects": "Subproiecte",
+    "areaFollowsParent": "Aria urmează proiectul părinte",
     "loading": "Se încarcă proiectele...",
     "error": "Eroare la încărcarea proiectelor",
     "searchPlaceholder": "Căutați proiecte...",

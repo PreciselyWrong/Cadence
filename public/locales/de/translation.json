@@ -1665,6 +1665,10 @@
     "createError": "Fehler beim Erstellen der Notiz"
   },
   "projects": {
+    "parentProject": "Übergeordnetes Projekt",
+    "noParent": "Kein übergeordnetes Projekt",
+    "subProjects": "Unterprojekte",
+    "areaFollowsParent": "Der Bereich folgt dem übergeordneten Projekt",
     "loading": "Projekte laden...",
     "error": "Fehler beim Laden der Projekte",
     "searchPlaceholder": "Projekte suchen...",
