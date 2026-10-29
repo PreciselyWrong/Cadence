@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CalendarYearView, {
     countByDay,
+    MonthGrid,
     heatLevel,
 } from '../Calendar/CalendarYearView';
 import CalendarWeekView from '../Calendar/CalendarWeekView';
@@ -75,5 +76,22 @@ describe('week numbers', () => {
             (el) => el.getAttribute('data-week')
         );
         expect(weeks).toEqual(['40', '41', '42', '43', '44']);
+    });
+});
+
+describe('month grid', () => {
+    afterEach(() => jest.useRealTimers());
+
+    it('marks today only inside its own month', () => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 9, 29, 12));
+        render(
+            <MonthGrid
+                month={new Date(2026, 10, 1)}
+                weekStartsOn={1}
+                onDayClick={jest.fn()}
+            />
+        );
+        // November's grid starts on Mon 26 Oct; the 29th there is not today's cell.
+        expect(document.querySelector('.ring-1')).toBeNull();
     });
 });

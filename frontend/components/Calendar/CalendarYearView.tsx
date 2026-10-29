@@ -107,7 +107,9 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                                 ? 'text-gray-700 dark:text-gray-200'
                                 : 'text-gray-300 dark:text-gray-600'
                         } ${HEAT[heatLevel(count)]} ${
-                            isToday(day) ? 'ring-1 ring-blue-500' : ''
+                            inMonth && isToday(day)
+                                ? 'ring-1 ring-blue-500'
+                                : ''
                         } ${
                             key === selectedKey
                                 ? 'outline outline-2 outline-blue-500'

@@ -492,6 +492,7 @@ const Calendar: React.FC = () => {
                         <div className="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
                             {(
                                 [
+                                    'year',
                                     'month',
                                     'week',
                                     'multi',

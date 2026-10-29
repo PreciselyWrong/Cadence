@@ -100,6 +100,18 @@ describe('Calendar page feeds', () => {
         (updateCalendarFeed as jest.Mock).mockResolvedValue({});
     });
 
+    it('offers every view in the switcher', async () => {
+        renderCalendar();
+        await screen.findByText('Standup');
+        ['year', 'month', 'week', 'day', 'agenda'].forEach((name) =>
+            expect(
+                screen.getByRole('button', {
+                    name: new RegExp(`^${name}$`, 'i'),
+                })
+            ).toBeInTheDocument()
+        );
+    });
+
     it('draws events only from calendars that are shown', async () => {
         renderCalendar();
 
