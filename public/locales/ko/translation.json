@@ -3486,5 +3486,24 @@
     "adminRequiredTitle": "먼저 2단계 인증을 켜세요",
     "adminRequiredBody": "이 계정은 모든 고객을 볼 수 있으므로, 관리자 패널은 2단계 인증을 켠 후에만 열립니다.",
     "adminRequiredAction": "설정하기"
+  },
+  "projectBoard": {
+    "title": "보드",
+    "unsectioned": "섹션 없음",
+    "empty": "작업 없음",
+    "addColumn": "열 추가",
+    "addLeft": "왼쪽에 열 추가",
+    "addRight": "오른쪽에 열 추가",
+    "moveLeft": "왼쪽으로 이동",
+    "moveRight": "오른쪽으로 이동",
+    "rename": "이름 바꾸기",
+    "delete": "삭제",
+    "deleteTitle": "열 삭제",
+    "deleteMessage": "\"{{name}}\"을(를) 삭제할까요? 작업은 섹션 없음으로 이동합니다.",
+    "columnName": "열 이름",
+    "columnActions": "열 작업",
+    "newColumn": "새 열",
+    "loadError": "열을 불러올 수 없습니다",
+    "saveError": "보드를 저장할 수 없습니다"
   }
 }

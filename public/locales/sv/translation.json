@@ -3490,5 +3490,24 @@
     "adminRequiredTitle": "Slå på tvåfaktorsautentisering först",
     "adminRequiredBody": "Det här kontot kan se alla kunder, så adminpanelen öppnas först när tvåfaktorsautentisering är på.",
     "adminRequiredAction": "Konfigurera"
+  },
+  "projectBoard": {
+    "title": "Tavla",
+    "unsectioned": "Utan sektion",
+    "empty": "Inga uppgifter",
+    "addColumn": "Lägg till kolumn",
+    "addLeft": "Lägg till kolumn till vänster",
+    "addRight": "Lägg till kolumn till höger",
+    "moveLeft": "Flytta åt vänster",
+    "moveRight": "Flytta åt höger",
+    "rename": "Byt namn",
+    "delete": "Ta bort",
+    "deleteTitle": "Ta bort kolumn",
+    "deleteMessage": "Ta bort \"{{name}}\"? Uppgifterna flyttas till Utan sektion.",
+    "columnName": "Kolumnnamn",
+    "columnActions": "Kolumnåtgärder",
+    "newColumn": "Ny kolumn",
+    "loadError": "Kunde inte läsa in kolumner",
+    "saveError": "Kunde inte spara tavlan"
   }
 }

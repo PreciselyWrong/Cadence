@@ -38,6 +38,7 @@ const {
     CalendarToken,
     CalendarFeed,
     FocusSession,
+    ProjectSection,
     DailyPlan,
     DailyPlanItem,
     Person,
@@ -225,6 +226,34 @@ async function eraseUserAccount(userId) {
         await UserProjectOrder.destroy(byUser);
         await UserGoalOrder.destroy(byUser);
         await UserAreaOrder.destroy(byUser);
+        const ownProjects = await Project.findAll({
+            where: { user_id: userId },
+            attributes: ['id'],
+            raw: true,
+            ...tx,
+        });
+        if (ownProjects.length > 0) {
+            const projectIds = ownProjects.map((p) => p.id);
+            const sections = await ProjectSection.findAll({
+                where: { project_id: projectIds },
+                attributes: ['id'],
+                raw: true,
+                ...tx,
+            });
+            if (sections.length > 0) {
+                await Task.update(
+                    { section_id: null },
+                    {
+                        where: { section_id: sections.map((s) => s.id) },
+                        ...tx,
+                    }
+                );
+            }
+            await ProjectSection.destroy({
+                where: { project_id: projectIds },
+                ...tx,
+            });
+        }
         await Project.destroy(byUser);
         await Goal.destroy(byUser);
         await Area.destroy(byUser);

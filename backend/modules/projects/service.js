@@ -447,6 +447,7 @@ class ProjectsService {
                       blocked_by_count: blockedByCount,
                       is_blocked: blockedByCount > 0,
                       tags: sortTags(task.Tags),
+                      section_uid: task.Section?.uid || null,
                       subtasks: (task.Subtasks || []).map((subtask) => ({
                           ...subtask,
                           tags: sortTags(subtask.Tags),
@@ -468,6 +469,7 @@ class ProjectsService {
                       : null;
                   delete normalizedTask.Tags;
                   delete normalizedTask.Subtasks;
+                  delete normalizedTask.Section;
                   return normalizedTask;
               })
             : [];

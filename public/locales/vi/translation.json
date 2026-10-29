@@ -3486,5 +3486,24 @@
     "adminRequiredTitle": "Hãy bật xác minh hai bước trước",
     "adminRequiredBody": "Tài khoản này xem được mọi khách hàng, nên bảng quản trị chỉ mở khi xác minh hai bước đã bật.",
     "adminRequiredAction": "Thiết lập"
+  },
+  "projectBoard": {
+    "title": "Bảng",
+    "unsectioned": "Không có mục",
+    "empty": "Không có công việc",
+    "addColumn": "Thêm cột",
+    "addLeft": "Thêm cột bên trái",
+    "addRight": "Thêm cột bên phải",
+    "moveLeft": "Chuyển sang trái",
+    "moveRight": "Chuyển sang phải",
+    "rename": "Đổi tên",
+    "delete": "Xóa",
+    "deleteTitle": "Xóa cột",
+    "deleteMessage": "Xóa \"{{name}}\"? Các công việc sẽ chuyển sang Không có mục.",
+    "columnName": "Tên cột",
+    "columnActions": "Thao tác cột",
+    "newColumn": "Cột mới",
+    "loadError": "Không thể tải các cột",
+    "saveError": "Không thể lưu bảng"
   }
 }

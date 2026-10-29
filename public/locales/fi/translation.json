@@ -3490,5 +3490,24 @@
     "adminRequiredTitle": "Ota ensin kaksivaiheinen tunnistautuminen käyttöön",
     "adminRequiredBody": "Tällä tilillä näkee kaikki asiakkaat, joten hallintapaneeli avautuu vasta, kun kaksivaiheinen tunnistautuminen on käytössä.",
     "adminRequiredAction": "Ota käyttöön"
+  },
+  "projectBoard": {
+    "title": "Taulu",
+    "unsectioned": "Ei osiota",
+    "empty": "Ei tehtäviä",
+    "addColumn": "Lisää sarake",
+    "addLeft": "Lisää sarake vasemmalle",
+    "addRight": "Lisää sarake oikealle",
+    "moveLeft": "Siirrä vasemmalle",
+    "moveRight": "Siirrä oikealle",
+    "rename": "Nimeä uudelleen",
+    "delete": "Poista",
+    "deleteTitle": "Poista sarake",
+    "deleteMessage": "Poistetaanko \"{{name}}\"? Sen tehtävät siirtyvät kohtaan Ei osiota.",
+    "columnName": "Sarakkeen nimi",
+    "columnActions": "Sarakkeen toiminnot",
+    "newColumn": "Uusi sarake",
+    "loadError": "Sarakkeiden lataus epäonnistui",
+    "saveError": "Taulun tallennus epäonnistui"
   }
 }

@@ -3490,5 +3490,24 @@
     "adminRequiredTitle": "Schakel eerst tweestapsverificatie in",
     "adminRequiredBody": "Dit account kan alle klanten zien, dus het beheerpaneel opent pas als tweestapsverificatie aan staat.",
     "adminRequiredAction": "Instellen"
+  },
+  "projectBoard": {
+    "title": "Bord",
+    "unsectioned": "Zonder sectie",
+    "empty": "Geen taken",
+    "addColumn": "Kolom toevoegen",
+    "addLeft": "Kolom links toevoegen",
+    "addRight": "Kolom rechts toevoegen",
+    "moveLeft": "Naar links",
+    "moveRight": "Naar rechts",
+    "rename": "Hernoemen",
+    "delete": "Verwijderen",
+    "deleteTitle": "Kolom verwijderen",
+    "deleteMessage": "\"{{name}}\" verwijderen? De taken gaan naar Zonder sectie.",
+    "columnName": "Kolomnaam",
+    "columnActions": "Kolomacties",
+    "newColumn": "Nieuwe kolom",
+    "loadError": "Kolommen konden niet worden geladen",
+    "saveError": "Bord kon niet worden opgeslagen"
   }
 }

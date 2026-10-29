@@ -3486,5 +3486,24 @@
     "adminRequiredTitle": "Aktifkan verifikasi dua langkah terlebih dahulu",
     "adminRequiredBody": "Akun ini bisa melihat semua pelanggan, jadi panel admin hanya terbuka setelah verifikasi dua langkah aktif.",
     "adminRequiredAction": "Atur sekarang"
+  },
+  "projectBoard": {
+    "title": "Papan",
+    "unsectioned": "Tanpa bagian",
+    "empty": "Tidak ada tugas",
+    "addColumn": "Tambah kolom",
+    "addLeft": "Tambah kolom di kiri",
+    "addRight": "Tambah kolom di kanan",
+    "moveLeft": "Geser ke kiri",
+    "moveRight": "Geser ke kanan",
+    "rename": "Ganti nama",
+    "delete": "Hapus",
+    "deleteTitle": "Hapus kolom",
+    "deleteMessage": "Hapus \"{{name}}\"? Tugasnya pindah ke Tanpa bagian.",
+    "columnName": "Nama kolom",
+    "columnActions": "Tindakan kolom",
+    "newColumn": "Kolom baru",
+    "loadError": "Tidak dapat memuat kolom",
+    "saveError": "Tidak dapat menyimpan papan"
   }
 }

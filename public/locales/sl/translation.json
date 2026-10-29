@@ -3502,5 +3502,24 @@
     "adminRequiredTitle": "Najprej vklopite dvostopenjsko preverjanje",
     "adminRequiredBody": "Ta račun vidi vse stranke, zato se skrbniška plošča odpre šele, ko je dvostopenjsko preverjanje vklopljeno.",
     "adminRequiredAction": "Nastavi"
+  },
+  "projectBoard": {
+    "title": "Tabla",
+    "unsectioned": "Brez razdelka",
+    "empty": "Ni opravil",
+    "addColumn": "Dodaj stolpec",
+    "addLeft": "Dodaj stolpec levo",
+    "addRight": "Dodaj stolpec desno",
+    "moveLeft": "Premakni levo",
+    "moveRight": "Premakni desno",
+    "rename": "Preimenuj",
+    "delete": "Izbriši",
+    "deleteTitle": "Izbriši stolpec",
+    "deleteMessage": "Izbrišem »{{name}}«? Njegova opravila gredo v Brez razdelka.",
+    "columnName": "Ime stolpca",
+    "columnActions": "Dejanja stolpca",
+    "newColumn": "Nov stolpec",
+    "loadError": "Stolpcev ni bilo mogoče naložiti",
+    "saveError": "Table ni bilo mogoče shraniti"
   }
 }

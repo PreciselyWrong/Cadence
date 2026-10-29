@@ -3889,5 +3889,24 @@
     "adminRequiredTitle": "Turn on two-factor sign-in first",
     "adminRequiredBody": "This account can see every customer, so the admin panel opens only once two-factor sign-in is on.",
     "adminRequiredAction": "Set it up"
+  },
+  "projectBoard": {
+    "title": "Board",
+    "unsectioned": "Unsectioned",
+    "empty": "No tasks",
+    "addColumn": "Add column",
+    "addLeft": "Add column to the left",
+    "addRight": "Add column to the right",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteTitle": "Delete column",
+    "deleteMessage": "Delete \"{{name}}\"? Its tasks move to Unsectioned.",
+    "columnName": "Column name",
+    "columnActions": "Column actions",
+    "newColumn": "New column",
+    "loadError": "Could not load columns",
+    "saveError": "Could not save the board"
   }
 }

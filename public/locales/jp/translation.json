@@ -3487,5 +3487,24 @@
     "adminRequiredTitle": "先に2段階認証をオンにしてください",
     "adminRequiredBody": "このアカウントはすべての顧客を閲覧できるため、管理パネルは2段階認証がオンのときにのみ開きます。",
     "adminRequiredAction": "設定する"
+  },
+  "projectBoard": {
+    "title": "ボード",
+    "unsectioned": "セクションなし",
+    "empty": "タスクはありません",
+    "addColumn": "列を追加",
+    "addLeft": "左に列を追加",
+    "addRight": "右に列を追加",
+    "moveLeft": "左へ移動",
+    "moveRight": "右へ移動",
+    "rename": "名前を変更",
+    "delete": "削除",
+    "deleteTitle": "列を削除",
+    "deleteMessage": "「{{name}}」を削除しますか？タスクは「セクションなし」に移動します。",
+    "columnName": "列の名前",
+    "columnActions": "列の操作",
+    "newColumn": "新しい列",
+    "loadError": "列を読み込めませんでした",
+    "saveError": "ボードを保存できませんでした"
   }
 }

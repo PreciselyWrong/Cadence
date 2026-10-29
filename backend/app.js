@@ -417,6 +417,7 @@ const inboxModule = require('./modules/inbox');
 const notesModule = require('./modules/notes');
 const notificationsModule = require('./modules/notifications');
 const projectsModule = require('./modules/projects');
+const projectSectionsModule = require('./modules/project-sections');
 const quotesModule = require('./modules/quotes');
 const searchModule = require('./modules/search');
 const sharesModule = require('./modules/shares');
@@ -543,6 +544,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, commentsModule.routes);
     app.use(basePath, habitsModule.routes);
     app.use(basePath, projectsModule.routes);
+    app.use(basePath, projectSectionsModule.routes);
     app.use(basePath, adminModule.routes);
     app.use(basePath, sharesModule.routes);
     app.use(basePath, areasModule.routes);

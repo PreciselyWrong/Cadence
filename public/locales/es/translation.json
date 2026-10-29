@@ -3481,5 +3481,24 @@
     "adminRequiredTitle": "Activa primero la autenticación de dos factores",
     "adminRequiredBody": "Esta cuenta puede ver a todos los clientes, así que el panel de administración solo se abre cuando la autenticación de dos factores está activada.",
     "adminRequiredAction": "Configurarla"
+  },
+  "projectBoard": {
+    "title": "Tablero",
+    "unsectioned": "Sin sección",
+    "empty": "Sin tareas",
+    "addColumn": "Añadir columna",
+    "addLeft": "Añadir columna a la izquierda",
+    "addRight": "Añadir columna a la derecha",
+    "moveLeft": "Mover a la izquierda",
+    "moveRight": "Mover a la derecha",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar columna",
+    "deleteMessage": "¿Eliminar «{{name}}»? Sus tareas pasan a Sin sección.",
+    "columnName": "Nombre de la columna",
+    "columnActions": "Acciones de la columna",
+    "newColumn": "Nueva columna",
+    "loadError": "No se pudieron cargar las columnas",
+    "saveError": "No se pudo guardar el tablero"
   }
 }

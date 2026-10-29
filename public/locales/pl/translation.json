@@ -3502,5 +3502,24 @@
     "adminRequiredTitle": "Najpierw włącz weryfikację dwuetapową",
     "adminRequiredBody": "To konto widzi wszystkich klientów, więc panel administracyjny otwiera się dopiero po włączeniu weryfikacji dwuetapowej.",
     "adminRequiredAction": "Skonfiguruj"
+  },
+  "projectBoard": {
+    "title": "Tablica",
+    "unsectioned": "Bez sekcji",
+    "empty": "Brak zadań",
+    "addColumn": "Dodaj kolumnę",
+    "addLeft": "Dodaj kolumnę po lewej",
+    "addRight": "Dodaj kolumnę po prawej",
+    "moveLeft": "Przesuń w lewo",
+    "moveRight": "Przesuń w prawo",
+    "rename": "Zmień nazwę",
+    "delete": "Usuń",
+    "deleteTitle": "Usuń kolumnę",
+    "deleteMessage": "Usunąć „{{name}}”? Jej zadania trafią do Bez sekcji.",
+    "columnName": "Nazwa kolumny",
+    "columnActions": "Działania kolumny",
+    "newColumn": "Nowa kolumna",
+    "loadError": "Nie udało się wczytać kolumn",
+    "saveError": "Nie udało się zapisać tablicy"
   }
 }

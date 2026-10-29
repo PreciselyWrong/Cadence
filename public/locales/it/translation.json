@@ -3494,5 +3494,24 @@
     "adminRequiredTitle": "Attiva prima l'autenticazione a due fattori",
     "adminRequiredBody": "Questo account può vedere tutti i clienti, quindi il pannello di amministrazione si apre solo quando l'autenticazione a due fattori è attiva.",
     "adminRequiredAction": "Configurala"
+  },
+  "projectBoard": {
+    "title": "Bacheca",
+    "unsectioned": "Senza sezione",
+    "empty": "Nessuna attività",
+    "addColumn": "Aggiungi colonna",
+    "addLeft": "Aggiungi colonna a sinistra",
+    "addRight": "Aggiungi colonna a destra",
+    "moveLeft": "Sposta a sinistra",
+    "moveRight": "Sposta a destra",
+    "rename": "Rinomina",
+    "delete": "Elimina",
+    "deleteTitle": "Elimina colonna",
+    "deleteMessage": "Eliminare «{{name}}»? Le sue attività passano in Senza sezione.",
+    "columnName": "Nome colonna",
+    "columnActions": "Azioni colonna",
+    "newColumn": "Nuova colonna",
+    "loadError": "Impossibile caricare le colonne",
+    "saveError": "Impossibile salvare la bacheca"
   }
 }

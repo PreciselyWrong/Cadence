@@ -3486,5 +3486,24 @@
     "adminRequiredTitle": "请先开启两步验证",
     "adminRequiredBody": "此账户可以查看所有客户，因此只有开启两步验证后才能打开管理面板。",
     "adminRequiredAction": "立即设置"
+  },
+  "projectBoard": {
+    "title": "看板",
+    "unsectioned": "未分组",
+    "empty": "暂无任务",
+    "addColumn": "添加列",
+    "addLeft": "在左侧添加列",
+    "addRight": "在右侧添加列",
+    "moveLeft": "左移",
+    "moveRight": "右移",
+    "rename": "重命名",
+    "delete": "删除",
+    "deleteTitle": "删除列",
+    "deleteMessage": "删除“{{name}}”？其中的任务将移至未分组。",
+    "columnName": "列名称",
+    "columnActions": "列操作",
+    "newColumn": "新列",
+    "loadError": "无法加载列",
+    "saveError": "无法保存看板"
   }
 }
