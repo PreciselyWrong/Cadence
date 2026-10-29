@@ -256,6 +256,41 @@ describe('Offline sync API', () => {
         expect(typeof snap.body.cursor).toBe('number');
     });
 
+    it('stamps and journals a server-side bulk update, so it beats older offline edits', async () => {
+        await push(agent, [
+            upsert(
+                'op-bk',
+                'task',
+                'clienttask00020',
+                { name: 'Bulk' },
+                hlc(1)
+            ),
+        ]);
+        const before = await agent.get('/api/v1/sync/pull?cursor=0');
+
+        await Task.update(
+            { note: 'set in bulk' },
+            { where: { uid: 'clienttask00020' } }
+        );
+
+        const after = await agent.get(
+            `/api/v1/sync/pull?cursor=${before.body.cursor}`
+        );
+        expect(after.body.changes).toHaveLength(1);
+        expect(after.body.changes[0].data.note).toBe('set in bulk');
+
+        const stale = await push(agent, [
+            upsert(
+                'op-bk2',
+                'task',
+                'clienttask00020',
+                { note: 'older' },
+                hlc(2, 0, 'devB')
+            ),
+        ]);
+        expect(stale.body.results[0].status).toBe('conflict');
+    });
+
     describe('recurring occurrences', () => {
         const dailyTask = (uid, due) =>
             upsert(
