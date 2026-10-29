@@ -352,6 +352,15 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - Step-up (password or code) for new API keys; admin reset; CalDAV needs an API key once it is on
     - Required for the hosted superadmin before the admin panel opens
 
+39. **[Focus Sessions](docs/30-focus-sessions.md)**
+    - The top-bar tomato timer records finished sessions (and early stops of 5 minutes or more)
+    - Shown on the Calendar and in Insights → Productivity → Focus statistics
+
+39. **[Focus Sessions](docs/30-focus-sessions.md)**
+    - The top-bar tomato timer records finished sessions (and early stops of 5 minutes or more)
+    - Shown on the Calendar and in Insights → Productivity → Focus statistics
+    - `focus_sessions` table and `/api/focus-sessions` endpoints
+
 ---
 
 ## Project Overview

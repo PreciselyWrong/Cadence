@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Concentrare",
+    "lastDays_one": "{{count}} zi",
+    "lastDays_other": "{{count}} zile",
+    "error": "Statisticile de concentrare nu au putut fi încărcate",
+    "empty": "Încă nicio sesiune de concentrare. Pornește roșia din bara de sus; sesiunile terminate sunt numărate aici.",
+    "total": "Timp de concentrare",
+    "sessions": "Sesiuni",
+    "bestHour": "Ora cea mai concentrată",
+    "perDay": "Minute pe zi",
+    "perHour": "Minute pe oră din zi",
+    "topTasks": "Sarcini cu cea mai multă concentrare"
+  },
   "common": {
     "deleting": "Se șterge...",
     "save": "Salvează",
@@ -1708,6 +1721,7 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "focusSession": "Concentrare",
     "print": "Imprimă",
     "year": "An",
     "weekNumber": "S{{week}}",
@@ -1721,6 +1735,7 @@
     "agendaEmpty": "Nimic programat",
     "agenda": "Agendă",
     "options": {
+      "showFocus": "Afișează sesiunile de concentrare",
       "holidays": "Sărbători",
       "holidaysNone": "Niciuna",
       "holidayRegion": "Regiune",

@@ -14,6 +14,7 @@ export interface CalendarOptions {
     showWeekends: boolean;
     showRepeats: boolean;
     showHabits: boolean;
+    showFocus: boolean;
     showWeekNumbers: boolean;
     showMiniCalendar: boolean;
     colorBy: CalendarColorBy;
@@ -27,6 +28,7 @@ export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
     showWeekends: true,
     showRepeats: true,
     showHabits: true,
+    showFocus: true,
     showWeekNumbers: false,
     showMiniCalendar: false,
     colorBy: 'default',
@@ -54,6 +56,7 @@ export const readCalendarOptions = (saved: unknown): CalendarOptions => {
         showWeekends: flag('showWeekends'),
         showRepeats: flag('showRepeats'),
         showHabits: flag('showHabits'),
+        showFocus: flag('showFocus'),
         showWeekNumbers: flag('showWeekNumbers'),
         showMiniCalendar: flag('showMiniCalendar'),
         colorBy: COLOR_BY.includes(value.colorBy as CalendarColorBy)
@@ -205,7 +208,8 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
             | 'showRepeats'
             | 'showWeekNumbers'
             | 'showMiniCalendar'
-            | 'showHabits';
+            | 'showHabits'
+            | 'showFocus';
         label: string;
     }[] = [
         {
@@ -223,6 +227,10 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
         {
             key: 'showHabits',
             label: t('calendar.options.showHabits', 'Show habits'),
+        },
+        {
+            key: 'showFocus',
+            label: t('calendar.options.showFocus', 'Show focus sessions'),
         },
         {
             key: 'showWeekNumbers',

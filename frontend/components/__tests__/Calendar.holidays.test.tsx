@@ -48,6 +48,18 @@ jest.mock('../../utils/holidaysService', () => ({
     fetchHolidayRegions: jest.fn().mockResolvedValue([]),
 }));
 
+jest.mock('../../utils/focusSessionsService', () => ({
+    fetchFocusSessions: jest.fn().mockResolvedValue([
+        {
+            uid: 'f1',
+            started_at: new Date(2026, 9, 29, 9, 0).toISOString(),
+            ended_at: new Date(2026, 9, 29, 9, 25).toISOString(),
+            duration_seconds: 1500,
+            task: { uid: 't1', name: 'Write' },
+        },
+    ]),
+}));
+
 jest.mock('../../utils/profileService', () => ({
     fetchProfile: jest.fn().mockResolvedValue({
         ui_settings: {
@@ -59,7 +71,7 @@ jest.mock('../../utils/profileService', () => ({
     getLocaleFirstDayOfWeek: jest.fn().mockReturnValue(1),
 }));
 
-describe('Calendar page holidays', () => {
+describe('Calendar page holidays and focus sessions', () => {
     beforeEach(() => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
@@ -78,6 +90,7 @@ describe('Calendar page holidays', () => {
             </MemoryRouter>
         );
         expect(await screen.findByText('Noël')).toBeInTheDocument();
+        expect(await screen.findByText('Focus: Write')).toBeInTheDocument();
         await waitFor(() =>
             expect(fetchHolidays).toHaveBeenLastCalledWith(
                 'CH',

@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Enfoque",
+    "lastDays_one": "{{count}} día",
+    "lastDays_other": "{{count}} días",
+    "error": "No se pudieron cargar las estadísticas de enfoque",
+    "empty": "Aún no hay sesiones de enfoque. Inicia el tomate en la barra superior; las sesiones terminadas se cuentan aquí.",
+    "total": "Tiempo de enfoque",
+    "sessions": "Sesiones",
+    "bestHour": "Hora de más enfoque",
+    "perDay": "Minutos por día",
+    "perHour": "Minutos por hora del día",
+    "topTasks": "Tareas con más enfoque"
+  },
   "common": {
     "deleting": "Eliminando...",
     "loading": "Cargando...",
@@ -1668,6 +1681,7 @@
     "done": "Hecho"
   },
   "calendar": {
+    "focusSession": "Enfoque",
     "print": "Imprimir",
     "year": "Año",
     "weekNumber": "S{{week}}",
@@ -1681,6 +1695,7 @@
     "agendaEmpty": "Nada programado",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Mostrar sesiones de enfoque",
       "holidays": "Festivos",
       "holidaysNone": "Ninguno",
       "holidayRegion": "Región",

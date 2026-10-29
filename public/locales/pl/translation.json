@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Skupienie",
+    "lastDays_one": "{{count}} dzień",
+    "lastDays_other": "{{count}} dni",
+    "error": "Nie udało się wczytać statystyk skupienia",
+    "empty": "Brak sesji skupienia. Uruchom pomidor na górnym pasku; zakończone sesje są liczone tutaj.",
+    "total": "Czas skupienia",
+    "sessions": "Sesje",
+    "bestHour": "Najbardziej skupiona godzina",
+    "perDay": "Minuty dziennie",
+    "perHour": "Minuty według godziny",
+    "topTasks": "Zadania z największym skupieniem"
+  },
   "common": {
     "deleting": "Usuwanie...",
     "save": "Zapisz",
@@ -1708,6 +1721,7 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "focusSession": "Skupienie",
     "print": "Drukuj",
     "year": "Rok",
     "weekNumber": "T{{week}}",
@@ -1721,6 +1735,7 @@
     "agendaEmpty": "Nic nie zaplanowano",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Pokaż sesje skupienia",
       "holidays": "Święta",
       "holidaysNone": "Brak",
       "holidayRegion": "Region",

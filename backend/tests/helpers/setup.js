@@ -45,6 +45,7 @@ const CLEANUP_TABLES = [
     'daily_plan_items',
     'daily_plans',
     'calendar_feeds',
+    'focus_sessions',
     'comments',
     'recurring_completions',
     'caldav_occurrence_overrides',

@@ -93,6 +93,7 @@ const CalDAVOccurrenceOverride = require('./caldav_occurrence_override')(
 const CalDAVRemoteCalendar = require('./caldav_remote_calendar')(sequelize);
 const CalendarToken = require('./calendar_token')(sequelize);
 const CalendarFeed = require('./calendar_feed')(sequelize);
+const FocusSession = require('./focus_session')(sequelize);
 const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
@@ -446,6 +447,9 @@ Task.hasMany(DailyPlanItem, { foreignKey: 'task_id', as: 'DailyPlanItems' });
 DailyPlanItem.belongsTo(Task, { foreignKey: 'task_id', as: 'Task' });
 User.hasMany(CalendarFeed, { foreignKey: 'user_id', as: 'CalendarFeeds' });
 CalendarFeed.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
+User.hasMany(FocusSession, { foreignKey: 'user_id', as: 'FocusSessions' });
+FocusSession.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
+FocusSession.belongsTo(Task, { foreignKey: 'task_id', as: 'Task' });
 
 // UserProjectArea associations (per-user area placement for shared projects)
 User.hasMany(UserProjectArea, {
@@ -714,6 +718,7 @@ module.exports = {
     CalDAVRemoteCalendar,
     CalendarToken,
     CalendarFeed,
+    FocusSession,
     DailyPlan,
     DailyPlanItem,
     Person,

@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} hari",
+    "lastDays_other": "{{count}} hari",
+    "error": "Tidak dapat memuat statistik fokus",
+    "empty": "Belum ada sesi fokus. Mulai timer tomat di bilah atas; sesi yang selesai dihitung di sini.",
+    "total": "Waktu fokus",
+    "sessions": "Sesi",
+    "bestHour": "Jam paling fokus",
+    "perDay": "Menit per hari",
+    "perHour": "Menit per jam",
+    "topTasks": "Tugas paling difokuskan"
+  },
   "common": {
     "deleting": "Menghapus...",
     "save": "Simpan",
@@ -1702,6 +1715,7 @@
     "done": "Selesai"
   },
   "calendar": {
+    "focusSession": "Fokus",
     "print": "Cetak",
     "year": "Tahun",
     "weekNumber": "M{{week}}",
@@ -1715,6 +1729,7 @@
     "agendaEmpty": "Tidak ada jadwal",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Tampilkan sesi fokus",
       "holidays": "Hari libur",
       "holidaysNone": "Tidak ada",
       "holidayRegion": "Wilayah",

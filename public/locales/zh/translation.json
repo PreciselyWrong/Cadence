@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "专注",
+    "lastDays_one": "{{count}} 天",
+    "lastDays_other": "{{count}} 天",
+    "error": "无法加载专注统计",
+    "empty": "还没有专注记录。启动顶部栏的番茄钟，完成的专注会统计在这里。",
+    "total": "专注时长",
+    "sessions": "次数",
+    "bestHour": "最专注的时段",
+    "perDay": "每天分钟数",
+    "perHour": "按小时分钟数",
+    "topTasks": "专注最多的任务"
+  },
   "common": {
     "deleting": "正在删除...",
     "save": "保存",
@@ -1702,6 +1715,7 @@
     "done": "完成"
   },
   "calendar": {
+    "focusSession": "专注",
     "print": "打印",
     "year": "年",
     "weekNumber": "第{{week}}周",
@@ -1715,6 +1729,7 @@
     "agendaEmpty": "暂无安排",
     "agenda": "日程",
     "options": {
+      "showFocus": "显示专注记录",
       "holidays": "法定节假日",
       "holidaysNone": "无",
       "holidayRegion": "地区",

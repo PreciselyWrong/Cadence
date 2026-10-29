@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Osredotočenost",
+    "lastDays_one": "{{count}} dan",
+    "lastDays_other": "{{count}} dni",
+    "error": "Statistike osredotočenosti ni bilo mogoče naložiti",
+    "empty": "Še ni sej. Zaženite paradižnik v zgornji vrstici; končane seje se štejejo tukaj.",
+    "total": "Čas osredotočenosti",
+    "sessions": "Seje",
+    "bestHour": "Najbolj osredotočena ura",
+    "perDay": "Minute na dan",
+    "perHour": "Minute po urah dneva",
+    "topTasks": "Opravila z največ osredotočenosti"
+  },
   "common": {
     "deleting": "Brisanje...",
     "save": "Shrani",
@@ -1708,6 +1721,7 @@
     "done": "Končano"
   },
   "calendar": {
+    "focusSession": "Osredotočenost",
     "print": "Natisni",
     "year": "Leto",
     "weekNumber": "T{{week}}",
@@ -1721,6 +1735,7 @@
     "agendaEmpty": "Nič načrtovanega",
     "agenda": "Dnevni red",
     "options": {
+      "showFocus": "Pokaži seje osredotočenosti",
       "holidays": "Prazniki",
       "holidaysNone": "Brez",
       "holidayRegion": "Regija",

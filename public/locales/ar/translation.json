@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "التركيز",
+    "lastDays_one": "يوم واحد",
+    "lastDays_other": "{{count}} أيام",
+    "error": "تعذّر تحميل إحصاءات التركيز",
+    "empty": "لا توجد جلسات تركيز بعد. شغّل مؤقت الطماطم في الشريط العلوي؛ تُحتسب الجلسات المكتملة هنا.",
+    "total": "وقت التركيز",
+    "sessions": "الجلسات",
+    "bestHour": "أكثر ساعة تركيزًا",
+    "perDay": "دقائق يوميًا",
+    "perHour": "دقائق حسب ساعة اليوم",
+    "topTasks": "المهام الأكثر تركيزًا"
+  },
   "common": {
     "deleting": "جارٍ الحذف...",
     "save": "حفظ",
@@ -1712,6 +1725,7 @@
     "done": "تم"
   },
   "calendar": {
+    "focusSession": "تركيز",
     "print": "طباعة",
     "year": "السنة",
     "weekNumber": "أ{{week}}",
@@ -1725,6 +1739,7 @@
     "agendaEmpty": "لا شيء مجدول",
     "agenda": "جدول الأعمال",
     "options": {
+      "showFocus": "إظهار جلسات التركيز",
       "holidays": "العطل الرسمية",
       "holidaysNone": "لا شيء",
       "holidayRegion": "المنطقة",

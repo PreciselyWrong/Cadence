@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "집중",
+    "lastDays_one": "{{count}}일",
+    "lastDays_other": "{{count}}일",
+    "error": "집중 통계를 불러올 수 없습니다",
+    "empty": "아직 집중 세션이 없습니다. 상단 바의 토마토 타이머를 시작하면 끝난 세션이 여기에 집계됩니다.",
+    "total": "집중 시간",
+    "sessions": "세션",
+    "bestHour": "가장 집중한 시간",
+    "perDay": "일별 분",
+    "perHour": "시간대별 분",
+    "topTasks": "가장 많이 집중한 작업"
+  },
   "common": {
     "deleting": "삭제 중...",
     "save": "저장",
@@ -1702,6 +1715,7 @@
     "done": "완료"
   },
   "calendar": {
+    "focusSession": "집중",
     "print": "인쇄",
     "year": "연도",
     "weekNumber": "{{week}}주",
@@ -1715,6 +1729,7 @@
     "agendaEmpty": "예정된 항목 없음",
     "agenda": "일정 목록",
     "options": {
+      "showFocus": "집중 세션 표시",
       "holidays": "공휴일",
       "holidaysNone": "없음",
       "holidayRegion": "지역",

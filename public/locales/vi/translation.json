@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Tập trung",
+    "lastDays_one": "{{count}} ngày",
+    "lastDays_other": "{{count}} ngày",
+    "error": "Không thể tải thống kê tập trung",
+    "empty": "Chưa có phiên tập trung. Bật đồng hồ cà chua ở thanh trên; các phiên hoàn thành được tính ở đây.",
+    "total": "Thời gian tập trung",
+    "sessions": "Phiên",
+    "bestHour": "Giờ tập trung nhất",
+    "perDay": "Phút mỗi ngày",
+    "perHour": "Phút theo giờ trong ngày",
+    "topTasks": "Công việc tập trung nhiều nhất"
+  },
   "common": {
     "deleting": "Đang xóa...",
     "save": "Lưu",
@@ -1702,6 +1715,7 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "focusSession": "Tập trung",
     "print": "In",
     "year": "Năm",
     "weekNumber": "T{{week}}",
@@ -1715,6 +1729,7 @@
     "agendaEmpty": "Không có gì được lên lịch",
     "agenda": "Lịch trình",
     "options": {
+      "showFocus": "Hiện phiên tập trung",
       "holidays": "Ngày lễ",
       "holidaysNone": "Không",
       "holidayRegion": "Vùng",

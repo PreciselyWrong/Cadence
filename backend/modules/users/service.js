@@ -147,6 +147,7 @@ function sanitizeCalendarOptions(calendar) {
         'showWeekends',
         'showRepeats',
         'showHabits',
+        'showFocus',
         'showWeekNumbers',
         'showMiniCalendar',
     ].forEach((key) => {

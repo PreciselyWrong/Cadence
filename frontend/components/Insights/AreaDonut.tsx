@@ -106,16 +106,27 @@ const AreaDonut: React.FC<Props> = ({ projects }) => {
                         {paths.map((p, i) => {
                             const isHovered = hovered === i;
                             const rad = ((p.midAngle - 90) * Math.PI) / 180;
-                            const dx = isHovered ? Math.cos(rad) * HOVER_OFFSET : 0;
-                            const dy = isHovered ? Math.sin(rad) * HOVER_OFFSET : 0;
+                            const dx = isHovered
+                                ? Math.cos(rad) * HOVER_OFFSET
+                                : 0;
+                            const dy = isHovered
+                                ? Math.sin(rad) * HOVER_OFFSET
+                                : 0;
                             return (
                                 <path
                                     key={`v-${i}`}
                                     d={p.d}
                                     fill={p.color}
-                                    opacity={hovered === null || isHovered ? 0.9 : 0.3}
+                                    opacity={
+                                        hovered === null || isHovered
+                                            ? 0.9
+                                            : 0.3
+                                    }
                                     transform={`translate(${dx.toFixed(2)}, ${dy.toFixed(2)})`}
-                                    style={{ transition: 'transform 0.2s ease, opacity 0.2s ease' }}
+                                    style={{
+                                        transition:
+                                            'transform 0.2s ease, opacity 0.2s ease',
+                                    }}
                                     pointerEvents="none"
                                 />
                             );

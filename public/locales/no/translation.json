@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dager",
+    "error": "Kunne ikke laste fokusstatistikk",
+    "empty": "Ingen fokusøkter ennå. Start tomaten i topplinjen; fullførte økter telles her.",
+    "total": "Fokustid",
+    "sessions": "Økter",
+    "bestHour": "Mest fokuserte time",
+    "perDay": "Minutter per dag",
+    "perHour": "Minutter per time på dagen",
+    "topTasks": "Oppgaver med mest fokus"
+  },
   "common": {
     "deleting": "Sletter...",
     "save": "Lagre",
@@ -1705,6 +1718,7 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "focusSession": "Fokus",
     "print": "Skriv ut",
     "year": "År",
     "weekNumber": "U{{week}}",
@@ -1718,6 +1732,7 @@
     "agendaEmpty": "Ingenting planlagt",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Vis fokusøkter",
       "holidays": "Helligdager",
       "holidaysNone": "Ingen",
       "holidayRegion": "Region",

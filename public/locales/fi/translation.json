@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Keskittyminen",
+    "lastDays_one": "{{count}} päivä",
+    "lastDays_other": "{{count}} päivää",
+    "error": "Keskittymistilastoja ei voitu ladata",
+    "empty": "Ei vielä keskittymisjaksoja. Käynnistä tomaatti yläpalkista; päättyneet jaksot lasketaan tähän.",
+    "total": "Keskittymisaika",
+    "sessions": "Jaksot",
+    "bestHour": "Keskittynein tunti",
+    "perDay": "Minuuttia päivässä",
+    "perHour": "Minuuttia vuorokauden tunneittain",
+    "topTasks": "Eniten keskitytyt tehtävät"
+  },
   "common": {
     "deleting": "Poistetaan...",
     "save": "Tallenna",
@@ -1704,6 +1717,7 @@
     "done": "Valmis"
   },
   "calendar": {
+    "focusSession": "Keskittyminen",
     "print": "Tulosta",
     "year": "Vuosi",
     "weekNumber": "Vk {{week}}",
@@ -1717,6 +1731,7 @@
     "agendaEmpty": "Ei mitään aikataulutettuna",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Näytä keskittymisjaksot",
       "holidays": "Pyhäpäivät",
       "holidaysNone": "Ei mitään",
       "holidayRegion": "Alue",

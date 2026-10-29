@@ -37,6 +37,7 @@ const {
     CalDAVRemoteCalendar,
     CalendarToken,
     CalendarFeed,
+    FocusSession,
     DailyPlan,
     DailyPlanItem,
     Person,
@@ -190,6 +191,7 @@ async function eraseUserAccount(userId) {
         }
         await DailyPlan.destroy(byUser);
         await CalendarFeed.destroy(byUser);
+        await FocusSession.destroy(byUser);
 
         const calendars = await CalDAVCalendar.findAll({
             where: { user_id: userId },

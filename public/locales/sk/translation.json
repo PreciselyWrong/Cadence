@@ -1,4 +1,17 @@
 {
+    "focusStats": {
+        "title": "Sústredenie",
+        "lastDays_one": "{{count}} deň",
+        "lastDays_other": "{{count}} dní",
+        "error": "Štatistiky sústredenia sa nepodarilo načítať",
+        "empty": "Zatiaľ žiadne sedenia. Spustite paradajku v hornej lište; dokončené sedenia sa počítajú tu.",
+        "total": "Čas sústredenia",
+        "sessions": "Sedenia",
+        "bestHour": "Najsústredenejšia hodina",
+        "perDay": "Minúty za deň",
+        "perHour": "Minúty podľa hodiny dňa",
+        "topTasks": "Úlohy s najväčším sústredením"
+    },
     "common": {
         "deleting": "Odstraňuje sa...",
         "save": "Uložiť",
@@ -1876,6 +1889,7 @@
         "done": "Hotovo"
     },
     "calendar": {
+        "focusSession": "Sústredenie",
         "print": "Tlačiť",
         "year": "Rok",
         "weekNumber": "T{{week}}",
@@ -1889,6 +1903,7 @@
         "agendaEmpty": "Nič naplánované",
         "agenda": "Agenda",
         "options": {
+            "showFocus": "Zobraziť sedenia sústredenia",
             "holidays": "Sviatky",
             "holidaysNone": "Žiadne",
             "holidayRegion": "Región",

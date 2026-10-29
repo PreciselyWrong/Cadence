@@ -52,6 +52,10 @@ import {
 } from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
 import { Holiday, fetchHolidays } from '../utils/holidaysService';
+import {
+    FocusSession,
+    fetchFocusSessions,
+} from '../utils/focusSessionsService';
 import ArrangePanel, { ARRANGE_DRAG_PREFIX } from './Calendar/ArrangePanel';
 import ViewOptions, {
     CalendarOptions,
@@ -105,6 +109,16 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         allDay: !!event.all_day,
     };
 };
+
+const focusToEvent = (session: FocusSession, label: string): CalendarEvent => ({
+    id: `focus-${session.uid}`,
+    title: session.task ? `${label}: ${session.task.name}` : label,
+    start: new Date(session.started_at),
+    end: new Date(session.ended_at),
+    type: 'event',
+    color: '#f97316',
+    readOnly: true,
+});
 
 const holidayToEvent = (holiday: Holiday): CalendarEvent => {
     const start = localDate(holiday.date);
@@ -243,6 +257,22 @@ const Calendar: React.FC = () => {
         [allTasks, options]
     );
 
+    // Finished focus sessions in the loaded window.
+    const [focusSessions, setFocusSessions] = useState<FocusSession[]>([]);
+    useEffect(() => {
+        if (!options.showFocus) {
+            setFocusSessions([]);
+            return;
+        }
+        let cancelled = false;
+        fetchFocusSessions(windowStart, windowEnd)
+            .then((list) => !cancelled && setFocusSessions(list || []))
+            .catch(() => !cancelled && setFocusSessions([]));
+        return () => {
+            cancelled = true;
+        };
+    }, [options.showFocus, windowStart, windowEnd]);
+
     // Public holidays of the chosen country for the loaded window.
     const [holidays, setHolidays] = useState<Holiday[]>([]);
     useEffect(() => {
@@ -261,7 +291,7 @@ const Calendar: React.FC = () => {
                 ? format(endOfYear(currentDate), 'yyyy-MM-dd')
                 : windowEnd
         )
-            .then((list) => !cancelled && setHolidays(list))
+            .then((list) => !cancelled && setHolidays(list || []))
             .catch(() => !cancelled && setHolidays([]));
         return () => {
             cancelled = true;
@@ -279,6 +309,9 @@ const Calendar: React.FC = () => {
     );
     const calendarEvents = [
         ...holidays.map(holidayToEvent),
+        ...focusSessions.map((session) =>
+            focusToEvent(session, t('calendar.focusSession', 'Focus'))
+        ),
         ...events,
         ...feedEvents
             .filter((event) => shownFeedUids.has(event.feed_uid))

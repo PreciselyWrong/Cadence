@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "集中",
+    "lastDays_one": "{{count}}日",
+    "lastDays_other": "{{count}}日",
+    "error": "集中の統計を読み込めませんでした",
+    "empty": "まだ集中セッションがありません。上部バーのトマトタイマーを開始すると、終了したセッションがここに記録されます。",
+    "total": "集中時間",
+    "sessions": "セッション",
+    "bestHour": "最も集中した時間帯",
+    "perDay": "1日あたりの分",
+    "perHour": "時間帯別の分",
+    "topTasks": "最も集中したタスク"
+  },
   "common": {
     "deleting": "削除中...",
     "save": "保存",
@@ -1634,6 +1647,7 @@
     "startAfterDueError": "開始日は期限より後にできません"
   },
   "calendar": {
+    "focusSession": "集中",
     "print": "印刷",
     "year": "年",
     "weekNumber": "第{{week}}週",
@@ -1647,6 +1661,7 @@
     "agendaEmpty": "予定はありません",
     "agenda": "予定リスト",
     "options": {
+      "showFocus": "集中セッションを表示",
       "holidays": "祝日",
       "holidaysNone": "なし",
       "holidayRegion": "地域",

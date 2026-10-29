@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Foco",
+    "lastDays_one": "{{count}} dia",
+    "lastDays_other": "{{count}} dias",
+    "error": "Não foi possível carregar as estatísticas de foco",
+    "empty": "Ainda não há sessões de foco. Inicie o tomate na barra superior; as sessões concluídas são contadas aqui.",
+    "total": "Tempo de foco",
+    "sessions": "Sessões",
+    "bestHour": "Hora de maior foco",
+    "perDay": "Minutos por dia",
+    "perHour": "Minutos por hora do dia",
+    "topTasks": "Tarefas com mais foco"
+  },
   "common": {
     "deleting": "A eliminar...",
     "save": "Salvar",
@@ -1706,6 +1719,7 @@
     "done": "Concluído"
   },
   "calendar": {
+    "focusSession": "Foco",
     "print": "Imprimir",
     "year": "Ano",
     "weekNumber": "S{{week}}",
@@ -1719,6 +1733,7 @@
     "agendaEmpty": "Nada agendado",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Mostrar sessões de foco",
       "holidays": "Feriados",
       "holidaysNone": "Nenhum",
       "holidayRegion": "Região",

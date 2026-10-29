@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dagar",
+    "error": "Kunde inte läsa in fokusstatistik",
+    "empty": "Inga fokuspass än. Starta tomaten i toppfältet; avslutade pass räknas här.",
+    "total": "Fokustid",
+    "sessions": "Pass",
+    "bestHour": "Mest fokuserade timme",
+    "perDay": "Minuter per dag",
+    "perHour": "Minuter per timme på dagen",
+    "topTasks": "Uppgifter med mest fokus"
+  },
   "common": {
     "deleting": "Tar bort...",
     "save": "Spara",
@@ -1704,6 +1717,7 @@
     "done": "Klar"
   },
   "calendar": {
+    "focusSession": "Fokus",
     "print": "Skriv ut",
     "year": "År",
     "weekNumber": "V{{week}}",
@@ -1717,6 +1731,7 @@
     "agendaEmpty": "Inget planerat",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Visa fokuspass",
       "holidays": "Helgdagar",
       "holidaysNone": "Inga",
       "holidayRegion": "Region",

@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} day",
+    "lastDays_other": "{{count}} days",
+    "error": "Could not load focus statistics",
+    "empty": "No focus sessions yet. Start the tomato timer in the top bar; finished sessions are counted here.",
+    "total": "Time focused",
+    "sessions": "Sessions",
+    "bestHour": "Most focused hour",
+    "perDay": "Minutes per day",
+    "perHour": "Minutes by hour of the day",
+    "topTasks": "Tasks focused on most"
+  },
   "common": {
     "deleting": "Deleting...",
     "save": "Save",
@@ -1969,6 +1982,7 @@
     "done": "Done"
   },
   "calendar": {
+    "focusSession": "Focus",
     "print": "Print",
     "year": "Year",
     "weekNumber": "W{{week}}",
@@ -1982,6 +1996,7 @@
     "agendaEmpty": "Nothing scheduled",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Show focus sessions",
       "holidays": "Holidays",
       "holidaysNone": "None",
       "holidayRegion": "Region",

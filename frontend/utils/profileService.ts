@@ -33,6 +33,7 @@ interface Profile {
             showWeekends?: boolean;
             showRepeats?: boolean;
             showHabits?: boolean;
+            showFocus?: boolean;
             showWeekNumbers?: boolean;
             showMiniCalendar?: boolean;
             colorBy?: 'default' | 'project' | 'priority' | 'tag';

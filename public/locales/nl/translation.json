@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dagen",
+    "error": "Focusstatistieken konden niet worden geladen",
+    "empty": "Nog geen focussessies. Start de tomaat in de bovenbalk; afgeronde sessies worden hier geteld.",
+    "total": "Focustijd",
+    "sessions": "Sessies",
+    "bestHour": "Meest gefocuste uur",
+    "perDay": "Minuten per dag",
+    "perHour": "Minuten per uur van de dag",
+    "topTasks": "Taken met de meeste focus"
+  },
   "common": {
     "deleting": "Verwijderen...",
     "save": "Opslaan",
@@ -1704,6 +1717,7 @@
     "done": "Klaar"
   },
   "calendar": {
+    "focusSession": "Focus",
     "print": "Afdrukken",
     "year": "Jaar",
     "weekNumber": "W{{week}}",
@@ -1717,6 +1731,7 @@
     "agendaEmpty": "Niets gepland",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Focussessies tonen",
       "holidays": "Feestdagen",
       "holidaysNone": "Geen",
       "holidayRegion": "Regio",

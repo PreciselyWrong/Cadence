@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} jour",
+    "lastDays_other": "{{count}} jours",
+    "error": "Impossible de charger les statistiques de focus",
+    "empty": "Aucune session de focus pour l’instant. Lancez la tomate dans la barre du haut ; les sessions terminées sont comptées ici.",
+    "total": "Temps de focus",
+    "sessions": "Sessions",
+    "bestHour": "Heure la plus concentrée",
+    "perDay": "Minutes par jour",
+    "perHour": "Minutes par heure de la journée",
+    "topTasks": "Tâches les plus travaillées"
+  },
   "common": {
     "deleting": "Suppression...",
     "save": "Enregistrer",
@@ -1706,6 +1719,7 @@
     "done": "Fait"
   },
   "calendar": {
+    "focusSession": "Focus",
     "print": "Imprimer",
     "year": "Année",
     "weekNumber": "S{{week}}",
@@ -1719,6 +1733,7 @@
     "agendaEmpty": "Rien de prévu",
     "agenda": "Agenda",
     "options": {
+      "showFocus": "Afficher les sessions de focus",
       "holidays": "Jours fériés",
       "holidaysNone": "Aucun",
       "holidayRegion": "Région",

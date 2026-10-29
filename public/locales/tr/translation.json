@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Odak",
+    "lastDays_one": "{{count}} gün",
+    "lastDays_other": "{{count}} gün",
+    "error": "Odak istatistikleri yüklenemedi",
+    "empty": "Henüz odak oturumu yok. Üst çubuktaki domatesi başlat; biten oturumlar burada sayılır.",
+    "total": "Odak süresi",
+    "sessions": "Oturumlar",
+    "bestHour": "En odaklı saat",
+    "perDay": "Günlük dakika",
+    "perHour": "Günün saatine göre dakika",
+    "topTasks": "En çok odaklanılan görevler"
+  },
   "common": {
     "deleting": "Siliniyor...",
     "save": "Kaydet",
@@ -1704,6 +1717,7 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "focusSession": "Odak",
     "print": "Yazdır",
     "year": "Yıl",
     "weekNumber": "H{{week}}",
@@ -1717,6 +1731,7 @@
     "agendaEmpty": "Planlanmış bir şey yok",
     "agenda": "Ajanda",
     "options": {
+      "showFocus": "Odak oturumlarını göster",
       "holidays": "Resmî tatiller",
       "holidaysNone": "Yok",
       "holidayRegion": "Bölge",
