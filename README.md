@@ -52,13 +52,23 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 |---|---|---|
 | Timeline | Bars coloured by status | Also **colour by priority or tag** |
 
+### Tasks, tags and boards
+
+| | Upstream | This fork |
+|---|---|---|
+| Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
+| Tags | Flat list | **Nested tags** (one level of tag folders); filtering by a parent also matches its children |
+| Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, reorder, delete columns, drag tasks between them |
+| Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects) |
+| Period summary | — | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template |
+
 ### Under the hood
 
-- New tables / columns: `focus_sessions`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
-- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
+- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome).
-- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline](docs/06-projects.md#timeline-view).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
 
 ---
 
