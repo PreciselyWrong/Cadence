@@ -1,0 +1,340 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { isTaskCompleted } from '../../constants/taskStatus';
+import { CalendarColorBy } from './taskEvents';
+import {
+    HolidayPlace,
+    fetchHolidayCountries,
+    fetchHolidayRegions,
+} from '../../utils/holidaysService';
+
+export interface CalendarOptions {
+    showCompleted: boolean;
+    showWeekends: boolean;
+    showRepeats: boolean;
+    showHabits: boolean;
+    showFocus: boolean;
+    showWeekNumbers: boolean;
+    showMiniCalendar: boolean;
+    colorBy: CalendarColorBy;
+    multiDayCount: number;
+    holidayCountry: string;
+    holidayRegion: string;
+}
+
+export const DEFAULT_CALENDAR_OPTIONS: CalendarOptions = {
+    showCompleted: true,
+    showWeekends: true,
+    showRepeats: true,
+    showHabits: true,
+    showFocus: true,
+    showWeekNumbers: false,
+    showMiniCalendar: false,
+    colorBy: 'default',
+    multiDayCount: 3,
+    holidayCountry: '',
+    holidayRegion: '',
+};
+
+export const MULTI_DAY_COUNTS = [2, 3, 4, 5, 6, 7];
+
+const COLOR_BY: CalendarColorBy[] = ['default', 'project', 'priority', 'tag'];
+
+// Reads ui_settings.calendar, keeping the default for anything missing.
+export const readCalendarOptions = (saved: unknown): CalendarOptions => {
+    const value = (saved && typeof saved === 'object' ? saved : {}) as Record<
+        string,
+        unknown
+    >;
+    const flag = (key: keyof CalendarOptions) =>
+        typeof value[key] === 'boolean'
+            ? (value[key] as boolean)
+            : (DEFAULT_CALENDAR_OPTIONS[key] as boolean);
+    return {
+        showCompleted: flag('showCompleted'),
+        showWeekends: flag('showWeekends'),
+        showRepeats: flag('showRepeats'),
+        showHabits: flag('showHabits'),
+        showFocus: flag('showFocus'),
+        showWeekNumbers: flag('showWeekNumbers'),
+        showMiniCalendar: flag('showMiniCalendar'),
+        colorBy: COLOR_BY.includes(value.colorBy as CalendarColorBy)
+            ? (value.colorBy as CalendarColorBy)
+            : 'default',
+        multiDayCount: MULTI_DAY_COUNTS.includes(value.multiDayCount as number)
+            ? (value.multiDayCount as number)
+            : DEFAULT_CALENDAR_OPTIONS.multiDayCount,
+        holidayCountry:
+            typeof value.holidayCountry === 'string'
+                ? value.holidayCountry
+                : '',
+        holidayRegion:
+            typeof value.holidayRegion === 'string' ? value.holidayRegion : '',
+    };
+};
+
+// The tasks the calendar draws under these options.
+export const visibleTasks = <
+    T extends {
+        status?: any;
+        completed_at?: string | null;
+        is_virtual_occurrence?: boolean;
+        habit_mode?: boolean;
+    },
+>(
+    tasks: T[],
+    options: CalendarOptions
+): T[] =>
+    tasks.filter((task) => {
+        // A habit shows through its check-in days, never as a task block.
+        if (task.habit_mode) {
+            return options.showHabits && !!task.is_virtual_occurrence;
+        }
+        if (!options.showRepeats && task.is_virtual_occurrence) return false;
+        if (
+            !options.showCompleted &&
+            (task.completed_at || isTaskCompleted(task.status))
+        ) {
+            return false;
+        }
+        return true;
+    });
+
+export const isWeekend = (day: Date) =>
+    day.getDay() === 0 || day.getDay() === 6;
+
+// Country (and region) whose public holidays the calendar marks.
+const HolidayPicker: React.FC<{
+    country: string;
+    region: string;
+    onChange: (country: string, region: string) => void;
+}> = ({ country, region, onChange }) => {
+    const { t } = useTranslation();
+    const [countries, setCountries] = useState<HolidayPlace[]>([]);
+    const [regions, setRegions] = useState<HolidayPlace[]>([]);
+
+    useEffect(() => {
+        fetchHolidayCountries()
+            .then(setCountries)
+            .catch(() => setCountries([]));
+    }, []);
+
+    useEffect(() => {
+        if (!country) {
+            setRegions([]);
+            return;
+        }
+        fetchHolidayRegions(country)
+            .then(setRegions)
+            .catch(() => setRegions([]));
+    }, [country]);
+
+    const selectClass =
+        'max-w-[8rem] rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1';
+
+    return (
+        <>
+            <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                {t('calendar.options.holidays', 'Holidays')}
+                <select
+                    value={country}
+                    onChange={(e) => onChange(e.target.value, '')}
+                    className={selectClass}
+                >
+                    <option value="">
+                        {t('calendar.options.holidaysNone', 'None')}
+                    </option>
+                    {country && !countries.some((c) => c.code === country) && (
+                        <option value={country}>{country}</option>
+                    )}
+                    {countries.map((c) => (
+                        <option key={c.code} value={c.code}>
+                            {c.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            {regions.length > 0 && (
+                <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                    {t('calendar.options.holidayRegion', 'Region')}
+                    <select
+                        value={region}
+                        onChange={(e) => onChange(country, e.target.value)}
+                        className={selectClass}
+                    >
+                        <option value="">
+                            {t(
+                                'calendar.options.holidayRegionAll',
+                                'Whole country'
+                            )}
+                        </option>
+                        {regions.map((r) => (
+                            <option key={r.code} value={r.code}>
+                                {r.name}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+            )}
+        </>
+    );
+};
+
+interface ViewOptionsProps {
+    options: CalendarOptions;
+    onChange: (options: CalendarOptions) => void;
+}
+
+const ViewOptions: React.FC<ViewOptionsProps> = ({ options, onChange }) => {
+    const { t } = useTranslation();
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const close = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node))
+                setOpen(false);
+        };
+        document.addEventListener('mousedown', close);
+        return () => document.removeEventListener('mousedown', close);
+    }, [open]);
+
+    const toggles: {
+        key:
+            | 'showCompleted'
+            | 'showWeekends'
+            | 'showRepeats'
+            | 'showWeekNumbers'
+            | 'showMiniCalendar'
+            | 'showHabits'
+            | 'showFocus';
+        label: string;
+    }[] = [
+        {
+            key: 'showCompleted',
+            label: t('calendar.options.showCompleted', 'Show completed'),
+        },
+        {
+            key: 'showWeekends',
+            label: t('calendar.options.showWeekends', 'Show weekends'),
+        },
+        {
+            key: 'showRepeats',
+            label: t('calendar.options.showRepeats', 'Show all repeats'),
+        },
+        {
+            key: 'showHabits',
+            label: t('calendar.options.showHabits', 'Show habits'),
+        },
+        {
+            key: 'showFocus',
+            label: t('calendar.options.showFocus', 'Show focus sessions'),
+        },
+        {
+            key: 'showWeekNumbers',
+            label: t('calendar.options.showWeekNumbers', 'Show week numbers'),
+        },
+        {
+            key: 'showMiniCalendar',
+            label: t('calendar.options.showMiniCalendar', 'Show mini calendar'),
+        },
+    ];
+
+    return (
+        <div className="relative" ref={ref}>
+            <button
+                type="button"
+                onClick={() => setOpen((value) => !value)}
+                aria-expanded={open}
+                aria-label={t('calendar.options.title', 'View options')}
+                title={t('calendar.options.title', 'View options')}
+                className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
+            >
+                <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+            </button>
+            {open && (
+                <div
+                    role="dialog"
+                    aria-label={t('calendar.options.title', 'View options')}
+                    className="absolute right-0 z-30 mt-2 w-60 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-lg p-3 space-y-2"
+                >
+                    {toggles.map(({ key, label }) => (
+                        <label
+                            key={key}
+                            className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200"
+                        >
+                            {label}
+                            <input
+                                type="checkbox"
+                                checked={options[key]}
+                                onChange={(e) =>
+                                    onChange({
+                                        ...options,
+                                        [key]: e.target.checked,
+                                    })
+                                }
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                            />
+                        </label>
+                    ))}
+                    <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                        {t('calendar.options.colorBy', 'Colour by')}
+                        <select
+                            value={options.colorBy}
+                            onChange={(e) =>
+                                onChange({
+                                    ...options,
+                                    colorBy: e.target.value as CalendarColorBy,
+                                })
+                            }
+                            className="rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1"
+                        >
+                            {COLOR_BY.map((key) => (
+                                <option key={key} value={key}>
+                                    {t(`calendar.options.colorBy_${key}`, key)}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <HolidayPicker
+                        country={options.holidayCountry}
+                        region={options.holidayRegion}
+                        onChange={(holidayCountry, holidayRegion) =>
+                            onChange({
+                                ...options,
+                                holidayCountry,
+                                holidayRegion,
+                            })
+                        }
+                    />
+                    <label className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-200">
+                        {t(
+                            'calendar.options.multiDayCount',
+                            'Days in multi-day view'
+                        )}
+                        <select
+                            value={options.multiDayCount}
+                            onChange={(e) =>
+                                onChange({
+                                    ...options,
+                                    multiDayCount: Number(e.target.value),
+                                })
+                            }
+                            className="rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-1.5 py-1"
+                        >
+                            {MULTI_DAY_COUNTS.map((count) => (
+                                <option key={count} value={count}>
+                                    {count}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ViewOptions;

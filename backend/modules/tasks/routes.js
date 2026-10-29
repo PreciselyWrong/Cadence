@@ -10,6 +10,7 @@ const orderRouter = require('./order/routes');
 const { Task, TaskAttachment, Project } = require('../../models');
 const { numericIdParam } = require('../../middleware/numericIdParam');
 const taskRepository = require('./repository');
+const projectSectionsRepository = require('../project-sections/repository');
 const {
     resetQueryCounter,
     getQueryStats,
@@ -177,6 +178,74 @@ function expandRecurringTasks(
     return expandedTasks;
 }
 
+// Calendar: keeps every task as stored and adds the later occurrences of
+// each open recurring parent up to `endDay` (YYYY-MM-DD, user timezone).
+// Days that already have a generated instance are skipped.
+function expandCalendarOccurrences(
+    tasks,
+    endDay,
+    userTimezone = 'UTC',
+    habitDays = new Map()
+) {
+    const moment = require('moment-timezone');
+    const localDay = (date) =>
+        typeof date === 'string'
+            ? date.slice(0, 10)
+            : moment.utc(date).tz(userTimezone).format('YYYY-MM-DD');
+    const instanceDays = new Set(
+        tasks
+            .filter((t) => t.recurring_parent_id && t.due_date)
+            .map((t) => `${t.recurring_parent_id}:${localDay(t.due_date)}`)
+    );
+    const expanded = [];
+
+    tasks.forEach((task) => {
+        expanded.push(task);
+        // Habits add a whole-day item on each day they ask for a check-in.
+        if (task.habit_mode && !task.recurring_parent_id) {
+            (habitDays.get(task.id) || []).forEach((day, index) => {
+                if (day > endDay) return;
+                expanded.push({
+                    ...(task.toJSON ? task.toJSON() : task),
+                    due_date: day,
+                    due_has_time: false,
+                    start_date: null,
+                    is_virtual_occurrence: true,
+                    occurrence_index: index,
+                    virtual_id: `${task.id}_habit_${index}`,
+                });
+            });
+            return;
+        }
+        const isOpenParent =
+            task.recurrence_type &&
+            task.recurrence_type !== 'none' &&
+            !task.recurring_parent_id &&
+            !task.habit_mode &&
+            task.due_date &&
+            ![2, 3, 5, 'done', 'archived', 'cancelled'].includes(task.status);
+        if (!isOpenParent) return;
+
+        // The first occurrence is the parent's own due date.
+        calculateVirtualOccurrences(task, 100, task.due_date, userTimezone)
+            .slice(1)
+            .forEach((occurrence, index) => {
+                const day = localDay(occurrence.due_date);
+                if (day > endDay) return;
+                if (instanceDays.has(`${task.id}:${day}`)) return;
+                expanded.push({
+                    ...(task.toJSON ? task.toJSON() : task),
+                    due_date: occurrence.due_date,
+                    is_virtual_occurrence: true,
+                    occurrence_index: index + 1,
+                    virtual_id: `${task.id}_occurrence_${index + 1}`,
+                });
+            });
+    });
+
+    return expanded;
+}
+
 router.get('/tasks', async (req, res) => {
     const startTime = Date.now();
     resetQueryCounter();
@@ -280,6 +349,38 @@ router.get('/tasks', async (req, res) => {
                 tasks,
                 days,
                 req.query.status,
+                safeTimezone,
+                habitDays
+            );
+        }
+
+        if (
+            type === 'calendar' &&
+            /^\d{4}-\d{2}-\d{2}$/.test(req.query.end || '')
+        ) {
+            const moment = require('moment-timezone');
+            const safeTimezone = getSafeTimezone(timezone);
+            // Habit check-ins from today up to the end day (at most 62 days).
+            const daysAhead = Math.min(
+                62,
+                Math.max(
+                    0,
+                    moment
+                        .tz(req.query.end, safeTimezone)
+                        .diff(moment.tz(safeTimezone).startOf('day'), 'days') +
+                        1
+                )
+            );
+            const habitDays = daysAhead
+                ? await habitService.dueDays(
+                      tasks,
+                      await habitService.getUserContext(userId),
+                      daysAhead
+                  )
+                : new Map();
+            tasks = expandCalendarOccurrences(
+                tasks,
+                req.query.end,
                 safeTimezone,
                 habitDays
             );
@@ -783,6 +884,46 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
             } else {
                 taskAttributes.goal_id = null;
             }
+        }
+
+        // Board column. It must belong to the task's (new) project, and a
+        // task that changes project leaves its old project's column.
+        const finalProjectId =
+            taskAttributes.project_id !== undefined
+                ? taskAttributes.project_id
+                : task.project_id;
+        if (req.body.section_uid !== undefined) {
+            const sectionUid = req.body.section_uid;
+            if (sectionUid) {
+                const section = await projectSectionsRepository.findByUid(
+                    String(sectionUid)
+                );
+                if (
+                    !section ||
+                    !finalProjectId ||
+                    section.project_id !== finalProjectId
+                ) {
+                    return res.status(400).json({
+                        error: "Section does not belong to the task's project.",
+                    });
+                }
+                taskAttributes.section_id = section.id;
+            } else {
+                taskAttributes.section_id = null;
+            }
+            // A card moved to another column goes to its end.
+            if (
+                (taskAttributes.section_id || null) !==
+                (task.section_id || null)
+            ) {
+                taskAttributes.section_position = null;
+            }
+        } else if (
+            task.section_id &&
+            (finalProjectId || null) !== (task.project_id || null)
+        ) {
+            taskAttributes.section_id = null;
+            taskAttributes.section_position = null;
         }
 
         if (taskAttributes.assigned_to) {

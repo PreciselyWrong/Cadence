@@ -54,7 +54,23 @@ class NotesRepository extends BaseRepository {
 
         const includeClause = [
             tagFilter
-                ? { ...TAG_INCLUDE, where: { name: tagFilter }, required: true }
+                ? {
+                      ...TAG_INCLUDE,
+                      // A parent tag also matches notes carrying its children.
+                      where: {
+                          [Op.or]: [
+                              { name: tagFilter },
+                              {
+                                  parent_id: {
+                                      [Op.in]: Tag.sequelize.literal(
+                                          `(SELECT parent_tags.id FROM tags AS parent_tags WHERE parent_tags.name = ${Tag.sequelize.escape(tagFilter)})`
+                                      ),
+                                  },
+                              },
+                          ],
+                      },
+                      required: true,
+                  }
                 : TAG_INCLUDE,
             PROJECT_INCLUDE,
         ];

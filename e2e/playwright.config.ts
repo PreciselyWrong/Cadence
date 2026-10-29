@@ -8,6 +8,7 @@ const slowMoMs = Number(process.env.E2E_SLOWMO || '0') || 0;
 
 export default defineConfig({
   testDir: './tests',
+  globalSetup: './global-setup.ts',
   timeout: 30_000, // Reduced from 60s to 30s
   expect: { timeout: 5_000 }, // Reduced from 10s to 5s
   fullyParallel: true,

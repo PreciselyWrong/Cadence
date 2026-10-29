@@ -23,6 +23,19 @@ function sanitizeFeatures(raw) {
     return result;
 }
 
+const SUMMARY_GROUPINGS = ['project', 'day', 'status'];
+
+// The Summary page template: a saved grouping and include-open choice.
+function sanitizeSummary(raw) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    return {
+        group_by: SUMMARY_GROUPINGS.includes(raw.group_by)
+            ? raw.group_by
+            : 'project',
+        include_open: raw.include_open === true,
+    };
+}
+
 function maskAiSettings(user) {
     const encrypted = user.ai_api_key || '';
     let plaintext = '';
@@ -131,6 +144,129 @@ function sanitizeFocus(focus) {
     if (areaUid) clean.area_uid = areaUid;
     if (projectUid) clean.project_uid = projectUid;
     if (tags.length > 0) clean.tags = tags;
+    return clean;
+}
+
+const { isCountry, isRegion } = require('../holidays/service');
+
+const CALENDAR_COLOR_BY = ['default', 'project', 'priority', 'tag'];
+
+// Calendar page View options: known switches only.
+function sanitizeCalendarOptions(calendar) {
+    const clean = {};
+    if (!calendar || typeof calendar !== 'object') return clean;
+    [
+        'showCompleted',
+        'showWeekends',
+        'showRepeats',
+        'showHabits',
+        'showFocus',
+        'showWeekNumbers',
+        'showMiniCalendar',
+    ].forEach((key) => {
+        if (typeof calendar[key] === 'boolean') clean[key] = calendar[key];
+    });
+    if (CALENDAR_COLOR_BY.includes(calendar.colorBy)) {
+        clean.colorBy = calendar.colorBy;
+    }
+    // Public holidays: a country code, optionally a region; '' turns them off.
+    if (calendar.holidayCountry === '' || isCountry(calendar.holidayCountry)) {
+        clean.holidayCountry = calendar.holidayCountry;
+        clean.holidayRegion = '';
+    }
+    if (calendar.holidayRegion === '' || isRegion(calendar.holidayRegion)) {
+        clean.holidayRegion = calendar.holidayRegion;
+    }
+    if (
+        Number.isInteger(calendar.multiDayCount) &&
+        calendar.multiDayCount >= 2 &&
+        calendar.multiDayCount <= 7
+    ) {
+        clean.multiDayCount = calendar.multiDayCount;
+    }
+    return clean;
+}
+
+// Custom Eisenhower matrices. The built-in matrix (id 'default') lives in
+// the client and is never stored.
+const MAX_MATRICES = 10;
+const MAX_MATRIX_NAME = 60;
+const MAX_RULE_ITEMS = 20;
+const MATRIX_PRIORITIES = ['none', 'low', 'medium', 'high'];
+const MATRIX_DUE_TYPES = ['any', 'overdue', 'today', 'within', 'none'];
+
+function cleanName(value, fallback) {
+    const name = typeof value === 'string' ? value.trim() : '';
+    return (name || fallback).slice(0, MAX_MATRIX_NAME);
+}
+
+function cleanStringList(value, lower) {
+    if (!Array.isArray(value)) return [];
+    const out = [];
+    value.forEach((item) => {
+        if (typeof item !== 'string') return;
+        let v = item.trim().slice(0, 100);
+        if (lower) v = v.toLowerCase();
+        if (v && !out.includes(v)) out.push(v);
+    });
+    return out.slice(0, MAX_RULE_ITEMS);
+}
+
+function sanitizeMatrixRule(rule) {
+    const r =
+        rule && typeof rule === 'object' && !Array.isArray(rule) ? rule : {};
+    const priorities = MATRIX_PRIORITIES.filter(
+        (p) => Array.isArray(r.priorities) && r.priorities.includes(p)
+    );
+    const rawDue = r.due && typeof r.due === 'object' ? r.due : {};
+    const due = {
+        type: MATRIX_DUE_TYPES.includes(rawDue.type) ? rawDue.type : 'any',
+    };
+    if (due.type === 'within') {
+        const days = Number(rawDue.days);
+        due.days =
+            Number.isInteger(days) && days >= 1 && days <= 365 ? days : 7;
+    }
+    return {
+        priorities,
+        due,
+        tags: cleanStringList(r.tags, true),
+        projects: cleanStringList(r.projects, false),
+    };
+}
+
+function sanitizeMatrices(matrices) {
+    if (matrices === null) return [];
+    if (!Array.isArray(matrices)) {
+        throw new ValidationError('Matrices must be a list.');
+    }
+    if (matrices.length > MAX_MATRICES) {
+        throw new ValidationError(
+            `You can keep at most ${MAX_MATRICES} matrices.`
+        );
+    }
+    const seen = new Set();
+    const clean = [];
+    matrices.forEach((m) => {
+        if (!m || typeof m !== 'object' || Array.isArray(m)) return;
+        const id = typeof m.id === 'string' ? m.id.trim().slice(0, 64) : '';
+        if (!id || id === 'default' || seen.has(id)) return;
+        if (!Array.isArray(m.quadrants) || m.quadrants.length !== 4) {
+            throw new ValidationError('A matrix needs exactly 4 quadrants.');
+        }
+        seen.add(id);
+        clean.push({
+            id,
+            name: cleanName(m.name, 'Matrix'),
+            quadrants: m.quadrants.map((q, i) => {
+                const quad = q && typeof q === 'object' ? q : {};
+                return {
+                    name: cleanName(quad.name, `Q${i + 1}`),
+                    rule: sanitizeMatrixRule(quad.rule),
+                };
+            }),
+        });
+    });
     return clean;
 }
 
@@ -298,6 +434,9 @@ class UsersService {
             const kept = {};
             if (current?.planning) kept.planning = current.planning;
             if (current?.focus !== undefined) kept.focus = current.focus;
+            if (current?.matrices !== undefined)
+                kept.matrices = current.matrices;
+            if (current?.summary !== undefined) kept.summary = current.summary;
             allowedUpdates.ui_settings =
                 ui_settings && Object.keys(kept).length > 0
                     ? { ...ui_settings, ...kept }
@@ -750,7 +889,15 @@ class UsersService {
             throw new NotFoundError('User not found.');
         }
 
-        const { project, appearance, inbox, focus } = data;
+        const {
+            project,
+            appearance,
+            inbox,
+            focus,
+            calendar,
+            matrices,
+            summary,
+        } = data;
 
         const currentSettings =
             user.ui_settings && typeof user.ui_settings === 'object'
@@ -793,6 +940,21 @@ class UsersService {
 
         if (focus !== undefined) {
             newSettings.focus = sanitizeFocus(focus);
+        }
+
+        if (calendar !== undefined) {
+            newSettings.calendar = {
+                ...(currentSettings.calendar || {}),
+                ...sanitizeCalendarOptions(calendar),
+            };
+        }
+
+        if (matrices !== undefined) {
+            newSettings.matrices = sanitizeMatrices(matrices);
+        }
+
+        if (summary !== undefined) {
+            newSettings.summary = sanitizeSummary(summary);
         }
 
         await usersRepository.update(user, { ui_settings: newSettings });

@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Tập trung",
+    "lastDays_one": "{{count}} ngày",
+    "lastDays_other": "{{count}} ngày",
+    "error": "Không thể tải thống kê tập trung",
+    "empty": "Chưa có phiên tập trung. Bật đồng hồ Pomodoro ở thanh trên; các phiên hoàn thành được tính ở đây.",
+    "total": "Thời gian tập trung",
+    "sessions": "Phiên",
+    "bestHour": "Giờ tập trung nhất",
+    "perDay": "Phút mỗi ngày",
+    "perHour": "Phút theo giờ trong ngày",
+    "topTasks": "Công việc tập trung nhiều nhất"
+  },
   "common": {
     "deleting": "Đang xóa...",
     "save": "Lưu",
@@ -100,7 +113,8 @@
     "telegramProblem": "Sự cố kết nối Telegram",
     "resize": "Đổi kích thước thanh bên",
     "collapseViews": "Thu gọn danh sách chế độ xem",
-    "expandViews": "Mở rộng danh sách chế độ xem"
+    "expandViews": "Mở rộng danh sách chế độ xem",
+    "summary": "Tóm tắt"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -220,7 +234,43 @@
       "important": "Quan trọng",
       "notImportant": "Không quan trọng",
       "dropHere": "Thả vào đây",
-      "urgentHint": "Gán nhãn cho các nhiệm vụ với 'khẩn cấp' để đánh dấu chúng là khẩn cấp"
+      "urgentHint": "Gán nhãn cho các nhiệm vụ với 'khẩn cấp' để đánh dấu chúng là khẩn cấp",
+      "matrix": {
+        "picker": "Ma trận",
+        "default": "Eisenhower (mặc định)",
+        "new": "Ma trận mới",
+        "newName": "Ma trận mới",
+        "limit": "Bạn có thể giữ tối đa {{count}} ma trận.",
+        "editTitle": "Sửa ma trận",
+        "name": "Tên ma trận",
+        "quadrant": "Ô {{number}}",
+        "quadrantName": "Tên ô",
+        "priorities": "Độ ưu tiên (bất kỳ)",
+        "priority": {
+          "none": "Không",
+          "low": "Thấp",
+          "medium": "Trung bình",
+          "high": "Cao"
+        },
+        "due": "Hạn chót",
+        "dueType": {
+          "any": "Bất kỳ",
+          "overdue": "Quá hạn",
+          "today": "Hôm nay",
+          "within": "Trong N ngày",
+          "none": "Không có ngày"
+        },
+        "days": "Ngày",
+        "tags": "Thẻ (bất kỳ, cách nhau bằng dấu phẩy)",
+        "projects": "Dự án (tùy chọn)",
+        "firstMatchHint": "Mỗi công việc nằm ở ô đầu tiên có quy tắc phù hợp. Lựa chọn trống khớp với mọi thứ.",
+        "deleteTitle": "Xóa ma trận",
+        "deleteConfirm": "Xóa ma trận \"{{name}}\"? Công việc của bạn không thay đổi."
+      },
+      "dropRefusedPriority": "Ô này cho phép nhiều mức ưu tiên nên không thể kéo công việc vào đây.",
+      "dropRefusedDue": "Hạn của công việc không hợp với ô này; hãy đổi ngày.",
+      "dropRefusedProject": "Dự án của công việc không hợp với ô này.",
+      "dropRefusedEarlier": "Sau khi đổi, công việc vẫn rơi vào một ô trước đó."
     },
     "kanban": {
       "title": "Bảng Kanban",
@@ -281,6 +331,18 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Đăng ký công việc của bạn",
+      "description": "Một địa chỉ riêng hiển thị các công việc còn mở có hạn trong Google Calendar, Apple Calendar hoặc Outlook. Ai có địa chỉ đều đọc được các công việc đó.",
+      "address": "Địa chỉ nguồn",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép địa chỉ",
+      "once": "Hãy sao chép ngay: chỉ hiển thị một lần. Địa chỉ mới sẽ vô hiệu địa chỉ cũ.",
+      "create": "Tạo địa chỉ",
+      "rotate": "Tạo địa chỉ mới",
+      "disable": "Tắt",
+      "error": "Không thể cập nhật nguồn công việc"
+    },
     "settings": "Cài đặt hồ sơ",
     "language": "Ngôn ngữ",
     "theme": "Chủ đề",
@@ -1397,7 +1459,11 @@
     "noStartDate": "Không có ngày bắt đầu",
     "startDateUpdated": "Đã cập nhật ngày bắt đầu",
     "startDateUpdateError": "Không thể cập nhật ngày bắt đầu",
-    "startAfterDueError": "Ngày bắt đầu không thể sau hạn chót"
+    "startAfterDueError": "Ngày bắt đầu không thể sau hạn chót",
+    "pin": "Ghim",
+    "unpin": "Bỏ ghim",
+    "pinned": "Đã ghim",
+    "pinUpdateError": "Không thể cập nhật ghim"
   },
   "projects": {
     "loading": "Đang tải dự án...",
@@ -1645,7 +1711,12 @@
     "pinnedTag": "Thẻ đã ghim",
     "frequentlyUsed": "Thường dùng",
     "createTag": "+ Tạo \"{{name}}\"",
-    "pinTag": "Ghim để truy cập nhanh"
+    "pinTag": "Ghim để truy cập nhanh",
+    "parentTag": "Thẻ cha",
+    "noParent": "Không có (cấp cao nhất)",
+    "parentTagHasChildren": "Thẻ này có thẻ con nên không thể đặt dưới thẻ khác.",
+    "showChildTags": "Hiện thẻ con",
+    "hideChildTags": "Ẩn thẻ con"
   },
   "recurrence": {
     "none": "Không có",
@@ -1690,6 +1761,52 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "focusSession": "Tập trung",
+    "print": "In",
+    "year": "Năm",
+    "weekNumber": "T{{week}}",
+    "yearItems_one": "{{date}}: {{count}} mục",
+    "yearItems_other": "{{date}}: {{count}} mục",
+    "miniCalendar": "Lịch nhỏ",
+    "previousMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "multiDay_one": "{{count}} ngày",
+    "multiDay_other": "{{count}} ngày",
+    "agendaEmpty": "Không có gì được lên lịch",
+    "agenda": "Lịch trình",
+    "options": {
+      "showFocus": "Hiện phiên tập trung",
+      "holidays": "Ngày lễ",
+      "holidaysNone": "Không",
+      "holidayRegion": "Vùng",
+      "holidayRegionAll": "Cả nước",
+      "showHabits": "Hiện thói quen",
+      "showWeekNumbers": "Hiện số tuần",
+      "showMiniCalendar": "Hiện lịch nhỏ",
+      "multiDayCount": "Số ngày trong chế độ nhiều ngày",
+      "title": "Tùy chọn hiển thị",
+      "showCompleted": "Hiện việc đã xong",
+      "showWeekends": "Hiện cuối tuần",
+      "showRepeats": "Hiện mọi lần lặp",
+      "colorBy": "Tô màu theo",
+      "colorBy_default": "Mặc định",
+      "colorBy_project": "Dự án",
+      "colorBy_priority": "Ưu tiên",
+      "colorBy_tag": "Thẻ",
+      "saveError": "Không thể lưu tùy chọn hiển thị"
+    },
+    "arrange": {
+      "title": "Sắp xếp công việc",
+      "noDate": "Không có ngày",
+      "overdue": "Quá hạn",
+      "filterProject": "Dự án",
+      "filterTag": "Thẻ",
+      "filterPriority": "Ưu tiên",
+      "emptyNoDate": "Không có công việc chưa có ngày để lên lịch",
+      "emptyOverdue": "Không có công việc quá hạn để lên lịch",
+      "noProject": "Không có dự án"
+    },
+    "resizeTask": "Đổi thời điểm kết thúc công việc",
     "month": "Tháng",
     "week": "Tuần",
     "day": "Ngày",
@@ -3130,6 +3247,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Tô màu theo",
+    "colorByStatus": "Màu: trạng thái",
+    "colorByPriority": "Màu: ưu tiên",
+    "colorByTag": "Màu: thẻ",
     "title": "Dòng thời gian",
     "days": "Ngày",
     "weeks": "Tuần",
@@ -3411,5 +3532,75 @@
     "adminRequiredTitle": "Hãy bật xác minh hai bước trước",
     "adminRequiredBody": "Tài khoản này xem được mọi khách hàng, nên bảng quản trị chỉ mở khi xác minh hai bước đã bật.",
     "adminRequiredAction": "Thiết lập"
+  },
+  "summary": {
+    "period": "Khoảng thời gian",
+    "from": "Từ",
+    "to": "Đến",
+    "groupBy": "Nhóm theo",
+    "includeOpen": "Bao gồm công việc chưa xong đến hạn trong khoảng này",
+    "saveTemplate": "Lưu làm mẫu",
+    "templateSaved": "Đã lưu mẫu",
+    "templateFailed": "Không thể lưu mẫu",
+    "copyMarkdown": "Sao chép dạng Markdown",
+    "downloadMd": "Tải xuống .md",
+    "downloadTxt": "Tải xuống .txt",
+    "downloadCsv": "Tải xuống .csv",
+    "print": "In",
+    "copied": "Đã sao chép vào bộ nhớ tạm",
+    "copyFailed": "Không thể sao chép vào bộ nhớ tạm",
+    "exportTitle": "Tóm tắt {{start}} – {{end}}",
+    "counts": "{{completed}} đã xong, {{open}} chưa xong",
+    "empty": "Không có công việc nào trong khoảng này.",
+    "noProject": "Không có dự án",
+    "noDate": "Không có ngày",
+    "periods": {
+      "today": "Hôm nay",
+      "this_week": "Tuần này",
+      "last_week": "Tuần trước",
+      "this_month": "Tháng này",
+      "custom": "Khoảng tùy chỉnh"
+    },
+    "groupings": {
+      "project": "Dự án",
+      "day": "Ngày",
+      "status": "Trạng thái"
+    },
+    "status": {
+      "done": "Đã xong",
+      "not_started": "Chưa bắt đầu",
+      "in_progress": "Đang làm",
+      "waiting": "Đang chờ",
+      "planned": "Đã lên kế hoạch",
+      "archived": "Đã lưu trữ",
+      "cancelled": "Đã hủy"
+    },
+    "csv": {
+      "name": "Công việc",
+      "status": "Trạng thái",
+      "project": "Dự án",
+      "completed": "Hoàn thành",
+      "due": "Hạn",
+      "tags": "Thẻ"
+    }
+  },
+  "projectBoard": {
+    "title": "Bảng",
+    "unsectioned": "Không có mục",
+    "empty": "Không có công việc",
+    "addColumn": "Thêm cột",
+    "addLeft": "Thêm cột bên trái",
+    "addRight": "Thêm cột bên phải",
+    "moveLeft": "Chuyển sang trái",
+    "moveRight": "Chuyển sang phải",
+    "rename": "Đổi tên",
+    "delete": "Xóa",
+    "deleteTitle": "Xóa cột",
+    "deleteMessage": "Xóa \"{{name}}\"? Các công việc sẽ chuyển sang Không có mục.",
+    "columnName": "Tên cột",
+    "columnActions": "Thao tác cột",
+    "newColumn": "Cột mới",
+    "loadError": "Không thể tải các cột",
+    "saveError": "Không thể lưu bảng"
   }
 }

@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { Task } from '../../entities/Task';
 import { getApiPath } from '../../config/paths';
 import { getDefaultHeaders } from '../../utils/authUtils';
@@ -68,7 +74,8 @@ const BurndownChart: React.FC = () => {
                 count = allTasks.filter((t) => {
                     if (!t.created_at) return false;
                     if (new Date(t.created_at) > dayEnd) return false;
-                    if (t.completed_at) return new Date(t.completed_at) > dayEnd;
+                    if (t.completed_at)
+                        return new Date(t.completed_at) > dayEnd;
                     return true;
                 }).length;
             } else {
@@ -163,7 +170,12 @@ const BurndownChart: React.FC = () => {
                     <svg
                         width={containerW}
                         height={CHART_H}
-                        style={{ display: 'block', overflow: 'visible', width: '100%', height: '100%' }}
+                        style={{
+                            display: 'block',
+                            overflow: 'visible',
+                            width: '100%',
+                            height: '100%',
+                        }}
                     >
                         <defs>
                             <linearGradient

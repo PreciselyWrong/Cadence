@@ -90,6 +90,64 @@ Profile → **Calendars**, or the **Calendars** button on the Calendar page, con
 
 ---
 
+## Task feed (subscribe from another calendar)
+
+Profile → **Calendars** (and the Calendars dialog on the Calendar page) has **Subscribe to your tasks**. *Make an address* creates a secret `https://…/api/feeds/tasks/tf_….ics` address to paste into Google Calendar ("From URL"), Apple Calendar or Outlook. The address is shown once; only a SHA-256 of the token is stored (`users.task_feed_token_hash`). *Make a new address* replaces it and the old one stops working; *Turn off* removes it.
+
+The feed lists the user's own tasks with a due date from 60 days ago to 400 days ahead, except done, archived and cancelled ones, drawn the same way as on the Calendar page: a timed task from its start time (same day) or its due time for its estimate (an hour without one), a whole-day task as an all-day event from its start day to its due day. Recurring tasks appear at their current due date only.
+
+| Method | Path | |
+|---|---|---|
+| GET | `/api/profile/task-feed` | `{ enabled }` |
+| POST | `/api/profile/task-feed` | new address: `{ enabled: true, path }` |
+| DELETE | `/api/profile/task-feed` | `{ enabled: false }` |
+| GET | `/api/feeds/tasks/:token.ics` | the feed, no sign-in; 404 for an unknown token |
+
+## Calendar page: task blocks
+
+How a task is drawn on `/calendar` (`frontend/components/Calendar/taskEvents.ts`):
+
+- **Due time, start time earlier the same day:** a block from the start time to the due time. Dragging its bottom edge changes the due time.
+- **Due time otherwise:** a block that starts at the due time and lasts the task's estimate, or one hour without an estimate. Dragging its bottom edge sets the estimate, in 15-minute steps, between 5 minutes and 12 hours.
+- **Whole-day due date:** a bar in the all-day row of the week and day views, from the start date (when it is earlier) to the due date. In the month view the bar appears in each day it covers, on the same row all week. A due time with a start on an earlier day is also drawn as a bar.
+- **Defer until:** a one-hour block at that time, as before.
+- **Recurring tasks:** the task sits at its current due date, and its later occurrences up to the end of the loaded window (the month, padded a week each side) are drawn in a lighter blue. They come from `GET /api/tasks?type=calendar&end=YYYY-MM-DD`, which adds `is_virtual_occurrence` copies of each open recurring task, skipping days that already have a generated instance. A later occurrence cannot be moved or resized: move the current one, and the rest follow its new date.
+
+Moving a block keeps its length: a start-to-due block moves both ends, a bar moves its start and due dates by the same number of days and keeps their times. Dropping on an hour of the week or day view sets the time; dropping in the month view or the all-day row keeps it.
+
+## Calendar page: views
+
+**Year**, Month, Week, **N days**, Day and **Agenda**.
+
+- **Year** shows the twelve months as small grids; each day is shaded by how many items it has (whole-day bars count on every day they cover; later recurring occurrences count only inside the loaded month window). Clicking a day opens it in the Day view; the arrows move by a year.
+
+- **N days** is the week grid for 2 to 7 days starting on the current date (View options → *Days in multi-day view*, `ui_settings.calendar.multiDayCount`, 3 by default). The arrows move by that many days. With weekends hidden it counts working days only.
+- **Agenda** lists the month day by day, each day that has something on it under its own heading, whole-day items first. It opens scrolled to today, or the next day with items; the arrows move by a month.
+
+The printer button prints only the shown view, without the sidebar and toolbar.
+
+## Calendar page: View options
+
+The sliders button next to the view switcher opens **View options**, saved per user in `ui_settings.calendar` (`PUT /api/profile/ui-settings` with `{ calendar: {...} }`):
+
+- **Show completed** (`showCompleted`, on by default): done tasks stay on the calendar in green.
+- **Show weekends** (`showWeekends`, on): off drops Saturday and Sunday from the month and week views, and the day view steps over them.
+- **Show all repeats** (`showRepeats`, on): off keeps each recurring task at its current due date only.
+- **Show habits** (`showHabits`, on): each habit appears as a purple whole-day item on every day it asks for a check-in, from today up to the end of the loaded window (at most 62 days); off hides habits. `GET /api/tasks?type=calendar&end=` adds those days as `is_virtual_occurrence` copies of the habit.
+- **Days in multi-day view** (`multiDayCount`, 2–7).
+- **Show week numbers** (`showWeekNumbers`, off): ISO week numbers on each month row and in the week grid's corner.
+- **Show mini calendar** (`showMiniCalendar`, off): a small month beside the views on wide screens; clicking a day goes to it.
+- **Show focus sessions** (`showFocus`, on): finished focus sessions as orange blocks at the time they ran (see [Focus Sessions](30-focus-sessions.md)).
+- **Show focus sessions** (`showFocus`, on): finished focus sessions as orange blocks (see [Focus Sessions](30-focus-sessions.md)).
+- **Holidays** (`holidayCountry`, `holidayRegion`, none by default): the public holidays of a country, and of one of its regions (canton, state…) when picked, as red whole-day items. They come from the `date-holidays` package on the server: `GET /api/holidays/countries`, `GET /api/holidays/regions?country=CH`, `GET /api/holidays?country=CH&region=VD&start=&end=` (at most 400 days). They are not counted in the Year heatmap.
+- **Colour by** (`colorBy`: `default`, `project`, `priority`, `tag`): a project or tag uses its own colour when it has one, otherwise a stable colour from a fixed palette; priority is red, amber, blue for high, medium, low. Tasks without a project or tag are grey. Done tasks stay green.
+
+## Calendar page: Arrange tasks
+
+The **Arrange tasks** button opens a side panel with two tabs: **No date** (open tasks without a due date) and **Overdue** (open tasks due before today). Done and cancelled tasks, subtasks, habits and recurring previews are left out. Tasks are grouped by project in sections that fold, and can be narrowed by project, tag and priority.
+
+Drag a task onto the calendar to schedule it: onto a day in the month view (or the all-day row) to set its due date, onto an hour of the week or day view to set its due date and time.
+
 ## Data model
 
 | Table                    | Purpose                                                                                                                 |

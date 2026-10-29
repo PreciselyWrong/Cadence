@@ -1,4 +1,18 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} giorno",
+    "lastDays_many": "{{count}} giorni",
+    "lastDays_other": "{{count}} giorni",
+    "error": "Impossibile caricare le statistiche di focus",
+    "empty": "Ancora nessuna sessione di focus. Avvia il timer Pomodoro nella barra in alto; le sessioni concluse vengono contate qui.",
+    "total": "Tempo di focus",
+    "sessions": "Sessioni",
+    "bestHour": "Ora di maggiore concentrazione",
+    "perDay": "Minuti al giorno",
+    "perHour": "Minuti per ora del giorno",
+    "topTasks": "Attività con più focus"
+  },
   "common": {
     "deleting": "Eliminazione...",
     "save": "Salva",
@@ -100,7 +114,8 @@
     "telegramProblem": "Problema di connessione Telegram",
     "resize": "Ridimensiona la barra laterale",
     "collapseViews": "Comprimi l'elenco delle viste",
-    "expandViews": "Espandi l'elenco delle viste"
+    "expandViews": "Espandi l'elenco delle viste",
+    "summary": "Riepilogo"
   },
   "navigation": {
     "home": "Home",
@@ -220,7 +235,43 @@
       "important": "Importante",
       "notImportant": "Non Importante",
       "dropHere": "Trascina qui",
-      "urgentHint": "Contrassegna le attività con 'urgente' per marcarle come urgenti"
+      "urgentHint": "Contrassegna le attività con 'urgente' per marcarle come urgenti",
+      "matrix": {
+        "picker": "Matrice",
+        "default": "Eisenhower (predefinita)",
+        "new": "Nuova matrice",
+        "newName": "Nuova matrice",
+        "limit": "Puoi tenere fino a {{count}} matrici.",
+        "editTitle": "Modifica matrice",
+        "name": "Nome della matrice",
+        "quadrant": "Quadrante {{number}}",
+        "quadrantName": "Nome del quadrante",
+        "priorities": "Priorità (una qualsiasi)",
+        "priority": {
+          "none": "Nessuna",
+          "low": "Bassa",
+          "medium": "Media",
+          "high": "Alta"
+        },
+        "due": "Scadenza",
+        "dueType": {
+          "any": "Qualsiasi",
+          "overdue": "Scadute",
+          "today": "Oggi",
+          "within": "Entro N giorni",
+          "none": "Senza data"
+        },
+        "days": "Giorni",
+        "tags": "Tag (uno qualsiasi, separati da virgole)",
+        "projects": "Progetti (facoltativo)",
+        "firstMatchHint": "Ogni attività compare nel primo quadrante di cui rispetta la regola. Una scelta vuota corrisponde a tutto.",
+        "deleteTitle": "Elimina matrice",
+        "deleteConfirm": "Eliminare la matrice «{{name}}»? Le tue attività non cambiano."
+      },
+      "dropRefusedPriority": "Questo quadrante ammette più priorità, quindi l'attività non può essere trascinata qui.",
+      "dropRefusedDue": "La scadenza non corrisponde a questo quadrante; cambia invece la data.",
+      "dropRefusedProject": "Il progetto dell'attività non corrisponde a questo quadrante.",
+      "dropRefusedEarlier": "Dopo la modifica l'attività finirebbe comunque in un quadrante precedente."
     },
     "kanban": {
       "title": "Bacheca Kanban",
@@ -281,6 +332,18 @@
     "noActivity": "Nessuna attività ancora"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Iscriviti alle tue attività",
+      "description": "Un indirizzo privato che mostra le tue attività aperte con scadenza in Google Calendar, Apple Calendar o Outlook. Chiunque abbia l'indirizzo può leggere quelle attività.",
+      "address": "Indirizzo del feed",
+      "copy": "Copia",
+      "copied": "Indirizzo copiato",
+      "once": "Copialo ora: viene mostrato una sola volta. Un nuovo indirizzo disattiva il precedente.",
+      "create": "Crea un indirizzo",
+      "rotate": "Crea un nuovo indirizzo",
+      "disable": "Disattiva",
+      "error": "Impossibile aggiornare il feed delle attività"
+    },
     "settings": "Impostazioni Profilo",
     "language": "Lingua",
     "theme": "Tema",
@@ -1399,7 +1462,11 @@
     "noStartDate": "Nessuna data di inizio",
     "startDateUpdated": "Data di inizio aggiornata",
     "startDateUpdateError": "Impossibile aggiornare la data di inizio",
-    "startAfterDueError": "L'inizio non può essere dopo la scadenza"
+    "startAfterDueError": "L'inizio non può essere dopo la scadenza",
+    "pin": "Fissa",
+    "unpin": "Sblocca",
+    "pinned": "Fissata",
+    "pinUpdateError": "Impossibile aggiornare il fissaggio"
   },
   "projects": {
     "loading": "Caricamento progetti...",
@@ -1649,7 +1716,12 @@
     "pinnedTag": "Tag fissato",
     "frequentlyUsed": "Usati spesso",
     "createTag": "+ Crea «{{name}}»",
-    "pinTag": "Fissa per un accesso rapido"
+    "pinTag": "Fissa per un accesso rapido",
+    "parentTag": "Tag padre",
+    "noParent": "Nessuno (livello superiore)",
+    "parentTagHasChildren": "Questo tag ha tag figli, quindi non può essere messo sotto un altro tag.",
+    "showChildTags": "Mostra tag figli",
+    "hideChildTags": "Nascondi tag figli"
   },
   "recurrence": {
     "none": "Nessuna",
@@ -1694,6 +1766,54 @@
     "done": "Fatto"
   },
   "calendar": {
+    "focusSession": "Focus",
+    "print": "Stampa",
+    "year": "Anno",
+    "weekNumber": "S{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elemento",
+    "yearItems_many": "{{date}}: {{count}} elementi",
+    "yearItems_other": "{{date}}: {{count}} elementi",
+    "miniCalendar": "Mini calendario",
+    "previousMonth": "Mese precedente",
+    "nextMonth": "Mese successivo",
+    "multiDay_one": "{{count}} giorni",
+    "multiDay_many": "{{count}} giorni",
+    "multiDay_other": "{{count}} giorni",
+    "agendaEmpty": "Niente in programma",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Mostra sessioni di focus",
+      "holidays": "Festività",
+      "holidaysNone": "Nessuna",
+      "holidayRegion": "Regione",
+      "holidayRegionAll": "Tutto il paese",
+      "showHabits": "Mostra abitudini",
+      "showWeekNumbers": "Mostra numeri della settimana",
+      "showMiniCalendar": "Mostra mini calendario",
+      "multiDayCount": "Giorni nella vista multi-giorno",
+      "title": "Opzioni di visualizzazione",
+      "showCompleted": "Mostra completate",
+      "showWeekends": "Mostra fine settimana",
+      "showRepeats": "Mostra tutte le ripetizioni",
+      "colorBy": "Colore per",
+      "colorBy_default": "Predefinito",
+      "colorBy_project": "Progetto",
+      "colorBy_priority": "Priorità",
+      "colorBy_tag": "Tag",
+      "saveError": "Impossibile salvare le opzioni"
+    },
+    "arrange": {
+      "title": "Organizza attività",
+      "noDate": "Senza data",
+      "overdue": "Scadute",
+      "filterProject": "Progetto",
+      "filterTag": "Tag",
+      "filterPriority": "Priorità",
+      "emptyNoDate": "Nessuna attività senza data da pianificare",
+      "emptyOverdue": "Nessuna attività scaduta da pianificare",
+      "noProject": "Nessun progetto"
+    },
+    "resizeTask": "Cambia quando finisce questa attività",
     "month": "Mese",
     "week": "Settimana",
     "day": "Giorno",
@@ -3136,6 +3256,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Colore per",
+    "colorByStatus": "Colore: stato",
+    "colorByPriority": "Colore: priorità",
+    "colorByTag": "Colore: tag",
     "title": "Cronologia",
     "days": "Giorni",
     "weeks": "Settimane",
@@ -3419,5 +3543,75 @@
     "adminRequiredTitle": "Attiva prima l'autenticazione a due fattori",
     "adminRequiredBody": "Questo account può vedere tutti i clienti, quindi il pannello di amministrazione si apre solo quando l'autenticazione a due fattori è attiva.",
     "adminRequiredAction": "Configurala"
+  },
+  "summary": {
+    "period": "Periodo",
+    "from": "Da",
+    "to": "A",
+    "groupBy": "Raggruppa per",
+    "includeOpen": "Includi le attività aperte in scadenza nel periodo",
+    "saveTemplate": "Salva come modello",
+    "templateSaved": "Modello salvato",
+    "templateFailed": "Impossibile salvare il modello",
+    "copyMarkdown": "Copia come Markdown",
+    "downloadMd": "Scarica .md",
+    "downloadTxt": "Scarica .txt",
+    "downloadCsv": "Scarica .csv",
+    "print": "Stampa",
+    "copied": "Copiato negli appunti",
+    "copyFailed": "Impossibile copiare negli appunti",
+    "exportTitle": "Riepilogo {{start}} – {{end}}",
+    "counts": "{{completed}} completate, {{open}} aperte",
+    "empty": "Nessuna attività in questo periodo.",
+    "noProject": "Nessun progetto",
+    "noDate": "Nessuna data",
+    "periods": {
+      "today": "Oggi",
+      "this_week": "Questa settimana",
+      "last_week": "Settimana scorsa",
+      "this_month": "Questo mese",
+      "custom": "Intervallo personalizzato"
+    },
+    "groupings": {
+      "project": "Progetto",
+      "day": "Giorno",
+      "status": "Stato"
+    },
+    "status": {
+      "done": "Completata",
+      "not_started": "Non iniziata",
+      "in_progress": "In corso",
+      "waiting": "In attesa",
+      "planned": "Pianificata",
+      "archived": "Archiviata",
+      "cancelled": "Annullata"
+    },
+    "csv": {
+      "name": "Attività",
+      "status": "Stato",
+      "project": "Progetto",
+      "completed": "Completata il",
+      "due": "Scadenza",
+      "tags": "Tag"
+    }
+  },
+  "projectBoard": {
+    "title": "Bacheca",
+    "unsectioned": "Senza sezione",
+    "empty": "Nessuna attività",
+    "addColumn": "Aggiungi colonna",
+    "addLeft": "Aggiungi colonna a sinistra",
+    "addRight": "Aggiungi colonna a destra",
+    "moveLeft": "Sposta a sinistra",
+    "moveRight": "Sposta a destra",
+    "rename": "Rinomina",
+    "delete": "Elimina",
+    "deleteTitle": "Elimina colonna",
+    "deleteMessage": "Eliminare «{{name}}»? Le sue attività passano in Senza sezione.",
+    "columnName": "Nome colonna",
+    "columnActions": "Azioni colonna",
+    "newColumn": "Nuova colonna",
+    "loadError": "Impossibile caricare le colonne",
+    "saveError": "Impossibile salvare la bacheca"
   }
 }

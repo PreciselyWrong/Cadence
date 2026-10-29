@@ -391,6 +391,11 @@ const TagDetails: React.FC = () => {
             if (tag && tag.uid) {
                 const updatedTag = await updateTag(tag.uid, tagData);
                 setTag(updatedTag);
+                // Keep the shared tag list (sidebar, parent options) in step.
+                useStore
+                    .getState()
+                    .tagsStore.refreshTags()
+                    .catch(() => {});
             }
             closeTagModal();
         } catch (error) {

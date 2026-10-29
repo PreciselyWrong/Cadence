@@ -11,6 +11,7 @@ const permissionsService = require('../../../services/permissionsService');
 const scopeService = require('../../../services/scopeService');
 const { blockedCondition } = require('../relations/service');
 const { customOrderClause } = require('../order/service');
+const { PINNED_ORDER } = require('../core/comparators');
 const {
     getSafeTimezone,
     getUpcomingRangeInUTC,
@@ -75,7 +76,7 @@ async function filterTasksByParams(
         },
         {
             model: Project,
-            attributes: ['id', 'name', 'status', 'uid'],
+            attributes: ['id', 'name', 'status', 'uid', 'color'],
             required: false,
         },
         {
@@ -351,12 +352,19 @@ async function filterTasksByParams(
         }
     }
 
+    // Pinned tasks stay on top of whichever order the list uses.
+    orderClause = [PINNED_ORDER, ...orderClause];
+
     if (params.tag) {
         const taggedTaskIds = await sequelize.query(
             `SELECT DISTINCT tasks_tags.task_id
              FROM tasks_tags
              INNER JOIN tags ON tags.id = tasks_tags.tag_id
-             WHERE tags.name = :tagName`,
+             WHERE tags.name = :tagName
+                OR tags.parent_id IN (
+                    SELECT parent_tags.id FROM tags AS parent_tags
+                    WHERE parent_tags.name = :tagName
+                )`,
             {
                 replacements: { tagName: params.tag },
                 type: QueryTypes.SELECT,

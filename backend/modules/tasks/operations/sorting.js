@@ -1,7 +1,9 @@
-const { compareTasksByField } = require('../core/comparators');
+const { compareTasksByField, comparePinned } = require('../core/comparators');
 
 function createTaskComparator(orderColumn, orderDirection, safeTimezone) {
     return (a, b) => {
+        const pinned = comparePinned(a, b);
+        if (pinned !== 0) return pinned;
         const comparison = compareTasksByField(a, b, orderColumn, safeTimezone);
         return orderDirection === 'desc' ? -comparison : comparison;
     };

@@ -132,6 +132,7 @@ async function serializeTask(
         project_uid: taskJson.Project?.uid || null,
         area_uid: taskJson.Area?.uid || null,
         goal_uid: taskJson.Goal?.uid || null,
+        section_uid: taskJson.Section?.uid || null,
         recurring_parent_uid: recurringParentUid,
         due_date: processDueDateForResponse(taskJson.due_date, safeTimezone),
         due_time: taskJson.due_has_time
@@ -184,6 +185,7 @@ async function serializeTask(
                 ? task.completed_at.toISOString()
                 : new Date(task.completed_at).toISOString()
             : null,
+        pinned: Boolean(taskJson.pinned_at),
         today_move_count: todayMoveCount,
         parent_task: parentTaskInfo,
         blocked_by_count: blockedByCount,

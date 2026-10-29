@@ -317,28 +317,40 @@ const PlanMyDay: React.FC = () => {
         }
     }, [date, showErrorToast, t]);
 
-    const flush = useCallback(async () => {
+    // The save currently on its way to the server, if any: true once saved.
+    const inFlight = useRef<Promise<boolean> | null>(null);
+
+    const flush = useCallback(async (): Promise<boolean> => {
         if (saveTimer.current) {
             clearTimeout(saveTimer.current);
             saveTimer.current = null;
         }
+        // A save already on its way must land before the caller goes on
+        // (starting the day reads the saved plan).
+        if (inFlight.current && !(await inFlight.current)) return false;
         const next = pending.current;
         if (!next || !date) return true;
         pending.current = null;
         setSaveState('saving');
-        try {
-            await saveDailyPlanItems(date, toPlanItemInputs(next));
-            setSaveState('idle');
-            return true;
-        } catch (err) {
-            setSaveState('error');
-            showErrorToast(
-                err instanceof Error
-                    ? err.message
-                    : t('dailyPlan.saveError', 'Could not save the plan.')
-            );
-            return false;
-        }
+        const save = (async () => {
+            try {
+                await saveDailyPlanItems(date, toPlanItemInputs(next));
+                setSaveState('idle');
+                return true;
+            } catch (err) {
+                setSaveState('error');
+                showErrorToast(
+                    err instanceof Error
+                        ? err.message
+                        : t('dailyPlan.saveError', 'Could not save the plan.')
+                );
+                return false;
+            }
+        })();
+        inFlight.current = save;
+        const saved = await save;
+        if (inFlight.current === save) inFlight.current = null;
+        return saved;
     }, [date, showErrorToast, t]);
 
     // Every change saves itself shortly after the last edit.

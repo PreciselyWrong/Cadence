@@ -1,4 +1,21 @@
 {
+  "focusStats": {
+    "title": "التركيز",
+    "lastDays_one": "{{count}} يوم",
+    "lastDays_zero": "{{count}} يوم",
+    "lastDays_two": "{{count}} يومان",
+    "lastDays_few": "{{count}} أيام",
+    "lastDays_many": "{{count}} يومًا",
+    "lastDays_other": "{{count}} يوم",
+    "error": "تعذّر تحميل إحصاءات التركيز",
+    "empty": "لا توجد جلسات تركيز بعد. شغّل مؤقت بومودورو في الشريط العلوي؛ تُحتسب الجلسات المكتملة هنا.",
+    "total": "وقت التركيز",
+    "sessions": "الجلسات",
+    "bestHour": "أكثر ساعة تركيزًا",
+    "perDay": "دقائق يوميًا",
+    "perHour": "دقائق حسب ساعة اليوم",
+    "topTasks": "المهام الأكثر تركيزًا"
+  },
   "common": {
     "deleting": "جارٍ الحذف...",
     "save": "حفظ",
@@ -100,7 +117,8 @@
     "telegramProblem": "مشكلة في اتصال Telegram",
     "resize": "تغيير حجم الشريط الجانبي",
     "collapseViews": "طي قائمة العروض",
-    "expandViews": "توسيع قائمة العروض"
+    "expandViews": "توسيع قائمة العروض",
+    "summary": "الملخص"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -220,7 +238,43 @@
       "important": "مهم",
       "notImportant": "غير مهم",
       "dropHere": "اسقط هنا",
-      "urgentHint": "قم بوسم المهام بـ 'عاجل' لتحديدها كعاجلة"
+      "urgentHint": "قم بوسم المهام بـ 'عاجل' لتحديدها كعاجلة",
+      "matrix": {
+        "picker": "المصفوفة",
+        "default": "أيزنهاور (الافتراضية)",
+        "new": "مصفوفة جديدة",
+        "newName": "مصفوفة جديدة",
+        "limit": "يمكنك الاحتفاظ بما يصل إلى {{count}} مصفوفات.",
+        "editTitle": "تعديل المصفوفة",
+        "name": "اسم المصفوفة",
+        "quadrant": "الربع {{number}}",
+        "quadrantName": "اسم الربع",
+        "priorities": "الأولوية (أي منها)",
+        "priority": {
+          "none": "بلا",
+          "low": "منخفضة",
+          "medium": "متوسطة",
+          "high": "عالية"
+        },
+        "due": "تاريخ الاستحقاق",
+        "dueType": {
+          "any": "أي",
+          "overdue": "متأخرة",
+          "today": "اليوم",
+          "within": "خلال N أيام",
+          "none": "بلا تاريخ"
+        },
+        "days": "أيام",
+        "tags": "الوسوم (أي منها، مفصولة بفواصل)",
+        "projects": "المشاريع (اختياري)",
+        "firstMatchHint": "تظهر كل مهمة في أول ربع تطابق قاعدته. الاختيار الفارغ يطابق كل شيء.",
+        "deleteTitle": "حذف المصفوفة",
+        "deleteConfirm": "حذف المصفوفة \"{{name}}\"؟ لن تتغير مهامك."
+      },
+      "dropRefusedPriority": "يقبل هذا الربع عدة أولويات، لذا لا يمكن نقل المهمة إليه بالسحب.",
+      "dropRefusedDue": "موعد المهمة لا يناسب هذا الربع؛ غيّر التاريخ بدلًا من ذلك.",
+      "dropRefusedProject": "مشروع المهمة لا يناسب هذا الربع.",
+      "dropRefusedEarlier": "بعد التغيير ستبقى المهمة في ربع سابق."
     },
     "kanban": {
       "title": "لوحة كانبان",
@@ -281,6 +335,18 @@
     "noActivity": "لا توجد أنشطة حتى الآن"
   },
   "profile": {
+    "taskFeed": {
+      "title": "الاشتراك في مهامك",
+      "description": "عنوان خاص يعرض مهامك المفتوحة ذات الموعد في تقويم Google أو Apple أو Outlook. أي شخص لديه العنوان يمكنه قراءة هذه المهام.",
+      "address": "عنوان الموجز",
+      "copy": "نسخ",
+      "copied": "تم نسخ العنوان",
+      "once": "انسخه الآن: يُعرض مرة واحدة فقط. إنشاء عنوان جديد يوقف القديم.",
+      "create": "إنشاء عنوان",
+      "rotate": "إنشاء عنوان جديد",
+      "disable": "إيقاف",
+      "error": "تعذّر تحديث موجز المهام"
+    },
     "settings": "إعدادات الملف الشخصي",
     "language": "اللغة",
     "theme": "المظهر",
@@ -1402,7 +1468,11 @@
     "noStartDate": "لا يوجد تاريخ بدء",
     "startDateUpdated": "تم تحديث تاريخ البدء",
     "startDateUpdateError": "تعذر تحديث تاريخ البدء",
-    "startAfterDueError": "لا يمكن أن يكون البدء بعد تاريخ الاستحقاق"
+    "startAfterDueError": "لا يمكن أن يكون البدء بعد تاريخ الاستحقاق",
+    "pin": "تثبيت",
+    "unpin": "إلغاء التثبيت",
+    "pinned": "مثبتة",
+    "pinUpdateError": "فشل تحديث التثبيت"
   },
   "projects": {
     "loading": "جارٍ تحميل المشاريع...",
@@ -1655,7 +1725,12 @@
     "pinnedTag": "وسم مثبّت",
     "frequentlyUsed": "الأكثر استخدامًا",
     "createTag": "+ إنشاء \"{{name}}\"",
-    "pinTag": "تثبيت للوصول السريع"
+    "pinTag": "تثبيت للوصول السريع",
+    "parentTag": "الوسم الأصل",
+    "noParent": "بلا (مستوى أعلى)",
+    "parentTagHasChildren": "لهذا الوسم وسوم فرعية، لذا لا يمكن وضعه تحت وسم آخر.",
+    "showChildTags": "إظهار الوسوم الفرعية",
+    "hideChildTags": "إخفاء الوسوم الفرعية"
   },
   "recurrence": {
     "none": "لا شيء",
@@ -1700,6 +1775,60 @@
     "done": "تم"
   },
   "calendar": {
+    "focusSession": "تركيز",
+    "print": "طباعة",
+    "year": "السنة",
+    "weekNumber": "أ{{week}}",
+    "yearItems_one": "{{date}}: {{count}} عنصر",
+    "yearItems_zero": "{{date}}: {{count}} عنصر",
+    "yearItems_two": "{{date}}: {{count}} عنصران",
+    "yearItems_few": "{{date}}: {{count}} عناصر",
+    "yearItems_many": "{{date}}: {{count}} عنصرًا",
+    "yearItems_other": "{{date}}: {{count}} عنصر",
+    "miniCalendar": "تقويم مصغّر",
+    "previousMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
+    "multiDay_one": "{{count}} يوم",
+    "multiDay_zero": "{{count}} يوم",
+    "multiDay_two": "{{count}} يومان",
+    "multiDay_few": "{{count}} أيام",
+    "multiDay_many": "{{count}} يومًا",
+    "multiDay_other": "{{count}} يوم",
+    "agendaEmpty": "لا شيء مجدول",
+    "agenda": "جدول الأعمال",
+    "options": {
+      "showFocus": "إظهار جلسات التركيز",
+      "holidays": "العطل الرسمية",
+      "holidaysNone": "لا شيء",
+      "holidayRegion": "المنطقة",
+      "holidayRegionAll": "البلد بأكمله",
+      "showHabits": "إظهار العادات",
+      "showWeekNumbers": "إظهار أرقام الأسابيع",
+      "showMiniCalendar": "إظهار التقويم المصغّر",
+      "multiDayCount": "عدد الأيام في العرض المتعدد",
+      "title": "خيارات العرض",
+      "showCompleted": "إظهار المكتملة",
+      "showWeekends": "إظهار عطلة نهاية الأسبوع",
+      "showRepeats": "إظهار كل التكرارات",
+      "colorBy": "التلوين حسب",
+      "colorBy_default": "افتراضي",
+      "colorBy_project": "المشروع",
+      "colorBy_priority": "الأولوية",
+      "colorBy_tag": "الوسم",
+      "saveError": "تعذّر حفظ خيارات العرض"
+    },
+    "arrange": {
+      "title": "ترتيب المهام",
+      "noDate": "بدون تاريخ",
+      "overdue": "متأخرة",
+      "filterProject": "المشروع",
+      "filterTag": "الوسم",
+      "filterPriority": "الأولوية",
+      "emptyNoDate": "لا توجد مهام بدون تاريخ لجدولتها",
+      "emptyOverdue": "لا توجد مهام متأخرة لجدولتها",
+      "noProject": "بدون مشروع"
+    },
+    "resizeTask": "تغيير وقت انتهاء هذه المهمة",
     "month": "شهر",
     "week": "أسبوع",
     "day": "يوم",
@@ -3153,6 +3282,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "التلوين حسب",
+    "colorByStatus": "اللون: الحالة",
+    "colorByPriority": "اللون: الأولوية",
+    "colorByTag": "اللون: الوسم",
     "title": "الجدول الزمني",
     "days": "أيام",
     "weeks": "أسابيع",
@@ -3439,5 +3572,75 @@
     "adminRequiredTitle": "فعّل المصادقة الثنائية أولًا",
     "adminRequiredBody": "يمكن لهذا الحساب رؤية جميع العملاء، لذا لا تُفتح لوحة الإدارة إلا بعد تفعيل المصادقة الثنائية.",
     "adminRequiredAction": "إعدادها"
+  },
+  "summary": {
+    "period": "الفترة",
+    "from": "من",
+    "to": "إلى",
+    "groupBy": "التجميع حسب",
+    "includeOpen": "تضمين المهام المفتوحة المستحقة في هذه الفترة",
+    "saveTemplate": "حفظ كقالب",
+    "templateSaved": "تم حفظ القالب",
+    "templateFailed": "تعذر حفظ القالب",
+    "copyMarkdown": "نسخ بتنسيق Markdown",
+    "downloadMd": "تنزيل .md",
+    "downloadTxt": "تنزيل .txt",
+    "downloadCsv": "تنزيل .csv",
+    "print": "طباعة",
+    "copied": "تم النسخ إلى الحافظة",
+    "copyFailed": "تعذر النسخ إلى الحافظة",
+    "exportTitle": "الملخص {{start}} – {{end}}",
+    "counts": "{{completed}} مكتملة، {{open}} مفتوحة",
+    "empty": "لا توجد مهام في هذه الفترة.",
+    "noProject": "بدون مشروع",
+    "noDate": "بدون تاريخ",
+    "periods": {
+      "today": "اليوم",
+      "this_week": "هذا الأسبوع",
+      "last_week": "الأسبوع الماضي",
+      "this_month": "هذا الشهر",
+      "custom": "نطاق مخصص"
+    },
+    "groupings": {
+      "project": "المشروع",
+      "day": "اليوم",
+      "status": "الحالة"
+    },
+    "status": {
+      "done": "مكتملة",
+      "not_started": "لم تبدأ",
+      "in_progress": "قيد التنفيذ",
+      "waiting": "في الانتظار",
+      "planned": "مخطط لها",
+      "archived": "مؤرشفة",
+      "cancelled": "ملغاة"
+    },
+    "csv": {
+      "name": "المهمة",
+      "status": "الحالة",
+      "project": "المشروع",
+      "completed": "تاريخ الإكمال",
+      "due": "الاستحقاق",
+      "tags": "الوسوم"
+    }
+  },
+  "projectBoard": {
+    "title": "اللوحة",
+    "unsectioned": "بدون قسم",
+    "empty": "لا توجد مهام",
+    "addColumn": "إضافة عمود",
+    "addLeft": "إضافة عمود إلى اليسار",
+    "addRight": "إضافة عمود إلى اليمين",
+    "moveLeft": "نقل إلى اليسار",
+    "moveRight": "نقل إلى اليمين",
+    "rename": "إعادة تسمية",
+    "delete": "حذف",
+    "deleteTitle": "حذف العمود",
+    "deleteMessage": "حذف \"{{name}}\"؟ تنتقل مهامه إلى بدون قسم.",
+    "columnName": "اسم العمود",
+    "columnActions": "إجراءات العمود",
+    "newColumn": "عمود جديد",
+    "loadError": "تعذر تحميل الأعمدة",
+    "saveError": "تعذر حفظ اللوحة"
   }
 }

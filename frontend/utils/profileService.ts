@@ -1,6 +1,27 @@
 import { handleAuthResponse, getPostHeadersWithCsrf } from './authUtils';
 import { getApiPath } from '../config/paths';
 
+export type MatrixPriority = 'none' | 'low' | 'medium' | 'high';
+export type MatrixDueType = 'any' | 'overdue' | 'today' | 'within' | 'none';
+
+export interface MatrixRule {
+    priorities: MatrixPriority[];
+    due: { type: MatrixDueType; days?: number };
+    tags: string[];
+    projects: string[];
+}
+
+export interface MatrixQuadrant {
+    name: string;
+    rule: MatrixRule;
+}
+
+export interface EisenhowerMatrixConfig {
+    id: string;
+    name: string;
+    quadrants: MatrixQuadrant[];
+}
+
 interface Profile {
     id: number;
     email: string;
@@ -28,13 +49,31 @@ interface Profile {
             };
         };
         appearance?: Record<string, unknown>;
+        calendar?: {
+            showCompleted?: boolean;
+            showWeekends?: boolean;
+            showRepeats?: boolean;
+            showHabits?: boolean;
+            showFocus?: boolean;
+            showWeekNumbers?: boolean;
+            showMiniCalendar?: boolean;
+            colorBy?: 'default' | 'project' | 'priority' | 'tag';
+            multiDayCount?: number;
+            holidayCountry?: string;
+            holidayRegion?: string;
+        };
         inbox?: {
             recentlyCapturedExpanded?: boolean;
         };
+        matrices?: EisenhowerMatrixConfig[];
         focus?: {
             area_uid?: string | null;
             project_uid?: string | null;
             tags?: string[];
+        } | null;
+        summary?: {
+            group_by?: 'project' | 'day' | 'status';
+            include_open?: boolean;
         } | null;
     };
 }

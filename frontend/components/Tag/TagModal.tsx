@@ -3,6 +3,7 @@ import { Tag } from '../../entities/Tag';
 import { useToast } from '../Shared/ToastContext';
 import { useTranslation } from 'react-i18next';
 import ColorPicker from '../Shared/ColorPicker';
+import { useStore } from '../../store/useStore';
 import EntitySidePanel from '../SidePanel/EntitySidePanel';
 import {
     SidePanelField,
@@ -42,18 +43,32 @@ const TagModal: React.FC<TagModalProps> = ({
 
     const isSystemTag = tag?.tag_type === 'system';
 
+    // One level of nesting: only top-level tags can be parents, and a tag
+    // that already has children stays at the top level.
+    const allTags = useStore((state) => state.tagsStore.tags);
+    const hasChildren =
+        !!tag?.uid && allTags.some((other) => other.parent_uid === tag.uid);
+    const parentOptions = allTags
+        .filter((other) => other.uid && !other.parent_uid)
+        .filter((other) => other.uid !== tag?.uid)
+        .sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        );
+
     const hasUnsavedChanges = () => {
         if (!tag) {
             return (
                 formData.name.trim() !== '' ||
                 !!formData.color ||
-                !!formData.pinned
+                !!formData.pinned ||
+                !!formData.parent_uid
             );
         }
         return (
             formData.name !== tag.name ||
             formData.pinned !== tag.pinned ||
-            formData.color !== tag.color
+            formData.color !== tag.color ||
+            (formData.parent_uid || null) !== (tag.parent_uid || null)
         );
     };
 
@@ -67,7 +82,10 @@ const TagModal: React.FC<TagModalProps> = ({
         setError(null);
 
         try {
-            await onSave(formData);
+            await onSave({
+                ...formData,
+                parent_uid: formData.parent_uid || null,
+            });
             showSuccessToast(
                 tag
                     ? t('success.tagUpdated', 'Tag updated successfully!')
@@ -150,6 +168,43 @@ const TagModal: React.FC<TagModalProps> = ({
                     )}
                     data-testid="tag-name-input"
                 />
+            </SidePanelField>
+
+            <SidePanelField
+                label={t('tags.parentTag', 'Parent tag')}
+                htmlFor="tagParent"
+            >
+                <select
+                    id="tagParent"
+                    name="parent_uid"
+                    value={formData.parent_uid || ''}
+                    onChange={(e) =>
+                        setFormData((prev) => ({
+                            ...prev,
+                            parent_uid: e.target.value || null,
+                        }))
+                    }
+                    disabled={hasChildren}
+                    className={`${sidePanelInputClass} ${hasChildren ? 'cursor-default opacity-70' : ''}`}
+                    data-testid="tag-parent-select"
+                >
+                    <option value="">
+                        {t('tags.noParent', 'None (top level)')}
+                    </option>
+                    {parentOptions.map((option) => (
+                        <option key={option.uid} value={option.uid}>
+                            {option.name}
+                        </option>
+                    ))}
+                </select>
+                {hasChildren && (
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        {t(
+                            'tags.parentTagHasChildren',
+                            'This tag has child tags, so it cannot go under another tag.'
+                        )}
+                    </p>
+                )}
             </SidePanelField>
 
             <SidePanelSection title={t('tags.pinTag', 'Quick access')}>

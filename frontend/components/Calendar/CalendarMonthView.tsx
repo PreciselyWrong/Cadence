@@ -8,6 +8,8 @@ import {
     isToday,
     startOfWeek,
     endOfWeek,
+    addDays,
+    getISOWeek,
 } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,14 +17,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-interface CalendarEvent {
-    id: string;
-    title: string;
-    start: Date;
-    end: Date;
-    type: 'task' | 'event';
-    color?: string;
-}
+import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -30,6 +25,8 @@ interface CalendarMonthViewProps {
     onDateClick?: (date: Date) => void;
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (eventId: string, newDate: Date) => void;
+    showWeekends?: boolean;
+    showWeekNumbers?: boolean;
 }
 
 const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
@@ -38,6 +35,8 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     onDateClick,
     onEventClick,
     onEventDrop,
+    showWeekends = true,
+    showWeekNumbers = false,
 }) => {
     const { t } = useTranslation();
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
@@ -74,9 +73,17 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
         t('weekdays.saturday', 'Sat'),
     ];
 
+    const isShown = (dayOfWeek: number) =>
+        showWeekends || (dayOfWeek !== 0 && dayOfWeek !== 6);
     const getWeekDays = () => {
         const allDays = getAllWeekDays();
-        return [...allDays.slice(firstDayOfWeek), ...allDays.slice(0, firstDayOfWeek)];
+        return [0, 1, 2, 3, 4, 5, 6]
+            .map((offset) => (firstDayOfWeek + offset) % 7)
+            .filter(isShown)
+            .map((dayOfWeek) => allDays[dayOfWeek]);
+    };
+    const gridColumns = {
+        gridTemplateColumns: `repeat(${showWeekends ? 7 : 5}, minmax(0, 1fr))`,
     };
 
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
@@ -104,7 +111,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">
             {/* Weekday headers */}
-            <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+            <div
+                style={gridColumns}
+                className="grid border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+            >
                 {getWeekDays().map((day) => (
                     <div
                         key={day}
@@ -116,12 +126,34 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             </div>
 
             {/* Calendar grid */}
-            <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600">
-                {days.map((day) => {
-                    const dayEvents = events.filter(
-                        (event) =>
-                            format(event.start, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
+            <div
+                style={gridColumns}
+                className="grid flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600"
+            >
+                {days.map((day, index) => {
+                    if (!isShown(day.getDay())) return null;
+                    // Whole-day bars keep their week row; empty rows are
+                    // kept as gaps so a span lines up across days.
+                    const rows = layoutAllDayWeek(
+                        events,
+                        days[Math.floor(index / 7) * 7]
                     );
+                    const bars = events.filter(
+                        (event) => event.allDay && coversDay(event, day)
+                    );
+                    const slots: (CalendarEvent | null)[] = [];
+                    bars.forEach((bar) => {
+                        slots[rows.get(bar.id) ?? slots.length] = bar;
+                    });
+                    const dayEvents: (CalendarEvent | null)[] = [
+                        ...Array.from(slots, (slot) => slot ?? null),
+                        ...events.filter(
+                            (event) => !event.allDay && coversDay(event, day)
+                        ),
+                    ];
+                    const hiddenCount = dayEvents
+                        .slice(3)
+                        .filter(Boolean).length;
                     const isCurrentMonth = isSameMonth(day, currentDate);
                     const isTodayDate = isToday(day);
 
@@ -139,7 +171,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                       : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600/40'
                             }`}
                         >
-                            <div className="mb-1.5">
+                            <div className="mb-1.5 flex items-center justify-between">
                                 {isTodayDate ? (
                                     <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-xs font-semibold rounded-full">
                                         {format(day, 'd')}
@@ -155,31 +187,82 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         {format(day, 'd')}
                                     </span>
                                 )}
+                                {showWeekNumbers &&
+                                    days
+                                        .slice(
+                                            index - (index % 7),
+                                            index - (index % 7) + 7
+                                        )
+                                        .find((d) => isShown(d.getDay())) ===
+                                        day && (
+                                        <span
+                                            className="text-[10px] font-medium text-gray-400 dark:text-gray-500"
+                                            data-week={getISOWeek(day)}
+                                        >
+                                            {t('calendar.weekNumber', {
+                                                week: getISOWeek(day),
+                                                defaultValue: 'W{{week}}',
+                                            })}
+                                        </span>
+                                    )}
                             </div>
 
                             <div className="space-y-0.5 overflow-hidden flex-1">
-                                {dayEvents.slice(0, 3).map((event) => (
-                                    <div
-                                        key={event.id}
-                                        draggable={event.type === 'task'}
-                                        onDragStart={(e) => handleDragStart(event, e)}
-                                        onDragEnd={handleDragEnd}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onEventClick?.(event);
-                                        }}
-                                        className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
-                                            draggedEventId === event.id ? 'opacity-40' : ''
-                                        }`}
-                                        style={{ backgroundColor: event.color || '#3b82f6' }}
-                                        title={event.title}
-                                    >
-                                        {event.title}
-                                    </div>
-                                ))}
-                                {dayEvents.length > 3 && (
+                                {dayEvents.slice(0, 3).map((event, slot) =>
+                                    event === null ? (
+                                        <div
+                                            key={`gap-${slot}`}
+                                            aria-hidden="true"
+                                            className="text-xs py-1 invisible"
+                                        >
+                                            &nbsp;
+                                        </div>
+                                    ) : (
+                                        <div
+                                            key={event.id}
+                                            draggable={
+                                                event.type === 'task' &&
+                                                !event.readOnly
+                                            }
+                                            onDragStart={(e) =>
+                                                handleDragStart(event, e)
+                                            }
+                                            onDragEnd={handleDragEnd}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onEventClick?.(event);
+                                            }}
+                                            className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
+                                                draggedEventId === event.id
+                                                    ? 'opacity-40'
+                                                    : ''
+                                            } ${
+                                                event.allDay &&
+                                                event.start < day
+                                                    ? '-ml-2 pl-3.5 rounded-l-none'
+                                                    : ''
+                                            } ${
+                                                event.allDay &&
+                                                addDays(day, 1) < event.end
+                                                    ? '-mr-2 rounded-r-none'
+                                                    : ''
+                                            }`}
+                                            style={{
+                                                backgroundColor:
+                                                    event.color || '#3b82f6',
+                                                opacity: event.readOnly
+                                                    ? 0.6
+                                                    : undefined,
+                                            }}
+                                            title={event.title}
+                                        >
+                                            {event.title}
+                                        </div>
+                                    )
+                                )}
+                                {hiddenCount > 0 && (
                                     <div className="text-xs text-gray-400 dark:text-gray-500 px-1 font-medium">
-                                        +{dayEvents.length - 3}
+                                        +{hiddenCount}
                                     </div>
                                 )}
                             </div>

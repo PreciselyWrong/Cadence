@@ -51,6 +51,8 @@ import ProjectShareModal from './ProjectShareModal';
 import ProjectModal from './ProjectModal';
 import ProjectTasksSection from './ProjectTasksSection';
 import ProjectTimeline from './Timeline/ProjectTimeline';
+import ProjectBoard from './Board/ProjectBoard';
+import { orderBoardColumn } from '../../utils/projectSectionsService';
 import ProjectOverviewRail from './ProjectOverviewRail';
 import ProjectAttachmentsWidget from './ProjectAttachmentsWidget';
 import { ownerAttachmentsApi } from '../../utils/attachmentsService';
@@ -62,6 +64,7 @@ import {
 } from '../../constants/taskStatus';
 import { saveProjectAsTemplate } from '../../utils/templatesService';
 import TaskModal from '../Task/TaskModal';
+import { comparePinnedTasks } from '../../utils/taskPin';
 
 const ProjectDetails: React.FC = () => {
     const { uidSlug } = useParams<{ uidSlug: string }>();
@@ -82,16 +85,17 @@ const ProjectDetails: React.FC = () => {
     const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
     const [isTemplateConfirmOpen, setIsTemplateConfirmOpen] = useState(false);
     const [previewNote, setPreviewNote] = useState<Note | null>(null);
-    const [view, setView] = useState<'tasks' | 'timeline'>(() => {
+    const [view, setView] = useState<'tasks' | 'timeline' | 'board'>(() => {
         try {
-            return localStorage.getItem('project_view') === 'timeline'
-                ? 'timeline'
+            const stored = localStorage.getItem('project_view');
+            return stored === 'timeline' || stored === 'board'
+                ? stored
                 : 'tasks';
         } catch {
             return 'tasks';
         }
     });
-    const changeView = (next: 'tasks' | 'timeline') => {
+    const changeView = (next: 'tasks' | 'timeline' | 'board') => {
         setView(next);
         try {
             localStorage.setItem('project_view', next);
@@ -245,6 +249,57 @@ const ProjectDetails: React.FC = () => {
             showErrorToast(
                 t('projectTimeline.saveError', 'Could not move the task')
             );
+        }
+    };
+
+    // Dragging a card to another board column
+    const handleTaskSectionChange = async (
+        task: Task,
+        sectionUid: string | null
+    ) => {
+        if (!task.uid) return;
+        const previous = task.section_uid ?? null;
+        const setSection = (value: string | null) =>
+            setTasks((prev) =>
+                prev.map((item) =>
+                    item.uid === task.uid
+                        ? { ...item, section_uid: value }
+                        : item
+                )
+            );
+        setSection(sectionUid);
+        try {
+            await updateTask(task.uid, { section_uid: sectionUid });
+        } catch (error) {
+            setSection(previous);
+            throw error;
+        }
+    };
+
+    // Puts the listed tasks, in order, into a board column and saves it.
+    const handleColumnOrder = async (
+        sectionUid: string | null,
+        taskUids: string[]
+    ) => {
+        if (!project?.uid) return;
+        const previous = tasks;
+        const index = new Map(taskUids.map((uid, i) => [uid, i]));
+        setTasks(
+            tasks.map((item) =>
+                item.uid && index.has(item.uid)
+                    ? {
+                          ...item,
+                          section_uid: sectionUid,
+                          section_position: index.get(item.uid),
+                      }
+                    : item
+            )
+        );
+        try {
+            await orderBoardColumn(project.uid, sectionUid, taskUids);
+        } catch (error) {
+            setTasks(previous);
+            throw error;
         }
     };
 
@@ -493,6 +548,8 @@ const ProjectDetails: React.FC = () => {
 
     const compareTasks = useCallback(
         (a: Task, b: Task) => {
+            const pinned = comparePinnedTasks(a, b);
+            if (pinned !== 0) return pinned;
             if (orderBy.startsWith('custom:')) {
                 const posA = a.uid ? taskPositions.get(a.uid) : undefined;
                 const posB = b.uid ? taskPositions.get(b.uid) : undefined;
@@ -767,27 +824,34 @@ const ProjectDetails: React.FC = () => {
                     <div className="mb-4">
                         <div className="flex items-center justify-between min-h-[2.5rem]">
                             <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                                {(['tasks', 'timeline'] as const).map((tab) => (
-                                    <button
-                                        key={tab}
-                                        type="button"
-                                        aria-pressed={view === tab}
-                                        data-testid={`project-view-${tab}`}
-                                        onClick={() => changeView(tab)}
-                                        className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
-                                            view === tab
-                                                ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                                : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
-                                        }`}
-                                    >
-                                        {tab === 'tasks'
-                                            ? t('tasks.title', 'Tasks')
-                                            : t(
-                                                  'projectTimeline.title',
-                                                  'Timeline'
-                                              )}
-                                    </button>
-                                ))}
+                                {(['tasks', 'board', 'timeline'] as const).map(
+                                    (tab) => (
+                                        <button
+                                            key={tab}
+                                            type="button"
+                                            aria-pressed={view === tab}
+                                            data-testid={`project-view-${tab}`}
+                                            onClick={() => changeView(tab)}
+                                            className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
+                                                view === tab
+                                                    ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
+                                                    : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                            }`}
+                                        >
+                                            {tab === 'tasks'
+                                                ? t('tasks.title', 'Tasks')
+                                                : tab === 'board'
+                                                  ? t(
+                                                        'projectBoard.title',
+                                                        'Board'
+                                                    )
+                                                  : t(
+                                                        'projectTimeline.title',
+                                                        'Timeline'
+                                                    )}
+                                        </button>
+                                    )
+                                )}
                             </div>
 
                             {
@@ -900,7 +964,17 @@ const ProjectDetails: React.FC = () => {
                                 </div>
                             </div>
 
-                            {view === 'timeline' ? (
+                            {view === 'board' ? (
+                                <ProjectBoard
+                                    project={project}
+                                    tasks={displayTasks}
+                                    onMoveTask={handleTaskSectionChange}
+                                    onOrderColumn={handleColumnOrder}
+                                    readOnly={project.access_level === 'ro'}
+                                    onOpenTask={setPanelTask}
+                                    t={t}
+                                />
+                            ) : view === 'timeline' ? (
                                 <ProjectTimeline
                                     project={project}
                                     tasks={displayTasks}

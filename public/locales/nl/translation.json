@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dagen",
+    "error": "Focusstatistieken konden niet worden geladen",
+    "empty": "Nog geen focussessies. Start de Pomodoro-timer in de bovenbalk; afgeronde sessies worden hier geteld.",
+    "total": "Focustijd",
+    "sessions": "Sessies",
+    "bestHour": "Uur met de meeste focus",
+    "perDay": "Minuten per dag",
+    "perHour": "Minuten per uur van de dag",
+    "topTasks": "Taken met de meeste focus"
+  },
   "common": {
     "deleting": "Verwijderen...",
     "save": "Opslaan",
@@ -100,7 +113,8 @@
     "telegramProblem": "Probleem met Telegram-verbinding",
     "resize": "Zijbalk aanpassen",
     "collapseViews": "Lijst met weergaven inklappen",
-    "expandViews": "Lijst met weergaven uitklappen"
+    "expandViews": "Lijst met weergaven uitklappen",
+    "summary": "Samenvatting"
   },
   "navigation": {
     "home": "Home",
@@ -220,7 +234,43 @@
       "important": "Belangrijk",
       "notImportant": "Niet Belangrijk",
       "dropHere": "Hier laten vallen",
-      "urgentHint": "Tag taken met 'dringend' om ze als dringend te markeren"
+      "urgentHint": "Tag taken met 'dringend' om ze als dringend te markeren",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (standaard)",
+        "new": "Nieuwe matrix",
+        "newName": "Nieuwe matrix",
+        "limit": "Je kunt maximaal {{count}} matrices bewaren.",
+        "editTitle": "Matrix bewerken",
+        "name": "Naam van de matrix",
+        "quadrant": "Kwadrant {{number}}",
+        "quadrantName": "Naam van het kwadrant",
+        "priorities": "Prioriteit (een van)",
+        "priority": {
+          "none": "Geen",
+          "low": "Laag",
+          "medium": "Gemiddeld",
+          "high": "Hoog"
+        },
+        "due": "Vervaldatum",
+        "dueType": {
+          "any": "Alle",
+          "overdue": "Te laat",
+          "today": "Vandaag",
+          "within": "Binnen N dagen",
+          "none": "Geen datum"
+        },
+        "days": "Dagen",
+        "tags": "Labels (een van, gescheiden door komma's)",
+        "projects": "Projecten (optioneel)",
+        "firstMatchHint": "Elke taak staat in het eerste kwadrant waarvan ze aan de regel voldoet. Een lege keuze past op alles.",
+        "deleteTitle": "Matrix verwijderen",
+        "deleteConfirm": "De matrix \"{{name}}\" verwijderen? Je taken veranderen niet."
+      },
+      "dropRefusedPriority": "Dit kwadrant staat meerdere prioriteiten toe, dus de taak kan hier niet naartoe worden gesleept.",
+      "dropRefusedDue": "De deadline past niet bij dit kwadrant; wijzig liever de datum.",
+      "dropRefusedProject": "Het project van de taak past niet bij dit kwadrant.",
+      "dropRefusedEarlier": "Na de wijziging zou de taak nog steeds in een eerder kwadrant terechtkomen."
     },
     "kanban": {
       "title": "Kanban Bord",
@@ -281,6 +331,18 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonneren op je taken",
+      "description": "Een privéadres dat je open taken met een deadline toont in Google Agenda, Apple Agenda of Outlook. Iedereen met het adres kan die taken lezen.",
+      "address": "Feedadres",
+      "copy": "Kopiëren",
+      "copied": "Adres gekopieerd",
+      "once": "Kopieer het nu: het wordt maar één keer getoond. Een nieuw adres zet het oude uit.",
+      "create": "Adres maken",
+      "rotate": "Nieuw adres maken",
+      "disable": "Uitzetten",
+      "error": "Takenfeed kon niet worden bijgewerkt"
+    },
     "settings": "Profielinstellingen",
     "language": "Taal",
     "theme": "Thema",
@@ -1398,7 +1460,11 @@
     "noStartDate": "Geen startdatum",
     "startDateUpdated": "Startdatum bijgewerkt",
     "startDateUpdateError": "Startdatum bijwerken mislukt",
-    "startAfterDueError": "De start kan niet na de vervaldatum liggen"
+    "startAfterDueError": "De start kan niet na de vervaldatum liggen",
+    "pin": "Vastzetten",
+    "unpin": "Losmaken",
+    "pinned": "Vastgezet",
+    "pinUpdateError": "Vastzetten bijwerken mislukt"
   },
   "projects": {
     "loading": "Projecten laden...",
@@ -1647,7 +1713,12 @@
     "pinnedTag": "Vastgezette tag",
     "frequentlyUsed": "Vaak gebruikt",
     "createTag": "+ \"{{name}}\" aanmaken",
-    "pinTag": "Vastzetten voor snelle toegang"
+    "pinTag": "Vastzetten voor snelle toegang",
+    "parentTag": "Bovenliggende tag",
+    "noParent": "Geen (hoogste niveau)",
+    "parentTagHasChildren": "Deze tag heeft onderliggende tags en kan daarom niet onder een andere tag worden geplaatst.",
+    "showChildTags": "Onderliggende tags tonen",
+    "hideChildTags": "Onderliggende tags verbergen"
   },
   "recurrence": {
     "none": "Geen",
@@ -1692,6 +1763,52 @@
     "done": "Klaar"
   },
   "calendar": {
+    "focusSession": "Focus",
+    "print": "Afdrukken",
+    "year": "Jaar",
+    "weekNumber": "W{{week}}",
+    "yearItems_one": "{{date}}: {{count}} item",
+    "yearItems_other": "{{date}}: {{count}} items",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Vorige maand",
+    "nextMonth": "Volgende maand",
+    "multiDay_one": "{{count}} dagen",
+    "multiDay_other": "{{count}} dagen",
+    "agendaEmpty": "Niets gepland",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Focussessies tonen",
+      "holidays": "Feestdagen",
+      "holidaysNone": "Geen",
+      "holidayRegion": "Regio",
+      "holidayRegionAll": "Heel het land",
+      "showHabits": "Gewoonten tonen",
+      "showWeekNumbers": "Weeknummers tonen",
+      "showMiniCalendar": "Minikalender tonen",
+      "multiDayCount": "Dagen in meerdaagse weergave",
+      "title": "Weergaveopties",
+      "showCompleted": "Voltooide tonen",
+      "showWeekends": "Weekenden tonen",
+      "showRepeats": "Alle herhalingen tonen",
+      "colorBy": "Kleuren op",
+      "colorBy_default": "Standaard",
+      "colorBy_project": "Project",
+      "colorBy_priority": "Prioriteit",
+      "colorBy_tag": "Tag",
+      "saveError": "Weergaveopties konden niet worden opgeslagen"
+    },
+    "arrange": {
+      "title": "Taken inplannen",
+      "noDate": "Geen datum",
+      "overdue": "Te laat",
+      "filterProject": "Project",
+      "filterTag": "Tag",
+      "filterPriority": "Prioriteit",
+      "emptyNoDate": "Geen taken zonder datum om in te plannen",
+      "emptyOverdue": "Geen te late taken om in te plannen",
+      "noProject": "Geen project"
+    },
+    "resizeTask": "Wijzig wanneer deze taak eindigt",
     "month": "Maand",
     "week": "Week",
     "day": "Dag",
@@ -3133,6 +3250,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Kleuren op",
+    "colorByStatus": "Kleur: status",
+    "colorByPriority": "Kleur: prioriteit",
+    "colorByTag": "Kleur: tag",
     "title": "Tijdlijn",
     "days": "Dagen",
     "weeks": "Weken",
@@ -3415,5 +3536,75 @@
     "adminRequiredTitle": "Schakel eerst tweestapsverificatie in",
     "adminRequiredBody": "Dit account kan alle klanten zien, dus het beheerpaneel opent pas als tweestapsverificatie aan staat.",
     "adminRequiredAction": "Instellen"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Van",
+    "to": "Tot",
+    "groupBy": "Groeperen op",
+    "includeOpen": "Open taken met vervaldatum in deze periode meenemen",
+    "saveTemplate": "Opslaan als sjabloon",
+    "templateSaved": "Sjabloon opgeslagen",
+    "templateFailed": "Sjabloon kon niet worden opgeslagen",
+    "copyMarkdown": "Kopiëren als Markdown",
+    "downloadMd": "Downloaden .md",
+    "downloadTxt": "Downloaden .txt",
+    "downloadCsv": "Downloaden .csv",
+    "print": "Afdrukken",
+    "copied": "Gekopieerd naar klembord",
+    "copyFailed": "Kopiëren naar klembord mislukt",
+    "exportTitle": "Samenvatting {{start}} – {{end}}",
+    "counts": "{{completed}} voltooid, {{open}} open",
+    "empty": "Geen taken in deze periode.",
+    "noProject": "Geen project",
+    "noDate": "Geen datum",
+    "periods": {
+      "today": "Vandaag",
+      "this_week": "Deze week",
+      "last_week": "Vorige week",
+      "this_month": "Deze maand",
+      "custom": "Aangepaste periode"
+    },
+    "groupings": {
+      "project": "Project",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Voltooid",
+      "not_started": "Niet gestart",
+      "in_progress": "Bezig",
+      "waiting": "Wachtend",
+      "planned": "Gepland",
+      "archived": "Gearchiveerd",
+      "cancelled": "Geannuleerd"
+    },
+    "csv": {
+      "name": "Taak",
+      "status": "Status",
+      "project": "Project",
+      "completed": "Voltooid op",
+      "due": "Vervaldatum",
+      "tags": "Tags"
+    }
+  },
+  "projectBoard": {
+    "title": "Bord",
+    "unsectioned": "Zonder sectie",
+    "empty": "Geen taken",
+    "addColumn": "Kolom toevoegen",
+    "addLeft": "Kolom links toevoegen",
+    "addRight": "Kolom rechts toevoegen",
+    "moveLeft": "Naar links",
+    "moveRight": "Naar rechts",
+    "rename": "Hernoemen",
+    "delete": "Verwijderen",
+    "deleteTitle": "Kolom verwijderen",
+    "deleteMessage": "\"{{name}}\" verwijderen? De taken gaan naar Zonder sectie.",
+    "columnName": "Kolomnaam",
+    "columnActions": "Kolomacties",
+    "newColumn": "Nieuwe kolom",
+    "loadError": "Kolommen konden niet worden geladen",
+    "saveError": "Bord kon niet worden opgeslagen"
   }
 }

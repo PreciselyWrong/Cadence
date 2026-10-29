@@ -42,6 +42,15 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            parent_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'tags',
+                    key: 'id',
+                },
+                onDelete: 'SET NULL',
+            },
         },
         {
             tableName: 'tags',

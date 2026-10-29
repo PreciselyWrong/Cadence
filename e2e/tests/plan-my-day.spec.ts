@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../helpers/testHelpers';
+import { loginAsNewUser } from '../helpers/testHelpers';
 
 test.describe('Plan my day', () => {
     test('plans a task, starts the day and marks it done', async ({
@@ -7,11 +7,14 @@ test.describe('Plan my day', () => {
         context,
         baseURL,
     }) => {
-        const appUrl = await login(page, baseURL);
+        // A long flow (plan, start, finish) that shares the backend with the
+        // other workers: give it the slow-test budget.
+        test.slow();
+        const appUrl = await loginAsNewUser(page, baseURL);
         const name = `Plan me ${Date.now()}`;
 
-        // Start from an empty day: other tests share this user.
-        await context.request.delete(`${appUrl}/api/daily-plan/today`);
+        // A user of its own, so its day plan is not shared with other
+        // tests or with parallel copies of this one.
 
         const today = await page.evaluate(() => {
             const d = new Date();
@@ -39,7 +42,18 @@ test.describe('Plan my day', () => {
         await expect(card).toHaveCount(0);
         await expect(page.getByTestId('capacity')).toContainText('1h planned');
 
-        await page.getByTestId('start-my-day').click();
+        // Starting saves the plan first; under parallel load that can take
+        // longer than the default expect timeout.
+        const [started] = await Promise.all([
+            page.waitForResponse(
+                (r) =>
+                    /\/api\/daily-plan\/[^/]+\/start$/.test(r.url()) &&
+                    r.request().method() === 'POST',
+                { timeout: 30_000 }
+            ),
+            page.getByTestId('start-my-day').click(),
+        ]);
+        expect(started.ok()).toBeTruthy();
         await expect(page).toHaveURL(/\/today$/);
 
         const agenda = page.getByTestId('agenda-list');

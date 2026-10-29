@@ -415,6 +415,42 @@ describe('TaskRow', () => {
             expect(onTaskDelete).toHaveBeenCalledWith('task-1');
         });
 
+        it('pins the task with a field-only PATCH', async () => {
+            const onTaskUpdate = jest.fn().mockResolvedValue(undefined);
+            (tasksService.updateTask as jest.Mock).mockResolvedValueOnce({
+                ...baseTask(),
+                pinned: true,
+            });
+            renderRow(baseTask(), { onTaskUpdate });
+            expect(
+                screen.queryByTestId('task-pinned-icon')
+            ).not.toBeInTheDocument();
+            fireEvent.click(screen.getByTestId('task-actions-menu-button'));
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Pin' }));
+            await waitFor(() =>
+                expect(tasksService.updateTask).toHaveBeenCalledWith('task-1', {
+                    pinned: true,
+                })
+            );
+            await waitFor(() =>
+                expect(onTaskUpdate).toHaveBeenCalledWith(
+                    expect.objectContaining({ pinned: true })
+                )
+            );
+        });
+
+        it('shows the pin icon and an Unpin action on a pinned task', async () => {
+            renderRow(baseTask({ pinned: true }));
+            expect(screen.getByTestId('task-pinned-icon')).toBeInTheDocument();
+            fireEvent.click(screen.getByTestId('task-actions-menu-button'));
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
+            await waitFor(() =>
+                expect(tasksService.updateTask).toHaveBeenCalledWith('task-1', {
+                    pinned: false,
+                })
+            );
+        });
+
         it('closes on a click outside the menu', () => {
             renderRow(baseTask());
             fireEvent.click(screen.getByTestId('task-actions-menu-button'));

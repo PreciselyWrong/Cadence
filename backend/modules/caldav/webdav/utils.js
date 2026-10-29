@@ -201,13 +201,13 @@ function parsePropfind(xmlString) {
 
                 const prop = findResultNode(propfind, 'prop');
                 if (prop) {
-                    const requestedProps = Object.keys(prop).map((key) => {
-                        const [namespace, name] = key.split(':').reverse();
-                        return {
-                            name: name || namespace,
-                            namespace: name ? namespace : 'D',
-                        };
-                    });
+                    const requestedProps = Object.keys(prop)
+                        .filter((key) => !key.startsWith('$'))
+                        .map((key) => {
+                            const parts = key.split(':');
+                            const name = parts.pop();
+                            return { name, namespace: parts.pop() || 'D' };
+                        });
 
                     return resolve({ type: 'prop', props: requestedProps });
                 }

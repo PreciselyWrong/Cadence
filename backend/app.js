@@ -405,6 +405,9 @@ const goalsModule = require('./modules/goals');
 const dailyPlanModule = require('./modules/daily-plan');
 const onboardingModule = require('./modules/onboarding');
 const calendarFeedsModule = require('./modules/calendar-feeds');
+const taskFeedModule = require('./modules/task-feed');
+const holidaysModule = require('./modules/holidays');
+const focusSessionsModule = require('./modules/focus-sessions');
 const authModule = require('./modules/auth');
 const backupModule = require('./modules/backup');
 const featureFlagsModule = require('./modules/feature-flags');
@@ -414,6 +417,7 @@ const inboxModule = require('./modules/inbox');
 const notesModule = require('./modules/notes');
 const notificationsModule = require('./modules/notifications');
 const projectsModule = require('./modules/projects');
+const projectSectionsModule = require('./modules/project-sections');
 const quotesModule = require('./modules/quotes');
 const searchModule = require('./modules/search');
 const sharesModule = require('./modules/shares');
@@ -528,6 +532,8 @@ const registerApiRoutes = (basePath) => {
     // Public note links: reachable without signing in
     app.use(basePath, notesModule.publicRoutes);
     app.use(basePath, blogModule.routes);
+    // Task feed (.ics): the secret address is the key
+    app.use(basePath, taskFeedModule.publicRoutes);
 
     app.use(basePath, requireAuth);
     // Instances that sell access close everything past this point until the
@@ -538,6 +544,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, commentsModule.routes);
     app.use(basePath, habitsModule.routes);
     app.use(basePath, projectsModule.routes);
+    app.use(basePath, projectSectionsModule.routes);
     app.use(basePath, adminModule.routes);
     app.use(basePath, sharesModule.routes);
     app.use(basePath, areasModule.routes);
@@ -545,6 +552,9 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, dailyPlanModule.routes);
     app.use(basePath, onboardingModule.routes);
     app.use(basePath, calendarFeedsModule.routes);
+    app.use(basePath, taskFeedModule.routes);
+    app.use(basePath, holidaysModule.routes);
+    app.use(basePath, focusSessionsModule.routes);
     app.use(basePath, notesModule.routes);
     app.use(basePath, tagsModule.routes);
     app.use(basePath, usersModule.routes);

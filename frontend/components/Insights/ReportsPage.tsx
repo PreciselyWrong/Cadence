@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { getApiPath } from '../../config/paths';
 import { getDefaultHeaders } from '../../utils/authUtils';
@@ -95,7 +101,10 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
 
     const plotW = width - CHART_MARGINS.left - CHART_MARGINS.right;
     const plotH = HEIGHT - CHART_MARGINS.top - CHART_MARGINS.bottom;
-    const maxCount = useMemo(() => Math.max(...weeks.map((w) => w.count), 1), [weeks]);
+    const maxCount = useMemo(
+        () => Math.max(...weeks.map((w) => w.count), 1),
+        [weeks]
+    );
     const barWidth = plotW / weeks.length;
     const BAR_GAP = 4;
 
@@ -107,9 +116,14 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
 
     return (
         <div ref={containerRef} className="w-full" style={{ height: HEIGHT }}>
-            <svg width={width} height={HEIGHT} style={{ display: 'block', overflow: 'visible' }}>
+            <svg
+                width={width}
+                height={HEIGHT}
+                style={{ display: 'block', overflow: 'visible' }}
+            >
                 {yTicks.map((tick) => {
-                    const y = CHART_MARGINS.top + plotH - (tick / maxCount) * plotH;
+                    const y =
+                        CHART_MARGINS.top + plotH - (tick / maxCount) * plotH;
                     return (
                         <g key={tick}>
                             <line
@@ -136,7 +150,8 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                 })}
 
                 {weeks.map((w, i) => {
-                    const barH = maxCount === 0 ? 0 : (w.count / maxCount) * plotH;
+                    const barH =
+                        maxCount === 0 ? 0 : (w.count / maxCount) * plotH;
                     const x = CHART_MARGINS.left + i * barWidth + BAR_GAP / 2;
                     const y = CHART_MARGINS.top + plotH - barH;
                     const bw = barWidth - BAR_GAP;
@@ -199,11 +214,12 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
     );
 
     const sorted = useMemo(
-        () => [...areas].sort((a, b) => {
-            const rateA = a.completed / Math.max(a.completed + a.open, 1);
-            const rateB = b.completed / Math.max(b.completed + b.open, 1);
-            return rateB - rateA;
-        }),
+        () =>
+            [...areas].sort((a, b) => {
+                const rateA = a.completed / Math.max(a.completed + a.open, 1);
+                const rateB = b.completed / Math.max(b.completed + b.open, 1);
+                return rateB - rateA;
+            }),
         [areas]
     );
 
@@ -213,7 +229,8 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                 const total = area.completed + area.open;
                 const completedPct = (area.completed / maxTotal) * 100;
                 const openPct = (area.open / maxTotal) * 100;
-                const rate = total > 0 ? Math.round((area.completed / total) * 100) : 0;
+                const rate =
+                    total > 0 ? Math.round((area.completed / total) * 100) : 0;
                 const isTop = idx === 0 && area.completed > 0;
                 const isBottom = idx === sorted.length - 1 && sorted.length > 1;
                 return (
@@ -230,7 +247,10 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                                 )}
                                 {isBottom && rate < 20 && (
                                     <span className="text-[10px] text-orange-400 font-medium whitespace-nowrap">
-                                        {t('reports.needsAttention', 'needs attention')}
+                                        {t(
+                                            'reports.needsAttention',
+                                            'needs attention'
+                                        )}
                                     </span>
                                 )}
                             </div>
@@ -239,7 +259,8 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                                     {t('reports.doneOpen', {
                                         done: area.completed,
                                         open: area.open,
-                                        defaultValue: '{{done}} done · {{open}} open',
+                                        defaultValue:
+                                            '{{done}} done · {{open}} open',
                                     })}
                                 </span>
                                 <span
@@ -302,16 +323,24 @@ const ReportsPage: React.FC = () => {
     if (!report || !report.weekly_review) {
         return (
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                <p className="text-sm text-gray-500">{t('common.error', 'Failed to load reports.')}</p>
+                <p className="text-sm text-gray-500">
+                    {t('common.error', 'Failed to load reports.')}
+                </p>
             </div>
         );
     }
 
-    const { weekly_review, project_health, completion_trends, area_balance } = report;
+    const { weekly_review, project_health, completion_trends, area_balance } =
+        report;
     const { action_debt, total_projects } = project_health;
 
-    const totalCompleted = completion_trends.weeks.reduce((s, w) => s + w.count, 0);
-    const avgPerWeek = Math.round(totalCompleted / completion_trends.weeks.length);
+    const totalCompleted = completion_trends.weeks.reduce(
+        (s, w) => s + w.count,
+        0
+    );
+    const avgPerWeek = Math.round(
+        totalCompleted / completion_trends.weeks.length
+    );
     const bestWeek = completion_trends.weeks.reduce(
         (best, w) => (w.count > best.count ? w : best),
         completion_trends.weeks[0]
@@ -324,12 +353,16 @@ const ReportsPage: React.FC = () => {
     ];
 
     const oldestWait =
-        weekly_review.waiting_for.length > 0 ? weekly_review.waiting_for[0] : null;
+        weekly_review.waiting_for.length > 0
+            ? weekly_review.waiting_for[0]
+            : null;
 
     return (
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
             <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-2xl font-light">{t('sidebar.reports', 'Reports')}</h2>
+                <h2 className="text-2xl font-light">
+                    {t('sidebar.reports', 'Reports')}
+                </h2>
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500 dark:text-indigo-400">
                     {t('common.beta', 'beta')}
                 </span>
@@ -358,7 +391,9 @@ const ReportsPage: React.FC = () => {
                     {/* Stat cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex items-start gap-3">
-                            <ArchiveBoxIcon className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.inbox_count === 0 ? 'text-emerald-400' : 'text-amber-400'}`} />
+                            <ArchiveBoxIcon
+                                className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.inbox_count === 0 ? 'text-emerald-400' : 'text-amber-400'}`}
+                            />
                             <div>
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.inbox_count}
@@ -371,31 +406,45 @@ const ReportsPage: React.FC = () => {
                                         ? t('reports.inboxZero', 'Inbox zero')
                                         : t('reports.itemsToProcess', {
                                               count: weekly_review.inbox_count,
-                                              defaultValue: '{{count}} items to process',
+                                              defaultValue:
+                                                  '{{count}} items to process',
                                           })}
                                 </p>
                             </div>
                         </div>
 
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex items-start gap-3">
-                            <ExclamationTriangleIcon className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.stalled_projects.length === 0 ? 'text-emerald-400' : 'text-red-400'}`} />
+                            <ExclamationTriangleIcon
+                                className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.stalled_projects.length === 0 ? 'text-emerald-400' : 'text-red-400'}`}
+                            />
                             <div>
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.stalled_projects.length}
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    {t('reports.stalledProjects', 'Stalled projects')}
+                                    {t(
+                                        'reports.stalledProjects',
+                                        'Stalled projects'
+                                    )}
                                 </p>
                                 <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
                                     {weekly_review.stalled_projects.length === 0
-                                        ? t('reports.allProjectsMoving', 'All projects moving')
-                                        : t('reports.noActivity14', 'No activity in 14+ days')}
+                                        ? t(
+                                              'reports.allProjectsMoving',
+                                              'All projects moving'
+                                          )
+                                        : t(
+                                              'reports.noActivity14',
+                                              'No activity in 14+ days'
+                                          )}
                                 </p>
                             </div>
                         </div>
 
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex items-start gap-3">
-                            <ClockIcon className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.waiting_for.length === 0 ? 'text-emerald-400' : 'text-blue-400'}`} />
+                            <ClockIcon
+                                className={`h-8 w-8 flex-shrink-0 mt-0.5 ${weekly_review.waiting_for.length === 0 ? 'text-emerald-400' : 'text-blue-400'}`}
+                            />
                             <div>
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.waiting_for.length}
@@ -408,9 +457,13 @@ const ReportsPage: React.FC = () => {
                                         ? t('reports.oldestWait', {
                                               name: oldestWait.name,
                                               days: oldestWait.days_waiting,
-                                              defaultValue: 'Oldest: {{name}} ({{days}}d)',
+                                              defaultValue:
+                                                  'Oldest: {{name}} ({{days}}d)',
                                           })
-                                        : t('reports.nothingPending', 'Nothing pending')}
+                                        : t(
+                                              'reports.nothingPending',
+                                              'Nothing pending'
+                                          )}
                                 </p>
                             </div>
                         </div>
@@ -421,11 +474,17 @@ const ReportsPage: React.FC = () => {
                         {weekly_review.stalled_projects.length > 0 && (
                             <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
                                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
-                                    {t('reports.stalledProjects', 'Stalled Projects')}
+                                    {t(
+                                        'reports.stalledProjects',
+                                        'Stalled Projects'
+                                    )}
                                 </h4>
                                 <ul className="space-y-2.5">
                                     {weekly_review.stalled_projects.map((p) => (
-                                        <li key={p.id} className="flex justify-between items-start gap-2">
+                                        <li
+                                            key={p.id}
+                                            className="flex justify-between items-start gap-2"
+                                        >
                                             <div className="min-w-0">
                                                 <p className="text-sm text-gray-800 dark:text-gray-200 truncate">
                                                     {p.name}
@@ -436,10 +495,13 @@ const ReportsPage: React.FC = () => {
                                                     </p>
                                                 )}
                                             </div>
-                                            <span className={`text-xs font-medium px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0 ${staleBadgeColor(p.days_stale)}`}>
+                                            <span
+                                                className={`text-xs font-medium px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0 ${staleBadgeColor(p.days_stale)}`}
+                                            >
                                                 {t('reports.daysStale', {
                                                     days: p.days_stale,
-                                                    defaultValue: '{{days}}d stale',
+                                                    defaultValue:
+                                                        '{{days}}d stale',
                                                 })}
                                             </span>
                                         </li>
@@ -455,7 +517,10 @@ const ReportsPage: React.FC = () => {
                                 </h4>
                                 <ul className="space-y-2.5">
                                     {weekly_review.waiting_for.map((p) => (
-                                        <li key={p.id} className="flex justify-between items-start gap-2">
+                                        <li
+                                            key={p.id}
+                                            className="flex justify-between items-start gap-2"
+                                        >
                                             <div className="min-w-0">
                                                 <p className="text-sm text-gray-800 dark:text-gray-200 truncate">
                                                     {p.name}
@@ -466,10 +531,13 @@ const ReportsPage: React.FC = () => {
                                                     </p>
                                                 )}
                                             </div>
-                                            <span className={`text-xs font-medium px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0 ${waitBadgeColor(p.days_waiting)}`}>
+                                            <span
+                                                className={`text-xs font-medium px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0 ${waitBadgeColor(p.days_waiting)}`}
+                                            >
                                                 {t('reports.daysWaiting', {
                                                     days: p.days_waiting,
-                                                    defaultValue: '{{days}}d waiting',
+                                                    defaultValue:
+                                                        '{{days}}d waiting',
                                                 })}
                                             </span>
                                         </li>
@@ -483,7 +551,10 @@ const ReportsPage: React.FC = () => {
                                 <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex items-center gap-2">
                                     <CheckCircleIcon className="h-5 w-5 text-emerald-400 flex-shrink-0" />
                                     <p className="text-sm text-emerald-500 dark:text-emerald-400">
-                                        {t('reports.allClear', 'All clear — no stalled projects or waiting-for items.')}
+                                        {t(
+                                            'reports.allClear',
+                                            'All clear — no stalled projects or waiting-for items.'
+                                        )}
                                     </p>
                                 </div>
                             )}
@@ -501,7 +572,10 @@ const ReportsPage: React.FC = () => {
                                     <p className="text-sm text-emerald-500 dark:text-emerald-400">
                                         {total_projects > 0
                                             ? `All ${total_projects} active projects have a next action.`
-                                            : t('reports.allProjectsHaveActions', 'All active projects have at least one next action.')}
+                                            : t(
+                                                  'reports.allProjectsHaveActions',
+                                                  'All active projects have at least one next action.'
+                                              )}
                                     </p>
                                 </div>
                             ) : (
@@ -513,7 +587,8 @@ const ReportsPage: React.FC = () => {
                                                 {t('reports.noNextAction', {
                                                     debt: action_debt.length,
                                                     total: total_projects,
-                                                    defaultValue: '{{debt}} of {{total}} projects have no next action',
+                                                    defaultValue:
+                                                        '{{debt}} of {{total}} projects have no next action',
                                                 })}
                                             </p>
                                         </div>
@@ -522,12 +597,17 @@ const ReportsPage: React.FC = () => {
                                     <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded overflow-hidden mb-4">
                                         <div
                                             className="h-full bg-emerald-400 dark:bg-emerald-500 rounded"
-                                            style={{ width: `${((total_projects - action_debt.length) / total_projects) * 100}%` }}
+                                            style={{
+                                                width: `${((total_projects - action_debt.length) / total_projects) * 100}%`,
+                                            }}
                                         />
                                     </div>
                                     <ul className="space-y-2">
                                         {action_debt.map((p) => (
-                                            <li key={p.id} className="flex items-center justify-between text-sm gap-2">
+                                            <li
+                                                key={p.id}
+                                                className="flex items-center justify-between text-sm gap-2"
+                                            >
                                                 <span className="text-gray-800 dark:text-gray-200 truncate">
                                                     {p.name}
                                                 </span>
@@ -538,7 +618,10 @@ const ReportsPage: React.FC = () => {
                                                         </span>
                                                     )}
                                                     <span className="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                                                        {p.status.replace(/_/g, ' ')}
+                                                        {p.status.replace(
+                                                            /_/g,
+                                                            ' '
+                                                        )}
                                                     </span>
                                                 </div>
                                             </li>
@@ -556,12 +639,18 @@ const ReportsPage: React.FC = () => {
                     {/* Completion Trends */}
                     <div>
                         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
-                            {t('reports.completionTrends8', 'Completion Trends, last 8 weeks')}
+                            {t(
+                                'reports.completionTrends8',
+                                'Completion Trends, last 8 weeks'
+                            )}
                         </h3>
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
                             {totalCompleted === 0 ? (
                                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                                    {t('reports.noCompletions', 'No completed tasks in the past 8 weeks.')}
+                                    {t(
+                                        'reports.noCompletions',
+                                        'No completed tasks in the past 8 weeks.'
+                                    )}
                                 </p>
                             ) : (
                                 <>
@@ -570,13 +659,23 @@ const ReportsPage: React.FC = () => {
                                             <p className="text-xl font-semibold text-gray-900 dark:text-white">
                                                 {totalCompleted}
                                             </p>
-                                            <p className="text-xs text-gray-400 dark:text-gray-500">{t('reports.totalCompleted', 'total completed')}</p>
+                                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                                                {t(
+                                                    'reports.totalCompleted',
+                                                    'total completed'
+                                                )}
+                                            </p>
                                         </div>
                                         <div>
                                             <p className="text-xl font-semibold text-gray-900 dark:text-white">
                                                 {avgPerWeek}
                                             </p>
-                                            <p className="text-xs text-gray-400 dark:text-gray-500">{t('reports.avgPerWeek', 'avg / week')}</p>
+                                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                                                {t(
+                                                    'reports.avgPerWeek',
+                                                    'avg / week'
+                                                )}
+                                            </p>
                                         </div>
                                         {bestWeek.count > 0 && (
                                             <div>
@@ -586,7 +685,8 @@ const ReportsPage: React.FC = () => {
                                                 <p className="text-xs text-gray-400 dark:text-gray-500">
                                                     {t('reports.bestWeek', {
                                                         week: bestWeek.label,
-                                                        defaultValue: 'best ({{week}})',
+                                                        defaultValue:
+                                                            'best ({{week}})',
                                                     })}
                                                 </p>
                                             </div>
@@ -601,26 +701,38 @@ const ReportsPage: React.FC = () => {
                     {/* Area Balance */}
                     <div>
                         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
-                            {t('reports.areaBalance30', 'Area Balance, last 30 days')}
+                            {t(
+                                'reports.areaBalance30',
+                                'Area Balance, last 30 days'
+                            )}
                         </h3>
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
                             {area_balance.length === 0 ? (
                                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                                    {t('reports.noAreaData', 'No area data available. Assign tasks to areas to see balance.')}
+                                    {t(
+                                        'reports.noAreaData',
+                                        'No area data available. Assign tasks to areas to see balance.'
+                                    )}
                                 </p>
                             ) : (
                                 <>
                                     <div className="flex items-center gap-4 mb-4 text-xs text-gray-400 dark:text-gray-500">
                                         <span className="flex items-center gap-1">
                                             <span className="inline-block w-3 h-2 rounded bg-emerald-400 dark:bg-emerald-500" />
-                                            {t('reports.completed', 'Completed (30d)')}
+                                            {t(
+                                                'reports.completed',
+                                                'Completed (30d)'
+                                            )}
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <span className="inline-block w-3 h-2 rounded bg-indigo-200 dark:bg-indigo-800" />
                                             {t('reports.open', 'Open')}
                                         </span>
                                         <span className="flex items-center gap-1 ml-auto">
-                                            {t('reports.completionRateLegend', '% = completion rate')}
+                                            {t(
+                                                'reports.completionRateLegend',
+                                                '% = completion rate'
+                                            )}
                                         </span>
                                     </div>
                                     <AreaBalanceChart areas={area_balance} />

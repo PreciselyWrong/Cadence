@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} Tag",
+    "lastDays_other": "{{count}} Tage",
+    "error": "Fokus-Statistik konnte nicht geladen werden",
+    "empty": "Noch keine Fokus-Sitzungen. Starten Sie den Pomodoro-Timer in der oberen Leiste; beendete Sitzungen werden hier gezählt.",
+    "total": "Fokuszeit",
+    "sessions": "Sitzungen",
+    "bestHour": "Fokussierteste Stunde",
+    "perDay": "Minuten pro Tag",
+    "perHour": "Minuten nach Tageszeit",
+    "topTasks": "Am meisten fokussierte Aufgaben"
+  },
   "common": {
     "deleting": "Wird gelöscht...",
     "save": "Speichern",
@@ -100,7 +113,8 @@
     "telegramProblem": "Problem mit der Telegram-Verbindung",
     "resize": "Seitenleiste anpassen",
     "collapseViews": "Ansichtenliste einklappen",
-    "expandViews": "Ansichtenliste ausklappen"
+    "expandViews": "Ansichtenliste ausklappen",
+    "summary": "Zusammenfassung"
   },
   "navigation": {
     "home": "Startseite",
@@ -220,7 +234,43 @@
       "important": "Wichtig",
       "notImportant": "Nicht Wichtig",
       "dropHere": "Hier ablegen",
-      "urgentHint": "Kennzeichnen Sie Aufgaben mit 'dringend', um sie als dringend zu markieren"
+      "urgentHint": "Kennzeichnen Sie Aufgaben mit 'dringend', um sie als dringend zu markieren",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (Standard)",
+        "new": "Neue Matrix",
+        "newName": "Neue Matrix",
+        "limit": "Sie können bis zu {{count}} Matrizen behalten.",
+        "editTitle": "Matrix bearbeiten",
+        "name": "Name der Matrix",
+        "quadrant": "Quadrant {{number}}",
+        "quadrantName": "Name des Quadranten",
+        "priorities": "Priorität (beliebige davon)",
+        "priority": {
+          "none": "Keine",
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch"
+        },
+        "due": "Fälligkeit",
+        "dueType": {
+          "any": "Beliebig",
+          "overdue": "Überfällig",
+          "today": "Heute",
+          "within": "Innerhalb von N Tagen",
+          "none": "Ohne Datum"
+        },
+        "days": "Tage",
+        "tags": "Tags (beliebige davon, durch Kommas getrennt)",
+        "projects": "Projekte (optional)",
+        "firstMatchHint": "Jede Aufgabe erscheint im ersten Quadranten, dessen Regel sie erfüllt. Leere Auswahl passt auf alles.",
+        "deleteTitle": "Matrix löschen",
+        "deleteConfirm": "Die Matrix „{{name}}“ löschen? Ihre Aufgaben bleiben unverändert."
+      },
+      "dropRefusedPriority": "Dieser Quadrant erlaubt mehrere Prioritäten, daher kann die Aufgabe nicht hierher gezogen werden.",
+      "dropRefusedDue": "Das Fälligkeitsdatum der Aufgabe passt nicht zu diesem Quadranten; ändern Sie stattdessen das Datum.",
+      "dropRefusedProject": "Das Projekt der Aufgabe passt nicht zu diesem Quadranten.",
+      "dropRefusedEarlier": "Nach der Änderung würde die Aufgabe weiterhin in einem früheren Quadranten landen."
     },
     "kanban": {
       "title": "Kanban-Board",
@@ -649,6 +699,18 @@
     "startsOn": "Beginnt am {{date}}"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Aufgaben abonnieren",
+      "description": "Eine private Adresse, die Ihre offenen Aufgaben mit Fälligkeitsdatum in Google Kalender, Apple Kalender oder Outlook anzeigt. Wer die Adresse hat, kann diese Aufgaben lesen.",
+      "address": "Feed-Adresse",
+      "copy": "Kopieren",
+      "copied": "Adresse kopiert",
+      "once": "Kopieren Sie sie jetzt: Sie wird nur einmal angezeigt. Eine neue Adresse deaktiviert die alte.",
+      "create": "Adresse erstellen",
+      "rotate": "Neue Adresse erstellen",
+      "disable": "Deaktivieren",
+      "error": "Aufgaben-Feed konnte nicht aktualisiert werden"
+    },
     "title": "Profil-Einstellungen",
     "appearance": "Erscheinungsbild",
     "language": "Sprache",
@@ -1352,9 +1414,59 @@
     "noStartDate": "Kein Startdatum",
     "startDateUpdated": "Startdatum aktualisiert",
     "startDateUpdateError": "Startdatum konnte nicht aktualisiert werden",
-    "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen"
+    "startAfterDueError": "Der Beginn darf nicht nach dem Fälligkeitsdatum liegen",
+    "pin": "Anheften",
+    "unpin": "Lösen",
+    "pinned": "Angeheftet",
+    "pinUpdateError": "Anheften konnte nicht aktualisiert werden"
   },
   "calendar": {
+    "focusSession": "Fokus",
+    "print": "Drucken",
+    "year": "Jahr",
+    "weekNumber": "KW{{week}}",
+    "yearItems_one": "{{date}}: {{count}} Eintrag",
+    "yearItems_other": "{{date}}: {{count}} Einträge",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "multiDay_one": "{{count}} Tage",
+    "multiDay_other": "{{count}} Tage",
+    "agendaEmpty": "Nichts geplant",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Fokus-Sitzungen anzeigen",
+      "holidays": "Feiertage",
+      "holidaysNone": "Keine",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Ganzes Land",
+      "showHabits": "Gewohnheiten anzeigen",
+      "showWeekNumbers": "Kalenderwochen anzeigen",
+      "showMiniCalendar": "Minikalender anzeigen",
+      "multiDayCount": "Tage in der Mehrtagesansicht",
+      "title": "Ansichtsoptionen",
+      "showCompleted": "Erledigte anzeigen",
+      "showWeekends": "Wochenenden anzeigen",
+      "showRepeats": "Alle Wiederholungen anzeigen",
+      "colorBy": "Färben nach",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Priorität",
+      "colorBy_tag": "Tag",
+      "saveError": "Ansichtsoptionen konnten nicht gespeichert werden"
+    },
+    "arrange": {
+      "title": "Aufgaben einplanen",
+      "noDate": "Ohne Datum",
+      "overdue": "Überfällig",
+      "filterProject": "Projekt",
+      "filterTag": "Tag",
+      "filterPriority": "Priorität",
+      "emptyNoDate": "Keine Aufgaben ohne Datum zum Einplanen",
+      "emptyOverdue": "Keine überfälligen Aufgaben zum Einplanen",
+      "noProject": "Kein Projekt"
+    },
+    "resizeTask": "Ende dieser Aufgabe ändern",
     "month": "Monat",
     "week": "Woche",
     "day": "Tag",
@@ -1732,7 +1844,12 @@
     "pinnedTag": "Angeheftetes Tag",
     "frequentlyUsed": "Häufig verwendet",
     "createTag": "+ „{{name}}“ erstellen",
-    "pinTag": "Für schnellen Zugriff anheften"
+    "pinTag": "Für schnellen Zugriff anheften",
+    "parentTag": "Übergeordnetes Tag",
+    "noParent": "Keines (oberste Ebene)",
+    "parentTagHasChildren": "Dieses Tag hat untergeordnete Tags und kann daher nicht unter ein anderes Tag gestellt werden.",
+    "showChildTags": "Untergeordnete Tags anzeigen",
+    "hideChildTags": "Untergeordnete Tags ausblenden"
   },
   "pomodoro": {
     "play": "Abspielen",
@@ -3142,6 +3259,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Färben nach",
+    "colorByStatus": "Farbe: Status",
+    "colorByPriority": "Farbe: Priorität",
+    "colorByTag": "Farbe: Tag",
     "title": "Zeitleiste",
     "days": "Tage",
     "weeks": "Wochen",
@@ -3424,5 +3545,75 @@
     "adminRequiredTitle": "Schalten Sie zuerst die Zwei-Faktor-Anmeldung ein",
     "adminRequiredBody": "Dieses Konto kann alle Kunden sehen. Deshalb öffnet sich der Admin-Bereich erst, wenn die Zwei-Faktor-Anmeldung eingeschaltet ist.",
     "adminRequiredAction": "Einrichten"
+  },
+  "summary": {
+    "period": "Zeitraum",
+    "from": "Von",
+    "to": "Bis",
+    "groupBy": "Gruppieren nach",
+    "includeOpen": "Offene Aufgaben mit Fälligkeit im Zeitraum einbeziehen",
+    "saveTemplate": "Als Vorlage speichern",
+    "templateSaved": "Vorlage gespeichert",
+    "templateFailed": "Vorlage konnte nicht gespeichert werden",
+    "copyMarkdown": "Als Markdown kopieren",
+    "downloadMd": "Als .md herunterladen",
+    "downloadTxt": "Als .txt herunterladen",
+    "downloadCsv": "Als .csv herunterladen",
+    "print": "Drucken",
+    "copied": "In die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen",
+    "exportTitle": "Zusammenfassung {{start}} – {{end}}",
+    "counts": "{{completed}} erledigt, {{open}} offen",
+    "empty": "Keine Aufgaben in diesem Zeitraum.",
+    "noProject": "Kein Projekt",
+    "noDate": "Kein Datum",
+    "periods": {
+      "today": "Heute",
+      "this_week": "Diese Woche",
+      "last_week": "Letzte Woche",
+      "this_month": "Dieser Monat",
+      "custom": "Eigener Zeitraum"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Tag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Erledigt",
+      "not_started": "Nicht begonnen",
+      "in_progress": "In Arbeit",
+      "waiting": "Wartend",
+      "planned": "Geplant",
+      "archived": "Archiviert",
+      "cancelled": "Abgebrochen"
+    },
+    "csv": {
+      "name": "Aufgabe",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Erledigt am",
+      "due": "Fällig",
+      "tags": "Tags"
+    }
+  },
+  "projectBoard": {
+    "title": "Board",
+    "unsectioned": "Ohne Abschnitt",
+    "empty": "Keine Aufgaben",
+    "addColumn": "Spalte hinzufügen",
+    "addLeft": "Spalte links hinzufügen",
+    "addRight": "Spalte rechts hinzufügen",
+    "moveLeft": "Nach links",
+    "moveRight": "Nach rechts",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "deleteTitle": "Spalte löschen",
+    "deleteMessage": "„{{name}}“ löschen? Die Aufgaben darin wandern nach „Ohne Abschnitt“.",
+    "columnName": "Spaltenname",
+    "columnActions": "Spaltenaktionen",
+    "newColumn": "Neue Spalte",
+    "loadError": "Spalten konnten nicht geladen werden",
+    "saveError": "Board konnte nicht gespeichert werden"
   }
 }

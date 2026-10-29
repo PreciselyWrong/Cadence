@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dager",
+    "error": "Kunne ikke laste fokusstatistikk",
+    "empty": "Ingen fokusøkter ennå. Start Pomodoro-timeren i topplinjen; fullførte økter telles her.",
+    "total": "Fokustid",
+    "sessions": "Økter",
+    "bestHour": "Mest fokuserte time",
+    "perDay": "Minutter per dag",
+    "perHour": "Minutter per time på dagen",
+    "topTasks": "Oppgaver med mest fokus"
+  },
   "common": {
     "deleting": "Sletter...",
     "save": "Lagre",
@@ -100,7 +113,8 @@
     "telegramProblem": "Problem med Telegram-tilkoblingen",
     "resize": "Endre størrelse på sidefeltet",
     "collapseViews": "Skjul listen over visninger",
-    "expandViews": "Vis listen over visninger"
+    "expandViews": "Vis listen over visninger",
+    "summary": "Oppsummering"
   },
   "navigation": {
     "home": "Hjem",
@@ -221,7 +235,43 @@
       "important": "Viktig",
       "notImportant": "Ikke viktig",
       "dropHere": "Slipp her",
-      "urgentHint": "Merk oppgaver med 'urgent' for å markere dem som urgente"
+      "urgentHint": "Merk oppgaver med 'urgent' for å markere dem som urgente",
+      "matrix": {
+        "picker": "Matrise",
+        "default": "Eisenhower (standard)",
+        "new": "Ny matrise",
+        "newName": "Ny matrise",
+        "limit": "Du kan beholde opptil {{count}} matriser.",
+        "editTitle": "Rediger matrise",
+        "name": "Navn på matrisen",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Navn på kvadranten",
+        "priorities": "Prioritet (en av)",
+        "priority": {
+          "none": "Ingen",
+          "low": "Lav",
+          "medium": "Middels",
+          "high": "Høy"
+        },
+        "due": "Forfallsdato",
+        "dueType": {
+          "any": "Alle",
+          "overdue": "Forsinket",
+          "today": "I dag",
+          "within": "Innen N dager",
+          "none": "Ingen dato"
+        },
+        "days": "Dager",
+        "tags": "Tagger (en av, skilt med komma)",
+        "projects": "Prosjekter (valgfritt)",
+        "firstMatchHint": "Hver oppgave vises i den første kvadranten der den oppfyller regelen. Et tomt valg passer til alt.",
+        "deleteTitle": "Slett matrise",
+        "deleteConfirm": "Slette matrisen «{{name}}»? Oppgavene dine endres ikke."
+      },
+      "dropRefusedPriority": "Denne kvadranten tillater flere prioriteter, så oppgaven kan ikke dras hit.",
+      "dropRefusedDue": "Fristen passer ikke i denne kvadranten; endre datoen i stedet.",
+      "dropRefusedProject": "Oppgavens prosjekt passer ikke i denne kvadranten.",
+      "dropRefusedEarlier": "Etter endringen ville oppgaven fortsatt havne i en tidligere kvadrant."
     },
     "kanban": {
       "title": "Kanban-tavle",
@@ -282,6 +332,18 @@
     "noActivity": "Ingen aktivitet ennå"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonner på oppgavene dine",
+      "description": "En privat adresse som viser åpne oppgaver med frist i Google Kalender, Apple Kalender eller Outlook. Alle med adressen kan lese oppgavene.",
+      "address": "Feedadresse",
+      "copy": "Kopier",
+      "copied": "Adresse kopiert",
+      "once": "Kopier den nå: den vises bare én gang. En ny adresse slår av den gamle.",
+      "create": "Lag en adresse",
+      "rotate": "Lag en ny adresse",
+      "disable": "Slå av",
+      "error": "Kunne ikke oppdatere oppgavefeeden"
+    },
     "settings": "Profilinnstillinger",
     "language": "Språk",
     "theme": "Tema",
@@ -1399,7 +1461,11 @@
     "noStartDate": "Ingen startdato",
     "startDateUpdated": "Startdato oppdatert",
     "startDateUpdateError": "Kunne ikke oppdatere startdato",
-    "startAfterDueError": "Start kan ikke være etter forfallsdatoen"
+    "startAfterDueError": "Start kan ikke være etter forfallsdatoen",
+    "pin": "Fest",
+    "unpin": "Løsne",
+    "pinned": "Festet",
+    "pinUpdateError": "Kunne ikke oppdatere festing"
   },
   "projects": {
     "loading": "Laster prosjekter...",
@@ -1648,7 +1714,12 @@
     "pinnedTag": "Festet merkelapp",
     "frequentlyUsed": "Ofte brukt",
     "createTag": "+ Opprett «{{name}}»",
-    "pinTag": "Fest for rask tilgang"
+    "pinTag": "Fest for rask tilgang",
+    "parentTag": "Overordnet tagg",
+    "noParent": "Ingen (øverste nivå)",
+    "parentTagHasChildren": "Denne taggen har underordnede tagger og kan derfor ikke plasseres under en annen tagg.",
+    "showChildTags": "Vis underordnede tagger",
+    "hideChildTags": "Skjul underordnede tagger"
   },
   "recurrence": {
     "none": "Ingen",
@@ -1693,6 +1764,52 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "focusSession": "Fokus",
+    "print": "Skriv ut",
+    "year": "År",
+    "weekNumber": "U{{week}}",
+    "yearItems_one": "{{date}}: {{count}} element",
+    "yearItems_other": "{{date}}: {{count}} elementer",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Forrige måned",
+    "nextMonth": "Neste måned",
+    "multiDay_one": "{{count}} dager",
+    "multiDay_other": "{{count}} dager",
+    "agendaEmpty": "Ingenting planlagt",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Vis fokusøkter",
+      "holidays": "Helligdager",
+      "holidaysNone": "Ingen",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Hele landet",
+      "showHabits": "Vis vaner",
+      "showWeekNumbers": "Vis ukenumre",
+      "showMiniCalendar": "Vis minikalender",
+      "multiDayCount": "Dager i flerdagsvisning",
+      "title": "Visningsvalg",
+      "showCompleted": "Vis fullførte",
+      "showWeekends": "Vis helger",
+      "showRepeats": "Vis alle gjentakelser",
+      "colorBy": "Farge etter",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Prosjekt",
+      "colorBy_priority": "Prioritet",
+      "colorBy_tag": "Tagg",
+      "saveError": "Kunne ikke lagre visningsvalg"
+    },
+    "arrange": {
+      "title": "Planlegg oppgaver",
+      "noDate": "Ingen dato",
+      "overdue": "Forsinket",
+      "filterProject": "Prosjekt",
+      "filterTag": "Tagg",
+      "filterPriority": "Prioritet",
+      "emptyNoDate": "Ingen oppgaver uten dato å planlegge",
+      "emptyOverdue": "Ingen forsinkede oppgaver å planlegge",
+      "noProject": "Ingen prosjekt"
+    },
+    "resizeTask": "Endre når oppgaven slutter",
     "month": "Måned",
     "week": "Uke",
     "day": "Dag",
@@ -3138,6 +3255,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Farge etter",
+    "colorByStatus": "Farge: status",
+    "colorByPriority": "Farge: prioritet",
+    "colorByTag": "Farge: tagg",
     "title": "Tidslinje",
     "days": "Dager",
     "weeks": "Uker",
@@ -3420,5 +3541,75 @@
     "adminRequiredTitle": "Slå på tofaktorautentisering først",
     "adminRequiredBody": "Denne kontoen kan se alle kunder, så administrasjonspanelet åpnes bare når tofaktorautentisering er på.",
     "adminRequiredAction": "Sett det opp"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Fra",
+    "to": "Til",
+    "groupBy": "Grupper etter",
+    "includeOpen": "Ta med åpne oppgaver med frist i perioden",
+    "saveTemplate": "Lagre som mal",
+    "templateSaved": "Mal lagret",
+    "templateFailed": "Kunne ikke lagre malen",
+    "copyMarkdown": "Kopier som Markdown",
+    "downloadMd": "Last ned .md",
+    "downloadTxt": "Last ned .txt",
+    "downloadCsv": "Last ned .csv",
+    "print": "Skriv ut",
+    "copied": "Kopiert til utklippstavlen",
+    "copyFailed": "Kunne ikke kopiere til utklippstavlen",
+    "exportTitle": "Oppsummering {{start}} – {{end}}",
+    "counts": "{{completed}} fullført, {{open}} åpne",
+    "empty": "Ingen oppgaver i denne perioden.",
+    "noProject": "Uten prosjekt",
+    "noDate": "Uten dato",
+    "periods": {
+      "today": "I dag",
+      "this_week": "Denne uken",
+      "last_week": "Forrige uke",
+      "this_month": "Denne måneden",
+      "custom": "Egendefinert periode"
+    },
+    "groupings": {
+      "project": "Prosjekt",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Fullført",
+      "not_started": "Ikke startet",
+      "in_progress": "Pågår",
+      "waiting": "Venter",
+      "planned": "Planlagt",
+      "archived": "Arkivert",
+      "cancelled": "Avbrutt"
+    },
+    "csv": {
+      "name": "Oppgave",
+      "status": "Status",
+      "project": "Prosjekt",
+      "completed": "Fullført",
+      "due": "Frist",
+      "tags": "Tagger"
+    }
+  },
+  "projectBoard": {
+    "title": "Tavle",
+    "unsectioned": "Uten seksjon",
+    "empty": "Ingen oppgaver",
+    "addColumn": "Legg til kolonne",
+    "addLeft": "Legg til kolonne til venstre",
+    "addRight": "Legg til kolonne til høyre",
+    "moveLeft": "Flytt til venstre",
+    "moveRight": "Flytt til høyre",
+    "rename": "Gi nytt navn",
+    "delete": "Slett",
+    "deleteTitle": "Slett kolonne",
+    "deleteMessage": "Slette «{{name}}»? Oppgavene flyttes til Uten seksjon.",
+    "columnName": "Kolonnenavn",
+    "columnActions": "Kolonnehandlinger",
+    "newColumn": "Ny kolonne",
+    "loadError": "Kunne ikke laste kolonner",
+    "saveError": "Kunne ikke lagre tavlen"
   }
 }

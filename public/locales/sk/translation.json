@@ -1,4 +1,19 @@
 {
+    "focusStats": {
+        "title": "Sústredenie",
+        "lastDays_one": "{{count}} deň",
+        "lastDays_few": "{{count}} dni",
+        "lastDays_many": "{{count}} dňa",
+        "lastDays_other": "{{count}} dní",
+        "error": "Štatistiky sústredenia sa nepodarilo načítať",
+        "empty": "Zatiaľ žiadne sedenia sústredenia. Spustite časovač Pomodoro v hornej lište; dokončené sedenia sa počítajú tu.",
+        "total": "Čas sústredenia",
+        "sessions": "Sedenia",
+        "bestHour": "Najsústredenejšia hodina",
+        "perDay": "Minúty za deň",
+        "perHour": "Minúty podľa hodiny dňa",
+        "topTasks": "Úlohy s najväčším sústredením"
+    },
     "common": {
         "deleting": "Odstraňuje sa...",
         "save": "Uložiť",
@@ -98,7 +113,8 @@
         "telegramConnected": "Telegram pripojený",
         "telegramProblem": "Problém s pripojením k Telegramu",
         "collapseViews": "Zbaliť zoznam zobrazení",
-        "expandViews": "Rozbaliť zoznam zobrazení"
+        "expandViews": "Rozbaliť zoznam zobrazení",
+        "summary": "Súhrn"
     },
     "navigation": {
         "home": "Domov",
@@ -207,7 +223,43 @@
             "important": "Dôležité",
             "notImportant": "Nie dôležité",
             "dropHere": "Pustite sem",
-            "urgentHint": "Označte úlohy štítkom 'urgent', aby boli naliehavé"
+            "urgentHint": "Označte úlohy štítkom 'urgent', aby boli naliehavé",
+            "matrix": {
+                "picker": "Matica",
+                "default": "Eisenhower (predvolená)",
+                "new": "Nová matica",
+                "newName": "Nová matica",
+                "limit": "Môžete mať najviac {{count}} matíc.",
+                "editTitle": "Upraviť maticu",
+                "name": "Názov matice",
+                "quadrant": "Kvadrant {{number}}",
+                "quadrantName": "Názov kvadrantu",
+                "priorities": "Priorita (ktorákoľvek z)",
+                "priority": {
+                    "none": "Žiadna",
+                    "low": "Nízka",
+                    "medium": "Stredná",
+                    "high": "Vysoká"
+                },
+                "due": "Termín",
+                "dueType": {
+                    "any": "Akýkoľvek",
+                    "overdue": "Po termíne",
+                    "today": "Dnes",
+                    "within": "Do N dní",
+                    "none": "Bez dátumu"
+                },
+                "days": "Dni",
+                "tags": "Štítky (ktorýkoľvek, oddelené čiarkou)",
+                "projects": "Projekty (voliteľné)",
+                "firstMatchHint": "Každá úloha sa zobrazí v prvom kvadrante, ktorého pravidlo spĺňa. Prázdna voľba zodpovedá všetkému.",
+                "deleteTitle": "Odstrániť maticu",
+                "deleteConfirm": "Odstrániť maticu „{{name}}“? Vaše úlohy sa nezmenia."
+            },
+            "dropRefusedPriority": "Tento kvadrant povoľuje viac priorít, preto sem úlohu nemožno presunúť.",
+            "dropRefusedDue": "Termín úlohy nezodpovedá tomuto kvadrantu; zmeňte radšej dátum.",
+            "dropRefusedProject": "Projekt úlohy nezodpovedá tomuto kvadrantu.",
+            "dropRefusedEarlier": "Po zmene by úloha aj tak skončila v predchádzajúcom kvadrante."
         },
         "kanban": {
             "title": "Kanban tabuľa",
@@ -300,6 +352,18 @@
         }
     },
     "profile": {
+        "taskFeed": {
+            "title": "Odoberať svoje úlohy",
+            "description": "Súkromná adresa, ktorá zobrazí otvorené úlohy s termínom v Kalendári Google, Apple alebo Outlooku. Ktokoľvek s adresou môže tieto úlohy čítať.",
+            "address": "Adresa kanála",
+            "copy": "Kopírovať",
+            "copied": "Adresa skopírovaná",
+            "once": "Skopírujte ju teraz: zobrazí sa iba raz. Nová adresa vypne starú.",
+            "create": "Vytvoriť adresu",
+            "rotate": "Vytvoriť novú adresu",
+            "disable": "Vypnúť",
+            "error": "Kanál úloh sa nepodarilo aktualizovať"
+        },
         "settings": "Nastavenia profilu",
         "sidebarSectionDescription": "Zobraziť sekciu {{name}} v bočnom paneli.",
         "sidebarLayoutDescription": "Toto je náhľad vášho bočného panela. Prepínačmi vyberte, čo sa zobrazí, a potiahnutím úchytov zmeňte poradie.",
@@ -1427,7 +1491,11 @@
         "noStartDate": "Bez dátumu začiatku",
         "startDateUpdated": "Dátum začiatku bol aktualizovaný",
         "startDateUpdateError": "Dátum začiatku sa nepodarilo aktualizovať",
-        "startAfterDueError": "Začiatok nemôže byť po termíne"
+        "startAfterDueError": "Začiatok nemôže byť po termíne",
+        "pin": "Pripnúť",
+        "unpin": "Odopnúť",
+        "pinned": "Pripnutá",
+        "pinUpdateError": "Nepodarilo sa aktualizovať pripnutie"
     },
     "subtasks": {
         "placeholder": "Pridajte podúlohu..."
@@ -1678,7 +1746,12 @@
         "pinnedTag": "Pripnutý štítok",
         "frequentlyUsed": "Často používané",
         "createTag": "+ Vytvoriť „{{name}}“",
-        "pinTag": "Pripnúť pre rýchly prístup"
+        "pinTag": "Pripnúť pre rýchly prístup",
+        "parentTag": "Nadradený štítok",
+        "noParent": "Žiadny (najvyššia úroveň)",
+        "parentTagHasChildren": "Tento štítok má podradené štítky, preto ho nemožno umiestniť pod iný štítok.",
+        "showChildTags": "Zobraziť podradené štítky",
+        "hideChildTags": "Skryť podradené štítky"
     },
     "habits": {
         "completeHabit": "Splniť návyk",
@@ -1864,6 +1937,56 @@
         "done": "Hotovo"
     },
     "calendar": {
+        "focusSession": "Sústredenie",
+        "print": "Tlačiť",
+        "year": "Rok",
+        "weekNumber": "T{{week}}",
+        "yearItems_one": "{{date}}: {{count}} položka",
+        "yearItems_few": "{{date}}: {{count}} položky",
+        "yearItems_many": "{{date}}: {{count}} položky",
+        "yearItems_other": "{{date}}: {{count}} položiek",
+        "miniCalendar": "Minikalendár",
+        "previousMonth": "Predchádzajúci mesiac",
+        "nextMonth": "Nasledujúci mesiac",
+        "multiDay_one": "{{count}} deň",
+        "multiDay_few": "{{count}} dni",
+        "multiDay_many": "{{count}} dňa",
+        "multiDay_other": "{{count}} dní",
+        "agendaEmpty": "Nič naplánované",
+        "agenda": "Agenda",
+        "options": {
+            "showFocus": "Zobraziť sedenia sústredenia",
+            "holidays": "Sviatky",
+            "holidaysNone": "Žiadne",
+            "holidayRegion": "Región",
+            "holidayRegionAll": "Celá krajina",
+            "showHabits": "Zobraziť návyky",
+            "showWeekNumbers": "Zobraziť čísla týždňov",
+            "showMiniCalendar": "Zobraziť minikalendár",
+            "multiDayCount": "Dni vo viacdňovom zobrazení",
+            "title": "Možnosti zobrazenia",
+            "showCompleted": "Zobraziť dokončené",
+            "showWeekends": "Zobraziť víkendy",
+            "showRepeats": "Zobraziť všetky opakovania",
+            "colorBy": "Farba podľa",
+            "colorBy_default": "Predvolené",
+            "colorBy_project": "Projekt",
+            "colorBy_priority": "Priorita",
+            "colorBy_tag": "Štítok",
+            "saveError": "Možnosti sa nepodarilo uložiť"
+        },
+        "arrange": {
+            "title": "Naplánovať úlohy",
+            "noDate": "Bez dátumu",
+            "overdue": "Po termíne",
+            "filterProject": "Projekt",
+            "filterTag": "Štítok",
+            "filterPriority": "Priorita",
+            "emptyNoDate": "Žiadne úlohy bez dátumu na naplánovanie",
+            "emptyOverdue": "Žiadne úlohy po termíne na naplánovanie",
+            "noProject": "Bez projektu"
+        },
+        "resizeTask": "Zmeniť koniec tejto úlohy",
         "month": "Mesiac",
         "week": "Týždeň",
         "day": "Deň",
@@ -3158,6 +3281,10 @@
         }
     },
     "projectTimeline": {
+        "colorBy": "Farba podľa",
+        "colorByStatus": "Farba: stav",
+        "colorByPriority": "Farba: priorita",
+        "colorByTag": "Farba: štítok",
         "title": "Časová os",
         "days": "Dni",
         "weeks": "Týždne",
@@ -3442,5 +3569,75 @@
         "adminRequiredTitle": "Najprv zapnite dvojfaktorové overenie",
         "adminRequiredBody": "Tento účet vidí všetkých zákazníkov, preto sa panel správcu otvorí až po zapnutí dvojfaktorového overenia.",
         "adminRequiredAction": "Nastaviť"
+    },
+    "summary": {
+        "period": "Obdobie",
+        "from": "Od",
+        "to": "Do",
+        "groupBy": "Zoskupiť podľa",
+        "includeOpen": "Zahrnúť otvorené úlohy s termínom v tomto období",
+        "saveTemplate": "Uložiť ako šablónu",
+        "templateSaved": "Šablóna uložená",
+        "templateFailed": "Šablónu sa nepodarilo uložiť",
+        "copyMarkdown": "Kopírovať ako Markdown",
+        "downloadMd": "Stiahnuť .md",
+        "downloadTxt": "Stiahnuť .txt",
+        "downloadCsv": "Stiahnuť .csv",
+        "print": "Tlačiť",
+        "copied": "Skopírované do schránky",
+        "copyFailed": "Nepodarilo sa skopírovať do schránky",
+        "exportTitle": "Súhrn {{start}} – {{end}}",
+        "counts": "Dokončené: {{completed}}, otvorené: {{open}}",
+        "empty": "V tomto období nie sú žiadne úlohy.",
+        "noProject": "Bez projektu",
+        "noDate": "Bez dátumu",
+        "periods": {
+            "today": "Dnes",
+            "this_week": "Tento týždeň",
+            "last_week": "Minulý týždeň",
+            "this_month": "Tento mesiac",
+            "custom": "Vlastné obdobie"
+        },
+        "groupings": {
+            "project": "Projekt",
+            "day": "Deň",
+            "status": "Stav"
+        },
+        "status": {
+            "done": "Dokončená",
+            "not_started": "Nezačatá",
+            "in_progress": "Prebieha",
+            "waiting": "Čaká",
+            "planned": "Naplánovaná",
+            "archived": "Archivovaná",
+            "cancelled": "Zrušená"
+        },
+        "csv": {
+            "name": "Úloha",
+            "status": "Stav",
+            "project": "Projekt",
+            "completed": "Dokončené",
+            "due": "Termín",
+            "tags": "Štítky"
+        }
+    },
+    "projectBoard": {
+        "title": "Tabuľa",
+        "unsectioned": "Bez sekcie",
+        "empty": "Žiadne úlohy",
+        "addColumn": "Pridať stĺpec",
+        "addLeft": "Pridať stĺpec vľavo",
+        "addRight": "Pridať stĺpec vpravo",
+        "moveLeft": "Posunúť doľava",
+        "moveRight": "Posunúť doprava",
+        "rename": "Premenovať",
+        "delete": "Odstrániť",
+        "deleteTitle": "Odstrániť stĺpec",
+        "deleteMessage": "Odstrániť „{{name}}“? Jeho úlohy sa presunú do Bez sekcie.",
+        "columnName": "Názov stĺpca",
+        "columnActions": "Akcie stĺpca",
+        "newColumn": "Nový stĺpec",
+        "loadError": "Stĺpce sa nepodarilo načítať",
+        "saveError": "Tabuľu sa nepodarilo uložiť"
     }
 }

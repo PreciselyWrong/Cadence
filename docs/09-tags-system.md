@@ -31,7 +31,7 @@ This document explains how the Tags system works in tududi from a user behavior 
 2. **Flexible categorization**
    - No predefined taxonomy
    - Create tags as needed
-   - No hierarchy (tags are flat)
+   - One optional level of nesting (a tag can sit under a parent tag)
    - Multiple tags per item (up to 10 tags per task/note/project)
 
 3. **User-scoped isolation**
@@ -54,6 +54,7 @@ This document explains how the Tags system works in tududi from a user behavior 
 | **Tag type** | String | Auto | `user` for your own tags, `system` for the built-in `today` and `someday` |
 | **Pinned** | Boolean | No | Pinned tags come first in the tag input's quick-access chips |
 | **Color** | String | No | Optional chip color |
+| **Parent** | Integer (`parent_id`) | No | Parent tag, for nested tags. The API reads and writes it as `parent_uid` |
 | **Created At** | Timestamp | Auto | Creation timestamp |
 | **Updated At** | Timestamp | Auto | Last modification timestamp |
 
@@ -260,6 +261,7 @@ Tags are automatically created when you add them to a task, note, or project:
 - Tasks, notes, and projects themselves (only tag link removed)
 - No cascading deletion
 - Other tags remain intact
+- Child tags of a deleted parent stay, and become top-level tags
 
 **No undo:**
 - Deletion is immediate and irreversible
@@ -272,8 +274,11 @@ Tags are automatically created when you add them to a task, note, or project:
 ### Tags List Page (`/tags`)
 
 **Layout:**
-- Alphabetical grouping (A, B, C, ...)
+- Alphabetical grouping (A, B, C, ...) of top-level tags
 - Each group shows tags starting with that letter
+- Child tags are listed, indented, under their parent; the chevron next to a
+  parent collapses or expands its children. A search keeps a parent when it or
+  one of its children matches
 - Search bar at top (collapsible)
 - Grid layout (1-3 columns based on screen size)
 
@@ -471,17 +476,43 @@ Tags are automatically created when you add them to a task, note, or project:
 - User B (collaborator) doesn't see `#urgent` in their tag list
 - User B can create their own `urgent` tag independently
 
-### No Tag Hierarchy
+### Nested Tags (Tag Folders)
 
-**Flat structure:**
-- Tags don't have parent/child relationships
-- No nesting (e.g., `work/backend` is one tag, not a hierarchy)
-- Workaround: Use naming conventions (`work-backend`, `work-frontend`)
+A tag can sit under a **parent tag**, like folders of tags (`work` > `calls`,
+`work` > `meetings`).
 
-**Multi-level categorization:**
-- Not supported natively
-- Use prefixes: `project-alpha`, `project-beta`
-- Or combine tags: Add both `work` and `backend` to same item
+**Setting a parent:**
+- Tag edit panel → **Parent tag** select. Choose *None (top level)* to move
+  a tag back to the top
+- API: send `parent_uid` on `POST /api/tag` or `PATCH /api/tag/:uid`
+  (`null` or `""` clears it). `GET /api/tags` and `GET /api/tag` return
+  `parent_uid` (`null` for a top-level tag)
+
+**Rules:**
+- **One level only.** A parent tag cannot itself have a parent, and a tag that
+  already has children cannot be put under another tag. The select only lists
+  top-level tags and is disabled for a tag with children
+- A tag cannot be its own parent (no cycles)
+- The parent must be one of your own tags: a parent owned by another user is
+  rejected with `403`, an unknown `parent_uid` with `400`
+- Deleting a parent keeps its children; they become top-level tags
+  (`parent_id` is a self foreign key with `ON DELETE SET NULL`)
+
+**Filtering:**
+- Filtering tasks (`GET /api/tasks?tag=work`) or notes
+  (`GET /api/notes?tag=work`) by a parent tag also returns items tagged with
+  any of its child tags. Filtering by a child tag returns only that child
+- Universal search (`GET /api/search?tags=...`), saved views (which run
+  through search) and the Focus chip (`tags` scope param) treat each listed
+  parent tag the same way: it stands for the parent or any of its children.
+  Several listed tags still use AND: an item matches when, for every listed
+  tag, it carries that tag or one of its children (`work,urgent` matches a
+  task tagged `calls` + `urgent`)
+
+**Where nesting shows:**
+- Tags page: children grouped under their parent, collapsible
+- Sidebar tag list: children listed right after their parent, indented
+- Tag chips on tasks, notes and projects show the tag name only
 
 ---
 
@@ -769,10 +800,9 @@ Tags are automatically created when you add them to a task, note, or project:
 
 ### Current Limitations
 
-1. **No tag hierarchy:**
-   - Flat structure only
-   - No parent-child relationships
-   - Workaround: Use naming conventions (`parent-child`)
+1. **One level of tag nesting:**
+   - A tag can have a parent tag, but a parent cannot have a parent
+   - Deeper structures need naming conventions (`work-backend-api`)
 
 2. **User-scoped only:**
    - Cannot share tags with other users

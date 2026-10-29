@@ -17,6 +17,7 @@ import {
     todayDay,
     weekdayOf,
 } from './timelineLayout';
+import { taskColor } from '../../Calendar/taskEvents';
 
 type Zoom = 'days' | 'weeks' | 'months';
 
@@ -26,6 +27,9 @@ const BAR_HEIGHT = 20;
 const HEADER_HEIGHT = 48;
 const ZOOM_KEY = 'project_timeline_zoom';
 const PATH_KEY = 'project_timeline_path';
+const COLOR_KEY = 'project_timeline_color';
+
+type TimelineColorBy = 'status' | 'priority' | 'tag';
 
 const readSetting = (key: string): string | null => {
     try {
@@ -78,6 +82,10 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
     const [showPath, setShowPath] = useState(
         () => readSetting(PATH_KEY) === 'true'
     );
+    const [colorBy, setColorBy] = useState<TimelineColorBy>(() => {
+        const saved = readSetting(COLOR_KEY);
+        return saved === 'priority' || saved === 'tag' ? saved : 'status';
+    });
     const [drag, setDrag] = useState<DragState | null>(null);
     const [dropDay, setDropDay] = useState<number | null>(null);
 
@@ -135,6 +143,11 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
     const changeZoom = (next: Zoom) => {
         setZoom(next);
         writeSetting(ZOOM_KEY, next);
+    };
+
+    const changeColorBy = (next: TimelineColorBy) => {
+        setColorBy(next);
+        writeSetting(COLOR_KEY, next);
     };
 
     const togglePath = () => {
@@ -254,8 +267,19 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
         return 'bg-blue-300 dark:bg-blue-700';
     };
 
+    // Colour by priority or tag replaces the status colours, except for
+    // done tasks, overdue ones and the highlighted path.
+    const customColor = (item: TimelineItem) => {
+        if (colorBy === 'status' || item.done || (showPath && path.size > 0)) {
+            return undefined;
+        }
+        if (item.due !== null && item.due < today) return undefined;
+        return taskColor(item.task as any, colorBy);
+    };
+
     // Dark text on the light bars, white on the strong ones
     const barText = (item: TimelineItem) =>
+        customColor(item) !== undefined ||
         barColors(item).startsWith('bg-orange') ||
         /^bg-blue-(6|7)00/.test(barColors(item))
             ? 'text-white'
@@ -342,6 +366,30 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                             </button>
                         ))}
                     </div>
+                    <select
+                        aria-label={t('projectTimeline.colorBy', 'Colour by')}
+                        value={colorBy}
+                        onChange={(e) =>
+                            changeColorBy(e.target.value as TimelineColorBy)
+                        }
+                        className="rounded-lg border-0 bg-gray-100 px-2 py-1.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    >
+                        <option value="status">
+                            {t(
+                                'projectTimeline.colorByStatus',
+                                'Colour: status'
+                            )}
+                        </option>
+                        <option value="priority">
+                            {t(
+                                'projectTimeline.colorByPriority',
+                                'Colour: priority'
+                            )}
+                        </option>
+                        <option value="tag">
+                            {t('projectTimeline.colorByTag', 'Colour: tag')}
+                        </option>
+                    </select>
                     <button
                         type="button"
                         onClick={scrollToToday}
@@ -640,6 +688,8 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                             }
                                             className={`absolute h-3.5 w-3.5 rotate-45 cursor-grab touch-none rounded-sm ${barColors(item)} ${dragging ? 'cursor-grabbing ring-2 ring-blue-300' : ''}`}
                                             style={{
+                                                backgroundColor:
+                                                    customColor(item),
                                                 left: x(from) + dayW / 2 - 7,
                                                 top: i * ROW_HEIGHT + 13,
                                             }}
@@ -655,6 +705,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                                 : ''
                                         } ${dragging ? 'ring-2 ring-blue-300' : ''}`}
                                         style={{
+                                            backgroundColor: customColor(item),
                                             left: x(from) + 2,
                                             width: Math.max(
                                                 (to - from + 1) * dayW - 4,

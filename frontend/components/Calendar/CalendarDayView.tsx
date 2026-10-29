@@ -1,21 +1,16 @@
 import React from 'react';
 import { format, addHours, isToday } from 'date-fns';
-
-interface CalendarEvent {
-    id: string;
-    title: string;
-    start: Date;
-    end: Date;
-    type: 'task' | 'event';
-    color?: string;
-}
+import { useTranslation } from 'react-i18next';
+import { CalendarEvent, coversDay } from './taskEvents';
+import { ResizeHandle, useEventResize } from './useEventResize';
 
 interface CalendarDayViewProps {
     currentDate: Date;
     events: CalendarEvent[];
     onEventClick?: (event: CalendarEvent) => void;
     onTimeSlotClick?: (date: Date, hour: number) => void;
-    onEventDrop?: (eventId: string, newDate: Date, newHour: number) => void;
+    onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
+    onEventResize?: (eventId: string, newEnd: Date) => void;
 }
 
 const HOUR_HEIGHT = 48;
@@ -26,14 +21,20 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     onEventClick,
     onTimeSlotClick,
     onEventDrop,
+    onEventResize,
 }) => {
+    const { t } = useTranslation();
+    const resize = useEventResize(HOUR_HEIGHT, onEventResize);
     const hours = Array.from({ length: 24 }, (_, i) => i);
-    const [draggedEventId, setDraggedEventId] = React.useState<string | null>(null);
+    const [draggedEventId, setDraggedEventId] = React.useState<string | null>(
+        null
+    );
 
     const dayEvents = events.filter(
-        (event) =>
-            format(event.start, 'yyyy-MM-dd') === format(currentDate, 'yyyy-MM-dd') &&
-            event.end.getTime() - event.start.getTime() < 24 * 60 * 60 * 1000
+        (event) => !event.allDay && coversDay(event, currentDate)
+    );
+    const allDayEvents = events.filter(
+        (event) => event.allDay && coversDay(event, currentDate)
     );
 
     const overlaps = (a: CalendarEvent, b: CalendarEvent) =>
@@ -45,14 +46,19 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
             .sort((a, b) => a.start.getTime() - b.start.getTime());
         const index = group.findIndex((e) => e.id === event.id);
         const count = group.length;
-        const startMinutes = event.start.getHours() * 60 + event.start.getMinutes();
-        const endMinutes =
-            event.end.getHours() === 0 && event.end.getMinutes() === 0
-                ? 24 * 60
-                : event.end.getHours() * 60 + event.end.getMinutes();
+        const startMinutes =
+            event.start.getHours() * 60 + event.start.getMinutes();
+        const end = resize.endOf(event);
+        const endMinutes = Math.min(
+            startMinutes + (end.getTime() - event.start.getTime()) / 60000,
+            24 * 60
+        );
         return {
             top: (startMinutes / 60) * HOUR_HEIGHT,
-            height: Math.max(((endMinutes - startMinutes) / 60) * HOUR_HEIGHT, 24),
+            height: Math.max(
+                ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT,
+                24
+            ),
             left: `calc(0.5rem + ${(100 / count) * index}%)`,
             width: `${count > 1 ? 100 / count - 2 : 100}%`,
         };
@@ -80,10 +86,14 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">
             {/* Day header */}
-            <div className={`p-5 border-b border-gray-200 dark:border-gray-600 text-center ${todayClass ? 'bg-blue-50 dark:bg-blue-900/15' : 'bg-gray-50 dark:bg-gray-800'}`}>
+            <div
+                className={`p-5 border-b border-gray-200 dark:border-gray-600 text-center ${todayClass ? 'bg-blue-50 dark:bg-blue-900/15' : 'bg-gray-50 dark:bg-gray-800'}`}
+            >
                 <div
                     className={`text-xs font-semibold tracking-widest uppercase mb-2 ${
-                        todayClass ? 'text-blue-500 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'
+                        todayClass
+                            ? 'text-blue-500 dark:text-blue-400'
+                            : 'text-gray-400 dark:text-gray-500'
                     }`}
                 >
                     {format(currentDate, 'EEEE')}
@@ -105,38 +115,34 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
             </div>
 
             {/* All-day events */}
-            {events.filter((event) => {
-                const eventDay = format(event.start, 'yyyy-MM-dd');
-                const currentDay = format(currentDate, 'yyyy-MM-dd');
-                const duration = event.end.getTime() - event.start.getTime();
-                return eventDay === currentDay && duration >= 24 * 60 * 60 * 1000;
-            }).length > 0 && (
+            {allDayEvents.length > 0 && (
                 <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                     <div className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-2">
-                        All day
+                        {t('calendar.allDay', 'All day')}
                     </div>
                     <div className="space-y-1">
-                        {events
-                            .filter((event) => {
-                                const eventDay = format(event.start, 'yyyy-MM-dd');
-                                const currentDay = format(currentDate, 'yyyy-MM-dd');
-                                const duration = event.end.getTime() - event.start.getTime();
-                                return eventDay === currentDay && duration >= 24 * 60 * 60 * 1000;
-                            })
-                            .map((event) => (
-                                <div
-                                    key={event.id}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEventClick?.(event);
-                                    }}
-                                    className="text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium"
-                                    style={{ backgroundColor: event.color || '#3b82f6' }}
-                                    title={event.title}
-                                >
-                                    {event.title}
-                                </div>
-                            ))}
+                        {allDayEvents.map((event) => (
+                            <div
+                                key={event.id}
+                                draggable={
+                                    event.type === 'task' && !event.readOnly
+                                }
+                                onDragStart={(e) => handleDragStart(event, e)}
+                                onDragEnd={handleDragEnd}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEventClick?.(event);
+                                }}
+                                className="text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium"
+                                style={{
+                                    backgroundColor: event.color || '#3b82f6',
+                                    opacity: event.readOnly ? 0.6 : undefined,
+                                }}
+                                title={event.title}
+                            >
+                                {event.title}
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
@@ -150,11 +156,22 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                             className="flex h-[48px] border-b border-gray-100 dark:border-gray-600"
                         >
                             <div className="w-20 py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
-                                {format(addHours(new Date().setHours(hour, 0, 0, 0), 0), 'HH:mm')}
+                                {format(
+                                    addHours(
+                                        new Date().setHours(hour, 0, 0, 0),
+                                        0
+                                    ),
+                                    'HH:mm'
+                                )}
                             </div>
                             <div
-                                onClick={() => onTimeSlotClick?.(currentDate, hour)}
-                                onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+                                onClick={() =>
+                                    onTimeSlotClick?.(currentDate, hour)
+                                }
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.dataTransfer.dropEffect = 'move';
+                                }}
                                 onDrop={(e) => handleDrop(hour, e)}
                                 className="flex-1 cursor-pointer hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative transition-colors"
                             />
@@ -166,18 +183,31 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                             return (
                                 <div
                                     key={event.id}
-                                    draggable={event.type === 'task'}
-                                    onDragStart={(e) => handleDragStart(event, e)}
+                                    draggable={
+                                        event.type === 'task' &&
+                                        !event.readOnly &&
+                                        resize.resizingId !== event.id
+                                    }
+                                    onDragStart={(e) =>
+                                        handleDragStart(event, e)
+                                    }
                                     onDragEnd={handleDragEnd}
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        if (resize.consumeClick()) return;
                                         onEventClick?.(event);
                                     }}
                                     className={`absolute text-xs px-2.5 py-1.5 rounded-lg text-white z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${
-                                        event.type === 'task' ? 'cursor-move' : ''
+                                        event.type === 'task'
+                                            ? 'cursor-move'
+                                            : ''
                                     } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
                                     style={{
-                                        backgroundColor: event.color || '#3b82f6',
+                                        backgroundColor:
+                                            event.color || '#3b82f6',
+                                        opacity: event.readOnly
+                                            ? 0.6
+                                            : undefined,
                                         top: layout.top,
                                         height: layout.height,
                                         left: layout.left,
@@ -185,10 +215,24 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     }}
                                     title={`${event.title} - ${format(event.start, 'HH:mm')} – ${format(event.end, 'HH:mm')}`}
                                 >
-                                    <div className="font-semibold truncate">{event.title}</div>
-                                    <div className="text-[10px] opacity-75 mt-0.5">
-                                        {format(event.start, 'HH:mm')} – {format(event.end, 'HH:mm')}
+                                    <div className="font-semibold truncate">
+                                        {event.title}
                                     </div>
+                                    <div className="text-[10px] opacity-75 mt-0.5">
+                                        {format(event.start, 'HH:mm')} –{' '}
+                                        {format(resize.endOf(event), 'HH:mm')}
+                                    </div>
+                                    {event.type === 'task' && event.resize && (
+                                        <ResizeHandle
+                                            label={t(
+                                                'calendar.resizeTask',
+                                                'Change when this task ends'
+                                            )}
+                                            onPointerDown={(e) =>
+                                                resize.begin(event, e)
+                                            }
+                                        />
+                                    )}
                                 </div>
                             );
                         })}

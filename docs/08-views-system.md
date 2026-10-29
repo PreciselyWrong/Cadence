@@ -399,6 +399,36 @@ Changes are reflected immediately in the view results.
 
 ---
 
+## **Eisenhower Matrix Views**
+
+The Eisenhower page (`/eisenhower`, behind the `eisenhower_enabled` feature) shows active tasks in four quadrants. Above the board a picker switches between the built-in matrix and up to 10 custom matrices.
+
+**Built-in matrix (default):** important = medium or high priority, urgent = the `urgent` tag. It cannot be edited or deleted. Dragging a task between its quadrants sets the priority (medium or higher for the important quadrants, low otherwise) and adds or removes the `urgent` tag.
+
+**Custom matrices:** "New matrix" opens an editor prefilled with the default rules; "Edit" and "Delete" act on the selected custom matrix. Each matrix has a name and four quadrants, each with a name and a rule. A rule combines (all parts must match; an empty part matches everything):
+
+- **Priorities** - any of none / low / medium / high (`none` = no priority set)
+- **Due window** - any, overdue (before today), today, within N days (1-365, due on or before today + N, overdue included), or no date
+- **Tags** - any of the listed tag names (case-insensitive)
+- **Projects** - optionally, any of the selected projects (stored by project uid)
+
+A task is placed in the **first** quadrant whose rule it matches, so it never appears twice; tasks that match no quadrant are not shown.
+
+**Dragging on custom matrices** (`editForQuadrant` in `frontend/components/Eisenhower/matrixRules.ts`) applies the smallest edit that lands the task in the target quadrant:
+
+- **Priority:** if the rule lists exactly one priority and the task has another, the task gets that priority. A rule with several priorities the task lacks refuses the drop.
+- **Tags:** if the task has none of the rule's tags, the first listed tag is added. Tags are never removed.
+- **Due window and projects** are never edited. If the task misses the rule's due window (anything other than "any", or "no date" for a task without a date) or project filter, the drop is refused.
+- After the edit the task must match the target before any earlier quadrant (first match wins); otherwise the drop is refused.
+
+A refused drop changes nothing and shows a short toast saying why.
+
+**Storage:** `ui_settings.matrices` via `PUT /api/profile/ui-settings` with `{ matrices: [...] }` (the whole list is replaced). Shape: `{ id, name, quadrants: [{ name, rule: { priorities, due: { type, days? }, tags, projects } } x4] }`. The backend (`sanitizeMatrices` in `backend/modules/users/service.js`) rejects more than 10 matrices or a matrix without exactly 4 quadrants (400), drops unknown keys, unknown priorities, duplicate ids and the reserved id `default`, lowercases and dedupes tags, caps names at 60 characters, and falls back to `any` for an unknown due type and to 7 days for an invalid N. A profile save keeps the stored matrices. The selected matrix is remembered per browser in `localStorage` (`eisenhower.activeMatrix`).
+
+**Files:** `frontend/components/Eisenhower/EisenhowerMatrix.tsx` (board and picker), `MatrixEditorModal.tsx` (editor), `matrixRules.ts` (pure rule matcher `matchesRule` / `assignToQuadrants`, tested in `__tests__/matrixRules.test.ts`).
+
+---
+
 ## **Related Documentation**
 
 - [Today Page Sections](02-today-page-sections.md) - How Today page filters tasks

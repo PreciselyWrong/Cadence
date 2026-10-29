@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "专注",
+    "lastDays_one": "{{count}} 天",
+    "lastDays_other": "{{count}} 天",
+    "error": "无法加载专注统计",
+    "empty": "还没有专注记录。启动顶部栏的番茄钟，完成的专注会统计在这里。",
+    "total": "专注时长",
+    "sessions": "次数",
+    "bestHour": "最专注的时段",
+    "perDay": "每天分钟数",
+    "perHour": "各时段分钟数",
+    "topTasks": "专注最多的任务"
+  },
   "common": {
     "deleting": "正在删除...",
     "save": "保存",
@@ -100,7 +113,8 @@
     "telegramProblem": "Telegram 连接出现问题",
     "resize": "调整侧边栏宽度",
     "collapseViews": "收起视图列表",
-    "expandViews": "展开视图列表"
+    "expandViews": "展开视图列表",
+    "summary": "摘要"
   },
   "navigation": {
     "home": "首页",
@@ -220,7 +234,43 @@
       "important": "重要",
       "notImportant": "不重要",
       "dropHere": "放在这里",
-      "urgentHint": "标记任务为 '紧急' 以将其标记为紧急"
+      "urgentHint": "标记任务为 '紧急' 以将其标记为紧急",
+      "matrix": {
+        "picker": "矩阵",
+        "default": "艾森豪威尔（默认）",
+        "new": "新建矩阵",
+        "newName": "新矩阵",
+        "limit": "最多可保存 {{count}} 个矩阵。",
+        "editTitle": "编辑矩阵",
+        "name": "矩阵名称",
+        "quadrant": "象限 {{number}}",
+        "quadrantName": "象限名称",
+        "priorities": "优先级（任一）",
+        "priority": {
+          "none": "无",
+          "low": "低",
+          "medium": "中",
+          "high": "高"
+        },
+        "due": "截止日期",
+        "dueType": {
+          "any": "任意",
+          "overdue": "已逾期",
+          "today": "今天",
+          "within": "N 天内",
+          "none": "无日期"
+        },
+        "days": "天",
+        "tags": "标签（任一，用逗号分隔）",
+        "projects": "项目（可选）",
+        "firstMatchHint": "每个任务只出现在第一个符合规则的象限中。留空表示匹配全部。",
+        "deleteTitle": "删除矩阵",
+        "deleteConfirm": "删除矩阵“{{name}}”？你的任务不会改变。"
+      },
+      "dropRefusedPriority": "此象限允许多个优先级，因此无法通过拖动移到这里。",
+      "dropRefusedDue": "任务的截止日期不符合此象限，请改为修改日期。",
+      "dropRefusedProject": "任务的项目不符合此象限。",
+      "dropRefusedEarlier": "修改后任务仍会落入前面的象限。"
     },
     "kanban": {
       "title": "看板",
@@ -281,6 +331,18 @@
     "noActivity": "还没有活动"
   },
   "profile": {
+    "taskFeed": {
+      "title": "订阅你的任务",
+      "description": "一个私密地址，可在 Google 日历、Apple 日历或 Outlook 中显示有截止日期的未完成任务。任何拥有该地址的人都能读取这些任务。",
+      "address": "订阅地址",
+      "copy": "复制",
+      "copied": "地址已复制",
+      "once": "请立即复制：它只显示一次。创建新地址会停用旧地址。",
+      "create": "创建地址",
+      "rotate": "创建新地址",
+      "disable": "关闭",
+      "error": "无法更新任务订阅"
+    },
     "settings": "个人资料设置",
     "language": "语言",
     "theme": "主题",
@@ -1397,7 +1459,11 @@
     "noStartDate": "无开始日期",
     "startDateUpdated": "开始日期已更新",
     "startDateUpdateError": "无法更新开始日期",
-    "startAfterDueError": "开始时间不能晚于截止日期"
+    "startAfterDueError": "开始时间不能晚于截止日期",
+    "pin": "置顶",
+    "unpin": "取消置顶",
+    "pinned": "已置顶",
+    "pinUpdateError": "更新置顶失败"
   },
   "projects": {
     "loading": "加载项目中...",
@@ -1645,7 +1711,12 @@
     "pinnedTag": "已置顶的标签",
     "frequentlyUsed": "常用",
     "createTag": "+ 创建“{{name}}”",
-    "pinTag": "置顶以便快速访问"
+    "pinTag": "置顶以便快速访问",
+    "parentTag": "父标签",
+    "noParent": "无（顶级）",
+    "parentTagHasChildren": "此标签有子标签，因此不能放在其他标签下。",
+    "showChildTags": "显示子标签",
+    "hideChildTags": "隐藏子标签"
   },
   "recurrence": {
     "none": "无",
@@ -1690,6 +1761,52 @@
     "done": "完成"
   },
   "calendar": {
+    "focusSession": "专注",
+    "print": "打印",
+    "year": "年",
+    "weekNumber": "第{{week}}周",
+    "yearItems_one": "{{date}}：{{count}} 项",
+    "yearItems_other": "{{date}}：{{count}} 项",
+    "miniCalendar": "迷你日历",
+    "previousMonth": "上个月",
+    "nextMonth": "下个月",
+    "multiDay_one": "{{count}} 天",
+    "multiDay_other": "{{count}} 天",
+    "agendaEmpty": "暂无安排",
+    "agenda": "日程",
+    "options": {
+      "showFocus": "显示专注记录",
+      "holidays": "法定节假日",
+      "holidaysNone": "无",
+      "holidayRegion": "地区",
+      "holidayRegionAll": "全国",
+      "showHabits": "显示习惯",
+      "showWeekNumbers": "显示周数",
+      "showMiniCalendar": "显示迷你日历",
+      "multiDayCount": "多日视图的天数",
+      "title": "视图选项",
+      "showCompleted": "显示已完成",
+      "showWeekends": "显示周末",
+      "showRepeats": "显示所有重复",
+      "colorBy": "颜色依据",
+      "colorBy_default": "默认",
+      "colorBy_project": "项目",
+      "colorBy_priority": "优先级",
+      "colorBy_tag": "标签",
+      "saveError": "无法保存视图选项"
+    },
+    "arrange": {
+      "title": "安排任务",
+      "noDate": "无日期",
+      "overdue": "已逾期",
+      "filterProject": "项目",
+      "filterTag": "标签",
+      "filterPriority": "优先级",
+      "emptyNoDate": "没有待安排的无日期任务",
+      "emptyOverdue": "没有待安排的逾期任务",
+      "noProject": "无项目"
+    },
+    "resizeTask": "更改此任务的结束时间",
     "month": "月份",
     "week": "周",
     "day": "天",
@@ -3130,6 +3247,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "颜色依据",
+    "colorByStatus": "颜色：状态",
+    "colorByPriority": "颜色：优先级",
+    "colorByTag": "颜色：标签",
     "title": "时间线",
     "days": "天",
     "weeks": "周",
@@ -3411,5 +3532,75 @@
     "adminRequiredTitle": "请先开启两步验证",
     "adminRequiredBody": "此账户可以查看所有客户，因此只有开启两步验证后才能打开管理面板。",
     "adminRequiredAction": "立即设置"
+  },
+  "summary": {
+    "period": "时间段",
+    "from": "从",
+    "to": "到",
+    "groupBy": "分组方式",
+    "includeOpen": "包含在此期间到期的未完成任务",
+    "saveTemplate": "保存为模板",
+    "templateSaved": "模板已保存",
+    "templateFailed": "无法保存模板",
+    "copyMarkdown": "复制为 Markdown",
+    "downloadMd": "下载 .md",
+    "downloadTxt": "下载 .txt",
+    "downloadCsv": "下载 .csv",
+    "print": "打印",
+    "copied": "已复制到剪贴板",
+    "copyFailed": "无法复制到剪贴板",
+    "exportTitle": "摘要 {{start}} – {{end}}",
+    "counts": "已完成 {{completed}} 项，未完成 {{open}} 项",
+    "empty": "此期间没有任务。",
+    "noProject": "无项目",
+    "noDate": "无日期",
+    "periods": {
+      "today": "今天",
+      "this_week": "本周",
+      "last_week": "上周",
+      "this_month": "本月",
+      "custom": "自定义范围"
+    },
+    "groupings": {
+      "project": "项目",
+      "day": "日期",
+      "status": "状态"
+    },
+    "status": {
+      "done": "已完成",
+      "not_started": "未开始",
+      "in_progress": "进行中",
+      "waiting": "等待中",
+      "planned": "已计划",
+      "archived": "已归档",
+      "cancelled": "已取消"
+    },
+    "csv": {
+      "name": "任务",
+      "status": "状态",
+      "project": "项目",
+      "completed": "完成时间",
+      "due": "截止日期",
+      "tags": "标签"
+    }
+  },
+  "projectBoard": {
+    "title": "看板",
+    "unsectioned": "未分组",
+    "empty": "暂无任务",
+    "addColumn": "添加列",
+    "addLeft": "在左侧添加列",
+    "addRight": "在右侧添加列",
+    "moveLeft": "左移",
+    "moveRight": "右移",
+    "rename": "重命名",
+    "delete": "删除",
+    "deleteTitle": "删除列",
+    "deleteMessage": "删除“{{name}}”？其中的任务将移至未分组。",
+    "columnName": "列名称",
+    "columnActions": "列操作",
+    "newColumn": "新列",
+    "loadError": "无法加载列",
+    "saveError": "无法保存看板"
   }
 }

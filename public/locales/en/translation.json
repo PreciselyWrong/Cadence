@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Focus",
+    "lastDays_one": "{{count}} day",
+    "lastDays_other": "{{count}} days",
+    "error": "Could not load focus statistics",
+    "empty": "No focus sessions yet. Start the tomato timer in the top bar; finished sessions are counted here.",
+    "total": "Time focused",
+    "sessions": "Sessions",
+    "bestHour": "Most focused hour",
+    "perDay": "Minutes per day",
+    "perHour": "Minutes by hour of the day",
+    "topTasks": "Tasks focused on most"
+  },
   "common": {
     "deleting": "Deleting...",
     "save": "Save",
@@ -99,7 +112,8 @@
     "telegramConnected": "Telegram connected",
     "telegramProblem": "Telegram connection problem",
     "collapseViews": "Collapse views list",
-    "expandViews": "Expand views list"
+    "expandViews": "Expand views list",
+    "summary": "Summary"
   },
   "navigation": {
     "home": "Home",
@@ -208,7 +222,43 @@
       "important": "Important",
       "notImportant": "Not Important",
       "dropHere": "Drop here",
-      "urgentHint": "Tag tasks with 'urgent' to mark them as urgent"
+      "urgentHint": "Tag tasks with 'urgent' to mark them as urgent",
+      "matrix": {
+        "picker": "Matrix",
+        "default": "Eisenhower (default)",
+        "new": "New matrix",
+        "newName": "New matrix",
+        "limit": "You can keep up to {{count}} matrices.",
+        "editTitle": "Edit matrix",
+        "name": "Matrix name",
+        "quadrant": "Quadrant {{number}}",
+        "quadrantName": "Quadrant name",
+        "priorities": "Priority (any of)",
+        "priority": {
+          "none": "None",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "due": "Due date",
+        "dueType": {
+          "any": "Any",
+          "overdue": "Overdue",
+          "today": "Today",
+          "within": "Within N days",
+          "none": "No date"
+        },
+        "days": "Days",
+        "tags": "Tags (any of, comma separated)",
+        "projects": "Projects (optional)",
+        "firstMatchHint": "Each task appears in the first quadrant whose rule it matches. Empty choices match everything.",
+        "deleteTitle": "Delete matrix",
+        "deleteConfirm": "Delete the matrix \"{{name}}\"? Your tasks are not changed."
+      },
+      "dropRefusedPriority": "This quadrant allows several priorities, so the task cannot be moved here by dragging.",
+      "dropRefusedDue": "The task's due date does not fit this quadrant; change the date instead.",
+      "dropRefusedProject": "The task's project does not fit this quadrant.",
+      "dropRefusedEarlier": "After the change the task would still land in an earlier quadrant."
     },
     "kanban": {
       "title": "Kanban Board",
@@ -303,6 +353,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Subscribe to your tasks",
+      "description": "A private address that shows your open tasks with a due date in Google Calendar, Apple Calendar or Outlook. Anyone with the address can read those tasks.",
+      "address": "Feed address",
+      "copy": "Copy",
+      "copied": "Address copied",
+      "once": "Copy it now: it is shown only once. Making a new address stops the old one.",
+      "create": "Make an address",
+      "rotate": "Make a new address",
+      "disable": "Turn off",
+      "error": "Could not update the task feed"
+    },
     "settings": "Profile Settings",
     "sidebarSectionDescription": "Show the {{name}} section in the sidebar.",
     "sidebarLayoutDescription": "This is a preview of your sidebar. Use the switches to choose what appears, and drag the handles to change the order.",
@@ -1485,7 +1547,11 @@
     "noStartDate": "No start date",
     "startDateUpdated": "Start date updated",
     "startDateUpdateError": "Failed to update start date",
-    "startAfterDueError": "Start cannot be after the due date"
+    "startAfterDueError": "Start cannot be after the due date",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "pinned": "Pinned",
+    "pinUpdateError": "Failed to update pin"
   },
   "subtasks": {
     "placeholder": "Add a subtask..."
@@ -1767,7 +1833,12 @@
     "pinnedTag": "Pinned tag",
     "frequentlyUsed": "Frequently used",
     "createTag": "+ Create \"{{name}}\"",
-    "pinTag": "Pin for quick access"
+    "pinTag": "Pin for quick access",
+    "parentTag": "Parent tag",
+    "noParent": "None (top level)",
+    "parentTagHasChildren": "This tag has child tags, so it cannot go under another tag.",
+    "showChildTags": "Show child tags",
+    "hideChildTags": "Hide child tags"
   },
   "habits": {
     "completeHabit": "Complete habit",
@@ -1957,6 +2028,52 @@
     "done": "Done"
   },
   "calendar": {
+    "focusSession": "Focus",
+    "print": "Print",
+    "year": "Year",
+    "weekNumber": "W{{week}}",
+    "yearItems_one": "{{date}}: {{count}} item",
+    "yearItems_other": "{{date}}: {{count}} items",
+    "miniCalendar": "Mini calendar",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "multiDay_one": "{{count}} days",
+    "multiDay_other": "{{count}} days",
+    "agendaEmpty": "Nothing scheduled",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Show focus sessions",
+      "holidays": "Holidays",
+      "holidaysNone": "None",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Whole country",
+      "showHabits": "Show habits",
+      "showWeekNumbers": "Show week numbers",
+      "showMiniCalendar": "Show mini calendar",
+      "multiDayCount": "Days in multi-day view",
+      "title": "View options",
+      "showCompleted": "Show completed",
+      "showWeekends": "Show weekends",
+      "showRepeats": "Show all repeats",
+      "colorBy": "Colour by",
+      "colorBy_default": "Default",
+      "colorBy_project": "Project",
+      "colorBy_priority": "Priority",
+      "colorBy_tag": "Tag",
+      "saveError": "Could not save view options"
+    },
+    "arrange": {
+      "title": "Arrange tasks",
+      "noDate": "No date",
+      "overdue": "Overdue",
+      "filterProject": "Project",
+      "filterTag": "Tag",
+      "filterPriority": "Priority",
+      "emptyNoDate": "No undated tasks to schedule",
+      "emptyOverdue": "No overdue tasks to schedule",
+      "noProject": "No project"
+    },
+    "resizeTask": "Change when this task ends",
     "month": "Month",
     "week": "Week",
     "day": "Day",
@@ -3532,6 +3649,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Colour by",
+    "colorByStatus": "Colour: status",
+    "colorByPriority": "Colour: priority",
+    "colorByTag": "Colour: tag",
     "title": "Timeline",
     "days": "Days",
     "weeks": "Weeks",
@@ -3814,5 +3935,75 @@
     "adminRequiredTitle": "Turn on two-factor sign-in first",
     "adminRequiredBody": "This account can see every customer, so the admin panel opens only once two-factor sign-in is on.",
     "adminRequiredAction": "Set it up"
+  },
+  "summary": {
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "groupBy": "Group by",
+    "includeOpen": "Include open tasks due in this period",
+    "saveTemplate": "Save as template",
+    "templateSaved": "Template saved",
+    "templateFailed": "Could not save the template",
+    "copyMarkdown": "Copy as Markdown",
+    "downloadMd": "Download .md",
+    "downloadTxt": "Download .txt",
+    "downloadCsv": "Download .csv",
+    "print": "Print",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Could not copy to clipboard",
+    "exportTitle": "Summary {{start}} – {{end}}",
+    "counts": "{{completed}} completed, {{open}} open",
+    "empty": "No tasks in this period.",
+    "noProject": "No project",
+    "noDate": "No date",
+    "periods": {
+      "today": "Today",
+      "this_week": "This week",
+      "last_week": "Last week",
+      "this_month": "This month",
+      "custom": "Custom range"
+    },
+    "groupings": {
+      "project": "Project",
+      "day": "Day",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Completed",
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "waiting": "Waiting",
+      "planned": "Planned",
+      "archived": "Archived",
+      "cancelled": "Cancelled"
+    },
+    "csv": {
+      "name": "Task",
+      "status": "Status",
+      "project": "Project",
+      "completed": "Completed",
+      "due": "Due",
+      "tags": "Tags"
+    }
+  },
+  "projectBoard": {
+    "title": "Board",
+    "unsectioned": "Unsectioned",
+    "empty": "No tasks",
+    "addColumn": "Add column",
+    "addLeft": "Add column to the left",
+    "addRight": "Add column to the right",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteTitle": "Delete column",
+    "deleteMessage": "Delete \"{{name}}\"? Its tasks move to Unsectioned.",
+    "columnName": "Column name",
+    "columnActions": "Column actions",
+    "newColumn": "New column",
+    "loadError": "Could not load columns",
+    "saveError": "Could not save the board"
   }
 }

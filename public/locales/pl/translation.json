@@ -1,4 +1,19 @@
 {
+  "focusStats": {
+    "title": "Skupienie",
+    "lastDays_one": "{{count}} dzień",
+    "lastDays_few": "{{count}} dni",
+    "lastDays_many": "{{count}} dni",
+    "lastDays_other": "{{count}} dni",
+    "error": "Nie udało się wczytać statystyk skupienia",
+    "empty": "Brak sesji skupienia. Uruchom timer Pomodoro na górnym pasku; zakończone sesje są liczone tutaj.",
+    "total": "Czas skupienia",
+    "sessions": "Sesje",
+    "bestHour": "Godzina największego skupienia",
+    "perDay": "Minuty dziennie",
+    "perHour": "Minuty według godziny",
+    "topTasks": "Zadania z największym skupieniem"
+  },
   "common": {
     "deleting": "Usuwanie...",
     "save": "Zapisz",
@@ -100,7 +115,8 @@
     "telegramProblem": "Problem z połączeniem z Telegramem",
     "resize": "Zmień szerokość paska bocznego",
     "collapseViews": "Zwiń listę widoków",
-    "expandViews": "Rozwiń listę widoków"
+    "expandViews": "Rozwiń listę widoków",
+    "summary": "Podsumowanie"
   },
   "navigation": {
     "home": "Strona główna",
@@ -220,7 +236,43 @@
       "important": "Ważne",
       "notImportant": "Nie Ważne",
       "dropHere": "Upuść tutaj",
-      "urgentHint": "Oznacz zadania jako 'pilne', aby je wyróżnić"
+      "urgentHint": "Oznacz zadania jako 'pilne', aby je wyróżnić",
+      "matrix": {
+        "picker": "Macierz",
+        "default": "Eisenhower (domyślna)",
+        "new": "Nowa macierz",
+        "newName": "Nowa macierz",
+        "limit": "Możesz mieć do {{count}} macierzy.",
+        "editTitle": "Edytuj macierz",
+        "name": "Nazwa macierzy",
+        "quadrant": "Ćwiartka {{number}}",
+        "quadrantName": "Nazwa ćwiartki",
+        "priorities": "Priorytet (dowolny z)",
+        "priority": {
+          "none": "Brak",
+          "low": "Niski",
+          "medium": "Średni",
+          "high": "Wysoki"
+        },
+        "due": "Termin",
+        "dueType": {
+          "any": "Dowolny",
+          "overdue": "Przeterminowane",
+          "today": "Dzisiaj",
+          "within": "W ciągu N dni",
+          "none": "Bez daty"
+        },
+        "days": "Dni",
+        "tags": "Tagi (dowolny z, oddzielone przecinkami)",
+        "projects": "Projekty (opcjonalnie)",
+        "firstMatchHint": "Każde zadanie trafia do pierwszej ćwiartki, której regułę spełnia. Pusty wybór pasuje do wszystkiego.",
+        "deleteTitle": "Usuń macierz",
+        "deleteConfirm": "Usunąć macierz „{{name}}”? Twoje zadania się nie zmienią."
+      },
+      "dropRefusedPriority": "Ta ćwiartka dopuszcza kilka priorytetów, więc zadania nie można tu przeciągnąć.",
+      "dropRefusedDue": "Termin zadania nie pasuje do tej ćwiartki; zmień datę.",
+      "dropRefusedProject": "Projekt zadania nie pasuje do tej ćwiartki.",
+      "dropRefusedEarlier": "Po zmianie zadanie i tak trafiłoby do wcześniejszej ćwiartki."
     },
     "kanban": {
       "title": "Tablica Kanban",
@@ -281,6 +333,18 @@
     "noActivity": "Brak aktywności"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Subskrybuj swoje zadania",
+      "description": "Prywatny adres pokazujący otwarte zadania z terminem w Kalendarzu Google, Kalendarzu Apple lub Outlooku. Każdy, kto zna adres, może czytać te zadania.",
+      "address": "Adres kanału",
+      "copy": "Kopiuj",
+      "copied": "Adres skopiowany",
+      "once": "Skopiuj go teraz: jest pokazywany tylko raz. Nowy adres wyłącza stary.",
+      "create": "Utwórz adres",
+      "rotate": "Utwórz nowy adres",
+      "disable": "Wyłącz",
+      "error": "Nie udało się zaktualizować kanału zadań"
+    },
     "settings": "Ustawienia profilu",
     "language": "Język",
     "theme": "Motyw",
@@ -1400,7 +1464,11 @@
     "noStartDate": "Brak daty rozpoczęcia",
     "startDateUpdated": "Data rozpoczęcia zaktualizowana",
     "startDateUpdateError": "Nie udało się zaktualizować daty rozpoczęcia",
-    "startAfterDueError": "Początek nie może być po terminie"
+    "startAfterDueError": "Początek nie może być po terminie",
+    "pin": "Przypnij",
+    "unpin": "Odepnij",
+    "pinned": "Przypięte",
+    "pinUpdateError": "Nie udało się zaktualizować przypięcia"
   },
   "projects": {
     "loading": "Ładowanie projektów...",
@@ -1651,7 +1719,12 @@
     "pinnedTag": "Przypięty tag",
     "frequentlyUsed": "Często używane",
     "createTag": "+ Utwórz „{{name}}”",
-    "pinTag": "Przypnij dla szybkiego dostępu"
+    "pinTag": "Przypnij dla szybkiego dostępu",
+    "parentTag": "Tag nadrzędny",
+    "noParent": "Brak (najwyższy poziom)",
+    "parentTagHasChildren": "Ten tag ma tagi podrzędne, więc nie może znaleźć się pod innym tagiem.",
+    "showChildTags": "Pokaż tagi podrzędne",
+    "hideChildTags": "Ukryj tagi podrzędne"
   },
   "recurrence": {
     "none": "Brak",
@@ -1696,6 +1769,56 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "focusSession": "Skupienie",
+    "print": "Drukuj",
+    "year": "Rok",
+    "weekNumber": "T{{week}}",
+    "yearItems_one": "{{date}}: {{count}} element",
+    "yearItems_few": "{{date}}: {{count}} elementy",
+    "yearItems_many": "{{date}}: {{count}} elementów",
+    "yearItems_other": "{{date}}: {{count}} elementu",
+    "miniCalendar": "Minikalendarz",
+    "previousMonth": "Poprzedni miesiąc",
+    "nextMonth": "Następny miesiąc",
+    "multiDay_one": "{{count}} dzień",
+    "multiDay_few": "{{count}} dni",
+    "multiDay_many": "{{count}} dni",
+    "multiDay_other": "{{count}} dni",
+    "agendaEmpty": "Nic nie zaplanowano",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Pokaż sesje skupienia",
+      "holidays": "Święta",
+      "holidaysNone": "Brak",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Cały kraj",
+      "showHabits": "Pokaż nawyki",
+      "showWeekNumbers": "Pokaż numery tygodni",
+      "showMiniCalendar": "Pokaż minikalendarz",
+      "multiDayCount": "Dni w widoku wielodniowym",
+      "title": "Opcje widoku",
+      "showCompleted": "Pokaż ukończone",
+      "showWeekends": "Pokaż weekendy",
+      "showRepeats": "Pokaż wszystkie powtórzenia",
+      "colorBy": "Kolor według",
+      "colorBy_default": "Domyślny",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Priorytet",
+      "colorBy_tag": "Tag",
+      "saveError": "Nie udało się zapisać opcji widoku"
+    },
+    "arrange": {
+      "title": "Rozplanuj zadania",
+      "noDate": "Bez daty",
+      "overdue": "Przeterminowane",
+      "filterProject": "Projekt",
+      "filterTag": "Tag",
+      "filterPriority": "Priorytet",
+      "emptyNoDate": "Brak zadań bez daty do zaplanowania",
+      "emptyOverdue": "Brak przeterminowanych zadań do zaplanowania",
+      "noProject": "Bez projektu"
+    },
+    "resizeTask": "Zmień koniec tego zadania",
     "month": "Miesiąc",
     "week": "Tydzień",
     "day": "Dzień",
@@ -3143,6 +3266,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Kolor według",
+    "colorByStatus": "Kolor: status",
+    "colorByPriority": "Kolor: priorytet",
+    "colorByTag": "Kolor: tag",
     "title": "Oś czasu",
     "days": "Dni",
     "weeks": "Tygodnie",
@@ -3427,5 +3554,75 @@
     "adminRequiredTitle": "Najpierw włącz weryfikację dwuetapową",
     "adminRequiredBody": "To konto widzi wszystkich klientów, więc panel administracyjny otwiera się dopiero po włączeniu weryfikacji dwuetapowej.",
     "adminRequiredAction": "Skonfiguruj"
+  },
+  "summary": {
+    "period": "Okres",
+    "from": "Od",
+    "to": "Do",
+    "groupBy": "Grupuj według",
+    "includeOpen": "Uwzględnij otwarte zadania z terminem w tym okresie",
+    "saveTemplate": "Zapisz jako szablon",
+    "templateSaved": "Szablon zapisany",
+    "templateFailed": "Nie udało się zapisać szablonu",
+    "copyMarkdown": "Kopiuj jako Markdown",
+    "downloadMd": "Pobierz .md",
+    "downloadTxt": "Pobierz .txt",
+    "downloadCsv": "Pobierz .csv",
+    "print": "Drukuj",
+    "copied": "Skopiowano do schowka",
+    "copyFailed": "Nie udało się skopiować do schowka",
+    "exportTitle": "Podsumowanie {{start}} – {{end}}",
+    "counts": "Ukończone: {{completed}}, otwarte: {{open}}",
+    "empty": "Brak zadań w tym okresie.",
+    "noProject": "Bez projektu",
+    "noDate": "Bez daty",
+    "periods": {
+      "today": "Dzisiaj",
+      "this_week": "Ten tydzień",
+      "last_week": "Poprzedni tydzień",
+      "this_month": "Ten miesiąc",
+      "custom": "Własny zakres"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dzień",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Ukończone",
+      "not_started": "Nierozpoczęte",
+      "in_progress": "W toku",
+      "waiting": "Oczekujące",
+      "planned": "Zaplanowane",
+      "archived": "Zarchiwizowane",
+      "cancelled": "Anulowane"
+    },
+    "csv": {
+      "name": "Zadanie",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Ukończono",
+      "due": "Termin",
+      "tags": "Tagi"
+    }
+  },
+  "projectBoard": {
+    "title": "Tablica",
+    "unsectioned": "Bez sekcji",
+    "empty": "Brak zadań",
+    "addColumn": "Dodaj kolumnę",
+    "addLeft": "Dodaj kolumnę po lewej",
+    "addRight": "Dodaj kolumnę po prawej",
+    "moveLeft": "Przesuń w lewo",
+    "moveRight": "Przesuń w prawo",
+    "rename": "Zmień nazwę",
+    "delete": "Usuń",
+    "deleteTitle": "Usuń kolumnę",
+    "deleteMessage": "Usunąć „{{name}}”? Jej zadania trafią do Bez sekcji.",
+    "columnName": "Nazwa kolumny",
+    "columnActions": "Działania kolumny",
+    "newColumn": "Nowa kolumna",
+    "loadError": "Nie udało się wczytać kolumn",
+    "saveError": "Nie udało się zapisać tablicy"
   }
 }

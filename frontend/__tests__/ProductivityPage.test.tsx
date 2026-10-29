@@ -14,6 +14,11 @@ jest.mock('../components/Productivity/ProductivityAssistant', () => ({
     default: () => <div data-testid="productivity-assistant" />,
 }));
 
+jest.mock('../components/Insights/FocusStats', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 jest.mock('../utils/projectsService', () => ({
     fetchProjects: jest.fn().mockResolvedValue([]),
 }));

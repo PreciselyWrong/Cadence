@@ -647,6 +647,11 @@ function registerTaskTools(server, context, tools) {
             description:
                 'Estimated duration in minutes (whole number between 5 and 720; pass null to clear)',
         },
+        pinned: {
+            type: 'boolean',
+            description:
+                'Pin the task to the top of its lists (true) or unpin it (false)',
+        },
         due_date: {
             type: 'string',
             description:
@@ -760,6 +765,10 @@ function registerTaskTools(server, context, tools) {
                 updates.estimated_minutes = parseEstimatedMinutes(
                     params.estimated_minutes
                 );
+            }
+            if (params.pinned !== undefined) {
+                if (!params.pinned) updates.pinned_at = null;
+                else if (!task.pinned_at) updates.pinned_at = new Date();
             }
             if (params.status) {
                 const statusMap = {

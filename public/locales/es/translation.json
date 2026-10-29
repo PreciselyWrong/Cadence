@@ -1,4 +1,18 @@
 {
+  "focusStats": {
+    "title": "Enfoque",
+    "lastDays_one": "{{count}} día",
+    "lastDays_many": "{{count}} días",
+    "lastDays_other": "{{count}} días",
+    "error": "No se pudieron cargar las estadísticas de enfoque",
+    "empty": "Aún no hay sesiones de enfoque. Inicia el temporizador Pomodoro en la barra superior; las sesiones terminadas se cuentan aquí.",
+    "total": "Tiempo de enfoque",
+    "sessions": "Sesiones",
+    "bestHour": "Hora de más enfoque",
+    "perDay": "Minutos por día",
+    "perHour": "Minutos por hora del día",
+    "topTasks": "Tareas con más enfoque"
+  },
   "common": {
     "deleting": "Eliminando...",
     "loading": "Cargando...",
@@ -100,7 +114,8 @@
     "telegramProblem": "Problema de conexión con Telegram",
     "resize": "Cambiar tamaño de la barra lateral",
     "collapseViews": "Contraer la lista de vistas",
-    "expandViews": "Expandir la lista de vistas"
+    "expandViews": "Expandir la lista de vistas",
+    "summary": "Resumen"
   },
   "navigation": {
     "home": "Inicio",
@@ -192,6 +207,18 @@
     "registration_email_sent": "Verifica tu dirección de correo para activar tu cuenta. Te hemos enviado un enlace, revisa tu bandeja de entrada."
   },
   "profile": {
+    "taskFeed": {
+      "title": "Suscribirse a tus tareas",
+      "description": "Una dirección privada que muestra tus tareas abiertas con fecha límite en Google Calendar, Apple Calendar u Outlook. Cualquiera con la dirección puede leer esas tareas.",
+      "address": "Dirección del feed",
+      "copy": "Copiar",
+      "copied": "Dirección copiada",
+      "once": "Cópiala ahora: solo se muestra una vez. Una nueva dirección desactiva la anterior.",
+      "create": "Crear una dirección",
+      "rotate": "Crear una nueva dirección",
+      "disable": "Desactivar",
+      "error": "No se pudo actualizar el feed de tareas"
+    },
     "title": "Configuración de Perfil",
     "appearance": "Apariencia",
     "language": "Idioma",
@@ -881,7 +908,43 @@
       "important": "Importante",
       "notImportant": "No Importante",
       "dropHere": "Suelta aquí",
-      "urgentHint": "Etiqueta las tareas con 'urgente' para marcarlas como urgentes"
+      "urgentHint": "Etiqueta las tareas con 'urgente' para marcarlas como urgentes",
+      "matrix": {
+        "picker": "Matriz",
+        "default": "Eisenhower (predeterminada)",
+        "new": "Nueva matriz",
+        "newName": "Nueva matriz",
+        "limit": "Puedes guardar hasta {{count}} matrices.",
+        "editTitle": "Editar matriz",
+        "name": "Nombre de la matriz",
+        "quadrant": "Cuadrante {{number}}",
+        "quadrantName": "Nombre del cuadrante",
+        "priorities": "Prioridad (cualquiera)",
+        "priority": {
+          "none": "Ninguna",
+          "low": "Baja",
+          "medium": "Media",
+          "high": "Alta"
+        },
+        "due": "Vencimiento",
+        "dueType": {
+          "any": "Cualquiera",
+          "overdue": "Vencidas",
+          "today": "Hoy",
+          "within": "En los próximos N días",
+          "none": "Sin fecha"
+        },
+        "days": "Días",
+        "tags": "Etiquetas (cualquiera, separadas por comas)",
+        "projects": "Proyectos (opcional)",
+        "firstMatchHint": "Cada tarea aparece en el primer cuadrante cuya regla cumple. Una opción vacía coincide con todo.",
+        "deleteTitle": "Eliminar matriz",
+        "deleteConfirm": "¿Eliminar la matriz «{{name}}»? Tus tareas no cambian."
+      },
+      "dropRefusedPriority": "Este cuadrante admite varias prioridades, así que la tarea no puede moverse aquí arrastrándola.",
+      "dropRefusedDue": "La fecha de vencimiento de la tarea no encaja en este cuadrante; cambia la fecha.",
+      "dropRefusedProject": "El proyecto de la tarea no encaja en este cuadrante.",
+      "dropRefusedEarlier": "Tras el cambio, la tarea seguiría cayendo en un cuadrante anterior."
     },
     "kanban": {
       "title": "Tablero Kanban",
@@ -1375,7 +1438,11 @@
     "noStartDate": "Sin fecha de inicio",
     "startDateUpdated": "Fecha de inicio actualizada",
     "startDateUpdateError": "No se pudo actualizar la fecha de inicio",
-    "startAfterDueError": "El inicio no puede ser posterior a la fecha de vencimiento"
+    "startAfterDueError": "El inicio no puede ser posterior a la fecha de vencimiento",
+    "pin": "Fijar",
+    "unpin": "Desfijar",
+    "pinned": "Fijada",
+    "pinUpdateError": "No se pudo actualizar la fijación"
   },
   "dateIndicators": {
     "today": "HOY",
@@ -1582,7 +1649,12 @@
     "pinnedTag": "Etiqueta fijada",
     "frequentlyUsed": "Usadas con frecuencia",
     "createTag": "+ Crear «{{name}}»",
-    "pinTag": "Fijar para acceso rápido"
+    "pinTag": "Fijar para acceso rápido",
+    "parentTag": "Etiqueta padre",
+    "noParent": "Ninguna (nivel superior)",
+    "parentTagHasChildren": "Esta etiqueta tiene etiquetas hijas, así que no puede ir bajo otra etiqueta.",
+    "showChildTags": "Mostrar etiquetas hijas",
+    "hideChildTags": "Ocultar etiquetas hijas"
   },
   "note": {
     "title": "Título",
@@ -1656,6 +1728,54 @@
     "done": "Hecho"
   },
   "calendar": {
+    "focusSession": "Enfoque",
+    "print": "Imprimir",
+    "year": "Año",
+    "weekNumber": "S{{week}}",
+    "yearItems_one": "{{date}}: {{count}} elemento",
+    "yearItems_many": "{{date}}: {{count}} elementos",
+    "yearItems_other": "{{date}}: {{count}} elementos",
+    "miniCalendar": "Minicalendario",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "multiDay_one": "{{count}} días",
+    "multiDay_many": "{{count}} días",
+    "multiDay_other": "{{count}} días",
+    "agendaEmpty": "Nada programado",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Mostrar sesiones de enfoque",
+      "holidays": "Festivos",
+      "holidaysNone": "Ninguno",
+      "holidayRegion": "Región",
+      "holidayRegionAll": "Todo el país",
+      "showHabits": "Mostrar hábitos",
+      "showWeekNumbers": "Mostrar números de semana",
+      "showMiniCalendar": "Mostrar minicalendario",
+      "multiDayCount": "Días en la vista de varios días",
+      "title": "Opciones de vista",
+      "showCompleted": "Mostrar completadas",
+      "showWeekends": "Mostrar fines de semana",
+      "showRepeats": "Mostrar todas las repeticiones",
+      "colorBy": "Color por",
+      "colorBy_default": "Predeterminado",
+      "colorBy_project": "Proyecto",
+      "colorBy_priority": "Prioridad",
+      "colorBy_tag": "Etiqueta",
+      "saveError": "No se pudieron guardar las opciones"
+    },
+    "arrange": {
+      "title": "Organizar tareas",
+      "noDate": "Sin fecha",
+      "overdue": "Vencidas",
+      "filterProject": "Proyecto",
+      "filterTag": "Etiqueta",
+      "filterPriority": "Prioridad",
+      "emptyNoDate": "No hay tareas sin fecha para programar",
+      "emptyOverdue": "No hay tareas vencidas para programar",
+      "noProject": "Sin proyecto"
+    },
+    "resizeTask": "Cambiar cuándo termina esta tarea",
     "month": "Mes",
     "week": "Semana",
     "day": "Día",
@@ -3123,6 +3243,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Color por",
+    "colorByStatus": "Color: estado",
+    "colorByPriority": "Color: prioridad",
+    "colorByTag": "Color: etiqueta",
     "title": "Cronograma",
     "days": "Días",
     "weeks": "Semanas",
@@ -3406,5 +3530,75 @@
     "adminRequiredTitle": "Activa primero la autenticación de dos factores",
     "adminRequiredBody": "Esta cuenta puede ver a todos los clientes, así que el panel de administración solo se abre cuando la autenticación de dos factores está activada.",
     "adminRequiredAction": "Configurarla"
+  },
+  "summary": {
+    "period": "Periodo",
+    "from": "Desde",
+    "to": "Hasta",
+    "groupBy": "Agrupar por",
+    "includeOpen": "Incluir tareas abiertas que vencen en el periodo",
+    "saveTemplate": "Guardar como plantilla",
+    "templateSaved": "Plantilla guardada",
+    "templateFailed": "No se pudo guardar la plantilla",
+    "copyMarkdown": "Copiar como Markdown",
+    "downloadMd": "Descargar .md",
+    "downloadTxt": "Descargar .txt",
+    "downloadCsv": "Descargar .csv",
+    "print": "Imprimir",
+    "copied": "Copiado al portapapeles",
+    "copyFailed": "No se pudo copiar al portapapeles",
+    "exportTitle": "Resumen {{start}} – {{end}}",
+    "counts": "{{completed}} completadas, {{open}} abiertas",
+    "empty": "No hay tareas en este periodo.",
+    "noProject": "Sin proyecto",
+    "noDate": "Sin fecha",
+    "periods": {
+      "today": "Hoy",
+      "this_week": "Esta semana",
+      "last_week": "Semana pasada",
+      "this_month": "Este mes",
+      "custom": "Rango personalizado"
+    },
+    "groupings": {
+      "project": "Proyecto",
+      "day": "Día",
+      "status": "Estado"
+    },
+    "status": {
+      "done": "Completada",
+      "not_started": "Sin empezar",
+      "in_progress": "En curso",
+      "waiting": "En espera",
+      "planned": "Planificada",
+      "archived": "Archivada",
+      "cancelled": "Cancelada"
+    },
+    "csv": {
+      "name": "Tarea",
+      "status": "Estado",
+      "project": "Proyecto",
+      "completed": "Completada",
+      "due": "Vencimiento",
+      "tags": "Etiquetas"
+    }
+  },
+  "projectBoard": {
+    "title": "Tablero",
+    "unsectioned": "Sin sección",
+    "empty": "Sin tareas",
+    "addColumn": "Añadir columna",
+    "addLeft": "Añadir columna a la izquierda",
+    "addRight": "Añadir columna a la derecha",
+    "moveLeft": "Mover a la izquierda",
+    "moveRight": "Mover a la derecha",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar columna",
+    "deleteMessage": "¿Eliminar «{{name}}»? Sus tareas pasan a Sin sección.",
+    "columnName": "Nombre de la columna",
+    "columnActions": "Acciones de la columna",
+    "newColumn": "Nueva columna",
+    "loadError": "No se pudieron cargar las columnas",
+    "saveError": "No se pudo guardar el tablero"
   }
 }

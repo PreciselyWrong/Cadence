@@ -32,6 +32,7 @@ export interface TaskRowSetters {
     setTags: (tagNames: string[]) => Promise<void>;
     setAssignee: (personUid: string | null) => Promise<void>;
     setRecurrence: (payload: RecurrencePayload) => Promise<void>;
+    setPinned: (pinned: boolean) => Promise<void>;
 }
 
 // Centralises task field edits made from the inline quick-edit row. Every setter
@@ -167,6 +168,8 @@ export const useTaskRowSave = (
                 'task.recurrenceUpdateError',
                 'Failed to update recurrence'
             ),
+        setPinned: (pinned) =>
+            save({ pinned }, 'task.pinUpdateError', 'Failed to update pin'),
     };
 };
 

@@ -473,6 +473,13 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Storage: `user_task_orders` (`user_id`, `task_id`, `scope`, `position`), scope `all` or `project:<project id>`
     - API: `GET /api/tasks/order?scope=all|project&project_uid=...` returns the saved uids; `PUT /api/tasks/order` with `{ scope, project_uid?, task_uids, base_order_by? }` saves a drag; `GET /api/tasks?order_by=custom:asc` sorts All Tasks by it
 
+55. **Pinned tasks:**
+    - **Pin** / **Unpin** sits in a task row's actions menu and in the task page's `...` menu; a pinned row shows a small pin icon
+    - Pinned tasks come first in their list, the most recently pinned first; the rest keep the list's order (any sort, including Custom)
+    - Applies to All Tasks, a project's task list, the Upcoming day groups and the Today task sections that the server sorts (Suggested and the plan lists); within a group, a pinned task still stays in its group
+    - Pinning again keeps the original pin time; unpinning clears it
+    - Storage: `tasks.pinned_at` (nullable date). API: `PATCH /api/task/:uid` with `{ pinned: true|false }`; responses carry `pinned` (boolean) and `pinned_at`. The MCP `update_task` tool takes `pinned` too
+
 53. **Grouping options:**
     - By project
     - By status

@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "집중",
+    "lastDays_one": "{{count}}일",
+    "lastDays_other": "{{count}}일",
+    "error": "집중 통계를 불러올 수 없습니다",
+    "empty": "아직 집중 세션이 없습니다. 상단 바의 포모도로 타이머를 시작하면 끝난 세션이 여기에 집계됩니다.",
+    "total": "집중 시간",
+    "sessions": "세션",
+    "bestHour": "가장 집중한 시간",
+    "perDay": "일별 집중 시간(분)",
+    "perHour": "시간대별 집중 시간(분)",
+    "topTasks": "가장 많이 집중한 작업"
+  },
   "common": {
     "deleting": "삭제 중...",
     "save": "저장",
@@ -100,7 +113,8 @@
     "telegramProblem": "Telegram 연결 문제",
     "resize": "사이드바 크기 조정",
     "collapseViews": "뷰 목록 접기",
-    "expandViews": "뷰 목록 펼치기"
+    "expandViews": "뷰 목록 펼치기",
+    "summary": "요약"
   },
   "navigation": {
     "home": "홈",
@@ -220,7 +234,43 @@
       "important": "중요함",
       "notImportant": "중요하지 않음",
       "dropHere": "여기에 드롭",
-      "urgentHint": "'긴급' 태그를 붙여서 긴급한 작업으로 표시하세요"
+      "urgentHint": "'긴급' 태그를 붙여서 긴급한 작업으로 표시하세요",
+      "matrix": {
+        "picker": "매트릭스",
+        "default": "아이젠하워 (기본)",
+        "new": "새 매트릭스",
+        "newName": "새 매트릭스",
+        "limit": "매트릭스는 최대 {{count}}개까지 저장할 수 있습니다.",
+        "editTitle": "매트릭스 편집",
+        "name": "매트릭스 이름",
+        "quadrant": "사분면 {{number}}",
+        "quadrantName": "사분면 이름",
+        "priorities": "우선순위 (하나 이상)",
+        "priority": {
+          "none": "없음",
+          "low": "낮음",
+          "medium": "보통",
+          "high": "높음"
+        },
+        "due": "마감일",
+        "dueType": {
+          "any": "전체",
+          "overdue": "기한 지남",
+          "today": "오늘",
+          "within": "N일 이내",
+          "none": "날짜 없음"
+        },
+        "days": "일",
+        "tags": "태그 (하나 이상, 쉼표로 구분)",
+        "projects": "프로젝트 (선택)",
+        "firstMatchHint": "각 작업은 규칙에 맞는 첫 번째 사분면에만 표시됩니다. 비워 두면 모두 일치합니다.",
+        "deleteTitle": "매트릭스 삭제",
+        "deleteConfirm": "\"{{name}}\" 매트릭스를 삭제할까요? 작업은 변경되지 않습니다."
+      },
+      "dropRefusedPriority": "이 사분면은 여러 우선순위를 허용하므로 드래그로 옮길 수 없습니다.",
+      "dropRefusedDue": "작업의 기한이 이 사분면에 맞지 않습니다. 대신 날짜를 바꾸세요.",
+      "dropRefusedProject": "작업의 프로젝트가 이 사분면에 맞지 않습니다.",
+      "dropRefusedEarlier": "변경 후에도 작업이 앞쪽 사분면에 들어갑니다."
     },
     "kanban": {
       "title": "칸반 보드",
@@ -281,6 +331,18 @@
     "noActivity": "아직 활동이 없습니다"
   },
   "profile": {
+    "taskFeed": {
+      "title": "내 작업 구독",
+      "description": "기한이 있는 열린 작업을 Google 캘린더, Apple 캘린더 또는 Outlook에 표시하는 비공개 주소입니다. 주소를 아는 사람은 누구나 작업을 볼 수 있습니다.",
+      "address": "피드 주소",
+      "copy": "복사",
+      "copied": "주소를 복사했습니다",
+      "once": "지금 복사하세요. 한 번만 표시됩니다. 새 주소를 만들면 이전 주소는 꺼집니다.",
+      "create": "주소 만들기",
+      "rotate": "새 주소 만들기",
+      "disable": "끄기",
+      "error": "작업 피드를 업데이트할 수 없습니다"
+    },
     "settings": "프로필 설정",
     "language": "언어",
     "theme": "테마",
@@ -1397,7 +1459,11 @@
     "noStartDate": "시작일 없음",
     "startDateUpdated": "시작일이 업데이트되었습니다",
     "startDateUpdateError": "시작일을 업데이트하지 못했습니다",
-    "startAfterDueError": "시작일은 마감일 이후일 수 없습니다"
+    "startAfterDueError": "시작일은 마감일 이후일 수 없습니다",
+    "pin": "고정",
+    "unpin": "고정 해제",
+    "pinned": "고정됨",
+    "pinUpdateError": "고정을 업데이트하지 못했습니다"
   },
   "projects": {
     "loading": "프로젝트 로딩 중...",
@@ -1645,7 +1711,12 @@
     "pinnedTag": "고정된 태그",
     "frequentlyUsed": "자주 사용",
     "createTag": "+ \"{{name}}\" 만들기",
-    "pinTag": "빠르게 쓰도록 고정"
+    "pinTag": "빠르게 쓰도록 고정",
+    "parentTag": "상위 태그",
+    "noParent": "없음 (최상위)",
+    "parentTagHasChildren": "이 태그에는 하위 태그가 있으므로 다른 태그 아래에 둘 수 없습니다.",
+    "showChildTags": "하위 태그 표시",
+    "hideChildTags": "하위 태그 숨기기"
   },
   "recurrence": {
     "none": "없음",
@@ -1690,6 +1761,52 @@
     "done": "완료"
   },
   "calendar": {
+    "focusSession": "집중",
+    "print": "인쇄",
+    "year": "연도",
+    "weekNumber": "{{week}}주",
+    "yearItems_one": "{{date}}: {{count}}개",
+    "yearItems_other": "{{date}}: {{count}}개",
+    "miniCalendar": "미니 캘린더",
+    "previousMonth": "이전 달",
+    "nextMonth": "다음 달",
+    "multiDay_one": "{{count}}일",
+    "multiDay_other": "{{count}}일",
+    "agendaEmpty": "예정된 항목 없음",
+    "agenda": "일정 목록",
+    "options": {
+      "showFocus": "집중 세션 표시",
+      "holidays": "공휴일",
+      "holidaysNone": "없음",
+      "holidayRegion": "지역",
+      "holidayRegionAll": "전국",
+      "showHabits": "습관 표시",
+      "showWeekNumbers": "주 번호 표시",
+      "showMiniCalendar": "미니 캘린더 표시",
+      "multiDayCount": "여러 날 보기의 일수",
+      "title": "보기 옵션",
+      "showCompleted": "완료된 항목 표시",
+      "showWeekends": "주말 표시",
+      "showRepeats": "모든 반복 표시",
+      "colorBy": "색상 기준",
+      "colorBy_default": "기본",
+      "colorBy_project": "프로젝트",
+      "colorBy_priority": "우선순위",
+      "colorBy_tag": "태그",
+      "saveError": "보기 옵션을 저장할 수 없습니다"
+    },
+    "arrange": {
+      "title": "작업 배치",
+      "noDate": "날짜 없음",
+      "overdue": "기한 지남",
+      "filterProject": "프로젝트",
+      "filterTag": "태그",
+      "filterPriority": "우선순위",
+      "emptyNoDate": "예약할 날짜 없는 작업이 없습니다",
+      "emptyOverdue": "예약할 기한 지난 작업이 없습니다",
+      "noProject": "프로젝트 없음"
+    },
+    "resizeTask": "이 작업의 종료 시간 변경",
     "month": "월",
     "week": "주",
     "day": "일",
@@ -3130,6 +3247,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "색상 기준",
+    "colorByStatus": "색상: 상태",
+    "colorByPriority": "색상: 우선순위",
+    "colorByTag": "색상: 태그",
     "title": "타임라인",
     "days": "일",
     "weeks": "주",
@@ -3411,5 +3532,75 @@
     "adminRequiredTitle": "먼저 2단계 인증을 켜세요",
     "adminRequiredBody": "이 계정은 모든 고객을 볼 수 있으므로, 관리자 패널은 2단계 인증을 켠 후에만 열립니다.",
     "adminRequiredAction": "설정하기"
+  },
+  "summary": {
+    "period": "기간",
+    "from": "시작",
+    "to": "종료",
+    "groupBy": "그룹화 기준",
+    "includeOpen": "기간 내 마감인 미완료 작업 포함",
+    "saveTemplate": "템플릿으로 저장",
+    "templateSaved": "템플릿이 저장되었습니다",
+    "templateFailed": "템플릿을 저장할 수 없습니다",
+    "copyMarkdown": "Markdown으로 복사",
+    "downloadMd": "다운로드 .md",
+    "downloadTxt": "다운로드 .txt",
+    "downloadCsv": "다운로드 .csv",
+    "print": "인쇄",
+    "copied": "클립보드에 복사했습니다",
+    "copyFailed": "클립보드에 복사할 수 없습니다",
+    "exportTitle": "요약 {{start}} – {{end}}",
+    "counts": "완료 {{completed}}개, 미완료 {{open}}개",
+    "empty": "이 기간에 작업이 없습니다.",
+    "noProject": "프로젝트 없음",
+    "noDate": "날짜 없음",
+    "periods": {
+      "today": "오늘",
+      "this_week": "이번 주",
+      "last_week": "지난주",
+      "this_month": "이번 달",
+      "custom": "사용자 지정 기간"
+    },
+    "groupings": {
+      "project": "프로젝트",
+      "day": "날짜",
+      "status": "상태"
+    },
+    "status": {
+      "done": "완료",
+      "not_started": "시작 안 함",
+      "in_progress": "진행 중",
+      "waiting": "대기 중",
+      "planned": "계획됨",
+      "archived": "보관됨",
+      "cancelled": "취소됨"
+    },
+    "csv": {
+      "name": "작업",
+      "status": "상태",
+      "project": "프로젝트",
+      "completed": "완료일",
+      "due": "마감일",
+      "tags": "태그"
+    }
+  },
+  "projectBoard": {
+    "title": "보드",
+    "unsectioned": "섹션 없음",
+    "empty": "작업 없음",
+    "addColumn": "열 추가",
+    "addLeft": "왼쪽에 열 추가",
+    "addRight": "오른쪽에 열 추가",
+    "moveLeft": "왼쪽으로 이동",
+    "moveRight": "오른쪽으로 이동",
+    "rename": "이름 바꾸기",
+    "delete": "삭제",
+    "deleteTitle": "열 삭제",
+    "deleteMessage": "\"{{name}}\"을(를) 삭제할까요? 작업은 섹션 없음으로 이동합니다.",
+    "columnName": "열 이름",
+    "columnActions": "열 작업",
+    "newColumn": "새 열",
+    "loadError": "열을 불러올 수 없습니다",
+    "saveError": "보드를 저장할 수 없습니다"
   }
 }

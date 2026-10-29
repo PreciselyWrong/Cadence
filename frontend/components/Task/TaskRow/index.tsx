@@ -469,6 +469,15 @@ const TaskRow: React.FC<TaskRowProps> = ({
                             : undefined
                     }
                     onDelete={task.uid ? handleDeleteClick : undefined}
+                    onTogglePin={
+                        task.uid
+                            ? () => {
+                                  setters
+                                      .setPinned(!task.pinned)
+                                      .catch(() => {});
+                              }
+                            : undefined
+                    }
                     onActionsMenuOpenChange={setIsActionsMenuOpen}
                 />
 

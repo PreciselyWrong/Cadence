@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
 import { Project } from '../entities/Project';
@@ -22,22 +22,54 @@ import {
     ClockIcon,
     FolderIcon,
     TagIcon,
+    PrinterIcon,
 } from '@heroicons/react/24/outline';
 import {
     format,
     addWeeks,
     addDays,
+    addMonths,
     startOfMonth,
     endOfMonth,
     subDays,
+    startOfYear,
+    endOfYear,
 } from 'date-fns';
 import { el, enUS, es, ja, uk, de } from 'date-fns/locale';
 import CalendarMonthView from './Calendar/CalendarMonthView';
 import CalendarWeekView from './Calendar/CalendarWeekView';
 import CalendarDayView from './Calendar/CalendarDayView';
+import CalendarAgendaView from './Calendar/CalendarAgendaView';
+import CalendarYearView, { MonthGrid } from './Calendar/CalendarYearView';
 import { getApiPath } from '../config/paths';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import {
+    CalendarEvent,
+    moveUpdate,
+    resizeUpdate,
+    taskIdOf,
+    taskToEvents,
+} from './Calendar/taskEvents';
 import { parseDateString } from '../utils/dateUtils';
+import { Holiday, fetchHolidays } from '../utils/holidaysService';
+import {
+    FocusSession,
+    fetchFocusSessions,
+} from '../utils/focusSessionsService';
+import ArrangePanel, { ARRANGE_DRAG_PREFIX } from './Calendar/ArrangePanel';
+import ViewOptions, {
+    CalendarOptions,
+    DEFAULT_CALENDAR_OPTIONS,
+    isWeekend,
+    readCalendarOptions,
+    visibleTasks,
+} from './Calendar/ViewOptions';
+import {
+    fetchProfile,
+    getFirstDayOfWeek,
+    getLocaleFirstDayOfWeek,
+    updateUiSettings,
+} from '../utils/profileService';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -55,16 +87,6 @@ const getLocale = (language: string) => {
             return enUS;
     }
 };
-
-interface CalendarEvent {
-    id: string;
-    title: string;
-    start: Date;
-    end: Date;
-    type: 'task' | 'event';
-    color?: string;
-    feedUid?: string;
-}
 
 const localDate = (day: string, minute = 0) => {
     const [year, month, date] = day.split('-').map(Number);
@@ -84,6 +106,31 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         type: 'event',
         color: event.color || '#6b7280',
         feedUid: event.feed_uid,
+        allDay: !!event.all_day,
+    };
+};
+
+const focusToEvent = (session: FocusSession, label: string): CalendarEvent => ({
+    id: `focus-${session.uid}`,
+    title: session.task ? `${label}: ${session.task.name}` : label,
+    start: new Date(session.started_at),
+    end: new Date(session.ended_at),
+    type: 'event',
+    color: '#f97316',
+    readOnly: true,
+});
+
+const holidayToEvent = (holiday: Holiday): CalendarEvent => {
+    const start = localDate(holiday.date);
+    return {
+        id: `holiday-${holiday.date}`,
+        title: holiday.name,
+        start,
+        end: addDays(start, 1),
+        type: 'event',
+        color: '#ef4444',
+        allDay: true,
+        readOnly: true,
     };
 };
 
@@ -93,8 +140,11 @@ const Calendar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [view, setView] = useState<'month' | 'week' | 'day'>('month');
-    const [events, setEvents] = useState<CalendarEvent[]>([]);
+    const [view, setView] = useState<
+        'year' | 'month' | 'week' | 'multi' | 'day' | 'agenda'
+    >('month');
+    const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
+    const [miniMonth, setMiniMonth] = useState(new Date());
     const [isLoadingTasks, setIsLoadingTasks] = useState(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [allTasks, setAllTasks] = useState<any[]>([]);
@@ -105,11 +155,14 @@ const Calendar: React.FC = () => {
     const [feedEvents, setFeedEvents] = useState<CalendarRangeEvent[]>([]);
     const [feedErrors, setFeedErrors] = useState<string[]>([]);
     const [isManagerOpen, setIsManagerOpen] = useState(false);
+    const [isArrangeOpen, setIsArrangeOpen] = useState(false);
+    const [options, setOptions] = useState<CalendarOptions>(
+        DEFAULT_CALENDAR_OPTIONS
+    );
 
     const locale = getLocale(i18n.language);
 
     useEffect(() => {
-        loadTasks();
         loadProjects();
     }, []);
 
@@ -128,6 +181,16 @@ const Calendar: React.FC = () => {
     // a week each side), so paging within a month never refetches.
     const visibleMonth = format(currentDate, 'yyyy-MM');
     const feedUidsKey = feeds.map((feed) => feed.uid).join(',');
+    const windowStart = format(
+        subDays(startOfMonth(currentDate), 7),
+        'yyyy-MM-dd'
+    );
+    const windowEnd = format(addDays(endOfMonth(currentDate), 7), 'yyyy-MM-dd');
+
+    // Recurring tasks add their later occurrences up to the window's end.
+    useEffect(() => {
+        loadTasks();
+    }, [visibleMonth]);
 
     useEffect(() => {
         if (!feedUidsKey) {
@@ -156,10 +219,99 @@ const Calendar: React.FC = () => {
         };
     }, [visibleMonth, feedUidsKey]);
 
+    useEffect(() => {
+        getFirstDayOfWeek()
+            .then(setFirstDayOfWeek)
+            .catch(() =>
+                setFirstDayOfWeek(getLocaleFirstDayOfWeek(navigator.language))
+            );
+    }, []);
+
+    // The mini calendar follows the shown date.
+    useEffect(() => {
+        setMiniMonth(currentDate);
+    }, [visibleMonth]);
+
+    useEffect(() => {
+        fetchProfile()
+            .then((profile) =>
+                setOptions(readCalendarOptions(profile.ui_settings?.calendar))
+            )
+            .catch(() => {});
+    }, []);
+
+    const changeOptions = (next: CalendarOptions) => {
+        setOptions(next);
+        updateUiSettings({ calendar: next }).catch(() =>
+            showErrorToast(
+                t('calendar.options.saveError', 'Could not save view options')
+            )
+        );
+    };
+
+    const events = useMemo(
+        () =>
+            visibleTasks(allTasks, options).flatMap((task) =>
+                taskToEvents(task, options.colorBy)
+            ),
+        [allTasks, options]
+    );
+
+    // Finished focus sessions in the loaded window.
+    const [focusSessions, setFocusSessions] = useState<FocusSession[]>([]);
+    useEffect(() => {
+        if (!options.showFocus) {
+            setFocusSessions([]);
+            return;
+        }
+        let cancelled = false;
+        fetchFocusSessions(windowStart, windowEnd)
+            .then((list) => !cancelled && setFocusSessions(list || []))
+            .catch(() => !cancelled && setFocusSessions([]));
+        return () => {
+            cancelled = true;
+        };
+    }, [options.showFocus, windowStart, windowEnd]);
+
+    // Public holidays of the chosen country for the loaded window.
+    const [holidays, setHolidays] = useState<Holiday[]>([]);
+    useEffect(() => {
+        if (!options.holidayCountry) {
+            setHolidays([]);
+            return;
+        }
+        let cancelled = false;
+        fetchHolidays(
+            options.holidayCountry,
+            options.holidayRegion,
+            view === 'year'
+                ? format(startOfYear(currentDate), 'yyyy-MM-dd')
+                : windowStart,
+            view === 'year'
+                ? format(endOfYear(currentDate), 'yyyy-MM-dd')
+                : windowEnd
+        )
+            .then((list) => !cancelled && setHolidays(list || []))
+            .catch(() => !cancelled && setHolidays([]));
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        options.holidayCountry,
+        options.holidayRegion,
+        windowStart,
+        windowEnd,
+        view === 'year' ? currentDate.getFullYear() : 0,
+    ]);
+
     const shownFeedUids = new Set(
         feeds.filter((feed) => feed.show_on_calendar).map((feed) => feed.uid)
     );
     const calendarEvents = [
+        ...holidays.map(holidayToEvent),
+        ...focusSessions.map((session) =>
+            focusToEvent(session, t('calendar.focusSession', 'Focus'))
+        ),
         ...events,
         ...feedEvents
             .filter((event) => shownFeedUids.has(event.feed_uid))
@@ -167,8 +319,7 @@ const Calendar: React.FC = () => {
     ];
     const failedFeedNames = feeds
         .filter(
-            (feed) =>
-                feed.show_on_calendar && feedErrors.includes(feed.uid)
+            (feed) => feed.show_on_calendar && feedErrors.includes(feed.uid)
         )
         .map((feed) => feed.name);
 
@@ -197,9 +348,14 @@ const Calendar: React.FC = () => {
     const loadTasks = async () => {
         setIsLoadingTasks(true);
         try {
-            const response = await fetch(getApiPath('tasks?type=calendar'), {
-                credentials: 'include',
-            });
+            const response = await fetch(
+                getApiPath(
+                    `tasks?type=calendar&start=${windowStart}&end=${windowEnd}`
+                ),
+                {
+                    credentials: 'include',
+                }
+            );
             if (response.ok) {
                 const data = await response.json();
                 let tasks;
@@ -213,50 +369,12 @@ const Calendar: React.FC = () => {
                     tasks = [];
                 }
                 setAllTasks(tasks);
-                setEvents(convertTasksToEvents(tasks));
             }
         } catch (error) {
             console.error('Error loading tasks:', error);
         } finally {
             setIsLoadingTasks(false);
         }
-    };
-
-    const convertTasksToEvents = (tasks: any[]): CalendarEvent[] => {
-        const taskEvents: CalendarEvent[] = [];
-        if (!Array.isArray(tasks)) return [];
-
-        tasks.forEach((task) => {
-            const name = task.original_name || task.name || task.title || `Task ${task.id}`;
-
-            if (task.defer_until) {
-                const deferDate = new Date(task.defer_until);
-                taskEvents.push({
-                    id: `task-defer-${task.id}`,
-                    title: name,
-                    start: deferDate,
-                    end: new Date(deferDate.getTime() + 60 * 60 * 1000),
-                    type: 'task',
-                    color: task.completed_at ? '#22c55e' : '#f59e0b',
-                });
-            }
-
-            if (task.due_date) {
-                const dueDate = parseDateString(task.due_date);
-                if (dueDate) {
-                    taskEvents.push({
-                        id: `task-${task.id}`,
-                        title: name,
-                        start: dueDate,
-                        end: new Date(dueDate.getTime() + 60 * 60 * 1000),
-                        type: 'task',
-                        color: task.completed_at ? '#22c55e' : '#3b82f6',
-                    });
-                }
-            }
-        });
-
-        return taskEvents;
     };
 
     const loadProjects = async () => {
@@ -275,7 +393,14 @@ const Calendar: React.FC = () => {
 
     const navigateView = (direction: 'prev' | 'next') => {
         setCurrentDate((prev) => {
-            if (view === 'month') {
+            if (view === 'year') {
+                const newDate = new Date(prev);
+                newDate.setFullYear(
+                    prev.getFullYear() + (direction === 'prev' ? -1 : 1)
+                );
+                return newDate;
+            }
+            if (view === 'month' || view === 'agenda') {
                 const newDate = new Date(prev);
                 if (direction === 'prev') {
                     newDate.setMonth(prev.getMonth() - 1);
@@ -284,25 +409,51 @@ const Calendar: React.FC = () => {
                 }
                 return newDate;
             } else if (view === 'week') {
-                return direction === 'prev' ? addWeeks(prev, -1) : addWeeks(prev, 1);
+                return direction === 'prev'
+                    ? addWeeks(prev, -1)
+                    : addWeeks(prev, 1);
+            } else if (view === 'multi') {
+                return addDays(
+                    prev,
+                    (direction === 'prev' ? -1 : 1) * options.multiDayCount
+                );
             } else {
-                return direction === 'prev' ? addDays(prev, -1) : addDays(prev, 1);
+                // Without weekends, the day view steps over them.
+                let next = addDays(prev, direction === 'prev' ? -1 : 1);
+                while (!options.showWeekends && isWeekend(next)) {
+                    next = addDays(next, direction === 'prev' ? -1 : 1);
+                }
+                return next;
             }
         });
     };
 
     const goToToday = () => setCurrentDate(new Date());
 
+    // Prints only the shown view (see the print rules in tailwind.css).
+    const printCalendar = () => {
+        document.body.classList.add('printing-calendar');
+        const done = () => {
+            document.body.classList.remove('printing-calendar');
+            window.removeEventListener('afterprint', done);
+        };
+        window.addEventListener('afterprint', done);
+        window.print();
+    };
+
     const handleDateClick = () => {};
 
     const handleEventClick = (event: CalendarEvent) => {
         if (event.type === 'task') {
-            const taskId = event.id.replace(/^task(-defer|-created|-fallback)?-/, '');
-            const task = allTasks.find((t) => t.id.toString() === taskId);
+            const task = findTask(event.id);
             if (task) {
                 const taskEntity: Task = {
                     ...task,
-                    name: task.original_name || task.name || task.title || `Task ${task.id}`,
+                    name:
+                        task.original_name ||
+                        task.name ||
+                        task.title ||
+                        `Task ${task.id}`,
                     priority: task.priority || 'low',
                     status: task.status || 'not_started',
                     tags: task.tags || [],
@@ -331,47 +482,85 @@ const Calendar: React.FC = () => {
         }
     };
 
-    const handleEventDrop = async (eventId: string, newDate: Date, newHour?: number) => {
-        const taskId = eventId.replace(/^task(-defer|-created|-fallback)?-/, '');
-        const task = allTasks.find((t) => t.id.toString() === taskId);
-        if (!task?.uid) return;
-
-        const newDateTime = new Date(newDate);
-        if (newHour !== undefined) {
-            newDateTime.setHours(newHour, 0, 0, 0);
-        } else {
-            if (task.due_date) {
-                const originalTime = parseDateString(task.due_date);
-                newDateTime.setHours(
-                    originalTime ? originalTime.getHours() : 0,
-                    originalTime ? originalTime.getMinutes() : 0,
-                    0,
-                    0
-                );
-            } else {
-                newDateTime.setHours(0, 0, 0, 0);
-            }
-        }
-
-        const isDeferEvent = eventId.startsWith('task-defer-');
-        const fieldToUpdate = isDeferEvent ? 'defer_until' : 'due_date';
-        const updatedTask = { ...task, [fieldToUpdate]: newDateTime.toISOString() };
-
-        setAllTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
-        setEvents((prevEvents) =>
-            prevEvents.map((event) =>
-                event.id === eventId
-                    ? { ...event, start: newDateTime, end: new Date(newDateTime.getTime() + 60 * 60 * 1000) }
-                    : event
-            )
+    const findTask = (eventId: string) => {
+        const taskId = taskIdOf(eventId);
+        return allTasks.find(
+            (t) => t.id.toString() === taskId && !t.is_virtual_occurrence
         );
+    };
 
+    // Shows the change at once, saves it, then keeps what the server
+    // returns (or reloads everything if the save fails).
+    const saveTaskChange = async (
+        task: any,
+        update: Record<string, unknown>
+    ) => {
+        const replace = (next: any) =>
+            setAllTasks((prev) =>
+                prev.map((t) =>
+                    t.id === task.id && !t.is_virtual_occurrence ? next : t
+                )
+            );
+        replace({ ...task, ...update });
         try {
-            await updateTask(task.uid, { [fieldToUpdate]: newDateTime.toISOString() });
+            const saved: any = await updateTask(
+                task.uid,
+                update as Partial<Task>
+            );
+            // A recurring task's later occurrences follow its new date.
+            if (task.recurrence_type && task.recurrence_type !== 'none') {
+                await loadTasks();
+                return;
+            }
+            replace({ ...task, ...update, ...(saved || {}) });
         } catch (error) {
             console.error('Error updating task:', error);
             await loadTasks();
         }
+    };
+
+    const handleEventDrop = async (
+        eventId: string,
+        newDate: Date,
+        newHour?: number
+    ) => {
+        if (eventId.startsWith(ARRANGE_DRAG_PREFIX)) {
+            const task = findTask(eventId.slice(ARRANGE_DRAG_PREFIX.length));
+            if (!task?.uid) return;
+            const update: Record<string, unknown> = {
+                due_date: format(newDate, 'yyyy-MM-dd'),
+            };
+            if (newHour !== undefined) {
+                update.due_time = `${String(newHour).padStart(2, '0')}:00`;
+            }
+            await saveTaskChange(task, update);
+            return;
+        }
+
+        const task = findTask(eventId);
+        const event = events.find((e) => e.id === eventId);
+        if (!task?.uid || !event || event.readOnly) return;
+
+        const newStart = new Date(newDate);
+        if (newHour !== undefined && !event.allDay) {
+            newStart.setHours(newHour, 0, 0, 0);
+        } else {
+            newStart.setHours(
+                event.start.getHours(),
+                event.start.getMinutes(),
+                0,
+                0
+            );
+        }
+
+        await saveTaskChange(task, moveUpdate(task, event, newStart));
+    };
+
+    const handleEventResize = async (eventId: string, newEnd: Date) => {
+        const task = findTask(eventId);
+        const event = events.find((e) => e.id === eventId);
+        if (!task?.uid || !event?.resize) return;
+        await saveTaskChange(task, resizeUpdate(event, newEnd));
     };
 
     return (
@@ -384,14 +573,27 @@ const Calendar: React.FC = () => {
                             {t('sidebar.calendar')}
                         </h2>
                         <span className="text-sm text-gray-400 dark:text-gray-500">
-                            {format(currentDate, 'MMMM yyyy', { locale })}
+                            {format(
+                                currentDate,
+                                view === 'year' ? 'yyyy' : 'MMMM yyyy',
+                                { locale }
+                            )}
                         </span>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
                         {/* View selector */}
                         <div className="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
-                            {(['month', 'week', 'day'] as const).map((viewType) => (
+                            {(
+                                [
+                                    'year',
+                                    'month',
+                                    'week',
+                                    'multi',
+                                    'day',
+                                    'agenda',
+                                ] as const
+                            ).map((viewType) => (
                                 <button
                                     key={viewType}
                                     onClick={() => setView(viewType)}
@@ -401,10 +603,30 @@ const Calendar: React.FC = () => {
                                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                                     }`}
                                 >
-                                    {t(`calendar.${viewType}`)}
+                                    {viewType === 'multi'
+                                        ? t('calendar.multiDay', {
+                                              count: options.multiDayCount,
+                                              defaultValue: '{{count}} days',
+                                          })
+                                        : t(`calendar.${viewType}`, viewType)}
                                 </button>
                             ))}
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={printCalendar}
+                            aria-label={t('calendar.print', 'Print')}
+                            title={t('calendar.print', 'Print')}
+                            className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
+                        >
+                            <PrinterIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                        </button>
+
+                        <ViewOptions
+                            options={options}
+                            onChange={changeOptions}
+                        />
 
                         {/* Navigation */}
                         <button
@@ -441,12 +663,20 @@ const Calendar: React.FC = () => {
                             onClick={() => void toggleFeed(feed)}
                             title={
                                 feed.show_on_calendar
-                                    ? t('calendar.hideCalendar', 'Hide {{name}}', {
-                                          name: feed.name,
-                                      })
-                                    : t('calendar.showCalendar', 'Show {{name}}', {
-                                          name: feed.name,
-                                      })
+                                    ? t(
+                                          'calendar.hideCalendar',
+                                          'Hide {{name}}',
+                                          {
+                                              name: feed.name,
+                                          }
+                                      )
+                                    : t(
+                                          'calendar.showCalendar',
+                                          'Show {{name}}',
+                                          {
+                                              name: feed.name,
+                                          }
+                                      )
                             }
                             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
                                 feed.show_on_calendar
@@ -466,6 +696,19 @@ const Calendar: React.FC = () => {
                             {feed.name}
                         </button>
                     ))}
+                    <button
+                        type="button"
+                        onClick={() => setIsArrangeOpen((open) => !open)}
+                        aria-pressed={isArrangeOpen}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
+                            isArrangeOpen
+                                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'
+                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        }`}
+                    >
+                        <ClockIcon className="h-4 w-4" />
+                        {t('calendar.arrange.title', 'Arrange tasks')}
+                    </button>
                     <button
                         type="button"
                         onClick={() => setIsManagerOpen(true)}
@@ -495,33 +738,136 @@ const Calendar: React.FC = () => {
                 )}
 
                 {/* Calendar view */}
-                <div className="flex-1 overflow-hidden min-h-0">
-                    {view === 'month' && (
-                        <CalendarMonthView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onDateClick={handleDateClick}
-                            onEventClick={handleEventClick}
-                            onEventDrop={handleEventDrop}
-                        />
+                <div className="flex-1 overflow-hidden min-h-0 flex gap-3">
+                    {options.showMiniCalendar && (
+                        <aside
+                            aria-label={t(
+                                'calendar.miniCalendar',
+                                'Mini calendar'
+                            )}
+                            className="hidden lg:block w-56 shrink-0 self-start bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 p-3"
+                        >
+                            <div className="mb-2 flex items-center justify-between">
+                                <button
+                                    type="button"
+                                    aria-label={t(
+                                        'calendar.previousMonth',
+                                        'Previous month'
+                                    )}
+                                    onClick={() =>
+                                        setMiniMonth((m) => addMonths(m, -1))
+                                    }
+                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                >
+                                    <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-500" />
+                                </button>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                    {format(miniMonth, 'MMMM yyyy', { locale })}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label={t(
+                                        'calendar.nextMonth',
+                                        'Next month'
+                                    )}
+                                    onClick={() =>
+                                        setMiniMonth((m) => addMonths(m, 1))
+                                    }
+                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                >
+                                    <ChevronRightIcon className="h-3.5 w-3.5 text-gray-500" />
+                                </button>
+                            </div>
+                            <MonthGrid
+                                month={miniMonth}
+                                weekStartsOn={
+                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                                }
+                                selected={currentDate}
+                                onDayClick={setCurrentDate}
+                                compact
+                            />
+                        </aside>
                     )}
-                    {view === 'week' && (
-                        <CalendarWeekView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onDateClick={handleDateClick}
-                            onEventClick={handleEventClick}
-                            onTimeSlotClick={handleTimeSlotClick}
-                            onEventDrop={handleEventDrop}
-                        />
-                    )}
-                    {view === 'day' && (
-                        <CalendarDayView
-                            currentDate={currentDate}
-                            events={calendarEvents}
-                            onEventClick={handleEventClick}
-                            onTimeSlotClick={handleTimeSlotClick}
-                            onEventDrop={handleEventDrop}
+                    <div
+                        className="flex-1 overflow-hidden min-h-0"
+                        data-print-area
+                    >
+                        {view === 'year' && (
+                            <CalendarYearView
+                                currentDate={currentDate}
+                                events={events}
+                                weekStartsOn={
+                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                                }
+                                onDayClick={(day) => {
+                                    setCurrentDate(day);
+                                    setView('day');
+                                }}
+                            />
+                        )}
+                        {view === 'month' && (
+                            <CalendarMonthView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onDateClick={handleDateClick}
+                                onEventClick={handleEventClick}
+                                onEventDrop={handleEventDrop}
+                                showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
+                            />
+                        )}
+                        {view === 'week' && (
+                            <CalendarWeekView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onDateClick={handleDateClick}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                                showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
+                            />
+                        )}
+                        {view === 'multi' && (
+                            <CalendarWeekView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                                showWeekends={options.showWeekends}
+                                showWeekNumbers={options.showWeekNumbers}
+                                dayCount={options.multiDayCount}
+                            />
+                        )}
+                        {view === 'agenda' && (
+                            <CalendarAgendaView
+                                start={startOfMonth(currentDate)}
+                                end={endOfMonth(currentDate)}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
+                                showWeekends={options.showWeekends}
+                            />
+                        )}
+                        {view === 'day' && (
+                            <CalendarDayView
+                                currentDate={currentDate}
+                                events={calendarEvents}
+                                onEventClick={handleEventClick}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventDrop={handleEventDrop}
+                                onEventResize={handleEventResize}
+                            />
+                        )}
+                    </div>
+
+                    {isArrangeOpen && (
+                        <ArrangePanel
+                            tasks={allTasks}
+                            onClose={() => setIsArrangeOpen(false)}
                         />
                     )}
                 </div>
@@ -626,16 +972,33 @@ interface TaskEventModalProps {
     onEditTask: () => void;
 }
 
-const TaskEventModal: React.FC<TaskEventModalProps> = ({ isOpen, task, onClose, onEditTask }) => {
+const TaskEventModal: React.FC<TaskEventModalProps> = ({
+    isOpen,
+    task,
+    onClose,
+    onEditTask,
+}) => {
     const { t, i18n } = useTranslation();
     const locale = getLocale(i18n.language);
 
     if (!isOpen) return null;
 
     const priorityConfig = {
-        high: { label: t('calendar.high', 'High'), className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
-        medium: { label: t('calendar.medium', 'Medium'), className: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' },
-        low: { label: t('calendar.low', 'Low'), className: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400' },
+        high: {
+            label: t('calendar.high', 'High'),
+            className:
+                'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+        },
+        medium: {
+            label: t('calendar.medium', 'Medium'),
+            className:
+                'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
+        },
+        low: {
+            label: t('calendar.low', 'Low'),
+            className:
+                'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+        },
     };
 
     return (
@@ -670,16 +1033,26 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({ isOpen, task, onClose, 
                 <div className="min-h-0 overflow-y-auto">
                     {/* Pills row */}
                     <div className="flex items-center gap-2 px-5 pb-4 flex-wrap">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                            task.completed_at
-                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                        }`}>
-                            {task.completed_at ? t('calendar.completed', 'Completed') : t('calendar.pending', 'Pending')}
+                        <span
+                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                                task.completed_at
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                            }`}
+                        >
+                            {task.completed_at
+                                ? t('calendar.completed', 'Completed')
+                                : t('calendar.pending', 'Pending')}
                         </span>
                         {task.priority && task.priority in priorityConfig && (
-                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${priorityConfig[task.priority as keyof typeof priorityConfig].className}`}>
-                                {priorityConfig[task.priority as keyof typeof priorityConfig].label}
+                            <span
+                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${priorityConfig[task.priority as keyof typeof priorityConfig].className}`}
+                            >
+                                {
+                                    priorityConfig[
+                                        task.priority as keyof typeof priorityConfig
+                                    ].label
+                                }
                             </span>
                         )}
                     </div>
@@ -689,13 +1062,23 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({ isOpen, task, onClose, 
                         {task.due_date && parseDateString(task.due_date) && (
                             <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
                                 <CalendarDaysIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
-                                <span>{format(parseDateString(task.due_date) as Date, 'PPP', { locale })}</span>
+                                <span>
+                                    {format(
+                                        parseDateString(task.due_date) as Date,
+                                        'PPP',
+                                        { locale }
+                                    )}
+                                </span>
                             </div>
                         )}
                         {task.defer_until && (
                             <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
                                 <ClockIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
-                                <span>{format(new Date(task.defer_until), 'PPP', { locale })}</span>
+                                <span>
+                                    {format(new Date(task.defer_until), 'PPP', {
+                                        locale,
+                                    })}
+                                </span>
                             </div>
                         )}
                         {task.Project?.name && (
@@ -709,7 +1092,10 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({ isOpen, task, onClose, 
                                 <TagIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" />
                                 <span className="flex flex-wrap gap-1">
                                     {task.tags.map((tag: any) => (
-                                        <span key={tag.id || tag.name} className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded">
+                                        <span
+                                            key={tag.id || tag.name}
+                                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded"
+                                        >
                                             {tag.name}
                                         </span>
                                     ))}

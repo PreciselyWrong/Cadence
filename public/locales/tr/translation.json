@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Odak",
+    "lastDays_one": "{{count}} gün",
+    "lastDays_other": "{{count}} gün",
+    "error": "Odak istatistikleri yüklenemedi",
+    "empty": "Henüz odak oturumu yok. Üst çubuktaki Pomodoro zamanlayıcısını başlatın; biten oturumlar burada sayılır.",
+    "total": "Odak süresi",
+    "sessions": "Oturumlar",
+    "bestHour": "En odaklı saat",
+    "perDay": "Günlük dakika",
+    "perHour": "Günün saatine göre dakika",
+    "topTasks": "En çok odaklanılan görevler"
+  },
   "common": {
     "deleting": "Siliniyor...",
     "save": "Kaydet",
@@ -100,7 +113,8 @@
     "telegramProblem": "Telegram bağlantı sorunu",
     "resize": "Kenar çubuğunu yeniden boyutlandır",
     "collapseViews": "Görünüm listesini daralt",
-    "expandViews": "Görünüm listesini genişlet"
+    "expandViews": "Görünüm listesini genişlet",
+    "summary": "Özet"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -220,7 +234,43 @@
       "important": "Önemli",
       "notImportant": "Önemli Değil",
       "dropHere": "Buraya Bırak",
-      "urgentHint": "'Acil' etiketini kullanarak görevleri acil olarak işaretleyin"
+      "urgentHint": "'Acil' etiketini kullanarak görevleri acil olarak işaretleyin",
+      "matrix": {
+        "picker": "Matris",
+        "default": "Eisenhower (varsayılan)",
+        "new": "Yeni matris",
+        "newName": "Yeni matris",
+        "limit": "En fazla {{count}} matris tutabilirsiniz.",
+        "editTitle": "Matrisi düzenle",
+        "name": "Matris adı",
+        "quadrant": "Çeyrek {{number}}",
+        "quadrantName": "Çeyrek adı",
+        "priorities": "Öncelik (herhangi biri)",
+        "priority": {
+          "none": "Yok",
+          "low": "Düşük",
+          "medium": "Orta",
+          "high": "Yüksek"
+        },
+        "due": "Bitiş tarihi",
+        "dueType": {
+          "any": "Herhangi",
+          "overdue": "Gecikmiş",
+          "today": "Bugün",
+          "within": "N gün içinde",
+          "none": "Tarihsiz"
+        },
+        "days": "Gün",
+        "tags": "Etiketler (herhangi biri, virgülle ayrılmış)",
+        "projects": "Projeler (isteğe bağlı)",
+        "firstMatchHint": "Her görev, kuralına uyduğu ilk çeyrekte görünür. Boş bir seçim her şeyle eşleşir.",
+        "deleteTitle": "Matrisi sil",
+        "deleteConfirm": "\"{{name}}\" matrisi silinsin mi? Görevleriniz değişmez."
+      },
+      "dropRefusedPriority": "Bu çeyrek birden fazla önceliğe izin veriyor, bu yüzden görev buraya sürüklenemez.",
+      "dropRefusedDue": "Görevin son tarihi bu çeyreğe uymuyor; bunun yerine tarihi değiştirin.",
+      "dropRefusedProject": "Görevin projesi bu çeyreğe uymuyor.",
+      "dropRefusedEarlier": "Değişiklikten sonra görev yine önceki bir çeyreğe düşerdi."
     },
     "kanban": {
       "title": "Kanban Panosu",
@@ -281,6 +331,18 @@
     "noActivity": "Henüz etkinlik yok"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Görevlerinize abone olun",
+      "description": "Son tarihi olan açık görevlerinizi Google Takvim, Apple Takvim veya Outlook'ta gösteren özel bir adres. Adrese sahip herkes bu görevleri okuyabilir.",
+      "address": "Akış adresi",
+      "copy": "Kopyala",
+      "copied": "Adres kopyalandı",
+      "once": "Şimdi kopyalayın: yalnızca bir kez gösterilir. Yeni bir adres eskisini kapatır.",
+      "create": "Adres oluştur",
+      "rotate": "Yeni adres oluştur",
+      "disable": "Kapat",
+      "error": "Görev akışı güncellenemedi"
+    },
     "settings": "Profil Ayarları",
     "language": "Dil",
     "theme": "Tema",
@@ -1398,7 +1460,11 @@
     "noStartDate": "Başlangıç tarihi yok",
     "startDateUpdated": "Başlangıç tarihi güncellendi",
     "startDateUpdateError": "Başlangıç tarihi güncellenemedi",
-    "startAfterDueError": "Başlangıç, bitiş tarihinden sonra olamaz"
+    "startAfterDueError": "Başlangıç, bitiş tarihinden sonra olamaz",
+    "pin": "Sabitle",
+    "unpin": "Sabitlemeyi kaldır",
+    "pinned": "Sabitlendi",
+    "pinUpdateError": "Sabitleme güncellenemedi"
   },
   "projects": {
     "loading": "Projeler yükleniyor...",
@@ -1647,7 +1713,12 @@
     "pinnedTag": "Sabitlenmiş etiket",
     "frequentlyUsed": "Sık kullanılanlar",
     "createTag": "+ \"{{name}}\" oluştur",
-    "pinTag": "Hızlı erişim için sabitle"
+    "pinTag": "Hızlı erişim için sabitle",
+    "parentTag": "Üst etiket",
+    "noParent": "Yok (en üst düzey)",
+    "parentTagHasChildren": "Bu etiketin alt etiketleri olduğu için başka bir etiketin altına konamaz.",
+    "showChildTags": "Alt etiketleri göster",
+    "hideChildTags": "Alt etiketleri gizle"
   },
   "recurrence": {
     "none": "Yok",
@@ -1692,6 +1763,52 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "focusSession": "Odak",
+    "print": "Yazdır",
+    "year": "Yıl",
+    "weekNumber": "H{{week}}",
+    "yearItems_one": "{{date}}: {{count}} öğe",
+    "yearItems_other": "{{date}}: {{count}} öğe",
+    "miniCalendar": "Mini takvim",
+    "previousMonth": "Önceki ay",
+    "nextMonth": "Sonraki ay",
+    "multiDay_one": "{{count}} gün",
+    "multiDay_other": "{{count}} gün",
+    "agendaEmpty": "Planlanmış bir şey yok",
+    "agenda": "Ajanda",
+    "options": {
+      "showFocus": "Odak oturumlarını göster",
+      "holidays": "Resmî tatiller",
+      "holidaysNone": "Yok",
+      "holidayRegion": "Bölge",
+      "holidayRegionAll": "Tüm ülke",
+      "showHabits": "Alışkanlıkları göster",
+      "showWeekNumbers": "Hafta numaralarını göster",
+      "showMiniCalendar": "Mini takvimi göster",
+      "multiDayCount": "Çok günlü görünümdeki gün sayısı",
+      "title": "Görünüm seçenekleri",
+      "showCompleted": "Tamamlananları göster",
+      "showWeekends": "Hafta sonlarını göster",
+      "showRepeats": "Tüm tekrarları göster",
+      "colorBy": "Renklendirme",
+      "colorBy_default": "Varsayılan",
+      "colorBy_project": "Proje",
+      "colorBy_priority": "Öncelik",
+      "colorBy_tag": "Etiket",
+      "saveError": "Görünüm seçenekleri kaydedilemedi"
+    },
+    "arrange": {
+      "title": "Görevleri yerleştir",
+      "noDate": "Tarihsiz",
+      "overdue": "Gecikmiş",
+      "filterProject": "Proje",
+      "filterTag": "Etiket",
+      "filterPriority": "Öncelik",
+      "emptyNoDate": "Planlanacak tarihsiz görev yok",
+      "emptyOverdue": "Planlanacak gecikmiş görev yok",
+      "noProject": "Proje yok"
+    },
+    "resizeTask": "Bu görevin bitişini değiştir",
     "month": "Ay",
     "week": "Hafta",
     "day": "Gün",
@@ -3133,6 +3250,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Renklendirme",
+    "colorByStatus": "Renk: durum",
+    "colorByPriority": "Renk: öncelik",
+    "colorByTag": "Renk: etiket",
     "title": "Zaman çizelgesi",
     "days": "Günler",
     "weeks": "Haftalar",
@@ -3415,5 +3536,75 @@
     "adminRequiredTitle": "Önce iki adımlı doğrulamayı açın",
     "adminRequiredBody": "Bu hesap tüm müşterileri görebilir, bu yüzden yönetim paneli yalnızca iki adımlı doğrulama açıkken açılır.",
     "adminRequiredAction": "Kur"
+  },
+  "summary": {
+    "period": "Dönem",
+    "from": "Başlangıç",
+    "to": "Bitiş",
+    "groupBy": "Gruplandır",
+    "includeOpen": "Bu dönemde süresi dolan açık görevleri dahil et",
+    "saveTemplate": "Şablon olarak kaydet",
+    "templateSaved": "Şablon kaydedildi",
+    "templateFailed": "Şablon kaydedilemedi",
+    "copyMarkdown": "Markdown olarak kopyala",
+    "downloadMd": "İndir .md",
+    "downloadTxt": "İndir .txt",
+    "downloadCsv": "İndir .csv",
+    "print": "Yazdır",
+    "copied": "Panoya kopyalandı",
+    "copyFailed": "Panoya kopyalanamadı",
+    "exportTitle": "Özet {{start}} – {{end}}",
+    "counts": "{{completed}} tamamlandı, {{open}} açık",
+    "empty": "Bu dönemde görev yok.",
+    "noProject": "Proje yok",
+    "noDate": "Tarih yok",
+    "periods": {
+      "today": "Bugün",
+      "this_week": "Bu hafta",
+      "last_week": "Geçen hafta",
+      "this_month": "Bu ay",
+      "custom": "Özel aralık"
+    },
+    "groupings": {
+      "project": "Proje",
+      "day": "Gün",
+      "status": "Durum"
+    },
+    "status": {
+      "done": "Tamamlandı",
+      "not_started": "Başlanmadı",
+      "in_progress": "Devam ediyor",
+      "waiting": "Bekliyor",
+      "planned": "Planlandı",
+      "archived": "Arşivlendi",
+      "cancelled": "İptal edildi"
+    },
+    "csv": {
+      "name": "Görev",
+      "status": "Durum",
+      "project": "Proje",
+      "completed": "Tamamlanma",
+      "due": "Son tarih",
+      "tags": "Etiketler"
+    }
+  },
+  "projectBoard": {
+    "title": "Pano",
+    "unsectioned": "Bölümsüz",
+    "empty": "Görev yok",
+    "addColumn": "Sütun ekle",
+    "addLeft": "Sola sütun ekle",
+    "addRight": "Sağa sütun ekle",
+    "moveLeft": "Sola taşı",
+    "moveRight": "Sağa taşı",
+    "rename": "Yeniden adlandır",
+    "delete": "Sil",
+    "deleteTitle": "Sütunu sil",
+    "deleteMessage": "\"{{name}}\" silinsin mi? Görevleri Bölümsüz'e taşınır.",
+    "columnName": "Sütun adı",
+    "columnActions": "Sütun işlemleri",
+    "newColumn": "Yeni sütun",
+    "loadError": "Sütunlar yüklenemedi",
+    "saveError": "Pano kaydedilemedi"
   }
 }

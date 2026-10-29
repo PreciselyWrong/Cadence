@@ -20,6 +20,59 @@ More screenshots are [available here](#screenshots).
 
 ---
 
+## 🍴 What this fork adds
+
+This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
+
+### Calendar
+
+| | Upstream | This fork |
+|---|---|---|
+| Views | Month, Week, Day | **Year** (heatmap), Month, Week, **N days** (2–7), Day, **Agenda** |
+| Task blocks | Always a 1-hour block at midnight of the due day (the due time was ignored) | Drawn at the due time for the task's **estimate**, or from its start time to its due time; whole-day and multi-day tasks are **bars** in an all-day row |
+| Drag & drop | Move only | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h) |
+| Scheduling | — | **Arrange tasks** panel: undated and overdue tasks, grouped by project, filtered by project/tag/priority, dragged onto a day or an hour |
+| Recurring tasks | Only the next occurrence | **Every occurrence** in the shown month (faded, read-only) |
+| View options | — | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag — saved per user |
+| Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
+| Print | — | Prints only the shown view |
+| Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
+
+### Focus
+
+| | Upstream | This fork |
+|---|---|---|
+| Tomato timer | A countdown, nothing kept | Finished sessions (and early stops of 5 min or more) are **recorded** |
+| Statistics | — | Insights → Productivity → **Focus**: total time, sessions, most focused hour, minutes per day and per hour, top tasks |
+| Calendar | — | Focus sessions as orange blocks |
+
+### Projects
+
+| | Upstream | This fork |
+|---|---|---|
+| Timeline | Bars coloured by status | Also **colour by priority or tag** |
+
+### Tasks, tags and boards
+
+| | Upstream | This fork |
+|---|---|---|
+| Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
+| Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
+| Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit |
+| Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit |
+| Period summary | — | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template |
+
+### Under the hood
+
+- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences.
+- Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
+- All new strings are translated into the 26 languages (machine-written, review welcome).
+- Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and the "This Fork" section of [CLAUDE.md](CLAUDE.md).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
+
+---
+
 ## 💖 Enjoying tududi?
 
 Help keep it free and actively developed by [buying me a coffee](https://coff.ee/chrisveleris) ☕, [becoming a sponsor](https://github.com/sponsors/chrisvel), or [supporting on Patreon](https://www.patreon.com/ChrisVeleris). You can also support the project by purchasing a **hosted subscription** for a hassle-free, managed solution. Every contribution helps maintain this project and build new features!

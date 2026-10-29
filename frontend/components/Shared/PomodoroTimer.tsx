@@ -6,6 +6,7 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { recordFocusSession } from '../../utils/focusSessionsService';
 
 interface PomodoroTimerProps {
     className?: string;
@@ -13,6 +14,13 @@ interface PomodoroTimerProps {
 
 const POMODORO_STORAGE_KEY = 'tududi_pomodoro_timer';
 const DEFAULT_TIME = 25 * 60; // 25 minutes in seconds
+// A session stopped early is kept once it reaches this many seconds.
+const MIN_RECORDED_TIME = 5 * 60;
+
+// Saves a finished or stopped session; the timer works without it.
+const saveSession = (seconds: number) => {
+    recordFocusSession({ duration_seconds: seconds }).catch(() => {});
+};
 
 interface PomodoroState {
     isActive: boolean;
@@ -29,6 +37,23 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ className = '' }) => {
     const [showCompletionMessage, setShowCompletionMessage] = useState(false);
     const [startTime, setStartTime] = useState<number | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    // The finished session has been saved (or there is none to save).
+    const savedRef = useRef(false);
+
+    useEffect(() => {
+        if (timeLeft > 0) {
+            savedRef.current = false;
+        } else if (isActive && !savedRef.current) {
+            savedRef.current = true;
+            saveSession(DEFAULT_TIME);
+        }
+    }, [timeLeft, isActive]);
+
+    // Stopping early keeps the time focused so far, if long enough.
+    const saveStopped = () => {
+        const focused = DEFAULT_TIME - timeLeft;
+        if (timeLeft > 0 && focused >= MIN_RECORDED_TIME) saveSession(focused);
+    };
 
     // Load state from localStorage on mount
     useEffect(() => {
@@ -55,7 +80,9 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ className = '' }) => {
                             setShowCompletionMessage(true);
                         }
                     } else {
-                        // Timer was paused, use the saved timeLeft
+                        // Timer was paused, use the saved timeLeft. A
+                        // finished one was saved before the reload.
+                        if (state.timeLeft <= 0) savedRef.current = true;
                         setTimeLeft(state.timeLeft);
                         setIsRunning(state.isRunning);
                     }
@@ -126,6 +153,7 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ className = '' }) => {
     };
 
     const handleReset = () => {
+        saveStopped();
         setIsRunning(false);
         setTimeLeft(DEFAULT_TIME);
         setStartTime(null);
@@ -133,6 +161,7 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ className = '' }) => {
     };
 
     const handleClose = () => {
+        saveStopped();
         setIsActive(false);
         setIsRunning(false);
         setTimeLeft(DEFAULT_TIME);

@@ -1,4 +1,19 @@
 {
+  "focusStats": {
+    "title": "Osredotočenost",
+    "lastDays_one": "{{count}} dan",
+    "lastDays_two": "{{count}} dneva",
+    "lastDays_few": "{{count}} dni",
+    "lastDays_other": "{{count}} dni",
+    "error": "Statistike osredotočenosti ni bilo mogoče naložiti",
+    "empty": "Še ni sej osredotočenosti. Zaženite Pomodoro časomer v zgornji vrstici; končane seje se štejejo tukaj.",
+    "total": "Čas osredotočenosti",
+    "sessions": "Seje",
+    "bestHour": "Najbolj osredotočena ura",
+    "perDay": "Minute na dan",
+    "perHour": "Minute po urah dneva",
+    "topTasks": "Naloge z največ osredotočenosti"
+  },
   "common": {
     "deleting": "Brisanje...",
     "save": "Shrani",
@@ -100,7 +115,8 @@
     "telegramProblem": "Težava s povezavo Telegram",
     "resize": "Spremeni širino stranske vrstice",
     "collapseViews": "Strni seznam pogledov",
-    "expandViews": "Razširi seznam pogledov"
+    "expandViews": "Razširi seznam pogledov",
+    "summary": "Povzetek"
   },
   "navigation": {
     "home": "Domov",
@@ -220,7 +236,43 @@
       "important": "Pomembno",
       "notImportant": "Ni pomembno",
       "dropHere": "Spusti tukaj",
-      "urgentHint": "Označi naloge z 'nujno', da jih označiš kot nujne"
+      "urgentHint": "Označi naloge z 'nujno', da jih označiš kot nujne",
+      "matrix": {
+        "picker": "Matrika",
+        "default": "Eisenhower (privzeta)",
+        "new": "Nova matrika",
+        "newName": "Nova matrika",
+        "limit": "Shranite lahko največ {{count}} matrik.",
+        "editTitle": "Uredi matriko",
+        "name": "Ime matrike",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Ime kvadranta",
+        "priorities": "Prioriteta (katera koli)",
+        "priority": {
+          "none": "Brez",
+          "low": "Nizka",
+          "medium": "Srednja",
+          "high": "Visoka"
+        },
+        "due": "Rok",
+        "dueType": {
+          "any": "Kateri koli",
+          "overdue": "Zapadle",
+          "today": "Danes",
+          "within": "V N dneh",
+          "none": "Brez datuma"
+        },
+        "days": "Dni",
+        "tags": "Oznake (katera koli, ločene z vejico)",
+        "projects": "Projekti (neobvezno)",
+        "firstMatchHint": "Vsaka naloga se prikaže v prvem kvadrantu, katerega pravilu ustreza. Prazna izbira ustreza vsemu.",
+        "deleteTitle": "Izbriši matriko",
+        "deleteConfirm": "Izbrišem matriko »{{name}}«? Vaše naloge ostanejo nespremenjene."
+      },
+      "dropRefusedPriority": "Ta kvadrant dovoljuje več prioritet, zato naloge ni mogoče povleči sem.",
+      "dropRefusedDue": "Rok naloge ne ustreza temu kvadrantu; raje spremenite datum.",
+      "dropRefusedProject": "Projekt naloge ne ustreza temu kvadrantu.",
+      "dropRefusedEarlier": "Po spremembi bi naloga še vedno pristala v prejšnjem kvadrantu."
     },
     "kanban": {
       "title": "Kanban tabla",
@@ -281,6 +333,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Naroči se na svoje naloge",
+      "description": "Zasebni naslov, ki prikaže odprte naloge z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere te naloge.",
+      "address": "Naslov vira",
+      "copy": "Kopiraj",
+      "copied": "Naslov kopiran",
+      "once": "Kopirajte ga zdaj: prikaže se samo enkrat. Nov naslov izklopi starega.",
+      "create": "Ustvari naslov",
+      "rotate": "Ustvari nov naslov",
+      "disable": "Izklopi",
+      "error": "Vira nalog ni bilo mogoče posodobiti"
+    },
     "settings": "Nastavitve profila",
     "language": "Jezik",
     "theme": "Tema",
@@ -1400,7 +1464,11 @@
     "noStartDate": "Brez datuma začetka",
     "startDateUpdated": "Datum začetka posodobljen",
     "startDateUpdateError": "Datuma začetka ni bilo mogoče posodobiti",
-    "startAfterDueError": "Začetek ne more biti po roku"
+    "startAfterDueError": "Začetek ne more biti po roku",
+    "pin": "Pripni",
+    "unpin": "Odpni",
+    "pinned": "Pripeto",
+    "pinUpdateError": "Posodobitev pripenjanja ni uspela"
   },
   "projects": {
     "loading": "Nalagam projekte...",
@@ -1651,7 +1719,12 @@
     "pinnedTag": "Pripeta oznaka",
     "frequentlyUsed": "Pogosto uporabljene",
     "createTag": "+ Ustvari »{{name}}«",
-    "pinTag": "Pripni za hiter dostop"
+    "pinTag": "Pripni za hiter dostop",
+    "parentTag": "Nadrejena oznaka",
+    "noParent": "Brez (najvišja raven)",
+    "parentTagHasChildren": "Ta oznaka ima podrejene oznake, zato je ni mogoče postaviti pod drugo oznako.",
+    "showChildTags": "Pokaži podrejene oznake",
+    "hideChildTags": "Skrij podrejene oznake"
   },
   "recurrence": {
     "none": "Noben",
@@ -1696,6 +1769,56 @@
     "done": "Končano"
   },
   "calendar": {
+    "focusSession": "Osredotočenost",
+    "print": "Natisni",
+    "year": "Leto",
+    "weekNumber": "T{{week}}",
+    "yearItems_one": "{{date}}: {{count}} element",
+    "yearItems_two": "{{date}}: {{count}} elementa",
+    "yearItems_few": "{{date}}: {{count}} elementi",
+    "yearItems_other": "{{date}}: {{count}} elementov",
+    "miniCalendar": "Mini koledar",
+    "previousMonth": "Prejšnji mesec",
+    "nextMonth": "Naslednji mesec",
+    "multiDay_one": "{{count}} dan",
+    "multiDay_two": "{{count}} dneva",
+    "multiDay_few": "{{count}} dni",
+    "multiDay_other": "{{count}} dni",
+    "agendaEmpty": "Nič načrtovanega",
+    "agenda": "Razpored",
+    "options": {
+      "showFocus": "Pokaži seje osredotočenosti",
+      "holidays": "Prazniki",
+      "holidaysNone": "Brez",
+      "holidayRegion": "Regija",
+      "holidayRegionAll": "Vsa država",
+      "showHabits": "Pokaži navade",
+      "showWeekNumbers": "Pokaži številke tednov",
+      "showMiniCalendar": "Pokaži mini koledar",
+      "multiDayCount": "Dnevi v večdnevnem pogledu",
+      "title": "Možnosti pogleda",
+      "showCompleted": "Pokaži dokončane",
+      "showWeekends": "Pokaži vikende",
+      "showRepeats": "Pokaži vse ponovitve",
+      "colorBy": "Barva po",
+      "colorBy_default": "Privzeto",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Prioriteta",
+      "colorBy_tag": "Oznaka",
+      "saveError": "Možnosti ni bilo mogoče shraniti"
+    },
+    "arrange": {
+      "title": "Razporedi naloge",
+      "noDate": "Brez datuma",
+      "overdue": "Zapadle",
+      "filterProject": "Projekt",
+      "filterTag": "Oznaka",
+      "filterPriority": "Prioriteta",
+      "emptyNoDate": "Ni nalog brez datuma za razporeditev",
+      "emptyOverdue": "Ni zapadlih nalog za razporeditev",
+      "noProject": "Brez projekta"
+    },
+    "resizeTask": "Spremeni, kdaj se naloga konča",
     "month": "Mesec",
     "week": "Teden",
     "day": "Dan",
@@ -3143,6 +3266,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Barva po",
+    "colorByStatus": "Barva: stanje",
+    "colorByPriority": "Barva: prioriteta",
+    "colorByTag": "Barva: oznaka",
     "title": "Časovnica",
     "days": "Dnevi",
     "weeks": "Tedni",
@@ -3427,5 +3554,75 @@
     "adminRequiredTitle": "Najprej vklopite dvostopenjsko preverjanje",
     "adminRequiredBody": "Ta račun vidi vse stranke, zato se skrbniška plošča odpre šele, ko je dvostopenjsko preverjanje vklopljeno.",
     "adminRequiredAction": "Nastavi"
+  },
+  "summary": {
+    "period": "Obdobje",
+    "from": "Od",
+    "to": "Do",
+    "groupBy": "Združi po",
+    "includeOpen": "Vključi odprte naloge z rokom v tem obdobju",
+    "saveTemplate": "Shrani kot predlogo",
+    "templateSaved": "Predloga shranjena",
+    "templateFailed": "Predloge ni bilo mogoče shraniti",
+    "copyMarkdown": "Kopiraj kot Markdown",
+    "downloadMd": "Prenesi .md",
+    "downloadTxt": "Prenesi .txt",
+    "downloadCsv": "Prenesi .csv",
+    "print": "Natisni",
+    "copied": "Kopirano v odložišče",
+    "copyFailed": "Kopiranje v odložišče ni uspelo",
+    "exportTitle": "Povzetek {{start}} – {{end}}",
+    "counts": "Dokončano: {{completed}}, odprto: {{open}}",
+    "empty": "V tem obdobju ni nalog.",
+    "noProject": "Brez projekta",
+    "noDate": "Brez datuma",
+    "periods": {
+      "today": "Danes",
+      "this_week": "Ta teden",
+      "last_week": "Prejšnji teden",
+      "this_month": "Ta mesec",
+      "custom": "Obdobje po meri"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dan",
+      "status": "Stanje"
+    },
+    "status": {
+      "done": "Dokončano",
+      "not_started": "Ni začeto",
+      "in_progress": "V teku",
+      "waiting": "Čaka",
+      "planned": "Načrtovano",
+      "archived": "Arhivirano",
+      "cancelled": "Preklicano"
+    },
+    "csv": {
+      "name": "Naloga",
+      "status": "Stanje",
+      "project": "Projekt",
+      "completed": "Dokončano",
+      "due": "Rok",
+      "tags": "Oznake"
+    }
+  },
+  "projectBoard": {
+    "title": "Tabla",
+    "unsectioned": "Brez razdelka",
+    "empty": "Ni nalog",
+    "addColumn": "Dodaj stolpec",
+    "addLeft": "Dodaj stolpec levo",
+    "addRight": "Dodaj stolpec desno",
+    "moveLeft": "Premakni levo",
+    "moveRight": "Premakni desno",
+    "rename": "Preimenuj",
+    "delete": "Izbriši",
+    "deleteTitle": "Izbriši stolpec",
+    "deleteMessage": "Izbrišem »{{name}}«? Njegove naloge gredo v Brez razdelka.",
+    "columnName": "Ime stolpca",
+    "columnActions": "Dejanja stolpca",
+    "newColumn": "Nov stolpec",
+    "loadError": "Stolpcev ni bilo mogoče naložiti",
+    "saveError": "Table ni bilo mogoče shraniti"
   }
 }

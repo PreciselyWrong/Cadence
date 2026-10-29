@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} hari",
+    "lastDays_other": "{{count}} hari",
+    "error": "Tidak dapat memuat statistik fokus",
+    "empty": "Belum ada sesi fokus. Mulai timer Pomodoro di bilah atas; sesi yang selesai dihitung di sini.",
+    "total": "Waktu fokus",
+    "sessions": "Sesi",
+    "bestHour": "Jam paling fokus",
+    "perDay": "Menit per hari",
+    "perHour": "Menit per jam",
+    "topTasks": "Tugas paling difokuskan"
+  },
   "common": {
     "deleting": "Menghapus...",
     "save": "Simpan",
@@ -100,7 +113,8 @@
     "telegramProblem": "Masalah koneksi Telegram",
     "resize": "Ubah ukuran bilah sisi",
     "collapseViews": "Ciutkan daftar tampilan",
-    "expandViews": "Luaskan daftar tampilan"
+    "expandViews": "Luaskan daftar tampilan",
+    "summary": "Ringkasan"
   },
   "navigation": {
     "home": "Beranda",
@@ -220,7 +234,43 @@
       "important": "Penting",
       "notImportant": "Tidak Penting",
       "dropHere": "Jatuhkan di sini",
-      "urgentHint": "Tandai tugas dengan 'mendesak' untuk menandainya sebagai mendesak"
+      "urgentHint": "Tandai tugas dengan 'mendesak' untuk menandainya sebagai mendesak",
+      "matrix": {
+        "picker": "Matriks",
+        "default": "Eisenhower (bawaan)",
+        "new": "Matriks baru",
+        "newName": "Matriks baru",
+        "limit": "Anda dapat menyimpan hingga {{count}} matriks.",
+        "editTitle": "Edit matriks",
+        "name": "Nama matriks",
+        "quadrant": "Kuadran {{number}}",
+        "quadrantName": "Nama kuadran",
+        "priorities": "Prioritas (salah satu)",
+        "priority": {
+          "none": "Tidak ada",
+          "low": "Rendah",
+          "medium": "Sedang",
+          "high": "Tinggi"
+        },
+        "due": "Tenggat",
+        "dueType": {
+          "any": "Apa saja",
+          "overdue": "Terlambat",
+          "today": "Hari ini",
+          "within": "Dalam N hari",
+          "none": "Tanpa tanggal"
+        },
+        "days": "Hari",
+        "tags": "Tag (salah satu, dipisahkan koma)",
+        "projects": "Proyek (opsional)",
+        "firstMatchHint": "Setiap tugas muncul di kuadran pertama yang aturannya cocok. Pilihan kosong cocok dengan semuanya.",
+        "deleteTitle": "Hapus matriks",
+        "deleteConfirm": "Hapus matriks \"{{name}}\"? Tugas Anda tidak berubah."
+      },
+      "dropRefusedPriority": "Kuadran ini mengizinkan beberapa prioritas, jadi tugas tidak bisa diseret ke sini.",
+      "dropRefusedDue": "Tenggat tugas tidak cocok dengan kuadran ini; ubah tanggalnya saja.",
+      "dropRefusedProject": "Proyek tugas tidak cocok dengan kuadran ini.",
+      "dropRefusedEarlier": "Setelah diubah, tugas tetap akan masuk ke kuadran sebelumnya."
     },
     "kanban": {
       "title": "Papan Kanban",
@@ -281,6 +331,18 @@
     "noActivity": "Belum ada aktivitas"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Berlangganan tugas Anda",
+      "description": "Alamat pribadi yang menampilkan tugas terbuka dengan tenggat di Google Calendar, Apple Calendar, atau Outlook. Siapa pun yang punya alamat ini dapat membaca tugas tersebut.",
+      "address": "Alamat feed",
+      "copy": "Salin",
+      "copied": "Alamat disalin",
+      "once": "Salin sekarang: hanya ditampilkan sekali. Alamat baru menonaktifkan yang lama.",
+      "create": "Buat alamat",
+      "rotate": "Buat alamat baru",
+      "disable": "Matikan",
+      "error": "Tidak dapat memperbarui feed tugas"
+    },
     "settings": "Pengaturan Profil",
     "language": "Bahasa",
     "theme": "Tema",
@@ -1397,7 +1459,11 @@
     "noStartDate": "Tidak ada tanggal mulai",
     "startDateUpdated": "Tanggal mulai diperbarui",
     "startDateUpdateError": "Gagal memperbarui tanggal mulai",
-    "startAfterDueError": "Mulai tidak boleh setelah tanggal jatuh tempo"
+    "startAfterDueError": "Mulai tidak boleh setelah tanggal jatuh tempo",
+    "pin": "Sematkan",
+    "unpin": "Lepas sematan",
+    "pinned": "Disematkan",
+    "pinUpdateError": "Gagal memperbarui sematan"
   },
   "projects": {
     "loading": "Memuat proyek...",
@@ -1645,7 +1711,12 @@
     "pinnedTag": "Tag disematkan",
     "frequentlyUsed": "Sering digunakan",
     "createTag": "+ Buat \"{{name}}\"",
-    "pinTag": "Sematkan untuk akses cepat"
+    "pinTag": "Sematkan untuk akses cepat",
+    "parentTag": "Tag induk",
+    "noParent": "Tidak ada (tingkat atas)",
+    "parentTagHasChildren": "Tag ini memiliki tag anak, jadi tidak dapat ditempatkan di bawah tag lain.",
+    "showChildTags": "Tampilkan tag anak",
+    "hideChildTags": "Sembunyikan tag anak"
   },
   "recurrence": {
     "none": "Tidak ada",
@@ -1690,6 +1761,52 @@
     "done": "Selesai"
   },
   "calendar": {
+    "focusSession": "Fokus",
+    "print": "Cetak",
+    "year": "Tahun",
+    "weekNumber": "M{{week}}",
+    "yearItems_one": "{{date}}: {{count}} item",
+    "yearItems_other": "{{date}}: {{count}} item",
+    "miniCalendar": "Kalender mini",
+    "previousMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya",
+    "multiDay_one": "{{count}} hari",
+    "multiDay_other": "{{count}} hari",
+    "agendaEmpty": "Tidak ada jadwal",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Tampilkan sesi fokus",
+      "holidays": "Hari libur",
+      "holidaysNone": "Tidak ada",
+      "holidayRegion": "Wilayah",
+      "holidayRegionAll": "Seluruh negara",
+      "showHabits": "Tampilkan kebiasaan",
+      "showWeekNumbers": "Tampilkan nomor minggu",
+      "showMiniCalendar": "Tampilkan kalender mini",
+      "multiDayCount": "Hari dalam tampilan multi-hari",
+      "title": "Opsi tampilan",
+      "showCompleted": "Tampilkan yang selesai",
+      "showWeekends": "Tampilkan akhir pekan",
+      "showRepeats": "Tampilkan semua pengulangan",
+      "colorBy": "Warna berdasarkan",
+      "colorBy_default": "Bawaan",
+      "colorBy_project": "Proyek",
+      "colorBy_priority": "Prioritas",
+      "colorBy_tag": "Tag",
+      "saveError": "Tidak dapat menyimpan opsi tampilan"
+    },
+    "arrange": {
+      "title": "Atur tugas",
+      "noDate": "Tanpa tanggal",
+      "overdue": "Terlambat",
+      "filterProject": "Proyek",
+      "filterTag": "Tag",
+      "filterPriority": "Prioritas",
+      "emptyNoDate": "Tidak ada tugas tanpa tanggal untuk dijadwalkan",
+      "emptyOverdue": "Tidak ada tugas terlambat untuk dijadwalkan",
+      "noProject": "Tanpa proyek"
+    },
+    "resizeTask": "Ubah kapan tugas ini selesai",
     "month": "Bulan",
     "week": "Minggu",
     "day": "Hari",
@@ -3130,6 +3247,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Warna berdasarkan",
+    "colorByStatus": "Warna: status",
+    "colorByPriority": "Warna: prioritas",
+    "colorByTag": "Warna: tag",
     "title": "Linimasa",
     "days": "Hari",
     "weeks": "Minggu",
@@ -3411,5 +3532,75 @@
     "adminRequiredTitle": "Aktifkan verifikasi dua langkah terlebih dahulu",
     "adminRequiredBody": "Akun ini bisa melihat semua pelanggan, jadi panel admin hanya terbuka setelah verifikasi dua langkah aktif.",
     "adminRequiredAction": "Atur sekarang"
+  },
+  "summary": {
+    "period": "Periode",
+    "from": "Dari",
+    "to": "Sampai",
+    "groupBy": "Kelompokkan menurut",
+    "includeOpen": "Sertakan tugas terbuka yang jatuh tempo dalam periode ini",
+    "saveTemplate": "Simpan sebagai templat",
+    "templateSaved": "Templat disimpan",
+    "templateFailed": "Tidak dapat menyimpan templat",
+    "copyMarkdown": "Salin sebagai Markdown",
+    "downloadMd": "Unduh .md",
+    "downloadTxt": "Unduh .txt",
+    "downloadCsv": "Unduh .csv",
+    "print": "Cetak",
+    "copied": "Disalin ke papan klip",
+    "copyFailed": "Tidak dapat menyalin ke papan klip",
+    "exportTitle": "Ringkasan {{start}} – {{end}}",
+    "counts": "{{completed}} selesai, {{open}} terbuka",
+    "empty": "Tidak ada tugas dalam periode ini.",
+    "noProject": "Tanpa proyek",
+    "noDate": "Tanpa tanggal",
+    "periods": {
+      "today": "Hari ini",
+      "this_week": "Minggu ini",
+      "last_week": "Minggu lalu",
+      "this_month": "Bulan ini",
+      "custom": "Rentang khusus"
+    },
+    "groupings": {
+      "project": "Proyek",
+      "day": "Hari",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Selesai",
+      "not_started": "Belum dimulai",
+      "in_progress": "Sedang berjalan",
+      "waiting": "Menunggu",
+      "planned": "Direncanakan",
+      "archived": "Diarsipkan",
+      "cancelled": "Dibatalkan"
+    },
+    "csv": {
+      "name": "Tugas",
+      "status": "Status",
+      "project": "Proyek",
+      "completed": "Selesai",
+      "due": "Jatuh tempo",
+      "tags": "Tag"
+    }
+  },
+  "projectBoard": {
+    "title": "Papan",
+    "unsectioned": "Tanpa bagian",
+    "empty": "Tidak ada tugas",
+    "addColumn": "Tambah kolom",
+    "addLeft": "Tambah kolom di kiri",
+    "addRight": "Tambah kolom di kanan",
+    "moveLeft": "Geser ke kiri",
+    "moveRight": "Geser ke kanan",
+    "rename": "Ganti nama",
+    "delete": "Hapus",
+    "deleteTitle": "Hapus kolom",
+    "deleteMessage": "Hapus \"{{name}}\"? Tugasnya pindah ke Tanpa bagian.",
+    "columnName": "Nama kolom",
+    "columnActions": "Tindakan kolom",
+    "newColumn": "Kolom baru",
+    "loadError": "Tidak dapat memuat kolom",
+    "saveError": "Tidak dapat menyimpan papan"
   }
 }

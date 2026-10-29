@@ -1,4 +1,18 @@
 {
+  "focusStats": {
+    "title": "Concentrare",
+    "lastDays_one": "{{count}} zi",
+    "lastDays_few": "{{count}} zile",
+    "lastDays_other": "{{count}} de zile",
+    "error": "Statisticile de concentrare nu au putut fi încărcate",
+    "empty": "Încă nicio sesiune de concentrare. Pornește cronometrul Pomodoro din bara de sus; sesiunile terminate sunt numărate aici.",
+    "total": "Timp de concentrare",
+    "sessions": "Sesiuni",
+    "bestHour": "Ora cu cea mai multă concentrare",
+    "perDay": "Minute pe zi",
+    "perHour": "Minute pe oră din zi",
+    "topTasks": "Sarcini cu cea mai multă concentrare"
+  },
   "common": {
     "deleting": "Se șterge...",
     "save": "Salvează",
@@ -100,7 +114,8 @@
     "telegramProblem": "Problemă cu conexiunea Telegram",
     "resize": "Redimensionează bara laterală",
     "collapseViews": "Restrânge lista de vizualizări",
-    "expandViews": "Extinde lista de vizualizări"
+    "expandViews": "Extinde lista de vizualizări",
+    "summary": "Rezumat"
   },
   "navigation": {
     "home": "Acasă",
@@ -220,7 +235,43 @@
       "important": "Important",
       "notImportant": "Nu Important",
       "dropHere": "Aruncă aici",
-      "urgentHint": "Etichetează sarcinile cu 'urgent' pentru a le marca ca urgente"
+      "urgentHint": "Etichetează sarcinile cu 'urgent' pentru a le marca ca urgente",
+      "matrix": {
+        "picker": "Matrice",
+        "default": "Eisenhower (implicită)",
+        "new": "Matrice nouă",
+        "newName": "Matrice nouă",
+        "limit": "Poți păstra până la {{count}} matrice.",
+        "editTitle": "Editează matricea",
+        "name": "Numele matricei",
+        "quadrant": "Cadranul {{number}}",
+        "quadrantName": "Numele cadranului",
+        "priorities": "Prioritate (oricare dintre)",
+        "priority": {
+          "none": "Niciuna",
+          "low": "Scăzută",
+          "medium": "Medie",
+          "high": "Ridicată"
+        },
+        "due": "Termen",
+        "dueType": {
+          "any": "Oricare",
+          "overdue": "Întârziate",
+          "today": "Azi",
+          "within": "În următoarele N zile",
+          "none": "Fără dată"
+        },
+        "days": "Zile",
+        "tags": "Etichete (oricare, separate prin virgulă)",
+        "projects": "Proiecte (opțional)",
+        "firstMatchHint": "Fiecare sarcină apare în primul cadran a cărui regulă o îndeplinește. O alegere goală se potrivește cu orice.",
+        "deleteTitle": "Șterge matricea",
+        "deleteConfirm": "Ștergi matricea „{{name}}”? Sarcinile tale nu se schimbă."
+      },
+      "dropRefusedPriority": "Acest cadran acceptă mai multe priorități, așa că sarcina nu poate fi trasă aici.",
+      "dropRefusedDue": "Termenul sarcinii nu se potrivește acestui cadran; schimbă data.",
+      "dropRefusedProject": "Proiectul sarcinii nu se potrivește acestui cadran.",
+      "dropRefusedEarlier": "După modificare, sarcina ar ajunge tot într-un cadran anterior."
     },
     "kanban": {
       "title": "Tabloul Kanban",
@@ -281,6 +332,18 @@
     "noActivity": "Nicio activitate încă"
   },
   "profile": {
+    "taskFeed": {
+      "title": "Abonează-te la sarcinile tale",
+      "description": "O adresă privată care arată sarcinile deschise cu termen în Google Calendar, Apple Calendar sau Outlook. Oricine are adresa poate citi aceste sarcini.",
+      "address": "Adresa fluxului",
+      "copy": "Copiază",
+      "copied": "Adresă copiată",
+      "once": "Copiaz-o acum: e afișată o singură dată. O adresă nouă o dezactivează pe cea veche.",
+      "create": "Creează o adresă",
+      "rotate": "Creează o adresă nouă",
+      "disable": "Dezactivează",
+      "error": "Fluxul de sarcini nu a putut fi actualizat"
+    },
     "settings": "Setări profil",
     "language": "Limba",
     "theme": "Temă",
@@ -1401,7 +1464,11 @@
     "noStartDate": "Fără dată de început",
     "startDateUpdated": "Data de început a fost actualizată",
     "startDateUpdateError": "Data de început nu a putut fi actualizată",
-    "startAfterDueError": "Începutul nu poate fi după termen"
+    "startAfterDueError": "Începutul nu poate fi după termen",
+    "pin": "Fixează",
+    "unpin": "Anulează fixarea",
+    "pinned": "Fixată",
+    "pinUpdateError": "Actualizarea fixării a eșuat"
   },
   "projects": {
     "loading": "Se încarcă proiectele...",
@@ -1651,7 +1718,12 @@
     "pinnedTag": "Etichetă fixată",
     "frequentlyUsed": "Folosite des",
     "createTag": "+ Creează „{{name}}”",
-    "pinTag": "Fixează pentru acces rapid"
+    "pinTag": "Fixează pentru acces rapid",
+    "parentTag": "Etichetă părinte",
+    "noParent": "Niciuna (nivel superior)",
+    "parentTagHasChildren": "Această etichetă are etichete copil, deci nu poate fi pusă sub altă etichetă.",
+    "showChildTags": "Afișează etichetele copil",
+    "hideChildTags": "Ascunde etichetele copil"
   },
   "recurrence": {
     "none": "Niciuna",
@@ -1696,6 +1768,54 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "focusSession": "Concentrare",
+    "print": "Imprimă",
+    "year": "An",
+    "weekNumber": "S{{week}}",
+    "yearItems_one": "{{date}}: {{count}} element",
+    "yearItems_few": "{{date}}: {{count}} elemente",
+    "yearItems_other": "{{date}}: {{count}} de elemente",
+    "miniCalendar": "Mini calendar",
+    "previousMonth": "Luna anterioară",
+    "nextMonth": "Luna următoare",
+    "multiDay_one": "{{count}} zi",
+    "multiDay_few": "{{count}} zile",
+    "multiDay_other": "{{count}} de zile",
+    "agendaEmpty": "Nimic programat",
+    "agenda": "Agendă",
+    "options": {
+      "showFocus": "Afișează sesiunile de concentrare",
+      "holidays": "Sărbători",
+      "holidaysNone": "Niciuna",
+      "holidayRegion": "Regiune",
+      "holidayRegionAll": "Toată țara",
+      "showHabits": "Afișează obiceiurile",
+      "showWeekNumbers": "Afișează numerele săptămânilor",
+      "showMiniCalendar": "Afișează mini calendarul",
+      "multiDayCount": "Zile în vizualizarea pe mai multe zile",
+      "title": "Opțiuni de afișare",
+      "showCompleted": "Afișează finalizate",
+      "showWeekends": "Afișează weekendurile",
+      "showRepeats": "Afișează toate repetările",
+      "colorBy": "Culoare după",
+      "colorBy_default": "Implicit",
+      "colorBy_project": "Proiect",
+      "colorBy_priority": "Prioritate",
+      "colorBy_tag": "Etichetă",
+      "saveError": "Nu s-au putut salva opțiunile"
+    },
+    "arrange": {
+      "title": "Aranjează sarcinile",
+      "noDate": "Fără dată",
+      "overdue": "Întârziate",
+      "filterProject": "Proiect",
+      "filterTag": "Etichetă",
+      "filterPriority": "Prioritate",
+      "emptyNoDate": "Nicio sarcină fără dată de programat",
+      "emptyOverdue": "Nicio sarcină întârziată de programat",
+      "noProject": "Fără proiect"
+    },
+    "resizeTask": "Schimbă când se termină această sarcină",
     "month": "Lună",
     "week": "Săptămână",
     "day": "Zi",
@@ -3140,6 +3260,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Culoare după",
+    "colorByStatus": "Culoare: stare",
+    "colorByPriority": "Culoare: prioritate",
+    "colorByTag": "Culoare: etichetă",
     "title": "Cronologie",
     "days": "Zile",
     "weeks": "Săptămâni",
@@ -3423,5 +3547,75 @@
     "adminRequiredTitle": "Activează mai întâi autentificarea în doi pași",
     "adminRequiredBody": "Acest cont vede toți clienții, așa că panoul de administrare se deschide doar după ce autentificarea în doi pași este activată.",
     "adminRequiredAction": "Configureaz-o"
+  },
+  "summary": {
+    "period": "Perioadă",
+    "from": "De la",
+    "to": "Până la",
+    "groupBy": "Grupează după",
+    "includeOpen": "Include sarcinile deschise scadente în perioadă",
+    "saveTemplate": "Salvează ca șablon",
+    "templateSaved": "Șablon salvat",
+    "templateFailed": "Șablonul nu a putut fi salvat",
+    "copyMarkdown": "Copiază ca Markdown",
+    "downloadMd": "Descarcă .md",
+    "downloadTxt": "Descarcă .txt",
+    "downloadCsv": "Descarcă .csv",
+    "print": "Tipărește",
+    "copied": "Copiat în clipboard",
+    "copyFailed": "Nu s-a putut copia în clipboard",
+    "exportTitle": "Rezumat {{start}} – {{end}}",
+    "counts": "{{completed}} finalizate, {{open}} deschise",
+    "empty": "Nicio sarcină în această perioadă.",
+    "noProject": "Fără proiect",
+    "noDate": "Fără dată",
+    "periods": {
+      "today": "Astăzi",
+      "this_week": "Săptămâna aceasta",
+      "last_week": "Săptămâna trecută",
+      "this_month": "Luna aceasta",
+      "custom": "Interval personalizat"
+    },
+    "groupings": {
+      "project": "Proiect",
+      "day": "Zi",
+      "status": "Stare"
+    },
+    "status": {
+      "done": "Finalizată",
+      "not_started": "Neîncepută",
+      "in_progress": "În desfășurare",
+      "waiting": "În așteptare",
+      "planned": "Planificată",
+      "archived": "Arhivată",
+      "cancelled": "Anulată"
+    },
+    "csv": {
+      "name": "Sarcină",
+      "status": "Stare",
+      "project": "Proiect",
+      "completed": "Finalizată la",
+      "due": "Scadență",
+      "tags": "Etichete"
+    }
+  },
+  "projectBoard": {
+    "title": "Panou",
+    "unsectioned": "Fără secțiune",
+    "empty": "Nicio sarcină",
+    "addColumn": "Adaugă coloană",
+    "addLeft": "Adaugă coloană la stânga",
+    "addRight": "Adaugă coloană la dreapta",
+    "moveLeft": "Mută la stânga",
+    "moveRight": "Mută la dreapta",
+    "rename": "Redenumește",
+    "delete": "Șterge",
+    "deleteTitle": "Șterge coloana",
+    "deleteMessage": "Ștergi „{{name}}”? Sarcinile ei trec la Fără secțiune.",
+    "columnName": "Numele coloanei",
+    "columnActions": "Acțiuni coloană",
+    "newColumn": "Coloană nouă",
+    "loadError": "Coloanele nu au putut fi încărcate",
+    "saveError": "Panoul nu a putut fi salvat"
   }
 }

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useStore } from '../../store/useStore';
 import { fetchProjects } from '../../utils/projectsService';
 import ProductivityAssistant from '../Productivity/ProductivityAssistant';
+import FocusStats from './FocusStats';
 const ProductivityPage: React.FC = () => {
     const { t } = useTranslation();
     const {
@@ -27,7 +28,10 @@ const ProductivityPage: React.FC = () => {
             <div className="w-full">
                 <div className="flex items-center gap-3 mb-8">
                     <h2 className="text-2xl font-light">
-                        {t('sidebar.productivityAssistant', 'Productivity Assistant')}
+                        {t(
+                            'sidebar.productivityAssistant',
+                            'Productivity Assistant'
+                        )}
                     </h2>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-500 dark:text-blue-400">
                         {t('common.beta', 'beta')}
@@ -40,6 +44,7 @@ const ProductivityPage: React.FC = () => {
                 ) : (
                     <ProductivityAssistant tasks={tasks} projects={projects} />
                 )}
+                <FocusStats />
             </div>
         </div>
     );

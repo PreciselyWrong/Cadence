@@ -1,4 +1,17 @@
 {
+  "focusStats": {
+    "title": "Fokus",
+    "lastDays_one": "{{count}} dag",
+    "lastDays_other": "{{count}} dagar",
+    "error": "Kunde inte läsa in fokusstatistik",
+    "empty": "Inga fokuspass än. Starta Pomodoro-timern i toppfältet; avslutade pass räknas här.",
+    "total": "Fokustid",
+    "sessions": "Pass",
+    "bestHour": "Mest fokuserade timme",
+    "perDay": "Minuter per dag",
+    "perHour": "Minuter per timme på dagen",
+    "topTasks": "Uppgifter med mest fokus"
+  },
   "common": {
     "deleting": "Tar bort...",
     "save": "Spara",
@@ -100,7 +113,8 @@
     "telegramProblem": "Problem med Telegram-anslutningen",
     "resize": "Ändra storlek på sidofältet",
     "collapseViews": "Fäll ihop listan med vyer",
-    "expandViews": "Fäll ut listan med vyer"
+    "expandViews": "Fäll ut listan med vyer",
+    "summary": "Sammanfattning"
   },
   "navigation": {
     "home": "Hem",
@@ -220,7 +234,43 @@
       "important": "Viktigt",
       "notImportant": "Inte viktigt",
       "dropHere": "Släpp här",
-      "urgentHint": "Tagga uppgifter med 'brådskande' för att markera dem som brådskande"
+      "urgentHint": "Tagga uppgifter med 'brådskande' för att markera dem som brådskande",
+      "matrix": {
+        "picker": "Matris",
+        "default": "Eisenhower (standard)",
+        "new": "Ny matris",
+        "newName": "Ny matris",
+        "limit": "Du kan spara upp till {{count}} matriser.",
+        "editTitle": "Redigera matris",
+        "name": "Matrisens namn",
+        "quadrant": "Kvadrant {{number}}",
+        "quadrantName": "Kvadrantens namn",
+        "priorities": "Prioritet (någon av)",
+        "priority": {
+          "none": "Ingen",
+          "low": "Låg",
+          "medium": "Medel",
+          "high": "Hög"
+        },
+        "due": "Förfallodatum",
+        "dueType": {
+          "any": "Alla",
+          "overdue": "Förfallna",
+          "today": "Idag",
+          "within": "Inom N dagar",
+          "none": "Inget datum"
+        },
+        "days": "Dagar",
+        "tags": "Taggar (någon av, kommaseparerade)",
+        "projects": "Projekt (valfritt)",
+        "firstMatchHint": "Varje uppgift visas i den första kvadrant vars regel den uppfyller. Ett tomt val matchar allt.",
+        "deleteTitle": "Ta bort matris",
+        "deleteConfirm": "Ta bort matrisen \"{{name}}\"? Dina uppgifter ändras inte."
+      },
+      "dropRefusedPriority": "Den här kvadranten tillåter flera prioriteter, så uppgiften kan inte dras hit.",
+      "dropRefusedDue": "Förfallodatumet passar inte i den här kvadranten; ändra datumet i stället.",
+      "dropRefusedProject": "Uppgiftens projekt passar inte i den här kvadranten.",
+      "dropRefusedEarlier": "Efter ändringen skulle uppgiften ändå hamna i en tidigare kvadrant."
     },
     "kanban": {
       "title": "Kanban-tavla",
@@ -281,6 +331,18 @@
     }
   },
   "profile": {
+    "taskFeed": {
+      "title": "Prenumerera på dina uppgifter",
+      "description": "En privat adress som visar dina öppna uppgifter med förfallodatum i Google Kalender, Apple Kalender eller Outlook. Alla med adressen kan läsa uppgifterna.",
+      "address": "Flödesadress",
+      "copy": "Kopiera",
+      "copied": "Adressen kopierad",
+      "once": "Kopiera den nu: den visas bara en gång. En ny adress stänger av den gamla.",
+      "create": "Skapa en adress",
+      "rotate": "Skapa en ny adress",
+      "disable": "Stäng av",
+      "error": "Kunde inte uppdatera uppgiftsflödet"
+    },
     "settings": "Profilinställningar",
     "language": "Språk",
     "theme": "Tema",
@@ -1398,7 +1460,11 @@
     "noStartDate": "Inget startdatum",
     "startDateUpdated": "Startdatum uppdaterat",
     "startDateUpdateError": "Det gick inte att uppdatera startdatum",
-    "startAfterDueError": "Start kan inte vara efter förfallodatumet"
+    "startAfterDueError": "Start kan inte vara efter förfallodatumet",
+    "pin": "Fäst",
+    "unpin": "Lossa",
+    "pinned": "Fäst",
+    "pinUpdateError": "Det gick inte att uppdatera fästningen"
   },
   "projects": {
     "loading": "Laddar projekt...",
@@ -1647,7 +1713,12 @@
     "pinnedTag": "Fäst tagg",
     "frequentlyUsed": "Används ofta",
     "createTag": "+ Skapa ”{{name}}”",
-    "pinTag": "Fäst för snabb åtkomst"
+    "pinTag": "Fäst för snabb åtkomst",
+    "parentTag": "Överordnad tagg",
+    "noParent": "Ingen (översta nivån)",
+    "parentTagHasChildren": "Den här taggen har underordnade taggar och kan därför inte placeras under en annan tagg.",
+    "showChildTags": "Visa underordnade taggar",
+    "hideChildTags": "Dölj underordnade taggar"
   },
   "recurrence": {
     "none": "Ingen",
@@ -1692,6 +1763,52 @@
     "done": "Klar"
   },
   "calendar": {
+    "focusSession": "Fokus",
+    "print": "Skriv ut",
+    "year": "År",
+    "weekNumber": "V{{week}}",
+    "yearItems_one": "{{date}}: {{count}} objekt",
+    "yearItems_other": "{{date}}: {{count}} objekt",
+    "miniCalendar": "Minikalender",
+    "previousMonth": "Föregående månad",
+    "nextMonth": "Nästa månad",
+    "multiDay_one": "{{count}} dagar",
+    "multiDay_other": "{{count}} dagar",
+    "agendaEmpty": "Inget planerat",
+    "agenda": "Agenda",
+    "options": {
+      "showFocus": "Visa fokuspass",
+      "holidays": "Helgdagar",
+      "holidaysNone": "Inga",
+      "holidayRegion": "Region",
+      "holidayRegionAll": "Hela landet",
+      "showHabits": "Visa vanor",
+      "showWeekNumbers": "Visa veckonummer",
+      "showMiniCalendar": "Visa minikalender",
+      "multiDayCount": "Dagar i flerdagarsvy",
+      "title": "Visningsalternativ",
+      "showCompleted": "Visa slutförda",
+      "showWeekends": "Visa helger",
+      "showRepeats": "Visa alla upprepningar",
+      "colorBy": "Färg efter",
+      "colorBy_default": "Standard",
+      "colorBy_project": "Projekt",
+      "colorBy_priority": "Prioritet",
+      "colorBy_tag": "Tagg",
+      "saveError": "Kunde inte spara visningsalternativ"
+    },
+    "arrange": {
+      "title": "Planera uppgifter",
+      "noDate": "Inget datum",
+      "overdue": "Förfallna",
+      "filterProject": "Projekt",
+      "filterTag": "Tagg",
+      "filterPriority": "Prioritet",
+      "emptyNoDate": "Inga uppgifter utan datum att planera",
+      "emptyOverdue": "Inga förfallna uppgifter att planera",
+      "noProject": "Inget projekt"
+    },
+    "resizeTask": "Ändra när uppgiften slutar",
     "month": "Månad",
     "week": "Vecka",
     "day": "Dag",
@@ -3133,6 +3250,10 @@
     }
   },
   "projectTimeline": {
+    "colorBy": "Färg efter",
+    "colorByStatus": "Färg: status",
+    "colorByPriority": "Färg: prioritet",
+    "colorByTag": "Färg: tagg",
     "title": "Tidslinje",
     "days": "Dagar",
     "weeks": "Veckor",
@@ -3415,5 +3536,75 @@
     "adminRequiredTitle": "Slå på tvåfaktorsautentisering först",
     "adminRequiredBody": "Det här kontot kan se alla kunder, så adminpanelen öppnas först när tvåfaktorsautentisering är på.",
     "adminRequiredAction": "Konfigurera"
+  },
+  "summary": {
+    "period": "Period",
+    "from": "Från",
+    "to": "Till",
+    "groupBy": "Gruppera efter",
+    "includeOpen": "Ta med öppna uppgifter med förfallodatum i perioden",
+    "saveTemplate": "Spara som mall",
+    "templateSaved": "Mallen har sparats",
+    "templateFailed": "Det gick inte att spara mallen",
+    "copyMarkdown": "Kopiera som Markdown",
+    "downloadMd": "Ladda ner .md",
+    "downloadTxt": "Ladda ner .txt",
+    "downloadCsv": "Ladda ner .csv",
+    "print": "Skriv ut",
+    "copied": "Kopierat till urklipp",
+    "copyFailed": "Det gick inte att kopiera till urklipp",
+    "exportTitle": "Sammanfattning {{start}} – {{end}}",
+    "counts": "{{completed}} klara, {{open}} öppna",
+    "empty": "Inga uppgifter under den här perioden.",
+    "noProject": "Inget projekt",
+    "noDate": "Inget datum",
+    "periods": {
+      "today": "Idag",
+      "this_week": "Den här veckan",
+      "last_week": "Förra veckan",
+      "this_month": "Den här månaden",
+      "custom": "Anpassad period"
+    },
+    "groupings": {
+      "project": "Projekt",
+      "day": "Dag",
+      "status": "Status"
+    },
+    "status": {
+      "done": "Klar",
+      "not_started": "Ej påbörjad",
+      "in_progress": "Pågår",
+      "waiting": "Väntar",
+      "planned": "Planerad",
+      "archived": "Arkiverad",
+      "cancelled": "Avbruten"
+    },
+    "csv": {
+      "name": "Uppgift",
+      "status": "Status",
+      "project": "Projekt",
+      "completed": "Klar",
+      "due": "Förfaller",
+      "tags": "Taggar"
+    }
+  },
+  "projectBoard": {
+    "title": "Tavla",
+    "unsectioned": "Utan sektion",
+    "empty": "Inga uppgifter",
+    "addColumn": "Lägg till kolumn",
+    "addLeft": "Lägg till kolumn till vänster",
+    "addRight": "Lägg till kolumn till höger",
+    "moveLeft": "Flytta åt vänster",
+    "moveRight": "Flytta åt höger",
+    "rename": "Byt namn",
+    "delete": "Ta bort",
+    "deleteTitle": "Ta bort kolumn",
+    "deleteMessage": "Ta bort \"{{name}}\"? Uppgifterna flyttas till Utan sektion.",
+    "columnName": "Kolumnnamn",
+    "columnActions": "Kolumnåtgärder",
+    "newColumn": "Ny kolumn",
+    "loadError": "Kunde inte läsa in kolumner",
+    "saveError": "Kunde inte spara tavlan"
   }
 }

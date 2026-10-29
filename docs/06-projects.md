@@ -373,14 +373,44 @@ No Area
 
 ## Timeline View
 
-The project page has two tabs above the tasks: **Tasks** (the list) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.
+The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser.
 
 - **Bars** run from a task's start date to its due date. A task with only a due date shows as a diamond; one with only a start shows as a short faded bar. Tasks with neither sit in a "No dates yet" tray under the chart.
 - **Scheduling:** drag a bar to move both dates, drag either end to change one, drag a diamond to move the due date. Times of day are kept. Drag a task from the tray onto a day to give it that day as start and due. Clicking a bar opens the task.
 - **Arrows** show "blocks" relations between the project's tasks (`task_links` on `GET /api/project/:uid`, as `{ from_uid, to_uid }` pairs).
 - **Highlight the path** marks the chain of blocking tasks that sets the finish (from the linked task that ends last, back through the blocker that ends latest) and shows spare days on open tasks off that chain: days until what they block starts, or until the project's due date.
+- **Colour:** status (default), priority (red, amber, blue) or the first tag's colour. Done tasks, overdue ones and the highlighted path keep their own colours. The choice is remembered per browser.
 - **Scale:** Days, Weeks or Months. A line marks today, dashed lines mark the project's start and due date, and open tasks past their due date are orange.
 - The chart follows the page's status filter and search.
+
+## Board View
+
+The **Board** tab shows the project's tasks in columns the project defines itself (sections, like TickTick columns), separate from task status.
+
+- The first column, **Unsectioned**, holds every task without a section. It cannot be renamed, moved or deleted.
+- **Add column** at the end of the board adds a column at the right. Each column's menu can **rename** it (or double-click the name), **add a column to the left or right**, **move it left or right**, and **delete** it after a confirmation. Deleting a column never deletes tasks: they go back to Unsectioned.
+- **Drag a card** to another column to move the task there, or onto another card to put it just above that card (in the same column this reorders it). Dropping on the column's empty space puts it at the end. Clicking a card opens the task.
+- **Card order** is saved per column in `tasks.section_position`. Cards are sorted by it; cards without a position (new tasks, or tasks moved with a plain `PATCH`) come after, in the page's order.
+- **Drag a column header** onto another column to put it in that column's place (dropping on Unsectioned makes it the first column). The column menu's move left/right still works.
+- The board follows the page's status filter and search.
+- **Permissions:** anyone who can read the project sees its columns; changing columns or moving cards needs read-write access. Read-only viewers get the board without the add column button, the column menus, renaming or dragging. The project page knows this from `access_level` (`ro`, `rw` or `admin`) in `GET /api/project/:uid`.
+- A task belongs to at most one section of its own project. When a task moves to another project it leaves its old column (unless a column of the new project is chosen in the same request).
+
+**Data and API.** Sections live in `project_sections` (`uid`, `project_id` with cascade delete, `name`, `position`); tasks carry a nullable `section_id` (set to null when the section goes). Task payloads, including the project page's tasks, return `section_uid`.
+
+| Method | Path | Access | Body |
+|---|---|---|---|
+| `GET` | `/api/project/:uid/sections` | RO | - |
+| `POST` | `/api/project/:uid/sections` | RW | `{ name, position? }` (inserted at `position`, end when omitted) |
+| `PATCH` | `/api/project/:uid/sections/:sectionUid` | RW | `{ name }` |
+| `PUT` | `/api/project/:uid/sections/order` | RW | `{ section_uids: [...] }` (every section once) |
+| `DELETE` | `/api/project/:uid/sections/:sectionUid` | RW | - (its tasks become unsectioned) |
+| `PUT` | `/api/project/:uid/sections/:sectionUid/order` | RW | `{ task_uids: [...] }` (card order of the column) |
+| `PUT` | `/api/project/:uid/unsectioned/order` | RW | `{ task_uids: [...] }` (card order of Unsectioned) |
+
+The two `order` calls take the column's cards in order: each listed task gets `section_position` 0, 1, 2... and moves into that column if it was elsewhere, so one call both moves and places a card. Every uid must be a task of the project, listed once (400 otherwise). Cards of the column that are not listed (for example hidden by a filter) keep their position.
+
+Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400. A task that changes column this way loses its `section_position` and goes to the end of the column.
 
 ## Tasks and Notes in Projects
 

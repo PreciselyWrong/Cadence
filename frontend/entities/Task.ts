@@ -48,6 +48,8 @@ export interface Task {
     defer_until?: string;
     reminder_at?: string;
     estimated_minutes?: number | null;
+    pinned?: boolean;
+    pinned_at?: string | null;
     note?: string;
     tags?: Tag[];
     project_id?: number;
@@ -58,6 +60,8 @@ export interface Task {
     Area?: Area;
     goal_id?: number | null;
     goal_uid?: string | null;
+    section_uid?: string | null;
+    section_position?: number | null;
     created_at?: string;
     updated_at?: string;
     recurrence_type?: RecurrenceType;

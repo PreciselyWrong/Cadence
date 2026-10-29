@@ -61,6 +61,11 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // Set while the task is pinned to the top of its lists.
+            pinned_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
             estimated_minutes: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
@@ -186,6 +191,20 @@ module.exports = (sequelize) => {
                     model: 'tasks',
                     key: 'id',
                 },
+            },
+            section_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'project_sections',
+                    key: 'id',
+                },
+                onDelete: 'SET NULL',
+            },
+            // Order of the card in its board column; null sorts last.
+            section_position: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
             },
             parent_task_id: {
                 type: DataTypes.INTEGER,
