@@ -1,0 +1,91 @@
+package ch.nicolab.cadence.calendar
+
+/**
+ * Agenda de l'appareil tel que le fournit `CalendarContract.Calendars`.
+ *
+ * @property accountType type de compte Android (`com.google` pour Google), pour libeller la source.
+ * @property visibleOnDevice choix « visible » de l'application d'agenda du système, indicatif seulement.
+ */
+data class DeviceCalendar(
+    val id: Long,
+    val accountName: String,
+    val accountType: String,
+    val displayName: String,
+    val colorArgb: Int,
+    val visibleOnDevice: Boolean,
+)
+
+/** Identité stable d'une occurrence : un événement récurrent a une clé par occurrence. */
+data class EventInstanceKey(
+    val calendarId: Long,
+    val eventId: Long,
+    val instanceBegin: Long,
+)
+
+/**
+ * Occurrence d'événement lue dans `CalendarContract.Instances`.
+ *
+ * Bornes en millisecondes epoch, fin exclusive, telles que le fournisseur les donne : une occurrence
+ * « journée entière » est ancrée à minuit UTC. Utiliser [localStart] et [localEnd] pour la placer
+ * dans le fuseau de l'appareil.
+ */
+data class CalendarEvent(
+    val calendarId: Long,
+    val eventId: Long,
+    val instanceBegin: Long,
+    val instanceEnd: Long,
+    val allDay: Boolean,
+    val title: String,
+    val location: String?,
+    val colorArgb: Int,
+) {
+    val key: EventInstanceKey get() = EventInstanceKey(calendarId, eventId, instanceBegin)
+}
+
+/** Surface de Cadence où un agenda peut apparaître. */
+enum class CalendarSurface { AGENDA, TASKS, WIDGET }
+
+/** Où les événements d'un agenda apparaissent. Les valeurs par défaut sont celles d'un agenda neuf. */
+data class CalendarDisplay(
+    val agenda: Boolean = true,
+    val tasks: Boolean = true,
+    val widget: Boolean = false,
+) {
+    fun shows(surface: CalendarSurface): Boolean = when (surface) {
+        CalendarSurface.AGENDA -> agenda
+        CalendarSurface.TASKS -> tasks
+        CalendarSurface.WIDGET -> widget
+    }
+}
+
+/**
+ * Réglages communs à tous les agendas.
+ *
+ * @property checkEvents « Cocher un événement » : sans lui, aucune occurrence n'est présentée comme faite.
+ * @property hideDone « Masquer les événements faits », sur toutes les surfaces.
+ */
+data class CalendarGlobalSettings(
+    val checkEvents: Boolean = true,
+    val hideDone: Boolean = false,
+)
+
+data class CalendarWithDisplay(
+    val calendar: DeviceCalendar,
+    val display: CalendarDisplay,
+)
+
+/** Occurrence prête à afficher, avec son agenda et son état « fait » propre à Cadence. */
+data class EventWithDone(
+    val event: CalendarEvent,
+    val calendar: DeviceCalendar,
+    val done: Boolean,
+)
+
+/** Plage `[startMillis, endMillis[` en millisecondes epoch. */
+data class TimeRange(val startMillis: Long, val endMillis: Long) {
+    init {
+        require(endMillis >= startMillis) { "endMillis < startMillis" }
+    }
+
+    companion object
+}

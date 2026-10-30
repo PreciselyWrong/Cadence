@@ -26,6 +26,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `domain/` - calculs temporels et règles métier Kotlin sans Android.
 `data/` - persistance locale, préférences et sauvegardes.
 `tasks/` - tâches Tududi : base Room `tududi.db`, synchronisation hors ligne (`/api/v1/sync`, file d'envoi, horloges HLC), écrans, widgets Glance, rappels. Contrat : `TaskRepository`, `ServerConnection`, `TasksGraph`.
+`calendar/` - agendas de l'appareil en lecture seule, réglages par agenda et occurrences faites. Contrat : `CalendarRepository`, `CalendarGraph`.
 `app/` - UI Compose, widget Glance, rappels et assemblage.
 `docs/REDESIGN.md` + `docs/redesign/*.png` - refonte UI/UX 2026-10 (maquettes OpenPencil) : à suivre pour tout écran ou widget.
 
@@ -63,6 +64,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - La zone `À compléter` regroupe uniquement une donnée réellement ouverte : quantité d’alcool inconnue ou chronomètre non terminé. Elle n’invente ni brouillon, ni relance pour une saisie déjà complète.
 - Le mode `dev.ps1 -Dummy` peuple uniquement le build debug avec six habitudes ordinaires et 60 jours d’historique déterministe; une relance remplace seulement les données préfixées `dummy-`.
 - Health Connect est une source locale facultative pour les habitudes de durée : Cadence lit au premier plan les séances des 30 derniers jours selon une règle types + application source, importe chaque identifiant une seule fois et n’exporte aucune donnée santé. Corriger une séance la détache de la source; la supprimer l’ignore durablement; suspendre une règle ou la synchronisation conserve l’historique.
+- Agendas de l'appareil : `:calendar` lit `CalendarContract` en lecture seule (permission `READ_CALENDAR`), jamais d'écriture dans le fournisseur. L'état « fait » d'une occurrence est local à Cadence (DataStore, clé agenda + événement + début d'occurrence) ; une journée entière, ancrée à minuit UTC par le fournisseur, est replacée sur son jour civil local.
 
 ## ⛔ Interdits
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.
