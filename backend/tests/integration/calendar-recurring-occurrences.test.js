@@ -105,4 +105,26 @@ describe('GET /api/tasks?type=calendar recurring occurrences', () => {
         expect(days[0]).toBe(moment.utc().format('YYYY-MM-DD'));
         expect(days[6]).toBe(end);
     });
+
+    it('places an overdue timed daily task on the viewed day at its time', async () => {
+        const task = await weekly({
+            name: 'Sport',
+            recurrence_type: 'daily',
+            due_date: new Date('2030-03-04T11:30:00Z'),
+            due_has_time: true,
+        });
+
+        const res = await agent.get(
+            '/api/tasks?type=calendar&start=2030-03-05&end=2030-03-05'
+        );
+
+        expect(res.status).toBe(200);
+        const onDay = res.body.tasks.filter(
+            (t) =>
+                t.id === task.id &&
+                t.due_time === '11:30' &&
+                String(t.due_date).slice(0, 10) === '2030-03-05'
+        );
+        expect(onDay).toHaveLength(1);
+    });
 });

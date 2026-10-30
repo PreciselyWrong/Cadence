@@ -9,6 +9,7 @@ import {
     freeGaps,
     pickCurrentItem,
     taskLength,
+    tasksOnDay,
 } from '../planUtils';
 import { DailyPlanItem } from '../../../utils/dailyPlanService';
 import { CalendarEvent } from '../../../utils/calendarFeedsService';
@@ -219,5 +220,25 @@ describe('taskLength', () => {
 
     it('is undefined when neither a span nor an estimate exists', () => {
         expect(taskLength({ due_date: '2026-10-29' })).toBeUndefined();
+    });
+});
+
+describe('tasksOnDay', () => {
+    const day = '2026-10-31';
+
+    it('keeps the virtual occurrence of an overdue recurring task, not its parent', () => {
+        const parent = { id: 1, due_date: '2026-10-30', due_time: '11:30' };
+        const occurrence = { id: 1, due_date: day, due_time: '11:30' };
+        expect(tasksOnDay([parent, occurrence], day)).toEqual([occurrence]);
+    });
+
+    it('keeps tasks spanning or deferred to the day, drops others', () => {
+        const span = { due_date: '2026-11-02', start_date: '2026-10-30' };
+        const deferred = { due_date: null, defer_until: `${day}T08:00:00Z` };
+        const other = { due_date: '2026-11-05' };
+        expect(tasksOnDay([span, deferred, other], day)).toEqual([
+            span,
+            deferred,
+        ]);
     });
 });
