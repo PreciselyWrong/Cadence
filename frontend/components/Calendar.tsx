@@ -87,6 +87,8 @@ import {
     updateUiSettings,
 } from '../utils/profileService';
 import { openTaskPanel } from '../store/taskPanelStore';
+import { toggleTaskCompletion } from '../utils/tasksService';
+import { TaskToggleContext } from './Calendar/TaskCheck';
 
 const getLocale = (language: string) => {
     switch (language) {
@@ -730,6 +732,33 @@ const Calendar: React.FC = () => {
         );
     };
 
+    // A task's box ticked in the calendar: shown at once, then saved. A
+    // recurring task brings its next occurrence, so the window reloads.
+    const handleToggleComplete = async (event: CalendarEvent) => {
+        const task = findTask(event.id);
+        if (!task?.uid) return;
+        const done = !task.completed_at;
+        setAllTasks((prev) =>
+            prev.map((t) =>
+                t === task
+                    ? {
+                          ...t,
+                          completed_at: done ? new Date().toISOString() : null,
+                      }
+                    : t
+            )
+        );
+        try {
+            await toggleTaskCompletion(task.uid, task);
+        } catch (error) {
+            console.error('Error toggling task:', error);
+            showErrorToast(
+                t('calendar.toggleError', 'Could not update the task')
+            );
+        }
+        await loadTasks();
+    };
+
     // Shows the change at once, saves it, then keeps what the server
     // returns (or reloads everything if the save fails).
     const saveTaskChange = async (
@@ -1114,83 +1143,94 @@ const Calendar: React.FC = () => {
                             />
                         </aside>
                     )}
-                    <div
-                        className="flex-1 overflow-hidden min-h-0"
-                        data-print-area
+                    <TaskToggleContext.Provider
+                        value={(event) => void handleToggleComplete(event)}
                     >
-                        {view === 'year' && (
-                            <CalendarYearView
-                                currentDate={currentDate}
-                                events={events}
-                                weekStartsOn={
-                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
-                                }
-                                onDayClick={(day) => {
-                                    setCurrentDate(day);
-                                    setView('day');
-                                }}
-                            />
-                        )}
-                        {view === 'month' && (
-                            <CalendarMonthView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onDateClick={handleDateClick}
-                                onEventClick={handleEventClick}
-                                onEventDrop={handleEventDrop}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                            />
-                        )}
-                        {view === 'week' && (
-                            <CalendarWeekView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onDateClick={handleDateClick}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                                visibleHours={options.visibleHours}
-                            />
-                        )}
-                        {view === 'multi' && (
-                            <CalendarWeekView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                                visibleHours={options.visibleHours}
-                                dayCount={options.multiDayCount}
-                            />
-                        )}
-                        {view === 'agenda' && (
-                            <CalendarAgendaView
-                                start={startOfMonth(currentDate)}
-                                end={endOfMonth(currentDate)}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                showWeekends={options.showWeekends}
-                            />
-                        )}
-                        {view === 'day' && (
-                            <CalendarDayView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                visibleHours={options.visibleHours}
-                            />
-                        )}
-                    </div>
+                        <div
+                            className="flex-1 overflow-hidden min-h-0"
+                            data-print-area
+                        >
+                            {view === 'year' && (
+                                <CalendarYearView
+                                    currentDate={currentDate}
+                                    events={events}
+                                    weekStartsOn={
+                                        firstDayOfWeek as
+                                            | 0
+                                            | 1
+                                            | 2
+                                            | 3
+                                            | 4
+                                            | 5
+                                            | 6
+                                    }
+                                    onDayClick={(day) => {
+                                        setCurrentDate(day);
+                                        setView('day');
+                                    }}
+                                />
+                            )}
+                            {view === 'month' && (
+                                <CalendarMonthView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onDateClick={handleDateClick}
+                                    onEventClick={handleEventClick}
+                                    onEventDrop={handleEventDrop}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                />
+                            )}
+                            {view === 'week' && (
+                                <CalendarWeekView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onDateClick={handleDateClick}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                    visibleHours={options.visibleHours}
+                                />
+                            )}
+                            {view === 'multi' && (
+                                <CalendarWeekView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                    visibleHours={options.visibleHours}
+                                    dayCount={options.multiDayCount}
+                                />
+                            )}
+                            {view === 'agenda' && (
+                                <CalendarAgendaView
+                                    start={startOfMonth(currentDate)}
+                                    end={endOfMonth(currentDate)}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    showWeekends={options.showWeekends}
+                                />
+                            )}
+                            {view === 'day' && (
+                                <CalendarDayView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    visibleHours={options.visibleHours}
+                                />
+                            )}
+                        </div>
+                    </TaskToggleContext.Provider>
 
                     {isArrangeOpen && (
                         <ArrangePanel

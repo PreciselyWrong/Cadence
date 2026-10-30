@@ -23,6 +23,7 @@ import {
     layoutAllDayWeek,
     isMovable,
 } from './taskEvents';
+import { EventTitle } from './TaskCheck';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -261,7 +262,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                             }}
                                             title={event.title}
                                         >
-                                            {event.title}
+                                            <EventTitle event={event} />
                                         </div>
                                     )
                                 )}

@@ -8,6 +8,7 @@ import {
     isMovable,
     slotId,
 } from './taskEvents';
+import { EventTitle } from './TaskCheck';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
@@ -145,7 +146,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
 
     const blockBody = (event: CalendarEvent) => (
         <>
-            <div className="font-semibold truncate">{event.title}</div>
+            <div className="font-semibold">
+                <EventTitle event={event} />
+            </div>
             <div className="text-[10px] opacity-75 mt-0.5">
                 {format(event.start, 'HH:mm')} –{' '}
                 {format(resize.endOf(event), 'HH:mm')}
@@ -216,7 +219,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     )}
                     <div className="space-y-1">
                         {allDayEvents.map((event) => {
-                            const body = event.title;
+                            const body = <EventTitle event={event} />;
                             const className =
                                 'text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium';
                             const click = (e: React.MouseEvent) => {

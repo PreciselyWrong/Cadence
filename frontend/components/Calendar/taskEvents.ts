@@ -23,6 +23,9 @@ export interface CalendarEvent {
     // A later occurrence of a recurring task: shown, but not moved or
     // resized until it becomes the next one.
     readOnly?: boolean;
+    // A task that can be ticked off from its block, and whether it is done.
+    completable?: boolean;
+    completed?: boolean;
     // An event of a writable Google calendar: moved, resized and edited
     // like a task, saved to Google (fork).
     editable?: boolean;
@@ -257,7 +260,11 @@ export const taskToEvents = (
     }
     const due = dueEvent(task, colorBy);
     if (due) events.push(due);
-    return events;
+    return events.map((event) => ({
+        ...event,
+        completable: true,
+        completed: !!task.completed_at,
+    }));
 };
 
 const dayString = (date: Date) => format(date, 'yyyy-MM-dd');

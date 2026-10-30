@@ -1932,7 +1932,10 @@
       "connected": "Google conectado",
       "connectError": "Google no se conectó",
       "saveError": "No se pudo guardar el evento"
-    }
+    },
+    "markDone": "Marcar como hecha",
+    "markNotDone": "Marcar como no hecha",
+    "toggleError": "No se pudo actualizar la tarea"
   },
   "productivity": {
     "stalledProjects": "Proyectos Estancados",

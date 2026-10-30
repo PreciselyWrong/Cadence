@@ -23,6 +23,7 @@ import {
     layoutAllDayWeek,
     isMovable,
 } from './taskEvents';
+import { EventTitle } from './TaskCheck';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
@@ -268,7 +269,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             }}
                             title={event.title}
                         >
-                            {event.title}
+                            <EventTitle event={event} />
                         </div>
                     ))}
                 </div>
@@ -383,8 +384,11 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                             }}
                                             title={event.title}
                                         >
-                                            <div className="line-clamp-2 leading-tight">
-                                                {event.title}
+                                            <div className="leading-tight">
+                                                <EventTitle
+                                                    event={event}
+                                                    className="line-clamp-2"
+                                                />
                                             </div>
                                             <div className="text-[10px] opacity-75 mt-0.5">
                                                 {format(event.start, 'HH:mm')} –{' '}

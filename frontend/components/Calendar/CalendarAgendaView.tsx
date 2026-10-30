@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { eachDayOfInterval, format, isToday } from 'date-fns';
 import { CalendarEvent, coversDay } from './taskEvents';
+import { TaskCheck } from './TaskCheck';
 
 interface CalendarAgendaViewProps {
     start: Date;
@@ -77,7 +78,15 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                     </h3>
                     <ul>
                         {items.map((event) => (
-                            <li key={`${key}-${event.id}`}>
+                            <li
+                                key={`${key}-${event.id}`}
+                                className="flex items-center"
+                            >
+                                {event.completable && (
+                                    <span className="pl-4 text-gray-500 [&_button]:border-gray-400 dark:[&_button]:border-gray-500">
+                                        <TaskCheck event={event} />
+                                    </span>
+                                )}
                                 <button
                                     type="button"
                                     onClick={() => onEventClick?.(event)}
@@ -97,7 +106,13 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                                                 event.color || '#3b82f6',
                                         }}
                                     />
-                                    <span className="truncate text-gray-700 dark:text-gray-200">
+                                    <span
+                                        className={`truncate text-gray-700 dark:text-gray-200 ${
+                                            event.completed
+                                                ? 'line-through opacity-60'
+                                                : ''
+                                        }`}
+                                    >
                                         {event.title}
                                     </span>
                                 </button>

@@ -1619,7 +1619,10 @@
       "connected": "Google verbunden",
       "connectError": "Google wurde nicht verbunden",
       "saveError": "Termin konnte nicht gespeichert werden"
-    }
+    },
+    "markDone": "Als erledigt markieren",
+    "markNotDone": "Als nicht erledigt markieren",
+    "toggleError": "Die Aufgabe konnte nicht aktualisiert werden"
   },
   "weekdaysShort": {
     "monday": "Mo",

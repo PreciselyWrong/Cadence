@@ -1970,7 +1970,10 @@
       "connected": "Google collegato",
       "connectError": "Google non è stato collegato",
       "saveError": "Impossibile salvare l'evento"
-    }
+    },
+    "markDone": "Segna come fatta",
+    "markNotDone": "Segna come non fatta",
+    "toggleError": "Impossibile aggiornare l'attività"
   },
   "pages": {
     "notFound": {

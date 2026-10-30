@@ -1970,7 +1970,10 @@
       "connected": "Google connecté",
       "connectError": "Google n'a pas été connecté",
       "saveError": "Impossible d'enregistrer l'événement"
-    }
+    },
+    "markDone": "Marquer comme fait",
+    "markNotDone": "Marquer comme non fait",
+    "toggleError": "Impossible de mettre à jour la tâche"
   },
   "pages": {
     "notFound": {

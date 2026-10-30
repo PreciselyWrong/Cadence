@@ -1963,7 +1963,10 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "markDone": "Mark as done",
+    "markNotDone": "Mark as not done",
+    "toggleError": "Could not update the task"
   },
   "pages": {
     "notFound": {
