@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,8 +11,17 @@ import {
 import { searchUniversal } from '../../utils/searchService';
 import { focusKey, focusScopeParams, useFocus } from '../../utils/focus';
 import { openTaskPanel } from '../../store/taskPanelStore';
+import { searchDestination } from '../../utils/searchNavigation';
+
+// Lets the search field drive the list: arrows move, Enter opens.
+export interface SearchNavigation {
+    move: (delta: number) => void;
+    activate: () => void;
+}
 
 interface SearchResultsProps {
+    navRef: React.MutableRefObject<SearchNavigation | null>;
+    onCounts: (counts: Record<string, number>) => void;
     searchQuery: string;
     selectedFilters: string[];
     selectedPriority: string | null;
@@ -36,6 +45,8 @@ interface SearchResult {
 }
 
 const SearchResults: React.FC<SearchResultsProps> = ({
+    navRef,
+    onCounts,
     searchQuery,
     selectedFilters,
     selectedPriority,
@@ -125,13 +136,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         }
     };
 
-    const createSlug = (name: string): string => {
-        return name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-|-$/g, '');
-    };
-
     const handleResultClick = (result: SearchResult) => {
         // Close the dropdown before navigating
         onClose();
@@ -141,48 +145,68 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             window.dispatchEvent(new CustomEvent('closeMobileSearch'));
         }
 
-        switch (result.type) {
-            case 'Task':
-                // Tasks use uid directly
-                if (result.uid) {
-                    openTaskPanel(result.uid);
-                }
-                break;
-            case 'Project': {
-                // Projects need uid-slug format
-                if (result.uid) {
-                    const slug = createSlug(result.name);
-                    navigate(`/project/${result.uid}-${slug}`);
-                }
-                break;
-            }
-            case 'Area': {
-                // Areas navigate to projects page with area filter
-                if (result.uid) {
-                    const slug = createSlug(result.name);
-                    navigate(`/projects?area=${result.uid}-${slug}`);
-                }
-                break;
-            }
-            case 'Note': {
-                // Notes need uid-slug format
-                const noteName = result.title || result.name;
-                if (result.uid && noteName) {
-                    const slug = createSlug(noteName);
-                    navigate(`/note/${result.uid}-${slug}`);
-                }
-                break;
-            }
-            case 'Tag': {
-                // Tags use uid-slug format
-                if (result.uid) {
-                    const slug = createSlug(result.name);
-                    navigate(`/tag/${result.uid}-${slug}`);
-                }
-                break;
-            }
-        }
+        const destination = searchDestination(result);
+        if (destination?.kind === 'task') openTaskPanel(destination.uid);
+        else if (destination?.kind === 'path') navigate(destination.path);
     };
+
+    const TYPE_ORDER = ['Task', 'Project', 'Area', 'Note', 'Tag'];
+    const grouped = useMemo(() => {
+        const byType: Record<string, SearchResult[]> = {};
+        for (const result of results) {
+            (byType[result.type] ??= []).push(result);
+        }
+        return TYPE_ORDER.filter((type) => byType[type]).map((type) => ({
+            type,
+            items: byType[type],
+        }));
+    }, [results]);
+    const flat = useMemo(
+        () => grouped.flatMap((entry) => entry.items),
+        [grouped]
+    );
+
+    const [active, setActive] = useState(0);
+    useEffect(() => {
+        setActive(0);
+    }, [results]);
+
+    useEffect(() => {
+        onCounts(
+            Object.fromEntries(
+                grouped.map((entry) => [entry.type, entry.items.length])
+            )
+        );
+    }, [grouped, onCounts]);
+
+    const flatRef = useRef(flat);
+    flatRef.current = flat;
+    const activeRef = useRef(active);
+    activeRef.current = active;
+    const clickRef = useRef(handleResultClick);
+    clickRef.current = handleResultClick;
+    useEffect(() => {
+        navRef.current = {
+            move: (delta) =>
+                setActive((index) => {
+                    const total = flatRef.current.length;
+                    return total ? (index + delta + total) % total : 0;
+                }),
+            activate: () => {
+                const result = flatRef.current[activeRef.current];
+                if (result) clickRef.current(result);
+            },
+        };
+        return () => {
+            navRef.current = null;
+        };
+    }, [navRef]);
+
+    useEffect(() => {
+        document
+            .querySelector('[data-search-active="true"]')
+            ?.scrollIntoView({ block: 'nearest' });
+    }, [active, flat]);
 
     if (isLoading) {
         return (
@@ -190,7 +214,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 className="p-8 text-center text-gray-500 dark:text-gray-400"
                 data-testid="search-loading"
             >
-                <div className="animate-pulse">Searching...</div>
+                <div className="animate-pulse">
+                    {t('search.searching', 'Searching...')}
+                </div>
             </div>
         );
     }
@@ -224,52 +250,55 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         );
     }
 
-    // Group results by type
-    const groupedResults = results.reduce(
-        (acc, result) => {
-            if (!acc[result.type]) {
-                acc[result.type] = [];
-            }
-            acc[result.type].push(result);
-            return acc;
-        },
-        {} as Record<string, SearchResult[]>
-    );
-
+    let rowIndex = -1;
     return (
         <div className="flex-1 overflow-y-auto" data-testid="search-results">
-            {Object.entries(groupedResults).map(([type, typeResults]) => (
+            {grouped.map(({ type, items }) => (
                 <div
                     key={type}
                     className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                     data-testid={`search-results-${type.toLowerCase()}`}
                 >
                     <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-600 dark:text-gray-400">
-                        {type}s
+                        {t(`search.groups.${type}`)}
+                        <span className="ml-1.5 font-normal text-gray-500 dark:text-gray-500">
+                            {items.length}
+                        </span>
                     </div>
                     <div>
-                        {typeResults.map((result) => (
-                            <button
-                                key={`${result.type}-${result.id}`}
-                                onClick={() => handleResultClick(result)}
-                                className="w-full px-4 py-3 flex items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
-                                data-testid={`search-result-${result.type.toLowerCase()}-${result.id}`}
-                            >
-                                <div className="flex-shrink-0">
-                                    {getIcon(result.type)}
-                                </div>
-                                <div className="ml-3 flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                                        {result.name || result.title}
-                                    </p>
-                                    {result.description && (
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-                                            {result.description}
+                        {items.map((result) => {
+                            rowIndex += 1;
+                            const isActive = rowIndex === active;
+                            const index = rowIndex;
+                            return (
+                                <button
+                                    key={`${result.type}-${result.id}`}
+                                    onClick={() => handleResultClick(result)}
+                                    onMouseMove={() => setActive(index)}
+                                    data-search-active={isActive}
+                                    className={`w-full px-4 py-3 flex items-center transition-colors text-left ${
+                                        isActive
+                                            ? 'bg-blue-50 dark:bg-blue-900/30'
+                                            : 'hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    }`}
+                                    data-testid={`search-result-${result.type.toLowerCase()}-${result.id}`}
+                                >
+                                    <div className="flex-shrink-0">
+                                        {getIcon(result.type)}
+                                    </div>
+                                    <div className="ml-3 flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                            {result.name || result.title}
                                         </p>
-                                    )}
-                                </div>
-                            </button>
-                        ))}
+                                        {result.description && (
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                                                {result.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             ))}

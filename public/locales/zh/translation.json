@@ -1426,7 +1426,32 @@
     "shortcutTag": "添加标签",
     "shortcutProject": "分配到项目",
     "attachments": "附件",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "整理",
+      "title": "整理收件箱",
+      "exit": "退出",
+      "progress": "已整理 {{done}} / {{total}}",
+      "done": "收件箱已清空，没有需要整理的内容。",
+      "doneLater": "已保留 {{count}} 项稍后处理，其余已整理完毕。",
+      "suggested": "建议：{{kind}}",
+      "task": "任务",
+      "project": "项目",
+      "note": "笔记",
+      "later": "稍后",
+      "delete": "删除",
+      "keptLater": "已保留在收件箱中，稍后处理",
+      "madeTask": "任务已创建",
+      "madeProject": "项目已创建",
+      "madeNote": "笔记已创建",
+      "error": "无法处理此项，它仍在收件箱中。",
+      "reasonProject": "提到了项目 +{{detail}}",
+      "reasonTag": "带有标签 #{{detail}}",
+      "reasonUrl": "这是一个链接",
+      "reasonKeyword": "以“{{detail}}”开头",
+      "reasonLong": "内容较长，像一条笔记",
+      "reasonDefault": "短文本，通常是任务"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2789,7 +2814,18 @@
       "hasNoDueDate": "无截止日期",
       "isAssignedToProject": "已分配给项目",
       "hasNoProject": "无项目"
-    }
+    },
+    "groups": {
+      "Task": "任务",
+      "Project": "项目",
+      "Area": "领域",
+      "Note": "笔记",
+      "Tag": "标签"
+    },
+    "moreFilters": "更多筛选",
+    "fewerFilters": "收起筛选",
+    "hint": "上下键移动，Enter 打开，Esc 关闭",
+    "searching": "搜索中..."
   },
   "subtasks": {
     "placeholder": "添加子任务..."
@@ -3673,7 +3709,9 @@
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
-    "filesAttached_one": "1 file attached."
+    "filesAttached_one": "1 file attached.",
+    "button": "捕获",
+    "syntaxHint": "#tag  +project  !1 到 !3 优先级  明天 15:00 设置日期"
   },
   "area": {
     "loadError": "无法加载区域"
@@ -4391,5 +4429,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "命令面板",
+    "placeholder": "输入命令或搜索...",
+    "empty": "没有结果",
+    "hintNav": "上下键移动，Enter 运行，Esc 关闭",
+    "pickProject": "移动到哪个项目？",
+    "actionError": "无法更新任务",
+    "deleteError": "无法删除任务",
+    "taskDeleted": "已删除“{{name}}”",
+    "taskContext": "任务：{{name}}",
+    "completeTask": "完成任务",
+    "reopenTask": "重新打开任务",
+    "editTask": "打开任务",
+    "moveToProject": "移动到项目...",
+    "setDate": "日期：{{when}}",
+    "setPriority": "优先级：{{level}}",
+    "noProject": "无项目",
+    "createTask": "创建任务",
+    "capture": "快速捕获",
+    "createProject": "创建项目",
+    "createNote": "创建笔记",
+    "createHabit": "创建习惯",
+    "goTo": "前往{{page}}",
+    "triage": "整理收件箱",
+    "search": "搜索",
+    "toggleTheme": "切换深色模式",
+    "showShortcuts": "键盘快捷键",
+    "groups": {
+      "recent": "最近",
+      "task": "此任务",
+      "create": "创建",
+      "go": "前往",
+      "commands": "命令",
+      "projects": "项目",
+      "tasks": "任务",
+      "notes": "笔记",
+      "habits": "习惯"
+    },
+    "help": {
+      "title": "键盘快捷键",
+      "general": "常规",
+      "navigation": "前往",
+      "task": "任务上",
+      "create": "创建",
+      "triage": "收件箱整理"
+    },
+    "shortcuts": {
+      "palette": "打开命令面板",
+      "capture": "快速捕获",
+      "search": "搜索",
+      "help": "显示键盘快捷键",
+      "goToday": "前往“今天”",
+      "goInbox": "前往“收件箱”",
+      "goUpcoming": "前往“即将到来”",
+      "goCalendar": "前往“日历”",
+      "goProjects": "前往“项目”",
+      "taskNav": "在任务之间移动",
+      "taskComplete": "完成或重新打开任务（或 Space）",
+      "taskEdit": "打开任务进行编辑（或 Enter）",
+      "taskDate": "设置日期",
+      "taskPriority": "设置优先级",
+      "taskProject": "移动到项目",
+      "taskDelete": "删除任务（可撤销）",
+      "createAlt": "创建收件箱项、任务、项目、笔记、领域或标签（使用 Alt+Shift）",
+      "triageTask": "整理：转为任务",
+      "triageProject": "整理：转为项目",
+      "triageNote": "整理：转为笔记",
+      "triageLater": "整理：稍后（保留在收件箱）",
+      "triageDelete": "整理：删除"
+    }
   }
 }

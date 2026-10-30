@@ -1449,7 +1449,32 @@
     "hideInfo": "Hide info",
     "aboutInbox": "About Inbox",
     "shortcutTag": "to label with a tag",
-    "shortcutProject": "to assign to a project"
+    "shortcutProject": "to assign to a project",
+    "triage": {
+      "start": "Triage",
+      "title": "Triage the inbox",
+      "exit": "Exit",
+      "progress": "{{done}} of {{total}} sorted",
+      "done": "Inbox is empty. Nothing left to sort.",
+      "doneLater": "{{count}} kept for later. Everything else is sorted.",
+      "suggested": "Suggested: {{kind}}",
+      "task": "Task",
+      "project": "Project",
+      "note": "Note",
+      "later": "Later",
+      "delete": "Delete",
+      "keptLater": "Kept in the inbox for later",
+      "madeTask": "Task created",
+      "madeProject": "Project created",
+      "madeNote": "Note created",
+      "error": "Could not process this item. It is still in the inbox.",
+      "reasonProject": "It names the project +{{detail}}",
+      "reasonTag": "It is tagged #{{detail}}",
+      "reasonUrl": "It is a link",
+      "reasonKeyword": "It starts with \"{{detail}}\"",
+      "reasonLong": "It is long, like a note",
+      "reasonDefault": "Short text, most often a task"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -3007,7 +3032,18 @@
       "project": "project",
       "area": "area",
       "note": "note"
-    }
+    },
+    "groups": {
+      "Task": "Tasks",
+      "Project": "Projects",
+      "Area": "Areas",
+      "Note": "Notes",
+      "Tag": "Tags"
+    },
+    "moreFilters": "More filters",
+    "fewerFilters": "Fewer filters",
+    "hint": "Up and Down to move, Enter to open, Esc to close",
+    "searching": "Searching..."
   },
   "backup": {
     "title": "Backup & Restore",
@@ -3702,7 +3738,9 @@
     "tooManyFiles": "Up to {{max}} files can be added at once.",
     "filesNotAttached": "Saved, but these files could not be attached: {{names}}",
     "filesAttached_one": "1 file attached.",
-    "filesAttached_other": "{{count}} files attached."
+    "filesAttached_other": "{{count}} files attached.",
+    "button": "Capture",
+    "syntaxHint": "#tag  +project  !1 to !3 priority  tomorrow 3pm for a date"
   },
   "attachments": {
     "limitReached": "Maximum 20 attachments allowed",
@@ -4354,5 +4392,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Command palette",
+    "placeholder": "Type a command or search...",
+    "empty": "No results",
+    "hintNav": "Up and Down to move, Enter to run, Esc to close",
+    "pickProject": "Move to which project?",
+    "actionError": "Could not update the task",
+    "deleteError": "Could not delete the task",
+    "taskDeleted": "Deleted \"{{name}}\"",
+    "taskContext": "Task: {{name}}",
+    "completeTask": "Complete task",
+    "reopenTask": "Reopen task",
+    "editTask": "Open task",
+    "moveToProject": "Move to project...",
+    "setDate": "Date: {{when}}",
+    "setPriority": "Priority: {{level}}",
+    "noProject": "No project",
+    "createTask": "Create task",
+    "capture": "Quick capture",
+    "createProject": "Create project",
+    "createNote": "Create note",
+    "createHabit": "Create habit",
+    "goTo": "Go to {{page}}",
+    "triage": "Triage the inbox",
+    "search": "Search",
+    "toggleTheme": "Toggle dark mode",
+    "showShortcuts": "Keyboard shortcuts",
+    "groups": {
+      "recent": "Recent",
+      "task": "This task",
+      "create": "Create",
+      "go": "Go to",
+      "commands": "Commands",
+      "projects": "Projects",
+      "tasks": "Tasks",
+      "notes": "Notes",
+      "habits": "Habits"
+    },
+    "help": {
+      "title": "Keyboard shortcuts",
+      "general": "General",
+      "navigation": "Go to",
+      "task": "On a task",
+      "create": "Create",
+      "triage": "Inbox triage"
+    },
+    "shortcuts": {
+      "palette": "Open the command palette",
+      "capture": "Quick capture",
+      "search": "Search",
+      "help": "Show keyboard shortcuts",
+      "goToday": "Go to Today",
+      "goInbox": "Go to Inbox",
+      "goUpcoming": "Go to Upcoming",
+      "goCalendar": "Go to Calendar",
+      "goProjects": "Go to Projects",
+      "taskNav": "Move between tasks",
+      "taskComplete": "Complete or reopen the task (or Space)",
+      "taskEdit": "Open the task to edit (or Enter)",
+      "taskDate": "Set the date",
+      "taskPriority": "Set the priority",
+      "taskProject": "Move to a project",
+      "taskDelete": "Delete the task (with undo)",
+      "createAlt": "Create an inbox item, task, project, note, area or tag (with Alt+Shift)",
+      "triageTask": "Triage: make it a task",
+      "triageProject": "Triage: make it a project",
+      "triageNote": "Triage: make it a note",
+      "triageLater": "Triage: later (keep it in the inbox)",
+      "triageDelete": "Triage: delete"
+    }
   }
 }

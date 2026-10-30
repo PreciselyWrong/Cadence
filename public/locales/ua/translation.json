@@ -840,7 +840,32 @@
     "shortcutTag": "щоб додати тег",
     "shortcutProject": "щоб прив'язати до проекту",
     "attachments": "Вкладення",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Розібрати",
+      "title": "Розібрати вхідні",
+      "exit": "Вихід",
+      "progress": "{{done}} з {{total}} розібрано",
+      "done": "Вхідні порожні. Розбирати нічого.",
+      "doneLater": "{{count}} залишено на потім. Решту розібрано.",
+      "suggested": "Пропозиція: {{kind}}",
+      "task": "Завдання",
+      "project": "Проєкт",
+      "note": "Нотатка",
+      "later": "Пізніше",
+      "delete": "Видалити",
+      "keptLater": "Залишено у вхідних на потім",
+      "madeTask": "Завдання створено",
+      "madeProject": "Проєкт створено",
+      "madeNote": "Нотатку створено",
+      "error": "Не вдалося обробити цей елемент. Він досі у вхідних.",
+      "reasonProject": "Згадує проєкт +{{detail}}",
+      "reasonTag": "Має тег #{{detail}}",
+      "reasonUrl": "Це посилання",
+      "reasonKeyword": "Починається з «{{detail}}»",
+      "reasonLong": "Довгий, як нотатка",
+      "reasonDefault": "Короткий текст, зазвичай завдання"
+    }
   },
   "project": {
     "projectImage": "Зображення проекту",
@@ -2801,7 +2826,18 @@
       "hasNoDueDate": "не має терміну",
       "isAssignedToProject": "призначено проекту",
       "hasNoProject": "не має проекту"
-    }
+    },
+    "groups": {
+      "Task": "Завдання",
+      "Project": "Проєкти",
+      "Area": "Області",
+      "Note": "Нотатки",
+      "Tag": "Теги"
+    },
+    "moreFilters": "Більше фільтрів",
+    "fewerFilters": "Менше фільтрів",
+    "hint": "Стрілки вгору і вниз для переходу, Enter для відкриття, Esc для закриття",
+    "searching": "Пошук..."
   },
   "subtasks": {
     "placeholder": "Додати підзадачу..."
@@ -3689,7 +3725,9 @@
       "title": "Додавання елементів"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Записати",
+    "syntaxHint": "#tag  +project  !1–!3 пріоритет  завтра о 15:00 для дати"
   },
   "area": {
     "loadError": "Не вдалося завантажити області"
@@ -4409,5 +4447,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Палітра команд",
+    "placeholder": "Введіть команду або пошук...",
+    "empty": "Немає результатів",
+    "hintNav": "Стрілки вгору і вниз для переходу, Enter для запуску, Esc для закриття",
+    "pickProject": "Перемістити до якого проєкту?",
+    "actionError": "Не вдалося оновити завдання",
+    "deleteError": "Не вдалося видалити завдання",
+    "taskDeleted": "Видалено «{{name}}»",
+    "taskContext": "Завдання: {{name}}",
+    "completeTask": "Позначити завдання виконаним",
+    "reopenTask": "Відновити завдання",
+    "editTask": "Відкрити завдання",
+    "moveToProject": "Перемістити до проєкту...",
+    "setDate": "Дата: {{when}}",
+    "setPriority": "Пріоритет: {{level}}",
+    "noProject": "Без проєкту",
+    "createTask": "Створити завдання",
+    "capture": "Швидкий запис",
+    "createProject": "Створити проєкт",
+    "createNote": "Створити нотатку",
+    "createHabit": "Створити звичку",
+    "goTo": "Перейти до {{page}}",
+    "triage": "Розібрати вхідні",
+    "search": "Пошук",
+    "toggleTheme": "Перемкнути темну тему",
+    "showShortcuts": "Гарячі клавіші",
+    "groups": {
+      "recent": "Нещодавні",
+      "task": "Це завдання",
+      "create": "Створити",
+      "go": "Перейти до",
+      "commands": "Команди",
+      "projects": "Проєкти",
+      "tasks": "Завдання",
+      "notes": "Нотатки",
+      "habits": "Звички"
+    },
+    "help": {
+      "title": "Гарячі клавіші",
+      "general": "Загальні",
+      "navigation": "Перейти до",
+      "task": "Для завдання",
+      "create": "Створити",
+      "triage": "Розбір вхідних"
+    },
+    "shortcuts": {
+      "palette": "Відкрити палітру команд",
+      "capture": "Швидкий запис",
+      "search": "Пошук",
+      "help": "Показати гарячі клавіші",
+      "goToday": "Перейти до «Сьогодні»",
+      "goInbox": "Перейти до «Вхідні»",
+      "goUpcoming": "Перейти до «Найближчі»",
+      "goCalendar": "Перейти до «Календар»",
+      "goProjects": "Перейти до «Проєкти»",
+      "taskNav": "Переходити між завданнями",
+      "taskComplete": "Позначити завдання виконаним або відновити (або Space)",
+      "taskEdit": "Відкрити завдання для редагування (або Enter)",
+      "taskDate": "Встановити дату",
+      "taskPriority": "Встановити пріоритет",
+      "taskProject": "Перемістити до проєкту",
+      "taskDelete": "Видалити завдання (з відміною)",
+      "createAlt": "Створити елемент вхідних, завдання, проєкт, нотатку, область або тег (з Alt+Shift)",
+      "triageTask": "Розбір: зробити завданням",
+      "triageProject": "Розбір: зробити проєктом",
+      "triageNote": "Розбір: зробити нотаткою",
+      "triageLater": "Розбір: пізніше (залишити у вхідних)",
+      "triageDelete": "Розбір: видалити"
+    }
   }
 }

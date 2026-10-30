@@ -19,6 +19,7 @@ import LoadingScreen from '../Shared/LoadingScreen';
 import ProjectModal from '../Project/ProjectModal';
 import NoteModal from '../Note/NoteModal';
 import QuickCaptureInput from './QuickCaptureInput';
+import InboxTriage from './InboxTriage';
 import { createTask } from '../../utils/tasksService';
 import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
@@ -386,7 +387,8 @@ const InboxItems: React.FC = () => {
             const updatedProjects = await fetchProjects();
             setProjects(updatedProjects);
 
-            const { setProjects: setGlobalProjects } = useStore.getState().projectsStore;
+            const { setProjects: setGlobalProjects } =
+                useStore.getState().projectsStore;
             setGlobalProjects(updatedProjects);
 
             if (currentConversionItemUid !== null) {
@@ -485,6 +487,30 @@ const InboxItems: React.FC = () => {
         ? inboxItems.findIndex((item) => item.uid === openItemUid)
         : -1;
 
+    const isTriage = searchParams.get('triage') === '1';
+    const setTriage = (on: boolean) => {
+        const next = new URLSearchParams(searchParams);
+        if (on) next.set('triage', '1');
+        else next.delete('triage');
+        setSearchParams(next);
+    };
+
+    if (isTriage) {
+        return (
+            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+                <InboxTriage
+                    projects={projects}
+                    onExit={() => setTriage(false)}
+                    onProjectsChanged={() => {
+                        fetchProjects()
+                            .then(setProjects)
+                            .catch(() => {});
+                    }}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
             <div className="w-full max-w-7xl mx-auto">
@@ -493,33 +519,53 @@ const InboxItems: React.FC = () => {
                     <h1 className="text-2xl font-light text-gray-900 dark:text-gray-100">
                         {t('inbox.title')}
                     </h1>
-                    <button
-                        onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-                        className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/40 ${
-                            isInfoExpanded
-                                ? 'text-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                : 'text-gray-400 dark:text-gray-500 hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
-                        }`}
-                        aria-expanded={isInfoExpanded}
-                        aria-label={
-                            isInfoExpanded
-                                ? t('inbox.collapseInfo', 'Collapse info panel')
-                                : t('inbox.showInfo', 'Show inbox information')
-                        }
-                        title={
-                            isInfoExpanded
-                                ? t('inbox.hideInfo', 'Hide info')
-                                : t('inbox.aboutInbox', 'About Inbox')
-                        }
-                    >
-                        <InformationCircleIcon className="h-5 w-5" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {inboxItems.length > 0 && (
+                            <button
+                                type="button"
+                                data-testid="inbox-triage-start"
+                                onClick={() => setTriage(true)}
+                                className="rounded-lg px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                            >
+                                {t('inbox.triage.start', 'Triage')}
+                            </button>
+                        )}
+                        <button
+                            onClick={() => setIsInfoExpanded(!isInfoExpanded)}
+                            className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/40 ${
+                                isInfoExpanded
+                                    ? 'text-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                                    : 'text-gray-400 dark:text-gray-500 hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
+                            }`}
+                            aria-expanded={isInfoExpanded}
+                            aria-label={
+                                isInfoExpanded
+                                    ? t(
+                                          'inbox.collapseInfo',
+                                          'Collapse info panel'
+                                      )
+                                    : t(
+                                          'inbox.showInfo',
+                                          'Show inbox information'
+                                      )
+                            }
+                            title={
+                                isInfoExpanded
+                                    ? t('inbox.hideInfo', 'Hide info')
+                                    : t('inbox.aboutInbox', 'About Inbox')
+                            }
+                        >
+                            <InformationCircleIcon className="h-5 w-5" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* ── Info banner ──────────────────────────────────────────── */}
                 <div
                     className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isInfoExpanded ? 'max-h-48 opacity-100 mb-5' : 'max-h-0 opacity-0 mb-0'
+                        isInfoExpanded
+                            ? 'max-h-48 opacity-100 mb-5'
+                            : 'max-h-0 opacity-0 mb-0'
                     }`}
                 >
                     <div className="flex gap-3 px-4 py-3.5 bg-blue-50/60 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800/20">
@@ -529,10 +575,18 @@ const InboxItems: React.FC = () => {
                                 'inbox.infoShort',
                                 'Inbox is where uncategorized thoughts land — jot things down, sort them later.'
                             )}{' '}
-                            <span className="text-blue-600 dark:text-blue-400 font-semibold">#tag</span>
-                            {' '}{t('inbox.shortcutTag', 'to label with a tag')},{' '}
-                            <span className="text-green-700 dark:text-green-400 font-semibold">+Project</span>
-                            {' '}{t('inbox.shortcutProject', 'to assign to a project')}.
+                            <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                                #tag
+                            </span>{' '}
+                            {t('inbox.shortcutTag', 'to label with a tag')},{' '}
+                            <span className="text-green-700 dark:text-green-400 font-semibold">
+                                +Project
+                            </span>{' '}
+                            {t(
+                                'inbox.shortcutProject',
+                                'to assign to a project'
+                            )}
+                            .
                         </div>
                     </div>
                 </div>
@@ -565,7 +619,9 @@ const InboxItems: React.FC = () => {
                                     setInboxListExpanded((prev) => {
                                         const next = !prev;
                                         updateUiSettings({
-                                            inbox: { recentlyCapturedExpanded: next },
+                                            inbox: {
+                                                recentlyCapturedExpanded: next,
+                                            },
                                         }).catch(() => {});
                                         return next;
                                     })
@@ -573,7 +629,10 @@ const InboxItems: React.FC = () => {
                                 className="flex items-center gap-2.5 w-full px-4 py-2.5 rounded-lg text-left hover:bg-gray-100/60 dark:hover:bg-white/[0.04] transition-colors"
                             >
                                 <span className="text-[10.5px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-                                    {t('inbox.recentlyCaptured', 'Recently captured')}
+                                    {t(
+                                        'inbox.recentlyCaptured',
+                                        'Recently captured'
+                                    )}
                                 </span>
                                 <span className="text-[11px] text-gray-400 dark:text-gray-500">
                                     {inboxItems.length}
@@ -610,11 +669,19 @@ const InboxItems: React.FC = () => {
                                                 item={item}
                                                 onDelete={handleDeleteItem}
                                                 onUpdate={handleUpdateItem}
-                                                openTaskModal={handleOpenTaskModal}
-                                                openProjectModal={handleOpenProjectModal}
-                                                openNoteModal={handleOpenNoteModal}
+                                                openTaskModal={
+                                                    handleOpenTaskModal
+                                                }
+                                                openProjectModal={
+                                                    handleOpenProjectModal
+                                                }
+                                                openNoteModal={
+                                                    handleOpenNoteModal
+                                                }
                                                 projects={projects}
-                                                isNew={item.uid === lastAddedUid}
+                                                isNew={
+                                                    item.uid === lastAddedUid
+                                                }
                                                 onEditingChange={(editing) =>
                                                     setOpenItemUid((prev) =>
                                                         editing
@@ -640,16 +707,38 @@ const InboxItems: React.FC = () => {
                                             >
                                                 {isLoading ? (
                                                     <>
-                                                        <svg className="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                                        <svg
+                                                            className="animate-spin h-3.5 w-3.5"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <circle
+                                                                className="opacity-25"
+                                                                cx="12"
+                                                                cy="12"
+                                                                r="10"
+                                                                stroke="currentColor"
+                                                                strokeWidth="4"
+                                                            />
+                                                            <path
+                                                                className="opacity-75"
+                                                                fill="currentColor"
+                                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                            />
                                                         </svg>
-                                                        {t('inbox.loading', 'Loading…')}
+                                                        {t(
+                                                            'inbox.loading',
+                                                            'Loading…'
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <>
                                                         <InboxIcon className="h-3.5 w-3.5" />
-                                                        {t('inbox.loadMore', 'Load more')}
+                                                        {t(
+                                                            'inbox.loadMore',
+                                                            'Load more'
+                                                        )}
                                                     </>
                                                 )}
                                             </button>
@@ -661,7 +750,10 @@ const InboxItems: React.FC = () => {
                                         {t(
                                             'inbox.showingItems',
                                             'Showing {{current}} of {{total}} items',
-                                            { current: inboxItems.length, total: pagination.total }
+                                            {
+                                                current: inboxItems.length,
+                                                total: pagination.total,
+                                            }
                                         )}
                                     </div>
                                 </div>

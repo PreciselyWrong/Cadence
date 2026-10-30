@@ -1430,7 +1430,32 @@
     "shortcutTag": "za dodajanje oznake",
     "shortcutProject": "za dodelitev projektu",
     "attachments": "Priponke",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Razvrsti",
+      "title": "Razvrsti prejeto",
+      "exit": "Izhod",
+      "progress": "{{done}} od {{total}} razvrščenih",
+      "done": "Prejeto je prazno. Ni ničesar za razvrščanje.",
+      "doneLater": "{{count}} shranjenih za pozneje. Vse ostalo je razvrščeno.",
+      "suggested": "Predlagano: {{kind}}",
+      "task": "Opravilo",
+      "project": "Projekt",
+      "note": "Opomba",
+      "later": "Pozneje",
+      "delete": "Izbriši",
+      "keptLater": "Shranjeno v prejetem za pozneje",
+      "madeTask": "Opravilo ustvarjeno",
+      "madeProject": "Projekt ustvarjen",
+      "madeNote": "Opomba ustvarjena",
+      "error": "Elementa ni bilo mogoče obdelati. Še vedno je v prejetem.",
+      "reasonProject": "Omenja projekt +{{detail}}",
+      "reasonTag": "Ima oznako #{{detail}}",
+      "reasonUrl": "Je povezava",
+      "reasonKeyword": "Začne se z »{{detail}}«",
+      "reasonLong": "Je dolgo, kot opomba",
+      "reasonDefault": "Kratko besedilo, pogosto opravilo"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2801,7 +2826,18 @@
       "hasNoDueDate": "nima roka",
       "isAssignedToProject": "je dodeljeno projektu",
       "hasNoProject": "nima projekta"
-    }
+    },
+    "groups": {
+      "Task": "Opravila",
+      "Project": "Projekti",
+      "Area": "Območja",
+      "Note": "Opombe",
+      "Tag": "Oznake"
+    },
+    "moreFilters": "Več filtrov",
+    "fewerFilters": "Manj filtrov",
+    "hint": "Puščici gor in dol za premikanje, Enter za odpiranje, Esc za zapiranje",
+    "searching": "Iščem..."
   },
   "subtasks": {
     "placeholder": "Dodaj podnalogo..."
@@ -3689,7 +3725,9 @@
       "title": "Dodajanje elementov"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Zajem",
+    "syntaxHint": "#tag  +project  !1 do !3 prednost  jutri ob 15:00 za datum"
   },
   "area": {
     "loadError": "Področij ni bilo mogoče naložiti"
@@ -4409,5 +4447,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Paleta ukazov",
+    "placeholder": "Vnesite ukaz ali iščite...",
+    "empty": "Ni rezultatov",
+    "hintNav": "Puščici gor in dol za premikanje, Enter za zagon, Esc za zapiranje",
+    "pickProject": "Premakniti v kateri projekt?",
+    "actionError": "Opravila ni bilo mogoče posodobiti",
+    "deleteError": "Opravila ni bilo mogoče izbrisati",
+    "taskDeleted": "Izbrisano »{{name}}«",
+    "taskContext": "Opravilo: {{name}}",
+    "completeTask": "Dokončaj opravilo",
+    "reopenTask": "Ponovno odpri opravilo",
+    "editTask": "Odpri opravilo",
+    "moveToProject": "Premakni v projekt...",
+    "setDate": "Datum: {{when}}",
+    "setPriority": "Prednost: {{level}}",
+    "noProject": "Brez projekta",
+    "createTask": "Ustvari opravilo",
+    "capture": "Hitro zajemanje",
+    "createProject": "Ustvari projekt",
+    "createNote": "Ustvari opombo",
+    "createHabit": "Ustvari navado",
+    "goTo": "Pojdi na {{page}}",
+    "triage": "Razvrsti prejeto",
+    "search": "Iskanje",
+    "toggleTheme": "Preklopi temni način",
+    "showShortcuts": "Bližnjice na tipkovnici",
+    "groups": {
+      "recent": "Nedavno",
+      "task": "To opravilo",
+      "create": "Ustvari",
+      "go": "Pojdi na",
+      "commands": "Ukazi",
+      "projects": "Projekti",
+      "tasks": "Opravila",
+      "notes": "Opombe",
+      "habits": "Navade"
+    },
+    "help": {
+      "title": "Bližnjice na tipkovnici",
+      "general": "Splošno",
+      "navigation": "Pojdi na",
+      "task": "Pri opravilu",
+      "create": "Ustvari",
+      "triage": "Razvrščanje prejetega"
+    },
+    "shortcuts": {
+      "palette": "Odpri paleto ukazov",
+      "capture": "Hitro zajemanje",
+      "search": "Iskanje",
+      "help": "Prikaži bližnjice na tipkovnici",
+      "goToday": "Pojdi na Danes",
+      "goInbox": "Pojdi na Prejeto",
+      "goUpcoming": "Pojdi na Prihajajoče",
+      "goCalendar": "Pojdi na Koledar",
+      "goProjects": "Pojdi na Projekte",
+      "taskNav": "Premikanje med opravili",
+      "taskComplete": "Dokončaj ali ponovno odpri opravilo (ali Space)",
+      "taskEdit": "Odpri opravilo za urejanje (ali Enter)",
+      "taskDate": "Nastavi datum",
+      "taskPriority": "Nastavi prednost",
+      "taskProject": "Premakni v projekt",
+      "taskDelete": "Izbriši opravilo (z razveljavitvijo)",
+      "createAlt": "Ustvari element prejetega, opravilo, projekt, opombo, območje ali oznako (z Alt+Shift)",
+      "triageTask": "Razvrsti: naredi opravilo",
+      "triageProject": "Razvrsti: naredi projekt",
+      "triageNote": "Razvrsti: naredi opombo",
+      "triageLater": "Razvrsti: pozneje (ohrani v prejetem)",
+      "triageDelete": "Razvrsti: izbriši"
+    }
   }
 }

@@ -703,7 +703,32 @@
     "shortcutTag": "um ein Tag zu vergeben",
     "shortcutProject": "um einem Projekt zuzuordnen",
     "attachments": "Anhänge",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Sortieren",
+      "title": "Eingang sortieren",
+      "exit": "Beenden",
+      "progress": "{{done}} von {{total}} sortiert",
+      "done": "Der Eingang ist leer. Nichts mehr zu sortieren.",
+      "doneLater": "{{count}} für später behalten. Alles Übrige ist sortiert.",
+      "suggested": "Vorschlag: {{kind}}",
+      "task": "Aufgabe",
+      "project": "Projekt",
+      "note": "Notiz",
+      "later": "Später",
+      "delete": "Löschen",
+      "keptLater": "Für später im Eingang behalten",
+      "madeTask": "Aufgabe erstellt",
+      "madeProject": "Projekt erstellt",
+      "madeNote": "Notiz erstellt",
+      "error": "Dieses Element konnte nicht verarbeitet werden. Es ist noch im Eingang.",
+      "reasonProject": "Es nennt das Projekt +{{detail}}",
+      "reasonTag": "Es ist mit #{{detail}} markiert",
+      "reasonUrl": "Es ist ein Link",
+      "reasonKeyword": "Es beginnt mit „{{detail}}“",
+      "reasonLong": "Es ist lang, wie eine Notiz",
+      "reasonDefault": "Kurzer Text, meist eine Aufgabe"
+    }
   },
   "project": {
     "projectImage": "Projektbild",
@@ -2798,7 +2823,18 @@
       "hasNoDueDate": "hat kein Fälligkeitsdatum",
       "isAssignedToProject": "ist einem Projekt zugewiesen",
       "hasNoProject": "hat kein Projekt"
-    }
+    },
+    "groups": {
+      "Task": "Aufgaben",
+      "Project": "Projekte",
+      "Area": "Bereiche",
+      "Note": "Notizen",
+      "Tag": "Tags"
+    },
+    "moreFilters": "Weitere Filter",
+    "fewerFilters": "Weniger Filter",
+    "hint": "Pfeiltasten auf und ab zum Bewegen, Enter zum Öffnen, Esc zum Schließen",
+    "searching": "Suche läuft..."
   },
   "subtasks": {
     "placeholder": "Fügen Sie eine Unteraufgabe hinzu..."
@@ -3682,7 +3718,9 @@
       "oneItemPerLineHelp": "Aus: Alles, was du tippst, wird ein Eintrag, die erste Zeile als Titel und die übrigen als Notizen. An: Jede Zeile wird ein eigener Eintrag."
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Erfassen",
+    "syntaxHint": "#tag  +project  !1 bis !3 Priorität  morgen 15 Uhr für ein Datum"
   },
   "area": {
     "loadError": "Bereiche konnten nicht geladen werden"
@@ -4400,5 +4438,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Befehlspalette",
+    "placeholder": "Befehl eingeben oder suchen...",
+    "empty": "Keine Ergebnisse",
+    "hintNav": "Pfeiltasten auf und ab zum Bewegen, Enter zum Ausführen, Esc zum Schließen",
+    "pickProject": "In welches Projekt verschieben?",
+    "actionError": "Aufgabe konnte nicht aktualisiert werden",
+    "deleteError": "Aufgabe konnte nicht gelöscht werden",
+    "taskDeleted": "„{{name}}“ gelöscht",
+    "taskContext": "Aufgabe: {{name}}",
+    "completeTask": "Aufgabe erledigen",
+    "reopenTask": "Aufgabe wieder öffnen",
+    "editTask": "Aufgabe öffnen",
+    "moveToProject": "In Projekt verschieben...",
+    "setDate": "Datum: {{when}}",
+    "setPriority": "Priorität: {{level}}",
+    "noProject": "Kein Projekt",
+    "createTask": "Aufgabe erstellen",
+    "capture": "Schnellerfassung",
+    "createProject": "Projekt erstellen",
+    "createNote": "Notiz erstellen",
+    "createHabit": "Gewohnheit erstellen",
+    "goTo": "Wechseln zu {{page}}",
+    "triage": "Eingang sortieren",
+    "search": "Suchen",
+    "toggleTheme": "Dunkelmodus umschalten",
+    "showShortcuts": "Tastenkürzel",
+    "groups": {
+      "recent": "Zuletzt verwendet",
+      "task": "Diese Aufgabe",
+      "create": "Erstellen",
+      "go": "Wechseln zu",
+      "commands": "Befehle",
+      "projects": "Projekte",
+      "tasks": "Aufgaben",
+      "notes": "Notizen",
+      "habits": "Gewohnheiten"
+    },
+    "help": {
+      "title": "Tastenkürzel",
+      "general": "Allgemein",
+      "navigation": "Wechseln zu",
+      "task": "Bei einer Aufgabe",
+      "create": "Erstellen",
+      "triage": "Eingang sortieren"
+    },
+    "shortcuts": {
+      "palette": "Befehlspalette öffnen",
+      "capture": "Schnellerfassung",
+      "search": "Suchen",
+      "help": "Tastenkürzel anzeigen",
+      "goToday": "Zu Heute wechseln",
+      "goInbox": "Zum Eingang wechseln",
+      "goUpcoming": "Zu Demnächst wechseln",
+      "goCalendar": "Zum Kalender wechseln",
+      "goProjects": "Zu Projekten wechseln",
+      "taskNav": "Zwischen Aufgaben wechseln",
+      "taskComplete": "Aufgabe erledigen oder wieder öffnen (oder Space)",
+      "taskEdit": "Aufgabe zum Bearbeiten öffnen (oder Enter)",
+      "taskDate": "Datum festlegen",
+      "taskPriority": "Priorität festlegen",
+      "taskProject": "In ein Projekt verschieben",
+      "taskDelete": "Aufgabe löschen (mit Rückgängig)",
+      "createAlt": "Eingangselement, Aufgabe, Projekt, Notiz, Bereich oder Tag erstellen (mit Alt+Shift)",
+      "triageTask": "Sortieren: als Aufgabe anlegen",
+      "triageProject": "Sortieren: als Projekt anlegen",
+      "triageNote": "Sortieren: als Notiz anlegen",
+      "triageLater": "Sortieren: später (im Eingang belassen)",
+      "triageDelete": "Sortieren: löschen"
+    }
   }
 }

@@ -1426,7 +1426,32 @@
     "shortcutTag": "för att lägga till en tagg",
     "shortcutProject": "för att koppla till ett projekt",
     "attachments": "Bilagor",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Sortera",
+      "title": "Sortera inkorgen",
+      "exit": "Avsluta",
+      "progress": "{{done}} av {{total}} sorterade",
+      "done": "Inkorgen är tom. Inget kvar att sortera.",
+      "doneLater": "{{count}} sparade till senare. Resten är sorterat.",
+      "suggested": "Förslag: {{kind}}",
+      "task": "Uppgift",
+      "project": "Projekt",
+      "note": "Anteckning",
+      "later": "Senare",
+      "delete": "Ta bort",
+      "keptLater": "Sparad i inkorgen till senare",
+      "madeTask": "Uppgift skapad",
+      "madeProject": "Projekt skapat",
+      "madeNote": "Anteckning skapad",
+      "error": "Det går inte att bearbeta objektet. Det finns kvar i inkorgen.",
+      "reasonProject": "Det nämner projektet +{{detail}}",
+      "reasonTag": "Den är taggad #{{detail}}",
+      "reasonUrl": "Det är en länk",
+      "reasonKeyword": "Det börjar med “{{detail}}”",
+      "reasonLong": "Den är lång, som en anteckning",
+      "reasonDefault": "Kort text, oftast en uppgift"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2789,7 +2814,18 @@
       "hasNoDueDate": "har inget Förfallodatum",
       "isAssignedToProject": "är Tilldelad Projekt",
       "hasNoProject": "har inget Projekt"
-    }
+    },
+    "groups": {
+      "Task": "Uppgifter",
+      "Project": "Projekt",
+      "Area": "Områden",
+      "Note": "Anteckningar",
+      "Tag": "Taggar"
+    },
+    "moreFilters": "Fler filter",
+    "fewerFilters": "Färre filter",
+    "hint": "Upp och ner för att flytta, Enter för att öppna, Esc för att stänga",
+    "searching": "Söker..."
   },
   "subtasks": {
     "placeholder": "Lägg till en deluppgift..."
@@ -3673,7 +3709,9 @@
       "title": "Lägga till objekt"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Fånga",
+    "syntaxHint": "#tag  +project  !1 till !3 prioritet  imorgon kl. 15 för ett datum"
   },
   "area": {
     "loadError": "Det gick inte att läsa in områden"
@@ -4391,5 +4429,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Kommandopalett",
+    "placeholder": "Skriv ett kommando eller sök...",
+    "empty": "Inga resultat",
+    "hintNav": "Upp och ner för att flytta, Enter för att köra, Esc för att stänga",
+    "pickProject": "Flytta till vilket projekt?",
+    "actionError": "Uppgiften kunde inte uppdateras",
+    "deleteError": "Uppgiften kunde inte tas bort",
+    "taskDeleted": "Tog bort “{{name}}”",
+    "taskContext": "Uppgift: {{name}}",
+    "completeTask": "Slutför uppgift",
+    "reopenTask": "Öppna uppgiften igen",
+    "editTask": "Öppna uppgift",
+    "moveToProject": "Flytta till projekt...",
+    "setDate": "Datum: {{when}}",
+    "setPriority": "Prioritet: {{level}}",
+    "noProject": "Inget projekt",
+    "createTask": "Skapa uppgift",
+    "capture": "Snabbfångst",
+    "createProject": "Skapa projekt",
+    "createNote": "Skapa anteckning",
+    "createHabit": "Skapa vana",
+    "goTo": "Gå till {{page}}",
+    "triage": "Sortera inkorgen",
+    "search": "Sök",
+    "toggleTheme": "Växla mörkt läge",
+    "showShortcuts": "Kortkommandon",
+    "groups": {
+      "recent": "Senaste",
+      "task": "Den här uppgiften",
+      "create": "Skapa",
+      "go": "Gå till",
+      "commands": "Kommandon",
+      "projects": "Projekt",
+      "tasks": "Uppgifter",
+      "notes": "Anteckningar",
+      "habits": "Vanor"
+    },
+    "help": {
+      "title": "Kortkommandon",
+      "general": "Allmänt",
+      "navigation": "Gå till",
+      "task": "På en uppgift",
+      "create": "Skapa",
+      "triage": "Sortering av inkorgen"
+    },
+    "shortcuts": {
+      "palette": "Öppna kommandopaletten",
+      "capture": "Snabbfångst",
+      "search": "Sök",
+      "help": "Visa kortkommandon",
+      "goToday": "Gå till Idag",
+      "goInbox": "Gå till Inkorgen",
+      "goUpcoming": "Gå till Kommande",
+      "goCalendar": "Gå till Kalender",
+      "goProjects": "Gå till Projekt",
+      "taskNav": "Flytta mellan uppgifter",
+      "taskComplete": "Slutför eller öppna uppgiften igen (eller Space)",
+      "taskEdit": "Öppna uppgiften för redigering (eller Enter)",
+      "taskDate": "Ange datum",
+      "taskPriority": "Ange prioritet",
+      "taskProject": "Flytta till ett projekt",
+      "taskDelete": "Ta bort uppgiften (med ångra)",
+      "createAlt": "Skapa inkorgspost, uppgift, projekt, anteckning, område eller tagg (med Alt+Shift)",
+      "triageTask": "Sortera: gör till uppgift",
+      "triageProject": "Sortera: gör till projekt",
+      "triageNote": "Sortera: gör till anteckning",
+      "triageLater": "Sortera: senare (behåll i inkorgen)",
+      "triageDelete": "Sortera: ta bort"
+    }
   }
 }

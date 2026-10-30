@@ -1430,7 +1430,32 @@
     "shortcutTag": "pentru a adăuga o etichetă",
     "shortcutProject": "pentru a atribui unui proiect",
     "attachments": "Atașamente",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Triere",
+      "title": "Triază inbox-ul",
+      "exit": "Ieși",
+      "progress": "{{done}} din {{total}} sortate",
+      "done": "Inbox-ul este gol. Nimic de sortat.",
+      "doneLater": "{{count}} păstrate pentru mai târziu. Restul sunt sortate.",
+      "suggested": "Sugerat: {{kind}}",
+      "task": "Sarcină",
+      "project": "Proiect",
+      "note": "Notiță",
+      "later": "Mai târziu",
+      "delete": "Șterge",
+      "keptLater": "Păstrat în inbox pentru mai târziu",
+      "madeTask": "Sarcină creată",
+      "madeProject": "Proiect creat",
+      "madeNote": "Notiță creată",
+      "error": "Elementul nu a putut fi procesat. Este încă în inbox.",
+      "reasonProject": "Menționează proiectul +{{detail}}",
+      "reasonTag": "Are eticheta #{{detail}}",
+      "reasonUrl": "Este un link",
+      "reasonKeyword": "Începe cu „{{detail}}”",
+      "reasonLong": "Este lung, ca o notiță",
+      "reasonDefault": "Text scurt, de obicei o sarcină"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2797,7 +2822,18 @@
       "hasNoDueDate": "nu are Termen",
       "isAssignedToProject": "este Atribuit Proiectului",
       "hasNoProject": "nu are Proiect"
-    }
+    },
+    "groups": {
+      "Task": "Sarcini",
+      "Project": "Proiecte",
+      "Area": "Zone",
+      "Note": "Notițe",
+      "Tag": "Etichete"
+    },
+    "moreFilters": "Mai multe filtre",
+    "fewerFilters": "Mai puține filtre",
+    "hint": "Săgeți sus și jos pentru a naviga, Enter pentru a deschide, Esc pentru a închide",
+    "searching": "Se caută..."
   },
   "subtasks": {
     "placeholder": "Adaugă o subtask..."
@@ -3683,7 +3719,9 @@
       "title": "Adăugarea elementelor"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Captură",
+    "syntaxHint": "#tag  +project  !1 până la !3 prioritate  mâine la 15:00 pentru o dată"
   },
   "area": {
     "loadError": "Ariile nu au putut fi încărcate"
@@ -4402,5 +4440,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Paleta de comenzi",
+    "placeholder": "Scrie o comandă sau caută...",
+    "empty": "Niciun rezultat",
+    "hintNav": "Săgeți sus și jos pentru a naviga, Enter pentru a rula, Esc pentru a închide",
+    "pickProject": "Muți în ce proiect?",
+    "actionError": "Nu s-a putut actualiza sarcina",
+    "deleteError": "Nu s-a putut șterge sarcina",
+    "taskDeleted": "„{{name}}” a fost șters",
+    "taskContext": "Sarcină: {{name}}",
+    "completeTask": "Finalizează sarcina",
+    "reopenTask": "Redeschide sarcina",
+    "editTask": "Deschide sarcina",
+    "moveToProject": "Mută în proiect...",
+    "setDate": "Data: {{when}}",
+    "setPriority": "Prioritate: {{level}}",
+    "noProject": "Fără proiect",
+    "createTask": "Creează sarcină",
+    "capture": "Captură rapidă",
+    "createProject": "Creează proiect",
+    "createNote": "Creează notiță",
+    "createHabit": "Creează obicei",
+    "goTo": "Mergi la {{page}}",
+    "triage": "Triază inbox-ul",
+    "search": "Caută",
+    "toggleTheme": "Comută modul întunecat",
+    "showShortcuts": "Comenzi rapide de la tastatură",
+    "groups": {
+      "recent": "Recente",
+      "task": "Această sarcină",
+      "create": "Creează",
+      "go": "Mergi la",
+      "commands": "Comenzi",
+      "projects": "Proiecte",
+      "tasks": "Sarcini",
+      "notes": "Notițe",
+      "habits": "Obiceiuri"
+    },
+    "help": {
+      "title": "Comenzi rapide de la tastatură",
+      "general": "General",
+      "navigation": "Mergi la",
+      "task": "Pe o sarcină",
+      "create": "Creează",
+      "triage": "Triere inbox"
+    },
+    "shortcuts": {
+      "palette": "Deschide paleta de comenzi",
+      "capture": "Captură rapidă",
+      "search": "Caută",
+      "help": "Afișează comenzile rapide",
+      "goToday": "Mergi la Azi",
+      "goInbox": "Mergi la Inbox",
+      "goUpcoming": "Mergi la Viitoare",
+      "goCalendar": "Mergi la Calendar",
+      "goProjects": "Mergi la Proiecte",
+      "taskNav": "Navighează între sarcini",
+      "taskComplete": "Finalizează sau redeschide sarcina (sau Space)",
+      "taskEdit": "Deschide sarcina pentru editare (sau Enter)",
+      "taskDate": "Setează data",
+      "taskPriority": "Setează prioritatea",
+      "taskProject": "Mută într-un proiect",
+      "taskDelete": "Șterge sarcina (cu anulare)",
+      "createAlt": "Creează element inbox, sarcină, proiect, notiță, zonă sau etichetă (cu Alt+Shift)",
+      "triageTask": "Triere: transformă în sarcină",
+      "triageProject": "Triere: transformă în proiect",
+      "triageNote": "Triere: transformă în notiță",
+      "triageLater": "Triere: mai târziu (păstrează în inbox)",
+      "triageDelete": "Triere: șterge"
+    }
   }
 }

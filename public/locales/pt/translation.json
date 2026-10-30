@@ -1428,7 +1428,32 @@
     "shortcutTag": "para adicionar uma etiqueta",
     "shortcutProject": "para atribuir a um projeto",
     "attachments": "Anexos",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Triar",
+      "title": "Triar a caixa de entrada",
+      "exit": "Sair",
+      "progress": "{{done}} de {{total}} organizados",
+      "done": "A caixa de entrada está vazia. Nada mais para organizar.",
+      "doneLater": "{{count}} mantidos para depois. O restante está organizado.",
+      "suggested": "Sugerido: {{kind}}",
+      "task": "Tarefa",
+      "project": "Projeto",
+      "note": "Nota",
+      "later": "Depois",
+      "delete": "Excluir",
+      "keptLater": "Mantido na caixa de entrada para depois",
+      "madeTask": "Tarefa criada",
+      "madeProject": "Projeto criado",
+      "madeNote": "Nota criada",
+      "error": "Não foi possível processar este item. Ele continua na caixa de entrada.",
+      "reasonProject": "Menciona o projeto +{{detail}}",
+      "reasonTag": "Tem a tag #{{detail}}",
+      "reasonUrl": "É um link",
+      "reasonKeyword": "Começa com “{{detail}}”",
+      "reasonLong": "É longo, como uma nota",
+      "reasonDefault": "Texto curto, geralmente uma tarefa"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d 'de' MMMM 'de' yyyy",
@@ -2795,7 +2820,18 @@
       "hasNoDueDate": "não tem Data de vencimento",
       "isAssignedToProject": "está Atribuído ao Projeto",
       "hasNoProject": "não tem Projeto"
-    }
+    },
+    "groups": {
+      "Task": "Tarefas",
+      "Project": "Projetos",
+      "Area": "Áreas",
+      "Note": "Notas",
+      "Tag": "Tags"
+    },
+    "moreFilters": "Mais filtros",
+    "fewerFilters": "Menos filtros",
+    "hint": "Setas para cima e para baixo para mover, Enter para abrir, Esc para fechar",
+    "searching": "Pesquisando..."
   },
   "subtasks": {
     "placeholder": "Adicionar uma subtarefa..."
@@ -3679,7 +3715,9 @@
       "title": "Adicionar itens"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Capturar",
+    "syntaxHint": "#tag  +project  !1 a !3 prioridade  amanhã às 15h para uma data"
   },
   "area": {
     "loadError": "Não foi possível carregar as áreas"
@@ -4398,5 +4436,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Paleta de comandos",
+    "placeholder": "Digite um comando ou pesquise...",
+    "empty": "Nenhum resultado",
+    "hintNav": "Setas para cima e para baixo para mover, Enter para executar, Esc para fechar",
+    "pickProject": "Mover para qual projeto?",
+    "actionError": "Não foi possível atualizar a tarefa",
+    "deleteError": "Não foi possível excluir a tarefa",
+    "taskDeleted": "“{{name}}” excluído",
+    "taskContext": "Tarefa: {{name}}",
+    "completeTask": "Concluir tarefa",
+    "reopenTask": "Reabrir tarefa",
+    "editTask": "Abrir tarefa",
+    "moveToProject": "Mover para projeto...",
+    "setDate": "Data: {{when}}",
+    "setPriority": "Prioridade: {{level}}",
+    "noProject": "Sem projeto",
+    "createTask": "Criar tarefa",
+    "capture": "Captura rápida",
+    "createProject": "Criar projeto",
+    "createNote": "Criar nota",
+    "createHabit": "Criar hábito",
+    "goTo": "Ir para {{page}}",
+    "triage": "Triar a caixa de entrada",
+    "search": "Pesquisar",
+    "toggleTheme": "Alternar modo escuro",
+    "showShortcuts": "Atalhos de teclado",
+    "groups": {
+      "recent": "Recentes",
+      "task": "Esta tarefa",
+      "create": "Criar",
+      "go": "Ir para",
+      "commands": "Comandos",
+      "projects": "Projetos",
+      "tasks": "Tarefas",
+      "notes": "Notas",
+      "habits": "Hábitos"
+    },
+    "help": {
+      "title": "Atalhos de teclado",
+      "general": "Geral",
+      "navigation": "Ir para",
+      "task": "Em uma tarefa",
+      "create": "Criar",
+      "triage": "Triagem da caixa de entrada"
+    },
+    "shortcuts": {
+      "palette": "Abrir a paleta de comandos",
+      "capture": "Captura rápida",
+      "search": "Pesquisar",
+      "help": "Mostrar atalhos de teclado",
+      "goToday": "Ir para Hoje",
+      "goInbox": "Ir para Caixa de entrada",
+      "goUpcoming": "Ir para Próximas",
+      "goCalendar": "Ir para Calendário",
+      "goProjects": "Ir para Projetos",
+      "taskNav": "Mover entre tarefas",
+      "taskComplete": "Concluir ou reabrir a tarefa (ou Space)",
+      "taskEdit": "Abrir a tarefa para editar (ou Enter)",
+      "taskDate": "Definir a data",
+      "taskPriority": "Definir a prioridade",
+      "taskProject": "Mover para um projeto",
+      "taskDelete": "Excluir a tarefa (com desfazer)",
+      "createAlt": "Criar item da caixa de entrada, tarefa, projeto, nota, área ou tag (com Alt+Shift)",
+      "triageTask": "Triar: transformar em tarefa",
+      "triageProject": "Triar: transformar em projeto",
+      "triageNote": "Triar: transformar em nota",
+      "triageLater": "Triar: depois (manter na caixa de entrada)",
+      "triageDelete": "Triar: excluir"
+    }
   }
 }

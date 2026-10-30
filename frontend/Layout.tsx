@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Breadcrumbs from './components/Shared/Breadcrumbs';
 import CaptureHost from './components/Capture/CaptureHost';
 import TaskPanelHost from './components/Task/TaskPanelHost';
+import CommandCenter from './components/CommandPalette/CommandCenter';
 import { openCapture } from './utils/captureUi';
 import MobileBottomBar from './components/Shared/MobileBottomBar';
 import Sidebar, { SIDEBAR_CANVAS } from './components/Sidebar';
@@ -639,6 +640,12 @@ const Layout: React.FC<LayoutProps> = ({
 
                         <CaptureHost sidebarOpen={isSidebarOpen} />
                         <TaskPanelHost />
+                        <CommandCenter
+                            toggleDarkMode={toggleDarkMode}
+                            openProjectModal={openProjectModal}
+                            openNewNote={openNewNote}
+                            openNewHabit={openNewHabit}
+                        />
                     </>
                 )}
             </SidebarProvider>

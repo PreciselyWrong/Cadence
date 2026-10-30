@@ -1459,7 +1459,32 @@
         "aboutInbox": "O schránke",
         "shortcutTag": "na označenie štítkom",
         "shortcutProject": "na priradenie k projektu",
-        "removeArea": "Remove area"
+        "removeArea": "Remove area",
+        "triage": {
+            "start": "Triediť",
+            "title": "Triedenie doručenej pošty",
+            "exit": "Ukončiť",
+            "progress": "Vytriedené: {{done}} z {{total}}",
+            "done": "Doručená pošta je prázdna. Nič na triedenie.",
+            "doneLater": "{{count}} ponechaných na neskôr. Všetko ostatné je vytriedené.",
+            "suggested": "Navrhnuté: {{kind}}",
+            "task": "Úloha",
+            "project": "Projekt",
+            "note": "Poznámka",
+            "later": "Neskôr",
+            "delete": "Odstrániť",
+            "keptLater": "Ponechané v doručenej pošte na neskôr",
+            "madeTask": "Úloha vytvorená",
+            "madeProject": "Projekt vytvorený",
+            "madeNote": "Poznámka vytvorená",
+            "error": "Túto položku sa nepodarilo spracovať. Stále je v doručenej pošte.",
+            "reasonProject": "Spomína projekt +{{detail}}",
+            "reasonTag": "Má štítok #{{detail}}",
+            "reasonUrl": "Je to odkaz",
+            "reasonKeyword": "Začína na „{{detail}}“",
+            "reasonLong": "Je dlhé, ako poznámka",
+            "reasonDefault": "Krátky text, zvyčajne úloha"
+        }
     },
     "dateFormats": {
         "long": "EEEE, d. MMMM yyyy",
@@ -3025,7 +3050,18 @@
             "note": "poznámka"
         },
         "withStatus": ", with status",
-        "statusFilter": "Status"
+        "statusFilter": "Status",
+        "groups": {
+            "Task": "Úlohy",
+            "Project": "Projekty",
+            "Area": "Oblasti",
+            "Note": "Poznámky",
+            "Tag": "Štítky"
+        },
+        "moreFilters": "Viac filtrov",
+        "fewerFilters": "Menej filtrov",
+        "hint": "Šípky nahor a nadol na pohyb, Enter na otvorenie, Esc na zatvorenie",
+        "searching": "Hľadá sa..."
     },
     "backup": {
         "title": "Záloha a obnovenie",
@@ -3726,7 +3762,9 @@
         "filesAttached_one": "Priložený 1 súbor.",
         "filesAttached_few": "Priložené {{count}} súbory.",
         "filesAttached_many": "Priložených {{count}} súborov.",
-        "filesAttached_other": "Priložených {{count}} súborov."
+        "filesAttached_other": "Priložených {{count}} súborov.",
+        "button": "Zachytiť",
+        "syntaxHint": "#tag  +project  !1 až !3 priorita  zajtra o 15:00 pre dátum"
     },
     "attachments": {
         "limitReached": "Povolených je najviac 20 príloh",
@@ -4386,5 +4424,76 @@
         "habits": "Habits",
         "review": "Review",
         "newTask": "New task"
+    },
+    "commandCenter": {
+        "title": "Paleta príkazov",
+        "placeholder": "Zadajte príkaz alebo hľadajte...",
+        "empty": "Žiadne výsledky",
+        "hintNav": "Šípky nahor a nadol na pohyb, Enter na spustenie, Esc na zatvorenie",
+        "pickProject": "Presunúť do ktorého projektu?",
+        "actionError": "Úlohu sa nepodarilo aktualizovať",
+        "deleteError": "Úlohu sa nepodarilo odstrániť",
+        "taskDeleted": "Odstránené „{{name}}“",
+        "taskContext": "Úloha: {{name}}",
+        "completeTask": "Dokončiť úlohu",
+        "reopenTask": "Znovu otvoriť úlohu",
+        "editTask": "Otvoriť úlohu",
+        "moveToProject": "Presunúť do projektu...",
+        "setDate": "Dátum: {{when}}",
+        "setPriority": "Priorita: {{level}}",
+        "noProject": "Bez projektu",
+        "createTask": "Vytvoriť úlohu",
+        "capture": "Rýchly zápis",
+        "createProject": "Vytvoriť projekt",
+        "createNote": "Vytvoriť poznámku",
+        "createHabit": "Vytvoriť návyk",
+        "goTo": "Prejsť na {{page}}",
+        "triage": "Triedenie doručenej pošty",
+        "search": "Hľadať",
+        "toggleTheme": "Prepnúť tmavý režim",
+        "showShortcuts": "Klávesové skratky",
+        "groups": {
+            "recent": "Nedávne",
+            "task": "Táto úloha",
+            "create": "Vytvoriť",
+            "go": "Prejsť na",
+            "commands": "Príkazy",
+            "projects": "Projekty",
+            "tasks": "Úlohy",
+            "notes": "Poznámky",
+            "habits": "Návyky"
+        },
+        "help": {
+            "title": "Klávesové skratky",
+            "general": "Všeobecné",
+            "navigation": "Prejsť na",
+            "task": "Pri úlohe",
+            "create": "Vytvoriť",
+            "triage": "Triedenie doručenej pošty"
+        },
+        "shortcuts": {
+            "palette": "Otvoriť paletu príkazov",
+            "capture": "Rýchly zápis",
+            "search": "Hľadať",
+            "help": "Zobraziť klávesové skratky",
+            "goToday": "Prejsť na Dnes",
+            "goInbox": "Prejsť na Doručenú poštu",
+            "goUpcoming": "Prejsť na Nadchádzajúce",
+            "goCalendar": "Prejsť na Kalendár",
+            "goProjects": "Prejsť na Projekty",
+            "taskNav": "Prepínať medzi úlohami",
+            "taskComplete": "Dokončiť alebo znovu otvoriť úlohu (alebo Space)",
+            "taskEdit": "Otvoriť úlohu na úpravu (alebo Enter)",
+            "taskDate": "Nastaviť dátum",
+            "taskPriority": "Nastaviť prioritu",
+            "taskProject": "Presunúť do projektu",
+            "taskDelete": "Odstrániť úlohu (s možnosťou vrátenia)",
+            "createAlt": "Vytvoriť položku doručenej pošty, úlohu, projekt, poznámku, oblasť alebo štítok (s Alt+Shift)",
+            "triageTask": "Triediť: urobiť úlohou",
+            "triageProject": "Triediť: urobiť projektom",
+            "triageNote": "Triediť: urobiť poznámkou",
+            "triageLater": "Triediť: neskôr (ponechať v doručenej pošte)",
+            "triageDelete": "Triediť: odstrániť"
+        }
     }
 }

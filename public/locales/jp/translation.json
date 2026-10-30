@@ -1666,7 +1666,32 @@
     "shortcutTag": "でタグを付ける",
     "shortcutProject": "でプロジェクトに割り当てる",
     "attachments": "添付ファイル",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "整理",
+      "title": "受信トレイを整理",
+      "exit": "終了",
+      "progress": "{{done}} / {{total}} 件を整理済み",
+      "done": "受信トレイは空です。整理する項目はありません。",
+      "doneLater": "{{count}} 件を後で整理するために残しました。それ以外は整理済みです。",
+      "suggested": "候補: {{kind}}",
+      "task": "タスク",
+      "project": "プロジェクト",
+      "note": "メモ",
+      "later": "後で",
+      "delete": "削除",
+      "keptLater": "後で整理するために受信トレイに残しました",
+      "madeTask": "タスクを作成しました",
+      "madeProject": "プロジェクトを作成しました",
+      "madeNote": "メモを作成しました",
+      "error": "この項目を処理できませんでした。受信トレイに残っています。",
+      "reasonProject": "プロジェクト +{{detail}} に言及しています",
+      "reasonTag": "#{{detail}} のタグが付いています",
+      "reasonUrl": "リンクです",
+      "reasonKeyword": "「{{detail}}」で始まります",
+      "reasonLong": "長文なので、メモ向けです",
+      "reasonDefault": "短いテキスト、多くはタスク"
+    }
   },
   "project": {
     "projectImage": "プロジェクト画像",
@@ -2789,7 +2814,18 @@
       "hasNoDueDate": "期限なし",
       "isAssignedToProject": "プロジェクトに割り当てられている",
       "hasNoProject": "プロジェクトなし"
-    }
+    },
+    "groups": {
+      "Task": "タスク",
+      "Project": "プロジェクト",
+      "Area": "エリア",
+      "Note": "メモ",
+      "Tag": "タグ"
+    },
+    "moreFilters": "フィルターを増やす",
+    "fewerFilters": "フィルターを減らす",
+    "hint": "上下キーで移動、Enterで開く、Escで閉じる",
+    "searching": "検索中..."
   },
   "subtasks": {
     "placeholder": "サブタスクを追加..."
@@ -3673,7 +3709,9 @@
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
-    "filesAttached_one": "1 file attached."
+    "filesAttached_one": "1 file attached.",
+    "button": "キャプチャ",
+    "syntaxHint": "#tag  +project  !1〜!3 優先度  明日15時 日付指定"
   },
   "area": {
     "loadError": "エリアを読み込めませんでした"
@@ -4391,5 +4429,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "コマンドパレット",
+    "placeholder": "コマンドを入力、または検索...",
+    "empty": "結果がありません",
+    "hintNav": "上下キーで移動、Enterで実行、Escで閉じる",
+    "pickProject": "どのプロジェクトに移動しますか？",
+    "actionError": "タスクを更新できませんでした",
+    "deleteError": "タスクを削除できませんでした",
+    "taskDeleted": "「{{name}}」を削除しました",
+    "taskContext": "タスク: {{name}}",
+    "completeTask": "タスクを完了",
+    "reopenTask": "タスクを未完了に戻す",
+    "editTask": "タスクを開く",
+    "moveToProject": "プロジェクトに移動...",
+    "setDate": "日付: {{when}}",
+    "setPriority": "優先度: {{level}}",
+    "noProject": "プロジェクトなし",
+    "createTask": "タスクを作成",
+    "capture": "クイックキャプチャ",
+    "createProject": "プロジェクトを作成",
+    "createNote": "メモを作成",
+    "createHabit": "習慣を作成",
+    "goTo": "{{page}}へ移動",
+    "triage": "受信トレイを整理",
+    "search": "検索",
+    "toggleTheme": "ダークモードを切り替え",
+    "showShortcuts": "キーボードショートカット",
+    "groups": {
+      "recent": "最近",
+      "task": "このタスク",
+      "create": "作成",
+      "go": "移動先",
+      "commands": "コマンド",
+      "projects": "プロジェクト",
+      "tasks": "タスク",
+      "notes": "メモ",
+      "habits": "習慣"
+    },
+    "help": {
+      "title": "キーボードショートカット",
+      "general": "一般",
+      "navigation": "移動",
+      "task": "タスク上で",
+      "create": "作成",
+      "triage": "受信トレイの整理"
+    },
+    "shortcuts": {
+      "palette": "コマンドパレットを開く",
+      "capture": "クイックキャプチャ",
+      "search": "検索",
+      "help": "キーボードショートカットを表示",
+      "goToday": "「今日」へ移動",
+      "goInbox": "「受信トレイ」へ移動",
+      "goUpcoming": "「今後」へ移動",
+      "goCalendar": "「カレンダー」へ移動",
+      "goProjects": "「プロジェクト」へ移動",
+      "taskNav": "タスク間を移動",
+      "taskComplete": "タスクを完了または未完了に戻す（または Space）",
+      "taskEdit": "タスクを開いて編集（または Enter）",
+      "taskDate": "日付を設定",
+      "taskPriority": "優先度を設定",
+      "taskProject": "プロジェクトに移動",
+      "taskDelete": "タスクを削除（元に戻せます）",
+      "createAlt": "受信トレイ項目、タスク、プロジェクト、メモ、エリア、タグを作成（Alt+Shift）",
+      "triageTask": "整理: タスクにする",
+      "triageProject": "整理: プロジェクトにする",
+      "triageNote": "整理: メモにする",
+      "triageLater": "整理: 後で（受信トレイに残す）",
+      "triageDelete": "整理: 削除"
+    }
   }
 }

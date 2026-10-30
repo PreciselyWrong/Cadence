@@ -1427,7 +1427,32 @@
     "shortcutTag": "for å legge til en etikett",
     "shortcutProject": "for å knytte til et prosjekt",
     "attachments": "Vedlegg",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Sorter",
+      "title": "Sorter innboksen",
+      "exit": "Avslutt",
+      "progress": "{{done}} av {{total}} sortert",
+      "done": "Innboksen er tom. Ingenting igjen å sortere.",
+      "doneLater": "{{count}} beholdt til senere. Alt annet er sortert.",
+      "suggested": "Foreslått: {{kind}}",
+      "task": "Oppgave",
+      "project": "Prosjekt",
+      "note": "Notat",
+      "later": "Senere",
+      "delete": "Slett",
+      "keptLater": "Beholdt i innboksen til senere",
+      "madeTask": "Oppgave opprettet",
+      "madeProject": "Prosjekt opprettet",
+      "madeNote": "Notat opprettet",
+      "error": "Elementet kunne ikke behandles. Det ligger fortsatt i innboksen.",
+      "reasonProject": "Det nevner prosjektet +{{detail}}",
+      "reasonTag": "Det er merket #{{detail}}",
+      "reasonUrl": "Det er en lenke",
+      "reasonKeyword": "Det starter med “{{detail}}”",
+      "reasonLong": "Det er langt, som et notat",
+      "reasonDefault": "Kort tekst, oftest en oppgave"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2790,7 +2815,18 @@
       "hasNoDueDate": "har ingen Forfallsdato",
       "isAssignedToProject": "er Tildelt Prosjekt",
       "hasNoProject": "har ikke Prosjekt"
-    }
+    },
+    "groups": {
+      "Task": "Oppgaver",
+      "Project": "Prosjekter",
+      "Area": "Områder",
+      "Note": "Notater",
+      "Tag": "Tagger"
+    },
+    "moreFilters": "Flere filtre",
+    "fewerFilters": "Færre filtre",
+    "hint": "Opp og ned for å flytte, Enter for å åpne, Esc for å lukke",
+    "searching": "Søker..."
   },
   "subtasks": {
     "placeholder": "Legg til en underoppgave..."
@@ -3678,7 +3714,9 @@
       "title": "Legge til elementer"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Fang",
+    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato"
   },
   "area": {
     "loadError": "Kunne ikke laste inn områder"
@@ -4396,5 +4434,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Kommandopalett",
+    "placeholder": "Skriv en kommando eller søk...",
+    "empty": "Ingen resultater",
+    "hintNav": "Opp og ned for å flytte, Enter for å kjøre, Esc for å lukke",
+    "pickProject": "Flytte til hvilket prosjekt?",
+    "actionError": "Oppgaven kunne ikke oppdateres",
+    "deleteError": "Oppgaven kunne ikke slettes",
+    "taskDeleted": "Slettet “{{name}}”",
+    "taskContext": "Oppgave: {{name}}",
+    "completeTask": "Fullfør oppgave",
+    "reopenTask": "Åpne oppgaven igjen",
+    "editTask": "Åpne oppgave",
+    "moveToProject": "Flytt til prosjekt...",
+    "setDate": "Dato: {{when}}",
+    "setPriority": "Prioritet: {{level}}",
+    "noProject": "Uten prosjekt",
+    "createTask": "Opprett oppgave",
+    "capture": "Hurtigfangst",
+    "createProject": "Opprett prosjekt",
+    "createNote": "Opprett notat",
+    "createHabit": "Opprett vane",
+    "goTo": "Gå til {{page}}",
+    "triage": "Sorter innboksen",
+    "search": "Søk",
+    "toggleTheme": "Bytt mørk modus",
+    "showShortcuts": "Hurtigtaster",
+    "groups": {
+      "recent": "Nylige",
+      "task": "Denne oppgaven",
+      "create": "Opprett",
+      "go": "Gå til",
+      "commands": "Kommandoer",
+      "projects": "Prosjekter",
+      "tasks": "Oppgaver",
+      "notes": "Notater",
+      "habits": "Vaner"
+    },
+    "help": {
+      "title": "Hurtigtaster",
+      "general": "Generelt",
+      "navigation": "Gå til",
+      "task": "På en oppgave",
+      "create": "Opprett",
+      "triage": "Sortering av innboks"
+    },
+    "shortcuts": {
+      "palette": "Åpne kommandopalett",
+      "capture": "Hurtigfangst",
+      "search": "Søk",
+      "help": "Vis hurtigtaster",
+      "goToday": "Gå til I dag",
+      "goInbox": "Gå til Innboks",
+      "goUpcoming": "Gå til Kommende",
+      "goCalendar": "Gå til Kalender",
+      "goProjects": "Gå til Prosjekter",
+      "taskNav": "Flytt mellom oppgaver",
+      "taskComplete": "Fullfør eller åpne oppgaven igjen (eller Space)",
+      "taskEdit": "Åpne oppgaven for redigering (eller Enter)",
+      "taskDate": "Angi dato",
+      "taskPriority": "Angi prioritet",
+      "taskProject": "Flytt til et prosjekt",
+      "taskDelete": "Slett oppgaven (med angre)",
+      "createAlt": "Opprett innbokselement, oppgave, prosjekt, notat, område eller tagg (med Alt+Shift)",
+      "triageTask": "Sorter: gjør til oppgave",
+      "triageProject": "Sorter: gjør til prosjekt",
+      "triageNote": "Sorter: gjør til notat",
+      "triageLater": "Sorter: senere (behold i innboksen)",
+      "triageDelete": "Sorter: slett"
+    }
   }
 }

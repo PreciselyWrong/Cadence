@@ -1705,7 +1705,32 @@
     "shortcutTag": "para añadir una etiqueta",
     "shortcutProject": "para asignar a un proyecto",
     "attachments": "Adjuntos",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Clasificar",
+      "title": "Clasificar la bandeja de entrada",
+      "exit": "Salir",
+      "progress": "{{done}} de {{total}} clasificados",
+      "done": "La bandeja de entrada está vacía. No queda nada por clasificar.",
+      "doneLater": "{{count}} guardados para más tarde. Lo demás está clasificado.",
+      "suggested": "Sugerido: {{kind}}",
+      "task": "Tarea",
+      "project": "Proyecto",
+      "note": "Nota",
+      "later": "Más tarde",
+      "delete": "Eliminar",
+      "keptLater": "Guardado en la bandeja para más tarde",
+      "madeTask": "Tarea creada",
+      "madeProject": "Proyecto creado",
+      "madeNote": "Nota creada",
+      "error": "No se pudo procesar este elemento. Sigue en la bandeja de entrada.",
+      "reasonProject": "Menciona el proyecto +{{detail}}",
+      "reasonTag": "Tiene la etiqueta #{{detail}}",
+      "reasonUrl": "Es un enlace",
+      "reasonKeyword": "Empieza por “{{detail}}”",
+      "reasonLong": "Es largo, como una nota",
+      "reasonDefault": "Texto corto, casi siempre una tarea"
+    }
   },
   "areas": {
     "title": "Áreas",
@@ -2782,7 +2807,18 @@
       "hasNoDueDate": "no tiene Fecha de vencimiento",
       "isAssignedToProject": "está Asignado al Proyecto",
       "hasNoProject": "no tiene Proyecto"
-    }
+    },
+    "groups": {
+      "Task": "Tareas",
+      "Project": "Proyectos",
+      "Area": "Áreas",
+      "Note": "Notas",
+      "Tag": "Etiquetas"
+    },
+    "moreFilters": "Más filtros",
+    "fewerFilters": "Menos filtros",
+    "hint": "Arriba y Abajo para moverte, Enter para abrir, Esc para cerrar",
+    "searching": "Buscando..."
   },
   "subtasks": {
     "placeholder": "Agregar una subtarea..."
@@ -3666,7 +3702,9 @@
       "oneItemPerLineHelp": "Desactivado: todo lo que escribas será un solo elemento, con la primera línea como título y el resto como notas. Activado: cada línea será un elemento."
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Capturar",
+    "syntaxHint": "#tag  +project  !1 a !3 prioridad  mañana 15:00 para una fecha"
   },
   "area": {
     "loadError": "No se pudieron cargar las áreas"
@@ -4385,5 +4423,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Paleta de comandos",
+    "placeholder": "Escribe un comando o busca...",
+    "empty": "Sin resultados",
+    "hintNav": "Arriba y Abajo para moverte, Enter para ejecutar, Esc para cerrar",
+    "pickProject": "¿A qué proyecto mover?",
+    "actionError": "No se pudo actualizar la tarea",
+    "deleteError": "No se pudo eliminar la tarea",
+    "taskDeleted": "Eliminado “{{name}}”",
+    "taskContext": "Tarea: {{name}}",
+    "completeTask": "Completar tarea",
+    "reopenTask": "Reabrir tarea",
+    "editTask": "Abrir tarea",
+    "moveToProject": "Mover a proyecto...",
+    "setDate": "Fecha: {{when}}",
+    "setPriority": "Prioridad: {{level}}",
+    "noProject": "Sin proyecto",
+    "createTask": "Crear tarea",
+    "capture": "Captura rápida",
+    "createProject": "Crear proyecto",
+    "createNote": "Crear nota",
+    "createHabit": "Crear hábito",
+    "goTo": "Ir a {{page}}",
+    "triage": "Clasificar la bandeja de entrada",
+    "search": "Buscar",
+    "toggleTheme": "Alternar modo oscuro",
+    "showShortcuts": "Atajos de teclado",
+    "groups": {
+      "recent": "Recientes",
+      "task": "Esta tarea",
+      "create": "Crear",
+      "go": "Ir a",
+      "commands": "Comandos",
+      "projects": "Proyectos",
+      "tasks": "Tareas",
+      "notes": "Notas",
+      "habits": "Hábitos"
+    },
+    "help": {
+      "title": "Atajos de teclado",
+      "general": "General",
+      "navigation": "Ir a",
+      "task": "En una tarea",
+      "create": "Crear",
+      "triage": "Clasificar bandeja"
+    },
+    "shortcuts": {
+      "palette": "Abrir la paleta de comandos",
+      "capture": "Captura rápida",
+      "search": "Buscar",
+      "help": "Mostrar atajos de teclado",
+      "goToday": "Ir a Hoy",
+      "goInbox": "Ir a Bandeja de entrada",
+      "goUpcoming": "Ir a Próximas",
+      "goCalendar": "Ir a Calendario",
+      "goProjects": "Ir a Proyectos",
+      "taskNav": "Moverse entre tareas",
+      "taskComplete": "Completar o reabrir la tarea (o Space)",
+      "taskEdit": "Abrir la tarea para editar (o Enter)",
+      "taskDate": "Establecer la fecha",
+      "taskPriority": "Establecer la prioridad",
+      "taskProject": "Mover a un proyecto",
+      "taskDelete": "Eliminar la tarea (con deshacer)",
+      "createAlt": "Crear un elemento de bandeja, tarea, proyecto, nota, área o etiqueta (con Alt+Shift)",
+      "triageTask": "Clasificar: convertir en tarea",
+      "triageProject": "Clasificar: convertir en proyecto",
+      "triageNote": "Clasificar: convertir en nota",
+      "triageLater": "Clasificar: más tarde (mantener en la bandeja)",
+      "triageDelete": "Clasificar: eliminar"
+    }
   }
 }

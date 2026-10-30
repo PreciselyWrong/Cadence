@@ -1426,7 +1426,32 @@
     "shortcutTag": "lisätäksesi tunnisteen",
     "shortcutProject": "liittääksesi projektiin",
     "attachments": "Liitteet",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Lajittele",
+      "title": "Lajittele saapuneet",
+      "exit": "Poistu",
+      "progress": "{{done}} / {{total}} lajiteltu",
+      "done": "Saapuneet on tyhjä. Lajiteltavaa ei ole.",
+      "doneLater": "{{count}} jätetty myöhempää varten. Muu on lajiteltu.",
+      "suggested": "Ehdotus: {{kind}}",
+      "task": "Tehtävä",
+      "project": "Projekti",
+      "note": "Muistiinpano",
+      "later": "Myöhemmin",
+      "delete": "Poista",
+      "keptLater": "Jätetty saapuneisiin myöhempää varten",
+      "madeTask": "Tehtävä luotu",
+      "madeProject": "Projekti luotu",
+      "madeNote": "Muistiinpano luotu",
+      "error": "Kohdetta ei voitu käsitellä. Se on yhä saapuneissa.",
+      "reasonProject": "Se mainitsee projektin +{{detail}}",
+      "reasonTag": "Se on tunnisteella #{{detail}}",
+      "reasonUrl": "Se on linkki",
+      "reasonKeyword": "Se alkaa sanalla “{{detail}}”",
+      "reasonLong": "Se on pitkä, kuten muistiinpano",
+      "reasonDefault": "Lyhyt teksti, useimmiten tehtävä"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2789,7 +2814,18 @@
       "hasNoDueDate": "ei ole Eräpäivää",
       "isAssignedToProject": "on Määrätty Projektiin",
       "hasNoProject": "ei ole Projektia"
-    }
+    },
+    "groups": {
+      "Task": "Tehtävät",
+      "Project": "Projektit",
+      "Area": "Alueet",
+      "Note": "Muistiinpanot",
+      "Tag": "Tunnisteet"
+    },
+    "moreFilters": "Lisää suodattimia",
+    "fewerFilters": "Vähemmän suodattimia",
+    "hint": "Nuoli ylös ja alas siirtää, Enter avaa, Esc sulkee",
+    "searching": "Haetaan..."
   },
   "subtasks": {
     "placeholder": "Lisää alitehtävä..."
@@ -3673,7 +3709,9 @@
       "title": "Kohteiden lisääminen"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Kaappaa",
+    "syntaxHint": "#tag  +project  !1–!3 prioriteetti  huomenna klo 15 päivämäärälle"
   },
   "area": {
     "loadError": "Alueiden lataaminen epäonnistui"
@@ -4391,5 +4429,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Komentopaletti",
+    "placeholder": "Kirjoita komento tai hae...",
+    "empty": "Ei tuloksia",
+    "hintNav": "Nuoli ylös ja alas siirtää, Enter suorittaa, Esc sulkee",
+    "pickProject": "Mihin projektiin siirretään?",
+    "actionError": "Tehtävää ei voitu päivittää",
+    "deleteError": "Tehtävää ei voitu poistaa",
+    "taskDeleted": "Poistettu “{{name}}”",
+    "taskContext": "Tehtävä: {{name}}",
+    "completeTask": "Merkitse tehdyksi",
+    "reopenTask": "Avaa tehtävä uudelleen",
+    "editTask": "Avaa tehtävä",
+    "moveToProject": "Siirrä projektiin...",
+    "setDate": "Päivämäärä: {{when}}",
+    "setPriority": "Prioriteetti: {{level}}",
+    "noProject": "Ei projektia",
+    "createTask": "Luo tehtävä",
+    "capture": "Pikakaappaus",
+    "createProject": "Luo projekti",
+    "createNote": "Luo muistiinpano",
+    "createHabit": "Luo tapa",
+    "goTo": "Siirry kohteeseen {{page}}",
+    "triage": "Lajittele saapuneet",
+    "search": "Hae",
+    "toggleTheme": "Vaihda tumma tila",
+    "showShortcuts": "Pikanäppäimet",
+    "groups": {
+      "recent": "Viimeisimmät",
+      "task": "Tämä tehtävä",
+      "create": "Luo",
+      "go": "Siirry",
+      "commands": "Komennot",
+      "projects": "Projektit",
+      "tasks": "Tehtävät",
+      "notes": "Muistiinpanot",
+      "habits": "Tavat"
+    },
+    "help": {
+      "title": "Pikanäppäimet",
+      "general": "Yleiset",
+      "navigation": "Siirry",
+      "task": "Tehtävässä",
+      "create": "Luo",
+      "triage": "Saapuneiden lajittelu"
+    },
+    "shortcuts": {
+      "palette": "Avaa komentopaletti",
+      "capture": "Pikakaappaus",
+      "search": "Hae",
+      "help": "Näytä pikanäppäimet",
+      "goToday": "Siirry Tähän päivään",
+      "goInbox": "Siirry Saapuneisiin",
+      "goUpcoming": "Siirry Tuleviin",
+      "goCalendar": "Siirry Kalenteriin",
+      "goProjects": "Siirry Projekteihin",
+      "taskNav": "Siirry tehtävien välillä",
+      "taskComplete": "Merkitse tehtävä tehdyksi tai avaa uudelleen (tai Space)",
+      "taskEdit": "Avaa tehtävä muokattavaksi (tai Enter)",
+      "taskDate": "Aseta päivämäärä",
+      "taskPriority": "Aseta prioriteetti",
+      "taskProject": "Siirrä projektiin",
+      "taskDelete": "Poista tehtävä (kumottavissa)",
+      "createAlt": "Luo saapuneisiin kohde, tehtävä, projekti, muistiinpano, alue tai tunniste (Alt+Shift)",
+      "triageTask": "Lajittele: tee tehtäväksi",
+      "triageProject": "Lajittele: tee projektiksi",
+      "triageNote": "Lajittele: tee muistiinpanoksi",
+      "triageLater": "Lajittele: myöhemmin (jää saapuneisiin)",
+      "triageDelete": "Lajittele: poista"
+    }
   }
 }

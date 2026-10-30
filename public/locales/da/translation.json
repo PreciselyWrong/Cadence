@@ -1426,7 +1426,32 @@
     "shortcutTag": "for at tilføje et tag",
     "shortcutProject": "for at tilknytte et projekt",
     "attachments": "Vedhæftede filer",
-    "removeArea": "Remove area"
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Sortér",
+      "title": "Sortér indbakken",
+      "exit": "Luk",
+      "progress": "{{done}} af {{total}} sorteret",
+      "done": "Indbakken er tom. Intet tilbage at sortere.",
+      "doneLater": "{{count}} gemt til senere. Alt andet er sorteret.",
+      "suggested": "Foreslået: {{kind}}",
+      "task": "Opgave",
+      "project": "Projekt",
+      "note": "Note",
+      "later": "Senere",
+      "delete": "Slet",
+      "keptLater": "Gemt i indbakken til senere",
+      "madeTask": "Opgave oprettet",
+      "madeProject": "Projekt oprettet",
+      "madeNote": "Note oprettet",
+      "error": "Elementet kunne ikke behandles. Det ligger stadig i indbakken.",
+      "reasonProject": "Det nævner projektet +{{detail}}",
+      "reasonTag": "Det har tagget #{{detail}}",
+      "reasonUrl": "Det er et link",
+      "reasonKeyword": "Det starter med “{{detail}}”",
+      "reasonLong": "Det er langt, ligesom en note",
+      "reasonDefault": "Kort tekst, oftest en opgave"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2789,7 +2814,18 @@
       "hasNoDueDate": "har ingen forfaldsdato",
       "isAssignedToProject": "er tildelt projekt",
       "hasNoProject": "har intet projekt"
-    }
+    },
+    "groups": {
+      "Task": "Opgaver",
+      "Project": "Projekter",
+      "Area": "Områder",
+      "Note": "Noter",
+      "Tag": "Tags"
+    },
+    "moreFilters": "Flere filtre",
+    "fewerFilters": "Færre filtre",
+    "hint": "Op og Ned for at flytte, Enter for at åbne, Esc for at lukke",
+    "searching": "Søger..."
   },
   "subtasks": {
     "placeholder": "Tilføj en underopgave..."
@@ -3673,7 +3709,9 @@
       "title": "Tilføjelse af elementer"
     },
     "addTitle": "Add to Inbox, Task, Note or Project",
-    "close": "Close"
+    "close": "Close",
+    "button": "Indfang",
+    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato"
   },
   "area": {
     "loadError": "Kunne ikke indlæse områder"
@@ -4391,5 +4429,76 @@
     "habits": "Habits",
     "review": "Review",
     "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Kommandopalet",
+    "placeholder": "Skriv en kommando eller søg...",
+    "empty": "Ingen resultater",
+    "hintNav": "Op og Ned for at flytte, Enter for at køre, Esc for at lukke",
+    "pickProject": "Flyt til hvilket projekt?",
+    "actionError": "Opgaven kunne ikke opdateres",
+    "deleteError": "Opgaven kunne ikke slettes",
+    "taskDeleted": "Slettede “{{name}}”",
+    "taskContext": "Opgave: {{name}}",
+    "completeTask": "Fuldfør opgave",
+    "reopenTask": "Genåbn opgave",
+    "editTask": "Åbn opgave",
+    "moveToProject": "Flyt til projekt...",
+    "setDate": "Dato: {{when}}",
+    "setPriority": "Prioritet: {{level}}",
+    "noProject": "Intet projekt",
+    "createTask": "Opret opgave",
+    "capture": "Hurtig indtastning",
+    "createProject": "Opret projekt",
+    "createNote": "Opret note",
+    "createHabit": "Opret vane",
+    "goTo": "Gå til {{page}}",
+    "triage": "Sortér indbakken",
+    "search": "Søg",
+    "toggleTheme": "Skift mørk tilstand",
+    "showShortcuts": "Tastaturgenveje",
+    "groups": {
+      "recent": "Seneste",
+      "task": "Denne opgave",
+      "create": "Opret",
+      "go": "Gå til",
+      "commands": "Kommandoer",
+      "projects": "Projekter",
+      "tasks": "Opgaver",
+      "notes": "Noter",
+      "habits": "Vaner"
+    },
+    "help": {
+      "title": "Tastaturgenveje",
+      "general": "Generelt",
+      "navigation": "Gå til",
+      "task": "På en opgave",
+      "create": "Opret",
+      "triage": "Sortering af indbakke"
+    },
+    "shortcuts": {
+      "palette": "Åbn kommandopaletten",
+      "capture": "Hurtig indtastning",
+      "search": "Søg",
+      "help": "Vis tastaturgenveje",
+      "goToday": "Gå til I dag",
+      "goInbox": "Gå til Indbakke",
+      "goUpcoming": "Gå til Kommende",
+      "goCalendar": "Gå til Kalender",
+      "goProjects": "Gå til Projekter",
+      "taskNav": "Flyt mellem opgaver",
+      "taskComplete": "Fuldfør eller genåbn opgaven (eller Space)",
+      "taskEdit": "Åbn opgaven for at redigere (eller Enter)",
+      "taskDate": "Angiv datoen",
+      "taskPriority": "Angiv prioriteten",
+      "taskProject": "Flyt til et projekt",
+      "taskDelete": "Slet opgaven (med fortryd)",
+      "createAlt": "Opret indbakkepunkt, opgave, projekt, note, område eller tag (med Alt+Shift)",
+      "triageTask": "Sortér: gør til opgave",
+      "triageProject": "Sortér: gør til projekt",
+      "triageNote": "Sortér: gør til note",
+      "triageLater": "Sortér: senere (behold i indbakken)",
+      "triageDelete": "Sortér: slet"
+    }
   }
 }
