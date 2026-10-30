@@ -2,7 +2,9 @@ package ch.nicolab.cadence.tasks.data
 
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.Repetition
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.Instant
@@ -11,6 +13,8 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 
 internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem = with(task) {
+    val extras = TaskExtras.parse(extrasJson)
+    val startHasTime = extras["start_has_time"] == "true"
     TaskItem(
         uid = uid,
         name = name,
@@ -30,6 +34,12 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         completedAt = parseInstant(completedAtRaw),
         pinnedAt = parseInstant(pinnedAtRaw),
         pendingSync = pendingSync,
+        startDate = parseInstant(extras["start_date"]),
+        startHasTime = startHasTime,
+        startDay = dueDayOf(extras["start_date"], startHasTime, accountZone, deviceZone),
+        estimatedMinutes = extras["estimated_minutes"]?.toIntOrNull(),
+        repetition = Repetition.of(recurrenceType, extras["recurrence_interval"]),
+        extras = extras,
     )
 }
 
@@ -38,6 +48,17 @@ internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, area
 internal fun AreaEntity.toItem() = AreaItem(uid, name, color)
 
 internal fun TagEntity.toItem() = TagItem(uid, name, color)
+
+internal fun NoteRow.toItem() = NoteItem(
+    uid = note.uid,
+    title = note.title,
+    content = note.content,
+    projectUid = note.projectUid,
+    tagUids = WireCodec.decodeTagUids(note.tagUidsJson),
+    color = note.color,
+    updatedAt = parseInstant(note.updatedAtRaw),
+    pendingSync = pendingSync,
+)
 
 internal fun InboxRow.toEntry() = InboxEntry(
     uid = item.uid,

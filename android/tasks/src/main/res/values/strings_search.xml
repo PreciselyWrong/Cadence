@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Recherche -->
+    <string name="tasks_search_open">Rechercher</string>
+    <string name="tasks_search_back">Retour</string>
+    <string name="tasks_search_hint">Rechercher…</string>
+    <string name="tasks_search_clear">Effacer la recherche</string>
+    <string name="tasks_search_prompt">Cherchez dans vos tâches, projets, notes et habitudes.</string>
+    <string name="tasks_search_empty">Aucun résultat pour « %1$s ».</string>
+    <string name="tasks_search_all">Tout</string>
+    <string name="tasks_search_tasks">Tâches</string>
+    <string name="tasks_search_notes">Notes</string>
+    <string name="tasks_search_projects">Projets</string>
+    <string name="tasks_search_habits">Habitudes</string>
+    <string name="tasks_search_habit_subtitle">Habitude</string>
+
+    <!-- Détail d'une tâche -->
+    <string name="tasks_subtasks">Sous-tâches</string>
+    <string name="tasks_subtasks_progress">Sous-tâches · %1$d/%2$d</string>
+    <string name="tasks_subtask_hint">Ajouter une sous-tâche</string>
+    <string name="tasks_subtask_add">Ajouter</string>
+    <string name="tasks_field_start">Début</string>
+    <string name="tasks_add_start">Ajouter un début</string>
+    <string name="tasks_field_repeat">Répétition</string>
+    <string name="tasks_repeat_none">Aucune</string>
+    <string name="tasks_repeat_every">Tous les</string>
+    <string name="tasks_repeat_less">Réduire l\'intervalle</string>
+    <string name="tasks_repeat_more">Augmenter l\'intervalle</string>
+    <string name="tasks_repeat_custom">Règle personnalisée, modifiable sur le web.</string>
+    <string name="tasks_repeat_needs_due">Sans échéance, la règle n\'a pas de jour d\'ancrage.</string>
+    <plurals name="tasks_repeat_daily">
+        <item quantity="one">Chaque jour</item>
+        <item quantity="other">Tous les %d jours</item>
+    </plurals>
+    <plurals name="tasks_repeat_weekly">
+        <item quantity="one">Chaque semaine</item>
+        <item quantity="other">Toutes les %d semaines</item>
+    </plurals>
+    <plurals name="tasks_repeat_monthly">
+        <item quantity="one">Chaque mois</item>
+        <item quantity="other">Tous les %d mois</item>
+    </plurals>
+    <string name="tasks_field_estimate">Estimation</string>
+    <string name="tasks_estimate_none">Aucune</string>
+    <string name="tasks_field_links">Liens</string>
+    <string name="tasks_field_comments">Commentaires et pièces jointes</string>
+    <string name="tasks_web_only">Pas encore synchronisés sur l\'appareil : à consulter sur le web.</string>
+    <string name="tasks_extras_title">Autres informations</string>
+    <string name="tasks_extras_readonly">Lecture seule</string>
+    <string name="tasks_extra_review_on">À revoir le</string>
+    <string name="tasks_extra_reviewed_at">Revue le</string>
+    <string name="tasks_extra_week_of">Semaine du</string>
+    <string name="tasks_extra_recurrence_end_date">Fin de la répétition</string>
+    <string name="tasks_extra_completion_based">Répétition après terminaison</string>
+    <string name="tasks_extra_in_view_at">Mise en vue le</string>
+    <string name="tasks_extra_created_at">Créée le</string>
+    <string name="tasks_extra_updated_at">Modifiée le</string>
+    <string name="tasks_extra_yes">Oui</string>
+    <string name="tasks_extra_no">Non</string>
+    <string name="tasks_focus_open">Minuteur de concentration</string>
+
+    <!-- Minuteur de concentration -->
+    <string name="tasks_focus_title">Concentration</string>
+    <string name="tasks_focus_phase_focus">Concentration</string>
+    <string name="tasks_focus_phase_short">Pause courte</string>
+    <string name="tasks_focus_phase_long">Pause longue</string>
+    <string name="tasks_focus_start">Démarrer</string>
+    <string name="tasks_focus_pause">Pause</string>
+    <string name="tasks_focus_resume">Reprendre</string>
+    <string name="tasks_focus_next">Phase suivante</string>
+    <string name="tasks_focus_reset">Remettre à zéro</string>
+    <string name="tasks_focus_local">Minuteur local à cet appareil, non synchronisé.</string>
+    <string name="tasks_focus_other_task">Le minuteur suit une autre tâche. Démarrer ici le lui retire.</string>
+    <plurals name="tasks_focus_sessions">
+        <item quantity="one">%d session terminée</item>
+        <item quantity="other">%d sessions terminées</item>
+    </plurals>
+
+    <!-- Notes -->
+    <string name="tasks_inbox_segment_ideas">Idées</string>
+    <string name="tasks_inbox_segment_notes">Notes</string>
+    <string name="tasks_notes_empty">Aucune note. Celles créées sur le web apparaissent ici.</string>
+    <string name="tasks_note_untitled">Sans titre</string>
+    <string name="tasks_note_empty_content">Cette note est vide.</string>
+    <string name="tasks_note_readonly">Lecture seule : modifiez cette note depuis le web.</string>
+    <string name="tasks_note_updated">Modifiée le %1$s</string>
+    <string name="tasks_note_back">Retour</string>
+</resources>

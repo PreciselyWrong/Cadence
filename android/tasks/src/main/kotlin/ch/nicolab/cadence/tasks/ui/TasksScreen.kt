@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -53,19 +54,23 @@ internal enum class TasksTab(@StringRes val label: Int) {
 /**
  * Écran Tâches : titre et date, onglets à pastilles, tirer pour synchroniser, ajout rapide.
  * [openTaskUid] ouvre directement la fiche d'une tâche (depuis le widget ou un rappel).
+ * [showProjectUid] ouvre directement le contenu d'un projet (depuis la recherche).
  * [routineStrip] est affiché dans l'onglet Aujourd'hui, sous les tâches du jour.
  */
 @Composable
 fun TasksScreen(
     modifier: Modifier = Modifier,
     openTaskUid: String? = null,
+    showProjectUid: String? = null,
+    onProjectShown: () -> Unit = {},
+    onOpenSearch: () -> Unit = {},
     onOpenSettings: () -> Unit,
     routineStrip: @Composable () -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
     val snackbar = remember { SnackbarHostState() }
     var tab by rememberSaveable { mutableStateOf(TasksTab.TODAY) }
-    var openProjectUid by rememberSaveable { mutableStateOf<String?>(null) }
+    var openProjectUid by rememberSaveable { mutableStateOf(showProjectUid) }
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
@@ -76,6 +81,12 @@ fun TasksScreen(
 
     LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) selectedTaskUid = openTaskUid
+    }
+    LaunchedEffect(showProjectUid) {
+        if (showProjectUid != null) {
+            openProjectUid = showProjectUid
+            onProjectShown()
+        }
     }
     BackHandler(enabled = openProjectUid != null) { openProjectUid = null }
 
@@ -100,6 +111,11 @@ fun TasksScreen(
                     subtitle = subtitle,
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
+                        RoundHeaderButton(
+                            icon = Icons.Outlined.Search,
+                            contentDescription = stringResource(R.string.tasks_search_open),
+                            onClick = onOpenSearch,
+                        )
                         RoundHeaderButton(
                             icon = Icons.Outlined.Settings,
                             contentDescription = stringResource(R.string.tasks_open_settings),

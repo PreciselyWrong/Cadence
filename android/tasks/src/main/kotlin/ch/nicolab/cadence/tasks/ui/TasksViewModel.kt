@@ -16,6 +16,7 @@ import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -137,10 +138,24 @@ internal class TasksViewModel(
     val inbox: StateFlow<List<InboxEntry>> = repository.observeInbox()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
+    val notes: StateFlow<List<NoteItem>> = repository.observeNotes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Chaque tâche, sous-tâches comprises ; ne sert qu'à la recherche. */
+    val everyTask: StateFlow<List<TaskItem>> = repository.observeAllTasks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
     val syncStatus: StateFlow<SyncStatus> = repository.observeSyncStatus()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), SyncStatus.Idle(null, 0))
 
     fun observeTask(uid: String): Flow<TaskItem?> = repository.observeTask(uid)
+
+    fun observeNote(uid: String): Flow<NoteItem?> = repository.observeNote(uid)
+
+    fun observeSubtasks(parentUid: String): Flow<List<TaskItem>> = repository.observeSubtasks(parentUid)
+
+    fun addSubtask(parentUid: String, name: String) =
+        launchAction { repository.createTask(TaskDraft(name = name, parentTaskUid = parentUid)) }
 
     fun observeProjectTasks(projectUid: String): Flow<List<TaskItem>> =
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
