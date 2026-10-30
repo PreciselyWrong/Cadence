@@ -3771,5 +3771,98 @@
     "note": "Notitie",
     "subtasks": "Subtaken",
     "loadError": "Deze taak kon niet worden geladen."
+  },
+  "review": {
+    "title": "Herzien",
+    "attention": "{{count}} om te bekijken",
+    "decidedThisWeek": "{{count}} deze week besloten",
+    "decide": "Beslissen",
+    "loadError": "Kan de herziening niet laden.",
+    "saveError": "Kan de beslissing niet opslaan.",
+    "loadMore": "Meer tonen",
+    "next": "Volgende: {{name}}",
+    "addedToday": "Aan vandaag toegevoegd",
+    "pushedCount": "{{count}} keer uitgesteld",
+    "lastPlanned": "laatst gepland {{date}}",
+    "reviewDue": "herziening nodig",
+    "reviewOn": "herzien op {{date}}",
+    "reviewOnLabel": "Herzien op",
+    "lastActivity": "ongewijzigd sinds {{date}}",
+    "nextTaskPlaceholder": "Volgende taak…",
+    "tabs": {
+      "undecided": "Te beslissen",
+      "pushed": "Uitgesteld",
+      "projects": "Vastgelopen projecten",
+      "later": "Later",
+      "stale": "Oud",
+      "week": "Deze week"
+    },
+    "empty": {
+      "undecided": "De inbox is leeg.",
+      "pushed": "Niets dat je steeds uitstelt.",
+      "projects": "Elk actief project heeft een volgende stap.",
+      "later": "Niets geparkeerd.",
+      "stale": "Geen oude taken."
+    },
+    "actions": {
+      "today": "Vandaag doen",
+      "shortSession": "Korte sessie vandaag (25 min)",
+      "split": "Opdelen in stappen",
+      "later": "Later",
+      "drop": "Opgeven",
+      "keep": "Zo laten",
+      "thisWeek": "Deze week",
+      "inView": "In beeld",
+      "reviewIn30": "Over 30 dagen herzien",
+      "reviewOn": "Herzien op…",
+      "keepLater": "Geparkeerd laten",
+      "toTask": "Er een taak van maken",
+      "toLater": "Parkeren voor later",
+      "discard": "Weggooien",
+      "openInbox": "Inbox openen",
+      "addNext": "Volgende taak toevoegen",
+      "openProject": "Project openen",
+      "pauseProject": "In de wacht zetten",
+      "removeWeek": "Niet deze week",
+      "outOfView": "Uit beeld"
+    },
+    "reasons": {
+      "no_next_action": "geen volgende taak",
+      "quiet": "al 30 dagen geen activiteit",
+      "pushed_tasks": "uitgestelde taken"
+    },
+    "week": {
+      "planned": "{{planned}} gepland",
+      "capacity": "{{planned}} gepland / {{capacity}} beschikbaar",
+      "setCapacity": "Beschikbare tijd instellen",
+      "capacityPrompt": "Beschikbare uren deze week",
+      "unestimated": "{{count}} zonder schatting",
+      "committed": "Deze week besloten",
+      "inView": "In beeld",
+      "emptyCommitted": "Nog niets besloten voor deze week.",
+      "emptyInView": "Niets in beeld. Zet een taak in beeld via het menu.",
+      "choose": "Help me kiezen"
+    }
+  },
+  "postponements": {
+    "summary": "{{total}} keer uitgesteld, {{count}} in de laatste 30 dagen",
+    "kinds": {
+      "postponed": "Uitgesteld",
+      "rescheduled": "Opnieuw gepland",
+      "time_shift": "Tijd gewijzigd",
+      "advanced": "Vervroegd",
+      "scheduled": "Datum ingesteld",
+      "unscheduled": "Datum verwijderd",
+      "automatic": "Automatisch gewijzigd",
+      "missed": "Gepland, niet gedaan"
+    }
+  },
+  "thisOrThat": {
+    "title": "Welke nu?",
+    "skipBoth": "Geen van beide",
+    "done": "Je volgende actie",
+    "none": "Niets meer om te vergelijken.",
+    "addToday": "Aan vandaag toevoegen",
+    "close": "Sluiten"
   }
 }

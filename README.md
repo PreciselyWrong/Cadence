@@ -67,6 +67,14 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Planning | — | Planning happens on Today: candidates on the left (round check completes, **+** or drag places), and on the right a **Planning** / **Calendar** switch (remembered per browser). The calendar toggle hides the panel. Drag the untimed tasks ("Today, no time yet") into order, saved with the plan; **Tomorrow** / **Next week** move a planned task's due date and take it off today's plan (Undo brings it back) |
 | Days | — | **‹** / **›** move between days and **Today** returns, kept in the URL as `?date=` [Docs](docs/20-daily-plan.md) |
 
+### Review and decisions
+
+| | Upstream | This fork |
+|---|---|---|
+| Decision funnel | Someday tag and defer-until only | **In view** (possibilities), **This week** (commitments) and **Later** (parked, with an optional **review date**) from the task pane or the row menu; none of them is a due date, none reaches Google. On Today, this week's tasks and tasks in view lead the suggestions. [Docs](docs/34-review.md) |
+| Postponements | Due date changes logged, never read | Due date changes are classified (pushed back, rescheduled, time changed, automatic) and unfinished plan days counted; a task pushed back 3 times in 30 days is listed, and the task pane shows its history. No badges, no score. [Docs](docs/34-review.md) |
+| Review | — | One page, `/review` (More menu): **To decide**, **Pushed back**, **Stalled projects**, **Later**, **Old**, **This week** with planned time against available time; one Decide menu per row; decisions saved one by one, so a review can stop and resume. **Help me choose** compares two tasks at a time, on Today and in the week. [Docs](docs/34-review.md) |
+
 ### Projects
 
 | | Upstream | This fork |
@@ -97,6 +105,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - Manual order of lists: the existing `user_task_orders` table gains a `tag:<id>` scope next to `all` and `project:<id>` (no new column); `GET` and `PUT /api/tasks/order` accept `scope=tag&tag_uid=`.
 - New column: `views.project_uid` (migration `20261029170000-add-project-uid-to-views`); the view search reads it through the existing `project_uid` scope.
 - New `ui_settings` key: `viewTypes` (a map of `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks` to `list`, `board` or `calendar`; at most 500 entries, sanitised in `updateUiSettings`).
+- Review: new columns `tasks.in_view_at`, `tasks.week_of`, `tasks.review_on`, `tasks.reviewed_at`, `projects.reviewed_at` (migration `20261030110000-add-review-fields-to-tasks-and-projects`); new endpoints `GET /api/review`, `GET /api/review/:category`, `GET /api/review/week`, `PUT /api/review/week/capacity`, `GET /api/task/:uid/postponements`, `POST /api/project/:uid/reviewed`; tasks accept `in_view`, `week_of`, `review_on`, `later` and `reviewed`; new `ui_settings.planning.weekCapacityMinutes`; rail item `review`. Due date events now compare stored values (a repeated save logs nothing) and record their source (`web`, `api`, `import`). The `review.*`, `postponements.*` and `thisOrThat.*` strings are agent-written and unreviewed in every language.
 - New tables / columns: `google_accounts`, `google_calendars`, `google_events`, `google_tasklists`, `google_task_links`, `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
 - New endpoints: `/api/google*` (connect, settings, sync, calendars, events), `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences; `GET /api/tasks/smart-counts` returns the Today, Tomorrow and Next 7 days counts, and `GET /api/tasks?type=tomorrow` lists tomorrow.
 - Minimal sidebar: `users.sidebar_settings` holds `smartLists` (show, count badge, order), `rail` (`rail` / `more` / `hidden` per item, in order) and `sectionBadges`; sanitized in `backend/modules/users/validation.js` on `PUT /api/profile/sidebar-settings`, defaults filled in by `frontend/utils/minimalSidebar.ts`.
@@ -105,7 +114,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
 - All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language. So are `tasks.addTaskInline` (the "+ Add task" field) and the `tasks.contextMenu.*` strings of the row menu, the `profile.taskRow*` strings (row chip names), and the `viewType.*` strings (List, Board, Calendar) and the `newView.*` strings. The Google sync strings are so far only in French, German, Spanish and Italian (English elsewhere).
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and [docs/fork/FORK.md](docs/fork/FORK.md).
-- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md), [Google sync](docs/33-google-sync.md).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md), [Google sync](docs/33-google-sync.md), [Review](docs/34-review.md).
 
 ---
 

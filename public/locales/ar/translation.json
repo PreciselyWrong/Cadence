@@ -3807,5 +3807,98 @@
     "note": "ملاحظة",
     "subtasks": "المهام الفرعية",
     "loadError": "تعذّر تحميل هذه المهمة."
+  },
+  "review": {
+    "title": "المراجعة",
+    "attention": "{{count}} للنظر فيها",
+    "decidedThisWeek": "{{count}} تقرّر هذا الأسبوع",
+    "decide": "قرّر",
+    "loadError": "تعذّر تحميل المراجعة.",
+    "saveError": "تعذّر حفظ القرار.",
+    "loadMore": "عرض المزيد",
+    "next": "التالي: {{name}}",
+    "addedToday": "أضيفت إلى اليوم",
+    "pushedCount": "أُجّلت {{count}} مرات",
+    "lastPlanned": "آخر موعد مخطط {{date}}",
+    "reviewDue": "حان وقت المراجعة",
+    "reviewOn": "مراجعة في {{date}}",
+    "reviewOnLabel": "المراجعة في",
+    "lastActivity": "بلا تغيير منذ {{date}}",
+    "nextTaskPlaceholder": "المهمة التالية…",
+    "tabs": {
+      "undecided": "للقرار",
+      "pushed": "المؤجّلة",
+      "projects": "مشاريع متوقفة",
+      "later": "لاحقًا",
+      "stale": "قديمة",
+      "week": "هذا الأسبوع"
+    },
+    "empty": {
+      "undecided": "صندوق الوارد فارغ.",
+      "pushed": "لا شيء تؤجّله باستمرار.",
+      "projects": "لكل مشروع نشط خطوة تالية.",
+      "later": "لا شيء مركون.",
+      "stale": "لا مهام قديمة."
+    },
+    "actions": {
+      "today": "افعلها اليوم",
+      "shortSession": "جلسة قصيرة اليوم (25 دقيقة)",
+      "split": "قسّمها إلى خطوات",
+      "later": "لاحقًا",
+      "drop": "تخلَّ عنها",
+      "keep": "اتركها كما هي",
+      "thisWeek": "هذا الأسبوع",
+      "inView": "في الأفق",
+      "reviewIn30": "راجع بعد 30 يومًا",
+      "reviewOn": "راجع في…",
+      "keepLater": "أبقِها مركونة",
+      "toTask": "اجعلها مهمة",
+      "toLater": "اركنها لوقت لاحق",
+      "discard": "تجاهل",
+      "openInbox": "افتح صندوق الوارد",
+      "addNext": "أضف المهمة التالية",
+      "openProject": "افتح المشروع",
+      "pauseProject": "ضعه قيد الانتظار",
+      "removeWeek": "ليس هذا الأسبوع",
+      "outOfView": "أخرجها من الأفق"
+    },
+    "reasons": {
+      "no_next_action": "لا مهمة تالية",
+      "quiet": "لا نشاط منذ 30 يومًا",
+      "pushed_tasks": "مهام مؤجّلة"
+    },
+    "week": {
+      "planned": "{{planned}} مخطط",
+      "capacity": "{{planned}} مخطط / {{capacity}} متاح",
+      "setCapacity": "حدّد الوقت المتاح",
+      "capacityPrompt": "الساعات المتاحة هذا الأسبوع",
+      "unestimated": "{{count}} بلا تقدير",
+      "committed": "تقرّر هذا الأسبوع",
+      "inView": "في الأفق",
+      "emptyCommitted": "لم يتقرر شيء لهذا الأسبوع بعد.",
+      "emptyInView": "لا شيء في الأفق. ضع مهمة في الأفق من قائمتها.",
+      "choose": "ساعدني على الاختيار"
+    }
+  },
+  "postponements": {
+    "summary": "أُجّلت {{total}} مرات، منها {{count}} في آخر 30 يومًا",
+    "kinds": {
+      "postponed": "أُجّلت",
+      "rescheduled": "أُعيدت جدولتها",
+      "time_shift": "تغيّر الوقت",
+      "advanced": "قُدّمت",
+      "scheduled": "حُدّد التاريخ",
+      "unscheduled": "أُزيل التاريخ",
+      "automatic": "تغيّرت تلقائيًا",
+      "missed": "مخطط لها، لم تُنجز"
+    }
+  },
+  "thisOrThat": {
+    "title": "أيّها الآن؟",
+    "skipBoth": "ولا واحدة",
+    "done": "إجراؤك التالي",
+    "none": "لم يبقَ شيء للمقارنة.",
+    "addToday": "أضف إلى اليوم",
+    "close": "إغلاق"
   }
 }

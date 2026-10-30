@@ -3765,5 +3765,98 @@
     "note": "Nota",
     "subtasks": "Subtareas",
     "loadError": "No se pudo cargar esta tarea."
+  },
+  "review": {
+    "title": "Revisar",
+    "attention": "{{count}} por revisar",
+    "decidedThisWeek": "{{count}} decididas esta semana",
+    "decide": "Decidir",
+    "loadError": "No se pudo cargar la revisión.",
+    "saveError": "No se pudo guardar la decisión.",
+    "loadMore": "Mostrar más",
+    "next": "Siguiente: {{name}}",
+    "addedToday": "Añadida a hoy",
+    "pushedCount": "aplazada {{count}} veces",
+    "lastPlanned": "última fecha prevista {{date}}",
+    "reviewDue": "revisión pendiente",
+    "reviewOn": "revisar el {{date}}",
+    "reviewOnLabel": "Revisar el",
+    "lastActivity": "sin cambios desde {{date}}",
+    "nextTaskPlaceholder": "Siguiente tarea…",
+    "tabs": {
+      "undecided": "Por decidir",
+      "pushed": "Aplazadas",
+      "projects": "Proyectos estancados",
+      "later": "Más tarde",
+      "stale": "Antiguas",
+      "week": "Esta semana"
+    },
+    "empty": {
+      "undecided": "La bandeja de entrada está vacía.",
+      "pushed": "Nada que aplaces una y otra vez.",
+      "projects": "Cada proyecto activo tiene un siguiente paso.",
+      "later": "Nada aparcado.",
+      "stale": "No hay tareas antiguas."
+    },
+    "actions": {
+      "today": "Hacer hoy",
+      "shortSession": "Sesión corta hoy (25 min)",
+      "split": "Dividir en pasos",
+      "later": "Más tarde",
+      "drop": "Abandonar",
+      "keep": "Dejar como está",
+      "thisWeek": "Esta semana",
+      "inView": "A la vista",
+      "reviewIn30": "Revisar en 30 días",
+      "reviewOn": "Revisar el…",
+      "keepLater": "Mantener aparcada",
+      "toTask": "Convertir en tarea",
+      "toLater": "Aparcar para más tarde",
+      "discard": "Descartar",
+      "openInbox": "Abrir la bandeja de entrada",
+      "addNext": "Añadir la siguiente tarea",
+      "openProject": "Abrir el proyecto",
+      "pauseProject": "Poner en espera",
+      "removeWeek": "Esta semana no",
+      "outOfView": "Quitar de la vista"
+    },
+    "reasons": {
+      "no_next_action": "sin siguiente tarea",
+      "quiet": "sin actividad en 30 días",
+      "pushed_tasks": "tareas aplazadas"
+    },
+    "week": {
+      "planned": "{{planned}} previstas",
+      "capacity": "{{planned}} previstas / {{capacity}} disponibles",
+      "setCapacity": "Indicar el tiempo disponible",
+      "capacityPrompt": "Horas disponibles esta semana",
+      "unestimated": "{{count}} sin estimación",
+      "committed": "Decididas esta semana",
+      "inView": "A la vista",
+      "emptyCommitted": "Aún no hay nada decidido para esta semana.",
+      "emptyInView": "Nada a la vista. Pon una tarea a la vista desde su menú.",
+      "choose": "Ayúdame a elegir"
+    }
+  },
+  "postponements": {
+    "summary": "Aplazada {{total}} veces, {{count}} en los últimos 30 días",
+    "kinds": {
+      "postponed": "Aplazada",
+      "rescheduled": "Reprogramada",
+      "time_shift": "Hora cambiada",
+      "advanced": "Adelantada",
+      "scheduled": "Fecha añadida",
+      "unscheduled": "Fecha quitada",
+      "automatic": "Cambiada automáticamente",
+      "missed": "Prevista, no hecha"
+    }
+  },
+  "thisOrThat": {
+    "title": "¿Cuál ahora?",
+    "skipBoth": "Ninguna",
+    "done": "Tu siguiente acción",
+    "none": "No queda nada que comparar.",
+    "addToday": "Añadir a hoy",
+    "close": "Cerrar"
   }
 }

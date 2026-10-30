@@ -3767,5 +3767,98 @@
     "note": "Ghi chú",
     "subtasks": "Công việc con",
     "loadError": "Không thể tải công việc này."
+  },
+  "review": {
+    "title": "Xem lại",
+    "attention": "{{count}} cần xem",
+    "decidedThisWeek": "{{count}} đã quyết tuần này",
+    "decide": "Quyết định",
+    "loadError": "Không thể tải phần xem lại.",
+    "saveError": "Không thể lưu quyết định.",
+    "loadMore": "Hiện thêm",
+    "next": "Tiếp: {{name}}",
+    "addedToday": "Đã thêm vào hôm nay",
+    "pushedCount": "đã hoãn {{count}} lần",
+    "lastPlanned": "lần cuối dự định {{date}}",
+    "reviewDue": "đến hạn xem lại",
+    "reviewOn": "xem lại ngày {{date}}",
+    "reviewOnLabel": "Xem lại vào",
+    "lastActivity": "không đổi từ {{date}}",
+    "nextTaskPlaceholder": "Việc tiếp theo…",
+    "tabs": {
+      "undecided": "Cần quyết định",
+      "pushed": "Bị hoãn",
+      "projects": "Dự án đình trệ",
+      "later": "Để sau",
+      "stale": "Cũ",
+      "week": "Tuần này"
+    },
+    "empty": {
+      "undecided": "Hộp thư đến trống.",
+      "pushed": "Không có gì bạn cứ hoãn mãi.",
+      "projects": "Mọi dự án đang hoạt động đều có bước tiếp theo.",
+      "later": "Không có gì đang gác lại.",
+      "stale": "Không có việc cũ."
+    },
+    "actions": {
+      "today": "Làm hôm nay",
+      "shortSession": "Phiên ngắn hôm nay (25 phút)",
+      "split": "Chia thành bước",
+      "later": "Để sau",
+      "drop": "Bỏ",
+      "keep": "Giữ nguyên",
+      "thisWeek": "Tuần này",
+      "inView": "Trong tầm mắt",
+      "reviewIn30": "Xem lại sau 30 ngày",
+      "reviewOn": "Xem lại vào…",
+      "keepLater": "Tiếp tục gác lại",
+      "toTask": "Tạo thành việc",
+      "toLater": "Gác lại để sau",
+      "discard": "Loại bỏ",
+      "openInbox": "Mở hộp thư đến",
+      "addNext": "Thêm việc tiếp theo",
+      "openProject": "Mở dự án",
+      "pauseProject": "Tạm chờ",
+      "removeWeek": "Không phải tuần này",
+      "outOfView": "Bỏ khỏi tầm mắt"
+    },
+    "reasons": {
+      "no_next_action": "không có việc tiếp theo",
+      "quiet": "không hoạt động 30 ngày",
+      "pushed_tasks": "việc bị hoãn"
+    },
+    "week": {
+      "planned": "{{planned}} dự định",
+      "capacity": "{{planned}} dự định / {{capacity}} khả dụng",
+      "setCapacity": "Đặt thời gian khả dụng",
+      "capacityPrompt": "Số giờ khả dụng tuần này",
+      "unestimated": "{{count}} chưa ước lượng",
+      "committed": "Đã quyết tuần này",
+      "inView": "Trong tầm mắt",
+      "emptyCommitted": "Chưa quyết gì cho tuần này.",
+      "emptyInView": "Không có gì trong tầm mắt. Đưa một việc vào tầm mắt từ menu của nó.",
+      "choose": "Giúp tôi chọn"
+    }
+  },
+  "postponements": {
+    "summary": "Đã hoãn {{total}} lần, {{count}} trong 30 ngày qua",
+    "kinds": {
+      "postponed": "Đã hoãn",
+      "rescheduled": "Đã dời lịch",
+      "time_shift": "Đổi giờ",
+      "advanced": "Dời sớm hơn",
+      "scheduled": "Đã đặt ngày",
+      "unscheduled": "Đã bỏ ngày",
+      "automatic": "Tự động thay đổi",
+      "missed": "Đã dự định, chưa làm"
+    }
+  },
+  "thisOrThat": {
+    "title": "Cái nào bây giờ?",
+    "skipBoth": "Không cái nào",
+    "done": "Hành động tiếp theo của bạn",
+    "none": "Không còn gì để so sánh.",
+    "addToday": "Thêm vào hôm nay",
+    "close": "Đóng"
   }
 }

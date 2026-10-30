@@ -3789,5 +3789,98 @@
     "note": "Notatka",
     "subtasks": "Podzadania",
     "loadError": "Nie udało się wczytać tego zadania."
+  },
+  "review": {
+    "title": "Przegląd",
+    "attention": "{{count}} do przejrzenia",
+    "decidedThisWeek": "{{count}} zdecydowane w tym tygodniu",
+    "decide": "Zdecyduj",
+    "loadError": "Nie udało się wczytać przeglądu.",
+    "saveError": "Nie udało się zapisać decyzji.",
+    "loadMore": "Pokaż więcej",
+    "next": "Dalej: {{name}}",
+    "addedToday": "Dodano do dzisiaj",
+    "pushedCount": "odłożone {{count}} razy",
+    "lastPlanned": "ostatnio zaplanowane {{date}}",
+    "reviewDue": "czas na przegląd",
+    "reviewOn": "przegląd {{date}}",
+    "reviewOnLabel": "Przejrzyj dnia",
+    "lastActivity": "bez zmian od {{date}}",
+    "nextTaskPlaceholder": "Następne zadanie…",
+    "tabs": {
+      "undecided": "Do decyzji",
+      "pushed": "Odkładane",
+      "projects": "Stojące projekty",
+      "later": "Później",
+      "stale": "Stare",
+      "week": "Ten tydzień"
+    },
+    "empty": {
+      "undecided": "Skrzynka odbiorcza jest pusta.",
+      "pushed": "Nic, co ciągle odkładasz.",
+      "projects": "Każdy aktywny projekt ma następny krok.",
+      "later": "Nic odłożonego.",
+      "stale": "Brak starych zadań."
+    },
+    "actions": {
+      "today": "Zrób dzisiaj",
+      "shortSession": "Krótka sesja dzisiaj (25 min)",
+      "split": "Podziel na kroki",
+      "later": "Później",
+      "drop": "Porzuć",
+      "keep": "Zostaw bez zmian",
+      "thisWeek": "Ten tydzień",
+      "inView": "Na widoku",
+      "reviewIn30": "Przejrzyj za 30 dni",
+      "reviewOn": "Przejrzyj dnia…",
+      "keepLater": "Zostaw odłożone",
+      "toTask": "Utwórz zadanie",
+      "toLater": "Odłóż na później",
+      "discard": "Odrzuć",
+      "openInbox": "Otwórz skrzynkę odbiorczą",
+      "addNext": "Dodaj następne zadanie",
+      "openProject": "Otwórz projekt",
+      "pauseProject": "Wstrzymaj",
+      "removeWeek": "Nie w tym tygodniu",
+      "outOfView": "Usuń z widoku"
+    },
+    "reasons": {
+      "no_next_action": "brak następnego zadania",
+      "quiet": "brak aktywności od 30 dni",
+      "pushed_tasks": "odkładane zadania"
+    },
+    "week": {
+      "planned": "{{planned}} zaplanowane",
+      "capacity": "{{planned}} zaplanowane / {{capacity}} dostępne",
+      "setCapacity": "Ustaw dostępny czas",
+      "capacityPrompt": "Dostępne godziny w tym tygodniu",
+      "unestimated": "{{count}} bez szacunku",
+      "committed": "Zdecydowane w tym tygodniu",
+      "inView": "Na widoku",
+      "emptyCommitted": "Nic jeszcze nie zdecydowano na ten tydzień.",
+      "emptyInView": "Nic na widoku. Dodaj zadanie do widoku z jego menu.",
+      "choose": "Pomóż mi wybrać"
+    }
+  },
+  "postponements": {
+    "summary": "Odłożone {{total}} razy, {{count}} w ostatnich 30 dniach",
+    "kinds": {
+      "postponed": "Odłożone",
+      "rescheduled": "Przełożone",
+      "time_shift": "Zmieniono godzinę",
+      "advanced": "Przyspieszone",
+      "scheduled": "Ustawiono datę",
+      "unscheduled": "Usunięto datę",
+      "automatic": "Zmienione automatycznie",
+      "missed": "Zaplanowane, niewykonane"
+    }
+  },
+  "thisOrThat": {
+    "title": "Które teraz?",
+    "skipBoth": "Żadne",
+    "done": "Twoje następne działanie",
+    "none": "Nie ma już czego porównywać.",
+    "addToday": "Dodaj do dzisiaj",
+    "close": "Zamknij"
   }
 }

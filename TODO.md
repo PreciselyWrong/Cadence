@@ -7,6 +7,9 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 - Synchro Google (module `google-sync`, fusionné dans `main`) : créer le client OAuth (Calendar + Tasks API, app « En production »), définir `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, puis 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min. Voir `docs/33-google-sync.md`.
 - Fixtures dorées des habitudes : extraire des tests `domain/` de Cadence des cas JSON (versions d'objectif et de planning + saisies + pauses → statut de chaque période, séries, statistiques). Vérif : les tests Kotlin de Cadence passent sur ces fixtures.
 
+- Revue et entonnoir (`docs/34-review.md`, branche `claude/jolly-brown-jjdogm`) : livré En vue / Cette semaine / Plus tard + date de réexamen, reports classés depuis `task_events` et les plans du jour, page `/review` (6 étapes), capacité hebdo, This or That. Vérif à faire en usage réel : 2 semaines, puis ajuster le seuil (3 en 30 j) et la règle « jour arrivé ou lendemain » si des faux positifs apparaissent.
+  - Reste : journaliser `move-occurrence` (report d'une occurrence récurrente) et les modifications d'échéance reçues par `/api/v1/sync` depuis Android (source `device`, à compter comme volontaires) ; la rangée de décision n'existe qu'en Minimal (Dense : menu de la page Revue seulement) ; e2e Playwright du parcours de revue.
+
 ## Next
 
 - Refonte TickTick, étape 4 : comparer avec TickTick 8.0.20 lancé en local, écran par écran, lister et corriger les écarts du calendrier (les étapes 1 à 3 et 5 sont dans `main`). À trancher : réordonner les tâches sans heure et retirer du plan en déplaçant la date depuis l'agenda (retirés de l'ancien Aujourd'hui).

@@ -3771,5 +3771,98 @@
     "note": "Anteckning",
     "subtasks": "Deluppgifter",
     "loadError": "Den här uppgiften kunde inte laddas."
+  },
+  "review": {
+    "title": "Genomgång",
+    "attention": "{{count}} att titta på",
+    "decidedThisWeek": "{{count}} beslutade denna vecka",
+    "decide": "Besluta",
+    "loadError": "Kunde inte läsa in genomgången.",
+    "saveError": "Kunde inte spara beslutet.",
+    "loadMore": "Visa fler",
+    "next": "Nästa: {{name}}",
+    "addedToday": "Tillagd i dag",
+    "pushedCount": "uppskjuten {{count}} gånger",
+    "lastPlanned": "senast planerad {{date}}",
+    "reviewDue": "genomgång förfallen",
+    "reviewOn": "genomgång {{date}}",
+    "reviewOnLabel": "Gå igenom den",
+    "lastActivity": "oförändrad sedan {{date}}",
+    "nextTaskPlaceholder": "Nästa uppgift…",
+    "tabs": {
+      "undecided": "Att besluta",
+      "pushed": "Uppskjutna",
+      "projects": "Stillastående projekt",
+      "later": "Senare",
+      "stale": "Gamla",
+      "week": "Denna vecka"
+    },
+    "empty": {
+      "undecided": "Inkorgen är tom.",
+      "pushed": "Inget du skjuter upp gång på gång.",
+      "projects": "Varje aktivt projekt har ett nästa steg.",
+      "later": "Inget parkerat.",
+      "stale": "Inga gamla uppgifter."
+    },
+    "actions": {
+      "today": "Gör i dag",
+      "shortSession": "Kort pass i dag (25 min)",
+      "split": "Dela upp i steg",
+      "later": "Senare",
+      "drop": "Ge upp",
+      "keep": "Behåll som den är",
+      "thisWeek": "Denna vecka",
+      "inView": "I sikte",
+      "reviewIn30": "Gå igenom om 30 dagar",
+      "reviewOn": "Gå igenom den…",
+      "keepLater": "Behåll parkerad",
+      "toTask": "Gör en uppgift",
+      "toLater": "Parkera till senare",
+      "discard": "Kasta",
+      "openInbox": "Öppna inkorgen",
+      "addNext": "Lägg till nästa uppgift",
+      "openProject": "Öppna projektet",
+      "pauseProject": "Sätt på vänt",
+      "removeWeek": "Inte denna vecka",
+      "outOfView": "Ur sikte"
+    },
+    "reasons": {
+      "no_next_action": "ingen nästa uppgift",
+      "quiet": "ingen aktivitet på 30 dagar",
+      "pushed_tasks": "uppskjutna uppgifter"
+    },
+    "week": {
+      "planned": "{{planned}} planerat",
+      "capacity": "{{planned}} planerat / {{capacity}} tillgängligt",
+      "setCapacity": "Ange tillgänglig tid",
+      "capacityPrompt": "Tillgängliga timmar denna vecka",
+      "unestimated": "{{count}} utan uppskattning",
+      "committed": "Beslutat denna vecka",
+      "inView": "I sikte",
+      "emptyCommitted": "Inget beslutat för denna vecka än.",
+      "emptyInView": "Inget i sikte. Sätt en uppgift i sikte från dess meny.",
+      "choose": "Hjälp mig välja"
+    }
+  },
+  "postponements": {
+    "summary": "Uppskjuten {{total}} gånger, {{count}} de senaste 30 dagarna",
+    "kinds": {
+      "postponed": "Uppskjuten",
+      "rescheduled": "Omplanerad",
+      "time_shift": "Tid ändrad",
+      "advanced": "Tidigarelagd",
+      "scheduled": "Datum satt",
+      "unscheduled": "Datum borttaget",
+      "automatic": "Ändrad automatiskt",
+      "missed": "Planerad, inte gjord"
+    }
+  },
+  "thisOrThat": {
+    "title": "Vilken nu?",
+    "skipBoth": "Ingen av dem",
+    "done": "Din nästa åtgärd",
+    "none": "Inget kvar att jämföra.",
+    "addToday": "Lägg till i dag",
+    "close": "Stäng"
   }
 }

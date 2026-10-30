@@ -3778,5 +3778,98 @@
     "note": "Nota",
     "subtasks": "Sottoattività",
     "loadError": "Impossibile caricare questa attività."
+  },
+  "review": {
+    "title": "Revisione",
+    "attention": "{{count}} da esaminare",
+    "decidedThisWeek": "{{count}} decise questa settimana",
+    "decide": "Decidi",
+    "loadError": "Impossibile caricare la revisione.",
+    "saveError": "Impossibile salvare la decisione.",
+    "loadMore": "Mostra altro",
+    "next": "Avanti: {{name}}",
+    "addedToday": "Aggiunta a oggi",
+    "pushedCount": "rimandata {{count}} volte",
+    "lastPlanned": "ultima data prevista {{date}}",
+    "reviewDue": "revisione scaduta",
+    "reviewOn": "revisione il {{date}}",
+    "reviewOnLabel": "Rivedi il",
+    "lastActivity": "invariata dal {{date}}",
+    "nextTaskPlaceholder": "Prossima attività…",
+    "tabs": {
+      "undecided": "Da decidere",
+      "pushed": "Rimandate",
+      "projects": "Progetti fermi",
+      "later": "Più tardi",
+      "stale": "Vecchie",
+      "week": "Questa settimana"
+    },
+    "empty": {
+      "undecided": "La posta in arrivo è vuota.",
+      "pushed": "Niente che continui a rimandare.",
+      "projects": "Ogni progetto attivo ha un prossimo passo.",
+      "later": "Niente in sospeso.",
+      "stale": "Nessuna attività vecchia."
+    },
+    "actions": {
+      "today": "Fai oggi",
+      "shortSession": "Sessione breve oggi (25 min)",
+      "split": "Dividi in passi",
+      "later": "Più tardi",
+      "drop": "Abbandona",
+      "keep": "Lascia così",
+      "thisWeek": "Questa settimana",
+      "inView": "In vista",
+      "reviewIn30": "Rivedi tra 30 giorni",
+      "reviewOn": "Rivedi il…",
+      "keepLater": "Lascia in sospeso",
+      "toTask": "Crea un’attività",
+      "toLater": "Metti da parte",
+      "discard": "Scarta",
+      "openInbox": "Apri la posta in arrivo",
+      "addNext": "Aggiungi la prossima attività",
+      "openProject": "Apri il progetto",
+      "pauseProject": "Metti in attesa",
+      "removeWeek": "Non questa settimana",
+      "outOfView": "Togli dalla vista"
+    },
+    "reasons": {
+      "no_next_action": "nessuna prossima attività",
+      "quiet": "nessuna attività da 30 giorni",
+      "pushed_tasks": "attività rimandate"
+    },
+    "week": {
+      "planned": "{{planned}} previste",
+      "capacity": "{{planned}} previste / {{capacity}} disponibili",
+      "setCapacity": "Imposta il tempo disponibile",
+      "capacityPrompt": "Ore disponibili questa settimana",
+      "unestimated": "{{count}} senza stima",
+      "committed": "Decise questa settimana",
+      "inView": "In vista",
+      "emptyCommitted": "Ancora niente deciso per questa settimana.",
+      "emptyInView": "Niente in vista. Metti un’attività in vista dal suo menu.",
+      "choose": "Aiutami a scegliere"
+    }
+  },
+  "postponements": {
+    "summary": "Rimandata {{total}} volte, {{count}} negli ultimi 30 giorni",
+    "kinds": {
+      "postponed": "Rimandata",
+      "rescheduled": "Ripianificata",
+      "time_shift": "Ora cambiata",
+      "advanced": "Anticipata",
+      "scheduled": "Data aggiunta",
+      "unscheduled": "Data rimossa",
+      "automatic": "Cambiata automaticamente",
+      "missed": "Prevista, non fatta"
+    }
+  },
+  "thisOrThat": {
+    "title": "Quale adesso?",
+    "skipBoth": "Nessuna delle due",
+    "done": "La tua prossima azione",
+    "none": "Niente altro da confrontare.",
+    "addToday": "Aggiungi a oggi",
+    "close": "Chiudi"
   }
 }

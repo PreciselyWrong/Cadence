@@ -3767,5 +3767,98 @@
     "note": "Catatan",
     "subtasks": "Subtugas",
     "loadError": "Tugas ini tidak dapat dimuat."
+  },
+  "review": {
+    "title": "Tinjauan",
+    "attention": "{{count}} untuk ditinjau",
+    "decidedThisWeek": "{{count}} diputuskan minggu ini",
+    "decide": "Putuskan",
+    "loadError": "Tidak dapat memuat tinjauan.",
+    "saveError": "Tidak dapat menyimpan keputusan.",
+    "loadMore": "Tampilkan lebih banyak",
+    "next": "Berikutnya: {{name}}",
+    "addedToday": "Ditambahkan ke hari ini",
+    "pushedCount": "ditunda {{count}} kali",
+    "lastPlanned": "terakhir direncanakan {{date}}",
+    "reviewDue": "waktunya ditinjau",
+    "reviewOn": "tinjau pada {{date}}",
+    "reviewOnLabel": "Tinjau pada",
+    "lastActivity": "tidak berubah sejak {{date}}",
+    "nextTaskPlaceholder": "Tugas berikutnya…",
+    "tabs": {
+      "undecided": "Perlu diputuskan",
+      "pushed": "Ditunda",
+      "projects": "Proyek macet",
+      "later": "Nanti",
+      "stale": "Lama",
+      "week": "Minggu ini"
+    },
+    "empty": {
+      "undecided": "Kotak masuk kosong.",
+      "pushed": "Tidak ada yang terus Anda tunda.",
+      "projects": "Setiap proyek aktif punya langkah berikutnya.",
+      "later": "Tidak ada yang diparkir.",
+      "stale": "Tidak ada tugas lama."
+    },
+    "actions": {
+      "today": "Kerjakan hari ini",
+      "shortSession": "Sesi singkat hari ini (25 mnt)",
+      "split": "Pecah menjadi langkah",
+      "later": "Nanti",
+      "drop": "Tinggalkan",
+      "keep": "Biarkan apa adanya",
+      "thisWeek": "Minggu ini",
+      "inView": "Dalam pandangan",
+      "reviewIn30": "Tinjau dalam 30 hari",
+      "reviewOn": "Tinjau pada…",
+      "keepLater": "Tetap diparkir",
+      "toTask": "Jadikan tugas",
+      "toLater": "Parkir untuk nanti",
+      "discard": "Buang",
+      "openInbox": "Buka kotak masuk",
+      "addNext": "Tambah tugas berikutnya",
+      "openProject": "Buka proyek",
+      "pauseProject": "Tunda sementara",
+      "removeWeek": "Bukan minggu ini",
+      "outOfView": "Keluarkan dari pandangan"
+    },
+    "reasons": {
+      "no_next_action": "tidak ada tugas berikutnya",
+      "quiet": "tidak ada aktivitas selama 30 hari",
+      "pushed_tasks": "tugas yang ditunda"
+    },
+    "week": {
+      "planned": "{{planned}} direncanakan",
+      "capacity": "{{planned}} direncanakan / {{capacity}} tersedia",
+      "setCapacity": "Atur waktu tersedia",
+      "capacityPrompt": "Jam tersedia minggu ini",
+      "unestimated": "{{count}} tanpa perkiraan",
+      "committed": "Diputuskan minggu ini",
+      "inView": "Dalam pandangan",
+      "emptyCommitted": "Belum ada yang diputuskan untuk minggu ini.",
+      "emptyInView": "Tidak ada dalam pandangan. Masukkan tugas ke pandangan dari menunya.",
+      "choose": "Bantu saya memilih"
+    }
+  },
+  "postponements": {
+    "summary": "Ditunda {{total}} kali, {{count}} dalam 30 hari terakhir",
+    "kinds": {
+      "postponed": "Ditunda",
+      "rescheduled": "Dijadwalkan ulang",
+      "time_shift": "Waktu diubah",
+      "advanced": "Dimajukan",
+      "scheduled": "Tanggal ditetapkan",
+      "unscheduled": "Tanggal dihapus",
+      "automatic": "Diubah otomatis",
+      "missed": "Direncanakan, tidak dikerjakan"
+    }
+  },
+  "thisOrThat": {
+    "title": "Yang mana sekarang?",
+    "skipBoth": "Tidak keduanya",
+    "done": "Tindakan Anda berikutnya",
+    "none": "Tidak ada lagi yang dibandingkan.",
+    "addToday": "Tambahkan ke hari ini",
+    "close": "Tutup"
   }
 }

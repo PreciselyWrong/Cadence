@@ -3789,5 +3789,98 @@
     "note": "Opomba",
     "subtasks": "Podnaloge",
     "loadError": "Te naloge ni bilo mogoče naložiti."
+  },
+  "review": {
+    "title": "Pregled",
+    "attention": "{{count}} za ogled",
+    "decidedThisWeek": "{{count}} odločenih ta teden",
+    "decide": "Odloči",
+    "loadError": "Pregleda ni bilo mogoče naložiti.",
+    "saveError": "Odločitve ni bilo mogoče shraniti.",
+    "loadMore": "Pokaži več",
+    "next": "Naprej: {{name}}",
+    "addedToday": "Dodano za danes",
+    "pushedCount": "odloženo {{count}}-krat",
+    "lastPlanned": "nazadnje načrtovano {{date}}",
+    "reviewDue": "pregled zapadel",
+    "reviewOn": "pregled {{date}}",
+    "reviewOnLabel": "Preglej dne",
+    "lastActivity": "nespremenjeno od {{date}}",
+    "nextTaskPlaceholder": "Naslednje opravilo…",
+    "tabs": {
+      "undecided": "Za odločitev",
+      "pushed": "Odložena",
+      "projects": "Zastali projekti",
+      "later": "Pozneje",
+      "stale": "Stara",
+      "week": "Ta teden"
+    },
+    "empty": {
+      "undecided": "Prejeto je prazno.",
+      "pushed": "Nič, kar nenehno odlagate.",
+      "projects": "Vsak aktiven projekt ima naslednji korak.",
+      "later": "Nič parkiranega.",
+      "stale": "Ni starih opravil."
+    },
+    "actions": {
+      "today": "Naredi danes",
+      "shortSession": "Kratka seja danes (25 min)",
+      "split": "Razdeli na korake",
+      "later": "Pozneje",
+      "drop": "Opusti",
+      "keep": "Pusti, kot je",
+      "thisWeek": "Ta teden",
+      "inView": "Na očeh",
+      "reviewIn30": "Preglej čez 30 dni",
+      "reviewOn": "Preglej dne…",
+      "keepLater": "Pusti parkirano",
+      "toTask": "Ustvari opravilo",
+      "toLater": "Parkiraj za pozneje",
+      "discard": "Zavrzi",
+      "openInbox": "Odpri Prejeto",
+      "addNext": "Dodaj naslednje opravilo",
+      "openProject": "Odpri projekt",
+      "pauseProject": "Postavi na čakanje",
+      "removeWeek": "Ne ta teden",
+      "outOfView": "Umakni z oči"
+    },
+    "reasons": {
+      "no_next_action": "ni naslednjega opravila",
+      "quiet": "brez dejavnosti 30 dni",
+      "pushed_tasks": "odložena opravila"
+    },
+    "week": {
+      "planned": "{{planned}} načrtovano",
+      "capacity": "{{planned}} načrtovano / {{capacity}} na voljo",
+      "setCapacity": "Nastavi razpoložljiv čas",
+      "capacityPrompt": "Razpoložljive ure ta teden",
+      "unestimated": "{{count}} brez ocene",
+      "committed": "Odločeno ta teden",
+      "inView": "Na očeh",
+      "emptyCommitted": "Za ta teden še ni nič odločeno.",
+      "emptyInView": "Nič na očeh. Postavite opravilo na oči iz njegovega menija.",
+      "choose": "Pomagaj mi izbrati"
+    }
+  },
+  "postponements": {
+    "summary": "Odloženo {{total}}-krat, {{count}} v zadnjih 30 dneh",
+    "kinds": {
+      "postponed": "Odloženo",
+      "rescheduled": "Prestavljeno",
+      "time_shift": "Čas spremenjen",
+      "advanced": "Premaknjeno naprej",
+      "scheduled": "Datum nastavljen",
+      "unscheduled": "Datum odstranjen",
+      "automatic": "Samodejno spremenjeno",
+      "missed": "Načrtovano, ne narejeno"
+    }
+  },
+  "thisOrThat": {
+    "title": "Katero zdaj?",
+    "skipBoth": "Nobeno",
+    "done": "Vaše naslednje dejanje",
+    "none": "Ni več česa primerjati.",
+    "addToday": "Dodaj za danes",
+    "close": "Zapri"
   }
 }

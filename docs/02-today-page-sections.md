@@ -136,7 +136,7 @@ If none of these are true, no suggestions are shown.
    - Tasks due today, tomorrow, or the day after are still eligible (and get a boost)
 
 4. **Excludes "someday" tasks by default**
-   - Tasks tagged "someday" are only included as a fallback if fewer than 6 suggestions exist
+   - Tasks tagged "someday" are only included as a fallback if fewer than 6 suggestions exist (classic Today only; Plan my day never falls back on them, see [Review](34-review.md))
 
 5. **One task per project**
    - The system picks the single best next action per active project

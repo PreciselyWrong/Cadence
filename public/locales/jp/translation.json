@@ -3768,5 +3768,98 @@
     "note": "メモ",
     "subtasks": "サブタスク",
     "loadError": "このタスクを読み込めませんでした。"
+  },
+  "review": {
+    "title": "見直し",
+    "attention": "確認が必要 {{count}} 件",
+    "decidedThisWeek": "今週決めたもの {{count}} 件",
+    "decide": "決める",
+    "loadError": "見直しを読み込めませんでした。",
+    "saveError": "決定を保存できませんでした。",
+    "loadMore": "さらに表示",
+    "next": "次へ: {{name}}",
+    "addedToday": "今日に追加しました",
+    "pushedCount": "{{count}} 回先送り",
+    "lastPlanned": "最後の予定日 {{date}}",
+    "reviewDue": "見直しの時期",
+    "reviewOn": "{{date}} に見直し",
+    "reviewOnLabel": "見直す日",
+    "lastActivity": "{{date}} から変更なし",
+    "nextTaskPlaceholder": "次のタスク…",
+    "tabs": {
+      "undecided": "決めること",
+      "pushed": "先送り",
+      "projects": "停滞中のプロジェクト",
+      "later": "あとで",
+      "stale": "古いもの",
+      "week": "今週"
+    },
+    "empty": {
+      "undecided": "受信箱は空です。",
+      "pushed": "繰り返し先送りしているものはありません。",
+      "projects": "すべての進行中プロジェクトに次の一歩があります。",
+      "later": "保留中のものはありません。",
+      "stale": "古いタスクはありません。"
+    },
+    "actions": {
+      "today": "今日やる",
+      "shortSession": "今日短いセッション (25 分)",
+      "split": "ステップに分ける",
+      "later": "あとで",
+      "drop": "やめる",
+      "keep": "このままにする",
+      "thisWeek": "今週",
+      "inView": "視野に入れる",
+      "reviewIn30": "30 日後に見直す",
+      "reviewOn": "見直す日を選ぶ…",
+      "keepLater": "保留のままにする",
+      "toTask": "タスクにする",
+      "toLater": "あとで考える",
+      "discard": "破棄",
+      "openInbox": "受信箱を開く",
+      "addNext": "次のタスクを追加",
+      "openProject": "プロジェクトを開く",
+      "pauseProject": "保留にする",
+      "removeWeek": "今週ではない",
+      "outOfView": "視野から外す"
+    },
+    "reasons": {
+      "no_next_action": "次のタスクなし",
+      "quiet": "30 日間動きなし",
+      "pushed_tasks": "先送り中のタスク"
+    },
+    "week": {
+      "planned": "{{planned}} 予定",
+      "capacity": "{{planned}} 予定 / {{capacity}} 利用可能",
+      "setCapacity": "使える時間を設定",
+      "capacityPrompt": "今週使える時間",
+      "unestimated": "見積もりなし {{count}} 件",
+      "committed": "今週決めたもの",
+      "inView": "視野に入れたもの",
+      "emptyCommitted": "今週はまだ何も決めていません。",
+      "emptyInView": "視野に入れたものはありません。タスクのメニューから追加できます。",
+      "choose": "選ぶのを手伝って"
+    }
+  },
+  "postponements": {
+    "summary": "{{total}} 回先送り、直近 30 日で {{count}} 回",
+    "kinds": {
+      "postponed": "先送り",
+      "rescheduled": "予定変更",
+      "time_shift": "時刻を変更",
+      "advanced": "前倒し",
+      "scheduled": "日付を設定",
+      "unscheduled": "日付を削除",
+      "automatic": "自動で変更",
+      "missed": "予定したが未完了"
+    }
+  },
+  "thisOrThat": {
+    "title": "今はどっち？",
+    "skipBoth": "どちらでもない",
+    "done": "次の行動",
+    "none": "比べるものは残っていません。",
+    "addToday": "今日に追加",
+    "close": "閉じる"
   }
 }

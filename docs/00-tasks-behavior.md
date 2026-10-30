@@ -539,6 +539,7 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Applies to All Tasks, a project's task list, the Upcoming day groups and the Today task sections that the server sorts (Suggested and the plan lists); within a group, a pinned task still stays in its group
     - Pinning again keeps the original pin time; unpinning clears it
     - Storage: `tasks.pinned_at` (nullable date). API: `PATCH /api/task/:uid` with `{ pinned: true|false }`; responses carry `pinned` (boolean) and `pinned_at`. The MCP `update_task` tool takes `pinned` too
+    - Pinning is about list order only; **In view**, **This week** and **Later** are separate decisions, see [Review](34-review.md)
 
 53. **Grouping options:**
     - By project

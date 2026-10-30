@@ -3767,5 +3767,98 @@
     "note": "备注",
     "subtasks": "子任务",
     "loadError": "无法加载此任务。"
+  },
+  "review": {
+    "title": "回顾",
+    "attention": "{{count}} 项待查看",
+    "decidedThisWeek": "本周已决定 {{count}} 项",
+    "decide": "决定",
+    "loadError": "无法加载回顾。",
+    "saveError": "无法保存决定。",
+    "loadMore": "显示更多",
+    "next": "下一步：{{name}}",
+    "addedToday": "已加入今天",
+    "pushedCount": "推迟了 {{count}} 次",
+    "lastPlanned": "上次计划 {{date}}",
+    "reviewDue": "该回顾了",
+    "reviewOn": "{{date}} 回顾",
+    "reviewOnLabel": "回顾日期",
+    "lastActivity": "自 {{date}} 起未变",
+    "nextTaskPlaceholder": "下一个任务…",
+    "tabs": {
+      "undecided": "待决定",
+      "pushed": "被推迟",
+      "projects": "停滞的项目",
+      "later": "以后",
+      "stale": "旧的",
+      "week": "本周"
+    },
+    "empty": {
+      "undecided": "收件箱已清空。",
+      "pushed": "没有一再推迟的事。",
+      "projects": "每个进行中的项目都有下一步。",
+      "later": "没有搁置的内容。",
+      "stale": "没有旧任务。"
+    },
+    "actions": {
+      "today": "今天做",
+      "shortSession": "今天短时段（25 分钟）",
+      "split": "拆分成步骤",
+      "later": "以后",
+      "drop": "放弃",
+      "keep": "保持不变",
+      "thisWeek": "本周",
+      "inView": "关注中",
+      "reviewIn30": "30 天后回顾",
+      "reviewOn": "回顾日期…",
+      "keepLater": "继续搁置",
+      "toTask": "转为任务",
+      "toLater": "搁置到以后",
+      "discard": "丢弃",
+      "openInbox": "打开收件箱",
+      "addNext": "添加下一个任务",
+      "openProject": "打开项目",
+      "pauseProject": "设为等待",
+      "removeWeek": "不在本周",
+      "outOfView": "移出关注"
+    },
+    "reasons": {
+      "no_next_action": "没有下一个任务",
+      "quiet": "30 天无活动",
+      "pushed_tasks": "有被推迟的任务"
+    },
+    "week": {
+      "planned": "已计划 {{planned}}",
+      "capacity": "已计划 {{planned}} / 可用 {{capacity}}",
+      "setCapacity": "设置可用时间",
+      "capacityPrompt": "本周可用小时数",
+      "unestimated": "{{count}} 项无估时",
+      "committed": "本周已决定",
+      "inView": "关注中",
+      "emptyCommitted": "本周还没有决定任何事。",
+      "emptyInView": "没有关注中的任务。可从任务菜单加入关注。",
+      "choose": "帮我选"
+    }
+  },
+  "postponements": {
+    "summary": "推迟了 {{total}} 次，近 30 天 {{count}} 次",
+    "kinds": {
+      "postponed": "推迟",
+      "rescheduled": "重新安排",
+      "time_shift": "时间已改",
+      "advanced": "提前",
+      "scheduled": "设定日期",
+      "unscheduled": "移除日期",
+      "automatic": "自动更改",
+      "missed": "已计划，未完成"
+    }
+  },
+  "thisOrThat": {
+    "title": "现在做哪个？",
+    "skipBoth": "都不选",
+    "done": "你的下一步",
+    "none": "没有可比较的了。",
+    "addToday": "加入今天",
+    "close": "关闭"
   }
 }

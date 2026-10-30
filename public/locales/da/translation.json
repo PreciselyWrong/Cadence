@@ -3771,5 +3771,98 @@
     "note": "Note",
     "subtasks": "Underopgaver",
     "loadError": "Opgaven kunne ikke indlæses."
+  },
+  "review": {
+    "title": "Gennemgang",
+    "attention": "{{count}} at se på",
+    "decidedThisWeek": "{{count}} besluttet denne uge",
+    "decide": "Beslut",
+    "loadError": "Kunne ikke indlæse gennemgangen.",
+    "saveError": "Kunne ikke gemme beslutningen.",
+    "loadMore": "Vis flere",
+    "next": "Næste: {{name}}",
+    "addedToday": "Føjet til i dag",
+    "pushedCount": "udskudt {{count}} gange",
+    "lastPlanned": "sidst planlagt {{date}}",
+    "reviewDue": "gennemgang forfalden",
+    "reviewOn": "gennemgang {{date}}",
+    "reviewOnLabel": "Gennemgå den",
+    "lastActivity": "uændret siden {{date}}",
+    "nextTaskPlaceholder": "Næste opgave…",
+    "tabs": {
+      "undecided": "Til beslutning",
+      "pushed": "Udskudt",
+      "projects": "Gået i stå",
+      "later": "Senere",
+      "stale": "Gamle",
+      "week": "Denne uge"
+    },
+    "empty": {
+      "undecided": "Indbakken er tom.",
+      "pushed": "Intet, du bliver ved med at udskyde.",
+      "projects": "Alle aktive projekter har et næste skridt.",
+      "later": "Intet parkeret.",
+      "stale": "Ingen gamle opgaver."
+    },
+    "actions": {
+      "today": "Gør i dag",
+      "shortSession": "Kort session i dag (25 min)",
+      "split": "Del op i trin",
+      "later": "Senere",
+      "drop": "Opgiv",
+      "keep": "Behold som den er",
+      "thisWeek": "Denne uge",
+      "inView": "I syne",
+      "reviewIn30": "Gennemgå om 30 dage",
+      "reviewOn": "Gennemgå den…",
+      "keepLater": "Behold parkeret",
+      "toTask": "Lav en opgave",
+      "toLater": "Parkér til senere",
+      "discard": "Kassér",
+      "openInbox": "Åbn indbakken",
+      "addNext": "Tilføj næste opgave",
+      "openProject": "Åbn projekt",
+      "pauseProject": "Sæt på vent",
+      "removeWeek": "Ikke denne uge",
+      "outOfView": "Ud af syne"
+    },
+    "reasons": {
+      "no_next_action": "ingen næste opgave",
+      "quiet": "ingen aktivitet i 30 dage",
+      "pushed_tasks": "udskudte opgaver"
+    },
+    "week": {
+      "planned": "{{planned}} planlagt",
+      "capacity": "{{planned}} planlagt / {{capacity}} til rådighed",
+      "setCapacity": "Angiv tid til rådighed",
+      "capacityPrompt": "Timer til rådighed denne uge",
+      "unestimated": "{{count}} uden estimat",
+      "committed": "Besluttet denne uge",
+      "inView": "I syne",
+      "emptyCommitted": "Intet besluttet for denne uge endnu.",
+      "emptyInView": "Intet i syne. Sæt en opgave i syne fra dens menu.",
+      "choose": "Hjælp mig med at vælge"
+    }
+  },
+  "postponements": {
+    "summary": "Udskudt {{total}} gange, {{count}} de sidste 30 dage",
+    "kinds": {
+      "postponed": "Udskudt",
+      "rescheduled": "Omplanlagt",
+      "time_shift": "Tidspunkt ændret",
+      "advanced": "Rykket frem",
+      "scheduled": "Dato sat",
+      "unscheduled": "Dato fjernet",
+      "automatic": "Ændret automatisk",
+      "missed": "Planlagt, ikke gjort"
+    }
+  },
+  "thisOrThat": {
+    "title": "Hvilken nu?",
+    "skipBoth": "Ingen af dem",
+    "done": "Din næste handling",
+    "none": "Intet tilbage at sammenligne.",
+    "addToday": "Føj til i dag",
+    "close": "Luk"
   }
 }

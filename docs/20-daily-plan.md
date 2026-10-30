@@ -45,7 +45,8 @@ The order comes from `backend/modules/daily-plan/ranking.js` and each user sets 
 1. Every candidate falls in one of ten buckets: its group (tagged #today, any open top-level task with a tag named `today` in any case, whatever its dates; overdue, including started tasks past their due date; due today; in progress; everything else) split into tasks in a project and tasks without one. A task tagged #today leaves its other group.
 2. Groups follow the user's bucket order (drag or the arrow buttons; saved at once): a group sits where its first bucket does. The default is each group in turn, project tasks first.
 3. Inside a group: higher priority first, then the bucket order (so a project task without priority never passes a higher-priority task without a project), then the earlier due date, then the user's tie-break (most recently changed by default, or newest, or oldest), then the task id.
-4. The suggestion cap (Profile > Planning) keeps the first suggestions in this order, so higher-priority suggestions always make the cut.
+4. Among suggestions, tasks the user decided for this week come first, then tasks **in view**, then the rules above. Both skip the filters below (a future defer-until still holds them back), and their line reads *This week* or *In view*. See [Review](34-review.md).
+5. The suggestion cap (Profile > Planning) keeps the first suggestions in this order, so higher-priority suggestions always make the cut.
 
 The order is stored in `users.ui_settings.planning.candidateOrder`. A saved order that is missing buckets or has unknown ones is repaired on read (missing #today buckets go first, others last), and the profile form's own save keeps the stored order.
 
@@ -65,7 +66,7 @@ Groups follow the task's own due date. A task with no date of its own in a late 
 | `horizonDays`        | `3`                | `1`, `3`, `7`: nothing due further ahead is suggested          |
 | `maxSuggestions`     | `20`               | `10`, `20`, `50`: how many suggestions load at first           |
 
-These only filter the suggested group: overdue, due-today and in-progress tasks always show, even from an excluded project. Filters run before the limit, and the limit keeps the first suggestions in the final order. The limit is a first page, not a ceiling: the response carries `suggested_total`, and `?suggested_limit=N` (1 to 1000) raises the cap so **Show more** can page through the rest. The underlying Today suggestions list keeps its own rules (50, three days ahead, no project filter).
+Plan my day never adds `#someday` tasks to fill a short list. These only filter the suggested group: overdue, due-today and in-progress tasks always show, even from an excluded project. Filters run before the limit, and the limit keeps the first suggestions in the final order. The limit is a first page, not a ceiling: the response carries `suggested_total`, and `?suggested_limit=N` (1 to 1000) raises the cap so **Show more** can page through the rest. The underlying Today suggestions list keeps its own rules (50, three days ahead, no project filter).
 
 ### Day hours
 

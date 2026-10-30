@@ -3778,5 +3778,98 @@
     "note": "Note",
     "subtasks": "Sous-tâches",
     "loadError": "Impossible de charger cette tâche."
+  },
+  "review": {
+    "title": "À revoir",
+    "attention": "{{count}} à examiner",
+    "decidedThisWeek": "{{count}} décidées cette semaine",
+    "decide": "Décider",
+    "loadError": "Impossible de charger la revue.",
+    "saveError": "Impossible d’enregistrer la décision.",
+    "loadMore": "Afficher plus",
+    "next": "Suivant : {{name}}",
+    "addedToday": "Ajoutée à aujourd’hui",
+    "pushedCount": "reportée {{count}} fois",
+    "lastPlanned": "dernière date prévue {{date}}",
+    "reviewDue": "à revoir",
+    "reviewOn": "revue le {{date}}",
+    "reviewOnLabel": "Revoir le",
+    "lastActivity": "inchangée depuis le {{date}}",
+    "nextTaskPlaceholder": "Prochaine tâche…",
+    "tabs": {
+      "undecided": "À décider",
+      "pushed": "Repoussées",
+      "projects": "Projets stagnants",
+      "later": "En sommeil",
+      "stale": "Anciennes",
+      "week": "Cette semaine"
+    },
+    "empty": {
+      "undecided": "L’Inbox est vide.",
+      "pushed": "Rien que vous repoussiez sans cesse.",
+      "projects": "Chaque projet actif a une prochaine étape.",
+      "later": "Rien en sommeil.",
+      "stale": "Aucune tâche ancienne."
+    },
+    "actions": {
+      "today": "Faire aujourd’hui",
+      "shortSession": "Session courte aujourd’hui (25 min)",
+      "split": "Découper en étapes",
+      "later": "Plus tard",
+      "drop": "Abandonner",
+      "keep": "Conserver sans changer",
+      "thisWeek": "Cette semaine",
+      "inView": "En vue",
+      "reviewIn30": "Revoir dans 30 jours",
+      "reviewOn": "Revoir le…",
+      "keepLater": "Garder en sommeil",
+      "toTask": "En faire une tâche",
+      "toLater": "Mettre en sommeil",
+      "discard": "Écarter",
+      "openInbox": "Ouvrir l’Inbox",
+      "addNext": "Ajouter la prochaine tâche",
+      "openProject": "Ouvrir le projet",
+      "pauseProject": "Mettre en attente",
+      "removeWeek": "Pas cette semaine",
+      "outOfView": "Retirer de En vue"
+    },
+    "reasons": {
+      "no_next_action": "aucune prochaine tâche",
+      "quiet": "aucune activité depuis 30 jours",
+      "pushed_tasks": "tâches repoussées"
+    },
+    "week": {
+      "planned": "{{planned}} prévues",
+      "capacity": "{{planned}} prévues / {{capacity}} disponibles",
+      "setCapacity": "Indiquer le temps disponible",
+      "capacityPrompt": "Heures disponibles cette semaine",
+      "unestimated": "{{count}} sans estimation",
+      "committed": "Décidées cette semaine",
+      "inView": "En vue",
+      "emptyCommitted": "Rien de décidé pour cette semaine.",
+      "emptyInView": "Rien en vue. Placez une tâche en vue depuis son menu.",
+      "choose": "Aidez-moi à choisir"
+    }
+  },
+  "postponements": {
+    "summary": "Reportée {{total}} fois, dont {{count}} ces 30 derniers jours",
+    "kinds": {
+      "postponed": "Reportée",
+      "rescheduled": "Replanifiée",
+      "time_shift": "Heure modifiée",
+      "advanced": "Avancée",
+      "scheduled": "Date ajoutée",
+      "unscheduled": "Date retirée",
+      "automatic": "Modifiée automatiquement",
+      "missed": "Prévue, non faite"
+    }
+  },
+  "thisOrThat": {
+    "title": "Laquelle maintenant ?",
+    "skipBoth": "Aucune des deux",
+    "done": "Votre prochaine action",
+    "none": "Plus rien à comparer.",
+    "addToday": "Ajouter à aujourd’hui",
+    "close": "Fermer"
   }
 }

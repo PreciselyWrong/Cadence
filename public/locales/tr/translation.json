@@ -3771,5 +3771,98 @@
     "note": "Not",
     "subtasks": "Alt görevler",
     "loadError": "Bu görev yüklenemedi."
+  },
+  "review": {
+    "title": "Gözden geçir",
+    "attention": "{{count}} bakılacak",
+    "decidedThisWeek": "bu hafta {{count}} karar verildi",
+    "decide": "Karar ver",
+    "loadError": "Gözden geçirme yüklenemedi.",
+    "saveError": "Karar kaydedilemedi.",
+    "loadMore": "Daha fazla göster",
+    "next": "Sonraki: {{name}}",
+    "addedToday": "Bugüne eklendi",
+    "pushedCount": "{{count}} kez ertelendi",
+    "lastPlanned": "son planlanan {{date}}",
+    "reviewDue": "gözden geçirme zamanı",
+    "reviewOn": "{{date}} tarihinde gözden geçir",
+    "reviewOnLabel": "Şu tarihte gözden geçir",
+    "lastActivity": "{{date}} tarihinden beri değişmedi",
+    "nextTaskPlaceholder": "Sonraki görev…",
+    "tabs": {
+      "undecided": "Karar verilecek",
+      "pushed": "Ertelenenler",
+      "projects": "Duran projeler",
+      "later": "Daha sonra",
+      "stale": "Eski",
+      "week": "Bu hafta"
+    },
+    "empty": {
+      "undecided": "Gelen kutusu boş.",
+      "pushed": "Sürekli ertelediğiniz bir şey yok.",
+      "projects": "Her etkin projenin bir sonraki adımı var.",
+      "later": "Bekletilen bir şey yok.",
+      "stale": "Eski görev yok."
+    },
+    "actions": {
+      "today": "Bugün yap",
+      "shortSession": "Bugün kısa oturum (25 dk)",
+      "split": "Adımlara böl",
+      "later": "Daha sonra",
+      "drop": "Vazgeç",
+      "keep": "Olduğu gibi bırak",
+      "thisWeek": "Bu hafta",
+      "inView": "Görünürde",
+      "reviewIn30": "30 gün sonra gözden geçir",
+      "reviewOn": "Şu tarihte gözden geçir…",
+      "keepLater": "Beklemede tut",
+      "toTask": "Görev yap",
+      "toLater": "Sonraya bırak",
+      "discard": "At",
+      "openInbox": "Gelen kutusunu aç",
+      "addNext": "Sonraki görevi ekle",
+      "openProject": "Projeyi aç",
+      "pauseProject": "Beklemeye al",
+      "removeWeek": "Bu hafta değil",
+      "outOfView": "Görünümden çıkar"
+    },
+    "reasons": {
+      "no_next_action": "sonraki görev yok",
+      "quiet": "30 gündür etkinlik yok",
+      "pushed_tasks": "ertelenen görevler"
+    },
+    "week": {
+      "planned": "{{planned}} planlandı",
+      "capacity": "{{planned}} planlandı / {{capacity}} kullanılabilir",
+      "setCapacity": "Kullanılabilir zamanı ayarla",
+      "capacityPrompt": "Bu hafta kullanılabilir saat",
+      "unestimated": "{{count}} tahminsiz",
+      "committed": "Bu hafta karar verilenler",
+      "inView": "Görünürde",
+      "emptyCommitted": "Bu hafta için henüz karar verilmedi.",
+      "emptyInView": "Görünürde bir şey yok. Bir görevi menüsünden görünüre ekleyin.",
+      "choose": "Seçmeme yardım et"
+    }
+  },
+  "postponements": {
+    "summary": "{{total}} kez ertelendi, son 30 günde {{count}}",
+    "kinds": {
+      "postponed": "Ertelendi",
+      "rescheduled": "Yeniden planlandı",
+      "time_shift": "Saat değişti",
+      "advanced": "Öne alındı",
+      "scheduled": "Tarih eklendi",
+      "unscheduled": "Tarih kaldırıldı",
+      "automatic": "Otomatik değişti",
+      "missed": "Planlandı, yapılmadı"
+    }
+  },
+  "thisOrThat": {
+    "title": "Şimdi hangisi?",
+    "skipBoth": "Hiçbiri",
+    "done": "Sonraki eyleminiz",
+    "none": "Karşılaştırılacak bir şey kalmadı.",
+    "addToday": "Bugüne ekle",
+    "close": "Kapat"
   }
 }

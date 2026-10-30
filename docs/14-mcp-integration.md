@@ -293,6 +293,10 @@ Update an existing task.
 | `assigned_to` | string | No | Person UID to assign the task to (`null` to unassign) |
 | `today` | boolean | No | Add to Today list |
 | `tags` | string[] | No | Array of tag names (replaces existing tags) |
+| `in_view` | boolean | No | Put the task in view (a possibility, not a commitment) or take it out |
+| `week_of` | string | No | Commit to a week: a date in it (`YYYY-MM-DD`), `this_week`, `next_week`, or `null` |
+| `review_on` | string | No | Day to decide about the task again (`YYYY-MM-DD`, or `null`); never a due date |
+| `later` | boolean | No | `true` parks the task (`#someday`, out of view, week and today); `false` brings it back |
 | `recurrence_type` | string | No | `none`, `daily`, `weekly`, `monthly`, `monthly_weekday`, or `monthly_last_day` |
 | `recurrence_interval` | number | No | Repeat every N days/weeks/months |
 | `recurrence_weekday` | number | No | Weekday for `weekly`/`monthly_weekday` recurrence (0=Sunday..6=Saturday) |

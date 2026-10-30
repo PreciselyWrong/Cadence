@@ -3776,5 +3776,98 @@
     "note": "Notat",
     "subtasks": "Underoppgaver",
     "loadError": "Kunne ikke laste denne oppgaven."
+  },
+  "review": {
+    "title": "Gjennomgang",
+    "attention": "{{count}} å se på",
+    "decidedThisWeek": "{{count}} bestemt denne uken",
+    "decide": "Bestem",
+    "loadError": "Kunne ikke laste gjennomgangen.",
+    "saveError": "Kunne ikke lagre beslutningen.",
+    "loadMore": "Vis flere",
+    "next": "Neste: {{name}}",
+    "addedToday": "Lagt til i dag",
+    "pushedCount": "utsatt {{count}} ganger",
+    "lastPlanned": "sist planlagt {{date}}",
+    "reviewDue": "gjennomgang forfalt",
+    "reviewOn": "gjennomgang {{date}}",
+    "reviewOnLabel": "Gå gjennom den",
+    "lastActivity": "uendret siden {{date}}",
+    "nextTaskPlaceholder": "Neste oppgave…",
+    "tabs": {
+      "undecided": "Å bestemme",
+      "pushed": "Utsatt",
+      "projects": "Fastlåste prosjekter",
+      "later": "Senere",
+      "stale": "Gamle",
+      "week": "Denne uken"
+    },
+    "empty": {
+      "undecided": "Innboksen er tom.",
+      "pushed": "Ingenting du stadig utsetter.",
+      "projects": "Alle aktive prosjekter har et neste steg.",
+      "later": "Ingenting parkert.",
+      "stale": "Ingen gamle oppgaver."
+    },
+    "actions": {
+      "today": "Gjør i dag",
+      "shortSession": "Kort økt i dag (25 min)",
+      "split": "Del opp i steg",
+      "later": "Senere",
+      "drop": "Gi opp",
+      "keep": "Behold som den er",
+      "thisWeek": "Denne uken",
+      "inView": "I sikte",
+      "reviewIn30": "Gå gjennom om 30 dager",
+      "reviewOn": "Gå gjennom den…",
+      "keepLater": "Behold parkert",
+      "toTask": "Lag en oppgave",
+      "toLater": "Parker til senere",
+      "discard": "Forkast",
+      "openInbox": "Åpne innboksen",
+      "addNext": "Legg til neste oppgave",
+      "openProject": "Åpne prosjekt",
+      "pauseProject": "Sett på vent",
+      "removeWeek": "Ikke denne uken",
+      "outOfView": "Ut av syne"
+    },
+    "reasons": {
+      "no_next_action": "ingen neste oppgave",
+      "quiet": "ingen aktivitet på 30 dager",
+      "pushed_tasks": "utsatte oppgaver"
+    },
+    "week": {
+      "planned": "{{planned}} planlagt",
+      "capacity": "{{planned}} planlagt / {{capacity}} tilgjengelig",
+      "setCapacity": "Angi tilgjengelig tid",
+      "capacityPrompt": "Tilgjengelige timer denne uken",
+      "unestimated": "{{count}} uten estimat",
+      "committed": "Bestemt denne uken",
+      "inView": "I sikte",
+      "emptyCommitted": "Ingenting bestemt for denne uken ennå.",
+      "emptyInView": "Ingenting i sikte. Sett en oppgave i sikte fra menyen.",
+      "choose": "Hjelp meg å velge"
+    }
+  },
+  "postponements": {
+    "summary": "Utsatt {{total}} ganger, {{count}} de siste 30 dagene",
+    "kinds": {
+      "postponed": "Utsatt",
+      "rescheduled": "Omplanlagt",
+      "time_shift": "Klokkeslett endret",
+      "advanced": "Flyttet fram",
+      "scheduled": "Dato satt",
+      "unscheduled": "Dato fjernet",
+      "automatic": "Endret automatisk",
+      "missed": "Planlagt, ikke gjort"
+    }
+  },
+  "thisOrThat": {
+    "title": "Hvilken nå?",
+    "skipBoth": "Ingen av dem",
+    "done": "Din neste handling",
+    "none": "Ingenting igjen å sammenligne.",
+    "addToday": "Legg til i dag",
+    "close": "Lukk"
   }
 }

@@ -33,6 +33,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 | Insights              | Custom Eisenhower matrices (`ui_settings.matrices`); period Summary with export (`ui_settings.summary`)                                                                                                                                                                       | [08-views-system.md](../08-views-system.md), [31-summary.md](../31-summary.md)                               |
 | Sidebar               | Minimal: smart lists with counts, Areas as folders, icon rail with a More menu; smart lists, rail placement and count badges customisable in Profile → Sidebar; Dense is upstream                                                                                             | [32-sidebar.md](../32-sidebar.md)                                                                            |
 | Views                 | Minimal: List / Board (by priority) / Calendar (month by due date) switch on saved views, tag pages, projects and Tasks, remembered in `ui_settings.viewTypes`; New view from the sidebar (name, project, tag, priority, due, status; `views.project_uid`); Dense is upstream | [08-views-system.md](../08-views-system.md)                                                                  |
+| Review                | Decision funnel (In view `tasks.in_view_at`, This week `tasks.week_of`, Later = `#someday` + `tasks.review_on`), postponements read from `task_events` and `daily_plans`, `/review` page with weekly capacity and This or That | [34-review.md](../34-review.md) |
 | Inbox / quick add     | French dates (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), `!1`–`!3` priority, `^list` as an alias of `+project` (accent-insensitive, unique prefix)                                                                                                             | [04-inbox-page.md](../04-inbox-page.md)                                                                      |
 
 ## Rules for agents working on the fork
@@ -77,5 +78,10 @@ Upstream's `CLAUDE.md` index lists pages 1–38. The fork adds:
 
 43. **[Google Sync](../33-google-sync.md)**
     - Two-way sync with Google Calendar and Google Tasks (`backend/modules/google-sync/`, `google_*` tables)
+
+44. **[Review](../34-review.md)**
+    - Decision funnel: Inbox, In view, This week, Today, Now, and Later with a review date
+    - Postponements classified from `task_events` and day plans; pushed back 3 times in 30 days
+    - `/review`: To decide, Pushed back, Stalled projects, Later, Old, This week; `/api/review*`
 
 And page 29, Daily Plan, reads in the fork: Today is one page (`/today`) with planning built in; `/today/plan` and `/today_legacy` redirect to `/today`.

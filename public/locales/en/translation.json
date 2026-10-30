@@ -4169,5 +4169,98 @@
     "note": "Note",
     "subtasks": "Subtasks",
     "loadError": "Could not load this task."
+  },
+  "review": {
+    "title": "Review",
+    "attention": "{{count}} to look at",
+    "decidedThisWeek": "{{count}} decided this week",
+    "decide": "Decide",
+    "loadError": "Could not load the review.",
+    "saveError": "Could not save the decision.",
+    "loadMore": "Show more",
+    "next": "Next: {{name}}",
+    "addedToday": "Added to today",
+    "pushedCount": "pushed back {{count}} times",
+    "lastPlanned": "last planned {{date}}",
+    "reviewDue": "review due",
+    "reviewOn": "review {{date}}",
+    "reviewOnLabel": "Review on",
+    "lastActivity": "unchanged since {{date}}",
+    "nextTaskPlaceholder": "Next task…",
+    "tabs": {
+      "undecided": "To decide",
+      "pushed": "Pushed back",
+      "projects": "Stalled projects",
+      "later": "Later",
+      "stale": "Old",
+      "week": "This week"
+    },
+    "empty": {
+      "undecided": "The inbox is clear.",
+      "pushed": "Nothing you keep pushing back.",
+      "projects": "Every active project has a next step.",
+      "later": "Nothing parked.",
+      "stale": "No old tasks."
+    },
+    "actions": {
+      "today": "Do today",
+      "shortSession": "Short session today (25 min)",
+      "split": "Break into steps",
+      "later": "Later",
+      "drop": "Drop",
+      "keep": "Keep as is",
+      "thisWeek": "This week",
+      "inView": "In view",
+      "reviewIn30": "Review in 30 days",
+      "reviewOn": "Review on…",
+      "keepLater": "Keep parked",
+      "toTask": "Make a task",
+      "toLater": "Park for later",
+      "discard": "Discard",
+      "openInbox": "Open the Inbox",
+      "addNext": "Add the next task",
+      "openProject": "Open project",
+      "pauseProject": "Put on hold",
+      "removeWeek": "Not this week",
+      "outOfView": "Out of view"
+    },
+    "reasons": {
+      "no_next_action": "no next task",
+      "quiet": "no activity for 30 days",
+      "pushed_tasks": "tasks pushed back"
+    },
+    "week": {
+      "planned": "{{planned}} planned",
+      "capacity": "{{planned}} planned / {{capacity}} available",
+      "setCapacity": "Set available time",
+      "capacityPrompt": "Hours available this week",
+      "unestimated": "{{count}} without estimate",
+      "committed": "Decided this week",
+      "inView": "In view",
+      "emptyCommitted": "Nothing decided for this week yet.",
+      "emptyInView": "Nothing in view. Put a task in view from its menu.",
+      "choose": "Help me choose"
+    }
+  },
+  "postponements": {
+    "summary": "Pushed back {{total}} times, {{count}} in the last 30 days",
+    "kinds": {
+      "postponed": "Pushed back",
+      "rescheduled": "Rescheduled",
+      "time_shift": "Time changed",
+      "advanced": "Moved earlier",
+      "scheduled": "Date set",
+      "unscheduled": "Date removed",
+      "automatic": "Changed automatically",
+      "missed": "Planned, not done"
+    }
+  },
+  "thisOrThat": {
+    "title": "Which one now?",
+    "skipBoth": "Neither",
+    "done": "Your next action",
+    "none": "Nothing left to compare.",
+    "addToday": "Add to today",
+    "close": "Close"
   }
 }

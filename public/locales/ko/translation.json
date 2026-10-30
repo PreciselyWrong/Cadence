@@ -3767,5 +3767,98 @@
     "note": "메모",
     "subtasks": "하위 작업",
     "loadError": "이 작업을 불러올 수 없습니다."
+  },
+  "review": {
+    "title": "검토",
+    "attention": "살펴볼 항목 {{count}}개",
+    "decidedThisWeek": "이번 주 결정 {{count}}개",
+    "decide": "결정",
+    "loadError": "검토를 불러올 수 없습니다.",
+    "saveError": "결정을 저장할 수 없습니다.",
+    "loadMore": "더 보기",
+    "next": "다음: {{name}}",
+    "addedToday": "오늘에 추가됨",
+    "pushedCount": "{{count}}번 미룸",
+    "lastPlanned": "마지막 예정일 {{date}}",
+    "reviewDue": "검토할 때",
+    "reviewOn": "{{date}} 검토",
+    "reviewOnLabel": "검토 날짜",
+    "lastActivity": "{{date}} 이후 변경 없음",
+    "nextTaskPlaceholder": "다음 작업…",
+    "tabs": {
+      "undecided": "결정할 것",
+      "pushed": "미룬 작업",
+      "projects": "멈춘 프로젝트",
+      "later": "나중에",
+      "stale": "오래된 것",
+      "week": "이번 주"
+    },
+    "empty": {
+      "undecided": "받은편지함이 비어 있습니다.",
+      "pushed": "계속 미루는 것이 없습니다.",
+      "projects": "모든 진행 중 프로젝트에 다음 단계가 있습니다.",
+      "later": "보류 중인 것이 없습니다.",
+      "stale": "오래된 작업이 없습니다."
+    },
+    "actions": {
+      "today": "오늘 하기",
+      "shortSession": "오늘 짧은 세션 (25분)",
+      "split": "단계로 나누기",
+      "later": "나중에",
+      "drop": "그만두기",
+      "keep": "그대로 두기",
+      "thisWeek": "이번 주",
+      "inView": "시야에 두기",
+      "reviewIn30": "30일 후 검토",
+      "reviewOn": "검토 날짜 선택…",
+      "keepLater": "보류 유지",
+      "toTask": "작업으로 만들기",
+      "toLater": "나중으로 보류",
+      "discard": "버리기",
+      "openInbox": "받은편지함 열기",
+      "addNext": "다음 작업 추가",
+      "openProject": "프로젝트 열기",
+      "pauseProject": "대기로 전환",
+      "removeWeek": "이번 주 아님",
+      "outOfView": "시야에서 빼기"
+    },
+    "reasons": {
+      "no_next_action": "다음 작업 없음",
+      "quiet": "30일 동안 활동 없음",
+      "pushed_tasks": "미룬 작업 있음"
+    },
+    "week": {
+      "planned": "{{planned}} 계획됨",
+      "capacity": "{{planned}} 계획됨 / {{capacity}} 가능",
+      "setCapacity": "가능한 시간 설정",
+      "capacityPrompt": "이번 주 가능한 시간",
+      "unestimated": "추정 없음 {{count}}개",
+      "committed": "이번 주 결정함",
+      "inView": "시야에 둔 것",
+      "emptyCommitted": "이번 주에 결정한 것이 아직 없습니다.",
+      "emptyInView": "시야에 둔 것이 없습니다. 작업 메뉴에서 추가하세요.",
+      "choose": "고르기 도와줘"
+    }
+  },
+  "postponements": {
+    "summary": "{{total}}번 미룸, 최근 30일 {{count}}번",
+    "kinds": {
+      "postponed": "미룸",
+      "rescheduled": "일정 변경",
+      "time_shift": "시간 변경",
+      "advanced": "앞당김",
+      "scheduled": "날짜 설정",
+      "unscheduled": "날짜 제거",
+      "automatic": "자동 변경",
+      "missed": "계획했지만 안 함"
+    }
+  },
+  "thisOrThat": {
+    "title": "지금은 어느 것?",
+    "skipBoth": "둘 다 아님",
+    "done": "다음 행동",
+    "none": "비교할 것이 남지 않았습니다.",
+    "addToday": "오늘에 추가",
+    "close": "닫기"
   }
 }

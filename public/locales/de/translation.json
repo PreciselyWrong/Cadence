@@ -3780,5 +3780,98 @@
     "note": "Notiz",
     "subtasks": "Unteraufgaben",
     "loadError": "Diese Aufgabe konnte nicht geladen werden."
+  },
+  "review": {
+    "title": "Überprüfen",
+    "attention": "{{count}} anzusehen",
+    "decidedThisWeek": "{{count}} diese Woche entschieden",
+    "decide": "Entscheiden",
+    "loadError": "Die Überprüfung konnte nicht geladen werden.",
+    "saveError": "Die Entscheidung konnte nicht gespeichert werden.",
+    "loadMore": "Mehr anzeigen",
+    "next": "Weiter: {{name}}",
+    "addedToday": "Zu heute hinzugefügt",
+    "pushedCount": "{{count}}-mal verschoben",
+    "lastPlanned": "zuletzt geplant {{date}}",
+    "reviewDue": "Überprüfung fällig",
+    "reviewOn": "Überprüfung {{date}}",
+    "reviewOnLabel": "Überprüfen am",
+    "lastActivity": "unverändert seit {{date}}",
+    "nextTaskPlaceholder": "Nächste Aufgabe…",
+    "tabs": {
+      "undecided": "Zu entscheiden",
+      "pushed": "Verschoben",
+      "projects": "Stockende Projekte",
+      "later": "Später",
+      "stale": "Alt",
+      "week": "Diese Woche"
+    },
+    "empty": {
+      "undecided": "Der Eingang ist leer.",
+      "pushed": "Nichts, was Sie ständig verschieben.",
+      "projects": "Jedes aktive Projekt hat einen nächsten Schritt.",
+      "later": "Nichts geparkt.",
+      "stale": "Keine alten Aufgaben."
+    },
+    "actions": {
+      "today": "Heute erledigen",
+      "shortSession": "Kurze Sitzung heute (25 Min.)",
+      "split": "In Schritte aufteilen",
+      "later": "Später",
+      "drop": "Aufgeben",
+      "keep": "So belassen",
+      "thisWeek": "Diese Woche",
+      "inView": "Im Blick",
+      "reviewIn30": "In 30 Tagen überprüfen",
+      "reviewOn": "Überprüfen am…",
+      "keepLater": "Geparkt lassen",
+      "toTask": "Als Aufgabe anlegen",
+      "toLater": "Für später parken",
+      "discard": "Verwerfen",
+      "openInbox": "Eingang öffnen",
+      "addNext": "Nächste Aufgabe hinzufügen",
+      "openProject": "Projekt öffnen",
+      "pauseProject": "Auf Warten setzen",
+      "removeWeek": "Nicht diese Woche",
+      "outOfView": "Aus dem Blick"
+    },
+    "reasons": {
+      "no_next_action": "keine nächste Aufgabe",
+      "quiet": "seit 30 Tagen keine Aktivität",
+      "pushed_tasks": "verschobene Aufgaben"
+    },
+    "week": {
+      "planned": "{{planned}} geplant",
+      "capacity": "{{planned}} geplant / {{capacity}} verfügbar",
+      "setCapacity": "Verfügbare Zeit festlegen",
+      "capacityPrompt": "Verfügbare Stunden diese Woche",
+      "unestimated": "{{count}} ohne Schätzung",
+      "committed": "Diese Woche entschieden",
+      "inView": "Im Blick",
+      "emptyCommitted": "Für diese Woche ist noch nichts entschieden.",
+      "emptyInView": "Nichts im Blick. Nehmen Sie eine Aufgabe über ihr Menü in den Blick.",
+      "choose": "Hilf mir wählen"
+    }
+  },
+  "postponements": {
+    "summary": "{{total}}-mal verschoben, {{count}} in den letzten 30 Tagen",
+    "kinds": {
+      "postponed": "Verschoben",
+      "rescheduled": "Neu geplant",
+      "time_shift": "Uhrzeit geändert",
+      "advanced": "Vorgezogen",
+      "scheduled": "Datum gesetzt",
+      "unscheduled": "Datum entfernt",
+      "automatic": "Automatisch geändert",
+      "missed": "Geplant, nicht erledigt"
+    }
+  },
+  "thisOrThat": {
+    "title": "Welche jetzt?",
+    "skipBoth": "Keine von beiden",
+    "done": "Ihre nächste Aktion",
+    "none": "Nichts mehr zu vergleichen.",
+    "addToday": "Zu heute hinzufügen",
+    "close": "Schließen"
   }
 }

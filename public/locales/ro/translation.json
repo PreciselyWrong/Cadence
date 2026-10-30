@@ -3782,5 +3782,98 @@
     "note": "Notiță",
     "subtasks": "Subsarcini",
     "loadError": "Nu s-a putut încărca această sarcină."
+  },
+  "review": {
+    "title": "Revizuire",
+    "attention": "{{count}} de examinat",
+    "decidedThisWeek": "{{count}} decise săptămâna aceasta",
+    "decide": "Decide",
+    "loadError": "Revizuirea nu a putut fi încărcată.",
+    "saveError": "Decizia nu a putut fi salvată.",
+    "loadMore": "Arată mai multe",
+    "next": "Următorul: {{name}}",
+    "addedToday": "Adăugată la azi",
+    "pushedCount": "amânată de {{count}} ori",
+    "lastPlanned": "ultima dată planificată {{date}}",
+    "reviewDue": "revizuire scadentă",
+    "reviewOn": "revizuire pe {{date}}",
+    "reviewOnLabel": "Revizuiește pe",
+    "lastActivity": "neschimbată din {{date}}",
+    "nextTaskPlaceholder": "Următoarea sarcină…",
+    "tabs": {
+      "undecided": "De decis",
+      "pushed": "Amânate",
+      "projects": "Proiecte blocate",
+      "later": "Mai târziu",
+      "stale": "Vechi",
+      "week": "Săptămâna aceasta"
+    },
+    "empty": {
+      "undecided": "Inboxul este gol.",
+      "pushed": "Nimic din ce amâni mereu.",
+      "projects": "Fiecare proiect activ are un pas următor.",
+      "later": "Nimic parcat.",
+      "stale": "Nicio sarcină veche."
+    },
+    "actions": {
+      "today": "Fă azi",
+      "shortSession": "Sesiune scurtă azi (25 min)",
+      "split": "Împarte în pași",
+      "later": "Mai târziu",
+      "drop": "Renunță",
+      "keep": "Păstrează așa",
+      "thisWeek": "Săptămâna aceasta",
+      "inView": "În vedere",
+      "reviewIn30": "Revizuiește peste 30 de zile",
+      "reviewOn": "Revizuiește pe…",
+      "keepLater": "Păstrează parcată",
+      "toTask": "Fă o sarcină",
+      "toLater": "Parchează pentru mai târziu",
+      "discard": "Aruncă",
+      "openInbox": "Deschide Inboxul",
+      "addNext": "Adaugă următoarea sarcină",
+      "openProject": "Deschide proiectul",
+      "pauseProject": "Pune în așteptare",
+      "removeWeek": "Nu săptămâna aceasta",
+      "outOfView": "Scoate din vedere"
+    },
+    "reasons": {
+      "no_next_action": "nicio sarcină următoare",
+      "quiet": "nicio activitate de 30 de zile",
+      "pushed_tasks": "sarcini amânate"
+    },
+    "week": {
+      "planned": "{{planned}} planificate",
+      "capacity": "{{planned}} planificate / {{capacity}} disponibile",
+      "setCapacity": "Setează timpul disponibil",
+      "capacityPrompt": "Ore disponibile săptămâna aceasta",
+      "unestimated": "{{count}} fără estimare",
+      "committed": "Decise săptămâna aceasta",
+      "inView": "În vedere",
+      "emptyCommitted": "Nimic decis încă pentru săptămâna aceasta.",
+      "emptyInView": "Nimic în vedere. Pune o sarcină în vedere din meniul ei.",
+      "choose": "Ajută-mă să aleg"
+    }
+  },
+  "postponements": {
+    "summary": "Amânată de {{total}} ori, {{count}} în ultimele 30 de zile",
+    "kinds": {
+      "postponed": "Amânată",
+      "rescheduled": "Replanificată",
+      "time_shift": "Ora schimbată",
+      "advanced": "Devansată",
+      "scheduled": "Dată setată",
+      "unscheduled": "Dată eliminată",
+      "automatic": "Schimbată automat",
+      "missed": "Planificată, nefăcută"
+    }
+  },
+  "thisOrThat": {
+    "title": "Care acum?",
+    "skipBoth": "Niciuna",
+    "done": "Următoarea ta acțiune",
+    "none": "Nu mai e nimic de comparat.",
+    "addToday": "Adaugă la azi",
+    "close": "Închide"
   }
 }

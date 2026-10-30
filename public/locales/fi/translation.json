@@ -3771,5 +3771,98 @@
     "note": "Muistiinpano",
     "subtasks": "Alitehtävät",
     "loadError": "Tehtävää ei voitu ladata."
+  },
+  "review": {
+    "title": "Katselmointi",
+    "attention": "{{count}} katsottavaa",
+    "decidedThisWeek": "{{count}} päätetty tällä viikolla",
+    "decide": "Päätä",
+    "loadError": "Katselmointia ei voitu ladata.",
+    "saveError": "Päätöstä ei voitu tallentaa.",
+    "loadMore": "Näytä lisää",
+    "next": "Seuraava: {{name}}",
+    "addedToday": "Lisätty tälle päivälle",
+    "pushedCount": "lykätty {{count}} kertaa",
+    "lastPlanned": "viimeksi suunniteltu {{date}}",
+    "reviewDue": "katselmointi erääntynyt",
+    "reviewOn": "katselmointi {{date}}",
+    "reviewOnLabel": "Katselmoi",
+    "lastActivity": "ennallaan {{date}} lähtien",
+    "nextTaskPlaceholder": "Seuraava tehtävä…",
+    "tabs": {
+      "undecided": "Päätettävät",
+      "pushed": "Lykätyt",
+      "projects": "Pysähtyneet projektit",
+      "later": "Myöhemmin",
+      "stale": "Vanhat",
+      "week": "Tämä viikko"
+    },
+    "empty": {
+      "undecided": "Saapuneet on tyhjä.",
+      "pushed": "Ei mitään, mitä lykkäisit jatkuvasti.",
+      "projects": "Jokaisella aktiivisella projektilla on seuraava askel.",
+      "later": "Ei mitään pysäköitynä.",
+      "stale": "Ei vanhoja tehtäviä."
+    },
+    "actions": {
+      "today": "Tee tänään",
+      "shortSession": "Lyhyt jakso tänään (25 min)",
+      "split": "Jaa vaiheisiin",
+      "later": "Myöhemmin",
+      "drop": "Luovu",
+      "keep": "Pidä ennallaan",
+      "thisWeek": "Tämä viikko",
+      "inView": "Näkyvissä",
+      "reviewIn30": "Katselmoi 30 päivän päästä",
+      "reviewOn": "Katselmoi…",
+      "keepLater": "Pidä pysäköitynä",
+      "toTask": "Tee tehtäväksi",
+      "toLater": "Pysäköi myöhemmäksi",
+      "discard": "Hylkää",
+      "openInbox": "Avaa Saapuneet",
+      "addNext": "Lisää seuraava tehtävä",
+      "openProject": "Avaa projekti",
+      "pauseProject": "Aseta odottamaan",
+      "removeWeek": "Ei tällä viikolla",
+      "outOfView": "Pois näkyvistä"
+    },
+    "reasons": {
+      "no_next_action": "ei seuraavaa tehtävää",
+      "quiet": "ei toimintaa 30 päivään",
+      "pushed_tasks": "lykättyjä tehtäviä"
+    },
+    "week": {
+      "planned": "{{planned}} suunniteltu",
+      "capacity": "{{planned}} suunniteltu / {{capacity}} käytettävissä",
+      "setCapacity": "Aseta käytettävissä oleva aika",
+      "capacityPrompt": "Käytettävissä olevat tunnit tällä viikolla",
+      "unestimated": "{{count}} ilman arviota",
+      "committed": "Päätetty tällä viikolla",
+      "inView": "Näkyvissä",
+      "emptyCommitted": "Tälle viikolle ei ole vielä päätetty mitään.",
+      "emptyInView": "Ei mitään näkyvissä. Tuo tehtävä näkyviin sen valikosta.",
+      "choose": "Auta minua valitsemaan"
+    }
+  },
+  "postponements": {
+    "summary": "Lykätty {{total}} kertaa, {{count}} viimeisten 30 päivän aikana",
+    "kinds": {
+      "postponed": "Lykätty",
+      "rescheduled": "Siirretty",
+      "time_shift": "Aika muutettu",
+      "advanced": "Aikaistettu",
+      "scheduled": "Päivä asetettu",
+      "unscheduled": "Päivä poistettu",
+      "automatic": "Muutettu automaattisesti",
+      "missed": "Suunniteltu, ei tehty"
+    }
+  },
+  "thisOrThat": {
+    "title": "Kumpi nyt?",
+    "skipBoth": "Ei kumpikaan",
+    "done": "Seuraava toimesi",
+    "none": "Ei enää vertailtavaa.",
+    "addToday": "Lisää tälle päivälle",
+    "close": "Sulje"
   }
 }

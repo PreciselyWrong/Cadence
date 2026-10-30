@@ -3804,5 +3804,98 @@
         "note": "Poznámka",
         "subtasks": "Podúlohy",
         "loadError": "Túto úlohu sa nepodarilo načítať."
+    },
+    "review": {
+        "title": "Prehľad",
+        "attention": "{{count}} na prezretie",
+        "decidedThisWeek": "{{count}} rozhodnuté tento týždeň",
+        "decide": "Rozhodnúť",
+        "loadError": "Prehľad sa nepodarilo načítať.",
+        "saveError": "Rozhodnutie sa nepodarilo uložiť.",
+        "loadMore": "Zobraziť viac",
+        "next": "Ďalej: {{name}}",
+        "addedToday": "Pridané na dnes",
+        "pushedCount": "odložené {{count}}-krát",
+        "lastPlanned": "naposledy plánované {{date}}",
+        "reviewDue": "prehľad je na rade",
+        "reviewOn": "prehľad {{date}}",
+        "reviewOnLabel": "Prezrieť dňa",
+        "lastActivity": "bez zmeny od {{date}}",
+        "nextTaskPlaceholder": "Ďalšia úloha…",
+        "tabs": {
+            "undecided": "Na rozhodnutie",
+            "pushed": "Odkladané",
+            "projects": "Zaseknuté projekty",
+            "later": "Neskôr",
+            "stale": "Staré",
+            "week": "Tento týždeň"
+        },
+        "empty": {
+            "undecided": "Doručená pošta je prázdna.",
+            "pushed": "Nič, čo stále odkladáte.",
+            "projects": "Každý aktívny projekt má ďalší krok.",
+            "later": "Nič odložené.",
+            "stale": "Žiadne staré úlohy."
+        },
+        "actions": {
+            "today": "Urobiť dnes",
+            "shortSession": "Krátka relácia dnes (25 min)",
+            "split": "Rozdeliť na kroky",
+            "later": "Neskôr",
+            "drop": "Vzdať",
+            "keep": "Ponechať tak",
+            "thisWeek": "Tento týždeň",
+            "inView": "Na očiach",
+            "reviewIn30": "Prezrieť o 30 dní",
+            "reviewOn": "Prezrieť dňa…",
+            "keepLater": "Nechať odložené",
+            "toTask": "Vytvoriť úlohu",
+            "toLater": "Odložiť na neskôr",
+            "discard": "Zahodiť",
+            "openInbox": "Otvoriť doručenú poštu",
+            "addNext": "Pridať ďalšiu úlohu",
+            "openProject": "Otvoriť projekt",
+            "pauseProject": "Pozastaviť",
+            "removeWeek": "Nie tento týždeň",
+            "outOfView": "Preč z očí"
+        },
+        "reasons": {
+            "no_next_action": "žiadna ďalšia úloha",
+            "quiet": "žiadna aktivita 30 dní",
+            "pushed_tasks": "odkladané úlohy"
+        },
+        "week": {
+            "planned": "{{planned}} naplánované",
+            "capacity": "{{planned}} naplánované / {{capacity}} k dispozícii",
+            "setCapacity": "Nastaviť dostupný čas",
+            "capacityPrompt": "Dostupné hodiny tento týždeň",
+            "unestimated": "{{count}} bez odhadu",
+            "committed": "Rozhodnuté tento týždeň",
+            "inView": "Na očiach",
+            "emptyCommitted": "Na tento týždeň zatiaľ nič rozhodnuté.",
+            "emptyInView": "Nič na očiach. Dajte úlohu na oči z jej ponuky.",
+            "choose": "Pomôžte mi vybrať"
+        }
+    },
+    "postponements": {
+        "summary": "Odložené {{total}}-krát, {{count}} za posledných 30 dní",
+        "kinds": {
+            "postponed": "Odložené",
+            "rescheduled": "Preplánované",
+            "time_shift": "Zmenený čas",
+            "advanced": "Posunuté skôr",
+            "scheduled": "Dátum nastavený",
+            "unscheduled": "Dátum odstránený",
+            "automatic": "Zmenené automaticky",
+            "missed": "Plánované, neurobené"
+        }
+    },
+    "thisOrThat": {
+        "title": "Ktorú teraz?",
+        "skipBoth": "Ani jednu",
+        "done": "Vaša ďalšia akcia",
+        "none": "Už nie je čo porovnávať.",
+        "addToday": "Pridať na dnes",
+        "close": "Zavrieť"
     }
 }
