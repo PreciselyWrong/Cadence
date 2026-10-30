@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
@@ -103,9 +104,9 @@ internal fun RoutineStrip(
             }
         }
         Spacer(Modifier.height(Space.sm))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm, Alignment.CenterHorizontally)) {
             moment.facetIds.forEach { id ->
-                byId[id]?.let { item -> RoutineFacet(item, Modifier.weight(1f)) { quick(item) } }
+                byId[id]?.let { item -> RoutineFacet(item, Modifier.widthIn(max = Size.routineFacet).weight(1f, fill = false)) { quick(item) } }
             }
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -125,7 +126,7 @@ private fun TodayWidgetConfiguration(
     }
 
     CadenceScreen {
-        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().safeDrawingPadding().padding(horizontal = Space.gutter)) {
             ScreenHeader(title = stringResource(R.string.today_config_title), onBack = onBack, backDescription = stringResource(R.string.today_config_back))
             WidgetPreviewBand(config)
             Spacer(Modifier.height(Space.sm))

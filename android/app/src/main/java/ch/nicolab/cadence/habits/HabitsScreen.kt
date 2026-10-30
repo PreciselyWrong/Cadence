@@ -54,26 +54,26 @@ internal fun HabitsScreen(
         if (activeHabits.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_regular_section)) }
         items(activeHabits, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
-                HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
+                HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) }, onOptions = { options(it) })
             }
         }
         if (activeTrackers.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_activities_section)) }
         items(activeTrackers, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
-                HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
+                HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) }, onOptions = { options(it) })
             }
         }
         if (activeAbstinences.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
         items(activeAbstinences, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
-                HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) })
+                HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) }, onOptions = { options(it) })
             }
         }
         if (archived.isNotEmpty()) {
             item { SectionHeader(stringResource(R.string.habits_archived_section)) }
             items(archived, key = { "archived-${it.stored.id}" }) {
                 Box(Modifier.animateItem().fillMaxWidth()) {
-                    HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) })
+                    HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) }, onOptions = { options(it) })
                 }
             }
         }

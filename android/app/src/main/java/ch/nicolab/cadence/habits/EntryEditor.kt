@@ -40,6 +40,7 @@ import ch.nicolab.cadence.domain.HabitEntrySource
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.ui.HabitFormatter
+import ch.nicolab.cadence.ui.shortFrench
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -65,7 +66,7 @@ internal fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUn
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(entry.localDate.toString(), style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
+            Text(entry.localDate.shortFrench(), style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
             Text(
                 // La note prime sur l'heure : c'est elle qui rappelle de quoi il s'agissait.
                 entry.note ?: entry.occurredAt.atZone(entry.observedZoneId).toLocalTime()

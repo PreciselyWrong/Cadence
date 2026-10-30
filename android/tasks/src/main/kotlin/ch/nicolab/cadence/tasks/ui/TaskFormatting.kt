@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.Instant
@@ -26,11 +27,11 @@ internal fun dayLabel(date: LocalDate, today: LocalDate): String {
     val todayText = stringResource(R.string.tasks_day_today)
     val tomorrowText = stringResource(R.string.tasks_day_tomorrow)
     val yesterdayText = stringResource(R.string.tasks_day_yesterday)
-    return when (date) {
-        today -> todayText
-        today.plusDays(1) -> tomorrowText
-        today.minusDays(1) -> yesterdayText
-        else -> date.format(DateTimeFormatter.ofPattern("EEEE d MMM", tasksLocale))
+    return when (RelativeDay.of(date, today)) {
+        RelativeDay.TODAY -> todayText
+        RelativeDay.TOMORROW -> tomorrowText
+        RelativeDay.YESTERDAY -> yesterdayText
+        RelativeDay.OTHER -> date.format(DateTimeFormatter.ofPattern("EEEE d MMM", tasksLocale))
     }
 }
 

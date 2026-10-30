@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -61,6 +63,8 @@ fun CadenceScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.(
     }
 }
 
+private val PanelPadding = PaddingValues(horizontal = Space.lg, vertical = Space.md)
+
 /**
  * Niveau 2 - grande surface fonctionnelle. Pas de bordure : la séparation vient du
  * contraste de surface. L'ombre n'apparaît que si la surface est réellement au-dessus.
@@ -73,6 +77,8 @@ fun Panel(
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     floating: Boolean = false,
+    container: Brush? = null,
+    contentPadding: PaddingValues = PanelPadding,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val palette = cadence
@@ -110,12 +116,15 @@ fun Panel(
                 } else Modifier
             ),
         shape = shape,
-        color = palette.card,
+        color = if (container != null) Color.Transparent else palette.card,
         contentColor = palette.onSurface,
         shadowElevation = if (floating) Elevation.floating else Elevation.flat,
         tonalElevation = Elevation.flat,
     ) {
-        Column(Modifier.then(interactive).padding(horizontal = Space.lg, vertical = Space.md), content = content)
+        Column(
+            Modifier.then(interactive).then(if (container != null) Modifier.background(container) else Modifier).padding(contentPadding),
+            content = content,
+        )
     }
 }
 

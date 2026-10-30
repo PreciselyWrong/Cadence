@@ -257,17 +257,23 @@ private fun ThemeTile(mode: ThemeMode, selected: Boolean, modifier: Modifier, on
     }
 }
 
-/** Aperçu schématique : deux barres et une pastille d'accent, sur fond clair, sombre ou partagé. */
+/**
+ * Aperçu schématique : deux barres et une pastille d'accent, sur fond clair, sombre ou partagé.
+ * La tuile a son propre fond de carte et un liseré, sinon l'aperçu clair se confond avec la page.
+ */
 @Composable
 private fun ThemePreview(mode: ThemeMode, selected: Boolean) {
     val palette = cadence
-    val border = if (selected) Modifier.border(Size.stroke, palette.primary, Radius.Card) else Modifier
+    val outline = if (selected) Modifier.border(Size.stroke, palette.primary, Radius.Card) else Modifier.border(Size.hairline, palette.outline, Radius.Card)
     Row(
         Modifier
             .fillMaxWidth()
             .height(PreviewHeight)
             .clip(Radius.Card)
-            .then(border),
+            .background(palette.card)
+            .then(outline)
+            .padding(Space.sm)
+            .clip(Radius.Chip),
     ) {
         when (mode) {
             ThemeMode.SYSTEM -> {

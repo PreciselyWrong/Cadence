@@ -131,6 +131,9 @@ object Size {
 
     /** Carte d'habitude (e07). */
     val habitCard = 80.dp
+
+    /** Largeur maximale d'une facette de la routine : les facettes se groupent au centre au lieu de s'étirer. */
+    val routineFacet = 72.dp
 }
 
 /**

@@ -5,6 +5,10 @@
     <string name="tasks_search_back">Retour</string>
     <string name="tasks_search_hint">Rechercher…</string>
     <string name="tasks_search_clear">Effacer la recherche</string>
+    <string name="tasks_search_recent">Récentes</string>
+    <string name="tasks_search_recent_clear">Effacer</string>
+    <string name="tasks_search_recent_remove">Retirer « %1$s » des récentes</string>
+    <string name="tasks_search_suggestions">Suggestions</string>
     <string name="tasks_search_prompt">Cherchez dans vos tâches, projets, notes et habitudes.</string>
     <string name="tasks_search_empty">Aucun résultat pour « %1$s ».</string>
     <string name="tasks_search_all">Tout</string>

@@ -22,17 +22,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.MeasurementUnit
+import ch.nicolab.cadence.ui.HabitFormatter
+import ch.nicolab.cadence.ui.shortFrenchOrSame
 
 /**
  * Le rythme des dernières périodes. Une seule question : la cadence a-t-elle tenu ?
  * Chaque période est une colonne creusée dans laquelle la part accomplie remonte.
  */
 @Composable
-fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifier = Modifier) {
+fun HabitHistoryGraph(
+    history: List<PeriodStat>,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    goalType: GoalType? = null,
+    unit: MeasurementUnit? = null,
+) {
     val palette = cadence
     Column(modifier) {
         Text(stringResource(R.string.history_graph_title), style = MaterialTheme.typography.labelMedium, color = palette.outline)
         Spacer(Modifier.height(Space.md))
+        if (goalType != null) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                history.forEach { period ->
+                    Text(
+                        barValue(period, goalType, unit),
+                        Modifier.weight(1f),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (period.succeeded) palette.onSurface else palette.onSurfaceVariant,
+                        maxLines = 1,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                }
+            }
+            Spacer(Modifier.height(Space.xs))
+        }
         Row(
             Modifier.fillMaxWidth().height(72.dp),
             horizontalArrangement = Arrangement.spacedBy(Space.sm),
@@ -75,8 +100,12 @@ fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifi
     }
 }
 
-/** L'étiquette persistée est une date ISO ; la colonne n'a la place que du jour et du mois. */
-private fun compactLabel(label: String): String = runCatching {
-    val date = java.time.LocalDate.parse(label)
-    "${date.dayOfMonth}/${date.monthValue}"
-}.getOrDefault(label)
+/** L'étiquette persistée est une date ISO, rendue « 30 oct. » : jamais l'écriture ISO à l'écran. */
+private fun compactLabel(label: String): String = shortFrenchOrSame(label)
+
+/** Valeur écrite au-dessus de la colonne : la mesure de la période, jamais une jauge muette. */
+private fun barValue(period: PeriodStat, goalType: GoalType, unit: MeasurementUnit?): String = when {
+    period.excludedByPause -> "–"
+    goalType == GoalType.BINARY -> if (period.succeeded) "Fait" else "–"
+    else -> HabitFormatter.formatValue(period.progressMinor, goalType, unit)
+}
