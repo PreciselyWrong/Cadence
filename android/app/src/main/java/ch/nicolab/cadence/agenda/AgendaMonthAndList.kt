@@ -177,12 +177,12 @@ private fun RowScope.MonthCell(
 }
 
 /**
- * Vue Liste : les 30 prochains jours à partir d'aujourd'hui, groupés par date. Les jours sans
+ * Vue Liste : les 30 jours à partir du jour choisi (aujourd'hui par défaut), groupés par date. Les jours sans
  * élément n'apparaissent pas.
  */
 @Composable
 internal fun ColumnScope.ListAgenda(state: AgendaUiState, onToggleEvent: (EventInstanceKey) -> Unit) {
-    val groups = remember(state.entries, state.today) { listGroups(state.entries, state.today, AGENDA_LIST_DAYS) }
+    val groups = remember(state.entries, state.selected) { listGroups(state.entries, state.selected, AGENDA_LIST_DAYS) }
     LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
         if (groups.isEmpty()) {
             item {
@@ -264,6 +264,7 @@ internal fun agendaMeta(entry: AgendaEntry): String {
     val source = when (entry) {
         is AgendaEntry.Event -> entry.calendarName
         is AgendaEntry.Task -> stringResource(R.string.agenda_task_kind)
+        is AgendaEntry.Habit -> stringResource(R.string.agenda_habit_kind)
     }
     return stringResource(R.string.agenda_meta, time, source)
 }
