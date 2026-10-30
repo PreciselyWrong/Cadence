@@ -14,6 +14,8 @@ data class LearnedQuestionSettings(
     val askAt: LocalTime = DEFAULT_ASK_AT,
     val thresholdPercent: Int = DEFAULT_THRESHOLD_PERCENT,
     val mutedWeekdays: Set<DayOfWeek> = emptySet(),
+    /** Aucune question pour un jour couvert par une pause ou un voyage ; désactivé, la question reste posée. */
+    val silentDuringPauses: Boolean = true,
 ) {
     init {
         require(habitId.isNotBlank()) { "Habit id cannot be blank" }
@@ -133,7 +135,7 @@ class QuestionPlanner(
         if (yesterday < habit.startsOn) return null
         if (yesterday.dayOfWeek in settings.mutedWeekdays) return null
         if (records.any { it.habitId == habit.id && it.date == yesterday }) return null
-        if (pauses.any { it.includes(yesterday) }) return null
+        if (settings.silentDuringPauses && pauses.any { it.includes(yesterday) }) return null
         if (logs.any { it.localDate == yesterday }) return null
         val earliest = logs.minOfOrNull { it.localDate } ?: return null
         val trackingSince = maxOf(habit.startsOn, earliest)

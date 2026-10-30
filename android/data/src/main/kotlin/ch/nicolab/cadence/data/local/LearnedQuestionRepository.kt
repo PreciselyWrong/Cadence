@@ -113,6 +113,7 @@ class LearnedQuestionRepository(
                 askAt = settings.askAt.format(ASK_AT_FORMAT),
                 thresholdPercent = settings.thresholdPercent,
                 mutedWeekdays = settings.mutedWeekdays.sortedBy(DayOfWeek::ordinal).joinToString(",") { it.name },
+                silentDuringPauses = settings.silentDuringPauses,
             ),
         )
     }
@@ -176,6 +177,7 @@ class LearnedQuestionRepository(
             thresholdPercent = stored.thresholdPercent,
             mutedWeekdays = stored.mutedWeekdays.split(",").filter(String::isNotBlank)
                 .map(DayOfWeek::valueOf).toSet(),
+            silentDuringPauses = stored.silentDuringPauses,
         )
     }
 

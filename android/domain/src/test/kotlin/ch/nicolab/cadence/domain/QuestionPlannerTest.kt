@@ -112,6 +112,16 @@ class QuestionPlannerTest {
         assertNull(plan(pauses = listOf(HabitPause.skip(yesterday, PauseReason.REST))))
     }
 
+    @Test fun `pause covering yesterday asks when silence during pauses is off`() {
+        val awake = settings.copy(silentDuringPauses = false)
+
+        assertNotNull(plan(settings = awake, pauses = listOf(HabitPause.skip(yesterday, PauseReason.REST))))
+    }
+
+    @Test fun `silence during pauses is on by default`() {
+        assertEquals(true, settings.silentDuringPauses)
+    }
+
     @Test fun `pause earlier in the window shrinks observed weeks`() {
         val logs = listOf(
             LocalDate.of(2026, 9, 17),

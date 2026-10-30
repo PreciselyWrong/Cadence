@@ -268,7 +268,13 @@ internal fun LearnedQuestionsPanel(
             settings.mutedWeekdays.sortedBy(DayOfWeek::ordinal).forEach { day ->
                 Text(stringResource(R.string.learned_panel_muted, LearnedQuestionText.weekdayName(day)), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }
-            Text(stringResource(R.string.learned_panel_pause), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+            SettingToggleRow(
+                title = stringResource(R.string.learned_panel_silent_pauses),
+                checked = settings.silentDuringPauses,
+                onCheckedChange = { save(settings.copy(silentDuringPauses = it)) },
+                icon = Icons.Outlined.AutoAwesome,
+                subtitle = stringResource(R.string.learned_panel_silent_pauses_help),
+            )
         }
     }
 }
