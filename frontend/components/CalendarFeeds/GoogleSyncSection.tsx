@@ -4,6 +4,7 @@ import { useToast } from '../Shared/ToastContext';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import {
     GoogleCalendar,
+    GoogleCalendarSyncMode,
     GoogleStatus,
     disconnectGoogle,
     fetchGoogleStatus,
@@ -130,6 +131,33 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                     'profile.calendars.toggleError',
                     'Could not update that calendar'
                 )
+            );
+        }
+    };
+
+    const changeMode = async (
+        calendar: GoogleCalendar,
+        mode: GoogleCalendarSyncMode
+    ) => {
+        if (!status) return;
+        try {
+            const saved = await updateGoogleCalendar(calendar.uid, {
+                sync_mode: mode,
+            });
+            setStatus({
+                ...status,
+                calendars: status.calendars.map((c) =>
+                    c.uid === calendar.uid ? saved : c
+                ),
+            });
+        } catch (err) {
+            showErrorToast(
+                err instanceof Error
+                    ? err.message
+                    : t(
+                          'profile.calendars.toggleError',
+                          'Could not update that calendar'
+                      )
             );
         }
     };
@@ -270,26 +298,62 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                                         />
                                         <span className="min-w-0 flex-1 truncate text-sm text-gray-900 dark:text-white">
                                             {calendar.name}
-                                            {!calendar.writable && (
-                                                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                                                    {t(
-                                                        'profile.google.readOnly',
-                                                        'read-only'
-                                                    )}
-                                                </span>
-                                            )}
                                         </span>
-                                        <Switch
-                                            checked={calendar.show_on_calendar}
-                                            label={t(
-                                                'profile.calendars.showOnCalendar',
-                                                'Show {{name}} on the Calendar page and Today',
+                                        <select
+                                            value={calendar.sync_mode || 'read'}
+                                            aria-label={t(
+                                                'profile.google.syncMode',
+                                                'Sync mode for {{name}}',
                                                 { name: calendar.name }
                                             )}
-                                            onChange={() =>
-                                                void toggleCalendar(calendar)
+                                            onChange={(e) =>
+                                                void changeMode(
+                                                    calendar,
+                                                    e.target
+                                                        .value as GoogleCalendarSyncMode
+                                                )
                                             }
-                                        />
+                                            className="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                                        >
+                                            <option value="hidden">
+                                                {t(
+                                                    'profile.google.modeHidden',
+                                                    'Hidden'
+                                                )}
+                                            </option>
+                                            <option value="read">
+                                                {t(
+                                                    'profile.google.modeRead',
+                                                    'Read only'
+                                                )}
+                                            </option>
+                                            <option
+                                                value="two_way"
+                                                disabled={!calendar.can_write}
+                                            >
+                                                {t(
+                                                    'profile.google.modeTwoWay',
+                                                    'Two-way'
+                                                )}
+                                            </option>
+                                        </select>
+                                        {calendar.sync_mode !== 'hidden' && (
+                                            <Switch
+                                                checked={
+                                                    calendar.show_on_calendar
+                                                }
+                                                label={t(
+                                                    'profile.calendars.showOnCalendar',
+                                                    'Show {{name}} on the Calendar page and Today',
+                                                    { name: calendar.name }
+                                                )}
+                                                onChange={() =>
+                                                    void toggleCalendar(
+                                                        calendar
+                                                    )
+                                                }
+                                            />
+                                        )}
                                     </div>
                                 ))}
                         </div>

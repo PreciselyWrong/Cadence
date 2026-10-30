@@ -38,6 +38,15 @@ module.exports = (sequelize) => {
                 allowNull: false,
                 defaultValue: true,
             },
+            // hidden: not pulled nor shown; read: shown, read-only in
+            // Cadence; two_way: editable from the Calendar page (only when
+            // Google lets the account write).
+            sync_mode: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: 'read',
+                validate: { isIn: [['hidden', 'read', 'two_way']] },
+            },
             sync_token: { type: DataTypes.TEXT, allowNull: true },
         },
         {

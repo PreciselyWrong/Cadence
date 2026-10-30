@@ -960,7 +960,11 @@
       "syncNow": "Sincronizza ora",
       "disconnect": "Scollega",
       "disconnectTitle": "Scollega Google",
-      "disconnectMessage": "Interrompere la sincronizzazione con Google? Le attività restano in Cadence e ciò che è già su Google resta lì."
+      "disconnectMessage": "Interrompere la sincronizzazione con Google? Le attività restano in Cadence e ciò che è già su Google resta lì.",
+      "syncMode": "Modalità di sincronizzazione per {{name}}",
+      "modeHidden": "Nascosto",
+      "modeRead": "Sola lettura",
+      "modeTwoWay": "Bidirezionale"
     },
     "sidebarSmartListsTitle": "Elenchi intelligenti",
     "sidebarRailTitle": "Barra icone e Altro",

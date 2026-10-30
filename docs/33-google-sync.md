@@ -8,14 +8,20 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 
 | Google side                                                  | Cadence side                                                                                         | Direction                                                                                                                        |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Every calendar of the account                                | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Both ways for calendars the account can write (owner/writer); read-only ones (holidays, shared "see all details") are shown only |
+| Every calendar of the account                                | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Per calendar: **Hidden**, **Read only** (default) or **Two-way** (only where Google lets the account write: owner/writer)        |
 | The secondary calendar **"Cadence"** (made on the first sync) | Open tasks with a due **time** (every dated task when Google Tasks sync is off)                    | Both ways                                                                                                                        |
 | Google Tasks: the default list                               | Tasks without a project (not the timed ones while calendar sync is on)                              | Both ways                                                                                                                        |
 | Google Tasks: every other list                               | One project per list (made by name when missing; a project's list is made when it first has a task) | Both ways                                                                                                                        |
 
 ### Calendar events (other calendars)
 
-- Click an empty hour (week/day view) to create a one-hour event, a day (month view, week header) for an all-day event, an event to edit or delete it. Drag to move, drag the bottom edge to change the end.
+- Each calendar has a **sync mode** (Profile → Calendars, select next to its name):
+  - **Hidden**: not read from Google and shown nowhere (Calendar, Today, Plan my day, AI draft). Its stored copies are dropped; switching back reads it afresh.
+  - **Read only** (default, also for calendars that existed before this setting): shown, but not editable from Cadence even when Google would allow it.
+  - **Two-way**: editable from the Calendar page as below. Offered only when Google lets the account write (owner/writer).
+- Events created in Google stay events (they never become tasks); only the "Cadence" calendar turns events into tasks. The show/hide switch next to the mode only toggles display.
+
+- On a two-way calendar: click an empty hour (week/day view) to create a one-hour event, a day (month view, week header) for an all-day event, an event to edit or delete it. Drag to move, drag the bottom edge to change the end.
 - A repeating event is changed one occurrence at a time (Google keeps it as an exception). Edit the whole series in Google.
 - Each calendar can be shown or hidden (chip on the Calendar page, or Profile → Calendars). A hidden calendar is also left out of Today, Plan my day and the AI draft. The first time, calendars hidden in Google stay hidden.
 - Copies are stored in `google_events`; the first sync reads 90 days back and everything ahead.
@@ -86,7 +92,7 @@ All under `/api`, signed in.
 | DELETE         | `/google`                              | Disconnect                                                                                                                            |
 | PATCH          | `/google/settings`                     | `{ sync_events, sync_tasks }`                                                                                                         |
 | POST           | `/google/sync`                         | Sync now                                                                                                                              |
-| PATCH          | `/google/calendars/:uid`               | `{ show_on_calendar }`                                                                                                                |
+| PATCH          | `/google/calendars/:uid`               | `{ show_on_calendar, sync_mode }` (`hidden`, `read`, `two_way`)                                                                                                              |
 | POST           | `/google/events`                       | `{ calendar_uid, title, description, location, all_day, start, end }` or `{ …, all_day: true, start_date, end_date }` (end exclusive) |
 | PATCH / DELETE | `/google/events/:calendarUid/:eventId` | Edit / delete one event (one occurrence of a repeating event)                                                                         |
 
@@ -94,7 +100,7 @@ Google events are also returned by `GET /api/calendar-feeds/events` with `source
 
 ## Schema
 
-`google_accounts` (one per user, tokens encrypted), `google_calendars` (calendar list, `show_on_calendar`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes). Migration `20261030090000-create-google-sync.js`.
+`google_accounts` (one per user, tokens encrypted), `google_calendars` (calendar list, `show_on_calendar`, `sync_mode`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes). Migrations `20261030090000-create-google-sync.js`, `20261030120000-add-sync-mode-to-google-calendars.js`.
 
 ## Limits
 

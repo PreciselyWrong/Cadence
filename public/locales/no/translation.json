@@ -960,7 +960,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "Synkroniseringsmodus for {{name}}",
+      "modeHidden": "Skjult",
+      "modeRead": "Kun lesing",
+      "modeTwoWay": "Begge veier"
     },
     "sidebarSmartListsTitle": "Smarte lister",
     "sidebarRailTitle": "Ikonlinje og Mer",

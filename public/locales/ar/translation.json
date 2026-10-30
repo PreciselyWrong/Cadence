@@ -963,7 +963,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "وضع المزامنة لـ {{name}}",
+      "modeHidden": "مخفي",
+      "modeRead": "للقراءة فقط",
+      "modeTwoWay": "في الاتجاهين"
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",

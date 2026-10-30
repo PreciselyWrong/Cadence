@@ -959,7 +959,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "{{name}} için eşitleme modu",
+      "modeHidden": "Gizli",
+      "modeRead": "Salt okunur",
+      "modeTwoWay": "Çift yönlü"
     },
     "sidebarSmartListsTitle": "Akıllı listeler",
     "sidebarRailTitle": "Simge çubuğu ve Diğer",

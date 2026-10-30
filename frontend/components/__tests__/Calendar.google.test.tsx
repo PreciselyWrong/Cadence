@@ -233,6 +233,29 @@ describe('Calendar page with Google', () => {
         );
     });
 
+    it('leaves hidden calendars out and edits only two-way ones', async () => {
+        (fetchGoogleStatus as jest.Mock).mockResolvedValue({
+            configured: true,
+            connected: true,
+            sync_events: true,
+            sync_tasks: true,
+            calendars: [
+                // Google allows writing, but the user chose read-only.
+                calendar('me', 'Me', {
+                    is_primary: true,
+                    writable: true,
+                    sync_mode: 'read',
+                }),
+                calendar('hol', 'Holidays', { sync_mode: 'hidden' }),
+            ],
+        });
+        renderCalendar();
+        await screen.findByRole('switch', { name: /Me/ });
+        expect(screen.queryByRole('switch', { name: /Holidays/ })).toBeNull();
+        fireEvent.click(screen.getByText('new on 20th'));
+        expect(screen.queryByLabelText('Title')).toBeNull();
+    });
+
     it('does not move a read-only event', async () => {
         renderCalendar();
         fireEvent.click(

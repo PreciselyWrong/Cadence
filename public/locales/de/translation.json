@@ -1327,7 +1327,11 @@
       "syncNow": "Jetzt synchronisieren",
       "disconnect": "Trennen",
       "disconnectTitle": "Google trennen",
-      "disconnectMessage": "Synchronisierung mit Google beenden? Ihre Aufgaben bleiben in Cadence, und was schon bei Google ist, bleibt dort."
+      "disconnectMessage": "Synchronisierung mit Google beenden? Ihre Aufgaben bleiben in Cadence, und was schon bei Google ist, bleibt dort.",
+      "syncMode": "Synchronisierungsmodus für {{name}}",
+      "modeHidden": "Ausgeblendet",
+      "modeRead": "Nur lesen",
+      "modeTwoWay": "In beide Richtungen"
     },
     "sidebarSmartListsTitle": "Intelligente Listen",
     "sidebarRailTitle": "Symbolleiste und Mehr",

@@ -984,7 +984,11 @@
             "syncNow": "Sync now",
             "disconnect": "Disconnect",
             "disconnectTitle": "Disconnect Google",
-            "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+            "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+            "syncMode": "Režim synchronizácie pre {{name}}",
+            "modeHidden": "Skrytý",
+            "modeRead": "Iba na čítanie",
+            "modeTwoWay": "Obojsmerný"
         },
         "sidebarSmartListsTitle": "Inteligentné zoznamy",
         "sidebarRailTitle": "Lišta ikon a Viac",

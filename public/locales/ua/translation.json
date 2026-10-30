@@ -1448,7 +1448,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "Режим синхронізації для {{name}}",
+      "modeHidden": "Приховано",
+      "modeRead": "Лише читання",
+      "modeTwoWay": "В обидва боки"
     },
     "sidebarSmartListsTitle": "Розумні списки",
     "sidebarRailTitle": "Панель значків і Ще",

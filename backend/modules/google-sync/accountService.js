@@ -12,7 +12,12 @@ const secretCipher = require('../../shared/crypto/secretCipher');
 const { ValidationError, NotFoundError } = require('../../shared/errors');
 const { getGoogleConfig, isConfigured } = require('./config');
 const client = require('./client');
-const { isWritable, FEED_PREFIX } = require('./eventsService');
+const {
+    isWritable,
+    isEditable,
+    SYNC_MODES,
+    FEED_PREFIX,
+} = require('./eventsService');
 
 const CALLBACK_PATH = '/google/oauth/callback';
 
@@ -24,7 +29,10 @@ function serializeCalendar(calendar) {
         color: calendar.color,
         is_primary: calendar.is_primary,
         is_tududi: calendar.is_tududi,
-        writable: isWritable(calendar) && !calendar.is_tududi,
+        // Google lets the account write to it (two_way can be chosen).
+        can_write: isWritable(calendar) && !calendar.is_tududi,
+        writable: isEditable(calendar),
+        sync_mode: calendar.sync_mode,
         show_on_calendar: calendar.show_on_calendar,
     };
 }
@@ -154,10 +162,42 @@ async function updateCalendar(userId, uid, body = {}) {
         where: { user_id: userId, uid },
     });
     if (!calendar) throw new NotFoundError('Calendar not found');
-    if (typeof body.show_on_calendar !== 'boolean') {
-        throw new ValidationError('show_on_calendar must be true or false');
+    const updates = {};
+    if (body.show_on_calendar !== undefined) {
+        if (typeof body.show_on_calendar !== 'boolean') {
+            throw new ValidationError('show_on_calendar must be true or false');
+        }
+        updates.show_on_calendar = body.show_on_calendar;
     }
-    await calendar.update({ show_on_calendar: body.show_on_calendar });
+    if (body.sync_mode !== undefined) {
+        if (!SYNC_MODES.includes(body.sync_mode)) {
+            throw new ValidationError(
+                `sync_mode must be one of ${SYNC_MODES.join(', ')}`
+            );
+        }
+        if (calendar.is_tududi) {
+            throw new ValidationError(
+                'The Cadence calendar always syncs both ways'
+            );
+        }
+        if (body.sync_mode === 'two_way' && !isWritable(calendar)) {
+            throw new ValidationError(
+                'Google does not let you edit this calendar'
+            );
+        }
+        updates.sync_mode = body.sync_mode;
+    }
+    if (!Object.keys(updates).length) {
+        throw new ValidationError('Nothing to change');
+    }
+    // Hidden: its copies go; showing it again reads it afresh.
+    if (updates.sync_mode === 'hidden' && calendar.sync_mode !== 'hidden') {
+        await GoogleEvent.destroy({
+            where: { google_calendar_id: calendar.id },
+        });
+        updates.sync_token = null;
+    }
+    await calendar.update(updates);
     return serializeCalendar(calendar);
 }
 

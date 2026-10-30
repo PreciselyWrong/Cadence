@@ -12,7 +12,15 @@ const WRITABLE_ROLES = ['owner', 'writer'];
 const FEED_PREFIX = 'google-';
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
+const SYNC_MODES = ['hidden', 'read', 'two_way'];
+
+// Google lets the account write to it.
 const isWritable = (calendar) => WRITABLE_ROLES.includes(calendar.access_role);
+// And the user chose to edit it from Cadence.
+const isEditable = (calendar) =>
+    !calendar.is_tududi &&
+    calendar.sync_mode === 'two_way' &&
+    isWritable(calendar);
 
 // Minutes on the user's clock (same rule as calendar-feeds/icsEvents.js).
 function wallMinute(at, dayStart, dayEnd) {
@@ -45,7 +53,7 @@ function base(row, calendar) {
         source: 'google',
         calendar_uid: calendar.uid,
         event_id: row.event_id,
-        editable: isWritable(calendar),
+        editable: isEditable(calendar),
         location: row.location,
         description: row.description,
         html_link: row.html_link,
@@ -112,7 +120,11 @@ async function eventsBetween(
     });
     // Calendar sync switched off: its copies are stale, show none.
     if (!account?.sync_events) return [];
-    const where = { user_id: user.id, is_tududi: false };
+    const where = {
+        user_id: user.id,
+        is_tududi: false,
+        sync_mode: { [Op.ne]: 'hidden' },
+    };
     if (shownOnly) where.show_on_calendar = true;
     const calendars = await GoogleCalendar.findAll({ where });
     if (!calendars.length) return [];
@@ -167,7 +179,7 @@ async function writableCalendar(userId, calendarUid) {
             'The Cadence calendar holds your tasks: change the task instead'
         );
     }
-    if (!isWritable(calendar)) {
+    if (!isEditable(calendar)) {
         throw new ValidationError('This calendar is read-only');
     }
     return calendar;
@@ -274,5 +286,7 @@ module.exports = {
     updateEvent,
     deleteEvent,
     isWritable,
+    isEditable,
+    SYNC_MODES,
     FEED_PREFIX,
 };

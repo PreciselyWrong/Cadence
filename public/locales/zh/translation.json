@@ -959,7 +959,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "{{name}} 的同步模式",
+      "modeHidden": "隐藏",
+      "modeRead": "只读",
+      "modeTwoWay": "双向"
     },
     "sidebarSmartListsTitle": "智能列表",
     "sidebarRailTitle": "图标栏与更多",

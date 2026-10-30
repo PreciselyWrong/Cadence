@@ -962,7 +962,11 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.",
+      "syncMode": "Mod de sincronizare pentru {{name}}",
+      "modeHidden": "Ascuns",
+      "modeRead": "Doar citire",
+      "modeTwoWay": "Bidirecțional"
     },
     "sidebarSmartListsTitle": "Liste inteligente",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",

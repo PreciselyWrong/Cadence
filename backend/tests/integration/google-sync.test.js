@@ -6,6 +6,7 @@ const {
     Project,
     GoogleAccount,
     GoogleCalendar,
+    GoogleEvent,
     GoogleTaskLink,
 } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
@@ -278,12 +279,20 @@ describe('Google sync', () => {
                 end: { date: day(3) },
             });
             await connect();
+            const me = await GoogleCalendar.findOne({
+                where: { google_id: 'me@gmail.com' },
+            });
+            let res = await agent
+                .patch(`/api/google/calendars/${me.uid}`)
+                .send({ sync_mode: 'two_way' });
+            expect(res.status).toBe(200);
+            expect(res.body.calendar.writable).toBe(true);
 
             const range = () =>
                 agent
                     .get('/api/calendar-feeds/events')
                     .query({ start: day(0), end: day(5) });
-            let res = await range();
+            res = await range();
             expect(res.status).toBe(200);
             const meeting = res.body.events.find((e) => e.title === 'Meeting');
             expect(meeting.start_minute).toBe(600);
@@ -308,9 +317,6 @@ describe('Google sync', () => {
             ).toBeUndefined();
             expect(dayView.events).toHaveLength(0);
 
-            const me = await GoogleCalendar.findOne({
-                where: { google_id: 'me@gmail.com' },
-            });
             const moved = moment.tz(`${day(1)} 15:00`, TZ);
             res = await agent
                 .patch(`/api/google/events/${me.uid}/${meeting.event_id}`)
@@ -347,6 +353,102 @@ describe('Google sync', () => {
             );
             expect(res.status).toBe(204);
             expect(stored.status).toBe('cancelled');
+        });
+
+        it('keeps a calendar read-only until it is set to two-way', async () => {
+            const start = moment.tz(`${day(1)} 10:00`, TZ);
+            google.putEvent('me@gmail.com', {
+                summary: 'Standup',
+                start: { dateTime: start.toISOString() },
+                end: { dateTime: start.clone().add(1, 'hour').toISOString() },
+            });
+            await connect();
+            const status = await agent.get('/api/google');
+            const meRow = status.body.calendars.find((c) => c.name === 'Me');
+            expect(meRow.sync_mode).toBe('read');
+            expect(meRow.can_write).toBe(true);
+            expect(meRow.writable).toBe(false);
+
+            const res = await agent
+                .get('/api/calendar-feeds/events')
+                .query({ start: day(0), end: day(2) });
+            const standup = res.body.events.find((e) => e.title === 'Standup');
+            expect(standup.editable).toBe(false);
+            const edit = await agent
+                .patch(`/api/google/events/${meRow.uid}/${standup.event_id}`)
+                .send({ title: 'Nope' });
+            expect(edit.status).toBe(400);
+            const create = await agent.post('/api/google/events').send({
+                calendar_uid: meRow.uid,
+                title: 'Nope',
+                all_day: true,
+                start_date: day(1),
+            });
+            expect(create.status).toBe(400);
+
+            const holidays = status.body.calendars.find(
+                (c) => c.name === 'Holidays'
+            );
+            const refused = await agent
+                .patch(`/api/google/calendars/${holidays.uid}`)
+                .send({ sync_mode: 'two_way' });
+            expect(refused.status).toBe(400);
+            const bad = await agent
+                .patch(`/api/google/calendars/${holidays.uid}`)
+                .send({ sync_mode: 'sometimes' });
+            expect(bad.status).toBe(400);
+        });
+
+        it('neither pulls nor shows a hidden calendar', async () => {
+            google.putEvent('holidays', {
+                summary: 'Holiday',
+                start: { date: day(1) },
+                end: { date: day(2) },
+            });
+            await connect();
+            const holidays = await GoogleCalendar.findOne({
+                where: { google_id: 'holidays' },
+            });
+            const res = await agent
+                .patch(`/api/google/calendars/${holidays.uid}`)
+                .send({ sync_mode: 'hidden' });
+            expect(res.status).toBe(200);
+            expect(
+                await GoogleEvent.count({
+                    where: { google_calendar_id: holidays.id },
+                })
+            ).toBe(0);
+
+            google.putEvent('holidays', {
+                summary: 'Another',
+                start: { date: day(2) },
+                end: { date: day(3) },
+            });
+            await syncUser(user.id);
+            expect(
+                await GoogleEvent.count({
+                    where: { google_calendar_id: holidays.id },
+                })
+            ).toBe(0);
+            const range = await agent
+                .get('/api/calendar-feeds/events')
+                .query({ start: day(0), end: day(4) });
+            expect(range.body.events).toHaveLength(0);
+            const dayView = await calendarFeedsService.eventsForDay(
+                user,
+                day(1)
+            );
+            expect(dayView.events).toHaveLength(0);
+
+            await agent
+                .patch(`/api/google/calendars/${holidays.uid}`)
+                .send({ sync_mode: 'read' });
+            await syncUser(user.id);
+            expect(
+                await GoogleEvent.count({
+                    where: { google_calendar_id: holidays.id },
+                })
+            ).toBe(2);
         });
 
         it('picks up changes made in Google on the next sync', async () => {

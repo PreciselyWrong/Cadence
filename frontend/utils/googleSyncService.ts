@@ -13,9 +13,15 @@ export interface GoogleCalendar {
     color: string | null;
     is_primary: boolean;
     is_tududi: boolean;
+    // Editable from Cadence (two-way and Google allows it).
     writable: boolean;
+    // Google lets the account write to it, so two-way can be chosen.
+    can_write?: boolean;
+    sync_mode?: GoogleCalendarSyncMode;
     show_on_calendar: boolean;
 }
+
+export type GoogleCalendarSyncMode = 'hidden' | 'read' | 'two_way';
 
 export interface GoogleStatus {
     configured: boolean;
@@ -103,7 +109,7 @@ export const syncGoogleNow = async (): Promise<GoogleStatus> =>
 
 export const updateGoogleCalendar = async (
     uid: string,
-    data: { show_on_calendar: boolean }
+    data: { show_on_calendar?: boolean; sync_mode?: GoogleCalendarSyncMode }
 ): Promise<GoogleCalendar> => {
     const body = await json(
         await fetch(getApiPath(`google/calendars/${encodeURIComponent(uid)}`), {

@@ -297,10 +297,15 @@ const Calendar: React.FC = () => {
 
     const googleCalendars: GoogleCalendar[] = googleStatus?.sync_events
         ? (googleStatus.calendars || []).filter(
-              (calendar) => !calendar.is_tududi
+              (calendar) =>
+                  !calendar.is_tududi && calendar.sync_mode !== 'hidden'
           )
         : [];
-    const writableGoogle = googleCalendars.filter((c) => c.writable);
+    // Only calendars set to two-way are edited from here, whatever Google
+    // allows.
+    const writableGoogle = googleCalendars.filter(
+        (c) => c.writable && (c.sync_mode ?? 'two_way') === 'two_way'
+    );
 
     // Month, week and day views all draw from one month-sized window (padded
     // a week each side), so paging within a month never refetches.

@@ -960,7 +960,11 @@
       "syncNow": "Synchroniser",
       "disconnect": "Déconnecter",
       "disconnectTitle": "Déconnecter Google",
-      "disconnectMessage": "Arrêter la synchronisation avec Google ? Vos tâches restent dans Cadence et tout ce qui est déjà sur Google y reste."
+      "disconnectMessage": "Arrêter la synchronisation avec Google ? Vos tâches restent dans Cadence et tout ce qui est déjà sur Google y reste.",
+      "syncMode": "Mode de synchronisation pour {{name}}",
+      "modeHidden": "Masqué",
+      "modeRead": "Lecture seule",
+      "modeTwoWay": "Bidirectionnel"
     },
     "sidebarSmartListsTitle": "Listes intelligentes",
     "sidebarRailTitle": "Barre d’icônes et Plus",

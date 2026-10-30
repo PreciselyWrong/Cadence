@@ -295,7 +295,10 @@ async function syncCalendars(ctx, account) {
     for (const calendar of calendars) {
         if (calendar.is_tududi) {
             await syncTududiCalendar(ctx, calendar);
-        } else if (calendar.access_role !== 'freeBusyReader') {
+        } else if (
+            calendar.access_role !== 'freeBusyReader' &&
+            calendar.sync_mode !== 'hidden'
+        ) {
             await syncCalendarEvents(ctx, calendar);
         }
     }
