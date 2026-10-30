@@ -3,8 +3,6 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,8 +42,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ch.nicolab.cadence.designsystem.components.TaskCheckbox
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.model.TaskViews
 import java.time.LocalDate
@@ -103,8 +102,9 @@ internal fun TaskRow(
             }
             TaskCheckbox(
                 checked = task.status == TaskStatus.DONE,
-                label = stringResource(if (task.isClosed) R.string.tasks_mark_undone else R.string.tasks_mark_done),
-                onClick = onToggle,
+                onCheckedChange = { onToggle() },
+                highPriority = task.priority == TaskPriority.HIGH,
+                contentDescription = stringResource(if (task.isClosed) R.string.tasks_mark_undone else R.string.tasks_mark_done),
             )
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
@@ -125,35 +125,6 @@ internal fun TaskRow(
                         .size(8.dp)
                         .clip(CircleShape)
                         .background(priorityColor(priority)),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TaskCheckbox(checked: Boolean, label: String, onClick: () -> Unit) {
-    val primary = MaterialTheme.colorScheme.primary
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clickable(role = Role.Checkbox, onClickLabel = label, onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
-                .border(2.dp, if (checked) primary else MaterialTheme.colorScheme.outline, CircleShape)
-                .background(if (checked) primary else Color.Transparent),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (checked) {
-                Icon(
-                    Icons.Outlined.Check,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(16.dp),
                 )
             }
         }

@@ -88,6 +88,11 @@ internal class TasksViewModel(
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
 
+    private val _completed = MutableSharedFlow<TaskItem>(extraBufferCapacity = 4)
+
+    /** Tâches terminées à l'instant, pour proposer « Annuler » ; une récurrente avance d'occurrence et n'en fait pas partie. */
+    val completed: Flow<TaskItem> = _completed.asSharedFlow()
+
     private val _pendingMove = MutableStateFlow<PendingMove?>(null)
     val pendingMove: StateFlow<PendingMove?> = _pendingMove.asStateFlow()
 
@@ -161,8 +166,15 @@ internal class TasksViewModel(
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
 
     fun toggle(task: TaskItem) = launchAction {
-        if (task.isClosed) repository.reopenTask(task.uid) else repository.completeTask(task.uid)
+        if (task.isClosed) {
+            repository.reopenTask(task.uid)
+        } else {
+            repository.completeTask(task.uid)
+            if (!task.isRecurring) _completed.tryEmit(task)
+        }
     }
+
+    fun undoComplete(uid: String) = launchAction { repository.reopenTask(uid) }
 
     fun skipOccurrence(task: TaskItem) = launchAction { repository.skipOccurrence(task.uid) }
 
