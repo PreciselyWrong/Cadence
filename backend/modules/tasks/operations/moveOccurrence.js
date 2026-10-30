@@ -15,7 +15,10 @@ const {
 
 const SCOPES = ['this', 'following', 'all'];
 const DATE_FORMAT = 'YYYY-MM-DD';
-const MAX_OCCURRENCE_SEARCH = 400;
+const OCCURRENCE_PAGE = 100;
+// Far enough for any real plan; it only keeps a typo like year 9999 from
+// walking a daily series for millions of steps.
+const MAX_YEARS_AHEAD = 50;
 
 const ONE_OFF_FIELDS = [
     'name',
@@ -120,6 +123,38 @@ const occurrenceLocalDate = (occurrence, timezone) =>
     typeof occurrence.due_date === 'string'
         ? occurrence.due_date
         : localDateOf(occurrence.due_date, timezone);
+
+// Walks the series page by page from its current due date until it reaches
+// or passes the date, so an occurrence months or years ahead is found too.
+function isOccurrenceOf(task, occurrenceDate, timezone) {
+    const horizon = moment
+        .tz(timezone)
+        .add(MAX_YEARS_AHEAD, 'years')
+        .format(DATE_FORMAT);
+    if (occurrenceDate > horizon) return false;
+
+    let startFrom = null;
+    let lastSeen = null;
+    for (;;) {
+        const page = calculateVirtualOccurrences(
+            task,
+            OCCURRENCE_PAGE,
+            startFrom,
+            timezone
+        );
+        for (const occurrence of page) {
+            const date = occurrenceLocalDate(occurrence, timezone);
+            if (date === occurrenceDate) return true;
+            if (date > occurrenceDate) return false;
+        }
+        const last = page[page.length - 1];
+        const lastDate = last && occurrenceLocalDate(last, timezone);
+        // The series ended, or stopped moving forward.
+        if (!last || (lastSeen && lastDate <= lastSeen)) return false;
+        lastSeen = lastDate;
+        startFrom = last.due_date;
+    }
+}
 
 async function shiftWholeSeries(task, deltaDays, timezone) {
     const newDue = shiftInstant(task.due_date, deltaDays, timezone);
@@ -274,14 +309,7 @@ async function moveOccurrence(
         throw new ValidationError('This recurring task has no due date.');
     }
 
-    const isOccurrence = calculateVirtualOccurrences(
-        task,
-        MAX_OCCURRENCE_SEARCH,
-        null,
-        tz
-    ).some(
-        (occurrence) => occurrenceLocalDate(occurrence, tz) === occurrenceDate
-    );
+    const isOccurrence = isOccurrenceOf(task, occurrenceDate, tz);
     if (!isOccurrence) {
         throw new ValidationError(
             'That date is not an occurrence of this task.'

@@ -191,6 +191,22 @@ describe('Moving one occurrence, the following ones, or the whole series', () =>
         });
     });
 
+    it('moves an occurrence however far ahead it is', async () => {
+        const series = await daily();
+
+        const res = await move(series.uid, {
+            scope: 'following',
+            occurrence_date: '2027-12-01',
+            due_date: '2027-12-02',
+        });
+
+        expect(res.status).toBe(200);
+        const next = await reload(res.body.moved.uid);
+        expect(day(next.due_date)).toBe('2027-12-02');
+        const parent = await reload(series.uid);
+        expect(day(parent.due_date)).toBe('2027-03-01');
+    });
+
     describe('validation', () => {
         it('refuses a task that does not repeat', async () => {
             const res = await agent
