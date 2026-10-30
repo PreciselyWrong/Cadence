@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, Location } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -218,6 +219,13 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     const { t } = useTranslation();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
     const moreRef = useRef<HTMLDivElement>(null);
+    const moreMenuRef = useRef<HTMLUListElement>(null);
+    // The rail scrolls (overflow hidden on x), so an absolutely positioned
+    // menu would be clipped: it is portalled and placed next to the button.
+    const [morePosition, setMorePosition] = useState<{
+        top: number;
+        left: number;
+    } | null>(null);
 
     const calendarEnabled = useStore(
         (state) => state.userSettingsStore.calendarEnabled
@@ -243,12 +251,21 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     useEffect(() => {
         if (!isMoreOpen) return;
         const onPointerDown = (event: MouseEvent) => {
-            if (!moreRef.current?.contains(event.target as Node)) {
+            const target = event.target as Node;
+            if (
+                !moreRef.current?.contains(target) &&
+                !moreMenuRef.current?.contains(target)
+            ) {
                 setIsMoreOpen(false);
             }
         };
+        const close = () => setIsMoreOpen(false);
         document.addEventListener('mousedown', onPointerDown);
-        return () => document.removeEventListener('mousedown', onPointerDown);
+        window.addEventListener('resize', close);
+        return () => {
+            document.removeEventListener('mousedown', onPointerDown);
+            window.removeEventListener('resize', close);
+        };
     }, [isMoreOpen]);
 
     const isVisible = (id: RailItemId): boolean => {
@@ -351,7 +368,15 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                     <div ref={moreRef} className="relative mt-1">
                         <button
                             type="button"
-                            onClick={() => setIsMoreOpen((open) => !open)}
+                            onClick={(event) => {
+                                const rect =
+                                    event.currentTarget.getBoundingClientRect();
+                                setMorePosition({
+                                    top: rect.top,
+                                    left: rect.right + 8,
+                                });
+                                setIsMoreOpen((open) => !open);
+                            }}
                             title={t('sidebar.more', 'More')}
                             aria-label={t('sidebar.more', 'More')}
                             aria-expanded={isMoreOpen}
@@ -360,46 +385,55 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                         >
                             <EllipsisHorizontalIcon className="h-[18px] w-[18px]" />
                         </button>
-                        {isMoreOpen && (
-                            <ul className="absolute left-full top-0 ml-2 z-50 min-w-[170px] py-1 rounded-[10px] border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                                {overflow.map((item) => (
-                                    <li key={item.id}>
-                                        <button
-                                            type="button"
-                                            onClick={() => openItem(item)}
-                                            data-testid={`sidebar-rail-more-${item.id}`}
-                                            className={`w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] mx-0 ${
-                                                isActive(item)
-                                                    ? activeClass
-                                                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
-                                            }`}
-                                        >
-                                            <item.Icon className="h-[16px] w-[16px] flex-shrink-0" />
-                                            {itemTitle(item)}
-                                        </button>
-                                    </li>
-                                ))}
-                                {onCustomize && (
-                                    <li className="mt-1 border-t border-gray-200 pt-1 dark:border-gray-700">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setIsMoreOpen(false);
-                                                onCustomize();
-                                            }}
-                                            data-testid="sidebar-rail-customize"
-                                            className="w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                                        >
-                                            <AdjustmentsHorizontalIcon className="h-[16px] w-[16px] flex-shrink-0" />
-                                            {t(
-                                                'sidebar.customize',
-                                                'Customize sidebar'
-                                            )}
-                                        </button>
-                                    </li>
-                                )}
-                            </ul>
-                        )}
+                        {isMoreOpen &&
+                            createPortal(
+                                <ul
+                                    ref={moreMenuRef}
+                                    style={{
+                                        top: morePosition?.top ?? 0,
+                                        left: morePosition?.left ?? 0,
+                                    }}
+                                    className="fixed z-50 max-h-[calc(100vh-16px)] overflow-y-auto min-w-[170px] py-1 rounded-[10px] border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900"
+                                >
+                                    {overflow.map((item) => (
+                                        <li key={item.id}>
+                                            <button
+                                                type="button"
+                                                onClick={() => openItem(item)}
+                                                data-testid={`sidebar-rail-more-${item.id}`}
+                                                className={`w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] mx-0 ${
+                                                    isActive(item)
+                                                        ? activeClass
+                                                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
+                                                }`}
+                                            >
+                                                <item.Icon className="h-[16px] w-[16px] flex-shrink-0" />
+                                                {itemTitle(item)}
+                                            </button>
+                                        </li>
+                                    ))}
+                                    {onCustomize && (
+                                        <li className="mt-1 border-t border-gray-200 pt-1 dark:border-gray-700">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsMoreOpen(false);
+                                                    onCustomize();
+                                                }}
+                                                data-testid="sidebar-rail-customize"
+                                                className="w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                            >
+                                                <AdjustmentsHorizontalIcon className="h-[16px] w-[16px] flex-shrink-0" />
+                                                {t(
+                                                    'sidebar.customize',
+                                                    'Customize sidebar'
+                                                )}
+                                            </button>
+                                        </li>
+                                    )}
+                                </ul>,
+                                document.body
+                            )}
                     </div>
                 )}
             </div>

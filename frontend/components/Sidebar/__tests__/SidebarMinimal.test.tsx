@@ -309,4 +309,20 @@ describe('Sidebar in minimal mode', () => {
             screen.getByTestId('sidebar-rail-more-access')
         ).toBeInTheDocument();
     });
+
+    it('renders the rail More menu outside the clipping rail', () => {
+        renderSidebar(true);
+
+        fireEvent.click(screen.getByTestId('sidebar-rail-more'));
+
+        const item = screen.getByTestId('sidebar-rail-more-boards');
+        const menu = item.closest('ul') as HTMLElement;
+        // The rail scrolls with overflow-x hidden: a menu inside it is cut off.
+        expect(menu.parentElement).toBe(document.body);
+        expect(menu.className).toContain('fixed');
+
+        fireEvent.mouseDown(item);
+        fireEvent.click(item);
+        expect(screen.queryByTestId('sidebar-rail-more-boards')).toBeNull();
+    });
 });
