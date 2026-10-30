@@ -60,6 +60,7 @@ import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
+import ch.nicolab.cadence.tasks.widget.openTaskIntent
 import ch.nicolab.cadence.widget.WidgetHabit
 import ch.nicolab.cadence.widget.WidgetHabitPresentation
 import ch.nicolab.cadence.widget.pendingWidgetHabits
@@ -176,6 +177,7 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        TodayCalendarRefresh.ensureScheduled(context)
         // Le contenu dépend du jour et de l'heure : ces signaux le redessinent.
         if (intent.action in DAY_SIGNALS) {
             val app = context.applicationContext as CadenceApp
@@ -186,6 +188,11 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         TodayWidgetConfigStore(context).remove(appWidgetIds)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        TodayCalendarRefresh.cancel(context)
     }
 
     private companion object {
@@ -333,7 +340,8 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
     val accent = (if (config.controlColour == ControlColour.PROJET) projectArgb else null)
         ?: TodayControlPalette.argb(config.controlColour, config.freeControlArgb)
         ?: palette.accent
-    val openIntent = Intent(LocalContext.current, MainActivity::class.java)
+    val context = LocalContext.current
+    val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,

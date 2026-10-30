@@ -86,6 +86,7 @@ class CompleteTaskAction : ActionCallback {
         val uid = parameters[taskUidKey] ?: return
         TasksGraph.repository(context).completeTask(uid)
         TasksWidget().updateAll(context)
+        TasksSquareWidget().updateAll(context)
     }
 }
 

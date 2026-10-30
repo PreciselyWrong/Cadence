@@ -12,7 +12,7 @@ const val EXTRA_OPEN_TASK_UID = "open_task_uid"
  * nécessaire : l'égalité des PendingIntent ignore les extras, donc sans elle deux
  * tâches partageraient le même PendingIntent et l'extra du premier écraserait l'autre.
  */
-internal fun openTaskIntent(context: Context, uid: String): Intent? =
+fun openTaskIntent(context: Context, uid: String): Intent? =
     context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
         putExtra(EXTRA_OPEN_TASK_UID, uid)
         data = Uri.parse("tududi-task://open/$uid")

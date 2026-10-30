@@ -148,6 +148,49 @@ class TodayWidgetSelectionTest {
         assertEquals(listOf("morning", "afternoon"), shown.events.map { it.event.title })
     }
 
+    @Test
+    fun `le filtre de projets ne garde que les taches de ces projets`() {
+        val tasks = listOf(
+            task("a", today, projectUid = "p1"),
+            task("b", today, projectUid = "p2"),
+            task("loose", today),
+        )
+
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY, projectUids = setOf("p1")))
+
+        assertEquals(listOf("a"), selection.tasks.map { it.uid })
+        assertEquals(1, selection.total)
+    }
+
+    @Test
+    fun `le filtre d'etiquettes garde les taches portant au moins une etiquette choisie`() {
+        val tasks = listOf(
+            task("x", today, tagUids = listOf("t1", "t9")),
+            task("y", today, tagUids = listOf("t2")),
+            task("none", today),
+        )
+
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY, tagUids = setOf("t1", "t2")))
+
+        assertEquals(listOf("x", "y"), selection.tasks.map { it.uid }.sorted())
+    }
+
+    @Test
+    fun `projets et etiquettes se cumulent`() {
+        val tasks = listOf(
+            task("both", today, projectUid = "p1", tagUids = listOf("t1")),
+            task("projectOnly", today, projectUid = "p1"),
+            task("tagOnly", today, tagUids = listOf("t1")),
+        )
+
+        val selection = select(
+            tasks,
+            TodayWidgetConfig(taskScope = TaskScope.TODAY, projectUids = setOf("p1"), tagUids = setOf("t1")),
+        )
+
+        assertEquals(listOf("both"), selection.tasks.map { it.uid })
+    }
+
     private fun select(
         tasks: List<TaskItem>,
         config: TodayWidgetConfig,
@@ -160,6 +203,7 @@ class TodayWidgetSelectionTest {
         projectUid: String? = null,
         priority: Int? = null,
         recurrenceType: String? = null,
+        tagUids: List<String> = emptyList(),
     ) = TaskItem(
         uid = uid,
         name = uid,
@@ -168,6 +212,7 @@ class TodayWidgetSelectionTest {
         projectUid = projectUid,
         priority = priority,
         recurrenceType = recurrenceType,
+        tagUids = tagUids,
     )
 
     private fun at(hhmm: String): Long =

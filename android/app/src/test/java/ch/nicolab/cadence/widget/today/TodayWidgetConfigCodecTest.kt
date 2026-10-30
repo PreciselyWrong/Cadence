@@ -30,6 +30,8 @@ class TodayWidgetConfigCodecTest {
             showEvents = true,
             textSize = TodayTextSize.L,
             cornerRadiusDp = 8,
+            projectUids = setOf("p-1", "p-2"),
+            tagUids = setOf("t-1"),
         )
 
         val stored = TodayWidgetConfigCodec.encode(config)
@@ -40,12 +42,13 @@ class TodayWidgetConfigCodecTest {
     @Test
     fun `des valeurs absentes ou abimees donnent les valeurs par defaut`() {
         val defaults = TodayWidgetConfig()
+        val junk = setOf("n'importe quoi")
 
         assertEquals(defaults, TodayWidgetConfigCodec.decode { null })
         // Les identifiants d'habitude sont opaques : une valeur inconnue est gardée telle quelle,
         // elle ne correspond à aucune habitude et n'affiche rien.
         assertEquals(
-            defaults.copy(habitIds = setOf("n'importe quoi")),
+            defaults.copy(habitIds = junk, projectUids = junk, tagUids = junk),
             TodayWidgetConfigCodec.decode { "n'importe quoi" },
         )
     }

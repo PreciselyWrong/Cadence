@@ -29,7 +29,10 @@ object TasksWidgetUpdater {
             TasksGraph.repository(app).observeTasks()
                 .distinctUntilChanged()
                 .debounce(DEBOUNCE_MILLIS)
-                .collect { TasksWidget().updateAll(app) }
+                .collect {
+                    TasksWidget().updateAll(app)
+                    TasksSquareWidget().updateAll(app)
+                }
         }
     }
 
@@ -53,6 +56,7 @@ class TasksDayChangeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         runAsync {
             TasksWidget().updateAll(context)
+            TasksSquareWidget().updateAll(context)
             TasksWidgetUpdater.scheduleMidnight(context)
         }
     }
