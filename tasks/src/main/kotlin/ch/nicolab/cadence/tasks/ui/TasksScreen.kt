@@ -120,6 +120,7 @@ fun TasksScreen(modifier: Modifier = Modifier, openTaskUid: String? = null) {
                     tab == TasksTab.INBOX -> InboxTab(
                         viewModel = viewModel,
                         captureFocus = captureFocus,
+                        onOpen = { selectedTaskUid = it.uid },
                         modifier = Modifier.fillMaxSize(),
                     )
                     else -> ProjectsTab(

@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.model
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /**
  * Règles d'affichage partagées par les écrans et le widget, reprises de
@@ -46,14 +47,25 @@ object TaskViews {
 
     /** Tâches ouvertes sans échéance ni projet : à trier. */
     fun unsorted(tasks: List<TaskItem>, now: Instant): List<TaskItem> =
-        tasks.filter { visibleNow(it, now) && it.dueDate == null && it.projectUid == null }
+        tasks.filter { visibleNow(it, now) && it.dueDate == null && it.dueDay == null && it.projectUid == null }
 
     fun ofProject(tasks: List<TaskItem>, projectUid: String, now: Instant): List<TaskItem> =
         tasks.filter { it.projectUid == projectUid && visibleNow(it, now) }
             .sortedWith(compareBy<TaskItem> { it.dueDate == null }.thenBy { it.dueDate }.thenBy { it.name.lowercase() })
 
+    /**
+     * Report d'une tâche au [day] : une échéance à heure fixe garde son heure locale,
+     * sinon la tâche redevient une échéance de journée.
+     */
+    fun postponeChange(task: TaskItem, day: LocalDate, zone: ZoneId): TaskChange {
+        val time = task.dueDate?.takeIf { task.dueHasTime }?.atZone(zone)?.toLocalTime()
+        return TaskChange(dueDate = day, dueTime = time?.format(hourMinute))
+    }
+
     fun completedToday(tasks: List<TaskItem>, today: LocalDate, zone: ZoneId): List<TaskItem> =
         tasks.filter { it.status == TaskStatus.DONE && it.completedAt?.atZone(zone)?.toLocalDate() == today }
+
+    private val hourMinute: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     private val todayOrder =
         compareBy<TaskItem> { it.pinnedAt == null }

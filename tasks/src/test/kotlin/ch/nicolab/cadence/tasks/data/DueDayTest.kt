@@ -87,4 +87,13 @@ class DueDayTest {
 
         assertEquals(Instant.parse("2026-10-30T14:45:00Z"), due)
     }
+
+    @Test
+    fun `occurrence récurrente est désignée par le jour du compte, pas celui de l'appareil`() {
+        val tokyo = ZoneId.of("Asia/Tokyo")
+
+        // 23:30 UTC est encore le 30 pour le compte, déjà le 31 à Tokyo.
+        assertEquals(LocalDate.of(2026, 10, 30), occurrenceDayOf("2026-10-30T23:30:00Z", utc))
+        assertEquals(LocalDate.of(2026, 10, 31), occurrenceDayOf("2026-10-30T23:30:00Z", tokyo))
+    }
 }

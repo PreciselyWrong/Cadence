@@ -17,14 +17,26 @@ internal fun createServerConnection(context: Context): ServerConnection = TasksR
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
+        .addMigrations(MIGRATION_1_2)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
     private val store = RoomSyncStore(database, clockState)
-    val connection = ServerConnectionImpl(appContext, database, store)
+    private val deviceZone = DeviceZone(appContext)
+    // La connexion et le moteur se réfèrent l'un à l'autre : le moteur n'est lu qu'à l'exécution.
+    val connection = ServerConnectionImpl(appContext, database, store) { engine }
     val api = HttpSyncApi { connection.currentSession() ?: throw AuthError("Aucun serveur configuré") }
-    val engine = SyncEngine(api, store, hlc, onProfile = connection::saveProfile)
-    val repository = RoomTaskRepository(appContext, database, api, hlc, clockState, connection, engine.state)
+    val engine: SyncEngine = SyncEngine(api, store, hlc, onProfile = connection::saveProfile)
+    val repository = RoomTaskRepository(
+        appContext,
+        database,
+        api,
+        hlc,
+        clockState,
+        connection,
+        engine.state,
+        deviceZone.zone,
+    )
 
     companion object {
         @Volatile

@@ -79,6 +79,11 @@ internal class TasksViewModel(application: Application) : AndroidViewModel(appli
         TaskViews.upcoming(all, m.today, m.now)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
+    /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */
+    val unsorted: StateFlow<List<TaskItem>> = combine(tasks, moment) { all, m ->
+        TaskViews.unsorted(all, m.now)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
     val projects: StateFlow<List<ProjectItem>> = repository.observeProjects()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
@@ -112,11 +117,12 @@ internal class TasksViewModel(application: Application) : AndroidViewModel(appli
 
     /** Report à demain ; une tâche récurrente demande d'abord la portée. */
     fun postpone(task: TaskItem) {
-        val tomorrow = moment.value.today.plusDays(1)
+        val current = moment.value
+        val tomorrow = current.today.plusDays(1)
         if (task.isRecurring) {
             askRecurringMove(task.uid, tomorrow)
         } else {
-            update(task.uid, TaskChange(dueDate = tomorrow))
+            update(task.uid, TaskViews.postponeChange(task, tomorrow, current.zone))
         }
     }
 
@@ -133,16 +139,22 @@ internal class TasksViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    fun createTask(draft: TaskDraft) = launchAction { repository.createTask(draft) }
+    // Écritures des formulaires : suspendues, pour que l'écran ne se ferme qu'après succès.
+    // Les erreurs remontent à l'appelant, qui garde les valeurs saisies.
+    suspend fun saveChange(uid: String, change: TaskChange) = repository.updateTask(uid, change)
+
+    suspend fun saveNewTask(draft: TaskDraft) {
+        repository.createTask(draft)
+    }
+
+    suspend fun saveConversion(entry: InboxEntry, draft: TaskDraft) {
+        repository.createTask(draft)
+        repository.deleteInboxItem(entry.uid)
+    }
 
     fun captureInbox(text: String) = launchAction { repository.captureInbox(text) }
 
     fun deleteInboxItem(uid: String) = launchAction { repository.deleteInboxItem(uid) }
-
-    fun convertInbox(entry: InboxEntry, draft: TaskDraft) = launchAction {
-        repository.createTask(draft)
-        repository.deleteInboxItem(entry.uid)
-    }
 
     fun requestSync() = repository.requestSync()
 

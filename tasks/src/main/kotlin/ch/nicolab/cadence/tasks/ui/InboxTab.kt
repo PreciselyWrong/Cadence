@@ -34,18 +34,25 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.TaskItem
 
 /**
  * Capture rapide : le champ en tête envoie la saisie à la boîte de réception.
  * « Convertir en tâche » ouvre l'ajout rapide pré-rempli, puis supprime l'entrée.
+ * Sous les entrées, « Tâches à classer » liste les tâches sans échéance ni projet,
+ * qu'aucun autre onglet n'affiche.
  */
 @Composable
 internal fun InboxTab(
     viewModel: TasksViewModel,
     captureFocus: FocusRequester,
+    onOpen: (TaskItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.inbox.collectAsStateWithLifecycle()
+    val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
+    val projectNames = rememberProjectNames(viewModel)
     var capture by rememberSaveable { mutableStateOf("") }
     var converting by remember { mutableStateOf<InboxEntry?>(null) }
     val submit = {
@@ -78,13 +85,17 @@ internal fun InboxTab(
                 onDelete = { viewModel.deleteInboxItem(entry.uid) },
             )
         }
+        if (unsorted.isNotEmpty()) {
+            item { SectionHeader(stringResource(R.string.tasks_section_unsorted)) }
+            taskRows(unsorted, projectNames, moment, viewModel, onOpen)
+        }
     }
 
     converting?.let { entry ->
         QuickAddSheet(
             onDismiss = { converting = null },
             initialName = entry.content,
-            onSave = { draft -> viewModel.convertInbox(entry, draft) },
+            onSave = { draft -> viewModel.saveConversion(entry, draft) },
         )
     }
 }

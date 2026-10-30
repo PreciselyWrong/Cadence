@@ -27,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -41,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -59,6 +61,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import java.time.LocalDate
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /**
@@ -75,7 +78,7 @@ class TaskQuickAddActivity : ComponentActivity() {
         setContent {
             QuickAddTheme {
                 QuickAddCard(
-                    onSubmit = { draft -> submit(draft) },
+                    onSubmit = { draft -> TasksGraph.repository(this@TaskQuickAddActivity).createTask(draft) },
                     onDismiss = { finish() },
                 )
             }
@@ -91,14 +94,6 @@ class TaskQuickAddActivity : ComponentActivity() {
         lifecycleScope.launch {
             TasksGraph.repository(this@TaskQuickAddActivity).captureInbox(content)
             Toast.makeText(this@TaskQuickAddActivity, R.string.tasks_share_saved, Toast.LENGTH_SHORT).show()
-            finish()
-        }
-    }
-
-    private fun submit(draft: TaskDraft) {
-        // La fermeture attend l'écriture locale, sinon la coroutine serait annulée avec l'activité.
-        lifecycleScope.launch {
-            TasksGraph.repository(this@TaskQuickAddActivity).createTask(draft)
             finish()
         }
     }
@@ -130,20 +125,36 @@ private fun QuickAddTheme(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun QuickAddCard(onSubmit: (TaskDraft) -> Unit, onDismiss: () -> Unit) {
+private fun QuickAddCard(onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () -> Unit) {
     var name by rememberSaveable { mutableStateOf("") }
     var due by rememberSaveable { mutableStateOf(DueChoice.TODAY) }
-    var submitting by rememberSaveable { mutableStateOf(false) }
+    var saving by remember { mutableStateOf(false) }
+    var saveError by remember { mutableStateOf<String?>(null) }
     val focusRequester = remember { FocusRequester() }
     val interactionSource = remember { MutableInteractionSource() }
+    val scope = rememberCoroutineScope()
+    val genericError = stringResource(R.string.tasks_error_generic)
 
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
+    // La carte ne se ferme qu'après l'écriture ; en cas d'échec, le titre et le choix restent.
     fun submit() {
         val title = name.trim()
-        if (title.isEmpty() || submitting) return
-        submitting = true
-        onSubmit(TaskDraft(name = title, dueDate = due.dateFrom(LocalDate.now())))
+        if (title.isEmpty() || saving) return
+        saving = true
+        saveError = null
+        val draft = TaskDraft(name = title, dueDate = due.dateFrom(LocalDate.now()))
+        scope.launch {
+            try {
+                onSubmit(draft)
+                onDismiss()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                saveError = e.message ?: genericError
+                saving = false
+            }
+        }
     }
 
     Box(
@@ -175,6 +186,7 @@ private fun QuickAddCard(onSubmit: (TaskDraft) -> Unit, onDismiss: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     placeholder = { Text(stringResource(R.string.tasks_quick_add_hint)) },
                     singleLine = true,
+                    enabled = !saving,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         imeAction = ImeAction.Done,
@@ -191,11 +203,23 @@ private fun QuickAddCard(onSubmit: (TaskDraft) -> Unit, onDismiss: () -> Unit) {
                         )
                     }
                 }
+                if (saving) {
+                    Spacer(Modifier.height(12.dp))
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+                saveError?.let {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
                 Spacer(Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.tasks_quick_add_cancel)) }
+                    TextButton(onClick = onDismiss, enabled = !saving) { Text(stringResource(R.string.tasks_quick_add_cancel)) }
                     Spacer(Modifier.width(8.dp))
-                    Button(onClick = { submit() }, enabled = name.isNotBlank() && !submitting) {
+                    Button(onClick = { submit() }, enabled = name.isNotBlank() && !saving) {
                         Text(stringResource(R.string.tasks_quick_add_submit))
                     }
                 }

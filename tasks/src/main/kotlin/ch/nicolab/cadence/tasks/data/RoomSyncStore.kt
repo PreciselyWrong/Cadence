@@ -63,8 +63,20 @@ internal class RoomSyncStore(
 
     override suspend fun recordFailure(opIds: List<String>, message: String) = outbox.markFailed(opIds, message)
 
+    /** Appelé avant que la ligne rejetée ne soit retirée : son nom est encore disponible. */
     override suspend fun recordRejected(op: OutboxOp, reason: String?) {
-        database.failedOpDao().insert(FailedOpEntity(op.opId, op.entity, op.uid, reason, nowMs()))
+        database.failedOpDao().insert(
+            FailedOpEntity(op.opId, op.entity, op.uid, reason, nowMs(), displayName(op.entity, op.uid)),
+        )
+    }
+
+    private suspend fun displayName(entity: String, uid: String): String? = when (entity) {
+        "task" -> database.taskDao().get(uid)?.name
+        "project" -> database.projectDao().get(uid)?.name
+        "area" -> database.areaDao().get(uid)?.name
+        "tag" -> database.tagDao().get(uid)?.name
+        "inbox_item" -> database.inboxDao().get(uid)?.content
+        else -> null
     }
 
     override suspend fun saveClock(state: String) = clockState.save(state)

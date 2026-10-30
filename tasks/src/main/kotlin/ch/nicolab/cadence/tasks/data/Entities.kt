@@ -85,6 +85,8 @@ data class FailedOpEntity(
     val uid: String,
     val reason: String?,
     val atMs: Long,
+    /** Libellé de la ligne au moment du rejet (son nom), pour que le diagnostic parle à l'utilisateur. */
+    val displayName: String? = null,
 )
 
 @Entity(tableName = "sync_meta")

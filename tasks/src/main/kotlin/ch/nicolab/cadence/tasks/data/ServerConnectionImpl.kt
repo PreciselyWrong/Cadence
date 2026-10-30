@@ -11,11 +11,14 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
+import ch.nicolab.cadence.tasks.sync.ProtocolError
 import ch.nicolab.cadence.tasks.sync.ServerSession
-import ch.nicolab.cadence.tasks.sync.SyncStore
+import ch.nicolab.cadence.tasks.sync.SyncEngine
 import ch.nicolab.cadence.tasks.sync.SyncScheduler
+import ch.nicolab.cadence.tasks.sync.SyncStore
 import java.io.IOException
 import java.time.ZoneId
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -37,6 +40,7 @@ internal class ServerConnectionImpl(
     private val context: Context,
     private val database: TududiDatabase,
     private val store: SyncStore,
+    private val engineProvider: () -> SyncEngine,
 ) : ServerConnection {
 
     override fun observe(): Flow<ConnectionInfo?> = context.connectionStore.data
@@ -76,10 +80,16 @@ internal class ServerConnectionImpl(
             SyncScheduler.schedulePeriodic(context)
             SyncScheduler.requestNow(context)
             Result.success(ConnectionInfo(url, profile.email, parseZone(profile.timezone)))
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: AuthError) {
             Result.failure(IllegalStateException("Clé API refusée", error))
+        } catch (error: ProtocolError) {
+            Result.failure(IllegalStateException("Réponse inattendue du serveur", error))
         } catch (error: IOException) {
             Result.failure(IllegalStateException("Serveur injoignable", error))
+        } catch (error: Exception) {
+            Result.failure(IllegalStateException("Connexion impossible", error))
         }
     }
 
@@ -88,10 +98,18 @@ internal class ServerConnectionImpl(
         context.connectionStore.edit { prefs -> applyProfile(prefs, profile) }
     }
 
+    /**
+     * Ordre voulu : le moteur cesse d'écrire, WorkManager est arrêté, puis on efface
+     * sous le verrou du moteur pour qu'aucun passage ne ramène des lignes.
+     */
     override suspend fun disconnect() {
-        context.connectionStore.edit { prefs -> prefs.clear() }
-        withContext(Dispatchers.IO) { database.clearAllTables() }
+        val engine = engineProvider()
+        engine.markClosed()
         SyncScheduler.cancel(context)
+        engine.whileIdle {
+            context.connectionStore.edit { prefs -> prefs.clear() }
+            withContext(Dispatchers.IO) { database.clearAllTables() }
+        }
     }
 }
 

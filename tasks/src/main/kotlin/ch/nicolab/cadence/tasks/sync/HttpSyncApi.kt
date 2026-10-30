@@ -8,14 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.longOrNull
 
 /**
@@ -24,15 +23,9 @@ import kotlinx.serialization.json.longOrNull
  */
 class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
 
-    override suspend fun meta(): JsonObject = request("GET", "/api/v1/sync/meta").jsonObject
+    override suspend fun meta(): JsonObject = request("GET", "/api/v1/sync/meta")
 
-    override suspend fun profile(): AccountProfile {
-        val body = request("GET", "/api/v1/profile").jsonObject
-        return AccountProfile(
-            email = (body["email"] as? JsonPrimitive)?.contentOrNull,
-            timezone = (body["timezone"] as? JsonPrimitive)?.contentOrNull,
-        )
-    }
+    override suspend fun profile(): AccountProfile = profileOf(request("GET", "/api/v1/profile"))
 
     override suspend fun snapshot(entity: String, after: Long, cursor: Long?, limit: Int): SnapshotPage {
         val query = buildMap {
@@ -41,47 +34,20 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
             put("limit", limit.toString())
             cursor?.let { put("cursor", it.toString()) }
         }
-        val body = request("GET", "/api/v1/sync/snapshot", query).jsonObject
-        return SnapshotPage(
-            cursor = body.long("cursor"),
-            next = (body["next"] as? JsonPrimitive)?.longOrNull,
-            rows = body.array("rows").map { it.jsonObject },
-        )
+        return snapshotPageOf(request("GET", "/api/v1/sync/snapshot", query))
     }
 
-    override suspend fun pull(cursor: Long, limit: Int): PullPage {
-        val body = request(
+    override suspend fun pull(cursor: Long, limit: Int): PullPage = pullPageOf(
+        request(
             "GET",
             "/api/v1/sync/pull",
             mapOf("cursor" to cursor.toString(), "limit" to limit.toString()),
-        ).jsonObject
-        return PullPage(
-            cursor = body.long("cursor"),
-            hasMore = body.getValue("has_more").jsonPrimitive.booleanOrNull == true,
-            changes = body.array("changes").map { element ->
-                val change = element.jsonObject
-                RemoteChange(
-                    seq = change.long("seq"),
-                    entity = change.string("entity"),
-                    uid = change.string("uid"),
-                    op = change.string("op"),
-                    data = change["data"] as? JsonObject,
-                    opId = (change["op_id"] as? JsonPrimitive)?.contentOrNull,
-                )
-            },
-        )
-    }
+        ),
+    )
 
     override suspend fun push(ops: List<JsonObject>): List<PushResult> {
         val body = JsonObject(mapOf("ops" to JsonArray(ops)))
-        return request("POST", "/api/v1/sync/push", body = body).jsonObject.array("results").map { element ->
-            val result = element.jsonObject
-            PushResult(
-                opId = result.string("op_id"),
-                status = result.string("status"),
-                reason = (result["reason"] as? JsonPrimitive)?.contentOrNull,
-            )
-        }
+        return pushResultsOf(request("POST", "/api/v1/sync/push", body = body))
     }
 
     override suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String) {
@@ -100,7 +66,7 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
         path: String,
         query: Map<String, String> = emptyMap(),
         body: JsonObject? = null,
-    ): JsonElement = withContext(Dispatchers.IO) {
+    ): JsonObject = withContext(Dispatchers.IO) {
         val server = session()
         val queryString = query.entries.joinToString("&") { (key, value) -> "${encode(key)}=${encode(value)}" }
         val url = URL(server.baseUrl + path + if (queryString.isEmpty()) "" else "?$queryString")
@@ -125,7 +91,7 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
             }
             if (code !in 200..299) throw IOException("HTTP $code")
             val text = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            Json.parseToJsonElement(text)
+            parseResponse(text)
         } finally {
             connection.disconnect()
         }
@@ -133,14 +99,74 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
 
     private fun encode(value: String): String = URLEncoder.encode(value, "UTF-8")
 
-    private fun JsonObject.long(key: String): Long = getValue(key).jsonPrimitive.longOrNull
-        ?: throw IOException("Réponse invalide : $key")
-
-    private fun JsonObject.string(key: String): String = getValue(key).jsonPrimitive.content
-
-    private fun JsonObject.array(key: String) = this[key]?.jsonArray ?: JsonArray(emptyList())
-
     private companion object {
         const val TIMEOUT_MS = 15_000
     }
 }
+
+/**
+ * Toutes les réponses sont des objets JSON : un corps qui n'en est pas un (page HTML d'un proxy,
+ * liste, texte) devient une [ProtocolError].
+ */
+internal fun parseResponse(text: String): JsonObject = shaped { Json.parseToJsonElement(text).jsonObject }
+
+internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
+    AccountProfile(
+        email = (fields["email"] as? JsonPrimitive)?.contentOrNull,
+        timezone = (fields["timezone"] as? JsonPrimitive)?.contentOrNull,
+    )
+}
+
+internal fun snapshotPageOf(fields: JsonObject): SnapshotPage = shaped {
+    SnapshotPage(
+        cursor = fields.long("cursor"),
+        next = (fields["next"] as? JsonPrimitive)?.longOrNull,
+        rows = fields.array("rows").map { it.jsonObject },
+    )
+}
+
+internal fun pullPageOf(fields: JsonObject): PullPage = shaped {
+    PullPage(
+        cursor = fields.long("cursor"),
+        hasMore = fields.getValue("has_more").jsonPrimitive.booleanOrNull == true,
+        changes = fields.array("changes").map { element ->
+            val change = element.jsonObject
+            RemoteChange(
+                seq = change.long("seq"),
+                entity = change.string("entity"),
+                uid = change.string("uid"),
+                op = change.string("op"),
+                data = change["data"] as? JsonObject,
+                opId = (change["op_id"] as? JsonPrimitive)?.contentOrNull,
+            )
+        },
+    )
+}
+
+internal fun pushResultsOf(fields: JsonObject): List<PushResult> = shaped {
+    fields.array("results").map { element ->
+        val result = element.jsonObject
+        PushResult(
+            opId = result.string("op_id"),
+            status = result.string("status"),
+            reason = (result["reason"] as? JsonPrimitive)?.contentOrNull,
+        )
+    }
+}
+
+/**
+ * Lit une réponse dont la forme est attendue : toute erreur de lecture (clé absente, mauvais type,
+ * JSON invalide) devient une [ProtocolError] au lieu de faire planter l'appelant.
+ */
+private inline fun <T> shaped(read: () -> T): T = try {
+    read()
+} catch (error: RuntimeException) {
+    throw ProtocolError(error)
+}
+
+private fun JsonObject.long(key: String): Long = getValue(key).jsonPrimitive.longOrNull
+    ?: throw ProtocolError()
+
+private fun JsonObject.string(key: String): String = getValue(key).jsonPrimitive.content
+
+private fun JsonObject.array(key: String) = this[key]?.jsonArray ?: JsonArray(emptyList())

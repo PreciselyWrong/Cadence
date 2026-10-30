@@ -11,7 +11,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         // Sans serveur, il n'y a rien à faire : ce n'est pas une erreur à réessayer.
         if (runtime.connection.currentSession() == null) return Result.success()
         return when (runtime.engine.sync()) {
-            SyncResult.Synced, SyncResult.Unauthorized -> Result.success()
+            SyncResult.Synced, SyncResult.Unauthorized, SyncResult.Closed -> Result.success()
             is SyncResult.Offline -> Result.retry()
         }
     }

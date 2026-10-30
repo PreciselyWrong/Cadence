@@ -20,4 +20,13 @@ class ServerUrlTest {
         assertNull(normalizeServerUrl("   "))
         assertNull(normalizeServerUrl("https://"))
     }
+
+    @Test
+    fun `accepte seulement http et https`() {
+        assertEquals("HTTPS://tududi.example", normalizeServerUrl("HTTPS://tududi.example"))
+        assertNull(normalizeServerUrl("ftp://tududi.example"))
+        assertNull(normalizeServerUrl("file:///etc/passwd"))
+        assertNull(normalizeServerUrl("javascript:alert(1)"))
+        assertNull(normalizeServerUrl("content://media/external"))
+    }
 }

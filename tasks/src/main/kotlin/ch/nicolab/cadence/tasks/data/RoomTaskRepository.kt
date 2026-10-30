@@ -50,7 +50,8 @@ internal class RoomTaskRepository(
     private val clockState: ClockStateStore,
     private val connection: ServerConnection,
     private val syncState: StateFlow<SyncState>,
-    private val deviceZone: ZoneId = ZoneId.systemDefault(),
+    /** Suivi du fuseau de l'appareil : les vues se recalculent à chaque changement. */
+    private val deviceZone: StateFlow<ZoneId>,
     private val nowMs: () -> Long = System::currentTimeMillis,
 ) : TaskRepository {
     private val taskDao = database.taskDao()
@@ -61,14 +62,18 @@ internal class RoomTaskRepository(
     private val outbox = database.outboxDao()
 
     override fun observeTasks(): Flow<List<TaskItem>> =
-        combine(taskDao.observeTopLevel(), accountZone()) { rows, zone -> rows.map { it.toItem(zone, deviceZone) } }
+        combine(taskDao.observeTopLevel(), accountZone(), deviceZone) { rows, account, device ->
+            rows.map { it.toItem(account, device) }
+        }
 
     override fun observeTask(uid: String): Flow<TaskItem?> =
-        combine(taskDao.observeOne(uid), accountZone()) { row, zone -> row?.toItem(zone, deviceZone) }
+        combine(taskDao.observeOne(uid), accountZone(), deviceZone) { row, account, device ->
+            row?.toItem(account, device)
+        }
 
     override fun observeSubtasks(parentUid: String): Flow<List<TaskItem>> =
-        combine(taskDao.observeChildren(parentUid), accountZone()) { rows, zone ->
-            rows.map { it.toItem(zone, deviceZone) }
+        combine(taskDao.observeChildren(parentUid), accountZone(), deviceZone) { rows, account, device ->
+            rows.map { it.toItem(account, device) }
         }
 
     override fun observeProjects(): Flow<List<ProjectItem>> =
@@ -76,7 +81,8 @@ internal class RoomTaskRepository(
 
     /** Fuseau du compte tant qu'il est connu, sinon celui de l'appareil. */
     private fun accountZone(): Flow<ZoneId> =
-        connection.observe().map { it?.accountZone ?: deviceZone }.distinctUntilChanged()
+        combine(connection.observe(), deviceZone) { info, device -> info?.accountZone ?: device }
+            .distinctUntilChanged()
 
     override fun observeAreas(): Flow<List<AreaItem>> =
         areaDao.observeAll().map { rows -> rows.map { it.toItem() } }
@@ -176,7 +182,7 @@ internal class RoomTaskRepository(
 
     override suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Unit> {
         val task = taskDao.get(uid) ?: return Result.failure(IllegalArgumentException("Tâche introuvable"))
-        val occurrence = dueDayOf(task.dueDateRaw, task.dueHasTime, accountZone().first(), deviceZone)
+        val occurrence = occurrenceDayOf(task.dueDateRaw, accountZone().first())
             ?: return Result.failure(IllegalStateException("Pas d'échéance à déplacer"))
         return try {
             api.moveOccurrence(uid, scope.wire, occurrence.toString(), newDate.toString())
@@ -241,12 +247,12 @@ internal class RoomTaskRepository(
 
     private suspend fun currentDueDate(uid: String): LocalDate? {
         val task = taskDao.get(uid) ?: return null
-        return dueDayOf(task.dueDateRaw, task.dueHasTime, accountZone().first(), deviceZone)
+        return dueDayOf(task.dueDateRaw, task.dueHasTime, accountZone().first(), deviceZone.value)
     }
 
     private suspend fun dueFields(date: LocalDate?, time: String?): Map<String, JsonElement> {
         if (date == null) return mapOf("due_date" to JsonNull, "due_has_time" to JsonPrimitive(false))
-        val due = dueInstant(date, time, accountZone().first(), deviceZone)
+        val due = dueInstant(date, time, accountZone().first(), deviceZone.value)
         return mapOf(
             "due_date" to JsonPrimitive(due.toString()),
             "due_has_time" to JsonPrimitive(time != null),

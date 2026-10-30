@@ -20,11 +20,14 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +40,8 @@ import ch.nicolab.cadence.tasks.model.TaskViews
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 
 /** Fiche d'une tâche : modification, actions et suppression. Enregistrer applique les changements. */
 @Composable
@@ -51,19 +56,42 @@ internal fun TaskDetailSheet(
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val zone = ZoneId.systemDefault()
     val edit = remember(current.uid) { TaskEditState(current, zone) }
+    val scope = rememberCoroutineScope()
+    val genericError = stringResource(R.string.tasks_error_generic)
+    var saving by remember { mutableStateOf(false) }
+    var saveError by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
     var pickingDate by remember { mutableStateOf(false) }
     var pickingTime by remember { mutableStateOf(false) }
+    val notifications = rememberNotificationPermission()
+    val hasReminder = current.reminderAt != null
+    LaunchedEffect(hasReminder) {
+        if (hasReminder) notifications.request()
+    }
 
+    // La fiche ne se ferme qu'après l'écriture : en cas d'échec, les modifications restent à l'écran.
     val save = {
-        val result = edit.result()
-        if (result.change != TaskChange()) viewModel.update(current.uid, result.change)
-        result.moveDate?.let { viewModel.askRecurringMove(current.uid, it) }
-        onDismiss()
+        if (!saving) {
+            val result = edit.result()
+            saving = true
+            saveError = null
+            scope.launch {
+                try {
+                    if (result.change != TaskChange()) viewModel.saveChange(current.uid, result.change)
+                    result.moveDate?.let { viewModel.askRecurringMove(current.uid, it) }
+                    onDismiss()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    saveError = e.message ?: genericError
+                    saving = false
+                }
+            }
+        }
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!saving) onDismiss() },
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         Column(
@@ -119,9 +147,22 @@ internal fun TaskDetailSheet(
                 },
                 onDelete = { confirmDelete = true },
             )
+            if (hasReminder && !notifications.allowed) {
+                NotificationsOffNotice()
+            }
+            if (saving) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+            saveError?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
             Button(
                 onClick = save,
-                enabled = edit.name.isNotBlank(),
+                enabled = edit.name.isNotBlank() && !saving,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.tasks_save)) }
         }

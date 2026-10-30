@@ -36,6 +36,8 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import ch.nicolab.cadence.tasks.ConnectPayload
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.ui.NotificationsOffNotice
+import ch.nicolab.cadence.tasks.ui.rememberNotificationPermission
 import kotlinx.coroutines.launch
 
 /**
@@ -49,6 +51,7 @@ fun TududiConnectionSection(modifier: Modifier = Modifier) {
     val repository = remember(context) { TasksGraph.repository(context) }
     val info by connection.observe().collectAsStateWithLifecycle(initialValue = null)
     val scope = rememberCoroutineScope()
+    val notifications = rememberNotificationPermission()
 
     var serverUrl by rememberSaveable { mutableStateOf("") }
     var token by rememberSaveable { mutableStateOf("") }
@@ -66,6 +69,8 @@ fun TududiConnectionSection(modifier: Modifier = Modifier) {
                 .onSuccess {
                     serverUrl = ""
                     token = ""
+                    // Les rappels de tâches ont besoin de cette permission dès la connexion.
+                    notifications.request()
                 }
                 .onFailure { error = it.message ?: connectError }
             busy = false
@@ -154,6 +159,9 @@ fun TududiConnectionSection(modifier: Modifier = Modifier) {
         }
         if (busy) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        }
+        if (info != null && !notifications.allowed) {
+            NotificationsOffNotice()
         }
         error?.let {
             Text(

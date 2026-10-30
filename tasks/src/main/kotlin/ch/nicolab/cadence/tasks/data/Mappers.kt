@@ -54,6 +54,13 @@ internal fun InboxRow.toEntry() = InboxEntry(
 internal fun dueDayOf(dueDateRaw: String?, dueHasTime: Boolean, accountZone: ZoneId, deviceZone: ZoneId): LocalDate? =
     parseInstant(dueDateRaw)?.atZone(if (dueHasTime) deviceZone else accountZone)?.toLocalDate()
 
+/**
+ * Jour d'une occurrence récurrente, tel que le serveur le désigne : toujours dans le fuseau du compte,
+ * même pour une échéance avec heure.
+ */
+internal fun occurrenceDayOf(dueDateRaw: String?, accountZone: ZoneId): LocalDate? =
+    parseInstant(dueDateRaw)?.atZone(accountZone)?.toLocalDate()
+
 /** Les dates serveur sont ISO-8601 avec un décalage ; une valeur illisible reste absente. */
 internal fun parseInstant(raw: String?): Instant? =
     raw?.let { runCatching { OffsetDateTime.parse(it).toInstant() }.getOrNull() }

@@ -1,6 +1,10 @@
 package ch.nicolab.cadence.tasks.sync
 
 import java.io.IOException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -177,6 +181,81 @@ class SyncEngineTest {
         assertTrue(store.clock!!.startsWith("1700000000005-0003-"), store.clock)
     }
 
+    @Test
+    fun `une création rejetée et absente du serveur disparaît et laisse un échec nommé`() = runTest {
+        val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1")), rows = mapOf(("task" to "task-1") to row("task-1", "Acheter du lait")))
+        val api = FakeSyncApi().apply {
+            onPush = { listOf(PushResult("op-1", "rejected", "invalid_reference:project_uid")) }
+            onSnapshot = { _, _, _ -> SnapshotPage(5, null, emptyList()) }
+            onPull = { PullPage(5, false, emptyList()) }
+        }
+        val engine = engine(api, store)
+
+        engine.sync()
+
+        assertTrue(store.row("task", "task-1").isEmpty())
+        assertEquals(listOf("op-1"), store.rejected)
+        assertEquals("1 modification refusée par le serveur", engine.state.value.lastError)
+    }
+
+    @Test
+    fun `une modification rejetée dont la tâche existe encore garde la valeur du serveur`() = runTest {
+        val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1")))
+        val api = FakeSyncApi().apply {
+            onPush = { listOf(PushResult("op-1", "rejected", "invalid_reference:project_uid")) }
+            onSnapshot = { entity, _, _ -> SnapshotPage(5, null, if (entity == "task") listOf(row("task-1", "valeur serveur")) else emptyList()) }
+            onPull = { PullPage(5, false, emptyList()) }
+        }
+
+        engine(api, store).sync()
+
+        assertEquals("valeur serveur", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `une fermeture pendant l'instantané n'écrit plus aucune ligne`() = runTest {
+        val store = FakeSyncStore()
+        lateinit var engine: SyncEngine
+        val api = FakeSyncApi().apply {
+            onSnapshot = { entity, _, _ ->
+                if (entity == "area") engine.markClosed()
+                SnapshotPage(5, null, if (entity == "task") listOf(row("task-1", "écrit trop tard")) else emptyList())
+            }
+        }
+        engine = engine(api, store)
+
+        val result = engine.sync()
+
+        assertEquals(SyncResult.Closed, result)
+        assertTrue(store.row("task", "task-1").isEmpty())
+        assertEquals(null, store.cursor())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `whileIdle attend le passage en cours avant de s'exécuter`() = runTest {
+        val gate = CompletableDeferred<Unit>()
+        val api = FakeSyncApi().apply {
+            onPull = {
+                gate.await()
+                PullPage(6, false, emptyList())
+            }
+        }
+        val engine = engine(api, FakeSyncStore(cursor = 5))
+        val order = mutableListOf<String>()
+
+        val sync = async { engine.sync().also { order += "passage" } }
+        runCurrent()
+        val clear = async { engine.whileIdle { order += "effacement" } }
+        runCurrent()
+        assertEquals(emptyList<String>(), order)
+
+        gate.complete(Unit)
+        sync.await()
+        clear.await()
+        assertEquals(listOf("passage", "effacement"), order)
+    }
+
     private fun row(uid: String, name: String, status: Int = 0, clock: String = fieldClock): JsonObject = buildJsonObject {
         put("uid", uid)
         put("name", name)
@@ -209,7 +288,7 @@ class SyncEngineTest {
 
 private class FakeSyncApi : SyncApi {
     var onSnapshot: (String, Long, Long?) -> SnapshotPage = { _, _, _ -> SnapshotPage(0, null, emptyList()) }
-    var onPull: (Long) -> PullPage = { cursor -> PullPage(cursor, false, emptyList()) }
+    var onPull: suspend (Long) -> PullPage = { cursor -> PullPage(cursor, false, emptyList()) }
     var onPush: (List<JsonObject>) -> List<PushResult> = { emptyList() }
 
     val snapshotArgs = mutableListOf<Triple<String, Long, Long?>>()

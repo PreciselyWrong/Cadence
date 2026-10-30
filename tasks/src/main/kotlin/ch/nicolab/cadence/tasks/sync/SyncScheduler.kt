@@ -9,6 +9,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object SyncScheduler {
     private const val PERIODIC_NAME = "tududi-sync-periodic"
@@ -30,10 +32,11 @@ object SyncScheduler {
             .enqueueUniqueWork(NOW_NAME, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
     }
 
-    fun cancel(context: Context) {
+    /** Attend la fin de l'annulation : un passage lancé par WorkManager ne doit pas survivre à la déconnexion. */
+    suspend fun cancel(context: Context): Unit = withContext(Dispatchers.IO) {
         val manager = WorkManager.getInstance(context)
-        manager.cancelUniqueWork(PERIODIC_NAME)
-        manager.cancelUniqueWork(NOW_NAME)
+        manager.cancelUniqueWork(PERIODIC_NAME).result.get()
+        manager.cancelUniqueWork(NOW_NAME).result.get()
     }
 
     private const val PERIODIC_MINUTES = 15L

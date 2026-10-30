@@ -1,6 +1,10 @@
 package ch.nicolab.cadence.tasks.sync
 
+import java.io.IOException
 import kotlinx.serialization.json.JsonObject
+
+/** Réponse du serveur de forme inattendue (page HTML, JSON incomplet) : réessayable comme une panne réseau. */
+class ProtocolError(cause: Throwable? = null) : IOException("Réponse inattendue du serveur", cause)
 
 /** Clé API refusée ou absente : il faut que l'utilisateur la renouvelle. */
 class AuthError(message: String) : Exception(message)

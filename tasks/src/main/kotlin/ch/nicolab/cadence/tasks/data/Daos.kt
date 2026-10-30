@@ -57,6 +57,9 @@ interface ProjectDao {
     @Query("SELECT * FROM projects ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<ProjectEntity>>
 
+    @Query("SELECT * FROM projects WHERE uid = :uid")
+    suspend fun get(uid: String): ProjectEntity?
+
     @Upsert
     suspend fun upsert(project: ProjectEntity)
 
@@ -71,6 +74,9 @@ interface ProjectDao {
 interface AreaDao {
     @Query("SELECT * FROM areas ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<AreaEntity>>
+
+    @Query("SELECT * FROM areas WHERE uid = :uid")
+    suspend fun get(uid: String): AreaEntity?
 
     @Upsert
     suspend fun upsert(area: AreaEntity)
@@ -87,6 +93,9 @@ interface TagDao {
     @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<TagEntity>>
 
+    @Query("SELECT * FROM tags WHERE uid = :uid")
+    suspend fun get(uid: String): TagEntity?
+
     @Upsert
     suspend fun upsert(tag: TagEntity)
 
@@ -101,9 +110,12 @@ interface TagDao {
 interface InboxDao {
     @Query(
         """SELECT inbox_items.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'inbox_item' AND outbox.uid = inbox_items.uid) AS pendingSync
-        FROM inbox_items ORDER BY createdAtRaw DESC""",
+        FROM inbox_items WHERE status NOT IN ('processed', 'deleted', 'trashed') ORDER BY createdAtRaw DESC""",
     )
     fun observeAll(): Flow<List<InboxRow>>
+
+    @Query("SELECT * FROM inbox_items WHERE uid = :uid")
+    suspend fun get(uid: String): InboxItemEntity?
 
     @Upsert
     suspend fun upsert(item: InboxItemEntity)

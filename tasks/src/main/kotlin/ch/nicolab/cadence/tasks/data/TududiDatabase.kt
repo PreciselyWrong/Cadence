@@ -2,6 +2,8 @@ package ch.nicolab.cadence.tasks.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
@@ -14,7 +16,7 @@ import androidx.room.RoomDatabase
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -26,4 +28,11 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun outboxDao(): OutboxDao
     abstract fun failedOpDao(): FailedOpDao
     abstract fun syncMetaDao(): SyncMetaDao
+}
+
+/** Ajoute le nom de la ligne rejetée au journal des échecs. */
+internal val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE failed_ops ADD COLUMN displayName TEXT")
+    }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
@@ -19,6 +20,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,18 +38,21 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import java.time.LocalDate
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 
 /**
  * Ajout rapide d'une tâche, réutilisable par d'autres écrans (ex. l'activité du widget).
  * Sans [onSave], la tâche est créée directement ; [onSave] permet de la transformer
- * (ex. convertir une entrée de la boîte de réception).
+ * (ex. convertir une entrée de la boîte de réception). La fiche ne se ferme qu'après
+ * l'écriture ; en cas d'échec, les valeurs restent et le message s'affiche.
  */
 @Composable
 fun QuickAddSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     initialName: String = "",
-    onSave: ((TaskDraft) -> Unit)? = null,
+    onSave: (suspend (TaskDraft) -> Unit)? = null,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -61,19 +66,35 @@ fun QuickAddSheet(
     var projectUid by rememberSaveable { mutableStateOf<String?>(null) }
     var pickingDate by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
+    val scope = rememberCoroutineScope()
+    var saving by remember { mutableStateOf(false) }
+    var saveError by remember { mutableStateOf<String?>(null) }
+    val genericError = stringResource(R.string.tasks_error_generic)
 
     LaunchedEffect(Unit) { focus.requestFocus() }
 
     fun save() {
         val trimmed = name.trim()
-        if (trimmed.isEmpty()) return
+        if (trimmed.isEmpty() || saving) return
         val draft = TaskDraft(name = trimmed, dueDate = due, priority = priority, projectUid = projectUid)
-        (onSave ?: viewModel::createTask)(draft)
-        onDismiss()
+        val write: suspend (TaskDraft) -> Unit = onSave ?: viewModel::saveNewTask
+        saving = true
+        saveError = null
+        scope.launch {
+            try {
+                write(draft)
+                onDismiss()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                saveError = e.message ?: genericError
+                saving = false
+            }
+        }
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!saving) onDismiss() },
         modifier = modifier,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
@@ -94,6 +115,7 @@ fun QuickAddSheet(
                 label = { Text(stringResource(R.string.tasks_field_name)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                enabled = !saving,
                 keyboardActions = KeyboardActions(onDone = { save() }),
                 modifier = Modifier.fillMaxWidth().focusRequester(focus),
             )
@@ -128,9 +150,19 @@ fun QuickAddSheet(
             PrioritySelector(selected = priority, onSelect = { priority = it }, allowNone = true)
             FieldLabel(R.string.tasks_field_project)
             ProjectDropdown(projects = projects, selectedUid = projectUid, onSelect = { projectUid = it })
+            if (saving) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+            saveError?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
             Button(
                 onClick = { save() },
-                enabled = name.isNotBlank(),
+                enabled = name.isNotBlank() && !saving,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.tasks_add)) }
         }
