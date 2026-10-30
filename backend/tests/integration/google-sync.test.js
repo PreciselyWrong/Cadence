@@ -209,12 +209,31 @@ describe('Google sync', () => {
             expect(await Task.count({ where: { id: task.id } })).toBe(1);
         });
 
-        it('removes the event of a completed task', async () => {
+        it('keeps the event of a completed task, marked done', async () => {
             const task = await createTask({ name: 'Pay', due_date: day(1) });
             await connect();
             expect(liveEvents(tududiCalendar())).toHaveLength(1);
             await agent.patch(`/api/task/${task.uid}`).send({ status: 'done' });
             await syncUser(user.id);
+            const [event] = liveEvents(tududiCalendar());
+            expect(event.summary).toBe('✓ Pay');
+            expect(event.start.date).toBe(day(1));
+
+            // The mark is not read back as a rename.
+            await syncUser(user.id);
+            await task.reload();
+            expect(task.name).toBe('Pay');
+
+            await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ status: 'not_started' });
+            await syncUser(user.id);
+            expect(liveEvents(tududiCalendar())[0].summary).toBe('Pay');
+        });
+
+        it('does not add a task done before it reached the calendar', async () => {
+            await createTask({ name: 'Old', due_date: day(1), status: 'done' });
+            await connect();
             expect(liveEvents(tududiCalendar())).toHaveLength(0);
         });
 

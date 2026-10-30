@@ -6,12 +6,12 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 
 ## What syncs
 
-| Google side                                                  | Cadence side                                                                                         | Direction                                                                                                                        |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Every calendar of the account                                | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Both ways for calendars the account can write (owner/writer); read-only ones (holidays, shared "see all details") are shown only |
+| Google side                                                   | Cadence side                                                                                        | Direction                                                                                                                        |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Every calendar of the account                                 | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Both ways for calendars the account can write (owner/writer); read-only ones (holidays, shared "see all details") are shown only |
 | The secondary calendar **"Cadence"** (made on the first sync) | Every open task with a due date                                                                     | Both ways                                                                                                                        |
-| Google Tasks: the default list                               | Tasks without a project                                                                             | Both ways                                                                                                                        |
-| Google Tasks: every other list                               | One project per list (made by name when missing; a project's list is made when it first has a task) | Both ways                                                                                                                        |
+| Google Tasks: the default list                                | Tasks without a project                                                                             | Both ways                                                                                                                        |
+| Google Tasks: every other list                                | One project per list (made by name when missing; a project's list is made when it first has a task) | Both ways                                                                                                                        |
 
 ### Calendar events (other calendars)
 
@@ -25,7 +25,7 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 - Where a task sits matches the Calendar page: due time + estimate (default 60 min), start time → due time, or whole days from a whole-day start to the due day. A task with a date but no time is an all-day event.
 - Moving or resizing the event in Google moves the task (due date/time, start, or estimate); renaming it renames the task.
 - Deleting the event in Google **takes the date off the task**; the task stays.
-- A finished task leaves the calendar. An undated task is not on it.
+- A task ticked off stays on the calendar, its title marked `✓ `; reopening it removes the mark, and the mark is not read back as a rename. A task already done before it reached the calendar is not added. An undated task is not on it. A recurring task moves on to its next occurrence, so its event moves with it.
 - An event added to the "Cadence" calendar in Google becomes a new task.
 - A recurring task shows only its **next occurrence**.
 - The events are "free" (transparent) so they do not block your availability in Google.

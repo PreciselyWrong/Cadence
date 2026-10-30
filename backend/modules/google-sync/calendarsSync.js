@@ -7,6 +7,7 @@ const {
     remoteEventProjection,
     toGoogleEvent,
     fromGoogleEvent,
+    eventTaskName,
     storedEventFields,
 } = require('./mapping');
 const local = require('./localTasks');
@@ -196,7 +197,7 @@ async function syncTududiCalendar(ctx, calendar) {
                     // becomes a task.
                     task = await local.createTask(user, {
                         ...fromGoogleEvent(event, null, timezone),
-                        name: event.summary || '(untitled)',
+                        name: eventTaskName(event) || '(untitled)',
                         note: event.description || null,
                     });
                     tasksById.set(task.id, task);
@@ -246,10 +247,14 @@ async function syncTududiCalendar(ctx, calendar) {
     for (const task of tasksById.values()) {
         await guard(ctx, 'push', async () => {
             const link = byTask.get(task.id);
+            // A task done after it reached the calendar stays there, marked
+            // done; one already done is not added.
             const onCalendar =
-                local.isSyncable(task) && !local.isDone(task) && task.due_date;
+                local.isSyncable(task) &&
+                task.due_date &&
+                (link || !local.isDone(task));
             if (!onCalendar) {
-                // Done or undated: off the calendar.
+                // Undated, removed from sync, or done before: off the calendar.
                 if (link) {
                     await client.deleteEvent(link.container_id, link.google_id);
                     await link.destroy();

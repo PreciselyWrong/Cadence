@@ -141,11 +141,23 @@ function taskEventTimes(task, timezone) {
     };
 }
 
+// A done task keeps its event, its title marked with this prefix.
+const DONE_PREFIX = '✓ ';
+const eventTitle = (task) =>
+    (isDone(task) ? DONE_PREFIX : '') + clean(task.name);
+// An event's title without the done mark, as the task's name.
+const eventTaskName = (event) => {
+    const title = clean(event.summary);
+    return title.startsWith(DONE_PREFIX.trim())
+        ? title.slice(DONE_PREFIX.trim().length).trim()
+        : title;
+};
+
 function localEventProjection(task, timezone) {
     const times = taskEventTimes(task, timezone);
     if (!times) return null;
     return {
-        title: clean(task.name),
+        title: eventTitle(task),
         allDay: times.allDay,
         start: times.start,
         end: times.end,
@@ -176,7 +188,7 @@ function remoteEventProjection(event) {
 function toGoogleEvent(task, timezone, taskUrl) {
     const times = taskEventTimes(task, timezone);
     const body = {
-        summary: clean(task.name) || '(untitled)',
+        summary: eventTitle(task) || '(untitled)',
         description: [clean(task.note), taskUrl].filter(Boolean).join('\n\n'),
         extendedProperties: { private: { tududiTaskUid: task.uid } },
         transparency: 'transparent',
@@ -194,7 +206,7 @@ function toGoogleEvent(task, timezone, taskUrl) {
 // Attributes for a Tududi task moved, resized or renamed in Google.
 function fromGoogleEvent(event, task, timezone) {
     const attrs = {};
-    const title = clean(event.summary);
+    const title = eventTaskName(event);
     if (title && title !== clean(task?.name)) attrs.name = title;
 
     const remote = eventTimes(event);
@@ -280,6 +292,7 @@ module.exports = {
     remoteEventProjection,
     toGoogleEvent,
     fromGoogleEvent,
+    eventTaskName,
     storedEventFields,
     plusDay,
     minusDay,
