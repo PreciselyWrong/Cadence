@@ -5,6 +5,7 @@ import {
     BookOpenIcon,
     CalendarDaysIcon,
     AdjustmentsHorizontalIcon,
+    ArrowPathRoundedSquareIcon,
     ChartBarIcon,
     EllipsisHorizontalIcon,
     FireIcon,
@@ -38,6 +39,7 @@ type RailItemId =
     | 'goals'
     | 'people'
     | 'insights'
+    | 'review'
     | 'allTasks'
     | 'assignedToMe'
     | 'everyone'
@@ -134,6 +136,14 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
         titleKey: 'sidebar.insights',
         title: 'Insights',
         Icon: ChartBarIcon,
+    },
+    review: {
+        id: 'review',
+        path: '/review',
+        match: /^\/review(\/|$)/,
+        titleKey: 'review.title',
+        title: 'Review',
+        Icon: ArrowPathRoundedSquareIcon,
     },
     allTasks: {
         id: 'allTasks',

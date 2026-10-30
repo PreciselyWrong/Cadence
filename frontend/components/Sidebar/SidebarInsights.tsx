@@ -6,6 +6,7 @@ import {
     LightBulbIcon,
     ChevronRightIcon,
     DocumentTextIcon,
+    ArrowPathRoundedSquareIcon,
 } from '@heroicons/react/24/outline';
 
 interface SidebarInsightsProps {
@@ -45,6 +46,11 @@ const SidebarInsights: React.FC<SidebarInsightsProps> = ({ handleNavClick, locat
             path: '/insights/summary',
             title: t('sidebar.summary', 'Summary'),
             icon: <DocumentTextIcon className="h-4 w-4 flex-shrink-0" />,
+        },
+        {
+            path: '/review',
+            title: t('review.title', 'Review'),
+            icon: <ArrowPathRoundedSquareIcon className="h-4 w-4 flex-shrink-0" />,
         },
     ];
 

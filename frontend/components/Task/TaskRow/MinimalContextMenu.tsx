@@ -17,6 +17,13 @@ import {
 } from '../../../utils/dateUtils';
 import { useTaskRowSave } from './useTaskRowSave';
 import { TASK_UPDATED_EVENT } from '../../../contexts/TaskPaneContext';
+import {
+    decideTask,
+    isParked,
+    TaskDecision,
+} from '../../../utils/reviewService';
+import { isCurrentWeek } from '../../Review/TaskDecisionRow';
+import { useToast } from '../../Shared/ToastContext';
 
 const VIEWPORT_MARGIN = 8;
 
@@ -69,6 +76,25 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
         [onTaskUpdate]
     );
     const setters = useTaskRowSave(task, saveAndAnnounce);
+    const { showErrorToast } = useToast();
+    const parked = isParked(task);
+    const thisWeek = isCurrentWeek(task.week_of);
+    const decide = async (decision: TaskDecision) => {
+        if (!task.uid) return;
+        try {
+            const updated = await decideTask(task.uid, decision);
+            await saveAndAnnounce({
+                ...task,
+                ...updated,
+                subtasks: updated.subtasks || task.subtasks || [],
+            });
+        } catch (error) {
+            showErrorToast(
+                t('review.saveError', 'Could not save the decision.')
+            );
+            throw error;
+        }
+    };
     const menuRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState({ left: x, top: y });
 
@@ -226,6 +252,57 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
             ))}
 
             <div className="my-1 border-t border-gray-100 dark:border-gray-700" />
+            {!parked && (
+                <>
+                    <button
+                        type="button"
+                        role="menuitemcheckbox"
+                        aria-checked={Boolean(task.in_view)}
+                        onClick={() =>
+                            run(() => decide({ in_view: !task.in_view }))
+                        }
+                        className={`${itemClass} ${
+                            task.in_view ? selectedClass : ''
+                        }`}
+                    >
+                        {t('review.actions.inView', 'In view')}
+                    </button>
+                    <button
+                        type="button"
+                        role="menuitemcheckbox"
+                        aria-checked={thisWeek}
+                        onClick={() =>
+                            run(() =>
+                                decide({
+                                    week_of: thisWeek ? null : 'this_week',
+                                })
+                            )
+                        }
+                        className={`${itemClass} ${
+                            thisWeek ? selectedClass : ''
+                        }`}
+                    >
+                        {t('review.actions.thisWeek', 'This week')}
+                    </button>
+                </>
+            )}
+            <button
+                type="button"
+                role="menuitemcheckbox"
+                aria-checked={parked}
+                onClick={() =>
+                    run(() =>
+                        decide(
+                            parked
+                                ? { later: false, review_on: null }
+                                : { later: true }
+                        )
+                    )
+                }
+                className={`${itemClass} ${parked ? selectedClass : ''}`}
+            >
+                {t('review.actions.later', 'Later')}
+            </button>
             <button
                 type="button"
                 role="menuitem"

@@ -29,6 +29,8 @@ import {
     useTaskPane,
 } from '../../contexts/TaskPaneContext';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import TaskDecisionRow from '../Review/TaskDecisionRow';
+import PostponementHistory from '../Review/PostponementHistory';
 
 const sectionLabel =
     'mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400';
@@ -168,6 +170,8 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                 }
             />
 
+            <TaskDecisionRow task={task} onSaved={onSaved} />
+
             <div>
                 <p className={sectionLabel}>
                     {t('taskPane.project', 'Project')}
@@ -285,6 +289,13 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                     />
                 </div>
             </div>
+
+            {task.uid && (
+                <PostponementHistory
+                    taskUid={task.uid}
+                    version={task.due_date}
+                />
+            )}
 
             {isBlockedConfirmOpen && (
                 <ConfirmDialog

@@ -12,6 +12,8 @@ import DurationChips from './DurationChips';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { DEFAULT_DURATION, formatDuration, taskLength } from './planUtils';
 import { openTaskPanel } from '../../store/taskPanelStore';
+import { isCurrentWeek } from '../Review/TaskDecisionRow';
+import ThisOrThat from '../Review/ThisOrThat';
 
 export type CandidateFilter =
     | 'all'
@@ -48,6 +50,8 @@ interface CandidateListProps {
 
 // Few choices at a time: a short list, then "Show more" on request.
 const PAGE_SIZE = 5;
+// "Help me choose" compares the first candidates in the list's order.
+const CHOOSE_FROM = 8;
 // Order of importance when everything is shown together.
 const GROUP_ORDER: TaskGroupKey[] = [
     'tagged_today',
@@ -106,6 +110,12 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
         suggested: t('dailyPlan.suggested', 'Suggested'),
     };
     let status = labels[group];
+    // Suggestions the user chose themselves say so.
+    if (group === 'suggested' && isCurrentWeek(task.week_of)) {
+        status = t('review.actions.thisWeek', 'This week');
+    } else if (group === 'suggested' && task.in_view) {
+        status = t('review.actions.inView', 'In view');
+    }
     if (group === 'overdue' && task.due_date) {
         const days = Math.max(
             1,
@@ -237,6 +247,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
     const { t } = useTranslation();
     const [visible, setVisible] = useState(PAGE_SIZE);
     const [showFilters, setShowFilters] = useState(false);
+    const [choosing, setChoosing] = useState(false);
     // Dropping a planned block back here takes it off the plan.
     const { setNodeRef, isOver } = useDroppable({ id: 'candidates' });
 
@@ -321,18 +332,42 @@ const CandidateList: React.FC<CandidateListProps> = ({
                         ? t('dailyPlan.whatNext', 'What could you do today?')
                         : counts.find((c) => c.key === filter)?.label}
                 </h3>
-                <button
-                    type="button"
-                    onClick={() => setShowFilters((open) => !open)}
-                    aria-expanded={showFilters}
-                    className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                    {t('dailyPlan.browse', 'Browse')}
-                    <ChevronDownIcon
-                        className={`h-3.5 w-3.5 transition-transform ${showFilters ? 'rotate-180' : ''}`}
-                    />
-                </button>
+                <div className="flex items-center gap-3">
+                    {entries.length >= 2 && (
+                        <button
+                            type="button"
+                            onClick={() => setChoosing(true)}
+                            className="whitespace-nowrap text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            {t('review.week.choose', 'Help me choose')}
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => setShowFilters((open) => !open)}
+                        aria-expanded={showFilters}
+                        className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                        {t('dailyPlan.browse', 'Browse')}
+                        <ChevronDownIcon
+                            className={`h-3.5 w-3.5 transition-transform ${showFilters ? 'rotate-180' : ''}`}
+                        />
+                    </button>
+                </div>
             </div>
+
+            {choosing && (
+                <ThisOrThat
+                    tasks={entries
+                        .slice(0, CHOOSE_FROM)
+                        .map((entry) => entry.task)}
+                    onClose={() => setChoosing(false)}
+                    onChoose={(task) => {
+                        setChoosing(false);
+                        onAdd(task);
+                    }}
+                />
+            )}
 
             {showFilters && (
                 <div className="flex flex-wrap gap-1.5" role="tablist">

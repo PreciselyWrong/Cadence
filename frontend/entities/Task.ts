@@ -50,6 +50,12 @@ export interface Task {
     estimated_minutes?: number | null;
     pinned?: boolean;
     pinned_at?: string | null;
+    // Decision funnel (fork): none of these is a due date.
+    in_view?: boolean;
+    in_view_at?: string | null;
+    week_of?: string | null;
+    review_on?: string | null;
+    reviewed_at?: string | null;
     note?: string;
     tags?: Tag[];
     project_id?: number;

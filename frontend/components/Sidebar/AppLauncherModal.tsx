@@ -7,6 +7,7 @@ import {
     CalendarIcon,
     ChartBarIcon,
     DocumentTextIcon,
+    ArrowPathRoundedSquareIcon,
     ClockIcon,
     FireIcon,
     FlagIcon,
@@ -263,6 +264,15 @@ const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 title: t('sidebar.summary', 'Summary'),
                 Icon: DocumentTextIcon,
                 gradient: 'from-sky-400 to-indigo-600',
+            },
+            {
+                id: 'review',
+                group: 'sections',
+                orderKey: 'insights',
+                path: '/review',
+                title: t('review.title', 'Review'),
+                Icon: ArrowPathRoundedSquareIcon,
+                gradient: 'from-slate-400 to-slate-600',
             },
             templatesEnabled && {
                 id: 'templates',

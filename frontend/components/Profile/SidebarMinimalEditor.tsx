@@ -35,6 +35,7 @@ const RAIL_LABELS: Record<RailId, [string, string]> = {
     goals: ['sidebar.goals', 'Goals'],
     people: ['sidebar.people', 'People'],
     insights: ['sidebar.insights', 'Insights'],
+    review: ['review.title', 'Review'],
     allTasks: ['sidebar.allTasks', 'All Tasks'],
     assignedToMe: ['sidebar.assignedToMe', 'Assigned to me'],
     everyone: ['sidebar.everyone', 'Everyone'],
