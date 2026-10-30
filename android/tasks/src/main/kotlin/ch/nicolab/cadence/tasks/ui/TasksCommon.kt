@@ -25,6 +25,7 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
+import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -176,6 +177,7 @@ internal fun LazyListScope.taskRows(
     moment: Moment,
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
+    sectionDay: LocalDate? = null,
 ) {
     items(tasks, key = { it.uid }) { task ->
         TaskRow(
@@ -189,6 +191,7 @@ internal fun LazyListScope.taskRows(
             onOpen = { onOpen(task) },
             onSwipeAction = { viewModel.swipe(task, it) },
             onMenu = { viewModel.openMenu(task) },
+            sectionDay = sectionDay,
         )
     }
 }

@@ -231,7 +231,7 @@ internal fun TodayTab(
                 item(key = "tomorrow-header") {
                     SectionHeader(title = stringResource(R.string.planning_closed_tomorrow), count = tomorrowTasks.size)
                 }
-                taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen)
+                taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = today.plusDays(1))
             }
         }
         if (state.overdue.isNotEmpty()) {
@@ -324,6 +324,7 @@ private fun LazyListScope.agendaRows(
                 onOpen = { onOpen(item.task) },
                 onSwipeAction = { viewModel.swipe(item.task, it) },
                 onMenu = { viewModel.openMenu(item.task) },
+                sectionDay = moment.today,
             )
             is TodayItem.Event -> EventRow(
                 item = item.event,

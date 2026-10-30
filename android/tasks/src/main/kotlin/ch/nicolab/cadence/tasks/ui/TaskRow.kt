@@ -73,6 +73,7 @@ internal fun TaskRow(
     onSwipeAction: (SwipeAction) -> Unit,
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
+    sectionDay: LocalDate? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -138,7 +139,7 @@ internal fun TaskRow(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                TaskMeta(task, projectName, today, zone)
+                TaskMeta(task, projectName, today, zone, sectionDay)
             }
             // Une priorité haute est déjà portée par le trait rouge de la case.
             task.priority?.takeIf { it != TaskPriority.HIGH }?.let { priority ->
@@ -155,8 +156,15 @@ internal fun TaskRow(
     }
 }
 
+/**
+ * Faux quand la section affiche déjà le jour de l'échéance : la pastille ne répète pas la date.
+ * Une tâche en retard garde sa date, son badge rouge étant le signal.
+ */
+internal fun showsDueDay(dueDay: LocalDate, sectionDay: LocalDate?, overdue: Boolean): Boolean =
+    overdue || sectionDay != dueDay
+
 @Composable
-private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zone: ZoneId) {
+private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zone: ZoneId, sectionDay: LocalDate?) {
     val pendingText = stringResource(R.string.tasks_pending_sync)
     val recurringText = stringResource(R.string.tasks_recurring)
     val dueDate = task.dueDay
@@ -166,18 +174,20 @@ private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zon
     ) {
         if (dueDate != null) {
             val overdue = dueDate.isBefore(today) && !task.isClosed
-            val time = task.dueDate?.takeIf { task.dueHasTime }
-                ?.let { " " + wireTime(instantTime(it, zone)) }
-                .orEmpty()
-            Text(
-                text = dayLabel(dueDate, today) + time,
-                style = MaterialTheme.typography.labelSmall,
-                color = if (overdue) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (overdue) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer)
-                    .padding(horizontal = 6.dp, vertical = 2.dp),
-            )
+            val day = if (showsDueDay(dueDate, sectionDay, overdue)) dayLabel(dueDate, today) else null
+            val time = task.dueDate?.takeIf { task.dueHasTime }?.let { wireTime(instantTime(it, zone)) }
+            val badge = listOfNotNull(day, time).joinToString(" ")
+            if (badge.isNotEmpty()) {
+                Text(
+                    text = badge,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (overdue) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (overdue) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            }
         }
         if (task.isRecurring) {
             Icon(

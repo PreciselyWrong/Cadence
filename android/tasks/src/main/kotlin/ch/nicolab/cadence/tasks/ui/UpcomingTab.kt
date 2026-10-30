@@ -92,7 +92,7 @@ internal fun UpcomingTab(
             item(key = "day-$date") {
                 SectionHeader(title = sectionDayTitle(date, today), count = tasks.size)
             }
-            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
+            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = date)
         }
     }
 }

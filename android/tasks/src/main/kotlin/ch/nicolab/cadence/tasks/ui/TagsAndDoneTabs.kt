@@ -138,7 +138,7 @@ internal fun DoneTab(
         }
         groups.forEach { (day, tasks) ->
             item(key = "done-$day") { SectionHeader(title = dayLabel(day, moment.today), count = tasks.size) }
-            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
+            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = day)
         }
     }
 }
