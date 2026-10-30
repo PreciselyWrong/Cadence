@@ -33,6 +33,7 @@ import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
 import { sidebarPercentToRem } from '../utils/sidebarWidth';
 import type { SidebarSectionId } from '../utils/sidebarLayout';
+import type { RailId } from '../utils/minimalSidebar';
 
 interface SidebarProps {
     isSidebarOpen: boolean;
@@ -113,8 +114,31 @@ const Sidebar: React.FC<SidebarProps> = ({
         (state) => state.userSettingsStore.sidebarSectionOrder
     );
     const isMinimal = useIsMinimal();
+    const smartLists = useStore(
+        (state) => state.userSettingsStore.sidebarMinimal.smartLists
+    );
     const isSectionVisible = (key: keyof SidebarVisibleSections) =>
         visibleSections[key] !== false;
+
+    // With the panel open, the minimal rail skips the entries the panel
+    // already lists (smart lists at the top, Areas among the sections).
+    const railIdsListedInPanel = (): RailId[] => {
+        const ids: RailId[] = [];
+        for (const item of smartLists) {
+            if (!item.visible) continue;
+            if (item.key === 'today' || item.key === 'inbox') {
+                ids.push(item.key);
+            }
+        }
+        if (
+            sectionOrder.includes('areas') &&
+            MINIMAL_LIST_SECTIONS.includes('areas') &&
+            isSectionVisible('areas')
+        ) {
+            ids.push('areas');
+        }
+        return ids;
+    };
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -252,6 +276,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             location={location}
                             canOpenAccess={canOpenAccess(currentUser)}
                             onCustomize={openSidebarSettings}
+                            hiddenIds={railIdsListedInPanel()}
                         />
                     )}
                     <div
