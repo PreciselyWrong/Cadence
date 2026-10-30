@@ -18,4 +18,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":domain")
 include(":data")
+include(":tasks")
 include(":app")
