@@ -89,7 +89,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                             >
                                 {t('feedback.title', 'Send feedback')}
                             </h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {t(
                                     'feedback.subtitle',
                                     'Found a bug or have an idea? Let us know.'
@@ -100,7 +100,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5"
+                        className="p-1 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5"
                         aria-label={t('common.close', 'Close')}
                     >
                         <XMarkIcon className="w-5 h-5" />
@@ -132,7 +132,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                         className="w-full min-h-[200px] resize-y rounded-xl bg-gray-50 dark:bg-gray-900/60 px-4 py-3 text-[15px] leading-relaxed text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                         data-testid="feedback-message"
                     />
-                    <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                         {t(
                             'feedback.contextNote',
                             'The page you are on and the app version are sent along with your message.'
@@ -149,7 +149,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                         <button
                             type="submit"
                             disabled={!trimmed || sending}
-                            className="px-4 py-2 rounded-lg text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                            className="px-4 py-2 rounded-lg text-sm text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-50"
                             data-testid="feedback-submit"
                         >
                             {sending

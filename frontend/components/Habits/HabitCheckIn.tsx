@@ -89,7 +89,7 @@ const HabitCheckIn: React.FC<HabitCheckInProps> = ({
                         <button
                             type="button"
                             onClick={() => setOpen(false)}
-                            className="px-2 py-1 text-xs rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="px-2 py-1 text-xs rounded-lg text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                             {t('common.cancel', 'Cancel')}
                         </button>
@@ -104,7 +104,7 @@ const HabitCheckIn: React.FC<HabitCheckInProps> = ({
                         } ${
                             slippedToday
                                 ? 'bg-red-50 dark:bg-red-950/40 text-red-500 cursor-default'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-500'
+                                : 'text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-500'
                         }`}
                         title={t(
                             'habits.slipHint',

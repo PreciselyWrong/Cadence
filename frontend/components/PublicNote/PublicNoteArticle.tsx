@@ -69,7 +69,7 @@ const PublicNoteArticle: React.FC<PublicNoteArticleProps> = ({
                 </h1>
                 {updated && (
                     <p
-                        className={`mt-1 text-sm ${noteColor ? 'opacity-70' : 'text-gray-500 dark:text-gray-400'}`}
+                        className={`mt-1 text-sm ${noteColor ? 'opacity-70' : 'text-gray-600 dark:text-gray-300'}`}
                     >
                         {t('publicNote.updated', 'Last updated {{date}}', {
                             date: updated,

@@ -57,7 +57,7 @@ const MfaCodeForm: React.FC<MfaCodeFormProps> = ({ onSuccess, onExpired }) => {
 
     return (
         <form onSubmit={handleSubmit} data-testid="mfa-form">
-            <p className="mb-4 text-center text-gray-600 dark:text-gray-400">
+            <p className="mb-4 text-center text-gray-600 dark:text-gray-300">
                 {useRecovery
                     ? t(
                           'mfa.recoveryPrompt',
@@ -99,7 +99,7 @@ const MfaCodeForm: React.FC<MfaCodeFormProps> = ({ onSuccess, onExpired }) => {
             <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-60"
+                className="w-full bg-primary text-primary-on py-2 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
                 data-testid="mfa-submit"
             >
                 {t('mfa.verify', 'Verify')}

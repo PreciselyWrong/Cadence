@@ -141,7 +141,7 @@ const HabitDayPanel: React.FC<HabitDayPanelProps> = ({
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
                     {heading}
                 </h3>
-                <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+                <span className="text-xs text-gray-600 dark:text-gray-300 tabular-nums">
                     {status}
                 </span>
             </div>
@@ -185,7 +185,7 @@ const HabitDayPanel: React.FC<HabitDayPanelProps> = ({
                             <button
                                 type="button"
                                 onClick={() => guard(() => onDelete(entry))}
-                                className="shrink-0 p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40"
+                                className="shrink-0 p-1 rounded text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40"
                                 title={t('habits.removeEntry', 'Remove')}
                                 aria-label={t('habits.removeEntry', 'Remove')}
                             >

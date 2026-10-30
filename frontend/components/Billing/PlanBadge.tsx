@@ -36,7 +36,7 @@ const PlanBadge: React.FC = () => {
             className="flex items-center justify-between px-4 py-2 text-sm border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
             data-testid="plan-badge"
         >
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-gray-600 dark:text-gray-300">
                 {t('billing.plan', 'Plan')}
             </span>
             <span

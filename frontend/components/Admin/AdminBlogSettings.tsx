@@ -74,13 +74,13 @@ const AdminBlogSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="p-1 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                        className="p-1 rounded text-gray-500 hover:text-gray-600 dark:hover:text-gray-200"
                         aria-label={t('common.close', 'Close')}
                     >
                         <XMarkIcon className="w-5 h-5" />
                     </button>
                 </div>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'admin.blog.description',
                         'Pick one of your notes as the front page. The public notes it links with [[Title]] become the posts. Share the front page and each post publicly for them to show.'
@@ -112,7 +112,7 @@ const AdminBlogSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
+                        className="px-4 py-2 rounded-lg bg-primary text-primary-on text-sm hover:bg-primary/90 disabled:opacity-50"
                     >
                         {t('common.save', 'Save')}
                     </button>
@@ -155,7 +155,7 @@ const AdminBlogSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         </p>
                         {status.note.shared && (
                             <>
-                                <p className="text-gray-500 dark:text-gray-400">
+                                <p className="text-gray-600 dark:text-gray-300">
                                     {t(
                                         'admin.blog.postCount',
                                         'Posts: {{count}}',

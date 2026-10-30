@@ -775,7 +775,7 @@ const Projects: React.FC = () => {
     const tableHeader =
         viewMode === 'list' ? (
             <div
-                className={`${PROJECT_TABLE_GRID} px-4 py-2.5 mb-1 rounded-md bg-gray-100 dark:bg-gray-800/60 text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400`}
+                className={`${PROJECT_TABLE_GRID} px-4 py-2.5 mb-1 rounded-md bg-gray-100 dark:bg-gray-800/60 text-[12px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300`}
                 role="row"
             >
                 {sortHeader(t('projects.table.name', 'Name'), 'name:asc')}
@@ -865,10 +865,10 @@ const Projects: React.FC = () => {
                                     key={mode}
                                     type="button"
                                     onClick={() => setViewMode(mode)}
-                                    className={`p-1 sm:p-1.5 rounded-md focus:outline-none transition-colors ${
+                                    className={`p-1 sm:p-1.5 rounded-md transition-colors ${
                                         viewMode === mode
                                             ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                                     }`}
                                     aria-label={label}
                                     aria-pressed={viewMode === mode}
@@ -1005,7 +1005,7 @@ const Projects: React.FC = () => {
                     }`}
                 >
                     <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm p-2">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                         <input
                             type="text"
                             placeholder={t('projects.searchPlaceholder')}

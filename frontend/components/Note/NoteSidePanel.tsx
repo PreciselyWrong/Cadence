@@ -133,7 +133,7 @@ const NoteSidePanel: React.FC<NoteSidePanelProps> = ({
           } as React.CSSProperties)
         : { backgroundColor: tint };
     const iconButton =
-        'p-2 text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400';
+        'p-2 text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400';
 
     return createPortal(
         <>
@@ -207,7 +207,7 @@ const NoteSidePanel: React.FC<NoteSidePanelProps> = ({
                         }
                     />
                 ) : (
-                    <p className="p-6 text-sm text-gray-400">
+                    <p className="p-6 text-sm text-gray-500">
                         {t('common.loading', 'Loading...')}
                     </p>
                 )}

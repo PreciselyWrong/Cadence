@@ -110,7 +110,7 @@ const BoardTaskRow: React.FC<BoardTaskRowProps> = ({
                     {task.name}
                 </p>
                 {(task.Project?.name || due || recurring || statusLabel) && (
-                    <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                    <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
                         {task.Project?.name && (
                             <span className="truncate">
                                 {task.Project.name}
@@ -139,7 +139,7 @@ const BoardTaskRow: React.FC<BoardTaskRowProps> = ({
                             />
                         )}
                         {statusLabel && (
-                            <span className="shrink-0 rounded bg-gray-100 px-1 text-[11px] text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                            <span className="shrink-0 rounded bg-gray-100 px-1 text-[12px] text-gray-600 dark:bg-gray-700 dark:text-gray-300">
                                 {statusLabel}
                             </span>
                         )}

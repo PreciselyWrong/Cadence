@@ -45,7 +45,7 @@ const PersonHero: React.FC<PersonHeroProps> = ({
                     </span>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                             {meta}
                         </div>
                         <h1
@@ -63,13 +63,13 @@ const PersonHero: React.FC<PersonHeroProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                         <span>
                             Assigned tasks · {doneCount} of {totalCount} done
                         </span>
                         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                 %
                             </span>
                         </span>

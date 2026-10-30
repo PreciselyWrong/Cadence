@@ -49,7 +49,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
         : 'py-[4px] text-[13.5px]';
 
     const itemClass = (path: string, nested = false) =>
-        `group flex justify-between items-center rounded-[8px] ${nested ? 'pl-[44px]' : 'pl-[30px]'} pr-[10px] ${rowSize} cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+        `group flex justify-between items-center rounded-[8px] ${nested ? 'pl-[44px]' : 'pl-[30px]'} pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
         }`;
 
@@ -81,10 +81,10 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                 }}
             >
                 <span
-                    className={`flex items-center gap-[6px] text-[10.5px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
+                    className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         location.pathname === '/tags'
                             ? 'text-black dark:text-white'
-                            : 'text-gray-400 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();
@@ -104,7 +104,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                             e.stopPropagation();
                             openTagModal(null);
                         }}
-                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                         aria-label={t('tags.addTag', 'Add Tag')}
                         title={t('tags.addTag', 'Add Tag')}
                     >
@@ -113,7 +113,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                     {tags.length > 0 && (
                         <>
                             {showBadge && (
-                                <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
+                                <span className="text-[12px] text-gray-500 dark:text-gray-400 tabular-nums">
                                     {tags.length}
                                 </span>
                             )}
@@ -123,7 +123,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
-                                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                                className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"

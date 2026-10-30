@@ -361,7 +361,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                 >
                     <div className="sticky top-0 z-20 flex rounded-t-xl bg-white dark:bg-gray-900">
                         <div
-                            className="sticky left-0 z-10 flex items-end bg-white px-4 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-gray-900 dark:text-gray-400"
+                            className="sticky left-0 z-10 flex items-end bg-white px-4 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:bg-gray-900 dark:text-gray-300"
                             style={{ width: LEFT_WIDTH, height: HEADER_HEIGHT }}
                         >
                             {t('everyone.people', 'People')}
@@ -396,10 +396,10 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                 return (
                                     <div
                                         key={day}
-                                        className={`absolute bottom-0 flex h-7 items-center justify-center gap-1 whitespace-nowrap text-[11px] tabular-nums ${
+                                        className={`absolute bottom-0 flex h-7 items-center justify-center gap-1 whitespace-nowrap text-[12px] tabular-nums ${
                                             day === today
                                                 ? 'font-bold text-blue-700 dark:text-blue-400'
-                                                : 'text-gray-500 dark:text-gray-400'
+                                                : 'text-gray-600 dark:text-gray-300'
                                         } ${weekend ? 'bg-gray-500/[0.06] dark:bg-white/[0.04]' : ''}`}
                                         style={{ left: i * dayW, width: dayW }}
                                     >
@@ -472,7 +472,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                                     ? t('everyone.you', 'You')
                                                     : lane.person.name}
                                             </div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                            <div className="text-xs text-gray-600 dark:text-gray-300">
                                                 {t(
                                                     'everyoneTimeline.planned',
                                                     '{{hours}} planned',
@@ -644,7 +644,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                                     </span>
                                                     {est &&
                                                         span * dayW > 110 && (
-                                                            <span className="ml-auto flex-shrink-0 text-[11px] text-gray-600 dark:text-gray-300">
+                                                            <span className="ml-auto flex-shrink-0 text-[12px] text-gray-600 dark:text-gray-300">
                                                                 {est}
                                                             </span>
                                                         )}
@@ -668,7 +668,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                                     >
                                                         {hours > 0 && (
                                                             <div
-                                                                className={`flex h-full items-center justify-center rounded text-[11px] font-semibold tabular-nums ${
+                                                                className={`flex h-full items-center justify-center rounded text-[12px] font-semibold tabular-nums ${
                                                                     over
                                                                         ? 'bg-orange-200 text-orange-900 dark:bg-orange-500/30 dark:text-orange-100'
                                                                         : 'bg-indigo-50 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-100'
@@ -709,7 +709,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                     )}
                 </div>
 
-                <div className="mt-3 flex flex-wrap gap-4 px-1 text-xs text-gray-500 dark:text-gray-400">
+                <div className="mt-3 flex flex-wrap gap-4 px-1 text-xs text-gray-600 dark:text-gray-300">
                     <span className="flex items-center gap-1.5">
                         <span className="h-3 w-7 rounded bg-indigo-50 dark:bg-indigo-500/20" />
                         {t(

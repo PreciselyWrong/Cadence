@@ -19,7 +19,7 @@ const PhotoCredit: React.FC<PhotoCreditProps> = ({
 
     return (
         <p
-            className={`text-[10px] leading-none text-white/70 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)] opacity-60 hover:opacity-100 transition-opacity ${className}`}
+            className={`text-[12px] leading-none text-white/70 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)] opacity-60 hover:opacity-100 transition-opacity ${className}`}
             data-testid="photo-credit"
         >
             {t('profile.photoBy', 'Photo by')}{' '}

@@ -1,3 +1,4 @@
+import { applyAppearance, watchThemeMode } from './utils/appearance';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -45,20 +46,26 @@ if ('serviceWorker' in navigator && !isBlogSite) {
         // Development gets the worker only for push notifications; caching
         // and the offline queue would fight hot reloading.
         const swUrl = isDevelopment ? '/sw.js?push-only' : '/sw.js';
-        navigator.serviceWorker.register(swUrl).then((registration) => {
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                if (newWorker) {
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            newWorker.postMessage({ type: 'SKIP_WAITING' });
-                        }
-                    });
-                }
+        navigator.serviceWorker
+            .register(swUrl)
+            .then((registration) => {
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                            if (
+                                newWorker.state === 'installed' &&
+                                navigator.serviceWorker.controller
+                            ) {
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        });
+                    }
+                });
+            })
+            .catch(() => {
+                // Non-fatal: app functions without service worker
             });
-        }).catch(() => {
-            // Non-fatal: app functions without service worker
-        });
 
         navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data?.type === 'SYNC_COMPLETE') {
@@ -109,6 +116,9 @@ if (isDarkMode) {
 } else {
     document.documentElement.classList.remove('dark');
 }
+
+applyAppearance();
+watchThemeMode();
 
 const container = document.getElementById('root');
 

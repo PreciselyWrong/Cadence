@@ -480,6 +480,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     return (
         <div
             ref={rowRootRef}
+            data-task-row=""
             data-task-expanded={isExpanded || undefined}
             className={`relative ${
                 isStatusMenuOpen || isActionsMenuOpen
@@ -594,7 +595,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         );
                     return (
                         <div
-                            className="flex items-center gap-2 ml-4 px-3 py-1.5 rounded-b-lg text-[11px] select-none"
+                            className="flex items-center gap-2 ml-4 px-3 py-1.5 rounded-b-lg text-[12px] select-none"
                             style={{
                                 backgroundColor: `${reasonColor}12`,
                                 color: `${reasonColor}cc`,
@@ -613,7 +614,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                 !(task.status === 'archived' || task.status === 3) && (
                     <div className="mt-1 ml-4 space-y-1 relative z-0">
                         {loadingSubtasks ? (
-                            <div className="text-sm text-gray-500 dark:text-gray-400 px-3 py-2">
+                            <div className="text-sm text-gray-600 dark:text-gray-300 px-3 py-2">
                                 {t('loading.subtasks', 'Loading subtasks...')}
                             </div>
                         ) : (

@@ -36,7 +36,7 @@ const NowCard: React.FC<NowCardProps> = ({
                             'Everything you planned is done'
                         )}
                     </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'dailyPlan.allDoneHint',
                             'Pick something from "Not planned" below, or call it a day.'
@@ -96,7 +96,7 @@ const NowCard: React.FC<NowCardProps> = ({
                     {item.task.name}
                 </span>
                 {details.length > 0 && (
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                         {details.join(' · ')}
                     </span>
                 )}
@@ -114,7 +114,7 @@ const NowCard: React.FC<NowCardProps> = ({
                     type="button"
                     onClick={() => onDone(item)}
                     disabled={isBusy}
-                    className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                    className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-50"
                     data-testid="now-card-done"
                 >
                     {t('dailyPlan.markDone', 'Mark done')}

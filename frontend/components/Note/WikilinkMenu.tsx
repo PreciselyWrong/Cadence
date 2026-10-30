@@ -122,7 +122,7 @@ const WikilinkMenu: React.FC<WikilinkMenuProps> = ({
             onMouseDown={(e) => e.preventDefault()}
         >
             {itemCount === 0 && (
-                <div className="px-3 py-2.5 text-sm text-gray-400 dark:text-gray-500">
+                <div className="px-3 py-2.5 text-sm text-gray-500 dark:text-gray-400">
                     No matching notes
                 </div>
             )}
@@ -148,13 +148,13 @@ const WikilinkMenu: React.FC<WikilinkMenuProps> = ({
                     }}
                     onMouseEnter={() => setActiveIndex(i)}
                 >
-                    <span className="text-gray-400 dark:text-gray-500 text-xs">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">
                         [[
                     </span>
                     <span className="flex-1 text-sm font-medium truncate">
                         {note.title}
                     </span>
-                    <span className="text-gray-400 dark:text-gray-500 text-xs">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">
                         ]]
                     </span>
                 </button>
@@ -177,7 +177,7 @@ const WikilinkMenu: React.FC<WikilinkMenuProps> = ({
                     }}
                     onMouseEnter={() => setActiveIndex(matches.length)}
                 >
-                    <span className="text-gray-400 dark:text-gray-500 text-xs">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">
                         +
                     </span>
                     <span className="flex-1 text-sm truncate">

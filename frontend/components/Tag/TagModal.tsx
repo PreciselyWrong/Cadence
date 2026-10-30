@@ -198,7 +198,7 @@ const TagModal: React.FC<TagModalProps> = ({
                     ))}
                 </select>
                 {hasChildren && (
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'tags.parentTagHasChildren',
                             'This tag has child tags, so it cannot go under another tag.'
@@ -220,7 +220,7 @@ const TagModal: React.FC<TagModalProps> = ({
                     className={`rounded-md px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                         formData.pinned
                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-700'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-700'
                     }`}
                     data-testid="tag-pin-toggle"
                 >

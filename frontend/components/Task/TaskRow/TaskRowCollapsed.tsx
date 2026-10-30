@@ -136,10 +136,10 @@ export const formatDueLabel = (d: string, t: Translate): string => {
 export const dueToneClass = (task: Task): string => {
     const today = getTodayDateString();
     if (!task.due_date || isTaskCompleted(task.status))
-        return 'text-gray-500 dark:text-gray-400';
+        return 'text-gray-600 dark:text-gray-300';
     if (task.due_date < today) return 'text-red-600 dark:text-red-400';
     if (task.due_date === today) return 'text-blue-600 dark:text-blue-400';
-    return 'text-gray-500 dark:text-gray-400';
+    return 'text-gray-600 dark:text-gray-300';
 };
 
 const slug = (s: string) =>
@@ -340,15 +340,15 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         <span
             className={
                 isMinimal
-                    ? 'flex items-center gap-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0'
-                    : 'ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-400 dark:text-gray-500 flex-shrink-0'
+                    ? 'flex items-center gap-0.5 text-gray-500 dark:text-gray-400 flex-shrink-0'
+                    : 'ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-500 dark:text-gray-400 flex-shrink-0'
             }
             title={t('comments.count', '{{count}} comments', {
                 count: commentCount,
             })}
         >
             <ChatBubbleLeftIcon className="h-3.5 w-3.5" />
-            <span className="text-[11px] font-medium">{commentCount}</span>
+            <span className="text-[12px] font-medium">{commentCount}</span>
         </span>
     );
 
@@ -370,11 +370,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }
             className={
                 isMinimal
-                    ? 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
+                    ? 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-gray-500 transition-colors hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300'
                     : `ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full border transition-colors flex-shrink-0 ${
                           showSubtasks
                               ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-100'
-                              : 'text-gray-400 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
+                              : 'text-gray-500 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
                       }`
             }
         >
@@ -403,7 +403,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const minimalChips: Record<TaskRowFieldKey, React.ReactNode> = {
         recurrence: isRecurring ? (
             <ArrowPathIcon
-                className="h-3 w-3 text-gray-400 dark:text-gray-500"
+                className="h-3 w-3 text-gray-500 dark:text-gray-400"
                 title={t('recurrence.recurring', 'Recurring')}
                 aria-label={t('recurrence.recurring', 'Recurring')}
             />
@@ -583,7 +583,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                       : 'max-sm:line-clamp-2 max-sm:break-words sm:truncate'
                             } ${
                                 isTaskCompleted(task.status)
-                                    ? 'text-gray-400 dark:text-gray-500 line-through'
+                                    ? 'text-gray-500 dark:text-gray-400 line-through'
                                     : 'text-gray-900 dark:text-gray-200'
                             } ${sheetTitleWeightClass(
                                 toPriorityLevel(task.priority),
@@ -611,7 +611,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             data-testid="task-blocked-badge"
                         >
                             <NoSymbolIcon className="h-3.5 w-3.5" />
-                            <span className="text-[11px] font-medium">
+                            <span className="text-[12px] font-medium">
                                 {t('relations.blocked', 'Blocked')}
                             </span>
                         </span>
@@ -620,7 +620,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     {!isMinimal && subtasksToggle}
                     {!isMinimal && !compact && (
                         <div
-                            className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2 text-xs text-gray-500 dark:text-gray-400 max-w-[60%]"
+                            className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2 text-xs text-gray-600 dark:text-gray-300 max-w-[60%]"
                             data-testid="task-row-right"
                         >
                             {task.tags && task.tags.length > 0 && (
@@ -658,7 +658,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 </div>
 
                 {isMinimal && (
-                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300">
                         {rowFields
                             .filter((field) => field.visible)
                             .map((field) => (
@@ -670,7 +670,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 )}
 
                 {hasMeta && !isMinimal && (
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                         <PriorityBadge priority={task.priority} />
                         {task.parent_task && (
                             <span className="flex items-center">
@@ -715,7 +715,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                         key={tag.uid || tag.name}
                                         to={`/tag/${tag.uid ? `${tag.uid}-` : ''}${slug(tag.name)}`}
                                         onClick={stop}
-                                        className="inline-flex items-center gap-1 px-2 py-px rounded-full text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 [.task-sheet_&]:!bg-transparent [.task-sheet_&]:!px-0 [.task-sheet_&]:text-[11px] [.task-sheet_&]:font-normal [.task-sheet_&]:!text-gray-500 dark:[.task-sheet_&]:!text-gray-400"
+                                        className="inline-flex items-center gap-1 px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 [.task-sheet_&]:!bg-transparent [.task-sheet_&]:!px-0 [.task-sheet_&]:text-[12px] [.task-sheet_&]:font-normal [.task-sheet_&]:!text-gray-600 dark:[.task-sheet_&]:!text-gray-500"
                                         style={tagColorStyle(tag.color)}
                                     >
                                         <span
@@ -779,7 +779,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         aria-label={t('common.moreActions', 'More actions')}
                         title={t('common.moreActions', 'More actions')}
                         data-testid="task-actions-menu-button"
-                        className={`p-1 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
+                        className={`p-1 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
                             isActionsMenuOpen
                                 ? 'opacity-100'
                                 : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'

@@ -137,7 +137,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
 
                     <div className="relative bg-gray-900 rounded-lg overflow-hidden">
                         <div className="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
-                            <span className="text-xs font-mono text-gray-400">
+                            <span className="text-xs font-mono text-gray-500">
                                 claude_desktop_config.json
                             </span>
                             <button

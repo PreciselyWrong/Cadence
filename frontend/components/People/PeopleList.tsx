@@ -147,7 +147,7 @@ const PeopleList: React.FC = () => {
                             <button
                                 onClick={openCreate}
                                 data-testid="add-contact-button"
-                                className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                                className="flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-on text-sm rounded-md hover:bg-primary/90 transition-colors"
                             >
                                 <PlusIcon className="w-4 h-4" />
                                 {t('people.newContact', 'New contact')}
@@ -190,7 +190,7 @@ const PeopleList: React.FC = () => {
                             className={`relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
                                 filter === id
                                     ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                    : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                    : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                             }`}
                         >
                             {label} ({count})
@@ -199,12 +199,12 @@ const PeopleList: React.FC = () => {
                 </div>
 
                 {isLoading ? (
-                    <div className="text-center py-12 text-gray-400 dark:text-gray-500">
+                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                         {t('common.loading', 'Loading...')}
                     </div>
                 ) : displayPeople.length === 0 ? (
                     <div className="text-center py-16">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">
                             {t(
                                 'people.empty',
                                 'No people yet. Add family, colleagues, or friends.'
@@ -221,7 +221,7 @@ const PeopleList: React.FC = () => {
                     <div className="space-y-8">
                         {sortedGroupKeys.map((letter) => (
                             <div key={letter}>
-                                <h3 className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">
+                                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
                                     {letter}
                                 </h3>
                                 <div

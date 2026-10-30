@@ -294,7 +294,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 nodes.push(
                     <span
                         key={`tag-${idx}`}
-                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[11px] font-semibold leading-none text-blue-700 dark:text-blue-300 bg-blue-100/70 dark:bg-blue-400/10 rounded-full px-2 py-[3px]"
+                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[12px] font-semibold leading-none text-blue-700 dark:text-blue-300 bg-blue-100/70 dark:bg-blue-400/10 rounded-full px-2 py-[3px]"
                     >
                         #{tagName}
                         <button
@@ -316,7 +316,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 nodes.push(
                     <span
                         key={`person-${idx}`}
-                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[11px] font-semibold leading-none text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-400/10 rounded-full px-2 py-[3px]"
+                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[12px] font-semibold leading-none text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-400/10 rounded-full px-2 py-[3px]"
                     >
                         @{personName}
                         <button
@@ -338,7 +338,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 nodes.push(
                     <span
                         key={`area-${idx}`}
-                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[11px] font-semibold leading-none text-purple-700 dark:text-purple-300 bg-purple-100/70 dark:bg-purple-400/10 rounded-full px-2 py-[3px]"
+                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[12px] font-semibold leading-none text-purple-700 dark:text-purple-300 bg-purple-100/70 dark:bg-purple-400/10 rounded-full px-2 py-[3px]"
                     >
                         ~{areaName}
                         <button
@@ -360,7 +360,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 nodes.push(
                     <span
                         key={`proj-${idx}`}
-                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[11px] font-semibold leading-none text-green-700 dark:text-green-300 bg-green-100/70 dark:bg-green-400/10 rounded-full px-2 py-[3px]"
+                        className="inline-flex items-center gap-0.5 mx-0.5 align-middle text-[12px] font-semibold leading-none text-green-700 dark:text-green-300 bg-green-100/70 dark:bg-green-400/10 rounded-full px-2 py-[3px]"
                     >
                         +{projectName}
                         <button
@@ -605,27 +605,27 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     {loading && (
                         <div className="h-3.5 w-3.5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
                     )}
-                    <span className="text-[11px] text-gray-400 dark:text-gray-500">
+                    <span className="text-[12px] text-gray-500 dark:text-gray-400">
                         {t('inbox.saveAs', 'Save as')}
                     </span>
                     <button
                         type="button"
                         onClick={() => void handleConvertToTask(context)}
-                        className="text-[12px] text-blue-600 dark:text-blue-400 hover:underline transition-colors focus:outline-none"
+                        className="text-[12px] text-blue-600 dark:text-blue-400 hover:underline transition-colors "
                     >
                         {t('inbox.createTask', 'Task')}
                     </button>
                     <button
                         type="button"
                         onClick={() => void handleConvertToNote(context)}
-                        className="text-[12px] text-purple-600 dark:text-purple-400 hover:underline transition-colors focus:outline-none"
+                        className="text-[12px] text-purple-600 dark:text-purple-400 hover:underline transition-colors "
                     >
                         {t('inbox.createNote', 'Note')}
                     </button>
                     <button
                         type="button"
                         onClick={() => handleConvertToProject(context)}
-                        className="text-[12px] text-green-600 dark:text-green-400 hover:underline transition-colors focus:outline-none"
+                        className="text-[12px] text-green-600 dark:text-green-400 hover:underline transition-colors "
                     >
                         {t('inbox.createProject', 'Project')}
                     </button>
@@ -633,7 +633,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 <button
                     type="button"
                     onClick={handleDelete}
-                    className="text-[12px] text-red-500 dark:text-red-400 hover:underline transition-colors focus:outline-none"
+                    className="text-[12px] text-red-500 dark:text-red-400 hover:underline transition-colors "
                 >
                     {t('common.delete', 'Delete')}
                 </button>
@@ -680,14 +680,14 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     <div className="flex-1 min-w-0">
                         <p className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 leading-snug break-words">
                             {isBlank ? (
-                                <span className="italic text-gray-400 dark:text-gray-500">
+                                <span className="italic text-gray-500 dark:text-gray-400">
                                     {t('inbox.emptyItem', '(Empty item)')}
                                 </span>
                             ) : (
                                 renderInlineSegments(displayText)
                             )}
                             {extraLineCount > 0 && (
-                                <span className="ml-2 text-xs font-normal text-gray-400 dark:text-gray-500">
+                                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
                                     +{extraLineCount}{' '}
                                     {extraLineCount === 1
                                         ? t('inbox.line', 'line')

@@ -117,7 +117,7 @@ const NumberSelectDropdown: React.FC<NumberSelectDropdownProps> = ({
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-500 dark:text-gray-300 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-gray-600 dark:text-gray-300 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 />
             </button>
 

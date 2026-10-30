@@ -193,7 +193,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                     </h4>
                 )}
                 <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t('common.loading', 'Loading...')}
                     </p>
                 </div>
@@ -234,7 +234,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                         className="bg-gray-200 dark:bg-gray-700 flex flex-col items-center justify-center rounded-t-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
                         style={{ height: '140px' }}
                     >
-                        <CloudArrowUpIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-2" />
+                        <CloudArrowUpIcon className="h-12 w-12 text-gray-500 dark:text-gray-400 mb-2" />
                         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             {uploading
                                 ? t(
@@ -248,12 +248,12 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                         </p>
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-center">
-                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 text-center">
                             {t('task.attachments.maxSize', 'Max {{size}}MB', {
                                 size: maxSizeMB,
                             })}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 text-center mt-1">
                             {t('task.attachments.anyFormat', 'Any file type')}
                         </p>
                     </div>
@@ -295,7 +295,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                             </h3>
                             <button
                                 onClick={() => setPreviewAttachment(null)}
-                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                className="text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
                             >
                                 ✕
                             </button>

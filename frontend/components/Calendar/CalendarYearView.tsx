@@ -41,7 +41,7 @@ const HEAT = [
     'bg-blue-100 dark:bg-blue-900/40',
     'bg-blue-200 dark:bg-blue-800/60',
     'bg-blue-400 text-white dark:bg-blue-700',
-    'bg-blue-600 text-white dark:bg-blue-500',
+    'bg-primary text-primary-on ',
 ];
 export const heatLevel = (count: number) => Math.min(count, HEAT.length - 1);
 
@@ -73,11 +73,11 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
     const initials = days.slice(0, 7).map((day) => format(day, 'EEEEE'));
 
     return (
-        <div className="grid grid-cols-7 gap-0.5 text-center text-[11px]">
+        <div className="grid grid-cols-7 gap-0.5 text-center text-[12px]">
             {initials.map((initial, index) => (
                 <div
                     key={`h-${index}`}
-                    className="text-gray-400 dark:text-gray-500 font-medium"
+                    className="text-gray-500 dark:text-gray-400 font-medium"
                 >
                     {initial}
                 </div>

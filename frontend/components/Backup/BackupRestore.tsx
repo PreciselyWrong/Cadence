@@ -278,7 +278,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                         {t('backup.title', 'Backup & Restore')}
                     </h1>
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'backup.description',
                             'Create backups or restore from previous backups. Your last 5 backups are automatically saved.'
@@ -303,7 +303,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                 className={`flex-1 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                                     activeTab === 'export'
                                         ? 'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                        : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                 }`}
                             >
                                 <div className="flex items-center justify-center space-x-2">
@@ -321,7 +321,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                 className={`flex-1 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                                     activeTab === 'import'
                                         ? 'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                        : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                 }`}
                             >
                                 <div className="flex items-center justify-center space-x-2">
@@ -348,7 +348,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                             'Create New Backup'
                                         )}
                                     </h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
                                         {t(
                                             'backup.createDescription',
                                             'Create a new backup of all your data. Backups are saved on the server and you can restore them later.'
@@ -359,7 +359,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                 <button
                                     onClick={handleCreateBackup}
                                     disabled={isExporting}
-                                    className="w-full flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-base font-medium"
+                                    className="w-full flex items-center justify-center px-6 py-3 bg-primary text-primary-on rounded-md hover:bg-primary/90 dark:hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-base font-medium"
                                 >
                                     {isExporting ? (
                                         <>
@@ -421,11 +421,11 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                     </div>
 
                                     {isLoadingBackups ? (
-                                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                        <div className="text-center py-8 text-gray-600 dark:text-gray-300">
                                             {t('common.loading', 'Loading...')}
                                         </div>
                                     ) : savedBackups.length === 0 ? (
-                                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                        <div className="text-center py-8 text-gray-600 dark:text-gray-300">
                                             {t(
                                                 'backup.noBackups',
                                                 'No backups found. Create your first backup above.'
@@ -436,31 +436,31 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                 <thead className="bg-gray-50 dark:bg-gray-700">
                                                     <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                                             {t(
                                                                 'backup.createdAt',
                                                                 'Created'
                                                             )}
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                                             {t(
                                                                 'backup.version',
                                                                 'Version'
                                                             )}
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                                             {t(
                                                                 'backup.size',
                                                                 'Size'
                                                             )}
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                                             {t(
                                                                 'backup.contents',
                                                                 'Contents'
                                                             )}
                                                         </th>
-                                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                                             {t(
                                                                 'backup.actions',
                                                                 'Actions'
@@ -480,17 +480,17 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                                                         backup.created_at
                                                                     )}
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                                                     {
                                                                         backup.version
                                                                     }
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                                                     {formatFileSize(
                                                                         backup.file_size
                                                                     )}
                                                                 </td>
-                                                                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                                <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                                                                     <div className="flex flex-wrap gap-2">
                                                                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                                                             {
@@ -597,7 +597,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                             'Import from File'
                                         )}
                                     </h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
                                         {t(
                                             'backup.importDescription',
                                             'Upload a backup file to restore your data. Your existing data will be preserved, and new items from the backup will be added.'
@@ -655,7 +655,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                                 <p className="text-base font-medium text-gray-900 dark:text-white">
                                                     {selectedFile.name}
                                                 </p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                                     {(
                                                         selectedFile.size / 1024
                                                     ).toFixed(2)}{' '}
@@ -698,7 +698,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                                             'Backup contents:'
                                                         )}
                                                     </p>
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-600 dark:text-gray-300">
                                                         <div className="flex items-center">
                                                             <CheckIcon className="h-4 w-4 mr-2 text-green-600" />
                                                             {
@@ -829,7 +829,7 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                                     <button
                                         onClick={handleImport}
                                         disabled={isImporting}
-                                        className="w-full flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-base font-medium"
+                                        className="w-full flex items-center justify-center px-6 py-3 bg-primary text-primary-on rounded-md hover:bg-primary/90 dark:hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-base font-medium"
                                     >
                                         {isImporting ? (
                                             <>

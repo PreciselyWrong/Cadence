@@ -150,7 +150,7 @@ const UpgradeModal: React.FC = () => {
                             setDetail(null);
                             navigate('/profile?section=billing');
                         }}
-                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                        className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90"
                         data-testid="upgrade-modal-cta"
                     >
                         {t('billing.seePlans', 'See plans')}

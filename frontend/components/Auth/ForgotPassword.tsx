@@ -75,7 +75,7 @@ const ForgotPassword: React.FC = () => {
         >
             {sent ? (
                 <div className="text-center" data-testid="forgot-sent">
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'auth.forgot_password_sent',
                             'If an account exists for that email, we have sent a link to choose a new password. Check your inbox.'
@@ -90,7 +90,7 @@ const ForgotPassword: React.FC = () => {
                 </div>
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'auth.forgot_password_intro',
                             'Enter the email address of your account and we will send you a link to choose a new password.'
@@ -132,12 +132,12 @@ const ForgotPassword: React.FC = () => {
                     <button
                         type="submit"
                         disabled={submitting || (!!captcha && !captchaToken)}
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-60"
+                        className="w-full bg-primary text-primary-on py-2 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
                         data-testid="forgot-submit"
                     >
                         {t('auth.send_reset_link', 'Send reset link')}
                     </button>
-                    <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
+                    <div className="mt-6 text-center text-gray-600 dark:text-gray-300">
                         <Link
                             to="/login"
                             className="text-blue-500 hover:text-blue-600"

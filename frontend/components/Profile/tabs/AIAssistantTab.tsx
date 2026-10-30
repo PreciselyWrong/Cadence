@@ -84,7 +84,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                 {t('profile.aiAssistantTab', 'AI Assistant')}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                 {t(
                     'profile.aiAssistantTabDescription',
                     'Daily briefs, task insights, and project insights powered by any OpenAI-compatible model.'
@@ -101,7 +101,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                     <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
                         {t('profile.aiCreditsSection', 'AI Credits')}
                     </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                         {t(
                             'profile.aiCreditsDescription',
                             'One credit is used for each daily brief, task insight, or project insight you generate. Your balance resets on the 1st of each month.'
@@ -117,7 +117,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                             limit={credits.limit}
                         />
                     ) : (
-                        <p className="text-sm text-gray-400 dark:text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             {loaded ? '—' : '…'}
                         </p>
                     )}
@@ -131,7 +131,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                     <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
                         {t('profile.aiProviderSection', 'AI Provider')}
                     </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                         {t(
                             'profile.aiProviderDescription',
                             'Bring your own API key for any OpenAI-compatible provider. Leave blank to use the server default, if one is configured.'
@@ -253,7 +253,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                                     'AI Assistant (Insights)'
                                 )}
                             </label>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                                 {t(
                                     'profile.aiAssistantDescription',
                                     'Enable AI-powered daily briefs, task insights, and project insights.'
@@ -289,7 +289,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                 <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
                     {t('profile.aiProfileLabel', 'About You')}
                 </h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                     {t(
                         'profile.aiProfileDescription',
                         'Optional context fed into the AI prompts: your role, field, or anything that helps personalise the briefs and insights (e.g. "Academic researcher focused on grant deadlines and grading cycles").'
@@ -309,7 +309,7 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                     )}
                     className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 />
-                <p className="mt-1 text-xs text-gray-400 dark:text-gray-500 text-right">
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 text-right">
                     {(formData.ai_profile || '').length} / 500
                 </p>
             </div>

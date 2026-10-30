@@ -50,7 +50,7 @@ const CalendarHoursMenu: React.FC<CalendarHoursMenuProps> = ({
                 aria-expanded={open}
                 aria-label={label}
                 title={label}
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
             >
                 <EllipsisHorizontalIcon
                     className="h-5 w-5"

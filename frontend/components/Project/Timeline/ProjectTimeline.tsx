@@ -410,7 +410,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                     className={`flex items-center gap-2 text-sm ${
                         hasLinks
                             ? 'text-gray-700 dark:text-gray-300'
-                            : 'cursor-not-allowed text-gray-400 dark:text-gray-500'
+                            : 'cursor-not-allowed text-gray-500 dark:text-gray-400'
                     }`}
                 >
                     <input
@@ -427,7 +427,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
             <div className="flex overflow-hidden rounded-xl bg-white shadow-sm dark:bg-gray-900">
                 <div className="w-40 flex-shrink-0 sm:w-64 shadow-[1px_0_0_rgba(0,0,0,0.06)] dark:shadow-[1px_0_0_rgba(255,255,255,0.06)]">
                     <div
-                        className="flex items-end px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                        className="flex items-end px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"
                         style={{ height: HEADER_HEIGHT }}
                     >
                         {t('tasks.title', 'Tasks')}
@@ -445,7 +445,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                             <span
                                 className={`truncate text-sm ${
                                     item.done
-                                        ? 'text-gray-400 line-through dark:text-gray-500'
+                                        ? 'text-gray-500 line-through dark:text-gray-400'
                                         : path.has(item.task.uid || '')
                                           ? 'font-semibold text-gray-900 dark:text-gray-100'
                                           : 'text-gray-900 dark:text-gray-100'
@@ -453,14 +453,14 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                             >
                                 {item.task.name}
                             </span>
-                            <span className="truncate text-xs text-gray-500 dark:text-gray-400">
+                            <span className="truncate text-xs text-gray-600 dark:text-gray-300">
                                 {describe(item)}
                             </span>
                         </button>
                     ))}
                     {items.length === 0 && (
                         <div
-                            className="px-3 text-sm italic text-gray-500 dark:text-gray-400"
+                            className="px-3 text-sm italic text-gray-600 dark:text-gray-300"
                             style={{ height: ROW_HEIGHT }}
                         >
                             {t(
@@ -500,10 +500,10 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                             {ticks.map((tick) => (
                                 <div
                                     key={`t-${tick.x}`}
-                                    className={`absolute bottom-2 whitespace-nowrap text-center text-[11px] ${
+                                    className={`absolute bottom-2 whitespace-nowrap text-center text-[12px] ${
                                         tick.strong
                                             ? 'font-bold text-blue-700 dark:text-blue-400'
-                                            : 'text-gray-500 dark:text-gray-400'
+                                            : 'text-gray-600 dark:text-gray-300'
                                     }`}
                                     style={{
                                         left: tick.x,
@@ -585,7 +585,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                     return (
                                         <div
                                             key={`s-${item.task.uid}`}
-                                            className="absolute flex items-center overflow-hidden whitespace-nowrap rounded px-1.5 text-[10px] font-medium text-gray-600 dark:text-gray-300"
+                                            className="absolute flex items-center overflow-hidden whitespace-nowrap rounded px-1.5 text-[12px] font-medium text-gray-600 dark:text-gray-300"
                                             style={{
                                                 left: x(item.to + 1) + 2,
                                                 width: days * dayW - 4,
@@ -745,7 +745,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                             onPointerUp={() =>
                                                 handlePointerUp(item)
                                             }
-                                            className={`min-w-0 flex-1 truncate px-1 text-left text-[11px] font-medium ${barText(item)} ${
+                                            className={`min-w-0 flex-1 truncate px-1 text-left text-[12px] font-medium ${barText(item)} ${
                                                 dragging
                                                     ? 'cursor-grabbing'
                                                     : 'cursor-grab'
@@ -785,7 +785,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                         <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
                             {t('projectTimeline.noDates', 'No dates yet')} ·{' '}
                             {undated.length}{' '}
-                            <span className="font-normal text-gray-500 dark:text-gray-400">
+                            <span className="font-normal text-gray-600 dark:text-gray-300">
                                 {t(
                                     'projectTimeline.dragHint',
                                     'Drag one onto the timeline to schedule it'
@@ -814,7 +814,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                         </div>
                     </section>
                 )}
-                <div className="flex flex-wrap gap-4 px-1 py-3 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex flex-wrap gap-4 px-1 py-3 text-xs text-gray-600 dark:text-gray-300">
                     <span className="flex items-center gap-1.5">
                         <span className="h-2.5 w-6 rounded bg-blue-300 dark:bg-blue-700" />
                         {t('projectTimeline.legendRange', 'Start → Due')}

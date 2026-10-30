@@ -98,7 +98,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
     return (
         <div className="mb-6 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/60">
             <div className="flex items-start gap-3">
-                <DevicePhoneMobileIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+                <DevicePhoneMobileIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-300 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {t(
@@ -106,7 +106,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
                             'Push notifications on this device'
                         )}
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                         {body}
                     </p>
                     {message && (
@@ -121,7 +121,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
                             type="button"
                             onClick={handleEnable}
                             disabled={busy}
-                            className={`${buttonClass} text-white bg-blue-600 hover:bg-blue-700`}
+                            className={`${buttonClass} text-primary-on bg-primary hover:bg-primary/90`}
                         >
                             {t('notifications.push.enable', 'Turn on')}
                         </button>

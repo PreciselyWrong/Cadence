@@ -34,7 +34,7 @@ const SlashItemRow: React.FC<{ item: SlashItem }> = ({ item }) => {
                     {item.label}
                 </span>
                 {item.description && (
-                    <span className="block text-xs text-gray-500 dark:text-gray-400 leading-tight truncate">
+                    <span className="block text-xs text-gray-600 dark:text-gray-300 leading-tight truncate">
                         {item.description}
                     </span>
                 )}

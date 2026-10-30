@@ -61,12 +61,12 @@ const MarketplaceTemplateCard: React.FC<MarketplaceTemplateCardProps> = ({
                 )}
 
                 {template.description && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
                         {template.description}
                     </p>
                 )}
 
-                <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mt-auto pt-1">
+                <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-auto pt-1">
                     {taskCount > 0 && (
                         <span className="flex items-center gap-1">
                             <ClipboardDocumentListIcon className="h-3.5 w-3.5" />
@@ -84,7 +84,7 @@ const MarketplaceTemplateCard: React.FC<MarketplaceTemplateCardProps> = ({
                 <div className="flex items-center gap-2 pt-2.5 border-t border-gray-100 dark:border-gray-700/60">
                     <button
                         onClick={() => onPreview(template)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 rounded-md transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 rounded-md transition-colors"
                     >
                         <EyeIcon className="h-3.5 w-3.5" />
                         {t('templates.marketplace.preview', 'Preview')}
@@ -92,7 +92,7 @@ const MarketplaceTemplateCard: React.FC<MarketplaceTemplateCardProps> = ({
                     <button
                         onClick={() => onInstall(template)}
                         disabled={installing}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors ml-auto"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors ml-auto"
                     >
                         <ArrowDownTrayIcon className="h-3.5 w-3.5" />
                         {installing

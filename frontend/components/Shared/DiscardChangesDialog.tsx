@@ -56,7 +56,7 @@ const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = ({
                     <button
                         ref={cancelButtonRef}
                         onClick={onCancel}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="px-4 py-2 bg-primary text-primary-on rounded hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         data-testid="discard-dialog-cancel"
                     >
                         {t('common.no', 'No, keep editing')}

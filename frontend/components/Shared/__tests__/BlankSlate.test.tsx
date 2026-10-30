@@ -35,7 +35,7 @@ describe('BlankSlate', () => {
         ).toBeInTheDocument();
 
         const create = screen.getByRole('button', { name: 'Create a thing' });
-        expect(create).toHaveClass('bg-blue-600');
+        expect(create).toHaveClass('bg-primary');
         fireEvent.click(create);
         expect(onCreate).toHaveBeenCalledTimes(1);
 

@@ -94,7 +94,7 @@ const ResetPassword: React.FC = () => {
                     <div className="mb-4 text-green-600 dark:text-green-400 text-5xl">
                         ✓
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'auth.reset_password_done',
                             'Your password has been updated. You can now log in.'
@@ -157,7 +157,7 @@ const ResetPassword: React.FC = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-60"
+                        className="w-full bg-primary text-primary-on py-2 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
                         data-testid="reset-submit"
                     >
                         {t('auth.resetPassword', 'Reset Password')}

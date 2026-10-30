@@ -143,25 +143,25 @@ const BurndownChart: React.FC = () => {
 
     return (
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 h-full flex flex-col">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                 4-Week Burndown
             </h3>
             {!hasCompletedAt && !loading && allTasks.length > 0 && (
-                <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-1 leading-tight">
+                <p className="text-[12px] text-gray-500 dark:text-gray-400 mb-1 leading-tight">
                     Tasks created (completion tracking coming soon)
                 </p>
             )}
             <div ref={containerRef} className="flex-1 min-h-0 relative">
                 {loading && (
                     <div className="flex items-center justify-center h-full">
-                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             Loading…
                         </span>
                     </div>
                 )}
                 {!loading && allTasks.length === 0 && (
                     <div className="flex items-center justify-center h-full">
-                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             No task data
                         </span>
                     </div>
@@ -263,7 +263,7 @@ const BurndownChart: React.FC = () => {
                                 textAnchor="end"
                                 fontSize="9"
                                 fill="currentColor"
-                                className="text-gray-400 dark:text-gray-500"
+                                className="text-gray-500 dark:text-gray-400"
                             >
                                 {tick}
                             </text>
@@ -284,7 +284,7 @@ const BurndownChart: React.FC = () => {
                                 }
                                 fontSize="9"
                                 fill="currentColor"
-                                className="text-gray-400 dark:text-gray-500"
+                                className="text-gray-500 dark:text-gray-400"
                             >
                                 {label}
                             </text>

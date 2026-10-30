@@ -54,7 +54,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
             <span className="text-base font-medium text-gray-900 dark:text-gray-100">
                 {task.original_name || task.name}
             </span>
-            <span className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <span className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                 {[
                     task.Project?.name,
                     task.estimated_minutes
@@ -64,7 +64,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
                     .filter(Boolean)
                     .join(' · ')}
             </span>
-            <span className="mt-auto pt-2 text-[11px] text-gray-400 max-md:hidden">
+            <span className="mt-auto pt-2 text-[12px] text-gray-500 max-md:hidden">
                 {shortcut}
             </span>
         </button>
@@ -88,7 +88,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
                         : t('thisOrThat.title', 'Which one now?')}
                 </h3>
                 {!kept ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t('thisOrThat.none', 'Nothing left to compare.')}
                     </p>
                 ) : finished ? (
@@ -99,7 +99,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
                         <button
                             type="button"
                             onClick={() => onChoose(kept)}
-                            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-on hover:bg-primary/90"
                         >
                             {t('thisOrThat.addToday', 'Add to today')}
                         </button>
@@ -115,7 +115,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
                         <button
                             type="button"
                             onClick={skipBoth}
-                            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                         >
                             {t('thisOrThat.skipBoth', 'Neither')}
                         </button>
@@ -125,7 +125,7 @@ const ThisOrThat: React.FC<ThisOrThatProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                     >
                         {t('thisOrThat.close', 'Close')}
                     </button>

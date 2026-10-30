@@ -107,7 +107,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                         <button
                             type="button"
                             onClick={toggleDarkMode}
-                            className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white focus:outline-none"
+                            className="p-2 rounded-full text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white "
                             aria-label={t(
                                 'publicNote.toggleTheme',
                                 'Toggle dark mode'
@@ -122,7 +122,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                         {isSignedIn ? (
                             <Link
                                 to="/today"
-                                className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+                                className="px-4 py-2 rounded bg-primary text-primary-on text-sm hover:bg-primary/90"
                             >
                                 {t('publicNote.openApp', 'Open Cadence')}
                             </Link>
@@ -137,7 +137,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                                 {showSignUp && (
                                     <Link
                                         to="/register"
-                                        className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+                                        className="px-4 py-2 rounded bg-primary text-primary-on text-sm hover:bg-primary/90"
                                     >
                                         {t('auth.signup', 'Sign Up')}
                                     </Link>
@@ -224,7 +224,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                                     'Do you want to share your notes?'
                                 )}
                             </span>
-                            <span className="hidden md:inline text-gray-500 dark:text-gray-400">
+                            <span className="hidden md:inline text-gray-600 dark:text-gray-300">
                                 {' '}
                                 {t(
                                     'publicNote.ctaBody',

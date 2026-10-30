@@ -141,7 +141,7 @@ const AdminWaitlistPage: React.FC = () => {
                 />
                 <button
                     type="submit"
-                    className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                    className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90"
                 >
                     {t('common.search', 'Search')}
                 </button>
@@ -208,7 +208,7 @@ const AdminWaitlistPage: React.FC = () => {
                         {loading ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={7}
                                 >
                                     {t('common.loading', 'Loading...')}
@@ -217,7 +217,7 @@ const AdminWaitlistPage: React.FC = () => {
                         ) : entries.length === 0 ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={7}
                                     data-testid="admin-waitlist-empty"
                                 >
@@ -239,21 +239,21 @@ const AdminWaitlistPage: React.FC = () => {
                                     className="text-gray-900 dark:text-gray-100"
                                 >
                                     <td className="px-4 py-2">{entry.email}</td>
-                                    <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                         {entry.source}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                         {entry.locale || '-'}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                         {entry.submission_count}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                         {new Date(
                                             entry.created_at
                                         ).toLocaleString()}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-500 dark:text-gray-400 font-mono text-xs">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300 font-mono text-xs">
                                         {entry.ip_address || '-'}
                                     </td>
                                     <td className="px-4 py-2 text-right">
@@ -276,7 +276,7 @@ const AdminWaitlistPage: React.FC = () => {
                 </table>
             </div>
 
-            <div className="flex items-center justify-between mt-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-between mt-4 text-sm text-gray-600 dark:text-gray-300">
                 <span data-testid="admin-waitlist-count">
                     {t(
                         'admin.waitlist.showing',

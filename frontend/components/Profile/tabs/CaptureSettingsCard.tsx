@@ -32,7 +32,7 @@ const CaptureSettingsCard: React.FC = () => {
             <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
                 {t('capture.settings.title', 'Adding items')}
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-4">
+            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 mb-4">
                 {t(
                     'capture.settings.description',
                     'How the Add box behaves. These apply immediately and are kept on this device.'
@@ -107,7 +107,7 @@ const CaptureSettingsCard: React.FC = () => {
                                 'One item per line'
                             )}
                         </span>
-                        <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        <span className="block text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                             {t(
                                 'capture.settings.oneItemPerLineHelp',
                                 'Off: everything you type becomes one item, with the first line as its title and the other lines as its notes. On: each line becomes its own item.'

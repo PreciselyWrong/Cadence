@@ -318,12 +318,12 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={handleToggle}
-                className="relative flex items-center focus:outline-none"
+                className="relative flex items-center "
                 aria-label={t('profile.notifications')}
             >
                 <BellIcon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
+                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[12px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
                         {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                 )}
@@ -360,13 +360,13 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                     <div className="max-h-96 overflow-y-auto">
                         {loading ? (
                             <div className="p-4 text-center">
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
                                     {t('notifications.loading', 'Loading...')}
                                 </p>
                             </div>
                         ) : notifications.length === 0 ? (
                             <div className="p-4 text-center">
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
                                     {t(
                                         'notifications.noNotifications',
                                         'No notifications yet'
@@ -415,10 +415,10 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                     <p className="text-sm font-medium">
                                                         {notification.title}
                                                     </p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                                                         {notification.message}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                                                         {formatTimestamp(
                                                             notification.created_at
                                                         )}
@@ -437,7 +437,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                         'accept'
                                                                     );
                                                                 }}
-                                                                className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700"
+                                                                className="px-2 py-1 text-xs rounded bg-primary text-primary-on hover:bg-primary/90"
                                                             >
                                                                 {t(
                                                                     'shares.acceptInvitation',
@@ -466,7 +466,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                     {answeredInvitations[
                                                         notification.uid
                                                     ] && (
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">
                                                             {answeredInvitations[
                                                                 notification.uid
                                                             ] === 'accepted'
@@ -496,7 +496,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                 'Mark as read'
                                                             )}
                                                         >
-                                                            <CheckIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                                                            <CheckIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                                                         </button>
                                                     )}
                                                     <button
@@ -512,7 +512,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                             'Delete'
                                                         )}
                                                     >
-                                                        <XMarkIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                                                        <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                                                     </button>
                                                 </div>
                                             </div>

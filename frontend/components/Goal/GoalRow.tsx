@@ -10,7 +10,7 @@ export const STATUS_COLORS: Record<string, string> = {
     achieved:
         'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
     paused: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    dropped: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+    dropped: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
 };
 
 interface GoalRowProps {
@@ -71,12 +71,12 @@ const GoalRow: React.FC<GoalRowProps> = ({
                     {goal.title}
                 </h3>
                 {goal.why && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 truncate mt-0.5">
                         {goal.why}
                     </p>
                 )}
                 {goal.Area && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 truncate mt-0.5">
                         {goal.Area.name}
                     </p>
                 )}
@@ -84,18 +84,18 @@ const GoalRow: React.FC<GoalRowProps> = ({
 
             <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
                 <span
-                    className={`inline-flex items-center px-2 py-px rounded-full text-[10px] font-medium ${
+                    className={`inline-flex items-center px-2 py-px rounded-full text-[12px] font-medium ${
                         STATUS_COLORS[goal.status] ?? ''
                     }`}
                 >
                     {t(`goals.status.${goal.status}`, goal.status)}
                 </span>
-                <span className="inline-flex items-center px-2 py-px rounded-full text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                <span className="inline-flex items-center px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
                     {t(`goals.horizon.${goal.horizon}`, goal.horizon)}
                 </span>
             </div>
 
-            <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 w-40 justify-end">
+            <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 w-40 justify-end">
                 <span>
                     {projectsCount} {t('goals.stats.projects', 'projects')}
                 </span>
@@ -112,7 +112,7 @@ const GoalRow: React.FC<GoalRowProps> = ({
                         e.stopPropagation();
                         setMenuOpen((open) => !open);
                     }}
-                    className="focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className=" opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                 >
                     <EllipsisVerticalIcon className="h-4 w-4" />
                 </button>

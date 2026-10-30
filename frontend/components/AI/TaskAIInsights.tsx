@@ -74,7 +74,7 @@ const InsightCard: React.FC<{
         >
             <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1">
+                <p className="text-[12px] font-semibold uppercase tracking-wider mb-1">
                     {label}
                 </p>
                 <p className="text-sm leading-relaxed">{text}</p>
@@ -100,9 +100,9 @@ const LinksCard: React.FC<{
                 visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
         >
-            <LinkIcon className="h-4 w-4 flex-shrink-0 mt-0.5 text-gray-400 dark:text-gray-500" />
+            <LinkIcon className="h-4 w-4 flex-shrink-0 mt-0.5 text-gray-500 dark:text-gray-400" />
             <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-gray-500 dark:text-gray-400">
+                <p className="text-[12px] font-semibold uppercase tracking-wider mb-2 text-gray-600 dark:text-gray-300">
                     {t('aiAssistant.suggestedLinks', 'Suggested links')}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -143,13 +143,13 @@ const BreakdownCard: React.FC<{
         >
             <ListBulletIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-2">
+                <p className="text-[12px] font-semibold uppercase tracking-wider mb-2">
                     {t('aiAssistant.taskBreakdown', 'How to approach it')}
                 </p>
                 <ol className="space-y-1.5">
                     {steps.map((step, i) => (
                         <li key={i} className="flex items-start gap-2">
-                            <span className="flex-shrink-0 w-4 h-4 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-[10px] font-bold flex items-center justify-center leading-none mt-0.5">
+                            <span className="flex-shrink-0 w-4 h-4 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-[12px] font-bold flex items-center justify-center leading-none mt-0.5">
                                 {i + 1}
                             </span>
                             <span className="text-sm text-green-900 dark:text-green-100 leading-snug">{step}</span>
@@ -297,11 +297,11 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                 <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800">
                     <div className="flex items-center gap-2">
                         <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
-                        <span className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                        <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                             {t('aiAssistant.taskInsightsTitle', 'AI Insights')}
                         </span>
                         {insights && !isLoading && insights.generated_at && (
-                            <span className="text-xs text-gray-400 dark:text-gray-500">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                                 {new Date(insights.generated_at).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit',
@@ -331,7 +331,7 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                             onClick={dismiss}
                             disabled={isLoading}
                             title={t('common.close', 'Close')}
-                            className="p-1 rounded text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <XMarkIcon className="h-3.5 w-3.5" />
                         </button>

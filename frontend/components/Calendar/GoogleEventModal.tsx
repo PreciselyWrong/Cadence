@@ -171,7 +171,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                         type="button"
                         onClick={onClose}
                         aria-label={t('calendar.close', 'Close')}
-                        className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="p-1 rounded-lg text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                         <XMarkIcon className="w-4 h-4" />
                     </button>
@@ -210,7 +210,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                 </label>
 
                 <div className="grid grid-cols-2 gap-2">
-                    <label className="text-xs text-gray-500 dark:text-gray-400">
+                    <label className="text-xs text-gray-600 dark:text-gray-300">
                         {t('calendar.google.start', 'Start')}
                         <input
                             type={allDay ? 'date' : 'datetime-local'}
@@ -219,7 +219,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                             className={inputClass}
                         />
                     </label>
-                    <label className="text-xs text-gray-500 dark:text-gray-400">
+                    <label className="text-xs text-gray-600 dark:text-gray-300">
                         {t('calendar.google.end', 'End')}
                         <input
                             type={allDay ? 'date' : 'datetime-local'}
@@ -250,7 +250,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                 />
 
                 {draft.recurring && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'calendar.google.recurringNote',
                             'Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.'
@@ -271,7 +271,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                         type="button"
                         disabled={saving || !calendarUid}
                         onClick={() => void save()}
-                        className="inline-flex min-h-[36px] items-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
+                        className="inline-flex min-h-[36px] items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-on hover:bg-primary/90 disabled:opacity-50"
                     >
                         {t('calendar.google.save', 'Save')}
                     </button>

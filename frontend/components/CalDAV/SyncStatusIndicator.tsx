@@ -26,7 +26,7 @@ const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
     if (!enabled) {
         return (
             <span
-                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
                 title={t('profile.caldav.disabled', 'Disabled')}
             >
                 <MinusCircleIcon className="w-4 h-4 mr-1" />
@@ -85,7 +85,7 @@ const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
 
     return (
         <span
-            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             title={t('profile.caldav.neverSynced', 'Never synced')}
         >
             <MinusCircleIcon className="w-4 h-4 mr-1" />

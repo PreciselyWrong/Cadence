@@ -190,7 +190,7 @@ const AdminFeedbackPage: React.FC = () => {
                         className={`px-3 py-1.5 rounded-lg text-sm ${
                             status === tab.key
                                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                         }`}
                         data-testid={`admin-feedback-tab-${tab.key}`}
                     >
@@ -200,12 +200,12 @@ const AdminFeedbackPage: React.FC = () => {
             </div>
 
             {loading ? (
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-gray-600 dark:text-gray-300">
                     {t('common.loading', 'Loading...')}
                 </p>
             ) : entries.length === 0 ? (
                 <p
-                    className="text-gray-500 dark:text-gray-400"
+                    className="text-gray-600 dark:text-gray-300"
                     data-testid="admin-feedback-empty"
                 >
                     {status === 'open'
@@ -277,7 +277,7 @@ const AdminFeedbackPage: React.FC = () => {
                                     <span
                                         className={`w-32 sm:w-48 shrink-0 truncate text-sm ${
                                             resolved
-                                                ? 'text-gray-500 dark:text-gray-400'
+                                                ? 'text-gray-600 dark:text-gray-300'
                                                 : 'font-semibold text-gray-900 dark:text-white'
                                         }`}
                                     >
@@ -286,21 +286,21 @@ const AdminFeedbackPage: React.FC = () => {
                                     <span
                                         className={`flex-1 min-w-0 truncate text-sm ${
                                             resolved
-                                                ? 'text-gray-400 dark:text-gray-500'
+                                                ? 'text-gray-500 dark:text-gray-400'
                                                 : 'text-gray-600 dark:text-gray-300'
                                         }`}
                                     >
                                         {preview}
                                     </span>
                                     {entry.page_url && (
-                                        <span className="hidden md:inline-block max-w-[10rem] truncate shrink-0 px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700/60 text-xs text-gray-500 dark:text-gray-300">
+                                        <span className="hidden md:inline-block max-w-[10rem] truncate shrink-0 px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700/60 text-xs text-gray-600 dark:text-gray-300">
                                             {entry.page_url}
                                         </span>
                                     )}
                                     <time
                                         className={`w-24 shrink-0 text-right text-xs ${
                                             resolved
-                                                ? 'text-gray-400 dark:text-gray-500'
+                                                ? 'text-gray-500 dark:text-gray-400'
                                                 : 'font-medium text-gray-700 dark:text-gray-200'
                                         }`}
                                         dateTime={entry.created_at}
@@ -315,7 +315,7 @@ const AdminFeedbackPage: React.FC = () => {
                                 {isOpen && (
                                     <div className="px-4 pb-4 sm:pl-[4.25rem]">
                                         {entry.user?.name && (
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                            <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">
                                                 {entry.user.email}
                                             </p>
                                         )}
@@ -359,7 +359,7 @@ const AdminFeedbackPage: React.FC = () => {
                                                     {entry.app_version}
                                                 </span>
                                             )}
-                                            <span className="text-gray-400 dark:text-gray-500 ml-1">
+                                            <span className="text-gray-500 dark:text-gray-400 ml-1">
                                                 {new Date(
                                                     entry.created_at
                                                 ).toLocaleString()}
@@ -398,7 +398,7 @@ const AdminFeedbackPage: React.FC = () => {
                                                 onClick={() =>
                                                     setEntryToDelete(entry)
                                                 }
-                                                className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
+                                                className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
                                                 data-testid="admin-feedback-delete"
                                             >
                                                 <TrashIcon className="w-4 h-4 mr-1.5" />

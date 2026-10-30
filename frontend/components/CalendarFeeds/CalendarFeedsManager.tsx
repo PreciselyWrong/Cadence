@@ -130,12 +130,12 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
 
             <div className="mb-8 space-y-3">
                 {loading && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t('common.loading', 'Loading...')}
                     </p>
                 )}
                 {!loading && feeds.length === 0 && (
-                    <p className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center text-sm text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                    <p className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center text-sm text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">
                         {t(
                             'profile.calendars.empty',
                             'No calendars connected yet.'
@@ -155,7 +155,7 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                             <span className="text-sm font-medium text-gray-900 dark:text-white">
                                 {feed.name}
                             </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-gray-600 dark:text-gray-300">
                                 {feed.url_host}
                                 {feed.last_error
                                     ? ` · ${feed.last_error}`
@@ -210,7 +210,7 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                                     name: feed.name,
                                 }
                             )}
-                            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700"
+                            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700"
                         >
                             <TrashIcon className="h-4 w-4" />
                         </button>
@@ -273,7 +273,7 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                     />
                     <p
                         id="calendar-feed-url-help"
-                        className="mt-1.5 text-xs text-gray-600 dark:text-gray-400"
+                        className="mt-1.5 text-xs text-gray-600 dark:text-gray-300"
                     >
                         {t(
                             'profile.calendars.googleHelp',
@@ -299,7 +299,7 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                     type="button"
                     onClick={() => void handleAdd()}
                     disabled={saving}
-                    className="inline-flex min-h-[40px] items-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
+                    className="inline-flex min-h-[40px] items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-on hover:bg-primary/90 disabled:opacity-50"
                 >
                     {saving
                         ? t(

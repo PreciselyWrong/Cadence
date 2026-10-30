@@ -31,7 +31,7 @@ const ProjectStateDropdown: React.FC<ProjectStateDropdownProps> = ({
                 'captured but not started yet'
             ),
             icon: (
-                <EllipsisHorizontalCircleIcon className="w-5 h-5 text-gray-500" />
+                <EllipsisHorizontalCircleIcon className="w-5 h-5 text-gray-600" />
             ),
         },
         {
@@ -191,7 +191,7 @@ const ProjectStateDropdown: React.FC<ProjectStateDropdownProps> = ({
                     {selectedState ? (
                         selectedState.icon
                     ) : (
-                        <EllipsisHorizontalCircleIcon className="w-5 h-5 text-gray-400" />
+                        <EllipsisHorizontalCircleIcon className="w-5 h-5 text-gray-500" />
                     )}
                     <span>
                         {selectedState
@@ -199,7 +199,7 @@ const ProjectStateDropdown: React.FC<ProjectStateDropdownProps> = ({
                             : t('projects.selectState', 'Select State')}
                     </span>
                 </span>
-                <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                <ChevronDownIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </button>
 
             {isOpen && (
@@ -216,7 +216,7 @@ const ProjectStateDropdown: React.FC<ProjectStateDropdownProps> = ({
                                     <div className="font-medium">
                                         {state.label}
                                     </div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                    <div className="text-xs text-gray-600 dark:text-gray-300">
                                         {state.description}
                                     </div>
                                 </div>

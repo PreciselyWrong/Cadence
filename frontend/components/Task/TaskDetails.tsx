@@ -1643,11 +1643,11 @@ const TaskDetails: React.FC = () => {
             <div className="flex justify-center px-4 lg:px-2">
                 <div className="w-full max-w-5xl">
                     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center">
-                        <ExclamationTriangleIcon className="h-24 w-24 text-gray-400 dark:text-gray-500 mx-auto mb-8" />
+                        <ExclamationTriangleIcon className="h-24 w-24 text-gray-500 dark:text-gray-400 mx-auto mb-8" />
                         <h1 className="text-2xl font-medium text-gray-700 dark:text-gray-300 mb-4">
                             {error || t('task.notFound', 'Task Not Found')}
                         </h1>
-                        <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
                             {t(
                                 'task.notFoundDescription',
                                 'The task you are looking for does not exist or has been deleted.'
@@ -1655,7 +1655,7 @@ const TaskDetails: React.FC = () => {
                         </p>
                         <button
                             onClick={() => navigate('/today')}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
+                            className="px-6 py-3 bg-primary text-primary-on rounded-lg hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200"
                         >
                             {t('common.goToToday', 'Go to Today')}
                         </button>

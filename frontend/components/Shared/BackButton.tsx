@@ -18,7 +18,7 @@ const BackButton: React.FC<BackButtonProps> = ({
     const baseClass =
         variant === 'overlay'
             ? 'flex items-center gap-1.5 text-sm text-white/90 hover:text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full transition-colors'
-            : 'flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-100 transition-colors';
+            : 'flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors';
 
     return (
         <button

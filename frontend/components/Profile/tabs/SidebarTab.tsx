@@ -37,7 +37,7 @@ const SidebarTab: React.FC<SidebarTabProps> = ({
 
             {isMinimal ? (
                 <>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'profile.sidebarMinimalHint',
                             'These settings change the Minimal sidebar only. Dense keeps its own layout.'
@@ -47,7 +47,7 @@ const SidebarTab: React.FC<SidebarTabProps> = ({
                 </>
             ) : (
                 <>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'profile.sidebarLayoutDescription',
                             'This is a preview of your sidebar. Use the switches to choose what appears, and drag the handles to change the order.'
@@ -63,7 +63,7 @@ const SidebarTab: React.FC<SidebarTabProps> = ({
                         onReorder={onReorder}
                     />
 
-                    <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-4 text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'profile.sidebarLayoutHint',
                             'Templates and Access stay at the bottom. Items marked as off in Features stay hidden until you turn the feature on.'

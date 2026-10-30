@@ -64,10 +64,10 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                 }}
             >
                 <span
-                    className={`flex items-center gap-[6px] text-[10.5px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
+                    className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         location.pathname.startsWith('/notes')
                             ? 'text-black dark:text-white'
-                            : 'text-gray-400 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();
@@ -87,7 +87,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                             e.stopPropagation();
                             onCreateNote();
                         }}
-                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                         aria-label={t('notes.addNote', 'Add Note')}
                         title={t('notes.addNote', 'Add Note')}
                     >
@@ -95,7 +95,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                     </button>
                     {notes.length > 0 && (
                         <>
-                            <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400 tabular-nums">
                                 {notes.length}
                             </span>
                             <button
@@ -104,7 +104,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
-                                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                                className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"
@@ -123,7 +123,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
             {isExpanded && notes.length > 0 && (
                 <div className="mt-1 mb-1.5 rounded-xl bg-gray-50 py-1 dark:bg-white/[0.03]">
                     <div className="flex items-center gap-[6px] ml-[30px] mr-[10px] mt-1 mb-1 px-[8px] py-[3px] rounded-md bg-white dark:bg-white/5">
-                        <MagnifyingGlassIcon className="h-3 w-3 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                        <MagnifyingGlassIcon className="h-3 w-3 text-gray-500 dark:text-gray-400 flex-shrink-0" />
                         <input
                             type="text"
                             value={searchQuery}

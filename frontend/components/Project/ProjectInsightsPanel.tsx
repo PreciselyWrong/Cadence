@@ -72,7 +72,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm p-5">
                 <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        <p className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300">
                             {t('projects.progress', 'Progress')}
                         </p>
                         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -96,7 +96,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                             <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
                                 {taskStats.completionRate}%
                             </span>
-                            <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                            <span className="text-[12px] text-gray-600 dark:text-gray-300">
                                 {t('common.done', 'done')}
                             </span>
                         </div>
@@ -114,7 +114,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                                 )}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                             <span className="w-2 h-2 rounded-full bg-red-500"></span>
                             <span>
                                 {taskStats.overdue}{' '}
@@ -124,7 +124,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                             </span>
                         </div>
                         <div>
-                            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300">
                                 <span>{t('tasks.progress', 'Progress')}</span>
                                 <span className="font-semibold text-gray-700 dark:text-gray-200">
                                     {taskStats.completionRate}%
@@ -148,7 +148,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                     <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                         {t('projects.dueSchedule', 'Due schedule')}
                     </h3>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
                         {t('projects.next14Days', 'Next 14 days')}
                     </span>
                 </div>
@@ -177,10 +177,10 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                                                 backgroundColor: `rgba(251, 191, 36, ${intensity})`,
                                             }}
                                         ></div>
-                                        <span className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
+                                        <span className="mt-1 text-[12px] text-gray-600 dark:text-gray-300">
                                             {d.label}
                                         </span>
-                                        <span className="text-[10px] text-gray-600 dark:text-gray-300">
+                                        <span className="text-[12px] text-gray-600 dark:text-gray-300">
                                             {d.count}
                                         </span>
                                     </div>
@@ -207,7 +207,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                         )}
                     </>
                 ) : (
-                    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'projects.noUpcomingDue',
                             'No due dates in the next 14 days.'
@@ -221,7 +221,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                     <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                         {t('projects.recentCompletion', 'Recent completion')}
                     </h3>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
                         {t('projects.last7And30', 'Last 7 & 30 days')}
                     </span>
                 </div>
@@ -229,13 +229,13 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                 <div className="mt-4 space-y-4">
                     <div className="flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            <p className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300">
                                 {t('projects.weeklyPace', 'Weekly pace')}
                             </p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                 {weeklyPace.lastWeek}
                             </p>
-                            <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                            <p className="text-[12px] text-gray-600 dark:text-gray-300">
                                 {t(
                                     'projects.prevWeekCompleted',
                                     '{{count}} prior week',
@@ -247,7 +247,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
                             <div
-                                className={`px-2 py-1 rounded-full text-[11px] font-semibold ${
+                                className={`px-2 py-1 rounded-full text-[12px] font-semibold ${
                                     weeklyPace.delta > 0
                                         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-200'
                                         : weeklyPace.delta === 0
@@ -283,7 +283,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
 
                     <div className="flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            <p className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300">
                                 {t(
                                     'projects.monthlyCompletion',
                                     '30-day completions'
@@ -292,7 +292,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                 {monthlyCompleted}
                             </p>
-                            <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                            <p className="text-[12px] text-gray-600 dark:text-gray-300">
                                 {t('projects.last30Days', 'Last 30 days')}
                             </p>
                         </div>
@@ -311,7 +311,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm p-5">
                 <div className="flex items-start justify-between gap-2">
                     <div>
-                        <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        <p className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300">
                             {t('projects.nextUp', 'Next best action')}
                         </p>
                         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -319,7 +319,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                         </h3>
                     </div>
                     {nextBestAction && (
-                        <span className="px-2 py-1 text-[11px] rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
+                        <span className="px-2 py-1 text-[12px] rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
                             {getDueDescriptor(nextBestAction)}
                         </span>
                     )}
@@ -334,13 +334,13 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                                     {nextBestAction.name}
                                 </p>
                                 {nextBestAction.note && (
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                                         {nextBestAction.note}
                                     </p>
                                 )}
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
+                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 flex-wrap">
                             {nextBestAction.priority && (
                                 <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
                                     {t('tasks.priority', 'Priority')}:{' '}
@@ -382,7 +382,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                                     ? t('tasks.inProgress', 'In progress')
                                     : t('tasks.startNow', 'Start now')}
                             </button>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-gray-600 dark:text-gray-300">
                                 {t(
                                     'projects.focusHint',
                                     'Shifts this task to in progress and today'
@@ -391,7 +391,7 @@ const ProjectInsightsPanel: React.FC<ProjectInsightsPanelProps> = ({
                         </div>
                     </div>
                 ) : (
-                    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'projects.noNextAction',
                             'All clear-no outstanding tasks.'

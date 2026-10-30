@@ -192,7 +192,7 @@ const AdminUserStatusTable: React.FC = () => {
                     {t('admin.userStatus.title', 'Users')}
                     {users !== null && filters.length > 0 && (
                         <span
-                            className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400"
+                            className="ml-2 text-sm font-normal text-gray-600 dark:text-gray-300"
                             data-testid="admin-user-filter-count"
                         >
                             {t('admin.userFilter.showing', {
@@ -302,7 +302,7 @@ const AdminUserStatusTable: React.FC = () => {
                         {users === null ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={COLUMNS}
                                 >
                                     {t('common.loading', 'Loading...')}
@@ -311,7 +311,7 @@ const AdminUserStatusTable: React.FC = () => {
                         ) : sorted.length === 0 ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={COLUMNS}
                                     data-testid="admin-user-filter-empty"
                                 >
@@ -334,7 +334,7 @@ const AdminUserStatusTable: React.FC = () => {
                                             <td className="px-4 py-2">
                                                 <div>
                                                     {u.email ?? (
-                                                        <span className="italic text-gray-400">
+                                                        <span className="italic text-gray-500">
                                                             {t(
                                                                 'admin.noEmail',
                                                                 'No email'
@@ -343,7 +343,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                     )}
                                                 </div>
                                                 {u.name && (
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <div className="text-xs text-gray-600 dark:text-gray-300">
                                                         {u.name}
                                                     </div>
                                                 )}
@@ -354,7 +354,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                 <div>
                                                     {formatDate(u.created_at)}
                                                 </div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                <div className="text-xs text-gray-600 dark:text-gray-300">
                                                     {u.member_of
                                                         ? t(
                                                               'admin.userStatus.addedBy',
@@ -392,7 +392,7 @@ const AdminUserStatusTable: React.FC = () => {
                                             </td>
                                             <td className={cell}>
                                                 {!u.email ? (
-                                                    <span className="text-gray-400">
+                                                    <span className="text-gray-500">
                                                         -
                                                     </span>
                                                 ) : u.email_verified ? (
@@ -446,7 +446,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                         />
                                                     </button>
                                                 ) : (
-                                                    <span className="text-gray-400">
+                                                    <span className="text-gray-500">
                                                         {t(
                                                             'admin.userStatus.nothingCreated',
                                                             'Nothing yet'
@@ -454,7 +454,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                     </span>
                                                 )}
                                                 {u.usage.last_created_at && (
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <div className="text-xs text-gray-600 dark:text-gray-300">
                                                         {t(
                                                             'admin.userStatus.lastCreated',
                                                             {
@@ -503,7 +503,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                             {status.label}
                                                         </span>
                                                         {u.read_only_until && (
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                            <div className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                                                                 {t(
                                                                     'admin.userStatus.deletedOn',
                                                                     {
@@ -529,7 +529,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                                 }
                                                             </span>
                                                         ) : (
-                                                            <span className="text-gray-400">
+                                                            <span className="text-gray-500">
                                                                 -
                                                             </span>
                                                         )}
@@ -562,7 +562,7 @@ const AdminUserStatusTable: React.FC = () => {
                                                                 )}
                                                             </span>
                                                         ) : (
-                                                            <span className="text-gray-500 dark:text-gray-400">
+                                                            <span className="text-gray-600 dark:text-gray-300">
                                                                 {t(
                                                                     'admin.userStatus.paidNo',
                                                                     'No'

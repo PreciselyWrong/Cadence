@@ -63,7 +63,7 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({ options, disabled }) => {
                 aria-haspopup="menu"
                 aria-expanded={open}
                 onClick={() => setOpen((value) => !value)}
-                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-40 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
             >
                 <span className="max-sm:sr-only">
                     {t('review.decide', 'Decide')}
@@ -77,7 +77,7 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({ options, disabled }) => {
                 >
                     {askingDate ? (
                         <div className="px-3 py-2">
-                            <label className="block text-xs text-gray-500 dark:text-gray-400">
+                            <label className="block text-xs text-gray-600 dark:text-gray-300">
                                 {askingDate.label}
                                 <input
                                     type="date"

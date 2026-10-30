@@ -140,7 +140,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     const meta = [status, formatDuration(duration)].filter(Boolean).join(' · ');
 
     const quietAction =
-        'text-xs text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-400 dark:hover:text-gray-200';
+        'text-xs text-gray-600 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-300 dark:hover:text-gray-200';
 
     return (
         <div
@@ -171,7 +171,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                     >
                         {task.name}
                     </button>
-                    <span className="flex items-center gap-1.5 truncate text-xs text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1.5 truncate text-xs text-gray-600 dark:text-gray-300">
                         {group === 'overdue' && (
                             <span
                                 className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400/80"
@@ -186,7 +186,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                 )}
                 {task.Project?.name && (
                     <span
-                        className="hidden max-w-[7rem] shrink-0 items-center gap-1 truncate text-xs text-gray-500 dark:text-gray-400 sm:flex"
+                        className="hidden max-w-[7rem] shrink-0 items-center gap-1 truncate text-xs text-gray-600 dark:text-gray-300 sm:flex"
                         data-testid={`candidate-project-${task.uid}`}
                     >
                         <FolderIcon className="h-3.5 w-3.5 shrink-0" />
@@ -203,7 +203,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                             name: task.name,
                         }
                     )}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-400"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-300"
                     data-testid={`add-${task.uid}`}
                 >
                     <PlusIcon className="h-4 w-4" />
@@ -374,7 +374,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                         <button
                             type="button"
                             onClick={() => setChoosing(true)}
-                            className="whitespace-nowrap text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="whitespace-nowrap text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                         >
                             {t('review.week.choose', 'Help me choose')}
                         </button>
@@ -383,7 +383,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                         type="button"
                         onClick={() => setShowFilters((open) => !open)}
                         aria-expanded={showFilters}
-                        className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                     >
                         {t('dailyPlan.browse', 'Browse')}
                         <ChevronDownIcon
@@ -433,7 +433,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
             {filter !== 'inbox' && (
                 <>
                     {shown.length === 0 && (
-                        <p className="px-3 text-sm text-gray-600 dark:text-gray-400">
+                        <p className="px-3 text-sm text-gray-600 dark:text-gray-300">
                             {t('dailyPlan.noCandidates', 'Nothing here. Nice.')}
                         </p>
                     )}
@@ -477,7 +477,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                             type="button"
                             onClick={showMore}
                             disabled={loadingMore && entries.length <= visible}
-                            className="self-start px-3 text-xs text-gray-500 hover:text-gray-800 disabled:cursor-wait disabled:opacity-60 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="self-start px-3 text-xs text-gray-600 hover:text-gray-800 disabled:cursor-wait disabled:opacity-60 dark:text-gray-300 dark:hover:text-gray-200"
                             data-testid="candidates-show-more"
                         >
                             {loadingMore && entries.length <= visible
@@ -497,7 +497,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
             {filter === 'inbox' && (
                 <div className="flex flex-col">
                     {candidates.inbox.length === 0 && (
-                        <p className="px-3 text-sm text-gray-600 dark:text-gray-400">
+                        <p className="px-3 text-sm text-gray-600 dark:text-gray-300">
                             {t('dailyPlan.noCandidates', 'Nothing here. Nice.')}
                         </p>
                     )}
@@ -516,7 +516,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                     'dailyPlan.addAsTask',
                                     'Add as task'
                                 )}
-                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-blue-600 hover:text-white dark:text-gray-400"
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white dark:text-gray-300"
                             >
                                 <PlusIcon className="h-4 w-4" />
                             </button>
@@ -525,7 +525,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                     {candidates.inbox_count > candidates.inbox.length && (
                         <a
                             href="/inbox"
-                            className="px-3 pt-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400"
+                            className="px-3 pt-1 text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300"
                         >
                             {t(
                                 'dailyPlan.moreInInbox',

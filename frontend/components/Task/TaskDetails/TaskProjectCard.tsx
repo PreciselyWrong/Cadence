@@ -164,7 +164,7 @@ const TaskProjectCard: React.FC<TaskProjectCardProps> = ({
                         onClick={() => setProjectDropdownOpen(true)}
                         className="rounded-lg shadow-sm bg-white dark:bg-gray-900 p-6 cursor-pointer transition-colors"
                     >
-                        <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-col items-center justify-center py-8 text-gray-600 dark:text-gray-300">
                             <FolderIcon className="h-12 w-12 mb-3 opacity-50" />
                             <span className="text-sm text-center">
                                 {t('task.noProject', 'Assign to a project')}

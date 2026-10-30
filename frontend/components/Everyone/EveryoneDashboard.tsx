@@ -78,7 +78,7 @@ const EveryoneDashboard: React.FC = () => {
 
     const groupLinks = groups.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-            <span className="mr-0.5 text-xs text-gray-400 dark:text-gray-500">
+            <span className="mr-0.5 text-xs text-gray-500 dark:text-gray-400">
                 {t('groupPage.yourGroups', 'Your groups')}
             </span>
             {groups.map((g) => (
@@ -99,12 +99,12 @@ const EveryoneDashboard: React.FC = () => {
                 header={
                     <header className="shrink-0 pt-4 pb-5">
                         <div className="flex items-center gap-2">
-                            <UsersIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                            <UsersIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                             <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                                 {t('everyone.title', 'Everyone')}
                             </h1>
                         </div>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                             {t(
                                 'everyoneTimeline.subtitle',
                                 'Who is doing what over the coming weeks'

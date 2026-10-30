@@ -81,7 +81,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
     }, [isMinimal]);
 
     const itemClass = (path: string, projectUid?: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
         } ${
             projectUid && dropUid === projectUid
@@ -109,10 +109,10 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                 }}
             >
                 <span
-                    className={`flex items-center gap-[6px] text-[10.5px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
+                    className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         location.pathname === '/projects'
                             ? 'text-black dark:text-white'
-                            : 'text-gray-400 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();
@@ -133,7 +133,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                 e.stopPropagation();
                                 openProjectModal();
                             }}
-                            className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                            className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             aria-label={t('projects.addProject', 'Add Project')}
                             title={t('projects.addProject', 'Add Project')}
                         >
@@ -143,7 +143,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                     {activeProjects.length > 0 && (
                         <>
                             {showBadge && (
-                                <span className="text-[10.5px] text-gray-400 dark:text-gray-500 tabular-nums">
+                                <span className="text-[12px] text-gray-500 dark:text-gray-400 tabular-nums">
                                     {activeProjects.length}
                                 </span>
                             )}
@@ -153,7 +153,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
-                                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                                className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"

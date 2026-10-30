@@ -244,7 +244,7 @@ const CalendarForm: React.FC<CalendarFormProps> = ({ onComplete, onCancel }) => 
                 <div className="lg:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {t('profile.caldavWizard.description', 'Description')}{' '}
-                        <span className="text-gray-400 text-xs">
+                        <span className="text-gray-500 text-xs">
                             ({t('common.optional', 'optional')})
                         </span>
                     </label>
@@ -483,7 +483,7 @@ const CalendarForm: React.FC<CalendarFormProps> = ({ onComplete, onCancel }) => 
                         }
                         className="block w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                     />
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                         {t('profile.caldavWizard.syncIntervalHelp', 'How often to automatically sync (5-1440 minutes)')}
                     </p>
                 </div>

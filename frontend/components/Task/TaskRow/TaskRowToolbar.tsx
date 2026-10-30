@@ -305,7 +305,7 @@ const TaskRowToolbar: React.FC<TaskRowToolbarProps> = ({
                 title={t('tasks.openPanel', 'Open in side panel')}
                 aria-label={t('tasks.openPanel', 'Open in side panel')}
                 data-testid="task-row-open-panel"
-                className="inline-flex items-center h-8 px-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="inline-flex items-center h-8 px-1.5 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </button>

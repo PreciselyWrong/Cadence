@@ -274,14 +274,14 @@ const AreaModal: React.FC<AreaModalProps> = ({
                                           .join(', ')}
                             </span>
                             <ChevronDownIcon
-                                className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${isGoalDropdownOpen ? 'rotate-180' : ''}`}
+                                className={`h-4 w-4 flex-shrink-0 text-gray-500 transition-transform ${isGoalDropdownOpen ? 'rotate-180' : ''}`}
                             />
                         </button>
 
                         {isGoalDropdownOpen && (
                             <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-52 overflow-y-auto rounded-md bg-white shadow-lg dark:bg-gray-800">
                                 {availableGoals.length === 0 ? (
-                                    <p className="px-3 py-2.5 text-sm text-gray-400 dark:text-gray-500">
+                                    <p className="px-3 py-2.5 text-sm text-gray-500 dark:text-gray-400">
                                         {t(
                                             'goals.noAvailableGoals',
                                             'No available goals'
@@ -318,7 +318,7 @@ const AreaModal: React.FC<AreaModalProps> = ({
                                                     <p className="truncate text-sm text-gray-800 dark:text-gray-200">
                                                         {goal.title}
                                                     </p>
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
                                                         {t(
                                                             `goals.horizon.${goal.horizon}`,
                                                             goal.horizon

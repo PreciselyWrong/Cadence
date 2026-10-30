@@ -99,7 +99,7 @@ const TaskPriorityBoard: React.FC<TaskPriorityBoardProps> = ({
                             : 'border-gray-200 bg-gray-50/60 dark:border-gray-700 dark:bg-gray-900/30'
                     }`}
                 >
-                    <h3 className="mb-2 flex items-center justify-between px-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    <h3 className="mb-2 flex items-center justify-between px-1 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
                         <span>{labelOf(column.key)}</span>
                         <span>{byColumn[column.key].length}</span>
                     </h3>
@@ -126,7 +126,7 @@ const TaskPriorityBoard: React.FC<TaskPriorityBoardProps> = ({
                                     {task.name}
                                 </button>
                                 {task.due_date && (
-                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                                         {String(task.due_date).slice(0, 10)}
                                     </p>
                                 )}

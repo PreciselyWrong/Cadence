@@ -60,12 +60,12 @@ const BUCKET_META: Record<
     upcoming: {
         key: 'everyone.upcoming',
         fallback: 'This week',
-        tone: 'text-gray-500 dark:text-gray-400',
+        tone: 'text-gray-600 dark:text-gray-300',
     },
     no_date: {
         key: 'everyone.noDate',
         fallback: 'No date',
-        tone: 'text-gray-400 dark:text-gray-500',
+        tone: 'text-gray-500 dark:text-gray-400',
     },
 };
 
@@ -135,7 +135,7 @@ export const PersonAvatar: React.FC<{ name: string; color: string }> = ({
     color,
 }) => (
     <span
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
         style={{ backgroundColor: color }}
         aria-hidden="true"
     >
@@ -156,7 +156,7 @@ const Stat: React.FC<{ value: number; label: string; tone?: string }> = ({
         >
             {value}
         </span>
-        <span className="text-gray-500 dark:text-gray-400">{label}</span>
+        <span className="text-gray-600 dark:text-gray-300">{label}</span>
     </span>
 );
 
@@ -239,19 +239,19 @@ const PersonColumn: React.FC<PersonColumnProps> = ({
                         {name}
                     </div>
                     {col.is_self && (
-                        <div className="truncate text-xs text-gray-400 dark:text-gray-500">
+                        <div className="truncate text-xs text-gray-500 dark:text-gray-400">
                             {col.person.name}
                         </div>
                     )}
                 </div>
-                <span className="ml-auto text-xs tabular-nums text-gray-400 dark:text-gray-500">
+                <span className="ml-auto text-xs tabular-nums text-gray-500 dark:text-gray-400">
                     {total}
                 </span>
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto px-1 pb-2 space-y-3">
                 {activeBuckets.length === 0 ? (
-                    <p className="text-xs text-gray-400 dark:text-gray-500 px-2.5 py-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 px-2.5 py-2">
                         {dragFromElsewhere
                             ? t('everyone.dropHere', 'Drop to assign')
                             : t('everyone.nothing', 'Nothing right now')}
@@ -264,11 +264,11 @@ const PersonColumn: React.FC<PersonColumnProps> = ({
                             <div key={b}>
                                 <div className="flex items-center gap-1.5 px-2.5 pt-1 pb-0.5">
                                     <span
-                                        className={`text-[11px] font-medium uppercase tracking-wide ${meta.tone}`}
+                                        className={`text-[12px] font-medium uppercase tracking-wide ${meta.tone}`}
                                     >
                                         {t(meta.key, meta.fallback)}
                                     </span>
-                                    <span className="text-[11px] tabular-nums text-gray-400 dark:text-gray-500">
+                                    <span className="text-[12px] tabular-nums text-gray-500 dark:text-gray-400">
                                         {tasks.length}
                                     </span>
                                 </div>
@@ -525,7 +525,7 @@ function PeopleBoard<T extends EveryoneResponse>({
     if (!columns || !ordered) {
         return (
             <div className="px-4 sm:px-6 py-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t('common.loading', 'Loading...')}
                 </p>
             </div>
@@ -545,13 +545,13 @@ function PeopleBoard<T extends EveryoneResponse>({
         >
             <header className="shrink-0 pt-4 pb-5">
                 <div className="flex items-center gap-2">
-                    <UsersIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    <UsersIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                         {title}
                     </h1>
                 </div>
                 {subtitle && (
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         {subtitle}
                     </p>
                 )}
@@ -588,7 +588,7 @@ function PeopleBoard<T extends EveryoneResponse>({
             </header>
 
             {!anyTasks && (
-                <div className="shrink-0 mb-5 bg-white dark:bg-gray-800 rounded-xl p-6 text-sm text-gray-500 dark:text-gray-400">
+                <div className="shrink-0 mb-5 bg-white dark:bg-gray-800 rounded-xl p-6 text-sm text-gray-600 dark:text-gray-300">
                     {emptyMessage}
                 </div>
             )}

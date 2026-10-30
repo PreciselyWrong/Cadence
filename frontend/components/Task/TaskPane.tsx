@@ -33,7 +33,7 @@ import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
 
 const sectionLabel =
-    'mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400';
+    'mb-1 text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300';
 
 interface TaskPaneBodyProps {
     task: Task;
@@ -241,7 +241,7 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                                 className="prose prose-sm dark:prose-invert max-w-none break-words"
                             />
                         ) : (
-                            <span className="text-gray-400 dark:text-gray-500">
+                            <span className="text-gray-500 dark:text-gray-400">
                                 {t(
                                     'forms.task.notePlaceholder',
                                     'Add a note...'
@@ -262,7 +262,7 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                             key={subtask.uid}
                             className={`px-1 text-sm ${
                                 isTaskCompleted(subtask.status)
-                                    ? 'text-gray-400 line-through dark:text-gray-500'
+                                    ? 'text-gray-500 line-through dark:text-gray-400'
                                     : 'text-gray-800 dark:text-gray-200'
                             }`}
                         >
@@ -271,7 +271,7 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                     ))}
                 </ul>
                 <div className="mt-2 flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1.5 dark:border-gray-700">
-                    <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                    <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-500" />
                     <input
                         value={newSubtask}
                         onChange={(e) => setNewSubtask(e.target.value)}
@@ -388,7 +388,7 @@ const TaskPane: React.FC = () => {
             <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2 dark:border-gray-800">
                 <Link
                     to={fullPagePath}
-                    className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                 >
                     <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                     {t('taskPane.openFullPage', 'Open full page')}
@@ -398,7 +398,7 @@ const TaskPane: React.FC = () => {
                     onClick={closeTask}
                     aria-label={t('taskPane.close', 'Close')}
                     title={t('taskPane.close', 'Close')}
-                    className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                     <XMarkIcon className="h-5 w-5" />
                 </button>

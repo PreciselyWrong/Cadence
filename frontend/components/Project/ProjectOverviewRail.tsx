@@ -70,7 +70,7 @@ const Panel: React.FC<{
                     {title}
                 </h3>
                 {subtitle && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {subtitle}
                     </p>
                 )}
@@ -105,14 +105,14 @@ const EditableRow: React.FC<{
 }) => (
     <div className="group py-2 text-sm">
         <div className="flex items-center justify-between gap-3">
-            <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
+            <dt className="text-gray-600 dark:text-gray-300">{label}</dt>
             <dd className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 text-right text-gray-800 dark:text-gray-200">
                 {hasValue ? (
                     <>
                         <button
                             type="button"
                             onClick={onStartEdit}
-                            className="rounded p-0.5 text-gray-400 opacity-0 transition-opacity hover:text-gray-700 focus-visible:opacity-100 group-hover:opacity-100 dark:hover:text-gray-200 [@media(hover:none)]:opacity-100"
+                            className="rounded p-0.5 text-gray-500 opacity-0 transition-opacity hover:text-gray-700 focus-visible:opacity-100 group-hover:opacity-100 dark:hover:text-gray-200 [@media(hover:none)]:opacity-100"
                             aria-label={editLabel}
                         >
                             <PencilIcon className="h-3.5 w-3.5" />
@@ -123,7 +123,7 @@ const EditableRow: React.FC<{
                     <button
                         type="button"
                         onClick={onStartEdit}
-                        className="text-gray-400 hover:text-gray-700 hover:underline dark:text-gray-500 dark:hover:text-gray-200"
+                        className="text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-200"
                     >
                         {empty}
                     </button>
@@ -265,7 +265,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                     <button
                         type="button"
                         onClick={onShareClick}
-                        className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                        className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                         aria-label={t('projectItem.share', 'Share')}
                     >
                         <PlusIcon className="h-4 w-4" />
@@ -273,7 +273,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                 }
             >
                 {people.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'project.notShared',
                             'Only you can see this project.'
@@ -307,7 +307,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                                             {person?.name ||
                                                 displayName(row.email)}
                                         </div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        <div className="text-xs text-gray-600 dark:text-gray-300">
                                             {roleLabel(row)}
                                         </div>
                                     </div>
@@ -511,7 +511,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                                     <button
                                         type="button"
                                         onClick={saveTags}
-                                        className="rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700"
+                                        className="rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-on hover:bg-primary/90"
                                     >
                                         {t('common.save', 'Save')}
                                     </button>
@@ -568,7 +568,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                     <button
                         type="button"
                         onClick={onCreateNote}
-                        className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                        className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                         aria-label={t('project.addNote', 'Add note')}
                     >
                         <PlusIcon className="h-4 w-4" />
@@ -576,7 +576,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                 }
             >
                 {recentNotes.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t('project.noNotesYet', 'No notes yet.')}
                     </p>
                 ) : (
@@ -593,7 +593,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                                             t('notes.untitled', 'Untitled')}
                                     </span>
                                     {note.updated_at && (
-                                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
                                             {format(
                                                 new Date(note.updated_at),
                                                 'MMM d'

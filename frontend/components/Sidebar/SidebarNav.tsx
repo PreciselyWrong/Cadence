@@ -155,7 +155,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             className={`relative flex items-center justify-center h-9 w-9 rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                         >
                             <span
-                                className={`[&>svg]:h-[18px] [&>svg]:w-[18px] ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-500 dark:text-[oklch(65%_0.006_95)]'}`}
+                                className={`[&>svg]:h-[18px] [&>svg]:w-[18px] ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-600 dark:text-[oklch(65%_0.006_95)]'}`}
                             >
                                 {link.icon}
                             </span>
@@ -181,7 +181,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                         className={`w-full flex items-center gap-[5px] px-[10px] py-[4px] rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                     >
                         <span
-                            className={`flex-shrink-0 ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-400 dark:text-[oklch(55%_0.006_95)]'}`}
+                            className={`flex-shrink-0 ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-500 dark:text-[oklch(55%_0.006_95)]'}`}
                         >
                             {link.icon}
                         </span>
@@ -190,7 +190,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                         </span>
                         {link.path === '/today' && planProgress && (
                             <span
-                                className="text-[12px] text-gray-400 dark:text-[oklch(60%_0.01_250)]"
+                                className="text-[12px] text-gray-500 dark:text-[oklch(60%_0.01_250)]"
                                 aria-label={t(
                                     'dailyPlan.sidebarProgress',
                                     '{{done}} of {{total}} planned tasks done',
@@ -201,7 +201,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             </span>
                         )}
                         {link.path === '/inbox' && inboxItemsCount > 0 && (
-                            <span className="text-[12px] text-gray-400 dark:text-[oklch(60%_0.01_250)]">
+                            <span className="text-[12px] text-gray-500 dark:text-[oklch(60%_0.01_250)]">
                                 {inboxItemsCount > 99 ? '99+' : inboxItemsCount}
                             </span>
                         )}

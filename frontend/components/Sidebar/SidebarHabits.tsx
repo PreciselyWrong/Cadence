@@ -18,14 +18,14 @@ const SidebarHabits: React.FC<SidebarHabitsProps> = ({
     const isActiveHabit = (path: string) => {
         return location.pathname.startsWith(path)
             ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)] text-gray-900 dark:text-white'
-            : 'text-gray-400 dark:text-[oklch(58%_0.006_95)]';
+            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]';
     };
 
     return (
         <>
             <ul className="flex flex-col">
                 <li
-                    className={`group flex items-center rounded-[8px] px-[10px] py-[4px] text-[10.5px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] hover:text-gray-900 dark:hover:text-white ${isActiveHabit(
+                    className={`group flex items-center rounded-[8px] px-[10px] py-[4px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] hover:text-gray-900 dark:hover:text-white ${isActiveHabit(
                         '/habits'
                     )}`}
                     onClick={() =>

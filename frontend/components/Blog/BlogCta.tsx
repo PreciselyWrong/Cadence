@@ -33,7 +33,7 @@ const BlogCta: React.FC<{ links: BlogLinks }> = ({ links }) => {
                         'Tasks, projects, notes and habits in one calm place, shared with the people you live and work with. No server, nothing to install.'
                     )}
                 </p>
-                <p className="mt-4 text-gray-400" data-testid="blog-cta-price">
+                <p className="mt-4 text-gray-500" data-testid="blog-cta-price">
                     {t(
                         'blog.ctaPrice',
                         '{{monthly}} a month or {{annual}} a year',

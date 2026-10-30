@@ -7,6 +7,107 @@
     /* Scale down everything by 10% by setting base font-size to 90% */
     font-size: 90%;
   }
+
+  /* Semantic colour tokens (RGB channels, so opacity utilities work). They
+     mirror android/designsystem Color.kt; the accent roles and the blue-*
+     scale are rewritten at runtime by frontend/utils/appearance.ts. */
+  :root {
+    --blue-50: 243 242 255;
+    --blue-100: 228 227 255;
+    --blue-200: 207 205 255;
+    --blue-300: 169 166 255;
+    --blue-400: 139 137 245;
+    --blue-500: 94 92 230;
+    --blue-600: 78 76 212;
+    --blue-700: 63 61 184;
+    --blue-800: 47 45 143;
+    --blue-900: 27 22 128;
+    --blue-950: 18 16 79;
+    --gray-50: 248 247 251;
+    --gray-100: 243 241 252;
+    --gray-200: 230 228 237;
+    --gray-300: 200 197 208;
+    --gray-400: 145 143 154;
+    --gray-500: 111 110 121;
+    --gray-600: 70 70 79;
+    --gray-700: 47 46 56;
+    --gray-800: 31 30 42;
+    --gray-900: 18 18 24;
+    --gray-950: 11 11 16;
+    --color-primary: 94 92 230;
+    --color-on-primary: 255 255 255;
+    --color-primary-container: 228 227 255;
+    --color-on-primary-container: 22 19 107;
+    --color-surface: 253 252 255;
+    --color-on-surface: 27 27 33;
+    --color-surface-variant: 228 225 236;
+    --color-on-surface-variant: 70 70 79;
+    --color-card: 243 241 252;
+    --color-container-low: 245 243 250;
+    --color-container-high: 233 231 240;
+    --color-container-highest: 227 225 234;
+    --color-outline: 119 118 128;
+    --color-outline-variant: 199 197 208;
+    --color-error: 186 26 26;
+    --color-on-error: 255 255 255;
+    --color-error-container: 255 218 214;
+    --color-on-error-container: 65 0 2;
+    --color-success: 40 108 42;
+    --color-success-container: 171 245 163;
+    --color-warning: 124 88 0;
+    --color-warning-container: 255 222 168;
+    --color-scrim: 14 14 20;
+  }
+
+  .dark {
+    --color-primary: 169 166 255;
+    --color-on-primary: 27 22 128;
+    --color-primary-container: 58 55 143;
+    --color-on-primary-container: 228 227 255;
+    --color-surface: 18 18 24;
+    --color-on-surface: 229 225 236;
+    --color-surface-variant: 70 69 79;
+    --color-on-surface-variant: 200 197 208;
+    --color-card: 31 30 42;
+    --color-container-low: 27 27 33;
+    --color-container-high: 42 41 48;
+    --color-container-highest: 53 52 59;
+    --color-outline: 145 143 154;
+    --color-outline-variant: 70 69 79;
+    --color-error: 255 180 171;
+    --color-on-error: 105 0 5;
+    --color-error-container: 147 0 10;
+    --color-on-error-container: 255 218 214;
+    --color-success: 143 216 138;
+    --color-success-container: 31 82 35;
+    --color-warning: 245 189 82;
+    --color-warning-container: 93 66 0;
+    --color-scrim: 0 0 0;
+  }
+
+  .dark.pure-black {
+    --gray-900: 0 0 0;
+    --gray-800: 18 18 22;
+    --gray-700: 38 38 44;
+    --color-surface: 0 0 0;
+    --color-card: 18 18 22;
+    --color-container-low: 10 10 14;
+    --color-container-high: 28 28 34;
+    --color-container-highest: 38 38 44;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-on-surface));
+  }
+
+  /* One keyboard focus ring for every control. Zero specificity: a control
+     that draws its own ring with a utility class still wins. */
+  :where(a, button, summary, [role='button'], [role='tab'], [role='menuitem'], [tabindex]):focus-visible {
+    outline: 2px solid rgb(var(--color-primary));
+    outline-offset: 2px;
+  }
 }
 
 .spinner {
@@ -14,7 +115,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border-left-color: #09f;
+  border-left-color: rgb(var(--color-primary));
   animation: spin 1s ease infinite;
 }
 
@@ -254,12 +355,12 @@ html.sidebar-resizing * {
     box-shadow 300ms ease-out;
 }
 .dark .task-sheet > * {
-  background-color: #111827;
+  background-color: #121218;
 }
 /* A soft line between rows. It drops away on either side of an open task,
    which already sits apart from its neighbours. */
 .task-sheet > * + * {
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #f1f0f5;
 }
 .dark .task-sheet > * + * {
   border-top-color: rgb(255 255 255 / 0.05);
@@ -289,10 +390,10 @@ html.sidebar-resizing * {
 /* Hover tints the whole row band, edge to edge, so it reads as a line in
    a list rather than a rounded pill floating inside it. */
 .task-sheet > *:not(:has([data-task-expanded])):hover {
-  background-color: #f9fafb;
+  background-color: #f8f7fb;
 }
 .dark .task-sheet > *:not(:has([data-task-expanded])):hover {
-  background-color: #151d2e;
+  background-color: #1d1d26;
 }
 .task-sheet > *:has([data-task-expanded]),
 .task-sheet > *:has([data-task-expanded]) + * {
@@ -333,6 +434,13 @@ html.sidebar-resizing * {
 @media (prefers-reduced-motion: reduce) {
   .task-sheet > * {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-check-pop,
+  .animate-check-draw {
+    animation: none;
   }
 }
 

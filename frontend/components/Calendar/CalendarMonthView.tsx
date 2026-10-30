@@ -123,7 +123,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                 {getWeekDays().map((day) => (
                     <div
                         key={day}
-                        className="py-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500"
+                        className="py-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400"
                     >
                         {day}
                     </div>
@@ -178,7 +178,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                         >
                             <div className="mb-1.5 flex items-center justify-between">
                                 {isTodayDate ? (
-                                    <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-xs font-semibold rounded-full">
+                                    <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-primary-on text-xs font-semibold rounded-full">
                                         {format(day, 'd')}
                                     </span>
                                 ) : (
@@ -201,7 +201,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         .find((d) => isShown(d.getDay())) ===
                                         day && (
                                         <span
-                                            className="text-[10px] font-medium text-gray-400 dark:text-gray-500"
+                                            className="text-[12px] font-medium text-gray-500 dark:text-gray-400"
                                             data-week={getISOWeek(day)}
                                         >
                                             {t('calendar.weekNumber', {
@@ -266,7 +266,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     )
                                 )}
                                 {hiddenCount > 0 && (
-                                    <div className="text-xs text-gray-400 dark:text-gray-500 px-1 font-medium">
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 px-1 font-medium">
                                         +{hiddenCount}
                                     </div>
                                 )}

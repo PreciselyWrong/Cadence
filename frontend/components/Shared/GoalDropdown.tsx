@@ -93,10 +93,10 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                 onClick={handleToggle}
             >
                 <span className="flex items-center space-x-2">
-                    <FlagIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    <FlagIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     <span>{getLabel()}</span>
                 </span>
-                <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                <ChevronDownIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </button>
 
             {isOpen &&
@@ -136,7 +136,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                         ))}
                         {inactiveGoals.length > 0 && (
                             <>
-                                <div className="px-4 py-1 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-600 mt-1">
+                                <div className="px-4 py-1 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-600 mt-1">
                                     Inactive
                                 </div>
                                 {inactiveGoals.map((g) => (
@@ -145,7 +145,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                                         onClick={() =>
                                             handleSelect(g.id ?? null, false)
                                         }
-                                        className="flex items-center px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 w-full last:rounded-b-md"
+                                        className="flex items-center px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full last:rounded-b-md"
                                     >
                                         {g.title} ({g.status})
                                     </button>

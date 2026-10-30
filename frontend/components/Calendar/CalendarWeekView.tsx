@@ -181,7 +181,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 style={gridColumns}
             >
                 <div
-                    className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 border-r border-gray-200 dark:border-gray-600"
+                    className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 border-r border-gray-200 dark:border-gray-600"
                     data-week={
                         showWeekNumbers ? getISOWeek(weekDays[0]) : undefined
                     }
@@ -203,14 +203,14 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             className={`text-xs font-semibold tracking-widest uppercase mb-1 ${
                                 isToday(day)
                                     ? 'text-blue-500 dark:text-blue-400'
-                                    : 'text-gray-400 dark:text-gray-500'
+                                    : 'text-gray-500 dark:text-gray-400'
                             }`}
                         >
                             {format(day, 'EEE')}
                         </div>
                         <div>
                             {isToday(day) ? (
-                                <span className="inline-flex items-center justify-center w-7 h-7 bg-blue-500 text-white text-sm font-semibold rounded-full">
+                                <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-primary-on text-sm font-semibold rounded-full">
                                     {format(day, 'd')}
                                 </span>
                             ) : (
@@ -311,7 +311,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                 : gridColumns
                         }
                     >
-                        <div className="py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+                        <div className="py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                             {format(
                                 addHours(new Date().setHours(hour, 0, 0, 0), 0),
                                 'HH:mm'
@@ -387,7 +387,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                             <div className="line-clamp-2 leading-tight">
                                                 {event.title}
                                             </div>
-                                            <div className="text-[10px] opacity-75 mt-0.5">
+                                            <div className="text-[12px] opacity-75 mt-0.5">
                                                 {format(event.start, 'HH:mm')} –{' '}
                                                 {format(
                                                     resize.endOf(event),

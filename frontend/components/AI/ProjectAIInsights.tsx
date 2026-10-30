@@ -193,7 +193,7 @@ const ProjectAIInsights = forwardRef<
             <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 overflow-hidden">
                 <div className="flex items-center gap-2 px-4 py-2">
                     <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
-                    <span className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                    <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                         {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                     </span>
                     <ArrowPathIcon className="h-3 w-3 text-gray-300 dark:text-gray-600 animate-spin ml-1" />
@@ -208,7 +208,7 @@ const ProjectAIInsights = forwardRef<
                 <div className="flex items-center justify-between px-4 py-2">
                     <div className="flex items-center gap-2">
                         <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
-                        <span className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                        <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                             {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                         </span>
                     </div>
@@ -234,11 +234,11 @@ const ProjectAIInsights = forwardRef<
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-2">
                     <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
-                    <span className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                    <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                         {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                     </span>
                     {insights && !isLoading && insights.generated_at && (
-                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             {new Date(insights.generated_at).toLocaleTimeString([], {
                                 hour: '2-digit',
                                 minute: '2-digit',
@@ -268,7 +268,7 @@ const ProjectAIInsights = forwardRef<
                         onClick={dismiss}
                         disabled={isLoading}
                         title={t('common.close', 'Close')}
-                        className="p-1 rounded text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <XMarkIcon className="h-3.5 w-3.5" />
                     </button>
@@ -361,7 +361,7 @@ const TaskStatsBar: React.FC<{
             <p className="text-2xl font-bold text-gray-800 dark:text-gray-100 tabular-nums">
                 {taskStats.total}
             </p>
-            <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-0.5">
                 {t('aiAssistant.statTotal', 'Total')}
             </p>
         </div>
@@ -369,7 +369,7 @@ const TaskStatsBar: React.FC<{
             <p className="text-2xl font-bold text-green-600 dark:text-green-400 tabular-nums">
                 {taskStats.completed}
             </p>
-            <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-0.5">
                 {t('aiAssistant.statDone', 'Done')}
             </p>
         </div>
@@ -377,15 +377,15 @@ const TaskStatsBar: React.FC<{
             <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 tabular-nums">
                 {taskStats.inProgress}
             </p>
-            <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-0.5">
                 {t('aiAssistant.statActive', 'Active')}
             </p>
         </div>
         <div className="px-3 py-3 text-center">
-            <p className={`text-2xl font-bold tabular-nums ${taskStats.overdue > 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-600'}`}>
+            <p className={`text-2xl font-bold tabular-nums ${taskStats.overdue > 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-600'}`}>
                 {taskStats.overdue}
             </p>
-            <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-0.5">
                 {t('aiAssistant.statOverdue', 'Overdue')}
             </p>
         </div>
@@ -413,7 +413,7 @@ const InsightCard: React.FC<{
         >
             <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1">
+                <p className="text-[12px] font-semibold uppercase tracking-wider mb-1">
                     {label}
                 </p>
                 <p className="text-sm leading-relaxed">{text}</p>

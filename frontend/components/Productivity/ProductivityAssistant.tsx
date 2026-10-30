@@ -204,7 +204,7 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                     ),
                     items: staleTasks,
                     icon: ClockIcon,
-                    color: 'text-gray-500',
+                    color: 'text-gray-600',
                 });
             }
 
@@ -357,11 +357,11 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                         <div>
                             <h4 className="font-medium text-gray-900 dark:text-gray-100">
                                 {insight.title}{' '}
-                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                <span className="text-sm font-normal text-gray-600 dark:text-gray-300">
                                     ({insight.items.length})
                                 </span>
                             </h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {insight.description}
                             </p>
                         </div>
@@ -383,7 +383,7 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                         {insight.items.length > 3 && (
                             <button
                                 onClick={() => toggleInsightExpansion(index)}
-                                className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline cursor-pointer"
+                                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-300 underline cursor-pointer"
                             >
                                 {expandedInsights.has(index)
                                     ? t('common.showLess', 'Show less')
@@ -397,7 +397,7 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                     </div>
                 </div>
             ))}
-            <p className="text-xs text-gray-400 dark:text-gray-500 pt-2">
+            <p className="text-xs text-gray-500 dark:text-gray-400 pt-2">
                 {t(
                     'productivity.suggestion',
                     'Click on any item above to open it and make improvements.'

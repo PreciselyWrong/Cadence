@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     SunIcon,
@@ -12,6 +12,14 @@ import {
     Bars3BottomLeftIcon,
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import {
+    ACCENT_PRESETS,
+    applyAppearance,
+    getStoredAccent,
+    getStoredPureBlack,
+    storeAccent,
+    storePureBlack,
+} from '../../../utils/appearance';
 import type { ProfileFormData } from '../types';
 import type { UiDensity } from '../../../store/useStore';
 import {
@@ -74,7 +82,7 @@ const BackgroundCard: React.FC<BackgroundCardProps> = ({
         type="button"
         onClick={onSelect}
         aria-pressed={selected}
-        className="group text-left focus:outline-none"
+        className="group text-left "
     >
         <div
             className={`relative aspect-[16/10] overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 transition-shadow ${
@@ -91,7 +99,7 @@ const BackgroundCard: React.FC<BackgroundCardProps> = ({
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
             ) : (
-                <NoSymbolIcon className="absolute inset-0 m-auto h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <NoSymbolIcon className="absolute inset-0 m-auto h-5 w-5 text-gray-500 dark:text-gray-400" />
             )}
             {selected && (
                 <CheckCircleIcon className="absolute top-1 right-1 h-4 w-4 text-white drop-shadow" />
@@ -101,7 +109,7 @@ const BackgroundCard: React.FC<BackgroundCardProps> = ({
             {label}
         </p>
         {caption && (
-            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">
+            <p className="text-[12px] text-gray-600 dark:text-gray-300 truncate">
                 {caption}
             </p>
         )}
@@ -141,6 +149,24 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
         );
     };
 
+    const [accent, setAccent] = useState(getStoredAccent);
+    const [pureBlack, setPureBlack] = useState(getStoredPureBlack);
+    const [customHex, setCustomHex] = useState(accent);
+
+    const chooseAccent = (hex: string) => {
+        setAccent(hex);
+        setCustomHex(hex);
+        storeAccent(hex);
+        applyAppearance(hex, pureBlack);
+    };
+
+    const togglePureBlack = () => {
+        const next = !pureBlack;
+        setPureBlack(next);
+        storePureBlack(next);
+        applyAppearance(accent, next);
+    };
+
     return (
         <div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
@@ -150,7 +176,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
             {/* Theme */}
             <div className="mb-8">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-4">
                     {t('profile.theme', 'Theme')}
                 </h4>
                 <div className="inline-flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
@@ -159,7 +185,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         onClick={() => onAppearanceChange('light')}
                         className={`flex items-center justify-center px-5 py-2 text-sm font-medium transition-colors ${
                             formData.appearance === 'light'
-                                ? 'bg-blue-500 text-white'
+                                ? 'bg-primary text-primary-on'
                                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
                         }`}
                     >
@@ -171,7 +197,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         onClick={() => onAppearanceChange('dark')}
                         className={`flex items-center justify-center px-5 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition-colors ${
                             formData.appearance === 'dark'
-                                ? 'bg-blue-500 text-white'
+                                ? 'bg-primary text-primary-on'
                                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
                         }`}
                     >
@@ -183,7 +209,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         onClick={() => onAppearanceChange('system')}
                         className={`flex items-center justify-center px-5 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition-colors ${
                             formData.appearance === 'system'
-                                ? 'bg-blue-500 text-white'
+                                ? 'bg-primary text-primary-on'
                                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
                         }`}
                     >
@@ -193,9 +219,67 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 </div>
             </div>
 
+            {/* Accent colour and pure black, same choices as the Android app */}
+            <div className="mb-8">
+                <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-4">
+                    {t('profile.accent', 'Accent colour')}
+                </h4>
+                <div className="flex flex-wrap items-center gap-3">
+                    {ACCENT_PRESETS.map((preset) => {
+                        const selected =
+                            accent.toUpperCase() === preset.hex.toUpperCase();
+                        const label = t(preset.labelKey, preset.fallback);
+                        return (
+                            <button
+                                key={preset.id}
+                                type="button"
+                                aria-label={label}
+                                aria-pressed={selected}
+                                title={label}
+                                onClick={() => chooseAccent(preset.hex)}
+                                className={`flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95 ${
+                                    selected
+                                        ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white ring-offset-white dark:ring-offset-gray-900'
+                                        : ''
+                                }`}
+                                style={{ backgroundColor: preset.hex }}
+                            >
+                                {selected && (
+                                    <CheckCircleIcon className="h-5 w-5 text-white" />
+                                )}
+                            </button>
+                        );
+                    })}
+                    <input
+                        type="text"
+                        value={customHex}
+                        maxLength={7}
+                        aria-label={t('profile.accentCustom', 'Custom colour')}
+                        placeholder="#5E5CE6"
+                        onChange={(e) => {
+                            setCustomHex(e.target.value);
+                            if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                                chooseAccent(e.target.value.toUpperCase());
+                            }
+                        }}
+                        className="h-10 w-28 rounded-control border border-gray-300 bg-transparent px-3 text-sm dark:border-gray-600"
+                    />
+                </div>
+                <label className="mt-4 flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                    <input
+                        type="checkbox"
+                        role="switch"
+                        checked={pureBlack}
+                        onChange={togglePureBlack}
+                        className="h-4 w-4 rounded"
+                    />
+                    {t('profile.pureBlack', 'Pure black in dark mode')}
+                </label>
+            </div>
+
             {/* Interface density */}
             <div className="mb-8">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-4">
                     {t('profile.interfaceDensity', 'Interface')}
                 </h4>
                 <div className="inline-flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
@@ -216,7 +300,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                                     : ''
                             } ${
                                 density === value
-                                    ? 'bg-blue-500 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
                             }`}
                         >
@@ -224,7 +308,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         </button>
                     ))}
                 </div>
-                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-3 text-xs text-gray-600 dark:text-gray-300">
                     {t(
                         'profile.densityDescription',
                         'Minimal hides extras for a calm list; Dense shows every control.'
@@ -235,11 +319,11 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
             {/* Task row details: only for the minimal list rows */}
             {density === 'minimal' && (
                 <div className="mb-8">
-                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                         <Bars3BottomLeftIcon className="w-4 h-4" />
                         {t('profile.taskRowDetails', 'Task row details')}
                     </h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
                         {t(
                             'profile.taskRowDetailsDescription',
                             'Choose which details show on the right of a minimal task row, and in what order.'
@@ -277,7 +361,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                                             'profile.taskRowMoveUp',
                                             'Move up'
                                         )}
-                                        className="p-1 rounded text-gray-500 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700"
+                                        className="p-1 rounded text-gray-600 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700"
                                     >
                                         <ArrowUpIcon className="h-4 w-4" />
                                     </button>
@@ -292,7 +376,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                                             'profile.taskRowMoveDown',
                                             'Move down'
                                         )}
-                                        className="p-1 rounded text-gray-500 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700"
+                                        className="p-1 rounded text-gray-600 hover:text-gray-800 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700"
                                     >
                                         <ArrowDownIcon className="h-4 w-4" />
                                     </button>
@@ -305,11 +389,11 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
             {/* Background */}
             <div className="mb-8">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                     <PhotoIcon className="w-4 h-4" />
                     {t('profile.contentBackground', 'Background')}
                 </h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
                     {t(
                         'profile.contentBackgroundDescription',
                         'Show a photo behind the main content area. Photos come from Unsplash and are credited to their photographers.'

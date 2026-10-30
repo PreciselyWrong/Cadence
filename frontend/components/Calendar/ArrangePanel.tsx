@@ -146,7 +146,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
                     aria-label={t('common.close', 'Close')}
                     className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                 >
-                    <XMarkIcon className="h-4 w-4 text-gray-500" />
+                    <XMarkIcon className="h-4 w-4 text-gray-600" />
                 </button>
             </div>
 
@@ -164,7 +164,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
                         className={`flex-1 px-2 py-1 text-xs font-medium rounded-md ${
                             tab === key
                                 ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400'
+                                : 'text-gray-600 dark:text-gray-300'
                         }`}
                     >
                         {key === 'nodate'
@@ -233,7 +233,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
 
             <div className="flex-1 min-h-0 overflow-y-auto mt-2 pb-3">
                 {shown.length === 0 && (
-                    <p className="px-3 py-6 text-center text-xs text-gray-400 dark:text-gray-500">
+                    <p className="px-3 py-6 text-center text-xs text-gray-500 dark:text-gray-400">
                         {tab === 'nodate'
                             ? t(
                                   'calendar.arrange.emptyNoDate',
@@ -251,7 +251,7 @@ const ArrangePanel: React.FC<ArrangePanelProps> = ({ tasks, onClose }) => {
                             type="button"
                             onClick={() => toggle(key)}
                             aria-expanded={!collapsed.has(key)}
-                            className="w-full flex items-center gap-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500"
+                            className="w-full flex items-center gap-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
                         >
                             <ChevronRightIcon
                                 className={`h-3 w-3 transition-transform ${

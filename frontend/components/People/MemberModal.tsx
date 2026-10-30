@@ -205,7 +205,7 @@ const MemberModal: React.FC<MemberModalProps> = ({
                     data-testid="member-email"
                 />
                 <p
-                    className="text-xs text-gray-500 dark:text-gray-400"
+                    className="text-xs text-gray-600 dark:text-gray-300"
                     data-testid="member-email-hint"
                 >
                     {hasEmail

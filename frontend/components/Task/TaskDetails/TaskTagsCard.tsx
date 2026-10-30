@@ -109,7 +109,7 @@ const TaskTagsCard: React.FC<TaskTagsCardProps> = ({
                                     }}
                                     className="flex items-center space-x-2 min-w-0 flex-1 text-left"
                                 >
-                                    <TagIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                                    <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                                     <span className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                         {tag.name}
                                     </span>
@@ -130,7 +130,7 @@ const TaskTagsCard: React.FC<TaskTagsCardProps> = ({
                         onClick={handleStartEdit}
                         className="p-6 cursor-pointer transition-colors"
                     >
-                        <div className="flex flex-col items-center justify-center py-6 text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-col items-center justify-center py-6 text-gray-600 dark:text-gray-300">
                             <TagIcon className="h-10 w-10 mb-3 opacity-50" />
                             <span className="text-sm text-center">
                                 {t('task.noTags', 'Add tags')}

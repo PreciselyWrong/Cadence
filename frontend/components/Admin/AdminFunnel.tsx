@@ -45,7 +45,7 @@ const PointsDelta: React.FC<{
             ? 'text-emerald-600 dark:text-emerald-400'
             : diff < 0
               ? 'text-rose-600 dark:text-rose-400'
-              : 'text-gray-400 dark:text-gray-500';
+              : 'text-gray-500 dark:text-gray-400';
     return (
         <span className={`text-xs whitespace-nowrap ${tone}`}>
             {t('admin.funnel.pts', '{{diff}} pts', {
@@ -148,7 +148,7 @@ const AdminFunnel: React.FC<{ funnel: Funnel }> = ({ funnel }) => {
                           )}
                 </h2>
                 {last !== usable && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
                         {t('admin.funnel.overall', 'End to end: {{pct}}', {
                             pct: percentOf(last.now, usable.now),
                         })}
@@ -194,18 +194,18 @@ const AdminFunnel: React.FC<{ funnel: Funnel }> = ({ funnel }) => {
                                 data-testid={`admin-funnel-${step.key}`}
                                 title={step.hint}
                             >
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {step.label}
                                 </p>
                                 <p className="text-xl font-semibold text-gray-900 dark:text-gray-100 tabular-nums">
                                     {step.now}
-                                    <span className="ml-2 text-xs font-normal text-gray-400 dark:text-gray-500">
+                                    <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
                                         {t('admin.funnel.before', 'was {{n}}', {
                                             n: step.before,
                                         })}
                                     </span>
                                 </p>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                                     {step.hint}
                                 </p>
                             </li>
@@ -215,7 +215,7 @@ const AdminFunnel: React.FC<{ funnel: Funnel }> = ({ funnel }) => {
             </ol>
 
             {(current.paid !== null || unactivatedPaid > 0) && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                <p className="text-xs text-gray-600 dark:text-gray-300 mt-3">
                     {current.paid !== null &&
                         t(
                             'admin.funnel.maturity',

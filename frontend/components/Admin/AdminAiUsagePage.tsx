@@ -71,7 +71,7 @@ const AdminAiUsagePage: React.FC = () => {
                         key={String(label)}
                         className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900"
                     >
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div className="text-sm text-gray-600 dark:text-gray-300">
                             {label}
                         </div>
                         <div className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -101,7 +101,7 @@ const AdminAiUsagePage: React.FC = () => {
                 />
                 <button
                     type="submit"
-                    className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                    className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90"
                 >
                     {t('common.search', 'Search')}
                 </button>
@@ -155,7 +155,7 @@ const AdminAiUsagePage: React.FC = () => {
                         {loading ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={5}
                                 >
                                     {t('common.loading', 'Loading...')}
@@ -164,7 +164,7 @@ const AdminAiUsagePage: React.FC = () => {
                         ) : users.length === 0 ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={5}
                                 >
                                     {t('admin.aiUsage.empty', 'No users yet')}
@@ -179,7 +179,7 @@ const AdminAiUsagePage: React.FC = () => {
                                     <td className="px-4 py-2">
                                         <div>{u.email}</div>
                                         {u.name && (
-                                            <div className="text-xs text-gray-500">
+                                            <div className="text-xs text-gray-600">
                                                 {u.name}
                                             </div>
                                         )}

@@ -558,13 +558,13 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
 
                         {/* Metadata Filters */}
                         <div className="space-y-3">
-                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+                            <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">
                                 {t('search.metadataFilters')}
                             </div>
 
                             {/* Priority Filters */}
                             <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
                                     {t('search.priorityFilter')}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -588,7 +588,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
 
                             {/* Status Filters */}
                             <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
                                     {t('search.statusFilter')}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -609,7 +609,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
 
                             {/* Due Date Filters */}
                             <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
                                     {t('search.dueFilter')}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -630,7 +630,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
 
                             {/* Defer Until Filters */}
                             <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
                                     {t('search.deferUntilFilter')}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -652,7 +652,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                             {/* Tags Filters */}
                             {availableTags.length > 0 && (
                                 <div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
                                         {t('search.tagsFilter')}
                                     </div>
                                     <div className="flex flex-wrap gap-2">
@@ -679,7 +679,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
 
                         {/* Extras Section */}
                         <div className="space-y-3">
-                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+                            <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">
                                 {t('search.extras')}
                             </div>
 
@@ -768,7 +768,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                                                 type="button"
                                                 onClick={handleSaveView}
                                                 disabled={isSaving}
-                                                className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-md transition-colors"
+                                                className="px-3 py-1.5 text-xs font-medium text-primary-on bg-primary hover:bg-primary/90 disabled:bg-blue-400 rounded-md transition-colors"
                                             >
                                                 {isSaving
                                                     ? t('search.saving')

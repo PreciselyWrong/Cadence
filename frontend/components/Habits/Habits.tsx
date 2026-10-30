@@ -204,7 +204,7 @@ const Habits: React.FC = () => {
                         className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
                             showArchived
                                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                     >
                         <ArchiveBoxIcon className="w-4 h-4" />
@@ -219,11 +219,11 @@ const Habits: React.FC = () => {
 
             {showArchived && (
                 <div className="mb-8">
-                    <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-3">
+                    <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-3">
                         {t('habits.archived', 'Archived')}
                     </h3>
                     {archived.length === 0 ? (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                             {t('habits.noArchived', 'No archived habits.')}
                         </p>
                     ) : (
@@ -243,7 +243,7 @@ const Habits: React.FC = () => {
                                         <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
                                             {habit.name}
                                         </p>
-                                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
                                             {formatHabitTarget(t, habit)} ·{' '}
                                             {t(
                                                 'habits.bestStreakShort',
@@ -297,7 +297,7 @@ const Habits: React.FC = () => {
             ) : (
                 <>
                     <div className="mb-8">
-                        <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                        <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-4">
                             {t('habits.overview', 'Overview')}
                         </h3>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -307,10 +307,10 @@ const Habits: React.FC = () => {
                                     className={`${SURFACE.card} rounded-xl shadow-sm px-4 pt-4 pb-3 min-w-0`}
                                 >
                                     <div className="flex items-center justify-between mb-3">
-                                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                        <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                                             {label}
                                         </span>
-                                        <span className="text-gray-300 dark:text-gray-500">
+                                        <span className="text-gray-300 dark:text-gray-400">
                                             {icon}
                                         </span>
                                     </div>
@@ -318,7 +318,7 @@ const Habits: React.FC = () => {
                                         {value}
                                     </p>
                                     {sub && (
-                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 truncate">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 truncate">
                                             {sub}
                                         </p>
                                     )}
@@ -329,7 +329,7 @@ const Habits: React.FC = () => {
 
                     {groups.map(({ group, items }) => (
                         <div key={group} className="mb-8">
-                            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-4">
                                 {showGroupHeaders
                                     ? groupLabel(group)
                                     : t('habits.yourHabits', 'Your Habits')}

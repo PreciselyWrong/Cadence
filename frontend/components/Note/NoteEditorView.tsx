@@ -144,7 +144,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                         autoFocus={!note.uid}
                     />
                     <div
-                        className="flex flex-col text-xs text-gray-500 dark:text-gray-400 space-y-1 mb-2"
+                        className="flex flex-col text-xs text-gray-600 dark:text-gray-300 space-y-1 mb-2"
                         style={{
                             color: noteColor
                                 ? shouldUseLightText(noteColor)
@@ -234,7 +234,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                 <div className="flex items-center">
                     <button
                         onClick={onOpenFocusMode}
-                        className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         style={{
                             color: noteColor
                                 ? shouldUseLightText(noteColor)
@@ -253,7 +253,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                             className={`p-2 transition ${
                                 note.is_public
                                     ? 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300'
-                                    : 'text-gray-400 dark:text-gray-500 opacity-60 hover:opacity-100'
+                                    : 'text-gray-500 dark:text-gray-400 opacity-60 hover:opacity-100'
                             }`}
                             style={{
                                 color:
@@ -283,7 +283,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                     <div className="relative" ref={optionsRef}>
                         <button
                             onClick={() => setShowOptions(!showOptions)}
-                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                             style={{
                                 color: noteColor
                                     ? shouldUseLightText(noteColor)
@@ -298,7 +298,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                         {showOptions && (
                             <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                                 <div className="px-3 py-3 border-b border-gray-200 dark:border-gray-700">
-                                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">
                                         Background Color
                                     </div>
                                     <div className="grid grid-cols-5 gap-2">
@@ -325,12 +325,12 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                                 aria-label={`Set background to ${colorOption.name}`}
                                             >
                                                 {!colorOption.value && (
-                                                    <XMarkIcon className="h-5 w-5 text-gray-400" />
+                                                    <XMarkIcon className="h-5 w-5 text-gray-500" />
                                                 )}
                                             </button>
                                         ))}
                                     </div>
-                                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-3 mb-2">
+                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 mt-3 mb-2">
                                         {t(
                                             'notes.backgroundImage',
                                             'Background'

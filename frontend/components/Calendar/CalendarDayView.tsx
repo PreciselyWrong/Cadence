@@ -146,7 +146,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     const blockBody = (event: CalendarEvent) => (
         <>
             <div className="font-semibold truncate">{event.title}</div>
-            <div className="text-[10px] opacity-75 mt-0.5">
+            <div className="text-[12px] opacity-75 mt-0.5">
                 {format(event.start, 'HH:mm')} –{' '}
                 {format(resize.endOf(event), 'HH:mm')}
             </div>
@@ -180,14 +180,14 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     className={`text-xs font-semibold tracking-widest uppercase mb-2 ${
                         todayClass
                             ? 'text-blue-500 dark:text-blue-400'
-                            : 'text-gray-400 dark:text-gray-500'
+                            : 'text-gray-500 dark:text-gray-400'
                     }`}
                 >
                     {format(currentDate, 'EEEE')}
                 </div>
                 <div>
                     {todayClass ? (
-                        <span className="inline-flex items-center justify-center w-12 h-12 bg-blue-500 text-white text-xl font-semibold rounded-full">
+                        <span className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-on text-xl font-semibold rounded-full">
                             {format(currentDate, 'd')}
                         </span>
                     ) : (
@@ -196,7 +196,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                         </span>
                     )}
                 </div>
-                <div className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {format(currentDate, 'MMMM yyyy')}
                 </div>
             </div>
@@ -210,7 +210,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     className={`px-4 py-2 border-b border-gray-100 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 ${dndKit ? 'min-h-[3.25rem]' : ''}`}
                 >
                     {allDayEvents.length > 0 && (
-                        <div className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-2">
+                        <div className="text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-2">
                             {t('calendar.allDay', 'All day')}
                         </div>
                     )}
@@ -282,7 +282,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     : undefined
                             }
                         >
-                            <div className="w-20 py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
+                            <div className="w-20 py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
                                 {format(
                                     addHours(
                                         new Date().setHours(hour, 0, 0, 0),

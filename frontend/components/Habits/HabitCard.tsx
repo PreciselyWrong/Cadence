@@ -155,9 +155,9 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
                         />
                         <span className="min-w-0">{habit.name}</span>
                     </h3>
-                    <p className="flex items-center gap-1.5 text-xs mt-1.5 text-gray-400 dark:text-gray-500">
+                    <p className="flex items-center gap-1.5 text-xs mt-1.5 text-gray-500 dark:text-gray-400">
                         {quit && (
-                            <span className="px-1.5 py-px rounded bg-red-50 dark:bg-red-950/50 text-red-500 dark:text-red-400 text-[10px] font-medium uppercase tracking-wide">
+                            <span className="px-1.5 py-px rounded bg-red-50 dark:bg-red-950/50 text-red-500 dark:text-red-400 text-[12px] font-medium uppercase tracking-wide">
                                 {t('habits.quit', 'Quit')}
                             </span>
                         )}
@@ -231,7 +231,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
                         >
                             {value}
                         </span>
-                        <span className="flex items-center gap-1 text-[10px] leading-none text-gray-400 dark:text-gray-500">
+                        <span className="flex items-center gap-1 text-[12px] leading-none text-gray-500 dark:text-gray-400">
                             <span className={ACCENT.text}>{icon}</span>
                             {label}
                         </span>

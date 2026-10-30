@@ -61,7 +61,7 @@ const TaskFeedSection: React.FC = () => {
             >
                 {t('profile.taskFeed.title', 'Subscribe to your tasks')}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
                 {t(
                     'profile.taskFeed.description',
                     'A private address that shows your open tasks with a due date in Google Calendar, Apple Calendar or Outlook. Anyone with the address can read those tasks.'
@@ -101,7 +101,7 @@ const TaskFeedSection: React.FC = () => {
                     type="button"
                     disabled={busy}
                     onClick={() => run(createTaskFeed)}
-                    className={`${buttonClass} bg-blue-500 text-white hover:bg-blue-600`}
+                    className={`${buttonClass} bg-primary text-primary-on hover:bg-primary/90`}
                 >
                     {enabled
                         ? t('profile.taskFeed.rotate', 'Make a new address')

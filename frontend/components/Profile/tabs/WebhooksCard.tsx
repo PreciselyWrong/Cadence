@@ -21,7 +21,7 @@ const inputClass =
 const smallButton =
     'px-2.5 py-1 text-xs font-medium rounded-md text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
 const primaryButton =
-    'px-3 py-1.5 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
+    'px-3 py-1.5 text-sm font-medium rounded-md text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
 
 const DEFAULT_EVENTS = ['task.due_soon', 'task.overdue', 'task.reminder'];
 
@@ -203,7 +203,7 @@ const WebhookForm: React.FC<WebhookFormProps> = ({
 
             {WEBHOOK_EVENT_GROUPS.map((group) => (
                 <fieldset key={group.key}>
-                    <legend className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+                    <legend className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300 mb-2">
                         {groupLabel(t, group.key)}
                     </legend>
                     <div className="flex flex-wrap gap-2">
@@ -218,7 +218,7 @@ const WebhookForm: React.FC<WebhookFormProps> = ({
                                     onClick={() => toggleEvent(event)}
                                     className={`px-2.5 py-1 text-xs rounded-full transition-colors ${
                                         on
-                                            ? 'bg-blue-600 text-white'
+                                            ? 'bg-primary text-primary-on'
                                             : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'
                                     }`}
                                 >
@@ -228,7 +228,7 @@ const WebhookForm: React.FC<WebhookFormProps> = ({
                         })}
                         {group.key === 'summary' &&
                             form.events.includes('daily_summary') && (
-                                <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                                <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                                     {t(
                                         'notifications.webhooks.summaryAt',
                                         'at'
@@ -304,7 +304,7 @@ const DeliveryList: React.FC<{ uid: string }> = ({ uid }) => {
     if (!rows) return null;
     if (rows.length === 0) {
         return (
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                 {t('notifications.webhooks.noDeliveries', 'Nothing sent yet.')}
             </p>
         );
@@ -314,11 +314,11 @@ const DeliveryList: React.FC<{ uid: string }> = ({ uid }) => {
             {rows.map((row) => (
                 <li
                     key={row.uid}
-                    className="flex items-center justify-between gap-3 text-gray-600 dark:text-gray-400"
+                    className="flex items-center justify-between gap-3 text-gray-600 dark:text-gray-300"
                 >
                     <span className="truncate">
                         {eventLabel(t, row.event)}
-                        <span className="ml-2 text-gray-400">
+                        <span className="ml-2 text-gray-500">
                             {new Date(row.created_at).toLocaleString()}
                         </span>
                     </span>
@@ -328,7 +328,7 @@ const DeliveryList: React.FC<{ uid: string }> = ({ uid }) => {
                                 ? 'text-green-700 dark:text-green-400'
                                 : row.status === 'failed'
                                   ? 'text-red-700 dark:text-red-400'
-                                  : 'text-gray-500'
+                                  : 'text-gray-600'
                         }
                     >
                         {row.status === 'delivered'
@@ -511,7 +511,7 @@ const WebhooksCard: React.FC = () => {
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {t('notifications.webhooks.title', 'Webhooks')}
                     </h4>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                         {t(
                             'notifications.webhooks.description',
                             'Send events as JSON to n8n, Home Assistant, Slack, Discord or your own server. Each webhook picks its own events.'
@@ -593,7 +593,7 @@ const WebhooksCard: React.FC = () => {
                                 <div className="min-w-0">
                                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                                         {webhook.name}
-                                        <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                                        <span className="ml-2 text-xs font-normal text-gray-600 dark:text-gray-300">
                                             {webhook.host}
                                         </span>
                                     </p>
@@ -603,12 +603,12 @@ const WebhooksCard: React.FC = () => {
                                             webhook.last_delivery_status ===
                                                 'failed'
                                                 ? 'text-red-700 dark:text-red-400'
-                                                : 'text-gray-500 dark:text-gray-400'
+                                                : 'text-gray-600 dark:text-gray-300'
                                         }`}
                                     >
                                         {statusText(webhook)}
                                     </p>
-                                    <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
+                                    <p className="text-xs mt-1 text-gray-600 dark:text-gray-300">
                                         {webhook.events
                                             .map((e) => eventLabel(t, e))
                                             .join(', ')}

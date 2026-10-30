@@ -1,20 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import { PriorityLevel, toPriorityLevel } from '../Shared/PriorityBadge';
 
-// The ring takes the priority hue, so the row needs no separate badge colour.
-const RING: Record<PriorityLevel | 'none', string> = {
-    high: 'border-red-500 hover:bg-red-50 dark:hover:bg-red-900/30',
-    medium: 'border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/30',
-    low: 'border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30',
-    none: 'border-gray-400 hover:bg-gray-100 dark:border-gray-500 dark:hover:bg-gray-800',
+// Same look as the Android TaskCheckbox: rounded square, 2px outline stroke,
+// primary fill when done, error stroke for high priority.
+const STROKE: Record<PriorityLevel | 'none', string> = {
+    high: 'border-danger',
+    medium: 'border-outline',
+    low: 'border-outline',
+    none: 'border-outline',
 };
 
-// Long enough to see the tick land before the row leaves the list.
-export const CHECK_DELAY_MS = 250;
+// Tick animation (CSS, 180ms), then the row fades and collapses, then the
+// task is toggled so the undo toast lands after the motion.
+export const CHECK_DELAY_MS = 600;
+const ROW_LEAVE_AT_MS = 420;
+const ROW_LEAVE_MS = 180;
+const REDUCED_DELAY_MS = 250;
+
+const prefersReducedMotion = () =>
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function collapseRow(row: HTMLElement) {
+    const height = row.offsetHeight;
+    row.style.height = `${height}px`;
+    row.style.overflow = 'hidden';
+    row.style.transition = `height ${ROW_LEAVE_MS}ms ease-out, opacity ${ROW_LEAVE_MS}ms ease-out`;
+    requestAnimationFrame(() => {
+        row.style.height = '0px';
+        row.style.opacity = '0';
+    });
+}
+
+function resetRow(row: HTMLElement | null) {
+    if (!row) return;
+    row.style.height = '';
+    row.style.overflow = '';
+    row.style.transition = '';
+    row.style.opacity = '';
+}
 
 interface TaskCheckCircleProps {
     task: Task;
@@ -27,20 +55,29 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
 }) => {
     const { t } = useTranslation();
     const [checking, setChecking] = useState(false);
-    const timer = useRef<number | null>(null);
+    const timers = useRef<number[]>([]);
+    const rowRef = useRef<HTMLElement | null>(null);
     const done = isTaskCompleted(task.status);
     const shown = done || checking;
 
+    const clearTimers = () => {
+        timers.current.forEach((id) => window.clearTimeout(id));
+        timers.current = [];
+    };
+
     useEffect(
         () => () => {
-            if (timer.current) window.clearTimeout(timer.current);
+            clearTimers();
         },
         []
     );
 
-    useEffect(() => setChecking(false), [task.status]);
+    useEffect(() => {
+        setChecking(false);
+        resetRow(rowRef.current);
+    }, [task.status]);
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         if (checking) return;
         if (done) {
@@ -48,12 +85,23 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
             return;
         }
         setChecking(true);
-        timer.current = window.setTimeout(onToggle, CHECK_DELAY_MS);
+        if (prefersReducedMotion()) {
+            timers.current.push(window.setTimeout(onToggle, REDUCED_DELAY_MS));
+            return;
+        }
+        const row = e.currentTarget.closest<HTMLElement>('[data-task-row]');
+        rowRef.current = row;
+        if (row) {
+            timers.current.push(
+                window.setTimeout(() => collapseRow(row), ROW_LEAVE_AT_MS)
+            );
+        }
+        timers.current.push(window.setTimeout(onToggle, CHECK_DELAY_MS));
     };
 
-    const ring = shown
-        ? 'border-gray-400 bg-gray-400 dark:border-gray-500 dark:bg-gray-500'
-        : RING[toPriorityLevel(task.priority) ?? 'none'];
+    const box = shown
+        ? 'border-primary bg-primary'
+        : `${STROKE[toPriorityLevel(task.priority) ?? 'none']} hover:bg-primary/10`;
 
     return (
         <button
@@ -67,19 +115,24 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
             }
             onClick={handleClick}
             onKeyDown={(e) => e.stopPropagation()}
-            className="group/check -m-2 flex-shrink-0 p-2 focus:outline-none"
+            className="group/check -m-3 flex-shrink-0 p-3 rounded-control focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary"
             data-testid="task-check-circle"
         >
             <span
-                className={`flex h-[18px] w-[18px] items-center justify-center rounded-full border-[1.5px] transition-colors duration-150 group-focus-visible/check:ring-2 group-focus-visible/check:ring-blue-500 ${ring}`}
+                className={`flex h-[22px] w-[22px] items-center justify-center rounded-checkbox border-2 transition-colors duration-[220ms] ${box} ${
+                    checking && !done ? 'animate-check-pop' : ''
+                }`}
             >
-                <CheckIcon
-                    className={`h-3 w-3 stroke-[3] transition-opacity duration-150 ${
-                        shown
-                            ? 'text-white opacity-100'
-                            : 'text-gray-400 opacity-0 group-hover/check:opacity-100'
-                    }`}
-                />
+                <svg
+                    viewBox="0 0 24 24"
+                    className={`h-4 w-4 fill-none stroke-primary-on stroke-[3.2] [stroke-linecap:round] [stroke-linejoin:round] ${
+                        shown ? 'opacity-100' : 'opacity-0'
+                    } ${checking && !done ? 'animate-check-draw' : ''}`}
+                    style={{ strokeDasharray: 24 }}
+                    aria-hidden="true"
+                >
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
             </span>
         </button>
     );

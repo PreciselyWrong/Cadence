@@ -122,7 +122,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                             className={`flex-shrink-0 ${
                                 row.isActive
                                     ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]'
-                                    : 'text-gray-500 dark:text-[oklch(65%_0.006_95)]'
+                                    : 'text-gray-600 dark:text-[oklch(65%_0.006_95)]'
                             }`}
                         >
                             {row.icon}
@@ -131,7 +131,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                             {row.title}
                         </span>
                         {row.showCount && row.count !== undefined && (
-                            <span className="text-[12px] tabular-nums text-gray-400 dark:text-[oklch(60%_0.01_250)]">
+                            <span className="text-[12px] tabular-nums text-gray-500 dark:text-[oklch(60%_0.01_250)]">
                                 {row.count > 99 ? '99+' : row.count}
                             </span>
                         )}

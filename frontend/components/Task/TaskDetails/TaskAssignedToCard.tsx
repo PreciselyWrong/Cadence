@@ -33,7 +33,7 @@ const TaskAssignedToCard: React.FC<TaskAssignedToCardProps> = ({ task, onAssign 
 
     return (
         <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 transition-colors p-3">
-            <div className="flex items-center gap-2 mb-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            <div className="flex items-center gap-2 mb-2 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wide">
                 <UserIcon className="w-3.5 h-3.5" />
                 Assigned To
             </div>

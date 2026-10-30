@@ -126,7 +126,7 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                             )}
                             {saveStatus === 'saved' && (
                                 <span
-                                    className="text-gray-400 dark:text-gray-500"
+                                    className="text-gray-500 dark:text-gray-400"
                                     style={
                                         mutedColor
                                             ? { color: mutedColor }
@@ -153,7 +153,7 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                 </div>
                 <button
                     onClick={onClose}
-                    className="p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    className="p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                     style={mutedColor ? { color: mutedColor } : undefined}
                     aria-label={t('common.exitFocusMode')}
                 >

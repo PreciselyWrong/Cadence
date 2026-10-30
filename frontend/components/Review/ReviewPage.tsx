@@ -465,7 +465,7 @@ const ReviewPage: React.FC = () => {
                     {t('review.title', 'Review')}
                 </h2>
                 {summary && (
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         {[
                             t('review.attention', '{{count}} to look at', {
                                 count: summary.attention_total,
@@ -502,12 +502,12 @@ const ReviewPage: React.FC = () => {
                             className={`-mb-px flex-shrink-0 whitespace-nowrap border-b-2 px-2.5 py-2 text-sm ${
                                 active
                                     ? 'border-blue-500 text-gray-900 dark:text-gray-100'
-                                    : 'border-transparent text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                    : 'border-transparent text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                             }`}
                         >
                             {label(s)}
                             {count !== null && count > 0 && (
-                                <span className="ml-1.5 text-xs text-gray-400">
+                                <span className="ml-1.5 text-xs text-gray-500">
                                     {count}
                                 </span>
                             )}
@@ -521,7 +521,7 @@ const ReviewPage: React.FC = () => {
             ) : (
                 <section aria-live="polite">
                     {step === 'undecided' && total > 0 && (
-                        <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mb-2 text-xs text-gray-600 dark:text-gray-300">
                             <Link
                                 to="/inbox"
                                 className="underline-offset-2 hover:underline"
@@ -534,7 +534,7 @@ const ReviewPage: React.FC = () => {
                         </p>
                     )}
                     {!loading && rows.length === 0 && (
-                        <p className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                        <p className="py-10 text-center text-sm text-gray-600 dark:text-gray-300">
                             {emptyText(step)}
                         </p>
                     )}
@@ -552,7 +552,7 @@ const ReviewPage: React.FC = () => {
                                             <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
                                                 {title(row)}
                                             </span>
-                                            <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
                                                 {meta(row)}
                                             </span>
                                         </button>
@@ -599,7 +599,7 @@ const ReviewPage: React.FC = () => {
                             type="button"
                             disabled={loading}
                             onClick={() => void load(rows.length)}
-                            className="mt-3 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="mt-3 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                         >
                             {t('review.loadMore', 'Show more')}
                         </button>

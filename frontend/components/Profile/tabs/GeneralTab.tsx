@@ -89,12 +89,12 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
                         />
                     ) : (
                         <div className="w-32 h-32 rounded-full border-4 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <UserCircleIcon className="w-20 h-20 text-gray-400 dark:text-gray-500" />
+                            <UserCircleIcon className="w-20 h-20 text-gray-500 dark:text-gray-400" />
                         </div>
                     )}
                     <label
                         htmlFor="avatar-upload"
-                        className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 cursor-pointer transition-colors"
+                        className="absolute bottom-0 right-0 bg-primary hover:bg-primary/90 text-primary-on rounded-full p-2 cursor-pointer transition-colors"
                     >
                         <PhotoIcon className="w-5 h-5" />
                         <input
@@ -120,7 +120,7 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
                         {t('profile.removeAvatar', 'Remove Avatar')}
                     </button>
                 )}
-                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                     {t(
                         'profile.avatarDescription',
                         'Upload a profile photo (max 5MB)'

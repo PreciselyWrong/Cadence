@@ -94,12 +94,12 @@ const SelectMenu: React.FC<SelectMenuProps> = ({
                 className={`${FORM.input} w-full flex items-center justify-between gap-2 text-left`}
             >
                 <span
-                    className={`truncate ${selected ? '' : 'text-gray-400 dark:text-gray-500'}`}
+                    className={`truncate ${selected ? '' : 'text-gray-500 dark:text-gray-400'}`}
                 >
                     {selected ? selected.label : placeholder}
                 </span>
                 <ChevronDownIcon
-                    className={`w-4 h-4 flex-shrink-0 text-gray-500 dark:text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 flex-shrink-0 text-gray-600 dark:text-gray-300 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 />
             </button>
             {isOpen && (
@@ -121,7 +121,7 @@ const SelectMenu: React.FC<SelectMenuProps> = ({
                                 onClick={() => pick(option)}
                                 className={`flex items-center justify-between gap-2 px-3 py-2 text-sm ${
                                     option.disabled
-                                        ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                                        ? 'text-gray-500 dark:text-gray-400 cursor-not-allowed'
                                         : `cursor-pointer text-gray-900 dark:text-gray-100 ${
                                               index === activeIndex
                                                   ? 'bg-black/[0.05] dark:bg-white/[0.08]'
@@ -132,7 +132,7 @@ const SelectMenu: React.FC<SelectMenuProps> = ({
                                 <span className="truncate">
                                     {option.label}
                                     {option.hint && (
-                                        <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
+                                        <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                                             {option.hint}
                                         </span>
                                     )}

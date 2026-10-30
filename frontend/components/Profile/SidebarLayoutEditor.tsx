@@ -135,7 +135,7 @@ const PreviewRow = React.forwardRef<
                         checked ? '' : 'opacity-40'
                     } ${
                         isSection
-                            ? 'text-[10.5px] font-semibold uppercase tracking-[0.01em] text-gray-400 dark:text-[oklch(58%_0.006_95)]'
+                            ? 'text-[12px] font-semibold uppercase tracking-[0.01em] text-gray-500 dark:text-[oklch(58%_0.006_95)]'
                             : 'text-[13.5px] text-gray-700 dark:text-[oklch(75%_0.006_95)]'
                     }`}
                 >
@@ -143,13 +143,13 @@ const PreviewRow = React.forwardRef<
                         className={`flex-shrink-0 ${
                             isSection
                                 ? 'h-[14px] w-[14px]'
-                                : 'h-[15px] w-[15px] text-gray-400 dark:text-[oklch(55%_0.006_95)]'
+                                : 'h-[15px] w-[15px] text-gray-500 dark:text-[oklch(55%_0.006_95)]'
                         }`}
                     />
                     <span className="truncate">{row.label}</span>
                 </span>
                 {row.note && (
-                    <span className="flex-shrink-0 rounded-full bg-gray-200/70 px-2 py-0.5 text-[10px] text-gray-500 dark:bg-white/10 dark:text-gray-400">
+                    <span className="flex-shrink-0 rounded-full bg-gray-200/70 px-2 py-0.5 text-[12px] text-gray-600 dark:bg-white/10 dark:text-gray-300">
                         {row.note}
                     </span>
                 )}

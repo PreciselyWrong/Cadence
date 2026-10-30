@@ -284,7 +284,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     const activeClass =
         'bg-blue-50 text-blue-600 dark:bg-[oklch(27%_0.02_250)] dark:text-[oklch(68%_0.14_250)]';
     const inactiveClass =
-        'text-gray-500 hover:bg-gray-100 dark:text-[oklch(65%_0.006_95)] dark:hover:bg-[oklch(24%_0.015_250)]';
+        'text-gray-600 hover:bg-gray-100 dark:text-[oklch(65%_0.006_95)] dark:hover:bg-[oklch(24%_0.015_250)]';
 
     const openItem = (item: RailItem) => {
         setIsMoreOpen(false);
@@ -320,7 +320,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                 <button
                     type="button"
                     onClick={onExpand}
-                    className="mb-3 p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    className="mb-3 p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                     aria-label="Expand Sidebar"
                     title="Expand Sidebar"
                     data-testid="sidebar-rail-expand"
@@ -388,7 +388,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                                                 onCustomize();
                                             }}
                                             data-testid="sidebar-rail-customize"
-                                            className="w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                            className="w-full flex items-center gap-[8px] px-[10px] h-[34px] text-[14px] text-left rounded-[6px] text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                         >
                                             <AdjustmentsHorizontalIcon className="h-[16px] w-[16px] flex-shrink-0" />
                                             {t(

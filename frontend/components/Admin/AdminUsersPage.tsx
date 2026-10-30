@@ -469,7 +469,7 @@ const AddUserModal: React.FC<{
                             </select>
                             {selectedPersonUid && (
                                 <p
-                                    className="mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                    className="mt-1 text-xs text-gray-600 dark:text-gray-300"
                                     data-testid="admin-user-contact-note"
                                 >
                                     {t(
@@ -483,7 +483,7 @@ const AddUserModal: React.FC<{
                     <div>
                         <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
                             {t('admin.email', 'Email')}
-                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                            <span className="text-xs text-gray-600 dark:text-gray-300 ml-2">
                                 ({t('admin.emailOptional', 'optional')})
                             </span>
                         </label>
@@ -496,7 +496,7 @@ const AddUserModal: React.FC<{
                         />
                         {!hasEmail && (
                             <p
-                                className="mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                className="mt-1 text-xs text-gray-600 dark:text-gray-300"
                                 data-testid="no-email-hint"
                             >
                                 {editingUser
@@ -537,7 +537,7 @@ const AddUserModal: React.FC<{
                         <div>
                             <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
                                 {t('admin.password', 'Password')}
-                                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                                <span className="text-xs text-gray-600 dark:text-gray-300 ml-2">
                                     (
                                     {editingUser
                                         ? t(
@@ -586,7 +586,7 @@ const AddUserModal: React.FC<{
                                             }
                                             aria-pressed={showPassword}
                                             data-testid="toggle-password-visibility"
-                                            className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none"
+                                            className="p-1 text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 "
                                         >
                                             {showPassword ? (
                                                 <EyeSlashIcon className="h-4 w-4" />
@@ -603,7 +603,7 @@ const AddUserModal: React.FC<{
                                                 'Copy password'
                                             )}
                                             data-testid="copy-password"
-                                            className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                                            className="p-1 text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
                                         >
                                             {passwordCopied ? (
                                                 <CheckIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -645,13 +645,13 @@ const AddUserModal: React.FC<{
                             >
                                 <span>{roleName(t, role, hosted)}</span>
                                 <ChevronDownIcon
-                                    className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform ${
+                                    className={`h-4 w-4 text-gray-600 dark:text-gray-300 transition-transform ${
                                         isRoleDropdownOpen ? 'rotate-180' : ''
                                     }`}
                                 />
                             </button>
                             {isRoleDropdownOpen && !roleLocked && (
-                                <div className="absolute mt-1 w-full rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none z-50">
+                                <div className="absolute mt-1 w-full rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50">
                                     <div className="p-1">
                                         {roleOptions.map((id) => (
                                             <button
@@ -691,7 +691,7 @@ const AddUserModal: React.FC<{
                             <div className="text-sm text-gray-700 dark:text-gray-300">
                                 {t('admin.roles.permissions', 'Permissions')}
                             </div>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">
                                 {t(
                                     'admin.roles.permissionsFromRole',
                                     'What this role allows.'
@@ -717,7 +717,7 @@ const AddUserModal: React.FC<{
                                                 className={
                                                     allowed
                                                         ? ''
-                                                        : 'text-gray-400 dark:text-gray-500'
+                                                        : 'text-gray-500 dark:text-gray-400'
                                                 }
                                             >
                                                 <div className="text-sm text-gray-700 dark:text-gray-300">
@@ -737,7 +737,7 @@ const AddUserModal: React.FC<{
                                                               )}
                                                     </span>
                                                 </div>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                                     {capabilityHint(
                                                         t,
                                                         capability
@@ -762,7 +762,7 @@ const AddUserModal: React.FC<{
                                         'Request email verification'
                                     )}
                                 </label>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {password
                                         ? t(
                                               'admin.requireVerificationHint',
@@ -809,14 +809,14 @@ const AddUserModal: React.FC<{
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none transition duration-150 ease-in-out text-sm"
+                            className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 transition duration-150 ease-in-out text-sm"
                         >
                             {t('common.cancel', 'Cancel')}
                         </button>
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none transition duration-150 ease-in-out text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="px-4 py-2 bg-primary text-primary-on rounded-md hover:bg-primary/90 dark:hover:bg-primary/90 transition duration-150 ease-in-out text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {submitting
                                 ? t('common.saving', 'Saving...')
@@ -946,7 +946,7 @@ const AdminUsersPanel: React.FC<{
                             setEditingUser(null);
                             setAddOpen(true);
                         }}
-                        className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none transition duration-150 ease-in-out text-sm"
+                        className="px-4 py-2 rounded-md bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90 transition duration-150 ease-in-out text-sm"
                     >
                         {t('admin.addUser', 'Add user')}
                     </button>
@@ -968,7 +968,7 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
                                 <SortHeader
                                     column="name"
@@ -976,7 +976,7 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
                                 <SortHeader
                                     column="surname"
@@ -984,7 +984,7 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
                                 <SortHeader
                                     column="created"
@@ -992,7 +992,7 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
                                 <SortHeader
                                     column="verified"
@@ -1000,7 +1000,7 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
                                 <SortHeader
                                     column="role"
@@ -1008,9 +1008,9 @@ const AdminUsersPanel: React.FC<{
                                     sortKey={sortKey}
                                     sortDir={sortDir}
                                     onSort={toggle}
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                                 />
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     {t('admin.actions', 'Actions')}
                                 </th>
                             </tr>
@@ -1020,7 +1020,7 @@ const AdminUsersPanel: React.FC<{
                                 <tr>
                                     <td
                                         colSpan={7}
-                                        className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                                        className="px-6 py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                                     >
                                         {t(
                                             'admin.loadingUsers',
@@ -1033,7 +1033,7 @@ const AdminUsersPanel: React.FC<{
                                 <tr>
                                     <td
                                         colSpan={7}
-                                        className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                                        className="px-6 py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                                     >
                                         {t('admin.noUsers', 'No users')}
                                     </td>
@@ -1048,7 +1048,7 @@ const AdminUsersPanel: React.FC<{
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                             {u.email ?? (
-                                                <span className="italic font-normal text-gray-400 dark:text-gray-500">
+                                                <span className="italic font-normal text-gray-500 dark:text-gray-400">
                                                     {t(
                                                         'admin.noEmail',
                                                         'No email'
@@ -1058,7 +1058,7 @@ const AdminUsersPanel: React.FC<{
                                             {u.account_status ===
                                                 'no_sign_in' && (
                                                 <div
-                                                    className="text-xs font-normal text-gray-500 dark:text-gray-400"
+                                                    className="text-xs font-normal text-gray-600 dark:text-gray-300"
                                                     data-testid={`user-status-${u.id}`}
                                                 >
                                                     {t(
@@ -1069,7 +1069,7 @@ const AdminUsersPanel: React.FC<{
                                             )}
                                             {u.account_status === 'invited' && (
                                                 <div
-                                                    className="text-xs font-normal text-gray-500 dark:text-gray-400"
+                                                    className="text-xs font-normal text-gray-600 dark:text-gray-300"
                                                     data-testid={`user-status-${u.id}`}
                                                 >
                                                     {t(
@@ -1090,13 +1090,13 @@ const AdminUsersPanel: React.FC<{
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                             {u.name || '-'}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                             {u.surname || '-'}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                             {new Date(
                                                 u.created_at
                                             ).toLocaleString()}
@@ -1106,7 +1106,7 @@ const AdminUsersPanel: React.FC<{
                                             data-testid={`user-verified-${u.id}`}
                                         >
                                             {!u.email ? (
-                                                <span className="text-gray-400 dark:text-gray-500">
+                                                <span className="text-gray-500 dark:text-gray-400">
                                                     -
                                                 </span>
                                             ) : u.email_verified ? (
@@ -1118,7 +1118,7 @@ const AdminUsersPanel: React.FC<{
                                                     )}
                                                 </span>
                                             ) : (
-                                                <span className="text-gray-500 dark:text-gray-400">
+                                                <span className="text-gray-600 dark:text-gray-300">
                                                     {t(
                                                         'admin.verifiedNo',
                                                         'Not verified'
@@ -1152,7 +1152,7 @@ const AdminUsersPanel: React.FC<{
                                                                     u
                                                                 )
                                                             }
-                                                            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                                                            className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                                                             title={t(
                                                                 'signInLink.action',
                                                                 'Sign-in link'
@@ -1170,7 +1170,7 @@ const AdminUsersPanel: React.FC<{
                                                                     u
                                                                 )
                                                             }
-                                                            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                                                            className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                                                             title={t(
                                                                 'admin.mfaReset',
                                                                 'Reset two-factor sign-in'
@@ -1388,7 +1388,7 @@ const AdminUsersPage: React.FC = () => {
                     <h2 className="text-2xl font-light">
                         {t('admin.access.title', 'Access')}
                     </h2>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'admin.access.subtitle',
                             'Who can sign in, what they can do, and how they are grouped'
@@ -1409,10 +1409,10 @@ const AdminUsersPage: React.FC = () => {
                             aria-controls={`admin-tabpanel-${tab.id}`}
                             data-testid={`admin-tab-${tab.id}`}
                             onClick={() => selectTab(tab.id)}
-                            className={`-mb-px pb-3 text-sm font-medium border-b-2 focus:outline-none transition-colors ${
+                            className={`-mb-px pb-3 text-sm font-medium border-b-2 transition-colors ${
                                 activeTab === tab.id
                                     ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                                    : 'border-transparent text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200'
                             }`}
                         >
                             {tab.label}

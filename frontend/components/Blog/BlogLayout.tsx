@@ -57,7 +57,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
                         <button
                             type="button"
                             onClick={toggleDarkMode}
-                            className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white focus:outline-none"
+                            className="p-2 rounded-full text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white "
                             aria-label={t(
                                 'publicNote.toggleTheme',
                                 'Toggle dark mode'
@@ -87,7 +87,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
                                 </a>
                                 <a
                                     href={links.register}
-                                    className="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 whitespace-nowrap"
+                                    className="px-4 py-2 rounded-full bg-primary text-primary-on text-sm font-medium hover:bg-primary/90 whitespace-nowrap"
                                     data-testid="blog-nav-cta"
                                 >
                                     {t('blog.navCta', 'Start now')}
@@ -101,7 +101,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
             {children}
 
             <footer className="relative mt-16">
-                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between text-sm text-gray-500 dark:text-gray-400">
+                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between text-sm text-gray-600 dark:text-gray-300">
                     <p>
                         &copy; {new Date().getFullYear()}{' '}
                         <span className="font-semibold text-gray-700 dark:text-gray-200">

@@ -64,7 +64,7 @@ const NotFound: React.FC = () => {
                 <div className="min-h-[60vh] flex flex-col items-center justify-center text-center">
                     {/* Error Icon */}
                     <div className="mb-8">
-                        <ExclamationTriangleIcon className="h-24 w-24 text-gray-400 dark:text-gray-500 mx-auto" />
+                        <ExclamationTriangleIcon className="h-24 w-24 text-gray-500 dark:text-gray-400 mx-auto" />
                     </div>
 
                     {/* Error Message */}
@@ -75,7 +75,7 @@ const NotFound: React.FC = () => {
                         <h2 className="text-2xl font-medium text-gray-700 dark:text-gray-300 mb-4">
                             {t('notFound.title', 'Page Not Found')}
                         </h2>
-                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-md mx-auto">
                             {t(
                                 'notFound.description',
                                 "The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL."
@@ -87,7 +87,7 @@ const NotFound: React.FC = () => {
                     <div className="mb-12 flex flex-col sm:flex-row gap-4">
                         <button
                             onClick={handleGoBack}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200 font-medium"
+                            className="px-6 py-3 bg-primary text-primary-on rounded-lg hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200 font-medium"
                         >
                             {t('notFound.goBack', 'Go Back')}
                         </button>
@@ -113,11 +113,11 @@ const NotFound: React.FC = () => {
                                     }
                                     className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 group"
                                 >
-                                    <action.icon className="h-8 w-8 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 mx-auto mb-3 transition-colors duration-200" />
+                                    <action.icon className="h-8 w-8 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 mx-auto mb-3 transition-colors duration-200" />
                                     <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
                                         {action.name}
                                     </h4>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
                                         {action.description}
                                     </p>
                                 </button>

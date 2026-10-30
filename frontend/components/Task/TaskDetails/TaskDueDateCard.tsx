@@ -167,7 +167,7 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
                                                 className={`h-4 w-4 flex-shrink-0 ${
                                                     overdue
                                                         ? 'text-red-600 dark:text-red-400'
-                                                        : 'text-gray-500 dark:text-gray-400'
+                                                        : 'text-gray-600 dark:text-gray-300'
                                                 }`}
                                             />
                                             <span className="text-sm font-medium">
@@ -180,7 +180,7 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
                                                 className={`text-sm italic ${
                                                     overdue
                                                         ? 'text-red-500 dark:text-red-400 font-medium'
-                                                        : 'text-gray-500 dark:text-gray-400'
+                                                        : 'text-gray-600 dark:text-gray-300'
                                                 }`}
                                             >
                                                 ({display.relativeText})
@@ -193,7 +193,7 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
                                 );
                             })()
                         ) : (
-                            <span className="text-sm text-gray-500 dark:text-gray-400 italic">
+                            <span className="text-sm text-gray-600 dark:text-gray-300 italic">
                                 {t('task.noDueDate', 'No due date')}
                             </span>
                         )}

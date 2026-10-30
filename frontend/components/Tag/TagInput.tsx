@@ -212,7 +212,7 @@ const TagInput: React.FC<TagInputProps> = ({
                             key={tag.uid ?? tag.name}
                             type="button"
                             onClick={() => selectTag(tag.name)}
-                            className="flex items-center gap-1 text-xs px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:border-blue-600 dark:hover:text-blue-300 transition-colors duration-100"
+                            className="flex items-center gap-1 text-xs px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:border-blue-600 dark:hover:text-blue-300 transition-colors duration-100"
                             title={
                                 tag.pinned
                                     ? t('tags.pinnedTag', 'Pinned tag')
@@ -245,7 +245,7 @@ const TagInput: React.FC<TagInputProps> = ({
                             <button
                                 type="button"
                                 onClick={() => removeTag(index)}
-                                className="ml-1 text-gray-600 hover:text-gray-800 focus:outline-none"
+                                className="ml-1 text-gray-600 hover:text-gray-800 "
                                 aria-label={`Remove tag ${tag}`}
                             >
                                 &times;

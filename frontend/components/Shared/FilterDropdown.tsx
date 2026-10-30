@@ -114,7 +114,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             ? 'w-32'
             : 'w-40';
 
-    const buttonClasses = `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} bg-white dark:bg-gray-700 font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none transition-colors ${fill ? 'w-full sm:w-44 gap-1' : widthClass}`;
+    const buttonClasses = `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} bg-white dark:bg-gray-700 font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${fill ? 'w-full sm:w-44 gap-1' : widthClass}`;
 
     const iconSize = isMobile ? 'h-3 w-3' : 'h-4 w-4';
 
@@ -139,14 +139,14 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                     {selectedOption?.label || placeholder}
                 </span>
                 <ChevronDownIcon
-                    className={`${iconSize} flex-shrink-0 text-gray-500 dark:text-gray-300 transition-transform ${
+                    className={`${iconSize} flex-shrink-0 text-gray-600 dark:text-gray-300 transition-transform ${
                         isOpen ? 'rotate-180' : ''
                     }`}
                 />
             </button>
             {isOpen && (
                 <div
-                    className={`origin-top-right absolute right-0 mt-1 ${fill ? 'min-w-full' : ''} ${fullWidth ? 'left-0 w-full' : !autoWidth ? (isMobile ? 'w-36' : 'w-40') : ''} rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none z-50`}
+                    className={`origin-top-right absolute right-0 mt-1 ${fill ? 'min-w-full' : ''} ${fullWidth ? 'left-0 w-full' : !autoWidth ? (isMobile ? 'w-36' : 'w-40') : ''} rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50`}
                     style={autoWidth && !fullWidth ? dynamicStyles : {}}
                 >
                     {searchable && (
@@ -175,7 +175,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                         className={`p-1${fullWidth ? ' max-h-60 overflow-y-auto' : ''}`}
                     >
                         {visibleOptions.length === 0 && (
-                            <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">
                                 {t('search.noResults', 'No results found')}
                             </div>
                         )}

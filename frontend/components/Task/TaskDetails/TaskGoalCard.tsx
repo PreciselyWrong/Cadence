@@ -87,7 +87,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                                 </button>
                             )}
                             {activeGoals.length === 0 && inactiveGoals.length === 0 ? (
-                                <div className="text-sm text-gray-400 dark:text-gray-500 px-3 py-2">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 px-3 py-2">
                                     {t('goals.noGoalsFound', 'No goals found')}
                                 </div>
                             ) : (
@@ -104,14 +104,14 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                                     ))}
                                     {inactiveGoals.length > 0 && (
                                         <>
-                                            <div className="px-3 py-1 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 mt-1">
+                                            <div className="px-3 py-1 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 mt-1">
                                                 {t('goals.inactive', 'Inactive')}
                                             </div>
                                             {inactiveGoals.map((goal) => (
                                                 <button
                                                     key={goal.id}
                                                     onClick={() => handleSelect(goal)}
-                                                    className="w-full text-left text-sm px-3 py-1.5 rounded text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
+                                                    className="w-full text-left text-sm px-3 py-1.5 rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
                                                 >
                                                     <FlagIcon className="h-3.5 w-3.5 flex-shrink-0" />
                                                     {goal.title} ({t(`goals.status.${goal.status}`, goal.status)})
@@ -149,7 +149,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                             )}
                             <button
                                 onClick={handleClear}
-                                className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                className="p-1.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                 title={t('goals.clearGoal', 'Remove goal')}
                             >
                                 <XMarkIcon className="h-4 w-4" />
@@ -162,7 +162,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                     onClick={() => setDropdownOpen(true)}
                     className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 p-6 cursor-pointer transition-colors"
                 >
-                    <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-col items-center justify-center py-8 text-gray-600 dark:text-gray-300">
                         <FlagIcon className="h-12 w-12 mb-3 opacity-50" />
                         <span className="text-sm text-center">
                             {t('task.noGoal', 'Assign to a goal')}

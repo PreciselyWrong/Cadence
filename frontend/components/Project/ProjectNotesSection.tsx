@@ -52,7 +52,7 @@ const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({
                     ))}
                 </div>
             ) : (
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-300">
                     <p>{t('project.noNotes', 'No notes for this project.')}</p>
                 </div>
             )}

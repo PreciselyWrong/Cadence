@@ -81,7 +81,7 @@ const PlanRow: React.FC<{
             <div className="flex min-w-0 flex-1 items-center gap-2">
                 <button
                     type="button"
-                    className="flex h-9 w-9 shrink-0 cursor-grab items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 active:cursor-grabbing dark:hover:bg-gray-800"
+                    className="flex h-9 w-9 shrink-0 cursor-grab items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 active:cursor-grabbing dark:hover:bg-gray-800"
                     aria-label={t('dailyPlan.reorder', 'Reorder {{name}}', {
                         name: item.task.name,
                     })}
@@ -90,7 +90,7 @@ const PlanRow: React.FC<{
                 >
                     <Bars3Icon className="h-4 w-4" />
                 </button>
-                <span className="w-5 shrink-0 text-right text-xs text-gray-500">
+                <span className="w-5 shrink-0 text-right text-xs text-gray-600">
                     {index + 1}
                 </span>
                 <span
@@ -116,7 +116,7 @@ const PlanRow: React.FC<{
                 </span>
             </div>
             <div className="flex flex-wrap items-center gap-2 pl-11 sm:pl-0">
-                <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
                     <span className="sr-only">
                         {t('dailyPlan.startTime', 'Start time')}
                     </span>
@@ -141,14 +141,14 @@ const PlanRow: React.FC<{
                 <button
                     type="button"
                     onClick={() => onReschedule('tomorrow')}
-                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 >
                     {t('dailyPlan.tomorrow', 'Tomorrow')}
                 </button>
                 <button
                     type="button"
                     onClick={() => onReschedule('next_week')}
-                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                    className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 >
                     {t('dailyPlan.nextWeek', 'Next week')}
                 </button>
@@ -159,7 +159,7 @@ const PlanRow: React.FC<{
                         'dailyPlan.removeFromPlan',
                         'Remove from plan'
                     )}
-                    className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                     <XMarkIcon className="h-4 w-4" />
                 </button>

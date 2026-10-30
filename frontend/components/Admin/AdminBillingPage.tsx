@@ -188,7 +188,7 @@ const AdminBillingPage: React.FC = () => {
                         key={String(label)}
                         className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900"
                     >
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div className="text-sm text-gray-600 dark:text-gray-300">
                             {label}
                         </div>
                         <div className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -218,7 +218,7 @@ const AdminBillingPage: React.FC = () => {
                 />
                 <button
                     type="submit"
-                    className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                    className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90"
                 >
                     {t('common.search', 'Search')}
                 </button>
@@ -293,7 +293,7 @@ const AdminBillingPage: React.FC = () => {
                         {loading ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={7}
                                 >
                                     {t('common.loading', 'Loading...')}
@@ -302,7 +302,7 @@ const AdminBillingPage: React.FC = () => {
                         ) : accounts.length === 0 ? (
                             <tr>
                                 <td
-                                    className="px-4 py-3 text-gray-500"
+                                    className="px-4 py-3 text-gray-600"
                                     colSpan={7}
                                 >
                                     {t(
@@ -320,7 +320,7 @@ const AdminBillingPage: React.FC = () => {
                                     <td className="px-4 py-2">
                                         <div>{a.email}</div>
                                         {a.name && (
-                                            <div className="text-xs text-gray-500">
+                                            <div className="text-xs text-gray-600">
                                                 {a.name}
                                             </div>
                                         )}
@@ -383,7 +383,7 @@ const AdminBillingPage: React.FC = () => {
                                             </span>
                                         )}
                                         {a.cancel_at_period_end && (
-                                            <span className="ml-1 text-xs text-gray-500">
+                                            <span className="ml-1 text-xs text-gray-600">
                                                 {t(
                                                     'admin.billing.cancelling',
                                                     'cancelling'
@@ -391,14 +391,14 @@ const AdminBillingPage: React.FC = () => {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-400">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                         {formatDate(
                                             a.current_period_end ||
                                                 a.read_only_until ||
                                                 a.trial_ends_at
                                         )}
                                     </td>
-                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                                    <td className="px-4 py-2 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                                         {a.ai_requests_this_month}{' '}
                                         {t(
                                             'admin.billing.requestsAbbr',
@@ -418,7 +418,7 @@ const AdminBillingPage: React.FC = () => {
                                                     ` (${t('admin.billing.until', 'until')} ${formatDate(a.override_expires_at)})`}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-400">
+                                            <span className="text-gray-500">
                                                 -
                                             </span>
                                         )}
@@ -469,7 +469,7 @@ const AdminBillingPage: React.FC = () => {
                                                 }
                                                 className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
                                             >
-                                                <ArrowPathIcon className="w-5 h-5 text-gray-500" />
+                                                <ArrowPathIcon className="w-5 h-5 text-gray-600" />
                                             </button>
                                         )}
                                     </td>
@@ -561,7 +561,7 @@ const AdminBillingPage: React.FC = () => {
                                 type="button"
                                 onClick={saveOverride}
                                 disabled={busyUser !== null}
-                                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                                className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-60"
                                 data-testid="admin-billing-override-save"
                             >
                                 {t('common.save', 'Save')}

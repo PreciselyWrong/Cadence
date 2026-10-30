@@ -153,7 +153,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
             </h3>
 
             {loading && !status ? (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-600">
                     {t('common.loading', 'Loading...')}
                 </div>
             ) : status ? (
@@ -184,7 +184,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                     <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                <div className="text-sm text-gray-600 dark:text-gray-300">
                                     {t('billing.currentPlan', 'Current plan')}
                                 </div>
                                 <div className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -195,7 +195,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                         status.planName
                                     )}
                                 </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                     {status.reason === 'trial' &&
                                         t('billing.trialEnds', {
                                             defaultValue:
@@ -410,7 +410,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                             onClick={() => setPlanKey('pro')}
                                             className={`px-3 py-1.5 rounded text-sm ${
                                                 chosenPlan.key === 'pro'
-                                                    ? 'bg-blue-600 text-white'
+                                                    ? 'bg-primary text-primary-on'
                                                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                                             }`}
                                             data-testid="billing-plan-pro"
@@ -428,7 +428,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                             }
                                             className={`px-3 py-1.5 rounded text-sm ${
                                                 chosenPlan.key !== 'pro'
-                                                    ? 'bg-blue-600 text-white'
+                                                    ? 'bg-primary text-primary-on'
                                                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                                             }`}
                                             data-testid="billing-plan-team"
@@ -491,7 +491,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                         }
                                     )}
                                     {chosenPlan.seats > 1 && (
-                                        <span className="text-gray-500 dark:text-gray-400">
+                                        <span className="text-gray-600 dark:text-gray-300">
                                             {' '}
                                             {t('billing.perSeatNote', {
                                                 defaultValue:
@@ -543,7 +543,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                                         }
                                                         className={`px-3 py-1.5 rounded text-sm border ${
                                                             interval === opt
-                                                                ? 'bg-blue-600 text-white border-blue-600'
+                                                                ? 'bg-primary text-primary-on border-blue-600'
                                                                 : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                                                         }`}
                                                     >
@@ -565,7 +565,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                     type="button"
                                     onClick={() => onUpgrade(interval)}
                                     disabled={busy !== null}
-                                    className="px-5 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                                    className="px-5 py-2 rounded bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-60"
                                     data-testid="billing-upgrade"
                                 >
                                     {busy === interval
@@ -575,7 +575,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                                               'Upgrade now'
                                           )}
                                 </button>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">
                                     {t('billing.paymentsNote', {
                                         provider: status.provider?.display_name,
                                         defaultValue:
@@ -586,7 +586,7 @@ const BillingTab: React.FC<BillingTabProps> = ({ isActive }) => {
                         )}
 
                     {!status.billing_configured && !isPro && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                             {t(
                                 'billing.notConfigured',
                                 'Upgrades are not available on this instance yet.'

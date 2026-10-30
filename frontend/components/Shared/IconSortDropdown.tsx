@@ -71,7 +71,7 @@ const IconSortDropdown: React.FC<IconSortDropdownProps> = ({
             <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className={`relative p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors ${buttonClassName}`}
+                className={`relative p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${buttonClassName}`}
                 aria-label={ariaLabel}
                 title={title}
             >
@@ -88,7 +88,7 @@ const IconSortDropdown: React.FC<IconSortDropdownProps> = ({
                     className={`absolute ${align === 'left' ? 'left-0' : 'right-0'} mt-1 w-56 max-h-[70vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50`}
                 >
                     {dropdownLabel && (
-                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                             {dropdownLabel}
                         </div>
                     )}
@@ -117,7 +117,7 @@ const IconSortDropdown: React.FC<IconSortDropdownProps> = ({
                     </div>
                     {sections.map((section) => (
                         <div key={section.key}>
-                            <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                 {section.label}
                             </div>
                             <div className="py-1">

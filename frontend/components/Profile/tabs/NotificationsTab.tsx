@@ -148,12 +148,12 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
         <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
             <td className="py-4 px-4">
                 <div className="flex items-center space-x-3">
-                    <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+                    <Icon className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0" />
                     <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {label}
                         </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                        <div className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                             {description}
                         </div>
                     </div>
@@ -341,7 +341,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                 <BellIcon className="w-6 h-6 mr-3 text-purple-500" />
                 {t('profile.tabs.notifications', 'Notifications')}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                 {t(
                     'profile.notificationsDescription',
                     'Choose how you want to be notified about important events.'
@@ -369,7 +369,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             <th className="py-3 px-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 <div className="flex items-center justify-center gap-1">
                                     {t('notifications.channels.email', 'Email')}
-                                    <span className="text-[10px] text-gray-500 dark:text-gray-500 font-normal">
+                                    <span className="text-[12px] text-gray-600 dark:text-gray-400 font-normal">
                                         ({t('common.comingSoon', 'Coming Soon')}
                                         )
                                     </span>
@@ -547,7 +547,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td className="py-4 px-4 text-sm text-gray-600 dark:text-gray-400">
+                            <td className="py-4 px-4 text-sm text-gray-600 dark:text-gray-300">
                                 {t(
                                     'notifications.test.rowLabel',
                                     'Send a test notification'

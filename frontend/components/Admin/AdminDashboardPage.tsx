@@ -52,12 +52,12 @@ const Stat: React.FC<{
     testId?: string;
 }> = ({ label, value, hint, testId }) => (
     <div className="px-4 py-3" data-testid={testId}>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-300">{label}</p>
         <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tabular-nums">
             {value}
         </p>
         {hint && (
-            <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">{hint}</p>
         )}
     </div>
 );
@@ -98,7 +98,7 @@ const AdminDashboardPage: React.FC = () => {
 
     if (!data) {
         return (
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-gray-500 dark:text-gray-400">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-gray-600 dark:text-gray-300">
                 {t('common.loading', 'Loading...')}
             </div>
         );
@@ -126,7 +126,7 @@ const AdminDashboardPage: React.FC = () => {
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-1">
                 {t('admin.dashboard.title', 'Admin')}
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                 {t(
                     'admin.dashboard.subtitleTotals',
                     '{{users}} users · {{tasks}} tasks · {{waitlist}} on the waitlist · Cadence {{version}} · {{env}}',
@@ -300,7 +300,7 @@ const AdminDashboardPage: React.FC = () => {
                     <NewspaperIcon className="w-4 h-4 mr-2" />
                     {t('admin.blog.title', 'Blog')}
                 </button>
-                <span className="inline-flex items-center px-4 py-2 rounded-lg text-sm text-gray-500 dark:text-gray-400">
+                <span className="inline-flex items-center px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-gray-300">
                     <RectangleStackIcon className="w-4 h-4 mr-2" />
                     {data.instance.registration_enabled
                         ? t('admin.dashboard.regOpen', 'Registration open')

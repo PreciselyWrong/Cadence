@@ -89,13 +89,13 @@ const TagRow: React.FC<TagRowProps> = ({ tag, onEdit, onDelete }) => {
                 )}
                 {isSystem && (
                     <LockClosedIcon
-                        className="h-3.5 w-3.5 flex-shrink-0 text-gray-400 dark:text-gray-500"
+                        className="h-3.5 w-3.5 flex-shrink-0 text-gray-500 dark:text-gray-400"
                         title={t('tags.systemTag', 'System tag')}
                     />
                 )}
             </Link>
 
-            <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 justify-end">
+            <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 justify-end">
                 {stats.map(({ icon, count, label }) => (
                     <span key={label} className="flex items-center gap-1">
                         {icon}
@@ -112,7 +112,7 @@ const TagRow: React.FC<TagRowProps> = ({ tag, onEdit, onDelete }) => {
                         e.stopPropagation();
                         setMenuOpen((open) => !open);
                     }}
-                    className="focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className=" opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                     aria-label={t(
                         'tags.toggleDropdownMenu',
                         'Toggle dropdown menu'

@@ -197,7 +197,7 @@ const SummaryPage: React.FC = () => {
             </h2>
 
             <div className="flex flex-wrap items-end gap-4 mb-4 no-print">
-                <label className="flex flex-col gap-1 text-xs text-gray-500">
+                <label className="flex flex-col gap-1 text-xs text-gray-600">
                     {t('summary.period', 'Period')}
                     <select
                         className={selectClass}
@@ -215,7 +215,7 @@ const SummaryPage: React.FC = () => {
                 </label>
                 {period === 'custom' && (
                     <>
-                        <label className="flex flex-col gap-1 text-xs text-gray-500">
+                        <label className="flex flex-col gap-1 text-xs text-gray-600">
                             {t('summary.from', 'From')}
                             <input
                                 type="date"
@@ -224,7 +224,7 @@ const SummaryPage: React.FC = () => {
                                 onChange={(e) => setCustomStart(e.target.value)}
                             />
                         </label>
-                        <label className="flex flex-col gap-1 text-xs text-gray-500">
+                        <label className="flex flex-col gap-1 text-xs text-gray-600">
                             {t('summary.to', 'To')}
                             <input
                                 type="date"
@@ -235,7 +235,7 @@ const SummaryPage: React.FC = () => {
                         </label>
                     </>
                 )}
-                <label className="flex flex-col gap-1 text-xs text-gray-500">
+                <label className="flex flex-col gap-1 text-xs text-gray-600">
                     {t('summary.groupBy', 'Group by')}
                     <select
                         className={selectClass}
@@ -338,7 +338,7 @@ const SummaryPage: React.FC = () => {
                 {notice && (
                     <span
                         role="status"
-                        className="self-center text-sm text-gray-500"
+                        className="self-center text-sm text-gray-600"
                     >
                         {notice}
                     </span>
@@ -348,7 +348,7 @@ const SummaryPage: React.FC = () => {
             <div id="summary-print">
                 <h3 className="text-lg font-medium mb-1">{title}</h3>
                 {data && (
-                    <p className="text-sm text-gray-500 mb-4">
+                    <p className="text-sm text-gray-600 mb-4">
                         {t(
                             'summary.counts',
                             '{{completed}} completed, {{open}} open',
@@ -360,13 +360,13 @@ const SummaryPage: React.FC = () => {
                     </p>
                 )}
                 {loading && (
-                    <p className="text-sm text-gray-500 no-print">
+                    <p className="text-sm text-gray-600 no-print">
                         {t('common.loading', 'Loading...')}
                     </p>
                 )}
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 {!loading && !error && empty && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-600">
                         {t('summary.empty', 'No tasks in this period.')}
                     </p>
                 )}
@@ -374,7 +374,7 @@ const SummaryPage: React.FC = () => {
                     <section key={group.key || '__none'} className="mb-5">
                         <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5">
                             {group.label}{' '}
-                            <span className="text-gray-400 font-normal">
+                            <span className="text-gray-500 font-normal">
                                 ({group.tasks.length})
                             </span>
                         </h4>
@@ -394,7 +394,7 @@ const SummaryPage: React.FC = () => {
                                         {task.tags.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="ml-1.5 text-xs text-gray-500"
+                                                className="ml-1.5 text-xs text-gray-600"
                                             >
                                                 #{tag}
                                             </span>

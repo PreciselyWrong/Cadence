@@ -75,7 +75,7 @@ const NoteBadge: React.FC<{ title: string; locked?: boolean }> = ({
     locked = false,
 }) => (
     <span className="inline-flex items-baseline align-baseline rounded overflow-hidden mx-0.5 leading-snug">
-        <span className="self-stretch flex items-center px-1.5 text-[0.72em] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 bg-gray-200/80 dark:bg-gray-700/80">
+        <span className="self-stretch flex items-center px-1.5 text-[0.72em] font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300 bg-gray-200/80 dark:bg-gray-700/80">
             NOTE:
         </span>
         <span className="inline-flex items-baseline gap-1 px-1.5 py-px text-[0.9em] text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800">
@@ -504,7 +504,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                             return <CodeBlock {...props} />;
                         }
                         return summaryMode ? (
-                            <span className="text-gray-500 italic">
+                            <span className="text-gray-600 italic">
                                 [Diagram hidden in preview]
                             </span>
                         ) : (
@@ -560,7 +560,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                         }
                         return (
                             <blockquote
-                                className="mb-4 pl-4 border-l-4 border-gray-300 dark:border-gray-600 italic text-gray-600 dark:text-gray-400"
+                                className="mb-4 pl-4 border-l-4 border-gray-300 dark:border-gray-600 italic text-gray-600 dark:text-gray-300"
                                 {...props}
                             >
                                 {children}
@@ -571,7 +571,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                     // Customize table styles - hide tables in summary mode
                     table: ({ ...props }) =>
                         summaryMode ? (
-                            <span className="text-gray-500 italic">
+                            <span className="text-gray-600 italic">
                                 [Table content hidden in preview]
                             </span>
                         ) : (

@@ -78,7 +78,7 @@ const Welcome: React.FC<WelcomeProps> = ({ onDone }) => {
                     onClick={start}
                     disabled={busy}
                     data-testid="welcome-start"
-                    className="mt-6 h-11 rounded-lg bg-blue-600 px-8 font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    className="mt-6 h-11 rounded-lg bg-primary px-8 font-medium text-primary-on shadow-sm hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-primary/90"
                 >
                     {busy
                         ? t('onboarding.starter.settingUp', 'Setting up...')

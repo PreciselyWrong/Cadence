@@ -79,7 +79,7 @@ const TaskAreaCard: React.FC<TaskAreaCardProps> = ({
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
                             {effectiveArea.name}
                         </span>
-                        <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
                             {t('area.viaProject', 'via project')}
                         </span>
                     </div>
@@ -121,7 +121,7 @@ const TaskAreaCard: React.FC<TaskAreaCardProps> = ({
                                 </button>
                             )}
                             {filteredAreas.length === 0 ? (
-                                <div className="text-sm text-gray-400 dark:text-gray-500 px-3 py-2">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 px-3 py-2">
                                     {t('area.noAreasFound', 'No areas found')}
                                 </div>
                             ) : (
@@ -170,7 +170,7 @@ const TaskAreaCard: React.FC<TaskAreaCardProps> = ({
                             )}
                             <button
                                 onClick={handleClear}
-                                className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                className="p-1.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                 title={t('area.clearArea', 'Remove area')}
                             >
                                 <XMarkIcon className="h-4 w-4" />
@@ -183,7 +183,7 @@ const TaskAreaCard: React.FC<TaskAreaCardProps> = ({
                     onClick={() => setDropdownOpen(true)}
                     className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 p-6 cursor-pointer transition-colors"
                 >
-                    <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-col items-center justify-center py-8 text-gray-600 dark:text-gray-300">
                         <RectangleStackIcon className="h-12 w-12 mb-3 opacity-50" />
                         <span className="text-sm text-center">
                             {t('task.noArea', 'Assign to an area')}

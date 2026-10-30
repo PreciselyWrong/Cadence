@@ -34,7 +34,7 @@ const TrialBanner: React.FC = () => {
             </p>
             <Link
                 to="/subscription/new"
-                className="px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 text-center whitespace-nowrap"
+                className="px-3 py-1.5 rounded bg-primary text-primary-on hover:bg-primary/90 text-center whitespace-nowrap"
                 data-testid="trial-banner-subscribe"
             >
                 {t('subscription.subscribe', 'Subscribe')}

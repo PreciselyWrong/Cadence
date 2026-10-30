@@ -474,7 +474,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
                             onClick={() => setNoteTab('edit')}
                             className={`p-1.5 rounded-md transition-colors ${
                                 noteTab === 'edit'
-                                    ? 'bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
                             }`}
                             title={t('common.edit', 'Edit')}
@@ -488,7 +488,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
                             onClick={() => setNoteTab('preview')}
                             className={`p-1.5 rounded-md transition-colors ${
                                 noteTab === 'preview'
-                                    ? 'bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
                             }`}
                             title={t('common.preview', 'Preview')}
@@ -524,7 +524,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
                                     }
                                 />
                             ) : (
-                                <p className="text-gray-500 dark:text-gray-400 italic">
+                                <p className="text-gray-600 dark:text-gray-300 italic">
                                     {t(
                                         'task.noContentPreview',
                                         'No content to preview. Switch to Edit mode to add content.'
@@ -631,7 +631,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
 
             <SidePanelSection title={t('forms.task.recurrence', 'Recurrence')}>
                 {isRecurringInstance ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'task.instanceOf',
                             'This is an instance of a recurring task'

@@ -398,7 +398,7 @@ const TaskRowExpanded: React.FC<TaskRowExpandedProps> = ({
                                         void setters.setProject(null);
                                         setOpenSection(null);
                                     }}
-                                    className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-red-600"
+                                    className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-red-600"
                                 >
                                     <XMarkIcon className="h-3.5 w-3.5" />
                                     {t('common.clear', 'Clear')}
@@ -407,7 +407,7 @@ const TaskRowExpanded: React.FC<TaskRowExpandedProps> = ({
                         </div>
                         <div className="mt-1 max-h-44 overflow-y-auto">
                             {filteredProjects.length === 0 ? (
-                                <p className="px-2 py-1.5 text-sm text-gray-400">
+                                <p className="px-2 py-1.5 text-sm text-gray-500">
                                     {t('projects.noResults', 'No projects')}
                                 </p>
                             ) : (
@@ -455,7 +455,7 @@ const TaskRowExpanded: React.FC<TaskRowExpandedProps> = ({
                                 <button
                                     type="button"
                                     onClick={clearRecurrence}
-                                    className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-red-600"
+                                    className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-red-600"
                                 >
                                     <XMarkIcon className="h-3.5 w-3.5" />
                                     {t('common.clear', 'Clear')}
@@ -491,7 +491,7 @@ const TaskRowExpanded: React.FC<TaskRowExpandedProps> = ({
 
                 {openSection === 'subtasks' && (
                     <div className="mt-2 flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-700 px-2 py-1.5">
-                        <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                        <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-500" />
                         <input
                             autoFocus
                             value={newSubtask}

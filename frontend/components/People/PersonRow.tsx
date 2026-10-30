@@ -50,18 +50,18 @@ const PersonRow: React.FC<PersonRowProps> = ({ person }) => {
                     />
                 )}
                 {person.email && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <span className="text-xs text-gray-600 dark:text-gray-300 truncate">
                         {person.email}
                     </span>
                 )}
                 {person.archived && (
-                    <span className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                    <span className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
                         {t('people.archivedBadge', 'archived')}
                     </span>
                 )}
             </Link>
 
-            <div className="hidden md:flex items-center text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+            <div className="hidden md:flex items-center text-xs text-gray-600 dark:text-gray-300 flex-shrink-0">
                 <span>{kindLabel}</span>
             </div>
         </div>

@@ -54,7 +54,7 @@ const HabitProgressBar: React.FC<HabitProgressBarProps> = ({
             </div>
             {showLabel && (
                 <span
-                    className="text-[11px] tabular-nums text-gray-500 dark:text-gray-400 shrink-0"
+                    className="text-[12px] tabular-nums text-gray-600 dark:text-gray-300 shrink-0"
                     aria-label={`${formatAmount(progress)} / ${formatAmount(goal)}`}
                 >
                     {formatAmount(progress)}/{formatAmount(goal)}

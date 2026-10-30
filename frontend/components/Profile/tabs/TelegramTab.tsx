@@ -84,7 +84,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                             placeholder={t('profile.telegramTokenPlaceholder')}
                             className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         />
-                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'profile.telegramTokenDescription',
                                 'Create a bot with @BotFather on Telegram and paste the token here.'
@@ -104,7 +104,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                             placeholder={t('profile.telegramAllowedUsersPlaceholder')}
                             className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         />
-                        <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                        <div className="mt-2 text-xs text-gray-600 dark:text-gray-300 space-y-1">
                             <p>
                                 {t(
                                     'profile.telegramAllowedUsersDescription',
@@ -227,7 +227,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                                         ) : (
                                             <button
                                                 onClick={onStartPolling}
-                                                className="px-3 py-1 bg-blue-600 text-white dark:bg-blue-700 rounded text-sm hover:bg-blue-700 dark:hover:bg-blue-800"
+                                                className="px-3 py-1 bg-primary text-primary-on rounded text-sm hover:bg-primary/90 dark:hover:bg-primary/90"
                                             >
                                                 {t(
                                                     'profile.startPolling',
@@ -264,8 +264,8 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                         className={`px-4 py-2 rounded-md ${
                             !formData.telegram_bot_token ||
                             telegramSetupStatus === 'loading'
-                                ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600'
+                                ? 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed'
+                                : 'bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90'
                         }`}
                     >
                         {telegramSetupStatus === 'loading'
@@ -376,7 +376,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                                     className={`px-3 py-1.5 text-sm rounded-full ${
                                         formData.task_summary_frequency ===
                                         frequency
-                                            ? 'bg-blue-500 text-white'
+                                            ? 'bg-primary text-primary-on'
                                             : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                                     }`}
                                     onClick={() => onSelectFrequency(frequency)}
@@ -389,7 +389,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                             )
                         )}
                     </div>
-                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'profile.frequencyHelp',
                             'Choose how often you want to receive task summaries.'
@@ -407,8 +407,8 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                         className={`px-4 py-2 rounded-md ${
                             !profile?.telegram_bot_token ||
                             !profile?.telegram_chat_id
-                                ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600'
+                                ? 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed'
+                                : 'bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90'
                         }`}
                         onClick={onSendTestSummary}
                     >

@@ -26,7 +26,7 @@ export const RecurringMoveDialog: React.FC<RecurringMoveDialogProps> = ({
     }, [onCancel]);
 
     const optionClass =
-        'w-full px-4 py-3 text-left rounded border border-gray-300 text-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 focus:outline-none';
+        'w-full px-4 py-3 text-left rounded border border-gray-300 text-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 ';
 
     return (
         <div
@@ -83,7 +83,7 @@ export const RecurringMoveDialog: React.FC<RecurringMoveDialogProps> = ({
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none"
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 "
                         data-testid="recurring-move-cancel"
                     >
                         {t('common.cancel', 'Cancel')}

@@ -134,7 +134,7 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ code }) => {
     if (svg === null) {
         return (
             <div
-                className="mb-4 rounded-lg bg-gray-100 dark:bg-gray-800 p-4 text-sm text-gray-500 dark:text-gray-400"
+                className="mb-4 rounded-lg bg-gray-100 dark:bg-gray-800 p-4 text-sm text-gray-600 dark:text-gray-300"
                 aria-busy="true"
             >
                 Rendering diagram...

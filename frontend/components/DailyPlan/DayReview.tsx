@@ -58,7 +58,7 @@ const DayReview: React.FC<DayReviewProps> = ({
                 })}
             </h3>
             {done.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'dailyPlan.reviewNothingDone',
                         'Nothing completed that day.'
@@ -66,7 +66,7 @@ const DayReview: React.FC<DayReviewProps> = ({
                 </p>
             ) : (
                 <>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {t('dailyPlan.reviewDoneCount', 'Done: {{count}}', {
                             count: done.length,
                         })}
@@ -86,14 +86,14 @@ const DayReview: React.FC<DayReviewProps> = ({
             )}
             {notDone.length > 0 && (
                 <>
-                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                         {t('dailyPlan.reviewNotDone', 'Planned, not done')}
                     </p>
                     <ul className="flex flex-col gap-1">
                         {notDone.map((task) => (
                             <li
                                 key={task.uid}
-                                className="truncate text-sm text-gray-500 dark:text-gray-400"
+                                className="truncate text-sm text-gray-600 dark:text-gray-300"
                             >
                                 {task.name}
                             </li>

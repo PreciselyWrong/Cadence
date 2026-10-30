@@ -77,14 +77,14 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                         </div>
                         <button
                             onClick={onClose}
-                            className="flex-shrink-0 p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            className="flex-shrink-0 p-1 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
                             <XMarkIcon className="h-5 w-5" />
                         </button>
                     </div>
 
                     {full.description && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 leading-relaxed">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-3 leading-relaxed">
                             {full.description}
                         </p>
                     )}
@@ -93,7 +93,7 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                 <div className="border-t border-gray-100 dark:border-gray-700 mx-6" />
 
                 <div className="px-6 py-3 flex-shrink-0">
-                    <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         {t('templates.taskList', 'Tasks')}
                         {!loading && tasks.length > 0 && <span className="ml-1.5 normal-case font-normal">({tasks.length})</span>}
                     </p>
@@ -105,7 +105,7 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500" />
                         </div>
                     ) : tasks.length === 0 ? (
-                        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-6">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">
                             {t('templates.noTasks', 'No tasks in this template')}
                         </p>
                     ) : (
@@ -121,7 +121,7 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                                             {(task.subtasks || []).map((sub, si) => (
                                                 <div key={si} className="flex items-start gap-2 py-1">
                                                     <span className="text-gray-300 dark:text-gray-600 text-xs mt-px">—</span>
-                                                    <span className="text-xs text-gray-500 dark:text-gray-400">{sub.name}</span>
+                                                    <span className="text-xs text-gray-600 dark:text-gray-300">{sub.name}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -133,7 +133,7 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                 </div>
 
                 <div className="border-t border-gray-100 dark:border-gray-700 px-6 py-4 flex items-center justify-between flex-shrink-0 bg-gray-50 dark:bg-gray-800/80">
-                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                         {tasks.length > 0 && <>{tasks.length} {t('templates.tasks', 'tasks')}</>}
                         {full.clone_count !== undefined && full.clone_count > 0 && (
                             <span className="ml-2 text-gray-300 dark:text-gray-600">&bull;</span>
@@ -145,7 +145,7 @@ const MarketplacePreviewModal: React.FC<MarketplacePreviewModalProps> = ({
                     <button
                         onClick={() => onInstall(full)}
                         disabled={installing}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
                     >
                         <ArrowDownTrayIcon className="h-4 w-4" />
                         {installing ? t('templates.marketplace.installing', 'Installing...') : t('templates.marketplace.install', 'Install')}

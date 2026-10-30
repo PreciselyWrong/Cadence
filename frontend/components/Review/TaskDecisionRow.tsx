@@ -83,7 +83,7 @@ const TaskDecisionRow: React.FC<TaskDecisionRowProps> = ({ task, onSaved }) => {
                 {t('review.actions.later', 'Later')}
             </button>
             {(parked || task.review_on) && (
-                <label className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                <label className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
                     {t('review.reviewOnLabel', 'Review on')}
                     <input
                         type="date"

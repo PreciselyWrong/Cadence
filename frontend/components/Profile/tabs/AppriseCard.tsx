@@ -86,7 +86,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {t('notifications.apprise.title', 'Apprise')}
                     </h4>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                         {configured
                             ? t(
                                   'notifications.apprise.connected',
@@ -160,7 +160,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                         className={inputClass}
                     />
                     <div className="sm:col-span-3 flex items-center justify-between gap-3">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'notifications.apprise.help',
                                 'Create a configuration in your Apprise server and paste its key here.'
@@ -169,7 +169,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                         <button
                             type="submit"
                             disabled={!url || !key || busy}
-                            className="px-3 py-1.5 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            className="px-3 py-1.5 text-sm font-medium rounded-md text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                         >
                             {busy
                                 ? t('notifications.test.sending', 'Sending...')

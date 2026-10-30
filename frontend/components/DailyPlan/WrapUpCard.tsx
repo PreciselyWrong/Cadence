@@ -86,7 +86,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                     <span className="text-base text-gray-900 dark:text-gray-100">
                         {t('dailyPlan.ai.wrapUpTitle', 'How did today go?')}
                     </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                         {t(
                             'dailyPlan.ai.wrapUpHint',
                             'Get a short recap and pick what to carry over to tomorrow.'
@@ -131,7 +131,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                 </ul>
             )}
             {wrapUp.pattern && (
-                <p className="text-sm italic text-gray-600 dark:text-gray-400">
+                <p className="text-sm italic text-gray-600 dark:text-gray-300">
                     {wrapUp.pattern}
                 </p>
             )}
@@ -164,7 +164,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                             <span>
                                 {item.name}
                                 {item.reason && (
-                                    <span className="text-gray-500 dark:text-gray-400">
+                                    <span className="text-gray-600 dark:text-gray-300">
                                         {' '}
                                         · {item.reason}
                                     </span>
@@ -186,7 +186,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                             type="button"
                             onClick={generate}
                             disabled={loading}
-                            className="text-xs text-gray-600 underline-offset-2 hover:underline disabled:opacity-60 dark:text-gray-400"
+                            className="text-xs text-gray-600 underline-offset-2 hover:underline disabled:opacity-60 dark:text-gray-300"
                         >
                             {t('dailyPlan.ai.regenerate', 'Regenerate')}
                         </button>

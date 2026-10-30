@@ -359,7 +359,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                     <div className="flex justify-center items-center mt-4">
                         <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
                             <svg
-                                className="h-20 w-20 text-gray-400 opacity-30 mb-6"
+                                className="h-20 w-20 text-gray-500 opacity-30 mb-6"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="1.5"
@@ -377,7 +377,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                     'No tasks available.'
                                 )}
                             </p>
-                            <p className="text-base text-center text-gray-400 dark:text-gray-400">
+                            <p className="text-base text-center text-gray-500 dark:text-gray-300">
                                 {t(
                                     'tasks.blankSlateHint',
                                     'Start by creating a new task or changing your filters.'
@@ -416,7 +416,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                             className="flex w-full items-center gap-1.5 text-left"
                                                         >
                                                             <ChevronRightIcon
-                                                                className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                                className={`h-4 w-4 flex-shrink-0 text-gray-500 transition-transform ${
                                                                     isCollapsed(
                                                                         groupName
                                                                     )
@@ -485,7 +485,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
 
                                                     {/* Empty state for columns with no tasks */}
                                                     {dayTasks.length === 0 && (
-                                                        <div className="text-center py-8 text-gray-400 dark:text-gray-600">
+                                                        <div className="text-center py-8 text-gray-500 dark:text-gray-600">
                                                             <p className="text-sm">
                                                                 No tasks
                                                                 scheduled
@@ -563,7 +563,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                       >
                                           <span className="flex min-w-0 items-center gap-1.5">
                                               <ChevronRightIcon
-                                                  className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                  className={`h-4 w-4 flex-shrink-0 text-gray-500 transition-transform ${
                                                       sectionCollapsed
                                                           ? ''
                                                           : 'rotate-90'
@@ -574,7 +574,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                   {projectName}
                                               </span>
                                           </span>
-                                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+                                          <span className="text-xs font-normal text-gray-600 dark:text-gray-300">
                                               {projectTasks.length}{' '}
                                               {t('tasks.tasks', 'tasks')}
                                           </span>
@@ -584,7 +584,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                           <span className="truncate">
                                               {projectName}
                                           </span>
-                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                          <span className="text-xs text-gray-600 dark:text-gray-300">
                                               {projectTasks.length}{' '}
                                               {t('tasks.tasks', 'tasks')}
                                           </span>
@@ -747,7 +747,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                             <div
                                 className={`mt-2 space-y-1.5 border-l-2 border-blue-200 dark:border-blue-800 pl-4 ${!isVirtualTemplate ? 'ml-8' : 'ml-4'}`}
                             >
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-2 flex items-center">
                                     <ArrowPathIcon className="h-3 w-3 mr-1" />
                                     {formatRecurrence(
                                         group.template.recurrence_type!
@@ -798,7 +798,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                 <div className="flex justify-center items-center mt-4">
                     <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
                         <svg
-                            className="h-20 w-20 text-gray-400 opacity-30 mb-6"
+                            className="h-20 w-20 text-gray-500 opacity-30 mb-6"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -813,7 +813,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                         <p className="text-2xl font-light text-center text-gray-600 dark:text-gray-300 mb-2">
                             {t('tasks.noTasksAvailable', 'No tasks available.')}
                         </p>
-                        <p className="text-base text-center text-gray-400 dark:text-gray-400">
+                        <p className="text-base text-center text-gray-500 dark:text-gray-300">
                             {t(
                                 'tasks.blankSlateHint',
                                 'Start by creating a new task or changing your filters.'

@@ -55,7 +55,7 @@ const OIDCCallback: React.FC = () => {
                                 'Completing sign-in...'
                             )}
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-300">
                             {t(
                                 'auth.oidc.authenticating_with_provider',
                                 'Authenticating with provider. Please wait...'

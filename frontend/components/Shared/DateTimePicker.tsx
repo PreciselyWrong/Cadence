@@ -353,19 +353,19 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                         disabled={disabled}
                     >
                         <span
-                            className={`truncate ${!value ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                            className={`truncate ${!value ? 'text-gray-600 dark:text-gray-300' : ''}`}
                         >
                             {formatDisplayDateTime(value)}
                         </span>
                         <div className="flex items-center space-x-1">
-                            <ClockIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                            <ClockIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                         </div>
                     </button>
                     {value && (
                         <button
                             type="button"
                             onClick={handleClear}
-                            className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs w-4 h-4 flex items-center justify-center"
+                            className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xs w-4 h-4 flex items-center justify-center"
                         >
                             ×
                         </button>
@@ -437,7 +437,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                                 {getDaysOfWeek().map((day) => (
                                     <div
                                         key={day}
-                                        className="text-xs font-medium text-gray-500 dark:text-gray-400 text-center py-1"
+                                        className="text-xs font-medium text-gray-600 dark:text-gray-300 text-center py-1"
                                     >
                                         {day}
                                     </div>
@@ -455,7 +455,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                                                 }
                                                 className={`w-full h-full text-xs rounded transition-colors ${
                                                     isSelected(date)
-                                                        ? 'bg-blue-600 text-white'
+                                                        ? 'bg-primary text-primary-on'
                                                         : isToday(date)
                                                           ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100'
                                                           : 'hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100'
@@ -524,7 +524,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                                     <button
                                         type="button"
                                         onClick={handleClear}
-                                        className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                        className="text-xs text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-300"
                                     >
                                         Clear
                                     </button>

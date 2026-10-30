@@ -60,7 +60,7 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
             data-testid="calendar-agenda"
         >
             {days.length === 0 && (
-                <p className="p-8 text-center text-sm text-gray-400 dark:text-gray-500">
+                <p className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
                     {t('calendar.agendaEmpty', 'Nothing scheduled')}
                 </p>
             )}
@@ -70,7 +70,7 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                         className={`sticky top-0 z-10 px-4 py-2 text-xs font-semibold tracking-widest uppercase border-b border-gray-100 dark:border-gray-600 ${
                             isToday(day)
                                 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300'
-                                : 'bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
                         }`}
                     >
                         {format(day, 'EEEE d MMMM')}
@@ -85,7 +85,7 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                                         event.readOnly ? 'opacity-60' : ''
                                     }`}
                                 >
-                                    <span className="w-24 shrink-0 text-xs text-gray-400 dark:text-gray-500">
+                                    <span className="w-24 shrink-0 text-xs text-gray-500 dark:text-gray-400">
                                         {event.allDay
                                             ? t('calendar.allDay', 'All day')
                                             : `${format(event.start, 'HH:mm')} – ${format(event.end, 'HH:mm')}`}

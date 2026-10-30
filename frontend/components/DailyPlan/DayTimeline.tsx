@@ -223,7 +223,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
     return (
         <div className="flex flex-col gap-3">
             {allDay.length > 0 && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-600 dark:text-gray-300">
                     {t('dailyPlan.allDay', 'All day')}:{' '}
                     {allDay.map((e) => e.title).join(', ')}
                 </p>
@@ -251,7 +251,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                         return (
                             <React.Fragment key={minute}>
                                 <div
-                                    className="absolute -left-14 text-xs text-gray-400 dark:text-gray-500"
+                                    className="absolute -left-14 text-xs text-gray-500 dark:text-gray-400"
                                     style={{ top: top - 8 }}
                                 >
                                     {formatMinute(minute)}
@@ -283,12 +283,12 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                                 key={`${event.feed_uid}-${event.uid}-${event.start}`}
                                 className={`absolute left-1 right-1 flex items-start gap-2 overflow-hidden rounded-md px-2.5 text-[13px] ${
                                     event.busy
-                                        ? 'bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-400'
-                                        : 'bg-gray-50 text-gray-400 dark:bg-gray-800/20 dark:text-gray-500'
+                                        ? 'bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-300'
+                                        : 'bg-gray-50 text-gray-500 dark:bg-gray-800/20 dark:text-gray-400'
                                 } ${blockHeight < 40 ? 'items-center' : 'py-1.5'}`}
                                 style={{ top: top + 1, height: blockHeight }}
                             >
-                                <span className="shrink-0 text-gray-400 dark:text-gray-500">
+                                <span className="shrink-0 text-gray-500 dark:text-gray-400">
                                     {formatMinute(event.start_minute as number)}
                                 </span>
                                 <span className="min-w-0 flex-1 truncate">
@@ -306,7 +306,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                         freeGaps(items, events, range).map((gap) => (
                             <div
                                 key={`gap-${gap.start}`}
-                                className="pointer-events-none absolute left-1 right-1 flex items-center justify-center text-[11px] text-gray-400 dark:text-gray-500"
+                                className="pointer-events-none absolute left-1 right-1 flex items-center justify-center text-[12px] text-gray-500 dark:text-gray-400"
                                 style={{
                                     top:
                                         (gap.start - range.start) *
@@ -434,20 +434,20 @@ const TrayItem: React.FC<{
             >
                 {item.task.name}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-600">
                 {formatDuration(item.duration_minutes)}
             </span>
             <button
                 type="button"
                 onClick={() => onReschedule('tomorrow')}
-                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             >
                 {t('dailyPlan.tomorrow', 'Tomorrow')}
             </button>
             <button
                 type="button"
                 onClick={() => onReschedule('next_week')}
-                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                className="rounded px-1.5 py-0.5 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             >
                 {t('dailyPlan.nextWeek', 'Next week')}
             </button>
@@ -455,7 +455,7 @@ const TrayItem: React.FC<{
                 type="button"
                 onClick={onRemove}
                 aria-label={t('dailyPlan.removeFromPlan', 'Remove from plan')}
-                className="flex h-7 w-7 items-center justify-center rounded text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex h-7 w-7 items-center justify-center rounded text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
                 <XMarkIcon className="h-4 w-4" />
             </button>
@@ -472,7 +472,7 @@ const UnscheduledTray: React.FC<{
     const { t } = useTranslation();
     return (
         <div className="ml-14 flex flex-col gap-2 rounded-lg bg-gray-50 p-3 dark:bg-gray-800/40">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
                 {dayLabel
                     ? t('dailyPlan.noTimeYetOn', '{{date}}, no time yet', {
                           date: dayLabel,

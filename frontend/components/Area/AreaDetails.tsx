@@ -191,7 +191,7 @@ const AreaDetails: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
                 {t('areas.loading', 'Loading…')}
             </div>
         );
@@ -220,7 +220,7 @@ const AreaDetails: React.FC = () => {
         `relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
             activeTab === tab
                 ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
         }`;
 
     return (
@@ -272,7 +272,7 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'projects' &&
                 (areaProjects.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
                         {t('areas.noProjects', 'No projects in this area.')}
                     </p>
                 ) : (
@@ -289,7 +289,7 @@ const AreaDetails: React.FC = () => {
                                     onClick={() =>
                                         setShowFinished((value) => !value)
                                     }
-                                    className="inline-flex items-center gap-1 px-2 text-sm font-medium text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                                    className="inline-flex items-center gap-1 px-2 text-sm font-medium text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                                     aria-expanded={showFinished}
                                     data-testid="area-finished-projects-toggle"
                                 >
@@ -316,7 +316,7 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'goals' &&
                 (areaGoals.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
                         {t(
                             'goals.noGoalsInArea',
                             'No goals linked to this area.'
@@ -339,11 +339,11 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'tasks' &&
                 (loadingTasks ? (
-                    <div className="px-2 text-sm text-gray-400 dark:text-gray-500">
+                    <div className="px-2 text-sm text-gray-500 dark:text-gray-400">
                         {t('loading.tasks', 'Loading tasks…')}
                     </div>
                 ) : activeTasks.length === 0 && completedTasks.length === 0 ? (
-                    <p className="text-sm text-gray-400 dark:text-gray-500 px-2">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
                         {t('areas.noTasks', 'No tasks directly in this area')}
                     </p>
                 ) : (
@@ -359,7 +359,7 @@ const AreaDetails: React.FC = () => {
                         )}
                         {completedTasks.length > 0 && (
                             <div>
-                                <h3 className="px-2 text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                                <h3 className="px-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
                                     {t('tasks.completed', 'Completed')} (
                                     {completedTasks.length})
                                 </h3>

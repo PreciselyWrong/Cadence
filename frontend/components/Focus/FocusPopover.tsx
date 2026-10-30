@@ -21,7 +21,7 @@ interface FocusPopoverProps {
 }
 
 const LABEL =
-    'mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400';
+    'mb-1 block text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300';
 
 // Picks the area, the project inside it and the tags of a Focus. Apply
 // saves it for the account; Clear removes it.
@@ -181,7 +181,7 @@ const FocusPopover: React.FC<FocusPopoverProps> = ({ focus, onClose }) => {
                     />
                 </div>
             </div>
-            <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-3 text-xs text-gray-600 dark:text-gray-300">
                 {t(
                     'focus.hint',
                     'Today, Upcoming, Tasks, Projects, Notes and search show only this. New tasks get the project and tags.'
@@ -212,7 +212,7 @@ const FocusPopover: React.FC<FocusPopoverProps> = ({ focus, onClose }) => {
                         })
                     }
                     disabled={saving || !canApply}
-                    className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-on hover:bg-primary/90 disabled:opacity-40 dark:hover:bg-primary/90"
                     data-testid="focus-apply"
                 >
                     {t('focus.apply', 'Apply')}

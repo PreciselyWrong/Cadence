@@ -145,7 +145,7 @@ const LifeBalance: React.FC<Props> = ({ projects }) => {
     return (
         <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-4 shadow-sm h-full">
             <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                     Area Balance
                 </h3>
                 <div className="space-y-2">
@@ -161,12 +161,12 @@ const LifeBalance: React.FC<Props> = ({ projects }) => {
                             }
                         >
                             <div className="w-36 flex-shrink-0 flex items-center justify-end gap-1.5 min-w-0">
-                                <span className="text-xs text-gray-600 dark:text-gray-400 truncate group-hover:text-blue-500 transition-colors">
+                                <span className="text-xs text-gray-600 dark:text-gray-300 truncate group-hover:text-blue-500 transition-colors">
                                     {area.name}
                                 </span>
                                 {area.inProgress > 0 && (
                                     <span
-                                        className="text-[10px] font-medium px-1 py-0.5 rounded flex-shrink-0"
+                                        className="text-[12px] font-medium px-1 py-0.5 rounded flex-shrink-0"
                                         style={{
                                             backgroundColor: area.color
                                                 ? `${area.color}22`
@@ -195,9 +195,9 @@ const LifeBalance: React.FC<Props> = ({ projects }) => {
                                     }}
                                 />
                             </div>
-                            <div className="w-20 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 text-right">
+                            <div className="w-20 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 text-right">
                                 {area.done}/{area.total}
-                                <span className="text-gray-400 dark:text-gray-600 ml-1">
+                                <span className="text-gray-500 dark:text-gray-600 ml-1">
                                     ({Math.round(area.share)}%)
                                 </span>
                             </div>
@@ -205,7 +205,7 @@ const LifeBalance: React.FC<Props> = ({ projects }) => {
                     ))}
                 </div>
                 {conclusion && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 leading-relaxed italic border-t border-gray-100 dark:border-gray-800 pt-3">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-3 leading-relaxed italic border-t border-gray-100 dark:border-gray-800 pt-3">
                         {conclusion}
                     </p>
                 )}

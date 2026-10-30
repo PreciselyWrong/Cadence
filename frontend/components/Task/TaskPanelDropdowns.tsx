@@ -86,7 +86,7 @@ export const TaskStatusDropdown: React.FC<TaskStatusDropdownProps> = ({
             value: TASK_STATUS.NOT_STARTED,
             label: t('task.status.notStarted', 'Not started'),
             Icon: PauseCircleIcon,
-            iconClass: 'text-gray-500 dark:text-gray-400',
+            iconClass: 'text-gray-600 dark:text-gray-300',
             activeClass:
                 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100',
         },
@@ -271,12 +271,12 @@ export const TaskProjectDropdown: React.FC<TaskProjectDropdownProps> = ({
                         className={`h-4 w-4 flex-shrink-0 ${
                             selected
                                 ? 'text-blue-500 dark:text-blue-400'
-                                : 'text-gray-400 dark:text-gray-500'
+                                : 'text-gray-500 dark:text-gray-400'
                         }`}
                     />
                     <span
                         className={`truncate ${
-                            selected ? '' : 'text-gray-500 dark:text-gray-400'
+                            selected ? '' : 'text-gray-600 dark:text-gray-300'
                         }`}
                     >
                         {selected
@@ -284,7 +284,7 @@ export const TaskProjectDropdown: React.FC<TaskProjectDropdownProps> = ({
                             : t('tasks.noProject', 'No project')}
                     </span>
                 </span>
-                <ChevronDownIcon className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                <ChevronDownIcon className="h-4 w-4 flex-shrink-0 text-gray-600 dark:text-gray-300" />
             </button>
             {isOpen &&
                 createPortal(

@@ -264,7 +264,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
         } else if (priority === 'high' || priority === 2) {
             return 'text-red-500 dark:text-red-400';
         }
-        return 'text-gray-500 dark:text-gray-400';
+        return 'text-gray-600 dark:text-gray-300';
     };
 
     const formattedUpdatedAt = task.updated_at
@@ -523,13 +523,13 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                         )}
 
                                         {formattedUpdatedAt && (
-                                            <span className="text-xs text-gray-400 dark:text-gray-600 sm:pl-1 mt-1 sm:mt-0 break-words">
+                                            <span className="text-xs text-gray-500 dark:text-gray-600 sm:pl-1 mt-1 sm:mt-0 break-words">
                                                 {t(
                                                     'task.updatedAt',
                                                     'Updated at'
                                                 )}
                                                 :{' '}
-                                                <span className="text-gray-400 dark:text-gray-600">
+                                                <span className="text-gray-500 dark:text-gray-600">
                                                     {formattedUpdatedAt}
                                                 </span>
                                             </span>
@@ -539,7 +539,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                 {/* Project and tags display below title */}
                                 {(task.Project ||
                                     (task.tags && task.tags.length > 0)) && (
-                                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2 px-2 -mx-2 gap-2 flex-wrap">
+                                    <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-2 px-2 -mx-2 gap-2 flex-wrap">
                                         {task.Project && (
                                             <Link
                                                 to={
@@ -620,7 +620,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                             onClick={() => onPillChange('overview')}
                             className={`h-7 px-3 flex items-center rounded-lg text-xs font-medium transition-colors ${
                                 activePill === 'overview'
-                                    ? 'bg-blue-500 dark:bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                         >
@@ -630,7 +630,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                             onClick={() => onPillChange('attachments')}
                             className={`h-7 px-3 flex items-center rounded-lg text-xs font-medium transition-colors relative ${
                                 activePill === 'attachments'
-                                    ? 'bg-blue-500 dark:bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                         >
@@ -643,7 +643,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                             onClick={() => onPillChange('comments')}
                             className={`h-7 px-3 flex items-center rounded-lg text-xs font-medium transition-colors relative ${
                                 activePill === 'comments'
-                                    ? 'bg-blue-500 dark:bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                         >
@@ -656,7 +656,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                             onClick={() => onPillChange('activity')}
                             className={`h-7 px-3 flex items-center rounded-lg text-xs font-medium transition-colors ${
                                 activePill === 'activity'
-                                    ? 'bg-blue-500 dark:bg-blue-600 text-white'
+                                    ? 'bg-primary text-primary-on'
                                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                         >
@@ -803,7 +803,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                                     "This task was in your plan yesterday and wasn't completed."
                                                                 )}
                                                             </p>
-                                                            <p className="mt-1 text-[11px] text-amber-700 dark:text-amber-200">
+                                                            <p className="mt-1 text-[12px] text-amber-700 dark:text-amber-200">
                                                                 {t(
                                                                     'task.overdueYesterday',
                                                                     'Consider prioritizing this task or breaking it into smaller steps.'

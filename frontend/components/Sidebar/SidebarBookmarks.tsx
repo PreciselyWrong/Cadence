@@ -77,7 +77,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
     const isActive = (path: string) => location.pathname === path;
 
     const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
             isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
         }`;
 
@@ -140,14 +140,14 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                     localStorage.setItem('bookmarksSidebarCollapsed', String(!next));
                 }}
             >
-                <span className="flex items-center gap-[6px] text-[10.5px] tracking-[0.01em] font-semibold uppercase text-gray-400 dark:text-[oklch(58%_0.006_95)] hover:text-gray-900 dark:hover:text-white">
+                <span className="flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase text-gray-500 dark:text-[oklch(58%_0.006_95)] hover:text-gray-900 dark:hover:text-white">
                     <PushPinIcon className="h-[14px] w-[14px]" />
                     {t('sidebar.bookmarks', 'Favorites')}
                 </span>
                 <div className="flex items-center gap-1">
                     <span className="h-3.5 w-3.5" aria-hidden="true" />
                     <button
-                        className="text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none"
+                        className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                         aria-label={isExpanded ? t('sidebar.collapseFavorites', 'Collapse favorites') : t('sidebar.expandFavorites', 'Expand favorites')}
                     >
                         <ChevronRightIcon
@@ -177,7 +177,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                             </span>
                             <button
                                 onClick={(e) => unpinProject(project, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${project.name}`}
                                 title={`Unpin ${project.name}`}
                             >
@@ -203,7 +203,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                             </span>
                             <button
                                 onClick={(e) => unpinNote(note, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${note.title}`}
                                 title={`Unpin ${note.title}`}
                             >
@@ -229,7 +229,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                             </span>
                             <button
                                 onClick={(e) => unpinTag(tag, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${tag.name}`}
                                 title={`Unpin ${tag.name}`}
                             >

@@ -28,8 +28,8 @@ const SidebarInsights: React.FC<SidebarInsightsProps> = ({ handleNavClick, locat
 
     const isActive = (path: string) =>
         location.pathname === path
-            ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)] text-gray-500 dark:text-[oklch(82%_0.006_95)]'
-            : 'text-gray-500 dark:text-[oklch(82%_0.006_95)]';
+            ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)] text-gray-600 dark:text-[oklch(82%_0.006_95)]'
+            : 'text-gray-600 dark:text-[oklch(82%_0.006_95)]';
 
     const links = [
         {
@@ -57,13 +57,13 @@ const SidebarInsights: React.FC<SidebarInsightsProps> = ({ handleNavClick, locat
     return (
         <ul className="flex flex-col">
             <li className="flex justify-between items-center px-[10px] py-[4px] rounded-md">
-                <span className="flex items-center gap-[6px] text-[10.5px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-gray-900 dark:hover:text-white text-gray-400 dark:text-[oklch(58%_0.006_95)]" onClick={toggleCollapsed}>
+                <span className="flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-gray-900 dark:hover:text-white text-gray-500 dark:text-[oklch(58%_0.006_95)]" onClick={toggleCollapsed}>
                     <ChartBarIcon className="h-[14px] w-[14px]" />
                     {t('sidebar.insights', 'Insights')}
                 </span>
                 <div className="flex items-center gap-1">
                     <span className="h-3.5 w-3.5" aria-hidden="true" />
-                    <button onClick={toggleCollapsed} className="text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white focus:outline-none">
+                    <button onClick={toggleCollapsed} className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white ">
                         <ChevronRightIcon
                             className="h-3 w-3 transition-transform duration-150"
                             style={{ transform: !isCollapsed ? 'rotate(90deg)' : 'none' }}

@@ -345,7 +345,7 @@ const BannerEditModal: React.FC<BannerEditModalProps> = ({
                                                 'Browse Image'
                                             )}
                                         </button>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">
                                             {t(
                                                 'project.uploadImageHint',
                                                 'Upload an image for your project (max {{size}}MB)',
@@ -361,7 +361,7 @@ const BannerEditModal: React.FC<BannerEditModalProps> = ({
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none transition duration-150 ease-in-out"
+                                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 transition duration-150 ease-in-out"
                             >
                                 {t('common.cancel', 'Cancel')}
                             </button>
@@ -369,7 +369,7 @@ const BannerEditModal: React.FC<BannerEditModalProps> = ({
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={isUploading || isSaving}
-                                className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none transition duration-150 ease-in-out text-sm ${
+                                className={`px-4 py-2 bg-primary text-primary-on rounded-md hover:bg-primary/90 dark:hover:bg-primary/90 transition duration-150 ease-in-out text-sm ${
                                     isUploading || isSaving
                                         ? 'opacity-50 cursor-not-allowed'
                                         : ''

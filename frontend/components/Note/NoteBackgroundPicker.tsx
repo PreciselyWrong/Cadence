@@ -44,7 +44,7 @@ const NoteBackgroundPicker: React.FC<NoteBackgroundPickerProps> = ({
                 aria-label={t('notes.noBackground', 'No background')}
                 aria-pressed={!value}
             >
-                <XMarkIcon className="h-5 w-5 text-gray-400" />
+                <XMarkIcon className="h-5 w-5 text-gray-500" />
             </button>
             {CONTENT_BACKGROUNDS.map((bg) => (
                 <button
