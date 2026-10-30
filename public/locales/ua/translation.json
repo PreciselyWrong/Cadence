@@ -122,7 +122,8 @@
     "next7Days": "Наступні 7 днів",
     "more": "Ще",
     "toggleFolder": "Показати або приховати проєкти",
-    "customize": "Налаштувати бічну панель"
+    "customize": "Налаштувати бічну панель",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Головна",
@@ -1614,7 +1615,10 @@
       "security": "Security",
       "advanced": "Advanced"
     },
-    "optional": "Optional"
+    "optional": "Optional",
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "task": {
     "recurringMove": {
@@ -1896,7 +1900,12 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -4556,5 +4565,15 @@
     "nextMonth": "Наступний місяць",
     "time": "Час",
     "clearTime": "Без часу"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

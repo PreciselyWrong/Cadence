@@ -23,7 +23,7 @@ interface AdminRolesPanelProps {
 }
 
 const headerCell =
-    'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider align-top';
+    'px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider align-top';
 
 const Allowed: React.FC<{ allowed: boolean; label: string }> = ({
     allowed,
@@ -64,7 +64,7 @@ const AdminRolesPanel: React.FC<AdminRolesPanelProps> = ({
 
     return (
         <div className="w-full space-y-6" data-testid="admin-roles-panel">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
                 {t(
                     'admin.roles.intro',
                     'Every account has one role. A role decides what an account can create and manage. The roles are fixed for now.'
@@ -119,7 +119,7 @@ const AdminRolesPanel: React.FC<AdminRolesPanelProps> = ({
                             <tr>
                                 <td
                                     colSpan={roles.length + 1 || 4}
-                                    className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                                    className="px-6 py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                                 >
                                     {t(
                                         'admin.roles.loading',
@@ -138,7 +138,7 @@ const AdminRolesPanel: React.FC<AdminRolesPanelProps> = ({
                                                 'Manage users, roles and groups'
                                             )}
                                         </div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        <div className="text-xs text-gray-600 dark:text-gray-300">
                                             {t(
                                                 'admin.roles.manageAccountsHint',
                                                 'Create and remove accounts, change roles, manage groups'
@@ -160,7 +160,7 @@ const AdminRolesPanel: React.FC<AdminRolesPanelProps> = ({
                                             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                 {capabilityName(t, capability)}
                                             </div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                            <div className="text-xs text-gray-600 dark:text-gray-300">
                                                 {capabilityHint(t, capability)}
                                             </div>
                                         </td>

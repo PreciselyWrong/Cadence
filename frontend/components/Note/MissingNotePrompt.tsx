@@ -79,7 +79,7 @@ const MissingNotePrompt: React.FC<MissingNotePromptProps> = ({
                 </button>
                 <button
                     type="button"
-                    className="px-2.5 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700"
+                    className="px-2.5 py-1 text-xs rounded bg-primary text-primary-on hover:bg-primary/90"
                     onMouseDown={(e) => {
                         e.preventDefault();
                         onCreate();

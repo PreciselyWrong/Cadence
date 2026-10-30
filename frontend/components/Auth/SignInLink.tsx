@@ -112,13 +112,13 @@ const SignInLink: React.FC = () => {
                         onClick={handleSignIn}
                         disabled={submitting}
                         data-testid="sign-in-link-submit"
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60"
+                        className="w-full px-4 py-2 bg-primary text-primary-on rounded-lg hover:bg-primary/90 disabled:opacity-60"
                     >
                         {submitting
                             ? t('signInLink.signingIn', 'Signing in...')
                             : t('signInLink.signIn', 'Sign in')}
                     </button>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'signInLink.stayHint',
                             'You will stay signed in on this device for 30 days.'

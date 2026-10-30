@@ -25,6 +25,7 @@ import {
     isMovable,
 } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
+import AllDayOverflow from './AllDayOverflow';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -161,6 +162,26 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
         );
 
     const allDayRows = layoutAllDayWeek(events, weekStart);
+    // At most three rows of bars; the rest hide behind a "+N" chip per day.
+    const MAX_ALL_DAY_ROWS = 3;
+    const shownBars = allDayBars.filter(
+        ({ event }) => (allDayRows.get(event.id) ?? 0) < MAX_ALL_DAY_ROWS
+    );
+    const hiddenByDay = weekDays.map((day) =>
+        allDayBars
+            .filter(
+                ({ event }) =>
+                    (allDayRows.get(event.id) ?? 0) >= MAX_ALL_DAY_ROWS &&
+                    coversDay(event, day)
+            )
+            .map(({ event }) => event)
+    );
+    const hasHidden = hiddenByDay.some((hidden) => hidden.length > 0);
+    const allDayRowCount =
+        Math.max(
+            1,
+            ...shownBars.map(({ event }) => (allDayRows.get(event.id) ?? 0) + 1)
+        ) + (hasHidden ? 1 : 0);
 
     const handleDrop = (
         day: Date,
@@ -182,7 +203,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 style={gridColumns}
             >
                 <div
-                    className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 border-r border-gray-200 dark:border-gray-600"
+                    className="p-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 border-r border-gray-200 dark:border-gray-600"
                     data-week={
                         showWeekNumbers ? getISOWeek(weekDays[0]) : undefined
                     }
@@ -204,14 +225,14 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             className={`text-xs font-semibold tracking-widest uppercase mb-1 ${
                                 isToday(day)
                                     ? 'text-blue-500 dark:text-blue-400'
-                                    : 'text-gray-400 dark:text-gray-500'
+                                    : 'text-gray-500 dark:text-gray-400'
                             }`}
                         >
                             {format(day, 'EEE', { locale: getCurrentLocale() })}
                         </div>
                         <div>
                             {isToday(day) ? (
-                                <span className="inline-flex items-center justify-center w-7 h-7 bg-blue-500 text-white text-sm font-semibold rounded-full">
+                                <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-primary-on text-sm font-semibold rounded-full">
                                     {format(day, 'd')}
                                 </span>
                             ) : (
@@ -224,10 +245,9 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 ))}
             </div>
 
-            {/* Capped at about three rows so the hours stay in view. */}
             {allDayBars.length > 0 && (
                 <div
-                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 max-h-[5.5rem] overflow-y-auto shrink-0"
+                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0"
                     style={gridColumns}
                     data-testid="calendar-all-day-row"
                 >
@@ -241,11 +261,11 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             onDrop={(e) => handleDrop(day, undefined, e)}
                             style={{
                                 gridColumn: index + 2,
-                                gridRow: `1 / span ${allDayBars.length}`,
+                                gridRow: `1 / span ${allDayRowCount}`,
                             }}
                         />
                     ))}
-                    {allDayBars.map(({ event, from, to }) => (
+                    {shownBars.map(({ event, from, to }) => (
                         <div
                             key={event.id}
                             draggable={isMovable(event) && !event.readOnly}
@@ -273,6 +293,20 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             {event.title}
                         </div>
                     ))}
+                    {hiddenByDay.map((hidden, index) =>
+                        hidden.length > 0 ? (
+                            <AllDayOverflow
+                                key={`all-day-more-${weekDays[index].toString()}`}
+                                events={hidden}
+                                onEventClick={onEventClick}
+                                className="z-10"
+                                style={{
+                                    gridColumn: index + 2,
+                                    gridRow: MAX_ALL_DAY_ROWS + 1,
+                                }}
+                            />
+                        ) : null
+                    )}
                 </div>
             )}
 
@@ -312,7 +346,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                 : gridColumns
                         }
                     >
-                        <div className="py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+                        <div className="py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                             {format(
                                 addHours(new Date().setHours(hour, 0, 0, 0), 0),
                                 'HH:mm'
@@ -388,7 +422,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                             <div className="line-clamp-2 leading-tight">
                                                 {event.title}
                                             </div>
-                                            <div className="text-[10px] opacity-75 mt-0.5">
+                                            <div className="text-[12px] opacity-75 mt-0.5">
                                                 {format(event.start, 'HH:mm')} –{' '}
                                                 {format(
                                                     resize.endOf(event),

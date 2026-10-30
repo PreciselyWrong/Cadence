@@ -68,14 +68,14 @@ const BlogIndexPage: React.FC<BlogPageProps> = (props) => {
                 >
                     {BLOG_TITLE}
                 </h1>
-                <p className="mt-3 max-w-2xl text-lg sm:text-xl text-gray-600 dark:text-gray-400">
+                <p className="mt-3 max-w-2xl text-lg sm:text-xl text-gray-600 dark:text-gray-300">
                     {BLOG_TAGLINE}
                 </p>
             </header>
 
             <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {stage === 'loading' && (
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-gray-600 dark:text-gray-300">
                         {t('common.loading', 'Loading...')}
                     </p>
                 )}

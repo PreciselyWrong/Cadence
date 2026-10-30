@@ -69,7 +69,7 @@ const MarketplaceTemplates: React.FC<MarketplaceTemplatesProps> = ({ onInstalled
 
     if (templates.length === 0) {
         return (
-            <div className="text-center py-16 text-gray-400 dark:text-gray-500">
+            <div className="text-center py-16 text-gray-500 dark:text-gray-400">
                 <p className="text-sm">{t('templates.marketplace.empty', 'No templates available in the marketplace yet.')}</p>
             </div>
         );
@@ -82,13 +82,13 @@ const MarketplaceTemplates: React.FC<MarketplaceTemplatesProps> = ({ onInstalled
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     {t('templates.marketplace.title', 'Marketplace')}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">
                     {t('templates.marketplace.subtitle', 'Browse and install ready-made templates from the community')}
                 </p>
             </div>
 
             <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <input
                     type="text"
                     value={search}
@@ -106,8 +106,8 @@ const MarketplaceTemplates: React.FC<MarketplaceTemplatesProps> = ({ onInstalled
                             onClick={() => setCategoryFilter(cat)}
                             className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
                                 categoryFilter === cat
-                                    ? 'bg-blue-600 border-blue-600 text-white'
-                                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-blue-400 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400'
+                                    ? 'bg-primary border-blue-600 text-primary-on'
+                                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-blue-400 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400'
                             }`}
                         >
                             {cat === 'all' ? t('templates.allCategories', 'All') : cat}
@@ -117,12 +117,12 @@ const MarketplaceTemplates: React.FC<MarketplaceTemplatesProps> = ({ onInstalled
             )}
 
             {filtered.length === 0 ? (
-                <p className="text-center text-sm text-gray-400 dark:text-gray-500 py-8">
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-8">
                     {t('templates.noResults', 'No templates match your search.')}
                 </p>
             ) : (
                 <div className="flex flex-col gap-3">
-                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                         {filtered.length} {filtered.length === 1 ? t('templates.result', 'template') : t('templates.results', 'templates')}
                         {categoryFilter !== 'all' && <span> {t('templates.inCategory', 'in')} <span className="font-medium text-gray-600 dark:text-gray-300">{categoryFilter}</span></span>}
                     </p>

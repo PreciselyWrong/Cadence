@@ -195,7 +195,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
                             <button
                                 type="button"
                                 onClick={onClearProject}
-                                className="ml-1.5 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 focus:outline-none"
+                                className="ml-1.5 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 "
                                 aria-label={`Remove project ${selectedProject.name}`}
                             >
                                 &times;
@@ -226,7 +226,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
                             type="button"
                             onClick={onShowAllProjects}
                             disabled={disabled}
-                            className="absolute inset-y-0 right-0 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                            className="absolute inset-y-0 right-0 flex items-center pr-1 text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                             aria-label={
                                 dropdownOpen
                                     ? 'Hide projects'
@@ -282,7 +282,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
                                 </button>
                             ))
                         ) : (
-                            <div className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                            <div className="px-4 py-2 text-gray-600 dark:text-gray-300">
                                 {projectName
                                     ? t(
                                           'forms.task.noMatchingProjects',
@@ -297,7 +297,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
                             type="button"
                             onClick={() => onCreateProject(projectName.trim())}
                             disabled={isCreatingProject}
-                            className="block w-full text-left px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
+                            className="block w-full text-left px-4 py-2 bg-primary text-primary-on hover:bg-primary/90 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
                         >
                             {isCreatingProject
                                 ? t('forms.task.creatingProject', 'Creating...')

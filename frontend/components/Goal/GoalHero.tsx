@@ -19,7 +19,7 @@ const GOAL_STATUS_TINT: Record<GoalStatus, string> = {
     achieved:
         'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
     paused: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    dropped: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+    dropped: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
 };
 
 interface GoalHeroProps {
@@ -125,7 +125,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                     </span>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                             <div className="relative" ref={statusRef}>
                                 <button
                                     type="button"
@@ -210,7 +210,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                             {goal.title}
                         </h1>
                         {goal.why && (
-                            <p className="max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                            <p className="max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                                 {goal.why}
                             </p>
                         )}
@@ -237,7 +237,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                             <button
                                 type="button"
                                 onClick={() => setMenuOpen((v) => !v)}
-                                className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-white hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                                className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-white hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                 aria-label={t(
                                     'project.moreOptions',
                                     'More options'
@@ -275,7 +275,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                             : undefined
                     }
                 >
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                         <span>
                             {t(
                                 'goals.progressSummary',
@@ -290,7 +290,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                         </span>
                         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                 %
                             </span>
                         </span>

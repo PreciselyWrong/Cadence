@@ -120,7 +120,8 @@
     "next7Days": "Komende 7 dagen",
     "more": "Meer",
     "toggleFolder": "Projecten tonen of verbergen",
-    "customize": "Zijbalk aanpassen"
+    "customize": "Zijbalk aanpassen",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Home",
@@ -1015,7 +1016,10 @@
       "security": "Security",
       "advanced": "Advanced"
     },
-    "optional": "Optional"
+    "optional": "Optional",
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",
@@ -2122,7 +2126,12 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -4538,5 +4547,15 @@
     "nextMonth": "Volgende maand",
     "time": "Tijd",
     "clearTime": "Geen tijd"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

@@ -65,6 +65,8 @@ interface TaskRowCollapsedProps {
     hideAreaName?: boolean;
     hideStatusControl?: boolean;
     condenseStatusControl?: boolean;
+    // The row sits in a column or group that already states its due date.
+    hideDueDate?: boolean;
     compact?: boolean;
     onActivate: (e: React.MouseEvent | React.KeyboardEvent) => void;
     onToggleCompletion?: () => void;
@@ -140,10 +142,10 @@ export const formatDueLabel = (d: string, t: Translate): string => {
 export const dueToneClass = (task: Task): string => {
     const today = getTodayDateString();
     if (!task.due_date || isTaskCompleted(task.status))
-        return 'text-gray-500 dark:text-gray-400';
+        return 'text-gray-600 dark:text-gray-300';
     if (task.due_date < today) return 'text-red-600 dark:text-red-400';
     if (task.due_date === today) return 'text-blue-600 dark:text-blue-400';
-    return 'text-gray-500 dark:text-gray-400';
+    return 'text-gray-600 dark:text-gray-300';
 };
 
 const slug = (s: string) =>
@@ -159,6 +161,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     hideAreaName = false,
     hideStatusControl = false,
     condenseStatusControl = false,
+    hideDueDate = false,
     compact = false,
     onActivate,
     onToggleCompletion,
@@ -243,6 +246,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     };
 
     const formatDue = (d: string) => formatDueLabel(d, t);
+    const dueTime = task.due_has_time && task.due_time ? task.due_time : '';
+    // A column that already names the day shows only the time of day.
+    const dueText = !task.due_date
+        ? null
+        : hideDueDate
+          ? dueTime || null
+          : `${formatDue(task.due_date)}${dueTime ? ` ${dueTime}` : ''}`;
 
     const formatDefer = (v: string): string | null => {
         const date = new Date(v);
@@ -294,7 +304,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             showProject ||
             showArea ||
             (task.tags && task.tags.length > 0) ||
-            !!task.due_date ||
+            !!dueText ||
             (isTaskCompleted(task.status) && !!task.completed_at) ||
             (task.recurrence_type && task.recurrence_type !== 'none') ||
             !!task.recurring_parent_id ||
@@ -359,15 +369,15 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         <span
             className={
                 isMinimal
-                    ? 'flex items-center gap-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0'
-                    : 'ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-400 dark:text-gray-500 flex-shrink-0'
+                    ? 'flex items-center gap-0.5 text-gray-500 dark:text-gray-400 flex-shrink-0'
+                    : 'ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full text-gray-500 dark:text-gray-400 flex-shrink-0'
             }
             title={t('comments.count', '{{count}} comments', {
                 count: commentCount,
             })}
         >
             <ChatBubbleLeftIcon className="h-3.5 w-3.5" />
-            <span className="text-[11px] font-medium">{commentCount}</span>
+            <span className="text-[12px] font-medium">{commentCount}</span>
         </span>
     );
 
@@ -389,11 +399,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             }
             className={
                 isMinimal
-                    ? 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
+                    ? 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-gray-500 transition-colors hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300'
                     : `ml-1 flex items-center gap-0.5 h-5 px-1.5 rounded-full border transition-colors flex-shrink-0 ${
                           showSubtasks
                               ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-100'
-                              : 'text-gray-400 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
+                              : 'text-gray-500 border-transparent hover:border-gray-200 hover:text-gray-600 dark:hover:border-gray-600'
                       }`
             }
         >
@@ -422,7 +432,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const minimalChips: Record<TaskRowFieldKey, React.ReactNode> = {
         recurrence: isRecurring ? (
             <ArrowPathIcon
-                className="h-3 w-3 text-gray-400 dark:text-gray-500"
+                className="h-3 w-3 text-gray-500 dark:text-gray-400"
                 title={t('recurrence.recurring', 'Recurring')}
                 aria-label={t('recurrence.recurring', 'Recurring')}
             />
@@ -466,20 +476,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     task={task}
                     onFieldUpdate={onFieldUpdate}
                     dueClass={dueClass}
-                    dueText={
-                        task.due_date
-                            ? `${formatDue(task.due_date)}${
-                                  task.due_has_time && task.due_time
-                                      ? ` ${task.due_time}`
-                                      : ''
-                              }`
-                            : null
-                    }
+                    dueText={dueText}
                 />
-            ) : !compact && task.due_date ? (
+            ) : !compact && dueText ? (
                 <span className={`whitespace-nowrap ${dueClass}`}>
-                    {formatDue(task.due_date)}
-                    {task.due_has_time && task.due_time && ` ${task.due_time}`}
+                    {dueText}
                 </span>
             ) : null,
     };
@@ -530,14 +531,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             <div
                 className={
                     isMinimal
-                        ? 'flex flex-1 min-w-0 items-center gap-3'
+                        ? 'flex flex-1 min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5'
                         : 'flex flex-1 min-w-0 flex-col'
                 }
                 data-testid={isMinimal ? 'task-row-minimal-line' : undefined}
             >
                 <div
                     className={`flex items-center gap-1.5 min-w-0 ${
-                        isMinimal ? 'flex-1' : ''
+                        isMinimal ? 'flex-1 basis-40' : ''
                     }`}
                 >
                     {task.pinned && (
@@ -602,7 +603,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                       : 'max-sm:line-clamp-2 max-sm:break-words sm:truncate'
                             } ${
                                 isTaskCompleted(task.status)
-                                    ? 'text-gray-400 dark:text-gray-500 line-through'
+                                    ? 'text-gray-500 dark:text-gray-400 line-through'
                                     : 'text-gray-900 dark:text-gray-200'
                             } ${sheetTitleWeightClass(
                                 toPriorityLevel(task.priority),
@@ -630,7 +631,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             data-testid="task-blocked-badge"
                         >
                             <NoSymbolIcon className="h-3.5 w-3.5" />
-                            <span className="text-[11px] font-medium">
+                            <span className="text-[12px] font-medium">
                                 {t('relations.blocked', 'Blocked')}
                             </span>
                         </span>
@@ -639,7 +640,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     {!isMinimal && subtasksToggle}
                     {!isMinimal && !compact && (
                         <div
-                            className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2 text-xs text-gray-500 dark:text-gray-400 max-w-[60%]"
+                            className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2 text-xs text-gray-600 dark:text-gray-300 max-w-[60%]"
                             data-testid="task-row-right"
                         >
                             {task.tags && task.tags.length > 0 && (
@@ -660,16 +661,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                     </Link>
                                 </span>
                             )}
-                            {task.due_date && (
+                            {dueText && (
                                 <span
                                     className={`flex items-center whitespace-nowrap ${dueClass}`}
                                     data-testid="task-row-due"
                                 >
                                     <CalendarIcon className="h-3.5 w-3.5 mr-1" />
-                                    {formatDue(task.due_date)}
-                                    {task.due_has_time &&
-                                        task.due_time &&
-                                        ` ${task.due_time}`}
+                                    {dueText}
                                 </span>
                             )}
                         </div>
@@ -677,7 +675,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 </div>
 
                 {isMinimal && (
-                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300">
                         {rowFields
                             .filter((field) => field.visible)
                             .map((field) => (
@@ -689,7 +687,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 )}
 
                 {hasMeta && !isMinimal && (
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                         <PriorityBadge priority={task.priority} />
                         {task.parent_task && (
                             <span className="flex items-center">
@@ -734,7 +732,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                         key={tag.uid || tag.name}
                                         to={`/tag/${tag.uid ? `${tag.uid}-` : ''}${slug(tag.name)}`}
                                         onClick={stop}
-                                        className="inline-flex items-center gap-1 px-2 py-px rounded-full text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 [.task-sheet_&]:!bg-transparent [.task-sheet_&]:!px-0 [.task-sheet_&]:text-[11px] [.task-sheet_&]:font-normal [.task-sheet_&]:!text-gray-500 dark:[.task-sheet_&]:!text-gray-400"
+                                        className="inline-flex items-center gap-1 px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 [.task-sheet_&]:!bg-transparent [.task-sheet_&]:!px-0 [.task-sheet_&]:text-[12px] [.task-sheet_&]:font-normal [.task-sheet_&]:!text-gray-600 dark:[.task-sheet_&]:!text-gray-500"
                                         style={tagColorStyle(tag.color)}
                                     >
                                         <span
@@ -798,7 +796,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         aria-label={t('common.moreActions', 'More actions')}
                         title={t('common.moreActions', 'More actions')}
                         data-testid="task-actions-menu-button"
-                        className={`p-1 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
+                        className={`flex items-center justify-center rounded-md p-1 max-sm:-m-2.5 max-sm:min-h-[44px] max-sm:min-w-[44px] text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
                             isActionsMenuOpen
                                 ? 'opacity-100'
                                 : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'

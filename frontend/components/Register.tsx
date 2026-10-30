@@ -146,7 +146,7 @@ const Register: React.FC = () => {
     if (loading) {
         return (
             <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center">
-                <div className="text-gray-600 dark:text-gray-400">
+                <div className="text-gray-600 dark:text-gray-300">
                     {t('common.loading', 'Loading...')}
                 </div>
             </div>
@@ -179,7 +179,7 @@ const Register: React.FC = () => {
                                 'Password Registration Disabled'
                             )}
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">
                             {t(
                                 'auth.password_registration_disabled_message',
                                 'Password-based registration is not available. Please use SSO to sign in.'
@@ -223,7 +223,7 @@ const Register: React.FC = () => {
                                 'Registration Closed'
                             )}
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">
                             {t(
                                 'auth.registration_closed_message',
                                 'New account registration is currently disabled. Contact your administrator for access.'
@@ -279,7 +279,7 @@ const Register: React.FC = () => {
                                         )}
                                     </h2>
                                     <p
-                                        className="text-gray-600 dark:text-gray-400 mb-6"
+                                        className="text-gray-600 dark:text-gray-300 mb-6"
                                         data-testid="register-success-message"
                                     >
                                         {t(
@@ -362,7 +362,7 @@ const Register: React.FC = () => {
                                         <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
                                     </div>
                                     <div className="relative flex justify-center text-sm">
-                                        <span className="px-2 bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                                        <span className="px-2 bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-300">
                                             {t(
                                                 'auth.or_continue_with_email',
                                                 'Or continue with email'
@@ -447,13 +447,13 @@ const Register: React.FC = () => {
                                 <button
                                     type="submit"
                                     disabled={!!captcha && !captchaToken}
-                                    className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-60"
+                                    className="w-full bg-primary text-primary-on py-2 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
                                     data-testid="register-submit"
                                 >
                                     {t('auth.sign_up', 'Sign Up')}
                                 </button>
                             </form>
-                            <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
+                            <div className="mt-6 text-center text-gray-600 dark:text-gray-300">
                                 {t(
                                     'auth.already_have_account',
                                     'Already have an account?'

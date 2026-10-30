@@ -82,7 +82,7 @@ const PostponementHistory: React.FC<PostponementHistoryProps> = ({
     ].sort((a, b) => b.at.localeCompare(a.at));
 
     return (
-        <div className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="text-xs text-gray-600 dark:text-gray-300">
             <button
                 type="button"
                 aria-expanded={open}
@@ -101,7 +101,7 @@ const PostponementHistory: React.FC<PostponementHistoryProps> = ({
                 <ul className="mt-2 space-y-1">
                     {entries.map((entry, index) => (
                         <li key={`${entry.at}-${index}`} className="flex gap-2">
-                            <span className="w-14 flex-shrink-0 text-gray-400">
+                            <span className="w-14 flex-shrink-0 text-gray-500">
                                 {formatDay(entry.at, locale)}
                             </span>
                             <span>
@@ -113,7 +113,7 @@ const PostponementHistory: React.FC<PostponementHistoryProps> = ({
                         </li>
                     ))}
                     {!data.history_complete && (
-                        <li className="text-gray-400">…</li>
+                        <li className="text-gray-500">…</li>
                     )}
                 </ul>
             )}

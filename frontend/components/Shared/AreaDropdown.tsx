@@ -92,12 +92,12 @@ const AreaDropdown: React.FC<AreaDropdownProps> = ({
                 onClick={handleToggle}
             >
                 <span className="flex items-center space-x-2">
-                    <Squares2X2Icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    <Squares2X2Icon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     {selectedArea ? (
                         <span>{selectedArea.name}</span>
                     ) : inheritedArea ? (
                         <span
-                            className="text-gray-500 dark:text-gray-400"
+                            className="text-gray-600 dark:text-gray-300"
                             data-testid="area-dropdown-inherited"
                         >
                             {inheritedArea.name}
@@ -109,7 +109,7 @@ const AreaDropdown: React.FC<AreaDropdownProps> = ({
                         <span>{t('common.none', 'No Area')}</span>
                     )}
                 </span>
-                <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                <ChevronDownIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </button>
 
             {isOpen &&
@@ -130,7 +130,7 @@ const AreaDropdown: React.FC<AreaDropdownProps> = ({
                             className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 w-full first:rounded-t-md"
                         >
                             <span className="flex items-center space-x-2">
-                                <Squares2X2Icon className="w-4 h-4 text-gray-400" />
+                                <Squares2X2Icon className="w-4 h-4 text-gray-500" />
                                 <span>{t('common.none', 'No Area')}</span>
                             </span>
                         </button>
@@ -143,7 +143,7 @@ const AreaDropdown: React.FC<AreaDropdownProps> = ({
                                 className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 w-full last:rounded-b-md"
                             >
                                 <span className="flex items-center space-x-2">
-                                    <Squares2X2Icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                    <Squares2X2Icon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                                     <span>{area.name}</span>
                                 </span>
                             </button>

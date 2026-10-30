@@ -211,7 +211,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     if (isLoading) {
         return (
             <div
-                className="p-8 text-center text-gray-500 dark:text-gray-400"
+                className="p-8 text-center text-gray-600 dark:text-gray-300"
                 data-testid="search-loading"
             >
                 <div className="animate-pulse">
@@ -231,7 +231,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     ) {
         return (
             <div
-                className="p-8 text-center text-gray-500 dark:text-gray-400"
+                className="p-8 text-center text-gray-600 dark:text-gray-300"
                 data-testid="search-empty"
             >
                 <p className="text-sm">{t('search.startTyping')}</p>
@@ -242,7 +242,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     if (results.length === 0) {
         return (
             <div
-                className="p-8 text-center text-gray-500 dark:text-gray-400"
+                className="p-8 text-center text-gray-600 dark:text-gray-300"
                 data-testid="search-no-results"
             >
                 <p className="text-sm">{t('search.noResults')}</p>
@@ -259,9 +259,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                     className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                     data-testid={`search-results-${type.toLowerCase()}`}
                 >
-                    <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-600 dark:text-gray-400">
+                    <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-600 dark:text-gray-300">
                         {t(`search.groups.${type}`)}
-                        <span className="ml-1.5 font-normal text-gray-500 dark:text-gray-500">
+                        <span className="ml-1.5 font-normal text-gray-600 dark:text-gray-400">
                             {items.length}
                         </span>
                     </div>
@@ -291,7 +291,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                                             {result.name || result.title}
                                         </p>
                                         {result.description && (
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                                            <p className="text-xs text-gray-600 dark:text-gray-300 truncate mt-0.5">
                                                 {result.description}
                                             </p>
                                         )}

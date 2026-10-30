@@ -271,7 +271,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
             onClick={onClick}
             title={title}
             aria-label={title}
-            className="ml-0.5 text-gray-400 hover:text-red-500 dark:text-gray-500 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 rounded-sm"
+            className="ml-0.5 text-gray-500 hover:text-red-500 dark:text-gray-400 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 rounded-sm"
         >
             <XMarkIcon className="h-3 w-3" />
         </button>
@@ -294,7 +294,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
         return (
             <div
                 data-testid="capture-metadata"
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400 pb-1.5"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-300 pb-1.5"
             >
                 {area && (
                     <div
@@ -350,7 +350,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
                         data-testid="selected-tags-container"
                         className="flex items-center gap-1.5"
                     >
-                        <SolidTagIcon className="h-3 w-3 flex-shrink-0 text-gray-400 dark:text-gray-500" />
+                        <SolidTagIcon className="h-3 w-3 flex-shrink-0 text-gray-500 dark:text-gray-400" />
                         {selectedTags.map((tagName, index) => {
                             const tag = tags.find(
                                 (x) =>
@@ -362,7 +362,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
                                     key={`${tagName}-${index}`}
                                     data-testid={`selected-tag-${tagName}`}
                                     data-tag-exists={String(!!tag)}
-                                    className={`inline-flex items-center px-2 py-px rounded-full text-[10px] font-medium bg-gray-100 dark:bg-gray-800 ${tag ? 'text-gray-500 dark:text-gray-400' : newItemClass}`}
+                                    className={`inline-flex items-center px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 ${tag ? 'text-gray-600 dark:text-gray-300' : newItemClass}`}
                                     style={
                                         tag
                                             ? tagColorStyle(tag.color)
@@ -448,21 +448,21 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
             )}
 
             {dueDate && (
-                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1">
+                <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 flex-wrap gap-1">
                     <CalendarDaysIcon className="h-3 w-3 mr-1" />
                     {renderDateChip(dueDate)}
                 </div>
             )}
 
             {assignee && (
-                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1">
+                <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 flex-wrap gap-1">
                     <UserIcon className="h-3 w-3 mr-1" />
                     {renderPersonChip(assignee)}
                 </div>
             )}
 
             {area && (
-                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1">
+                <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 flex-wrap gap-1">
                     <Squares2X2Icon className="h-3 w-3 mr-1" />
                     <span
                         data-testid="selected-area"
@@ -486,7 +486,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
             {selectedTags.length > 0 && (
                 <div
                     data-testid="selected-tags-container"
-                    className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1"
+                    className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 flex-wrap gap-1"
                 >
                     <TagIcon className="h-3 w-3 mr-1" />
                     <div className="flex flex-wrap gap-1">
@@ -500,7 +500,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
             {selectedProjects.length > 0 && (
                 <div
                     data-testid="selected-projects-container"
-                    className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1"
+                    className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 flex-wrap gap-1"
                 >
                     <FolderIcon className="h-3 w-3 mr-1" />
                     <div className="flex flex-wrap gap-1">

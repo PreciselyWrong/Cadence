@@ -216,7 +216,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                                 }}
                             />
                         ) : (
-                            <span className="text-gray-400 dark:text-gray-500">
+                            <span className="text-gray-500 dark:text-gray-400">
                                 {t(
                                     'taskPanel.addDescription',
                                     'Add a description (Markdown)'

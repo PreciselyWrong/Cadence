@@ -85,14 +85,14 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                     </div>
 
                     {calendar.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                             {calendar.description}
                         </p>
                     )}
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div>
-                            <span className="text-gray-500 dark:text-gray-400">
+                            <span className="text-gray-600 dark:text-gray-300">
                                 {t('profile.caldav.lastSync', 'Last sync')}:
                             </span>
                             <p className="text-gray-900 dark:text-white font-medium">
@@ -100,7 +100,7 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                             </p>
                         </div>
                         <div>
-                            <span className="text-gray-500 dark:text-gray-400">
+                            <span className="text-gray-600 dark:text-gray-300">
                                 {t('profile.caldav.interval', 'Interval')}:
                             </span>
                             <p className="text-gray-900 dark:text-white font-medium">
@@ -109,7 +109,7 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                             </p>
                         </div>
                         <div>
-                            <span className="text-gray-500 dark:text-gray-400">
+                            <span className="text-gray-600 dark:text-gray-300">
                                 {t('profile.caldav.direction', 'Direction')}:
                             </span>
                             <p className="text-gray-900 dark:text-white font-medium">
@@ -118,7 +118,7 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                         </div>
                         {calendar.stats && (
                             <div>
-                                <span className="text-gray-500 dark:text-gray-400">
+                                <span className="text-gray-600 dark:text-gray-300">
                                     {t('profile.caldav.tasks', 'Tasks')}:
                                 </span>
                                 <p className="text-gray-900 dark:text-white font-medium">
@@ -154,7 +154,7 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                         disabled={isSyncing || !calendar.enabled}
                         className={`p-2 rounded-md transition-colors ${
                             isSyncing || !calendar.enabled
-                                ? 'text-gray-400 cursor-not-allowed'
+                                ? 'text-gray-500 cursor-not-allowed'
                                 : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                         }`}
                         title={t('profile.caldav.syncNow', 'Sync now')}
@@ -177,7 +177,7 @@ const CalendarCard: React.FC<CalendarCardProps> = ({
                         disabled={isDeleting}
                         className={`p-2 rounded-md transition-colors ${
                             isDeleting
-                                ? 'text-gray-400 cursor-not-allowed'
+                                ? 'text-gray-500 cursor-not-allowed'
                                 : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
                         }`}
                         title={t('profile.caldav.delete', 'Delete')}

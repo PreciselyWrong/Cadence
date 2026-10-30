@@ -91,8 +91,8 @@ const TONES: Record<string, { bg: string; icon: string; text: string }> = {
     },
     muted: {
         bg: 'bg-gray-50 dark:bg-gray-800/40',
-        icon: 'text-gray-400 dark:text-gray-500',
-        text: 'text-gray-600 dark:text-gray-400',
+        icon: 'text-gray-500 dark:text-gray-400',
+        text: 'text-gray-600 dark:text-gray-300',
     },
 };
 
@@ -118,7 +118,7 @@ const StatTile: React.FC<StatTileProps> = ({
                 </span>
                 {children}
             </div>
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 text-center leading-tight">
+            <span className="text-[12px] text-gray-600 dark:text-gray-300 text-center leading-tight">
                 {label}
             </span>
         </div>
@@ -175,7 +175,7 @@ const ReportsOverview: React.FC = () => {
         <div className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
                 <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex flex-col">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                         {t('dashboard.overview')}
                     </h3>
                     <div className="grid grid-cols-3 gap-2 flex-1 auto-rows-fr">

@@ -118,7 +118,7 @@ const WeekdaySelector: React.FC<WeekdaySelectorProps> = ({
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                                 ${
                                     isSelected
-                                        ? 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600'
+                                        ? 'bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                                 }
                                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}

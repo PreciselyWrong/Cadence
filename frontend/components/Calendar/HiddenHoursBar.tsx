@@ -48,8 +48,8 @@ const HiddenHoursBar: React.FC<HiddenHoursBarProps> = ({
             }}
             title={`${tooltip}\n${t('calendar.hiddenHours.show', 'Show all hours')}`}
             aria-label={t('calendar.hiddenHours.show', 'Show all hours')}
-            className={`w-full flex items-center justify-center gap-1 rounded-md font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
-                compact ? 'px-1 py-0.5 text-[10px]' : 'px-3 py-1.5 text-xs'
+            className={`w-full flex items-center justify-center gap-1 rounded-md font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                compact ? 'px-1 py-0.5 text-[12px]' : 'px-3 py-1.5 text-xs'
             }`}
         >
             <span aria-hidden="true">

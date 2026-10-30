@@ -62,7 +62,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-')
                     .replace(/^-|-$/g, '')}`}
-                className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-md relative flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out cursor-pointer border-l-4 border-l-blue-400 dark:border-l-blue-500"
+                className="bg-surface-card rounded-card shadow-sm relative flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out cursor-pointer border-l-4 border-l-blue-400 dark:border-l-blue-500"
                 style={{
                     minHeight: '280px',
                     maxHeight: '280px',
@@ -85,7 +85,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     {/* Content Summary - Main Area */}
                     <div className="h-40 overflow-hidden flex py-3">
                         <div
-                            className="text-sm text-gray-400 dark:text-gray-600 leading-relaxed w-full opacity-50"
+                            className="text-sm text-gray-500 dark:text-gray-600 leading-relaxed w-full opacity-50"
                             style={{
                                 display: '-webkit-box',
                                 WebkitLineClamp: 6,
@@ -115,7 +115,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                 <div className="px-4">
                     {/* Footer - Project and Tags - Fixed Height */}
                     <div className="h-10 flex items-center justify-between overflow-hidden flex-shrink-0">
-                        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2 min-w-0 flex-1">
+                        <div className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-2 min-w-0 flex-1">
                             {showProject && project && (
                                 <button
                                     onClick={async (e) => {
@@ -177,7 +177,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                                                     {tag.name}
                                                 </button>
                                                 {index < tags.length - 1 && (
-                                                    <span className="text-gray-400">
+                                                    <span className="text-gray-500">
                                                         ,{' '}
                                                     </span>
                                                 )}
@@ -200,7 +200,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                             e.stopPropagation();
                             setDropdownOpen(!dropdownOpen);
                         }}
-                        className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 focus:outline-none transition-opacity duration-300 p-1"
+                        className="text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 transition-opacity duration-300 p-1"
                         aria-label={t('notes.toggleDropdownMenu')}
                         type="button"
                         data-testid={`note-dropdown-${noteIdentifier}`}
@@ -220,7 +220,15 @@ const NoteCard: React.FC<NoteCardProps> = ({
                                     }}
                                     className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left rounded-t-md"
                                 >
-                                    {note.pin_to_sidebar ? t('notes.unpinFromSidebar', 'Unpin from sidebar') : t('notes.pinToSidebar', 'Pin to sidebar')}
+                                    {note.pin_to_sidebar
+                                        ? t(
+                                              'notes.unpinFromSidebar',
+                                              'Unpin from sidebar'
+                                          )
+                                        : t(
+                                              'notes.pinToSidebar',
+                                              'Pin to sidebar'
+                                          )}
                                 </button>
                             )}
                             {onEdit && (

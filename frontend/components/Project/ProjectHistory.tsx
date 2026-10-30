@@ -167,7 +167,7 @@ const ProjectHistory: React.FC = () => {
             <div className="w-full max-w-7xl mx-auto">
                 <Link
                     to="/projects"
-                    className="mb-3 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="mb-3 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                 >
                     <ChevronLeftIcon className="h-4 w-4" />
                     {t('projects.title')}
@@ -177,7 +177,7 @@ const ProjectHistory: React.FC = () => {
                         <h2 className="text-2xl font-light">
                             {t('projects.historyTitle', 'Completed projects')}
                         </h2>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                             {t('projects.historyCount', '{{count}} finished', {
                                 count: finished.length,
                             })}
@@ -212,7 +212,7 @@ const ProjectHistory: React.FC = () => {
                             <section key={year.year}>
                                 <h3 className="mb-4 flex items-baseline gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                                     {year.year}
-                                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    <span className="text-sm font-normal text-gray-600 dark:text-gray-300">
                                         {t(
                                             'projects.historyCount',
                                             '{{count}} finished',
@@ -223,7 +223,7 @@ const ProjectHistory: React.FC = () => {
                                 <div className="space-y-6">
                                     {year.months.map((month) => (
                                         <div key={month.key}>
-                                            <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                            <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300">
                                                 {month.label}
                                             </h4>
                                             <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
@@ -315,7 +315,7 @@ const HistoryRow: React.FC<HistoryRowProps> = ({
                         to={projectPath(project)}
                         className={`truncate font-medium hover:underline ${
                             project.status === 'cancelled'
-                                ? 'text-gray-500 line-through dark:text-gray-400'
+                                ? 'text-gray-600 line-through dark:text-gray-300'
                                 : 'text-gray-900 dark:text-gray-100'
                         }`}
                     >
@@ -328,7 +328,7 @@ const HistoryRow: React.FC<HistoryRowProps> = ({
                     )}
                 </div>
                 {details.length > 0 && (
-                    <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                    <p className="truncate text-xs text-gray-600 dark:text-gray-300">
                         {details.join(' · ')}
                     </p>
                 )}
@@ -336,7 +336,7 @@ const HistoryRow: React.FC<HistoryRowProps> = ({
             {at && (
                 <time
                     dateTime={at.toISOString()}
-                    className="flex-shrink-0 text-xs tabular-nums text-gray-500 dark:text-gray-400"
+                    className="flex-shrink-0 text-xs tabular-nums text-gray-600 dark:text-gray-300"
                 >
                     {format(at, 'MMM d', { locale })}
                 </time>
@@ -344,7 +344,7 @@ const HistoryRow: React.FC<HistoryRowProps> = ({
             <button
                 type="button"
                 onClick={() => onReopen(project)}
-                className="flex-shrink-0 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                className="flex-shrink-0 rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                 aria-label={t('projects.reopen', 'Reopen')}
                 title={t('projects.reopen', 'Reopen')}
                 data-testid={`history-reopen-${project.uid}`}

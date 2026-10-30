@@ -93,7 +93,7 @@ const AreaDonut: React.FC<Props> = ({ projects }) => {
 
     return (
         <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-4 shadow-sm h-full flex flex-col">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                 Balance
             </h3>
             <div className="flex-1 flex items-center justify-center min-h-0">
@@ -147,7 +147,7 @@ const AreaDonut: React.FC<Props> = ({ projects }) => {
                             <span className="text-xs font-semibold text-gray-800 dark:text-gray-100 leading-tight text-center px-2 truncate max-w-[80px]">
                                 {activeSlice.name}
                             </span>
-                            <span className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+                            <span className="text-[12px] text-gray-600 dark:text-gray-300 mt-0.5">
                                 {Math.round(activeSlice.pct)}%
                             </span>
                         </div>

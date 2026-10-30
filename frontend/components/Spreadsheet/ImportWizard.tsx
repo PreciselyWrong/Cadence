@@ -88,7 +88,7 @@ const PRIORITY_OPTIONS: [number, string, string][] = [
 const inputClass =
     'w-full rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100';
 const primaryButton =
-    'inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600';
+    'inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-on hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-primary/90';
 const secondaryButton =
     'inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600';
 
@@ -412,7 +412,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                                 ? 'font-semibold text-blue-600 dark:text-blue-400'
                                                 : i < stepIndex
                                                   ? 'text-gray-700 dark:text-gray-300'
-                                                  : 'text-gray-400'
+                                                  : 'text-gray-500'
                                         }
                                     >
                                         {i + 1}. {label}
@@ -425,7 +425,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                         type="button"
                         onClick={close}
                         disabled={busy}
-                        className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        className="rounded-lg p-1.5 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700"
                         aria-label={t('common.close', 'Close')}
                     >
                         <XMarkIcon className="h-5 w-5" />
@@ -468,7 +468,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                         : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/40 dark:hover:bg-gray-900/60'
                                 }`}
                             >
-                                <ArrowUpTrayIcon className="h-8 w-8 text-gray-400" />
+                                <ArrowUpTrayIcon className="h-8 w-8 text-gray-500" />
                                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {busy
                                         ? t(
@@ -480,7 +480,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                               'Choose a file or drop it here'
                                           )}
                                 </span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                <span className="text-xs text-gray-600 dark:text-gray-300">
                                     {t(
                                         'spreadsheet.import.fileTypes',
                                         '.xlsx or .csv, up to 5 MB and 5,000 rows'
@@ -497,7 +497,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                     e.target.value = '';
                                 }}
                             />
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                            <p className="text-xs text-gray-600 dark:text-gray-300">
                                 {t(
                                     'spreadsheet.import.templateHint',
                                     'Starting from scratch? Use the template:'
@@ -588,7 +588,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                         ))}
                                     </select>
                                 </label>
-                                <p className="pb-2 text-sm text-gray-500 dark:text-gray-400">
+                                <p className="pb-2 text-sm text-gray-600 dark:text-gray-300">
                                     {t(
                                         'spreadsheet.import.rowCount',
                                         '{{count}} rows',
@@ -657,7 +657,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                                         )}
                                                 </div>
                                             </div>
-                                            <div className="truncate text-xs text-gray-500 dark:text-gray-400">
+                                            <div className="truncate text-xs text-gray-600 dark:text-gray-300">
                                                 {sampleFor(i) || '—'}
                                             </div>
                                             <select
@@ -1263,7 +1263,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                 </div>
                                 <div className="max-h-80 overflow-auto rounded-lg bg-gray-50 dark:bg-gray-900/40">
                                     <table className="w-full text-left text-sm">
-                                        <thead className="sticky top-0 bg-gray-100 text-xs text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+                                        <thead className="sticky top-0 bg-gray-100 text-xs text-gray-600 dark:bg-gray-900 dark:text-gray-300">
                                             <tr>
                                                 <th className="px-3 py-2 font-medium">
                                                     #
@@ -1301,7 +1301,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                                     key={row.row_number}
                                                     className="align-top odd:bg-white/60 dark:odd:bg-gray-800/40"
                                                 >
-                                                    <td className="px-3 py-2 text-xs text-gray-400 tabular-nums">
+                                                    <td className="px-3 py-2 text-xs text-gray-500 tabular-nums">
                                                         {row.row_number}
                                                     </td>
                                                     <td className="px-3 py-2">
@@ -1309,7 +1309,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                                     </td>
                                                     <td className="px-3 py-2 text-gray-900 dark:text-gray-100">
                                                         {row.parent && (
-                                                            <div className="text-xs text-gray-400">
+                                                            <div className="text-xs text-gray-500">
                                                                 ↳ {row.parent}
                                                             </div>
                                                         )}
@@ -1361,7 +1361,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                     </table>
                                 </div>
                                 {preview.total_rows > preview.rows.length && (
-                                    <p className="mt-2 text-xs text-gray-500">
+                                    <p className="mt-2 text-xs text-gray-600">
                                         {t(
                                             'spreadsheet.import.moreRows',
                                             'Showing {{shown}} of {{total}} rows.',

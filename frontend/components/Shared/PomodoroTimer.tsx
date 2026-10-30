@@ -225,7 +225,7 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ className = '' }) => {
 
                 <button
                     onClick={handlePlayPause}
-                    className="flex items-center justify-center p-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    className="flex items-center justify-center p-1 bg-primary text-primary-on rounded hover:bg-primary/90 transition-colors"
                     aria-label={
                         isRunning ? t('pomodoro.pause') : t('pomodoro.play')
                     }

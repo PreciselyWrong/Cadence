@@ -68,7 +68,7 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
                                 onClick={() => setContentTab('edit')}
                                 className={`p-1.5 rounded-md transition-colors ${
                                     contentTab === 'edit'
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-primary text-primary-on'
                                         : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
                                 }`}
                                 title={t('common.edit', 'Edit')}
@@ -80,7 +80,7 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
                                 onClick={() => setContentTab('preview')}
                                 className={`p-1.5 rounded-md transition-colors ${
                                     contentTab === 'preview'
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-primary text-primary-on'
                                         : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
                                 }`}
                                 title={t('common.preview', 'Preview')}
@@ -112,7 +112,7 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
                                         onContentChange={setEditedContent}
                                     />
                                 ) : (
-                                    <p className="text-gray-500 dark:text-gray-400 italic">
+                                    <p className="text-gray-600 dark:text-gray-300 italic">
                                         {t(
                                             'task.noContentPreview',
                                             'No content to preview. Switch to Edit mode to add content.'
@@ -123,7 +123,7 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
                         )}
                     </div>
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'task.contentEditHint',
                                 'Press Cmd/Ctrl+Enter to save, Esc to cancel'
@@ -166,7 +166,7 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
                     className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 p-6 cursor-pointer transition-colors"
                     title={t('task.clickToAddContent', 'Click to add content')}
                 >
-                    <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-col items-center justify-center py-8 text-gray-600 dark:text-gray-300">
                         <PencilSquareIcon className="h-12 w-12 mb-3 opacity-50" />
                         <span className="text-sm text-center">
                             {t('task.noNotes', 'Add some content')}

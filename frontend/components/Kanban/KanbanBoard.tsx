@@ -75,7 +75,7 @@ const COL_CONFIG: Record<
         bg: 'bg-gray-50 dark:bg-gray-900/20',
         dragOverBg: 'bg-gray-100 dark:bg-gray-800/40',
         headerBg: 'bg-gray-100 dark:bg-gray-800/60',
-        headerColor: 'text-gray-600 dark:text-gray-400',
+        headerColor: 'text-gray-600 dark:text-gray-300',
     },
     planned: {
         labelKey: 'tasks.kanban.planned',
@@ -314,7 +314,7 @@ const KanbanBoard: React.FC = () => {
                 <div className="relative" ref={settingsRef}>
                     <button
                         onClick={() => setSettingsOpen((o) => !o)}
-                        className="p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="p-1.5 rounded-lg text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                         title={t('tasks.kanban.customizeColumns', 'Customize columns')}
                     >
                         <Cog6ToothIcon className="w-5 h-5" />
@@ -322,7 +322,7 @@ const KanbanBoard: React.FC = () => {
 
                     {settingsOpen && (
                         <div className="absolute right-0 top-full mt-1 z-50 w-52 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg py-1">
-                            <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                            <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                 {t('tasks.kanban.columns', 'Columns')}
                             </p>
                             {ALL_COLS.map((col) => {
@@ -351,7 +351,7 @@ const KanbanBoard: React.FC = () => {
             </div>
 
             {loading && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">{t('common.loading', 'Loading...')}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t('common.loading', 'Loading...')}</p>
             )}
             {error && (
                 <p className="text-sm text-red-500">{error}</p>
@@ -389,7 +389,7 @@ const KanbanBoard: React.FC = () => {
 
                                 <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
                                     {colTasks.length === 0 ? (
-                                        <p className={`text-xs py-3 text-center ${isDraggingActive ? 'text-gray-400 dark:text-gray-500' : 'text-gray-300 dark:text-gray-600'}`}>
+                                        <p className={`text-xs py-3 text-center ${isDraggingActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'}`}>
                                             {isDraggingActive
                                                 ? t('tasks.kanban.dropHere', 'Drop here')
                                                 : '-'}

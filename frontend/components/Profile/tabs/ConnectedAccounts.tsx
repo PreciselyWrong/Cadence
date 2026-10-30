@@ -151,7 +151,7 @@ const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({
             )}
 
             {loading ? (
-                <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                <div className="text-center py-4 text-gray-600 dark:text-gray-300">
                     {t('common.loading', 'Loading...')}
                 </div>
             ) : (
@@ -170,7 +170,7 @@ const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({
                                         {provider.name}
                                     </div>
                                     {isLinked && identity && (
-                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                        <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                             {identity.email && (
                                                 <span>{identity.email}</span>
                                             )}
@@ -198,7 +198,7 @@ const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={handleCancelUnlink}
-                                                    className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                                    className="px-3 py-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                                                     disabled={
                                                         unlinkingId !== null
                                                     }
@@ -254,7 +254,7 @@ const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({
                                                     provider.slug
                                                 )
                                             }
-                                            className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            className="px-3 py-1 text-sm bg-primary text-primary-on rounded hover:bg-primary/90"
                                         >
                                             {t(
                                                 'profile.connectedAccounts.link',

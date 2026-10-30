@@ -251,7 +251,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                     </button>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                             <div className="relative" ref={statusRef}>
                                 <button
                                     type="button"
@@ -444,8 +444,8 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 )}
                                 className={`-mx-1 max-w-3xl cursor-text whitespace-pre-wrap rounded-md px-1 py-0.5 text-sm leading-relaxed transition-colors hover:bg-white/60 dark:hover:bg-gray-800/60 ${
                                     project.description
-                                        ? 'text-gray-600 dark:text-gray-400'
-                                        : 'text-gray-400 dark:text-gray-500'
+                                        ? 'text-gray-600 dark:text-gray-300'
+                                        : 'text-gray-500 dark:text-gray-400'
                                 }`}
                                 data-testid="project-description"
                             >
@@ -509,7 +509,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             <button
                                 type="button"
                                 onClick={() => setMenuOpen((v) => !v)}
-                                className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-white hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                                className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-white hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                 aria-label={t(
                                     'project.moreOptions',
                                     'More options'
@@ -644,7 +644,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             : undefined
                     }
                 >
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                         <span>
                             {t(
                                 'project.progressSummary',
@@ -659,7 +659,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                         </span>
                         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                 %
                             </span>
                         </span>

@@ -118,7 +118,7 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                             className={
                                 selectedPerson
                                     ? ''
-                                    : 'text-gray-400 dark:text-gray-500'
+                                    : 'text-gray-500 dark:text-gray-400'
                             }
                         >
                             {selectedPerson
@@ -141,13 +141,13 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                                         handleSelect(null);
                                     }
                                 }}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+                                className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
                                 aria-label="Clear assignment"
                             >
                                 <XMarkIcon className="w-4 h-4" />
                             </span>
                         )}
-                        <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                        <ChevronDownIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     </div>
                 </button>
             )}
@@ -166,7 +166,7 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                     >
                         <button
                             onClick={() => handleSelect(null)}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 w-full first:rounded-t-md"
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full first:rounded-t-md"
                         >
                             <span className="inline-block w-3 h-3 rounded-full flex-shrink-0 border border-gray-300 dark:border-gray-600" />
                             {placeholder}
@@ -186,14 +186,14 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                                 {!p.is_self &&
                                     p.relationship_type &&
                                     p.relationship_type !== 'other' && (
-                                        <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">
+                                        <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">
                                             {p.relationship_type}
                                         </span>
                                     )}
                             </button>
                         ))}
                         {activePeople.length === 0 && (
-                            <div className="px-4 py-2 text-sm text-gray-400 dark:text-gray-500">
+                            <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
                                 No people yet
                             </div>
                         )}

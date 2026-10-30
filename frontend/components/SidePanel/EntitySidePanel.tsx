@@ -167,7 +167,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                 >
                     <div className={inline ? 'sr-only' : 'min-w-0'}>
                         {eyebrow && (
-                            <p className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <p className="text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-300">
                                 {eyebrow}
                             </p>
                         )}
@@ -180,7 +180,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                         type="button"
                         onClick={requestClose}
                         aria-label={t('common.close', 'Close')}
-                        className="flex-shrink-0 rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                        className="flex-shrink-0 rounded-md p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                     >
                         <XMarkIcon className="h-5 w-5" />
                     </button>
@@ -224,7 +224,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                                 <button
                                     type="button"
                                     onClick={requestClose}
-                                    className="rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:text-gray-100"
+                                    className="rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-300 dark:hover:text-gray-100"
                                 >
                                     {t('common.cancel', 'Cancel')}
                                 </button>
@@ -232,7 +232,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                                     type="submit"
                                     disabled={isSubmitting}
                                     data-testid={submitTestId}
-                                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                    className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-on transition-colors hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isSubmitting
                                         ? t('modals.submitting')

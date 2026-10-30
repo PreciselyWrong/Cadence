@@ -190,7 +190,7 @@ const AdminUserFilter: React.FC<AdminUserFilterProps> = ({
                 <FunnelIcon className="h-4 w-4" aria-hidden="true" />
                 <span>{t('admin.userFilter.filter', 'Filter')}</span>
                 {selected.length > 0 && (
-                    <span className="inline-flex min-w-[1.25rem] justify-center rounded-full bg-blue-600 px-1.5 text-xs text-white">
+                    <span className="inline-flex min-w-[1.25rem] justify-center rounded-full bg-primary px-1.5 text-xs text-primary-on">
                         {selected.length}
                     </span>
                 )}
@@ -203,7 +203,7 @@ const AdminUserFilter: React.FC<AdminUserFilterProps> = ({
                 >
                     {groups.map((group) => (
                         <div key={group.key} className="py-1">
-                            <div className="px-3 pb-1 pt-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                            <div className="px-3 pb-1 pt-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                 {group.label}
                             </div>
                             {group.choices.map((choice) => {

@@ -103,7 +103,7 @@ const ImportExportTab: React.FC<ImportExportTabProps> = ({ isActive }) => {
                         <button
                             type="button"
                             onClick={() => setWizardOpen(true)}
-                            className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90"
                         >
                             {t(
                                 'spreadsheet.tab.importButton',
@@ -188,14 +188,14 @@ const ImportExportTab: React.FC<ImportExportTabProps> = ({ isActive }) => {
                                         <div className="truncate font-medium text-gray-900 dark:text-gray-100">
                                             {item.file_name}
                                         </div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        <div className="text-xs text-gray-600 dark:text-gray-300">
                                             {formatDate(item.committed_at)}
                                             {item.counts &&
                                                 ` · ${t('spreadsheet.tab.historyCounts', '{{created}} created, {{updated}} updated', item.counts)}`}
                                         </div>
                                     </div>
                                     {item.status === 'undone' ? (
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                        <span className="text-xs text-gray-600 dark:text-gray-300">
                                             {t(
                                                 'spreadsheet.tab.undoneLabel',
                                                 'Undone'
@@ -221,7 +221,7 @@ const ImportExportTab: React.FC<ImportExportTabProps> = ({ isActive }) => {
                                 </li>
                             ))}
                         </ul>
-                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'spreadsheet.tab.undoText',
                                 'Undo deletes the tasks an import created, puts updated tasks back as they were, and removes projects it created once they are empty. It is available for 7 days.'

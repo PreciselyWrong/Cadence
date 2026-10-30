@@ -732,11 +732,11 @@ const ViewDetail: React.FC = () => {
                         }}
                     >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white text-gray-500 shadow-sm ring-4 ring-white dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-900">
+                            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm ring-4 ring-white dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-900">
                                 <QueueListIcon className="h-7 w-7" />
                             </span>
                             <div className="min-w-0 flex-1 space-y-2">
-                                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                                     <span className="rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                         {t('views.view', 'View')}
                                     </span>
@@ -769,7 +769,7 @@ const ViewDetail: React.FC = () => {
                                             else if (e.key === 'Escape')
                                                 handleCancelEdit();
                                         }}
-                                        className="text-xl font-semibold sm:text-2xl text-gray-900 dark:text-white bg-transparent border-b-2 border-blue-500 focus:outline-none w-full"
+                                        className="text-xl font-semibold sm:text-2xl text-gray-900 dark:text-white bg-transparent border-b-2 border-blue-500 w-full"
                                         autoFocus
                                     />
                                 ) : (
@@ -900,7 +900,7 @@ const ViewDetail: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                            <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                                 <span>
                                     {t(
                                         'views.progressSummary',
@@ -918,7 +918,7 @@ const ViewDetail: React.FC = () => {
                                                   100
                                           )
                                         : 0}
-                                    <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                    <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                         %
                                     </span>
                                 </span>
@@ -950,7 +950,7 @@ const ViewDetail: React.FC = () => {
                     } overflow-hidden`}
                 >
                     <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                         <input
                             type="text"
                             placeholder={t(
@@ -994,7 +994,7 @@ const ViewDetail: React.FC = () => {
                                     className={`relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
                                         activeTab === tab
                                             ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                            : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                                     }`}
                                     aria-pressed={activeTab === tab}
                                 >
@@ -1019,7 +1019,7 @@ const ViewDetail: React.FC = () => {
                                 footerContent={
                                     <div className="space-y-3">
                                         <div>
-                                            <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                                                 {t('tasks.groupBy', 'Group by')}
                                             </div>
                                             <div className="py-1">
@@ -1063,7 +1063,7 @@ const ViewDetail: React.FC = () => {
                                         </div>
                                         {!view.task_status && (
                                             <div>
-                                                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                                     {t('tasks.show', 'Show')}
                                                 </div>
                                                 <div className="py-1 space-y-1">
@@ -1124,7 +1124,7 @@ const ViewDetail: React.FC = () => {
                                             </div>
                                         )}
                                         <div>
-                                            <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                                 {t(
                                                     'tasks.direction',
                                                     'Direction'
@@ -1238,7 +1238,7 @@ const ViewDetail: React.FC = () => {
                                             {isLoadingMore ? (
                                                 <>
                                                     <svg
-                                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500"
+                                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-600"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         fill="none"
                                                         viewBox="0 0 24 24"
@@ -1277,7 +1277,7 @@ const ViewDetail: React.FC = () => {
 
                                 {/* Pagination info */}
                                 {displayTasks.length > 0 && (
-                                    <div className="text-center text-sm text-gray-500 dark:text-gray-400 pt-2 pb-4">
+                                    <div className="text-center text-sm text-gray-600 dark:text-gray-300 pt-2 pb-4">
                                         {t(
                                             'tasks.showingItems',
                                             'Showing {{current}} of {{total}} tasks',
@@ -1361,7 +1361,7 @@ const ViewDetail: React.FC = () => {
                                                                     }}
                                                                     className="flex items-center space-x-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                                 >
-                                                                    <TagIcon className="h-3 w-3 text-gray-500 dark:text-gray-300" />
+                                                                    <TagIcon className="h-3 w-3 text-gray-600 dark:text-gray-300" />
                                                                     <span className="text-gray-700 dark:text-gray-300">
                                                                         {
                                                                             noteTag.name
@@ -1378,7 +1378,7 @@ const ViewDetail: React.FC = () => {
                                                     onClick={
                                                         () => {} // Edit functionality not implemented yet
                                                     }
-                                                    className={`text-gray-500 hover:text-blue-700 dark:hover:text-blue-300 focus:outline-none transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
+                                                    className={`text-gray-600 hover:text-blue-700 dark:hover:text-blue-300 transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
                                                     aria-label={`Edit ${note.title}`}
                                                     title={`Edit ${note.title}`}
                                                 >
@@ -1388,7 +1388,7 @@ const ViewDetail: React.FC = () => {
                                                     onClick={
                                                         () => {} // Delete functionality not implemented yet
                                                     }
-                                                    className={`text-gray-500 hover:text-red-700 dark:hover:text-red-300 focus:outline-none transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
+                                                    className={`text-gray-600 hover:text-red-700 dark:hover:text-red-300 transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
                                                     aria-label={`Delete ${note.title}`}
                                                     title={`Delete ${note.title}`}
                                                 >
@@ -1451,8 +1451,8 @@ const ViewDetail: React.FC = () => {
                     notes.length === 0 &&
                     projects.length === 0 && (
                         <div className="text-center py-8">
-                            <QueueListIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                            <p className="text-gray-600 dark:text-gray-400 text-lg">
+                            <QueueListIcon className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+                            <p className="text-gray-600 dark:text-gray-300 text-lg">
                                 {taskSearchQuery.trim()
                                     ? t(
                                           'tasks.noTasksAvailable',

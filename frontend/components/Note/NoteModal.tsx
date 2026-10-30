@@ -514,7 +514,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                             }
                                                         }}
                                                         required
-                                                        className="block w-full text-xl font-semibold bg-transparent text-black dark:text-white border-none focus:outline-none shadow-sm py-2"
+                                                        className="block w-full text-xl font-semibold bg-transparent text-black dark:text-white border-none shadow-sm py-2"
                                                         placeholder={t(
                                                             'forms.noteTitlePlaceholder'
                                                         )}
@@ -530,7 +530,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                             {t(
                                                                 'forms.noteContent'
                                                             )}{' '}
-                                                            <span className="text-gray-500">
+                                                            <span className="text-gray-600">
                                                                 (Markdown
                                                                 supported)
                                                             </span>
@@ -546,7 +546,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                                 className={`px-3 py-1 text-xs rounded-md flex items-center space-x-1 transition-colors ${
                                                                     activeTab ===
                                                                     'edit'
-                                                                        ? 'bg-blue-600 text-white'
+                                                                        ? 'bg-primary text-primary-on'
                                                                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                                                                 }`}
                                                             >
@@ -565,7 +565,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                                 className={`px-3 py-1 text-xs rounded-md flex items-center space-x-1 transition-colors ${
                                                                     activeTab ===
                                                                     'preview'
-                                                                        ? 'bg-blue-600 text-white'
+                                                                        ? 'bg-primary text-primary-on'
                                                                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                                                                 }`}
                                                             >
@@ -612,7 +612,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                                     }}
                                                                 />
                                                             ) : (
-                                                                <p className="text-gray-500 dark:text-gray-400 italic">
+                                                                <p className="text-gray-600 dark:text-gray-300 italic">
                                                                     No content
                                                                     to preview.
                                                                     Switch to
@@ -707,7 +707,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                 className={`relative p-2 rounded-full transition-colors ${
                                                     expandedSections.tags
                                                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                                 }`}
                                                 title={t('forms.tags', 'Tags')}
                                             >
@@ -728,7 +728,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                 className={`relative p-2 rounded-full transition-colors ${
                                                     expandedSections.project
                                                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                                 }`}
                                                 title={t(
                                                     'forms.task.labels.project',
@@ -754,7 +754,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                 onClick={() =>
                                                     setShowConfirmDialog(true)
                                                 }
-                                                className="p-2 border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none transition duration-150 ease-in-out"
+                                                className="p-2 border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition duration-150 ease-in-out"
                                                 title={t(
                                                     'common.delete',
                                                     'Delete'
@@ -766,7 +766,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                         <button
                                             type="button"
                                             onClick={handleClose}
-                                            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none transition duration-150 ease-in-out text-sm"
+                                            className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 transition duration-150 ease-in-out text-sm"
                                         >
                                             {t('common.cancel', 'Cancel')}
                                         </button>
@@ -777,7 +777,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                         type="button"
                                         onClick={handleSubmit}
                                         disabled={isSubmitting}
-                                        className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none transition duration-150 ease-in-out text-sm ${
+                                        className={`px-4 py-2 bg-primary text-primary-on rounded-md hover:bg-primary/90 dark:hover:bg-primary/90 transition duration-150 ease-in-out text-sm ${
                                             isSubmitting
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''

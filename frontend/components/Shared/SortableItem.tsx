@@ -114,7 +114,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
             {children}
             {isActive && (
                 <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-blue-500/10">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow-md">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-on shadow-md">
                         <ArrowsPointingOutIcon className="h-4 w-4" />
                         {t('sortable.move', 'Move')}
                     </span>

@@ -107,7 +107,7 @@ const MatrixEditorModal: React.FC<MatrixEditorModalProps> = ({
                             key={i}
                             className="border border-gray-200 dark:border-gray-700 rounded p-3 space-y-2"
                         >
-                            <legend className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-1">
+                            <legend className="text-xs font-semibold text-gray-600 dark:text-gray-300 px-1">
                                 {t('tasks.eisenhower.matrix.quadrant', {
                                     defaultValue: 'Quadrant {{number}}',
                                     number: i + 1,
@@ -284,7 +284,7 @@ const MatrixEditorModal: React.FC<MatrixEditorModalProps> = ({
                         </fieldset>
                     ))}
                 </div>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3 italic">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 italic">
                     {t(
                         'tasks.eisenhower.matrix.firstMatchHint',
                         'Each task appears in the first quadrant whose rule it matches. Empty choices match everything.'
@@ -300,7 +300,7 @@ const MatrixEditorModal: React.FC<MatrixEditorModalProps> = ({
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="px-4 py-2 text-sm bg-primary text-primary-on rounded hover:bg-primary/90"
                     >
                         {t('common.save', 'Save')}
                     </button>

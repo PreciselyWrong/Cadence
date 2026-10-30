@@ -49,13 +49,13 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                             <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                                 {t('templates.cloneTitle', 'Create Project from Template')}
                             </h3>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
                                 {t('templates.cloneSubtitle', 'Configure your new project from "{{name}}"', { name: template.name })}
                             </p>
                         </div>
-                        <button
+                        <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                             onClick={onClose}
-                            className="flex-shrink-0 p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            className="flex-shrink-0 p-1 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
                             <XMarkIcon className="h-5 w-5" />
                         </button>
@@ -79,7 +79,7 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                             {t('templates.area', 'Area')}
-                            <span className="ml-1 font-normal text-gray-400 dark:text-gray-500 text-xs">{t('common.optional', '(optional)')}</span>
+                            <span className="ml-1 font-normal text-gray-500 dark:text-gray-400 text-xs">{t('common.optional', '(optional)')}</span>
                         </label>
                         <select
                             value={areaUid}
@@ -98,7 +98,7 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                             {t('templates.startDate', 'Start Date')}
-                            <span className="ml-1 font-normal text-gray-400 dark:text-gray-500 text-xs">{t('templates.startDateHint2', 'adjusts relative due dates')}</span>
+                            <span className="ml-1 font-normal text-gray-500 dark:text-gray-400 text-xs">{t('templates.startDateHint2', 'adjusts relative due dates')}</span>
                         </label>
                         <input
                             type="date"
@@ -106,7 +106,7 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                             onChange={(e) => setStartDate(e.target.value)}
                             className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             {t('templates.startDateHint', 'Leave empty to keep original due dates.')}
                         </p>
                     </div>
@@ -134,7 +134,7 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                            className="px-4 py-2 text-sm font-medium text-primary-on bg-primary hover:bg-primary/90 rounded-lg transition-colors"
                         >
                             {t('templates.createProject', 'Create Project')}
                         </button>

@@ -156,7 +156,7 @@ const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
                         type="button"
                         onClick={() => onYearChange(year - 1)}
                         disabled={year <= minYear}
-                        className="p-1 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
+                        className="p-1 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
                         aria-label={t('habits.previousYear', 'Previous year')}
                     >
                         <ChevronLeftIcon className="h-4 w-4" />
@@ -168,7 +168,7 @@ const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
                         type="button"
                         onClick={() => onYearChange(year + 1)}
                         disabled={year >= today.getFullYear()}
-                        className="p-1 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
+                        className="p-1 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
                         aria-label={t('habits.nextYear', 'Next year')}
                     >
                         <ChevronRightIcon className="h-4 w-4" />
@@ -178,7 +178,7 @@ const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
 
             <div className="overflow-x-auto pb-2">
                 <div className="inline-flex gap-1.5">
-                    <div className="flex flex-col gap-[2px] pt-4 text-[9px] text-gray-400 dark:text-gray-500">
+                    <div className="flex flex-col gap-[2px] pt-4 text-[12px] text-gray-500 dark:text-gray-400">
                         {rowLabels.map((day, i) => (
                             <span key={day} className="h-[11px] leading-[11px]">
                                 {i % 2 === 0 ? weekdayLabel(day) : ''}
@@ -186,7 +186,7 @@ const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
                         ))}
                     </div>
                     <div>
-                        <div className="flex gap-[2px] h-4 text-[9px] text-gray-400 dark:text-gray-500">
+                        <div className="flex gap-[2px] h-4 text-[12px] text-gray-500 dark:text-gray-400">
                             {monthLabels.map((label, i) => (
                                 <span
                                     key={i}
@@ -210,7 +210,7 @@ const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
                 </div>
             </div>
 
-            <div className="mt-2 flex flex-wrap items-center gap-3 text-[10px] text-gray-500 dark:text-gray-400">
+            <div className="mt-2 flex flex-wrap items-center gap-3 text-[12px] text-gray-600 dark:text-gray-300">
                 {quit ? (
                     <>
                         <Legend

@@ -166,7 +166,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
                 {t('relations.title', 'Relations')}
                 {relations.length > 0 && (
-                    <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
+                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                         ({relations.length})
                     </span>
                 )}
@@ -174,7 +174,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
 
             {grouped.map(({ relationType, items }) => (
                 <div key={relationType} className="mb-3">
-                    <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
                         {typeLabel(relationType)}
                     </div>
                     <div className="space-y-1">
@@ -195,7 +195,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
                                         }
                                         className={`text-sm text-left truncate hover:underline ${
                                             resolved
-                                                ? 'text-gray-400 dark:text-gray-500 line-through'
+                                                ? 'text-gray-500 dark:text-gray-400 line-through'
                                                 : 'text-gray-900 dark:text-gray-100'
                                         }`}
                                     >
@@ -206,7 +206,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
                                         onClick={() =>
                                             void handleRemove(relation)
                                         }
-                                        className="ml-3 p-1 text-gray-400 hover:text-red-500 focus:outline-none"
+                                        className="ml-3 p-1 text-gray-500 hover:text-red-500 "
                                         aria-label={t(
                                             'relations.remove',
                                             'Remove relation'
@@ -237,7 +237,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
                                     {typeLabel(type)}
                                 </span>
                                 <ChevronDownIcon
-                                    className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform ${
+                                    className={`h-4 w-4 text-gray-600 dark:text-gray-300 transition-transform ${
                                         typeOpen ? 'rotate-180' : ''
                                     }`}
                                 />
@@ -292,7 +292,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
                         <button
                             type="button"
                             onClick={closeAdd}
-                            className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                            className="text-xs text-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
                         >
                             {t('common.cancel', 'Cancel')}
                         </button>
@@ -317,7 +317,7 @@ const TaskRelationsCard: React.FC<TaskRelationsCardProps> = ({
                 <button
                     type="button"
                     onClick={() => setAdding(true)}
-                    className="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    className="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200"
                     data-testid="task-relation-add"
                 >
                     <PlusCircleIcon className="h-5 w-5 mr-2" />

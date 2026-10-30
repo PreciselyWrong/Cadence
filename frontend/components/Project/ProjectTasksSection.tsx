@@ -73,7 +73,7 @@ const ProjectTasksSection: React.FC<ProjectTasksSectionProps> = ({
                     </div>
                 ) : (
                     <div className="transition-all duration-300 ease-in-out opacity-100 transform translate-y-0">
-                        <p className="text-gray-500 dark:text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-300">
                             {taskSearchQuery.trim()
                                 ? t(
                                       'tasks.noTasksAvailable',

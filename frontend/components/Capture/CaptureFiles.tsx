@@ -40,7 +40,7 @@ const CaptureFiles: React.FC<CaptureFilesProps> = ({
                             className="h-8 w-8 flex-shrink-0 rounded object-cover"
                         />
                     ) : (
-                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-black/[0.05] dark:bg-white/[0.08] text-gray-500 dark:text-gray-400">
+                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-black/[0.05] dark:bg-white/[0.08] text-gray-600 dark:text-gray-300">
                             <FileIcon
                                 mimeType={file.type}
                                 className="h-4 w-4"
@@ -51,7 +51,7 @@ const CaptureFiles: React.FC<CaptureFilesProps> = ({
                         <span className="block truncate font-medium">
                             {file.name}
                         </span>
-                        <span className="block text-gray-500 dark:text-gray-400">
+                        <span className="block text-gray-600 dark:text-gray-300">
                             {formatFileSize(file.size)}
                         </span>
                     </span>
@@ -62,7 +62,7 @@ const CaptureFiles: React.FC<CaptureFilesProps> = ({
                         aria-label={t('capture.removeFile', 'Remove {{name}}', {
                             name: file.name,
                         })}
-                        className="flex-shrink-0 rounded p-1 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-black/[0.06] dark:hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                        className="flex-shrink-0 rounded p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-black/[0.06] dark:hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                     >
                         <XMarkIcon className="h-4 w-4" aria-hidden="true" />
                     </button>

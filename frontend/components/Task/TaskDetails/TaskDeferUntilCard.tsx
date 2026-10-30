@@ -166,18 +166,18 @@ const TaskDeferUntilCard: React.FC<TaskDeferUntilCardProps> = ({
 
                                 return (
                                     <div className="flex items-center space-x-2 flex-1 min-w-0 text-gray-900 dark:text-gray-100">
-                                        <ClockIcon className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                                        <ClockIcon className="h-4 w-4 flex-shrink-0 text-gray-600 dark:text-gray-300" />
                                         <span className="text-sm font-medium">
                                             {display.formattedDateTime}
                                         </span>
-                                        <span className="text-sm italic text-gray-500 dark:text-gray-400">
+                                        <span className="text-sm italic text-gray-600 dark:text-gray-300">
                                             ({display.relativeText})
                                         </span>
                                     </div>
                                 );
                             })()
                         ) : (
-                            <span className="text-sm text-gray-500 dark:text-gray-400 italic">
+                            <span className="text-sm text-gray-600 dark:text-gray-300 italic">
                                 {t('task.noDeferUntil', 'No defer until')}
                             </span>
                         )}

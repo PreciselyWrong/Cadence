@@ -169,7 +169,7 @@ const Breadcrumbs: React.FC = () => {
             aria-label={t('common.breadcrumb', 'Breadcrumb')}
             className="w-full px-2 sm:px-4 lg:px-6 pt-2"
         >
-            <ol className="flex items-center gap-1 min-w-0 text-xs text-gray-500 dark:text-gray-400">
+            <ol className="flex items-center gap-1 min-w-0 text-xs text-gray-600 dark:text-gray-300">
                 {crumbs.map((crumb, index) => {
                     const isLast = index === crumbs.length - 1;
                     return (
@@ -193,7 +193,7 @@ const Breadcrumbs: React.FC = () => {
                                 </span>
                             )}
                             {!isLast && (
-                                <ChevronRightIcon className="h-3.5 w-3.5 flex-shrink-0 text-gray-400 dark:text-gray-500" />
+                                <ChevronRightIcon className="h-3.5 w-3.5 flex-shrink-0 text-gray-500 dark:text-gray-400" />
                             )}
                         </li>
                     );

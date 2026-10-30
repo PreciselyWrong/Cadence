@@ -1,3 +1,5 @@
+import SegmentedTabs from './Shared/ui/SegmentedTabs';
+import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
@@ -847,7 +849,7 @@ const Calendar: React.FC = () => {
                         <h2 className="text-2xl font-light dark:text-white">
                             {t('sidebar.calendar')}
                         </h2>
-                        <span className="text-sm text-gray-400 dark:text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                             {format(
                                 currentDate,
                                 view === 'year' ? 'yyyy' : 'MMMM yyyy',
@@ -857,8 +859,42 @@ const Calendar: React.FC = () => {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
+                        {/* Phones: four segments; year and N days sit in a menu */}
+                        <div className="flex w-full items-center gap-2 sm:hidden">
+                            <SegmentedTabs
+                                className="flex-1"
+                                aria-label={t('calendar.view', 'View')}
+                                selected={view}
+                                onSelect={(id) => setView(id as typeof view)}
+                                segments={(
+                                    ['month', 'week', 'day', 'agenda'] as const
+                                ).map((viewType) => ({
+                                    id: viewType,
+                                    label: t(`calendar.${viewType}`, viewType),
+                                }))}
+                            />
+                            <OverflowMenu
+                                label={t('calendar.moreViews', 'More views')}
+                                items={[
+                                    {
+                                        key: 'year',
+                                        label: t('calendar.year', 'year'),
+                                        onClick: () => setView('year'),
+                                    },
+                                    {
+                                        key: 'multi',
+                                        label: t('calendar.multiDay', {
+                                            count: options.multiDayCount,
+                                            defaultValue: '{{count}} days',
+                                        }),
+                                        onClick: () => setView('multi'),
+                                    },
+                                ]}
+                            />
+                        </div>
+
                         {/* View selector */}
-                        <div className="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
+                        <div className="hidden sm:flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
                             {(
                                 [
                                     'year',
@@ -875,7 +911,7 @@ const Calendar: React.FC = () => {
                                     className={`px-3 py-1.5 text-sm font-medium capitalize rounded-md transition-all duration-150 ${
                                         view === viewType
                                             ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm'
-                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                                     }`}
                                 >
                                     {viewType === 'multi'
@@ -907,13 +943,15 @@ const Calendar: React.FC = () => {
                         <button
                             onClick={() => navigateView('prev')}
                             className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
+                            aria-label={t('common.previous', 'Previous')}
+                            title={t('common.previous', 'Previous')}
                         >
                             <ChevronLeftIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                         </button>
 
                         <button
                             onClick={goToToday}
-                            className="px-3 py-1.5 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                            className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-on rounded-lg hover:bg-primary/90 transition-colors"
                         >
                             {t('calendar.today')}
                         </button>
@@ -921,6 +959,8 @@ const Calendar: React.FC = () => {
                         <button
                             onClick={() => navigateView('next')}
                             className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
+                            aria-label={t('common.next', 'Next')}
+                            title={t('common.next', 'Next')}
                         >
                             <ChevronRightIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                         </button>
@@ -956,7 +996,7 @@ const Calendar: React.FC = () => {
                             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
                                 feed.show_on_calendar
                                     ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
-                                    : 'bg-transparent text-gray-400 line-through hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-gray-800'
+                                    : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                         >
                             <span
@@ -998,7 +1038,7 @@ const Calendar: React.FC = () => {
                             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
                                 calendar.show_on_calendar
                                     ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
-                                    : 'bg-transparent text-gray-400 line-through hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-gray-800'
+                                    : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                         >
                             <span
@@ -1020,7 +1060,7 @@ const Calendar: React.FC = () => {
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
                             isArrangeOpen
                                 ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'
-                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200'
                         }`}
                     >
                         <ClockIcon className="h-4 w-4" />
@@ -1029,7 +1069,7 @@ const Calendar: React.FC = () => {
                     <button
                         type="button"
                         onClick={() => setIsManagerOpen(true)}
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
                     >
                         <Cog6ToothIcon className="h-4 w-4" />
                         {t('calendar.manageCalendars', 'Calendars')}
@@ -1076,7 +1116,7 @@ const Calendar: React.FC = () => {
                                     }
                                     className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                                 >
-                                    <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-500" />
+                                    <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-600" />
                                 </button>
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                     {format(miniMonth, 'MMMM yyyy', { locale })}
@@ -1092,7 +1132,7 @@ const Calendar: React.FC = () => {
                                     }
                                     className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                                 >
-                                    <ChevronRightIcon className="h-3.5 w-3.5 text-gray-500" />
+                                    <ChevronRightIcon className="h-3.5 w-3.5 text-gray-600" />
                                 </button>
                             </div>
                             <MonthGrid
@@ -1303,7 +1343,7 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
                         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                             {t('calendar.manageCalendars', 'Calendars')}
                         </h3>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                             {t(
                                 'calendar.manageDescription',
                                 'Connect read-only calendars and choose which ones appear here. Cadence never changes them.'
@@ -1314,7 +1354,7 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
                         type="button"
                         onClick={onClose}
                         aria-label={t('calendar.close', 'Close')}
-                        className="shrink-0 p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="shrink-0 p-1 rounded-lg text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                         <XMarkIcon className="w-4 h-4" />
                     </button>
@@ -1365,7 +1405,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
         low: {
             label: t('calendar.low', 'Low'),
             className:
-                'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+                'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
         },
     };
 
@@ -1383,7 +1423,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                 {/* Header */}
                 <div className="shrink-0 flex items-start justify-between p-5 pb-4">
                     <div className="flex-1 min-w-0 pr-3">
-                        <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-1.5">
+                        <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-1.5">
                             {t('calendar.task', 'Task')}
                         </p>
                         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug break-words line-clamp-4">
@@ -1391,8 +1431,10 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                         </h3>
                     </div>
                     <button
+                        aria-label={t('common.close', 'Close')}
+                        title={t('common.close', 'Close')}
                         onClick={onClose}
-                        className="shrink-0 p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="shrink-0 p-1 rounded-lg text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                         <XMarkIcon className="w-4 h-4" />
                     </button>
@@ -1429,7 +1471,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                     <div className="px-5 pb-4 space-y-3">
                         {task.due_date && parseDateString(task.due_date) && (
                             <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <CalendarDaysIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
+                                <CalendarDaysIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
                                 <span>
                                     {format(
                                         parseDateString(task.due_date) as Date,
@@ -1441,7 +1483,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                         )}
                         {task.defer_until && (
                             <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <ClockIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
+                                <ClockIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
                                 <span>
                                     {format(new Date(task.defer_until), 'PPP', {
                                         locale,
@@ -1451,18 +1493,18 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                         )}
                         {task.Project?.name && (
                             <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <FolderIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
+                                <FolderIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
                                 <span>{task.Project.name}</span>
                             </div>
                         )}
                         {task.tags && task.tags.length > 0 && (
                             <div className="flex items-start gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <TagIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" />
+                                <TagIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0 mt-0.5" />
                                 <span className="flex flex-wrap gap-1">
                                     {task.tags.map((tag: any) => (
                                         <span
                                             key={tag.id || tag.name}
-                                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded"
+                                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded"
                                         >
                                             {tag.name}
                                         </span>
@@ -1471,7 +1513,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                             </div>
                         )}
                         {task.note && (
-                            <p className="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 leading-relaxed whitespace-pre-wrap break-words">
+                            <p className="text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 leading-relaxed whitespace-pre-wrap break-words">
                                 {task.note}
                             </p>
                         )}
@@ -1482,14 +1524,14 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                 <div className="shrink-0 flex items-center justify-between px-5 py-4 border-t border-gray-100 dark:border-gray-700">
                     <Link
                         to="/tasks"
-                        className="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                     >
                         <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
                         {t('calendar.goToTasks', 'All tasks')}
                     </Link>
                     <button
                         onClick={onEditTask}
-                        className="px-4 py-1.5 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        className="px-4 py-1.5 text-sm font-medium bg-primary text-primary-on rounded-lg hover:bg-primary/90 transition-colors"
                     >
                         {t('calendar.editTask', 'Open task')}
                     </button>

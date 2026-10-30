@@ -157,7 +157,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                         </ul>
                     )}
                     {wrapUp.pattern && (
-                        <p className="text-sm italic text-gray-600 dark:text-gray-400">
+                        <p className="text-sm italic text-gray-600 dark:text-gray-300">
                             {wrapUp.pattern}
                         </p>
                     )}
@@ -193,7 +193,7 @@ const WrapUpCard: React.FC<WrapUpCardProps> = ({
                             <span>
                                 {entry.name}
                                 {entry.reason && (
-                                    <span className="text-gray-600 dark:text-gray-400">
+                                    <span className="text-gray-600 dark:text-gray-300">
                                         {' '}
                                         · {entry.reason}
                                     </span>

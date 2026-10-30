@@ -137,7 +137,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                         {t('project.attachments', 'Attachments')}
                     </h3>
                     {files.length > 0 && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
                             {t('project.fileCount', '{{count}} files', {
                                 count: files.length,
                             })}
@@ -148,7 +148,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                     type="button"
                     onClick={() => inputRef.current?.click()}
                     disabled={uploading}
-                    className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                    className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                     aria-label={t('project.addFile', 'Add file')}
                     title={t('project.addFile', 'Add file')}
                 >
@@ -164,7 +164,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
             </div>
 
             {files.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {uploading
                         ? t('project.uploading', 'Uploading...')
                         : t(
@@ -203,7 +203,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                                             {file.title ||
                                                 file.original_filename}
                                         </span>
-                                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
                                             {formatFileSize(file.file_size)}
                                         </span>
                                     </span>
@@ -216,7 +216,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                 <button
                     type="button"
                     onClick={() => setShowAll((v) => !v)}
-                    className="text-xs font-medium text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="text-xs font-medium text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                 >
                     {showAll
                         ? t('project.fewerFiles', 'Show fewer')

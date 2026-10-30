@@ -25,7 +25,7 @@ const AdminMfaRequired: React.FC = () => {
                 </p>
                 <Link
                     to="/profile?section=security"
-                    className="inline-block px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+                    className="inline-block px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90"
                 >
                     {t('mfa.adminRequiredAction', 'Set it up')}
                 </Link>

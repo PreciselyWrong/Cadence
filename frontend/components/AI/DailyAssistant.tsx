@@ -90,11 +90,11 @@ const DailyAssistant: React.FC = () => {
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-2">
                     <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
-                    <span className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                    <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                         {t('aiAssistant.title', 'AI Daily Brief')}
                     </span>
                     {brief && (
-                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             {t('aiAssistant.generatedAt', {
                                 time: new Date(brief.generated_at).toLocaleTimeString([], {
                                     hour: '2-digit',
@@ -145,7 +145,7 @@ const DailyAssistant: React.FC = () => {
             <div className="p-4 space-y-3">
                 {/* Not configured */}
                 {!isConfigured && !isLoadingCached && (
-                    <div className="flex items-start gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
                         <InformationCircleIcon className="h-4 w-4 mt-0.5 flex-shrink-0" />
                         <div>
                             <p>
@@ -154,7 +154,7 @@ const DailyAssistant: React.FC = () => {
                                     'AI is not configured on this server.'
                                 )}
                             </p>
-                            <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                            <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                                 {t(
                                     'aiAssistant.notConfiguredHint',
                                     'Set LLM_API_KEY (or OPENAI_API_KEY) to enable the daily brief.'
@@ -194,8 +194,8 @@ const DailyAssistant: React.FC = () => {
                         {/* Overview */}
                         {brief.overview && (
                             <div className="flex items-start gap-2.5 px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50">
-                                <ChartBarIcon className="h-3.5 w-3.5 flex-shrink-0 text-gray-400 dark:text-gray-500 mt-0.5" />
-                                <p className="text-xs text-gray-600 dark:text-gray-400 leading-snug">
+                                <ChartBarIcon className="h-3.5 w-3.5 flex-shrink-0 text-gray-500 dark:text-gray-400 mt-0.5" />
+                                <p className="text-xs text-gray-600 dark:text-gray-300 leading-snug">
                                     {brief.overview}
                                 </p>
                             </div>
@@ -206,7 +206,7 @@ const DailyAssistant: React.FC = () => {
                             <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/40">
                                 <BoltIcon className="h-4 w-4 flex-shrink-0 text-indigo-500 dark:text-indigo-400" />
                                 <div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 mb-0.5">
+                                    <p className="text-[12px] font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 mb-0.5">
                                         {t('aiAssistant.focusForToday')}
                                     </p>
                                     <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100">
@@ -221,14 +221,14 @@ const DailyAssistant: React.FC = () => {
                             <div>
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <FlagIcon className="h-3.5 w-3.5 text-blue-500" />
-                                    <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-500 dark:text-blue-400">
+                                    <span className="text-[12px] font-semibold uppercase tracking-wider text-blue-500 dark:text-blue-400">
                                         {t('aiAssistant.priorityActions')}
                                     </span>
                                 </div>
                                 <ol className="space-y-2">
                                     {(brief.priority_actions ?? []).map((item, i) => (
                                         <li key={i} className="flex items-start gap-2.5">
-                                            <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold flex items-center justify-center leading-none">
+                                            <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[12px] font-bold flex items-center justify-center leading-none">
                                                 {i + 1}
                                             </span>
                                             <div className="min-w-0 flex-1">
@@ -250,20 +250,20 @@ const DailyAssistant: React.FC = () => {
                                                         item.project_uid ? (
                                                             <Link
                                                                 to={`/project/${item.project_uid}`}
-                                                                className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                                                className="inline-flex items-center gap-1 text-[12px] font-medium text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                                                             >
                                                                 <FolderIcon className="h-2.5 w-2.5" />
                                                                 {item.project}
                                                             </Link>
                                                         ) : (
-                                                            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 dark:text-blue-400">
+                                                            <span className="inline-flex items-center gap-1 text-[12px] font-medium text-blue-600 dark:text-blue-400">
                                                                 <FolderIcon className="h-2.5 w-2.5" />
                                                                 {item.project}
                                                             </span>
                                                         )
                                                     )}
                                                     {item.reason && (
-                                                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
                                                             {item.reason}
                                                         </span>
                                                     )}
@@ -285,7 +285,7 @@ const DailyAssistant: React.FC = () => {
                             <div className="flex items-start gap-2.5 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800/30">
                                 <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0 text-amber-500 mt-0.5" />
                                 <div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-500 dark:text-amber-400 mb-0.5">
+                                    <p className="text-[12px] font-semibold uppercase tracking-wider text-amber-500 dark:text-amber-400 mb-0.5">
                                         {t('aiAssistant.watchOut')}
                                     </p>
                                     <ul className="space-y-0.5">

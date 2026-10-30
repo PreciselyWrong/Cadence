@@ -157,7 +157,7 @@ const Tags: React.FC = () => {
                                     ? t('tags.showChildTags', 'Show child tags')
                                     : t('tags.hideChildTags', 'Hide child tags')
                             }
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-0.5 text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-200 focus:outline-none"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-0.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 "
                             data-testid={`tag-toggle-${uid}`}
                         >
                             <ChevronRightIcon
@@ -261,7 +261,7 @@ const Tags: React.FC = () => {
                     } overflow-hidden`}
                 >
                     <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                         <input
                             type="text"
                             placeholder={t(
@@ -284,7 +284,7 @@ const Tags: React.FC = () => {
                     <div className="space-y-8">
                         {sortedGroupKeys.map((letter) => (
                             <div key={letter}>
-                                <h3 className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">
+                                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
                                     {letter}
                                 </h3>
 

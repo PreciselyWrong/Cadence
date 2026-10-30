@@ -186,7 +186,7 @@ const SubscriptionRequired: React.FC = () => {
                 <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-1">
                     {t('subscription.title', 'Subscription')}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400 mb-8">
+                <p className="text-gray-600 dark:text-gray-300 mb-8">
                     {t(
                         'subscription.chooseForCloud',
                         'Choose a plan for Cadence Cloud'
@@ -205,7 +205,7 @@ const SubscriptionRequired: React.FC = () => {
                     <p className="font-medium text-gray-800 dark:text-gray-100">
                         {heading}
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         {intro}
                     </p>
 
@@ -219,7 +219,7 @@ const SubscriptionRequired: React.FC = () => {
                     )}
 
                     {status && !status.billing_configured ? (
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-300">
                             {t(
                                 'subscription.notConfigured',
                                 'Subscriptions are not available on this instance yet. Please contact support.'
@@ -240,7 +240,7 @@ const SubscriptionRequired: React.FC = () => {
                                                     }
                                                     className={`px-4 py-1.5 text-sm rounded-md ${
                                                         interval === opt
-                                                            ? 'bg-blue-500 text-white'
+                                                            ? 'bg-primary text-primary-on'
                                                             : 'text-gray-600 dark:text-gray-300'
                                                     }`}
                                                     data-testid={`subscription-interval-${opt}`}
@@ -264,7 +264,7 @@ const SubscriptionRequired: React.FC = () => {
                                 <div className="mb-4">
                                     <label
                                         htmlFor="subscription-plan"
-                                        className="block text-sm text-gray-500 dark:text-gray-400 mb-1"
+                                        className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
                                     >
                                         {t(
                                             'subscription.whoFor',
@@ -300,7 +300,7 @@ const SubscriptionRequired: React.FC = () => {
                             )}
 
                             <div className="mb-6">
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
                                     {planLabel(
                                         t,
                                         chosen.key,
@@ -338,7 +338,7 @@ const SubscriptionRequired: React.FC = () => {
                                           })}
                                 </p>
                                 {chosen.seats > 1 && (
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                         {t('subscription.perSeat', {
                                             defaultValue:
                                                 '{{price}} per person a month, {{seats}} seats including you',
@@ -367,7 +367,7 @@ const SubscriptionRequired: React.FC = () => {
                                 type="button"
                                 onClick={onSubscribe}
                                 disabled={busy || !status?.checkout_available}
-                                className="w-full bg-blue-500 text-white py-2.5 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-60"
+                                className="w-full bg-primary text-primary-on py-2.5 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
                                 data-testid="subscription-subscribe"
                             >
                                 {busy
@@ -383,7 +383,7 @@ const SubscriptionRequired: React.FC = () => {
                                         )}
                             </button>
 
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-3">
                                 {t('subscription.taxNote', {
                                     defaultValue:
                                         'Payments are handled by {{provider}}. Prices exclude applicable taxes. Cancel at any time.',
@@ -418,7 +418,7 @@ const SubscriptionRequired: React.FC = () => {
                     <button
                         type="button"
                         onClick={onSignOut}
-                        className="text-gray-500 hover:text-gray-600 dark:text-gray-400"
+                        className="text-gray-600 hover:text-gray-600 dark:text-gray-300"
                         data-testid="subscription-signout"
                     >
                         {t('navigation.logout', 'Logout')}

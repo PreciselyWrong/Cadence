@@ -133,7 +133,7 @@ const UniversalSearch: React.FC = () => {
                         isOpen ? 'ring-2 ring-blue-500 relative z-50' : ''
                     }`}
                 >
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                     <input
                         ref={inputRef}
                         type="text"
@@ -178,7 +178,7 @@ const UniversalSearch: React.FC = () => {
                     {searchQuery && (
                         <button
                             onClick={() => setSearchQuery('')}
-                            className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                            className="ml-2 text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                         >
                             <XMarkIcon className="h-4 w-4" />
                         </button>

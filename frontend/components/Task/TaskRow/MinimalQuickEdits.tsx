@@ -61,10 +61,10 @@ export const MinimalPriorityEdit: React.FC<MinimalQuickEditProps> = ({
                         title={setPriorityLabel}
                         aria-haspopup="menu"
                         aria-expanded={isOpen}
-                        className={`flex flex-shrink-0 items-center transition-opacity focus:outline-none ${
+                        className={`flex flex-shrink-0 items-center transition-opacity ${
                             level
                                 ? FLAG_TONE[level]
-                                : `text-gray-400 dark:text-gray-500 ${HOVER_ONLY}`
+                                : `text-gray-500 dark:text-gray-400 ${HOVER_ONLY}`
                         }`}
                     >
                         <FlagIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -111,7 +111,7 @@ export const MinimalDueEdit: React.FC<MinimalDueEditProps> = ({
                             aria-expanded={isOpen}
                             aria-label={setDueLabel}
                             data-quick-edit="due"
-                            className={`whitespace-nowrap rounded hover:underline focus:outline-none ${dueClass}`}
+                            className={`whitespace-nowrap rounded hover:underline ${dueClass}`}
                         >
                             {dueText}
                         </button>
@@ -124,7 +124,7 @@ export const MinimalDueEdit: React.FC<MinimalDueEditProps> = ({
                             aria-label={setDueLabel}
                             data-quick-edit="due"
                             title={setDueLabel}
-                            className={`flex flex-shrink-0 items-center text-gray-400 transition-opacity focus:outline-none dark:text-gray-500 ${HOVER_ONLY}`}
+                            className={`flex flex-shrink-0 items-center text-gray-500 transition-opacity dark:text-gray-400 ${HOVER_ONLY}`}
                         >
                             <CalendarIcon
                                 className="h-3.5 w-3.5"

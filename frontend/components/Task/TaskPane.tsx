@@ -124,7 +124,7 @@ const TaskPane: React.FC = () => {
             <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2 dark:border-gray-800">
                 <Link
                     to={fullPagePath}
-                    className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                 >
                     <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                     {t('taskPane.openFullPage', 'Open full page')}
@@ -134,7 +134,7 @@ const TaskPane: React.FC = () => {
                     onClick={closeTask}
                     aria-label={t('taskPane.close', 'Close')}
                     title={t('taskPane.close', 'Close')}
-                    className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                     <XMarkIcon className="h-5 w-5" />
                 </button>

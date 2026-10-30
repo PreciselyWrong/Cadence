@@ -122,7 +122,8 @@
     "next7Days": "Naslednjih 7 dni",
     "more": "Več",
     "toggleFolder": "Prikaži ali skrij projekte",
-    "customize": "Prilagodi stransko vrstico"
+    "customize": "Prilagodi stransko vrstico",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Domov",
@@ -1017,7 +1018,10 @@
       "security": "Security",
       "advanced": "Advanced"
     },
-    "optional": "Optional"
+    "optional": "Optional",
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Zastali projekti",
@@ -2132,7 +2136,12 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -4556,5 +4565,15 @@
     "nextMonth": "Naslednji mesec",
     "time": "Čas",
     "clearTime": "Brez časa"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

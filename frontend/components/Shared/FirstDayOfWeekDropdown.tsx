@@ -101,7 +101,7 @@ const FirstDayOfWeekDropdown: React.FC<FirstDayOfWeekDropdownProps> = ({
             >
                 <span>{selectedWeekday.label}</span>
                 <ChevronDownIcon
-                    className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                    className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : ''
                     }`}
                 />

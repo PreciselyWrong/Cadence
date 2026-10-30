@@ -158,7 +158,7 @@ const PersonDetails: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
                 Loading...
             </div>
         );
@@ -166,7 +166,7 @@ const PersonDetails: React.FC = () => {
 
     if (!person) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
                 Person not found.
             </div>
         );
@@ -224,7 +224,7 @@ const PersonDetails: React.FC = () => {
                     <div className="space-y-2">
                         {person.email && (
                             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <EnvelopeIcon className="h-4 w-4 text-gray-400" />
+                                <EnvelopeIcon className="h-4 w-4 text-gray-500" />
                                 <a
                                     href={`mailto:${person.email}`}
                                     className="hover:underline"
@@ -235,7 +235,7 @@ const PersonDetails: React.FC = () => {
                         )}
                         {person.phone && (
                             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <PhoneIcon className="h-4 w-4 text-gray-400" />
+                                <PhoneIcon className="h-4 w-4 text-gray-500" />
                                 <a
                                     href={`tel:${person.phone}`}
                                     className="hover:underline"
@@ -245,7 +245,7 @@ const PersonDetails: React.FC = () => {
                             </div>
                         )}
                         {person.notes && (
-                            <p className="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                            <p className="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                                 {person.notes}
                             </p>
                         )}
@@ -342,7 +342,7 @@ const PersonDetails: React.FC = () => {
             {/* Assigned Tasks */}
             <div>
                 {assignedTasks.length === 0 ? (
-                    <p className="text-sm text-gray-400 dark:text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                         No tasks assigned to {person.name}.
                     </p>
                 ) : (

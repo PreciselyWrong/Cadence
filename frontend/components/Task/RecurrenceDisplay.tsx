@@ -159,7 +159,7 @@ const RecurrenceDisplay: React.FC<RecurrenceDisplayProps> = ({
                 recurrenceWeekdays &&
                 recurrenceWeekdays.length > 0 && (
                     <div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                        <div className="text-xs text-gray-600 dark:text-gray-300 mb-1">
                             {t('forms.task.labels.repeatOn', 'Repeat on')}:
                         </div>
                         <div className="flex gap-1 flex-wrap">
@@ -174,8 +174,8 @@ const RecurrenceDisplay: React.FC<RecurrenceDisplayProps> = ({
                                         w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium
                                         ${
                                             isSelected
-                                                ? 'bg-blue-600 text-white dark:bg-blue-500'
-                                                : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
+                                                ? 'bg-primary text-primary-on '
+                                                : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-600'
                                         }
                                     `}
                                         title={weekday.full}
@@ -190,14 +190,14 @@ const RecurrenceDisplay: React.FC<RecurrenceDisplayProps> = ({
 
             {/* Month day display for monthly recurrence */}
             {recurrenceType === 'monthly' && recurrenceMonthDay && (
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     {t('recurrence.onDay', 'On day')} {recurrenceMonthDay}
                 </div>
             )}
 
             {/* End date display */}
             {recurrenceEndDate && (
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     <span>
                         {t('recurrence.until', 'Until')}{' '}
                         {formatEndDate(recurrenceEndDate)}

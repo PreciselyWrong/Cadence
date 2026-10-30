@@ -37,7 +37,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none"
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 "
                         data-testid="confirm-dialog-cancel"
                     >
                         {t('common.cancel', 'Cancel')}
@@ -45,7 +45,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                     <button
                         type="button"
                         onClick={onConfirm}
-                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
+                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 "
                         data-testid="confirm-dialog-confirm"
                     >
                         {confirmButtonText ?? t('common.delete', 'Delete')}

@@ -24,6 +24,7 @@ import { Task } from '../../entities/Task';
 import { GroupedTasks } from '../../utils/tasksService';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
+import { toIntlLocale } from '../../utils/intlLocale';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
 import { useCollapsedGroups } from './useCollapsedGroups';
@@ -105,6 +106,41 @@ const SortableTaskGroup: React.FC<{
     );
 };
 
+// One header format for every day column: "Sunday 1 November" in the user's
+// language. The backend's own group name only survives for today/tomorrow,
+// shown as a quiet suffix, and for groups without a date.
+export const dayColumnHeader = (
+    groupName: string,
+    dayTasks: Task[],
+    locale: string
+): { title: string; hint?: string } => {
+    const due = dayTasks.find((task) => !!task.due_date)?.due_date;
+    const match = due ? /^(\d{4})-(\d{2})-(\d{2})/.exec(due) : null;
+    if (!match) return { title: groupName };
+    const date = new Date(
+        Number(match[1]),
+        Number(match[2]) - 1,
+        Number(match[3])
+    );
+    const title = new Intl.DateTimeFormat(locale, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+    }).format(date);
+    const today = new Date();
+    const isRelative =
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const isTomorrow =
+        date.getFullYear() === tomorrow.getFullYear() &&
+        date.getMonth() === tomorrow.getMonth() &&
+        date.getDate() === tomorrow.getDate();
+    return { title, hint: isRelative || isTomorrow ? groupName : undefined };
+};
+
 interface TaskGroup {
     template: Task;
     instances: Task[];
@@ -132,7 +168,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     searchQuery = '',
     onReorder,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     // Minimal lists let a group header collapse its tasks. The state is kept
     // per list (path and query) and group.
     const isMinimal = useIsMinimal();
@@ -359,7 +395,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                     <div className="flex justify-center items-center mt-4">
                         <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
                             <svg
-                                className="h-20 w-20 text-gray-400 opacity-30 mb-6"
+                                className="h-20 w-20 text-gray-500 opacity-30 mb-6"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="1.5"
@@ -377,7 +413,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                     'No tasks available.'
                                 )}
                             </p>
-                            <p className="text-base text-center text-gray-400 dark:text-gray-400">
+                            <p className="text-base text-center text-gray-500 dark:text-gray-300">
                                 {t(
                                     'tasks.blankSlateHint',
                                     'Start by creating a new task or changing your filters.'
@@ -389,13 +425,30 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                     /* Responsive board layout */
                     <div className="pb-4">
                         {/* Mobile: Stack vertically, Desktop: Horizontal board */}
-                        <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full">
+                        <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 w-full">
                             {Object.entries(filteredGroupedTasks).map(
                                 ([groupName, dayTasks]) => {
+                                    const header = dayColumnHeader(
+                                        groupName,
+                                        dayTasks,
+                                        toIntlLocale(i18n?.language)
+                                    );
+                                    const headerLabel = (
+                                        <>
+                                            <span className="first-letter:uppercase">
+                                                {header.title}
+                                            </span>
+                                            {header.hint && (
+                                                <span className="ml-2 text-label-m font-normal text-gray-600 dark:text-gray-300">
+                                                    {header.hint}
+                                                </span>
+                                            )}
+                                        </>
+                                    );
                                     return (
                                         <div
                                             key={groupName}
-                                            className="day-column w-full md:flex-1 md:min-w-64"
+                                            className="day-column w-full xl:flex-1 xl:min-w-64"
                                         >
                                             {/* Day column header */}
                                             <div className="pb-3 mb-4">
@@ -416,7 +469,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                             className="flex w-full items-center gap-1.5 text-left"
                                                         >
                                                             <ChevronRightIcon
-                                                                className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                                className={`h-4 w-4 flex-shrink-0 text-gray-500 transition-transform ${
                                                                     isCollapsed(
                                                                         groupName
                                                                     )
@@ -425,10 +478,10 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                                 }`}
                                                                 aria-hidden="true"
                                                             />
-                                                            {groupName}
+                                                            {headerLabel}
                                                         </button>
                                                     ) : (
-                                                        groupName
+                                                        headerLabel
                                                     )}
                                                 </h3>
                                             </div>
@@ -485,7 +538,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
 
                                                     {/* Empty state for columns with no tasks */}
                                                     {dayTasks.length === 0 && (
-                                                        <div className="text-center py-8 text-gray-400 dark:text-gray-600">
+                                                        <div className="text-center py-8 text-gray-500 dark:text-gray-600">
                                                             <p className="text-sm">
                                                                 No tasks
                                                                 scheduled
@@ -563,7 +616,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                       >
                                           <span className="flex min-w-0 items-center gap-1.5">
                                               <ChevronRightIcon
-                                                  className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${
+                                                  className={`h-4 w-4 flex-shrink-0 text-gray-500 transition-transform ${
                                                       sectionCollapsed
                                                           ? ''
                                                           : 'rotate-90'
@@ -574,7 +627,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                   {projectName}
                                               </span>
                                           </span>
-                                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+                                          <span className="text-xs font-normal text-gray-600 dark:text-gray-300">
                                               {projectTasks.length}{' '}
                                               {t('tasks.tasks', 'tasks')}
                                           </span>
@@ -584,7 +637,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                           <span className="truncate">
                                               {projectName}
                                           </span>
-                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                          <span className="text-xs text-gray-600 dark:text-gray-300">
                                               {projectTasks.length}{' '}
                                               {t('tasks.tasks', 'tasks')}
                                           </span>
@@ -747,7 +800,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                             <div
                                 className={`mt-2 space-y-1.5 border-l-2 border-blue-200 dark:border-blue-800 pl-4 ${!isVirtualTemplate ? 'ml-8' : 'ml-4'}`}
                             >
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mb-2 flex items-center">
                                     <ArrowPathIcon className="h-3 w-3 mr-1" />
                                     {formatRecurrence(
                                         group.template.recurrence_type!
@@ -798,7 +851,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                 <div className="flex justify-center items-center mt-4">
                     <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
                         <svg
-                            className="h-20 w-20 text-gray-400 opacity-30 mb-6"
+                            className="h-20 w-20 text-gray-500 opacity-30 mb-6"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -813,7 +866,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                         <p className="text-2xl font-light text-center text-gray-600 dark:text-gray-300 mb-2">
                             {t('tasks.noTasksAvailable', 'No tasks available.')}
                         </p>
-                        <p className="text-base text-center text-gray-400 dark:text-gray-400">
+                        <p className="text-base text-center text-gray-500 dark:text-gray-300">
                             {t(
                                 'tasks.blankSlateHint',
                                 'Start by creating a new task or changing your filters.'

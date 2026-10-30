@@ -273,7 +273,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         <div className="min-w-0">
             <label
                 htmlFor="share-email"
-                className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1"
             >
                 {t('shares.targetUser', 'Invite by email')}
             </label>
@@ -300,7 +300,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         `flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
             active
                 ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
         }`;
 
     const submitDisabled =
@@ -313,11 +313,11 @@ const ShareModal: React.FC<ShareModalProps> = ({
     );
 
     const sectionLabel =
-        'text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400';
+        'text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300';
     const fieldLabel =
-        'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+        'block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1';
     const revokeButton =
-        'px-2 py-1 text-xs font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-500/10 transition-colors';
+        'px-2 py-1 text-xs font-medium rounded-md text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-500/10 transition-colors';
 
     return (
         <div
@@ -341,7 +341,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                         </h3>
                         {resourceName && (
                             <p
-                                className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate"
+                                className="text-sm text-gray-600 dark:text-gray-300 mt-0.5 truncate"
                                 title={resourceName}
                             >
                                 {resourceName}
@@ -352,7 +352,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                         type="button"
                         onClick={onClose}
                         aria-label={t('common.close', 'Close')}
-                        className="-mr-2 p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        className="-mr-2 p-1.5 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                         <XMarkIcon className="w-5 h-5" />
                     </button>
@@ -511,7 +511,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                         emailField}
 
                     <div className="flex items-center justify-between gap-4">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
                             {target === 'group'
                                 ? t(
                                       'shares.groupHint',
@@ -525,7 +525,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                         <button
                             type="submit"
                             disabled={submitDisabled}
-                            className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             {submitting
                                 ? t('common.saving', 'Saving...')
@@ -559,11 +559,11 @@ const ShareModal: React.FC<ShareModalProps> = ({
                             {t('shares.currentShares', 'Users with access')}
                         </div>
                         {loadingList && !rows ? (
-                            <div className="py-2 text-sm text-gray-500">
+                            <div className="py-2 text-sm text-gray-600">
                                 {t('common.loading', 'Loading...')}
                             </div>
                         ) : sortedRows.length === 0 ? (
-                            <div className="py-2 text-sm text-gray-500">
+                            <div className="py-2 text-sm text-gray-600">
                                 {t('shares.noShares', 'Not shared yet')}
                             </div>
                         ) : (
@@ -592,7 +592,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                                                 <div className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                                     {label}
                                                     {isMe && (
-                                                        <span className="ml-1 text-gray-400">
+                                                        <span className="ml-1 text-gray-500">
                                                             (
                                                             {t(
                                                                 'shares.you',
@@ -602,12 +602,12 @@ const ShareModal: React.FC<ShareModalProps> = ({
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                                <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                                                     {accessLabel(
                                                         r.access_level
                                                     )}
                                                     {r.status === 'pending' && (
-                                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium leading-none bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+                                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-medium leading-none bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
                                                             {t(
                                                                 'shares.pending',
                                                                 'Pending'
@@ -660,7 +660,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                                             <div className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                                 {g.group_name}
                                             </div>
-                                            <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                            <div className="mt-0.5 text-xs text-gray-600 dark:text-gray-300">
                                                 {accessLabel(g.access_level)}
                                                 {' · '}
                                                 {t(

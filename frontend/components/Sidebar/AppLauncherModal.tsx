@@ -358,7 +358,7 @@ const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="p-1 rounded-md text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                        className="p-1 rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                         aria-label={t('common.close', 'Close')}
                     >
                         <XMarkIcon className="h-5 w-5" />

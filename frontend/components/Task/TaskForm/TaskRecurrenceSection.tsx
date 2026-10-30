@@ -147,7 +147,7 @@ const TaskRecurrenceSection: React.FC<TaskRecurrenceSectionProps> = ({
                             disabled={isDisabled}
                         />
                     </div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                         {recurrenceType === 'daily' &&
                             t('recurrence.days', 'days')}
                         {recurrenceType === 'weekly' &&
@@ -293,7 +293,7 @@ const TaskRecurrenceSection: React.FC<TaskRecurrenceSectionProps> = ({
                 <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">
                     {t('forms.task.recurrenceSettings', 'Recurrence Settings')}
                 </h3>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     Loading parent task recurrence settings...
                 </div>
             </div>
@@ -488,7 +488,7 @@ const TaskRecurrenceSection: React.FC<TaskRecurrenceSectionProps> = ({
                                         disabled={disabled}
                                     />
                                 </div>
-                                <span className="text-sm text-gray-600 dark:text-gray-400">
+                                <span className="text-sm text-gray-600 dark:text-gray-300">
                                     {recurrenceType === 'daily' &&
                                         t('recurrence.days', 'days')}
                                     {recurrenceType === 'weekly' &&

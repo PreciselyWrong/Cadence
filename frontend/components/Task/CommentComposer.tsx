@@ -278,7 +278,7 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
         const placeholder = document.createElement('span');
         placeholder.contentEditable = 'false';
         placeholder.dataset.uploading = 'true';
-        placeholder.className = 'italic text-gray-400 dark:text-gray-500';
+        placeholder.className = 'italic text-gray-500 dark:text-gray-400';
         placeholder.textContent = t(
             'comments.uploadingImage',
             'Uploading image...'
@@ -371,7 +371,7 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
         <div className="relative">
             <div className="relative">
                 {!hasContent && uploading === 0 && (
-                    <span className="pointer-events-none absolute left-3.5 top-3 text-sm text-gray-400 dark:text-gray-500">
+                    <span className="pointer-events-none absolute left-3.5 top-3 text-sm text-gray-500 dark:text-gray-400">
                         {placeholder ??
                             t(
                                 'comments.placeholder',
@@ -480,7 +480,7 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
                     type="button"
                     onClick={handleSubmit}
                     disabled={!hasContent || submitting || uploading > 0}
-                    className="px-4 py-2 text-xs font-medium rounded-lg bg-blue-500 dark:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 text-xs font-medium rounded-lg bg-primary text-primary-on disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors"
                 >
                     {submitLabel ?? t('comments.submit', 'Comment')}
                 </button>

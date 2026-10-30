@@ -83,14 +83,14 @@ const TaskStartDateCard: React.FC<TaskStartDateCardProps> = ({
                     >
                         {formatted ? (
                             <span className="flex items-center space-x-2 text-gray-900 dark:text-gray-100">
-                                <PlayIcon className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                                <PlayIcon className="h-4 w-4 flex-shrink-0 text-gray-600 dark:text-gray-300" />
                                 <span className="text-sm font-medium">
                                     {formatted}
                                     {task.start_time && ` ${task.start_time}`}
                                 </span>
                             </span>
                         ) : (
-                            <span className="text-sm text-gray-500 dark:text-gray-400 italic">
+                            <span className="text-sm text-gray-600 dark:text-gray-300 italic">
                                 {t('task.noStartDate', 'No start date')}
                             </span>
                         )}

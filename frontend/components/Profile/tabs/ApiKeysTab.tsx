@@ -183,37 +183,37 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                             <thead className="bg-gray-100 dark:bg-gray-800">
                                 <tr>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.name',
                                             'Name'
                                         )}
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.prefix',
                                             'Prefix'
                                         )}
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.status',
                                             'Status'
                                         )}
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.lastUsed',
                                             'Last used'
                                         )}
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.expires',
                                             'Expires'
                                         )}
                                     </th>
-                                    <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                         {t(
                                             'profile.apiKeys.table.actions',
                                             'Actions'
@@ -230,7 +230,7 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                                                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {key.name}
                                                 </div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                <div className="text-xs text-gray-600 dark:text-gray-300">
                                                     {t(
                                                         'profile.apiKeys.createdAt',
                                                         'Created {{date}}',
@@ -285,7 +285,7 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                                                         }
                                                         className={`inline-flex items-center px-3 py-1.5 rounded-md border text-xs font-medium ${
                                                             key.revoked_at
-                                                                ? 'border-gray-400 text-gray-400 cursor-not-allowed'
+                                                                ? 'border-gray-400 text-gray-500 cursor-not-allowed'
                                                                 : 'border-yellow-600 text-yellow-700 hover:bg-yellow-50'
                                                         }`}
                                                     >
@@ -315,7 +315,7 @@ const ApiKeysTab: React.FC<ApiKeysTabProps> = ({
                                                         className={`inline-flex items-center justify-center px-3 py-1.5 rounded-md border text-xs font-medium ${
                                                             deleteInFlightId ===
                                                             key.id
-                                                                ? 'border-gray-400 text-gray-400 cursor-not-allowed'
+                                                                ? 'border-gray-400 text-gray-500 cursor-not-allowed'
                                                                 : 'border-red-600 text-red-700 hover:bg-red-50'
                                                         }`}
                                                         aria-label={t(

@@ -216,15 +216,22 @@ const Navbar: React.FC<NavbarProps> = ({
                         <>
                             <button
                                 onClick={() => setIsSidebarOpen(true)}
-                                className="sm:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                                aria-label="Expand Sidebar"
+                                className="sm:hidden flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                aria-label={t(
+                                    'navbar.expandSidebar',
+                                    'Expand Sidebar'
+                                )}
+                                title={t(
+                                    'navbar.expandSidebar',
+                                    'Expand Sidebar'
+                                )}
                                 data-testid="sidebar-expand"
                             >
                                 <SidebarPanelIcon className="h-5 w-5" />
                             </button>
                             <Link
                                 to="/"
-                                className="sm:hidden flex items-center justify-center h-9 w-9"
+                                className="sm:hidden flex items-center justify-center h-11 w-11"
                                 aria-label="Cadence"
                                 data-testid="navbar-logo"
                             >
@@ -250,7 +257,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         onClick={() =>
                             setIsMobileSearchOpen(!isMobileSearchOpen)
                         }
-                        className="md:hidden flex items-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full focus:outline-none transition-all duration-200 p-2"
+                        className="md:hidden flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px] bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full transition-all duration-200 p-2"
                         aria-label={t('navigation.toggleSearch')}
                         title={t('navigation.search')}
                     >
@@ -263,7 +270,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         aria-haspopup="dialog"
                         aria-expanded={captureOpen}
                         data-testid="capture-navbar-button"
-                        className={`${hasFab ? 'max-md:hidden ' : ''}flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 transition-all duration-200 px-2 py-2 md:px-3 md:py-2`}
+                        className={`${hasFab ? 'max-md:hidden ' : ''}flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px] bg-primary hover:bg-primary/90 text-primary-on rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-200 px-2 py-2 md:px-3 md:py-2`}
                         aria-label={t('navigation.quickInboxCapture')}
                         title={`${t('navigation.quickInboxCapture')} (${shortcutTooltip('capture')})`}
                     >
@@ -271,7 +278,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         <span className="hidden md:inline-block ml-1.5 text-sm font-semibold">
                             {t('capture.button', 'Capture')}
                         </span>
-                        <kbd className="hidden lg:inline-block ml-2 px-1.5 rounded bg-blue-600/60 text-[11px] font-mono text-blue-100">
+                        <kbd className="hidden lg:inline-block ml-2 px-1.5 rounded bg-blue-600/60 text-[12px] font-mono text-blue-100">
                             {shortcutKeyCaps('capture')[0]}
                         </kbd>
                     </button>
@@ -282,8 +289,9 @@ const Navbar: React.FC<NavbarProps> = ({
                     <div className="relative" ref={dropdownRef}>
                         <button
                             onClick={toggleDropdown}
-                            className="flex items-center focus:outline-none"
+                            className="flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px]"
                             aria-label={t('navigation.userMenu')}
+                            title={t('navigation.userMenu')}
                         >
                             {currentUser?.avatar_image ? (
                                 <img
@@ -293,7 +301,7 @@ const Navbar: React.FC<NavbarProps> = ({
                                 />
                             ) : (
                                 <div className="h-8 w-8 rounded-full border-2 border-green-500 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                    <UserIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+                                    <UserIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                                 </div>
                             )}
                         </button>
@@ -303,7 +311,7 @@ const Navbar: React.FC<NavbarProps> = ({
                                 className="absolute right-0 top-full mt-2 min-w-48 w-max bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 border border-gray-200 dark:border-gray-700"
                             >
                                 {currentUser?.email && (
-                                    <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600 flex items-center">
+                                    <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600 flex items-center">
                                         <EnvelopeIcon className="h-4 w-4 mr-2" />
                                         {currentUser.email}
                                     </div>
@@ -320,7 +328,7 @@ const Navbar: React.FC<NavbarProps> = ({
                                             <ShieldCheckIcon className="h-4 w-4 mr-2 shrink-0" />
                                             {t('navigation.admin', 'Admin')}
                                         </span>
-                                        <span className="ml-3 px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide uppercase bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                                        <span className="ml-3 px-1.5 py-0.5 rounded text-[12px] font-semibold tracking-wide uppercase bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
                                             {featureFlags.hosted
                                                 ? t(
                                                       'admin.roles.names.superadmin',

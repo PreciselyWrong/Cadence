@@ -32,13 +32,13 @@ const TaskRecurringInstanceInfo: React.FC<TaskRecurringInstanceInfoProps> = ({
                 {loadingParent && (
                     <div className="flex items-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-500 mr-2"></div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {t('common.loading', 'Loading parent task...')}
                         </span>
                     </div>
                 )}
                 {parentTask && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                         <strong>{t('task.parentTask', 'Parent Task')}:</strong>{' '}
                         <button
                             type="button"

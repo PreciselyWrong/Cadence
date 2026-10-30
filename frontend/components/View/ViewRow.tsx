@@ -88,13 +88,13 @@ const ViewRow: React.FC<ViewRowProps> = ({
                     <StarIconSolid className="h-3 w-3 flex-shrink-0 text-yellow-400" />
                 )}
                 {summary && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <span className="text-xs text-gray-600 dark:text-gray-300 truncate">
                         {summary}
                     </span>
                 )}
             </Link>
 
-            <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 justify-end">
+            <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 justify-end">
                 <span className="flex items-center gap-1">
                     <FunnelIcon className="h-3.5 w-3.5" />
                     {filterCount} {t('views.filters', 'filters')}
@@ -113,7 +113,7 @@ const ViewRow: React.FC<ViewRowProps> = ({
                         e.stopPropagation();
                         setMenuOpen((open) => !open);
                     }}
-                    className="focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className=" opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                 >
                     <EllipsisVerticalIcon className="h-4 w-4" />
                 </button>

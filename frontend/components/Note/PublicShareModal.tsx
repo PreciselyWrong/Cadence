@@ -247,7 +247,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                                     },
                                 ]}
                             />
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                                 {access === 'anyone'
                                     ? t(
                                           'notes.publicShare.anyoneHint',
@@ -282,7 +282,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                             <span
                                 className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded transition-colors ${
                                     inheritStyle
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-primary text-primary-on'
                                         : 'bg-black/[0.06] dark:bg-white/[0.1]'
                                 }`}
                             >
@@ -305,7 +305,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                                     onClick={handleCreateLink}
                                     disabled={saving}
                                     data-testid="public-share-create"
-                                    className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
+                                    className="px-4 py-2 rounded bg-primary text-primary-on text-sm hover:bg-primary/90 disabled:opacity-50"
                                 >
                                     {t(
                                         'notes.publicShare.createLink',
@@ -327,7 +327,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                         </label>
                         <div className="flex gap-2">
                             <div className="relative flex-1 min-w-0">
-                                <LinkIcon className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+                                <LinkIcon className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
                                 <input
                                     id="public-share-link"
                                     ref={linkRef}
@@ -342,7 +342,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                                 type="button"
                                 onClick={handleCopy}
                                 data-testid="public-share-copy"
-                                className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700 whitespace-nowrap"
+                                className="px-4 py-2 rounded bg-primary text-primary-on text-sm hover:bg-primary/90 whitespace-nowrap"
                             >
                                 {copied
                                     ? t('notes.publicShare.copied', 'Copied')
@@ -402,7 +402,7 @@ const PublicShareModal: React.FC<PublicShareModalProps> = ({
                 )}
 
                 {loading && (
-                    <div className="px-6 pb-2 text-sm text-gray-500">
+                    <div className="px-6 pb-2 text-sm text-gray-600">
                         {t('common.loading', 'Loading...')}
                     </div>
                 )}

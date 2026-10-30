@@ -159,7 +159,7 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({
                             {attachment.title || attachment.original_filename}
                         </p>
                     )}
-                    <p className="truncate px-1 text-xs text-gray-400">
+                    <p className="truncate px-1 text-xs text-gray-500">
                         {attachment.original_filename} ·{' '}
                         {formatFileSize(attachment.file_size)}
                         {canStep && ` · ${index + 1} / ${attachments.length}`}
@@ -238,7 +238,7 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({
                         </p>
                         <a
                             href={api.downloadUrl(attachment.uid)}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-on hover:bg-primary/90"
                         >
                             <ArrowDownTrayIcon className="h-4 w-4" />
                             {t('attachments.download', 'Download')}

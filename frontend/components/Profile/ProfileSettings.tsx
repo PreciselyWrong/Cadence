@@ -2001,7 +2001,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                 <div className="flex justify-end dark:border-gray-700">
                                     <button
                                         type="submit"
-                                        className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200 flex items-center space-x-2"
+                                        className="px-6 py-3 bg-primary text-primary-on rounded-lg font-medium hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200 flex items-center space-x-2"
                                     >
                                         <CheckIcon className="w-5 h-5" />
                                         <span>

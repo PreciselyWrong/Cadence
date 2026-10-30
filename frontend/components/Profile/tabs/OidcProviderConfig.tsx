@@ -64,7 +64,7 @@ function LabeledInput({
 }) {
     return (
         <div className={className}>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <label className="block text-xs text-gray-600 dark:text-gray-300 mb-1">
                 {label}
             </label>
             <input
@@ -175,7 +175,7 @@ const OidcProviderConfig: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+            <div className="text-sm text-gray-600 dark:text-gray-300 mb-8">
                 {t('profile.loading', 'Loading...')}
             </div>
         );
@@ -186,7 +186,7 @@ const OidcProviderConfig: React.FC = () => {
             <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
                 {t('profile.oidcProviderConfig', 'Provider Configuration')}
             </h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                 {source === 'env'
                     ? t(
                           'profile.oidcConfigFromEnv',
@@ -204,7 +204,7 @@ const OidcProviderConfig: React.FC = () => {
                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             {t('profile.oidcEnabled', 'OIDC/SSO enabled')}
                         </label>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                             {t(
                                 'profile.oidcEnabledDescription',
                                 'Turns SSO login on or off for everyone on this instance.'
@@ -245,7 +245,7 @@ const OidcProviderConfig: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => removeProvider(index)}
-                                className="text-gray-400 hover:text-red-500"
+                                className="text-gray-500 hover:text-red-500"
                                 aria-label={t(
                                     'profile.oidcRemoveProvider',
                                     'Remove provider'
@@ -292,7 +292,7 @@ const OidcProviderConfig: React.FC = () => {
                                 }
                             />
                             <div>
-                                <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                <label className="block text-xs text-gray-600 dark:text-gray-300 mb-1">
                                     {t(
                                         'profile.oidcProviderClientSecret',
                                         'Client secret'
@@ -360,7 +360,7 @@ const OidcProviderConfig: React.FC = () => {
                             />
                             <label
                                 htmlFor={`oidc-auto-provision-${index}`}
-                                className="text-sm text-gray-600 dark:text-gray-400"
+                                className="text-sm text-gray-600 dark:text-gray-300"
                             >
                                 {t(
                                     'profile.oidcAutoProvision',
@@ -386,7 +386,7 @@ const OidcProviderConfig: React.FC = () => {
                     type="button"
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                    className="px-4 py-2 text-sm font-medium text-primary-on bg-primary rounded-md hover:bg-primary/90 disabled:opacity-50"
                 >
                     {saving
                         ? t('profile.saving', 'Saving...')

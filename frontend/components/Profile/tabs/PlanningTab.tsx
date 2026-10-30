@@ -91,7 +91,7 @@ const PlanningCard: React.FC<PlanningCardProps> = ({
                     {action}
                 </div>
                 {description && (
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                         {description}
                     </p>
                 )}
@@ -129,7 +129,7 @@ const BucketRow: React.FC<BucketRowProps> = ({
     } = useSortable({ id: bucket });
 
     const arrow =
-        'flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-400 dark:hover:bg-gray-700';
+        'flex h-8 w-8 items-center justify-center rounded-md text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700';
 
     return (
         <li
@@ -142,7 +142,7 @@ const BucketRow: React.FC<BucketRowProps> = ({
         >
             <button
                 type="button"
-                className="flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md text-gray-500 hover:bg-gray-200 active:cursor-grabbing dark:text-gray-400 dark:hover:bg-gray-700"
+                className="flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md text-gray-600 hover:bg-gray-200 active:cursor-grabbing dark:text-gray-300 dark:hover:bg-gray-700"
                 aria-label={t('profile.planning.dragRow', 'Drag {{name}}', {
                     name: title,
                 })}
@@ -158,7 +158,7 @@ const BucketRow: React.FC<BucketRowProps> = ({
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {title}
                 </span>
-                <span className="text-xs text-gray-600 dark:text-gray-400">
+                <span className="text-xs text-gray-600 dark:text-gray-300">
                     {detail}
                 </span>
             </span>
@@ -539,15 +539,15 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
               });
     const fieldLabel =
         'mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300';
-    const fieldHint = 'mt-1.5 text-xs text-gray-500 dark:text-gray-400';
+    const fieldHint = 'mt-1.5 text-xs text-gray-600 dark:text-gray-300';
     const pill =
         'flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-800 dark:bg-gray-900/60 dark:text-gray-300 dark:hover:bg-gray-900 dark:has-[:checked]:bg-blue-900/30 dark:has-[:checked]:text-blue-200';
     const checkbox =
         'h-4 w-4 shrink-0 rounded text-blue-600 focus:ring-blue-500';
     const resetLink =
-        'text-xs font-normal text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-400 dark:hover:text-gray-200';
+        'text-xs font-normal text-gray-600 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-300 dark:hover:text-gray-200';
     const loadingText = (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
             {t('common.loading', 'Loading...')}
         </p>
     );
@@ -861,7 +861,7 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
                                                     'Suggest {{name}} again',
                                                     { name: project.name }
                                                 )}
-                                                className="flex h-5 w-5 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                                className="flex h-5 w-5 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                             >
                                                 <XMarkIcon className="h-3.5 w-3.5" />
                                             </button>

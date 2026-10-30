@@ -40,7 +40,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     if (!fileUrl) {
         console.warn('No file URL available for attachment:', attachment);
         return (
-            <div className="text-sm text-gray-500 dark:text-gray-400 p-4">
+            <div className="text-sm text-gray-600 dark:text-gray-300 p-4">
                 Preview not available
             </div>
         );
@@ -77,7 +77,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     if (type === 'text') {
         if (loading) {
             return (
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     Loading...
                 </div>
             );

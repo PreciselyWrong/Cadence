@@ -279,7 +279,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
 
     const renderCards = (list: Task[], sectionUid: string | null) =>
         list.length === 0 ? (
-            <p className="text-xs py-3 text-center text-gray-400 dark:text-gray-500">
+            <p className="text-xs py-3 text-center text-gray-500 dark:text-gray-400">
                 {t('projectBoard.empty', 'No tasks')}
             </p>
         ) : (
@@ -325,7 +325,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                             : ''
                     } rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm shadow-sm hover:border-gray-300 dark:hover:border-gray-600 ${
                         DONE_STATUSES.has(task.status)
-                            ? 'line-through text-gray-400 dark:text-gray-500'
+                            ? 'line-through text-gray-500 dark:text-gray-400'
                             : 'text-gray-900 dark:text-gray-100'
                     }`}
                 >
@@ -383,7 +383,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                 }}
             >
                 {header}
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-gray-600 dark:text-gray-300">
                     {list.length}
                 </span>
             </div>
@@ -395,7 +395,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
 
     if (loading) {
         return (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
                 {t('common.loading', 'Loading...')}
             </p>
         );
@@ -468,7 +468,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                                                 : section.uid
                                         )
                                     }
-                                    className="p-1 rounded text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    className="p-1 rounded text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700"
                                 >
                                     <EllipsisHorizontalIcon className="h-4 w-4" />
                                 </button>
@@ -588,7 +588,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                             type="button"
                             data-testid="board-add-column"
                             onClick={() => setAdding(true)}
-                            className="flex w-full items-center gap-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="flex w-full items-center gap-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
                         >
                             <PlusIcon className="h-4 w-4" />
                             {t('projectBoard.addColumn', 'Add column')}

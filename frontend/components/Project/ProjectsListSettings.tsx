@@ -51,7 +51,7 @@ const ProjectsListSettings: React.FC<ProjectsListSettingsProps> = ({
             <button
                 type="button"
                 onClick={() => setIsOpen((open) => !open)}
-                className="relative p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors"
+                className="relative p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 aria-label={label}
                 aria-expanded={isOpen}
                 title={label}

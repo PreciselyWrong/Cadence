@@ -27,7 +27,7 @@ const TaskEstimateCard: React.FC<TaskEstimateCardProps> = ({
                         onChange(minutes === value ? null : minutes)
                     }
                 />
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-gray-600 dark:text-gray-300">
                     {value === null
                         ? t(
                               'task.estimateHint',

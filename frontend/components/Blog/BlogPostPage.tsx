@@ -63,14 +63,14 @@ const BlogPostPage: React.FC<BlogPageProps> = (props) => {
             <main className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
                 <Link
                     to={props.basePath || '/'}
-                    className="relative text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                 >
                     &larr; {t('blog.allPosts', 'All posts')}
                 </Link>
 
                 <div className="mt-4">
                     {stage === 'loading' && (
-                        <p className="text-gray-500 dark:text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-300">
                             {t('common.loading', 'Loading...')}
                         </p>
                     )}

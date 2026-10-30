@@ -123,9 +123,9 @@ const SecurityTab: React.FC<SecurityTabProps> = ({
                                     onClick={onToggleCurrentPassword}
                                 >
                                     {showCurrentPassword ? (
-                                        <EyeSlashIcon className="h-5 w-5 text-gray-400" />
+                                        <EyeSlashIcon className="h-5 w-5 text-gray-500" />
                                     ) : (
-                                        <EyeIcon className="h-5 w-5 text-gray-400" />
+                                        <EyeIcon className="h-5 w-5 text-gray-500" />
                                     )}
                                 </button>
                             </div>
@@ -154,9 +154,9 @@ const SecurityTab: React.FC<SecurityTabProps> = ({
                                 onClick={onToggleNewPassword}
                             >
                                 {showNewPassword ? (
-                                    <EyeSlashIcon className="h-5 w-5 text-gray-400" />
+                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
                                 ) : (
-                                    <EyeIcon className="h-5 w-5 text-gray-400" />
+                                    <EyeIcon className="h-5 w-5 text-gray-500" />
                                 )}
                             </button>
                         </div>
@@ -187,15 +187,15 @@ const SecurityTab: React.FC<SecurityTabProps> = ({
                                 onClick={onToggleConfirmPassword}
                             >
                                 {showConfirmPassword ? (
-                                    <EyeSlashIcon className="h-5 w-5 text-gray-400" />
+                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
                                 ) : (
-                                    <EyeIcon className="h-5 w-5 text-gray-400" />
+                                    <EyeIcon className="h-5 w-5 text-gray-500" />
                                 )}
                             </button>
                         </div>
                     </div>
 
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'profile.passwordChangeNote',
                             'Password changes will be saved when you click "Save Changes" at the bottom of the form.'
@@ -211,7 +211,7 @@ const SecurityTab: React.FC<SecurityTabProps> = ({
                     <TrashIcon className="w-5 h-5 mr-2" />
                     {t('profile.deleteAccount', 'Delete account')}
                 </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     {t(
                         'profile.deleteAccountInfo',
                         'This permanently removes your account and everything in it: tasks, projects, notes, attachments, backups, and integrations. It cannot be undone.'

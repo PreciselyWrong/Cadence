@@ -115,7 +115,7 @@ const SignInLinkModal: React.FC<SignInLinkModalProps> = ({
                             data-testid="sign-in-link-url"
                         />
                         <p
-                            className="text-xs text-gray-500 dark:text-gray-400"
+                            className="text-xs text-gray-600 dark:text-gray-300"
                             data-testid="sign-in-link-expiry"
                         >
                             {t(
@@ -133,7 +133,7 @@ const SignInLinkModal: React.FC<SignInLinkModalProps> = ({
                             onClick={handleCopy}
                             disabled={busy}
                             data-testid="sign-in-link-copy"
-                            className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm disabled:opacity-60"
+                            className="px-3 py-1.5 bg-primary text-primary-on rounded-md hover:bg-primary/90 text-sm disabled:opacity-60"
                         >
                             {t('signInLink.copy', 'Copy link')}
                         </button>
@@ -171,7 +171,7 @@ const SignInLinkModal: React.FC<SignInLinkModalProps> = ({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-sm"
+                            className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 text-sm"
                         >
                             {t('common.close', 'Close')}
                         </button>
@@ -180,7 +180,7 @@ const SignInLinkModal: React.FC<SignInLinkModalProps> = ({
                             onClick={handleCreate}
                             disabled={busy}
                             data-testid="sign-in-link-create"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="px-4 py-2 bg-primary text-primary-on rounded-md hover:bg-primary/90 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {link
                                 ? t('signInLink.createNew', 'Create a new link')

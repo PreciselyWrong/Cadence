@@ -73,7 +73,7 @@ export const Delta: React.FC<{ now: number; before: number }> = ({
             ? 'text-emerald-600 dark:text-emerald-400'
             : diff < 0
               ? 'text-rose-600 dark:text-rose-400'
-              : 'text-gray-400 dark:text-gray-500';
+              : 'text-gray-500 dark:text-gray-400';
     return (
         <span className={`tabular-nums ${tone}`}>
             {diff > 0 ? `+${diff}` : String(diff)}
@@ -140,7 +140,7 @@ const addToday = (a: WeekCount, b: WeekCount) =>
 const ofTotal = (n: number, total: number) => (
     <>
         {n}
-        <span className="text-gray-400 dark:text-gray-500">
+        <span className="text-gray-500 dark:text-gray-400">
             {' '}
             / {total} · {percentOf(n, total)}
         </span>
@@ -169,11 +169,11 @@ const Ranking: React.FC<{
     testId: string;
 }> = ({ title, empty, rows, testId }) => (
     <div data-testid={testId}>
-        <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+        <h3 className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-2">
             {title}
         </h3>
         {rows.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">{empty}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{empty}</p>
         ) : (
             <ul className="space-y-1">
                 {rows.slice(0, 5).map((row) => (
@@ -182,7 +182,7 @@ const Ranking: React.FC<{
                         className="flex justify-between gap-3 text-sm text-gray-700 dark:text-gray-200"
                     >
                         <span className="truncate">{row.label}</span>
-                        <span className="tabular-nums text-gray-500 dark:text-gray-400">
+                        <span className="tabular-nums text-gray-600 dark:text-gray-300">
                             {row.views}
                         </span>
                     </li>
@@ -384,7 +384,7 @@ const AdminTrends: React.FC<{ trends: Trends }> = ({ trends }) => {
             </h2>
             <div className="overflow-x-auto -mx-3">
                 <table className="w-full text-sm">
-                    <thead className="text-xs text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-600 dark:text-gray-300">
                         <tr>
                             <th className="px-3 py-2 font-medium text-left" />
                             <th className={th}>
@@ -409,7 +409,7 @@ const AdminTrends: React.FC<{ trends: Trends }> = ({ trends }) => {
                             <tr>
                                 <th
                                     colSpan={6}
-                                    className="px-3 pt-4 pb-1 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    className="px-3 pt-4 pb-1 text-left text-xs font-medium text-gray-600 dark:text-gray-300"
                                 >
                                     {group.title}
                                 </th>
@@ -427,7 +427,7 @@ const AdminTrends: React.FC<{ trends: Trends }> = ({ trends }) => {
                                     <td className="px-3 py-1.5 text-gray-700 dark:text-gray-200">
                                         {row.label}
                                         {row.hint && (
-                                            <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
+                                            <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                                                 {row.hint}
                                             </span>
                                         )}
@@ -438,7 +438,7 @@ const AdminTrends: React.FC<{ trends: Trends }> = ({ trends }) => {
                                     <td className="px-3 py-1.5 text-right tabular-nums font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
                                         {row.now}
                                     </td>
-                                    <td className="px-3 py-1.5 text-right tabular-nums text-gray-500 dark:text-gray-400">
+                                    <td className="px-3 py-1.5 text-right tabular-nums text-gray-600 dark:text-gray-300">
                                         {row.before ?? ''}
                                     </td>
                                     <td className="px-3 py-1.5 text-right">

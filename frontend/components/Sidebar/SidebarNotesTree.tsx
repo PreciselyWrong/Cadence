@@ -124,12 +124,12 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
     }).filter((row) => row.type !== 'section-header');
 
     const itemClass = (isActive: boolean) =>
-        `flex justify-between items-center gap-2 rounded-[8px] py-[4px] pr-[10px] text-[13.5px] cursor-pointer text-gray-500 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
-            isActive ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
+        `flex justify-between items-center gap-2 rounded-[8px] py-[4px] pr-[10px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+            isActive ? 'bg-gray-100 dark:bg-gray-800' : ''
         }`;
 
     const sectionLabelClass =
-        'pt-2 pb-0.5 pr-[10px] text-[10px] font-semibold uppercase tracking-[0.04em] text-gray-400 dark:text-gray-500';
+        'pt-2 pb-0.5 pr-[10px] text-[12px] font-semibold uppercase tracking-[0.04em] text-gray-500 dark:text-gray-400';
 
     const renderNoteRow = (note: Note, key: string, indent: number) => {
         const path = getNotePath(note);
@@ -215,7 +215,7 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
             <div className="flex flex-col mb-1.5">
                 <span
                     style={{ paddingLeft: BASE_PADDING_PX }}
-                    className="text-[13.5px] text-gray-400 dark:text-gray-500"
+                    className="text-[13.5px] text-gray-500 dark:text-gray-400"
                 >
                     {t('notes.noNotesFound', 'No notes found')}
                 </span>
@@ -264,7 +264,7 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
                             style={{
                                 paddingLeft: BASE_PADDING_PX + INDENT_PX,
                             }}
-                            className="text-left rounded-[8px] py-[4px] pr-[10px] text-[12.5px] text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-[oklch(24%_0.015_250)] focus:outline-none"
+                            className="text-left rounded-[8px] py-[4px] pr-[10px] text-[12.5px] text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-gray-800 "
                         >
                             {t('notes.sidebar.more', '{{count}} more', {
                                 count: row.count,
@@ -301,7 +301,7 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
                                     {row.label}
                                 </span>
                             </span>
-                            <span className="flex-shrink-0 flex items-center gap-1 text-gray-400 dark:text-gray-500">
+                            <span className="flex-shrink-0 flex items-center gap-1 text-gray-500 dark:text-gray-400">
                                 {row.count}
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"

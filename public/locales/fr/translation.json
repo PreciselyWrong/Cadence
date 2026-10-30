@@ -121,7 +121,8 @@
     "next7Days": "7 prochains jours",
     "more": "Plus",
     "toggleFolder": "Afficher ou masquer les projets",
-    "customize": "Personnaliser la barre latérale"
+    "customize": "Personnaliser la barre latérale",
+    "toggleSection": "Déplier ou replier"
   },
   "navigation": {
     "home": "Accueil",
@@ -1017,7 +1018,10 @@
       "security": "Sécurité",
       "advanced": "Avancé"
     },
-    "optional": "Optionnel"
+    "optional": "Optionnel",
+    "accent": "Couleur d'accent",
+    "accentCustom": "Couleur libre (hex)",
+    "pureBlack": "Noir pur en mode sombre"
   },
   "productivity": {
     "stalledProjects": "Projets bloqués",
@@ -2128,7 +2132,12 @@
     "manageDescription": "Connecter des agendas en lecture seule et choisir ceux qui s'affichent ici. Cadence ne les modifie jamais.",
     "hideCalendar": "Masquer {{name}}",
     "showCalendar": "Afficher {{name}}",
-    "feedError": "Impossible de charger : {{names}}"
+    "feedError": "Impossible de charger : {{names}}",
+    "moreAllDay": "{{count}} autres événements sur la journée",
+    "view": "Vue",
+    "moreViews": "Autres vues",
+    "openDay": "Ouvrir le jour",
+    "noEventsThisDay": "Rien de prévu."
   },
   "pages": {
     "notFound": {
@@ -4546,5 +4555,15 @@
     "nextMonth": "Mois suivant",
     "time": "Heure",
     "clearTime": "Sans heure"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Bleu",
+    "teal": "Sarcelle",
+    "green": "Vert",
+    "amber": "Ambre",
+    "coral": "Corail",
+    "rose": "Rose"
   }
 }

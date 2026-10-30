@@ -144,7 +144,7 @@ const GoalDetails: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
                 {t('common.loading', 'Loading...')}
             </div>
         );
@@ -175,7 +175,7 @@ const GoalDetails: React.FC = () => {
         `relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
             activeTab === tab
                 ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
         }`;
 
     return (
@@ -217,7 +217,7 @@ const GoalDetails: React.FC = () => {
 
             {activeTab === 'tasks' ? (
                 tasks.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
                         {t('goals.noTasks', 'No tasks assigned to this goal.')}
                     </p>
                 ) : (
@@ -232,7 +232,7 @@ const GoalDetails: React.FC = () => {
                         )}
                         {completedTasks.length > 0 && (
                             <div>
-                                <h4 className="px-2 text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                                <h4 className="px-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
                                     {t('tasks.completed', 'Completed')} (
                                     {completedTasks.length})
                                 </h4>
@@ -248,7 +248,7 @@ const GoalDetails: React.FC = () => {
                     </div>
                 )
             ) : goalProjects.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
+                <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
                     {t('goals.noProjects', 'No projects linked to this goal.')}
                 </p>
             ) : (

@@ -122,7 +122,8 @@
     "next7Days": "Следующие 7 дней",
     "more": "Ещё",
     "toggleFolder": "Показать или скрыть проекты",
-    "customize": "Настроить боковую панель"
+    "customize": "Настроить боковую панель",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Главная",
@@ -1017,7 +1018,10 @@
       "security": "Security",
       "advanced": "Advanced"
     },
-    "optional": "Optional"
+    "optional": "Optional",
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Приостановленные проекты",
@@ -2132,7 +2136,12 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -4556,5 +4565,15 @@
     "nextMonth": "Следующий месяц",
     "time": "Время",
     "clearTime": "Без времени"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

@@ -62,7 +62,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                         }
                     >
                         {!color.value && (
-                            <span className="flex items-center justify-center w-full h-full rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 text-xs">
+                            <span className="flex items-center justify-center w-full h-full rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs">
                                 ✕
                             </span>
                         )}

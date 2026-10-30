@@ -274,7 +274,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
             className="flex flex-wrap items-center gap-1.5"
             data-testid={testId}
         >
-            <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400 mr-0.5">
+            <span className="text-[12px] font-medium text-gray-600 dark:text-gray-300 mr-0.5">
                 {label}
             </span>
             {children}
@@ -480,7 +480,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                                 type="button"
                                 onClick={handleSaveView}
                                 disabled={isSaving}
-                                className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-md transition-colors"
+                                className="px-3 py-1.5 text-xs font-medium text-primary-on bg-primary hover:bg-primary/90 disabled:bg-blue-400 rounded-md transition-colors"
                             >
                                 {isSaving
                                     ? t('search.saving')
@@ -505,7 +505,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                 onClose={onClose}
             />
 
-            <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-[11px] text-gray-500 dark:text-gray-400">
+            <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-[12px] text-gray-600 dark:text-gray-300">
                 {t(
                     'search.hint',
                     'Up and Down to move, Enter to open, Esc to close'

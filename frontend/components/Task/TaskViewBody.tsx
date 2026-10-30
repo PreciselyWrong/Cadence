@@ -46,7 +46,7 @@ export const ViewTypeSwitch: React.FC<ViewTypeSwitchProps> = ({
                     className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
                         value === option.key
                             ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
-                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                            : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                     }`}
                 >
                     {option.label}

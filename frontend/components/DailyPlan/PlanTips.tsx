@@ -41,7 +41,7 @@ const PlanTips: React.FC<PlanTipsProps> = ({
         >
             {[tips[current]].map((tip) => {
                 let icon = (
-                    <LightBulbIcon className="h-4 w-4 shrink-0 text-gray-400" />
+                    <LightBulbIcon className="h-4 w-4 shrink-0 text-gray-500" />
                 );
                 let text = '';
                 let action: React.ReactNode = null;
@@ -130,7 +130,7 @@ const PlanTips: React.FC<PlanTipsProps> = ({
                 <button
                     type="button"
                     onClick={() => setIndex((current + 1) % tips.length)}
-                    className="inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-1 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                    className="inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-1 text-xs text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                     aria-label={t('dailyPlan.tips.next', 'Next tip')}
                     data-testid="plan-tips-next"
                 >

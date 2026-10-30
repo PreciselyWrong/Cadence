@@ -33,7 +33,7 @@ const onEnter =
 const inputClass =
     'block w-full rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500';
 const primaryButton =
-    'px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-60';
+    'px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-60';
 const secondaryButton =
     'px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600';
 
@@ -160,7 +160,7 @@ const TwoFactorCard: React.FC = () => {
                     </span>
                 )}
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 {t(
                     'mfa.description',
                     'Ask for a code from an authenticator app, as well as your password or single sign-on, whenever this account signs in on a new device.'
@@ -216,7 +216,7 @@ const TwoFactorCard: React.FC = () => {
                         className="w-48 h-48 bg-white p-2 rounded"
                         data-testid="mfa-qr"
                     />
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
                         {t('mfa.setupManual', 'Or type this key into the app:')}
                         <code className="block mt-1 font-mono break-all text-gray-900 dark:text-gray-100">
                             {setup.secret.replace(/(.{4})/g, '$1 ').trim()}
@@ -310,7 +310,7 @@ const TwoFactorCard: React.FC = () => {
                                     >
                                         <span className="text-gray-900 dark:text-gray-100">
                                             {key.name}
-                                            <span className="ml-2 text-gray-500 dark:text-gray-400">
+                                            <span className="ml-2 text-gray-600 dark:text-gray-300">
                                                 {key.last_used_at
                                                     ? t('mfa.keyLastUsed', {
                                                           defaultValue:
@@ -370,7 +370,7 @@ const TwoFactorCard: React.FC = () => {
                         className={`text-sm ${
                             status.recovery_codes_left <= 2
                                 ? 'text-amber-700 dark:text-amber-300'
-                                : 'text-gray-600 dark:text-gray-400'
+                                : 'text-gray-600 dark:text-gray-300'
                         }`}
                     >
                         {t('mfa.codesLeft', {

@@ -427,7 +427,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                         />
                     </div>
                     {formData.parent_project_uid && (
-                        <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mt-1.5 text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'projects.areaFollowsParent',
                                 'Area follows the parent project'

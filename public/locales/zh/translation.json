@@ -120,7 +120,8 @@
     "next7Days": "未来7天",
     "more": "更多",
     "toggleFolder": "显示或隐藏项目",
-    "customize": "自定义侧边栏"
+    "customize": "自定义侧边栏",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "首页",
@@ -1015,7 +1016,10 @@
       "security": "Security",
       "advanced": "Advanced"
     },
-    "optional": "Optional"
+    "optional": "Optional",
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "停滞项目",
@@ -2122,7 +2126,12 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -4538,5 +4547,15 @@
     "nextMonth": "下个月",
     "time": "时间",
     "clearTime": "无时间"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

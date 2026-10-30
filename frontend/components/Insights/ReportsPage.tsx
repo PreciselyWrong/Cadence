@@ -141,7 +141,7 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                                 textAnchor="end"
                                 fontSize={9}
                                 fill="currentColor"
-                                className="text-gray-400 dark:text-gray-500"
+                                className="text-gray-500 dark:text-gray-400"
                             >
                                 {tick}
                             </text>
@@ -182,7 +182,7 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                                     className={
                                         isRecent
                                             ? 'text-indigo-600 dark:text-indigo-300'
-                                            : 'text-gray-400 dark:text-gray-500'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     }
                                 >
                                     {w.count}
@@ -194,7 +194,7 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                                 textAnchor="middle"
                                 fontSize={8}
                                 fill="currentColor"
-                                className="text-gray-400 dark:text-gray-500"
+                                className="text-gray-500 dark:text-gray-400"
                             >
                                 {w.label}
                             </text>
@@ -241,12 +241,12 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                                     {area.name}
                                 </span>
                                 {isTop && (
-                                    <span className="text-[10px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
+                                    <span className="text-[12px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
                                         {t('reports.mostActive', 'most active')}
                                     </span>
                                 )}
                                 {isBottom && rate < 20 && (
-                                    <span className="text-[10px] text-orange-400 font-medium whitespace-nowrap">
+                                    <span className="text-[12px] text-orange-400 font-medium whitespace-nowrap">
                                         {t(
                                             'reports.needsAttention',
                                             'needs attention'
@@ -255,7 +255,7 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                                 )}
                             </div>
                             <div className="flex items-center gap-3 ml-2 flex-shrink-0">
-                                <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                                     {t('reports.doneOpen', {
                                         done: area.completed,
                                         open: area.open,
@@ -323,7 +323,7 @@ const ReportsPage: React.FC = () => {
     if (!report || !report.weekly_review) {
         return (
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-600">
                     {t('common.error', 'Failed to load reports.')}
                 </p>
             </div>
@@ -376,7 +376,7 @@ const ReportsPage: React.FC = () => {
                         className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                             activeTab === tab.id
                                 ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                         }`}
                     >
                         {tab.label}
@@ -398,10 +398,10 @@ const ReportsPage: React.FC = () => {
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.inbox_count}
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {t('reports.inboxItems', 'Inbox items')}
                                 </p>
-                                <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
+                                <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
                                     {weekly_review.inbox_count === 0
                                         ? t('reports.inboxZero', 'Inbox zero')
                                         : t('reports.itemsToProcess', {
@@ -421,13 +421,13 @@ const ReportsPage: React.FC = () => {
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.stalled_projects.length}
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {t(
                                         'reports.stalledProjects',
                                         'Stalled projects'
                                     )}
                                 </p>
-                                <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
+                                <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
                                     {weekly_review.stalled_projects.length === 0
                                         ? t(
                                               'reports.allProjectsMoving',
@@ -449,10 +449,10 @@ const ReportsPage: React.FC = () => {
                                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                                     {weekly_review.waiting_for.length}
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {t('reports.waitingFor', 'Waiting for')}
                                 </p>
-                                <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
+                                <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
                                     {oldestWait
                                         ? t('reports.oldestWait', {
                                               name: oldestWait.name,
@@ -473,7 +473,7 @@ const ReportsPage: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {weekly_review.stalled_projects.length > 0 && (
                             <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
-                                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                                     {t(
                                         'reports.stalledProjects',
                                         'Stalled Projects'
@@ -490,7 +490,7 @@ const ReportsPage: React.FC = () => {
                                                     {p.name}
                                                 </p>
                                                 {p.area && (
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                         {p.area}
                                                     </p>
                                                 )}
@@ -512,7 +512,7 @@ const ReportsPage: React.FC = () => {
 
                         {weekly_review.waiting_for.length > 0 && (
                             <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
-                                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                                     {t('reports.waitingFor', 'Waiting For')}
                                 </h4>
                                 <ul className="space-y-2.5">
@@ -526,7 +526,7 @@ const ReportsPage: React.FC = () => {
                                                     {p.name}
                                                 </p>
                                                 {p.area && (
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                         {p.area}
                                                     </p>
                                                 )}
@@ -562,7 +562,7 @@ const ReportsPage: React.FC = () => {
 
                     {/* Project Health */}
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                             {t('reports.projectHealth', 'Project Health')}
                         </h3>
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
@@ -583,7 +583,7 @@ const ReportsPage: React.FC = () => {
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
                                             <NoSymbolIcon className="h-4 w-4 text-orange-400 flex-shrink-0" />
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                                 {t('reports.noNextAction', {
                                                     debt: action_debt.length,
                                                     total: total_projects,
@@ -613,11 +613,11 @@ const ReportsPage: React.FC = () => {
                                                 </span>
                                                 <div className="flex items-center gap-2 flex-shrink-0">
                                                     {p.area && (
-                                                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
                                                             {p.area}
                                                         </span>
                                                     )}
-                                                    <span className="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                                                    <span className="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
                                                         {p.status.replace(
                                                             /_/g,
                                                             ' '
@@ -638,7 +638,7 @@ const ReportsPage: React.FC = () => {
                 <div className="space-y-6">
                     {/* Completion Trends */}
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                             {t(
                                 'reports.completionTrends8',
                                 'Completion Trends, last 8 weeks'
@@ -646,7 +646,7 @@ const ReportsPage: React.FC = () => {
                         </h3>
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
                             {totalCompleted === 0 ? (
-                                <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                                <p className="text-sm text-gray-600 dark:text-gray-300 italic">
                                     {t(
                                         'reports.noCompletions',
                                         'No completed tasks in the past 8 weeks.'
@@ -659,7 +659,7 @@ const ReportsPage: React.FC = () => {
                                             <p className="text-xl font-semibold text-gray-900 dark:text-white">
                                                 {totalCompleted}
                                             </p>
-                                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 {t(
                                                     'reports.totalCompleted',
                                                     'total completed'
@@ -670,7 +670,7 @@ const ReportsPage: React.FC = () => {
                                             <p className="text-xl font-semibold text-gray-900 dark:text-white">
                                                 {avgPerWeek}
                                             </p>
-                                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 {t(
                                                     'reports.avgPerWeek',
                                                     'avg / week'
@@ -682,7 +682,7 @@ const ReportsPage: React.FC = () => {
                                                 <p className="text-xl font-semibold text-indigo-500 dark:text-indigo-400">
                                                     {bestWeek.count}
                                                 </p>
-                                                <p className="text-xs text-gray-400 dark:text-gray-500">
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
                                                     {t('reports.bestWeek', {
                                                         week: bestWeek.label,
                                                         defaultValue:
@@ -700,7 +700,7 @@ const ReportsPage: React.FC = () => {
 
                     {/* Area Balance */}
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
                             {t(
                                 'reports.areaBalance30',
                                 'Area Balance, last 30 days'
@@ -708,7 +708,7 @@ const ReportsPage: React.FC = () => {
                         </h3>
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4">
                             {area_balance.length === 0 ? (
-                                <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                                <p className="text-sm text-gray-600 dark:text-gray-300 italic">
                                     {t(
                                         'reports.noAreaData',
                                         'No area data available. Assign tasks to areas to see balance.'
@@ -716,7 +716,7 @@ const ReportsPage: React.FC = () => {
                                 </p>
                             ) : (
                                 <>
-                                    <div className="flex items-center gap-4 mb-4 text-xs text-gray-400 dark:text-gray-500">
+                                    <div className="flex items-center gap-4 mb-4 text-xs text-gray-500 dark:text-gray-400">
                                         <span className="flex items-center gap-1">
                                             <span className="inline-block w-3 h-2 rounded bg-emerald-400 dark:bg-emerald-500" />
                                             {t(

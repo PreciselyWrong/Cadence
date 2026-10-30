@@ -214,7 +214,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center h-32 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center h-32 text-gray-600 dark:text-gray-300">
                 <ClockIcon className="h-6 w-6 mb-2 animate-spin" />
                 <span className="text-sm">Loading timeline...</span>
             </div>
@@ -232,7 +232,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
 
     if (!taskUid) {
         return (
-            <div className="flex flex-col items-center justify-center h-32 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center h-32 text-gray-600 dark:text-gray-300">
                 <SparklesIcon className="h-6 w-6 mb-2" />
                 <span className="text-sm text-center">
                     Timeline will appear after saving
@@ -243,7 +243,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
 
     if (events.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center py-8 text-gray-600 dark:text-gray-300">
                 <ClockIcon className="h-12 w-12 mb-3 opacity-50" />
                 <span className="text-sm text-center">
                     {t('task.noActivityYet', 'No activity yet')}
@@ -264,7 +264,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
                                 <div className="text-xs font-medium text-gray-900 dark:text-gray-100 leading-tight">
                                     {getEventDescription(event)}
                                 </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                                     {formatTimeAgo(event.created_at)}
                                 </div>
 

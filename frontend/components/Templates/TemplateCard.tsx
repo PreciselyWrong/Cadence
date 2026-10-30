@@ -79,7 +79,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                             justOpenedRef.current = true;
                             setDropdownOpen((v) => !v);
                         }}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 "
                         aria-label={t('templates.toggleMenu', 'Toggle menu')}
                     >
                         <EllipsisVerticalIcon className="h-4 w-4" />
@@ -129,7 +129,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 )}
 
                 {template.description && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
                         {template.description}
                     </p>
                 )}
@@ -144,7 +144,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                         <span className="text-base font-semibold leading-none text-gray-700 dark:text-gray-200">
                             {count}
                         </span>
-                        <span className="flex items-center gap-1 text-[10px] leading-none text-gray-400 dark:text-gray-500">
+                        <span className="flex items-center gap-1 text-[12px] leading-none text-gray-500 dark:text-gray-400">
                             {icon}
                             {label}
                         </span>

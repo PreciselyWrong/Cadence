@@ -123,11 +123,11 @@ const EditCalendarModal: React.FC<EditCalendarModalProps> = ({
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                         {t('profile.editCalendar.title', 'Edit Calendar')}
                     </h2>
-                    <button
+                    <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                         type="button"
                         onClick={onClose}
                         disabled={isSubmitting}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                     >
                         <XMarkIcon className="w-6 h-6" />
                     </button>
@@ -259,7 +259,7 @@ const EditCalendarModal: React.FC<EditCalendarModalProps> = ({
                             disabled={isSubmitting}
                             className="block w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                         />
-                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'profile.caldavWizard.syncIntervalHelp',
                                 'How often to automatically sync (5-1440 minutes)'

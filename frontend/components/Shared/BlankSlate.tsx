@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 // The empty state for an entity list page: a title, a short hint and a row
-// of actions. The first action is the main one and gets the solid blue
-// button, the rest get a light blue one.
+// of actions. The first action is the main one and gets the solid primary
+// button, the rest are text buttons.
 export interface BlankSlateAction {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
@@ -30,9 +30,10 @@ interface BlankSlateProps {
 }
 
 const BUTTON =
-    'flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400';
-const PRIMARY = `${BUTTON} bg-blue-600 text-white shadow-sm hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600`;
-const SECONDARY = `${BUTTON} bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50`;
+    'flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-control transition-colors';
+const PRIMARY = `${BUTTON} bg-primary text-primary-on shadow-sm hover:bg-primary/90 dark:hover:bg-primary/90`;
+// Secondary actions stay quiet: one filled button per empty state.
+const SECONDARY = `${BUTTON} text-primary hover:bg-primary-container/60`;
 const PRESET =
     'inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400';
 
@@ -44,13 +45,15 @@ const BlankSlate: React.FC<BlankSlateProps> = ({
     presets = [],
 }) => (
     <div className="flex justify-center items-center mt-4">
-        <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-6 py-12 sm:px-10 sm:py-24 flex flex-col items-center opacity-95">
-            <InformationCircleIcon className="h-20 w-20 text-gray-400 opacity-30 mb-6" />
+        <div className="w-full max-w rounded-panel px-6 py-12 sm:px-10 sm:py-24 flex flex-col items-center opacity-95">
+            <span className="mb-6 flex h-16 w-16 items-center justify-center rounded-panel bg-primary-container text-primary-on-container">
+                <InformationCircleIcon className="h-8 w-8" />
+            </span>
             <p className="text-2xl font-light text-center text-gray-600 dark:text-gray-300 mb-2">
                 {title}
             </p>
             <p
-                className={`text-base text-center text-gray-400 dark:text-gray-400 max-w-md ${
+                className={`text-base text-center text-gray-500 dark:text-gray-300 max-w-md ${
                     actions.length > 0 ? 'mb-8' : ''
                 }`}
             >
@@ -97,7 +100,7 @@ const BlankSlate: React.FC<BlankSlateProps> = ({
                     data-testid="blank-slate-presets"
                 >
                     {presetsLabel && (
-                        <p className="text-sm text-gray-400 dark:text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             {presetsLabel}
                         </p>
                     )}

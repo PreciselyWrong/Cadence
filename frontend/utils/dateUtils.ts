@@ -29,6 +29,7 @@ import {
     zhCN,
 } from 'date-fns/locale';
 import i18n from '../i18n';
+import { toIntlLocale } from './intlLocale';
 import {
     isTaskInProgress,
     isTaskPlanned,
@@ -149,14 +150,7 @@ export const getDateFnsLocale = (language: string): Locale =>
 export const getCurrentLocale = (): Locale =>
     getDateFnsLocale(i18n.language || 'en');
 
-// The app's own language codes are not all valid locales (jp, ua), so map
-// them before handing them to Intl / toLocale*String.
-const INTL_LOCALE: Record<string, string> = { jp: 'ja', ua: 'uk' };
-
-export const getIntlLocale = (): string => {
-    const language = i18n.language || 'en';
-    return INTL_LOCALE[language] || language;
-};
+export const getIntlLocale = (): string => toIntlLocale(i18n.language);
 
 /**
  * Checks if a task is past its due date

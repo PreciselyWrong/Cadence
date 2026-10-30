@@ -758,7 +758,7 @@ const ProjectDetails: React.FC = () => {
     const renderStatusFilter = () => (
         <div className="space-y-3">
             <div>
-                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                     {t('tasks.show', 'Show')}
                 </div>
                 <div className="py-1 space-y-1">
@@ -794,7 +794,7 @@ const ProjectDetails: React.FC = () => {
                 </div>
             </div>
             <div>
-                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                     {t('tasks.direction', 'Direction')}
                 </div>
                 <div className="py-1">
@@ -918,7 +918,7 @@ const ProjectDetails: React.FC = () => {
                                         className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
                                             view === tab
                                                 ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                                : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                                         }`}
                                     >
                                         {tab === 'tasks'
@@ -1032,7 +1032,7 @@ const ProjectDetails: React.FC = () => {
                                 } overflow-hidden`}
                             >
                                 <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
+                                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                                     <input
                                         type="text"
                                         placeholder={t(

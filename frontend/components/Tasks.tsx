@@ -42,6 +42,7 @@ import { isQueuedOfflineResponse } from '../utils/authUtils';
 import { isTaskActive } from '../constants/taskStatus';
 import { useTaskUpdatedEvent } from '../hooks/useTaskUpdatedEvent';
 import { openTaskPanel } from '../store/taskPanelStore';
+import SkeletonRows from './Shared/SkeletonRows';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -644,11 +645,11 @@ const Tasks: React.FC = () => {
                                     className="flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
                                     onClick={handleRemoveTag}
                                 >
-                                    <TagIcon className="h-4 w-4 text-gray-500 dark:text-gray-300" />
+                                    <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                                     <span className="text-xs text-gray-700 dark:text-gray-300">
                                         {capitalize(tag)}
                                     </span>
-                                    <XMarkIcon className="h-4 w-4 text-gray-500 dark:text-gray-300 hover:text-red-500" />
+                                    <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300 hover:text-red-500" />
                                 </button>
                             </div>
                         )}
@@ -717,7 +718,7 @@ const Tasks: React.FC = () => {
                                 <div className="space-y-3">
                                     {!isUpcomingView && (
                                         <div>
-                                            <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                                                 {t('tasks.groupBy', 'Group by')}
                                             </div>
                                             <div className="py-1">
@@ -759,7 +760,7 @@ const Tasks: React.FC = () => {
                                         </div>
                                     )}
                                     <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                             {t('tasks.show', 'Show')}
                                         </div>
                                         <div className="py-1 space-y-1">
@@ -879,7 +880,7 @@ const Tasks: React.FC = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                             {t('tasks.direction', 'Direction')}
                                         </div>
                                         <div className="py-1">
@@ -952,7 +953,7 @@ const Tasks: React.FC = () => {
                             <InformationCircleIcon className="h-12 w-12 text-blue-400 opacity-20" />
                         </div>
                         <div className="flex-1">
-                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                                 {description}
                             </p>
                         </div>
@@ -969,7 +970,7 @@ const Tasks: React.FC = () => {
                         } overflow-hidden`}
                     >
                         <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
+                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                             <input
                                 type="text"
                                 placeholder={getSearchPlaceholder(
@@ -995,7 +996,7 @@ const Tasks: React.FC = () => {
                 )}
 
                 {loading ? (
-                    <p>{t('common.loading', 'Loading...')}</p>
+                    <SkeletonRows />
                 ) : error ? (
                     <p className="text-red-500">{error}</p>
                 ) : (
@@ -1057,7 +1058,7 @@ const Tasks: React.FC = () => {
                                                                             project.name
                                                                         }
                                                                     </a>
-                                                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                                                                         <span>
                                                                             {t(
                                                                                 'common.due',
@@ -1140,7 +1141,7 @@ const Tasks: React.FC = () => {
                                             {isLoadingMore ? (
                                                 <>
                                                     <svg
-                                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500"
+                                                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-600"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         fill="none"
                                                         viewBox="0 0 24 24"
@@ -1186,7 +1187,7 @@ const Tasks: React.FC = () => {
 
                                 {/* Pagination info - hide in upcoming view */}
                                 {!isUpcomingView && tasks.length > 0 && (
-                                    <div className="text-center text-sm text-gray-500 dark:text-gray-400 pt-2 pb-4">
+                                    <div className="text-center text-sm text-gray-600 dark:text-gray-300 pt-2 pb-4">
                                         {t(
                                             'tasks.showingItems',
                                             'Showing {{current}} of {{total}} tasks',
@@ -1201,14 +1202,14 @@ const Tasks: React.FC = () => {
                         ) : (
                             <div className="flex justify-center items-center mt-4">
                                 <div className="w-full max-w bg-black/2 dark:bg-gray-900/25 rounded-l px-10 py-24 flex flex-col items-center opacity-95">
-                                    <InformationCircleIcon className="h-20 w-20 text-gray-400 opacity-30 mb-6" />
+                                    <InformationCircleIcon className="h-20 w-20 text-gray-500 opacity-30 mb-6" />
                                     <p className="text-2xl font-light text-center text-gray-600 dark:text-gray-300 mb-2">
                                         {t(
                                             'tasks.noTasksAvailable',
                                             'No tasks available.'
                                         )}
                                     </p>
-                                    <p className="text-base text-center text-gray-400 dark:text-gray-400">
+                                    <p className="text-base text-center text-gray-500 dark:text-gray-300">
                                         {t(
                                             'tasks.blankSlateHint',
                                             'Start by creating a new task or changing your filters.'

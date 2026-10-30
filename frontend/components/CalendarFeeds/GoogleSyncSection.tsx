@@ -206,7 +206,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                 >
                     {t('profile.google.title', 'Google Calendar and Tasks')}
                 </h3>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'profile.google.description',
                         'Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a "Cadence" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.'
@@ -228,7 +228,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                     type="button"
                     disabled={busy}
                     onClick={() => void connect()}
-                    className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-500`}
+                    className={`${buttonClass} bg-primary text-primary-on hover:bg-primary/90`}
                 >
                     {t('profile.google.connect', 'Connect Google')}
                 </button>
@@ -236,7 +236,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
 
             {status.connected && (
                 <>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {status.email}
                         {status.last_error ? (
                             <span className="text-red-600 dark:text-red-400">
@@ -440,7 +440,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                         {logOpen && logEntries && (
                             <ul className="mt-2 max-h-64 space-y-1 overflow-y-auto text-xs">
                                 {logEntries.length === 0 && (
-                                    <li className="text-gray-500 dark:text-gray-400">
+                                    <li className="text-gray-600 dark:text-gray-300">
                                         {t(
                                             'profile.google.logEmpty',
                                             'Nothing recorded yet'
@@ -452,7 +452,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                                         key={`${entry.created_at}-${index}`}
                                         className="flex gap-2"
                                     >
-                                        <span className="shrink-0 text-gray-500 dark:text-gray-400">
+                                        <span className="shrink-0 text-gray-600 dark:text-gray-300">
                                             {new Date(
                                                 entry.created_at
                                             ).toLocaleString()}

@@ -11,6 +11,7 @@ import {
 } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
+import AllDayOverflow from './AllDayOverflow';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -147,7 +148,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     const blockBody = (event: CalendarEvent) => (
         <>
             <div className="font-semibold truncate">{event.title}</div>
-            <div className="text-[10px] opacity-75 mt-0.5">
+            <div className="text-[12px] opacity-75 mt-0.5">
                 {format(event.start, 'HH:mm')} –{' '}
                 {format(resize.endOf(event), 'HH:mm')}
             </div>
@@ -181,7 +182,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     className={`text-xs font-semibold tracking-widest uppercase mb-2 ${
                         todayClass
                             ? 'text-blue-500 dark:text-blue-400'
-                            : 'text-gray-400 dark:text-gray-500'
+                            : 'text-gray-500 dark:text-gray-400'
                     }`}
                 >
                     {format(currentDate, 'EEEE', {
@@ -190,7 +191,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                 </div>
                 <div>
                     {todayClass ? (
-                        <span className="inline-flex items-center justify-center w-12 h-12 bg-blue-500 text-white text-xl font-semibold rounded-full">
+                        <span className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-on text-xl font-semibold rounded-full">
                             {format(currentDate, 'd')}
                         </span>
                     ) : (
@@ -199,7 +200,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                         </span>
                     )}
                 </div>
-                <div className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {format(currentDate, 'MMMM yyyy', {
                         locale: getCurrentLocale(),
                     })}
@@ -215,13 +216,13 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     className={`px-4 py-2 border-b border-gray-100 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 ${dndKit ? 'min-h-[3.25rem]' : ''}`}
                 >
                     {allDayEvents.length > 0 && (
-                        <div className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-2">
+                        <div className="text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-2">
                             {t('calendar.allDay', 'All day')}
                         </div>
                     )}
-                    {/* Capped so the hours stay in view. */}
-                    <div className="space-y-1 max-h-[6.5rem] overflow-y-auto">
-                        {allDayEvents.map((event) => {
+                    {/* At most three chips; the rest sit behind "+N". */}
+                    <div className="space-y-1">
+                        {allDayEvents.slice(0, 3).map((event) => {
                             const body = event.title;
                             const className =
                                 'text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium';
@@ -259,6 +260,11 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                 </div>
                             );
                         })}
+                        <AllDayOverflow
+                            events={allDayEvents.slice(3)}
+                            onEventClick={onEventClick}
+                            className="-ml-1"
+                        />
                     </div>
                 </DropTarget>
             )}
@@ -287,7 +293,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     : undefined
                             }
                         >
-                            <div className="w-20 py-3 px-2 text-xs font-medium text-gray-400 dark:text-gray-500 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
+                            <div className="w-20 py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 text-center border-r border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0">
                                 {format(
                                     addHours(
                                         new Date().setHours(hour, 0, 0, 0),

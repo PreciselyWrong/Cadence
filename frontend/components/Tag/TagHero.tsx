@@ -65,7 +65,7 @@ const TagHero: React.FC<TagHeroProps> = ({
                     </span>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                             <span className="rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                 {isSystem
                                     ? t('tags.systemTag', 'System tag')
@@ -165,7 +165,7 @@ const TagHero: React.FC<TagHeroProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                         <span>
                             {t(
                                 'tags.progressSummary',
@@ -175,7 +175,7 @@ const TagHero: React.FC<TagHeroProps> = ({
                         </span>
                         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                 %
                             </span>
                         </span>

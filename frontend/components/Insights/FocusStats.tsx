@@ -47,7 +47,7 @@ const Bars: React.FC<{
                     </div>
                 ))}
             </div>
-            <div className="flex gap-0.5 text-[10px] text-gray-400 dark:text-gray-500">
+            <div className="flex gap-0.5 text-[12px] text-gray-500 dark:text-gray-400">
                 {values.map((v) => (
                     <span key={v.key} className="flex-1 text-center">
                         {v.tick ?? ''}
@@ -109,13 +109,13 @@ const FocusStats: React.FC = () => {
             </div>
 
             {failed && (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-600">
                     {t('focusStats.error', 'Could not load focus statistics')}
                 </p>
             )}
 
             {stats && stats.sessions === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'focusStats.empty',
                         'No focus sessions yet. Start the tomato timer in the top bar; finished sessions are counted here.'
@@ -153,7 +153,7 @@ const FocusStats: React.FC = () => {
                                 key={tile.key}
                                 className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-600 dark:bg-gray-800"
                             >
-                                <dt className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                <dt className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300">
                                     {tile.label}
                                 </dt>
                                 <dd
@@ -212,7 +212,7 @@ const FocusStats: React.FC = () => {
                                         <td className="py-1.5 text-gray-700 dark:text-gray-200">
                                             {task.name}
                                         </td>
-                                        <td className="py-1.5 text-right text-gray-500 dark:text-gray-400">
+                                        <td className="py-1.5 text-right text-gray-600 dark:text-gray-300">
                                             {formatMinutes(task.minutes)}
                                         </td>
                                     </tr>

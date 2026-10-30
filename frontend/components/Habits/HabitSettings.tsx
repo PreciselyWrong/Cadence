@@ -75,7 +75,7 @@ function Segmented<T extends string>({
                     className={`px-3 py-1 text-sm rounded-md transition-colors ${
                         value === option.value
                             ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200'
                     }`}
                 >
                     {option.label}
@@ -144,12 +144,12 @@ const Row: React.FC<{
     children: React.ReactNode;
 }> = ({ label, hint, children }) => (
     <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <span className="text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300">
             {label}
         </span>
         <div className="flex flex-wrap items-center gap-2">{children}</div>
         {hint && (
-            <p className="text-xs text-gray-400 dark:text-gray-500">{hint}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
         )}
     </div>
 );
@@ -298,7 +298,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                                         onChange({ habit_target_count: n });
                                 }}
                             />
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="text-sm text-gray-600 dark:text-gray-300">
                                 {t('habits.times', 'times')}
                             </span>
                         </>
@@ -350,7 +350,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                 </select>
                 {period === 'interval' && (
                     <>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {t('habits.every', 'every')}
                         </span>
                         <DraftInput
@@ -368,7 +368,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                                     onChange({ habit_interval_days: n });
                             }}
                         />
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {t('habits.unit.days', 'days')}
                         </span>
                     </>
@@ -396,7 +396,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                                     className={`min-w-0 py-1 text-xs rounded-md truncate transition-colors ${
                                         on
                                             ? ACCENT.solid
-                                            : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                                     }`}
                                 >
                                     {weekdayLabel(day)}
@@ -465,7 +465,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                     <button
                         type="button"
                         onClick={() => onChange({ habit_reminder_time: null })}
-                        className="text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+                        className="text-xs text-gray-600 hover:text-gray-800 dark:hover:text-gray-200"
                     >
                         {t('habits.settings.noReminder', 'Turn off')}
                     </button>
@@ -473,7 +473,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
             </Row>
 
             {saving && (
-                <p className="text-xs text-gray-400" aria-live="polite">
+                <p className="text-xs text-gray-500" aria-live="polite">
                     {t('common.saving', 'Saving...')}
                 </p>
             )}

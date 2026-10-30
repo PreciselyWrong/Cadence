@@ -93,7 +93,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
         ) => { key: string; label: string; run: () => void }[]
     ) =>
         tasks.length === 0 ? (
-            <p className="py-3 text-sm text-gray-500 dark:text-gray-400">
+            <p className="py-3 text-sm text-gray-600 dark:text-gray-300">
                 {empty}
             </p>
         ) : (
@@ -111,7 +111,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
                             <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
                                 {task.original_name || task.name}
                             </span>
-                            <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
+                            <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
                                 {[
                                     task.Project?.name,
                                     task.estimated_minutes
@@ -129,7 +129,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
         );
 
     const sectionTitle =
-        'mt-6 mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400';
+        'mt-6 mb-1 text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300';
 
     return (
         <section>
@@ -144,7 +144,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
                     {capacityText}
                 </span>
                 {week.unestimated > 0 && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                         {t(
                             'review.week.unestimated',
                             '{{count}} without estimate',
@@ -175,7 +175,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
                             onBlur={() => void saveCapacity()}
                             className="w-20 rounded-md border border-gray-200 bg-white px-2 py-0.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                         />
-                        <span className="text-xs text-gray-400">h</span>
+                        <span className="text-xs text-gray-500">h</span>
                     </span>
                 ) : (
                     <button
@@ -188,7 +188,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
                             );
                             setEditingCapacity(true);
                         }}
-                        className="text-xs text-gray-500 underline-offset-2 hover:underline dark:text-gray-400"
+                        className="text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
                     >
                         {t('review.week.setCapacity', 'Set available time')}
                     </button>

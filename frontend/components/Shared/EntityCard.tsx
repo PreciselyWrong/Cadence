@@ -52,7 +52,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
 
     return (
         <div
-            className="group relative flex h-full flex-col gap-2.5 rounded-lg bg-gray-50 p-5 shadow-sm transition-shadow duration-150 hover:shadow-md dark:bg-gray-900"
+            className="group relative flex h-full flex-col gap-2.5 rounded-card bg-surface-card p-5 shadow-sm transition-shadow duration-150 hover:shadow-md"
             data-testid={testId}
         >
             <div className="flex min-w-0 items-start gap-2">
@@ -71,7 +71,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
             </div>
 
             {description && (
-                <p className="line-clamp-2 text-xs leading-relaxed text-gray-400 dark:text-gray-500">
+                <p className="line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
                     {description}
                 </p>
             )}
@@ -86,7 +86,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
                             </div>
                             {pill && (
                                 <span
-                                    className={`min-w-0 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                                    className={`min-w-0 truncate rounded-full px-2 py-0.5 text-[12px] font-semibold uppercase tracking-wide ${
                                         pill.color
                                             ? ''
                                             : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
@@ -101,7 +101,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
                     )}
                     {progress && (
                         <div className="space-y-2" title={progress.title}>
-                            <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-gray-500 tabular-nums dark:text-gray-400">
+                            <div className="flex items-center justify-between text-[12px] font-semibold uppercase tracking-wider text-gray-600 tabular-nums dark:text-gray-300">
                                 <span>
                                     {progress.label && `${progress.label} · `}
                                     {progress.done}/{progress.total}
@@ -117,7 +117,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
                         </div>
                     )}
                     {details && (
-                        <div className="flex h-6 min-w-0 items-center justify-between gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex h-6 min-w-0 items-center justify-between gap-2 text-xs text-gray-600 dark:text-gray-300">
                             {details}
                         </div>
                     )}

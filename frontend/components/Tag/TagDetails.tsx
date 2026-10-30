@@ -634,7 +634,7 @@ const TagDetails: React.FC = () => {
                 } overflow-hidden`}
             >
                 <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                     <input
                         type="text"
                         placeholder={t(
@@ -678,7 +678,7 @@ const TagDetails: React.FC = () => {
                                 className={`relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
                                     activeTab === tab
                                         ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                        : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                        : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
                                 }`}
                                 aria-pressed={activeTab === tab}
                             >
@@ -704,7 +704,7 @@ const TagDetails: React.FC = () => {
                             footerContent={
                                 <div className="space-y-3">
                                     <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                                             {t('tasks.groupBy', 'Group by')}
                                         </div>
                                         <div className="py-1">
@@ -743,7 +743,7 @@ const TagDetails: React.FC = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                             {t('tasks.show', 'Show')}
                                         </div>
                                         <div className="py-1 space-y-1">
@@ -801,7 +801,7 @@ const TagDetails: React.FC = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
                                             {t('tasks.direction', 'Direction')}
                                         </div>
                                         <div className="py-1">
@@ -910,7 +910,7 @@ const TagDetails: React.FC = () => {
                                 />
                             )
                         ) : (
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {t(
                                     'tasks.noTasksAvailable',
                                     'No tasks available.'
@@ -988,7 +988,7 @@ const TagDetails: React.FC = () => {
                                         </Link>
                                         {/* Project and Tags below title - matching TaskHeader style */}
                                         {hasMetadata && (
-                                            <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 mt-1">
                                                 {/* Project */}
                                                 {noteProject && (
                                                     <div className="flex items-center">
@@ -1008,7 +1008,7 @@ const TagDetails: React.FC = () => {
                                                                           )}`
                                                                     : `/project/${noteProject.id}`
                                                             }
-                                                            className="text-gray-500 dark:text-gray-400 hover:underline transition-colors"
+                                                            className="text-gray-600 dark:text-gray-300 hover:underline transition-colors"
                                                             onClick={(e) =>
                                                                 e.stopPropagation()
                                                             }
@@ -1048,7 +1048,7 @@ const TagDetails: React.FC = () => {
                                                                                           )}`
                                                                                     : `/tag/${encodeURIComponent(noteTag.name)}`
                                                                             }
-                                                                            className="text-gray-500 dark:text-gray-400 hover:underline transition-colors"
+                                                                            className="text-gray-600 dark:text-gray-300 hover:underline transition-colors"
                                                                             onClick={(
                                                                                 e
                                                                             ) =>
@@ -1075,7 +1075,7 @@ const TagDetails: React.FC = () => {
                                     <div className="flex space-x-2 pt-1">
                                         <button
                                             onClick={() => handleEditNote(note)}
-                                            className={`text-gray-500 hover:text-blue-700 dark:hover:text-blue-300 focus:outline-none transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
+                                            className={`text-gray-600 hover:text-blue-700 dark:hover:text-blue-300 transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
                                             aria-label={`Edit ${note.title}`}
                                             title={`Edit ${note.title}`}
                                         >
@@ -1085,7 +1085,7 @@ const TagDetails: React.FC = () => {
                                             onClick={() =>
                                                 handleDeleteNoteClick(note)
                                             }
-                                            className={`text-gray-500 hover:text-red-700 dark:hover:text-red-300 focus:outline-none transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
+                                            className={`text-gray-600 hover:text-red-700 dark:hover:text-red-300 transition-opacity ${hoveredNoteId === note.uid ? 'opacity-100' : 'opacity-0'}`}
                                             aria-label={`Delete ${note.title}`}
                                             title={`Delete ${note.title}`}
                                         >
@@ -1138,8 +1138,8 @@ const TagDetails: React.FC = () => {
                 notes.length === 0 &&
                 projects.length === 0 && (
                     <div className="text-center py-8">
-                        <TagIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-600 dark:text-gray-400 text-lg">
+                        <TagIcon className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+                        <p className="text-gray-600 dark:text-gray-300 text-lg">
                             {taskSearchQuery.trim()
                                 ? t(
                                       'tasks.noTasksAvailable',

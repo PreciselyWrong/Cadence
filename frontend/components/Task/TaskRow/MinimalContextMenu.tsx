@@ -173,7 +173,7 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
     );
 
     const sectionLabel =
-        'px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500';
+        'px-3 pb-1 pt-2 text-[12px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400';
 
     return createPortal(
         <div

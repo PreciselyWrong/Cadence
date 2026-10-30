@@ -38,7 +38,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                 className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-w-0"
                 data-testid="capture-destinations-locked"
             >
-                <span className="text-[13px] text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <span className="text-[13px] text-gray-600 dark:text-gray-300 whitespace-nowrap">
                     {t('capture.addTo', 'Add to')}
                 </span>
                 {chips.map((label) => (
@@ -50,7 +50,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                     </span>
                 ))}
                 <LockClosedIcon
-                    className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"
+                    className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400"
                     aria-hidden="true"
                 />
             </div>
@@ -61,7 +61,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
     // German) push the options under "Add to", then onto a second row.
     return (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-w-0">
-            <span className="text-[13px] text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            <span className="text-[13px] text-gray-600 dark:text-gray-300 whitespace-nowrap">
                 {t('capture.addTo', 'Add to')}
             </span>
             <div
@@ -82,7 +82,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                             className={`px-2 sm:px-2.5 py-1 text-[13px] whitespace-nowrap rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                                 selected
                                     ? 'bg-blue-100 dark:bg-blue-900/50 text-gray-900 dark:text-white font-semibold'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200'
                             }`}
                         >
                             {t(LABELS[target].key, LABELS[target].fallback)}

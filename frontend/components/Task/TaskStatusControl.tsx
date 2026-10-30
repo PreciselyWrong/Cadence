@@ -129,7 +129,7 @@ const TaskStatusControl: React.FC<TaskStatusControlProps> = ({
         ? 'text-green-600 dark:text-green-400'
         : taskInProgress
           ? 'text-blue-600 dark:text-blue-400'
-          : 'text-gray-600 dark:text-gray-400';
+          : 'text-gray-600 dark:text-gray-300';
 
     const completionButtonHoverClass = taskCompleted
         ? 'hover:bg-green-50 dark:hover:bg-green-900/40'
@@ -234,7 +234,7 @@ const TaskStatusControl: React.FC<TaskStatusControlProps> = ({
                 inactiveClasses:
                     'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800',
                 activeIconClass: 'text-gray-600 dark:text-gray-300',
-                inactiveIconClass: 'text-gray-500 dark:text-gray-400',
+                inactiveIconClass: 'text-gray-600 dark:text-gray-300',
             },
             {
                 value: 'planned',

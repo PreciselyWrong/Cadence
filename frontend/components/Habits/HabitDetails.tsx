@@ -204,7 +204,7 @@ const HabitDetails: React.FC = () => {
 
     if (!habit) {
         return (
-            <div className="flex items-center justify-center min-h-[50vh] text-gray-600 dark:text-gray-400">
+            <div className="flex items-center justify-center min-h-[50vh] text-gray-600 dark:text-gray-300">
                 {t('common.loading', 'Loading...')}
             </div>
         );
@@ -271,7 +271,7 @@ const HabitDetails: React.FC = () => {
         >
             <button
                 onClick={() => navigate('/habits')}
-                className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
+                className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white mb-4"
             >
                 <ArrowLeftIcon className="h-4 w-4" />
                 {t('habits.backToHabits', 'Habits')}
@@ -294,7 +294,7 @@ const HabitDetails: React.FC = () => {
                                     setEditingName(false);
                                 }
                             }}
-                            className="w-full bg-transparent text-3xl font-bold text-gray-900 dark:text-white focus:outline-none placeholder-gray-300 dark:placeholder-gray-600"
+                            className="w-full bg-transparent text-3xl font-bold text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
                             placeholder={t(
                                 'habits.namePlaceholder',
                                 'e.g. Read 20 pages, No sugar'
@@ -310,7 +310,7 @@ const HabitDetails: React.FC = () => {
                             {habit.name}
                         </button>
                     )}
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         {formatHabitTarget(t, habit)}
                         {habit.habit_archived &&
                             ` · ${t('habits.archivedLabel', 'Archived')}`}
@@ -348,7 +348,7 @@ const HabitDetails: React.FC = () => {
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
+                            className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
                             title={t('common.delete', 'Delete')}
                             aria-label={t('common.delete', 'Delete')}
                         >
@@ -393,7 +393,7 @@ const HabitDetails: React.FC = () => {
                                 className={`${SURFACE.card} rounded-xl shadow-sm p-4 min-w-0`}
                             >
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                    <h3 className="text-xs font-medium text-gray-600 dark:text-gray-300">
                                         {label}
                                     </h3>
                                     {icon}
@@ -401,7 +401,7 @@ const HabitDetails: React.FC = () => {
                                 <p className="text-3xl font-bold text-gray-900 dark:text-white tabular-nums">
                                     {value}
                                 </p>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 truncate">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
                                     {sub}
                                 </p>
                             </div>

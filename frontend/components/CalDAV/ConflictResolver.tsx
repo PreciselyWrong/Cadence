@@ -235,7 +235,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
             <div className="fixed inset-0 bg-gray-900 bg-opacity-80 z-50 flex items-center justify-center">
                 <div className="bg-white dark:bg-gray-900 rounded-lg p-8">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400">
+                    <p className="mt-4 text-gray-600 dark:text-gray-300">
                         {t('common.loading', 'Loading...')}
                     </p>
                 </div>
@@ -254,7 +254,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             'No conflicts'
                         )}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         {t(
                             'profile.conflictResolver.noConflictsDescription',
                             'There are no conflicts to resolve for this calendar.'
@@ -263,7 +263,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md"
+                        className="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-primary-on rounded-md"
                     >
                         {t('common.close', 'Close')}
                     </button>
@@ -288,7 +288,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                                 'Resolve Sync Conflicts'
                             )}
                         </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                             {t(
                                 'profile.conflictResolver.conflictCount',
                                 'Conflict {{current}} of {{total}}',
@@ -299,11 +299,11 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             )}
                         </p>
                     </div>
-                    <button
+                    <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                         type="button"
                         onClick={onClose}
                         disabled={isResolving}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                     >
                         <XMarkIcon className="w-6 h-6" />
                     </button>
@@ -315,7 +315,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             {currentConflict.conflict_local_version?.name ||
                                 t('common.untitled', 'Untitled')}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                             {t(
                                 'profile.conflictResolver.detectedAt',
                                 'Detected: {{time}}',
@@ -331,7 +331,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                         </p>
                     </div>
 
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                         {t(
                             'profile.conflictResolver.chooseVersion',
                             'Choose which version to keep for each field:'
@@ -373,7 +373,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                                             }`}
                                         >
                                             <div className="flex items-start justify-between mb-2">
-                                                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                                                     {t(
                                                         'profile.conflictResolver.local',
                                                         'Local (Cadence)'
@@ -408,7 +408,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                                             }`}
                                         >
                                             <div className="flex items-start justify-between mb-2">
-                                                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                                                     {t(
                                                         'profile.conflictResolver.remote',
                                                         'Remote (CalDAV)'
@@ -466,7 +466,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             disabled={currentIndex === 0 || isResolving}
                             className={`inline-flex items-center px-4 py-2 rounded-md ${
                                 currentIndex === 0 || isResolving
-                                    ? 'text-gray-400 cursor-not-allowed'
+                                    ? 'text-gray-500 cursor-not-allowed'
                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                             }`}
                         >
@@ -490,7 +490,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             className={`inline-flex items-center px-4 py-2 rounded-md ${
                                 currentIndex === conflicts.length - 1 ||
                                 isResolving
-                                    ? 'text-gray-400 cursor-not-allowed'
+                                    ? 'text-gray-500 cursor-not-allowed'
                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                             }`}
                         >

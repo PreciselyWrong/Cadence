@@ -141,6 +141,7 @@ import {
     intlLocale,
     feedEventsToBlocks,
 } from './planUtils';
+import SkeletonRows from '../Shared/SkeletonRows';
 
 type Mode = 'timeline' | 'list';
 type PanelMode = 'day' | 'agenda';
@@ -1766,7 +1767,7 @@ const TodayPage: React.FC = () => {
         `min-h-[30px] rounded-md px-3 text-xs font-medium ${
             active
                 ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
-                : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
         }`;
 
     return (
@@ -1800,7 +1801,7 @@ const TodayPage: React.FC = () => {
                             {relativeLabel ? (
                                 <>
                                     {relativeLabel}
-                                    <span className="ml-2 text-base text-gray-500 dark:text-gray-400">
+                                    <span className="ml-2 text-base text-gray-600 dark:text-gray-300">
                                         {dateLabel}
                                     </span>
                                 </>
@@ -1831,7 +1832,7 @@ const TodayPage: React.FC = () => {
                     </div>
 
                     {items.length > 0 && (
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {t(
                                 'dailyPlan.progress',
                                 '{{done}} of {{total}} done',
@@ -1856,7 +1857,7 @@ const TodayPage: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={previewPlaceAll}
-                                className="min-h-[34px] rounded-lg bg-blue-600 px-3.5 text-sm font-medium text-white hover:bg-blue-700"
+                                className="min-h-[34px] rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-on hover:bg-primary/90"
                                 data-testid="place-all"
                             >
                                 {t('dailyPlan.placeAll', 'Place all')}
@@ -1874,12 +1875,12 @@ const TodayPage: React.FC = () => {
                             </button>
                         )}
                         {saveState === 'saving' && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-600">
                                 {t('dailyPlan.saving', 'Saving…')}
                             </span>
                         )}
                         {refreshingEvents && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-600">
                                 {t(
                                     'dailyPlan.refreshingCalendar',
                                     'Refreshing calendar…'
@@ -1892,7 +1893,7 @@ const TodayPage: React.FC = () => {
                                 onClick={() => setMoreOpen((open) => !open)}
                                 aria-expanded={moreOpen}
                                 aria-label={t('dailyPlan.more', 'More options')}
-                                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                 data-testid="plan-more"
                             >
                                 <EllipsisHorizontalIcon className="h-5 w-5" />
@@ -2081,7 +2082,7 @@ const TodayPage: React.FC = () => {
                                                     'Fill free time'
                                                 )}
                                             </span>
-                                            <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="block text-xs text-gray-600 dark:text-gray-300">
                                                 {t(
                                                     'dailyPlan.ai.fillHint',
                                                     'Keep what is planned, add around it'
@@ -2101,7 +2102,7 @@ const TodayPage: React.FC = () => {
                                                     'Start over'
                                                 )}
                                             </span>
-                                            <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="block text-xs text-gray-600 dark:text-gray-300">
                                                 {t(
                                                     'dailyPlan.ai.replaceHint',
                                                     'Draft the whole day again (you can undo)'
@@ -2177,9 +2178,7 @@ const TodayPage: React.FC = () => {
                 )}
 
                 {!candidates ? (
-                    <p className="p-8 text-gray-500 dark:text-gray-400">
-                        {t('common.loading', 'Loading...')}
-                    </p>
+                    <SkeletonRows className="p-4" />
                 ) : (
                     <div
                         ref={panesRef}
@@ -2479,7 +2478,7 @@ const TodayPage: React.FC = () => {
                                                                                 s.name
                                                                             }
                                                                         </span>
-                                                                        <span className="text-gray-600 dark:text-gray-400">
+                                                                        <span className="text-gray-600 dark:text-gray-300">
                                                                             {
                                                                                 s.reason
                                                                             }

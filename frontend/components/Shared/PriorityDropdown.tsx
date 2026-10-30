@@ -32,7 +32,7 @@ const PriorityDropdown: React.FC<PriorityDropdownProps> = ({
             value: null,
             label: t('priority.none', 'None'),
             icon: (
-                <XMarkIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <XMarkIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             ),
         },
         {
@@ -146,7 +146,7 @@ const PriorityDropdown: React.FC<PriorityDropdownProps> = ({
             ) : (
                 <button
                     type="button"
-                    className="inline-flex justify-between w-full px-3 py-2 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-900 rounded-md shadow-sm focus:outline-none"
+                    className="inline-flex justify-between w-full px-3 py-2 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-900 rounded-md shadow-sm "
                     onClick={handleToggle}
                 >
                     <span className="flex items-center space-x-2">
@@ -157,7 +157,7 @@ const PriorityDropdown: React.FC<PriorityDropdownProps> = ({
                                 : t('forms.priority', 'Select Priority')}
                         </span>
                     </span>
-                    <ChevronDownIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                    <ChevronDownIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
             )}
 

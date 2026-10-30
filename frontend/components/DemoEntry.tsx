@@ -39,7 +39,7 @@ const DemoEntry: React.FC = () => {
                                 'The demo is not available'
                             )}
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">
                             {t(
                                 'demo.unavailableBody',
                                 'It may be rebuilding itself. Try again in a moment.'
@@ -54,7 +54,7 @@ const DemoEntry: React.FC = () => {
                     </>
                 ) : (
                     <p
-                        className="text-gray-600 dark:text-gray-400"
+                        className="text-gray-600 dark:text-gray-300"
                         data-testid="demo-opening"
                     >
                         {t('demo.opening', 'Opening the demo...')}

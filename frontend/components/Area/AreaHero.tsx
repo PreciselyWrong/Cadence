@@ -38,7 +38,7 @@ const AreaHero: React.FC<AreaHeroProps> = ({
         totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
     const actionClass =
         'inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800';
-    const statClass = 'hover:underline text-gray-500 dark:text-gray-400';
+    const statClass = 'hover:underline text-gray-600 dark:text-gray-300';
 
     return (
         <div className="mb-6 space-y-3">
@@ -60,7 +60,7 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                     </span>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
                             <span className="rounded-md px-2 py-0.5 font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                 {t('areas.singular', 'Area')}
                             </span>
@@ -88,7 +88,7 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                             {area.name}
                         </h1>
                         {area.description && (
-                            <p className="max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                            <p className="max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                                 {area.description}
                             </p>
                         )}
@@ -115,7 +115,7 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-500 tabular-nums dark:text-gray-400">
+                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
                         <span>
                             {t(
                                 'areas.progressSummary',
@@ -125,7 +125,7 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                         </span>
                         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                                 %
                             </span>
                         </span>

@@ -41,7 +41,7 @@ const ToggleRow: React.FC<ToggleRowProps> = ({
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {label}
             </label>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                 {description}
             </p>
         </div>

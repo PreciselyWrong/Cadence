@@ -70,7 +70,7 @@ const AgendaList: React.FC<AgendaListProps> = ({ items, events, now }) => {
         const over = now !== null && row.end !== null && row.end <= now;
         const content = (
             <>
-                <span className="w-24 shrink-0 text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                <span className="w-24 shrink-0 text-xs tabular-nums text-gray-600 dark:text-gray-300">
                     {row.start === null
                         ? t('dailyPlan.agendaAnytime', 'Any time')
                         : `${formatMinute(row.start)}${
@@ -92,14 +92,14 @@ const AgendaList: React.FC<AgendaListProps> = ({ items, events, now }) => {
                 <span
                     className={`min-w-0 flex-1 truncate text-sm ${
                         row.done
-                            ? 'text-gray-400 line-through'
+                            ? 'text-gray-500 line-through'
                             : 'text-gray-900 dark:text-gray-100'
                     }`}
                 >
                     {row.title}
                 </span>
                 {row.start !== null && row.end !== null && (
-                    <span className="shrink-0 text-xs text-gray-400">
+                    <span className="shrink-0 text-xs text-gray-500">
                         {formatDuration(row.end - row.start)}
                     </span>
                 )}
@@ -128,7 +128,7 @@ const AgendaList: React.FC<AgendaListProps> = ({ items, events, now }) => {
     if (timed.length === 0 && untimed.length === 0) {
         return (
             <p
-                className="py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                className="py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                 data-testid="agenda-empty"
             >
                 {t('dailyPlan.agendaEmpty', 'Nothing scheduled for this day.')}
@@ -141,7 +141,7 @@ const AgendaList: React.FC<AgendaListProps> = ({ items, events, now }) => {
             <ul className="flex flex-col">{timed.map(renderRow)}</ul>
             {untimed.length > 0 && (
                 <>
-                    <h3 className="mb-1 mt-4 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <h3 className="mb-1 mt-4 px-2 text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
                         {t('dailyPlan.agendaUntimed', 'No set time')}
                     </h3>
                     <ul className="flex flex-col">{untimed.map(renderRow)}</ul>

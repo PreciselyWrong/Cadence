@@ -350,7 +350,7 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
                         <span className="block text-sm font-medium leading-tight">
                             {cmd.label}
                         </span>
-                        <span className="block text-xs text-gray-500 dark:text-gray-400 leading-tight">
+                        <span className="block text-xs text-gray-600 dark:text-gray-300 leading-tight">
                             {cmd.description}
                         </span>
                     </span>

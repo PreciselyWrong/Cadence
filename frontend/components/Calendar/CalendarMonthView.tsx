@@ -1,3 +1,4 @@
+import { toIntlLocale } from '../../utils/intlLocale';
 import React, { useState, useEffect } from 'react';
 import {
     format,
@@ -43,9 +44,15 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
     showWeekends = true,
     showWeekNumbers = false,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
     const [draggedEventId, setDraggedEventId] = useState<string | null>(null);
+    // On phones a day cell only shows dots; tapping it lists the day below.
+    const [selectedDay, setSelectedDay] = useState<Date>(() => new Date());
+    const isPhone = () =>
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(max-width: 639px)').matches;
 
     useEffect(() => {
         const loadFirstDayOfWeek = async () => {
@@ -91,6 +98,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
         gridTemplateColumns: `repeat(${showWeekends ? 7 : 5}, minmax(0, 1fr))`,
     };
 
+    const selectedDayEvents = events
+        .filter((event) => coversDay(event, selectedDay))
+        .sort((a, b) => a.start.getTime() - b.start.getTime());
+
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
         e.stopPropagation();
         setDraggedEventId(event.id);
@@ -123,7 +134,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                 {getWeekDays().map((day) => (
                     <div
                         key={day}
-                        className="py-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500"
+                        className="py-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400"
                     >
                         {day}
                     </div>
@@ -165,10 +176,14 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                     return (
                         <div
                             key={day.toString()}
-                            onClick={() => onDateClick?.(day)}
+                            onClick={() =>
+                                isPhone()
+                                    ? setSelectedDay(day)
+                                    : onDateClick?.(day)
+                            }
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(day, e)}
-                            className={`p-2 border-b border-gray-100 dark:border-gray-600 cursor-pointer flex flex-col min-h-[90px] transition-colors ${
+                            className={`p-1 sm:p-2 border-b border-gray-100 dark:border-gray-600 cursor-pointer flex flex-col min-h-[52px] sm:min-h-[90px] transition-colors ${
                                 !isCurrentMonth
                                     ? 'bg-gray-50 dark:bg-gray-800'
                                     : isTodayDate
@@ -178,15 +193,15 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                         >
                             <div className="mb-1.5 flex items-center justify-between">
                                 {isTodayDate ? (
-                                    <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-xs font-semibold rounded-full">
+                                    <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-primary-on text-xs font-semibold rounded-full">
                                         {format(day, 'd')}
                                     </span>
                                 ) : (
                                     <span
                                         className={`text-sm font-medium ${
                                             !isCurrentMonth
-                                                ? 'text-gray-300 dark:text-gray-600'
-                                                : 'text-gray-600 dark:text-gray-300'
+                                                ? 'text-gray-500 dark:text-gray-400'
+                                                : 'text-gray-700 dark:text-gray-200'
                                         }`}
                                     >
                                         {format(day, 'd')}
@@ -201,7 +216,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         .find((d) => isShown(d.getDay())) ===
                                         day && (
                                         <span
-                                            className="text-[10px] font-medium text-gray-400 dark:text-gray-500"
+                                            className="text-[12px] font-medium text-gray-500 dark:text-gray-400"
                                             data-week={getISOWeek(day)}
                                         >
                                             {t('calendar.weekNumber', {
@@ -212,7 +227,30 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     )}
                             </div>
 
-                            <div className="space-y-0.5 overflow-hidden flex-1">
+                            {/* Phones: one coloured dot per event, at most three. */}
+                            <div
+                                className="flex justify-center gap-1 sm:hidden"
+                                data-testid="calendar-month-dots"
+                            >
+                                {dayEvents
+                                    .filter(
+                                        (event): event is CalendarEvent =>
+                                            event !== null
+                                    )
+                                    .slice(0, 3)
+                                    .map((event) => (
+                                        <span
+                                            key={event.id}
+                                            className="h-1.5 w-1.5 rounded-full"
+                                            style={{
+                                                backgroundColor:
+                                                    event.color || '#3b82f6',
+                                            }}
+                                        />
+                                    ))}
+                            </div>
+
+                            <div className="hidden space-y-0.5 overflow-hidden flex-1 sm:block">
                                 {dayEvents.slice(0, 3).map((event, slot) =>
                                     event === null ? (
                                         <div
@@ -266,7 +304,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     )
                                 )}
                                 {hiddenCount > 0 && (
-                                    <div className="text-xs text-gray-400 dark:text-gray-500 px-1 font-medium">
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 px-1 font-medium">
                                         +{hiddenCount}
                                     </div>
                                 )}
@@ -274,6 +312,57 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                         </div>
                     );
                 })}
+            </div>
+
+            {/* Phones: the selected day's events */}
+            <div
+                className="border-t border-gray-200 p-3 dark:border-gray-600 sm:hidden"
+                data-testid="calendar-month-day-list"
+            >
+                <div className="mb-2 flex items-center justify-between">
+                    <span className="text-label font-semibold first-letter:uppercase">
+                        {new Intl.DateTimeFormat(toIntlLocale(i18n?.language), {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                        }).format(selectedDay)}
+                    </span>
+                    <button
+                        type="button"
+                        onClick={() => onDateClick?.(selectedDay)}
+                        className="min-h-[44px] rounded-full px-3 text-label text-primary"
+                    >
+                        {t('calendar.openDay', 'Open day')}
+                    </button>
+                </div>
+                {selectedDayEvents.length === 0 ? (
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {t('calendar.noEventsThisDay', 'Nothing planned.')}
+                    </p>
+                ) : (
+                    <ul className="space-y-1">
+                        {selectedDayEvents.map((event) => (
+                            <li key={event.id}>
+                                <button
+                                    type="button"
+                                    onClick={() => onEventClick?.(event)}
+                                    className="flex min-h-[44px] w-full items-center gap-3 rounded-chip px-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-600/40"
+                                >
+                                    <span
+                                        className="h-8 w-1 shrink-0 rounded-full"
+                                        style={{
+                                            backgroundColor:
+                                                event.color || '#3b82f6',
+                                        }}
+                                    />
+                                    <span className="truncate">
+                                        {event.title}
+                                    </span>
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </div>
     );

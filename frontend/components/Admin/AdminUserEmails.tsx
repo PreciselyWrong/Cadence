@@ -172,7 +172,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                                 : t('admin.userEmails.title', 'Emails')}
                         </h3>
                         {data?.user.email && (
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {data.user.email} ·{' '}
                                 {t('admin.userEmails.language', {
                                     defaultValue: 'Language: {{language}}',
@@ -184,7 +184,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                        className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-200"
                         aria-label={t('common.close', 'Close')}
                     >
                         <XMarkIcon className="h-5 w-5" />
@@ -212,13 +212,13 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                             data-testid="admin-user-email-preview"
                         >
                             <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1">
-                                <dt className="text-gray-500 dark:text-gray-400">
+                                <dt className="text-gray-600 dark:text-gray-300">
                                     {t('admin.userEmails.to', 'To')}
                                 </dt>
                                 <dd className="text-gray-900 dark:text-gray-100">
                                     {preview.to}
                                 </dd>
-                                <dt className="text-gray-500 dark:text-gray-400">
+                                <dt className="text-gray-600 dark:text-gray-300">
                                     {t('admin.userEmails.subject', 'Subject')}
                                 </dt>
                                 <dd className="font-medium text-gray-900 dark:text-gray-100">
@@ -231,7 +231,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                             {preview.text.includes(
                                 preview.link_placeholder
                             ) && (
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 dark:text-gray-300">
                                     {t(
                                         'admin.userEmails.linkNote',
                                         'The link is created when you send, so the real email has a working link in its place.'
@@ -256,7 +256,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                                     type="button"
                                     onClick={confirmSend}
                                     disabled={sending}
-                                    className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                                    className="px-4 py-2 rounded-md bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-60"
                                     data-testid="admin-user-email-confirm"
                                 >
                                     {sending
@@ -286,7 +286,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                                                     {name(e.key)}
                                                 </div>
                                                 {e.reason && (
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <div className="text-xs text-gray-600 dark:text-gray-300">
                                                         {e.reason}
                                                     </div>
                                                 )}
@@ -327,7 +327,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                                         )}
                                     </h4>
                                     {data.history.length === 0 ? (
-                                        <p className="text-gray-500 dark:text-gray-400">
+                                        <p className="text-gray-600 dark:text-gray-300">
                                             {t(
                                                 'admin.userEmails.noHistory',
                                                 'Nothing recorded yet.'
@@ -358,7 +358,7 @@ const AdminUserEmails: React.FC<AdminUserEmailsProps> = ({
                                                             {h.subject}
                                                         </span>
                                                     </div>
-                                                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                                    <div className="mt-0.5 text-xs text-gray-600 dark:text-gray-300">
                                                         {formatDateTime(
                                                             h.created_at
                                                         )}{' '}

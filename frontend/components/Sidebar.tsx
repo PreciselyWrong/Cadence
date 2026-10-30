@@ -315,7 +315,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                    className="p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                     aria-label="Collapse Sidebar"
                                     data-testid="sidebar-collapse"
                                 >
@@ -385,7 +385,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                         type="button"
                                         onClick={openSidebarSettings}
                                         data-testid="sidebar-customize"
-                                        className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-[oklch(24%_0.015_250)]"
+                                        className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                     >
                                         {t(
                                             'sidebar.customize',

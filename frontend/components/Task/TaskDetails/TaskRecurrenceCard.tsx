@@ -88,7 +88,7 @@ const TaskRecurrenceCard: React.FC<TaskRecurrenceCardProps> = ({
             return (
                 <div className="flex items-center justify-center py-4">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-                    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
                         {t('common.loading', 'Loading...')}
                     </span>
                 </div>
@@ -97,7 +97,7 @@ const TaskRecurrenceCard: React.FC<TaskRecurrenceCardProps> = ({
 
         if (nextIterations.length === 0) {
             return (
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'task.noUpcomingOccurrences',
                         'No upcoming occurrences.'
@@ -249,7 +249,7 @@ const TaskRecurrenceCard: React.FC<TaskRecurrenceCardProps> = ({
                                 />
                             </div>
                         ) : (
-                            <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                            <div className="text-sm text-gray-600 dark:text-gray-300 text-center">
                                 {t(
                                     'task.notRecurring',
                                     'Add recurrence details'

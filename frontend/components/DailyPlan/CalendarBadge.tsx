@@ -9,7 +9,7 @@ interface CalendarBadgeProps {
 // and its name in quiet grey text. The row itself stays neutral.
 const CalendarBadge: React.FC<CalendarBadgeProps> = ({ name, color }) => (
     <span
-        className="inline-flex max-w-[40%] shrink-0 items-center gap-1.5 text-[11px] text-gray-400 dark:text-gray-500"
+        className="inline-flex max-w-[40%] shrink-0 items-center gap-1.5 text-[12px] text-gray-500 dark:text-gray-400"
         data-testid="calendar-badge"
     >
         <span

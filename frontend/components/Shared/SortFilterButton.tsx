@@ -55,8 +55,8 @@ const SortFilterButton: React.FC<SortFilterButtonProps> = ({
         : Math.max(longestOptionLength * 0.55 + 3.5, 8.5); // min 8.5rem for desktop
 
     const buttonClasses = isMobile
-        ? `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-3 py-1.5 bg-white dark:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none transition-colors`
-        : `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none transition-colors`;
+        ? `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-3 py-1.5 bg-white dark:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors`
+        : `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors`;
 
     const buttonStyle = { width: `${optimalWidth}rem` };
 
@@ -85,7 +85,7 @@ const SortFilterButton: React.FC<SortFilterButtonProps> = ({
             </button>
             {isOpen && (
                 <div
-                    className={`origin-top-right absolute right-0 mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none z-50`}
+                    className={`origin-top-right absolute right-0 mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50`}
                     style={buttonStyle}
                 >
                     <div className="p-1">

@@ -100,7 +100,7 @@ export function useReverify() {
                       <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                           {t('mfa.reverifyTitle', 'Confirm it is you')}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                           {pending.method === 'code'
                               ? t(
                                     'mfa.reverifyCode',
@@ -144,7 +144,7 @@ export function useReverify() {
                           <button
                               type="submit"
                               disabled={submitting || !value}
-                              className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-60"
+                              className="px-4 py-2 rounded bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-60"
                               data-testid="reverify-submit"
                           >
                               {t('mfa.confirm', 'Confirm')}

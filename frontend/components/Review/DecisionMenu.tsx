@@ -75,7 +75,7 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({ options, disabled }) => {
                 >
                     {askingDate ? (
                         <div className="px-3 py-2">
-                            <label className="block text-xs text-gray-500 dark:text-gray-400">
+                            <label className="block text-xs text-gray-600 dark:text-gray-300">
                                 {askingDate.label}
                                 <input
                                     type="date"

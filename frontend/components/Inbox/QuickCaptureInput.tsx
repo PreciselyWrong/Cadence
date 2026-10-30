@@ -2622,12 +2622,12 @@ const QuickCaptureInput = React.forwardRef<
             (openTaskModal || openProjectModal || openNoteModal) ? (
                 <div className="mt-2 flex items-center gap-3.5 h-5 overflow-hidden">
                     {!inputText.trim() ? (
-                        <span className="text-[10px] text-gray-300 dark:text-gray-600">
+                        <span className="text-[12px] text-gray-300 dark:text-gray-600">
                             {t('inbox.shiftEnterHint')}
                         </span>
                     ) : (
                         <>
-                            <span className="text-[11px] text-gray-400 dark:text-gray-500">
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400">
                                 {t('inbox.saveAs')}
                             </span>
                             {openTaskModal && (
@@ -2668,7 +2668,7 @@ const QuickCaptureInput = React.forwardRef<
                                         void openTaskModal(newTask);
                                         composerFooterContext.clearText();
                                     }}
-                                    className="text-[12px] text-blue-600 dark:text-blue-400 hover:underline transition-colors focus:outline-none"
+                                    className="text-[12px] text-blue-600 dark:text-blue-400 hover:underline transition-colors "
                                 >
                                     {t('inbox.createTask', 'Task')}
                                 </button>
@@ -2711,7 +2711,7 @@ const QuickCaptureInput = React.forwardRef<
                                         openNoteModal(newNote);
                                         composerFooterContext.clearText();
                                     }}
-                                    className="text-[12px] text-purple-600 dark:text-purple-400 hover:underline transition-colors focus:outline-none"
+                                    className="text-[12px] text-purple-600 dark:text-purple-400 hover:underline transition-colors "
                                 >
                                     {t('inbox.createNote', 'Note')}
                                 </button>
@@ -2737,7 +2737,7 @@ const QuickCaptureInput = React.forwardRef<
                                         openProjectModal(newProject);
                                         composerFooterContext.clearText();
                                     }}
-                                    className="text-[12px] text-green-600 dark:text-green-400 hover:underline transition-colors focus:outline-none"
+                                    className="text-[12px] text-green-600 dark:text-green-400 hover:underline transition-colors "
                                 >
                                     {t('inbox.createProject', 'Project')}
                                 </button>
@@ -2894,7 +2894,7 @@ const QuickCaptureInput = React.forwardRef<
                                 'Attach files. You can also paste or drop them here.'
                             )}
                             aria-label={t('capture.attach', 'Attach files')}
-                            className="rounded-lg p-2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                            className="rounded-lg p-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                         >
                             <PaperClipIcon
                                 className="h-5 w-5"
@@ -2911,7 +2911,7 @@ const QuickCaptureInput = React.forwardRef<
                                 isPreparingFiles
                             }
                             aria-busy={isSaving || isPreparingFiles}
-                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-gray-100 dark:disabled:bg-black/30 disabled:text-gray-400 dark:disabled:text-gray-500 text-white text-sm font-semibold px-4 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            className="inline-flex items-center gap-2 rounded-lg bg-primary hover:bg-primary/90 disabled:bg-gray-100 dark:disabled:bg-black/30 disabled:text-gray-400 dark:disabled:text-gray-500 text-primary-on text-sm font-semibold px-4 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                         >
                             {(isSaving || isPreparingFiles) && (
                                 <span
@@ -2931,7 +2931,7 @@ const QuickCaptureInput = React.forwardRef<
                                     : t('capture.add', 'Add')}
                         </button>
                     </div>
-                    <div className="order-2 sm:order-3 flex-1 sm:flex-none sm:w-full min-w-0 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 min-h-[20px] text-xs text-gray-500 dark:text-gray-400">
+                    <div className="order-2 sm:order-3 flex-1 sm:flex-none sm:w-full min-w-0 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 min-h-[20px] text-xs text-gray-600 dark:text-gray-300">
                         <span
                             role="status"
                             aria-live="polite"
@@ -3149,7 +3149,7 @@ const QuickCaptureInput = React.forwardRef<
                         strokeWidth="0.9"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="absolute right-6 top-5 pointer-events-none opacity-[0.09] dark:opacity-[0.08] text-gray-400 dark:text-[oklch(55%_0.006_95)]"
+                        className="absolute right-6 top-5 pointer-events-none opacity-[0.09] dark:opacity-[0.08] text-gray-500 dark:text-gray-300"
                         aria-hidden="true"
                     >
                         <path d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M2.25 13.5V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.5M2.25 13.5V9.75A2.25 2.25 0 014.5 7.5h15a2.25 2.25 0 012.25 2.25v3.75" />
@@ -3165,7 +3165,7 @@ const QuickCaptureInput = React.forwardRef<
                             >
                                 {!inputText && !isEditMode && (
                                     <div
-                                        className={`absolute z-0 pointer-events-none select-none ${compact ? 'left-3.5 top-2.5 text-[17px]' : 'left-0 top-[5px] text-[18px]'} leading-relaxed font-normal text-gray-400 dark:text-gray-500 transition-opacity duration-300 ${
+                                        className={`absolute z-0 pointer-events-none select-none ${compact ? 'left-3.5 top-2.5 text-[17px]' : 'left-0 top-[5px] text-[18px]'} leading-relaxed font-normal text-gray-500 dark:text-gray-400 transition-opacity duration-300 ${
                                             placeholderFading
                                                 ? 'opacity-0'
                                                 : 'opacity-100'
@@ -3384,7 +3384,7 @@ const QuickCaptureInput = React.forwardRef<
                                                             )}
                                                     </p>
                                                     {urlPreview.description && (
-                                                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 break-words">
+                                                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 break-words">
                                                             {
                                                                 urlPreview.description
                                                             }
@@ -3398,7 +3398,7 @@ const QuickCaptureInput = React.forwardRef<
                                                             urlPreview.url;
                                                         setUrlPreview(null);
                                                     }}
-                                                    className="rounded-md p-1 text-gray-400 transition hover:bg-white/60 hover:text-gray-600 dark:hover:bg-white/10"
+                                                    className="rounded-md p-1 text-gray-500 transition hover:bg-white/60 hover:text-gray-600 dark:hover:bg-white/10"
                                                     aria-label={t(
                                                         'common.dismiss',
                                                         'Dismiss'
@@ -3408,7 +3408,7 @@ const QuickCaptureInput = React.forwardRef<
                                                 </button>
                                             </div>
                                             <div className="mt-2 flex flex-wrap items-center gap-2">
-                                                <span className="text-xs text-gray-500 dark:text-gray-400 break-all">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300 break-all">
                                                     {urlPreview.url}
                                                 </span>
                                                 {!urlPreview.isLoading &&
@@ -3466,7 +3466,7 @@ const QuickCaptureInput = React.forwardRef<
                                 onClick={() => handleSubmit(false)}
                                 disabled={isSaving}
                                 title={t('inbox.addToInbox')}
-                                className={`flex-shrink-0 self-start mt-3 text-[13px] font-medium px-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none transition-opacity ${
+                                className={`flex-shrink-0 self-start mt-3 text-[13px] font-medium px-1 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-opacity ${
                                     inputText.trim() && !isSaving
                                         ? 'opacity-100'
                                         : 'opacity-0 pointer-events-none'

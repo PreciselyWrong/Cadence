@@ -125,7 +125,7 @@ const MemberEditModal: React.FC<MemberEditModalProps> = ({
                         onChange={(e) => setEmail(e.target.value)}
                         data-testid="member-edit-email"
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                         {t(
                             'members.addEmailHint',
                             'Adding an email sends them an invitation to set a password. It cannot be changed afterwards.'

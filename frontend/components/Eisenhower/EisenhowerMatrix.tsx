@@ -445,8 +445,8 @@ const EisenhowerMatrix: React.FC = () => {
             bgColor: 'bg-gray-50 dark:bg-gray-900/20',
             dragOverBg: 'bg-gray-100 dark:bg-gray-800/40',
             badgeColor:
-                'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400',
-            headerColor: 'text-gray-600 dark:text-gray-400',
+                'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300',
+            headerColor: 'text-gray-600 dark:text-gray-300',
             cellBorder: '',
         },
     };
@@ -489,9 +489,9 @@ const EisenhowerMatrix: React.FC = () => {
                 >
                     <div className="flex items-center gap-2">
                         {isCollapsed ? (
-                            <ChevronRightIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                            <ChevronRightIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />
                         ) : (
-                            <ChevronDownIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                            <ChevronDownIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />
                         )}
                         <span
                             className={`text-sm font-semibold ${cfg.headerColor}`}
@@ -510,7 +510,7 @@ const EisenhowerMatrix: React.FC = () => {
                     <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-1.5 min-h-0">
                         {cellTasks.length === 0 ? (
                             <p
-                                className={`text-xs py-4 text-center ${isDraggingActive ? 'text-gray-400 dark:text-gray-500' : 'text-gray-400 dark:text-gray-600'}`}
+                                className={`text-xs py-4 text-center ${isDraggingActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-600'}`}
                             >
                                 {isDraggingActive
                                     ? t(
@@ -566,7 +566,7 @@ const EisenhowerMatrix: React.FC = () => {
                         {t('sidebar.eisenhower', 'Eisenhower Matrix')}
                     </h2>
                     {isDefault && (
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 italic">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
                             {t(
                                 'tasks.eisenhower.urgentHint',
                                 "Tag tasks with 'urgent' to mark them as urgent"
@@ -609,7 +609,7 @@ const EisenhowerMatrix: React.FC = () => {
                               })
                             : undefined
                     }
-                    className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                    className="px-3 py-1 text-sm rounded bg-primary text-primary-on hover:bg-primary/90 disabled:opacity-50"
                 >
                     {t('tasks.eisenhower.matrix.new', 'New matrix')}
                 </button>
@@ -659,7 +659,7 @@ const EisenhowerMatrix: React.FC = () => {
             )}
 
             {loading && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t('common.loading', 'Loading...')}
                 </p>
             )}
@@ -670,12 +670,12 @@ const EisenhowerMatrix: React.FC = () => {
                     {/* Column axis labels */}
                     <div className="grid grid-cols-[36px_minmax(0,1fr)_minmax(0,1fr)] mb-1 flex-shrink-0">
                         <div />
-                        <div className="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 pb-1 tracking-wide uppercase">
+                        <div className="text-center text-xs font-semibold text-gray-600 dark:text-gray-300 pb-1 tracking-wide uppercase">
                             {isDefault
                                 ? t('tasks.eisenhower.urgent', 'Urgent')
                                 : ''}
                         </div>
-                        <div className="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 pb-1 tracking-wide uppercase">
+                        <div className="text-center text-xs font-semibold text-gray-600 dark:text-gray-300 pb-1 tracking-wide uppercase">
                             {isDefault
                                 ? t('tasks.eisenhower.notUrgent', 'Not Urgent')
                                 : ''}
@@ -688,7 +688,7 @@ const EisenhowerMatrix: React.FC = () => {
                         <div className="flex items-center justify-center bg-white dark:bg-gray-900 border-r border-b border-gray-200 dark:border-gray-700 min-h-0">
                             <span
                                 style={axisLabelStyle}
-                                className="text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wide uppercase"
+                                className="text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wide uppercase"
                             >
                                 {isDefault
                                     ? t(
@@ -706,7 +706,7 @@ const EisenhowerMatrix: React.FC = () => {
                         <div className="flex items-center justify-center bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 min-h-0">
                             <span
                                 style={axisLabelStyle}
-                                className="text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wide uppercase"
+                                className="text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wide uppercase"
                             >
                                 {isDefault
                                     ? t(

@@ -207,7 +207,7 @@ const Habits: React.FC = () => {
                         className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
                             showArchived
                                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                     >
                         <ArchiveBoxIcon className="w-4 h-4" />
@@ -222,11 +222,11 @@ const Habits: React.FC = () => {
 
             {showArchived && (
                 <div className="mb-8">
-                    <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-3">
+                    <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-3">
                         {t('habits.archived', 'Archived')}
                     </h3>
                     {archived.length === 0 ? (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                             {t('habits.noArchived', 'No archived habits.')}
                         </p>
                     ) : (
@@ -246,7 +246,7 @@ const Habits: React.FC = () => {
                                         <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
                                             {habit.name}
                                         </p>
-                                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
                                             {formatHabitTarget(t, habit)} ·{' '}
                                             {t(
                                                 'habits.bestStreakShort',
@@ -337,7 +337,7 @@ const Habits: React.FC = () => {
                                             <span className="text-sm text-gray-600 dark:text-gray-300">
                                                 {label}
                                             </span>
-                                            <span className="text-gray-400 dark:text-gray-500">
+                                            <span className="text-gray-500 dark:text-gray-400">
                                                 {icon}
                                             </span>
                                         </div>

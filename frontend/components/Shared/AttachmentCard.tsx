@@ -56,7 +56,7 @@ const AttachmentCard: React.FC<AttachmentCardProps> = ({
                             mimeType={attachment.mime_type}
                             className="h-16 w-16 mb-2"
                         />
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-600 dark:text-gray-300">
                             PDF
                         </span>
                     </div>
@@ -115,13 +115,13 @@ const AttachmentCard: React.FC<AttachmentCardProps> = ({
                     >
                         {attachment.original_filename}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                         {formatFileSize(attachment.file_size)}
                     </p>
                 </div>
 
                 {/* Date */}
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     {new Date(attachment.created_at).toLocaleDateString()}
                 </p>
             </div>

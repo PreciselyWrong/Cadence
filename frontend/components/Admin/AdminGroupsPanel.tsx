@@ -145,7 +145,7 @@ const GroupModal: React.FC<GroupModalProps> = ({ group, onClose, onSaved }) => {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-60"
+                        className="px-4 py-2 rounded bg-primary text-primary-on disabled:opacity-60"
                     >
                         {saving
                             ? t('common.saving', 'Saving...')
@@ -281,7 +281,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                         </div>
                     )}
                     {loading ? (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-600">
                             {t('common.loading', 'Loading...')}
                         </div>
                     ) : (
@@ -304,7 +304,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                                         <div className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                                             {displayName(m)}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 truncate">
+                                                        <div className="text-xs text-gray-600 truncate">
                                                             {m.email ??
                                                                 t(
                                                                     'admin.noEmail',
@@ -330,7 +330,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                             ))}
                                         </ul>
                                     ) : (
-                                        <div className="p-3 text-sm text-gray-500">
+                                        <div className="p-3 text-sm text-gray-600">
                                             {t(
                                                 'admin.groups.noMembers',
                                                 'No members yet'
@@ -373,7 +373,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                                         <div className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                                             {displayName(u)}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 truncate">
+                                                        <div className="text-xs text-gray-600 truncate">
                                                             {u.email ??
                                                                 t(
                                                                     'admin.noEmail',
@@ -395,7 +395,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                             ))}
                                         </ul>
                                     ) : (
-                                        <div className="p-3 text-sm text-gray-500">
+                                        <div className="p-3 text-sm text-gray-600">
                                             {t(
                                                 'admin.groups.noUsersToAdd',
                                                 'No matching users to add'
@@ -403,7 +403,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                         </div>
                                     )}
                                 </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">
                                     {t(
                                         'admin.groups.memberInviteHint',
                                         'New members are invited to everything already shared with this group.'
@@ -419,12 +419,12 @@ const MembersModal: React.FC<MembersModalProps> = ({
                                             'Shared with this group'
                                         )}
                                     </div>
-                                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                    <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                                         {detail.shares.map((s) => (
                                             <li
                                                 key={`${s.resource_type}-${s.resource_uid}`}
                                             >
-                                                <span className="uppercase text-xs text-gray-400 mr-2">
+                                                <span className="uppercase text-xs text-gray-500 mr-2">
                                                     {s.resource_type}
                                                 </span>
                                                 {s.resource_name ||
@@ -518,12 +518,12 @@ const AdminGroupsPanel: React.FC = () => {
     });
 
     const headerCell =
-        'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider';
+        'px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider';
 
     return (
         <div className="w-full space-y-6" data-testid="admin-groups-panel">
             <div className="flex items-start justify-between gap-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'admin.groups.intro',
                         'Groups let people share a project, area, goal, note or task with several users at once. Members are invited to everything shared with the group.'
@@ -532,7 +532,7 @@ const AdminGroupsPanel: React.FC = () => {
                 <button
                     onClick={() => setCreating(true)}
                     data-testid="add-group-button"
-                    className="shrink-0 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none transition duration-150 ease-in-out text-sm"
+                    className="shrink-0 px-4 py-2 rounded-md bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90 transition duration-150 ease-in-out text-sm"
                 >
                     {t('admin.groups.addGroup', 'Add group')}
                 </button>
@@ -572,7 +572,7 @@ const AdminGroupsPanel: React.FC = () => {
                                 onSort={toggle}
                                 className={headerCell}
                             />
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                 {t('admin.actions', 'Actions')}
                             </th>
                         </tr>
@@ -582,7 +582,7 @@ const AdminGroupsPanel: React.FC = () => {
                             <tr>
                                 <td
                                     colSpan={4}
-                                    className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                                    className="px-6 py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                                 >
                                     {t(
                                         'admin.groups.loading',
@@ -595,7 +595,7 @@ const AdminGroupsPanel: React.FC = () => {
                             <tr>
                                 <td
                                     colSpan={4}
-                                    className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+                                    className="px-6 py-8 text-center text-sm text-gray-600 dark:text-gray-300"
                                     data-testid="groups-empty"
                                 >
                                     {t(
@@ -618,15 +618,15 @@ const AdminGroupsPanel: React.FC = () => {
                                             {g.name}
                                         </div>
                                         {g.description && (
-                                            <div className="text-gray-500 dark:text-gray-400 line-clamp-1">
+                                            <div className="text-gray-600 dark:text-gray-300 line-clamp-1">
                                                 {g.description}
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                         {g.member_count}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                         {g.share_count}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

@@ -14,7 +14,7 @@ export const SidePanelSection: React.FC<SidePanelSectionProps> = ({
     children,
 }) => (
     <section className="space-y-3">
-        <h3 className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        <h3 className="text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-300">
             {title}
         </h3>
         {children}

@@ -245,7 +245,7 @@ const CommentRow: React.FC<CommentRowProps> = ({
             <span
                 // Same person, same color: drawn from the shared palette.
                 className={`flex-shrink-0 rounded-full flex items-center justify-center font-semibold text-white ${
-                    isReply ? 'h-8 w-8 text-[10px]' : 'h-10 w-10 text-xs'
+                    isReply ? 'h-8 w-8 text-[12px]' : 'h-10 w-10 text-xs'
                 }`}
                 style={{ backgroundColor: hashColor(authorName).value }}
                 title={authorName}
@@ -267,12 +267,12 @@ const CommentRow: React.FC<CommentRowProps> = ({
                             {authorName}
                         </span>
                     )}
-                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                         {formatTimeAgo(comment.created_at)}
                     </span>
                 </div>
                 {isDeleted ? (
-                    <div className="flex items-center gap-1.5 text-sm italic text-gray-400 dark:text-gray-500 mt-1">
+                    <div className="flex items-center gap-1.5 text-sm italic text-gray-500 dark:text-gray-400 mt-1">
                         <NoSymbolIcon className="h-3.5 w-3.5 flex-shrink-0" />
                         {t('comments.deletedPlaceholder', 'Comment deleted')}
                     </div>
@@ -289,7 +289,7 @@ const CommentRow: React.FC<CommentRowProps> = ({
                             className={`flex items-center gap-1 text-xs font-medium ${
                                 comment.my_reaction === 'like'
                                     ? 'text-blue-600 dark:text-blue-400'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                             }`}
                             aria-label={t('comments.like', 'Like')}
                             aria-pressed={comment.my_reaction === 'like'}
@@ -307,7 +307,7 @@ const CommentRow: React.FC<CommentRowProps> = ({
                             className={`flex items-center gap-1 text-xs font-medium ${
                                 comment.my_reaction === 'dislike'
                                     ? 'text-red-600 dark:text-red-400'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                             }`}
                             aria-label={t('comments.dislike', 'Dislike')}
                             aria-pressed={comment.my_reaction === 'dislike'}
@@ -324,7 +324,7 @@ const CommentRow: React.FC<CommentRowProps> = ({
                             <button
                                 type="button"
                                 onClick={onReply}
-                                className="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                className="text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200"
                             >
                                 {t('comments.reply', 'Reply')}
                             </button>
@@ -333,7 +333,7 @@ const CommentRow: React.FC<CommentRowProps> = ({
                             <button
                                 type="button"
                                 onClick={onDelete}
-                                className="text-xs font-medium text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-500"
+                                className="text-xs font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-500"
                                 aria-label={t(
                                     'comments.delete',
                                     'Delete comment'
@@ -441,7 +441,7 @@ const TaskComments: React.FC<TaskCommentsProps> = ({
 
     if (loading) {
         return (
-            <div className="flex items-center h-32 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center h-32 text-gray-600 dark:text-gray-300">
                 <span className="text-sm">
                     {t('comments.loading', 'Loading comments...')}
                 </span>

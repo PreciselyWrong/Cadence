@@ -327,7 +327,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     const actionsMenu = (
         <div className="relative dropdown-container">
             <button
-                className="p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-800 opacity-60 group-hover:opacity-100 focus:opacity-100 focus:outline-none transition"
+                className="p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-800 opacity-60 group-hover:opacity-100 focus:opacity-100 transition"
                 onClick={toggleActions}
                 aria-label={t('projectItem.toggleDropdownMenu')}
                 data-testid={`project-dropdown-${project.id}`}
@@ -482,7 +482,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                             />
                         ) : (
                             <span
-                                className={`inline-flex ${size} items-center justify-center rounded-full text-[10px] font-semibold ring-2 ${ring} ${avatarTint(
+                                className={`inline-flex ${size} items-center justify-center rounded-full text-[12px] font-semibold ring-2 ${ring} ${avatarTint(
                                     share.email || String(share.user_id)
                                 )}`}
                             >
@@ -500,7 +500,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                         )}
                     >
                         <span
-                            className={`inline-flex ${size} items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200 ring-2 ${ring}`}
+                            className={`inline-flex ${size} items-center justify-center rounded-full bg-gray-200 text-[12px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200 ring-2 ${ring}`}
                         >
                             +{shareAvatars.remaining}
                         </span>
@@ -527,7 +527,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 details={
                     <>
                         {dueInfo.isOverdue ? (
-                            <span className="inline-flex min-w-0 items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
+                            <span className="inline-flex min-w-0 items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[12px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
                                 <ExclamationTriangleIcon className="h-3 w-3 flex-shrink-0" />
                                 <span className="truncate">{dueInfo.text}</span>
                             </span>
@@ -566,7 +566,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             <div className="flex min-w-0 items-center gap-3">
                 <Link
                     to={projectPath}
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
                     style={
                         !project.image_url && project.color
                             ? {
@@ -597,7 +597,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                         {project.name}
                     </Link>
                     {area?.name && (
-                        <div className="truncate text-xs text-gray-500 dark:text-gray-400">
+                        <div className="truncate text-xs text-gray-600 dark:text-gray-300">
                             {area.name}
                         </div>
                     )}
@@ -615,13 +615,13 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             <div className="hidden min-w-0 xl:block">
                 {descriptionText ? (
                     <p
-                        className="line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400"
+                        className="line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300"
                         title={descriptionText}
                     >
                         {descriptionText}
                     </p>
                 ) : (
-                    <span className="text-xs text-gray-400 dark:text-gray-600">
+                    <span className="text-xs text-gray-500 dark:text-gray-600">
                         –
                     </span>
                 )}
@@ -632,7 +632,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     'h-6 w-6',
                     'ring-gray-50 dark:ring-gray-900'
                 ) ?? (
-                    <span className="text-xs text-gray-400 dark:text-gray-600">
+                    <span className="text-xs text-gray-500 dark:text-gray-600">
                         –
                     </span>
                 )}
@@ -642,7 +642,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 className={`hidden truncate text-xs md:block ${
                     dueInfo.isOverdue
                         ? 'font-semibold text-red-600 dark:text-red-400'
-                        : 'text-gray-500 dark:text-gray-400'
+                        : 'text-gray-600 dark:text-gray-300'
                 }`}
                 title={dueInfo.text}
             >
@@ -668,7 +668,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 {isComplete ? (
                     <CheckCircleSolidIcon className="h-4 w-4 flex-shrink-0 text-green-500" />
                 ) : (
-                    <span className="w-8 text-right text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                    <span className="w-8 text-right text-xs tabular-nums text-gray-600 dark:text-gray-300">
                         {percent}%
                     </span>
                 )}

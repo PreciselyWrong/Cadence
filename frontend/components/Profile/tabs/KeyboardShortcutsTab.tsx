@@ -161,7 +161,7 @@ const KeyboardShortcutsTab: React.FC<KeyboardShortcutsTabProps> = ({
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         {t('profile.shortcuts.enableShortcuts', 'Enable Keyboard Shortcuts')}
                     </label>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                         {t(
                             'profile.shortcuts.enableDescription',
                             'Turn keyboard shortcuts on or off globally.'
@@ -239,7 +239,7 @@ const KeyboardShortcutsTab: React.FC<KeyboardShortcutsTabProps> = ({
                                     <button
                                         type="button"
                                         onClick={handleStartRecording}
-                                        className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                        className="px-3 py-1.5 text-xs bg-primary text-primary-on rounded hover:bg-primary/90 transition-colors"
                                     >
                                         {t('profile.shortcuts.record', 'Record')}
                                     </button>

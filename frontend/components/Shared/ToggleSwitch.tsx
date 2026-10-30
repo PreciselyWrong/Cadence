@@ -57,7 +57,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
                 <label
                     className={`text-sm font-medium cursor-pointer ${
                         disabled
-                            ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                            ? 'text-gray-500 dark:text-gray-400 cursor-not-allowed'
                             : 'text-gray-700 dark:text-gray-300'
                     }`}
                     onClick={handleToggle}
@@ -68,8 +68,8 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
                     <p
                         className={`text-xs mt-1 ${
                             disabled
-                                ? 'text-gray-400 dark:text-gray-500'
-                                : 'text-gray-500 dark:text-gray-400'
+                                ? 'text-gray-500 dark:text-gray-400'
+                                : 'text-gray-600 dark:text-gray-300'
                         }`}
                     >
                         {description}

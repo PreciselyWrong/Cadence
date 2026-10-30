@@ -121,7 +121,8 @@
         "next7Days": "Najbližších 7 dní",
         "more": "Viac",
         "toggleFolder": "Zobraziť alebo skryť projekty",
-        "customize": "Prispôsobiť bočný panel"
+        "customize": "Prispôsobiť bočný panel",
+        "toggleSection": "Expand or collapse"
     },
     "navigation": {
         "home": "Domov",
@@ -1040,7 +1041,10 @@
             "security": "Security",
             "advanced": "Advanced"
         },
-        "optional": "Optional"
+        "optional": "Optional",
+        "accent": "Accent colour",
+        "accentCustom": "Custom colour (hex)",
+        "pureBlack": "Pure black in dark mode"
     },
     "productivity": {
         "nothingYet": "Zatiaľ nie je čo kontrolovať.",
@@ -2307,7 +2311,12 @@
             "connected": "Google connected",
             "connectError": "Google was not connected",
             "saveError": "Could not save the event"
-        }
+        },
+        "moreAllDay": "{{count}} more all-day events",
+        "view": "View",
+        "moreViews": "More views",
+        "openDay": "Open day",
+        "noEventsThisDay": "Nothing planned."
     },
     "pages": {
         "notFound": {
@@ -4533,5 +4542,15 @@
         "nextMonth": "Nasledujúci mesiac",
         "time": "Čas",
         "clearTime": "Bez času"
+    },
+    "accent": {
+        "violet": "Violet",
+        "indigo": "Indigo",
+        "blue": "Blue",
+        "teal": "Teal",
+        "green": "Green",
+        "amber": "Amber",
+        "coral": "Coral",
+        "rose": "Rose"
     }
 }

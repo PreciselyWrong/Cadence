@@ -64,7 +64,7 @@ const PriorityBadge: React.FC<PriorityBadgeProps> = ({
     const sizing =
         size === 'md'
             ? 'h-8 px-2 gap-1 rounded-md text-xs'
-            : 'h-[18px] px-1.5 gap-0.5 rounded-full text-[10.5px]';
+            : 'h-[18px] px-1.5 gap-0.5 rounded-full text-[12px]';
     return (
         <span
             className={`inline-flex items-center font-medium whitespace-nowrap ${sizing} ${tone} ${className}`}

@@ -115,7 +115,7 @@ const TimezoneDropdown: React.FC<TimezoneDropdownProps> = ({
             >
                 <span className="truncate">{selectedTimezone}</span>
                 <ChevronDownIcon
-                    className={`h-5 w-5 text-gray-400 transition-transform ${
+                    className={`h-5 w-5 text-gray-500 transition-transform ${
                         isOpen ? 'transform rotate-180' : ''
                     }`}
                 />
@@ -159,7 +159,7 @@ const TimezoneDropdown: React.FC<TimezoneDropdownProps> = ({
                             .sort()
                             .map((regionName) => (
                                 <div key={regionName}>
-                                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <div className="px-3 py-2 text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 sticky top-0">
                                         {regionName}
                                     </div>
                                     {groupedFilteredTimezones[regionName].map(
@@ -188,7 +188,7 @@ const TimezoneDropdown: React.FC<TimezoneDropdownProps> = ({
                             searchQuery &&
                             'utc'.includes(searchQuery.toLowerCase()) ===
                                 false && (
-                                <div className="px-3 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <div className="px-3 py-8 text-center text-gray-600 dark:text-gray-300">
                                     No timezones found matching &quot;
                                     {searchQuery}&quot;
                                 </div>
