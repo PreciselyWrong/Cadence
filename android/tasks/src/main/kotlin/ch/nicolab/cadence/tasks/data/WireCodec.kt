@@ -80,6 +80,7 @@ internal object WireCodec {
         color = wire.string("color"),
         areaUid = wire.string("area_uid"),
         pinToSidebar = wire.bool("pin_to_sidebar"),
+        sourceType = wire.string("source_type"),
     )
 
     fun areaFromWire(wire: JsonObject) = AreaEntity(

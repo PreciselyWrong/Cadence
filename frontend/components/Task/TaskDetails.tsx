@@ -3,6 +3,8 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import ConfirmDialog from '../Shared/ConfirmDialog';
+import TodoMdBadge from '../Shared/TodoMdBadge';
+import { isTodoMdTask } from '../../utils/todoMd';
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import { Area } from '../../entities/Area';
@@ -1169,6 +1171,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleSkipOccurrence = async () => {
+        if (isTodoMdTask(task)) return;
         if (!task?.uid) {
             return;
         }
@@ -1246,6 +1249,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleDeleteClick = () => {
+        if (isTodoMdTask(task)) return;
         if (task) {
             setTaskToDelete(task);
             setIsConfirmDialogOpen(true);
@@ -1293,6 +1297,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleTitleUpdate = async (newTitle: string) => {
+        if (isTodoMdTask(task)) return;
         if (!task?.uid || !newTitle.trim()) {
             return;
         }
@@ -1346,6 +1351,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleContentUpdate = async (newContent: string) => {
+        if (isTodoMdTask(task)) return;
         if (!task?.uid) {
             return;
         }
@@ -1599,6 +1605,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handlePriorityUpdate = async (priority: any) => {
+        if (isTodoMdTask(task)) return;
         if (!task?.uid) return;
 
         try {
@@ -1622,6 +1629,7 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleTogglePin = async () => {
+        if (isTodoMdTask(task)) return;
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
@@ -1665,6 +1673,8 @@ const TaskDetails: React.FC = () => {
         );
     }
 
+    const fileBacked = isTodoMdTask(task);
+
     return (
         <div className="px-2 sm:px-4 lg:px-6 pt-4">
             <div className="w-full">
@@ -1695,7 +1705,9 @@ const TaskDetails: React.FC = () => {
                     commentCount={commentCount}
                     autoEditTitle={isNewTask}
                     ancestorChain={ancestorChain}
-                    onEdit={() => setIsTaskPanelOpen(true)}
+                    onEdit={() => {
+                        if (!fileBacked) setIsTaskPanelOpen(true);
+                    }}
                     onTogglePin={handleTogglePin}
                 />
 
@@ -1714,7 +1726,24 @@ const TaskDetails: React.FC = () => {
                     </div>
                 )}
 
-                <div className="mb-6 mt-6">
+                {fileBacked && (
+                    <p className="mt-4 flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300">
+                        <TodoMdBadge className="ml-0" />
+                        {t(
+                            'todoMd.readOnly',
+                            'This comes from a TODO.md file. Edit the file instead.'
+                        )}
+                    </p>
+                )}
+
+                <div
+                    className={`mb-6 mt-6 ${
+                        fileBacked && activePill === 'overview'
+                            ? 'pointer-events-none select-text opacity-60'
+                            : ''
+                    }`}
+                    aria-disabled={fileBacked}
+                >
                     {activePill === 'overview' && (
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                             <div className="lg:col-span-3 space-y-8">

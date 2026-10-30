@@ -40,10 +40,11 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         estimatedMinutes = extras["estimated_minutes"]?.toIntOrNull(),
         repetition = Repetition.of(recurrenceType, extras["recurrence_interval"]),
         extras = extras,
+        fileBacked = fileBacked,
     )
 }
 
-internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, areaUid, pinToSidebar)
+internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, areaUid, pinToSidebar, sourceType)
 
 internal fun AreaEntity.toItem() = AreaItem(uid, name, color)
 

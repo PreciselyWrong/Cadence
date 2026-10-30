@@ -57,6 +57,13 @@ export interface Task {
     review_on?: string | null;
     reviewed_at?: string | null;
     note?: string;
+    // Set on a task mirrored from a TODO.md file (the "## " section it sits
+    // in, and its identity there). Such a task is read-only here.
+    source_section?: string | null;
+    source_key?: string | null;
+    // On create in a TODO.md project: the "## " section to add the bullet to
+    // (Next when omitted).
+    todo_section?: string;
     tags?: Tag[];
     project_id?: number;
     project_uid?: string;

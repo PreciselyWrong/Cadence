@@ -1,6 +1,6 @@
 'use strict';
 
-const { ENTITIES, listsOf } = require('./registry');
+const { ENTITIES, listsOf, serverFieldsOf } = require('./registry');
 
 function plain(value) {
     return value instanceof Date ? value.toISOString() : (value ?? null);
@@ -32,7 +32,7 @@ async function listUids(list, id, transaction) {
 async function serializeRow(entity, row, transaction) {
     const def = ENTITIES[entity];
     const data = { uid: row.uid };
-    for (const field of def.fields) {
+    for (const field of [...def.fields, ...serverFieldsOf(entity)]) {
         data[field] = plain(row.get(field));
     }
     for (const [key, ref] of Object.entries(def.refs)) {

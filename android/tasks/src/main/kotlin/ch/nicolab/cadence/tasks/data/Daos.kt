@@ -12,6 +12,8 @@ data class TaskRow(
     @Embedded val task: TaskEntity,
     /** Une opération d'envoi attend pour cette tâche. */
     val pendingSync: Boolean,
+    /** Le projet de la tâche reflète un fichier TODO.md (`source_type`). */
+    val fileBacked: Boolean = false,
 )
 
 data class InboxRow(
@@ -22,25 +24,29 @@ data class InboxRow(
 @Dao
 interface TaskDao {
     @Query(
-        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
+        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
         FROM tasks WHERE parentTaskUid IS NULL""",
     )
     fun observeTopLevel(): Flow<List<TaskRow>>
 
     @Query(
-        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
+        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
         FROM tasks""",
     )
     fun observeEvery(): Flow<List<TaskRow>>
 
     @Query(
-        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
+        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
         FROM tasks WHERE uid = :uid""",
     )
     fun observeOne(uid: String): Flow<TaskRow?>
 
     @Query(
-        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
+        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
         FROM tasks WHERE parentTaskUid = :parentUid""",
     )
     fun observeChildren(parentUid: String): Flow<List<TaskRow>>

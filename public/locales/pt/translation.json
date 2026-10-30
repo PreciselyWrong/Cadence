@@ -4564,5 +4564,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "De um arquivo TODO.md. Somente leitura aqui: edite o arquivo.",
+    "readOnly": "Isto vem de um arquivo TODO.md. Edite o arquivo.",
+    "projectInfo": "Espelha {{path}}. As tarefas que você adiciona são gravadas no arquivo, e marcá-las como concluídas o atualiza.",
+    "reread": "Recarregar arquivos",
+    "rereading": "Recarregando...",
+    "rereadDone": "Arquivos TODO.md recarregados.",
+    "rereadFailed": "Não foi possível recarregar os arquivos TODO.md.",
+    "addTo": "Adicionar a",
+    "addFailed": "Não foi possível gravar no arquivo TODO.md."
   }
 }

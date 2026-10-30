@@ -4565,5 +4565,17 @@
     "amber": "Ambre",
     "coral": "Corail",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Issu d'un fichier TODO.md. Lecture seule ici : modifiez le fichier.",
+    "readOnly": "Ceci provient d'un fichier TODO.md. Modifiez plutôt le fichier.",
+    "projectInfo": "Reflète {{path}}. Les tâches que vous ajoutez sont écrites dans le fichier, et les cocher le met à jour.",
+    "reread": "Recharger les fichiers",
+    "rereading": "Rechargement...",
+    "rereadDone": "Fichiers TODO.md rechargés.",
+    "rereadFailed": "Impossible de recharger les fichiers TODO.md.",
+    "addTo": "Ajouter à",
+    "addFailed": "Impossible d'écrire dans le fichier TODO.md."
   }
 }

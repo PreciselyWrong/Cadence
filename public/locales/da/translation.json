@@ -4557,5 +4557,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Fra en TODO.md-fil. Skrivebeskyttet her: rediger filen i stedet.",
+    "readOnly": "Dette kommer fra en TODO.md-fil. Rediger filen i stedet.",
+    "projectInfo": "Afspejler {{path}}. Opgaver, du tilføjer, skrives til filen, og afkrydsning opdaterer den.",
+    "reread": "Genindlæs filerne",
+    "rereading": "Genindlæser...",
+    "rereadDone": "TODO.md-filerne er genindlæst.",
+    "rereadFailed": "TODO.md-filerne kunne ikke genindlæses.",
+    "addTo": "Tilføj til",
+    "addFailed": "Kunne ikke skrive til TODO.md-filen."
   }
 }

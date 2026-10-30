@@ -41,6 +41,8 @@ data class ProjectEntity(
     val color: String?,
     val areaUid: String?,
     val pinToSidebar: Boolean,
+    /** `todo_md` pour un projet reflétant un fichier TODO.md du serveur (lecture seule ici). */
+    val sourceType: String? = null,
 )
 
 @Entity(tableName = "areas")

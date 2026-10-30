@@ -44,6 +44,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
 import java.time.LocalDate
@@ -87,8 +88,9 @@ internal fun TaskRow(
     }
     val showClosed = task.isClosed || completing
 
+    val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(
-        config = rememberSwipeConfig(),
+        config = remember(task.fileBacked, swipeConfig) { FileBackedActions.swipeConfig(task, swipeConfig) },
         closed = task.isClosed,
         onAction = onSwipeAction,
         shape = RowShape,
@@ -188,6 +190,20 @@ private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zon
                         .padding(horizontal = 6.dp, vertical = 2.dp),
                 )
             }
+        }
+        if (task.fileBacked) {
+            val fileText = stringResource(R.string.tasks_file_badge)
+            val fileDescription = stringResource(R.string.tasks_file_badge_description)
+            Text(
+                text = fileText,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                    .semantics { contentDescription = fileDescription },
+            )
         }
         if (task.isRecurring) {
             Icon(

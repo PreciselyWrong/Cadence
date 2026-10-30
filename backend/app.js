@@ -410,6 +410,7 @@ const dailyPlanModule = require('./modules/daily-plan');
 const onboardingModule = require('./modules/onboarding');
 const calendarFeedsModule = require('./modules/calendar-feeds');
 const googleSyncModule = require('./modules/google-sync');
+const todoMdModule = require('./modules/todo-md');
 const taskFeedModule = require('./modules/task-feed');
 const holidaysModule = require('./modules/holidays');
 const focusSessionsModule = require('./modules/focus-sessions');
@@ -561,6 +562,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, onboardingModule.routes);
     app.use(basePath, calendarFeedsModule.routes);
     app.use(basePath, googleSyncModule.routes);
+    app.use(basePath, todoMdModule.routes);
     app.use(basePath, taskFeedModule.routes);
     app.use(basePath, holidaysModule.routes);
     app.use(basePath, focusSessionsModule.routes);
@@ -646,6 +648,9 @@ async function startServer() {
 
         // Google Calendar / Google Tasks two-way sync (fork)
         if (!config.disableScheduler) googleSyncModule.scheduler.initialize();
+
+        // Projects mirrored from TODO.md files (off without TUDUDI_TODO_ROOT)
+        if (!config.disableScheduler) todoMdModule.watcher.start();
 
         // Public demo sandbox: make sure it exists, then wipe it on a timer.
         // withJobLock inside resetDemo keeps one worker doing it.

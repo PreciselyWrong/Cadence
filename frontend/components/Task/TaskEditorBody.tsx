@@ -7,6 +7,7 @@ import {
 import { Task } from '../../entities/Task';
 import QuickCaptureInput from '../Inbox/QuickCaptureInput';
 import ConfirmDialog from '../Shared/ConfirmDialog';
+import TodoMdBadge from '../Shared/TodoMdBadge';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import { SidePanelSection } from '../SidePanel/SidePanelParts';
 import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
@@ -48,6 +49,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
     const {
         t,
         task,
+        readOnly,
         projects,
         nameSeed,
         draftName,
@@ -76,6 +78,22 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
 
     return (
         <>
+            {readOnly && (
+                <div data-testid="todo-md-task-panel">
+                    <p className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300">
+                        <TodoMdBadge className="ml-0" />
+                        {t(
+                            'todoMd.readOnly',
+                            'This comes from a TODO.md file. Edit the file instead.'
+                        )}
+                    </p>
+                    {task.source_section && (
+                        <p className="mt-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            {task.source_section}
+                        </p>
+                    )}
+                </div>
+            )}
             <div
                 data-testid="task-name-field"
                 aria-label={t('taskPanel.titleLabel', 'Task title')}
@@ -90,21 +108,26 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                     }
                 }}
             >
-                <QuickCaptureInput
-                    mode="edit"
-                    bare
-                    multiline={false}
-                    hidePrimaryButton
-                    initialValue={nameSeed}
-                    projects={projects}
-                    onTextChange={(text) => {
-                        draftName.current = text;
-                    }}
-                    onSubmitOverride={(text) => commitTitle(text)}
-                />
+                {readOnly ? (
+                    <h2 className="break-words">{task.name}</h2>
+                ) : (
+                    <QuickCaptureInput
+                        mode="edit"
+                        bare
+                        multiline={false}
+                        hidePrimaryButton
+                        initialValue={nameSeed}
+                        projects={projects}
+                        onTextChange={(text) => {
+                            draftName.current = text;
+                        }}
+                        onSubmitOverride={(text) => commitTitle(text)}
+                    />
+                )}
             </div>
 
             <TaskChipRow
+                readOnly={readOnly}
                 task={task}
                 people={assignablePeople}
                 onDue={changeDue}
@@ -168,7 +191,16 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
             />
 
             <div data-testid="task-note-field">
-                {isEditingNote ? (
+                {readOnly ? (
+                    note.trim() && (
+                        <div className="px-3 py-2 text-sm">
+                            <MarkdownRenderer
+                                content={note}
+                                className="prose prose-sm dark:prose-invert max-w-none break-words"
+                            />
+                        </div>
+                    )
+                ) : isEditingNote ? (
                     <textarea
                         id="taskNote"
                         autoFocus
@@ -229,19 +261,23 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
 
             {task.uid && (
                 <>
-                    <SidePanelSection title={t('task.subtasks', 'Subtasks')}>
-                        <TaskSubtasksCard
-                            subtasks={subtasks}
-                            projects={projects}
-                            onSubtaskUpdate={handleSubtaskUpdate}
-                            onSubtaskDelete={(uid) =>
-                                void handleSubtaskDelete(uid)
-                            }
-                            onQuickAdd={(name) =>
-                                void handleQuickAddSubtask(name)
-                            }
-                        />
-                    </SidePanelSection>
+                    {!readOnly && (
+                        <SidePanelSection
+                            title={t('task.subtasks', 'Subtasks')}
+                        >
+                            <TaskSubtasksCard
+                                subtasks={subtasks}
+                                projects={projects}
+                                onSubtaskUpdate={handleSubtaskUpdate}
+                                onSubtaskDelete={(uid) =>
+                                    void handleSubtaskDelete(uid)
+                                }
+                                onQuickAdd={(name) =>
+                                    void handleQuickAddSubtask(name)
+                                }
+                            />
+                        </SidePanelSection>
+                    )}
 
                     <SidePanelSection
                         title={t('task.attachments', 'Attachments')}
@@ -288,14 +324,14 @@ export const TaskEditorFooter: React.FC<{
     ed: TaskEditor;
     withStatus?: boolean;
 }> = ({ ed, withStatus = false }) => {
-    const { t, done, postponeToTomorrow, handleComplete } = ed;
+    const { t, done, readOnly, postponeToTomorrow, handleComplete } = ed;
     return (
         <footer className="flex flex-shrink-0 items-center justify-end gap-3 bg-gray-50 px-5 py-3 dark:bg-gray-900/40">
             {withStatus && <SaveIndicator state={ed.state} />}
             <button
                 type="button"
                 onClick={postponeToTomorrow}
-                disabled={done}
+                disabled={done || readOnly}
                 data-testid="task-postpone-button"
                 className="rounded-full bg-gray-200/70 px-5 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
             >

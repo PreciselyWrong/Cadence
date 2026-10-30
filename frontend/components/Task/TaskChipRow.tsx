@@ -1,4 +1,10 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, {
+    createContext,
+    forwardRef,
+    useContext,
+    useRef,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowPathIcon,
@@ -45,22 +51,29 @@ interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     overdue?: boolean;
 }
 
+// A task mirrored from a TODO.md file shows its fields but changes none.
+const ReadOnlyChips = createContext(false);
+
 const Chip = forwardRef<HTMLButtonElement, ChipProps>(
-    ({ icon, text, filled, overdue, className = '', ...rest }, ref) => (
-        <button
-            ref={ref}
-            type="button"
-            {...rest}
-            className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-default disabled:opacity-60 ${
-                overdue ? OVERDUE : filled ? FILLED : EMPTY
-            } ${className}`}
-        >
-            <span className="flex-shrink-0 [&>svg]:h-3.5 [&>svg]:w-3.5">
-                {icon}
-            </span>
-            <span className="truncate">{text}</span>
-        </button>
-    )
+    ({ icon, text, filled, overdue, className = '', ...rest }, ref) => {
+        const readOnly = useContext(ReadOnlyChips);
+        return (
+            <button
+                ref={ref}
+                type="button"
+                {...rest}
+                disabled={readOnly || rest.disabled}
+                className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-default disabled:opacity-60 ${
+                    overdue ? OVERDUE : filled ? FILLED : EMPTY
+                } ${className}`}
+            >
+                <span className="flex-shrink-0 [&>svg]:h-3.5 [&>svg]:w-3.5">
+                    {icon}
+                </span>
+                <span className="truncate">{text}</span>
+            </button>
+        );
+    }
 );
 Chip.displayName = 'Chip';
 
@@ -125,6 +138,7 @@ export interface TaskChipRowProps {
     onEstimate: (minutes: number | null) => void;
     onAssignee: (uid: string | null) => void;
     onOpenParent?: (uid: string) => void;
+    readOnly?: boolean;
 }
 
 const TaskChipRow: React.FC<TaskChipRowProps> = ({
@@ -142,6 +156,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     onEstimate,
     onAssignee,
     onOpenParent,
+    readOnly = false,
 }) => {
     const { t } = useTranslation();
     const projects = useStore((s: any) => s.projectsStore.projects) as any[];
@@ -259,406 +274,427 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     };
 
     return (
-        <div
-            role="toolbar"
-            aria-label={t('taskPanel.fields', 'Task fields')}
-            className="flex flex-wrap gap-2"
-            data-testid="task-chip-row"
-        >
-            <DatePopover
-                label={t('taskPanel.due', 'Due')}
-                value={{ date: dueDate, time: dueTime }}
-                onChange={onDue}
-                renderTrigger={({ display, ...props }) => (
-                    <Chip
-                        {...props}
-                        icon={<CalendarDaysIcon />}
-                        text={display ?? t('taskPanel.due', 'Due')}
-                        filled={!!display}
-                        overdue={overdue}
-                        data-testid="chip-due"
-                        aria-label={`${t('taskPanel.due', 'Due')} : ${
-                            display ?? t('datePopover.noDate', 'No date')
-                        }`}
-                    />
-                )}
-            />
-
-            <DatePopover
-                label={t('forms.startDate', 'Start')}
-                value={{
-                    date: startDate,
-                    time: task.start_time ?? null,
-                }}
-                onChange={onStart}
-                renderTrigger={({ display, ...props }) => (
-                    <Chip
-                        {...props}
-                        icon={<PlayIcon />}
-                        text={
-                            display
-                                ? `${t('forms.startDate', 'Start')} ${display}`
-                                : t('forms.startDate', 'Start')
-                        }
-                        filled={!!display}
-                        data-testid="chip-start"
-                    />
-                )}
-            />
-
-            <ChipPopover
-                label={t('forms.priority', 'Priority')}
-                widthClass="w-48"
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        icon={<FlagIcon />}
-                        text={
-                            priorityValue
-                                ? (priorityLabel ?? '')
-                                : t('forms.priority', 'Priority')
-                        }
-                        filled={!!priorityValue}
-                        data-testid="chip-priority"
-                    />
-                )}
+        <ReadOnlyChips.Provider value={readOnly}>
+            <div
+                role="toolbar"
+                aria-label={t('taskPanel.fields', 'Task fields')}
+                aria-disabled={readOnly || undefined}
+                className="flex flex-wrap gap-2"
+                data-testid="task-chip-row"
             >
-                {(close) => (
-                    <OptionList
-                        label={t('forms.priority', 'Priority')}
-                        options={priorityOptions}
-                        value={priorityValue}
-                        onSelect={(value) => {
-                            onPriority(value as PriorityType);
-                            close();
-                        }}
-                    />
-                )}
-            </ChipPopover>
-
-            <ChipPopover
-                label={t('taskPanel.project', 'Project')}
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        icon={<FolderIcon />}
-                        text={
-                            project?.name ?? t('taskPanel.project', 'Project')
-                        }
-                        filled={!!project}
-                        data-testid="chip-project"
-                    />
-                )}
-            >
-                {(close) => (
-                    <OptionList
-                        label={t('taskPanel.project', 'Project')}
-                        options={[
-                            {
-                                value: null,
-                                label: t('taskPane.noProject', 'No project'),
-                            },
-                            ...projects.map((p: any) => ({
-                                value: p.id as number | null,
-                                label: p.name as string,
-                            })),
-                        ]}
-                        value={task.project_id ?? null}
-                        onSelect={(value) => {
-                            onProject(value);
-                            close();
-                        }}
-                    />
-                )}
-            </ChipPopover>
-
-            <ChipPopover
-                label={t('common.area', 'Area')}
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        icon={<MapPinIcon />}
-                        text={areaName ?? t('common.area', 'Area')}
-                        filled={!!areaName}
-                        data-testid="chip-area"
-                    />
-                )}
-            >
-                {(close) => (
-                    <OptionList
-                        label={t('common.area', 'Area')}
-                        options={[
-                            {
-                                value: null,
-                                label: inherited
-                                    ? `${t('taskPanel.areaInherited', 'Project area')} (${inherited.name})`
-                                    : t('taskPanel.noArea', 'No area'),
-                            },
-                            ...areas.map((a: any) => ({
-                                value: a.id as number | null,
-                                label: a.name as string,
-                            })),
-                        ]}
-                        value={task.area_id ?? null}
-                        onSelect={(value) => {
-                            onArea(value);
-                            close();
-                        }}
-                    />
-                )}
-            </ChipPopover>
-
-            <ChipPopover
-                label={t('forms.tags', 'Tags')}
-                widthClass="w-80"
-                onClose={commitTags}
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        onClick={() => {
-                            tagsDraft.current = tagNames;
-                            props.onClick();
-                        }}
-                        icon={<HashtagIcon />}
-                        text={
-                            tagNames.length > 0
-                                ? tagNames.map((n) => `#${n}`).join(' ')
-                                : t('forms.tags', 'Tags')
-                        }
-                        filled={tagNames.length > 0}
-                        data-testid="chip-tags"
-                    />
-                )}
-            >
-                {() => (
-                    <TagInput
-                        onTagsChange={(names) => {
-                            tagsDraft.current = names;
-                        }}
-                        initialTags={tagNames}
-                        availableTags={tagsStore.tags}
-                        onFocus={() => {
-                            if (!tagsStore.hasLoaded && !tagsStore.isLoading) {
-                                tagsStore.loadTags();
-                            }
-                        }}
-                    />
-                )}
-            </ChipPopover>
-
-            <ChipPopover
-                label={t('common.status', 'Status')}
-                widthClass="w-52"
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        icon={statusIcon}
-                        text={statusLabel}
-                        filled={statusValue !== TASK_STATUS.NOT_STARTED}
-                        data-testid="chip-status"
-                        data-status={statusValue}
-                    />
-                )}
-            >
-                {(close) => (
-                    <OptionList
-                        label={t('common.status', 'Status')}
-                        options={statusOptions}
-                        value={statusValue as number}
-                        onSelect={(value) => {
-                            onStatus(value);
-                            close();
-                        }}
-                    />
-                )}
-            </ChipPopover>
-
-            {isInstance ? (
-                <Chip
-                    icon={<ArrowPathIcon />}
-                    text={t('task.instanceOfShort', 'Occurrence')}
-                    filled
-                    title={t(
-                        'task.instanceOf',
-                        'This is an instance of a recurring task'
+                <DatePopover
+                    label={t('taskPanel.due', 'Due')}
+                    value={{ date: dueDate, time: dueTime }}
+                    onChange={onDue}
+                    renderTrigger={({ display, ...props }) => (
+                        <Chip
+                            {...props}
+                            icon={<CalendarDaysIcon />}
+                            text={display ?? t('taskPanel.due', 'Due')}
+                            filled={!!display}
+                            overdue={overdue}
+                            data-testid="chip-due"
+                            aria-label={`${t('taskPanel.due', 'Due')} : ${
+                                display ?? t('datePopover.noDate', 'No date')
+                            }`}
+                        />
                     )}
-                    onClick={() =>
-                        task.recurring_parent_uid &&
-                        onOpenParent?.(task.recurring_parent_uid)
-                    }
-                    data-testid="chip-recurrence"
                 />
-            ) : (
+
+                <DatePopover
+                    label={t('forms.startDate', 'Start')}
+                    value={{
+                        date: startDate,
+                        time: task.start_time ?? null,
+                    }}
+                    onChange={onStart}
+                    renderTrigger={({ display, ...props }) => (
+                        <Chip
+                            {...props}
+                            icon={<PlayIcon />}
+                            text={
+                                display
+                                    ? `${t('forms.startDate', 'Start')} ${display}`
+                                    : t('forms.startDate', 'Start')
+                            }
+                            filled={!!display}
+                            data-testid="chip-start"
+                        />
+                    )}
+                />
+
                 <ChipPopover
-                    label={t('forms.task.recurrence', 'Recurrence')}
-                    widthClass="w-96"
-                    onClose={commitRecurrence}
+                    label={t('forms.priority', 'Priority')}
+                    widthClass="w-48"
                     renderTrigger={(props) => (
                         <Chip
                             {...props}
-                            onClick={() => {
-                                setRecurrenceDraft(toRecurrenceDraft(task));
-                                props.onClick();
-                            }}
-                            icon={<ArrowPathIcon />}
+                            icon={<FlagIcon />}
                             text={
-                                isRecurring
-                                    ? (recurrenceLabels[recurrenceType] ??
-                                      t('recurrence.recurring', 'Recurring'))
-                                    : t('forms.task.recurrence', 'Recurrence')
+                                priorityValue
+                                    ? (priorityLabel ?? '')
+                                    : t('forms.priority', 'Priority')
                             }
-                            filled={isRecurring}
-                            data-testid="chip-recurrence"
-                        />
-                    )}
-                >
-                    {() => (
-                        <div className="max-h-[60vh] overflow-y-auto p-1">
-                            <TaskRecurrenceSection
-                                recurrenceType={recurrenceDraft.recurrence_type}
-                                recurrenceInterval={
-                                    recurrenceDraft.recurrence_interval
-                                }
-                                recurrenceEndDate={
-                                    recurrenceDraft.recurrence_end_date ||
-                                    undefined
-                                }
-                                recurrenceWeekday={
-                                    recurrenceDraft.recurrence_weekday ??
-                                    undefined
-                                }
-                                recurrenceWeekdays={
-                                    recurrenceDraft.recurrence_weekdays
-                                }
-                                recurrenceMonthDay={
-                                    recurrenceDraft.recurrence_month_day ??
-                                    undefined
-                                }
-                                recurrenceWeekOfMonth={
-                                    recurrenceDraft.recurrence_week_of_month ??
-                                    undefined
-                                }
-                                completionBased={
-                                    recurrenceDraft.completion_based
-                                }
-                                onChange={(field, value) =>
-                                    setRecurrenceDraft((prev) => {
-                                        const next = {
-                                            ...prev,
-                                            [field]: value,
-                                        };
-                                        if (
-                                            field === 'recurrence_type' &&
-                                            value === 'monthly' &&
-                                            !prev.recurrence_month_day
-                                        ) {
-                                            next.recurrence_month_day =
-                                                new Date().getDate();
-                                        }
-                                        return next;
-                                    })
-                                }
-                            />
-                        </div>
-                    )}
-                </ChipPopover>
-            )}
-
-            <ChipPopover
-                label={t('task.estimate', 'Estimate')}
-                widthClass="w-auto"
-                renderTrigger={(props) => (
-                    <Chip
-                        {...props}
-                        icon={<ClockIcon />}
-                        text={
-                            task.estimated_minutes
-                                ? formatDuration(task.estimated_minutes)
-                                : t('task.estimate', 'Estimate')
-                        }
-                        filled={!!task.estimated_minutes}
-                        data-testid="chip-estimate"
-                    />
-                )}
-            >
-                {(close) => (
-                    <div className="p-1">
-                        <DurationChips
-                            value={task.estimated_minutes ?? null}
-                            size="md"
-                            onChange={(minutes) => {
-                                onEstimate(
-                                    minutes === task.estimated_minutes
-                                        ? null
-                                        : minutes
-                                );
-                                close();
-                            }}
-                        />
-                    </div>
-                )}
-            </ChipPopover>
-
-            <DatePopover
-                label={t('task.deferUntil', 'Defer Until')}
-                value={{ date: deferParts.date, time: deferParts.time }}
-                onChange={({ date, time }) =>
-                    onDefer(date ? fromDueParts(date, time) : null)
-                }
-                renderTrigger={({ display, ...props }) => (
-                    <Chip
-                        {...props}
-                        icon={<BellSnoozeIcon />}
-                        text={
-                            display
-                                ? `${t('task.deferUntil', 'Defer Until')} ${display}`
-                                : t('task.deferUntil', 'Defer Until')
-                        }
-                        filled={!!display}
-                        data-testid="chip-defer"
-                    />
-                )}
-            />
-
-            {(people.length > 0 || assignee) && (
-                <ChipPopover
-                    label={t('tasks.assignedTo', 'Assigned to')}
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            icon={<UserIcon />}
-                            text={
-                                assignee?.name ??
-                                t('tasks.assignedTo', 'Assigned to')
-                            }
-                            filled={!!assignee}
-                            data-testid="chip-assignee"
+                            filled={!!priorityValue}
+                            data-testid="chip-priority"
                         />
                     )}
                 >
                     {(close) => (
                         <OptionList
-                            label={t('tasks.assignedTo', 'Assigned to')}
-                            options={[
-                                {
-                                    value: null as string | null,
-                                    label: t('taskPanel.unassigned', 'Nobody'),
-                                },
-                                ...people.map((p) => ({
-                                    value: p.uid as string | null,
-                                    label: p.name,
-                                })),
-                            ]}
-                            value={task.assigned_to ?? null}
+                            label={t('forms.priority', 'Priority')}
+                            options={priorityOptions}
+                            value={priorityValue}
                             onSelect={(value) => {
-                                onAssignee(value);
+                                onPriority(value as PriorityType);
                                 close();
                             }}
                         />
                     )}
                 </ChipPopover>
-            )}
-        </div>
+
+                <ChipPopover
+                    label={t('taskPanel.project', 'Project')}
+                    renderTrigger={(props) => (
+                        <Chip
+                            {...props}
+                            icon={<FolderIcon />}
+                            text={
+                                project?.name ??
+                                t('taskPanel.project', 'Project')
+                            }
+                            filled={!!project}
+                            data-testid="chip-project"
+                        />
+                    )}
+                >
+                    {(close) => (
+                        <OptionList
+                            label={t('taskPanel.project', 'Project')}
+                            options={[
+                                {
+                                    value: null,
+                                    label: t(
+                                        'taskPane.noProject',
+                                        'No project'
+                                    ),
+                                },
+                                ...projects.map((p: any) => ({
+                                    value: p.id as number | null,
+                                    label: p.name as string,
+                                })),
+                            ]}
+                            value={task.project_id ?? null}
+                            onSelect={(value) => {
+                                onProject(value);
+                                close();
+                            }}
+                        />
+                    )}
+                </ChipPopover>
+
+                <ChipPopover
+                    label={t('common.area', 'Area')}
+                    renderTrigger={(props) => (
+                        <Chip
+                            {...props}
+                            icon={<MapPinIcon />}
+                            text={areaName ?? t('common.area', 'Area')}
+                            filled={!!areaName}
+                            data-testid="chip-area"
+                        />
+                    )}
+                >
+                    {(close) => (
+                        <OptionList
+                            label={t('common.area', 'Area')}
+                            options={[
+                                {
+                                    value: null,
+                                    label: inherited
+                                        ? `${t('taskPanel.areaInherited', 'Project area')} (${inherited.name})`
+                                        : t('taskPanel.noArea', 'No area'),
+                                },
+                                ...areas.map((a: any) => ({
+                                    value: a.id as number | null,
+                                    label: a.name as string,
+                                })),
+                            ]}
+                            value={task.area_id ?? null}
+                            onSelect={(value) => {
+                                onArea(value);
+                                close();
+                            }}
+                        />
+                    )}
+                </ChipPopover>
+
+                <ChipPopover
+                    label={t('forms.tags', 'Tags')}
+                    widthClass="w-80"
+                    onClose={commitTags}
+                    renderTrigger={(props) => (
+                        <Chip
+                            {...props}
+                            onClick={() => {
+                                tagsDraft.current = tagNames;
+                                props.onClick();
+                            }}
+                            icon={<HashtagIcon />}
+                            text={
+                                tagNames.length > 0
+                                    ? tagNames.map((n) => `#${n}`).join(' ')
+                                    : t('forms.tags', 'Tags')
+                            }
+                            filled={tagNames.length > 0}
+                            data-testid="chip-tags"
+                        />
+                    )}
+                >
+                    {() => (
+                        <TagInput
+                            onTagsChange={(names) => {
+                                tagsDraft.current = names;
+                            }}
+                            initialTags={tagNames}
+                            availableTags={tagsStore.tags}
+                            onFocus={() => {
+                                if (
+                                    !tagsStore.hasLoaded &&
+                                    !tagsStore.isLoading
+                                ) {
+                                    tagsStore.loadTags();
+                                }
+                            }}
+                        />
+                    )}
+                </ChipPopover>
+
+                <ChipPopover
+                    label={t('common.status', 'Status')}
+                    widthClass="w-52"
+                    renderTrigger={(props) => (
+                        <Chip
+                            {...props}
+                            icon={statusIcon}
+                            text={statusLabel}
+                            filled={statusValue !== TASK_STATUS.NOT_STARTED}
+                            data-testid="chip-status"
+                            data-status={statusValue}
+                        />
+                    )}
+                >
+                    {(close) => (
+                        <OptionList
+                            label={t('common.status', 'Status')}
+                            options={statusOptions}
+                            value={statusValue as number}
+                            onSelect={(value) => {
+                                onStatus(value);
+                                close();
+                            }}
+                        />
+                    )}
+                </ChipPopover>
+
+                {isInstance ? (
+                    <Chip
+                        icon={<ArrowPathIcon />}
+                        text={t('task.instanceOfShort', 'Occurrence')}
+                        filled
+                        title={t(
+                            'task.instanceOf',
+                            'This is an instance of a recurring task'
+                        )}
+                        onClick={() =>
+                            task.recurring_parent_uid &&
+                            onOpenParent?.(task.recurring_parent_uid)
+                        }
+                        data-testid="chip-recurrence"
+                    />
+                ) : (
+                    <ChipPopover
+                        label={t('forms.task.recurrence', 'Recurrence')}
+                        widthClass="w-96"
+                        onClose={commitRecurrence}
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                onClick={() => {
+                                    setRecurrenceDraft(toRecurrenceDraft(task));
+                                    props.onClick();
+                                }}
+                                icon={<ArrowPathIcon />}
+                                text={
+                                    isRecurring
+                                        ? (recurrenceLabels[recurrenceType] ??
+                                          t(
+                                              'recurrence.recurring',
+                                              'Recurring'
+                                          ))
+                                        : t(
+                                              'forms.task.recurrence',
+                                              'Recurrence'
+                                          )
+                                }
+                                filled={isRecurring}
+                                data-testid="chip-recurrence"
+                            />
+                        )}
+                    >
+                        {() => (
+                            <div className="max-h-[60vh] overflow-y-auto p-1">
+                                <TaskRecurrenceSection
+                                    recurrenceType={
+                                        recurrenceDraft.recurrence_type
+                                    }
+                                    recurrenceInterval={
+                                        recurrenceDraft.recurrence_interval
+                                    }
+                                    recurrenceEndDate={
+                                        recurrenceDraft.recurrence_end_date ||
+                                        undefined
+                                    }
+                                    recurrenceWeekday={
+                                        recurrenceDraft.recurrence_weekday ??
+                                        undefined
+                                    }
+                                    recurrenceWeekdays={
+                                        recurrenceDraft.recurrence_weekdays
+                                    }
+                                    recurrenceMonthDay={
+                                        recurrenceDraft.recurrence_month_day ??
+                                        undefined
+                                    }
+                                    recurrenceWeekOfMonth={
+                                        recurrenceDraft.recurrence_week_of_month ??
+                                        undefined
+                                    }
+                                    completionBased={
+                                        recurrenceDraft.completion_based
+                                    }
+                                    onChange={(field, value) =>
+                                        setRecurrenceDraft((prev) => {
+                                            const next = {
+                                                ...prev,
+                                                [field]: value,
+                                            };
+                                            if (
+                                                field === 'recurrence_type' &&
+                                                value === 'monthly' &&
+                                                !prev.recurrence_month_day
+                                            ) {
+                                                next.recurrence_month_day =
+                                                    new Date().getDate();
+                                            }
+                                            return next;
+                                        })
+                                    }
+                                />
+                            </div>
+                        )}
+                    </ChipPopover>
+                )}
+
+                <ChipPopover
+                    label={t('task.estimate', 'Estimate')}
+                    widthClass="w-auto"
+                    renderTrigger={(props) => (
+                        <Chip
+                            {...props}
+                            icon={<ClockIcon />}
+                            text={
+                                task.estimated_minutes
+                                    ? formatDuration(task.estimated_minutes)
+                                    : t('task.estimate', 'Estimate')
+                            }
+                            filled={!!task.estimated_minutes}
+                            data-testid="chip-estimate"
+                        />
+                    )}
+                >
+                    {(close) => (
+                        <div className="p-1">
+                            <DurationChips
+                                value={task.estimated_minutes ?? null}
+                                size="md"
+                                onChange={(minutes) => {
+                                    onEstimate(
+                                        minutes === task.estimated_minutes
+                                            ? null
+                                            : minutes
+                                    );
+                                    close();
+                                }}
+                            />
+                        </div>
+                    )}
+                </ChipPopover>
+
+                <DatePopover
+                    label={t('task.deferUntil', 'Defer Until')}
+                    value={{ date: deferParts.date, time: deferParts.time }}
+                    onChange={({ date, time }) =>
+                        onDefer(date ? fromDueParts(date, time) : null)
+                    }
+                    renderTrigger={({ display, ...props }) => (
+                        <Chip
+                            {...props}
+                            icon={<BellSnoozeIcon />}
+                            text={
+                                display
+                                    ? `${t('task.deferUntil', 'Defer Until')} ${display}`
+                                    : t('task.deferUntil', 'Defer Until')
+                            }
+                            filled={!!display}
+                            data-testid="chip-defer"
+                        />
+                    )}
+                />
+
+                {(people.length > 0 || assignee) && (
+                    <ChipPopover
+                        label={t('tasks.assignedTo', 'Assigned to')}
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                icon={<UserIcon />}
+                                text={
+                                    assignee?.name ??
+                                    t('tasks.assignedTo', 'Assigned to')
+                                }
+                                filled={!!assignee}
+                                data-testid="chip-assignee"
+                            />
+                        )}
+                    >
+                        {(close) => (
+                            <OptionList
+                                label={t('tasks.assignedTo', 'Assigned to')}
+                                options={[
+                                    {
+                                        value: null as string | null,
+                                        label: t(
+                                            'taskPanel.unassigned',
+                                            'Nobody'
+                                        ),
+                                    },
+                                    ...people.map((p) => ({
+                                        value: p.uid as string | null,
+                                        label: p.name,
+                                    })),
+                                ]}
+                                value={task.assigned_to ?? null}
+                                onSelect={(value) => {
+                                    onAssignee(value);
+                                    close();
+                                }}
+                            />
+                        )}
+                    </ChipPopover>
+                )}
+            </div>
+        </ReadOnlyChips.Provider>
     );
 };
 

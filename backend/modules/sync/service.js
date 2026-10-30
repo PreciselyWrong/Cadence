@@ -1,11 +1,17 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { SCHEMA_VERSION, ENTITIES, listsOf } = require('./registry');
+const {
+    SCHEMA_VERSION,
+    ENTITIES,
+    listsOf,
+    serverFieldsOf,
+} = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { runWithOp } = require('./context');
 const { applyOccurrence } = require('./occurrences');
+const todoMdSync = require('../todo-md/syncHook');
 
 const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
 const OP_ID_FORMAT = /^[A-Za-z0-9_.:-]{1,100}$/;
@@ -27,6 +33,7 @@ function describe() {
             name,
             version: def.version,
             fields: def.fields,
+            server_fields: serverFieldsOf(name),
             refs: Object.fromEntries(
                 Object.entries(def.refs).map(([key, ref]) => [key, ref.entity])
             ),
@@ -205,6 +212,10 @@ async function applyUpsert(userId, op) {
         return rejected('deleted');
     }
 
+    // Rows mirrored from a TODO.md file answer to the file, not to the merge.
+    const fromFile = await todoMdSync.intercept(userId, op, row);
+    if (fromFile) return fromFile;
+
     const refs = await resolveRefs(def, userId, op.fields);
     if (refs.error) return rejected(refs.error);
     const lists = await resolveLists(def, userId, op.fields);
@@ -287,6 +298,8 @@ async function applyDelete(userId, op) {
     const row = await models()[def.model].findOne({ where: { uid: op.uid } });
     if (!row) return { status: 'applied' };
     if (row.user_id !== userId) return rejected('forbidden');
+    const fromFile = await todoMdSync.intercept(userId, op, row);
+    if (fromFile) return fromFile;
     hlc.observe(op.hlc);
     if (def.destroy) await def.destroy(row);
     else await row.destroy();

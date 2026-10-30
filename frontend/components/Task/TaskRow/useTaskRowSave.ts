@@ -10,6 +10,7 @@ import { useToast } from '../../Shared/ToastContext';
 import { useStore } from '../../../store/useStore';
 import { resolveTaskTokens, tokenChanges } from '../../../utils/taskTokens';
 import { isStartAfterDue } from '../../../utils/dueDateTime';
+import { isTodoMdTask } from '../../../utils/todoMd';
 
 type RecurrencePayload = Partial<
     Pick<
@@ -57,6 +58,17 @@ export const useTaskRowSave = (
             fallback: string
         ) => {
             if (!task.uid) return;
+            // The file is the source of truth: nothing but the check mark
+            // is edited from here.
+            if (isTodoMdTask(task)) {
+                showErrorToast(
+                    t(
+                        'todoMd.readOnly',
+                        'This comes from a TODO.md file. Edit the file instead.'
+                    )
+                );
+                return;
+            }
             try {
                 const response = await request();
                 const merged: Task = {

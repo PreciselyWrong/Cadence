@@ -4575,5 +4575,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Iz datoteke TODO.md. Tu samo za branje: uredite datoteko.",
+    "readOnly": "To prihaja iz datoteke TODO.md. Uredite datoteko.",
+    "projectInfo": "Zrcali {{path}}. Dodane naloge se zapišejo v datoteko, označevanje opravljenega pa jo posodobi.",
+    "reread": "Ponovno naloži datoteke",
+    "rereading": "Ponovno nalaganje...",
+    "rereadDone": "Datoteke TODO.md so ponovno naložene.",
+    "rereadFailed": "Datotek TODO.md ni bilo mogoče ponovno naložiti.",
+    "addTo": "Dodaj v",
+    "addFailed": "V datoteko TODO.md ni bilo mogoče pisati."
   }
 }

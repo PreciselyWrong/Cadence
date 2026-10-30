@@ -57,6 +57,8 @@ data class TaskItem(
     val repetition: Repetition = Repetition(RepeatType.NONE),
     /** Champs serveur que l'appareil ne sait pas modifier, lus tels quels (clé serveur, valeur en texte). */
     val extras: Map<String, String> = emptyMap(),
+    /** Le projet de la tâche reflète un fichier TODO.md du serveur : seule la case se modifie ici. */
+    val fileBacked: Boolean = false,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)
@@ -92,7 +94,13 @@ data class ProjectItem(
     val color: String? = null,
     val areaUid: String? = null,
     val pinToSidebar: Boolean = false,
-)
+    val sourceType: String? = null,
+) {
+    val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
+}
+
+/** `source_type` d'un projet reflétant un dossier TODO.md du serveur. */
+const val SOURCE_TODO_MD = "todo_md"
 
 data class AreaItem(val uid: String, val name: String, val color: String? = null)
 

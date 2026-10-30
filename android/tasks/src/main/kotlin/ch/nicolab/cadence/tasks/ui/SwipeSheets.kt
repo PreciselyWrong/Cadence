@@ -36,6 +36,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
+import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import java.time.DayOfWeek
@@ -45,7 +46,10 @@ import java.time.format.FormatStyle
 
 private val shortDay: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
 
-/** Menu d'un appui long : dates rapides, puis priorité, projet et suppression. */
+/**
+ * Menu d'un appui long : dates rapides, puis priorité, projet et suppression. Une tâche d'un fichier
+ * TODO.md n'y trouve que terminer ou rouvrir.
+ */
 @Composable
 internal fun TaskMenuSheet(
     task: TaskItem,
@@ -60,7 +64,17 @@ internal fun TaskMenuSheet(
     val quickDates = listOf(SchedulePreset.TODAY, SchedulePreset.TOMORROW, SchedulePreset.WEEKEND).map { preset ->
         Entry(presetIcon(preset), presetLabel(preset)) { onSchedule(SchedulePreset.dateFor(preset, today, firstDayOfWeek)) }
     }
-    val entries = quickDates + listOf(
+    val entries = if (!FileBackedActions.canEdit(task)) {
+        listOf(
+            Entry(
+                swipeActionIcon(SwipeAction.COMPLETE, task.isClosed),
+                swipeActionLabelRes(SwipeAction.COMPLETE, task.isClosed),
+            ) {
+                onAction(SwipeAction.COMPLETE)
+                onDismiss()
+            },
+        )
+    } else quickDates + listOf(
         Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
         Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
         Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) },

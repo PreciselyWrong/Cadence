@@ -32,6 +32,7 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.UndoChanges
@@ -254,6 +255,7 @@ internal class TasksViewModel(
 
     /** Exécute l'action d'un balayage ou d'une action d'accessibilité sur [task]. */
     fun swipe(task: TaskItem, action: SwipeAction) {
+        if (!FileBackedActions.allowsSwipe(task, action)) return
         val current = moment.value
         when (action) {
             SwipeAction.COMPLETE -> toggle(task)
@@ -280,6 +282,7 @@ internal class TasksViewModel(
     /** Nouvelle échéance ; null retire l'échéance. Une récurrente passe par le déplacement d'occurrence. */
     fun reschedule(task: TaskItem, date: LocalDate?) {
         _sheet.value = null
+        if (!FileBackedActions.canEdit(task)) return
         if (date != null && task.isRecurring) {
             askRecurringMove(task.uid, date)
             return
@@ -292,6 +295,7 @@ internal class TasksViewModel(
 
     fun moveToProject(task: TaskItem, projectUid: String?) {
         _sheet.value = null
+        if (!FileBackedActions.canEdit(task)) return
         if (projectUid == task.projectUid) return
         val change = if (projectUid == null) TaskChange(clearProject = true) else TaskChange(projectUid = projectUid)
         changeWithUndo(task, change, UndoChanges.restoreProject(task), getString(R.string.swipe_notice_moved))
@@ -299,6 +303,7 @@ internal class TasksViewModel(
 
     fun setPriority(task: TaskItem, priority: Int?) {
         _sheet.value = null
+        if (!FileBackedActions.canEdit(task)) return
         if (priority == task.priority) return
         val change = if (priority == null) TaskChange(clearPriority = true) else TaskChange(priority = priority)
         changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority))

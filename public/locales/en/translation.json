@@ -4520,5 +4520,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "From a TODO.md file. Read-only here: edit the file instead.",
+    "readOnly": "This comes from a TODO.md file. Edit the file instead.",
+    "projectInfo": "Mirrors {{path}}. Tasks you add are written to the file, and checking one off updates it.",
+    "reread": "Reread",
+    "rereading": "Rereading...",
+    "rereadDone": "TODO.md files reread.",
+    "rereadFailed": "Could not reread the TODO.md files.",
+    "addTo": "Add to",
+    "addFailed": "Could not write to the TODO.md file."
   }
 }

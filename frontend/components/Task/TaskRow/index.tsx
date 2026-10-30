@@ -31,6 +31,7 @@ import {
     TASK_RELATIONS_CHANGED_EVENT,
     TaskRelationsChangedDetail,
 } from '../../../utils/tasksService';
+import { isTodoMdTask } from '../../../utils/todoMd';
 import { isTaskOverdueInTodayPlan } from '../../../utils/dateUtils';
 import { getApiPath } from '../../../config/paths';
 import TaskRowCollapsed from './TaskRowCollapsed';
@@ -193,7 +194,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
         [task, panelSaved, blockedOverride]
     );
 
-    const canExpand = !disableExpand && !task.habit_mode && !!task.uid;
+    // A task mirrored from a TODO.md file only offers its check mark.
+    const fileBacked = isTodoMdTask(task);
+    const canExpand =
+        !disableExpand && !task.habit_mode && !!task.uid && !fileBacked;
     const isMinimal = useIsMinimal();
     const { openTask: openPane, openTaskUid } = useTaskPane();
     const isPaneOpen = isMinimal && !!task.uid && openTaskUid === task.uid;
@@ -507,14 +511,14 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     project={project}
                     hideProjectName={hideProjectName}
                     hideAreaName={hideAreaName}
-                    hideStatusControl={hideStatusControl}
+                    hideStatusControl={hideStatusControl || fileBacked}
                     condenseStatusControl={isUpcomingView}
                     hideDueDate={isUpcomingView}
                     compact={compact}
                     onActivate={handleActivate}
                     onToggleCompletion={handleToggleCompletion}
                     onTaskUpdate={handleStatusUpdate}
-                    onFieldUpdate={onTaskUpdate}
+                    onFieldUpdate={fileBacked ? undefined : onTaskUpdate}
                     onMenuOpenChange={setIsStatusMenuOpen}
                     hasSubtasks={shouldShowSubtasksIcon}
                     showSubtasks={showSubtasks}
@@ -528,9 +532,11 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     onSaveTitle={setters.setTitle}
                     onEscape={collapse}
                     onEdit={task.uid ? openTask : undefined}
-                    onDelete={task.uid ? handleDeleteClick : undefined}
+                    onDelete={
+                        task.uid && !fileBacked ? handleDeleteClick : undefined
+                    }
                     onTogglePin={
-                        task.uid
+                        task.uid && !fileBacked
                             ? () => {
                                   setters
                                       .setPinned(!task.pinned)
@@ -540,7 +546,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     }
                     onActionsMenuOpenChange={setIsActionsMenuOpen}
                     onContextMenu={
-                        isMinimal && task.uid ? openContextMenu : undefined
+                        isMinimal && task.uid && !fileBacked
+                            ? openContextMenu
+                            : undefined
                     }
                 />
 

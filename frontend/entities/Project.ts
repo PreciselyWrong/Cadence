@@ -25,6 +25,10 @@ export interface Project {
     name: string;
     description?: string;
     pin_to_sidebar?: boolean;
+    // 'todo_md' for a project mirrored from a TODO.md file, with its path
+    // under the server's TODO root.
+    source_type?: string | null;
+    source_path?: string | null;
     area?: Area;
     area_id?: number | null;
     area_uid?: string | null;

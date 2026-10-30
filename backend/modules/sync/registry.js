@@ -2,7 +2,8 @@
 
 // The single list of what syncs. Adding an entity means adding an entry
 // here (and a field_clocks column on its table); the protocol, journal and
-// merge stay as they are. `refs` are exposed to clients by uid, never by
+// merge stay as they are. `serverFields` are sent to clients but written only
+// by the server: a push that names one is rejected. `refs` are exposed to clients by uid, never by
 // the numeric id. `lists` are many-to-many sets, exposed as arrays of uids
 // and merged as a whole.
 const SCHEMA_VERSION = 1;
@@ -96,6 +97,9 @@ const ENTITIES = {
             'is_maintenance',
             'completed_at',
         ],
+        // 'todo_md' for a project mirrored from a TODO.md file: its tasks
+        // are read-only on the device.
+        serverFields: ['source_type'],
         refs: {
             area_uid: { column: 'area_id', entity: 'area' },
             parent_project_uid: {
@@ -179,4 +183,5 @@ module.exports = {
     ENTITIES,
     entityForModel: (modelName) => byModel.get(modelName) ?? null,
     listsOf: (entity) => ENTITIES[entity].lists || {},
+    serverFieldsOf: (entity) => ENTITIES[entity].serverFields || [],
 };

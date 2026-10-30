@@ -4593,5 +4593,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "من ملف TODO.md. للقراءة فقط هنا: عدّل الملف بدلاً من ذلك.",
+    "readOnly": "هذا آتٍ من ملف TODO.md. عدّل الملف بدلاً من ذلك.",
+    "projectInfo": "يعكس {{path}}. تُكتب المهام التي تضيفها في الملف، وتحديدها كمنجزة يحدّثه.",
+    "reread": "إعادة تحميل الملفات",
+    "rereading": "جارٍ إعادة التحميل...",
+    "rereadDone": "تمت إعادة تحميل ملفات TODO.md.",
+    "rereadFailed": "تعذرت إعادة تحميل ملفات TODO.md.",
+    "addTo": "إضافة إلى",
+    "addFailed": "تعذرت الكتابة في ملف TODO.md."
   }
 }

@@ -4557,5 +4557,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Bir TODO.md dosyasından. Burada salt okunur: dosyayı düzenleyin.",
+    "readOnly": "Bu, bir TODO.md dosyasından geliyor. Bunun yerine dosyayı düzenleyin.",
+    "projectInfo": "{{path}} yansıtılır. Eklediğiniz görevler dosyaya yazılır, birini işaretlemek ise dosyayı günceller.",
+    "reread": "Dosyaları yeniden yükle",
+    "rereading": "Yeniden yükleniyor...",
+    "rereadDone": "TODO.md dosyaları yeniden yüklendi.",
+    "rereadFailed": "TODO.md dosyaları yeniden yüklenemedi.",
+    "addTo": "Şuraya ekle:",
+    "addFailed": "TODO.md dosyasına yazılamadı."
   }
 }

@@ -4557,5 +4557,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Uit een TODO.md-bestand. Hier alleen-lezen: bewerk het bestand.",
+    "readOnly": "Dit komt uit een TODO.md-bestand. Bewerk het bestand.",
+    "projectInfo": "Weerspiegelt {{path}}. Taken die je toevoegt, worden naar het bestand geschreven, en afvinken werkt het bij.",
+    "reread": "Bestanden opnieuw laden",
+    "rereading": "Opnieuw laden...",
+    "rereadDone": "TODO.md-bestanden opnieuw geladen.",
+    "rereadFailed": "De TODO.md-bestanden konden niet opnieuw worden geladen.",
+    "addTo": "Toevoegen aan",
+    "addFailed": "Kon niet naar het TODO.md-bestand schrijven."
   }
 }

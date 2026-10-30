@@ -262,6 +262,16 @@ module.exports = (sequelize) => {
                 allowNull: true,
                 comment: 'Order position for subtasks within a parent task',
             },
+            // Tasks mirrored from a TODO.md file: the `## ` section they sit
+            // in and the identity that lets a re-read update them in place.
+            source_section: {
+                type: DataTypes.STRING(150),
+                allowNull: true,
+            },
+            source_key: {
+                type: DataTypes.STRING(64),
+                allowNull: true,
+            },
             completed_at: {
                 type: DataTypes.DATE,
                 allowNull: true,

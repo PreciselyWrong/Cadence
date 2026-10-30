@@ -4557,5 +4557,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "TODO.md-tiedostosta. Vain luku täällä: muokkaa tiedostoa.",
+    "readOnly": "Tämä tulee TODO.md-tiedostosta. Muokkaa tiedostoa.",
+    "projectInfo": "Peilaa polkua {{path}}. Lisäämäsi tehtävät kirjoitetaan tiedostoon, ja niiden merkitseminen valmiiksi päivittää sen.",
+    "reread": "Lataa tiedostot uudelleen",
+    "rereading": "Ladataan uudelleen...",
+    "rereadDone": "TODO.md-tiedostot ladattiin uudelleen.",
+    "rereadFailed": "TODO.md-tiedostoja ei voitu ladata uudelleen.",
+    "addTo": "Lisää kohteeseen",
+    "addFailed": "TODO.md-tiedostoon ei voitu kirjoittaa."
   }
 }

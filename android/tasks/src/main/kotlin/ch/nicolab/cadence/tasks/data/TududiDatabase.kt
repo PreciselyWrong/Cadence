@@ -18,7 +18,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -66,6 +66,17 @@ internal val MIGRATION_3_4 = object : Migration(3, 4) {
             "CREATE TABLE IF NOT EXISTS `link_previews` (`url` TEXT NOT NULL, `title` TEXT, `description` TEXT, " +
                 "`imageUrl` TEXT, `fetchedAtMs` INTEGER NOT NULL, `failed` INTEGER NOT NULL, PRIMARY KEY(`url`))",
         )
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Origine d'un projet (`source_type`, `todo_md` pour un fichier TODO.md du serveur). Le curseur est retiré :
+ * le prochain instantané apporte la valeur des projets déjà reçus.
+ */
+internal val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE projects ADD COLUMN sourceType TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

@@ -4557,5 +4557,17 @@
     "amber": "Amber",
     "coral": "Coral",
     "rose": "Rose"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Dari file TODO.md. Hanya baca di sini: edit filenya saja.",
+    "readOnly": "Ini berasal dari file TODO.md. Edit filenya saja.",
+    "projectInfo": "Mencerminkan {{path}}. Tugas yang Anda tambahkan ditulis ke file, dan menandainya selesai akan memperbaruinya.",
+    "reread": "Muat ulang file",
+    "rereading": "Memuat ulang...",
+    "rereadDone": "File TODO.md dimuat ulang.",
+    "rereadFailed": "File TODO.md tidak dapat dimuat ulang.",
+    "addTo": "Tambahkan ke",
+    "addFailed": "Tidak dapat menulis ke file TODO.md."
   }
 }

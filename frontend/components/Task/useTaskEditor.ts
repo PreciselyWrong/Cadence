@@ -17,6 +17,7 @@ import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import { isStartAfterDue } from '../../utils/dueDateTime';
+import { isTodoMdTask } from '../../utils/todoMd';
 import { datePresets } from '../../utils/datePresets';
 import { DateValue } from '../Shared/DatePopover';
 import useTaskAutosave from './useTaskAutosave';
@@ -111,7 +112,11 @@ export const useTaskEditor = (
             ? [...people, task.AssignedTo]
             : people;
 
+    // Mirrored from a TODO.md file: only the done toggle edits it
+    const readOnly = isTodoMdTask(task);
+
     const commitTitle = async (text = draftName.current) => {
+        if (readOnly) return;
         const next = text.trim();
         if (!next) {
             setError(t('task.nameRequired', 'Task name is required'));
@@ -125,6 +130,7 @@ export const useTaskEditor = (
     };
 
     const saveNote = (next: string) => {
+        if (readOnly) return;
         setError(null);
         void run({ note: next }, (s) => s.setNote(next)).then((ok) => {
             if (!ok) setNote(task.note ?? '');
@@ -224,10 +230,14 @@ export const useTaskEditor = (
     const toggleCompletion = () => {
         if (!task.uid) return;
         const uid = task.uid;
-        void run({}, async (_setters, commit) => {
-            await toggleTaskCompletion(uid, task);
-            await commit();
-        }).then((ok) => {
+        void run(
+            {},
+            async (_setters, commit) => {
+                await toggleTaskCompletion(uid, task);
+                await commit();
+            },
+            { allowReadOnly: true }
+        ).then((ok) => {
             if (!ok) {
                 showErrorToast(
                     t('task.statusUpdateError', 'Failed to update status')
@@ -263,7 +273,7 @@ export const useTaskEditor = (
     };
 
     const handleSubtaskUpdate = async (updated: Task) => {
-        if (!updated.uid) return;
+        if (!updated.uid || readOnly) return;
         try {
             const saved = await updateTask(updated.uid, updated);
             setSubtasks((prev) =>
@@ -278,6 +288,7 @@ export const useTaskEditor = (
     };
 
     const handleSubtaskDelete = async (subtaskUid: string) => {
+        if (readOnly) return;
         try {
             await deleteTask(subtaskUid);
             setSubtasks((prev) => prev.filter((s) => s.uid !== subtaskUid));
@@ -288,7 +299,7 @@ export const useTaskEditor = (
     };
 
     const handleQuickAddSubtask = async (name: string) => {
-        if (!task.uid || !task.id) return;
+        if (!task.uid || !task.id || readOnly) return;
         const newSubtask = {
             name,
             status: 'not_started',
@@ -314,6 +325,7 @@ export const useTaskEditor = (
     return {
         t,
         task,
+        readOnly,
         state,
         error,
         setError,

@@ -41,6 +41,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.BadgeTone
+import ch.nicolab.cadence.designsystem.components.CadenceBadge
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.SettingRow
@@ -70,16 +72,16 @@ internal class DetailField(
 
 /** Groupe de lignes connectées : coins extérieurs arrondis, jonctions presque droites. */
 @Composable
-internal fun DetailFieldGroup(fields: List<DetailField>) {
+internal fun DetailFieldGroup(fields: List<DetailField>, enabled: Boolean = true) {
     RowGroup(Modifier.fillMaxWidth()) {
         fields.forEachIndexed { index, field ->
-            DetailRow(field, rowGroupShape(index, fields.size))
+            DetailRow(field, rowGroupShape(index, fields.size), enabled)
         }
     }
 }
 
 @Composable
-private fun DetailRow(field: DetailField, shape: Shape) {
+private fun DetailRow(field: DetailField, shape: Shape, enabled: Boolean) {
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     Row(
@@ -87,7 +89,7 @@ private fun DetailRow(field: DetailField, shape: Shape) {
             .fillMaxWidth()
             .clip(shape)
             .background(palette.card)
-            .clickable(role = Role.Button) {
+            .clickable(enabled = enabled, role = Role.Button) {
                 haptic.tap()
                 field.onClick()
             }
@@ -107,12 +109,14 @@ private fun DetailRow(field: DetailField, shape: Shape) {
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Icon(
-            Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-            null,
-            tint = palette.onSurfaceVariant,
-            modifier = Modifier.size(Size.icon),
-        )
+        if (enabled) {
+            Icon(
+                Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                null,
+                tint = palette.onSurfaceVariant,
+                modifier = Modifier.size(Size.icon),
+            )
+        }
     }
 }
 
@@ -125,6 +129,7 @@ internal fun InlineTextField(
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
     onDone: (() -> Unit)? = null,
+    readOnly: Boolean = false,
 ) {
     val palette = cadence
     Box(modifier, contentAlignment = Alignment.CenterStart) {
@@ -134,6 +139,7 @@ internal fun InlineTextField(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
+            readOnly = readOnly,
             textStyle = MaterialTheme.typography.bodyLarge.copy(color = palette.onSurface),
             cursorBrush = SolidColor(palette.primary),
             singleLine = singleLine,
@@ -149,11 +155,12 @@ internal fun InlineTextField(
 
 /** Note de la tâche : zone libre dans une carte, enregistrée au fil de la saisie par la fiche. */
 @Composable
-internal fun NoteCard(note: String, onNoteChange: (String) -> Unit) {
+internal fun NoteCard(note: String, onNoteChange: (String) -> Unit, readOnly: Boolean = false) {
     Panel(Modifier.fillMaxWidth()) {
         InlineTextField(
             value = note,
             onValueChange = onNoteChange,
+            readOnly = readOnly,
             placeholder = stringResource(R.string.tasks_detail_note_hint),
             modifier = Modifier.fillMaxWidth().heightIn(min = Size.touch),
         )
@@ -285,3 +292,18 @@ private fun extraValue(raw: String): String = when (raw) {
 
 private const val DATE_LENGTH = 10
 private val longDate: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy", tasksLocale)
+
+/** Bandeau de la fiche d'une tâche de fichier TODO.md : d'où elle vient et pourquoi elle est figée. */
+@Composable
+internal fun FileBackedNotice() {
+    val palette = cadence
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+        CadenceBadge(text = stringResource(R.string.tasks_file_badge), tone = BadgeTone.Neutral)
+        Text(
+            stringResource(R.string.tasks_file_readonly),
+            style = MaterialTheme.typography.bodyMedium,
+            color = palette.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}

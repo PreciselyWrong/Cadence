@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Fiche de tâche -->
+    <string name="tasks_file_badge">TODO.md</string>
+    <string name="tasks_file_badge_description">Tâche d\'un fichier TODO.md, en lecture seule</string>
+    <string name="tasks_file_readonly">Cette tâche vient d\'un fichier TODO.md : modifiez le fichier. Seule la case se coche ici.</string>
     <string name="tasks_detail_back">Retour</string>
     <string name="tasks_detail_more">Plus d\'actions</string>
     <string name="tasks_detail_title_hint">Titre de la tâche</string>
