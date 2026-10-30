@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +29,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -49,7 +52,9 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.HabitCardColors
 import ch.nicolab.cadence.designsystem.theme.habitAccent
+import ch.nicolab.cadence.designsystem.theme.habitCardColors
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
@@ -59,8 +64,13 @@ import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 
 /**
- * Unité fonctionnelle de l'application : une habitude, sa facette de progression,
- * son nom et sa mesure. Aucune sous-carte, la hiérarchie vient de la typographie.
+ * Unité fonctionnelle de l'application : une carte d'habitude de 80 dp (e07), dégradé de trois
+ * arrêts de sa teinte, facette de progression, nom, mesure, puis l'action rapide. L'encre et la
+ * pastille sont dérivées de la teinte (`habitCardColors`) : le texte atteint 4,5:1 sur chaque
+ * arrêt, même pour une teinte claire. Une habitude terminée ou archivée repasse en surface calme.
+ *
+ * [onOptions] ajoute un bouton ⋮ en plus de l'appui long, pour la liste complète où la carte
+ * entière ouvre le détail.
  */
 @Composable
 internal fun HabitRow(
@@ -71,19 +81,33 @@ internal fun HabitRow(
     actionLabel: String? = null,
     actionEnabled: Boolean = true,
     action: (() -> Unit)? = null,
+    onOptions: (() -> Unit)? = null,
 ) {
     val palette = cadence
     val tint = habitTint(item)
     val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     val ratio = if (item.stored.goal.isAbstinence || item.stored.goal.isTracker) 0f else (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
-    Panel(onClick = onClick, onLongClick = onLongClick) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    val colors = remember(tint) { habitCardColors(tint.toArgb()) }
+    val ink = if (done) palette.onSurface else Color(colors.inkArgb)
+    val secondary = if (done) palette.onSurfaceVariant else ink
+    val facetTint = if (done) palette.outline else ink
+    val gradient = remember(colors) { Brush.horizontalGradient(colors.stopsArgb.map(::Color)) }
+    Panel(
+        onClick = onClick,
+        onLongClick = onLongClick,
+        container = if (done) null else gradient,
+        contentPadding = PaddingValues(horizontal = Space.lg),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().heightIn(min = Size.habitCard),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             HabitFacet(
                 icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
                 label = HabitIconRegistry.getIcon(item.stored.iconId).labelFr,
                 progress = ratio,
-                tint = if (done) palette.outline else tint,
-                trackColor = tint.copy(alpha = 0.20f),
+                tint = facetTint,
+                trackColor = facetTint.copy(alpha = 0.30f),
                 size = Size.badge,
             )
             Spacer(Modifier.width(Space.lg))
@@ -91,76 +115,15 @@ internal fun HabitRow(
                 Text(
                     item.stored.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (done) palette.onSurfaceVariant else palette.onSurface,
+                    color = ink,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = secondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (actionLabel != null && action != null) {
                 Spacer(Modifier.width(Space.sm))
-                val description = stringResource(R.string.today_action_description, item.stored.name, actionLabel)
-                val haptic = rememberCadenceHaptic()
-                val actionInteraction = remember { MutableInteractionSource() }
-                val actionPressed by actionInteraction.collectIsPressedAsState()
-                val actionScale by animateFloatAsState(
-                    targetValue = if (actionPressed && actionEnabled) 0.94f else 1f,
-                    animationSpec = Motion.interactive(),
-                    label = "habitActionPress",
-                )
-                val isBinary = item.stored.goal.goalType == GoalType.BINARY
-                if (isBinary) {
-                    Box(
-                        Modifier
-                            .graphicsLayer {
-                                scaleX = actionScale
-                                scaleY = actionScale
-                            }
-                            .size(Size.actionSm)
-                            .clip(CircleShape)
-                            .background(tint.copy(alpha = if (palette.isDark) 0.20f else 0.10f))
-                            .clickable(
-                                interactionSource = actionInteraction,
-                                indication = androidx.compose.foundation.LocalIndication.current,
-                                enabled = actionEnabled,
-                                role = androidx.compose.ui.semantics.Role.Button,
-                                onClick = {
-                                    haptic.confirm()
-                                    action()
-                                },
-                            )
-                            .semantics { contentDescription = description },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(Icons.Outlined.Check, null, tint = if (actionEnabled) tint else palette.outline, modifier = Modifier.size(Size.iconSm))
-                    }
-                } else {
-                    Box(
-                        Modifier
-                            .graphicsLayer {
-                                scaleX = actionScale
-                                scaleY = actionScale
-                            }
-                            .clip(Radius.Pill)
-                            .background(tint.copy(alpha = if (palette.isDark) 0.20f else 0.10f))
-                            .clickable(
-                                interactionSource = actionInteraction,
-                                indication = androidx.compose.foundation.LocalIndication.current,
-                                enabled = actionEnabled,
-                                role = androidx.compose.ui.semantics.Role.Button,
-                                onClick = {
-                                    haptic.confirm()
-                                    action()
-                                },
-                            )
-                            .heightIn(min = Size.actionSm)
-                            .padding(horizontal = Space.md, vertical = Space.xs)
-                            .semantics { contentDescription = description },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(actionLabel, style = MaterialTheme.typography.labelMedium, color = if (actionEnabled) tint else palette.outline)
-                    }
-                }
+                HabitActionPill(item, actionLabel, actionEnabled, colors, action)
             }
             if (done) {
                 Spacer(Modifier.width(Space.sm))
@@ -168,6 +131,71 @@ internal fun HabitRow(
                     Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.iconSm))
                 }
             }
+            if (onOptions != null) {
+                val optionsLabel = stringResource(R.string.habit_options_description, item.stored.name)
+                Box(
+                    Modifier
+                        .size(Size.touch)
+                        .clip(CircleShape)
+                        .clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onOptions)
+                        .semantics { contentDescription = optionsLabel },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(Icons.Outlined.MoreVert, null, tint = secondary, modifier = Modifier.size(Size.icon))
+                }
+            }
+        }
+    }
+}
+
+/** Action rapide : fond voilé opposé à l'encre, texte en encre dérivée de la teinte (4,5:1 sur la pastille). */
+@Composable
+private fun HabitActionPill(
+    item: HabitCardState,
+    label: String,
+    enabled: Boolean,
+    colors: HabitCardColors,
+    action: () -> Unit,
+) {
+    val palette = cadence
+    val description = stringResource(R.string.today_action_description, item.stored.name, label)
+    val haptic = rememberCadenceHaptic()
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (pressed && enabled) 0.94f else 1f,
+        animationSpec = Motion.interactive(),
+        label = "habitActionPress",
+    )
+    val ink = Color(colors.inkArgb)
+    val shape = if (item.stored.goal.goalType == GoalType.BINARY) CircleShape else Radius.Pill
+    val size = if (item.stored.goal.goalType == GoalType.BINARY) Modifier.size(Size.actionSm) else Modifier.heightIn(min = Size.actionSm).padding(horizontal = Space.md, vertical = Space.xs)
+    Box(
+        Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(shape)
+            .background(Color(colors.pillFillArgb))
+            .clickable(
+                interactionSource = interaction,
+                indication = androidx.compose.foundation.LocalIndication.current,
+                enabled = enabled,
+                role = androidx.compose.ui.semantics.Role.Button,
+                onClick = {
+                    haptic.confirm()
+                    action()
+                },
+            )
+            .then(size)
+            .semantics { contentDescription = description },
+        contentAlignment = Alignment.Center,
+    ) {
+        if (item.stored.goal.goalType == GoalType.BINARY) {
+            Icon(Icons.Outlined.Check, null, tint = if (enabled) ink else ink.copy(alpha = 0.6f), modifier = Modifier.size(Size.iconSm))
+        } else {
+            Text(label, style = MaterialTheme.typography.labelLarge, color = if (enabled) ink else ink.copy(alpha = 0.6f))
         }
     }
 }

@@ -15,8 +15,8 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import ch.nicolab.cadence.designsystem.components.CollapsingHeaderHost
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,7 +70,7 @@ fun TasksScreen(
     routineStrip: @Composable () -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
-    val snackbar = remember { SnackbarHostState() }
+    val snackbar = rememberAppSnackbarHostState()
     var tab by rememberSaveable { mutableStateOf(TasksTab.TODAY) }
     var openProjectUid by rememberSaveable { mutableStateOf(showProjectUid) }
     var openTagUid by rememberSaveable { mutableStateOf<String?>(null) }
@@ -112,9 +112,8 @@ fun TasksScreen(
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbar, Modifier.padding(bottom = navigationClearance())) },
     ) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding)) {
+        CollapsingHeaderHost(Modifier.fillMaxSize().padding(padding)) {
             Column(Modifier.fillMaxSize()) {
                 ScreenHeader(
                     title = stringResource(R.string.tasks_title),

@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -90,14 +91,14 @@ internal fun TaskOverlays(
     LaunchedEffect(viewModel) {
         viewModel.messages.collect { snackbar.showSnackbar(it) }
     }
-    val completedMessage = stringResource(R.string.tasks_completed_message)
     val undoLabel = stringResource(R.string.tasks_undo)
+    val context = LocalContext.current
     LaunchedEffect(viewModel) {
         viewModel.completed.collect { task ->
             snackbar.currentSnackbarData?.dismiss()
             launch {
                 val result = snackbar.showSnackbar(
-                    message = completedMessage,
+                    message = context.getString(R.string.tasks_completed_named, task.name),
                     actionLabel = undoLabel,
                     duration = SnackbarDuration.Short,
                 )

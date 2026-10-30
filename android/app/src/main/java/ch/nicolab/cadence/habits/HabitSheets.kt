@@ -53,6 +53,7 @@ import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.ui.HabitFormatter
+import ch.nicolab.cadence.ui.shortFrench
 import java.time.LocalDate
 
 /** Déplacement d'une habitude d'un groupe à l'autre, sans passer par le formulaire complet. */
@@ -124,7 +125,7 @@ internal fun HabitOptionsSheet(
                 Icons.Outlined.PlayArrow,
                 stringResource(
                     R.string.travel_active,
-                    suspension.pause.endExclusive?.minusDays(1)?.toString().orEmpty(),
+                    suspension.pause.endExclusive?.minusDays(1)?.shortFrench().orEmpty(),
                 ),
                 tint,
             ) { resumePause(suspension.id) }
@@ -179,7 +180,13 @@ internal fun QuickSheet(
         leading = { HabitAvatar(item, tint) },
     ) {
         if (!item.stored.goal.isTracker) {
-            HabitHistoryGraph(item.history, tint, Modifier.fillMaxWidth().padding(bottom = Space.xl))
+            HabitHistoryGraph(
+                item.history,
+                tint,
+                Modifier.fillMaxWidth().padding(bottom = Space.xl),
+                goalType = item.stored.goal.goalType,
+                unit = item.stored.goal.unit,
+            )
             StreakLine(item.streak)
         }
         Spacer(Modifier.height(Space.xl))
@@ -203,6 +210,16 @@ internal fun QuickSheet(
         if (item.stored.goal.goalType == GoalType.BINARY) {
             PrimaryAction(stringResource(R.string.quick_btn_validate), Modifier.fillMaxWidth(), accent = tint) { record(1); dismiss() }
         } else {
+            // « Ajouter » est l'action principale : sans saisie libre, il ajoute le premier raccourci.
+            val customValue = custom.toLongOrNull()?.takeIf { it > 0 }?.let { it * scale }
+            val amount = customValue ?: item.quickValues.firstOrNull() ?: scale
+            val goal = item.stored.goal
+            PrimaryAction(
+                stringResource(R.string.quick_btn_add_value, "+" + HabitFormatter.formatWithUnit(amount, goal.goalType, goal.unit)),
+                Modifier.fillMaxWidth(),
+                accent = tint,
+            ) { record(amount); custom = "" }
+            Spacer(Modifier.height(Space.md))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 item.quickValues.ifEmpty { listOf(scale) }.forEach { value ->
                     ValueChip("+${HabitFormatter.formatValue(value, item.stored.goal.goalType, item.stored.goal.unit)}", accent = tint) { record(value) }
@@ -217,10 +234,6 @@ internal fun QuickSheet(
                 accent = tint,
                 numeric = true,
             )
-            Spacer(Modifier.height(Space.md))
-            PrimaryAction(stringResource(R.string.quick_btn_add), Modifier.fillMaxWidth(), accent = tint, enabled = (custom.toLongOrNull() ?: 0) > 0) {
-                custom.toLongOrNull()?.takeIf { it > 0 }?.let { record(it * scale); custom = "" }
-            }
         }
         Spacer(Modifier.height(Space.xs))
         TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.fillMaxWidth(), onClick = undo)

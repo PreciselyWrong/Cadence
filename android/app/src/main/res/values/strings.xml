@@ -117,6 +117,8 @@
     <string name="status_paused">En pause</string>
     <string name="status_archived">Archivée</string>
     <string name="status_todo">À faire</string>
+    <string name="status_not_planned">Pas prévu aujourd’hui</string>
+    <string name="habit_options_description">Options de %1$s</string>
     <string name="status_minimum_reached">Minimum atteint</string>
     <string name="status_ideal_reached">Idéal atteint</string>
     <string name="form_minimum_label">Minimum</string>
@@ -210,6 +212,7 @@
     <string name="quick_sheet_subtitle">Uniquement ce qui reste à faire</string>
     <string name="quick_custom_value_label">Autre valeur</string>
     <string name="quick_btn_add">Ajouter</string>
+    <string name="quick_btn_add_value">Ajouter %1$s</string>
     <string name="quick_btn_validate">Valider</string>
     <string name="quick_btn_undo">Annuler la dernière saisie</string>
     <string name="quick_all_done">Tout est à jour !</string>
@@ -270,7 +273,6 @@
     <string name="stats_subtitle">Votre progression au fil du temps</string>
     <string name="stats_entry_count">%1$d saisies conservées</string>
     <string name="settings_widget_hint">Appui long sur le widget, puis Configurer.</string>
-    <string name="settings_widget_options">Taille · couleur · transparence · valeurs · habitudes</string>
     <string name="settings_data_title">Données</string>
     <string name="settings_data_subtitle">Sauvegarde locale versionnée</string>
     <string name="settings_export">Exporter</string>
@@ -534,7 +536,7 @@
     <string name="habits_segment_today">Aujourd’hui</string>
     <string name="habits_segment_all">Toutes</string>
     <string name="bilan_title">Bilan</string>
-    <string name="settings_section_home">Écran d\'accueil</string>
+    <string name="settings_section_home">Personnalisation</string>
     <string name="settings_section_organisation">Organisation</string>
     <string name="settings_page_widgets">Widgets</string>
     <string name="settings_page_appearance">Apparence</string>
@@ -567,8 +569,16 @@
     <string name="settings_pure_black_subtitle">Écrans OLED</string>
     <string name="settings_page_groups">Moments de la journée</string>
     <string name="settings_page_backup">Sauvegarde</string>
-    <string name="settings_page_tududi">Compte Tududi</string>
+    <string name="settings_page_tududi">Compte Cadence</string>
     <string name="action_back">Retour</string>
+    <string name="settings_widget_none_placed">Aucun placé</string>
+    <string name="settings_widget_configure">Configurer</string>
+    <string name="settings_widget_configure_numbered">Configurer le n° %1$d</string>
+    <string name="settings_widget_pin">Ajouter à l’écran d’accueil</string>
+    <plurals name="settings_widget_placed">
+        <item quantity="one">%1$d placé</item>
+        <item quantity="other">%1$d placés</item>
+    </plurals>
     <plurals name="settings_groups_count">
         <item quantity="one">%1$d moment</item>
         <item quantity="other">%1$d moments</item>
@@ -607,6 +617,11 @@
     <string name="today_widget_configure">Configurer le widget</string>
     <string name="today_overdue_label">En retard · %1$d</string>
     <string name="today_event_all_day">Journée</string>
+    <string name="today_widget_overflow">+%1$d</string>
+    <string name="today_widget_check_description">Terminer %1$s</string>
+    <string name="today_day_yesterday">Hier</string>
+    <string name="today_day_today">Auj.</string>
+    <string name="today_day_tomorrow">Demain</string>
     <string name="today_config_title">Widget Aujourd’hui</string>
     <string name="today_config_back">Retour</string>
     <string name="today_config_section_background">Fond</string>
@@ -660,9 +675,6 @@
     <string name="today_text_small">Petit</string>
     <string name="today_text_medium">Moyen</string>
     <string name="today_text_large">Grand</string>
-    <string name="settings_widget_today_title">Aujourd’hui</string>
-    <string name="settings_widget_today_open">Configurer le widget Aujourd’hui</string>
-    <string name="settings_widget_today_none">Ajoutez le widget Aujourd’hui à l’accueil pour le configurer.</string>
     <string name="today_config_filter_projects">Projets (aucun = tous)</string>
     <string name="today_config_filter_tags">Étiquettes (aucune = toutes)</string>
     <string name="today_config_preview_task_1">Appeler le dentiste</string>

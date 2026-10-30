@@ -283,6 +283,7 @@ internal fun conciseHabitStatus(item: HabitCardState): String {
         )
         evaluation.isCompleted -> stringResource(R.string.status_ideal_reached)
         evaluation.completedQuantity && !evaluation.completedFrequency -> stringResource(R.string.today_frequency, (goal.frequencyTarget ?: 0) - evaluation.sessionCount)
+        !evaluation.isPlannedForDate -> stringResource(R.string.status_not_planned)
         goal.goalType == GoalType.BINARY -> stringResource(R.string.status_todo)
         evaluation.validatesPeriod && goal.hasDistinctMinimum -> stringResource(R.string.today_minimum, quantityWithUnit((evaluation.targetMinor - evaluation.progressMinor).coerceAtLeast(0), item))
         else -> stringResource(when (goal.period) {

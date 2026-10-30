@@ -139,7 +139,7 @@ internal fun hslToArgb(hue: Float, saturation: Float, lightness: Float): Int {
     return (0xFF shl 24) or (channel(r1) shl 16) or (channel(g1) shl 8) or channel(b1)
 }
 
-private fun relativeLuminance(argb: Int): Double {
+internal fun relativeLuminance(argb: Int): Double {
     fun linear(channel: Int): Double {
         val c = channel / 255.0
         return if (c <= 0.03928) c / 12.92 else ((c + 0.055) / 1.055).pow(2.4)

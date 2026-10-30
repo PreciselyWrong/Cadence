@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -14,6 +15,8 @@ import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.LocalSize
+import androidx.glance.layout.ContentScale
 import androidx.glance.action.Action
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
@@ -58,6 +61,7 @@ import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
 import ch.nicolab.cadence.tasks.widget.openTaskIntent
@@ -209,6 +213,8 @@ class CompleteTodayTaskAction : ActionCallback {
 }
 
 private const val FACET_ICON_DP = 22
+private const val CHECK_DP = 22
+private const val MAX_EVENT_ROWS = 3
 
 private class TodayView(
     val appWidgetId: Int,
@@ -227,9 +233,17 @@ private fun TodayContent(view: TodayView) {
     val config = view.config
     val palette = view.palette
     val text = TodayTextSizes.of(config.textSize)
+    val size = LocalSize.current
+    val density = context.resources.displayMetrics.density
     val tasksShown = config.showTasks && (view.selection.tasks.isNotEmpty() || view.selection.overdue.isNotEmpty())
     val eventsShown = config.showEvents && view.selection.events.isNotEmpty()
     val habitsShown = view.facets.isNotEmpty()
+    val events = if (eventsShown) view.selection.events.take(MAX_EVENT_ROWS) else emptyList()
+    val capacity = TodayWidgetLayout.rowCapacity(size.height.value, text, habitsShown, view.selection.overdue.isNotEmpty()) - events.size
+    val fit = TodayWidgetLayout.fit(view.selection, capacity.coerceAtLeast(1))
+    val frame = remember(size, config.cornerRadiusDp, palette.ink, density) {
+        renderGlassFrame(size.width.value, size.height.value, config.cornerRadiusDp.toFloat(), density, palette.ink, sheen = config.background == TodayBackground.VERRE)
+    }
     Box(
         modifier = GlanceModifier.fillMaxSize()
             .background(ColorProvider(day = Color(palette.surface), night = Color(palette.surface)))
@@ -245,18 +259,29 @@ private fun TodayContent(view: TodayView) {
             Box(GlanceModifier.height(6.dp)) {}
             if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
             if (config.showTasks) {
-                if (view.selection.overdue.isNotEmpty()) {
+                if (fit.overdue.isNotEmpty()) {
                     SectionLabel(context.getString(R.string.today_overdue_label, view.selection.overdueTotal), palette.overdue, text)
-                    view.selection.overdue.forEach { TaskRowView(it, view, it.dueLabel(view), overdue = true, text) }
+                    fit.overdue.forEach { TaskRowView(it, view, it.dueLabel(view, context), overdue = true, text) }
                 }
-                view.selection.tasks.forEach { TaskRowView(it, view, it.dueLabel(view), overdue = false, text) }
+                fit.tasks.forEach { TaskRowView(it, view, it.dueLabel(view, context), overdue = false, text) }
+                if (fit.overflow > 0) OverflowFooter(fit.overflow, palette.muted, text)
                 if (!tasksShown && !eventsShown && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), text)
             }
-            if (eventsShown) {
-                view.selection.events.forEach { EventRowView(it, view, text) }
-            }
+            events.forEach { EventRowView(it, view, text) }
             if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
         }
+        Image(ImageProvider(frame), null, modifier = GlanceModifier.fillMaxSize(), contentScale = ContentScale.FillBounds)
+    }
+}
+
+@Composable
+private fun OverflowFooter(count: Int, mutedArgb: Int, sizes: TodayTextSizes) {
+    Row(modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp), horizontalAlignment = Alignment.Horizontal.End) {
+        Text(
+            LocalContext.current.getString(R.string.today_widget_overflow, count),
+            maxLines = 1,
+            style = TextStyle(color = ColorProvider(day = Color(mutedArgb), night = Color(mutedArgb)), fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
+        )
     }
 }
 
@@ -271,10 +296,17 @@ private fun Header(view: TodayView, text: TodayTextSizes) {
             style = TextStyle(color = ColorProvider(day = Color(palette.ink), night = Color(palette.ink)), fontSize = text.title.sp, fontWeight = FontWeight.Bold),
             modifier = GlanceModifier.defaultWeight(),
         )
-        Text(
-            view.selection.total.toString(),
-            style = TextStyle(color = ColorProvider(day = Color(palette.muted), night = Color(palette.muted)), fontSize = text.small.sp, fontWeight = FontWeight.Medium),
-        )
+        Box(
+            modifier = GlanceModifier
+                .background(ColorProvider(day = Color(palette.ink).copy(alpha = 0.14f), night = Color(palette.ink).copy(alpha = 0.14f)))
+                .cornerRadius(10.dp)
+                .padding(horizontal = 7.dp, vertical = 1.dp),
+        ) {
+            Text(
+                view.selection.total.toString(),
+                style = TextStyle(color = ColorProvider(day = Color(palette.muted), night = Color(palette.muted)), fontSize = text.small.sp, fontWeight = FontWeight.Medium),
+            )
+        }
         Box(GlanceModifier.width(8.dp)) {}
         IconButton(
             label = context.getString(R.string.today_widget_add),
@@ -341,6 +373,7 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
         ?: TodayControlPalette.argb(config.controlColour, config.freeControlArgb)
         ?: palette.accent
     val context = LocalContext.current
+    val density = context.resources.displayMetrics.density
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
@@ -351,16 +384,17 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
             Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(ColorProvider(day = Color(rail), night = Color(rail))).cornerRadius(2.dp)) {}
             Box(GlanceModifier.width(6.dp)) {}
         }
-        val checkbox = GlanceModifier.size(20.dp)
-            .background(ColorProvider(day = Color(accent), night = Color(accent)))
-            .cornerRadius(5.dp)
-        Box(
+        val checkbox = GlanceModifier.size(CHECK_DP.dp)
+        val checkBitmap = remember(accent, density) { renderCheckBox(accent, CHECK_DP, density) }
+        Image(
+            ImageProvider(checkBitmap),
+            context.getString(R.string.today_widget_check_description, task.name),
             modifier = if (config.checkFromWidget) {
                 checkbox.clickable(actionRunCallback<CompleteTodayTaskAction>(actionParametersOf(taskUidKey to task.uid)))
             } else {
                 checkbox.clickable(actionStartActivityIntent(openIntent))
             },
-        ) {}
+        )
         Column(
             modifier = GlanceModifier.defaultWeight().padding(start = 8.dp).clickable(actionStartActivityIntent(openIntent)),
         ) {
@@ -449,10 +483,20 @@ private fun HabitsRow(view: TodayView, sizes: TodayTextSizes) {
     }
 }
 
-private fun TaskItem.dueLabel(view: TodayView): String? {
+/**
+ * Échéance en une pastille de texte : Hier, Auj., Demain ou « 27 oct. », suivie de l'heure.
+ * « Auj. » ne s'écrit que hors des périmètres du jour, où il informe ; dans « Aujourd'hui » il répéterait le titre.
+ */
+private fun TaskItem.dueLabel(view: TodayView, context: Context): String? {
     val due = dueDay ?: return null
-    val day = if (due == view.today) null else due.format(DAY_FORMAT)
     val time = if (dueHasTime) dueDate?.atZone(view.zone)?.format(TIME_FORMAT) else null
+    val inTodayScope = view.config.taskScope == TaskScope.OVERDUE_AND_TODAY || view.config.taskScope == TaskScope.TODAY
+    val day = when (RelativeDay.of(due, view.today)) {
+        RelativeDay.YESTERDAY -> context.getString(R.string.today_day_yesterday)
+        RelativeDay.TODAY -> if (inTodayScope) null else context.getString(R.string.today_day_today)
+        RelativeDay.TOMORROW -> context.getString(R.string.today_day_tomorrow)
+        RelativeDay.OTHER -> due.format(DAY_FORMAT)
+    }
     return listOfNotNull(day, time).joinToString(" ").ifEmpty { null }
 }
 

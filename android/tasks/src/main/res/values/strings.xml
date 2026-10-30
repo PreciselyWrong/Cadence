@@ -22,6 +22,7 @@
     <string name="tasks_recurring">Tâche récurrente</string>
     <string name="tasks_pending_sync">Modification non synchronisée</string>
     <string name="tasks_completed_message">Tâche terminée</string>
+    <string name="tasks_completed_named">« %1$s » terminée</string>
     <string name="tasks_undo">Annuler</string>
     <string name="tasks_mark_done">Marquer comme terminée</string>
     <string name="tasks_mark_undone">Rouvrir la tâche</string>

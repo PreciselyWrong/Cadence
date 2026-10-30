@@ -53,6 +53,9 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface; seuls les éléments en verre (boutons d'en-tête, pastilles, barre de navigation) portent un liseré `outline` à 35 %.
 - La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`designsystem/.../components/Facet.kt`), réservée aux habitudes.
 - La navigation est une capsule translucide flottante (flou Haze sous Android 12+, teinte seule avant) à cinq cibles égales : Boîte, Tâches (ouverte au lancement), Agenda, Habitudes, Bilan. Chaque cible montre son icône et son libellé; l'active porte une pastille `primaryContainer`. Réglages est un écran poussé, ouvert par le bouton engrenage des en-têtes.
+- Messages : un seul hôte, `CadenceSnackbarHost`, posé par la coque au-dessus de la navigation ; un écran obtient l'état par `rememberAppSnackbarHostState()` et ne pose jamais son propre `SnackbarHost`. Le message nomme l'élément (« « Acheter du pain » terminée »).
+- `ScreenHeader` a une ligne de titre de hauteur fixe (même ligne de base sur tous les onglets) et se réduit au défilement dans un `CollapsingHeaderHost` ; `NavigationBarScrim` estompe le contenu avant la barre système.
+- Une carte d'habitude (`HabitRow`, 80 dp) prend ses couleurs de `habitCardColors(tint)` : dégradé de trois arrêts, encre et pastille d'action à 4,5:1 au moins. `readableOn` / `readableTint` sont la seule dérivation d'un texte posé sur une teinte.
 - Une rubrique de Réglages s'ajoute par une seule entrée de `settings/SettingsRegistry.kt` (`settingsPages`) : ligne, sous-titre et contenu de sa sous-page.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Hors alcool, les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
@@ -78,6 +81,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Le minuteur de concentration (`tasks/focus/PomodoroState`) est local et dérivé de l'horloge, comme `HabitTimer` : on ne stocke que l'instant de reprise et le reste figé.
 
 ## ⛔ Interdits
+- ⛔ Poser du texte sur une teinte d'habitude, de projet ou d'accent sans `readableOn`/`readableTint` — la teinte seule à 10 % d'opacité passe sous 4,5:1 pour les teintes claires.
+- ⛔ Créer un `SnackbarHost` dans un écran — deux hôtes sur le même état affichent chaque message deux fois.
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.
 - ⛔ Présenter une donnée à compléter comme un simple texte — l’action doit avoir une surface, un verbe et un indicateur visuel clairement touchables.
 - ⛔ Publier sur NicoApps sans transmettre puis relire le bloc courant de `CHANGELOG.md` — l’APK ne contient pas les notes de version et le catalogue ne peut pas les reconstruire.

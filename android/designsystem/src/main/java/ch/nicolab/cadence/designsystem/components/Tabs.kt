@@ -95,7 +95,7 @@ private fun PillTab(tab: TabPill, active: Boolean, onClick: () -> Unit) {
                     indication = androidx.compose.foundation.LocalIndication.current,
                     role = Role.Tab,
                     onClick = {
-                        if (!active) haptic.tap()
+                        if (!active) haptic.selection()
                         onClick()
                     },
                 )
@@ -159,7 +159,7 @@ private fun Segment(label: String, active: Boolean, modifier: Modifier, onClick:
                 indication = androidx.compose.foundation.LocalIndication.current,
                 role = Role.Tab,
                 onClick = {
-                    if (!active) haptic.tap()
+                    if (!active) haptic.selection()
                     onClick()
                 },
             )

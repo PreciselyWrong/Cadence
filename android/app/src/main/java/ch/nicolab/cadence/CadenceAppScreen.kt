@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,9 @@ import ch.nicolab.cadence.agenda.AgendaScreen
 import ch.nicolab.cadence.bilan.BilanScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.designsystem.components.CadenceNavigation
+import ch.nicolab.cadence.designsystem.components.CadenceSnackbarHost
+import ch.nicolab.cadence.designsystem.components.LocalAppSnackbarHostState
+import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.CadenceScreen
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.NavDestination
@@ -201,88 +205,91 @@ internal fun CadenceAppScreen(
     )
 
     CadenceScreen {
-        Crossfade(
-            targetState = if (settingsOpen) null else tab,
-            modifier = Modifier.fillMaxSize().backdropSource(backdrop),
-            label = "screen",
-        ) { current ->
-            when (current) {
-                null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
-                Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
-                Tab.TASKS -> TasksScreen(
-                    openTaskUid = openTaskUid,
-                    showProjectUid = projectToShow,
-                    onProjectShown = { projectToShow = null },
-                    onOpenSearch = { searchOpen = true },
-                    onOpenSettings = { settingsOpen = true },
-                    routineStrip = {
-                        RoutineStrip(
-                            habits = habits,
-                            groups = groups,
-                            quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                            openHabits = { tab = Tab.HABITS },
-                        )
-                    },
-                )
-                Tab.AGENDA -> AgendaScreen()
-                Tab.HABITS -> HabitsTab(
-                    habits = habits,
-                    groups = groups,
-                    selectedGroupId = groupFilter,
-                    onSelectGroup = { groupFilter = it },
-                    quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                    options = { options = it },
-                    create = { choosingCreation = true },
-                    openSettings = { settingsOpen = true },
-                    timers = timers,
-                    busy = busy,
-                    direct = { item -> viewModel.directAction(item) { receipt ->
-                        snackbar.currentSnackbarData?.dismiss()
-                        scope.launch {
-                            val result = snackbar.showSnackbar(
-                                context.getString(if (receipt.entryId != null) R.string.today_saved else R.string.today_timer_started, item.stored.name),
-                                actionLabel = context.getString(R.string.today_undo),
-                                duration = androidx.compose.material3.SnackbarDuration.Short,
+        CompositionLocalProvider(LocalAppSnackbarHostState provides snackbar) {
+            Crossfade(
+                targetState = if (settingsOpen) null else tab,
+                modifier = Modifier.fillMaxSize().backdropSource(backdrop),
+                label = "screen",
+            ) { current ->
+                when (current) {
+                    null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
+                    Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
+                    Tab.TASKS -> TasksScreen(
+                        openTaskUid = openTaskUid,
+                        showProjectUid = projectToShow,
+                        onProjectShown = { projectToShow = null },
+                        onOpenSearch = { searchOpen = true },
+                        onOpenSettings = { settingsOpen = true },
+                        routineStrip = {
+                            RoutineStrip(
+                                habits = habits,
+                                groups = groups,
+                                quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                                openHabits = { tab = Tab.HABITS },
                             )
-                            if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) viewModel.undoDirectAction(receipt)
-                        }
-                    } },
-                    offerReturn = offerReturn,
-                    resume = viewModel::dismissReturn,
-                    edit = { viewModel.clearSaveError(); editorId = it.stored.id },
-                    questions = pendingQuestions,
-                    answer = { answeringHabitId = it.habitId },
-                )
-                Tab.BILAN -> BilanScreen(
-                    habits = habits,
-                    quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                    options = { options = it },
-                    onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
-                )
+                        },
+                    )
+                    Tab.AGENDA -> AgendaScreen()
+                    Tab.HABITS -> HabitsTab(
+                        habits = habits,
+                        groups = groups,
+                        selectedGroupId = groupFilter,
+                        onSelectGroup = { groupFilter = it },
+                        quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                        options = { options = it },
+                        create = { choosingCreation = true },
+                        openSettings = { settingsOpen = true },
+                        timers = timers,
+                        busy = busy,
+                        direct = { item -> viewModel.directAction(item) { receipt ->
+                            snackbar.currentSnackbarData?.dismiss()
+                            scope.launch {
+                                val result = snackbar.showSnackbar(
+                                    context.getString(if (receipt.entryId != null) R.string.today_saved else R.string.today_timer_started, item.stored.name),
+                                    actionLabel = context.getString(R.string.today_undo),
+                                    duration = androidx.compose.material3.SnackbarDuration.Short,
+                                )
+                                if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) viewModel.undoDirectAction(receipt)
+                            }
+                        } },
+                        offerReturn = offerReturn,
+                        resume = viewModel::dismissReturn,
+                        edit = { viewModel.clearSaveError(); editorId = it.stored.id },
+                        questions = pendingQuestions,
+                        answer = { answeringHabitId = it.habitId },
+                    )
+                    Tab.BILAN -> BilanScreen(
+                        habits = habits,
+                        quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                        options = { options = it },
+                        onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
+                    )
+                }
             }
+            if (searchOpen) SearchScreen(
+                habits = habits.filter { !it.stored.archived }.map {
+                    SearchEntry(SearchKind.HABIT, it.stored.id, it.stored.name)
+                },
+                onBack = { searchOpen = false },
+                onOpenProject = { uid ->
+                    searchOpen = false
+                    tab = Tab.TASKS
+                    projectToShow = uid
+                },
+                onOpenHabit = { id ->
+                    searchOpen = false
+                    viewModel.clearSaveError()
+                    quickHabitId = id
+                },
+            )
+            NavigationBarScrim()
+            if (!settingsOpen && !searchOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
+            CadenceSnackbarHost(
+                snackbar,
+                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen) Space.lg else navigationClearance() + Space.sm),
+                backdrop = backdrop,
+            )
         }
-        if (searchOpen) SearchScreen(
-            habits = habits.filter { !it.stored.archived }.map {
-                SearchEntry(SearchKind.HABIT, it.stored.id, it.stored.name)
-            },
-            onBack = { searchOpen = false },
-            onOpenProject = { uid ->
-                searchOpen = false
-                tab = Tab.TASKS
-                projectToShow = uid
-            },
-            onOpenHabit = { id ->
-                searchOpen = false
-                viewModel.clearSaveError()
-                quickHabitId = id
-            },
-        )
-        if (!settingsOpen && !searchOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
-        androidx.compose.material3.SnackbarHost(
-            snackbar,
-            Modifier.align(Alignment.BottomCenter)
-                .padding(start = Space.gutter, end = Space.gutter, bottom = navigationClearance() + Space.lg),
-        )
     }
 
     quick?.let { item ->

@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.RelativeDay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -21,11 +22,11 @@ private const val SHORT_WEEKDAY_RANGE = 6L
  * section et la bande de la semaine : Hier, Aujourd'hui (Auj.), Demain, sinon le jour de la semaine.
  */
 internal fun dayLabelOf(date: LocalDate, today: LocalDate, words: DayWords, style: DayLabelStyle = DayLabelStyle.LONG): String =
-    when (date) {
-        today -> words.today
-        today.plusDays(1) -> words.tomorrow
-        today.minusDays(1) -> words.yesterday
-        else -> when (style) {
+    when (RelativeDay.of(date, today)) {
+        RelativeDay.TODAY -> words.today
+        RelativeDay.TOMORROW -> words.tomorrow
+        RelativeDay.YESTERDAY -> words.yesterday
+        RelativeDay.OTHER -> when (style) {
             DayLabelStyle.LONG -> date.format(DateTimeFormatter.ofPattern("EEEE d MMM", tasksLocale))
             DayLabelStyle.SHORT ->
                 if (abs(ChronoUnit.DAYS.between(today, date)) <= SHORT_WEEKDAY_RANGE) {
