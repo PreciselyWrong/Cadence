@@ -119,6 +119,7 @@ internal fun TaskDetailSheet(
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth(),
             )
+            LinkPreviewList("${edit.name}\n${edit.note}", viewModel.linkPreviews)
             SubtasksCard(parentUid = current.uid, viewModel = viewModel)
             StartFields(
                 edit = edit,

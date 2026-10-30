@@ -16,7 +16,13 @@ import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.notes.Autosaver
+import ch.nicolab.cadence.tasks.notes.NoteEditSession
+import ch.nicolab.cadence.tasks.notes.NoteFields
+import ch.nicolab.cadence.tasks.notes.NotePatch
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -50,6 +56,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private const val STOP_TIMEOUT_MS = 5_000L
+private const val UNDO_WINDOW_MS = 4_500L
+private const val NOTE_SAVE_DELAY_MS = 700L
 private const val CALENDAR_PREFS = "tududi_calendar_notice"
 private const val KEY_NOTICE_DISMISSED = "dismissed"
 
@@ -68,6 +76,11 @@ internal data class TodayState(
     val today: List<TaskItem> = emptyList(),
     val completed: List<TaskItem> = emptyList(),
 )
+
+internal enum class DeletionKind { Note, Idea }
+
+/** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. */
+internal data class PendingDeletion(val kind: DeletionKind, val uid: String)
 
 internal data class ProjectRow(val project: ProjectItem, val openCount: Int)
 
@@ -140,11 +153,23 @@ internal class TasksViewModel(
     val tags: StateFlow<List<TagItem>> = repository.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    val inbox: StateFlow<List<InboxEntry>> = repository.observeInbox()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+    /** Éléments masqués pendant la fenêtre d'annulation d'une suppression ; supprimés pour de bon ensuite. */
+    private val hidden = MutableStateFlow<Set<String>>(emptySet())
 
-    val notes: StateFlow<List<NoteItem>> = repository.observeNotes()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+    private val _deletions = MutableSharedFlow<PendingDeletion>(extraBufferCapacity = 4)
+
+    /** Suppressions annulables en cours : l'écran propose « Annuler » pendant [UNDO_WINDOW_MS]. */
+    val deletions: Flow<PendingDeletion> = _deletions.asSharedFlow()
+
+    val linkPreviews: LinkPreviews = TasksGraph.linkPreviews(application)
+
+    val inbox: StateFlow<List<InboxEntry>> = combine(repository.observeInbox(), hidden) { entries, gone ->
+        entries.filterNot { it.uid in gone }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
+        all.filterNot { it.uid in gone }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Chaque tâche, sous-tâches comprises ; ne sert qu'à la recherche. */
     val everyTask: StateFlow<List<TaskItem>> = repository.observeAllTasks()
@@ -218,6 +243,81 @@ internal class TasksViewModel(
         repository.createTask(draft)
         repository.deleteInboxItem(entry.uid)
     }
+
+    private val noteSessions = HashMap<String, NoteEditSession>()
+    private val noteSavers = HashMap<String, Autosaver<NotePatch>>()
+
+    /** Session de saisie d'une note, conservée tant que l'éditeur est ouvert (survit à une rotation). */
+    fun noteSession(uid: String, initial: NoteFields): NoteEditSession = noteSessions.getOrPut(uid) { NoteEditSession(initial) }
+
+    /** À appeler après chaque saisie : la sauvegarde part [NOTE_SAVE_DELAY_MS] après la dernière. */
+    fun noteEdited(uid: String) {
+        val session = noteSessions[uid] ?: return
+        val patch = session.pending() ?: return
+        noteSaver(uid, session).submit(patch)
+    }
+
+    /** Envoie tout de suite la saisie en attente, par exemple après une case cochée. */
+    fun flushNote(uid: String) {
+        val session = noteSessions[uid] ?: return
+        noteEdited(uid)
+        viewModelScope.launch { runSaving { noteSavers[uid]?.flush() } }
+    }
+
+    /** Ferme l'éditeur : la saisie en attente est enregistrée avant d'oublier la session. */
+    fun closeNote(uid: String) {
+        viewModelScope.launch {
+            noteEdited(uid)
+            runSaving { noteSavers[uid]?.flush() }
+            noteSavers.remove(uid)
+            noteSessions.remove(uid)
+        }
+    }
+
+    fun saveNoteAttributes(uid: String, change: NoteChange) = launchAction { repository.saveNote(uid, change) }
+
+    fun deleteNoteWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Note, uid)) { repository.deleteNote(uid) }
+
+    fun deleteIdeaWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Idea, uid)) { repository.deleteInboxItem(uid) }
+
+    fun undoDeletion(uid: String) {
+        hidden.value = hidden.value - uid
+    }
+
+    /** Masque l'élément tout de suite ; la suppression réelle attend la fin de la fenêtre d'annulation. */
+    private fun deleteWithUndo(deletion: PendingDeletion, commit: suspend () -> Unit) {
+        hidden.value = hidden.value + deletion.uid
+        _deletions.tryEmit(deletion)
+        launchAction {
+            delay(UNDO_WINDOW_MS)
+            if (deletion.uid in hidden.value) {
+                commit()
+                hidden.value = hidden.value - deletion.uid
+            }
+        }
+    }
+
+    private fun noteSaver(uid: String, session: NoteEditSession) = noteSavers.getOrPut(uid) {
+        Autosaver(viewModelScope, NOTE_SAVE_DELAY_MS) { patch ->
+            runSaving {
+                repository.saveNote(uid, NoteChange(title = patch.title, content = patch.content))
+                session.markSaved(patch)
+            }
+        }
+    }
+
+    private suspend fun runSaving(block: suspend () -> Unit) {
+        try {
+            block()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            _messages.tryEmit(e.message ?: genericError)
+        }
+    }
+
+    /** Une idée devient une tâche (échéance ou projet choisis) : l'idée est retirée de la boîte. */
+    fun convertIdea(entry: InboxEntry, draft: TaskDraft) = launchAction { saveConversion(entry, draft) }
 
     fun captureInbox(text: String) = launchAction { repository.captureInbox(text) }
 

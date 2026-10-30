@@ -25,6 +25,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    sourceSets {
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    }
+
     buildFeatures {
         compose = true
     }
@@ -58,6 +62,12 @@ dependencies {
     implementation(libs.play.services.code.scanner)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)

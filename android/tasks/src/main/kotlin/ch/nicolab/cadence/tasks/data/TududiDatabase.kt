@@ -12,12 +12,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         AreaEntity::class,
         TagEntity::class,
         NoteEntity::class,
+        LinkPreviewEntity::class,
         InboxItemEntity::class,
         OutboxEntity::class,
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -26,6 +27,7 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun areaDao(): AreaDao
     abstract fun tagDao(): TagDao
     abstract fun noteDao(): NoteDao
+    abstract fun linkPreviewDao(): LinkPreviewDao
     abstract fun inboxDao(): InboxDao
     abstract fun outboxDao(): OutboxDao
     abstract fun failedOpDao(): FailedOpDao
@@ -48,6 +50,21 @@ internal val MIGRATION_2_3 = object : Migration(2, 3) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS `notes` (`uid` TEXT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, " +
                 "`color` TEXT, `projectUid` TEXT, `tagUidsJson` TEXT NOT NULL, `updatedAtRaw` TEXT, PRIMARY KEY(`uid`))",
+        )
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Épingle des notes (écriture depuis l'appareil) et cache des aperçus de liens. Le curseur est retiré :
+ * le prochain instantané apporte l'état « épinglée » des notes déjà reçues.
+ */
+internal val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE notes ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `link_previews` (`url` TEXT NOT NULL, `title` TEXT, `description` TEXT, " +
+                "`imageUrl` TEXT, `fetchedAtMs` INTEGER NOT NULL, `failed` INTEGER NOT NULL, PRIMARY KEY(`url`))",
         )
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }

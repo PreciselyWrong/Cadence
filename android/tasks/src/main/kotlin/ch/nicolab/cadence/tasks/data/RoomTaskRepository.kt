@@ -6,6 +6,7 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
@@ -219,6 +220,44 @@ internal class RoomTaskRepository(
         } catch (error: IOException) {
             Result.failure(IllegalStateException("Connexion requise", error))
         }
+    }
+
+    override suspend fun saveNote(uid: String, change: NoteChange) {
+        val existing = noteDao.get(uid)
+        val fields = buildMap<String, JsonElement> {
+            if (existing == null) {
+                put("title", JsonPrimitive(change.title.orEmpty()))
+                put("content", JsonPrimitive(change.content.orEmpty()))
+            } else {
+                change.title?.let { put("title", JsonPrimitive(it)) }
+                change.content?.let { put("content", JsonPrimitive(it)) }
+            }
+            if (change.clearColor) put("color", JsonNull)
+            change.color?.let { put("color", JsonPrimitive(it)) }
+            change.pinned?.let { put("pin_to_sidebar", JsonPrimitive(it)) }
+            if (change.clearProject) put("project_uid", JsonNull)
+            change.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
+            change.tagUids?.let { put("tag_uids", jsonArray(it)) }
+        }
+        if (fields.isEmpty()) return
+        val clock = hlc.now()
+        database.withTransaction {
+            val current = noteDao.get(uid)?.let { WireCodec.noteToWire(it) }
+                ?: JsonObject(mapOf("uid" to JsonPrimitive(uid)))
+            val stamped = fields + ("updated_at" to JsonPrimitive(Instant.ofEpochMilli(nowMs()).toString()))
+            noteDao.upsert(WireCodec.noteFromWire(JsonObject(current + stamped)))
+            outbox.insert(LocalOps.upsert("note", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+    }
+
+    override suspend fun deleteNote(uid: String) {
+        val clock = hlc.now()
+        database.withTransaction {
+            noteDao.delete(uid)
+            outbox.insert(LocalOps.delete("note", uid, clock, nowMs()))
+        }
+        afterLocalWrite()
     }
 
     override suspend fun captureInbox(text: String): String {

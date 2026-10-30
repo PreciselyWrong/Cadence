@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -65,6 +66,18 @@ data class NoteEntity(
     val projectUid: String?,
     val tagUidsJson: String,
     val updatedAtRaw: String?,
+    @ColumnInfo(defaultValue = "0") val pinned: Boolean = false,
+)
+
+/** Aperçu d'un lien (titre, image) rapporté par le serveur, gardé pour fonctionner hors ligne. */
+@Entity(tableName = "link_previews")
+data class LinkPreviewEntity(
+    @PrimaryKey val url: String,
+    val title: String?,
+    val description: String?,
+    val imageUrl: String?,
+    val fetchedAtMs: Long,
+    val failed: Boolean,
 )
 
 @Entity(tableName = "inbox_items")

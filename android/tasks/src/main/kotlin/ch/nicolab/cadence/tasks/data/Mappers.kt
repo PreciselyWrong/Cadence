@@ -58,6 +58,7 @@ internal fun NoteRow.toItem() = NoteItem(
     color = note.color,
     updatedAt = parseInstant(note.updatedAtRaw),
     pendingSync = pendingSync,
+    pinned = note.pinned,
 )
 
 internal fun InboxRow.toEntry() = InboxEntry(
