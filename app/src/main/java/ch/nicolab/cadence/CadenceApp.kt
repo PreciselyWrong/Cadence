@@ -5,6 +5,8 @@ import ch.nicolab.cadence.data.local.AppDatabaseFactory
 import ch.nicolab.cadence.data.local.CadenceRepository
 import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.reminder.ReminderScheduler
+import ch.nicolab.cadence.tasks.sync.TasksBackground
+import ch.nicolab.cadence.tasks.widget.TasksWidgetsAndReminders
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
 import ch.nicolab.cadence.widget.CadenceWidget
@@ -32,5 +34,8 @@ class CadenceApp : Application() {
         WidgetAutoRefresh(repository.observeWidgetRevisions()) {
             CadenceWidget().updateAll(this)
         }.start(applicationScope)
+        // Tâches Tududi : synchronisation, widgets et rappels suivent leur propre base.
+        TasksBackground.start(this)
+        TasksWidgetsAndReminders.start(this, applicationScope)
     }
 }

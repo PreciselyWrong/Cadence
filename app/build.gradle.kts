@@ -56,6 +56,7 @@ kotlin {
 dependencies {
     implementation(projects.domain)
     implementation(projects.data)
+    implementation(projects.tasks)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

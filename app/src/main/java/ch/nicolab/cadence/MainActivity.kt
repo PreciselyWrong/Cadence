@@ -56,6 +56,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Check
@@ -157,6 +158,9 @@ import ch.nicolab.cadence.ui.components.SectionLabel
 import ch.nicolab.cadence.ui.components.TertiaryAction
 import ch.nicolab.cadence.ui.components.onColorOf
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
+import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
+import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
 import ch.nicolab.cadence.ui.theme.CadenceTheme
 import ch.nicolab.cadence.ui.theme.MetricStyle
 import ch.nicolab.cadence.ui.theme.Radius
@@ -182,11 +186,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { CadenceTheme { CadenceAppScreen(viewModel, intent.getStringExtra(EXTRA_EDIT_HABIT_ID)) } }
+        setContent {
+            CadenceTheme {
+                CadenceAppScreen(viewModel, intent.getStringExtra(EXTRA_EDIT_HABIT_ID), intent.getStringExtra(EXTRA_OPEN_TASK_UID))
+            }
+        }
     }
 }
 
 private enum class Tab(val label: Int, val icon: ImageVector) {
+    TASKS(R.string.tab_tasks, Icons.Outlined.TaskAlt),
     TODAY(R.string.tab_today, Icons.Outlined.TrackChanges),
     WEEK(R.string.tab_week, Icons.Outlined.DateRange),
     HABITS(R.string.tab_habits, Icons.Outlined.Check),
@@ -196,14 +205,14 @@ private enum class Tab(val label: Int, val icon: ImageVector) {
 
 @Composable
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
-private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = null) {
+private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = null, openTaskUid: String? = null) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
     val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
-    var tab by rememberSaveable { mutableStateOf(Tab.TODAY) }
+    var tab by rememberSaveable { mutableStateOf(Tab.TASKS) }
     var editorId by rememberSaveable { mutableStateOf<String?>(null) }
     val editor = habits.firstOrNull { it.stored.id == editorId }
     var creating by rememberSaveable { mutableStateOf(false) }
@@ -268,6 +277,10 @@ private fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = nu
     CadenceScreen {
         Crossfade(tab, label = "tab") { current ->
             when (current) {
+                Tab.TASKS -> TasksScreen(
+                    Modifier.navigationBarsPadding().padding(bottom = Size.navBar + Space.xl),
+                    openTaskUid = openTaskUid,
+                )
                 Tab.TODAY -> TodayScreen(
                     habits, groups, groupFilter, { groupFilter = it },
                     { viewModel.clearSaveError(); quickHabitId = it.stored.id },
@@ -1932,6 +1945,9 @@ private fun SettingsScreen(
 ) {
     val palette = cadence
     ScreenList(context = stringResource(R.string.settings_data_subtitle), title = stringResource(R.string.tab_settings)) {
+        item { SectionLabel(stringResource(R.string.tududi_section)) }
+        item { Panel { TududiConnectionSection() } }
+
         item { SectionLabel(stringResource(R.string.travel_section)) }
         item {
             Panel {

@@ -1,8 +1,14 @@
 package ch.nicolab.cadence.tasks
 
+import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
 
-data class ConnectionInfo(val serverUrl: String, val userEmail: String?)
+/** [accountZone] : fuseau du compte Tududi, qui fixe le jour des échéances sans heure. */
+data class ConnectionInfo(
+    val serverUrl: String,
+    val userEmail: String?,
+    val accountZone: ZoneId = ZoneId.systemDefault(),
+)
 
 /** Lien avec le serveur Tududi : adresse et clé API (`tt_…`) de cet appareil. */
 interface ServerConnection {

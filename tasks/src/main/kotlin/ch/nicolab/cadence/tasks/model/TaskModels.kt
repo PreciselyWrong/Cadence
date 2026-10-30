@@ -29,9 +29,14 @@ data class TaskItem(
     val note: String? = null,
     val status: Int = TaskStatus.NOT_STARTED,
     val priority: Int? = null,
-    /** Instant tel que stocké par le serveur ; sans heure, c'est le début du jour local. */
+    /** Instant tel que stocké par le serveur ; sans heure, c'est la fin du jour dans le fuseau du compte. */
     val dueDate: Instant? = null,
     val dueHasTime: Boolean = false,
+    /**
+     * Jour calendaire de l'échéance : fuseau du compte sans heure (le serveur stocke
+     * la fin du jour), fuseau de l'appareil avec heure.
+     */
+    val dueDay: LocalDate? = null,
     val deferUntil: Instant? = null,
     val reminderAt: Instant? = null,
     /** null ou "none" : tâche simple ; sinon "daily", "weekly", "monthly"… */

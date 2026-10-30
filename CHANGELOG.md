@@ -1,3 +1,14 @@
+## [1.1.0] — 30 octobre 2026
+
+### Nouveautés
+- Un onglet `Tâches` relie Cadence à votre serveur Tududi : `Aujourd'hui`, `À venir`, `Boîte de réception` et `Projets`, avec ajout rapide, fiche de tâche, priorités, projets et étiquettes.
+- Tout fonctionne hors ligne : les modifications attendent sur le téléphone et partent dès que le réseau revient, sans doublon.
+- La connexion se fait en scannant le code QR d'une clé API Tududi, ou en saisissant l'adresse et la clé.
+- Un widget `Aujourd'hui` liste les tâches du jour et se coche directement ; un petit widget ajoute une tâche en un geste.
+- Un texte partagé depuis une autre application arrive dans la boîte de réception.
+- Les rappels de tâches sonnent avec un bouton `Terminer`.
+- Déplacer une tâche récurrente demande si le changement vaut pour cette occurrence, la suite ou toute la série.
+
 ## [1.0.22] — 21 octobre 2026
 
 ### Améliorations

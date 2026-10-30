@@ -3,7 +3,7 @@
 ## Quoi
 Cadence est une application Android locale de suivi d'habitudes, destinée à une saisie quotidienne très rapide.
 Le widget compact et l'Activity de saisie rapide sont les surfaces principales.
-Aucun compte, serveur, tracker marketing, publicité ou accès réseau applicatif.
+Aucun compte, tracker marketing ni publicité. Le seul accès réseau est la synchronisation facultative des tâches avec un serveur Tududi personnel (module `tasks/`) ; les habitudes restent locales.
 
 ## Échanges
 Réponses low verbose : l'essentiel, sans préambule ni récapitulatif de ce qui vient d'être lu.
@@ -18,10 +18,14 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 | Lancer sur un appareil ADB | `.\dev.ps1 -NonInteractive` |
 | Lancer avec les données de démonstration | `.\dev.ps1 -NonInteractive -Dummy` |
 | Préparer une publication | `.\publish.ps1 -Plan -NonInteractive` |
+| Linux : tests domaine | `./dev.sh --test` |
+| Linux : build et lancement ADB | `./dev.sh` (`--dummy`, `--plan`) |
+| Linux : tests du module tâches | `JAVA_HOME=/usr/lib/jvm/temurin-21-jdk $JAVA_HOME/bin/java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain :tasks:testDebugUnitTest` (le `gradlew` versionné ne marche pas sous Linux) |
 
 ## Carte
 `domain/` - calculs temporels et règles métier Kotlin sans Android.
 `data/` - persistance locale, préférences et sauvegardes.
+`tasks/` - tâches Tududi : base Room `tududi.db`, synchronisation hors ligne (`/api/v1/sync`, file d'envoi, horloges HLC), écrans, widgets Glance, rappels. Contrat : `TaskRepository`, `ServerConnection`, `TasksGraph`.
 `app/` - UI Compose, widget Glance, rappels et assemblage.
 
 ## Décisions
