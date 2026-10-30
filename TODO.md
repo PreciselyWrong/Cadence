@@ -13,6 +13,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Next
 
+- Vérifier la refonte du 2026-10-30 (main `6ddf3a86`, vérifiée par build, tests et émulateur) sur le vrai téléphone et le web : Android (détail de tâche, ajout rapide en langage naturel, glissements, notes éditables + vignettes, Agenda, planification du jour, Bilan, widgets) et web (jetons Android, panneau de tâche en ligne, Ctrl+K, planification, barre mobile, fr complet). Restes : APK à publier sur NicoApps (`android/publish.ps1` + CHANGELOG), TODO.md côté Android (planification auto, déplacement et ajout dans un projet fichier non bloqués), traductions automatiques des 24 autres langues à relire, date ISO dans l'éditeur de saisie d'habitude, `QuickEntryActivity` ancien style.
+
 - Refonte TickTick, étape 4 : comparer avec TickTick 8.0.20 lancé en local, écran par écran, lister et corriger les écarts du calendrier (les étapes 1 à 3 et 5 sont dans `main`). À trancher : réordonner les tâches sans heure et retirer du plan en déplaçant la date depuis l'agenda (retirés de l'ancien Aujourd'hui).
 - Module habits Cadence côté serveur : schéma, moteur JS, migration des habitudes Tududi existantes en version 1. Vérif : Jest vert sur toutes les fixtures, SQLite et Postgres.
   - Combler les manques de l'amont : versions d'objectif (le passé n'est pas réinterprété), `AT_MOST` > 0 et `TRACK_ONLY`, minimum vs idéal, fréquence + quantité combinées, pauses multi-jours avec motif et reprise anticipée, fuseau observé par saisie, `startsOn`, quantités entières à précision explicite, groupes à plages libres (chevauchement, passage de minuit), chronos, progression de cible, profils d'abstinence, stats 30 jours avec confiance.
