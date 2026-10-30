@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.designsystem.components.EventCheck
@@ -57,6 +58,8 @@ import java.time.format.TextStyle
 import java.util.Locale
 import kotlin.math.roundToInt
 
+/** Puce de journée entière : une ligne, pour laisser la grille horaire visible. */
+private val ALL_DAY_CHIP_HEIGHT = 40.dp
 private const val HOURS_PER_DAY = 24
 private const val DEFAULT_START_HOUR = 8
 /** Glissement franc, en pixels, au-delà duquel un balayage change de semaine ou de période. */
@@ -229,9 +232,12 @@ private fun AllDayRow(
     Row(Modifier.fillMaxWidth().padding(vertical = Space.xs)) {
         Text(
             text = stringResource(R.string.agenda_all_day_row),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             color = palette.onSurfaceVariant,
-            modifier = Modifier.width(Size.agendaGutter).padding(top = Space.xs),
+            maxLines = 1,
+            softWrap = false,
+            textAlign = TextAlign.End,
+            modifier = Modifier.width(Size.agendaGutter).padding(top = Space.sm, end = Space.xs),
         )
         days.forEach { day ->
             Column(Modifier.weight(1f).padding(horizontal = Space.xs), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
@@ -255,9 +261,14 @@ private fun AllDayChip(entry: AgendaEntry, checkEvents: Boolean, onToggleEvent: 
             .alpha(if (entry.done) DONE_ALPHA else 1f),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.width(Size.rail).height(Size.touch).background(color))
+        Box(Modifier.width(Size.rail).height(ALL_DAY_CHIP_HEIGHT).background(color))
         if (entry is AgendaEntry.Event && checkEvents) {
-            EventCheckSlot(entry = entry, color = color, onToggleEvent = onToggleEvent)
+            EventCheckSlot(
+                entry = entry,
+                color = color,
+                onToggleEvent = onToggleEvent,
+                modifier = Modifier.size(ALL_DAY_CHIP_HEIGHT),
+            )
         }
         Text(
             text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
@@ -266,7 +277,7 @@ private fun AllDayChip(entry: AgendaEntry, checkEvents: Boolean, onToggleEvent: 
             textDecoration = if (entry.done) TextDecoration.LineThrough else null,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = Space.sm, vertical = Space.xs),
+            modifier = Modifier.padding(horizontal = Space.sm),
         )
     }
 }
@@ -381,12 +392,17 @@ private fun BoxWithConstraintsScope.TimedBlockView(
 }
 
 @Composable
-private fun EventCheckSlot(entry: AgendaEntry.Event, color: Color, onToggleEvent: (EventInstanceKey) -> Unit) {
+private fun EventCheckSlot(
+    entry: AgendaEntry.Event,
+    color: Color,
+    onToggleEvent: (EventInstanceKey) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     EventCheck(
         checked = entry.done,
         color = color,
         onCheckedChange = { onToggleEvent(entry.eventKey) },
-        modifier = Modifier.padding(start = Space.xs),
+        modifier = Modifier.padding(start = Space.xs).then(modifier),
         contentDescription = stringResource(
             if (entry.done) R.string.agenda_mark_undone else R.string.agenda_mark_done,
         ),

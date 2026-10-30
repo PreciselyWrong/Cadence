@@ -502,7 +502,7 @@
     <string name="agenda_range">%1$s → %2$s</string>
     <string name="agenda_week_subtitle">%1$s · S%2$d</string>
     <string name="agenda_list_subtitle">%1$d prochains jours</string>
-    <string name="agenda_all_day_row">Journée</string>
+    <string name="agenda_all_day_row">Jour.</string>
     <string name="agenda_all_day">Toute la journée</string>
     <string name="agenda_task_kind">Tâche</string>
     <string name="agenda_meta">%1$s · %2$s</string>

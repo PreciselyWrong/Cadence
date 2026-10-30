@@ -2,12 +2,14 @@ package ch.nicolab.cadence.ui
 
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.MeasurementUnit
+import ch.nicolab.cadence.domain.UnitDimension
 import java.util.Locale
 
 object HabitFormatter {
 
+    /** L'unité s'accorde avec la quantité affichée : « 1 verre », « 0 verre », « 2 verres ». */
     fun formatWithUnit(valueMinor: Long, goalType: GoalType, unit: MeasurementUnit?): String =
-        formatValue(valueMinor, goalType, unit) + unitSymbolSuffix(unit, goalType)
+        formatValue(valueMinor, goalType, unit) + unitSymbolSuffix(unit, goalType, valueMinor)
 
     fun formatValue(valueMinor: Long, goalType: GoalType, unit: MeasurementUnit?): String {
         return when (goalType) {
@@ -88,11 +90,30 @@ object HabitFormatter {
         }
     }
 
-    private fun unitSymbolSuffix(unit: MeasurementUnit?, goalType: GoalType): String {
+    private fun unitSymbolSuffix(unit: MeasurementUnit?, goalType: GoalType, valueMinor: Long? = null): String {
         // Une durée porte déjà son unité (`1 h 5 min`) : la répéter donnerait `1 h min`.
         if (goalType == GoalType.DURATION) return ""
         val sym = unit?.symbol?.trim()
         if (sym.isNullOrEmpty()) return ""
-        return " $sym"
+        val singular = valueMinor != null && unit.scaleToCanonical.let { valueMinor.toDouble() / it } < 2.0
+        return " " + if (singular) singularSymbol(unit, sym) else sym
     }
+
+    /** Les unités du catalogue sont à l'accord connu ; une unité libre perd son « s » final. */
+    private fun singularSymbol(unit: MeasurementUnit, symbol: String): String =
+        SINGULAR_SYMBOLS[unit.id]
+            ?: if (unit.dimension == UnitDimension.CUSTOM && symbol.length > 3 && symbol.endsWith("s") && !symbol.endsWith("ss")) {
+                symbol.dropLast(1)
+            } else {
+                symbol
+            }
+
+    private val SINGULAR_SYMBOLS = mapOf(
+        "set" to "série",
+        "session" to "séance",
+        "step" to "étape",
+        "page" to "page",
+        "glass" to "verre",
+        "item" to "élément",
+    )
 }

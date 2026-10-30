@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import java.time.DayOfWeek
@@ -41,7 +43,6 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.designsystem.components.EventCheck
 import ch.nicolab.cadence.designsystem.components.NavigationSpacer
-import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -80,6 +81,7 @@ internal fun ColumnScope.MonthAgenda(
                         text = name,
                         style = MaterialTheme.typography.labelMedium,
                         color = cadence.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -216,34 +218,40 @@ internal fun AgendaEntryRow(
 ) {
     val palette = cadence
     val color = entry.colorArgb?.let { Color(it) } ?: palette.primary
-    Panel(modifier = modifier.fillMaxWidth().alpha(if (entry.done) DONE_ALPHA else 1f)) {
-        Row(Modifier.height(IntrinsicSize.Min)) {
-            Box(Modifier.width(Size.rail).fillMaxHeight().background(color))
-            Row(
-                Modifier.weight(1f).padding(horizontal = Space.md, vertical = Space.md),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                if (entry is AgendaEntry.Event && checkEvents) {
-                    EventCheckRow(entry = entry, color = color, onToggleEvent = onToggleEvent)
-                    Spacer(Modifier.width(Space.md))
-                }
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = palette.onSurface,
-                        textDecoration = if (entry.done) TextDecoration.LineThrough else null,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = agendaMeta(entry),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = palette.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+    Row(
+        modifier
+            .fillMaxWidth()
+            .alpha(if (entry.done) DONE_ALPHA else 1f)
+            .clip(Radius.Card)
+            .background(palette.card)
+            .heightIn(min = Size.settingRow)
+            .height(IntrinsicSize.Min),
+    ) {
+        Box(Modifier.width(Size.rail).fillMaxHeight().background(color))
+        Row(
+            Modifier.weight(1f).padding(horizontal = Space.md, vertical = Space.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (entry is AgendaEntry.Event && checkEvents) {
+                EventCheckRow(entry = entry, color = color, onToggleEvent = onToggleEvent)
+                Spacer(Modifier.width(Space.xs))
+            }
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = palette.onSurface,
+                    textDecoration = if (entry.done) TextDecoration.LineThrough else null,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = agendaMeta(entry),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = palette.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
     }

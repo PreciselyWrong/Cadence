@@ -5,11 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,9 +38,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.abstinenceStatus
-import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.TabPill
+import ch.nicolab.cadence.designsystem.components.TabPills
 import ch.nicolab.cadence.designsystem.components.onColorOf
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Motion
@@ -217,7 +216,6 @@ internal fun progress(item: HabitCardState): String {
  * Filtre par groupe. `Tous` reste toujours en tête et sélectionnable : accéder à
  * l'ensemble ne doit jamais demander de deviner quel groupe choisir.
  */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun GroupFilter(
     groups: List<HabitGroup>,
@@ -227,17 +225,15 @@ internal fun GroupFilter(
 ) {
     val populatedGroups = groups.filter { group -> habits.any { it.stored.groupId == group.id } }
     if (populatedGroups.size <= 1) return
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        ChoiceChip(stringResource(R.string.group_filter_all), selectedGroupId == null) { onSelect(null) }
-        groups.forEach { group ->
-            // Un groupe sans aucune habitude n'encombre pas le filtre.
-            if (habits.any { it.stored.groupId == group.id }) {
-                ChoiceChip(group.name, selectedGroupId == group.id) {
-                    onSelect(group.id.takeIf { it != selectedGroupId })
-                }
-            }
-        }
-    }
+    // Une seule rangée défilante, comme les onglets des Tâches : les libellés ne passent jamais à la ligne.
+    val tabs = listOf(TabPill(stringResource(R.string.group_filter_all))) + populatedGroups.map { TabPill(it.name) }
+    val selected = populatedGroups.indexOfFirst { it.id == selectedGroupId }.let { if (it < 0) 0 else it + 1 }
+    TabPills(
+        tabs = tabs,
+        selected = selected,
+        onSelect = { index -> onSelect(if (index == 0) null else populatedGroups[index - 1].id) },
+        contentPadding = PaddingValues(),
+    )
 }
 
 /**
