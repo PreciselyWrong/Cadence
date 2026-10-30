@@ -472,6 +472,7 @@ class ReminderBootReceiver : BroadcastReceiver() {
                 repository.getAllReminders().forEach { ReminderScheduler.schedule(context, it) }
                 AbstinenceMilestoneScheduler.scheduleAll(context, repository)
                 AlcoholFollowUpScheduler.scheduleAll(context, repository)
+                LearnedQuestionScheduler.scheduleAll(context, (context.applicationContext as CadenceApp).learnedQuestions)
                 ReminderScheduler.restorePendingSnoozes(context, repository)
             } finally {
                 pending.finish()

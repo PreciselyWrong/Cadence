@@ -3,12 +3,14 @@ package ch.nicolab.cadence
 import android.app.Application
 import ch.nicolab.cadence.data.local.AppDatabaseFactory
 import ch.nicolab.cadence.data.local.CadenceRepository
+import ch.nicolab.cadence.data.local.LearnedQuestionRepository
 import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import ch.nicolab.cadence.tasks.sync.TasksBackground
 import ch.nicolab.cadence.tasks.widget.TasksWidgetsAndReminders
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
+import ch.nicolab.cadence.reminder.LearnedQuestionScheduler
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetAutoRefresh
 import kotlinx.coroutines.CoroutineScope
@@ -20,15 +22,18 @@ class CadenceApp : Application() {
     val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     val database by lazy { AppDatabaseFactory.create(this) }
     val repository by lazy { CadenceRepository(database) }
+    val learnedQuestions by lazy { LearnedQuestionRepository(database, repository) }
 
     override fun onCreate() {
         super.onCreate()
         ReminderScheduler.createChannel(this)
         AbstinenceMilestoneScheduler.createChannel(this)
         AlcoholFollowUpScheduler.createChannel(this)
+        LearnedQuestionScheduler.createChannel(this)
         applicationScope.launch {
             AbstinenceMilestoneScheduler.scheduleAll(this@CadenceApp, repository)
             AlcoholFollowUpScheduler.scheduleAll(this@CadenceApp, repository)
+            LearnedQuestionScheduler.scheduleAll(this@CadenceApp, learnedQuestions)
         }
         // Le widget suit la base plutôt que les appelants : tout changement s'y voit.
         WidgetAutoRefresh(repository.observeWidgetRevisions()) {

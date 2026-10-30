@@ -56,6 +56,7 @@ import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
+import ch.nicolab.cadence.domain.LearnedQuestion
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.TodayPresentation
 import ch.nicolab.cadence.ui.HabitFormatter
@@ -80,6 +81,8 @@ internal fun HabitsTodayScreen(
     offerReturn: Boolean,
     resume: () -> Unit,
     edit: (HabitCardState) -> Unit,
+    questions: List<LearnedQuestion> = emptyList(),
+    answer: (LearnedQuestion) -> Unit = {},
 ) {
     val time by produceState(LocalTime.now()) {
         while (true) {
@@ -111,6 +114,10 @@ internal fun HabitsTodayScreen(
 
     ScreenList(header = header) {
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
+        items(questions.filter { byId.containsKey(it.habitId) }, key = { "question:${it.habitId}" }) { question ->
+            val habit = byId.getValue(question.habitId)
+            LearnedQuestionCard(question, habit.stored.name, habitTint(habit)) { answer(question) }
+        }
         if (offerReturn) item {
             Column(Modifier.fillMaxWidth().padding(vertical = Space.md), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 Text(stringResource(R.string.today_return_title), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)

@@ -64,6 +64,12 @@ class LearnedQuestionRepository(
             }
     }
 
+    /** Heures de question actives, pour planifier les rappels : une seule par heure distincte. */
+    suspend fun askTimes(today: LocalDate = LocalDate.now(clock)): List<LocalTime> =
+        cadence.getHabitsEffectiveAt(today)
+            .mapNotNull { habit -> settingsFor(habit).takeIf { it.enabled }?.askAt }
+            .distinct()
+
     suspend fun answer(question: LearnedQuestion, answer: LearnedAnswer) {
         // Valider avant toute écriture : une réponse hors de la question ne doit rien laisser.
         val write = planner.resolve(question, answer)

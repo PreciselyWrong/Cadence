@@ -2,6 +2,7 @@ package ch.nicolab.cadence
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,13 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.EventBusy
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.MetricCard
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.habitAccent
+import ch.nicolab.cadence.domain.AbstinenceLapseSummary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +70,13 @@ fun AbstinenceDetailSheet(
                     if (item.evaluation.isPaused) {
                         Text(stringResource(R.string.abst_pause_help), color = cadence.onSurfaceVariant)
                     }
+                }
+            }
+            item {
+                val stats = item.abstinenceStats
+                // Sans économies suivies, la place des économies revient à ces trois chiffres.
+                if (item.alcoholStats == null && item.stored.abstinenceSpendingMinor == null && stats != null) {
+                    LapseSummaryRow(AbstinenceLapseSummary.of(stats))
                 }
             }
             item {
@@ -105,6 +119,32 @@ fun AbstinenceDetailSheet(
                     Text(stringResource(R.string.form_btn_cancel))
                 }
             },
+        )
+    }
+}
+
+@Composable
+private fun LapseSummaryRow(summary: AbstinenceLapseSummary) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+        MetricCard(
+            value = stringResource(R.string.abst_lapse_days, summary.recordDays),
+            label = stringResource(R.string.abst_lapse_record),
+            modifier = Modifier.weight(1f),
+            icon = Icons.Outlined.EmojiEvents,
+        )
+        MetricCard(
+            value = summary.averageGapDays?.let { stringResource(R.string.abst_lapse_days, it) }
+                ?: stringResource(R.string.abst_lapse_none),
+            label = stringResource(R.string.abst_lapse_average),
+            modifier = Modifier.weight(1f),
+            icon = Icons.AutoMirrored.Outlined.TrendingUp,
+        )
+        MetricCard(
+            value = summary.lapsesLast30Days.toString(),
+            label = stringResource(R.string.abst_lapse_last_30),
+            modifier = Modifier.weight(1f),
+            icon = Icons.Outlined.EventBusy,
+            iconTint = cadence.error,
         )
     }
 }

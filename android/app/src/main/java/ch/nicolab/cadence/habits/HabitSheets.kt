@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.TrendingFlat
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
@@ -97,6 +98,7 @@ internal fun HabitOptionsSheet(
     up: () -> Unit,
     down: () -> Unit,
     delete: () -> Unit,
+    learnedQuestions: (() -> Unit)? = null,
 ) {
     val palette = cadence
     val tint = habitTint(item)
@@ -136,6 +138,7 @@ internal fun HabitOptionsSheet(
             archive,
         )
         ActionRow(Icons.Outlined.Sell, stringResource(R.string.action_move_to_group), tint, moveToGroup)
+        learnedQuestions?.let { ActionRow(Icons.Outlined.AutoAwesome, stringResource(R.string.learned_panel_option), tint, it) }
         if (item.stored.goal.progression != null) {
             ActionRow(Icons.AutoMirrored.Outlined.TrendingFlat, stringResource(R.string.progression_stop), tint, stopProgression)
         }

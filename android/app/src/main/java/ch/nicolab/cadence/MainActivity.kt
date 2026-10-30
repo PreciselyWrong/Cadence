@@ -9,7 +9,10 @@ import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
 
 class MainActivity : ComponentActivity() {
-    companion object { const val EXTRA_EDIT_HABIT_ID = "edit_habit_id" }
+    companion object {
+        const val EXTRA_EDIT_HABIT_ID = "edit_habit_id"
+        const val EXTRA_OPEN_QUESTION_HABIT_ID = "open_question_habit_id"
+    }
     private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(application as CadenceApp) }
 
     override fun onStart() {
@@ -22,7 +25,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CadenceTheme {
-                CadenceAppScreen(viewModel, intent.getStringExtra(EXTRA_EDIT_HABIT_ID), intent.getStringExtra(EXTRA_OPEN_TASK_UID))
+                CadenceAppScreen(
+                    viewModel,
+                    intent.getStringExtra(EXTRA_EDIT_HABIT_ID),
+                    intent.getStringExtra(EXTRA_OPEN_TASK_UID),
+                    intent.getStringExtra(EXTRA_OPEN_QUESTION_HABIT_ID),
+                )
             }
         }
     }

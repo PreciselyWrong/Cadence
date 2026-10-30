@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="abst_lapse_record">Record</string>
+    <string name="abst_lapse_average">Écart moyen</string>
+    <string name="abst_lapse_last_30">Écarts / 30 j</string>
+    <string name="abst_lapse_days">%1$d j</string>
+    <string name="abst_lapse_none">—</string>
+</resources>

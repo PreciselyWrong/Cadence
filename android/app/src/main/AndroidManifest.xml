@@ -86,6 +86,9 @@
             android:name=".reminder.AlcoholFollowUpReceiver"
             android:exported="false" />
         <receiver
+            android:name=".reminder.LearnedQuestionReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".reminder.ReminderBootReceiver"
             android:exported="false">
             <intent-filter>

@@ -20,6 +20,7 @@ import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
+import ch.nicolab.cadence.domain.LearnedQuestion
 
 /**
  * Onglet Habitudes : un seul en-tête partagé, puis le sélecteur qui choisit entre
@@ -41,6 +42,8 @@ internal fun HabitsTab(
     offerReturn: Boolean,
     resume: () -> Unit,
     edit: (HabitCardState) -> Unit,
+    questions: List<LearnedQuestion> = emptyList(),
+    answer: (LearnedQuestion) -> Unit = {},
 ) {
     var segment by rememberSaveable { mutableIntStateOf(SEGMENT_TODAY) }
     val header: @Composable () -> Unit = {
@@ -61,7 +64,7 @@ internal fun HabitsTab(
     }
     if (segment == SEGMENT_TODAY) {
         HabitsTodayScreen(
-            header, habits, groups, selectedGroupId, onSelectGroup, quick, options, create, timers, busy, direct, offerReturn, resume, edit,
+            header, habits, groups, selectedGroupId, onSelectGroup, quick, options, create, timers, busy, direct, offerReturn, resume, edit, questions, answer,
         )
     } else {
         HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, create, options, quick)

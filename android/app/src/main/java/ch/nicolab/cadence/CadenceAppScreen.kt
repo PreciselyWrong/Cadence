@@ -65,6 +65,8 @@ import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.habits.EntryEditor
 import ch.nicolab.cadence.habits.GroupPickerSheet
 import ch.nicolab.cadence.habits.HabitOptionsSheet
+import ch.nicolab.cadence.habits.LearnedQuestionSheet
+import ch.nicolab.cadence.habits.LearnedQuestionsPanelHost
 import ch.nicolab.cadence.habits.HabitsTab
 import ch.nicolab.cadence.habits.QuickSheet
 import ch.nicolab.cadence.habits.RoutineStrip
@@ -89,7 +91,12 @@ private enum class Tab(@param:StringRes val label: Int, val icon: ImageVector, v
 
 @Composable
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
-internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = null, openTaskUid: String? = null) {
+internal fun CadenceAppScreen(
+    viewModel: MainViewModel,
+    editHabitId: String? = null,
+    openTaskUid: String? = null,
+    openQuestionHabitId: String? = null,
+) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
@@ -114,6 +121,16 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
     var creatingAbstinence by rememberSaveable { mutableStateOf(false) }
     var creatingTracker by rememberSaveable { mutableStateOf(false) }
     var editIntentHandled by rememberSaveable { mutableStateOf(false) }
+    val pendingQuestions by viewModel.pendingQuestions.collectAsStateWithLifecycle()
+    var answeringHabitId by rememberSaveable { mutableStateOf<String?>(null) }
+    var learningHabitId by rememberSaveable { mutableStateOf<String?>(null) }
+    var questionIntentHandled by rememberSaveable { mutableStateOf(false) }
+    androidx.compose.runtime.LaunchedEffect(openQuestionHabitId, pendingQuestions) {
+        if (!questionIntentHandled && openQuestionHabitId != null && pendingQuestions.any { it.habitId == openQuestionHabitId }) {
+            answeringHabitId = openQuestionHabitId
+            questionIntentHandled = true
+        }
+    }
     androidx.compose.runtime.LaunchedEffect(editHabitId, habits) {
         if (!editIntentHandled && editHabitId != null) habits.firstOrNull { it.stored.id == editHabitId }?.let {
             editorId = it.stored.id
@@ -225,6 +242,8 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
                     offerReturn = offerReturn,
                     resume = viewModel::dismissReturn,
                     edit = { viewModel.clearSaveError(); editorId = it.stored.id },
+                    questions = pendingQuestions,
+                    answer = { answeringHabitId = it.habitId },
                 )
                 Tab.BILAN -> BilanScreen(
                     habits = habits,
@@ -289,6 +308,25 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
             occurrenceOnly = habit?.stored?.goal?.isAbstinence == true,
         )
     }
+    pendingQuestions.firstOrNull { it.habitId == answeringHabitId }?.let { question ->
+        val habit = habits.firstOrNull { it.stored.id == question.habitId }
+        LearnedQuestionSheet(
+            question = question,
+            habitName = habit?.stored?.name.orEmpty(),
+            tint = habit?.let { habitTint(it) } ?: cadence.primary,
+            busy = busy,
+            error = saveError,
+            dismiss = { if (!busy) answeringHabitId = null },
+            answer = { viewModel.answerQuestion(question, it) { answeringHabitId = null } },
+            ignore = { viewModel.dismissQuestion(question); answeringHabitId = null },
+            muteWeekday = { viewModel.muteLearnedWeekday(question.habitId, question.weekday) { answeringHabitId = null } },
+        )
+    }
+    learningHabitId?.let { id ->
+        habits.firstOrNull { it.stored.id == id }?.let { item ->
+            LearnedQuestionsPanelHost(item, viewModel) { learningHabitId = null }
+        }
+    }
     options?.let { item ->
         HabitOptionsSheet(
             item,
@@ -305,6 +343,7 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
             up = { viewModel.moveHabit(item.stored.id, -1); options = null },
             down = { viewModel.moveHabit(item.stored.id, 1); options = null },
             delete = { deleting = item.stored; options = null },
+            learnedQuestions = { learningHabitId = item.stored.id; options = null }.takeIf { item.stored.goal.isTracker || item.stored.goal.isAbstinence },
         )
     }
     movingToGroup?.let { item ->

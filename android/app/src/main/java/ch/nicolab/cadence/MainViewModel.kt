@@ -8,6 +8,10 @@ import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.LearnedAnswer
+import ch.nicolab.cadence.domain.LearnedPattern
+import ch.nicolab.cadence.domain.LearnedQuestion
+import ch.nicolab.cadence.domain.LearnedQuestionSettings
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.AbstinenceStats
 import ch.nicolab.cadence.domain.AbstinenceJournalSummary
@@ -40,11 +44,13 @@ import ch.nicolab.cadence.reminder.ReminderNotifications
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpPlanner
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
+import ch.nicolab.cadence.reminder.LearnedQuestionScheduler
 import ch.nicolab.cadence.reminder.TimerNotifications
 import ch.nicolab.cadence.health.HealthConnectAvailability
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectPermissionMissing
 import java.time.Clock
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -115,6 +121,9 @@ data class HealthConnectSourceOption(
     val label: String,
 )
 
+/** Réglage d'une habitude et sa régularité observée, lus ensemble pour le panneau. */
+data class LearnedPanelState(val settings: LearnedQuestionSettings, val pattern: LearnedPattern)
+
 data class HealthConnectUiState(
     val availability: HealthConnectAvailability = HealthConnectAvailability.UNAVAILABLE,
     val permissionGranted: Boolean = false,
@@ -141,6 +150,10 @@ class MainViewModel(
     )
     val healthConnectState: StateFlow<HealthConnectUiState> = healthState
     private val evaluator = HabitEvaluator()
+    private val learnedQuestions = app.learnedQuestions
+    private val pending = MutableStateFlow<List<LearnedQuestion>>(emptyList())
+    /** Questions de la veille, répondues dans Habitudes › Aujourd'hui ou depuis la notification. */
+    val pendingQuestions: StateFlow<List<LearnedQuestion>> = pending
     private val cards = MutableStateFlow<List<HabitCardState>>(emptyList())
     val isLoaded = MutableStateFlow(false)
     val habits: StateFlow<List<HabitCardState>> = cards.stateIn(
@@ -329,6 +342,7 @@ class MainViewModel(
 
     init {
         viewModelScope.launch { repository.ensureDefaultGroups() }
+        viewModelScope.launch { learnedQuestions.observeRevision().collect { refreshQuestions() } }
 
         // Les saisies venues du widget écrivent directement en base : l'état affiché est
         // reconstruit à chaque révision des habitudes, des saisies ou des pauses, sans
@@ -452,6 +466,31 @@ class MainViewModel(
         AlcoholFollowUpScheduler.cancel(app, consumption.id, consumption.habitId)
         repository.deleteAlcoholConsumption(consumption.id)
     }
+
+    fun answerQuestion(question: LearnedQuestion, answer: LearnedAnswer, onSaved: () -> Unit) = saveSafely(onSaved) {
+        learnedQuestions.answer(question, answer)
+        LearnedQuestionScheduler.cancelAnswered(app, question.habitId, question.date)
+    }
+
+    fun dismissQuestion(question: LearnedQuestion) = saveSafely {
+        learnedQuestions.dismiss(question)
+        LearnedQuestionScheduler.cancelAnswered(app, question.habitId, question.date)
+    }
+
+    fun muteLearnedWeekday(habitId: String, weekday: DayOfWeek, onSaved: () -> Unit) = saveSafely(onSaved) {
+        learnedQuestions.muteWeekday(habitId, weekday)
+        LearnedQuestionScheduler.scheduleAll(app, learnedQuestions)
+    }
+
+    fun saveLearnedSettings(settings: LearnedQuestionSettings, onSaved: () -> Unit) = saveSafely(onSaved) {
+        learnedQuestions.updateSettings(settings)
+        LearnedQuestionScheduler.scheduleAll(app, learnedQuestions)
+    }
+
+    suspend fun learnedPanel(habitId: String): LearnedPanelState = LearnedPanelState(
+        settings = learnedQuestions.settings(habitId),
+        pattern = learnedQuestions.pattern(habitId),
+    )
 
     fun undoLastEntry() = viewModelScope.launch {
         val id = lastEntryId.value ?: return@launch
@@ -710,6 +749,7 @@ class MainViewModel(
             .onSuccess {
                 repository.getAllReminders().forEach { ReminderScheduler.schedule(app, it) }
                 AlcoholFollowUpScheduler.scheduleAll(app, repository, clock.zone, clock.instant())
+                LearnedQuestionScheduler.scheduleAll(app, learnedQuestions)
                 refreshAll()
                 onComplete()
             }
@@ -740,6 +780,11 @@ class MainViewModel(
             .forEach { ReminderNotifications.cancel(app, it.stored.id) }
         cards.value = rebuilt
         isLoaded.value = true
+        refreshQuestions()
+    }
+
+    private suspend fun refreshQuestions() {
+        pending.value = learnedQuestions.pendingQuestions(LocalDate.now(clock))
     }
 
     private suspend fun buildCard(habit: PersistedHabit, date: LocalDate): HabitCardState {
