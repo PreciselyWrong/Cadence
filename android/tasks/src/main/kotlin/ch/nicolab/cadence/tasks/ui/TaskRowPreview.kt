@@ -27,5 +27,6 @@ private fun TaskRowPreview() {
         onToggle = {},
         onOpen = {},
         onSwipeAction = {},
+        onMenu = {},
     )
 }

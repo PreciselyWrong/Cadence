@@ -25,6 +25,13 @@
     <string name="swipe_notice_moved">Tâche déplacée</string>
     <string name="swipe_notice_priority">Priorité modifiée</string>
     <string name="swipe_delete_recurring_title">Supprimer une tâche récurrente</string>
+    <string name="swipe_delete_this_hint">Cette date est ignorée, la série continue.</string>
+    <string name="swipe_delete_all_hint">La tâche et toutes ses occurrences sont supprimées.</string>
+    <string name="swipe_menu_title">Actions</string>
+    <string name="swipe_menu_pick">Choisir une date…</string>
+    <string name="tasks_move_this_hint">Seule la date de cette occurrence change.</string>
+    <string name="tasks_move_following_hint">Cette occurrence et toutes celles qui suivent sont décalées.</string>
+    <string name="tasks_move_all_hint">Toute la série est décalée.</string>
     <string name="swipe_delete_this">Seulement cette occurrence</string>
     <string name="swipe_delete_all">Toute la série</string>
 

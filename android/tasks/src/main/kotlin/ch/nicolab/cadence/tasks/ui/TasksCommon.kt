@@ -136,12 +136,21 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
     val sheet by viewModel.sheet.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val firstDay = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek }
     when (val open = sheet) {
         null -> Unit
+        is SwipeSheet.Menu -> TaskMenuSheet(
+            task = open.task,
+            today = moment.today,
+            firstDayOfWeek = firstDay,
+            onSchedule = { viewModel.reschedule(open.task, it) },
+            onAction = { viewModel.swipe(open.task, it) },
+            onDismiss = viewModel::dismissSheet,
+        )
         is SwipeSheet.Schedule -> ScheduleSheet(
             task = open.task,
             today = moment.today,
-            firstDayOfWeek = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek },
+            firstDayOfWeek = firstDay,
             onPick = { viewModel.reschedule(open.task, it) },
             onDismiss = viewModel::dismissSheet,
         )
@@ -176,9 +185,10 @@ internal fun LazyListScope.taskRows(
             projectColor = task.projectUid?.let { projectColors[it] },
             today = moment.today,
             zone = moment.zone,
-            onToggle = { viewModel.toggle(task) },
+            onToggle = { viewModel.toggle(task, hold = true) },
             onOpen = { onOpen(task) },
             onSwipeAction = { viewModel.swipe(task, it) },
+            onMenu = { viewModel.openMenu(task) },
         )
     }
 }

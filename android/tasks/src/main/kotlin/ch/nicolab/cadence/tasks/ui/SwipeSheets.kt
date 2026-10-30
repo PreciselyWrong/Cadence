@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,12 +37,56 @@ import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
+import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 private val shortDay: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+
+/** Menu d'un appui long : dates rapides, puis priorité, projet et suppression. */
+@Composable
+internal fun TaskMenuSheet(
+    task: TaskItem,
+    today: LocalDate,
+    firstDayOfWeek: DayOfWeek,
+    onSchedule: (LocalDate?) -> Unit,
+    onAction: (SwipeAction) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var picking by remember { mutableStateOf(false) }
+    class Entry(val icon: ImageVector, val label: Int, val onClick: () -> Unit)
+    val quickDates = listOf(SchedulePreset.TODAY, SchedulePreset.TOMORROW, SchedulePreset.WEEKEND).map { preset ->
+        Entry(presetIcon(preset), presetLabel(preset)) { onSchedule(SchedulePreset.dateFor(preset, today, firstDayOfWeek)) }
+    }
+    val entries = quickDates + listOf(
+        Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
+        Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
+        Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) },
+        Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) },
+    )
+    CadenceSheet(title = stringResource(R.string.swipe_menu_title), subtitle = task.name, dismiss = onDismiss) {
+        RowGroup {
+            entries.forEachIndexed { index, entry ->
+                SettingRow(
+                    title = stringResource(entry.label),
+                    icon = entry.icon,
+                    shape = rowGroupShape(index, entries.size),
+                    trailing = {},
+                    onClick = entry.onClick,
+                )
+            }
+        }
+    }
+    if (picking) {
+        TaskDatePickerDialog(
+            initial = task.dueDay ?: today,
+            onConfirm = { picking = false; onSchedule(it) },
+            onDismiss = { picking = false },
+        )
+    }
+}
 
 /** Feuille « Planifier » : raccourcis de date, choix libre ou retrait de l'échéance. */
 @Composable

@@ -30,7 +30,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -72,6 +74,7 @@ internal fun SwipeActionContainer(
     closed: Boolean,
     onAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
     content: @Composable (swipeSemantics: Modifier) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -112,7 +115,7 @@ internal fun SwipeActionContainer(
         }
     }
 
-    Box(modifier.clipToBounds().onSizeChanged { widthPx = it.width.toFloat() }) {
+    Box(modifier.clip(shape).onSizeChanged { widthPx = it.width.toFloat() }) {
         if (side != null) {
             SwipeBackdrop(
                 side = side,

@@ -57,6 +57,9 @@ private const val STOP_TIMEOUT_MS = 5_000L
 
 /** Délai avant qu'une suppression devienne définitive ; couvre la durée du bandeau « Annuler ». */
 private const val DELETE_UNDO_WINDOW_MS = 5_000L
+
+/** Durée où une ligne cochée reste visible et barrée avant de disparaître. */
+private const val COMPLETE_HOLD_MS = 600L
 private const val CALENDAR_PREFS = "tududi_calendar_notice"
 private const val KEY_NOTICE_DISMISSED = "dismissed"
 
@@ -88,6 +91,7 @@ internal class UndoNotice(val message: String, val undo: () -> Unit)
 internal sealed interface SwipeSheet {
     val task: TaskItem
 
+    data class Menu(override val task: TaskItem) : SwipeSheet
     data class Schedule(override val task: TaskItem) : SwipeSheet
     data class Project(override val task: TaskItem) : SwipeSheet
     data class Priority(override val task: TaskItem) : SwipeSheet
@@ -199,10 +203,12 @@ internal class TasksViewModel(
     fun observeProjectTasks(projectUid: String): Flow<List<TaskItem>> =
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
 
-    fun toggle(task: TaskItem) = launchAction {
+    /** [hold] laisse la ligne cochée et barrée un instant avant que la tâche quitte la liste. */
+    fun toggle(task: TaskItem, hold: Boolean = false) = launchAction {
         if (task.isClosed) {
             repository.reopenTask(task.uid)
         } else {
+            if (hold) delay(COMPLETE_HOLD_MS)
             repository.completeTask(task.uid)
             if (!task.isRecurring) _completed.tryEmit(task)
         }
@@ -233,6 +239,11 @@ internal class TasksViewModel(
             SwipeAction.DELETE -> if (task.isRecurring) _pendingDelete.value = task else deleteWithUndo(task)
             SwipeAction.NONE -> Unit
         }
+    }
+
+    /** Menu contextuel d'une ligne (appui long). */
+    fun openMenu(task: TaskItem) {
+        _sheet.value = SwipeSheet.Menu(task)
     }
 
     fun dismissSheet() {

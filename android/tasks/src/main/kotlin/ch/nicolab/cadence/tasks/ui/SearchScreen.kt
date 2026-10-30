@@ -174,9 +174,10 @@ fun SearchScreen(
                                             projectName = task.projectUid?.let(projectNames::get),
                                             today = moment.today,
                                             zone = moment.zone,
-                                            onToggle = { viewModel.toggle(task) },
+                                            onToggle = { viewModel.toggle(task, hold = true) },
                                             onOpen = { selectedTaskUid = task.uid },
                                             onSwipeAction = { viewModel.swipe(task, it) },
+                                            onMenu = { viewModel.openMenu(task) },
                                             modifier = Modifier.padding(bottom = Space.xs),
                                         )
                                     }

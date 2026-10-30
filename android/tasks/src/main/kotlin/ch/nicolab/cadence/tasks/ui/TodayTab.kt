@@ -121,14 +121,16 @@ private fun LazyListScope.agendaRows(
     items(agenda, key = { it.key }) { item ->
         when (item) {
             is TodayItem.Task -> TaskRow(
+                modifier = Modifier.animateItem(),
                 task = item.task,
                 projectName = item.task.projectUid?.let { projectNames[it] },
                 projectColor = item.task.projectUid?.let { projectColors[it] },
                 today = moment.today,
                 zone = moment.zone,
-                onToggle = { viewModel.toggle(item.task) },
+                onToggle = { viewModel.toggle(item.task, hold = true) },
                 onOpen = { onOpen(item.task) },
                 onSwipeAction = { viewModel.swipe(item.task, it) },
+                onMenu = { viewModel.openMenu(item.task) },
             )
             is TodayItem.Event -> EventRow(
                 item = item.event,
