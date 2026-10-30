@@ -180,7 +180,7 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
                         value = stringResource(R.string.alcohol_stats_observed_days, clearDays, observedDays),
                         label = stringResource(R.string.abstinence_stats_clear_days_label),
                         icon = Icons.Outlined.CheckCircle,
-                        iconTint = palette.success,
+                        iconTint = palette.primary,
                         modifier = Modifier.weight(1f),
                     )
                     MetricCard(
@@ -314,14 +314,14 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     Box(
                         modifier = Modifier
                             .clip(Radius.Chip)
-                            .background(palette.successContainer)
+                            .background(palette.primaryContainer)
                             .padding(horizontal = Space.md, vertical = Space.sm),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = stringResource(R.string.habit_stats_rate_value, summary.successRatePercent ?: 0),
                             style = MaterialTheme.typography.headlineMedium,
-                            color = palette.success,
+                            color = palette.onPrimaryContainer,
                         )
                     }
                     Column(Modifier.weight(1f)) {
@@ -342,8 +342,10 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                 if (comp != null) {
                     val isUp = comp.deltaPercentagePoints > 0
                     val isDown = comp.deltaPercentagePoints < 0
-                    val chipBg = if (isUp) palette.successContainer else if (isDown) palette.error.copy(alpha = 0.15f) else palette.card
-                    val chipColor = if (isUp) palette.success else if (isDown) palette.error else palette.onSurface
+                    val notableUp = comp.deltaPercentagePoints >= NOTABLE_TREND_POINTS
+                    val notableDown = comp.deltaPercentagePoints <= -NOTABLE_TREND_POINTS
+                    val chipBg = if (notableUp) palette.successContainer else if (notableDown) palette.error.copy(alpha = 0.15f) else palette.card
+                    val chipColor = if (notableUp) palette.success else if (notableDown) palette.error else palette.onSurface
                     val trendText = when {
                         isUp -> stringResource(R.string.habit_stats_trend_short_up, comp.deltaPercentagePoints)
                         isDown -> stringResource(R.string.habit_stats_trend_short_down, -comp.deltaPercentagePoints)
@@ -387,7 +389,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     Modifier
                         .fillMaxWidth(fraction = progressRate)
                         .fillMaxHeight()
-                        .background(palette.success, CircleShape)
+                        .background(palette.primary, CircleShape)
                 )
             }
 
@@ -406,7 +408,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     value = summary.idealPeriods.toString(),
                     label = stringResource(R.string.habit_stats_day_ideal),
                     icon = Icons.Outlined.EmojiEvents,
-                    iconTint = palette.success,
+                    iconTint = palette.primary,
                     modifier = Modifier.weight(1f),
                 )
                 MetricCard(
@@ -607,14 +609,14 @@ private fun AbstinenceStatisticsHero(
                     Box(
                         modifier = Modifier
                             .clip(Radius.Chip)
-                            .background(palette.successContainer)
+                            .background(palette.primaryContainer)
                             .padding(horizontal = Space.md, vertical = Space.sm),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = stringResource(R.string.habit_stats_days_short, stats.currentDays),
                             style = MaterialTheme.typography.headlineMedium,
-                            color = palette.success,
+                            color = palette.onPrimaryContainer,
                         )
                     }
                     Column(Modifier.weight(1f)) {
@@ -656,17 +658,17 @@ private fun AbstinenceStatisticsHero(
                     Modifier
                         .fillMaxWidth()
                         .clip(Radius.Chip)
-                        .background(palette.successContainer)
+                        .background(palette.primaryContainer)
                         .padding(horizontal = Space.md, vertical = Space.sm),
                     horizontalArrangement = Arrangement.spacedBy(Space.sm),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Outlined.Savings, contentDescription = null, tint = palette.success, modifier = Modifier.size(Size.icon))
+                    Icon(Icons.Outlined.Savings, contentDescription = null, tint = palette.onPrimaryContainer, modifier = Modifier.size(Size.icon))
                     Column {
                         Text(
                             text = stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
                             style = MaterialTheme.typography.titleMedium,
-                            color = palette.success,
+                            color = palette.onPrimaryContainer,
                         )
                         Text(
                             text = stringResource(R.string.abst_savings_basis, formatMoney(spending, currency), savingsPeriodLabel(spendingPeriod)),
@@ -684,7 +686,7 @@ private fun AbstinenceStatisticsHero(
                     value = "${stats.clearDays90} / ${stats.observedDays90}",
                     label = stringResource(R.string.abstinence_stats_clear_days_label),
                     icon = Icons.Outlined.CheckCircle,
-                    iconTint = palette.success,
+                    iconTint = palette.primary,
                     modifier = Modifier.weight(1f),
                 )
                 MetricCard(
@@ -757,3 +759,6 @@ private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (st
     HabitStatisticsDayStatus.ACTIVITY -> R.string.habit_stats_activity
     HabitStatisticsDayStatus.NO_ACTIVITY -> R.string.habit_stats_no_activity
 }
+
+/** Écart de taux (en points) à partir duquel une évolution mérite une couleur sémantique ; en dessous, elle reste neutre. */
+internal const val NOTABLE_TREND_POINTS = 10

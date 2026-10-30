@@ -534,7 +534,6 @@
     <string name="habits_segment_today">Aujourd’hui</string>
     <string name="habits_segment_all">Toutes</string>
     <string name="bilan_title">Bilan</string>
-    <string name="bilan_subtitle">Cette semaine et vos statistiques</string>
     <string name="settings_section_home">Écran d\'accueil</string>
     <string name="settings_section_organisation">Organisation</string>
     <string name="settings_page_widgets">Widgets</string>

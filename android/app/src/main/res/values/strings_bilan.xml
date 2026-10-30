@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bilan_week_of">Semaine du %1$s</string>
+    <string name="bilan_kpi_done">terminées cette semaine</string>
+    <string name="bilan_kpi_done_last">%1$d la semaine dernière</string>
+    <string name="bilan_kpi_overdue">en retard</string>
+    <string name="bilan_kpi_regularity">régularité des habitudes</string>
+    <string name="bilan_kpi_regularity_hint">moyenne sur 30 jours</string>
+</resources>
