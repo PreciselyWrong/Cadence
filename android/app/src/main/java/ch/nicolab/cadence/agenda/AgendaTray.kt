@@ -1,6 +1,23 @@
 package ch.nicolab.cadence.agenda
 
+import android.os.Build
+import android.view.HapticFeedbackConstants
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.semantics.Role
+import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.designsystem.theme.Motion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.horizontalScroll
@@ -54,6 +71,8 @@ private val DROP_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val GHOST_LIFT = 56.dp
 private val GHOST_WIDTH = 200.dp
 private val CHIP_MAX_WIDTH = 220.dp
+private val TRAY_STRIP_HEIGHT = 32.dp
+private const val DRAGGED_SOURCE_ALPHA = 0.4f
 
 /**
  * État partagé d'un glisser-déposer du bac vers la grille : la grille y publie sa géométrie, le bac
@@ -90,56 +109,100 @@ internal class TrayDragState {
         }
 }
 
-/** Bac « À planifier » : une rangée défilante de pastilles à glisser sur la grille horaire. */
+/**
+ * Bac « À planifier » : une bande d'une ligne, repliée par défaut pour laisser la grille respirer ; ouverte,
+ * elle montre une rangée défilante de pastilles à glisser sur la grille horaire. Absent quand il est vide.
+ */
 @Composable
 internal fun TrayRow(items: List<TrayItem>, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
     if (items.isEmpty()) return
     val palette = cadence
-    Column(Modifier.fillMaxWidth().padding(top = Space.sm)) {
-        Text(
-            text = stringResource(R.string.agenda_tray_title),
-            style = MaterialTheme.typography.labelMedium,
-            color = palette.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = Space.xs),
-        )
+    var open by rememberSaveable { mutableStateOf(false) }
+    val chevron by animateFloatAsState(if (open) 180f else 0f, Motion.normal(), label = "trayChevron")
+    Column(Modifier.fillMaxWidth().animateContentSize(Motion.normal())) {
         Row(
-            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            Modifier
+                .fillMaxWidth()
+                .height(TRAY_STRIP_HEIGHT)
+                .clip(Radius.Chip)
+                .clickable(role = Role.Button, onClickLabel = stringResource(if (open) R.string.agenda_tray_collapse else R.string.agenda_tray_expand)) {
+                    open = !open
+                },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            items.forEach { item -> TrayChip(item = item, drag = drag, onDrop = onDrop) }
+            Text(
+                text = if (open) stringResource(R.string.agenda_tray_title) else stringResource(R.string.agenda_tray_strip, items.size),
+                style = MaterialTheme.typography.labelMedium,
+                color = palette.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                imageVector = Icons.Outlined.ExpandMore,
+                contentDescription = null,
+                tint = palette.onSurfaceVariant,
+                modifier = Modifier.size(Size.icon).rotate(chevron),
+            )
+        }
+        if (open) {
+            Row(
+                Modifier.fillMaxWidth().padding(bottom = Space.xs).horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                items.forEach { item -> TrayChip(item = item, drag = drag, onDrop = onDrop) }
+            }
         }
     }
+}
+
+/**
+ * Rend un élément glissable : appui long puis glisser, le doigt publie sa position dans [drag] et le
+ * relâchement sur la grille planifie la tâche. La source s'estompe pendant le geste.
+ */
+@Composable
+internal fun Modifier.trayDragSource(
+    item: TrayItem,
+    drag: TrayDragState,
+    onDrop: (String, LocalDateTime) -> Unit,
+): Modifier {
+    var origin by remember { mutableStateOf(Offset.Zero) }
+    val latestDrop by rememberUpdatedState(onDrop)
+    val haptic = rememberCadenceHaptic()
+    val lifted = drag.item?.uid == item.uid
+    return this
+        .alpha(if (lifted) DRAGGED_SOURCE_ALPHA else 1f)
+        .onGloballyPositioned { origin = it.positionInRoot() }
+        .pointerInput(item) {
+            detectDragGesturesAfterLongPress(
+                onDragStart = { local ->
+                    haptic.longPress()
+                    drag.item = item
+                    drag.pointer = origin + local
+                },
+                onDrag = { change, amount ->
+                    change.consume()
+                    drag.pointer += amount
+                },
+                onDragEnd = {
+                    drag.target?.let { latestDrop(item.uid, it) }
+                    drag.item = null
+                },
+                onDragCancel = { drag.item = null },
+            )
+        }
 }
 
 @Composable
 private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
     val palette = cadence
-    var origin by remember { mutableStateOf(Offset.Zero) }
-    val latestDrop by rememberUpdatedState(onDrop)
     val color = item.colorArgb?.let { Color(it) } ?: palette.primary
     val tint = if (item.overdueDays > 0) palette.error else color
     Row(
         Modifier
-            .onGloballyPositioned { origin = it.positionInRoot() }
             .clip(Radius.Chip)
             .background(tint.copy(alpha = Glass.BadgeAlpha))
-            .pointerInput(item.uid) {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = { local ->
-                        drag.item = item
-                        drag.pointer = origin + local
-                    },
-                    onDrag = { change, amount ->
-                        change.consume()
-                        drag.pointer += amount
-                    },
-                    onDragEnd = {
-                        drag.target?.let { latestDrop(item.uid, it) }
-                        drag.item = null
-                    },
-                    onDragCancel = { drag.item = null },
-                )
-            },
+            .trayDragSource(item, drag, onDrop),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.width(Size.rail).height(Size.actionSm).background(tint))
@@ -166,11 +229,23 @@ private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, Local
     }
 }
 
+internal fun snapTickConstant(): Int =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        HapticFeedbackConstants.SEGMENT_FREQUENT_TICK
+    } else {
+        HapticFeedbackConstants.CLOCK_TICK
+    }
+
 /** Pastille qui suit le doigt, avec l'heure visée une fois au-dessus de la grille. */
 @Composable
 internal fun BoxScope.DragGhost(drag: TrayDragState, origin: Offset) {
     val item = drag.item ?: return
     val palette = cadence
+    val view = LocalView.current
+    // Un tic à chaque cran de 15 minutes franchi, comme un cadran qui accroche.
+    LaunchedEffect(drag.target) {
+        if (drag.target != null) view.performHapticFeedback(snapTickConstant())
+    }
     val lift = with(LocalDensity.current) { GHOST_LIFT.roundToPx() }
     val half = with(LocalDensity.current) { (GHOST_WIDTH / 2).roundToPx() }
     Column(

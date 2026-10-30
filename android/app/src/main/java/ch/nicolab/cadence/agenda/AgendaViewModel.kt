@@ -14,15 +14,20 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.model.TaskChange
 import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -61,6 +66,9 @@ internal data class AgendaUiState(
     val permissionMissing: Boolean = false,
     val checkEvents: Boolean = false,
 )
+
+/** Planification faite par un dépôt : de quoi la défaire (« Annuler ») en rendant à la tâche son échéance d'avant. */
+internal data class ScheduleReceipt(val uid: String, val at: LocalDateTime, val restore: TaskChange)
 
 private const val PREFS = "cadence_agenda"
 private const val KEY_TIMED_TASKS = "timed_tasks"
@@ -147,10 +155,42 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         _selected.value = stepDate(_mode.value, _selected.value, direction, _options.value.weekends)
     }
 
-    /** Dépôt d'une tâche du bac sur la grille : date et heure passent par la mise à jour normale, donc synchronisée. */
+    private val _scheduled = MutableSharedFlow<ScheduleReceipt>(extraBufferCapacity = 4)
+
+    /** Planifications faites à l'instant, pour proposer « Annuler ». */
+    val scheduled: SharedFlow<ScheduleReceipt> = _scheduled.asSharedFlow()
+
+    private val _completed = MutableSharedFlow<String>(extraBufferCapacity = 4)
+
+    /** Tâches terminées à l'instant ; une récurrente avance d'occurrence et n'en fait pas partie. */
+    val completed: SharedFlow<String> = _completed.asSharedFlow()
+
+    /** Dépôt d'une tâche sur la grille : date et heure passent par la mise à jour normale, donc synchronisée. */
     fun schedule(uid: String, at: LocalDateTime) = viewModelScope.launch {
+        val before = tasks.observeTask(uid).first()
         tasks.updateTask(uid, dropChange(at))
+        before?.let { _scheduled.tryEmit(ScheduleReceipt(uid, at, restoreSchedule(it, zone))) }
     }
+
+    fun undoSchedule(receipt: ScheduleReceipt) = viewModelScope.launch {
+        tasks.updateTask(receipt.uid, receipt.restore)
+    }
+
+    /** Bord bas d'un bloc tiré : la durée est l'estimation de la tâche, écrite comme un champ synchronisé ordinaire. */
+    fun resizeTask(uid: String, minutes: Int) = viewModelScope.launch {
+        tasks.updateTask(uid, TaskChange(estimatedMinutes = minutes))
+    }
+
+    fun toggleTask(task: AgendaEntry.Task) = viewModelScope.launch {
+        if (task.done) {
+            tasks.reopenTask(task.uid)
+        } else {
+            tasks.completeTask(task.uid)
+            if (!task.recurring) _completed.tryEmit(task.uid)
+        }
+    }
+
+    fun undoComplete(uid: String) = viewModelScope.launch { tasks.reopenTask(uid) }
 
     /** Balayage de la bande des jours : une semaine à la fois. */
     fun swipeWeek(direction: Int) {

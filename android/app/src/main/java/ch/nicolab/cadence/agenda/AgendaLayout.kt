@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 
 /** Hauteur visuelle minimale d'un bloc horaire : un élément court doit rester lisible et touchable. */
-private const val MIN_BLOCK_MINUTES = 30
+internal const val MIN_BLOCK_MINUTES = 30
 private const val MINUTES_PER_DAY = 24 * 60
 
 /** Au-delà de trois pastilles, la case d'un jour ne distingue plus rien : le détail est dans la liste. */
@@ -55,6 +55,10 @@ sealed interface AgendaEntry {
         override val allDay: Boolean,
         override val done: Boolean,
         override val colorArgb: Int?,
+        /** Estimation de la tâche : durée de son bloc sur la grille. */
+        val estimateMinutes: Int? = null,
+        /** Une récurrente ne se déplace pas par simple dépôt : elle demande un périmètre. */
+        val recurring: Boolean = false,
     ) : AgendaEntry
 
     /** Habitude prévue ce jour-là : dans la rangée de la journée, ou à l'heure de début de son groupe. */
@@ -178,16 +182,19 @@ fun agendaEvent(item: EventWithDone, zone: ZoneId): AgendaEntry.Event = AgendaEn
 /** Tâche datée ; null sans échéance. Sans heure, l'échéance vaut pour son jour civil (`dueDay`). */
 fun agendaTask(task: TaskItem, projectColorArgb: Int?, zone: ZoneId): AgendaEntry.Task? {
     val due = task.dueDate ?: return null
+    val estimate = task.estimatedMinutes?.takeIf { it > 0 }
     if (task.dueHasTime) {
         val at = LocalDateTime.ofInstant(due, zone)
         return AgendaEntry.Task(
             uid = task.uid,
             title = task.name,
             start = at,
-            end = at,
+            end = if (estimate != null) at.plusMinutes(estimate.toLong()) else at,
             allDay = false,
             done = task.isClosed,
             colorArgb = projectColorArgb,
+            estimateMinutes = estimate,
+            recurring = task.isRecurring,
         )
     }
     val day = task.dueDay ?: due.atZone(zone).toLocalDate()
@@ -199,6 +206,8 @@ fun agendaTask(task: TaskItem, projectColorArgb: Int?, zone: ZoneId): AgendaEntr
         allDay = true,
         done = task.isClosed,
         colorArgb = projectColorArgb,
+        estimateMinutes = estimate,
+        recurring = task.isRecurring,
     )
 }
 
