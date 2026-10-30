@@ -123,7 +123,8 @@
     "next7Days": "الأيام السبعة القادمة",
     "more": "المزيد",
     "toggleFolder": "إظهار المشاريع أو إخفاؤها",
-    "customize": "تخصيص الشريط الجانبي"
+    "customize": "تخصيص الشريط الجانبي",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -1001,7 +1002,10 @@
       "project": "المشروع",
       "priority": "علامة الأولوية",
       "due": "تاريخ الاستحقاق"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "المشاريع المتوقفة",
@@ -1996,7 +2000,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3926,5 +3935,15 @@
     "none": "لم يبقَ شيء للمقارنة.",
     "addToday": "أضف إلى اليوم",
     "close": "إغلاق"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

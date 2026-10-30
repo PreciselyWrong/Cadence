@@ -36,7 +36,7 @@ const SegmentedTabs: React.FC<SegmentedTabsProps> = ({
                     role="tab"
                     aria-selected={active}
                     onClick={() => onSelect(segment.id)}
-                    className={`h-10 min-w-0 flex-1 truncate rounded-full px-3 text-label transition-colors duration-[220ms] ${
+                    className={`h-10 min-w-0 flex-1 truncate rounded-full px-2 text-label transition-colors duration-[220ms] ${
                         active
                             ? 'bg-primary-container text-primary-on-container'
                             : 'text-surface-on-variant'

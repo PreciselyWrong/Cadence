@@ -119,7 +119,8 @@
     "next7Days": "今後7日間",
     "more": "その他",
     "toggleFolder": "プロジェクトの表示・非表示",
-    "customize": "サイドバーをカスタマイズ"
+    "customize": "サイドバーをカスタマイズ",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "ホーム",
@@ -997,7 +998,10 @@
       "project": "プロジェクト",
       "priority": "優先度フラグ",
       "due": "期限日"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "modals": {
     "confirmDelete": "本当に削除してよろしいですか？",
@@ -1906,7 +1910,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "productivity": {
     "stalledProjects": "停滞しているプロジェクト",
@@ -3887,5 +3896,15 @@
     "none": "比べるものは残っていません。",
     "addToday": "今日に追加",
     "close": "閉じる"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

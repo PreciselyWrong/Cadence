@@ -123,7 +123,7 @@ const EditCalendarModal: React.FC<EditCalendarModalProps> = ({
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                         {t('profile.editCalendar.title', 'Edit Calendar')}
                     </h2>
-                    <button
+                    <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                         type="button"
                         onClick={onClose}
                         disabled={isSubmitting}

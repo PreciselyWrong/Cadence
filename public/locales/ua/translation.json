@@ -121,7 +121,8 @@
     "next7Days": "Наступні 7 днів",
     "more": "Ще",
     "toggleFolder": "Показати або приховати проєкти",
-    "customize": "Налаштувати бічну панель"
+    "customize": "Налаштувати бічну панель",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Головна",
@@ -1486,7 +1487,10 @@
       "project": "Проєкт",
       "priority": "Прапорець пріоритету",
       "due": "Термін"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "task": {
     "recurringMove": {
@@ -1755,7 +1759,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -3908,5 +3917,15 @@
     "none": "Більше нічого порівнювати.",
     "addToday": "Додати на сьогодні",
     "close": "Закрити"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

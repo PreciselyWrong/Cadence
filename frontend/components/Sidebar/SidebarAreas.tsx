@@ -77,9 +77,9 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
         return (
             <div key={area.uid}>
                 <div
-                    className={`flex items-center gap-[4px] rounded-[8px] pl-[6px] pr-[10px] h-[34px] text-[14px] text-gray-700 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+                    className={`flex items-center gap-[4px] rounded-[8px] pl-[6px] pr-[10px] h-[34px] text-[14px] text-gray-700 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
                         location.pathname === getAreaPath(area)
-                            ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]'
+                            ? 'bg-gray-100 dark:bg-gray-800'
                             : ''
                     }`}
                 >
@@ -118,7 +118,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                     areaProjects.map(({ project, depth }) => (
                         <div
                             key={project.uid}
-                            className="flex items-center rounded-[8px] h-[34px] pr-[10px] text-[14px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)]"
+                            className="flex items-center rounded-[8px] h-[34px] pr-[10px] text-[14px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800"
                             style={{ paddingLeft: 30 + depth * 12 }}
                             onClick={() =>
                                 handleNavClick(
@@ -138,9 +138,9 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
     };
 
     const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
+        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
             location.pathname === path
-                ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]'
+                ? 'bg-gray-100 dark:bg-gray-800'
                 : ''
         }`;
 
@@ -165,7 +165,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                     className={`flex items-center text-[12px] tracking-[0.01em] font-semibold uppercase hover:text-gray-900 dark:hover:text-white ${
                         isAreasPageActive
                             ? 'text-gray-900 dark:text-white'
-                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-gray-300'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();

@@ -42,6 +42,7 @@ import { isQueuedOfflineResponse } from '../utils/authUtils';
 import { isTaskActive } from '../constants/taskStatus';
 import { useTaskUpdatedEvent } from '../hooks/useTaskUpdatedEvent';
 import { openTaskPanel } from '../store/taskPanelStore';
+import SkeletonRows from './Shared/SkeletonRows';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -995,7 +996,7 @@ const Tasks: React.FC = () => {
                 )}
 
                 {loading ? (
-                    <p>{t('common.loading', 'Loading...')}</p>
+                    <SkeletonRows />
                 ) : error ? (
                     <p className="text-red-500">{error}</p>
                 ) : (

@@ -525,7 +525,7 @@ const Layout: React.FC<LayoutProps> = ({
                                     className={`w-full h-full ${
                                         isNotesView
                                             ? 'flex flex-col overflow-hidden'
-                                            : 'overflow-auto'
+                                            : 'overflow-auto pb-24 lg:pb-0'
                                     }`}
                                 >
                                     {isError && (

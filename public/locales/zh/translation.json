@@ -119,7 +119,8 @@
     "next7Days": "未来7天",
     "more": "更多",
     "toggleFolder": "显示或隐藏项目",
-    "customize": "自定义侧边栏"
+    "customize": "自定义侧边栏",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "首页",
@@ -997,7 +998,10 @@
       "project": "项目",
       "priority": "优先级旗标",
       "due": "截止日期"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "停滞项目",
@@ -1974,7 +1978,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3886,5 +3895,15 @@
     "none": "没有可比较的了。",
     "addToday": "加入今天",
     "close": "关闭"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

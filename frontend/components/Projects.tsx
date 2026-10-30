@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next';
 import { SortOption } from './Shared/SortFilterButton';
 
 import { Project, ProjectStatus } from '../entities/Project';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
     FunnelIcon,
     PlusIcon,
@@ -64,6 +64,8 @@ import ProjectsListSettings, {
     ProjectsListFilters,
 } from './Project/ProjectsListSettings';
 import { flattenProjectTree } from '../utils/projectTree';
+import OverflowMenu from './Shared/OverflowMenu';
+import SkeletonRows from './Shared/SkeletonRows';
 
 // Custom order: projects without a position (new ones) come first, newest
 // first, then the rest by the position the user dragged them to.
@@ -801,9 +803,9 @@ const Projects: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-                    {t('projects.loading')}
+            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+                <div className="w-full max-w-7xl mx-auto">
+                    <SkeletonRows variant="card" rows={7} />
                 </div>
             </div>
         );
@@ -891,67 +893,51 @@ const Projects: React.FC = () => {
                             value={listFilters}
                             onChange={handleListFiltersChange}
                         />
-                        <Link
-                            to="/projects/completed"
-                            aria-label={t('projects.history', 'History')}
-                            title={t(
-                                'projects.historyHint',
-                                'Completed projects, newest first'
-                            )}
-                            className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm text-sm font-medium text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                            data-testid="projects-history-link"
-                        >
-                            <ClockIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">
-                                {t('projects.history', 'History')}
-                            </span>
-                        </Link>
-                        {templatesEnabled && (
-                            <Link
-                                to="/templates"
-                                aria-label={t(
-                                    'projects.fromTemplate',
-                                    'From Template'
-                                )}
-                                title={t(
-                                    'projects.fromTemplate',
-                                    'From Template'
-                                )}
-                                className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm text-sm font-medium text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                            >
-                                <RectangleStackIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                                <span className="hidden sm:inline">
-                                    {t(
-                                        'projects.fromTemplate',
-                                        'From Template'
-                                    )}
-                                </span>
-                            </Link>
-                        )}
-                        {canCreateProjects && (
-                            <button
-                                type="button"
-                                onClick={() => setIsImportOpen(true)}
-                                aria-label={t(
-                                    'spreadsheet.menu.importShort',
-                                    'Import'
-                                )}
-                                title={t(
-                                    'spreadsheet.menu.importHint',
-                                    'Import projects and tasks from Excel or CSV'
-                                )}
-                                className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm text-sm font-medium text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                                data-testid="projects-import-button"
-                            >
-                                <ArrowUpTrayIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                                <span className="hidden sm:inline">
-                                    {t(
-                                        'spreadsheet.menu.importShort',
-                                        'Import'
-                                    )}
-                                </span>
-                            </button>
-                        )}
+                        <OverflowMenu
+                            label={t('common.moreActions', 'More actions')}
+                            testId="projects-more-menu"
+                            items={[
+                                {
+                                    key: 'history',
+                                    label: t('projects.history', 'History'),
+                                    icon: <ClockIcon className="h-4 w-4" />,
+                                    to: '/projects/completed',
+                                    testId: 'projects-history-link',
+                                },
+                                ...(templatesEnabled
+                                    ? [
+                                          {
+                                              key: 'templates',
+                                              label: t(
+                                                  'projects.fromTemplate',
+                                                  'From Template'
+                                              ),
+                                              icon: (
+                                                  <RectangleStackIcon className="h-4 w-4" />
+                                              ),
+                                              to: '/templates',
+                                          },
+                                      ]
+                                    : []),
+                                ...(canCreateProjects
+                                    ? [
+                                          {
+                                              key: 'import',
+                                              label: t(
+                                                  'spreadsheet.menu.importShort',
+                                                  'Import'
+                                              ),
+                                              icon: (
+                                                  <ArrowUpTrayIcon className="h-4 w-4" />
+                                              ),
+                                              onClick: () =>
+                                                  setIsImportOpen(true),
+                                              testId: 'projects-import-button',
+                                          },
+                                      ]
+                                    : []),
+                            ]}
+                        />
                         {canCreateProjects && (
                             <NewItemButton
                                 label={t('projects.new', 'New Project')}

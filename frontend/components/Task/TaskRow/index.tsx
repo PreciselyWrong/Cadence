@@ -508,6 +508,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     hideAreaName={hideAreaName}
                     hideStatusControl={hideStatusControl}
                     condenseStatusControl={isUpcomingView}
+                    hideDueDate={isUpcomingView}
                     compact={compact}
                     onActivate={handleActivate}
                     onToggleCompletion={handleToggleCompletion}

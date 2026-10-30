@@ -211,15 +211,22 @@ const Navbar: React.FC<NavbarProps> = ({
                         <>
                             <button
                                 onClick={() => setIsSidebarOpen(true)}
-                                className="sm:hidden p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                                aria-label="Expand Sidebar"
+                                className="sm:hidden flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                aria-label={t(
+                                    'navbar.expandSidebar',
+                                    'Expand Sidebar'
+                                )}
+                                title={t(
+                                    'navbar.expandSidebar',
+                                    'Expand Sidebar'
+                                )}
                                 data-testid="sidebar-expand"
                             >
                                 <SidebarPanelIcon className="h-5 w-5" />
                             </button>
                             <Link
                                 to="/"
-                                className="sm:hidden flex items-center justify-center h-9 w-9"
+                                className="sm:hidden flex items-center justify-center h-11 w-11"
                                 aria-label="Cadence"
                                 data-testid="navbar-logo"
                             >
@@ -245,7 +252,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         onClick={() =>
                             setIsMobileSearchOpen(!isMobileSearchOpen)
                         }
-                        className="md:hidden flex items-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full transition-all duration-200 p-2"
+                        className="md:hidden flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px] bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full transition-all duration-200 p-2"
                         aria-label={t('navigation.toggleSearch')}
                         title={t('navigation.search')}
                     >
@@ -258,7 +265,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         aria-haspopup="dialog"
                         aria-expanded={captureOpen}
                         data-testid="capture-navbar-button"
-                        className="flex items-center bg-primary hover:bg-primary/90 text-primary-on rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-200 px-2 py-2 md:px-3 md:py-2"
+                        className="flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px] bg-primary hover:bg-primary/90 text-primary-on rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-200 px-2 py-2 md:px-3 md:py-2"
                         aria-label={t('navigation.quickInboxCapture')}
                         title={t('navigation.quickInboxCapture')}
                     >
@@ -272,8 +279,9 @@ const Navbar: React.FC<NavbarProps> = ({
                     <div className="relative" ref={dropdownRef}>
                         <button
                             onClick={toggleDropdown}
-                            className="flex items-center "
+                            className="flex items-center justify-center max-sm:min-h-[44px] max-sm:min-w-[44px]"
                             aria-label={t('navigation.userMenu')}
+                            title={t('navigation.userMenu')}
                         >
                             {currentUser?.avatar_image ? (
                                 <img

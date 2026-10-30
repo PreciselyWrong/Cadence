@@ -119,7 +119,8 @@
     "next7Days": "Sonraki 7 gün",
     "more": "Daha fazla",
     "toggleFolder": "Projeleri göster veya gizle",
-    "customize": "Kenar çubuğunu özelleştir"
+    "customize": "Kenar çubuğunu özelleştir",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -997,7 +998,10 @@
       "project": "Proje",
       "priority": "Öncelik bayrağı",
       "due": "Bitiş tarihi"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Duraklayan Projeler",
@@ -1976,7 +1980,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3890,5 +3899,15 @@
     "none": "Karşılaştırılacak bir şey kalmadı.",
     "addToday": "Bugüne ekle",
     "close": "Kapat"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

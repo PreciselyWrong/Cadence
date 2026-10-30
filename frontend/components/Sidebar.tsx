@@ -370,7 +370,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     type="button"
                                     onClick={openSidebarSettings}
                                     data-testid="sidebar-customize"
-                                    className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-[oklch(24%_0.015_250)]"
+                                    className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                 >
                                     {t(
                                         'sidebar.customize',

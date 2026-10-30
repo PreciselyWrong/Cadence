@@ -38,8 +38,8 @@ const SidebarGoals: React.FC<SidebarGoalsProps> = ({
     const isActive = (path: string) => location.pathname === path;
 
     const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
-            isActive(path) ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
+        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+            isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
         }`;
 
     const activeGoals = goals.filter((g: Goal) => g.status === 'active');
@@ -73,7 +73,7 @@ const SidebarGoals: React.FC<SidebarGoalsProps> = ({
                     className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         location.pathname === '/goals'
                             ? 'text-black dark:text-white'
-                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-gray-300'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();

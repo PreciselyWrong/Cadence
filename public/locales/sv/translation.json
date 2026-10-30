@@ -119,7 +119,8 @@
     "next7Days": "Nästa 7 dagar",
     "more": "Mer",
     "toggleFolder": "Visa eller dölj projekt",
-    "customize": "Anpassa sidofältet"
+    "customize": "Anpassa sidofältet",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Hem",
@@ -997,7 +998,10 @@
       "project": "Projekt",
       "priority": "Prioritetsflagga",
       "due": "Förfallodatum"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Stagnerade projekt",
@@ -1976,7 +1980,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3890,5 +3899,15 @@
     "none": "Inget kvar att jämföra.",
     "addToday": "Lägg till i dag",
     "close": "Stäng"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

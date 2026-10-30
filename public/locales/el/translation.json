@@ -119,7 +119,8 @@
     "next7Days": "Επόμενες 7 ημέρες",
     "more": "Περισσότερα",
     "toggleFolder": "Εμφάνιση ή απόκρυψη έργων",
-    "customize": "Προσαρμογή πλευρικής στήλης"
+    "customize": "Προσαρμογή πλευρικής στήλης",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Αρχική",
@@ -854,7 +855,10 @@
       "project": "Έργο",
       "priority": "Σημαία προτεραιότητας",
       "due": "Ημερομηνία λήξης"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "errors": {
     "required": "Αυτό το πεδίο είναι υποχρεωτικό",
@@ -1977,7 +1981,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3891,5 +3900,15 @@
     "none": "Δεν μένει τίποτα για σύγκριση.",
     "addToday": "Προσθήκη στο σήμερα",
     "close": "Κλείσιμο"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

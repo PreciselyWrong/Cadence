@@ -299,7 +299,7 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
                             )}
                         </p>
                     </div>
-                    <button
+                    <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                         type="button"
                         onClick={onClose}
                         disabled={isResolving}

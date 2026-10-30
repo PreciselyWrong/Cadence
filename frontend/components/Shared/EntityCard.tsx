@@ -52,7 +52,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
 
     return (
         <div
-            className="group relative flex h-full flex-col gap-2.5 rounded-lg bg-gray-50 p-5 shadow-sm transition-shadow duration-150 hover:shadow-md dark:bg-gray-900"
+            className="group relative flex h-full flex-col gap-2.5 rounded-card bg-surface-card p-5 shadow-sm transition-shadow duration-150 hover:shadow-md"
             data-testid={testId}
         >
             <div className="flex min-w-0 items-start gap-2">

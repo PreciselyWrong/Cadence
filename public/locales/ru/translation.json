@@ -121,7 +121,8 @@
     "next7Days": "Следующие 7 дней",
     "more": "Ещё",
     "toggleFolder": "Показать или скрыть проекты",
-    "customize": "Настроить боковую панель"
+    "customize": "Настроить боковую панель",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Главная",
@@ -999,7 +1000,10 @@
       "project": "Проект",
       "priority": "Флажок приоритета",
       "due": "Срок"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Приостановленные проекты",
@@ -1986,7 +1990,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3908,5 +3917,15 @@
     "none": "Больше нечего сравнивать.",
     "addToday": "Добавить на сегодня",
     "close": "Закрыть"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

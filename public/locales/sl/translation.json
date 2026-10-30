@@ -121,7 +121,8 @@
     "next7Days": "Naslednjih 7 dni",
     "more": "Več",
     "toggleFolder": "Prikaži ali skrij projekte",
-    "customize": "Prilagodi stransko vrstico"
+    "customize": "Prilagodi stransko vrstico",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Domov",
@@ -999,7 +1000,10 @@
       "project": "Projekt",
       "priority": "Zastavica prednosti",
       "due": "Rok"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Zastali projekti",
@@ -1986,7 +1990,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3908,5 +3917,15 @@
     "none": "Ni več česa primerjati.",
     "addToday": "Dodaj za danes",
     "close": "Zapri"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

@@ -119,7 +119,8 @@
     "next7Days": "Komende 7 dagen",
     "more": "Meer",
     "toggleFolder": "Projecten tonen of verbergen",
-    "customize": "Zijbalk aanpassen"
+    "customize": "Zijbalk aanpassen",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Home",
@@ -997,7 +998,10 @@
       "project": "Project",
       "priority": "Prioriteitsvlag",
       "due": "Vervaldatum"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",
@@ -1976,7 +1980,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3890,5 +3899,15 @@
     "none": "Niets meer om te vergelijken.",
     "addToday": "Aan vandaag toevoegen",
     "close": "Sluiten"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

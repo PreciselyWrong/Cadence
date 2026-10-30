@@ -67,7 +67,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                     className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         location.pathname.startsWith('/notes')
                             ? 'text-black dark:text-white'
-                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-gray-300'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();

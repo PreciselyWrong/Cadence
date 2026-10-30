@@ -62,7 +62,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-')
                     .replace(/^-|-$/g, '')}`}
-                className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-md relative flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out cursor-pointer border-l-4 border-l-blue-400 dark:border-l-blue-500"
+                className="bg-surface-card rounded-card shadow-sm relative flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out cursor-pointer border-l-4 border-l-blue-400 dark:border-l-blue-500"
                 style={{
                     minHeight: '280px',
                     maxHeight: '280px',
@@ -220,7 +220,15 @@ const NoteCard: React.FC<NoteCardProps> = ({
                                     }}
                                     className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left rounded-t-md"
                                 >
-                                    {note.pin_to_sidebar ? t('notes.unpinFromSidebar', 'Unpin from sidebar') : t('notes.pinToSidebar', 'Pin to sidebar')}
+                                    {note.pin_to_sidebar
+                                        ? t(
+                                              'notes.unpinFromSidebar',
+                                              'Unpin from sidebar'
+                                          )
+                                        : t(
+                                              'notes.pinToSidebar',
+                                              'Pin to sidebar'
+                                          )}
                                 </button>
                             )}
                             {onEdit && (

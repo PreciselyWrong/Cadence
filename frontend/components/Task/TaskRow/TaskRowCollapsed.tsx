@@ -61,6 +61,8 @@ interface TaskRowCollapsedProps {
     hideAreaName?: boolean;
     hideStatusControl?: boolean;
     condenseStatusControl?: boolean;
+    // The row sits in a column or group that already states its due date.
+    hideDueDate?: boolean;
     compact?: boolean;
     onActivate: (e: React.MouseEvent | React.KeyboardEvent) => void;
     onToggleCompletion?: () => void;
@@ -155,6 +157,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     hideAreaName = false,
     hideStatusControl = false,
     condenseStatusControl = false,
+    hideDueDate = false,
     compact = false,
     onActivate,
     onToggleCompletion,
@@ -239,6 +242,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     };
 
     const formatDue = (d: string) => formatDueLabel(d, t);
+    const dueTime = task.due_has_time && task.due_time ? task.due_time : '';
+    // A column that already names the day shows only the time of day.
+    const dueText = !task.due_date
+        ? null
+        : hideDueDate
+          ? dueTime || null
+          : `${formatDue(task.due_date)}${dueTime ? ` ${dueTime}` : ''}`;
 
     const formatDefer = (v: string): string | null => {
         const date = new Date(v);
@@ -290,7 +300,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             showProject ||
             showArea ||
             (task.tags && task.tags.length > 0) ||
-            !!task.due_date ||
+            !!dueText ||
             (isTaskCompleted(task.status) && !!task.completed_at) ||
             (task.recurrence_type && task.recurrence_type !== 'none') ||
             !!task.recurring_parent_id ||
@@ -447,20 +457,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     task={task}
                     onFieldUpdate={onFieldUpdate}
                     dueClass={dueClass}
-                    dueText={
-                        task.due_date
-                            ? `${formatDue(task.due_date)}${
-                                  task.due_has_time && task.due_time
-                                      ? ` ${task.due_time}`
-                                      : ''
-                              }`
-                            : null
-                    }
+                    dueText={dueText}
                 />
-            ) : !compact && task.due_date ? (
+            ) : !compact && dueText ? (
                 <span className={`whitespace-nowrap ${dueClass}`}>
-                    {formatDue(task.due_date)}
-                    {task.due_has_time && task.due_time && ` ${task.due_time}`}
+                    {dueText}
                 </span>
             ) : null,
     };
@@ -511,14 +512,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             <div
                 className={
                     isMinimal
-                        ? 'flex flex-1 min-w-0 items-center gap-3'
+                        ? 'flex flex-1 min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5'
                         : 'flex flex-1 min-w-0 flex-col'
                 }
                 data-testid={isMinimal ? 'task-row-minimal-line' : undefined}
             >
                 <div
                     className={`flex items-center gap-1.5 min-w-0 ${
-                        isMinimal ? 'flex-1' : ''
+                        isMinimal ? 'flex-1 basis-40' : ''
                     }`}
                 >
                     {task.pinned && (
@@ -641,16 +642,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                     </Link>
                                 </span>
                             )}
-                            {task.due_date && (
+                            {dueText && (
                                 <span
                                     className={`flex items-center whitespace-nowrap ${dueClass}`}
                                     data-testid="task-row-due"
                                 >
                                     <CalendarIcon className="h-3.5 w-3.5 mr-1" />
-                                    {formatDue(task.due_date)}
-                                    {task.due_has_time &&
-                                        task.due_time &&
-                                        ` ${task.due_time}`}
+                                    {dueText}
                                 </span>
                             )}
                         </div>
@@ -779,7 +777,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         aria-label={t('common.moreActions', 'More actions')}
                         title={t('common.moreActions', 'More actions')}
                         data-testid="task-actions-menu-button"
-                        className={`p-1 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
+                        className={`flex items-center justify-center rounded-md p-1 max-sm:-m-2.5 max-sm:min-h-[44px] max-sm:min-w-[44px] text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
                             isActionsMenuOpen
                                 ? 'opacity-100'
                                 : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'

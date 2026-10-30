@@ -1,3 +1,5 @@
+import SegmentedTabs from './Shared/ui/SegmentedTabs';
+import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
@@ -873,8 +875,42 @@ const Calendar: React.FC = () => {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
+                        {/* Phones: four segments; year and N days sit in a menu */}
+                        <div className="flex w-full items-center gap-2 sm:hidden">
+                            <SegmentedTabs
+                                className="flex-1"
+                                aria-label={t('calendar.view', 'View')}
+                                selected={view}
+                                onSelect={(id) => setView(id as typeof view)}
+                                segments={(
+                                    ['month', 'week', 'day', 'agenda'] as const
+                                ).map((viewType) => ({
+                                    id: viewType,
+                                    label: t(`calendar.${viewType}`, viewType),
+                                }))}
+                            />
+                            <OverflowMenu
+                                label={t('calendar.moreViews', 'More views')}
+                                items={[
+                                    {
+                                        key: 'year',
+                                        label: t('calendar.year', 'year'),
+                                        onClick: () => setView('year'),
+                                    },
+                                    {
+                                        key: 'multi',
+                                        label: t('calendar.multiDay', {
+                                            count: options.multiDayCount,
+                                            defaultValue: '{{count}} days',
+                                        }),
+                                        onClick: () => setView('multi'),
+                                    },
+                                ]}
+                            />
+                        </div>
+
                         {/* View selector */}
-                        <div className="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
+                        <div className="hidden sm:flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
                             {(
                                 [
                                     'year',
@@ -923,6 +959,8 @@ const Calendar: React.FC = () => {
                         <button
                             onClick={() => navigateView('prev')}
                             className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
+                            aria-label={t('common.previous', 'Previous')}
+                            title={t('common.previous', 'Previous')}
                         >
                             <ChevronLeftIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                         </button>
@@ -937,6 +975,8 @@ const Calendar: React.FC = () => {
                         <button
                             onClick={() => navigateView('next')}
                             className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
+                            aria-label={t('common.next', 'Next')}
+                            title={t('common.next', 'Next')}
                         >
                             <ChevronRightIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                         </button>
@@ -1407,6 +1447,8 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                         </h3>
                     </div>
                     <button
+                        aria-label={t('common.close', 'Close')}
+                        title={t('common.close', 'Close')}
                         onClick={onClose}
                         className="shrink-0 p-1 rounded-lg text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >

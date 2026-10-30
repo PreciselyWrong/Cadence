@@ -128,6 +128,7 @@ import {
     intlLocale,
     feedEventsToBlocks,
 } from './planUtils';
+import SkeletonRows from '../Shared/SkeletonRows';
 
 type Mode = 'timeline' | 'list';
 type PanelMode = 'day' | 'agenda';
@@ -1903,9 +1904,7 @@ const TodayPage: React.FC = () => {
                 )}
 
                 {!candidates ? (
-                    <p className="p-8 text-gray-600 dark:text-gray-300">
-                        {t('common.loading', 'Loading...')}
-                    </p>
+                    <SkeletonRows className="p-4" />
                 ) : (
                     <div
                         ref={panesRef}

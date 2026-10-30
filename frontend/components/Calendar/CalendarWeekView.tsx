@@ -24,6 +24,7 @@ import {
     isMovable,
 } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
+import AllDayOverflow from './AllDayOverflow';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -160,6 +161,26 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
         );
 
     const allDayRows = layoutAllDayWeek(events, weekStart);
+    // At most three rows of bars; the rest hide behind a "+N" chip per day.
+    const MAX_ALL_DAY_ROWS = 3;
+    const shownBars = allDayBars.filter(
+        ({ event }) => (allDayRows.get(event.id) ?? 0) < MAX_ALL_DAY_ROWS
+    );
+    const hiddenByDay = weekDays.map((day) =>
+        allDayBars
+            .filter(
+                ({ event }) =>
+                    (allDayRows.get(event.id) ?? 0) >= MAX_ALL_DAY_ROWS &&
+                    coversDay(event, day)
+            )
+            .map(({ event }) => event)
+    );
+    const hasHidden = hiddenByDay.some((hidden) => hidden.length > 0);
+    const allDayRowCount =
+        Math.max(
+            1,
+            ...shownBars.map(({ event }) => (allDayRows.get(event.id) ?? 0) + 1)
+        ) + (hasHidden ? 1 : 0);
 
     const handleDrop = (
         day: Date,
@@ -223,10 +244,9 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 ))}
             </div>
 
-            {/* Capped at about three rows so the hours stay in view. */}
             {allDayBars.length > 0 && (
                 <div
-                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 max-h-[5.5rem] overflow-y-auto shrink-0"
+                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 shrink-0"
                     style={gridColumns}
                     data-testid="calendar-all-day-row"
                 >
@@ -240,11 +260,11 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             onDrop={(e) => handleDrop(day, undefined, e)}
                             style={{
                                 gridColumn: index + 2,
-                                gridRow: `1 / span ${allDayBars.length}`,
+                                gridRow: `1 / span ${allDayRowCount}`,
                             }}
                         />
                     ))}
-                    {allDayBars.map(({ event, from, to }) => (
+                    {shownBars.map(({ event, from, to }) => (
                         <div
                             key={event.id}
                             draggable={isMovable(event) && !event.readOnly}
@@ -272,6 +292,20 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                             {event.title}
                         </div>
                     ))}
+                    {hiddenByDay.map((hidden, index) =>
+                        hidden.length > 0 ? (
+                            <AllDayOverflow
+                                key={`all-day-more-${weekDays[index].toString()}`}
+                                events={hidden}
+                                onEventClick={onEventClick}
+                                className="z-10"
+                                style={{
+                                    gridColumn: index + 2,
+                                    gridRow: MAX_ALL_DAY_ROWS + 1,
+                                }}
+                            />
+                        ) : null
+                    )}
                 </div>
             )}
 

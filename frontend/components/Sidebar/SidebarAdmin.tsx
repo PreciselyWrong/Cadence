@@ -34,10 +34,10 @@ const SidebarAdmin: React.FC<SidebarAdminProps> = ({
 
     const linkClass = (path: string) => {
         const isActive = location.pathname.startsWith(path);
-        return `flex items-center rounded-[8px] px-[10px] py-[4px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] hover:text-gray-900 dark:hover:text-white ${
+        return `flex items-center rounded-[8px] px-[10px] py-[4px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white ${
             isActive
-                ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)] text-gray-900 dark:text-white'
-                : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
+                ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-gray-300'
         }`;
     };
 

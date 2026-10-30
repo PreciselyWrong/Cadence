@@ -119,7 +119,8 @@
     "next7Days": "Seuraavat 7 päivää",
     "more": "Lisää",
     "toggleFolder": "Näytä tai piilota projektit",
-    "customize": "Mukauta sivupalkki"
+    "customize": "Mukauta sivupalkki",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Koti",
@@ -997,7 +998,10 @@
       "project": "Projekti",
       "priority": "Prioriteettilippu",
       "due": "Eräpäivä"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Jumiutuneet projektit",
@@ -1976,7 +1980,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3890,5 +3899,15 @@
     "none": "Ei enää vertailtavaa.",
     "addToday": "Lisää tälle päivälle",
     "close": "Sulje"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

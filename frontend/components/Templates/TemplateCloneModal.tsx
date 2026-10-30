@@ -53,7 +53,7 @@ const TemplateCloneModal: React.FC<TemplateCloneModalProps> = ({
                                 {t('templates.cloneSubtitle', 'Configure your new project from "{{name}}"', { name: template.name })}
                             </p>
                         </div>
-                        <button
+                        <button aria-label={t('common.close', 'Close')} title={t('common.close', 'Close')}
                             onClick={onClose}
                             className="flex-shrink-0 p-1 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >

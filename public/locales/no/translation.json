@@ -119,7 +119,8 @@
     "next7Days": "Neste 7 dager",
     "more": "Mer",
     "toggleFolder": "Vis eller skjul prosjekter",
-    "customize": "Tilpass sidefeltet"
+    "customize": "Tilpass sidefeltet",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Hjem",
@@ -998,7 +999,10 @@
       "project": "Prosjekt",
       "priority": "Prioritetsflagg",
       "due": "Forfallsdato"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Stagnerte prosjekter",
@@ -1977,7 +1981,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3895,5 +3904,15 @@
     "none": "Ingenting igjen å sammenligne.",
     "addToday": "Legg til i dag",
     "close": "Lukk"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

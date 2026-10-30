@@ -140,8 +140,8 @@ const SidebarRail: React.FC<SidebarRailProps> = ({
                 type="button"
                 onClick={onExpand}
                 className="mb-3 p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                aria-label="Expand Sidebar"
-                title="Expand Sidebar"
+                aria-label={t('navbar.expandSidebar', 'Expand Sidebar')}
+                title={t('navbar.expandSidebar', 'Expand Sidebar')}
                 data-testid="sidebar-rail-expand"
             >
                 <SidebarPanelIcon className="h-5 w-5" />
@@ -177,8 +177,8 @@ const SidebarRail: React.FC<SidebarRailProps> = ({
                                     data-testid={`sidebar-rail-${id}`}
                                     className={`flex items-center justify-center h-9 w-9 rounded-[8px] transition-colors duration-150 ${
                                         active
-                                            ? 'bg-blue-50 text-blue-600 dark:bg-[oklch(27%_0.02_250)] dark:text-[oklch(68%_0.14_250)]'
-                                            : 'text-gray-600 hover:bg-gray-100 dark:text-[oklch(65%_0.006_95)] dark:hover:bg-[oklch(24%_0.015_250)]'
+                                            ? 'bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-300'
+                                            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
                                     }`}
                                 >
                                     <section.Icon className="h-[18px] w-[18px]" />

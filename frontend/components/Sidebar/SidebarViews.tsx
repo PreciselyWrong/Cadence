@@ -83,8 +83,8 @@ const SortableViewItem: React.FC<SortableViewItemProps> = ({
         <li
             ref={setNodeRef}
             style={style}
-            className={`group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
-                isActive ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
+            className={`group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                isActive ? 'bg-gray-100 dark:bg-gray-800' : ''
             } ${isDragging ? 'opacity-50' : ''}`}
             onClick={handleClick}
             {...listeners}
@@ -283,7 +283,7 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
                     className={`flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase cursor-pointer hover:text-black dark:hover:text-white ${
                         isActiveView('/views')
                             ? 'text-black dark:text-white'
-                            : 'text-gray-500 dark:text-[oklch(58%_0.006_95)]'
+                            : 'text-gray-500 dark:text-gray-300'
                     }`}
                     onClick={(e) => {
                         e.stopPropagation();

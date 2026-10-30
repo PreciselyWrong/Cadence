@@ -119,7 +119,8 @@
     "next7Days": "다음 7일",
     "more": "더보기",
     "toggleFolder": "프로젝트 표시 또는 숨기기",
-    "customize": "사이드바 사용자 지정"
+    "customize": "사이드바 사용자 지정",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "홈",
@@ -997,7 +998,10 @@
       "project": "프로젝트",
       "priority": "우선순위 표시",
       "due": "마감일"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "정체된 프로젝트",
@@ -1974,7 +1978,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3886,5 +3895,15 @@
     "none": "비교할 것이 남지 않았습니다.",
     "addToday": "오늘에 추가",
     "close": "닫기"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

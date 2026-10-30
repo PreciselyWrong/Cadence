@@ -119,7 +119,8 @@
     "next7Days": "7 ngày tới",
     "more": "Thêm",
     "toggleFolder": "Hiện hoặc ẩn dự án",
-    "customize": "Tùy chỉnh thanh bên"
+    "customize": "Tùy chỉnh thanh bên",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -997,7 +998,10 @@
       "project": "Dự án",
       "priority": "Cờ ưu tiên",
       "due": "Ngày đến hạn"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",
@@ -1974,7 +1978,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3886,5 +3895,15 @@
     "none": "Không còn gì để so sánh.",
     "addToday": "Thêm vào hôm nay",
     "close": "Đóng"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

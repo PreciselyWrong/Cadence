@@ -10,6 +10,7 @@ import {
 } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
+import AllDayOverflow from './AllDayOverflow';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -214,9 +215,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                             {t('calendar.allDay', 'All day')}
                         </div>
                     )}
-                    {/* Capped so the hours stay in view. */}
-                    <div className="space-y-1 max-h-[6.5rem] overflow-y-auto">
-                        {allDayEvents.map((event) => {
+                    {/* At most three chips; the rest sit behind "+N". */}
+                    <div className="space-y-1">
+                        {allDayEvents.slice(0, 3).map((event) => {
                             const body = event.title;
                             const className =
                                 'text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium';
@@ -254,6 +255,11 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                 </div>
                             );
                         })}
+                        <AllDayOverflow
+                            events={allDayEvents.slice(3)}
+                            onEventClick={onEventClick}
+                            className="-ml-1"
+                        />
                     </div>
                 </DropTarget>
             )}

@@ -120,7 +120,8 @@
     "next7Days": "Próximos 7 dias",
     "more": "Mais",
     "toggleFolder": "Mostrar ou ocultar projetos",
-    "customize": "Personalizar barra lateral"
+    "customize": "Personalizar barra lateral",
+    "toggleSection": "Expand or collapse"
   },
   "navigation": {
     "home": "Início",
@@ -998,7 +999,10 @@
       "project": "Projeto",
       "priority": "Bandeira de prioridade",
       "due": "Data de vencimento"
-    }
+    },
+    "accent": "Accent colour",
+    "accentCustom": "Custom colour (hex)",
+    "pureBlack": "Pure black in dark mode"
   },
   "productivity": {
     "stalledProjects": "Projetos Parados",
@@ -1981,7 +1985,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "moreAllDay": "{{count}} more all-day events",
+    "view": "View",
+    "moreViews": "More views",
+    "openDay": "Open day",
+    "noEventsThisDay": "Nothing planned."
   },
   "pages": {
     "notFound": {
@@ -3897,5 +3906,15 @@
     "none": "Nada mais para comparar.",
     "addToday": "Adicionar a hoje",
     "close": "Fechar"
+  },
+  "accent": {
+    "violet": "Violet",
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "teal": "Teal",
+    "green": "Green",
+    "amber": "Amber",
+    "coral": "Coral",
+    "rose": "Rose"
   }
 }

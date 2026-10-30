@@ -124,8 +124,8 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
     }).filter((row) => row.type !== 'section-header');
 
     const itemClass = (isActive: boolean) =>
-        `flex justify-between items-center gap-2 rounded-[8px] py-[4px] pr-[10px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)] ${
-            isActive ? 'bg-gray-100 dark:bg-[oklch(24%_0.015_250)]' : ''
+        `flex justify-between items-center gap-2 rounded-[8px] py-[4px] pr-[10px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+            isActive ? 'bg-gray-100 dark:bg-gray-800' : ''
         }`;
 
     const sectionLabelClass =
@@ -264,7 +264,7 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
                             style={{
                                 paddingLeft: BASE_PADDING_PX + INDENT_PX,
                             }}
-                            className="text-left rounded-[8px] py-[4px] pr-[10px] text-[12.5px] text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-[oklch(24%_0.015_250)] "
+                            className="text-left rounded-[8px] py-[4px] pr-[10px] text-[12.5px] text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-gray-800 "
                         >
                             {t('notes.sidebar.more', '{{count}} more', {
                                 count: row.count,

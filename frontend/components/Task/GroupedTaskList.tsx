@@ -24,6 +24,7 @@ import { Task } from '../../entities/Task';
 import { GroupedTasks } from '../../utils/tasksService';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
+import { toIntlLocale } from '../../utils/intlLocale';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
 import { useCollapsedGroups } from './useCollapsedGroups';
@@ -105,6 +106,41 @@ const SortableTaskGroup: React.FC<{
     );
 };
 
+// One header format for every day column: "Sunday 1 November" in the user's
+// language. The backend's own group name only survives for today/tomorrow,
+// shown as a quiet suffix, and for groups without a date.
+export const dayColumnHeader = (
+    groupName: string,
+    dayTasks: Task[],
+    locale: string
+): { title: string; hint?: string } => {
+    const due = dayTasks.find((task) => !!task.due_date)?.due_date;
+    const match = due ? /^(\d{4})-(\d{2})-(\d{2})/.exec(due) : null;
+    if (!match) return { title: groupName };
+    const date = new Date(
+        Number(match[1]),
+        Number(match[2]) - 1,
+        Number(match[3])
+    );
+    const title = new Intl.DateTimeFormat(locale, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+    }).format(date);
+    const today = new Date();
+    const isRelative =
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const isTomorrow =
+        date.getFullYear() === tomorrow.getFullYear() &&
+        date.getMonth() === tomorrow.getMonth() &&
+        date.getDate() === tomorrow.getDate();
+    return { title, hint: isRelative || isTomorrow ? groupName : undefined };
+};
+
 interface TaskGroup {
     template: Task;
     instances: Task[];
@@ -132,7 +168,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
     searchQuery = '',
     onReorder,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     // Minimal lists let a group header collapse its tasks. The state is kept
     // per list (path and query) and group.
     const isMinimal = useIsMinimal();
@@ -389,13 +425,30 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                     /* Responsive board layout */
                     <div className="pb-4">
                         {/* Mobile: Stack vertically, Desktop: Horizontal board */}
-                        <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full">
+                        <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 w-full">
                             {Object.entries(filteredGroupedTasks).map(
                                 ([groupName, dayTasks]) => {
+                                    const header = dayColumnHeader(
+                                        groupName,
+                                        dayTasks,
+                                        toIntlLocale(i18n?.language)
+                                    );
+                                    const headerLabel = (
+                                        <>
+                                            <span className="first-letter:uppercase">
+                                                {header.title}
+                                            </span>
+                                            {header.hint && (
+                                                <span className="ml-2 text-label-m font-normal text-gray-600 dark:text-gray-300">
+                                                    {header.hint}
+                                                </span>
+                                            )}
+                                        </>
+                                    );
                                     return (
                                         <div
                                             key={groupName}
-                                            className="day-column w-full md:flex-1 md:min-w-64"
+                                            className="day-column w-full xl:flex-1 xl:min-w-64"
                                         >
                                             {/* Day column header */}
                                             <div className="pb-3 mb-4">
@@ -425,10 +478,10 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                                                 }`}
                                                                 aria-hidden="true"
                                                             />
-                                                            {groupName}
+                                                            {headerLabel}
                                                         </button>
                                                     ) : (
-                                                        groupName
+                                                        headerLabel
                                                     )}
                                                 </h3>
                                             </div>

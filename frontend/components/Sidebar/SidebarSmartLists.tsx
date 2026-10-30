@@ -114,15 +114,15 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                         aria-current={row.isActive ? 'page' : undefined}
                         className={`w-full flex items-center gap-[8px] px-[10px] h-[34px] rounded-[8px] text-[14px] transition-colors duration-150 ${
                             row.isActive
-                                ? 'bg-gray-200/70 dark:bg-[oklch(27%_0.02_250)] text-gray-900 dark:text-[oklch(90%_0.01_250)] font-medium'
-                                : 'text-gray-700 dark:text-[oklch(75%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)]'
+                                ? 'bg-gray-200/70 dark:bg-gray-700 text-gray-900 dark:text-[oklch(90%_0.01_250)] font-medium'
+                                : 'text-gray-700 dark:text-[oklch(75%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800'
                         }`}
                     >
                         <span
                             className={`flex-shrink-0 ${
                                 row.isActive
-                                    ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]'
-                                    : 'text-gray-600 dark:text-[oklch(65%_0.006_95)]'
+                                    ? 'text-blue-600 dark:text-blue-300'
+                                    : 'text-gray-600 dark:text-gray-300'
                             }`}
                         >
                             {row.icon}
@@ -131,7 +131,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                             {row.title}
                         </span>
                         {row.showCount && row.count !== undefined && (
-                            <span className="text-[12px] tabular-nums text-gray-500 dark:text-[oklch(60%_0.01_250)]">
+                            <span className="text-[12px] tabular-nums text-gray-500 dark:text-gray-300">
                                 {row.count > 99 ? '99+' : row.count}
                             </span>
                         )}

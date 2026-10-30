@@ -110,9 +110,9 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
     );
 
     const activeClass =
-        'bg-blue-50 dark:bg-[oklch(27%_0.02_250)] text-gray-900 dark:text-[oklch(90%_0.01_250)] font-semibold hover:bg-blue-100 dark:hover:bg-[oklch(27%_0.02_250)]';
+        'bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-[oklch(90%_0.01_250)] font-semibold hover:bg-blue-100 dark:hover:bg-[oklch(27%_0.02_250)]';
     const inactiveClass =
-        'text-gray-700 dark:text-[oklch(75%_0.006_95)] hover:bg-gray-100 dark:hover:bg-[oklch(24%_0.015_250)]';
+        'text-gray-700 dark:text-[oklch(75%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800';
 
     const isActiveLink = (path: string, query?: string): boolean => {
         if (path === '/today') {
@@ -155,7 +155,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             className={`relative flex items-center justify-center h-9 w-9 rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                         >
                             <span
-                                className={`[&>svg]:h-[18px] [&>svg]:w-[18px] ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-600 dark:text-[oklch(65%_0.006_95)]'}`}
+                                className={`[&>svg]:h-[18px] [&>svg]:w-[18px] ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-blue-300' : 'text-gray-600 dark:text-gray-300'}`}
                             >
                                 {link.icon}
                             </span>
@@ -181,7 +181,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                         className={`w-full flex items-center gap-[5px] px-[10px] py-[4px] rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                     >
                         <span
-                            className={`flex-shrink-0 ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-[oklch(68%_0.14_250)]' : 'text-gray-500 dark:text-[oklch(55%_0.006_95)]'}`}
+                            className={`flex-shrink-0 ${isActiveLink(link.path, link.query) ? 'text-blue-600 dark:text-blue-300' : 'text-gray-500 dark:text-gray-300'}`}
                         >
                             {link.icon}
                         </span>
@@ -190,7 +190,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                         </span>
                         {link.path === '/today' && planProgress && (
                             <span
-                                className="text-[12px] text-gray-500 dark:text-[oklch(60%_0.01_250)]"
+                                className="text-[12px] text-gray-500 dark:text-gray-300"
                                 aria-label={t(
                                     'dailyPlan.sidebarProgress',
                                     '{{done}} of {{total}} planned tasks done',
@@ -201,7 +201,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             </span>
                         )}
                         {link.path === '/inbox' && inboxItemsCount > 0 && (
-                            <span className="text-[12px] text-gray-500 dark:text-[oklch(60%_0.01_250)]">
+                            <span className="text-[12px] text-gray-500 dark:text-gray-300">
                                 {inboxItemsCount > 99 ? '99+' : inboxItemsCount}
                             </span>
                         )}
