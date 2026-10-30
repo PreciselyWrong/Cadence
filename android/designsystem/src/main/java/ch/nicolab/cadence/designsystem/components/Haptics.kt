@@ -17,6 +17,15 @@ class CadenceHapticFeedback(private val view: View) {
         view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
     }
 
+    /** Changement de sélection : onglet, segment, navigation. Un cran net, plus léger qu'une confirmation. */
+    fun selection() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_TICK)
+        } else {
+            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+        }
+    }
+
     /** Confirmation franche : validation d'habitude, saisie directe, action principale. */
     fun confirm() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

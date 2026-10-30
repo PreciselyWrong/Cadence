@@ -82,6 +82,12 @@ object Glass {
 
     /** Compteur d'un onglet sélectionné, posé sur le fond primaire. */
     const val CountAlpha = 0.75f
+
+    /** Fond de la bannière de message (snackbar), au-dessus du contenu. */
+    const val SnackbarAlpha = 0.86f
+
+    /** Dégradé sous les barres système : opacité du fond au bord de l'écran. */
+    const val SystemScrimAlpha = 0.94f
 }
 
 /** Tailles tactiles et iconographiques homogènes. */
@@ -116,6 +122,15 @@ object Size {
     val agendaHour = 56.dp
     val agendaGutter = 44.dp
     val agendaDot = 5.dp
+
+    /** En-tête d'écran : même hauteur de ligne de titre partout, réduite au défilement. */
+    val headerRow = 56.dp
+    val headerRowCompact = 48.dp
+    val headerSubtitle = 20.dp
+    val headerCollapse = 32.dp
+
+    /** Carte d'habitude (e07). */
+    val habitCard = 80.dp
 }
 
 /**

@@ -130,7 +130,7 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
                 indication = null,
                 role = Role.Tab,
                 onClick = {
-                    if (!active) haptic.tap()
+                    if (!active) haptic.selection()
                     onClick()
                 },
             )

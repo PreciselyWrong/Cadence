@@ -11,8 +11,8 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import ch.nicolab.cadence.designsystem.components.CollapsingHeaderHost
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +43,7 @@ import ch.nicolab.cadence.tasks.model.SyncStatus
 @Composable
 fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, onOpenSettings: () -> Unit) {
     val viewModel: TasksViewModel = viewModel()
-    val snackbar = remember { SnackbarHostState() }
+    val snackbar = rememberAppSnackbarHostState()
     val captureFocus = remember { FocusRequester() }
     var selectedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
@@ -55,9 +55,8 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbar, Modifier.padding(bottom = navigationClearance())) },
     ) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding)) {
+        CollapsingHeaderHost(Modifier.fillMaxSize().padding(padding)) {
             Column(Modifier.fillMaxSize()) {
                 ScreenHeader(
                     title = stringResource(R.string.tasks_inbox_title),

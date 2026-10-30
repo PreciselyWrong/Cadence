@@ -2,7 +2,6 @@ package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
@@ -14,8 +13,8 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.cadence
 
 /**
- * Interrupteur de Cadence : piste primaire quand il est actif, icône dans le pouce pour
- * rendre l'état lisible sans couleur seule.
+ * Interrupteur de Cadence : piste primaire quand il est actif, coche dans le pouce pour
+ * rendre l'état lisible sans couleur seule ; éteint, le pouce reste nu.
  */
 @Composable
 fun CadenceSwitch(
@@ -46,13 +45,12 @@ fun CadenceSwitch(
             uncheckedBorderColor = palette.outline,
             uncheckedThumbColor = palette.outline,
         ),
-        thumbContent = {
-            Icon(
-                if (checked) Icons.Rounded.Check else Icons.Rounded.Close,
-                null,
-                tint = if (checked) fill else palette.containerHigh,
-                modifier = Modifier.size(Size.iconSm),
-            )
+        thumbContent = if (checked) {
+            {
+                Icon(Icons.Rounded.Check, null, tint = fill, modifier = Modifier.size(Size.iconSm))
+            }
+        } else {
+            null
         },
     )
 }

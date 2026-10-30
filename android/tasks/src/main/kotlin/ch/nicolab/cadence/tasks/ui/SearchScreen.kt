@@ -24,8 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,7 +76,7 @@ fun SearchScreen(
     onOpenHabit: (String) -> Unit,
 ) {
     val viewModel: TasksViewModel = viewModel()
-    val snackbar = remember { SnackbarHostState() }
+    val snackbar = rememberAppSnackbarHostState()
     val focus = remember { FocusRequester() }
     var query by rememberSaveable { mutableStateOf("") }
     var filterIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -215,7 +214,6 @@ fun SearchScreen(
                     }
                 }
             }
-            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = navigationClearance()))
         }
     }
 
