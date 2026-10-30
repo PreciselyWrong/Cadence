@@ -9,6 +9,7 @@ const permissionsService = require('../../services/permissionsService');
 const scopeService = require('../../services/scopeService');
 const { serializeTasks } = require('../tasks/core/serializers');
 const { computeTaskMetrics } = require('../tasks/queries/metrics-computation');
+const { weekStart: weekStartOf } = require('../review/fields');
 const {
     GROUP_ORDER,
     DEFAULT_ORDER,
@@ -371,8 +372,25 @@ async function getCandidates(
     const scopeWhere = await scopeService.taskScopeWhere(
         scopeQuery ? await scopeService.resolveScope(scopeQuery, user.id) : null
     );
-    const [metrics, taggedToday] = await Promise.all([
+    const myVisibleWhere = {
+        [Op.and]: [
+            await permissionsService.ownershipOrPermissionWhere(
+                'task',
+                user.id
+            ),
+            await permissionsService.myWorkWhere(user.id),
+        ],
+    };
+    const weekStart = weekStartOf(
+        moment.tz(timezone).format('YYYY-MM-DD'),
+        user.first_day_of_week ?? 1
+    );
+    const [metrics, funnelTasks, taggedToday] = await Promise.all([
         computeTaskMetrics(user.id, timezone, null, suggestions, scopeWhere),
+        repository.findFunnelTasks(
+            scopeService.withScope(myVisibleWhere, scopeWhere),
+            weekStart
+        ),
         repository.findTasksTaggedToday(
             scopeService.withScope(
                 {
@@ -426,6 +444,13 @@ async function getCandidates(
         ],
         in_progress: started,
         suggested: [
+            // Committed this week or in view: chosen by the user, so only a
+            // later defer-until keeps them back.
+            ...funnelTasks.filter(
+                (task) =>
+                    !task.defer_until ||
+                    new Date(task.defer_until).getTime() <= now
+            ),
             ...metrics.suggested_tasks,
             ...fromProjectDates.filter((task) =>
                 isSuggestible(task, suggestions, now)
@@ -447,7 +472,9 @@ async function getCandidates(
     }
 
     // The cap comes last: keep the first suggestions in the final order.
-    let ranked = orderCandidates(unique, order, suggestions.tieBreak);
+    let ranked = orderCandidates(unique, order, suggestions.tieBreak, {
+        weekStart,
+    });
     const suggestedTotal = unique.suggested.length;
     const shown = new Set(
         ranked

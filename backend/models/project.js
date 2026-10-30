@@ -178,6 +178,11 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // Last deliberate decision about the project in the review.
+            reviewed_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
         },
         {
             tableName: 'projects',

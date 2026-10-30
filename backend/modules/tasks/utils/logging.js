@@ -24,7 +24,24 @@ function captureOldValues(task) {
     };
 }
 
-async function logTaskChanges(task, oldValues, reqBody, tagsData, userId) {
+const timeOf = (value) => {
+    if (!value) return null;
+    const time = new Date(value).getTime();
+    return Number.isNaN(time) ? null : time;
+};
+
+// `options.source` says who wrote the change ('web' for the app, 'api' for
+// an API key, 'import' for a spreadsheet); the review only counts the first
+// two as the user's own postponements.
+async function logTaskChanges(
+    task,
+    oldValues,
+    reqBody,
+    tagsData,
+    userId,
+    options = {}
+) {
+    const { source = 'web', skipDueDate = false } = options;
     try {
         const changes = {};
         const fields = [
@@ -54,16 +71,18 @@ async function logTaskChanges(task, oldValues, reqBody, tagsData, userId) {
             }
         });
 
-        if (reqBody.due_date !== undefined) {
-            const oldDateStr = oldValues.due_date
-                ? oldValues.due_date.toISOString().split('T')[0]
-                : null;
-            const newDateStr = reqBody.due_date || null;
-
-            if (oldDateStr !== newDateStr) {
+        // Compare what is stored before and after, so a save that sends the
+        // same due date again (or only a new time format) logs nothing.
+        if (
+            !skipDueDate &&
+            (reqBody.due_date !== undefined || reqBody.due_time !== undefined)
+        ) {
+            const before = timeOf(oldValues.due_date);
+            const after = timeOf(task.due_date);
+            if (before !== after) {
                 changes.due_date = {
                     oldValue: oldValues.due_date,
-                    newValue: reqBody.due_date,
+                    newValue: task.due_date,
                 };
             }
         }
@@ -83,7 +102,7 @@ async function logTaskChanges(task, oldValues, reqBody, tagsData, userId) {
         }
 
         if (Object.keys(changes).length > 0) {
-            await logTaskUpdate(task.id, userId, changes, { source: 'web' });
+            await logTaskUpdate(task.id, userId, changes, { source });
         }
 
         if (tagsData) {
@@ -102,7 +121,7 @@ async function logTaskChanges(task, oldValues, reqBody, tagsData, userId) {
                     fieldName: 'tags',
                     oldValue: oldValues.tags,
                     newValue: newTags,
-                    metadata: { source: 'web', action: 'tags_update' },
+                    metadata: { source, action: 'tags_update' },
                 });
             }
         }

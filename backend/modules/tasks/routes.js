@@ -52,6 +52,7 @@ const { createSubtasks, updateSubtasks } = require('./operations/subtasks');
 const { requireQuota } = require('../../middleware/entitlements');
 const { handleCompletionStatus } = require('./operations/completion');
 const { captureOldValues, logTaskChanges } = require('./utils/logging');
+const decisionFields = require('../review/fields');
 const { notifyAssignee } = require('./operations/assignment');
 const { destroyTaskRows } = require('./operations/deletion');
 const {
@@ -813,6 +814,16 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
 
         const timezone = getSafeTimezone(req.currentUser.timezone);
         const taskAttributes = buildUpdateAttributes(req.body, task, timezone);
+        try {
+            decisionFields.applyDecisionFields(
+                taskAttributes,
+                req.body,
+                task,
+                req.currentUser
+            );
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
 
         try {
             const finalDeferUntil =
@@ -1049,7 +1060,19 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
         }
 
         await updateTaskTags(task, tagsData, req.currentUser.id);
+        const parked = await decisionFields.applyLater(
+            task,
+            req.body,
+            req.currentUser.id
+        );
         await updateSubtasks(task.id, subtasks, req.currentUser.id);
+        if (parked && req.body.today === undefined) {
+            await dailyPlanService.setTaskOnToday(
+                req.currentUser,
+                task.uid,
+                false
+            );
+        }
         if (typeof req.body.today === 'boolean') {
             await dailyPlanService.setTaskOnToday(
                 req.currentUser,
@@ -1062,7 +1085,13 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
             oldValues,
             req.body,
             tagsData,
-            req.currentUser.id
+            req.currentUser.id,
+            {
+                source: req.authToken ? 'api' : 'web',
+                // Completing a recurring task moves its due date itself;
+                // recordOccurrence logs that.
+                skipDueDate: Boolean(recurringOccurrence?.hasNext),
+            }
         );
 
         const taskWithAssociations = await taskRepository.findById(task.id, {

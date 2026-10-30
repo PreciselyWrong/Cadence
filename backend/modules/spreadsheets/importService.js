@@ -487,7 +487,8 @@ async function afterCommit(user, followUps) {
                     history.oldValues,
                     history.body,
                     history.tags,
-                    user.id
+                    user.id,
+                    { source: 'import' }
                 );
             }
             if (task.assigned_to && task.assigned_to !== previousAssignee) {

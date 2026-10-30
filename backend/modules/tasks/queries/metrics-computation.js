@@ -136,7 +136,8 @@ async function computeSuggestedTasks(
         await keepDue([...nonProjectTasks, ...projectTasks])
     );
 
-    if (combinedTasks.length < 6) {
+    // Plan my day never falls back on #someday: parked ideas stay parked.
+    if (!planning && combinedTasks.length < 6) {
         const usedTaskIds = [
             ...excludedTaskIds,
             ...combinedTasks.map((t) => t.id),

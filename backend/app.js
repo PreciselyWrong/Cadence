@@ -409,6 +409,7 @@ const googleSyncModule = require('./modules/google-sync');
 const taskFeedModule = require('./modules/task-feed');
 const holidaysModule = require('./modules/holidays');
 const focusSessionsModule = require('./modules/focus-sessions');
+const reviewModule = require('./modules/review');
 const authModule = require('./modules/auth');
 const backupModule = require('./modules/backup');
 const featureFlagsModule = require('./modules/feature-flags');
@@ -559,6 +560,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, taskFeedModule.routes);
     app.use(basePath, holidaysModule.routes);
     app.use(basePath, focusSessionsModule.routes);
+    app.use(basePath, reviewModule.routes);
     app.use(basePath, notesModule.routes);
     app.use(basePath, tagsModule.routes);
     app.use(basePath, usersModule.routes);

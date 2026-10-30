@@ -72,6 +72,29 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // Set while the task is "In view": a possibility the user keeps
+            // in sight, not a commitment, a priority or a due date.
+            in_view_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            // First day (user's week start) of the week the user committed
+            // to doing the task in.
+            week_of: {
+                type: DataTypes.DATEONLY,
+                allowNull: true,
+            },
+            // Local day on which the user wants to decide about the task
+            // again. Never a due date: nothing becomes overdue from it.
+            review_on: {
+                type: DataTypes.DATEONLY,
+                allowNull: true,
+            },
+            // Last deliberate decision about the task in the review.
+            reviewed_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
             estimated_minutes: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

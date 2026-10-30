@@ -170,6 +170,27 @@ class DailyPlanRepository {
         });
     }
 
+    // Open tasks the user committed to this week or put in view; they lead
+    // the suggestions whatever the Planning filters say.
+    async findFunnelTasks(visibleWhere, weekStart) {
+        return Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        status: { [Op.notIn]: OPEN_STATUSES_EXCLUDED },
+                        parent_task_id: null,
+                        [Op.or]: [
+                            { week_of: weekStart },
+                            { in_view_at: { [Op.ne]: null } },
+                        ],
+                    },
+                ],
+            },
+            include: getTaskIncludeConfigLight(),
+        });
+    }
+
     async findOpenInboxItems(userId, limit) {
         const where = { user_id: userId, status: 'added' };
         const [items, count] = await Promise.all([

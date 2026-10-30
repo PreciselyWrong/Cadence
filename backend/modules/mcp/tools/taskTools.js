@@ -39,6 +39,7 @@ const permissionsService = require('../../../services/permissionsService');
 const { resolveTagsForTransaction } = require('./tagResolver');
 const relationsService = require('../../tasks/relations/service');
 const dailyPlanService = require('../../daily-plan/service');
+const decisionFields = require('../../review/fields');
 const {
     computeTaskMetrics,
 } = require('../../tasks/queries/metrics-computation');
@@ -713,6 +714,26 @@ function registerTaskTools(server, context, tools) {
             description:
                 'Array of tag names to assign (replaces existing tags)',
         },
+        in_view: {
+            type: 'boolean',
+            description:
+                'Put the task "In view" (a possibility kept in sight, not a commitment) or take it out',
+        },
+        week_of: {
+            type: ['string', 'null'],
+            description:
+                'Commit the task to a week: a date in that week (YYYY-MM-DD), "this_week" or "next_week"; null removes it. Not a due date.',
+        },
+        review_on: {
+            type: ['string', 'null'],
+            description:
+                'Day (YYYY-MM-DD) on which the user wants to decide about the task again; null clears it. Never makes the task overdue.',
+        },
+        later: {
+            type: 'boolean',
+            description:
+                'true parks the task for later (#someday tag, out of view, week and today); false brings it back',
+        },
         ...recurrenceInputSchemaProperties,
     };
 
@@ -911,6 +932,13 @@ function registerTaskTools(server, context, tools) {
                 );
             }
 
+            decisionFields.applyDecisionFields(
+                updates,
+                params,
+                task,
+                context.user
+            );
+
             // Detect recurrence/template changes before applying the update so
             // future recurring instances get regenerated, matching PATCH /api/task/:uid
             await handleRecurrenceUpdate(task, RECURRENCE_FIELDS, params);
@@ -947,6 +975,19 @@ function registerTaskTools(server, context, tools) {
                     task,
                     recurringOccurrence,
                     context.userId
+                );
+            }
+
+            const parked = await decisionFields.applyLater(
+                task,
+                params,
+                context.userId
+            );
+            if (parked && params.today === undefined) {
+                await dailyPlanService.setTaskOnToday(
+                    context.user,
+                    task.uid,
+                    false
                 );
             }
 

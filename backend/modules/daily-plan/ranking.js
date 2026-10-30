@@ -94,8 +94,23 @@ function normalizeOrder(order) {
     ];
 }
 
+// Among suggestions, what the user committed to this week comes first,
+// then what they put in view, before the rules below.
+const funnelRank = (group, task, weekStart) => {
+    if (group !== 'suggested') return 0;
+    if (weekStart && String(task.week_of || '').slice(0, 10) === weekStart) {
+        return 0;
+    }
+    return task.in_view_at ? 1 : 2;
+};
+
 // Returns [{ group, task }] for every task in `groups`, in the order above.
-function orderCandidates(groups, order = DEFAULT_ORDER, tieBreak) {
+function orderCandidates(
+    groups,
+    order = DEFAULT_ORDER,
+    tieBreak,
+    { weekStart = null } = {}
+) {
     const buckets = normalizeOrder(order);
     const groupRank = (group) =>
         buckets.findIndex((key) => key.startsWith(`${group}:`));
@@ -105,6 +120,8 @@ function orderCandidates(groups, order = DEFAULT_ORDER, tieBreak) {
     return entries.sort(
         (a, b) =>
             groupRank(a.group) - groupRank(b.group) ||
+            funnelRank(a.group, a.task, weekStart) -
+                funnelRank(b.group, b.task, weekStart) ||
             priorityRank(b.task.priority) - priorityRank(a.task.priority) ||
             buckets.indexOf(bucketOf(a.group, a.task)) -
                 buckets.indexOf(bucketOf(b.group, b.task)) ||
