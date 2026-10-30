@@ -26,7 +26,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `domain/` - calculs temporels et règles métier Kotlin sans Android.
 `data/` - persistance locale, préférences et sauvegardes.
 `tasks/` - tâches Tududi : base Room `tududi.db`, synchronisation hors ligne (`/api/v1/sync`, file d'envoi, horloges HLC), écrans, widgets Glance, rappels. Contrat : `TaskRepository`, `ServerConnection`, `TasksGraph`.
-`app/` - UI Compose, widget Glance, rappels et assemblage.
+`designsystem/` - thème et composants Compose partagés par `app/` et `tasks/` : jetons, typographie, palette, accent, apparence, navigation.
+`app/` - UI Compose, widget Glance, rappels et assemblage (`habits/`, `bilan/`, `agenda/`, `settings/`).
 `docs/REDESIGN.md` + `docs/redesign/*.png` - refonte UI/UX 2026-10 (maquettes OpenPencil) : à suivre pour tout écran ou widget.
 
 ## Décisions
@@ -47,10 +48,11 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Les plages de groupes peuvent se chevaucher et traverser minuit; une plage dont la fin égale le début couvre l'horloge entière.
 - Plus Jakarta Sans est embarquée localement; aucune police n'est téléchargée à l'exécution.
 - `app-release/version.json` est l'unique source de version lue par le build Android.
-- L'interface suit un design system unique - `ui/theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées), `ui/theme/Color.kt` (palette Cadence) et `ui/components/` (surfaces, contrôles, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
-- Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface, jamais d'une bordure.
-- La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`ui/components/Facet.kt`).
-- La navigation est une capsule sombre flottante à cinq cibles égales ; la destination active porte une pastille colorée, son icône et un libellé court.
+- L'interface suit un design system unique, le module `:designsystem` - `theme/Tokens.kt` (espacements, rayons, élévations, tailles, durées, verre), `theme/Color.kt` (palette de `docs/REDESIGN.md`, clair, sombre, noir pur), `theme/Accent.kt` (accent dérivé d'une couleur source), `theme/Theme.kt` (`CadenceTheme(appearance)` alimente la palette Cadence et le `colorScheme` Material 3, que `tasks/` lit) et `components/` (surfaces, contrôles, en-têtes, onglets, lignes, badges, cases, navigation, modal). Aucune valeur d'espacement ou de couleur littérale dans un écran.
+- Trois niveaux de surface au maximum : fond calme, surface fonctionnelle, élément interactif accentué. La séparation vient du contraste de surface; seuls les éléments en verre (boutons d'en-tête, pastilles, barre de navigation) portent un liseré `outline` à 35 %.
+- La signature visuelle est l'opposition extérieur doux / intérieur structuré : les surfaces sont largement arrondies, la progression d'une habitude est tracée sur une facette hexagonale (`designsystem/.../components/Facet.kt`), réservée aux habitudes.
+- La navigation est une capsule translucide flottante (flou Haze sous Android 12+, teinte seule avant) à cinq cibles égales : Boîte, Tâches (ouverte au lancement), Agenda, Habitudes, Bilan. Chaque cible montre son icône et son libellé; l'active porte une pastille `primaryContainer`. Réglages est un écran poussé, ouvert par le bouton engrenage des en-têtes.
+- Une rubrique de Réglages s'ajoute par une seule entrée de `settings/SettingsRegistry.kt` (`settingsPages`) : ligne, sous-titre et contenu de sa sous-page.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Hors alcool, les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
 - Le profil `ALCOHOL` conserve une consommation unique par date civile, avec un nombre entier facultatif de verres standards. `AlcoholStatsCalculator` dérive les jours terminés sans consommation notée, les séries, la fréquence sur 90 jours et l’objectif personnel d’un jour sans alcool par verre. Tant qu’un objectif court encore, une nouvelle quantité connue ajoute ses jours à l’échéance existante; une correction recalcule toute la dette. Aucun calcul n’est présenté comme une alcoolémie ou une aptitude à conduire.

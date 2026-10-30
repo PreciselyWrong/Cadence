@@ -2,7 +2,9 @@
 <resources>
     <string name="tasks_tab_today">Aujourd\'hui</string>
     <string name="tasks_tab_upcoming">À venir</string>
-    <string name="tasks_tab_inbox">Boîte de réception</string>
+    <string name="tasks_title">Tâches</string>
+    <string name="tasks_inbox_title">Boîte</string>
+    <string name="tasks_open_settings">Réglages</string>
     <string name="tasks_tab_projects">Projets</string>
     <string name="tasks_fab_add">Ajouter une tâche</string>
     <string name="tasks_error_generic">Une erreur est survenue.</string>
@@ -30,6 +32,10 @@
     <string name="tasks_projects_empty">Aucun projet pour l\'instant.</string>
     <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>
     <string name="tasks_back">Retour</string>
+    <plurals name="tasks_overdue_count">
+        <item quantity="one">%d en retard</item>
+        <item quantity="other">%d en retard</item>
+    </plurals>
     <plurals name="tasks_open_count">
         <item quantity="one">%d tâche ouverte</item>
         <item quantity="other">%d tâches ouvertes</item>

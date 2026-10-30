@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.SectionHeader
+import ch.nicolab.cadence.designsystem.components.SectionTone
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
 
@@ -30,24 +32,32 @@ internal fun TodayTab(
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
     modifier: Modifier = Modifier,
+    routineStrip: @Composable () -> Unit = {},
 ) {
     val state by viewModel.today.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
     var completedExpanded by rememberSaveable { mutableStateOf(false) }
 
-    LazyColumn(modifier = modifier, contentPadding = TasksListPadding) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         if (state.overdue.isEmpty() && state.today.isEmpty()) {
             item { EmptyState(R.string.tasks_today_empty) }
         }
         if (state.overdue.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.tasks_section_overdue), MaterialTheme.colorScheme.error) }
+            item {
+                SectionHeader(
+                    title = stringResource(R.string.tasks_section_overdue),
+                    count = state.overdue.size,
+                    tone = SectionTone.Error,
+                )
+            }
             taskRows(state.overdue, projectNames, moment, viewModel, onOpen)
         }
         if (state.today.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.tasks_section_today)) }
+            item { SectionHeader(title = stringResource(R.string.tasks_section_today), count = state.today.size) }
             taskRows(state.today, projectNames, moment, viewModel, onOpen)
         }
+        item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {
             item {
                 Row(

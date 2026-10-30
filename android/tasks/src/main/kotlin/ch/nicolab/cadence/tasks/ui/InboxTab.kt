@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -63,7 +64,7 @@ internal fun InboxTab(
         }
     }
 
-    LazyColumn(modifier = modifier, contentPadding = TasksListPadding) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item(key = "capture") {
             OutlinedTextField(
                 value = capture,
@@ -86,7 +87,7 @@ internal fun InboxTab(
             )
         }
         if (unsorted.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.tasks_section_unsorted)) }
+            item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
             taskRows(unsorted, projectNames, moment, viewModel, onOpen)
         }
     }

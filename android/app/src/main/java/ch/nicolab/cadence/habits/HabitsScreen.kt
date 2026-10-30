@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,8 +13,6 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
-import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.domain.HabitGroup
@@ -23,6 +20,7 @@ import ch.nicolab.cadence.ui.ScreenList
 
 @Composable
 internal fun HabitsScreen(
+    header: @Composable () -> Unit,
     habits: List<HabitCardState>,
     groups: List<HabitGroup>,
     selectedGroupId: String?,
@@ -37,11 +35,7 @@ internal fun HabitsScreen(
     val populatedGroups = remember(groups, habits) {
         groups.filter { g -> habits.any { it.stored.groupId == g.id } }
     }
-    ScreenList(
-        context = stringResource(R.string.habits_subtitle),
-        title = stringResource(R.string.habits_title),
-        action = { RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), style = HeaderButtonStyle.Filled, onClick = create) },
-    ) {
+    ScreenList(header = header) {
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (active.isEmpty() && archived.isEmpty() && selectedGroupId != null) {
             item {

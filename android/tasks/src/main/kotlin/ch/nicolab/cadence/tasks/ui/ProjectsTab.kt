@@ -34,7 +34,7 @@ internal fun ProjectsTab(
 ) {
     val rows by viewModel.projectRows.collectAsStateWithLifecycle()
 
-    LazyColumn(modifier = modifier, contentPadding = TasksListPadding) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         if (rows.isEmpty()) {
             item { EmptyState(R.string.tasks_projects_empty) }
         }
@@ -79,7 +79,7 @@ internal fun ProjectTasksPane(
     val projectNames = rememberProjectNames(viewModel)
     val projectName = projects.firstOrNull { it.uid == projectUid }?.name.orEmpty()
 
-    LazyColumn(modifier = modifier, contentPadding = TasksListPadding) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) {

@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.theme.Elevation
 import ch.nicolab.cadence.designsystem.theme.Motion
@@ -176,9 +179,17 @@ fun EmptyState(
     }
 }
 
+/**
+ * Hauteur verticale occupée par la barre de navigation flottante, inset système inclus.
+ * Le contenu qui défile dessous s'y arrête pour rester atteignable.
+ */
+@Composable
+fun navigationClearance(): Dp =
+    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Size.navBar + Space.sm
+
 /** Espace réservé sous le contenu pour que la navigation flottante ne masque rien. */
 @Composable
-fun NavigationSpacer() = Spacer(Modifier.height(Size.navBar + Space.sm + Space.xxl).navigationBarsPadding())
+fun NavigationSpacer() = Spacer(Modifier.height(navigationClearance() + Space.lg))
 
 @Composable
 internal fun HorizontalGap(width: androidx.compose.ui.unit.Dp) = Spacer(Modifier.width(width))

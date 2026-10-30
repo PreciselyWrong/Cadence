@@ -2,22 +2,28 @@ package ch.nicolab.cadence
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Analytics
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.filled.AutoGraph
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Hexagon
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.outlined.AutoGraph
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material.icons.outlined.TrackChanges
+import androidx.compose.material.icons.outlined.Hexagon
+import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,19 +43,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ch.nicolab.cadence.bilan.StatsScreen
-import ch.nicolab.cadence.bilan.WeekScreen
+import ch.nicolab.cadence.agenda.AgendaScreen
+import ch.nicolab.cadence.bilan.BilanScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.designsystem.components.CadenceNavigation
 import ch.nicolab.cadence.designsystem.components.CadenceScreen
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.NavDestination
-import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.backdropSource
+import ch.nicolab.cadence.designsystem.components.navigationClearance
+import ch.nicolab.cadence.designsystem.components.rememberBackdrop
 import ch.nicolab.cadence.designsystem.theme.Radius
-import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.AbstinenceProfile
@@ -58,25 +65,25 @@ import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.habits.EntryEditor
 import ch.nicolab.cadence.habits.GroupPickerSheet
 import ch.nicolab.cadence.habits.HabitOptionsSheet
-import ch.nicolab.cadence.habits.HabitsScreen
-import ch.nicolab.cadence.habits.HabitsTodayScreen
+import ch.nicolab.cadence.habits.HabitsTab
 import ch.nicolab.cadence.habits.QuickSheet
 import ch.nicolab.cadence.habits.habitTint
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectRulesSheet
+import ch.nicolab.cadence.settings.SettingsDeps
 import ch.nicolab.cadence.settings.SettingsScreen
+import ch.nicolab.cadence.tasks.ui.InboxScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.launch
 
-private enum class Tab(val label: Int, val icon: ImageVector) {
-    TASKS(R.string.tab_tasks, Icons.Outlined.TaskAlt),
-    TODAY(R.string.tab_today, Icons.Outlined.TrackChanges),
-    WEEK(R.string.tab_week, Icons.Outlined.DateRange),
-    HABITS(R.string.tab_habits, Icons.Outlined.Check),
-    STATS(R.string.tab_stats, Icons.Outlined.Analytics),
-    SETTINGS(R.string.tab_settings, Icons.Outlined.Settings),
+private enum class Tab(@param:StringRes val label: Int, val icon: ImageVector, val selectedIcon: ImageVector) {
+    INBOX(R.string.tab_inbox, Icons.Outlined.Inbox, Icons.Filled.Inbox),
+    TASKS(R.string.tab_tasks, Icons.Outlined.Checklist, Icons.Filled.Checklist),
+    AGENDA(R.string.tab_agenda, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
+    HABITS(R.string.tab_habits, Icons.Outlined.Hexagon, Icons.Filled.Hexagon),
+    BILAN(R.string.tab_bilan, Icons.Outlined.AutoGraph, Icons.Filled.AutoGraph),
 }
 
 @Composable
@@ -89,6 +96,16 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
     val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableStateOf(Tab.TASKS) }
+    var settingsOpen by rememberSaveable { mutableStateOf(false) }
+    BackHandler(enabled = settingsOpen) { settingsOpen = false }
+    // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
+    androidx.compose.runtime.LaunchedEffect(openTaskUid) {
+        if (openTaskUid != null) {
+            tab = Tab.TASKS
+            settingsOpen = false
+        }
+    }
+    val backdrop = rememberBackdrop()
     var editorId by rememberSaveable { mutableStateOf<String?>(null) }
     val editor = habits.firstOrNull { it.stored.id == editorId }
     var creating by rememberSaveable { mutableStateOf(false) }
@@ -139,19 +156,52 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
             viewModel.importBackup(content, { backupMessage = importedMessage }, { backupMessage = it })
         }
     }
-    val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon) }
+    val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon, it.selectedIcon) }
+    val settingsDeps = SettingsDeps(
+        groups = groups,
+        habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
+        saveGroup = viewModel::saveGroup,
+        addGroup = { viewModel.addGroup(it, 8 * 60, 12 * 60) },
+        deleteGroup = viewModel::deleteGroup,
+        moveGroup = viewModel::moveGroup,
+        startTravel = { travelling = true },
+        export = { exportLauncher.launch("cadence-backup.json") },
+        import = { importLauncher.launch(arrayOf("application/json")) },
+        message = backupMessage,
+        healthConnectState = healthConnectState,
+        hasDurationHabits = habits.any { it.stored.active && !it.stored.archived && it.stored.goal.goalType == GoalType.DURATION },
+        connectHealth = { healthConnectPermission.launch(HealthConnectGateway.permissions) },
+        syncHealth = viewModel::syncHealthConnect,
+        setHealthSyncEnabled = viewModel::setHealthConnectSyncEnabled,
+        manageHealthAccess = { runCatching { context.startActivity(viewModel.healthConnectManageIntent()) } },
+        configureHealth = { healthConnectRulesOpen = true },
+    )
 
     CadenceScreen {
-        Crossfade(tab, label = "tab") { current ->
+        Crossfade(
+            targetState = if (settingsOpen) null else tab,
+            modifier = Modifier.fillMaxSize().backdropSource(backdrop),
+            label = "screen",
+        ) { current ->
             when (current) {
+                null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
+                Tab.INBOX -> InboxScreen(onOpenSettings = { settingsOpen = true })
                 Tab.TASKS -> TasksScreen(
-                    Modifier.navigationBarsPadding().padding(bottom = Size.navBar + Space.xl),
                     openTaskUid = openTaskUid,
+                    onOpenSettings = { settingsOpen = true },
                 )
-                Tab.TODAY -> HabitsTodayScreen(
-                    habits, groups, groupFilter, { groupFilter = it },
-                    { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                    { options = it }, { choosingCreation = true }, timers, busy,
+                Tab.AGENDA -> AgendaScreen()
+                Tab.HABITS -> HabitsTab(
+                    habits = habits,
+                    groups = groups,
+                    selectedGroupId = groupFilter,
+                    onSelectGroup = { groupFilter = it },
+                    quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                    options = { options = it },
+                    create = { choosingCreation = true },
+                    openSettings = { settingsOpen = true },
+                    timers = timers,
+                    busy = busy,
                     direct = { item -> viewModel.directAction(item) { receipt ->
                         snackbar.currentSnackbarData?.dismiss()
                         scope.launch {
@@ -167,39 +217,19 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
                     resume = viewModel::dismissReturn,
                     edit = { viewModel.clearSaveError(); editorId = it.stored.id },
                 )
-                Tab.WEEK -> WeekScreen(habits, { viewModel.clearSaveError(); quickHabitId = it.stored.id }, { options = it })
-                Tab.HABITS -> HabitsScreen(habits, groups, groupFilter, { groupFilter = it }, { choosingCreation = true }, { options = it }, { viewModel.clearSaveError(); quickHabitId = it.stored.id })
-                Tab.STATS -> StatsScreen(
+                Tab.BILAN -> BilanScreen(
                     habits = habits,
-                    open = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                    quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                    options = { options = it },
                     onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
-                )
-                Tab.SETTINGS -> SettingsScreen(
-                    groups = groups,
-                    habitCountByGroup = habits.groupingBy { it.stored.groupId }.eachCount(),
-                    saveGroup = viewModel::saveGroup,
-                    addGroup = { viewModel.addGroup(it, 8 * 60, 12 * 60) },
-                    deleteGroup = viewModel::deleteGroup,
-                    moveGroup = viewModel::moveGroup,
-                    startTravel = { travelling = true },
-                    export = { exportLauncher.launch("cadence-backup.json") },
-                    import = { importLauncher.launch(arrayOf("application/json")) },
-                    message = backupMessage,
-                    healthConnectState = healthConnectState,
-                    hasDurationHabits = habits.any { it.stored.active && !it.stored.archived && it.stored.goal.goalType == GoalType.DURATION },
-                    connectHealth = { healthConnectPermission.launch(HealthConnectGateway.permissions) },
-                    syncHealth = viewModel::syncHealthConnect,
-                    setHealthSyncEnabled = viewModel::setHealthConnectSyncEnabled,
-                    manageHealthAccess = { runCatching { context.startActivity(viewModel.healthConnectManageIntent()) } },
-                    configureHealth = { healthConnectRulesOpen = true },
                 )
             }
         }
-        CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter)) { index -> tab = Tab.entries[index] }
+        if (!settingsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
         androidx.compose.material3.SnackbarHost(
             snackbar,
-            Modifier.align(Alignment.BottomCenter).navigationBarsPadding()
-                .padding(start = Space.gutter, end = Space.gutter, bottom = Size.navBar + Space.xl),
+            Modifier.align(Alignment.BottomCenter)
+                .padding(start = Space.gutter, end = Space.gutter, bottom = navigationClearance() + Space.lg),
         )
     }
 

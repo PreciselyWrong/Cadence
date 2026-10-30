@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Edit
@@ -44,8 +43,6 @@ import ch.nicolab.cadence.abstinenceStatus
 import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
-import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
@@ -63,15 +60,13 @@ import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.TodayPresentation
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.ScreenList
-import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlinx.coroutines.delay
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 internal fun HabitsTodayScreen(
+    header: @Composable () -> Unit,
     habits: List<HabitCardState>,
     groups: List<HabitGroup>,
     selectedGroupId: String?,
@@ -110,20 +105,11 @@ internal fun HabitsTodayScreen(
     val trackers = active.filter { it.stored.goal.isTracker && it.evaluation.isPlannedForDate && !it.evaluation.isPaused }
     val abstinences = active.filter { it.stored.goal.isAbstinence }
     val toComplete = remember(active, timers) { ToCompleteItem.resolve(active, timers) }
-    val todayEyebrow = remember {
-        val now = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
-        now.format(formatter).replaceFirstChar { it.uppercase() }
-    }
     val populatedGroups = remember(groups, habits) {
         groups.filter { g -> habits.any { it.stored.groupId == g.id && !it.stored.archived } }
     }
 
-    ScreenList(
-        context = todayEyebrow,
-        title = stringResource(R.string.today_title),
-        action = { RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), style = HeaderButtonStyle.Filled, onClick = create) },
-    ) {
+    ScreenList(header = header) {
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (offerReturn) item {
             Column(Modifier.fillMaxWidth().padding(vertical = Space.md), verticalArrangement = Arrangement.spacedBy(Space.sm)) {

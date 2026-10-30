@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
@@ -37,7 +38,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
-import ch.nicolab.cadence.AlcoholStatisticsSheet
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.HabitInsightsPanel
 import ch.nicolab.cadence.R
@@ -53,7 +53,6 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
-import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.HabitEntry
@@ -65,7 +64,6 @@ import ch.nicolab.cadence.habits.EntryRow
 import ch.nicolab.cadence.habits.habitTint
 import ch.nicolab.cadence.toStatisticsPulse
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.ScreenList
 import ch.nicolab.cadence.ui.components.ActivityCalendar
 import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
@@ -76,118 +74,104 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-internal fun StatsScreen(
+/**
+ * Statistiques par habitude : aperçu regroupé par nature, puis la fiche détaillée ouverte
+ * par [open]. Les fiches elles-mêmes sont rendues par [BilanScreen].
+ */
+internal fun LazyListScope.statisticsItems(
     habits: List<HabitCardState>,
     open: (HabitCardState) -> Unit,
-    onCorrect: (HabitEntry) -> Unit,
 ) {
     val visible = habits.filterNot { it.stored.archived }
     val archived = habits.filter { it.stored.archived }
     val regular = visible.filter { !it.stored.goal.isAbstinence && !it.stored.goal.isTracker }
     val trackers = visible.filter { it.stored.goal.isTracker }
     val abstinences = visible.filter { it.stored.goal.isAbstinence }
-    var detailId by rememberSaveable { mutableStateOf<String?>(null) }
-    var alcoholDetailId by rememberSaveable { mutableStateOf<String?>(null) }
-    var abstinenceDetailId by rememberSaveable { mutableStateOf<String?>(null) }
-    ScreenList(context = stringResource(R.string.habit_stats_subtitle), title = stringResource(R.string.tab_stats)) {
-        if (visible.isEmpty() && archived.isEmpty()) item {
-            EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
+    if (visible.isEmpty() && archived.isEmpty()) item {
+        EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
+    }
+    if (regular.isNotEmpty()) {
+        item { SectionHeader(stringResource(R.string.today_regular_section)) }
+        items(regular, key = { it.stored.id }) { item ->
+            HabitStatisticsOverview(item) { open(item) }
         }
-        if (regular.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.today_regular_section)) }
-            items(regular, key = { it.stored.id }) { item ->
-                HabitStatisticsOverview(item) { detailId = item.stored.id }
-            }
+    }
+    if (trackers.isNotEmpty()) {
+        item { SectionHeader(stringResource(R.string.today_activities_section)) }
+        items(trackers, key = { it.stored.id }) { item ->
+            TrackerStatisticsOverview(item) { open(item) }
         }
-        if (trackers.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.today_activities_section)) }
-            items(trackers, key = { it.stored.id }) { item ->
-                TrackerStatisticsOverview(item) { detailId = item.stored.id }
-            }
+    }
+    if (abstinences.isNotEmpty()) {
+        item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
+        items(abstinences, key = { it.stored.id }) { item ->
+            AbstinenceStatisticsOverview(item) { open(item) }
         }
-        if (abstinences.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
-            items(abstinences, key = { it.stored.id }) { item ->
-                AbstinenceStatisticsOverview(item) {
-                    if (item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL) alcoholDetailId = item.stored.id
-                    else abstinenceDetailId = item.stored.id
-                }
-            }
-        }
-        if (archived.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.habits_archived_section)) }
-            items(archived, key = { "stats-archived-${it.stored.id}" }) { item ->
-                Panel(onClick = {
-                    when {
-                        item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL -> alcoholDetailId = item.stored.id
-                        item.stored.goal.isAbstinence -> abstinenceDetailId = item.stored.id
-                        else -> detailId = item.stored.id
-                    }
-                }) {
-                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
-                    Text(stringResource(R.string.status_archived), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
-                }
+    }
+    if (archived.isNotEmpty()) {
+        item { SectionHeader(stringResource(R.string.habits_archived_section)) }
+        items(archived, key = { "stats-archived-${it.stored.id}" }) { item ->
+            Panel(onClick = { open(item) }) {
+                Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
+                Text(stringResource(R.string.status_archived), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }
         }
     }
-    (regular + trackers + archived.filterNot { it.stored.goal.isAbstinence }).firstOrNull { it.stored.id == detailId }?.let { item ->
-        val tint = habitTint(item)
-        val isTracker = item.stored.goal.isTracker
-        val progress = if (isTracker) 0f else (item.statistics?.successRatePercent ?: 0) / 100f
-        CadenceSheet(
-            title = item.stored.name,
-            subtitle = stringResource(if (isTracker) R.string.tracker_stats_detail_subtitle else R.string.habit_stats_detail_subtitle),
-            dismiss = { detailId = null },
-            modifier = Modifier.fillMaxHeight(0.94f),
-            leading = {
-                HabitFacet(
-                    icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
-                    label = null,
-                    progress = progress,
-                    tint = tint,
-                    trackColor = cadence.containerHigh,
-                    size = Size.touch,
-                )
-            },
+}
+
+/** Fiche détaillée d'une habitude ou d'un suivi : chiffres, calendrier, saisies récentes. */
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+internal fun HabitStatisticsDetailSheet(
+    item: HabitCardState,
+    onCorrect: (HabitEntry) -> Unit,
+    dismiss: () -> Unit,
+) {
+    val tint = habitTint(item)
+    val isTracker = item.stored.goal.isTracker
+    val progress = if (isTracker) 0f else (item.statistics?.successRatePercent ?: 0) / 100f
+    CadenceSheet(
+        title = item.stored.name,
+        subtitle = stringResource(if (isTracker) R.string.tracker_stats_detail_subtitle else R.string.habit_stats_detail_subtitle),
+        dismiss = dismiss,
+        modifier = Modifier.fillMaxHeight(0.94f),
+        leading = {
+            HabitFacet(
+                icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
+                label = null,
+                progress = progress,
+                tint = tint,
+                trackColor = cadence.containerHigh,
+                size = Size.touch,
+            )
+        },
+    ) {
+        LazyColumn(
+            Modifier.fillMaxWidth().weight(1f),
+            verticalArrangement = Arrangement.spacedBy(Space.lg),
         ) {
-            LazyColumn(
-                Modifier.fillMaxWidth().weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Space.lg),
-            ) {
-                if (!isTracker) {
-                    item { item.statistics?.let { HabitStatisticsHero(it, item.streak, tint) } }
-                } else {
-                    item { item.activityStats?.let { TrackerStatisticsHero(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
-                }
-                if (!isTracker) {
-                    item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
-                }
-                item { Hairline() }
-                if (isTracker) item { TrackerActivityCalendar(item) }
-                else item { item.statistics?.let { StatisticsCalendar(it.calendarDays) } }
-                if (!item.stored.goal.isLimit && !isTracker) {
-                    item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
-                }
-                item { Hairline() }
-                item { Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface) }
-                if (item.recentEntries.isEmpty()) item {
-                    Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
-                }
-                items(item.recentEntries, key = { "entry-${it.id}" }) { entry ->
-                    EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
-                }
+            if (!isTracker) {
+                item { item.statistics?.let { HabitStatisticsHero(it, item.streak, tint) } }
+            } else {
+                item { item.activityStats?.let { TrackerStatisticsHero(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
             }
-        }
-    }
-    (abstinences + archived).firstOrNull { it.stored.id == alcoholDetailId }?.let { item ->
-        AlcoholStatisticsSheet(item) { alcoholDetailId = null }
-    }
-    (abstinences + archived).firstOrNull { it.stored.id == abstinenceDetailId }?.let { item ->
-        AbstinenceStatisticsSheet(item, { abstinenceDetailId = null }, onCorrect = onCorrect) {
-            abstinenceDetailId = null
-            open(item)
+            if (!isTracker) {
+                item { item.activityStats?.let { HabitActivityNumbers(it, item.stored.goal.goalType, item.stored.goal.unit, tint) } }
+            }
+            item { Hairline() }
+            if (isTracker) item { TrackerActivityCalendar(item) }
+            else item { item.statistics?.let { StatisticsCalendar(it.calendarDays) } }
+            if (!item.stored.goal.isLimit && !isTracker) {
+                item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
+            }
+            item { Hairline() }
+            item { Text(stringResource(R.string.entries_section), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface) }
+            if (item.recentEntries.isEmpty()) item {
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+            }
+            items(item.recentEntries, key = { "entry-${it.id}" }) { entry ->
+                EntryRow(entry, item.stored.goal.goalType, item.stored.goal.unit) { onCorrect(entry) }
+            }
         }
     }
 }

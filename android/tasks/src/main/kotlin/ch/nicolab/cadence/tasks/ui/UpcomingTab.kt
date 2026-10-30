@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
 
@@ -19,12 +20,12 @@ internal fun UpcomingTab(
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
 
-    LazyColumn(modifier = modifier, contentPadding = TasksListPadding) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         if (upcoming.isEmpty()) {
             item { EmptyState(R.string.tasks_upcoming_empty) }
         }
         upcoming.forEach { (date, tasks) ->
-            item(key = "day-$date") { SectionHeader(dayLabel(date, moment.today)) }
+            item(key = "day-$date") { SectionHeader(title = dayLabel(date, moment.today)) }
             taskRows(tasks, projectNames, moment, viewModel, onOpen)
         }
     }

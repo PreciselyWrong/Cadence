@@ -85,7 +85,7 @@ fun CadenceNavigation(
             .then(surface)
             .border(Size.hairline, palette.glassBorder, Radius.Pill)
             .height(Size.navBar)
-            .padding(horizontal = Space.sm),
+            .padding(horizontal = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -118,7 +118,6 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
     )
     Column(
         modifier
-            .padding(horizontal = Space.xs)
             .height(Size.navItem)
             .graphicsLayer {
                 scaleX = scale
