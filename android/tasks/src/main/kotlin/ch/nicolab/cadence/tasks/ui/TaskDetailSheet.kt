@@ -2,48 +2,111 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.outlined.SkipNext
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import ch.nicolab.cadence.designsystem.components.BadgeTone
+import ch.nicolab.cadence.designsystem.components.CadenceBadge
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.SegmentedTabs
+import ch.nicolab.cadence.designsystem.theme.Glass
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.EstimateFormat
+import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
-import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.model.TaskPriority
+import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
-/** Fiche d'une tâche : modification, actions et suppression. Enregistrer applique les changements. */
+private const val AUTOSAVE_DELAY_MS = 700L
+private const val MAX_TAG_BADGES = 2
+private const val NO_PRIORITY = -1
+
+private enum class Picker { Dates, Repeat, Estimate, Priority, Status, Tags, Project, Actions, Focus }
+
+private enum class DateTab { Start, Due }
+
+private val editableStatuses = listOf(
+    TaskStatus.NOT_STARTED,
+    TaskStatus.IN_PROGRESS,
+    TaskStatus.PLANNED,
+    TaskStatus.WAITING,
+)
+
+/** Dernier titre et dernière note envoyés : évite de réécrire deux fois le même texte (frappe puis fermeture). */
+private class SentText(var name: String, var note: String)
+
+/**
+ * Fiche d'une tâche. Tout s'enregistre au fil des gestes : chaque sélecteur écrit son champ dès
+ * qu'on choisit, le titre et la note partent après une courte pause et à la fermeture.
+ */
 @Composable
 internal fun TaskDetailSheet(
     taskUid: String,
@@ -52,179 +115,229 @@ internal fun TaskDetailSheet(
 ) {
     val task by viewModel.observeTask(taskUid).collectAsStateWithLifecycle(initialValue = null)
     val current = task ?: return
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
-    val zone = ZoneId.systemDefault()
-    val edit = remember(current.uid) { TaskEditState(current, zone) }
-    val scope = rememberCoroutineScope()
-    val genericError = stringResource(R.string.tasks_error_generic)
-    var saving by remember { mutableStateOf(false) }
-    var saveError by remember { mutableStateOf<String?>(null) }
+    val zone = moment.zone
+    val today = moment.today
+    val palette = cadence
+
+    var title by remember(current.uid) { mutableStateOf(current.name) }
+    var note by remember(current.uid) { mutableStateOf(current.note.orEmpty()) }
+    val sent = remember(current.uid) { SentText(current.name, current.note.orEmpty()) }
+    val latest by rememberUpdatedState(current)
+    val flushText = {
+        val baseline = latest.copy(name = sent.name, note = sent.note)
+        val change = TaskEdits.text(baseline, title, note)
+        if (change != TaskChange()) {
+            change.name?.let { sent.name = it }
+            change.note?.let { sent.note = it }
+            viewModel.update(latest.uid, change)
+        }
+    }
+    LaunchedEffect(title, note) {
+        delay(AUTOSAVE_DELAY_MS)
+        flushText()
+    }
+    DisposableEffect(current.uid) { onDispose { flushText() } }
+    val close = {
+        flushText()
+        onDismiss()
+    }
+
+    var picker by remember { mutableStateOf<Picker?>(null) }
+    var dateTab by remember { mutableStateOf(DateTab.Due) }
     var confirmDelete by remember { mutableStateOf(false) }
-    var pickingDate by remember { mutableStateOf(false) }
-    var pickingTime by remember { mutableStateOf(false) }
-    var pickingStartDate by remember { mutableStateOf(false) }
-    var pickingStartTime by remember { mutableStateOf(false) }
-    var focusOpen by remember { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
     LaunchedEffect(hasReminder) {
         if (hasReminder) notifications.request()
     }
 
-    // La fiche ne se ferme qu'après l'écriture : en cas d'échec, les modifications restent à l'écran.
-    val save = {
-        if (!saving) {
-            val result = edit.result()
-            saving = true
-            saveError = null
-            scope.launch {
-                try {
-                    if (result.change != TaskChange()) viewModel.saveChange(current.uid, result.change)
-                    result.moveDate?.let { viewModel.askRecurringMove(current.uid, it) }
-                    onDismiss()
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    saveError = e.message ?: genericError
-                    saving = false
-                }
-            }
-        }
+    val dueTime = current.dueDate?.takeIf { current.dueHasTime }?.let { instantTime(it, zone) }
+    val startTime = current.startDate?.takeIf { current.startHasTime }?.let { instantTime(it, zone) }
+    val projectColors = rememberProjectColors(viewModel)
+    val openDates = { tab: DateTab ->
+        dateTab = tab
+        picker = Picker.Dates
     }
 
     ModalBottomSheet(
-        onDismissRequest = { if (!saving) onDismiss() },
+        onDismissRequest = close,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = palette.background,
+        contentColor = palette.onSurface,
+        scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
+        dragHandle = null,
     ) {
         Column(
-            modifier = Modifier
+            Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .fillMaxHeight()
+                .navigationBarsPadding()
+                .imePadding(),
         ) {
-            OutlinedTextField(
-                value = edit.name,
-                onValueChange = { edit.name = it },
-                label = { Text(stringResource(R.string.tasks_field_name)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+            DetailHeader(
+                title = title,
+                onTitleChange = { title = it },
+                onBack = close,
+                onFocusTimer = { picker = Picker.Focus },
+                onMore = { picker = Picker.Actions },
             )
-            OutlinedTextField(
-                value = edit.note,
-                onValueChange = { edit.note = it },
-                label = { Text(stringResource(R.string.tasks_field_note)) },
-                minLines = 3,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            SubtasksCard(parentUid = current.uid, viewModel = viewModel)
-            StartFields(
-                edit = edit,
-                onPickDate = { pickingStartDate = true },
-                onPickTime = { pickingStartTime = true },
-            )
-            DueFields(
-                edit = edit,
-                onPickDate = { pickingDate = true },
-                onPickTime = { pickingTime = true },
-            )
-            RepetitionFields(edit)
-            EstimateFields(edit)
-            FieldLabel(R.string.tasks_field_priority)
-            PrioritySelector(selected = edit.priority, onSelect = { edit.priority = it }, allowNone = false)
-            FieldLabel(R.string.tasks_field_project)
-            ProjectDropdown(projects = projects, selectedUid = edit.projectUid, onSelect = { edit.projectUid = it })
-            if (tags.isNotEmpty()) {
-                FieldLabel(R.string.tasks_field_tags)
-                TagChips(
-                    tags = tags,
-                    selected = edit.tagUids,
-                    onToggle = { uid -> edit.tagUids = edit.tagUids.toggle(uid) },
+            Column(
+                Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = Space.gutter),
+                verticalArrangement = Arrangement.spacedBy(Space.md),
+            ) {
+                DetailBadges(
+                    task = current,
+                    today = today,
+                    dueTime = dueTime,
+                    projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
+                    projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
+                    tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
+                    onDates = { openDates(DateTab.Due) },
+                    onPriority = { picker = Picker.Priority },
+                    onProject = { picker = Picker.Project },
+                    onStatus = { picker = Picker.Status },
+                    onTags = { picker = Picker.Tags },
+                    onRepeat = { picker = Picker.Repeat },
+                )
+                NoteCard(note = note, onNoteChange = { note = it })
+                SubtasksCard(parentUid = current.uid, viewModel = viewModel)
+                DetailFieldGroup(
+                    detailFields(
+                        task = current,
+                        today = today,
+                        dueTime = dueTime,
+                        startTime = startTime,
+                        projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
+                        tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
+                        onDates = { openDates(DateTab.Due) },
+                        onRepeat = { picker = Picker.Repeat },
+                        onEstimate = { picker = Picker.Estimate },
+                        onPriority = { picker = Picker.Priority },
+                        onStatus = { picker = Picker.Status },
+                        onTags = { picker = Picker.Tags },
+                        onProject = { picker = Picker.Project },
+                    ),
+                )
+                if (hasReminder && !notifications.allowed) {
+                    NotificationsOffNotice()
+                }
+                ReadOnlyDetails(current)
+            }
+            if (!WindowInsets.isImeVisible) {
+                DetailActionBar(
+                    closed = current.isClosed,
+                    onPlan = { openDates(DateTab.Due) },
+                    onToggle = {
+                        flushText()
+                        viewModel.toggle(current)
+                        onDismiss()
+                    },
                 )
             }
-            FieldLabel(R.string.tasks_field_status)
-            StatusChips(selected = edit.status, onSelect = { edit.status = it })
-            ReadOnlyDetails(current)
-            OutlinedButton(onClick = { focusOpen = true }, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.tasks_focus_open))
-            }
-            TaskActions(
-                task = current,
-                onToggle = {
-                    viewModel.toggle(current)
-                    onDismiss()
-                },
-                onSkip = {
-                    viewModel.skipOccurrence(current)
-                    onDismiss()
-                },
-                onDelete = { confirmDelete = true },
-            )
-            if (hasReminder && !notifications.allowed) {
-                NotificationsOffNotice()
-            }
-            if (saving) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            }
-            saveError?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-            Button(
-                onClick = save,
-                enabled = edit.name.isNotBlank() && !saving,
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text(stringResource(R.string.tasks_save)) }
         }
     }
 
-    if (pickingDate) {
-        TaskDatePickerDialog(
-            initial = edit.dueDate ?: LocalDate.now(),
-            onConfirm = {
-                edit.dueDate = it
-                pickingDate = false
-            },
-            onDismiss = { pickingDate = false },
-        )
+    val applyDue = { date: LocalDate?, time: LocalTime? ->
+        val result = TaskEdits.due(latest, date, time, zone)
+        if (result.change != TaskChange()) viewModel.update(latest.uid, result.change)
+        result.moveDate?.let { viewModel.askRecurringMove(latest.uid, it) }
     }
-    if (pickingTime) {
-        TaskTimePickerDialog(
-            initial = edit.dueTime ?: LocalTime.of(9, 0),
-            onConfirm = {
-                edit.dueTime = it
-                pickingTime = false
-            },
-            onDismiss = { pickingTime = false },
+    val dismissPicker = { picker = null }
+    when (picker) {
+        Picker.Dates -> {
+            val onStart = dateTab == DateTab.Start
+            TaskDateSheet(
+                title = stringResource(R.string.tasks_detail_dates),
+                today = today,
+                date = if (onStart) current.startDay else current.dueDay,
+                time = if (onStart) startTime else dueTime,
+                onApply = { date, time ->
+                    if (onStart) {
+                        val change = TaskEdits.start(latest, date, time, zone)
+                        if (change != TaskChange()) viewModel.update(latest.uid, change)
+                    } else {
+                        applyDue(date, time)
+                    }
+                },
+                onDismiss = dismissPicker,
+                header = {
+                    SegmentedTabs(
+                        labels = listOf(
+                            stringResource(R.string.tasks_detail_start),
+                            stringResource(R.string.tasks_field_due),
+                        ),
+                        selected = if (onStart) 0 else 1,
+                        onSelect = { dateTab = if (it == 0) DateTab.Start else DateTab.Due },
+                    )
+                },
+            )
+        }
+        Picker.Repeat -> RepetitionSheet(
+            current = current.repetition,
+            hasDue = current.dueDay != null,
+            onApply = { if (it != current.repetition) viewModel.update(current.uid, TaskChange(repetition = it)) },
+            onDismiss = dismissPicker,
         )
-    }
-    if (pickingStartDate) {
-        TaskDatePickerDialog(
-            initial = edit.startDate ?: LocalDate.now(),
-            onConfirm = {
-                edit.startDate = it
-                pickingStartDate = false
-            },
-            onDismiss = { pickingStartDate = false },
+        Picker.Estimate -> EstimateSheet(
+            current = current.estimatedMinutes,
+            onSelect = { viewModel.update(current.uid, TaskEdits.estimate(latest, it)) },
+            onDismiss = dismissPicker,
         )
-    }
-    if (pickingStartTime) {
-        TaskTimePickerDialog(
-            initial = edit.startTime ?: LocalTime.of(9, 0),
-            onConfirm = {
-                edit.startTime = it
-                pickingStartTime = false
+        Picker.Priority -> ChoiceSheet(
+            title = stringResource(R.string.tasks_field_priority),
+            choices = listOf(TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH).map {
+                SheetChoice(it, stringResource(priorityLabel(it)), priorityColor(it))
             },
-            onDismiss = { pickingStartTime = false },
+            selected = current.priority ?: NO_PRIORITY,
+            onSelect = { if (it != current.priority) viewModel.update(current.uid, TaskChange(priority = it)) },
+            onDismiss = dismissPicker,
         )
-    }
-    if (focusOpen) {
-        FocusTimerSheet(taskUid = current.uid, taskName = current.name, onDismiss = { focusOpen = false })
+        Picker.Status -> ChoiceSheet(
+            title = stringResource(R.string.tasks_field_status),
+            choices = editableStatuses.map { SheetChoice(it, stringResource(statusLabelRes(it))) },
+            selected = current.status,
+            onSelect = { if (it != current.status) viewModel.update(current.uid, TaskChange(status = it)) },
+            onDismiss = dismissPicker,
+        )
+        Picker.Tags -> TagsSheet(
+            tags = tags,
+            selected = current.tagUids.toSet(),
+            onChange = { viewModel.update(current.uid, TaskChange(tagUids = it.toList())) },
+            onDismiss = dismissPicker,
+        )
+        Picker.Project -> ProjectSheet(
+            projects = projects,
+            selectedUid = current.projectUid,
+            onSelect = { viewModel.update(current.uid, TaskEdits.project(latest, it)) },
+            onDismiss = dismissPicker,
+        )
+        Picker.Actions -> CadenceSheet(
+            title = stringResource(R.string.tasks_detail_actions_title),
+            subtitle = null,
+            dismiss = dismissPicker,
+        ) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                if (current.isRecurring) {
+                    ActionRow(Icons.Outlined.SkipNext, stringResource(R.string.tasks_action_skip), palette.primary) {
+                        viewModel.skipOccurrence(current)
+                        picker = null
+                        onDismiss()
+                    }
+                }
+                ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
+                    picker = null
+                    confirmDelete = true
+                }
+            }
+        }
+        Picker.Focus -> FocusTimerSheet(taskUid = current.uid, taskName = current.name, onDismiss = dismissPicker)
+        null -> Unit
     }
     if (confirmDelete) {
         AlertDialog(
@@ -233,6 +346,9 @@ internal fun TaskDetailSheet(
             text = { Text(stringResource(R.string.tasks_delete_message)) },
             confirmButton = {
                 TextButton(onClick = {
+                    // Une tâche supprimée ne doit pas recevoir l'écriture du texte en attente.
+                    sent.name = title.trim()
+                    sent.note = note.trim()
                     viewModel.delete(current)
                     onDismiss()
                 }) { Text(stringResource(R.string.tasks_action_delete)) }
@@ -244,112 +360,234 @@ internal fun TaskDetailSheet(
     }
 }
 
+private fun priorityLabel(priority: Int): Int = when (priority) {
+    TaskPriority.HIGH -> R.string.tasks_priority_high
+    TaskPriority.MEDIUM -> R.string.tasks_priority_medium
+    else -> R.string.tasks_priority_low
+}
+
 @Composable
-private fun DueFields(edit: TaskEditState, onPickDate: () -> Unit, onPickTime: () -> Unit) {
-    val today = LocalDate.now()
-    FieldLabel(R.string.tasks_field_due)
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+private fun DetailHeader(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    onBack: () -> Unit,
+    onFocusTimer: () -> Unit,
+    onMore: () -> Unit,
+) {
+    val palette = cadence
+    val focus = LocalFocusManager.current
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = Space.sm, vertical = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.xs),
     ) {
-        OutlinedButton(onClick = onPickDate) {
-            Text(edit.dueDate?.let { dayLabel(it, today) } ?: stringResource(R.string.tasks_no_due_date))
-        }
-        if (edit.dueDate != null) {
-            OutlinedButton(onClick = onPickTime) {
-                Text(edit.dueTime?.let(::wireTime) ?: stringResource(R.string.tasks_add_time))
+        RoundHeaderButton(
+            icon = Icons.AutoMirrored.Outlined.ArrowBack,
+            contentDescription = stringResource(R.string.tasks_detail_back),
+            style = HeaderButtonStyle.Plain,
+            onClick = onBack,
+        )
+        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.weight(1f)) {
+                if (title.isEmpty()) {
+                    Text(
+                        stringResource(R.string.tasks_detail_title_hint),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = palette.outline,
+                    )
+                }
+                BasicTextField(
+                    value = title,
+                    onValueChange = onTitleChange,
+                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = palette.onSurface),
+                    cursorBrush = SolidColor(palette.primary),
+                    maxLines = 2,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
-            TextButton(onClick = {
-                edit.dueDate = null
-                edit.dueTime = null
-            }) { Text(stringResource(R.string.tasks_clear_due)) }
         }
+        RoundHeaderButton(
+            icon = Icons.Outlined.Timer,
+            contentDescription = stringResource(R.string.tasks_focus_open),
+            onClick = onFocusTimer,
+        )
+        RoundHeaderButton(
+            icon = Icons.Outlined.MoreVert,
+            contentDescription = stringResource(R.string.tasks_detail_more),
+            onClick = onMore,
+        )
     }
 }
 
 @Composable
-private fun TaskActions(
+private fun DetailBadges(
     task: TaskItem,
-    onToggle: () -> Unit,
-    onSkip: () -> Unit,
-    onDelete: () -> Unit,
+    today: LocalDate,
+    dueTime: LocalTime?,
+    projectName: String?,
+    projectColor: Color?,
+    tagNames: List<String>,
+    onDates: () -> Unit,
+    onPriority: () -> Unit,
+    onProject: () -> Unit,
+    onStatus: () -> Unit,
+    onTags: () -> Unit,
+    onRepeat: () -> Unit,
 ) {
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
-        OutlinedButton(onClick = onToggle) {
-            Text(stringResource(if (task.isClosed) R.string.tasks_action_reopen else R.string.tasks_action_complete))
+        task.dueDay?.let { due ->
+            val overdue = due.isBefore(today) && !task.isClosed
+            val text = compactDateTime(due, dueTime, today)
+            TapBadge(onDates) {
+                CadenceBadge(
+                    text = if (overdue) stringResource(R.string.tasks_detail_overdue, text) else text,
+                    tone = if (overdue) BadgeTone.Error else BadgeTone.Primary,
+                    icon = Icons.Outlined.Schedule,
+                )
+            }
+        }
+        TapBadge(onPriority) {
+            val priority = task.priority
+            CadenceBadge(
+                text = priority?.let { stringResource(priorityBadge(it)) } ?: stringResource(R.string.tasks_field_priority),
+                tone = when (priority) {
+                    TaskPriority.HIGH -> BadgeTone.Error
+                    TaskPriority.MEDIUM -> BadgeTone.Warning
+                    else -> BadgeTone.Neutral
+                },
+                icon = Icons.Outlined.Flag,
+            )
+        }
+        projectName?.let {
+            TapBadge(onProject) { CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor) }
+        }
+        if (task.isClosed) {
+            CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
+        } else if (task.status != TaskStatus.NOT_STARTED) {
+            TapBadge(onStatus) {
+                CadenceBadge(text = stringResource(statusLabelRes(task.status)), tone = BadgeTone.Primary)
+            }
         }
         if (task.isRecurring) {
-            OutlinedButton(onClick = onSkip) { Text(stringResource(R.string.tasks_action_skip)) }
+            TapBadge(onRepeat) {
+                CadenceBadge(text = stringResource(R.string.tasks_recurring), icon = Icons.Outlined.Repeat)
+            }
         }
-        OutlinedButton(
-            onClick = onDelete,
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-        ) { Text(stringResource(R.string.tasks_action_delete)) }
+        tagNames.take(MAX_TAG_BADGES).forEach { name ->
+            TapBadge(onTags) { CadenceBadge(text = "#$name") }
+        }
+        if (tagNames.size > MAX_TAG_BADGES) {
+            TapBadge(onTags) {
+                CadenceBadge(text = stringResource(R.string.tasks_detail_more_tags, tagNames.size - MAX_TAG_BADGES))
+            }
+        }
     }
 }
 
-private fun Set<String>.toggle(uid: String): Set<String> = if (uid in this) this - uid else this + uid
+@Composable
+private fun TapBadge(onClick: () -> Unit, content: @Composable () -> Unit) {
+    Box(
+        Modifier.clip(Radius.Pill).clickable(role = Role.Button, onClick = onClick),
+    ) { content() }
+}
 
-/** Brouillon de la fiche ; [result] ne renvoie que les champs réellement modifiés. */
-internal class TaskEditState(private val task: TaskItem, zone: ZoneId) {
-    private val originalDue: LocalDate? = task.dueDay
-    private val originalTime: LocalTime? = task.dueDate?.takeIf { task.dueHasTime }?.let { instantTime(it, zone) }
+@Composable
+private fun detailFields(
+    task: TaskItem,
+    today: LocalDate,
+    dueTime: LocalTime?,
+    startTime: LocalTime?,
+    projectName: String?,
+    tagNames: List<String>,
+    onDates: () -> Unit,
+    onRepeat: () -> Unit,
+    onEstimate: () -> Unit,
+    onPriority: () -> Unit,
+    onStatus: () -> Unit,
+    onTags: () -> Unit,
+    onProject: () -> Unit,
+): List<DetailField> {
+    val due = task.dueDay?.let { compactDateTime(it, dueTime, today) }
+    val start = task.startDay?.let { compactDateTime(it, startTime, today) }
+    val dates = when {
+        start != null && due != null -> "$start → $due"
+        due != null -> due
+        start != null -> stringResource(R.string.tasks_detail_starts, start)
+        else -> stringResource(R.string.tasks_detail_dates_none)
+    }
+    val none = stringResource(R.string.tasks_detail_none)
+    return listOf(
+        DetailField(Icons.Outlined.CalendarMonth, stringResource(R.string.tasks_detail_dates), dates, onDates, due == null && start == null),
+        DetailField(
+            Icons.Outlined.Repeat,
+            stringResource(R.string.tasks_field_repeat),
+            repeatLabel(task.repetition),
+            onRepeat,
+            task.repetition.type == RepeatType.NONE,
+        ),
+        DetailField(
+            Icons.Outlined.HourglassEmpty,
+            stringResource(R.string.tasks_field_estimate),
+            task.estimatedMinutes?.let(EstimateFormat::format) ?: none,
+            onEstimate,
+            task.estimatedMinutes == null,
+        ),
+        DetailField(
+            Icons.Outlined.Flag,
+            stringResource(R.string.tasks_field_priority),
+            task.priority?.let { stringResource(priorityLabel(it)) } ?: stringResource(R.string.tasks_priority_none),
+            onPriority,
+            task.priority == null,
+        ),
+        DetailField(
+            Icons.Outlined.TaskAlt,
+            stringResource(R.string.tasks_field_status),
+            stringResource(statusLabelRes(task.status)),
+            onStatus,
+        ),
+        DetailField(
+            Icons.Outlined.Sell,
+            stringResource(R.string.tasks_field_tags),
+            tagNames.takeIf { it.isNotEmpty() }?.joinToString(" ") { "#$it" } ?: none,
+            onTags,
+            tagNames.isEmpty(),
+        ),
+        DetailField(
+            Icons.Outlined.Folder,
+            stringResource(R.string.tasks_field_project),
+            projectName ?: stringResource(R.string.tasks_no_project),
+            onProject,
+            projectName == null,
+        ),
+    )
+}
 
-    var name by mutableStateOf(task.name)
-    var note by mutableStateOf(task.note.orEmpty())
-    var priority by mutableStateOf(task.priority)
-    var status by mutableStateOf(task.status)
-    var projectUid by mutableStateOf(task.projectUid)
-    var tagUids by mutableStateOf(task.tagUids.toSet())
-    var dueDate by mutableStateOf(originalDue)
-    var dueTime by mutableStateOf(originalTime)
-    private val originalStart: LocalDate? = task.startDay
-    private val originalStartTime: LocalTime? = task.startDate?.takeIf { task.startHasTime }?.let { instantTime(it, zone) }
-    var startDate by mutableStateOf(originalStart)
-    var startTime by mutableStateOf(originalStartTime)
-    var estimate by mutableStateOf(task.estimatedMinutes)
-    var repetition by mutableStateOf(task.repetition)
-
-    fun result(): EditResult {
-        val dateChanged = dueDate != originalDue
-        val timeChanged = dueTime != originalTime
-        // Une récurrente dont la date change passe par moveRecurring, pas par updateTask.
-        val moveDate = dueDate.takeIf { task.isRecurring && dateChanged }
-        val due = when {
-            dateChanged && dueDate == null -> TaskChange(clearDue = true)
-            moveDate != null -> TaskChange(dueTime = if (timeChanged) dueTime?.let(::wireTime) else null)
-            dateChanged || timeChanged -> TaskChange(dueDate = dueDate, dueTime = dueTime?.let(::wireTime))
-            else -> TaskChange()
-        }
-        val change = TaskChange(
-            name = name.trim().takeIf { it != task.name },
-            note = note.trim().takeIf { it != task.note.orEmpty() },
-            priority = priority.takeIf { it != task.priority },
-            status = status.takeIf { it != task.status },
-            projectUid = projectUid.takeIf { it != task.projectUid },
-            clearProject = projectUid == null && task.projectUid != null,
-            tagUids = tagUids.toList().takeIf { tagUids != task.tagUids.toSet() },
+/** Barre fixe du bas : planifier ou terminer, sans avoir à faire défiler la fiche. */
+@Composable
+private fun DetailActionBar(closed: Boolean, onPlan: () -> Unit, onToggle: () -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Space.gutter, vertical = Space.md),
+        horizontalArrangement = Arrangement.spacedBy(Space.md),
+    ) {
+        SecondaryAction(
+            label = stringResource(R.string.tasks_detail_plan),
+            modifier = Modifier.weight(1f),
+            onClick = onPlan,
         )
-        val startDateChanged = startDate != originalStart
-        val startTimeChanged = startTime != originalStartTime
-        return EditResult(
-            change = change.copy(
-                dueDate = due.dueDate,
-                dueTime = due.dueTime,
-                clearDue = due.clearDue,
-                clearStart = startDateChanged && startDate == null,
-                startDate = startDate.takeIf { startDateChanged || startTimeChanged },
-                startTime = startTime?.takeIf { startDate != null && (startDateChanged || startTimeChanged) }?.let(::wireTime),
-                estimatedMinutes = estimate.takeIf { it != task.estimatedMinutes },
-                clearEstimate = estimate == null && task.estimatedMinutes != null,
-                repetition = repetition.takeIf { it != task.repetition },
-            ),
-            moveDate = moveDate,
+        PrimaryAction(
+            label = stringResource(if (closed) R.string.tasks_action_reopen else R.string.tasks_action_complete),
+            modifier = Modifier.weight(1f),
+            onClick = onToggle,
         )
     }
 }
-
-internal class EditResult(val change: TaskChange, val moveDate: LocalDate?)

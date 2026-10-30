@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fiche de tâche -->
+    <string name="tasks_detail_back">Retour</string>
+    <string name="tasks_detail_more">Plus d\'actions</string>
+    <string name="tasks_detail_title_hint">Titre de la tâche</string>
+    <string name="tasks_detail_note_hint">Ajouter une note</string>
+    <string name="tasks_detail_plan">Planifier</string>
+    <string name="tasks_detail_none">Aucune</string>
+    <string name="tasks_detail_dates">Début → échéance</string>
+    <string name="tasks_detail_dates_none">Aucune date</string>
+    <string name="tasks_detail_starts">Début le %1$s</string>
+    <string name="tasks_detail_start">Début</string>
+    <string name="tasks_detail_overdue">En retard · %1$s</string>
+    <string name="tasks_detail_badge_priority_low">Priorité basse</string>
+    <string name="tasks_detail_badge_priority_medium">Priorité moyenne</string>
+    <string name="tasks_detail_badge_priority_high">Priorité haute</string>
+    <string name="tasks_detail_done">Terminée</string>
+    <string name="tasks_detail_more_tags">+%1$d</string>
+    <string name="tasks_detail_links_row">Liens et commentaires : sur le web</string>
+    <string name="tasks_detail_validate">Valider</string>
+    <string name="tasks_detail_actions_title">Actions</string>
+    <string name="tasks_detail_no_tags">Aucune étiquette pour l\'instant : elles se créent sur le web.</string>
+    <string name="tasks_detail_subtask_add">Ajouter une sous-tâche</string>
+
+    <!-- Feuille de date partagée -->
+    <string name="tasks_date_weekend">Ce week-end</string>
+    <string name="tasks_date_next_week">Semaine prochaine</string>
+    <string name="tasks_date_time">Heure</string>
+    <string name="tasks_date_time_remove">Retirer l\'heure</string>
+    <string name="tasks_date_prev_month">Mois précédent</string>
+    <string name="tasks_date_next_month">Mois suivant</string>
+
+    <!-- Ajout rapide -->
+    <string name="tasks_capture_subtitle">Date, heure, #étiquette et !priorité sont reconnues</string>
+    <string name="tasks_capture_placeholder">Appeler Paul demain 14h #perso</string>
+    <string name="tasks_capture_remove">Retirer %1$s</string>
+    <string name="tasks_capture_pick_date">Date…</string>
+    <string name="tasks_capture_more">Plus d\'options</string>
+    <string name="tasks_capture_less">Moins d\'options</string>
+</resources>
