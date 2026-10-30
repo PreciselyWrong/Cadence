@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.settings
 
 import androidx.annotation.StringRes
+import android.appwidget.AppWidgetManager
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HealthConnectUiState
@@ -33,6 +36,7 @@ import ch.nicolab.cadence.designsystem.theme.rememberStoredAppearance
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
+import ch.nicolab.cadence.widget.today.TodayWidgetConfigActivity
 
 /** Rubriques de la page Réglages, dans l'ordre d'affichage. */
 enum class SettingsSection(@StringRes val title: Int) {
@@ -95,6 +99,7 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
                 Spacer(Modifier.height(Space.xs))
                 Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
             }
+            TodayWidgetSettings()
         },
     ),
     SettingsPage(
@@ -186,3 +191,21 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         content = { Panel { TududiConnectionSection() } },
     ),
 )
+
+/** Ouvre la configuration du widget « Aujourd'hui » placé, ou explique comment le placer. */
+@Composable
+private fun TodayWidgetSettings() {
+    val context = LocalContext.current
+    val placed = TodayWidgetConfigActivity.firstPlacedWidgetId(context) != AppWidgetManager.INVALID_APPWIDGET_ID
+    Panel {
+        Text(stringResource(R.string.settings_widget_today_title), style = MaterialTheme.typography.bodyLarge, color = cadence.onSurface)
+        Spacer(Modifier.height(Space.xs))
+        if (placed) {
+            SecondaryAction(stringResource(R.string.settings_widget_today_open)) {
+                context.startActivity(Intent(context, TodayWidgetConfigActivity::class.java))
+            }
+        } else {
+            Text(stringResource(R.string.settings_widget_today_none), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
+        }
+    }
+}
