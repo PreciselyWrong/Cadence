@@ -656,7 +656,8 @@
     "failedToDeleteGoal": "Не вдалося видалити ціль.",
     "failedToDeleteNote": "Не вдалося видалити нотатку.",
     "failedToDeleteTag": "Не вдалося видалити тег.",
-    "projectStatusUpdateFailed": "Не вдалося оновити статус проєкту"
+    "projectStatusUpdateFailed": "Не вдалося оновити статус проєкту",
+    "failedToSaveTask": "Не вдалося зберегти завдання."
   },
   "success": {
     "noteUpdated": "Нотатку успішно оновлено!",
@@ -769,7 +770,8 @@
     "every": "Кожен",
     "weeks": "тижні",
     "months": "місяці",
-    "advancedHint": "Для конкретних днів тижня або дати закінчення відкрийте повне завдання."
+    "advancedHint": "Для конкретних днів тижня або дати закінчення відкрийте повне завдання.",
+    "recurring": "Повторюване"
   },
   "weekdays": {
     "sunday": "Нд",
@@ -1759,10 +1761,14 @@
     "unpin": "Відкріпити",
     "pinned": "Закріплено",
     "pinUpdateError": "Не вдалося оновити закріплення",
-    "comments": "Comments",
+    "comments": "Коментарі",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Назва завдання обов'язкова",
+    "deferAfterDueError": "Дата відкладення не може бути пізніше терміну",
+    "untitled": "Завдання без назви",
+    "instanceOfShort": "Повторення"
   },
   "calendar": {
     "focusSession": "Фокус",
@@ -4398,9 +4404,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Завдання заблоковано",
+    "completeBlockedMessage": "Це завдання заблоковано {{count}} відкритим(и) завданням(ями). Завершити все одно?",
+    "completeAnyway": "Завершити все одно",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4518,5 +4524,37 @@
       "triageLater": "Розбір: пізніше (залишити у вхідних)",
       "triageDelete": "Розбір: видалити"
     }
+  },
+  "taskPanel": {
+    "saving": "Збереження…",
+    "saved": "Збережено",
+    "saveFailed": "Не вдалося зберегти, зміну скасовано",
+    "eyebrow": "Завдання",
+    "titleLabel": "Назва завдання",
+    "addDescription": "Додати опис (Markdown)",
+    "fields": "Поля завдання",
+    "due": "Термін",
+    "project": "Проєкт",
+    "areaInherited": "Область проєкту",
+    "noArea": "Без області",
+    "unassigned": "Ніхто",
+    "reopen": "Відкрити знову",
+    "complete": "Завершити"
+  },
+  "datePopover": {
+    "today": "Сьогодні",
+    "tomorrow": "Завтра",
+    "weekend": "Цими вихідними",
+    "nextWeek": "Наступного тижня",
+    "noDate": "Без дати",
+    "typePlaceholder": "Введіть дату: завтра о 14:00, п'ятниця…",
+    "typeLabel": "Дата словами",
+    "preview": "Зрозуміло",
+    "noMatch": "Дату не розпізнано",
+    "quick": "Швидкий вибір",
+    "prevMonth": "Попередній місяць",
+    "nextMonth": "Наступний місяць",
+    "time": "Час",
+    "clearTime": "Без часу"
   }
 }

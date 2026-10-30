@@ -1364,7 +1364,8 @@
     "failedToDeleteGoal": "Gagal menghapus tujuan.",
     "failedToDeleteNote": "Gagal menghapus catatan.",
     "failedToDeleteTag": "Gagal menghapus tag.",
-    "projectStatusUpdateFailed": "Gagal memperbarui status proyek"
+    "projectStatusUpdateFailed": "Gagal memperbarui status proyek",
+    "failedToSaveTask": "Gagal menyimpan tugas."
   },
   "inbox": {
     "title": "Kotak Masuk",
@@ -1658,10 +1659,14 @@
     "unpin": "Lepas sematan",
     "pinned": "Disematkan",
     "pinUpdateError": "Gagal memperbarui sematan",
-    "comments": "Comments",
+    "comments": "Komentar",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Nama tugas wajib diisi",
+    "deferAfterDueError": "Tanggal penundaan tidak boleh setelah tenggat",
+    "untitled": "Tugas tanpa judul",
+    "instanceOfShort": "Kejadian"
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -1974,7 +1979,8 @@
     "every": "Setiap",
     "weeks": "minggu",
     "months": "bulan",
-    "advancedHint": "Untuk hari kerja tertentu atau tanggal akhir, buka tugas lengkap."
+    "advancedHint": "Untuk hari kerja tertentu atau tanggal akhir, buka tugas lengkap.",
+    "recurring": "Berulang"
   },
   "weekdays": {
     "sunday": "Min",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Tugas diblokir",
+    "completeBlockedMessage": "Tugas ini diblokir oleh {{count}} tugas terbuka. Tetap selesaikan?",
+    "completeAnyway": "Tetap selesaikan",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "Pilah: nanti (tetap di kotak masuk)",
       "triageDelete": "Pilah: hapus"
     }
+  },
+  "taskPanel": {
+    "saving": "Menyimpan…",
+    "saved": "Tersimpan",
+    "saveFailed": "Gagal menyimpan, perubahan dibatalkan",
+    "eyebrow": "Tugas",
+    "titleLabel": "Judul tugas",
+    "addDescription": "Tambahkan deskripsi (Markdown)",
+    "fields": "Kolom tugas",
+    "due": "Tenggat",
+    "project": "Proyek",
+    "areaInherited": "Area proyek",
+    "noArea": "Tanpa area",
+    "unassigned": "Tidak ada",
+    "reopen": "Buka lagi",
+    "complete": "Selesaikan"
+  },
+  "datePopover": {
+    "today": "Hari ini",
+    "tomorrow": "Besok",
+    "weekend": "Akhir pekan ini",
+    "nextWeek": "Minggu depan",
+    "noDate": "Tanpa tanggal",
+    "typePlaceholder": "Ketik tanggal: besok 14.00, Jumat…",
+    "typeLabel": "Tanggal dalam kata-kata",
+    "preview": "Dipahami",
+    "noMatch": "Tanggal tidak dipahami",
+    "quick": "Pilihan cepat",
+    "prevMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya",
+    "time": "Waktu",
+    "clearTime": "Tanpa waktu"
   }
 }

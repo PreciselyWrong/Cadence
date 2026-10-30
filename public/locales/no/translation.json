@@ -1365,7 +1365,8 @@
     "failedToDeleteGoal": "Kunne ikke slette målet.",
     "failedToDeleteNote": "Kunne ikke slette notatet.",
     "failedToDeleteTag": "Kunne ikke slette merkelappen.",
-    "projectStatusUpdateFailed": "Kunne ikke oppdatere prosjektstatus"
+    "projectStatusUpdateFailed": "Kunne ikke oppdatere prosjektstatus",
+    "failedToSaveTask": "Kunne ikke lagre oppgaven."
   },
   "inbox": {
     "title": "Innboks",
@@ -1659,10 +1660,14 @@
     "unpin": "Løsne",
     "pinned": "Festet",
     "pinUpdateError": "Kunne ikke oppdatere festing",
-    "comments": "Comments",
+    "comments": "Kommentarer",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Oppgavenavn er påkrevd",
+    "deferAfterDueError": "Utsettelsesdato kan ikke være etter fristen",
+    "untitled": "Oppgave uten tittel",
+    "instanceOfShort": "Forekomst"
   },
   "projects": {
     "parentProject": "Overordnet prosjekt",
@@ -1975,7 +1980,8 @@
     "every": "Hver",
     "weeks": "uker",
     "months": "måneder",
-    "advancedHint": "For spesifikke ukedager eller en sluttdato, åpne den fullstendige oppgaven."
+    "advancedHint": "For spesifikke ukedager eller en sluttdato, åpne den fullstendige oppgaven.",
+    "recurring": "Gjentakende"
   },
   "weekdays": {
     "sunday": "Søn",
@@ -4385,9 +4391,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Oppgaven er blokkert",
+    "completeBlockedMessage": "Denne oppgaven er blokkert av {{count}} åpen(e) oppgave(r). Fullføre likevel?",
+    "completeAnyway": "Fullfør likevel",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4505,5 +4511,37 @@
       "triageLater": "Sorter: senere (behold i innboksen)",
       "triageDelete": "Sorter: slett"
     }
+  },
+  "taskPanel": {
+    "saving": "Lagrer…",
+    "saved": "Lagret",
+    "saveFailed": "Lagring feilet, endring angret",
+    "eyebrow": "Oppgave",
+    "titleLabel": "Oppgavetittel",
+    "addDescription": "Legg til beskrivelse (Markdown)",
+    "fields": "Oppgavefelt",
+    "due": "Frist",
+    "project": "Prosjekt",
+    "areaInherited": "Prosjektområde",
+    "noArea": "Ingen område",
+    "unassigned": "Ingen",
+    "reopen": "Gjenåpne",
+    "complete": "Fullfør"
+  },
+  "datePopover": {
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "weekend": "Denne helgen",
+    "nextWeek": "Neste uke",
+    "noDate": "Ingen dato",
+    "typePlaceholder": "Skriv en dato: i morgen kl. 14, fredag…",
+    "typeLabel": "Dato med ord",
+    "preview": "Forstått",
+    "noMatch": "Datoen ble ikke forstått",
+    "quick": "Hurtigvalg",
+    "prevMonth": "Forrige måned",
+    "nextMonth": "Neste måned",
+    "time": "Tid",
+    "clearTime": "Ingen tid"
   }
 }

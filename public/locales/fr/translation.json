@@ -1367,7 +1367,8 @@
     "failedToDeleteGoal": "Impossible de supprimer l'objectif.",
     "failedToDeleteNote": "Impossible de supprimer la note.",
     "failedToDeleteTag": "Impossible de supprimer l'étiquette.",
-    "projectStatusUpdateFailed": "Échec de la mise à jour du statut du projet"
+    "projectStatusUpdateFailed": "Échec de la mise à jour du statut du projet",
+    "failedToSaveTask": "Impossible d'enregistrer la tâche."
   },
   "inbox": {
     "title": "Boîte de réception",
@@ -1664,7 +1665,11 @@
     "comments": "Commentaires",
     "skipOccurrence": "Ignorer cette occurrence",
     "occurrenceSkipped": "Occurrence ignorée",
-    "skipOccurrenceError": "Impossible d'ignorer l'occurrence"
+    "skipOccurrenceError": "Impossible d'ignorer l'occurrence",
+    "nameRequired": "Le nom de la tâche est obligatoire",
+    "deferAfterDueError": "La date de report ne peut pas dépasser l'échéance",
+    "untitled": "Tâche sans titre",
+    "instanceOfShort": "Occurrence"
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -1978,7 +1983,8 @@
     "every": "Chaque",
     "weeks": "semaines",
     "months": "mois",
-    "advancedHint": "Pour des jours spécifiques ou une date de fin, ouvrez la tâche complète."
+    "advancedHint": "Pour des jours spécifiques ou une date de fin, ouvrez la tâche complète.",
+    "recurring": "Récurrente"
   },
   "weekdays": {
     "sunday": "Dim",
@@ -4508,5 +4514,37 @@
       "triageLater": "Tri : plus tard (reste dans la boîte)",
       "triageDelete": "Tri : supprimer"
     }
+  },
+  "taskPanel": {
+    "saving": "Enregistrement…",
+    "saved": "Enregistré",
+    "saveFailed": "Échec, modification annulée",
+    "eyebrow": "Tâche",
+    "titleLabel": "Titre de la tâche",
+    "addDescription": "Ajouter une description (Markdown)",
+    "fields": "Champs de la tâche",
+    "due": "Échéance",
+    "project": "Projet",
+    "areaInherited": "Zone du projet",
+    "noArea": "Aucune zone",
+    "unassigned": "Personne",
+    "reopen": "Rouvrir",
+    "complete": "Terminer"
+  },
+  "datePopover": {
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "weekend": "Ce week-end",
+    "nextWeek": "Semaine prochaine",
+    "noDate": "Sans date",
+    "typePlaceholder": "Écrire une date : demain 14h, vendredi…",
+    "typeLabel": "Date en toutes lettres",
+    "preview": "Compris",
+    "noMatch": "Date non comprise",
+    "quick": "Choix rapides",
+    "prevMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "time": "Heure",
+    "clearTime": "Sans heure"
   }
 }

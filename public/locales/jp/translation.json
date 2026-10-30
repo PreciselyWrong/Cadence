@@ -1239,7 +1239,8 @@
     "failedToDeleteGoal": "目標を削除できませんでした。",
     "failedToDeleteNote": "ノートを削除できませんでした。",
     "failedToDeleteTag": "タグを削除できませんでした。",
-    "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした"
+    "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした",
+    "failedToSaveTask": "タスクを保存できませんでした。"
   },
   "success": {
     "noteUpdated": "ノートが正常に更新されました！",
@@ -1595,7 +1596,8 @@
     "every": "毎",
     "weeks": "週間",
     "months": "月",
-    "advancedHint": "特定の曜日や終了日については、タスクの詳細を開いてください。"
+    "advancedHint": "特定の曜日や終了日については、タスクの詳細を開いてください。",
+    "recurring": "繰り返し"
   },
   "weekdays": {
     "monday": "月",
@@ -1921,10 +1923,14 @@
     "unpin": "ピン留めを解除",
     "pinned": "ピン留め済み",
     "pinUpdateError": "ピン留めの更新に失敗しました",
-    "comments": "Comments",
+    "comments": "コメント",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "タスク名は必須です",
+    "deferAfterDueError": "延期日は期限より後にできません",
+    "untitled": "無題のタスク",
+    "instanceOfShort": "反復"
   },
   "calendar": {
     "focusSession": "集中",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "タスクはブロックされています",
+    "completeBlockedMessage": "このタスクは未完了のタスク {{count}} 件にブロックされています。それでも完了しますか？",
+    "completeAnyway": "それでも完了",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "整理: 後で（受信トレイに残す）",
       "triageDelete": "整理: 削除"
     }
+  },
+  "taskPanel": {
+    "saving": "保存中…",
+    "saved": "保存しました",
+    "saveFailed": "保存に失敗しました。変更を取り消しました",
+    "eyebrow": "タスク",
+    "titleLabel": "タスク名",
+    "addDescription": "説明を追加 (Markdown)",
+    "fields": "タスク項目",
+    "due": "期限",
+    "project": "プロジェクト",
+    "areaInherited": "プロジェクトのエリア",
+    "noArea": "エリアなし",
+    "unassigned": "担当者なし",
+    "reopen": "再開",
+    "complete": "完了"
+  },
+  "datePopover": {
+    "today": "今日",
+    "tomorrow": "明日",
+    "weekend": "今週末",
+    "nextWeek": "来週",
+    "noDate": "日付なし",
+    "typePlaceholder": "日付を入力: 明日 14時、金曜…",
+    "typeLabel": "自然言語で日付",
+    "preview": "理解しました",
+    "noMatch": "日付を認識できません",
+    "quick": "クイック選択",
+    "prevMonth": "前の月",
+    "nextMonth": "次の月",
+    "time": "時刻",
+    "clearTime": "時刻なし"
   }
 }

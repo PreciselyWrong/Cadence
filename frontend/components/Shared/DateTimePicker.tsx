@@ -11,6 +11,7 @@ import {
 } from '../../utils/profileService';
 import { useTranslation } from 'react-i18next';
 import { resolveUserLocale } from '../../utils/localeUtils';
+import { formatDateLabel, toYmd } from '../../utils/datePresets';
 import { FORM } from '../../constants/formClasses';
 import {
     DATE_SHORTCUTS,
@@ -120,24 +121,8 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
         const { date, time } = parseDateTime(isoString);
         if (!date) return placeholder;
 
-        const displayDate = new Date(date);
-        if (time) {
-            const [hours, minutes] = time.split(':');
-            displayDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-        }
-
-        const dateStr = displayDate.toLocaleDateString(displayLocale, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        });
-
-        const timeStr = displayDate.toLocaleTimeString(displayLocale, {
-            hour: 'numeric',
-            minute: '2-digit',
-        });
-
-        return `${dateStr} at ${timeStr}`;
+        // Midnight is a whole-day date: no time is shown
+        return formatDateLabel(toYmd(date), time, displayLocale);
     };
 
     useEffect(() => {

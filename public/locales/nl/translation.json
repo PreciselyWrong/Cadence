@@ -1364,7 +1364,8 @@
     "failedToDeleteGoal": "Doel verwijderen mislukt.",
     "failedToDeleteNote": "Notitie verwijderen mislukt.",
     "failedToDeleteTag": "Tag verwijderen mislukt.",
-    "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt"
+    "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt",
+    "failedToSaveTask": "Taak opslaan mislukt."
   },
   "inbox": {
     "title": "Inbox",
@@ -1658,10 +1659,14 @@
     "unpin": "Losmaken",
     "pinned": "Vastgezet",
     "pinUpdateError": "Vastzetten bijwerken mislukt",
-    "comments": "Comments",
+    "comments": "Opmerkingen",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Taaknaam is verplicht",
+    "deferAfterDueError": "Uitstellen tot kan niet na de vervaldatum liggen",
+    "untitled": "Taak zonder titel",
+    "instanceOfShort": "Herhaling"
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -1974,7 +1979,8 @@
     "every": "Elke",
     "weeks": "weken",
     "months": "maanden",
-    "advancedHint": "Voor specifieke weekdagen of een einddatum, open de volledige taak."
+    "advancedHint": "Voor specifieke weekdagen of een einddatum, open de volledige taak.",
+    "recurring": "Herhalend"
   },
   "weekdays": {
     "sunday": "Zo",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Taak is geblokkeerd",
+    "completeBlockedMessage": "Deze taak wordt geblokkeerd door {{count}} open taak/taken. Toch voltooien?",
+    "completeAnyway": "Toch voltooien",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "Sorteren: later (in de inbox houden)",
       "triageDelete": "Sorteren: verwijderen"
     }
+  },
+  "taskPanel": {
+    "saving": "Opslaan…",
+    "saved": "Opgeslagen",
+    "saveFailed": "Opslaan mislukt, wijziging ongedaan gemaakt",
+    "eyebrow": "Taak",
+    "titleLabel": "Taaknaam",
+    "addDescription": "Beschrijving toevoegen (Markdown)",
+    "fields": "Taakvelden",
+    "due": "Vervaldatum",
+    "project": "Project",
+    "areaInherited": "Projectgebied",
+    "noArea": "Geen gebied",
+    "unassigned": "Niemand",
+    "reopen": "Heropenen",
+    "complete": "Voltooien"
+  },
+  "datePopover": {
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "weekend": "Dit weekend",
+    "nextWeek": "Volgende week",
+    "noDate": "Geen datum",
+    "typePlaceholder": "Typ een datum: morgen 14:00, vrijdag…",
+    "typeLabel": "Datum in woorden",
+    "preview": "Begrepen",
+    "noMatch": "Datum niet herkend",
+    "quick": "Snelle keuzes",
+    "prevMonth": "Vorige maand",
+    "nextMonth": "Volgende maand",
+    "time": "Tijd",
+    "clearTime": "Geen tijd"
   }
 }

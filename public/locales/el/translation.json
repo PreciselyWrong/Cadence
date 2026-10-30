@@ -910,7 +910,8 @@
     "failedToDeleteGoal": "Η διαγραφή του στόχου απέτυχε.",
     "failedToDeleteNote": "Η διαγραφή της σημείωσης απέτυχε.",
     "failedToDeleteTag": "Η διαγραφή της ετικέτας απέτυχε.",
-    "projectStatusUpdateFailed": "Αποτυχία ενημέρωσης κατάστασης έργου"
+    "projectStatusUpdateFailed": "Αποτυχία ενημέρωσης κατάστασης έργου",
+    "failedToSaveTask": "Αποτυχία αποθήκευσης εργασίας."
   },
   "dropdown": {
     "createNew": "Δημιουργία Νέου",
@@ -1630,10 +1631,14 @@
     "unpin": "Ξεκαρφίτσωμα",
     "pinned": "Καρφιτσωμένη",
     "pinUpdateError": "Αποτυχία ενημέρωσης καρφιτσώματος",
-    "comments": "Comments",
+    "comments": "Σχόλια",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Το όνομα εργασίας είναι υποχρεωτικό",
+    "deferAfterDueError": "Η ημερομηνία αναβολής δεν μπορεί να είναι μετά την προθεσμία",
+    "untitled": "Εργασία χωρίς τίτλο",
+    "instanceOfShort": "Εμφάνιση"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1891,7 +1896,8 @@
     "every": "Κάθε",
     "weeks": "εβδομάδες",
     "months": "μήνες",
-    "advancedHint": "Για συγκεκριμένες ημέρες της εβδομάδας ή μια ημερομηνία λήξης, άνοιξε την πλήρη εργασία."
+    "advancedHint": "Για συγκεκριμένες ημέρες της εβδομάδας ή μια ημερομηνία λήξης, άνοιξε την πλήρη εργασία.",
+    "recurring": "Επαναλαμβανόμενη"
   },
   "weekdays": {
     "sunday": "Κυρ",
@@ -4381,9 +4387,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Η εργασία είναι αποκλεισμένη",
+    "completeBlockedMessage": "Αυτή η εργασία είναι αποκλεισμένη από {{count}} ανοιχτή(ές) εργασία(ες). Να ολοκληρωθεί έτσι κι αλλιώς;",
+    "completeAnyway": "Ολοκλήρωση ούτως ή άλλως",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4501,5 +4507,37 @@
       "triageLater": "Διαλογή: αργότερα (παραμονή στα εισερχόμενα)",
       "triageDelete": "Διαλογή: διαγραφή"
     }
+  },
+  "taskPanel": {
+    "saving": "Αποθήκευση…",
+    "saved": "Αποθηκεύτηκε",
+    "saveFailed": "Αποτυχία αποθήκευσης, η αλλαγή αναιρέθηκε",
+    "eyebrow": "Εργασία",
+    "titleLabel": "Τίτλος εργασίας",
+    "addDescription": "Προσθήκη περιγραφής (Markdown)",
+    "fields": "Πεδία εργασίας",
+    "due": "Προθεσμία",
+    "project": "Έργο",
+    "areaInherited": "Περιοχή έργου",
+    "noArea": "Χωρίς περιοχή",
+    "unassigned": "Κανείς",
+    "reopen": "Επαναφορά",
+    "complete": "Ολοκλήρωση"
+  },
+  "datePopover": {
+    "today": "Σήμερα",
+    "tomorrow": "Αύριο",
+    "weekend": "Αυτό το Σ/Κ",
+    "nextWeek": "Επόμενη εβδομάδα",
+    "noDate": "Χωρίς ημερομηνία",
+    "typePlaceholder": "Γράψτε ημερομηνία: αύριο 14:00, Παρασκευή…",
+    "typeLabel": "Ημερομηνία με λόγια",
+    "preview": "Κατανοητό",
+    "noMatch": "Η ημερομηνία δεν αναγνωρίστηκε",
+    "quick": "Γρήγορες επιλογές",
+    "prevMonth": "Προηγούμενος μήνας",
+    "nextMonth": "Επόμενος μήνας",
+    "time": "Ώρα",
+    "clearTime": "Χωρίς ώρα"
   }
 }

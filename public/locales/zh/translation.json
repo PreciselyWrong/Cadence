@@ -1364,7 +1364,8 @@
     "failedToDeleteGoal": "无法删除目标。",
     "failedToDeleteNote": "无法删除笔记。",
     "failedToDeleteTag": "无法删除标签。",
-    "projectStatusUpdateFailed": "更新项目状态失败"
+    "projectStatusUpdateFailed": "更新项目状态失败",
+    "failedToSaveTask": "保存任务失败。"
   },
   "inbox": {
     "title": "收件箱",
@@ -1658,10 +1659,14 @@
     "unpin": "取消置顶",
     "pinned": "已置顶",
     "pinUpdateError": "更新置顶失败",
-    "comments": "Comments",
+    "comments": "评论",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "任务名称为必填项",
+    "deferAfterDueError": "推迟日期不能晚于截止日期",
+    "untitled": "未命名任务",
+    "instanceOfShort": "实例"
   },
   "projects": {
     "parentProject": "父项目",
@@ -1974,7 +1979,8 @@
     "every": "每",
     "weeks": "周",
     "months": "月",
-    "advancedHint": "要指定特定的工作日或结束日期，请打开完整任务。"
+    "advancedHint": "要指定特定的工作日或结束日期，请打开完整任务。",
+    "recurring": "重复"
   },
   "weekdays": {
     "sunday": "星期日",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "任务已被阻塞",
+    "completeBlockedMessage": "此任务被 {{count}} 个未完成任务阻塞。仍要完成吗？",
+    "completeAnyway": "仍然完成",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "整理：稍后（保留在收件箱）",
       "triageDelete": "整理：删除"
     }
+  },
+  "taskPanel": {
+    "saving": "保存中…",
+    "saved": "已保存",
+    "saveFailed": "保存失败，已撤销更改",
+    "eyebrow": "任务",
+    "titleLabel": "任务标题",
+    "addDescription": "添加描述（Markdown）",
+    "fields": "任务字段",
+    "due": "截止日期",
+    "project": "项目",
+    "areaInherited": "项目领域",
+    "noArea": "无领域",
+    "unassigned": "无人",
+    "reopen": "重新打开",
+    "complete": "完成"
+  },
+  "datePopover": {
+    "today": "今天",
+    "tomorrow": "明天",
+    "weekend": "本周末",
+    "nextWeek": "下周",
+    "noDate": "无日期",
+    "typePlaceholder": "输入日期：明天 14:00、周五…",
+    "typeLabel": "用文字输入日期",
+    "preview": "已识别",
+    "noMatch": "无法识别日期",
+    "quick": "快速选择",
+    "prevMonth": "上个月",
+    "nextMonth": "下个月",
+    "time": "时间",
+    "clearTime": "无时间"
   }
 }

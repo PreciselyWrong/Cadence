@@ -1372,7 +1372,8 @@
     "failedToDeleteGoal": "تعذر حذف الهدف.",
     "failedToDeleteNote": "تعذر حذف الملاحظة.",
     "failedToDeleteTag": "تعذر حذف الوسم.",
-    "projectStatusUpdateFailed": "فشل تحديث حالة المشروع"
+    "projectStatusUpdateFailed": "فشل تحديث حالة المشروع",
+    "failedToSaveTask": "تعذّر حفظ المهمة."
   },
   "inbox": {
     "title": "صندوق الوارد",
@@ -1666,10 +1667,14 @@
     "unpin": "إلغاء التثبيت",
     "pinned": "مثبتة",
     "pinUpdateError": "فشل تحديث التثبيت",
-    "comments": "Comments",
+    "comments": "التعليقات",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "اسم المهمة مطلوب",
+    "deferAfterDueError": "لا يمكن أن يكون تاريخ التأجيل بعد تاريخ الاستحقاق",
+    "untitled": "مهمة بلا عنوان",
+    "instanceOfShort": "تكرار"
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -1986,7 +1991,8 @@
     "every": "كل",
     "weeks": "أسابيع",
     "months": "أشهر",
-    "advancedHint": "لأيام الأسبوع المحددة أو تاريخ انتهاء، افتح المهمة الكاملة."
+    "advancedHint": "لأيام الأسبوع المحددة أو تاريخ انتهاء، افتح المهمة الكاملة.",
+    "recurring": "متكررة"
   },
   "weekdays": {
     "sunday": "أحد",
@@ -4416,9 +4422,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "المهمة محظورة",
+    "completeBlockedMessage": "هذه المهمة محظورة بسبب {{count}} مهمة مفتوحة. هل تريد إنهاءها على أي حال؟",
+    "completeAnyway": "إنهاء على أي حال",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4536,5 +4542,37 @@
       "triageLater": "فرز: لاحقًا (إبقاؤه في الوارد)",
       "triageDelete": "فرز: حذف"
     }
+  },
+  "taskPanel": {
+    "saving": "جارٍ الحفظ…",
+    "saved": "تم الحفظ",
+    "saveFailed": "فشل الحفظ، تم التراجع عن التغيير",
+    "eyebrow": "مهمة",
+    "titleLabel": "عنوان المهمة",
+    "addDescription": "أضف وصفًا (Markdown)",
+    "fields": "حقول المهمة",
+    "due": "الاستحقاق",
+    "project": "المشروع",
+    "areaInherited": "منطقة المشروع",
+    "noArea": "بلا منطقة",
+    "unassigned": "لا أحد",
+    "reopen": "إعادة فتح",
+    "complete": "إنهاء"
+  },
+  "datePopover": {
+    "today": "اليوم",
+    "tomorrow": "غدًا",
+    "weekend": "نهاية هذا الأسبوع",
+    "nextWeek": "الأسبوع القادم",
+    "noDate": "بلا تاريخ",
+    "typePlaceholder": "اكتب تاريخًا: غدًا 2 م، الجمعة…",
+    "typeLabel": "التاريخ بالكلمات",
+    "preview": "مفهوم",
+    "noMatch": "التاريخ غير مفهوم",
+    "quick": "اختيارات سريعة",
+    "prevMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
+    "time": "الوقت",
+    "clearTime": "بلا وقت"
   }
 }

@@ -11,12 +11,18 @@ export interface EntitySidePanelProps {
     onClose: () => void;
     title: string;
     eyebrow?: string;
-    submitLabel: string;
+    // Omit on a panel that saves each edit by itself: it then has no Save and
+    // Cancel footer and never asks before closing
+    submitLabel?: string;
     submitTestId?: string;
     isSubmitting?: boolean;
     isDirty?: boolean;
     error?: string | null;
-    onSubmit: () => void;
+    onSubmit?: () => void;
+    // Shown in the header beside the close button, e.g. a saved indicator
+    headerExtra?: React.ReactNode;
+    // Replaces the Save and Cancel footer on an autosaving panel
+    footer?: React.ReactNode;
     onDelete?: () => void;
     deleteLabel?: string;
     testId?: string;
@@ -39,6 +45,8 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
     isDirty = false,
     error,
     onSubmit,
+    headerExtra,
+    footer,
     onDelete,
     deleteLabel,
     testId,
@@ -46,6 +54,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
     children,
 }) => {
     const { t } = useTranslation();
+    const inline = !onSubmit;
     const [shown, setShown] = useState(false);
     const [showDiscard, setShowDiscard] = useState(false);
     const panelRef = useRef<HTMLElement>(null);
@@ -151,8 +160,12 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                     shown ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                <header className="flex flex-shrink-0 items-start justify-between gap-4 px-5 pb-3 pt-5">
-                    <div className="min-w-0">
+                <header
+                    className={`flex flex-shrink-0 items-start gap-4 px-5 pb-3 pt-5 ${
+                        inline ? 'justify-end' : 'justify-between'
+                    }`}
+                >
+                    <div className={inline ? 'sr-only' : 'min-w-0'}>
                         {eyebrow && (
                             <p className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 {eyebrow}
@@ -162,6 +175,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                             {title}
                         </h2>
                     </div>
+                    {headerExtra}
                     <button
                         type="button"
                         onClick={requestClose}
@@ -176,7 +190,7 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                     className="flex min-h-0 flex-1 flex-col"
                     onSubmit={(event) => {
                         event.preventDefault();
-                        if (!isSubmitting) onSubmit();
+                        if (!isSubmitting) onSubmit?.();
                     }}
                 >
                     <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overflow-x-hidden px-5 pb-6">
@@ -191,40 +205,45 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
                         )}
                     </div>
 
-                    <footer className="flex flex-shrink-0 items-center justify-between gap-3 bg-gray-50 px-5 py-3 dark:bg-gray-900/40">
-                        <div>
-                            {onDelete && (
+                    {onSubmit ? (
+                        <footer className="flex flex-shrink-0 items-center justify-between gap-3 bg-gray-50 px-5 py-3 dark:bg-gray-900/40">
+                            <div>
+                                {onDelete && (
+                                    <button
+                                        type="button"
+                                        onClick={onDelete}
+                                        className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-900/20"
+                                    >
+                                        <TrashIcon className="h-4 w-4" />
+                                        {deleteLabel ??
+                                            t('common.delete', 'Delete')}
+                                    </button>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-3">
                                 <button
                                     type="button"
-                                    onClick={onDelete}
-                                    className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-900/20"
+                                    onClick={requestClose}
+                                    className="rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:text-gray-100"
                                 >
-                                    <TrashIcon className="h-4 w-4" />
-                                    {deleteLabel ??
-                                        t('common.delete', 'Delete')}
+                                    {t('common.cancel', 'Cancel')}
                                 </button>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={requestClose}
-                                className="rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:text-gray-100"
-                            >
-                                {t('common.cancel', 'Cancel')}
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                data-testid={submitTestId}
-                                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
-                            >
-                                {isSubmitting
-                                    ? t('modals.submitting')
-                                    : submitLabel}
-                            </button>
-                        </div>
-                    </footer>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    data-testid={submitTestId}
+                                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                >
+                                    {isSubmitting
+                                        ? t('modals.submitting')
+                                        : (submitLabel ??
+                                          t('common.save', 'Save'))}
+                                </button>
+                            </div>
+                        </footer>
+                    ) : (
+                        footer
+                    )}
                 </form>
             </aside>
 

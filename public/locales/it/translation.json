@@ -1366,7 +1366,8 @@
     "failedToDeleteGoal": "Impossibile eliminare l'obiettivo.",
     "failedToDeleteNote": "Impossibile eliminare la nota.",
     "failedToDeleteTag": "Impossibile eliminare il tag.",
-    "projectStatusUpdateFailed": "Impossibile aggiornare lo stato del progetto"
+    "projectStatusUpdateFailed": "Impossibile aggiornare lo stato del progetto",
+    "failedToSaveTask": "Impossibile salvare l'attività."
   },
   "inbox": {
     "title": "Inbox",
@@ -1660,10 +1661,14 @@
     "unpin": "Sblocca",
     "pinned": "Fissata",
     "pinUpdateError": "Impossibile aggiornare il fissaggio",
-    "comments": "Comments",
+    "comments": "Commenti",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Il nome dell'attività è obbligatorio",
+    "deferAfterDueError": "La data di rinvio non può essere successiva alla scadenza",
+    "untitled": "Attività senza titolo",
+    "instanceOfShort": "Occorrenza"
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -1977,7 +1982,8 @@
     "every": "Ogni",
     "weeks": "settimane",
     "months": "mesi",
-    "advancedHint": "Per giorni specifici della settimana o una data di fine, apri il compito completo."
+    "advancedHint": "Per giorni specifici della settimana o una data di fine, apri il compito completo.",
+    "recurring": "Ricorrente"
   },
   "weekdays": {
     "sunday": "Dom",
@@ -4387,9 +4393,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Attività bloccata",
+    "completeBlockedMessage": "Questa attività è bloccata da {{count}} attività aperta/e. Completarla comunque?",
+    "completeAnyway": "Completa comunque",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4507,5 +4513,37 @@
       "triageLater": "Smista: più tardi (resta nella Inbox)",
       "triageDelete": "Smista: elimina"
     }
+  },
+  "taskPanel": {
+    "saving": "Salvataggio…",
+    "saved": "Salvato",
+    "saveFailed": "Salvataggio non riuscito, modifica annullata",
+    "eyebrow": "Attività",
+    "titleLabel": "Titolo attività",
+    "addDescription": "Aggiungi una descrizione (Markdown)",
+    "fields": "Campi attività",
+    "due": "Scadenza",
+    "project": "Progetto",
+    "areaInherited": "Area del progetto",
+    "noArea": "Nessuna area",
+    "unassigned": "Nessuno",
+    "reopen": "Riapri",
+    "complete": "Completa"
+  },
+  "datePopover": {
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "weekend": "Questo weekend",
+    "nextWeek": "Settimana prossima",
+    "noDate": "Nessuna data",
+    "typePlaceholder": "Scrivi una data: domani 14:00, venerdì…",
+    "typeLabel": "Data a parole",
+    "preview": "Capito",
+    "noMatch": "Data non riconosciuta",
+    "quick": "Scelte rapide",
+    "prevMonth": "Mese precedente",
+    "nextMonth": "Mese successivo",
+    "time": "Ora",
+    "clearTime": "Nessuna ora"
   }
 }

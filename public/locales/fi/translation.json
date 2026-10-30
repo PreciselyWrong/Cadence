@@ -1364,7 +1364,8 @@
     "failedToDeleteGoal": "Tavoitteen poistaminen epäonnistui.",
     "failedToDeleteNote": "Muistiinpanon poistaminen epäonnistui.",
     "failedToDeleteTag": "Tunnisteen poistaminen epäonnistui.",
-    "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui"
+    "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui",
+    "failedToSaveTask": "Tehtävän tallennus epäonnistui."
   },
   "inbox": {
     "title": "Saapuneet",
@@ -1658,10 +1659,14 @@
     "unpin": "Irrota",
     "pinned": "Kiinnitetty",
     "pinUpdateError": "Kiinnityksen päivitys epäonnistui",
-    "comments": "Comments",
+    "comments": "Kommentit",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Tehtävän nimi on pakollinen",
+    "deferAfterDueError": "Lykkäyspäivä ei voi olla eräpäivän jälkeen",
+    "untitled": "Nimetön tehtävä",
+    "instanceOfShort": "Esiintymä"
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -1974,7 +1979,8 @@
     "every": "Joka",
     "weeks": "viikkoa",
     "months": "kuukautta",
-    "advancedHint": "Tietyille viikonpäiville tai loppupäivämäärälle avaa koko tehtävä."
+    "advancedHint": "Tietyille viikonpäiville tai loppupäivämäärälle avaa koko tehtävä.",
+    "recurring": "Toistuva"
   },
   "weekdays": {
     "sunday": "Su",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Tehtävä on estetty",
+    "completeBlockedMessage": "Tehtävän estää {{count}} avoin tehtävä. Merkitäänkö valmiiksi silti?",
+    "completeAnyway": "Merkitse silti valmiiksi",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "Lajittele: myöhemmin (jää saapuneisiin)",
       "triageDelete": "Lajittele: poista"
     }
+  },
+  "taskPanel": {
+    "saving": "Tallennetaan…",
+    "saved": "Tallennettu",
+    "saveFailed": "Tallennus epäonnistui, muutos peruttu",
+    "eyebrow": "Tehtävä",
+    "titleLabel": "Tehtävän nimi",
+    "addDescription": "Lisää kuvaus (Markdown)",
+    "fields": "Tehtävän kentät",
+    "due": "Eräpäivä",
+    "project": "Projekti",
+    "areaInherited": "Projektin alue",
+    "noArea": "Ei aluetta",
+    "unassigned": "Ei kukaan",
+    "reopen": "Avaa uudelleen",
+    "complete": "Merkitse valmiiksi"
+  },
+  "datePopover": {
+    "today": "Tänään",
+    "tomorrow": "Huomenna",
+    "weekend": "Tänä viikonloppuna",
+    "nextWeek": "Ensi viikko",
+    "noDate": "Ei päivämäärää",
+    "typePlaceholder": "Kirjoita päivämäärä: huomenna klo 14, perjantai…",
+    "typeLabel": "Päivämäärä sanoin",
+    "preview": "Ymmärretty",
+    "noMatch": "Päivämäärää ei tunnistettu",
+    "quick": "Pikavalinnat",
+    "prevMonth": "Edellinen kuukausi",
+    "nextMonth": "Seuraava kuukausi",
+    "time": "Aika",
+    "clearTime": "Ei kellonaikaa"
   }
 }

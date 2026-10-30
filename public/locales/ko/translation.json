@@ -1364,7 +1364,8 @@
     "failedToDeleteGoal": "목표를 삭제하지 못했습니다.",
     "failedToDeleteNote": "노트를 삭제하지 못했습니다.",
     "failedToDeleteTag": "태그를 삭제하지 못했습니다.",
-    "projectStatusUpdateFailed": "프로젝트 상태를 업데이트하지 못했습니다"
+    "projectStatusUpdateFailed": "프로젝트 상태를 업데이트하지 못했습니다",
+    "failedToSaveTask": "작업을 저장하지 못했습니다."
   },
   "inbox": {
     "title": "받은 편지함",
@@ -1658,10 +1659,14 @@
     "unpin": "고정 해제",
     "pinned": "고정됨",
     "pinUpdateError": "고정을 업데이트하지 못했습니다",
-    "comments": "Comments",
+    "comments": "댓글",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "작업 이름은 필수입니다",
+    "deferAfterDueError": "보류 날짜는 마감일 이후일 수 없습니다",
+    "untitled": "제목 없는 작업",
+    "instanceOfShort": "발생"
   },
   "projects": {
     "parentProject": "상위 프로젝트",
@@ -1974,7 +1979,8 @@
     "every": "매",
     "weeks": "주",
     "months": "개월",
-    "advancedHint": "특정 요일이나 종료 날짜를 위해 전체 작업을 열어보세요."
+    "advancedHint": "특정 요일이나 종료 날짜를 위해 전체 작업을 열어보세요.",
+    "recurring": "반복"
   },
   "weekdays": {
     "sunday": "일요일",
@@ -4380,9 +4386,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "작업이 차단됨",
+    "completeBlockedMessage": "이 작업은 미완료 작업 {{count}}개에 의해 차단되어 있습니다. 그래도 완료할까요?",
+    "completeAnyway": "그래도 완료",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4500,5 +4506,37 @@
       "triageLater": "정리: 나중에 (받은편지함에 유지)",
       "triageDelete": "정리: 삭제"
     }
+  },
+  "taskPanel": {
+    "saving": "저장 중…",
+    "saved": "저장됨",
+    "saveFailed": "저장 실패, 변경 취소됨",
+    "eyebrow": "작업",
+    "titleLabel": "작업 제목",
+    "addDescription": "설명 추가 (Markdown)",
+    "fields": "작업 필드",
+    "due": "마감",
+    "project": "프로젝트",
+    "areaInherited": "프로젝트 영역",
+    "noArea": "영역 없음",
+    "unassigned": "담당자 없음",
+    "reopen": "다시 열기",
+    "complete": "완료"
+  },
+  "datePopover": {
+    "today": "오늘",
+    "tomorrow": "내일",
+    "weekend": "이번 주말",
+    "nextWeek": "다음 주",
+    "noDate": "날짜 없음",
+    "typePlaceholder": "날짜 입력: 내일 오후 2시, 금요일…",
+    "typeLabel": "자연어 날짜",
+    "preview": "인식됨",
+    "noMatch": "날짜를 인식할 수 없음",
+    "quick": "빠른 선택",
+    "prevMonth": "이전 달",
+    "nextMonth": "다음 달",
+    "time": "시간",
+    "clearTime": "시간 없음"
   }
 }

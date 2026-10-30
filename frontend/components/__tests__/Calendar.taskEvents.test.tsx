@@ -15,6 +15,8 @@ import {
     CAL_ALL_DAY_ID,
 } from '../Calendar/taskEvents';
 
+jest.mock('../../i18n', () => ({ __esModule: true, default: {} }));
+
 jest.mock('../../utils/profileService', () => ({
     getFirstDayOfWeek: jest.fn().mockResolvedValue(1),
     getLocaleFirstDayOfWeek: jest.fn().mockReturnValue(1),

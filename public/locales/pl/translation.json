@@ -1368,7 +1368,8 @@
     "failedToDeleteGoal": "Nie udało się usunąć celu.",
     "failedToDeleteNote": "Nie udało się usunąć notatki.",
     "failedToDeleteTag": "Nie udało się usunąć tagu.",
-    "projectStatusUpdateFailed": "Nie udało się zaktualizować statusu projektu"
+    "projectStatusUpdateFailed": "Nie udało się zaktualizować statusu projektu",
+    "failedToSaveTask": "Nie udało się zapisać zadania."
   },
   "inbox": {
     "title": "Skrzynka odbiorcza",
@@ -1662,10 +1663,14 @@
     "unpin": "Odepnij",
     "pinned": "Przypięte",
     "pinUpdateError": "Nie udało się zaktualizować przypięcia",
-    "comments": "Comments",
+    "comments": "Komentarze",
     "skipOccurrence": "Skip this occurrence",
     "occurrenceSkipped": "Occurrence skipped",
-    "skipOccurrenceError": "Failed to skip occurrence"
+    "skipOccurrenceError": "Failed to skip occurrence",
+    "nameRequired": "Nazwa zadania jest wymagana",
+    "deferAfterDueError": "Data odroczenia nie może być po terminie",
+    "untitled": "Zadanie bez tytułu",
+    "instanceOfShort": "Wystąpienie"
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -1980,7 +1985,8 @@
     "every": "Każdy",
     "weeks": "tygodnie",
     "months": "miesiące",
-    "advancedHint": "Aby ustawić konkretne dni tygodnia lub datę końcową, otwórz pełne zadanie."
+    "advancedHint": "Aby ustawić konkretne dni tygodnia lub datę końcową, otwórz pełne zadanie.",
+    "recurring": "Cykliczne"
   },
   "weekdays": {
     "sunday": "Nie",
@@ -4398,9 +4404,9 @@
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
     "blockedTooltip": "Blocked by {{count}} open task(s)",
-    "completeBlockedTitle": "Task is blocked",
-    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
-    "completeAnyway": "Complete anyway",
+    "completeBlockedTitle": "Zadanie jest zablokowane",
+    "completeBlockedMessage": "To zadanie jest zablokowane przez {{count}} otwarte zadanie(a). Mimo to zakończyć?",
+    "completeAnyway": "Zakończ mimo to",
     "types": {
       "blocks": "Blocks",
       "blocked_by": "Blocked by",
@@ -4518,5 +4524,37 @@
       "triageLater": "Przegląd: później (zostaw w skrzynce)",
       "triageDelete": "Przegląd: usuń"
     }
+  },
+  "taskPanel": {
+    "saving": "Zapisywanie…",
+    "saved": "Zapisano",
+    "saveFailed": "Nie udało się zapisać, zmiana cofnięta",
+    "eyebrow": "Zadanie",
+    "titleLabel": "Tytuł zadania",
+    "addDescription": "Dodaj opis (Markdown)",
+    "fields": "Pola zadania",
+    "due": "Termin",
+    "project": "Projekt",
+    "areaInherited": "Obszar projektu",
+    "noArea": "Brak obszaru",
+    "unassigned": "Nikt",
+    "reopen": "Otwórz ponownie",
+    "complete": "Zakończ"
+  },
+  "datePopover": {
+    "today": "Dziś",
+    "tomorrow": "Jutro",
+    "weekend": "W tym weekendzie",
+    "nextWeek": "Przyszły tydzień",
+    "noDate": "Bez daty",
+    "typePlaceholder": "Wpisz datę: jutro 14:00, piątek…",
+    "typeLabel": "Data słownie",
+    "preview": "Zrozumiano",
+    "noMatch": "Nie rozpoznano daty",
+    "quick": "Szybki wybór",
+    "prevMonth": "Poprzedni miesiąc",
+    "nextMonth": "Następny miesiąc",
+    "time": "Godzina",
+    "clearTime": "Bez godziny"
   }
 }
