@@ -671,3 +671,6 @@ A mode that transforms a task into a habit tracker with streak counting, target 
 **Document Version:** 1.1.0
 **Last Updated:** 2026-09-22
 **Audience:** Developers, AI assistants, and end users
+## Task row: tags, project and due date
+
+In the default (non-minimal) task list rows, the right side of the title line shows the task's tags as small rounded chips (the tag's palette color when it has one, neutral gray otherwise), then the project name with its folder icon, then the due date (red when overdue, blue today). At most two chips show; a `+N` chip lists the remaining tags in its tooltip. On narrow screens the chips are hidden from the title line and the tags move back to the secondary line. The Plan my day candidate rows show the same chips and the project on wider screens.
