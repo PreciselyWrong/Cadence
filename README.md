@@ -2,103 +2,132 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="public/wide-logo-light.png">
     <source media="(prefers-color-scheme: light)" srcset="public/wide-logo-dark.png">
-    <img src="public/wide-logo-light.png" alt="tududi" width="400">
+    <img src="public/wide-logo-dark.png" alt="Cadence" width="400">
   </picture>
 </p>
 
+<h3 align="center">One personal system for tasks, projects, habits and notes</h3>
+
 <p align="center">
-  <h2 align="center">Productivity made simple</p></h2>
-  <p align="center">Organize your life and projects with a clear, hierarchical structure<br>
-  and smart recurring tasks.<br>
-  Get focused, stay productive, and keep your data private.
-  </p>
+  Self-hosted, on the web and on Android, working offline, with no AI required.<br>
+  A fork of <a href="https://github.com/chrisvel/tududi">tududi</a> by Chris Veleris, under the MIT licence.
 </p>
 
-![Light Mode Screenshot](screenshots/all-light.png)
+![Cadence, light mode](screenshots/all-light.png)
 
-More screenshots are [available here](#screenshots).
+More screenshots are [below](#screenshots).
 
 ---
 
-## 🍴 What this fork adds
+## What Cadence is
 
-This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` (last synced with upstream `f04288d`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
+Cadence keeps tasks, projects, areas, habits, notes and quick capture in one place. You run the server yourself (Docker, SQLite or PostgreSQL) and reach it from your devices, for example through Tailscale. Nothing is sent to a third party unless you connect it yourself (Google Calendar, CalDAV, OIDC).
+
+| Client                               | State                                                                       |
+| ------------------------------------ | --------------------------------------------------------------------------- |
+| **Web** (installable PWA)            | Full app: every feature below                                               |
+| **Android** ([`android/`](android/)) | Habits with their widgets, and tasks synced with the server, usable offline |
+| **Linux desktop**                    | Planned (lightweight Tauri app); the web app covers it meanwhile            |
+
+### Android app
+
+Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the former Cadence habits app.
+
+- **Tasks, offline:** every task is kept on the phone and synced with the server through [`/api/v1/sync`](docs/30-offline-sync.md). Changes made offline are queued and sent when the server is reachable again; conflicts are merged field by field.
+- **Connect with a QR code:** create an API key in the web app (Profile → API keys) and scan the QR code shown under it, or type the server address and key.
+- **Widgets:** a _Today_ widget where a task is checked off in one tap, a _+ Task_ widget for quick capture, and the habit widgets.
+- **Capture and reminders:** share text from any app into the inbox, and get due-time reminders with a _Complete_ action.
+- **Habits:** kept on the phone for now; syncing them with the server is planned.
+
+Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
+
+## What Cadence adds to tududi
+
+Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last synced with upstream `f04288d`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app works as in tududi. The full list, kept up to date, is in [docs/fork/FORK.md](docs/fork/FORK.md).
+
+### Offline sync and mobile
+
+|                         | Upstream                                   | Cadence                                                                                                                                                                                         |
+| ----------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Offline clients         | The PWA reads from cache and queues writes | A **sync API** (`/api/v1/sync`): snapshot, pull by cursor, idempotent push, hybrid logical clocks, field-by-field merge, conflict log. Used by the Android app. [Docs](docs/30-offline-sync.md) |
+| Device setup            | Copy the API key by hand                   | A **QR code** under each new API key, scanned by the Android app                                                                                                                                |
+| Moving a recurring task | Moves the whole series                     | Choose **this occurrence**, **this and the following ones**, or **the whole series**, from the calendar, Today or the task row                                                                  |
 
 ### Calendar
 
-| | Upstream | This fork |
-|---|---|---|
-| Views | Month, Week, Day | **Year** (heatmap), Month, Week, **N days** (2–7), Day, **Agenda** |
-| Task blocks | Always a 1-hour block at midnight of the due day (the due time was ignored) | Drawn at the due time for the task's **estimate**, or from its start time to its due time; whole-day and multi-day tasks are **bars** in an all-day row |
-| Drag & drop | Move only | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h); on Today, drop a task or block on a 15-minute slot or the all-day row |
-| Scheduling | — | **Arrange tasks** panel: undated and overdue tasks, grouped by project, filtered by project/tag/priority, dragged onto a day or an hour |
-| Recurring tasks | Only the next occurrence | **Every occurrence** in the shown month (faded, read-only) |
-| View options | — | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag, **visible hours** (hide night hours) — saved per user |
-| Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
-| Print | — | Prints only the shown view |
-| Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
-| Google Calendar & Tasks | Read-only iCal feeds | **Two-way sync**: every Google calendar shown, hidden or edited from Tududi (create, move, resize, delete); dated tasks on a **"Tududi" calendar** in Google; **all tasks** with Google Tasks (one list per project). Changes follow within ~2 minutes |
+|                                         | Upstream                                                                    | This fork                                                                                                                                                                                                                                                |
+| --------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Views                                   | Month, Week, Day                                                            | **Year** (heatmap), Month, Week, **N days** (2–7), Day, **Agenda**                                                                                                                                                                                       |
+| Task blocks                             | Always a 1-hour block at midnight of the due day (the due time was ignored) | Drawn at the due time for the task's **estimate**, or from its start time to its due time; whole-day and multi-day tasks are **bars** in an all-day row                                                                                                  |
+| Drag & drop                             | Move only                                                                   | Move (keeps the length), **resize** the bottom edge (sets the estimate or the due time, 15-minute steps, 5 min–12 h); on Today, drop a task or block on a 15-minute slot or the all-day row                                                              |
+| Scheduling                              | —                                                                           | **Arrange tasks** panel: undated and overdue tasks, grouped by project, filtered by project/tag/priority, dragged onto a day or an hour                                                                                                                  |
+| Recurring tasks                         | Only the next occurrence                                                    | **Every occurrence** in the shown month (faded, read-only)                                                                                                                                                                                               |
+| View options                            | —                                                                           | Show completed, weekends, repeats, **habits**, **focus sessions**, **week numbers**, **mini calendar**, **public holidays** (country + region), **colour by** project / priority / tag, **visible hours** (hide night hours) — saved per user            |
+| Habits                                  | Not on the calendar                                                         | Purple whole-day items on each day a habit asks for a check-in                                                                                                                                                                                           |
+| Print                                   | —                                                                           | Prints only the shown view                                                                                                                                                                                                                               |
+| Subscribe from Google / Apple / Outlook | Not possible                                                                | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable                                                                                                                                                            |
+| Google Calendar & Tasks                 | Read-only iCal feeds                                                        | **Two-way sync**: every Google calendar shown, hidden or edited from Cadence (create, move, resize, delete); dated tasks on a **"Cadence" calendar** in Google; **all tasks** with Google Tasks (one list per project). Changes follow within ~2 minutes |
 
 ### Appearance
 
-| | Upstream | This fork |
-|---|---|---|
-| Interface density | One look, every control visible | **Minimal** (default, calmer TickTick-style list) or **Dense** (upstream's look), chosen in Profile → Appearance and saved in `ui_settings.appearance.density` |
-| Minimal row details | Fixed details on each row | Choose and reorder the right-hand chips of a Minimal row (recurrence, comments, tags, project, priority flag, due date) in Profile → Appearance, saved in `ui_settings.appearance.rowFields` |
+|                     | Upstream                        | This fork                                                                                                                                                                                    |
+| ------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Interface density   | One look, every control visible | **Minimal** (default, calmer TickTick-style list) or **Dense** (upstream's look), chosen in Profile → Appearance and saved in `ui_settings.appearance.density`                               |
+| Minimal row details | Fixed details on each row       | Choose and reorder the right-hand chips of a Minimal row (recurrence, comments, tags, project, priority flag, due date) in Profile → Appearance, saved in `ui_settings.appearance.rowFields` |
 
 ### Sidebar
 
-| | Upstream | This fork |
-|---|---|---|
+|                   | Upstream                       | This fork                                                                                                                                                                                                                                                                                    |
+| ----------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Sidebar (Minimal) | One long list of every section | Smart lists with counts (Today, Tomorrow, Next 7 days, Inbox), Projects and Tags with Areas as folders, and an icon rail with a More menu. Smart lists, rail placement and count badges can be customised in Profile → Sidebar. Dense keeps the upstream sidebar. [Docs](docs/32-sidebar.md) |
 
 ### Focus
 
-| | Upstream | This fork |
-|---|---|---|
-| Tomato timer | A countdown, nothing kept | Finished sessions (and early stops of 5 min or more) are **recorded** |
-| Statistics | — | Insights → Productivity → **Focus**: total time, sessions, most focused hour, minutes per day and per hour, top tasks |
-| Calendar | — | Focus sessions as orange blocks |
+|              | Upstream                  | This fork                                                                                                             |
+| ------------ | ------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Tomato timer | A countdown, nothing kept | Finished sessions (and early stops of 5 min or more) are **recorded**                                                 |
+| Statistics   | —                         | Insights → Productivity → **Focus**: total time, sessions, most focused hour, minutes per day and per hour, top tasks |
+| Calendar     | —                         | Focus sessions as orange blocks                                                                                       |
 
 ### Today
 
-| | Upstream | This fork |
-|---|---|---|
-| Planning | — | Planning happens on Today: candidates on the left (round check completes, **+** or drag places), and on the right a **Planning** / **Calendar** switch (remembered per browser). The calendar toggle hides the panel. Drag the untimed tasks ("Today, no time yet") into order, saved with the plan; **Tomorrow** / **Next week** move a planned task's due date and take it off today's plan (Undo brings it back) |
-| Days | — | **‹** / **›** move between days and **Today** returns, kept in the URL as `?date=` [Docs](docs/20-daily-plan.md) |
+|          | Upstream | This fork                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Planning | —        | Planning happens on Today: candidates on the left (round check completes, **+** or drag places), and on the right a **Planning** / **Calendar** switch (remembered per browser). The calendar toggle hides the panel. Drag the untimed tasks ("Today, no time yet") into order, saved with the plan; **Tomorrow** / **Next week** move a planned task's due date and take it off today's plan (Undo brings it back) |
+| Days     | —        | **‹** / **›** move between days and **Today** returns, kept in the URL as `?date=` [Docs](docs/20-daily-plan.md)                                                                                                                                                                                                                                                                                                    |
 
 ### Review and decisions
 
-| | Upstream | This fork |
-|---|---|---|
-| Decision funnel | Someday tag and defer-until only | **In view** (possibilities), **This week** (commitments) and **Later** (parked, with an optional **review date**) from the task pane or the row menu; none of them is a due date, none reaches Google. On Today, this week's tasks and tasks in view lead the suggestions. [Docs](docs/34-review.md) |
-| Postponements | Due date changes logged, never read | Due date changes are classified (pushed back, rescheduled, time changed, automatic) and unfinished plan days counted; a task pushed back 3 times in 30 days is listed, and the task pane shows its history. No badges, no score. [Docs](docs/34-review.md) |
-| Review | — | One page, `/review` (More menu): **To decide**, **Pushed back**, **Stalled projects**, **Later**, **Old**, **This week** with planned time against available time; one Decide menu per row; decisions saved one by one, so a review can stop and resume. **Help me choose** compares two tasks at a time, on Today and in the week. [Docs](docs/34-review.md) |
+|                 | Upstream                            | This fork                                                                                                                                                                                                                                                                                                                                                     |
+| --------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Decision funnel | Someday tag and defer-until only    | **In view** (possibilities), **This week** (commitments) and **Later** (parked, with an optional **review date**) from the task pane or the row menu; none of them is a due date, none reaches Google. On Today, this week's tasks and tasks in view lead the suggestions. [Docs](docs/34-review.md)                                                          |
+| Postponements   | Due date changes logged, never read | Due date changes are classified (pushed back, rescheduled, time changed, automatic) and unfinished plan days counted; a task pushed back 3 times in 30 days is listed, and the task pane shows its history. No badges, no score. [Docs](docs/34-review.md)                                                                                                    |
+| Review          | —                                   | One page, `/review` (More menu): **To decide**, **Pushed back**, **Stalled projects**, **Later**, **Old**, **This week** with planned time against available time; one Decide menu per row; decisions saved one by one, so a review can stop and resume. **Help me choose** compares two tasks at a time, on Today and in the week. [Docs](docs/34-review.md) |
 
 ### Projects
 
-| | Upstream | This fork |
-|---|---|---|
-| Timeline | Bars coloured by status | Also **colour by priority or tag** |
-| Sub-projects | Flat list of projects | **Sub-projects**, any depth; a sub-project takes its parent's area; listed on the parent page, indented in the list and sidebar |
+|              | Upstream                | This fork                                                                                                                       |
+| ------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Timeline     | Bars coloured by status | Also **colour by priority or tag**                                                                                              |
+| Sub-projects | Flat list of projects   | **Sub-projects**, any depth; a sub-project takes its parent's area; listed on the parent page, indented in the list and sidebar |
 
 ### Tasks, tags and boards
 
-| | Upstream | This fork |
-|---|---|---|
-| Pinned tasks | — | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming |
-| Round check | Checkbox and status menu on each row | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. In Minimal, rows are one line with a priority flag and due date you can set in place. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md) |
-| Task pane | Inline quick-edit on the row | In Minimal, a row click opens the task in a **right-hand pane** and you edit it in place (title, check, priority, due date, project, tags, note, subtasks); the URL keeps `?task=<uid>`, Escape closes it. Dense keeps the inline expansion. [Docs](docs/00-tasks-behavior.md) |
-| Row gestures | Subtasks through a list icon; no row menu; no keyboard moves between rows | In Minimal, a **chevron** before the check opens a row's subtasks, and group headers in project and day lists collapse. **Right-click** a row for priority, date (today, tomorrow, next week, clear), project, pin and delete. Arrow keys move between rows; Space completes, Enter opens, **D** and **P** open the date and priority pickers. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
-| Drag to reorder | — | In Minimal, drag a row in the Tasks, project or tag list to set its order; it is saved per account and list and the list sorts by **Custom**. Drop a row on a project in the sidebar to move it there (the project lights up while you hover). [Docs](docs/00-tasks-behavior.md) |
-| Add and completed | Add box at the top of the page; completed tasks mixed into the list | In Minimal, Today, Tasks, project and tag lists start with a **+ Add task** field (Enter adds to that list) and end with a collapsed **Completed (N)** section. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
-| Tags | Flat list | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus |
-| Quick add | English dates only | **French dates** too (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), **`!1`–`!3`** sets priority (high, medium, low), and **`^list`** is an alias of `+project`, matched without regard to case or accents. [Docs](docs/04-inbox-page.md) |
-| Project board | Kanban by status only | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit |
-| New view | Views created from Universal Search only | **New view** in the Minimal sidebar's Views section: name, project, tag, priority, due (today, next 7 days, overdue, no date) and status (open or done); a view can be narrowed to one project (`views.project_uid`). [Docs](docs/08-views-system.md) |
-| List, board or calendar | One list per view | In Minimal, a saved view, tag page, project and the Tasks list switch between **List**, **Board** (columns by priority, drag to change it) and **Calendar** (a month by due date, drag to move it); the choice is remembered per view in `ui_settings.viewTypes`. Dense is unchanged. [Docs](docs/08-views-system.md) |
-| Eisenhower matrix | One fixed urgent/important matrix | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit |
-| Period summary | — | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template |
+|                         | Upstream                                                                  | This fork                                                                                                                                                                                                                                                                                                                                                                                              |
+| ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Pinned tasks            | —                                                                         | **Pin** a task: it stays at the top of All tasks, project lists, Today and Upcoming                                                                                                                                                                                                                                                                                                                    |
+| Round check             | Checkbox and status menu on each row                                      | A **round check** before each title, ringed by priority; one click completes the task (undo toast) and it leaves the list. In Minimal, rows are one line with a priority flag and due date you can set in place. Task and Upcoming lists open on **open** tasks; "All" is explicit. [Docs](docs/00-tasks-behavior.md)                                                                                  |
+| Task pane               | Inline quick-edit on the row                                              | In Minimal, a row click opens the task in a **right-hand pane** and you edit it in place (title, check, priority, due date, project, tags, note, subtasks); the URL keeps `?task=<uid>`, Escape closes it. Dense keeps the inline expansion. [Docs](docs/00-tasks-behavior.md)                                                                                                                         |
+| Row gestures            | Subtasks through a list icon; no row menu; no keyboard moves between rows | In Minimal, a **chevron** before the check opens a row's subtasks, and group headers in project and day lists collapse. **Right-click** a row for priority, date (today, tomorrow, next week, clear), project, pin and delete. Arrow keys move between rows; Space completes, Enter opens, **D** and **P** open the date and priority pickers. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
+| Drag to reorder         | —                                                                         | In Minimal, drag a row in the Tasks, project or tag list to set its order; it is saved per account and list and the list sorts by **Custom**. Drop a row on a project in the sidebar to move it there (the project lights up while you hover). [Docs](docs/00-tasks-behavior.md)                                                                                                                       |
+| Add and completed       | Add box at the top of the page; completed tasks mixed into the list       | In Minimal, Today, Tasks, project and tag lists start with a **+ Add task** field (Enter adds to that list) and end with a collapsed **Completed (N)** section. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md)                                                                                                                                                                                |
+| Tags                    | Flat list                                                                 | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus                                                                                                                                                                                                                                                                 |
+| Quick add               | English dates only                                                        | **French dates** too (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), **`!1`–`!3`** sets priority (high, medium, low), and **`^list`** is an alias of `+project`, matched without regard to case or accents. [Docs](docs/04-inbox-page.md)                                                                                                                                                   |
+| Project board           | Kanban by status only                                                     | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit                                                                                                                                                                                                                                                       |
+| New view                | Views created from Universal Search only                                  | **New view** in the Minimal sidebar's Views section: name, project, tag, priority, due (today, next 7 days, overdue, no date) and status (open or done); a view can be narrowed to one project (`views.project_uid`). [Docs](docs/08-views-system.md)                                                                                                                                                  |
+| List, board or calendar | One list per view                                                         | In Minimal, a saved view, tag page, project and the Tasks list switch between **List**, **Board** (columns by priority, drag to change it) and **Calendar** (a month by due date, drag to move it); the choice is remembered per view in `ui_settings.viewTypes`. Dense is unchanged. [Docs](docs/08-views-system.md)                                                                                  |
+| Eisenhower matrix       | One fixed urgent/important matrix                                         | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit                                                                                                                                                                                                                                                    |
+| Period summary          | —                                                                         | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template                                                                                                                                                                                                                        |
 
 ### Under the hood
 
@@ -118,95 +147,42 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 
 ---
 
-## 💖 Enjoying tududi?
+## Features inherited from tududi
 
-Help keep it free and actively developed by [buying me a coffee](https://coff.ee/chrisveleris) ☕, [becoming a sponsor](https://github.com/sponsors/chrisvel), or [supporting on Patreon](https://www.patreon.com/ChrisVeleris). You can also support the project by purchasing a **hosted subscription** for a hassle-free, managed solution. Every contribution helps maintain this project and build new features!
+- **Tasks and subtasks:** filters (Today, Upcoming, Someday), sorting, progress on subtasks.
+- **Recurring tasks:** daily, weekly, monthly (also on a weekday or the last day), every N days/weeks/months, from the due date or the completion date, with an optional end date. [Docs](docs/01-recurring-tasks-behavior.md)
+- **Projects, areas, notes and tags**, goals and habits.
+- **Families and small teams:** roles (admin, user, guest), groups, members without an email, assigning tasks to members or contacts. [Docs](docs/19-people-and-roles.md)
+- **26 languages.**
+- **Installable PWA** on Android, iOS and desktop.
+- **REST API** with personal API keys and Swagger docs at `/api-docs`; **MCP server** for AI assistants. [Docs](docs/14-mcp-integration.md)
+- **OIDC/SSO** sign-in (Google, Okta, Keycloak, Authentik, PocketID, Azure AD…) and **CalDAV** sync (tasks.org, Apple Reminders, Thunderbird, Nextcloud…).
 
----
+## Getting started
 
-## 🚀 How It Works
+Cadence keeps tududi's technical names so that existing installs keep working: the Docker image, the `TUDUDI_*` variables, the database files and the `tt_` API key prefix are unchanged. Only the displayed name changed.
 
-This app allows users to manage their tasks, projects, areas, notes, and tags in an organized way. Users can create tasks, projects, areas (to group projects), notes, and tags. Each task can be associated with a project, and both tasks and notes can be tagged for better organization. Projects can belong to areas and can also have multiple notes and tags. This structure helps users categorize and track their work efficiently, whether they’re managing individual tasks, larger projects, or keeping detailed notes.
-
-## 🧠 Philosophy
-
-For the thinking behind tududi, read:
-
-- [Designing a Life Management System That Doesn't Fight Back](https://medium.com/@chrisveleris/designing-a-life-management-system-that-doesnt-fight-back-2fd58773e857)
-- [From Task to Table: How I Finally Got to the Korean Burger](https://medium.com/@chrisveleris/from-task-to-table-how-i-finally-got-to-the-korean-burger-01245a14d491)
-
-## ✨ Features
-
-- **Task Management**: Create, update, and delete tasks. Mark tasks as completed and view them by different filters (Today, Upcoming, Someday). Order them by Name, Due Date, Date Created, or Priority.
-- **Subtasks**: Break down complex tasks into smaller, manageable subtasks with progress tracking and seamless navigation.
-- **Recurring Tasks**: Comprehensive recurring task system with intelligent parent-child relationships:
-    - **Multiple Recurrence Patterns**: Daily, weekly, monthly, monthly on specific weekdays, and monthly last day
-    - **Completion-Based Recurrence**: Option to repeat based on completion date rather than due date
-    - **Smart Parent-Child Linking**: Generated task instances maintain connection to their original recurring pattern
-    - **Direct Parent Editing**: Edit recurrence settings directly from any generated task instance
-    - **Flexible Scheduling**: Set custom intervals (every 2 weeks, every 3 months, etc.)
-    - **End Date Control**: Optional end dates for recurring series
-- **Project Sharing & Collaboration**: Share projects with team members and collaborate effectively
-- **Families & Small Teams**: One workspace for a household or a team, described in [People, Members and Roles](docs/19-people-and-roles.md):
-    - **Roles**: Admin, user and guest, each with a list of what it can do
-    - **Groups**: Share a project, area or goal with several people at once
-    - **Members without an email**: Add a child or another household member who has no email, put them in a group, assign them tasks and give them a sign-in link so they can sign in
-    - **One People list**: Members and contacts in one list. Add members yourself with the invite permission, or turn a contact into a member without losing the tasks assigned to them
-    - **Assign to anyone**: Give a task to a member or to a contact such as a plumber, and see everyone's day on one Everyone board
-- **Quick Notes**: Create, update, delete, or assign text notes to projects.
-- **Tags**: Create tags for tasks and notes to enhance organization.
-- **Project Tracking**: Organize tasks into projects. Each project can contain multiple tasks and/or multiple notes.
-- **Area Categorization**: Group projects into areas for better organization and focus.
-- **Due Date Tracking**: Set due dates for tasks and view them based on due date categories.
-- **Responsive Design**: Accessible from various devices, ensuring a consistent experience across desktops, tablets, and mobile phones.
-- **Installable PWA**: Add tududi to your home screen on Android, iOS, and desktop browsers for a native app-like experience. The app stays readable from cache when offline, and write operations are queued and synced automatically when connectivity returns.
-- **Multi-Language Support**: Available in 26 languages with full localization support for a truly global productivity experience.
-- **Open API & Access Tokens**: Interactive Swagger docs at `/api-docs` plus personal API keys for integrating tududi with your own tooling or automations.
-- **OIDC/SSO Authentication**: Enterprise-ready Single Sign-On support with:
-    - Multiple OIDC providers (Google, Okta, Keycloak, Authentik, PocketID, Azure AD, and more)
-    - Just-In-Time (JIT) user provisioning
-    - Account linking for hybrid authentication
-    - Simple .env-based configuration perfect for self-hosters
-    - Automatic admin role assignment based on email domains
-- **CalDAV Synchronization**: Industry-standard CalDAV protocol support for seamless task syncing:
-    - Bidirectional sync with CalDAV servers (Nextcloud, Baikal, and more)
-    - Access tasks from popular clients (tasks.org, Apple Reminders, Thunderbird, Evolution)
-    - Full recurring task support with RRULE
-    - Conflict detection and resolution
-    - Background automatic synchronization
-    - HTTP Basic Authentication for CalDAV clients
-
-## 🗺️ Roadmap
-
-Check out our [GitHub Project](https://github.com/users/chrisvel/projects/2) for planned features and progress.
-
-## 🛠️ Getting Started
-
-Get up and running quickly with our comprehensive documentation:
-
-### Quick Start
+### Quick start
 
 ```bash
-docker pull chrisvel/tududi:latest
-
 docker run \
   -e TUDUDI_USER_EMAIL=admin@example.com \
   -e TUDUDI_USER_PASSWORD=your-secure-password \
   -e TUDUDI_SESSION_SECRET=$(openssl rand -hex 64) \
-  -v ~/tududi_db:/app/db \
-  -v ~/tududi_uploads:/app/uploads \
-  -v ~/tududi_backups:/app/backups \
+  -v ~/cadence/db:/app/db \
+  -v ~/cadence/uploads:/app/uploads \
+  -v ~/cadence/backups:/app/backups \
   -p 3002:3002 \
-  -d chrisvel/tududi:latest
+  -d ghcr.io/preciselywrong/tududi:latest
 ```
 
-Navigate to [http://localhost:3002](http://localhost:3002) and login with your credentials.
+The image is built from `main` by [`.github/workflows/custom-image.yml`](.github/workflows/custom-image.yml). Open [http://localhost:3002](http://localhost:3002) and sign in.
 
-If people reach tududi at another address (for example `http://zima.local:3002` or `https://tududi.example.com`), add `-e BASE_URL=<that address>` so links in emails (account verification, password reset) point there instead of `localhost`.
+If people reach Cadence at another address (for example `http://unraid.local:3002` or `https://cadence.example.com`), add `-e BASE_URL=<that address>` so links in emails (account verification, password reset) point there instead of `localhost`.
 
 ### Using docker-compose
 
-The repo also includes a `docker-compose.yml`. It reads its configuration from a `.env` file, so copy the example first:
+The repo also includes a `docker-compose.yml`. It still pulls the upstream image (`chrisvel/tududi`); set `image: ghcr.io/preciselywrong/tududi:latest` to run Cadence. It reads its configuration from a `.env` file, so copy the example first:
 
 ```bash
 cp .env.example .env
@@ -225,16 +201,16 @@ docker run \
   ...
 ```
 
-| Value | Meaning |
-|-------|---------|
-| `true` | Trust all proxies (simplest option for single-proxy setups) |
-| `1` | Trust the first hop only |
-| `loopback` | Trust loopback addresses (127.0.0.1/::1) |
-| `172.16.0.0/12` | Trust a specific subnet |
+| Value           | Meaning                                                     |
+| --------------- | ----------------------------------------------------------- |
+| `true`          | Trust all proxies (simplest option for single-proxy setups) |
+| `1`             | Trust the first hop only                                    |
+| `loopback`      | Trust loopback addresses (127.0.0.1/::1)                    |
+| `172.16.0.0/12` | Trust a specific subnet                                     |
 
 ### OIDC/SSO Authentication
 
-Tududi supports Single Sign-On via OpenID Connect (OIDC), allowing users to authenticate with external identity providers.
+Cadence supports Single Sign-On via OpenID Connect (OIDC), allowing users to authenticate with external identity providers.
 
 **Quick Setup (Single Provider):**
 
@@ -274,6 +250,7 @@ docker run \
 **Supported Providers:** Google, Okta, Keycloak, Authentik, PocketID, Azure AD, and any OIDC-compliant provider
 
 **Key Features:**
+
 - Automatic user provisioning on first login
 - Account linking for existing users
 - Admin role assignment based on email domains
@@ -283,7 +260,7 @@ docker run \
 
 ### CalDAV Synchronization
 
-Tududi supports the industry-standard CalDAV protocol, enabling seamless task synchronization with popular CalDAV clients and servers. It's enabled by default.
+Cadence supports the industry-standard CalDAV protocol, enabling seamless task synchronization with popular CalDAV clients and servers. It's enabled by default.
 
 **Quick Setup:**
 
@@ -294,6 +271,7 @@ docker run \
 ```
 
 **Supported Clients:**
+
 - **tasks.org** (Android/iOS) - Full task management with recurring tasks
 - **Apple Reminders** (iOS/macOS) - Native iOS/macOS integration
 - **Thunderbird** (Desktop) - Advanced task features
@@ -301,9 +279,10 @@ docker run \
 
 **Sync with External Servers:**
 
-Connect Tududi to external CalDAV servers like Nextcloud, Baikal, or other CalDAV-compatible services for bidirectional synchronization.
+Connect Cadence to external CalDAV servers like Nextcloud, Baikal, or other CalDAV-compatible services for bidirectional synchronization.
 
 **Key Features:**
+
 - Bidirectional sync (local ↔ remote)
 - Full recurring task support with RRULE
 - Conflict detection and resolution
@@ -315,7 +294,7 @@ Connect Tududi to external CalDAV servers like Nextcloud, Baikal, or other CalDA
 
 ### Database: SQLite or PostgreSQL
 
-Tududi stores everything in a single SQLite file by default, which is all a personal instance needs. For larger or multi-user deployments you can point it at PostgreSQL instead by setting `DATABASE_URL` (for example `postgres://tududi:secret@db:5432/tududi`). The database may be empty; the schema is created on first start. A complete compose setup with a bundled PostgreSQL service is in [docs/examples/docker-compose.postgres.yml](docs/examples/docker-compose.postgres.yml) (copy it next to your `.env` as `docker-compose.yml`), and the deployment guide is [docs/16-postgresql.md](docs/16-postgresql.md).
+Cadence stores everything in a single SQLite file by default, which is all a personal instance needs. For larger or multi-user deployments you can point it at PostgreSQL instead by setting `DATABASE_URL` (for example `postgres://tududi:secret@db:5432/tududi`). The database may be empty; the schema is created on first start. A complete compose setup with a bundled PostgreSQL service is in [docs/examples/docker-compose.postgres.yml](docs/examples/docker-compose.postgres.yml) (copy it next to your `.env` as `docker-compose.yml`), and the deployment guide is [docs/16-postgresql.md](docs/16-postgresql.md).
 
 ### Upgrading
 
@@ -323,7 +302,7 @@ Every start backs up the SQLite file next to it (`db-backup-<timestamp>.sqlite3`
 
 #### Upgrading to a release with PostgreSQL support
 
-SQLite stays the default and existing databases are used as they are. Make sure your `.env` does **not** contain a `DATABASE_URL` or `DB_DIALECT` left over from another application: either one switches tududi to PostgreSQL. As a safety net, the container refuses to start when PostgreSQL is selected but a populated SQLite database is present at `DB_FILE`; unset the variable to keep your data, or set `TUDUDI_ALLOW_DIALECT_SWITCH=true` if you really want an empty PostgreSQL database.
+SQLite stays the default and existing databases are used as they are. Make sure your `.env` does **not** contain a `DATABASE_URL` or `DB_DIALECT` left over from another application: either one switches Cadence to PostgreSQL. As a safety net, the container refuses to start when PostgreSQL is selected but a populated SQLite database is present at `DB_FILE`; unset the variable to keep your data, or set `TUDUDI_ALLOW_DIALECT_SWITCH=true` if you really want an empty PostgreSQL database.
 
 #### v1.1.x to v1.2.x: Volume path change
 
@@ -334,14 +313,14 @@ The Docker volume mount path changed in v1.2.0 from `/app/backend/db` to `/app/d
 ```yaml
 # OLD (v1.1.x) - update this
 volumes:
-  - ./tududi_db:/app/backend/db
-  - ./uploads:/app/backend/uploads
+    - ./tududi_db:/app/backend/db
+    - ./uploads:/app/backend/uploads
 
 # NEW (v1.2.x+) - use these paths
 volumes:
-  - ./tududi_db:/app/db
-  - ./uploads:/app/uploads
-  - ./backups:/app/backups
+    - ./tududi_db:/app/db
+    - ./uploads:/app/uploads
+    - ./backups:/app/backups
 ```
 
 **Migration steps:**
@@ -352,125 +331,46 @@ volumes:
 
 Your existing data directory (`./tududi_db`) stays the same - only the mount point inside the container changes. No data copying is needed when using bind mounts.
 
-> **Note:** While you still use the old path, Tududi will print a warning at startup and continue using the old location to prevent data loss. Once you update the volume mount, the warning disappears and writes go to the correct persistent location.
+> **Note:** While you still use the old path, Cadence will print a warning at startup and continue using the old location to prevent data loss. Once you update the volume mount, the warning disappears and writes go to the correct persistent location.
 
-### 📚 Documentation
+### Documentation
 
-For detailed setup instructions, configuration options, and getting started guides, visit:
+The behaviour pages are in [`docs/`](docs/) (tasks, recurring tasks, Today, projects, views, habits, sync, Google, review…). tududi's own guides at [docs.tududi.com](https://docs.tududi.com) still apply to the parts Cadence did not change.
 
-**[docs.tududi.com](https://docs.tududi.com)**
-
-- **[Installation Guide](https://docs.tududi.com/getting-started/installation)** - Docker, development setup, and deployment
-- **[Configuration](https://docs.tududi.com/getting-started/configuration)** - Environment variables and advanced settings
-- **[First Steps](https://docs.tududi.com/getting-started/first-steps)** - Learn the basics and get productive
-- **[Project Sharing](https://docs.tududi.com/features/project-sharing)** - Collaborate with your team
-- **[People, Members and Roles](docs/19-people-and-roles.md)** - Families and teams: roles, groups, members without an email and assigning tasks
-
-## 🚧 Development
-
-Want to contribute or run Tududi from source? Check out our comprehensive development guide:
-
-**[Development Setup Guide](https://docs.tududi.com/#-development-setup)**
-
-Quick overview:
+## Development
 
 ```bash
-# Clone and install
-git clone https://github.com/chrisvel/tududi.git
-cd tududi
+git clone https://github.com/PreciselyWrong/Cadence.git
+cd Cadence
 npm install
-
-# Start development servers
-npm run backend:dev   # Terminal 1 - Backend on :3001
-npm run frontend:dev  # Terminal 2 - Frontend on :8080
+npm run db:init      # first install
+npm start            # frontend on :8080 (proxies /api), backend on :3002
 ```
 
-For database management, testing, and detailed development instructions, see [docs.tududi.com](https://docs.tududi.com)
+Checks before pushing: `npm run lint`, targeted Jest runs (`cd backend && npx jest -w 2 <file>`, never the whole suite at once), `npm run frontend:test`, `npm run build`. The Android app is built with `cd android && ./dev.sh --test` (tests) and `./dev.sh` (debug build installed over ADB).
 
-## 🔌 API
+Working on Cadence with a coding agent: start with [AGENTS.md](AGENTS.md).
 
-Tududi provides a comprehensive REST API for integration with external tools and automation workflows.
+## API
 
-**Base URL:** `http://localhost:8080/api/v1`
+REST API under `/api` and `/api/v1`, authenticated by session cookie or `Authorization: Bearer <API key>`. Create keys in Profile → API keys; the Swagger docs are at `/api-docs` once signed in.
 
-**Key Features:**
-- Complete CRUD operations for tasks, projects, notes, and areas
-- Personal API keys for secure access
-- Swagger documentation available at `/api-docs` (requires authentication)
-- Support for recurring tasks, subtasks, and tag management
-- Real-time task metrics and productivity insights
-
-**Authentication:** Uses session cookies or Bearer token authentication. Generate personal API keys through the web interface for programmatic access.
-
-**Quick Example:**
 ```bash
-# Get all tasks
-curl -H "Authorization: Bearer YOUR_API_KEY" \
-     http://localhost:3002/api/v1/tasks
-
-# Create a new task
-curl -X POST \
-     -H "Authorization: Bearer YOUR_API_KEY" \
-     -H "Content-Type: application/json" \
-     -d '{"name":"Complete API documentation","priority":"medium"}' \
-     http://localhost:3002/api/v1/task
+curl -H "Authorization: Bearer YOUR_API_KEY" http://localhost:3002/api/v1/tasks
 ```
 
-For full API documentation, visit `/api-docs` after authentication or check the Swagger schema definitions in [`backend/config/swagger.js`](backend/config/swagger.js).
+## Contributing
 
-## 🤝 Contributing
+Issues and pull requests are welcome on [PreciselyWrong/Cadence](https://github.com/PreciselyWrong/Cadence/issues). A bug that also exists in tududi is best reported [upstream](https://github.com/chrisvel/tududi/issues).
 
-Contributions to tududi are welcome! Whether it's bug fixes, new features, documentation improvements, or translations, we appreciate your help.
+## Credits and licence
 
-**Before you start:**
+Cadence is a fork of **[tududi](https://github.com/chrisvel/tududi)**, created by [Chris Veleris](https://github.com/chrisvel), and keeps its [MIT licence](LICENSE) and copyright notice. If you like the app, consider supporting the original project: [buy Chris a coffee](https://coff.ee/chrisveleris), [sponsor him on GitHub](https://github.com/sponsors/chrisvel) or [on Patreon](https://www.patreon.com/ChrisVeleris).
 
-- Check [existing issues](https://github.com/chrisvel/tududi/issues) and [discussions](https://github.com/chrisvel/tududi/discussions) to avoid duplicate work
-- For bugs, [open an issue](https://github.com/chrisvel/tududi/issues/new/choose) with the bug report template
-- For feature requests, start a [discussion](https://github.com/chrisvel/tududi/discussions/categories/feature-requests)
+The Android app comes from the former Cadence habits app, now in [`android/`](android/). TickTick served only as a reference for behaviour: none of its code, assets or texts are used.
 
-**Quick contribution workflow:**
+## Screenshots
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes following our [code standards](.github/CONTRIBUTING.md#code-standards)
-4. Run linting and tests: `npm run pre-push`
-5. Commit your changes with a clear message
-6. Push to your fork and open a Pull Request
+![Cadence, light mode](screenshots/all-light.png)
 
-**Read our [Contributing Guide](.github/CONTRIBUTING.md) for:**
-
-- Development setup and workflow
-- Code standards and best practices
-- Testing requirements
-- Database migrations
-- Translation guidelines
-- Pull request checklist
-
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
-## 📬 Contact
-
-For questions or comments, please [open an issue](https://github.com/chrisvel/tududi/issues) or contact the developer directly.
-
-Join the tududi community:
-
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/fkbeJ9CmcH)
-[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/tududi?color=ff4500&label=Reddit&logo=reddit&logoColor=white&style=for-the-badge)](https://www.reddit.com/r/tududi/)
-
-## 🌟 Please check my other projects!
-
-- **[Reconya](https://reconya.com)** - Network reconnaissance and asset discovery tool
-- **[BreachHarbor](https://breachharbor.com)** - Cybersecurity suite for digital asset protection
-- **[Hevetra](https://hevetra.com)** - Digital tracking for child health milestones
-
-# Screenshots
-
-![Light Mode Screenshot](screenshots/all-light.png)
-
-![Dark Mode Screenshot](screenshots/all-dark.png)
-
----
-
-README created by [Chris Veleris](https://github.com/chrisvel) for `tududi`.
+![Cadence, dark mode](screenshots/all-dark.png)

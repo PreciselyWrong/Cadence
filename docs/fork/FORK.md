@@ -38,7 +38,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 
 ## Rules for agents working on the fork
 
-1. **Keep the README up to date.** `README.md` has a section "🍴 What this fork adds" with Upstream / This fork tables and an "Under the hood" list (tables, columns, endpoints, docs). Any change that adds, removes or changes a fork feature updates that section in the same commit. Also keep the table above in sync.
+1. **Keep the README up to date.** `README.md` has a section "What Cadence adds to tududi" with Upstream / Cadence tables and an "Under the hood" list (tables, columns, endpoints, docs). Any change that adds, removes or changes a fork feature updates that section in the same commit. Also keep the table above in sync.
 2. **Docs with every behaviour change.** Update the matching `docs/*.md` page (and the documentation index below when a page is added). Behaviour docs describe rules, not code.
 3. **All 26 languages.** Every new UI string goes into all `public/locales/*/translation.json`. Keep each file's own indentation (`sk` uses 4 spaces, the others 2), keep key order, and check that every file still parses as JSON. Translations written by an agent are flagged as unreviewed in the README.
 4. **Migrations.** One file per change in `backend/migrations`, with a timestamp no other migration uses (check `ls backend/migrations` before naming it). Use `backend/utils/migration-utils` helpers so they are idempotent and dialect-safe. Verify the upgrade path on SQLite and PostgreSQL: schema created by upstream `99ef695`, then `npx sequelize-cli db:migrate` with this branch.
