@@ -27,6 +27,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `data/` - persistance locale, préférences et sauvegardes.
 `tasks/` - tâches Tududi : base Room `tududi.db`, synchronisation hors ligne (`/api/v1/sync`, file d'envoi, horloges HLC), écrans, widgets Glance, rappels. Contrat : `TaskRepository`, `ServerConnection`, `TasksGraph`.
 `app/` - UI Compose, widget Glance, rappels et assemblage.
+`docs/REDESIGN.md` + `docs/redesign/*.png` - refonte UI/UX 2026-10 (maquettes OpenPencil) : à suivre pour tout écran ou widget.
 
 ## Décisions
 - Min SDK 26, compilation et cible API 36.
