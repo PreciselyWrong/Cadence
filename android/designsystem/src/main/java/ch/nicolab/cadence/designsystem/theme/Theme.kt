@@ -22,7 +22,7 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun CadenceTheme(
-    appearance: Appearance = Appearance.Default,
+    appearance: Appearance = rememberStoredAppearance(),
     content: @Composable () -> Unit,
 ) {
     val dark = when (appearance.themeMode) {

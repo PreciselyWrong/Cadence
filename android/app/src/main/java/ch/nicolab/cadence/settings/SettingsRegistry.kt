@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Flight
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.rememberStoredAppearance
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
@@ -72,6 +74,14 @@ internal class SettingsDeps(
 /** Seul point d'ajout d'une rubrique de Réglages : une entrée ici suffit à l'afficher. */
 @Composable
 internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
+    SettingsPage(
+        id = "appearance",
+        section = SettingsSection.HOME_SCREEN,
+        icon = Icons.Outlined.Palette,
+        title = R.string.settings_page_appearance,
+        subtitle = { appearanceSummary(rememberStoredAppearance()) },
+        content = { AppearanceSettings() },
+    ),
     SettingsPage(
         id = "widgets",
         section = SettingsSection.HOME_SCREEN,

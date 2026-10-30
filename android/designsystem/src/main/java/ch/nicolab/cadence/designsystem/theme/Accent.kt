@@ -82,6 +82,25 @@ fun contrastRatio(a: Int, b: Int): Double {
 
 fun accentPresetOf(id: String): AccentPreset? = AccentPreset.entries.firstOrNull { it.id == id }
 
+/** Couleur libre proposée par le sélecteur de teinte : saturation et luminosité fixes, teinte choisie. */
+fun hueToArgb(hue: Float): Int = hslToArgb(hue, FreeColourSaturation, FreeColourLightness)
+
+/** Teinte, en degrés, d'une couleur : sert à placer le curseur du sélecteur. */
+fun argbHue(argb: Int): Float = argb.toHsl().hue
+
+/** Lit un code `#RRGGBB` ; renvoie null pour tout autre texte. Le résultat est toujours opaque. */
+fun hexToOpaqueArgb(hex: String): Int? {
+    if (!HexColour.matches(hex)) return null
+    return 0xFF000000.toInt() or hex.substring(1).toInt(16)
+}
+
+/** Écrit une couleur opaque sous la forme `#RRGGBB` en majuscules. */
+fun opaqueArgbToHex(argb: Int): String = "#%06X".format(argb and 0xFFFFFF)
+
+private const val FreeColourSaturation = 0.7f
+private const val FreeColourLightness = 0.5f
+private val HexColour = Regex("#[0-9A-Fa-f]{6}")
+
 internal data class Hsl(val hue: Float, val saturation: Float, val lightness: Float)
 
 internal fun Int.toHsl(): Hsl {
