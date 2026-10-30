@@ -3163,6 +3163,8 @@
     "leaveWithoutStarting": "Tillbaka till Idag",
     "overdueDays": "Försenad {{count}} d",
     "whatNext": "Vad skulle du kunna göra idag?",
+    "whatNextOn": "Vad skulle du kunna göra {{date}}?",
+    "dueThatDay": "Förfaller den dagen",
     "browse": "Bläddra",
     "showMore": "Visa {{count}} till",
     "countOf": {

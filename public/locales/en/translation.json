@@ -3512,6 +3512,8 @@
     "leaveWithoutStarting": "Back to Today",
     "overdueDays": "Overdue {{count}}d",
     "whatNext": "What could you do today?",
+    "whatNextOn": "What could you do on {{date}}?",
+    "dueThatDay": "Due that day",
     "browse": "Browse",
     "showMore": "Show {{count}} more",
     "countOf": {

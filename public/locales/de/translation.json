@@ -3172,6 +3172,8 @@
     "leaveWithoutStarting": "Zurück zu Heute",
     "overdueDays": "Überfällig {{count}} T.",
     "whatNext": "Was könntest du heute tun?",
+    "whatNextOn": "Was könntest du am {{date}} tun?",
+    "dueThatDay": "An diesem Tag fällig",
     "browse": "Durchsuchen",
     "showMore": "{{count}} weitere anzeigen",
     "countOf": {

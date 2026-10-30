@@ -3169,6 +3169,8 @@
     "leaveWithoutStarting": "Retour à Aujourd'hui",
     "overdueDays": "En retard de {{count}} j",
     "whatNext": "Que pourriez-vous faire aujourd'hui ?",
+    "whatNextOn": "Que pourriez-vous faire le {{date}} ?",
+    "dueThatDay": "À faire ce jour-là",
     "browse": "Parcourir",
     "showMore": "Afficher {{count}} de plus",
     "countOf": {

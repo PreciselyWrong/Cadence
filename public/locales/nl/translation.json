@@ -3163,6 +3163,8 @@
     "leaveWithoutStarting": "Terug naar Vandaag",
     "overdueDays": "{{count}} d achterstallig",
     "whatNext": "Wat zou je vandaag kunnen doen?",
+    "whatNextOn": "Wat zou je op {{date}} kunnen doen?",
+    "dueThatDay": "Die dag te doen",
     "browse": "Bladeren",
     "showMore": "Nog {{count}} tonen",
     "countOf": {

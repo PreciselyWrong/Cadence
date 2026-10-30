@@ -3161,6 +3161,8 @@
     "leaveWithoutStarting": "Quay lại Hôm nay",
     "overdueDays": "Quá hạn {{count}} ngày",
     "whatNext": "Hôm nay bạn có thể làm gì?",
+    "whatNextOn": "Bạn có thể làm gì vào {{date}}?",
+    "dueThatDay": "Đến hạn ngày đó",
     "browse": "Duyệt",
     "showMore": "Hiện thêm {{count}}",
     "countOf": {

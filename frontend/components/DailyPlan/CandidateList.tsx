@@ -51,6 +51,9 @@ interface CandidateListProps {
     onLoadMore?: () => void;
     loadingMore?: boolean;
     today: string;
+    // False while browsing another day: titles then name that day.
+    isToday?: boolean;
+    dayLabel?: string;
 }
 
 // Few choices at a time: a short list, then "Show more" on request.
@@ -258,6 +261,8 @@ const CandidateList: React.FC<CandidateListProps> = ({
     onLoadMore,
     loadingMore = false,
     today,
+    isToday = true,
+    dayLabel = '',
 }) => {
     const { t } = useTranslation();
     const [visible, setVisible] = useState(PAGE_SIZE);
@@ -315,7 +320,9 @@ const CandidateList: React.FC<CandidateListProps> = ({
             label: {
                 tagged_today: t('dailyPlan.taggedToday', 'Tagged #today'),
                 overdue: t('dailyPlan.overdue', 'Overdue'),
-                due_today: t('dailyPlan.dueToday', 'Due today'),
+                due_today: isToday
+                    ? t('dailyPlan.dueToday', 'Due today')
+                    : t('dailyPlan.dueThatDay', 'Due that day'),
                 in_progress: t('dailyPlan.inProgress', 'In progress'),
                 suggested: t('dailyPlan.suggested', 'Suggested'),
             }[key],
@@ -344,7 +351,18 @@ const CandidateList: React.FC<CandidateListProps> = ({
             <div className="flex items-center justify-between gap-2">
                 <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">
                     {filter === 'all'
-                        ? t('dailyPlan.whatNext', 'What could you do today?')
+                        ? isToday || !dayLabel
+                            ? t(
+                                  'dailyPlan.whatNext',
+                                  'What could you do today?'
+                              )
+                            : t(
+                                  'dailyPlan.whatNextOn',
+                                  'What could you do on {{date}}?',
+                                  {
+                                      date: dayLabel,
+                                  }
+                              )
                         : counts.find((c) => c.key === filter)?.label}
                 </h3>
                 <div className="flex items-center gap-3">

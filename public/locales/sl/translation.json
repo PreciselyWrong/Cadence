@@ -3177,6 +3177,8 @@
     "leaveWithoutStarting": "Nazaj na Danes",
     "overdueDays": "Zamujeno {{count}} d",
     "whatNext": "Kaj bi lahko naredil danes?",
+    "whatNextOn": "Kaj bi lahko naredili {{date}}?",
+    "dueThatDay": "Rok na ta dan",
     "browse": "Prebrskaj",
     "showMore": "Pokaži še {{count}}",
     "countOf": {

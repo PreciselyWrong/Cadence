@@ -3163,6 +3163,8 @@
     "leaveWithoutStarting": "Bugün'e dön",
     "overdueDays": "{{count}} gün gecikti",
     "whatNext": "Bugün ne yapabilirsin?",
+    "whatNextOn": "{{date}} günü ne yapabilirsin?",
+    "dueThatDay": "O gün vadesi dolan",
     "browse": "Göz at",
     "showMore": "{{count}} tane daha göster",
     "countOf": {

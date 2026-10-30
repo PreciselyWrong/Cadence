@@ -3164,6 +3164,8 @@
     "leaveWithoutStarting": "Πίσω στο Σήμερα",
     "overdueDays": "Εκπρόθεσμη {{count}} ημ.",
     "whatNext": "Τι θα μπορούσες να κάνεις σήμερα;",
+    "whatNextOn": "Τι θα μπορούσατε να κάνετε στις {{date}};",
+    "dueThatDay": "Λήγει εκείνη την ημέρα",
     "browse": "Περιήγηση",
     "showMore": "Εμφάνιση {{count}} ακόμη",
     "countOf": {

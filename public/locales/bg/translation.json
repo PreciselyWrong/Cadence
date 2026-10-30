@@ -3163,6 +3163,8 @@
     "leaveWithoutStarting": "Обратно към „Днес“",
     "overdueDays": "Просрочена {{count}} д.",
     "whatNext": "Какво би могъл да направиш днес?",
+    "whatNextOn": "Какво бихте могли да направите на {{date}}?",
+    "dueThatDay": "С краен срок този ден",
     "browse": "Разгледай",
     "showMore": "Покажи още {{count}}",
     "countOf": {

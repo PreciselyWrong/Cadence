@@ -3161,6 +3161,8 @@
     "leaveWithoutStarting": "Kembali ke Hari Ini",
     "overdueDays": "Terlambat {{count}} hr",
     "whatNext": "Apa yang bisa kamu kerjakan hari ini?",
+    "whatNextOn": "Apa yang bisa Anda lakukan pada {{date}}?",
+    "dueThatDay": "Jatuh tempo hari itu",
     "browse": "Jelajahi",
     "showMore": "Tampilkan {{count}} lagi",
     "countOf": {

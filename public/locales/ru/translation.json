@@ -3177,6 +3177,8 @@
     "leaveWithoutStarting": "Назад к «Сегодня»",
     "overdueDays": "Просрочено на {{count}} дн.",
     "whatNext": "Что вы могли бы сделать сегодня?",
+    "whatNextOn": "Что вы могли бы сделать {{date}}?",
+    "dueThatDay": "Срок в этот день",
     "browse": "Обзор",
     "showMore": "Показать ещё {{count}}",
     "countOf": {

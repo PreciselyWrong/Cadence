@@ -3161,6 +3161,8 @@
     "leaveWithoutStarting": "返回今天",
     "overdueDays": "逾期 {{count}} 天",
     "whatNext": "今天可以做些什么?",
+    "whatNextOn": "{{date}}你可以做什么？",
+    "dueThatDay": "当天到期",
     "browse": "浏览",
     "showMore": "再显示 {{count}} 个",
     "countOf": {

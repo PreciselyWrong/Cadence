@@ -41,7 +41,6 @@ import { focusKey, focusScopeParams, useFocus } from '../../utils/focus';
 import {
     CalendarEvent,
     fetchCalendarEvents,
-    fetchCalendarFeeds,
 } from '../../utils/calendarFeedsService';
 import {
     createTask,
@@ -363,7 +362,6 @@ const TodayPage: React.FC = () => {
     const suggestedLimit = useRef<number | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
     const [feedEvents, setFeedEvents] = useState<CalendarEvent[]>([]);
-    const shownFeeds = useRef<Set<string>>(new Set());
     const [refreshingEvents, setRefreshingEvents] = useState(false);
     const [durations, setDurations] = useState<Record<string, number>>({});
     const [filter, setFilter] = useState<CandidateFilter>('all');
@@ -483,28 +481,17 @@ const TodayPage: React.FC = () => {
     }, [t, focusId, requestedDate, reloadToken]);
 
     // Calendar feeds belong to the Calendar feature; with it off the day is
-    // planned without events, and calendars hidden from Calendar stay out.
+    // planned without events. The server leaves out calendars hidden from
+    // Calendar, ICS feeds and Google calendars alike.
     useEffect(() => {
         if (!date || !calendarEnabled) {
-            shownFeeds.current = new Set();
             setFeedEvents([]);
             return;
         }
         let cancelled = false;
         (async () => {
-            const feeds = await fetchCalendarFeeds().catch(() => []);
-            const shown = new Set(
-                feeds.filter((feed) => feed.show_on_calendar).map((f) => f.uid)
-            );
-            shownFeeds.current = shown;
-            if (cancelled || shown.size === 0) {
-                if (!cancelled) setFeedEvents([]);
-                return;
-            }
             const day = await fetchCalendarEvents(date).catch(() => null);
-            if (!cancelled && day) {
-                setFeedEvents(day.events.filter((e) => shown.has(e.feed_uid)));
-            }
+            if (!cancelled) setFeedEvents(day ? day.events : []);
         })();
         return () => {
             cancelled = true;
@@ -536,10 +523,7 @@ const TodayPage: React.FC = () => {
     }, [focusId, isToday]);
 
     const replaceEvents = useCallback(
-        (list: CalendarEvent[]) =>
-            setFeedEvents(
-                list.filter((e) => shownFeeds.current.has(e.feed_uid))
-            ),
+        (list: CalendarEvent[]) => setFeedEvents(list),
         []
     );
 
@@ -780,7 +764,10 @@ const TodayPage: React.FC = () => {
 
     const goToDay = (days: number) => {
         if (!date) return;
-        setSearchParams({ date: addDays(date, days) });
+        const target = addDays(date, days);
+        // Landing back on today uses the plain /today URL, so it keeps
+        // following the real day (and matches the Today button).
+        setSearchParams(target === todayString() ? {} : { date: target });
     };
 
     const goToToday = () => setSearchParams({});
@@ -1516,6 +1503,14 @@ const TodayPage: React.FC = () => {
               day: 'numeric',
           }).format(new Date(`${date}T12:00:00`))
         : '';
+    // The calendar pane names the shown day: "Today" only when it really is.
+    const shortDateLabel = date
+        ? new Intl.DateTimeFormat(intlLocale(i18n.language), {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+          }).format(new Date(`${date}T12:00:00`))
+        : '';
     const overBooked = planned > freeMinutes;
     const doneCount = items.filter(isItemDone).length;
     const minutesLeft = items
@@ -1915,6 +1910,8 @@ const TodayPage: React.FC = () => {
                                 }
                                 loadingMore={loadingMore}
                                 today={date ?? ''}
+                                isToday={isToday}
+                                dayLabel={dateLabel}
                             />
                             {isMinimal && (
                                 <CompletedTasksSection
@@ -2016,7 +2013,9 @@ const TodayPage: React.FC = () => {
                                             className="min-h-[30px] rounded-lg px-3 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-gray-800"
                                             data-testid="panel-today"
                                         >
-                                            {t('tasks.today', 'Today')}
+                                            {isToday
+                                                ? t('tasks.today', 'Today')
+                                                : shortDateLabel}
                                         </button>
                                         <button
                                             type="button"

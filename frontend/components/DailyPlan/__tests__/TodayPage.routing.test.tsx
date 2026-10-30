@@ -218,4 +218,39 @@ describe('TodayPage routing and panel mode', () => {
             )
         );
     });
+
+    it('names the shown day in the calendar pane, not "Today", on another day', async () => {
+        const short = (day: string) =>
+            new Intl.DateTimeFormat('en', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+            }).format(new Date(`${day}T12:00:00`));
+        renderAt('/today');
+        await screen.findByText('Pay invoice');
+        expect(screen.getByTestId('panel-today')).toHaveTextContent(/^Today$/);
+        expect(
+            screen.getByText('What could you do today?')
+        ).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('day-next'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('panel-today')).toHaveTextContent(
+                short(NEXT)
+            )
+        );
+        expect(screen.getByTestId('panel-today')).not.toBeDisabled();
+        expect(
+            screen.queryByText('What could you do today?')
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('panel-prev'));
+        await waitFor(() =>
+            expect(screen.getByTestId('panel-today')).toHaveTextContent(
+                /^Today$/
+            )
+        );
+        expect(screen.getByTestId('location')).toHaveTextContent(/^\/today$/);
+    });
 });

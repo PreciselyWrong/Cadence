@@ -3191,6 +3191,8 @@
     "leaveWithoutStarting": "العودة إلى اليوم",
     "overdueDays": "متأخرة {{count}} يوم",
     "whatNext": "ماذا يمكنك أن تفعل اليوم؟",
+    "whatNextOn": "ماذا يمكنك أن تفعل يوم {{date}}؟",
+    "dueThatDay": "مستحقة في ذلك اليوم",
     "browse": "تصفّح",
     "showMore": "اعرض {{count}} أخرى",
     "countOf": {

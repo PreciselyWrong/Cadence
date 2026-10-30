@@ -3161,6 +3161,8 @@
     "leaveWithoutStarting": "今日に戻る",
     "overdueDays": "{{count}} 日超過",
     "whatNext": "今日は何ができそうですか?",
+    "whatNextOn": "{{date}}に何ができますか？",
+    "dueThatDay": "その日が期限",
     "browse": "見る",
     "showMore": "さらに {{count}} 件表示",
     "countOf": {

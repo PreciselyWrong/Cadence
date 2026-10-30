@@ -3161,6 +3161,8 @@
     "leaveWithoutStarting": "오늘로 돌아가기",
     "overdueDays": "{{count}}일 지남",
     "whatNext": "오늘 무엇을 할 수 있을까요?",
+    "whatNextOn": "{{date}}에 무엇을 할 수 있을까요?",
+    "dueThatDay": "그날 마감",
     "browse": "둘러보기",
     "showMore": "{{count}}개 더 보기",
     "countOf": {

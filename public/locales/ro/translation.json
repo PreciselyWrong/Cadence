@@ -3172,6 +3172,8 @@
     "leaveWithoutStarting": "Înapoi la Astăzi",
     "overdueDays": "Întârziată {{count}} z",
     "whatNext": "Ce ai putea face azi?",
+    "whatNextOn": "Ce ai putea face pe {{date}}?",
+    "dueThatDay": "Scadent în acea zi",
     "browse": "Răsfoiește",
     "showMore": "Arată încă {{count}}",
     "countOf": {

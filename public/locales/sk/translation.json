@@ -3182,6 +3182,8 @@
         "leaveWithoutStarting": "Späť na Dnes",
         "overdueDays": "Po termíne {{count}} d",
         "whatNext": "Čo by ste mohli dnes urobiť?",
+        "whatNextOn": "Čo by ste mohli urobiť {{date}}?",
+        "dueThatDay": "Termín v ten deň",
         "browse": "Prehľadávať",
         "showMore": "Zobraziť ďalšie ({{count}})",
         "countOf": {

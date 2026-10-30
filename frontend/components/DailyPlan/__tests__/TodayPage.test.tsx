@@ -244,15 +244,23 @@ describe('TodayPage', () => {
         expect(fetchCalendarEvents).not.toHaveBeenCalled();
     });
 
-    it('leaves events of calendars hidden from Calendar out of the timeline', async () => {
-        (fetchCalendarFeeds as jest.Mock).mockResolvedValue([
-            { uid: 'f1', name: 'Work', show_on_calendar: false },
-        ]);
+    it('shows every event the server returns, Google calendars included', async () => {
+        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+            date: TODAY,
+            events: [
+                {
+                    uid: 'g1',
+                    feed_uid: 'google-cal-1',
+                    title: 'Google meeting',
+                    all_day: true,
+                },
+            ],
+            errors: [],
+        });
 
         render(<TodayPage />);
 
-        await screen.findByTestId('candidate-o1');
-        expect(fetchCalendarEvents).not.toHaveBeenCalled();
+        expect(await screen.findByText(/Google meeting/)).toBeInTheDocument();
     });
 
     it('moves the day with the arrows and keeps it in ?date=', async () => {

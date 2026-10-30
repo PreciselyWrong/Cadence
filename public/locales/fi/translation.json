@@ -3163,6 +3163,8 @@
     "leaveWithoutStarting": "Takaisin Tänään-näkymään",
     "overdueDays": "Myöhässä {{count}} pv",
     "whatNext": "Mitä voisit tehdä tänään?",
+    "whatNextOn": "Mitä voisit tehdä {{date}}?",
+    "dueThatDay": "Erääntyy sinä päivänä",
     "browse": "Selaa",
     "showMore": "Näytä {{count}} lisää",
     "countOf": {
