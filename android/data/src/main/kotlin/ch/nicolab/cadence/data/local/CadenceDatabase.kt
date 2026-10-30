@@ -19,6 +19,7 @@ import ch.nicolab.cadence.data.local.entities.HabitEntryEntity
 import ch.nicolab.cadence.data.local.dao.HabitGroupDao
 import ch.nicolab.cadence.data.local.dao.HabitTimerDao
 import ch.nicolab.cadence.data.local.dao.HealthConnectDao
+import ch.nicolab.cadence.data.local.dao.LearnedQuestionDao
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
@@ -28,6 +29,8 @@ import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
 import ch.nicolab.cadence.data.local.entities.HealthConnectImportEntity
 import ch.nicolab.cadence.data.local.entities.HealthConnectRuleEntity
+import ch.nicolab.cadence.data.local.entities.LearnedQuestionRecordEntity
+import ch.nicolab.cadence.data.local.entities.LearnedQuestionSettingsEntity
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.domain.HabitGroup
@@ -49,8 +52,10 @@ import ch.nicolab.cadence.domain.HabitGroup
         HealthConnectImportEntity::class,
         WidgetConfigurationEntity::class,
         WidgetHabitEntity::class,
+        LearnedQuestionSettingsEntity::class,
+        LearnedQuestionRecordEntity::class,
     ],
-    version = 23,
+    version = 24,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -65,8 +70,45 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun habitReminderDao(): HabitReminderDao
     abstract fun healthConnectDao(): HealthConnectDao
     abstract fun widgetConfigDao(): WidgetConfigDao
+    abstract fun learnedQuestionDao(): LearnedQuestionDao
 
     companion object {
+        /**
+         * Introduit les questions apprises. Les habitudes existantes n'ont aucune ligne : les
+         * réglages par défaut se déduisent de l'habitude tant que l'utilisateur ne les change pas.
+         */
+        val MIGRATION_23_24 = object : Migration(23, 24) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS learned_question_settings (
+                        habitId TEXT NOT NULL PRIMARY KEY,
+                        enabled INTEGER NOT NULL,
+                        askAt TEXT NOT NULL,
+                        thresholdPercent INTEGER NOT NULL,
+                        mutedWeekdays TEXT NOT NULL,
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_learned_question_settings_habitId ON learned_question_settings (habitId)")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS learned_question_records (
+                        habitId TEXT NOT NULL,
+                        localDate TEXT NOT NULL,
+                        outcome TEXT NOT NULL,
+                        valueMinor INTEGER,
+                        recordedAtEpochMs INTEGER NOT NULL,
+                        PRIMARY KEY(habitId, localDate),
+                        FOREIGN KEY(habitId) REFERENCES habits(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_learned_question_records_habitId ON learned_question_records (habitId)")
+            }
+        }
+
         val MIGRATION_22_23 = object : Migration(22, 23) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(

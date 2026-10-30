@@ -15,6 +15,26 @@ data class BackupDocument(
     val groups: List<BackupGroupV2> = emptyList(),
     val abstinenceLogs: List<BackupAbstinenceLogV2> = emptyList(),
     val alcoholConsumptions: List<BackupAlcoholConsumptionV3> = emptyList(),
+    val learnedQuestionSettings: List<BackupLearnedQuestionSettingsV3> = emptyList(),
+    val learnedQuestionRecords: List<BackupLearnedQuestionRecordV3> = emptyList(),
+)
+
+@Serializable
+data class BackupLearnedQuestionSettingsV3(
+    val habitId: String,
+    val enabled: Boolean,
+    val askAt: String,
+    val thresholdPercent: Int,
+    val mutedWeekdays: List<String> = emptyList(),
+)
+
+@Serializable
+data class BackupLearnedQuestionRecordV3(
+    val habitId: String,
+    val localDate: String,
+    val outcome: String,
+    val valueMinor: Long? = null,
+    val recordedAtEpochMs: Long,
 )
 
 @Serializable
