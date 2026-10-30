@@ -11,7 +11,7 @@
     <string name="catalogue_smoking_label">Cigarette</string>
     <string name="catalogue_smoking_name">Sans cigarette</string>
     <string name="catalogue_smoking_description">Suivre votre temps sans tabac fumé et débloquer des jalons de santé sourcés.</string>
-    <string name="catalogue_smoking_notice">Ce suivi concerne l’arrêt du tabac fumé. Les délais varient selon les personnes et ne mesurent pas votre santé. L’usage d’un substitut nicotinique n’est pas une cigarette.</string>
+    <string name="catalogue_smoking_notice">Cette habitude concerne l’arrêt du tabac fumé. Les délais varient selon les personnes et ne mesurent pas votre santé. L’usage d’un substitut nicotinique n’est pas une cigarette.</string>
     <string name="catalogue_smoking_taste">Autour de deux jours sans tabac fumé, le goût et l’odorat peuvent commencer à s’améliorer, selon le NHS.</string>
     <string name="catalogue_smoking_breathing">Autour de trois jours, les bronches commencent à se détendre : respirer peut devenir plus facile. Ce délai reste indicatif.</string>
     <string name="catalogue_smoking_circulation">Le NHS situe une amélioration de la circulation entre deux et douze semaines après l’arrêt du tabac fumé. Ce jalon ne confirme pas un changement chez vous.</string>
@@ -39,17 +39,17 @@
     <string name="catalogue_gambling_label">Jeu d’argent</string>
     <string name="catalogue_gambling_name">Sans jeu d’argent</string>
     <string name="catalogue_gambling_description">Suivre vos journées sans pari ni jeu d’argent et repérer les situations à risque.</string>
-    <string name="catalogue_gambling_notice">Ce suivi ne diagnostique pas un trouble du jeu. L’OMS décrit des dommages possibles bien en dessous d’un diagnostic ; une aide spécialisée peut être utile.</string>
+    <string name="catalogue_gambling_notice">Cette habitude ne diagnostique pas un trouble du jeu. L’OMS décrit des dommages possibles bien en dessous d’un diagnostic ; une aide spécialisée peut être utile.</string>
 
     <string name="catalogue_social_media_label">Réseaux sociaux</string>
     <string name="catalogue_social_media_name">Pause réseaux sociaux</string>
     <string name="catalogue_social_media_description">Observer vos journées sans réseaux sociaux selon un objectif personnel choisi.</string>
-    <string name="catalogue_social_media_notice">Ce suivi mesure un choix personnel. Il ne permet pas de conclure à une dépendance ni à un effet sur votre santé.</string>
+    <string name="catalogue_social_media_notice">Cette habitude mesure un choix personnel. Il ne permet pas de conclure à une dépendance ni à un effet sur votre santé.</string>
 
     <string name="catalogue_bedtime_screens_label">Écrans du soir</string>
     <string name="catalogue_bedtime_screens_name">Sans écran avant le coucher</string>
     <string name="catalogue_bedtime_screens_description">Suivre une heure sans écran avant le coucher, selon l’horaire que vous choisissez.</string>
-    <string name="catalogue_bedtime_screens_notice">Le conseil porte sur l’heure avant le coucher, pas sur tous les écrans de la journée. Ce suivi ne garantit pas un meilleur sommeil.</string>
+    <string name="catalogue_bedtime_screens_notice">Le conseil porte sur l’heure avant le coucher, pas sur tous les écrans de la journée. Cette habitude ne garantit pas un meilleur sommeil.</string>
 
     <string name="catalogue_impulse_shopping_label">Achats impulsifs</string>
     <string name="catalogue_impulse_shopping_name">Sans achat impulsif</string>
@@ -58,13 +58,13 @@
 
     <string name="catalogue_pornography_label">Pornographie</string>
     <string name="catalogue_pornography_name">Pause pornographie</string>
-    <string name="catalogue_pornography_description">Suivre un choix personnel concernant la pornographie, séparément du suivi de la masturbation.</string>
-    <string name="catalogue_pornography_notice">La pornographie et la masturbation sont suivies séparément ici. Ce suivi ne diagnostique pas une compulsion ; un professionnel peut aider si cela vous fait souffrir.</string>
+    <string name="catalogue_pornography_description">Suivre un choix personnel concernant la pornographie, séparément de la masturbation.</string>
+    <string name="catalogue_pornography_notice">La pornographie et la masturbation sont suivies séparément ici. Cette habitude ne diagnostique pas une compulsion ; un professionnel peut aider si cela vous fait souffrir.</string>
 
     <string name="catalogue_custom_label">Autre objectif</string>
     <string name="catalogue_custom_name">Mon objectif personnel</string>
     <string name="catalogue_custom_description">Choisir ce que vous souhaitez éviter et les raisons qui comptent pour vous.</string>
-    <string name="catalogue_custom_notice">Pour arrêter une substance ou un médicament, demandez un conseil adapté à votre situation ; ce suivi ne fournit pas de protocole de sevrage.</string>
+    <string name="catalogue_custom_notice">Pour arrêter une substance ou un médicament, demandez un conseil adapté à votre situation ; cette habitude ne fournit pas de protocole de sevrage.</string>
 
     <string name="catalogue_source_nhs_smoking">NHS · Repères après l’arrêt du tabac</string>
     <string name="catalogue_source_cdc_smoking">CDC · Bénéfices de l’arrêt du tabac</string>

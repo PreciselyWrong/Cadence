@@ -217,7 +217,7 @@
 
     <!-- Widget Configuration -->
     <string name="widget_config_title">Configurer le widget</string>
-    <string name="widget_config_subtitle">Ligne compacte de suivi d\'habitudes</string>
+    <string name="widget_config_subtitle">Ligne compacte d\'habitudes</string>
     <string name="widget_config_all_habits">Toutes les habitudes actives</string>
     <string name="widget_config_select_habits">Sélectionner des habitudes spécifiques</string>
     <string name="widget_config_style_label">Style visuel</string>
@@ -263,7 +263,7 @@
     <string name="empty_today_done_message">Les habitudes prévues sont à jour.</string>
     <string name="empty_habits_title">Votre rythme, à vous</string>
     <string name="empty_habits_message">Créez une première habitude pour commencer.</string>
-    <string name="create_habit_button">Créer un suivi</string>
+    <string name="create_habit_button">Créer une habitude</string>
     <string name="duplicate_suffix">(copie)</string>
     <string name="today_completed_section">Terminé</string>
     <string name="habit_sessions_format">%1$s · %2$d / %3$d séances</string>
@@ -359,7 +359,7 @@
     <string name="notification_action_validate">Valider</string>
     <string name="notification_action_add">+%1$s</string>
     <string name="notification_action_skip">Sauter</string>
-    <string name="abstinence_form_title">Suivi d’abstinence</string>
+    <string name="abstinence_form_title">Habitude d’abstinence</string>
     <string name="abstinence_none">Aucun</string>
     <string name="abstinence_alcohol">Alcool</string>
     <string name="abstinence_masturbation">Masturbation</string>
@@ -372,7 +372,7 @@
     <string name="abstinence_best">Meilleure série : %1$d jours</string>
     <string name="abstinence_today_clear">Aujourd’hui : en cours</string>
     <string name="abstinence_today_event">Aujourd’hui : écart enregistré</string>
-    <string name="abstinence_today_paused">Suivi en pause</string>
+    <string name="abstinence_today_paused">Habitude en pause</string>
     <string name="abstinence_window">Les 30 derniers jours terminés</string>
     <string name="abstinence_clear_days">%1$d / %2$d jours sans écart noté</string>
     <string name="abstinence_events">%1$d écarts notés sur %2$d jours</string>
@@ -382,7 +382,7 @@
     <string name="abstinence_milestone_day">Après %1$d jours</string>
     <string name="abstinence_reached">Jalon débloqué</string>
     <string name="abstinence_upcoming">À débloquer</string>
-    <string name="abstinence_personal_detail">Aucun bénéfice corporel daté n’est établi pour ce suivi.</string>
+    <string name="abstinence_personal_detail">Aucun bénéfice corporel daté n’est établi pour cette habitude.</string>
     <string name="abstinence_evidence_empty">Aucun bénéfice corporel daté n’est assez établi pour créer un jalon. Cadence n’invente pas de changement biologique.</string>
     <string name="abstinence_alcohol_time_24_72_hours">24 à 72 heures</string>
     <string name="abstinence_alcohol_time_one_week">1 semaine</string>
@@ -420,15 +420,15 @@
     <string name="abstinence_source_li">Li et al. · Hepatology · 2017</string>
     <string name="abstinence_source_nhs">NHS · Masturbation et santé sexuelle</string>
     <string name="abstinence_source_retracted">PubMed · Article rétracté</string>
-    <string name="abstinence_widget_tracking">Suivi</string>
+    <string name="abstinence_widget_tracking">Habitude</string>
     <string name="abstinence_reminder_check_in">Un moment pour faire le point</string>
     <string name="abstinence_reminders_title">Rappels</string>
-    <string name="abstinence_reminders_subtitle">Un moment pour faire le point sur votre suivi.</string>
+    <string name="abstinence_reminders_subtitle">Un moment pour faire le point sur votre habitude.</string>
     <string name="alcohol_follow_up_time">Demander les verres le lendemain</string>
     <string name="alcohol_follow_up_time_value">%1$s · %2$s</string>
     <string name="alcohol_follow_up_time_help">Cadence vous le demandera à cette heure si vous avez noté une consommation le jour même.</string>
     <string name="alcohol_follow_up_time_invalid">Choisissez une heure valide.</string>
-    <string name="alcohol_follow_up_channel">Suivi alcool</string>
+    <string name="alcohol_follow_up_channel">Relances alcool</string>
     <string name="alcohol_follow_up_notification">Combien de verres standards avez-vous bu hier ?</string>
     <string name="alcohol_today_action">J’ai bu aujourd’hui</string>
     <string name="alcohol_today_recorded">Consommation notée aujourd’hui</string>
@@ -486,7 +486,7 @@
     </plurals>
     <string name="alcohol_stats_clear_day">Aucune consommation notée</string>
     <string name="alcohol_stats_drinking_day">Consommation notée</string>
-    <string name="alcohol_stats_paused_day">Suivi en pause</string>
+    <string name="alcohol_stats_paused_day">Habitude en pause</string>
     <string name="alcohol_stats_unobserved_day">Hors période suivie</string>
     <string name="alcohol_stats_today_clear">Aujourd’hui, aucune consommation notée</string>
     <string name="tab_inbox">Boîte</string>

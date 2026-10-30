@@ -9,5 +9,5 @@
     <string name="today_regular_section">Mes habitudes</string>
     <string name="abstinence_save_failed">Enregistrement impossible. Réessayez.</string>
     <string name="abstinence_saving">Enregistrement…</string>
-    <string name="abstinence_quick_unavailable">Ce suivi n’est plus disponible.</string>
+    <string name="abstinence_quick_unavailable">Cette habitude n’est plus disponible.</string>
 </resources>

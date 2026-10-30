@@ -33,7 +33,7 @@
     <string name="tracker_stats_ninety_days">Sur 90 jours : %1$d jours avec saisie sur %2$d jours calendaires couverts, %3$d saisies.</string>
     <string name="tracker_stats_ninety_total">Quantité notée sur 90 jours : %1$s.</string>
     <string name="tracker_calendar_title">Calendrier d’activité</string>
-    <string name="tracker_calendar_before">Avant le début du suivi</string>
+    <string name="tracker_calendar_before">Avant le début de l’habitude</string>
     <string name="tracker_calendar_activity">Activité notée : %1$s</string>
     <string name="tracker_calendar_empty">Aucune saisie notée</string>
     <string name="tracker_reminder_message">Votre activité peut être notée à tout moment.</string>
@@ -62,7 +62,7 @@
     <string name="abstinence_stats_average_gap">%1$s jours sans écart noté entre deux jours avec écart, en moyenne · 90 jours</string>
     <string name="abstinence_stats_average_missing">Deux jours avec écart sont nécessaires pour calculer une moyenne.</string>
     <string name="abstinence_stats_ninety_days">Sur 90 jours : %1$d jours sans écart noté sur %2$d suivis ; %3$d écarts sur %4$d jours.</string>
-    <string name="abstinence_stats_open_tracking">Ouvrir le suivi</string>
+    <string name="abstinence_stats_open_tracking">Ouvrir l’habitude</string>
     <string name="abstinence_stats_history">Tous les écarts notés</string>
     <string name="habit_stats_paused_short">En pause</string>
     <string name="habit_stats_today_occurrence_short">Écart noté aujourd’hui</string>
