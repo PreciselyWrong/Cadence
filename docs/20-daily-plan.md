@@ -32,7 +32,7 @@ Planning and doing the day happen on one page. There is no start button: the pla
 
 ## Planner (on Today)
 
-- **Left column:** a short list, "What could you do today?": five candidates at a time in a fixed order (see **Candidate order** below), each shown as its name and one grey line. The name opens the task. **Show 5 more** adds five and keeps going: once the loaded suggestions run out it asks the server for the next twenty, until every open task that qualifies has been shown. **Browse** opens the per-group filters and the inbox. Tasks already planned leave the list. Resting the pointer on a row for a moment, or focusing it (always on touch screens), opens its 15m / 30m / 1h / 2h chips and, for overdue tasks, **Tomorrow**, **Next week** (moves the due date) and **Drop** (cancels the task). The short delay keeps rows from opening and closing while the mouse passes over them.
+- **Left column:** a short list, "To do today": five candidates at a time in a fixed order (see **Candidate order** below), each shown as its name and one grey line. The name opens the task. **Show 5 more** adds five and keeps going: once the loaded suggestions run out it asks the server for the next twenty, until every open task that qualifies has been shown. **Browse** opens the per-group filters and the inbox. Tasks already planned leave the list. Resting the pointer on a row for a moment, or focusing it (always on touch screens), opens its 15m / 30m / 1h / 2h chips and, for overdue tasks, **Tomorrow**, **Next week** (moves the due date) and **Drop** (cancels the task). The short delay keeps rows from opening and closing while the mouse passes over them.
 - Task names on the timeline and in the list view also open the task.
 
 ### Candidate order
@@ -68,6 +68,18 @@ Plan my day never adds `#someday` tasks to fill a short list. These only filter 
 ### Day hours
 
 The timeline on the planner and on Today shows the user's day, 08:00 to 18:00 by default, set in **Profile > Planning** in 30-minute steps in the user's timezone. It still widens to whole hours around anything planned or on the calendar outside it. New tasks and AI drafts only get a time inside this range. Stored in `users.ui_settings.planning.dayHours` as `{ start, end }` minutes after local midnight; an invalid value falls back to the default.
+
+## Capacity, "Place all" and the day's rhythm
+
+Everything here is rule-based: no AI is called. The slot search is one pure function (`findFreeSlot` in `planUtils.ts`), shared by the per-task **+** and by **Place all** (`planAll` in `autoPlace.ts`), so both follow the same rules.
+
+- **Capacity meter** (Today header): a bar of planned time against free time (visible/working hours minus meetings, timed tasks and focus blocks). Amber from 90 %; above 100 % the bar turns red and the message names the excess ("2h too much for today: move something to another day"). Colour is never the only signal.
+- **Place all** (timeline mode, today): the candidates, in the ranking order of the candidate list, each take the first free slot from now inside the working hours, around existing blocks, calendar events and focus blocks. Length is the task's estimate (or the length chosen on its card), else 30 minutes. A preview lists the slots; **Apply** saves them (the chosen length becomes the task's estimate) and an **Undo** toast restores the previous plan. A task that fits nowhere stays in the list.
+- **Slipped blocks**: once the end of an unfinished timed block has passed, the Now card shows a banner with **Shift the rest** (the block restarts at the next slot from now and the following unfinished blocks move later only as far as needed; one pushed past the end of the day loses its time) and **Later** (only that block is re-placed in the next free slot, else untimed). Both offer Undo.
+- **Start-of-day guide** (today, optional): opens by itself once a day on an empty plan; the choice to dismiss or finish is remembered per day in the browser (`today.guide.<date>`), and **Start your day** in the **⋯** menu reopens it. Step 1 lists yesterday's unfinished plan items (not already on today's plan) with **Carry to today**, **Later** (the Review decision "later") and **Drop** (cancelled); step 2 picks from the ranked candidates; step 3 shows the capacity meter and **Place all**.
+- **Wrap up the day**: the header button is always there on today. It opens the wrap-up card with the day's score and the unfinished tasks to carry over to tomorrow (**Add to tomorrow**); with the AI assistant on, the card also offers the AI recap, and it still opens by itself once the day is over.
+- **Focus time**: recurring blocks (weekdays + hours, optional label), edited from **⋯ > Focus time** and kept in `ui_settings.planning.focusBlocks` (`GET`/`PUT /api/daily-plan/focus-blocks`, also returned as `focus_blocks` by `GET /api/daily-plan`; at most 20, 30-minute steps). They show on the Day calendar as busy time, reduce the free time, and Place all and **+** never use them. You can still drag a task onto one by hand.
+- **Daily quote**: optional (**⋯ > Show/Hide the daily quote**, remembered per browser in `today.showQuote`); off by default on phones.
 
 ## Task estimates
 
@@ -214,5 +226,6 @@ Each draft, estimate batch or wrap-up counts as one AI request, and one AI credi
 ## Known limitations
 
 - Two open planners for the same day overwrite each other; the last save wins.
-- Unfinished tasks are not carried over to the next day's plan.
+- Unfinished tasks are only carried to the next day's plan when you choose them in the wrap-up card.
+- Focus blocks apply to every selected weekday; there are no one-off exceptions or per-date overrides.
 - There are no MCP tools for the plan yet.

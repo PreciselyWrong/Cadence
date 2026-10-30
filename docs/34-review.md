@@ -26,14 +26,14 @@ Three different intentions stay three different things:
 
 - Task pane (Minimal): three chips, **In view**, **This week**, **Later**. A **Review on** date appears only for a parked task or one that already has a date.
 - Right-click menu of a Minimal row: the same three choices.
-- Review page: one **Decide** menu per row, with the choices that fit the list.
+- Review page: one visible **Decide** button per row (label always shown, with a chevron) that opens a menu with the choices that fit the list.
 - API: `PATCH /api/task/:uid` accepts `in_view` (boolean), `week_of` (`YYYY-MM-DD` in that week, `this_week`, `next_week` or `null`), `review_on` (`YYYY-MM-DD` or `null`), `later` (boolean) and `reviewed: true`. MCP `update_task` takes the first four.
 
 `later: true` adds the user's `#someday` tag and takes the task out of view, out of the week and off today's plan; it wins over `in_view` or `week_of` sent with it. `later: false` removes the tag. A parked task keeps its project, note, tags, links and history, stays in search, and is never shown as overdue on Today (the existing `#someday` rule). Its due date, if it has one, is left alone.
 
 ### On Today
 
-In "What could you do today?", tasks decided for this week come first among the suggestions, then tasks in view, before the usual ranking. They skip the Planning filters (project status, horizon, staleness) because the user chose them; a defer-until date in the future still holds them back. Their line says *This week* or *In view* instead of *Suggested*. Plan my day never falls back on `#someday` tasks any more.
+In the "To do today" list, tasks decided for this week come first among the suggestions, then tasks in view, before the usual ranking. They skip the Planning filters (project status, horizon, staleness) because the user chose them; a defer-until date in the future still holds them back. Their line says *This week* or *In view* instead of *Suggested*. Plan my day never falls back on `#someday` tasks any more.
 
 **Help me choose** (above the list when there are two or more candidates) shows two tasks side by side: title, project, estimate. The pick stays and meets the next one; **Neither** drops both. The last one left can be added to the day. Nothing about the tasks changes; there is no score.
 
