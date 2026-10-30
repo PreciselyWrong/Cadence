@@ -1,3 +1,17 @@
+## [1.2.0] — 30 octobre 2026
+
+### Nouveautés
+- Nouvelle navigation et nouveau design : interface refondue, plus claire, avec le choix de l'apparence et des thèmes dans les réglages.
+- Fiche de tâche complète et ajout rapide en langage naturel (« appeler Léa demain 18h »).
+- Gestes de balayage sur les tâches pour terminer, planifier, déplacer ou supprimer.
+- Notes modifiables, avec aperçu des liens.
+- Agenda en vue jour, 3 jours, mois et liste, avec glisser-déposer pour planifier une tâche.
+- Planification du jour avec capacité : voyez si votre journée est tenable.
+- Bilan de vos habitudes et de vos tâches.
+- Widgets remaniés pour les tâches et les habitudes.
+- Questions apprises : Cadence retient vos réponses habituelles pour vous les proposer.
+- Projets issus de vos fichiers TODO.md, en lecture seule.
+
 ## [1.1.0] — 30 octobre 2026
 
 ### Nouveautés
