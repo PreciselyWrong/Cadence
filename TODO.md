@@ -21,7 +21,7 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
   - Compaction du journal, entités habitudes.
 - Proposer ces trois ajouts en PR à l'amont.
 - UI web habitudes : créer, versionner, mettre en pause et saisir depuis le navigateur.
-- App Android depuis le dépôt Cadence (Kotlin, Compose) : toutes les fonctionnalités de Cadence reprises ([liste de parité](docs/fork/CADENCE-PARITY.md)), design au style Tududi ; tâches + habitudes, domaine Cadence en local (Room), file hors ligne, widget Glance, alarmes inexactes, Health Connect. Vérif : mode avion puis retour réseau, serveur à jour sans doublon.
+- App Android (dépôt Cadence, branche `feat/tududi-tasks`, v1.1.0) : tâches hors ligne synchronisées, écrans, widgets Aujourd'hui et ajout rapide, partage vers la boîte, rappels, connexion QR — vérifié sur émulateur contre un serveur local. Reste : habitudes synchronisées (après le module habitudes serveur), refonte visuelle au style Tududi, essai sur le vrai téléphone et le vrai serveur via Tailscale.
 - Import des données Cadence vers Tududi. Vérif : séries et stats identiques avant et après.
 - Client Linux Tauri 2 autour du front React : notifications natives, barre système, ajout rapide global, SQLite hors ligne. Vérif : RAM au repos < 100 Mo, notification reçue app fermée dans la barre.
 - Passer la production sur le Postgres d'Unraid (export puis import) et lancer les tests sur Postgres.
