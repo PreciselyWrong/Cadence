@@ -43,35 +43,35 @@ END:VCALENDAR`;
 
     it('should map iCalendar STATUS to Cadence status', async () => {
         const statuses = [
-            { ical: 'NEEDS-ACTION', tududi: 0 },
-            { ical: 'IN-PROCESS', tududi: 1 },
-            { ical: 'COMPLETED', tududi: 2 },
-            { ical: 'CANCELLED', tududi: 5 },
+            { ical: 'NEEDS-ACTION', expected: 0 },
+            { ical: 'IN-PROCESS', expected: 1 },
+            { ical: 'COMPLETED', expected: 2 },
+            { ical: 'CANCELLED', expected: 5 },
         ];
 
-        for (const { ical, Cadence } of statuses) {
+        for (const { ical, expected } of statuses) {
             const vtodo = basicVTODO.replace(
                 'STATUS:NEEDS-ACTION',
                 `STATUS:${ical}`
             );
             const task = await parseVTODOToTask(vtodo);
-            expect(task.status).toBe(Cadence);
+            expect(task.status).toBe(expected);
         }
     });
 
     it('should map iCalendar PRIORITY to Cadence priority', async () => {
         const priorities = [
-            { ical: 1, tududi: 2 },
-            { ical: 3, tududi: 2 },
-            { ical: 5, tududi: 1 },
-            { ical: 7, tududi: 0 },
-            { ical: 9, tududi: 0 },
+            { ical: 1, expected: 2 },
+            { ical: 3, expected: 2 },
+            { ical: 5, expected: 1 },
+            { ical: 7, expected: 0 },
+            { ical: 9, expected: 0 },
         ];
 
-        for (const { ical, Cadence } of priorities) {
+        for (const { ical, expected } of priorities) {
             const vtodo = basicVTODO.replace('PRIORITY:5', `PRIORITY:${ical}`);
             const task = await parseVTODOToTask(vtodo);
-            expect(task.priority).toBe(Cadence);
+            expect(task.priority).toBe(expected);
         }
     });
 
