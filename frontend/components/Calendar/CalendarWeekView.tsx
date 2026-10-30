@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '../../utils/dateUtils';
 import React, { useState, useEffect } from 'react';
 import {
     format,
@@ -206,7 +207,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                     : 'text-gray-400 dark:text-gray-500'
                             }`}
                         >
-                            {format(day, 'EEE')}
+                            {format(day, 'EEE', { locale: getCurrentLocale() })}
                         </div>
                         <div>
                             {isToday(day) ? (

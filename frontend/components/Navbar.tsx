@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserIcon, BoltIcon, InboxIcon } from '@heroicons/react/24/solid';
 import {
     EnvelopeIcon,
@@ -11,6 +11,7 @@ import {
     ArrowRightStartOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { fabTarget } from './Shared/MobileBottomBar';
 import PomodoroTimer from './Shared/PomodoroTimer';
 import UniversalSearch from './UniversalSearch/UniversalSearch';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
@@ -67,6 +68,9 @@ const Navbar: React.FC<NavbarProps> = ({
     });
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    // Phones get a floating add button on Tâches and Boîte instead
+    const hasFab = fabTarget(pathname) !== null;
     const { open: captureOpen } = useCaptureUi();
     // Dispatch event when mobile search state changes
     useEffect(() => {
@@ -258,7 +262,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         aria-haspopup="dialog"
                         aria-expanded={captureOpen}
                         data-testid="capture-navbar-button"
-                        className="flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 transition-all duration-200 px-2 py-2 md:px-3 md:py-2"
+                        className={`${hasFab ? 'max-md:hidden ' : ''}flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 transition-all duration-200 px-2 py-2 md:px-3 md:py-2`}
                         aria-label={t('navigation.quickInboxCapture')}
                         title={t('navigation.quickInboxCapture')}
                     >

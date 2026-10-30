@@ -120,7 +120,7 @@ const CaptureHost: React.FC<CaptureHostProps> = ({ sidebarOpen = false }) => {
                     type="button"
                     data-testid="capture-phone-button"
                     onClick={() => openCapture('inbox')}
-                    className="lg:hidden fixed right-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-[10100] flex items-center gap-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold pl-3.5 pr-5 h-12 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+                    className="max-md:hidden lg:hidden fixed right-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-[10100] flex items-center gap-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold pl-3.5 pr-5 h-12 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
                 >
                     <PlusIcon className="h-5 w-5" aria-hidden="true" />
                     {t('capture.add', 'Add')}

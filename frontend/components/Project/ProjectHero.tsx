@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '../../utils/dateUtils';
 import React, { useEffect, useRef, useState } from 'react';
 import { TFunction } from 'i18next';
 import { differenceInCalendarDays, format } from 'date-fns';
@@ -211,17 +212,17 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     return (
         <div className="mb-6 space-y-3">
             <div
-                className="space-y-5 rounded-2xl bg-white p-5 sm:p-6 dark:bg-gray-900"
+                className="space-y-3 rounded-2xl bg-white p-3 sm:space-y-5 sm:p-6 dark:bg-gray-900"
                 style={{
                     backgroundImage: `linear-gradient(color-mix(in srgb, ${tint} 10%, transparent), color-mix(in srgb, ${tint} 10%, transparent))`,
                 }}
             >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start">
                     <button
                         type="button"
                         onClick={onEditBannerClick}
                         disabled={!onEditBannerClick}
-                        className="group relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-white shadow-sm ring-4 ring-white dark:bg-gray-800 dark:ring-gray-900"
+                        className="group relative h-10 w-10 sm:h-14 sm:w-14 flex-shrink-0 overflow-hidden rounded-xl bg-white shadow-sm ring-4 ring-white dark:bg-gray-800 dark:ring-gray-900"
                         title={t('project.projectImage', 'Project image')}
                         aria-label={t('project.projectImage', 'Project image')}
                     >
@@ -316,10 +317,9 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                         'project.completedOn',
                                         'Completed {{date}}',
                                         {
-                                            date: format(
-                                                completedDate,
-                                                'MMM d, yyyy'
-                                            ),
+                                            date: format(completedDate, 'PP', {
+                                                locale: getCurrentLocale(),
+                                            }),
                                         }
                                     )}
                                 </span>
@@ -337,7 +337,10 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                                   {
                                                       date: format(
                                                           startDate,
-                                                          'MMM d, yyyy'
+                                                          'PP',
+                                                          {
+                                                              locale: getCurrentLocale(),
+                                                          }
                                                       ),
                                                   }
                                               )
@@ -347,7 +350,10 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                                   {
                                                       date: format(
                                                           startDate,
-                                                          'MMM d, yyyy'
+                                                          'PP',
+                                                          {
+                                                              locale: getCurrentLocale(),
+                                                          }
                                                       ),
                                                   }
                                               )}
@@ -372,7 +378,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                         setEditingName(false);
                                     }
                                 }}
-                                className="-mx-1 w-full rounded-md bg-white/70 px-1 text-xl font-semibold leading-tight text-gray-900 outline-none ring-2 ring-blue-500/40 sm:text-2xl dark:bg-gray-800/70 dark:text-gray-100"
+                                className="-mx-1 w-full rounded-md bg-white/70 px-1 text-lg font-semibold leading-tight text-gray-900 outline-none ring-2 ring-blue-500/40 sm:text-2xl dark:bg-gray-800/70 dark:text-gray-100"
                                 aria-label={t('project.name', 'Project Name')}
                                 data-testid="project-name-input"
                             />
@@ -383,7 +389,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                     'project.clickToEdit',
                                     'Click to edit'
                                 )}
-                                className="-mx-1 line-clamp-2 cursor-text rounded-md px-1 text-xl font-semibold leading-tight text-gray-900 transition-colors hover:bg-white/60 sm:text-2xl dark:text-gray-100 dark:hover:bg-gray-800/60"
+                                className="-mx-1 line-clamp-2 cursor-text rounded-md px-1 text-lg font-semibold leading-tight text-gray-900 transition-colors hover:bg-white/60 sm:text-2xl dark:text-gray-100 dark:hover:bg-gray-800/60"
                                 data-testid="project-name"
                             >
                                 {project.name}
@@ -478,7 +484,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             <button
                                 type="button"
                                 onClick={onTogglePin}
-                                className={actionClass}
+                                className={`${actionClass} max-sm:hidden`}
                                 aria-pressed={!!project.pin_to_sidebar}
                             >
                                 {project.pin_to_sidebar ? (
@@ -494,7 +500,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                         <button
                             type="button"
                             onClick={onShareClick}
-                            className={actionClass}
+                            className={`${actionClass} max-sm:hidden`}
                         >
                             <ShareIcon className="h-4 w-4" />
                             {t('projectItem.share', 'Share')}
@@ -514,6 +520,30 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             </button>
                             {menuOpen && (
                                 <div className="absolute right-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-md bg-white py-1 shadow-lg dark:bg-gray-800">
+                                    {onTogglePin && (
+                                        <button
+                                            type="button"
+                                            className={`${menuItemClass} sm:hidden`}
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                onTogglePin();
+                                            }}
+                                        >
+                                            {project.pin_to_sidebar
+                                                ? t('project.pinned', 'Pinned')
+                                                : t('project.pin', 'Pin')}
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        className={`${menuItemClass} sm:hidden`}
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            onShareClick();
+                                        }}
+                                    >
+                                        {t('projectItem.share', 'Share')}
+                                    </button>
                                     {onEditClick && (
                                         <button
                                             type="button"

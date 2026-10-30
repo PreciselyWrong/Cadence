@@ -1,8 +1,33 @@
 import { format, Locale } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { enUS } from 'date-fns/locale/en-US';
-import { es } from 'date-fns/locale/es';
-import { el } from 'date-fns/locale/el';
+import {
+    ar,
+    bg,
+    da,
+    de,
+    el,
+    enUS,
+    es,
+    fi,
+    fr,
+    id,
+    it,
+    ja,
+    ko,
+    nb,
+    nl,
+    pl,
+    pt,
+    ro,
+    ru,
+    sk,
+    sl,
+    sv,
+    tr,
+    uk,
+    vi,
+    zhCN,
+} from 'date-fns/locale';
 import i18n from '../i18n';
 import {
     isTaskInProgress,
@@ -87,18 +112,42 @@ export const convertToUserTimezone = (date: Date | number): Date => {
  */
 const localeMap: Record<string, Locale> = {
     en: enUS,
-    es: es,
-    el: el,
+    ar,
+    bg,
+    da,
+    de,
+    el,
+    es,
+    fi,
+    fr,
+    id,
+    it,
+    jp: ja,
+    ko,
+    nl,
+    no: nb,
+    pl,
+    pt,
+    ro,
+    ru,
+    sk,
+    sl,
+    sv,
+    tr,
+    ua: uk,
+    vi,
+    zh: zhCN,
 };
 
 /**
  * Returns the date-fns locale object based on the current i18next language
  * Falls back to English if the current language is not supported
  */
-export const getCurrentLocale = (): Locale => {
-    const language = i18n.language || 'en';
-    return localeMap[language] || enUS;
-};
+export const getDateFnsLocale = (language: string): Locale =>
+    localeMap[language] || localeMap[language?.split('-')[0]] || enUS;
+
+export const getCurrentLocale = (): Locale =>
+    getDateFnsLocale(i18n.language || 'en');
 
 // The app's own language codes are not all valid locales (jp, ua), so map
 // them before handing them to Intl / toLocale*String.

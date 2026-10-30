@@ -58,7 +58,8 @@
     "hideSearch": "Collapse search panel",
     "showSearch": "Show search input",
     "beta": "beta",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "due": "Due"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -1024,7 +1025,16 @@
       "project": "Project",
       "priority": "Priority flag",
       "due": "Due date"
-    }
+    },
+    "groups": {
+      "account": "Account",
+      "appearance": "Appearance",
+      "planning": "Planning",
+      "integrations": "Integrations",
+      "security": "Security",
+      "advanced": "Advanced"
+    },
+    "optional": "Optional"
   },
   "productivity": {
     "nothingYet": "Nothing to review yet.",
@@ -1337,7 +1347,8 @@
     "completeOpenTasks": "This project still has open tasks. Mark them done too, or leave them open? Recurring tasks keep their schedule either way.",
     "leaveTasksOpen": "Leave them open",
     "completeTasksToo": "Mark them done too",
-    "startsOn": "Starts {{date}}"
+    "startsOn": "Starts {{date}}",
+    "noTasks": "No tasks."
   },
   "errors": {
     "required": "This field is required",
@@ -1744,7 +1755,8 @@
     "historyDuration_other": "took {{count}} days",
     "reopen": "Reopen",
     "reopened": "\"{{name}}\" is back in progress",
-    "loadError": "Failed to load projects"
+    "loadError": "Failed to load projects",
+    "fromTemplate": "From template"
   },
   "projectStatus": {
     "not_started": "Not Started",
@@ -1758,7 +1770,8 @@
     "done": "Completed",
     "done_desc": "Finished and done",
     "cancelled": "Cancelled",
-    "cancelled_desc": "Will not be completed"
+    "cancelled_desc": "Will not be completed",
+    "idea": "Idea"
   },
   "projectItem": {
     "edit": "Edit",
@@ -1946,7 +1959,8 @@
     "stats": {
       "clean": "clean {{unit}}",
       "best": "best",
-      "strength": "strength"
+      "strength": "strength",
+      "cleanFor": "{{count}} {{unit}} clean"
     },
     "quit": "Quit",
     "confirmSlip": "Log slip",
@@ -2071,7 +2085,9 @@
     "presetsLabel": "Or start with",
     "presetWalk": "Morning walk",
     "presetRead": "Read 20 minutes",
-    "presetReview": "Weekly review"
+    "presetReview": "Weekly review",
+    "doneTodayLine": "{{done}} of {{total}} done for now",
+    "statistics": "Statistics"
   },
   "recurrence": {
     "none": "None",
@@ -4288,5 +4304,14 @@
     "none": "Nothing left to compare.",
     "addToday": "Add to today",
     "close": "Close"
+  },
+  "mobileNav": {
+    "label": "Main navigation",
+    "inbox": "Inbox",
+    "tasks": "Tasks",
+    "agenda": "Agenda",
+    "habits": "Habits",
+    "review": "Review",
+    "newTask": "New task"
   }
 }

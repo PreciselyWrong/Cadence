@@ -151,7 +151,7 @@ const HabitCheckIn: React.FC<HabitCheckInProps> = ({
                         <button
                             type="submit"
                             disabled={busy || !(parseFloat(amount) > 0)}
-                            className="px-2.5 py-1 text-xs rounded-lg ${ACCENT.solid} disabled:opacity-40"
+                            className={`px-3 py-1.5 text-sm rounded-full ${ACCENT.solid} disabled:opacity-40`}
                         >
                             {t('habits.add', 'Add')}
                         </button>
@@ -160,8 +160,8 @@ const HabitCheckIn: React.FC<HabitCheckInProps> = ({
                     <button
                         type="button"
                         onClick={() => setOpen(true)}
-                        className={`flex items-center gap-1 rounded-lg transition-colors ${
-                            lg ? 'px-4 py-2 text-sm' : 'px-2 py-1 text-xs'
+                        className={`flex items-center gap-1 rounded-full font-semibold min-h-9 transition-colors ${
+                            lg ? 'px-5 py-2 text-sm' : 'px-3.5 py-1.5 text-sm'
                         } ${
                             done
                                 ? `${ACCENT.softBg} ${ACCENT.text}`
@@ -186,8 +186,8 @@ const HabitCheckIn: React.FC<HabitCheckInProps> = ({
                     run();
                 }}
                 disabled={busy}
-                className={`flex items-center gap-1 rounded-lg ${ACCENT.softerBg} ${ACCENT.text} ${ACCENT.hoverSoftBg} transition-colors ${
-                    lg ? 'px-4 py-2 text-sm' : 'px-2 py-1 text-xs'
+                className={`flex items-center gap-0.5 rounded-full font-semibold min-h-9 ${ACCENT.softBg} ${ACCENT.text} ${ACCENT.hoverSoftBg} transition-colors ${
+                    lg ? 'px-5 py-2 text-sm' : 'px-3.5 py-1.5 text-sm'
                 }`}
                 title={t('habits.checkInOnce', 'Check in once')}
             >
