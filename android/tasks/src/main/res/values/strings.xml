@@ -18,9 +18,7 @@
     <string name="tasks_notifications_settings">Ouvrir les réglages</string>
     <string name="tasks_section_today">Aujourd\'hui</string>
     <string name="tasks_section_completed">Terminées aujourd\'hui (%1$d)</string>
-    <string name="tasks_today_empty">Rien de prévu aujourd\'hui.</string>
     <string name="tasks_upcoming_empty">Aucune échéance dans les 7 prochains jours.</string>
-    <string name="tasks_swipe_tomorrow">Demain</string>
     <string name="tasks_recurring">Tâche récurrente</string>
     <string name="tasks_pending_sync">Modification non synchronisée</string>
     <string name="tasks_completed_message">Tâche terminée</string>

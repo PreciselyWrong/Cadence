@@ -58,7 +58,8 @@
     "hideSearch": "Thu gọn tìm kiếm",
     "showSearch": "Hiện tìm kiếm",
     "beta": "beta",
-    "comingSoon": "Sắp ra mắt"
+    "comingSoon": "Sắp ra mắt",
+    "due": "Due"
   },
   "sidebar": {
     "dashboard": "Bảng điều khiển",
@@ -307,7 +308,8 @@
       "nextWeek": "Tuần sau",
       "clearDate": "Xóa ngày",
       "moveToProject": "Chuyển vào dự án"
-    }
+    },
+    "reorderError": "Failed to save task order"
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -770,7 +772,9 @@
       "hoursLoadError": "Không thể tải giờ trong ngày của bạn",
       "hoursSaveError": "Không thể lưu giờ trong ngày của bạn",
       "hoursTitle": "Ngày của bạn",
-      "hoursTo": "đến"
+      "hoursTo": "đến",
+      "taggedToday": "Tagged #today",
+      "taggedTodayDetail": "Open tasks you tagged #today, whatever their dates."
     },
     "aiApiKey": "Khóa API",
     "aiApiKeyClear": "Xóa",
@@ -997,7 +1001,21 @@
       "project": "Dự án",
       "priority": "Cờ ưu tiên",
       "due": "Ngày đến hạn"
-    }
+    },
+    "contentBackground": "Background",
+    "contentBackgroundDescription": "Show a photo behind the main content area. Photos come from Unsplash and are credited to their photographers.",
+    "contentBackgroundNone": "None",
+    "photoBy": "Photo by",
+    "photoOn": "on",
+    "groups": {
+      "account": "Account",
+      "appearance": "Appearance",
+      "planning": "Planning",
+      "integrations": "Integrations",
+      "security": "Security",
+      "advanced": "Advanced"
+    },
+    "optional": "Optional"
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",
@@ -1250,7 +1268,64 @@
     "completeOpenTasks": "Dự án này vẫn còn công việc chưa xong. Đánh dấu chúng là xong luôn, hay để mở? Công việc lặp lại vẫn giữ lịch của chúng trong cả hai trường hợp.",
     "leaveTasksOpen": "Để mở",
     "completeTasksToo": "Đánh dấu xong luôn",
-    "startsOn": "Bắt đầu {{date}}"
+    "startsOn": "Bắt đầu {{date}}",
+    "attachments": "Attachments",
+    "overview": "Overview",
+    "people": "People",
+    "info": "Project info",
+    "clickToEdit": "Click to edit",
+    "addDescription": "Add a description",
+    "changeArea": "Change area",
+    "setArea": "Set area",
+    "changeGoal": "Change goal",
+    "setGoal": "Set goal",
+    "changePriority": "Change priority",
+    "setPriority": "Set priority",
+    "changeDue": "Change due date",
+    "changeTags": "Change tags",
+    "addTags": "Add tags",
+    "changeColor": "Change color",
+    "setColor": "Set color",
+    "moreOptions": "More options",
+    "pin": "Pin",
+    "pinned": "Pinned",
+    "started": "Started",
+    "startedOn": "Started {{date}}",
+    "daysToDue_one": "{{count}} day to due date",
+    "daysToDue_other": "{{count}} days to due date",
+    "daysOverdue_one": "{{count}} day overdue",
+    "daysOverdue_other": "{{count}} days overdue",
+    "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
+    "timeUsed": "{{percent}}% of time used",
+    "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
+    "openTasks": "Open tasks",
+    "overdueTasks": "Overdue",
+    "doneThisWeek": "Done this week",
+    "untilDate": "Until {{date}}",
+    "pastDate": "Past {{date}}",
+    "memberCount_one": "{{count}} member",
+    "memberCount_other": "{{count}} members",
+    "noteCount_one": "{{count}} note",
+    "noteCount_other": "{{count}} notes",
+    "roleOwner": "Owner",
+    "rolePending": "Invited",
+    "roleEdit": "Can edit",
+    "roleView": "Can view",
+    "notShared": "Only you can see this project.",
+    "addNote": "Add note",
+    "noNotesYet": "No notes yet.",
+    "allNotes": "All notes",
+    "fewerNotes": "Show fewer",
+    "fileCount_one": "{{count}} file",
+    "fileCount_other": "{{count}} files",
+    "addFile": "Add file",
+    "uploading": "Uploading...",
+    "noFilesYet": "No files yet. Drop files here or use +.",
+    "allFiles": "All files",
+    "dropToUpload": "Drop to upload",
+    "fewerFiles": "Show fewer",
+    "completedWithTasks_one": "Project completed, {{count}} task marked done",
+    "noTasks": "No tasks."
   },
   "errors": {
     "required": "Trường này là bắt buộc",
@@ -1350,7 +1425,33 @@
     "aboutInbox": "Giới thiệu Hộp thư đến",
     "shortcutTag": "để gắn thẻ",
     "shortcutProject": "để gán vào dự án",
-    "attachments": "Tệp đính kèm"
+    "attachments": "Tệp đính kèm",
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Phân loại",
+      "title": "Phân loại hộp thư đến",
+      "exit": "Thoát",
+      "progress": "Đã phân loại {{done}} / {{total}}",
+      "done": "Hộp thư đến trống. Không còn gì để phân loại.",
+      "doneLater": "Đã giữ {{count}} mục để sau. Các mục khác đã được phân loại.",
+      "suggested": "Gợi ý: {{kind}}",
+      "task": "Công việc",
+      "project": "Dự án",
+      "note": "Ghi chú",
+      "later": "Để sau",
+      "delete": "Xóa",
+      "keptLater": "Đã giữ trong hộp thư đến để sau",
+      "madeTask": "Đã tạo công việc",
+      "madeProject": "Đã tạo dự án",
+      "madeNote": "Đã tạo ghi chú",
+      "error": "Không thể xử lý mục này. Mục vẫn còn trong hộp thư đến.",
+      "reasonProject": "Nhắc đến dự án +{{detail}}",
+      "reasonTag": "Được gắn thẻ #{{detail}}",
+      "reasonUrl": "Đây là một liên kết",
+      "reasonKeyword": "Bắt đầu bằng “{{detail}}”",
+      "reasonLong": "Dài, giống một ghi chú",
+      "reasonDefault": "Văn bản ngắn, thường là công việc"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d tháng MMMM, yyyy",
@@ -1556,7 +1657,11 @@
     "pin": "Ghim",
     "unpin": "Bỏ ghim",
     "pinned": "Đã ghim",
-    "pinUpdateError": "Không thể cập nhật ghim"
+    "pinUpdateError": "Không thể cập nhật ghim",
+    "comments": "Comments",
+    "skipOccurrence": "Skip this occurrence",
+    "occurrenceSkipped": "Occurrence skipped",
+    "skipOccurrenceError": "Failed to skip occurrence"
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -1584,7 +1689,8 @@
       "systemTagCannotBeDeleted": "Những nhãn hệ thống không thể bị xóa",
       "systemTagCannotBeRenamed": "Những nhãn hệ thống không thể bị đổi tên",
       "somedayHide": "Ẩn",
-      "somedayShow": "Hiện"
+      "somedayShow": "Hiện",
+      "shared": "Shared"
     },
     "selectState": "Chọn Trạng Thái",
     "state": "Trạng Thái Dự Án",
@@ -1649,7 +1755,25 @@
     "historyDuration_other": "mất {{count}} ngày",
     "reopen": "Mở lại",
     "reopened": "\"{{name}}\" đã quay lại trạng thái đang thực hiện",
-    "loadError": "Không thể tải dự án"
+    "loadError": "Không thể tải dự án",
+    "table": {
+      "name": "Name",
+      "status": "Status",
+      "summary": "Summary",
+      "members": "Members",
+      "due": "Due",
+      "progress": "Progress"
+    },
+    "listSettings": {
+      "title": "Projects settings",
+      "showSomeday": "Show someday projects",
+      "showSomedayHint": "Projects tagged #someday.",
+      "showCompleted": "Show completed projects",
+      "saveError": "Failed to save projects settings"
+    },
+    "reorderError": "Failed to save project order",
+    "historyDuration_one": "took {{count}} day",
+    "fromTemplate": "From template"
   },
   "projectItem": {
     "edit": "Chỉnh sửa",
@@ -1697,7 +1821,12 @@
     "blankSlateHint": "Khu vực là những phần của cuộc sống mà bạn chăm lo lâu dài, như Công việc, Sức khỏe hoặc Nhà. Đặt dự án và mục tiêu vào đó để xem từng phần ở cùng một nơi.",
     "blankSlateNew": "Tạo khu vực đầu tiên",
     "blankSlateProjects": "Đến dự án",
-    "finishedProjects": "Đã xong ({{count}})"
+    "finishedProjects": "Đã xong ({{count}})",
+    "presetsLabel": "Most people start with",
+    "presetHome": "Home",
+    "presetWork": "Work",
+    "presetHealth": "Health",
+    "presetFamily": "Family"
   },
   "notes": {
     "loading": "Đang tải ghi chú...",
@@ -1758,7 +1887,15 @@
     "linkedNoteCreate": "Tạo ghi chú",
     "linkedNoteCreateFailed": "Không thể tạo ghi chú.",
     "backgroundImage": "Hình nền",
-    "noBackground": "Không có hình nền"
+    "noBackground": "Không có hình nền",
+    "openInNotes": "Open in Notes",
+    "sidebar": {
+      "recent": "Recent",
+      "projects": "Projects",
+      "tags": "Tags",
+      "noProject": "No project",
+      "more": "{{count}} more"
+    }
   },
   "tags": {
     "loading": "Đang tải thẻ...",
@@ -1974,7 +2111,12 @@
       "connected": "Google connected",
       "connectError": "Google was not connected",
       "saveError": "Could not save the event"
-    }
+    },
+    "manageCalendars": "Calendars",
+    "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
+    "hideCalendar": "Hide {{name}}",
+    "showCalendar": "Show {{name}}",
+    "feedError": "Could not load: {{names}}"
   },
   "pages": {
     "notFound": {
@@ -2158,7 +2300,14 @@
       "reason": "Lý do (tùy chọn)",
       "overrideSaved": "Đã lưu ngoại lệ",
       "overrideCleared": "Đã gỡ ngoại lệ",
-      "synced": "Đã đồng bộ từ nhà cung cấp thanh toán"
+      "synced": "Đã đồng bộ từ nhà cung cấp thanh toán",
+      "onTrial": "On trial",
+      "trialsOnly": "Trials only",
+      "trial": "Trial",
+      "trialDaysLeft_one": "{{count}} day left",
+      "trialDaysLeft_other": "{{count}} days left",
+      "trialEnded": "Trial ended",
+      "readOnlyUntil": "Read-only, deleted on {{date}}"
     },
     "dashboard": {
       "title": "Quản trị viên",
@@ -2178,7 +2327,12 @@
       "email": "Email",
       "source": "Nguồn",
       "joined": "Đã tham gia",
-      "waitlistAll": "Xem tất cả"
+      "waitlistAll": "Xem tất cả",
+      "emptyAccounts": "Nothing created",
+      "emptyAccountsHint": "{{pct}} of users never created anything",
+      "tasks": "Tasks",
+      "payingShare": "{{pct}} of users",
+      "gated": "gated"
     },
     "waitlist": {
       "title": "Danh sách chờ",
@@ -2318,7 +2472,186 @@
     "mfaResetConfirm": "Tắt xác minh hai bước cho {{email}}? Chỉ làm vậy khi bạn chắc chắn đó đúng là họ. Họ sẽ bị đăng xuất ở mọi nơi và nhận được email thông báo.",
     "mfaResetAction": "Đặt lại",
     "mfaResetDone": "Đã đặt lại xác minh hai bước. Họ có thể đăng nhập bằng mật khẩu.",
-    "mfaResetFailed": "Không thể đặt lại 2FA"
+    "mfaResetFailed": "Không thể đặt lại 2FA",
+    "verified": "Verified",
+    "verifiedYes": "Verified",
+    "verifiedNo": "Not verified",
+    "feedback": {
+      "title": "Feedback",
+      "open": "Open ({{count}})",
+      "resolved": "Resolved",
+      "all": "All",
+      "emptyOpen": "Nothing open. Nice.",
+      "empty": "No feedback yet.",
+      "markResolved": "Mark resolved",
+      "reopen": "Reopen",
+      "updateFailed": "Failed to update",
+      "deleted": "Feedback deleted",
+      "deleteFailed": "Failed to delete",
+      "deleteTitle": "Delete Feedback",
+      "confirmDelete": "Delete this feedback? This cannot be undone.",
+      "statusOpen": "Open",
+      "statusResolved": "Resolved"
+    },
+    "userStatus": {
+      "title": "Users",
+      "user": "User",
+      "signedUp": "Signed up",
+      "verified": "Verified",
+      "status": "Status",
+      "daysLeft": "Trial days left",
+      "paid": "Paid",
+      "trial": "Trial",
+      "subscribed": "Subscribed",
+      "pastDue": "Past due",
+      "comped": "Comped",
+      "admin": "Admin",
+      "member": "Member",
+      "trialEnded": "Trial ended",
+      "free": "No plan",
+      "addedBy": "Added by {{email}}",
+      "signedUpWith": "With {{provider}}",
+      "signedUpWithEmail": "With email",
+      "deletedOn": "Deleted on {{date}}",
+      "paidByOwner": "Yes, by owner",
+      "paidYes": "Yes",
+      "paidBefore": "Not now, paid before",
+      "paidNo": "No",
+      "items": "Items",
+      "itemsCreated_one": "{{count}} item",
+      "itemsCreated_other": "{{count}} items",
+      "lastCreated": "Last on {{date}}",
+      "nothingCreated": "Nothing yet",
+      "emails": "Emails",
+      "emailsSent_one": "{{count}} sent",
+      "emailsSent_other": "{{count}} sent",
+      "emailsNone": "None sent",
+      "kinds": {
+        "tasks": "Tasks",
+        "habits": "Habits",
+        "projects": "Projects",
+        "notes": "Notes",
+        "areas": "Areas",
+        "goals": "Goals",
+        "tags": "Tags",
+        "people": "People",
+        "views": "Views",
+        "inbox": "Inbox"
+      }
+    },
+    "userEmails": {
+      "title": "Emails",
+      "language": "Language: {{language}}",
+      "to": "To",
+      "subject": "Subject",
+      "confirmTitle": "Send \"{{name}}\"?",
+      "sendNow": "Send email",
+      "sending": "Sending...",
+      "send": "Send",
+      "sendAgain": "Send again",
+      "sentOn": "Sent {{date}}",
+      "sentBeforeLog": "Sent (before the log)",
+      "sentOnBeforeLog": "Sent {{date}} (before the log)",
+      "failed": "Failed",
+      "sent": "Sent",
+      "notSent": "Not sent",
+      "history": "History",
+      "noHistory": "Nothing recorded yet.",
+      "sentBy": "by {{email}}",
+      "automatic": "automatic",
+      "sentNotice": "{{name}} sent to {{to}}.",
+      "failedNotice": "Not sent: {{error}}",
+      "linkNote": "The link is created when you send, so the real email has a working link in its place.",
+      "names": {
+        "verification": "Verify your email",
+        "verificationReminder": "Verification reminder",
+        "memberInvite": "Member invite",
+        "passwordReset": "Reset your password",
+        "trialReminder": "Trial ends soon",
+        "emptyAccount": "Account still empty",
+        "comeBack": "Come back after a quiet spell",
+        "deletionWarning": "Account will be deleted"
+      }
+    },
+    "userFilter": {
+      "filter": "Filter",
+      "clear": "Clear filters",
+      "showing": "{{shown}} of {{total}}",
+      "empty": "No users match these filters.",
+      "source": "How they joined",
+      "signedUp": "Signed up",
+      "member": "Added as member",
+      "invited": "Invitation pending",
+      "verification": "Email",
+      "verified": "Verified",
+      "unverified": "Not verified",
+      "activity": "Activity",
+      "created": "Created something",
+      "nothingCreated": "Nothing created yet",
+      "plan": "Plan",
+      "trial": "On trial",
+      "trialEnded": "Trial ended",
+      "paid": "Paying",
+      "paidBefore": "Paid before",
+      "neverPaid": "Never paid"
+    },
+    "trends": {
+      "title": "Last 7 days",
+      "signups": "signups",
+      "vsLastWeek": "{{diff}} vs last week",
+      "chartLabel": "Signups per day",
+      "barTitle": "{{date}}: {{n}} signups ({{prev}} a week before)",
+      "active": "Active users",
+      "activeHint": "created something this week",
+      "waitlist": "Waitlist joins",
+      "trialsStarted": "Trials started",
+      "trialsEnding": "Trials ending in 7 days",
+      "churn": "Canceled · failed payments",
+      "firstPlan": "Planned a first day",
+      "firstPlanHint": "{{n}} of {{total}} new users planned 3+ tasks",
+      "threeDays": "Kept planning",
+      "threeDaysHint": "{{n}} of {{total}} of last week's signups planned 3 days",
+      "tasksCreated": "Tasks created",
+      "tasksCompleted": "Tasks completed",
+      "verified": "Verified email",
+      "newUsers": "New users",
+      "usage": "Usage",
+      "createdSomething": "Created something",
+      "ofNewUsers": "{{n}} of {{total}} new users",
+      "trialsAndChurn": "Trials and churn"
+    },
+    "visits": {
+      "title": "Visits, last 7 days",
+      "visitors": "visitors",
+      "chartLabel": "Visitors per day",
+      "barTitle": "{{date}}: {{n}} visitors ({{prev}} a week before)",
+      "views": "Page views",
+      "blog": "Blog readers",
+      "appOpens": "App opens",
+      "appUsers": "App users",
+      "appUsersHint": "{{day}} today · {{month}} in 30 days",
+      "topPages": "Top pages",
+      "noPages": "No page views yet",
+      "topReferrers": "Top referrers",
+      "noReferrers": "No referrers yet"
+    },
+    "funnel": {
+      "title": "Trial funnel, last {{days}} days",
+      "titleNoTrial": "Signup funnel, last {{days}} days",
+      "overall": "End to end: {{pct}}",
+      "vsBefore": "{{diff}} pts vs the {{days}} days before",
+      "visitors": "Site visitors",
+      "visitorsHint": "marketing site and blog, counted per day",
+      "trialSignups": "Trial signups",
+      "signups": "Signups",
+      "signupsHint": "made their own account, members left out",
+      "activated": "Activated",
+      "activatedHint": "{{n}}+ tasks or used the planner",
+      "paid": "Paid",
+      "paidHint": "activated and has had a subscription",
+      "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
+      "paidWithoutActivating": "{{n}} more paid without activating."
+    }
   },
   "shares": {
     "shareProject": "Chia sẻ dự án",
@@ -2358,7 +2691,13 @@
     "groupAlreadyShared": "đã được chia sẻ",
     "groupHint": "Mỗi thành viên nhận một lời mời, và những người được thêm vào nhóm sau này cũng được mời.",
     "sharedWithGroups": "Chia sẻ với các nhóm",
-    "groupCounts": "{{accepted}} đã chấp nhận, {{pending}} đang chờ"
+    "groupCounts": "{{accepted}} đã chấp nhận, {{pending}} đang chờ",
+    "shareWith": "Share with",
+    "selectPerson": "Select a person",
+    "selectPersonError": "Choose a person",
+    "alreadyHasAccess": "already has access",
+    "someoneElseByEmail": "Someone else, by email",
+    "you": "you"
   },
   "viewType": {
     "label": "Chế độ xem",
@@ -2475,7 +2814,18 @@
       "hasNoDueDate": "không có Hạn",
       "isAssignedToProject": "được Giao cho Dự án",
       "hasNoProject": "không có Dự án"
-    }
+    },
+    "groups": {
+      "Task": "Công việc",
+      "Project": "Dự án",
+      "Area": "Khu vực",
+      "Note": "Ghi chú",
+      "Tag": "Thẻ"
+    },
+    "moreFilters": "Thêm bộ lọc",
+    "fewerFilters": "Bớt bộ lọc",
+    "hint": "Lên và Xuống để di chuyển, Enter để mở, Esc để đóng",
+    "searching": "Đang tìm kiếm..."
   },
   "subtasks": {
     "placeholder": "Thêm một công việc phụ..."
@@ -2548,7 +2898,8 @@
       "dueProjects": "Dự Án Đến Hạn",
       "overdueProjects": "Dự Án Quá Hạn",
       "taskAssigned": "Nhiệm vụ đã được giao",
-      "habitReminders": "Nhắc nhở thói quen"
+      "habitReminders": "Nhắc nhở thói quen",
+      "comments": "Comments & Mentions"
     },
     "descriptions": {
       "dueTasks": "Công việc đến hạn trong vòng 24 giờ",
@@ -2557,7 +2908,8 @@
       "dueProjects": "Dự án đến hạn trong vòng 24 giờ",
       "overdueProjects": "Dự án đã qua hạn",
       "taskAssigned": "Một nhiệm vụ đã được giao cho bạn bởi người khác",
-      "habitReminders": "Vào giờ nhắc đặt cho thói quen, khi thói quen đó vẫn còn mở"
+      "habitReminders": "Vào giờ nhắc đặt cho thói quen, khi thói quen đó vẫn còn mở",
+      "comments": "Replies, comments on your tasks, and @mentions"
     },
     "telegram": {
       "notConfigured": {
@@ -2569,7 +2921,12 @@
       "title": "Thông Báo Kiểm Tra",
       "description": "Gửi một thông báo thử nghiệm để xem nó xuất hiện trong ứng dụng và trên các kênh đã bật (Telegram, v.v.)",
       "send": "Gửi Thử",
-      "sending": "Đang gửi..."
+      "sending": "Đang gửi...",
+      "rowLabel": "Send a test notification",
+      "button": "Test",
+      "sendVia": "Send a test via {{channel}}",
+      "sent": "Test sent via {{channel}}.",
+      "failed": "Could not send the test."
     },
     "info": {
       "title": "Lưu ý:",
@@ -2634,6 +2991,17 @@
       "history": "Lịch sử",
       "confirmDelete": "Xóa nó?",
       "delete": "Xóa"
+    },
+    "push": {
+      "title": "Push notifications on this device",
+      "prompt": "Get notifications on this device even when Cadence is closed.",
+      "subscribed": "This device receives push notifications. Choose which ones in the Push column below.",
+      "needsInstall": "To get notifications on iPhone or iPad, add Cadence to your Home Screen first: tap Share, then Add to Home Screen, and open it from there.",
+      "unsupported": "This browser does not support push notifications.",
+      "denied": "Notifications are blocked for Cadence. Allow them in your browser or system settings, then come back here.",
+      "enable": "Turn on",
+      "disable": "Turn off",
+      "failed": "Something went wrong. Please try again."
     }
   },
   "projectStatus": {
@@ -2648,7 +3016,8 @@
     "done": "Đã hoàn thành",
     "done_desc": "Đã hoàn tất và xong",
     "cancelled": "Đã hủy",
-    "cancelled_desc": "Sẽ không được hoàn thành"
+    "cancelled_desc": "Sẽ không được hoàn thành",
+    "idea": "Idea"
   },
   "habits": {
     "completeHabit": "Hoàn thành thói quen",
@@ -2659,7 +3028,8 @@
     "stats": {
       "clean": "{{unit}} không tái phạm",
       "best": "tốt nhất",
-      "strength": "độ bền"
+      "strength": "độ bền",
+      "cleanFor": "{{count}} {{unit}} clean"
     },
     "quit": "Bỏ",
     "confirmSlip": "Ghi tái phạm",
@@ -2780,7 +3150,13 @@
     "perDay": "mỗi ngày",
     "weekdays": "Ngày thường",
     "weekends": "Cuối tuần",
-    "quitTarget": "Tránh"
+    "quitTarget": "Tránh",
+    "presetsLabel": "Or start with",
+    "presetWalk": "Morning walk",
+    "presetRead": "Read 20 minutes",
+    "presetReview": "Weekly review",
+    "doneTodayLine": "{{done}} of {{total}} done for now",
+    "statistics": "Statistics"
   },
   "aiAssistant": {
     "title": "Trợ Lý AI",
@@ -2849,7 +3225,8 @@
     "bestWeek": "tốt nhất ({{week}})",
     "areaBalance30": "Cân bằng khu vực, 30 ngày qua",
     "completionRateLegend": "% = tỷ lệ hoàn thành",
-    "itemsToProcess_one": "{{count}} mục cần xử lý"
+    "itemsToProcess_one": "{{count}} mục cần xử lý",
+    "overview": "Overview"
   },
   "billing": {
     "title": "Gói & Thanh toán",
@@ -2948,13 +3325,18 @@
     "backToApp": "Quay lại Cadence",
     "trialBanner": "Dùng thử miễn phí, số ngày còn lại: {{count}}",
     "trialLock": {
-      "webhooks": "Webhook không có trong bản dùng thử miễn phí. Hãy đăng ký để gửi sự kiện đến các dịch vụ của riêng bạn."
+      "webhooks": "Webhook không có trong bản dùng thử miễn phí. Hãy đăng ký để gửi sự kiện đến các dịch vụ của riêng bạn.",
+      "ai": "The AI assistant is not part of the free trial. Subscribe to turn it on.",
+      "publicNotes": "Public note links are not part of the free trial. Subscribe to share notes with anyone.",
+      "members": "Adding members is not part of the free trial. Subscribe to add family members or teammates."
     },
     "lockedWebhooks": "Webhook thuộc gói trả phí.",
     "whoFor": "Dành cho ai?",
     "justMe": "Chỉ mình tôi (Pro)",
     "teamOf": "Nhóm tối đa {{seats}} người",
-    "perSeat": "{{price}} mỗi người mỗi tháng, {{seats}} chỗ tính cả bạn"
+    "perSeat": "{{price}} mỗi người mỗi tháng, {{seats}} chỗ tính cả bạn",
+    "trialBanner_one": "You're on the free trial, {{count}} day left",
+    "trialBanner_other": "You're on the free trial, {{count}} days left"
   },
   "demo": {
     "opening": "Đang mở bản demo...",
@@ -2975,7 +3357,9 @@
     "nothing": "Hiện tại không có gì",
     "empty": "Không có gì được chia sẻ hiện tại. Chia sẻ một khu vực, dự án hoặc mục tiêu, hoặc giao cho ai đó một công việc, để thấy nó ở đây.",
     "sortableColumn": "cột có thể sắp xếp",
-    "reorderFailed": "Không thể lưu thứ tự cột."
+    "reorderFailed": "Không thể lưu thứ tự cột.",
+    "dropHere": "Drop to assign",
+    "reassignFailed": "Could not assign this task."
   },
   "people": {
     "addMember": "Thêm thành viên",
@@ -3164,14 +3548,16 @@
       "gapFit": "Rảnh {{gap}} lúc {{time}}, vừa cho {{name}} ({{duration}})",
       "place": "Xếp vào",
       "noBreak": "Không nghỉ từ {{start}} đến {{end}}",
-      "next": "Mẹo tiếp theo"
+      "next": "Mẹo tiếp theo",
+      "missed_one": "{{count}} planned block already passed",
+      "missed_other": "{{count}} planned blocks already passed"
     },
     "more": "Tùy chọn khác",
     "switchToList": "Chuyển sang danh sách",
     "switchToTimeline": "Chuyển sang dòng thời gian",
     "leaveWithoutStarting": "Quay lại Hôm nay",
     "overdueDays": "Quá hạn {{count}} ngày",
-    "whatNext": "Hôm nay bạn có thể làm gì?",
+    "whatNext": "Việc cần làm hôm nay",
     "whatNextOn": "Bạn có thể làm gì vào {{date}}?",
     "dueThatDay": "Đến hạn ngày đó",
     "yesterday": "Hôm qua",
@@ -3187,7 +3573,8 @@
       "overdue": "{{count}} quá hạn",
       "due_today": "{{count}} đến hạn hôm nay",
       "in_progress": "{{count}} đang làm",
-      "suggested": "{{count}} gợi ý"
+      "suggested": "{{count}} gợi ý",
+      "tagged_today": "{{count}} tagged #today"
     },
     "durationMinutes": "{{minutes}} phút",
     "durationHours": "{{hours}} giờ",
@@ -3206,7 +3593,55 @@
     "agendaEmpty": "Nothing scheduled for this day.",
     "agendaUntimed": "No set time",
     "resizePanes": "Resize the columns",
-    "calendarMenu": "Tùy chọn lịch khác"
+    "calendarMenu": "Tùy chọn lịch khác",
+    "addTask": "Add task",
+    "taggedToday": "Tagged #today",
+    "doneForToday": "Done for today",
+    "nextOccurrence": "Next on {{date}}",
+    "refreshCalendar": "Refresh calendar",
+    "refreshCalendarError": "Could not refresh the calendar.",
+    "refreshingCalendar": "Refreshing calendar…",
+    "capacity": "Sức chứa trong ngày",
+    "capacityOver": "Hôm nay thừa {{time}}: hãy chuyển bớt việc sang ngày khác.",
+    "placeAll": "Xếp tất cả",
+    "placeAllTitle": "Xếp việc vào thời gian rảnh",
+    "placeAllNothing": "Hôm nay không còn khung giờ trống nào.",
+    "placeAllHint": "{{count}} việc sẽ được xếp vào các khung giờ trống tiếp theo, theo thứ tự ưu tiên.",
+    "placeAllUnplaced": "Hôm nay không còn chỗ cho {{count}} việc nữa: chúng sẽ ở lại danh sách.",
+    "placeAllApply": "Áp dụng",
+    "placeAllDone": "Đã xếp {{count}} việc.",
+    "slipped": "\"{{name}}\" được lên kế hoạch đến {{time}} nhưng chưa hoàn thành.",
+    "shiftRest": "Dời phần còn lại",
+    "placeLater": "Để sau",
+    "shiftedRest": "Phần còn lại trong ngày đã được dời.",
+    "placedLater": "Đã chuyển '{{name}}' sang khung giờ sau.",
+    "endDay": "Kết thúc ngày",
+    "endDayClean": "Không còn gì tồn đọng. Làm tốt lắm.",
+    "guidedTitle": "Bắt đầu ngày mới",
+    "guidedStep": "Bước {{step}} / {{total}}",
+    "guidedLeftovers": "Việc còn lại từ hôm qua",
+    "guidedNoLeftovers": "Không có việc nào còn lại từ hôm qua.",
+    "guidedCarry": "Chuyển sang hôm nay",
+    "guidedDrop": "Bỏ",
+    "guidedPick": "Chọn việc làm hôm nay",
+    "guidedNoPicks": "Không còn gì để chọn.",
+    "guidedAdd": "Thêm",
+    "guidedCapacity": "Có vừa không?",
+    "guidedBack": "Quay lại",
+    "guidedNext": "Tiếp",
+    "guidedDone": "Xong",
+    "guidedSkip": "Không phải bây giờ",
+    "focusTitle": "Thời gian tập trung",
+    "focusHint": "Các khung giờ không đặt việc: Xếp tất cả và nút + sẽ bỏ qua chúng.",
+    "focusNone": "Chưa đặt thời gian tập trung.",
+    "focusBlock": "Khung tập trung",
+    "focusFrom": "Từ",
+    "focusTo": "Đến",
+    "focusLabel": "Nhãn (tùy chọn)",
+    "focusAdd": "Thêm thời gian tập trung",
+    "focusSaveError": "Không thể lưu thời gian tập trung của bạn.",
+    "showQuote": "Hiện câu nói trong ngày",
+    "hideQuote": "Ẩn câu nói trong ngày"
   },
   "capture": {
     "add": "Thêm",
@@ -3271,7 +3706,12 @@
       "oneItemPerLineHelp": "Tắt: mọi thứ bạn gõ trở thành một mục, dòng đầu là tiêu đề và các dòng còn lại là ghi chú. Bật: mỗi dòng trở thành một mục riêng.",
       "save": "Lưu",
       "title": "Thêm mục"
-    }
+    },
+    "addTitle": "Add to Inbox, Task, Note or Project",
+    "close": "Close",
+    "filesAttached_one": "1 file attached.",
+    "button": "Ghi lại",
+    "syntaxHint": "#tag  +project  !1 đến !3 ưu tiên  ngày mai 15:00 để đặt ngày"
   },
   "area": {
     "loadError": "Không thể tải khu vực"
@@ -3375,7 +3815,17 @@
     "confirmDeleteMessage": "Xóa \"{{name}}\"? Các dự án đã tạo từ mẫu này không bị ảnh hưởng."
   },
   "publicNote": {
-    "linkedNoteNotShared": "Ghi chú này không được chia sẻ công khai."
+    "linkedNoteNotShared": "Ghi chú này không được chia sẻ công khai.",
+    "toggleTheme": "Toggle dark mode",
+    "openApp": "Open Cadence",
+    "updated": "Last updated {{date}}",
+    "unavailableTitle": "This note is not available",
+    "unavailableBody": "The link may be wrong, or the owner stopped sharing this note. Ask them for a new link.",
+    "failedTitle": "Could not load this note",
+    "failedBody": "Something went wrong on our side. Try again in a moment.",
+    "ctaTitle": "Do you want to share your notes?",
+    "ctaBody": "Write notes, keep them organized with your tasks and projects, and share any of them with a link.",
+    "ctaButton": "Sign up now"
   },
   "blog": {
     "nav": "Blog",
@@ -3710,7 +4160,8 @@
     "reverifyPassword": "Nhập mật khẩu để tiếp tục.",
     "adminRequiredTitle": "Hãy bật xác minh hai bước trước",
     "adminRequiredBody": "Tài khoản này xem được mọi khách hàng, nên bảng quản trị chỉ mở khi xác minh hai bước đã bật.",
-    "adminRequiredAction": "Thiết lập"
+    "adminRequiredAction": "Thiết lập",
+    "codesLeft_one": "{{count}} recovery code left."
   },
   "summary": {
     "period": "Khoảng thời gian",
@@ -3886,5 +4337,168 @@
     "none": "Không còn gì để so sánh.",
     "addToday": "Thêm vào hôm nay",
     "close": "Đóng"
+  },
+  "comments": {
+    "count": "{{count}} comments",
+    "loading": "Loading comments...",
+    "failedToLoad": "Failed to load comments",
+    "empty": "No comments yet",
+    "placeholder": "Write a comment... use @ to mention someone",
+    "replyPlaceholder": "Write a reply...",
+    "submit": "Comment",
+    "reply": "Reply",
+    "unknownAuthor": "Unknown",
+    "delete": "Delete comment",
+    "deleteConfirmTitle": "Delete Comment",
+    "deleteConfirmMessage": "Are you sure you want to delete this comment? This action cannot be undone.",
+    "deletedPlaceholder": "Comment deleted",
+    "failedToPost": "Failed to post comment",
+    "failedToDelete": "Failed to delete comment",
+    "like": "Like",
+    "dislike": "Dislike",
+    "failedToReact": "Failed to update reaction",
+    "uploadingImage": "Uploading image...",
+    "imageUploadFailed": "Could not upload image"
+  },
+  "sortable": {
+    "move": "Move",
+    "project": "sortable project",
+    "task": "sortable task"
+  },
+  "groupPage": {
+    "title": "Group",
+    "subtitle": "What each member has on now",
+    "empty": "Nothing is assigned to this group yet. Assign a task to a member to see it here.",
+    "yourGroups": "Your groups"
+  },
+  "relations": {
+    "title": "Relations",
+    "add": "Add relation",
+    "remove": "Remove relation",
+    "searchPlaceholder": "Search for a task...",
+    "addFailed": "Failed to add relation.",
+    "removeFailed": "Failed to remove relation.",
+    "blocked": "Blocked",
+    "blockedTooltip": "Blocked by {{count}} open task(s)",
+    "completeBlockedTitle": "Task is blocked",
+    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
+    "completeAnyway": "Complete anyway",
+    "types": {
+      "blocks": "Blocks",
+      "blocked_by": "Blocked by",
+      "related_to": "Related to",
+      "duplicates": "Duplicates",
+      "duplicated_by": "Duplicated by"
+    }
+  },
+  "attachments": {
+    "limitReached": "Maximum 20 attachments allowed",
+    "addTitle": "Add a title",
+    "title": "Title",
+    "download": "Download",
+    "noPreview": "No preview for this file type.",
+    "previous": "Previous file",
+    "next": "Next file",
+    "renameError": "Could not save the title",
+    "confirmDelete": "Delete file?"
+  },
+  "feedback": {
+    "title": "Send feedback",
+    "subtitle": "Found a bug or have an idea? Let us know.",
+    "placeholder": "What happened, or what would make Cadence better?",
+    "contextNote": "The page you are on and the app version are sent along with your message.",
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Thanks! Your feedback was sent.",
+    "failed": "Could not send your feedback"
+  },
+  "onboarding": {
+    "starter": {
+      "kicker": "Welcome to Cadence",
+      "welcomeTitle": "Take a look at what you can do with Cadence in a minute",
+      "videoTitle": "A one minute tour of Cadence",
+      "letsStart": "I'm done, let's start",
+      "settingUp": "Setting up..."
+    }
+  },
+  "mobileNav": {
+    "label": "Main navigation",
+    "inbox": "Inbox",
+    "tasks": "Tasks",
+    "agenda": "Agenda",
+    "habits": "Habits",
+    "review": "Review",
+    "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Bảng lệnh",
+    "placeholder": "Nhập lệnh hoặc tìm kiếm...",
+    "empty": "Không có kết quả",
+    "hintNav": "Lên và Xuống để di chuyển, Enter để chạy, Esc để đóng",
+    "pickProject": "Chuyển đến dự án nào?",
+    "actionError": "Không thể cập nhật công việc",
+    "deleteError": "Không thể xóa công việc",
+    "taskDeleted": "Đã xóa “{{name}}”",
+    "taskContext": "Công việc: {{name}}",
+    "completeTask": "Hoàn thành công việc",
+    "reopenTask": "Mở lại công việc",
+    "editTask": "Mở công việc",
+    "moveToProject": "Chuyển đến dự án...",
+    "setDate": "Ngày: {{when}}",
+    "setPriority": "Độ ưu tiên: {{level}}",
+    "noProject": "Không có dự án",
+    "createTask": "Tạo công việc",
+    "capture": "Ghi nhanh",
+    "createProject": "Tạo dự án",
+    "createNote": "Tạo ghi chú",
+    "createHabit": "Tạo thói quen",
+    "goTo": "Đi tới {{page}}",
+    "triage": "Phân loại hộp thư đến",
+    "search": "Tìm kiếm",
+    "toggleTheme": "Bật/tắt chế độ tối",
+    "showShortcuts": "Phím tắt",
+    "groups": {
+      "recent": "Gần đây",
+      "task": "Công việc này",
+      "create": "Tạo",
+      "go": "Đi tới",
+      "commands": "Lệnh",
+      "projects": "Dự án",
+      "tasks": "Công việc",
+      "notes": "Ghi chú",
+      "habits": "Thói quen"
+    },
+    "help": {
+      "title": "Phím tắt",
+      "general": "Chung",
+      "navigation": "Đi tới",
+      "task": "Trên một công việc",
+      "create": "Tạo",
+      "triage": "Phân loại hộp thư đến"
+    },
+    "shortcuts": {
+      "palette": "Mở bảng lệnh",
+      "capture": "Ghi nhanh",
+      "search": "Tìm kiếm",
+      "help": "Hiển thị phím tắt",
+      "goToday": "Đi tới Hôm nay",
+      "goInbox": "Đi tới Hộp thư đến",
+      "goUpcoming": "Đi tới Sắp tới",
+      "goCalendar": "Đi tới Lịch",
+      "goProjects": "Đi tới Dự án",
+      "taskNav": "Di chuyển giữa các công việc",
+      "taskComplete": "Hoàn thành hoặc mở lại công việc (hoặc Space)",
+      "taskEdit": "Mở công việc để sửa (hoặc Enter)",
+      "taskDate": "Đặt ngày",
+      "taskPriority": "Đặt độ ưu tiên",
+      "taskProject": "Chuyển đến một dự án",
+      "taskDelete": "Xóa công việc (có hoàn tác)",
+      "createAlt": "Tạo mục hộp thư đến, công việc, dự án, ghi chú, khu vực hoặc thẻ (với Alt+Shift)",
+      "triageTask": "Phân loại: chuyển thành công việc",
+      "triageProject": "Phân loại: chuyển thành dự án",
+      "triageNote": "Phân loại: chuyển thành ghi chú",
+      "triageLater": "Phân loại: để sau (giữ trong hộp thư đến)",
+      "triageDelete": "Phân loại: xóa"
+    }
   }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="agenda_tray_strip">À planifier · %1$d</string>
+    <string name="agenda_tray_expand">Afficher les tâches à planifier</string>
+    <string name="agenda_tray_collapse">Masquer les tâches à planifier</string>
+    <string name="agenda_all_day_more">+%1$d</string>
+    <string name="agenda_all_day_more_description">Afficher %1$d éléments de plus</string>
+    <string name="agenda_all_day_less">Réduire les journées entières</string>
+    <string name="agenda_scheduled_at">Planifiée à %1$s</string>
+    <string name="agenda_undo">Annuler</string>
+    <string name="agenda_task_completed">Tâche terminée</string>
+    <string name="agenda_resize_handle">Ajuster la durée</string>
+    <string name="agenda_week_expand">Afficher la semaine</string>
+    <string name="agenda_permission_inline">Événements de l’appareil masqués</string>
+    <string name="agenda_calendar_access">Autoriser l’accès au calendrier</string>
+    <string name="agenda_calendar_access_hint">Cadence lit vos agendas en lecture seule pour afficher leurs événements.</string>
+</resources>

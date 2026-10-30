@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
@@ -31,7 +32,7 @@ interface TaskRepository {
     fun observeTags(): Flow<List<TagItem>>
     fun observeInbox(): Flow<List<InboxEntry>>
 
-    /** Notes du serveur, de la plus récente à la plus ancienne ; lecture seule sur l'appareil. */
+    /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */
     fun observeNotes(): Flow<List<NoteItem>>
     fun observeNote(uid: String): Flow<NoteItem?>
     fun observeSyncStatus(): Flow<SyncStatus>
@@ -54,6 +55,13 @@ interface TaskRepository {
      * renvoie un échec explicite hors ligne.
      */
     suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Unit>
+
+    /**
+     * Écrit les champs de [change] sur la note [uid], qui est créée si elle n'existe pas encore
+     * (l'uid est choisi par l'appareil) : une note vide jamais enregistrée n'atteint donc pas le serveur.
+     */
+    suspend fun saveNote(uid: String, change: NoteChange)
+    suspend fun deleteNote(uid: String)
 
     suspend fun captureInbox(text: String): String
     suspend fun deleteInboxItem(uid: String)

@@ -26,6 +26,7 @@ private fun TaskRowPreview() {
         zone = ZoneOffset.UTC,
         onToggle = {},
         onOpen = {},
-        onPostpone = {},
+        onSwipeAction = {},
+        onMenu = {},
     )
 }

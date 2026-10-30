@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getAssetPath } from '../config/paths';
@@ -243,163 +244,178 @@ const Sidebar: React.FC<SidebarProps> = ({
     };
 
     return (
-        <div
-            className={`fixed top-0 left-0 ${isSidebarOpen ? 'w-full sm:w-sidebar' : 'w-0 invisible sm:w-rail sm:visible'} h-screen overflow-hidden ${SIDEBAR_CANVAS} text-gray-900 dark:text-white transition-width duration-300 ease-in-out z-40`}
-        >
-            {/* Collapsed on tablet and desktop: an icon rail */}
-            {!isSidebarOpen && (
-                <div className="hidden sm:block h-full">
-                    {isMinimal ? (
-                        <SidebarRailMinimal
-                            handleNavClick={handleNavClick}
-                            location={location}
-                            canOpenAccess={canOpenAccess(currentUser)}
-                            onExpand={() => setIsSidebarOpen(true)}
-                            onCustomize={openSidebarSettings}
-                        />
-                    ) : (
-                        <SidebarRail
-                            handleNavClick={handleNavClick}
-                            location={location}
-                            isDarkMode={isDarkMode}
-                            openTaskModal={openTaskModal}
-                            onExpand={() => setIsSidebarOpen(true)}
-                        />
-                    )}
-                </div>
-            )}
+        <>
             {isSidebarOpen && (
-                <div className={isMinimal ? 'flex h-full' : 'contents'}>
-                    {isMinimal && (
-                        <SidebarRailMinimal
-                            handleNavClick={handleNavClick}
-                            location={location}
-                            canOpenAccess={canOpenAccess(currentUser)}
-                            onCustomize={openSidebarSettings}
-                            hiddenIds={railIdsListedInPanel()}
-                        />
-                    )}
-                    <div
-                        className={
-                            isMinimal
-                                ? 'flex flex-col h-full min-w-0 flex-1'
-                                : 'flex flex-col h-full'
-                        }
-                    >
-                        <SidebarResizeHandle />
-                        <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
-                            <Link
-                                to="/"
-                                className="flex items-center no-underline"
-                            >
-                                <img
-                                    src={getAssetPath(
-                                        isDarkMode
-                                            ? 'wide-logo-light.png'
-                                            : 'wide-logo-dark.png'
-                                    )}
-                                    alt="Cadence"
-                                    className="h-8 w-auto"
-                                />
-                            </Link>
-                            <button
-                                type="button"
-                                onClick={() => setIsSidebarOpen(false)}
-                                className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                                aria-label="Collapse Sidebar"
-                                data-testid="sidebar-collapse"
-                            >
-                                <SidebarPanelIcon className="h-5 w-5" />
-                            </button>
-                        </div>
-                        <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
-                            {/* Sidebar Contents */}
-                            <div className="mb-[22px]">
-                                {isMinimal ? (
-                                    <SidebarSmartLists
-                                        handleNavClick={handleNavClick}
-                                        location={location}
-                                    />
-                                ) : (
-                                    <SidebarNav
-                                        handleNavClick={handleNavClick}
-                                        location={location}
-                                        isDarkMode={isDarkMode}
-                                        openTaskModal={openTaskModal}
-                                    />
-                                )}
-                            </div>
-                            {sectionOrder.map((id) => {
-                                if (!isSectionVisible(id as SidebarSectionId)) {
-                                    return null;
-                                }
-                                if (id === 'habits' && !habitsEnabled)
-                                    return null;
-                                if (
-                                    isMinimal &&
-                                    !MINIMAL_LIST_SECTIONS.includes(
-                                        id as SidebarSectionId
-                                    )
-                                ) {
-                                    return null;
-                                }
-                                return (
-                                    <div key={id} className="mb-[6px]">
-                                        {
-                                            sectionElements[
-                                                id as SidebarSectionId
-                                            ]
-                                        }
-                                    </div>
-                                );
-                            })}
-                            {!isMinimal && (
-                                <div className="mb-[6px]">
-                                    <SidebarAdmin
-                                        handleNavClick={handleNavClick}
-                                        location={location}
-                                        currentUser={currentUser}
-                                    />
-                                </div>
-                            )}
-                        </div>
-
+                <div
+                    aria-hidden="true"
+                    data-testid="sidebar-scrim"
+                    className="sm:hidden fixed inset-0 z-[39] bg-black/50"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+            <div
+                className={`fixed top-0 left-0 ${isSidebarOpen ? 'w-[85vw] max-w-[22rem] sm:max-w-none sm:w-sidebar' : 'w-0 invisible sm:w-rail sm:visible'} h-screen overflow-hidden ${SIDEBAR_CANVAS} text-gray-900 dark:text-white transition-width duration-300 ease-in-out z-40`}
+            >
+                {/* Collapsed on tablet and desktop: an icon rail */}
+                {!isSidebarOpen && (
+                    <div className="hidden sm:block h-full">
+                        {isMinimal ? (
+                            <SidebarRailMinimal
+                                handleNavClick={handleNavClick}
+                                location={location}
+                                canOpenAccess={canOpenAccess(currentUser)}
+                                onExpand={() => setIsSidebarOpen(true)}
+                                onCustomize={openSidebarSettings}
+                            />
+                        ) : (
+                            <SidebarRail
+                                handleNavClick={handleNavClick}
+                                location={location}
+                                isDarkMode={isDarkMode}
+                                openTaskModal={openTaskModal}
+                                onExpand={() => setIsSidebarOpen(true)}
+                            />
+                        )}
+                    </div>
+                )}
+                {isSidebarOpen && (
+                    <div className={isMinimal ? 'flex h-full' : 'contents'}>
                         {isMinimal && (
-                            <div className="px-2.5 pb-1">
+                            <SidebarRailMinimal
+                                handleNavClick={handleNavClick}
+                                location={location}
+                                canOpenAccess={canOpenAccess(currentUser)}
+                                onCustomize={openSidebarSettings}
+                                hiddenIds={railIdsListedInPanel()}
+                            />
+                        )}
+                        <div
+                            className={
+                                isMinimal
+                                    ? 'flex flex-col h-full min-w-0 flex-1'
+                                    : 'flex flex-col h-full'
+                            }
+                        >
+                            <SidebarResizeHandle />
+                            <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
+                                <Link
+                                    to="/"
+                                    className="flex items-center no-underline"
+                                >
+                                    <img
+                                        src={getAssetPath(
+                                            isDarkMode
+                                                ? 'wide-logo-light.png'
+                                                : 'wide-logo-dark.png'
+                                        )}
+                                        alt="Cadence"
+                                        className="h-8 w-auto"
+                                    />
+                                </Link>
                                 <button
                                     type="button"
-                                    onClick={openSidebarSettings}
-                                    data-testid="sidebar-customize"
-                                    className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-[oklch(24%_0.015_250)]"
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                    aria-label="Collapse Sidebar"
+                                    data-testid="sidebar-collapse"
                                 >
-                                    {t(
-                                        'sidebar.customize',
-                                        'Customize sidebar'
-                                    )}
+                                    <XMarkIcon className="h-6 w-6 sm:hidden" />
+                                    <SidebarPanelIcon className="hidden sm:block h-5 w-5" />
                                 </button>
                             </div>
-                        )}
+                            <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
+                                {/* Sidebar Contents */}
+                                <div className="mb-[22px]">
+                                    {isMinimal ? (
+                                        <SidebarSmartLists
+                                            handleNavClick={handleNavClick}
+                                            location={location}
+                                        />
+                                    ) : (
+                                        <SidebarNav
+                                            handleNavClick={handleNavClick}
+                                            location={location}
+                                            isDarkMode={isDarkMode}
+                                            openTaskModal={openTaskModal}
+                                        />
+                                    )}
+                                </div>
+                                {sectionOrder.map((id) => {
+                                    if (
+                                        !isSectionVisible(
+                                            id as SidebarSectionId
+                                        )
+                                    ) {
+                                        return null;
+                                    }
+                                    if (id === 'habits' && !habitsEnabled)
+                                        return null;
+                                    if (
+                                        isMinimal &&
+                                        !MINIMAL_LIST_SECTIONS.includes(
+                                            id as SidebarSectionId
+                                        )
+                                    ) {
+                                        return null;
+                                    }
+                                    return (
+                                        <div key={id} className="mb-[6px]">
+                                            {
+                                                sectionElements[
+                                                    id as SidebarSectionId
+                                                ]
+                                            }
+                                        </div>
+                                    );
+                                })}
+                                {!isMinimal && (
+                                    <div className="mb-[6px]">
+                                        <SidebarAdmin
+                                            handleNavClick={handleNavClick}
+                                            location={location}
+                                            currentUser={currentUser}
+                                        />
+                                    </div>
+                                )}
+                            </div>
 
-                        <SidebarTrialCard />
-                        <SidebarFooter
-                            currentUser={currentUser}
-                            isDarkMode={isDarkMode}
-                            toggleDarkMode={toggleDarkMode}
-                            isSidebarOpen={isSidebarOpen}
-                            setIsSidebarOpen={setIsSidebarOpen}
-                            isDropdownOpen={isDropdownOpen}
-                            toggleDropdown={toggleDropdown}
-                            openTaskModal={openTaskModal}
-                            openProjectModal={openProjectModal}
-                            onCreateNote={onCreateNote}
-                            openAreaModal={openAreaModal}
-                            openTagModal={openTagModal}
-                            keyboardShortcuts={keyboardShortcuts}
-                        />
+                            {isMinimal && (
+                                <div className="px-2.5 pb-1">
+                                    <button
+                                        type="button"
+                                        onClick={openSidebarSettings}
+                                        data-testid="sidebar-customize"
+                                        className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-[oklch(24%_0.015_250)]"
+                                    >
+                                        {t(
+                                            'sidebar.customize',
+                                            'Customize sidebar'
+                                        )}
+                                    </button>
+                                </div>
+                            )}
+
+                            <SidebarTrialCard />
+                            <SidebarFooter
+                                currentUser={currentUser}
+                                isDarkMode={isDarkMode}
+                                toggleDarkMode={toggleDarkMode}
+                                isSidebarOpen={isSidebarOpen}
+                                setIsSidebarOpen={setIsSidebarOpen}
+                                isDropdownOpen={isDropdownOpen}
+                                toggleDropdown={toggleDropdown}
+                                openTaskModal={openTaskModal}
+                                openProjectModal={openProjectModal}
+                                onCreateNote={onCreateNote}
+                                openAreaModal={openAreaModal}
+                                openTagModal={openTagModal}
+                                keyboardShortcuts={keyboardShortcuts}
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 };
 

@@ -1425,100 +1425,130 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     const tabs: TabConfig[] = [
         {
             id: 'general',
+            group: 'account',
             name: t('profile.tabs.general', 'General'),
             icon: <UserIcon className="w-5 h-5" />,
         },
         {
             id: 'appearance',
+            group: 'appearance',
             name: t('profile.tabs.appearance', 'Appearance'),
             icon: <SwatchIcon className="w-5 h-5" />,
         },
         {
             id: 'security',
+            group: 'security',
             name: t('profile.tabs.security', 'Security'),
             icon: <ShieldCheckIcon className="w-5 h-5" />,
         },
         {
             id: 'oidc',
+            group: 'security',
             name: t('profile.tabs.oidc', 'OIDC/SSO'),
             icon: <LinkIcon className="w-5 h-5" />,
         },
         {
             id: 'api-keys',
+            group: 'security',
             name: t('profile.tabs.apiKeys', 'API Keys'),
             icon: <KeyIcon className="w-5 h-5" />,
         },
         {
             id: 'notifications',
+            group: 'planning',
             name: t('profile.tabs.notifications', 'Notifications'),
             icon: <BellIcon className="w-5 h-5" />,
         },
         {
             id: 'telegram',
+            group: 'integrations',
             name: t('profile.tabs.telegram', 'Telegram'),
             icon: <TelegramIcon className="w-5 h-5" />,
             featureFlag: 'telegram',
         },
         {
             id: 'keyboard-shortcuts',
+            group: 'appearance',
             name: t('profile.tabs.keyboardShortcuts', 'Shortcuts'),
             icon: <CommandLineIcon className="w-5 h-5" />,
         },
         {
             id: 'calendars',
+            group: 'planning',
             name: t('profile.tabs.calendars', 'Calendars'),
             icon: <CalendarDaysIcon className="w-5 h-5" />,
         },
         {
             id: 'planning',
+            group: 'planning',
             name: t('profile.tabs.planning', 'Planning'),
             icon: <QueueListIcon className="w-5 h-5" />,
         },
         {
             id: 'caldav',
+            group: 'integrations',
             name: t('profile.tabs.caldav', 'CalDAV Sync'),
             icon: <CalendarIcon className="w-5 h-5" />,
         },
         {
             id: 'mcp',
+            group: 'integrations',
             name: t('profile.tabs.mcp', 'MCP Integration'),
             icon: <CpuChipIcon className="w-5 h-5" />,
         },
         {
             id: 'ai-assistant',
+            group: 'integrations',
             name: t('profile.tabs.aiAssistant', 'AI Assistant'),
+            badge: t('profile.optional', 'Optional'),
             icon: <SparklesIcon className="w-5 h-5" />,
         },
         {
             id: 'billing',
+            group: 'account',
             name: t('profile.tabs.billing', 'Plan & Billing'),
             icon: <CreditCardIcon className="w-5 h-5" />,
             featureFlag: 'hosted',
         },
         {
             id: 'features',
+            group: 'advanced',
             name: t('profile.tabs.features', 'Features & Add-ons'),
             icon: <Squares2X2Icon className="w-5 h-5" />,
         },
         {
             id: 'import-export',
+            group: 'advanced',
             name: t('spreadsheet.tab.title', 'Import & export'),
             icon: <TableCellsIcon className="w-5 h-5" />,
         },
         {
             id: 'sidebar',
+            group: 'appearance',
             name: t('profile.tabs.sidebar', 'Sidebar'),
             icon: <ViewColumnsIcon className="w-5 h-5" />,
         },
     ];
 
-    // Filter tabs based on feature flags, then sort alphabetically by name
+    // Grouped like the Android settings; General stays first.
+    const GROUP_ORDER = [
+        'account',
+        'appearance',
+        'planning',
+        'integrations',
+        'security',
+        'advanced',
+    ];
     const visibleTabs = tabs
         .filter((tab) => {
             if (!tab.featureFlag) return true;
             return featureFlags[tab.featureFlag as keyof FeatureFlags];
         })
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .sort(
+            (a, b) =>
+                GROUP_ORDER.indexOf(a.group ?? '') -
+                GROUP_ORDER.indexOf(b.group ?? '')
+        );
 
     return (
         <>

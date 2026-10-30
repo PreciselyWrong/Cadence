@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '../../utils/dateUtils';
 import React from 'react';
 import { addHours, differenceInCalendarDays, format, isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
@@ -183,7 +184,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                             : 'text-gray-400 dark:text-gray-500'
                     }`}
                 >
-                    {format(currentDate, 'EEEE')}
+                    {format(currentDate, 'EEEE', {
+                        locale: getCurrentLocale(),
+                    })}
                 </div>
                 <div>
                     {todayClass ? (
@@ -197,7 +200,9 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     )}
                 </div>
                 <div className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                    {format(currentDate, 'MMMM yyyy')}
+                    {format(currentDate, 'MMMM yyyy', {
+                        locale: getCurrentLocale(),
+                    })}
                 </div>
             </div>
 

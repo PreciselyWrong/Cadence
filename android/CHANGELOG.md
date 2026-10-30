@@ -8,6 +8,7 @@
 - Un texte partagé depuis une autre application arrive dans la boîte de réception.
 - Les rappels de tâches sonnent avec un bouton `Terminer`.
 - Déplacer une tâche récurrente demande si le changement vaut pour cette occurrence, la suite ou toute la série.
+- Glisser une tâche à droite ou à gauche (court ou long) la termine, la planifie, la déplace vers un projet, change sa priorité ou la supprime, avec `Annuler` ; les quatre gestes se règlent dans `Réglages › Gestes`. Un appui long ouvre un menu d'actions.
 
 ## [1.0.22] — 21 octobre 2026
 

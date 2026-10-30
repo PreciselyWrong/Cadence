@@ -113,6 +113,7 @@ const HabitModal: React.FC<HabitModalProps> = ({ isOpen, onClose }) => {
                     setValues((prev) => ({ ...prev, ...patch }))
                 }
                 saving={submitting}
+                liveCounts
             />
         </EntitySidePanel>
     );

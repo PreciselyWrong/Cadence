@@ -27,6 +27,7 @@ import {
     AiWrapUp,
     DailyPlanItem,
     DayHours,
+    FocusBlock,
     InboxCandidate,
     PlanCandidates,
     fetchDailyPlan,
@@ -84,6 +85,18 @@ import {
 import PlanTips from './PlanTips';
 import NowCard from './NowCard';
 import WrapUpCard from './WrapUpCard';
+import CapacityMeter from './CapacityMeter';
+import PlaceAllDialog from './PlaceAllDialog';
+import StartOfDay from './StartOfDay';
+import FocusBlocksDialog from './FocusBlocksDialog';
+import {
+    Placement,
+    focusBlockEvents,
+    orderedCandidates,
+    placeLater,
+    planAll,
+    shiftFollowing,
+} from './autoPlace';
 import DayReview from './DayReview';
 import { useDailyQuote } from './useDailyQuote';
 import { buildTips, rescheduleMissed } from './tips';
@@ -134,6 +147,8 @@ type PanelMode = 'day' | 'agenda';
 const MODE_KEY = 'dailyPlanMode';
 const CALENDAR_OPEN_KEY = 'today.calendarOpen';
 const PANEL_MODE_KEY = 'today.panelMode';
+const QUOTE_KEY = 'today.showQuote';
+const GUIDE_KEY_PREFIX = 'today.guide.';
 const SAVE_DELAY_MS = 500;
 // How many more suggestions each "Show more" past the loaded ones asks for.
 const SUGGESTIONS_PAGE = 20;
@@ -146,6 +161,25 @@ const countSuggested = (list: PlanCandidates, delta: number) =>
         list.suggested.length + delta,
         (list.suggested_total ?? list.suggested.length) + delta
     );
+
+// The daily quote is off on phones unless chosen; remembered per browser.
+const readShowQuote = (narrow: boolean): boolean => {
+    try {
+        const saved = localStorage.getItem(QUOTE_KEY);
+        if (saved !== null) return saved === '1';
+    } catch {
+        // Fall through to the default.
+    }
+    return !narrow;
+};
+
+const guideDismissed = (date: string): boolean => {
+    try {
+        return localStorage.getItem(`${GUIDE_KEY_PREFIX}${date}`) !== null;
+    } catch {
+        return false;
+    }
+};
 
 const readMode = (): Mode => {
     try {
@@ -313,7 +347,11 @@ const TodayPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
     const narrow = useIsNarrow();
-    const quote = useDailyQuote(i18n.language);
+    const [quotePreference, setQuotePreference] = useState<boolean | null>(
+        null
+    );
+    const showQuote = quotePreference ?? readShowQuote(narrow);
+    const quote = useDailyQuote(i18n.language, showQuote);
     const setProgress = useDailyPlanProgress((s) => s.setProgress);
 
     const requestedParam = searchParams.get('date');
@@ -324,6 +362,16 @@ const TodayPage: React.FC = () => {
 
     const [date, setDate] = useState<string | null>(null);
     const [dayHours, setDayHours] = useState<DayHours | undefined>();
+    const [focusBlocks, setFocusBlocks] = useState<FocusBlock[]>([]);
+    const [focusOpen, setFocusOpen] = useState(false);
+    const [placeAllPreview, setPlaceAllPreview] = useState<{
+        placements: Placement[];
+        names: Record<string, string>;
+        tasks: Record<string, Task>;
+    } | null>(null);
+    const [guideOpen, setGuideOpen] = useState(false);
+    // null follows the day: the AI recap opens it once the day is over.
+    const [shutdownOpen, setShutdownOpen] = useState<boolean | null>(null);
     const [visibleHours, setVisibleHours] = useState<VisibleHours>(WHOLE_DAY);
     // Planning timeline only: "Show all hours" in the more menu, or a click
     // on an earlier / later bar. Session state, not saved.
@@ -462,6 +510,7 @@ const TodayPage: React.FC = () => {
                 if (cancelled) return;
                 setDate(day);
                 setDayHours(planResponse.day_hours);
+                setFocusBlocks(planResponse.focus_blocks ?? []);
                 setStarted(!!planResponse.plan?.started_at);
                 setItems(planResponse.plan?.items ?? []);
                 setWrapUp(planResponse.plan?.ai_wrap_up ?? null);
@@ -705,6 +754,19 @@ const TodayPage: React.FC = () => {
             showAllHours,
         ]
     );
+    // Recurring focus blocks of this weekday: reserved like meetings, so the
+    // free time and every slot search leave them alone.
+    const focusEvents = useMemo(
+        () =>
+            date
+                ? focusBlockEvents(focusBlocks, date).filter(
+                      (e) =>
+                          (e.end_minute as number) > range.start &&
+                          (e.start_minute as number) < range.end
+                  )
+                : [],
+        [focusBlocks, date, range]
+    );
     // The day's calendar events plus its open timed tasks that are not in
     // the plan, so the day view shows both (one source: taskToEvents).
     const dayEvents = useMemo<CalendarEvent[]>(() => {
@@ -743,8 +805,22 @@ const TodayPage: React.FC = () => {
                     (e.end_minute as number) > range.start &&
                     (e.start_minute as number) < range.end
             );
-        return [...shownFeedEvents, ...taskEvents];
-    }, [dayTasks, shownFeedEvents, plannedMap, date, range]);
+        return [...shownFeedEvents, ...taskEvents, ...focusEvents];
+    }, [dayTasks, shownFeedEvents, plannedMap, date, range, focusEvents]);
+    // Placement stays inside the working hours, never the widened view.
+    const placementRange = useMemo(
+        () =>
+            showAllHours
+                ? range
+                : clampDayHours(
+                      dayHours ?? {
+                          start: DEFAULT_DAY_START,
+                          end: DEFAULT_DAY_END,
+                      },
+                      visibleHours
+                  ),
+        [showAllHours, range, dayHours, visibleHours]
+    );
     const freeMinutes = Math.max(
         0,
         range.end - range.start - busyMinutes(dayEvents, range)
@@ -826,8 +902,8 @@ const TodayPage: React.FC = () => {
                         next,
                         dayEvents,
                         duration,
-                        range,
-                        Math.max(now, range.start)
+                        placementRange,
+                        Math.max(now, placementRange.start)
                     );
                     if (start === null) noSlot = true;
                 }
@@ -861,7 +937,7 @@ const TodayPage: React.FC = () => {
         [
             items,
             dayEvents,
-            range,
+            placementRange,
             now,
             mode,
             durations,
@@ -1044,6 +1120,117 @@ const TodayPage: React.FC = () => {
             );
         } finally {
             setBusyUid(null);
+        }
+    };
+
+    // Replaces the plan and offers to put the previous one back.
+    const persistWithUndo = (next: DailyPlanItem[], message: string) => {
+        const previous = items;
+        persist(next);
+        showUndoToast(message, () => persist(previous));
+    };
+
+    // "Place all": the candidates in ranking order take the next free slots.
+    const previewPlaceAll = () => {
+        if (!candidates) return;
+        const open = orderedCandidates(candidates)
+            .map((entry) => entry.task)
+            .filter(
+                (task) =>
+                    task.uid &&
+                    !plannedMap.has(task.uid) &&
+                    !isTaskDone(task.status)
+            );
+        const placements = planAll(
+            open.map((task) => ({
+                uid: task.uid as string,
+                duration: durationFor(task),
+            })),
+            items,
+            dayEvents,
+            placementRange,
+            Math.max(now, placementRange.start)
+        );
+        setPlaceAllPreview({
+            placements,
+            names: Object.fromEntries(
+                open.map((task) => [task.uid as string, task.name])
+            ),
+            tasks: Object.fromEntries(
+                open.map((task) => [task.uid as string, task])
+            ),
+        });
+    };
+
+    const applyPlaceAll = () => {
+        if (!placeAllPreview) return;
+        const placed = placeAllPreview.placements.filter(
+            (p) => p.start !== null
+        );
+        setPlaceAllPreview(null);
+        if (placed.length === 0) return;
+        const added: DailyPlanItem[] = placed.map((p, index) => ({
+            task_uid: p.uid,
+            position: items.length + index,
+            start_minute: p.start,
+            duration_minutes: p.duration,
+            task: placeAllPreview.tasks[p.uid],
+        }));
+        for (const p of placed) {
+            if (placeAllPreview.tasks[p.uid].estimated_minutes !== p.duration) {
+                updateTask(p.uid, { estimated_minutes: p.duration }).catch(
+                    () => undefined
+                );
+            }
+        }
+        persistWithUndo(
+            [...items, ...added],
+            t('dailyPlan.placeAllDone', '{{count}} tasks placed.', {
+                count: placed.length,
+            })
+        );
+    };
+
+    const shiftRest = (item: DailyPlanItem) =>
+        persistWithUndo(
+            shiftFollowing(
+                items,
+                item.task_uid,
+                dayEvents,
+                placementRange,
+                now
+            ),
+            t('dailyPlan.shiftedRest', 'The rest of the day was shifted.')
+        );
+
+    const placeAfterSlip = (item: DailyPlanItem) =>
+        persistWithUndo(
+            placeLater(items, item.task_uid, dayEvents, placementRange, now),
+            t('dailyPlan.placedLater', "'{{name}}' moved to a later slot.", {
+                name: item.task.name,
+            })
+        );
+
+    const closeGuide = (finished: boolean) => {
+        setGuideOpen(false);
+        if (!date) return;
+        try {
+            localStorage.setItem(
+                `${GUIDE_KEY_PREFIX}${date}`,
+                finished ? 'done' : 'dismissed'
+            );
+        } catch {
+            // The guide then shows again on the next visit; harmless.
+        }
+    };
+
+    const toggleQuote = () => {
+        const next = !showQuote;
+        setQuotePreference(next);
+        try {
+            localStorage.setItem(QUOTE_KEY, next ? '1' : '0');
+        } catch {
+            // A convenience only.
         }
     };
 
@@ -1396,6 +1583,19 @@ const TodayPage: React.FC = () => {
         items.length > 0 &&
         (items.every(isItemDone) || (lastEnd > 0 && now >= lastEnd));
 
+    const showWrapUp =
+        isToday && (shutdownOpen ?? (aiEnabled && (dayIsOver || !!wrapUp)));
+
+    // The guide opens by itself once a day, on an empty plan, and only until
+    // it is dismissed or finished for that day.
+    const guideChecked = useRef<string | null>(null);
+    useEffect(() => {
+        if (!date || !isToday || !candidates) return;
+        if (guideChecked.current === date) return;
+        guideChecked.current = date;
+        if (items.length === 0 && !guideDismissed(date)) setGuideOpen(true);
+    }, [date, isToday, candidates, items.length]);
+
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {
@@ -1549,7 +1749,6 @@ const TodayPage: React.FC = () => {
               ? t('dailyPlan.tomorrow', 'Tomorrow')
               : '';
     const isPast = !!date && dayOffset < 0;
-    const overBooked = planned > freeMinutes;
     const doneCount = items.filter(isItemDone).length;
     const minutesLeft = items
         .filter((item) => !isItemDone(item))
@@ -1649,35 +1848,31 @@ const TodayPage: React.FC = () => {
                     )}
 
                     {candidates && isToday && (
-                        <div
-                            className="flex flex-col items-end gap-1 text-[13px]"
-                            data-testid="capacity"
-                        >
-                            <span
-                                className={
-                                    overBooked
-                                        ? 'font-medium text-red-700 dark:text-red-400'
-                                        : 'text-gray-600 dark:text-gray-400'
-                                }
-                            >
-                                {t('dailyPlan.planned', '{{time}} planned', {
-                                    time: formatDuration(planned),
-                                })}{' '}
-                                <span className="text-gray-400 dark:text-gray-500">
-                                    {t('dailyPlan.ofFree', 'of {{time}} free', {
-                                        time: formatDuration(freeMinutes),
-                                    })}
-                                </span>
-                            </span>
-                            {overBooked && (
-                                <div className="h-1 w-40 rounded-full bg-red-100 dark:bg-red-900/40">
-                                    <div className="h-1 w-full rounded-full bg-red-500" />
-                                </div>
-                            )}
-                        </div>
+                        <CapacityMeter planned={planned} free={freeMinutes} />
                     )}
 
                     <div className="flex items-center gap-2">
+                        {candidates && isToday && mode === 'timeline' && (
+                            <button
+                                type="button"
+                                onClick={previewPlaceAll}
+                                className="min-h-[34px] rounded-lg bg-blue-600 px-3.5 text-sm font-medium text-white hover:bg-blue-700"
+                                data-testid="place-all"
+                            >
+                                {t('dailyPlan.placeAll', 'Place all')}
+                            </button>
+                        )}
+                        {isToday && (
+                            <button
+                                type="button"
+                                onClick={() => setShutdownOpen(!showWrapUp)}
+                                aria-expanded={showWrapUp}
+                                className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                                data-testid="end-day"
+                            >
+                                {t('dailyPlan.endDay', 'Wrap up the day')}
+                            </button>
+                        )}
                         {saveState === 'saving' && (
                             <span className="text-xs text-gray-500">
                                 {t('dailyPlan.saving', 'Saving…')}
@@ -1703,7 +1898,7 @@ const TodayPage: React.FC = () => {
                                 <EllipsisHorizontalIcon className="h-5 w-5" />
                             </button>
                             {moreOpen && (
-                                <div className="absolute right-0 z-[45] mt-1 flex w-48 flex-col rounded-lg bg-white p-1 text-sm shadow-lg dark:bg-gray-800 dark:bg-gray-900">
+                                <div className="absolute right-0 z-[45] mt-1 flex w-56 flex-col rounded-lg bg-white p-1 text-sm shadow-lg dark:bg-gray-800 dark:bg-gray-900">
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -1715,6 +1910,57 @@ const TodayPage: React.FC = () => {
                                         data-testid="plan-add-task"
                                     >
                                         {t('dailyPlan.addTask', 'Add task')}
+                                    </button>
+                                    {isToday && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setMoreOpen(false);
+                                                setGuideOpen(true);
+                                            }}
+                                            className="rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                            data-testid="plan-open-guide"
+                                        >
+                                            {t(
+                                                'dailyPlan.guidedTitle',
+                                                'Start your day'
+                                            )}
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMoreOpen(false);
+                                            setFocusOpen(true);
+                                        }}
+                                        className="rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        data-testid="plan-focus-time"
+                                    >
+                                        {t(
+                                            'dailyPlan.focusTitle',
+                                            'Focus time'
+                                        )}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="menuitemcheckbox"
+                                        aria-checked={showQuote}
+                                        onClick={() => {
+                                            setMoreOpen(false);
+                                            toggleQuote();
+                                        }}
+                                        className="rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        data-testid="plan-toggle-quote"
+                                    >
+                                        {showQuote
+                                            ? t(
+                                                  'dailyPlan.hideQuote',
+                                                  'Hide the daily quote'
+                                              )
+                                            : t(
+                                                  'dailyPlan.showQuote',
+                                                  'Show the daily quote'
+                                              )}
                                     </button>
                                     {calendarEnabled && (
                                         <button
@@ -1896,10 +2142,38 @@ const TodayPage: React.FC = () => {
                     </div>
                 </header>
 
-                {quote && (
-                    <p className="-mt-2 font-light text-gray-400 dark:text-gray-500">
+                {showQuote && quote && (
+                    <p
+                        className="-mt-2 text-sm italic text-gray-600 dark:text-gray-300"
+                        data-testid="daily-quote"
+                    >
                         {quote}
                     </p>
+                )}
+
+                {guideOpen && isToday && candidates && date && (
+                    <StartOfDay
+                        yesterday={addDays(date, -1)}
+                        todayItems={items}
+                        candidates={candidates}
+                        planned={planned}
+                        free={freeMinutes}
+                        canPlaceAll={mode === 'timeline'}
+                        onAdd={(task) => addTask(task)}
+                        onPlaceAll={previewPlaceAll}
+                        onClose={closeGuide}
+                    />
+                )}
+
+                {showWrapUp && date && (
+                    <WrapUpCard
+                        date={date}
+                        items={items}
+                        wrapUp={wrapUp}
+                        aiEnabled={aiEnabled}
+                        onGenerated={setWrapUp}
+                        onClose={() => setShutdownOpen(false)}
+                    />
                 )}
 
                 {!candidates ? (
@@ -2115,16 +2389,6 @@ const TodayPage: React.FC = () => {
                                     />
                                 ) : (
                                     <>
-                                        {isToday &&
-                                            aiEnabled &&
-                                            (dayIsOver || !!wrapUp) && (
-                                                <WrapUpCard
-                                                    date={date}
-                                                    wrapUp={wrapUp}
-                                                    onGenerated={setWrapUp}
-                                                />
-                                            )}
-
                                         {items.length > 0 && (
                                             <div className="mb-3">
                                                 <NowCard
@@ -2133,6 +2397,10 @@ const TodayPage: React.FC = () => {
                                                     now={now}
                                                     onDone={completePlanned}
                                                     onPushLater={pushLater}
+                                                    onShiftRest={shiftRest}
+                                                    onPlaceLater={
+                                                        placeAfterSlip
+                                                    }
                                                     busyUid={busyUid}
                                                 />
                                             </div>
@@ -2329,6 +2597,22 @@ const TodayPage: React.FC = () => {
                     </div>
                 ) : null}
             </DragOverlay>
+            {placeAllPreview && (
+                <PlaceAllDialog
+                    placements={placeAllPreview.placements}
+                    names={placeAllPreview.names}
+                    onApply={applyPlaceAll}
+                    onCancel={() => setPlaceAllPreview(null)}
+                />
+            )}
+            {focusOpen && (
+                <FocusBlocksDialog
+                    blocks={focusBlocks}
+                    language={i18n.language}
+                    onSaved={setFocusBlocks}
+                    onClose={() => setFocusOpen(false)}
+                />
+            )}
         </DndContext>
     );
 };

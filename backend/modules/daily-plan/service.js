@@ -1,5 +1,6 @@
 'use strict';
 
+const crypto = require('crypto');
 const moment = require('moment-timezone');
 const { Op } = require('sequelize');
 const { Task } = require('../../models');
@@ -229,14 +230,16 @@ async function serializePlan(plan, userId, timezone, scopeWhere = null) {
 async function getPlan(user, date, scopeQuery = null) {
     const timezone = getSafeTimezone(user.timezone);
     const planDate = resolvePlanDate(date, timezone);
-    const [plan, dayHours, scope] = await Promise.all([
+    const [plan, dayHours, focusBlocks, scope] = await Promise.all([
         repository.findPlan(user.id, planDate),
         getDayHours(user),
+        getFocusBlocks(user),
         scopeQuery ? scopeService.resolveScope(scopeQuery, user.id) : null,
     ]);
     return {
         date: planDate,
         day_hours: dayHours,
+        focus_blocks: focusBlocks.blocks,
         plan: await serializePlan(
             plan,
             user.id,
@@ -625,7 +628,67 @@ async function saveDayHours(user, hours) {
     return getDayHours(user);
 }
 
+// Recurring focus blocks (days + hours) that auto-placement never uses,
+// stored in ui_settings.planning.focusBlocks next to dayHours.
+const MAX_FOCUS_BLOCKS = 20;
+
+const normalizeFocusBlock = (block) => {
+    if (!block || typeof block !== 'object') return null;
+    const days = Array.isArray(block.days)
+        ? [...new Set(block.days)].sort((a, b) => a - b)
+        : [];
+    const valid =
+        days.length > 0 &&
+        days.every((d) => Number.isInteger(d) && d >= 0 && d <= 6) &&
+        isValidDayHours({ start: block.start, end: block.end });
+    if (!valid) return null;
+    const label =
+        typeof block.label === 'string' ? block.label.trim().slice(0, 60) : '';
+    return {
+        id:
+            typeof block.id === 'string' && block.id
+                ? block.id.slice(0, 40)
+                : crypto.randomUUID(),
+        days,
+        start: block.start,
+        end: block.end,
+        ...(label ? { label } : {}),
+    };
+};
+
+async function getFocusBlocks(user) {
+    const settings = await repository.findUiSettings(user.id);
+    const saved = settings.planning?.focusBlocks;
+    const blocks = Array.isArray(saved)
+        ? saved.map(normalizeFocusBlock).filter(Boolean)
+        : [];
+    return { blocks };
+}
+
+async function saveFocusBlocks(user, body) {
+    const input = body?.blocks;
+    if (!Array.isArray(input) || input.length > MAX_FOCUS_BLOCKS) {
+        throw new ValidationError(
+            `blocks must be a list of at most ${MAX_FOCUS_BLOCKS} focus blocks`
+        );
+    }
+    const blocks = input.map(normalizeFocusBlock);
+    if (blocks.some((block) => block === null)) {
+        throw new ValidationError(
+            `each focus block needs days (0-6) and start before end in steps of ${DAY_HOURS_STEP} minutes`
+        );
+    }
+    const settings = await repository.findUiSettings(user.id);
+    await repository.saveUiSettings(user.id, {
+        ...settings,
+        planning: { ...(settings.planning || {}), focusBlocks: blocks },
+    });
+    return getFocusBlocks(user);
+}
+
 module.exports = {
+    getFocusBlocks,
+    saveFocusBlocks,
     getDayHours,
     saveDayHours,
     resolvePlanDate,

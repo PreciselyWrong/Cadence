@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { Tag } from '../../entities/Tag';
 import { Project } from '../../entities/Project';
 import { formatLocalizedDate, parseDateString } from '../../utils/dateUtils';
+import type { InboxPriority } from '../../utils/inboxTokens';
 
 export interface InboxDateChip {
     date: string;
@@ -45,6 +46,8 @@ interface InboxSelectedChipsProps {
     onRemoveTag: (tagName: string) => void;
     onRemoveProject: (projectName: string) => void;
     dueDate?: InboxDateChip | null;
+    // From a !1-!3 token in the text
+    priority?: InboxPriority | null;
     assignee?: InboxPersonChip | null;
     onDismissDate?: () => void;
     onRemovePerson?: () => void;
@@ -54,6 +57,12 @@ interface InboxSelectedChipsProps {
     // project, tags and due date.
     variant?: 'chips' | 'line';
 }
+
+const PRIORITY_DOT: Record<InboxPriority, string> = {
+    high: 'bg-red-500',
+    medium: 'bg-amber-500',
+    low: 'bg-blue-400',
+};
 
 const tagColorStyle = (color?: string): React.CSSProperties | undefined => {
     if (!color) return undefined;
@@ -71,6 +80,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
     onRemoveTag,
     onRemoveProject,
     dueDate = null,
+    priority = null,
     assignee = null,
     onDismissDate,
     onRemovePerson,
@@ -272,6 +282,7 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
             selectedProjects.length > 0 ||
             selectedTags.length > 0 ||
             !!dueDate ||
+            !!priority ||
             !!assignee ||
             !!area;
         if (!hasAny) return null;
@@ -368,6 +379,18 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
                         })}
                     </div>
                 )}
+                {priority && (
+                    <div
+                        data-testid="selected-priority"
+                        className="flex items-center"
+                    >
+                        <span
+                            className={`mr-1 h-2 w-2 rounded-full ${PRIORITY_DOT[priority]}`}
+                            aria-hidden="true"
+                        />
+                        <span>{t(`priority.${priority}`, priority)}</span>
+                    </div>
+                )}
                 {dueDate && (
                     <div
                         data-testid="selected-due-date"
@@ -409,6 +432,21 @@ const InboxSelectedChips: React.FC<InboxSelectedChipsProps> = ({
 
     return (
         <>
+            {priority && (
+                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1">
+                    <span
+                        data-testid="selected-priority"
+                        className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-100 dark:bg-gray-700/60 rounded"
+                    >
+                        <span
+                            className={`h-2 w-2 rounded-full ${PRIORITY_DOT[priority]}`}
+                            aria-hidden="true"
+                        />
+                        {t(`priority.${priority}`, priority)}
+                    </span>
+                </div>
+            )}
+
             {dueDate && (
                 <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 flex-wrap gap-1">
                     <CalendarDaysIcon className="h-3 w-3 mr-1" />

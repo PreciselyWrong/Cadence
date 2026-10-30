@@ -121,7 +121,7 @@ data class NoteRow(
 interface NoteDao {
     @Query(
         """SELECT notes.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'note' AND outbox.uid = notes.uid) AS pendingSync
-        FROM notes ORDER BY updatedAtRaw DESC""",
+        FROM notes ORDER BY pinned DESC, updatedAtRaw DESC""",
     )
     fun observeAll(): Flow<List<NoteRow>>
 
@@ -142,6 +142,21 @@ interface NoteDao {
 
     @Query("DELETE FROM notes WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'note')")
     suspend fun deleteSynced()
+}
+
+@Dao
+interface LinkPreviewDao {
+    @Query("SELECT * FROM link_previews WHERE url = :url")
+    fun observe(url: String): Flow<LinkPreviewEntity?>
+
+    @Query("SELECT * FROM link_previews WHERE url = :url")
+    suspend fun get(url: String): LinkPreviewEntity?
+
+    @Upsert
+    suspend fun upsert(preview: LinkPreviewEntity)
+
+    @Query("DELETE FROM link_previews WHERE fetchedAtMs < :olderThanMs")
+    suspend fun deleteOlderThan(olderThanMs: Long)
 }
 
 @Dao

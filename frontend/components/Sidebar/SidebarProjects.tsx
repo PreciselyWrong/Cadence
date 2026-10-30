@@ -171,7 +171,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
             {isExpanded && (
                 <li className="p-0 list-none">
-                    <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
+                    <div className="max-h-[168px] overflow-y-auto overflow-x-hidden overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
                         {flattenProjectTree(activeProjects).map(
                             ({ project, depth }) => (
                                 <div
@@ -183,9 +183,15 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                         getProjectPath(project),
                                         project.uid
                                     )}
+                                    // A margin on a full-width row pushed
+                                    // nested rows past the list and clipped
+                                    // them; shrink the row by the indent.
                                     style={
                                         depth > 0
-                                            ? { marginLeft: depth * 12 }
+                                            ? {
+                                                  marginLeft: depth * 12,
+                                                  width: `calc(100% - ${depth * 12}px)`,
+                                              }
                                             : undefined
                                     }
                                     onClick={() => navigate(project)}

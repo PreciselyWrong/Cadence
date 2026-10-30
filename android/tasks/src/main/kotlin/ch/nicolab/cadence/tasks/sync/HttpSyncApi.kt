@@ -61,6 +61,9 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
         request("POST", "/api/v1/task/${encode(uid)}/move-occurrence", body = body)
     }
 
+    /** Métadonnées d'une page (titre, image, description) : le serveur la lit, jamais l'appareil. */
+    internal suspend fun linkMetadata(url: String): JsonObject = request("GET", "/api/url/title", mapOf("url" to url))
+
     private suspend fun request(
         method: String,
         path: String,

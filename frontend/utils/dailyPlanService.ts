@@ -59,9 +59,20 @@ export interface DayHours {
     end: number;
 }
 
+// Recurring reserved time that auto-placement never uses; days are
+// weekdays, 0 (Sunday) to 6.
+export interface FocusBlock {
+    id: string;
+    days: number[];
+    start: number;
+    end: number;
+    label?: string;
+}
+
 export interface DailyPlanResponse {
     date: string;
     day_hours?: DayHours;
+    focus_blocks?: FocusBlock[];
     plan: DailyPlan | null;
 }
 
@@ -375,4 +386,26 @@ export const carryOverTasks = async (
     );
     await handleAuthResponse(response, 'Could not add the tasks.');
     return response.json();
+};
+
+export const fetchFocusBlocks = async (): Promise<FocusBlock[]> => {
+    const response = await fetch(getApiPath('daily-plan/focus-blocks'), {
+        credentials: 'include',
+        headers: getDefaultHeaders(),
+    });
+    await handleAuthResponse(response, 'Failed to load your focus blocks.');
+    return (await response.json()).blocks;
+};
+
+export const saveFocusBlocks = async (
+    blocks: Omit<FocusBlock, 'id'>[] | FocusBlock[]
+): Promise<FocusBlock[]> => {
+    const response = await fetch(getApiPath('daily-plan/focus-blocks'), {
+        method: 'PUT',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+        body: JSON.stringify({ blocks }),
+    });
+    await handleAuthResponse(response, 'Failed to save your focus blocks.');
+    return (await response.json()).blocks;
 };

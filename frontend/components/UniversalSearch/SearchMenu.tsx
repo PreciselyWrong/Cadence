@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import {
-    InformationCircleIcon,
-    BookmarkIcon,
-    ChevronDownIcon,
-    ChevronUpIcon,
-} from '@heroicons/react/24/outline';
+import { BookmarkIcon } from '@heroicons/react/24/outline';
 import FilterBadge from './FilterBadge';
-import SearchResults from './SearchResults';
+import SearchResults, { SearchNavigation } from './SearchResults';
 import { useToast } from '../Shared/ToastContext';
 import { getApiPath } from '../../config/paths';
 import { getCsrfToken } from '../../utils/csrfService';
 
 interface SearchMenuProps {
+    navRef: React.MutableRefObject<SearchNavigation | null>;
     searchQuery: string;
     selectedFilters: string[];
     onFilterToggle: (filter: string) => void;
@@ -105,6 +101,7 @@ const oppositeExtras: Record<string, string> = {
 };
 
 const SearchMenu: React.FC<SearchMenuProps> = ({
+    navRef,
     searchQuery,
     selectedFilters,
     onFilterToggle,
@@ -127,7 +124,8 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
     const [viewName, setViewName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState('');
-    const [showCriteria, setShowCriteria] = useState(false);
+    const [showMoreFilters, setShowMoreFilters] = useState(false);
+    const [counts, setCounts] = useState<Record<string, number>>({});
 
     // Fetch available tags
     useEffect(() => {
@@ -257,221 +255,6 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
         setSaveError('');
     };
 
-    const buildSearchDescription = () => {
-        const parts: React.ReactNode[] = [];
-
-        // Build entity types part
-        if (selectedFilters.length > 0) {
-            const entities = selectedFilters.map((f) => (
-                <span key={f} style={{ fontWeight: 800, fontStyle: 'normal' }}>
-                    {f.toLowerCase()}s
-                </span>
-            ));
-            const entitiesWithSeparators: React.ReactNode[] = [];
-            entities.forEach((entity, index) => {
-                if (index > 0) {
-                    entitiesWithSeparators.push(
-                        <span key={`sep-entity-${index}`}>
-                            {' ' + t('search.and') + ' '}
-                        </span>
-                    );
-                }
-                entitiesWithSeparators.push(entity);
-            });
-            parts.push(...entitiesWithSeparators);
-        } else {
-            // If no specific entities selected, show "all items"
-            parts.push(
-                <span
-                    key="all"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {t('search.allItems')}
-                </span>
-            );
-        }
-
-        // Add search query
-        if (searchQuery.trim()) {
-            parts.push(
-                <span key="query-label">
-                    {t('search.containingText') + ' '}
-                </span>
-            );
-            parts.push(
-                <span
-                    key="query"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    &quot;{searchQuery.trim()}&quot;
-                </span>
-            );
-        }
-
-        // Add priority filter
-        if (selectedPriority) {
-            parts.push(
-                <span key="priority-label">
-                    {t('search.withPriority') + ' '}
-                </span>
-            );
-            parts.push(
-                <span
-                    key="priority"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {selectedPriority}
-                </span>
-            );
-            parts.push(
-                <span key="priority-suffix">{' ' + t('search.priority')}</span>
-            );
-        }
-
-        // Add status filter
-        if (selectedStatus) {
-            const statusOption = statusOptions.find(
-                (opt) => opt.value === selectedStatus
-            );
-            const statusLabel = statusOption
-                ? t(statusOption.labelKey)
-                : selectedStatus;
-            parts.push(
-                <span key="status-label">{t('search.withStatus') + ' '}</span>
-            );
-            parts.push(
-                <span
-                    key="status"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {statusLabel}
-                </span>
-            );
-        }
-
-        // Add due date filter
-        if (selectedDue) {
-            const dueOption = dueOptions.find(
-                (opt) => opt.value === selectedDue
-            );
-            const dueLabel = dueOption ? t(dueOption.labelKey) : selectedDue;
-            parts.push(<span key="due-label">{t('search.due') + ' '}</span>);
-            parts.push(
-                <span
-                    key="due"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {dueLabel}
-                </span>
-            );
-        }
-
-        // Add defer until filter
-        if (selectedDefer) {
-            const deferOption = deferOptions.find(
-                (opt) => opt.value === selectedDefer
-            );
-            const deferLabel = deferOption
-                ? t(deferOption.labelKey)
-                : selectedDefer;
-            parts.push(
-                <span key="defer-label">{t('search.deferUntil') + ' '}</span>
-            );
-            parts.push(
-                <span
-                    key="defer"
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {deferLabel}
-                </span>
-            );
-        }
-
-        // Add tags filter
-        if (selectedTags.length > 0) {
-            parts.push(
-                <span key="tags-label">{t('search.taggedWith') + ' '}</span>
-            );
-            const tagElements = selectedTags.map((tag) => (
-                <span
-                    key={`tag-${tag}`}
-                    style={{ fontWeight: 800, fontStyle: 'normal' }}
-                >
-                    {tag}
-                </span>
-            ));
-            const tagsWithSeparators: React.ReactNode[] = [];
-            tagElements.forEach((tagEl, index) => {
-                if (index > 0) {
-                    if (index === tagElements.length - 1) {
-                        tagsWithSeparators.push(
-                            <span key={`sep-tag-and-${index}`}>
-                                {' ' + t('search.and') + ' '}
-                            </span>
-                        );
-                    } else {
-                        tagsWithSeparators.push(
-                            <span key={`sep-tag-comma-${index}`}>{', '}</span>
-                        );
-                    }
-                }
-                tagsWithSeparators.push(tagEl);
-            });
-            parts.push(...tagsWithSeparators);
-        }
-
-        // Add extras filters
-        if (selectedExtras.length > 0) {
-            parts.push(
-                <span key="extras-label">{t('search.thatAre') + ' '}</span>
-            );
-            const extrasElements = selectedExtras.map((extra) => {
-                const extraOption = extrasOptions.find(
-                    (opt) => opt.value === extra
-                );
-                const extraLabel = extraOption
-                    ? t(extraOption.labelKey)
-                    : extra;
-                return (
-                    <span
-                        key={`extra-${extra}`}
-                        style={{ fontWeight: 800, fontStyle: 'normal' }}
-                    >
-                        {extraLabel}
-                    </span>
-                );
-            });
-            const extrasWithSeparators: React.ReactNode[] = [];
-            extrasElements.forEach((extraEl, index) => {
-                if (index > 0) {
-                    if (index === extrasElements.length - 1) {
-                        extrasWithSeparators.push(
-                            <span key={`sep-extra-and-${index}`}>
-                                {' ' + t('search.and') + ' '}
-                            </span>
-                        );
-                    } else {
-                        extrasWithSeparators.push(
-                            <span key={`sep-extra-comma-${index}`}>{', '}</span>
-                        );
-                    }
-                }
-                extrasWithSeparators.push(extraEl);
-            });
-            parts.push(...extrasWithSeparators);
-        }
-
-        if (parts.length === 0) return null;
-
-        // Construct the sentence
-        return (
-            <>
-                {t('search.searchingFor')} {parts}
-            </>
-        );
-    };
-
-    const searchDescription = buildSearchDescription();
     const hasActiveFilters =
         selectedFilters.length > 0 ||
         searchQuery.trim() ||
@@ -481,6 +264,22 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
         selectedDefer ||
         selectedTags.length > 0 ||
         selectedExtras.length > 0;
+
+    const group = (
+        label: string,
+        children: React.ReactNode,
+        testId?: string
+    ) => (
+        <div
+            className="flex flex-wrap items-center gap-1.5"
+            data-testid={testId}
+        >
+            <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400 mr-0.5">
+                {label}
+            </span>
+            {children}
+        </div>
+    );
 
     return (
         <div
@@ -494,297 +293,206 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                 e.preventDefault();
             }}
         >
-            {/* Filter Badges Section */}
-            <div className="border-b border-gray-200 dark:border-gray-700 overflow-y-auto max-h-[40vh] md:max-h-none">
-                {/* Search Description */}
-                {hasActiveFilters && searchDescription && (
-                    <>
-                        <div className="px-4 pt-4 pb-3 flex items-center gap-3">
-                            <InformationCircleIcon className="h-6 w-6 text-black/30 dark:text-white/30 flex-shrink-0" />
-                            <p
-                                className="text-xl text-black/40 dark:text-white/40 flex-1"
-                                style={{
-                                    fontFamily: "'Lora', Georgia, serif",
-                                    fontStyle: 'italic',
-                                }}
-                            >
-                                {searchDescription}
-                            </p>
-                        </div>
-                        <div className="border-t border-gray-300 dark:border-gray-600"></div>
-                    </>
-                )}
-
-                {/* Toggle Criteria Button */}
-                <div className="px-4 py-3">
-                    <button
-                        onClick={() => setShowCriteria(!showCriteria)}
-                        className="flex items-center justify-between w-full text-left text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                    >
-                        <span>{t('search.criteria')}</span>
-                        {showCriteria ? (
-                            <ChevronUpIcon className="h-5 w-5" />
-                        ) : (
-                            <ChevronDownIcon className="h-5 w-5" />
-                        )}
-                    </button>
+            {/* Filter chips: always visible, no accordion */}
+            <div
+                className="border-b border-gray-200 dark:border-gray-700 px-4 py-3 space-y-2 overflow-y-auto max-h-[40vh]"
+                data-testid="search-filters"
+            >
+                <div className="flex flex-wrap gap-2">
+                    {filterTypes.map((filter) => {
+                        const count = counts[filter.value];
+                        const label =
+                            count !== undefined
+                                ? `${t(`search.groups.${filter.value}`)} ${count}`
+                                : t(`search.groups.${filter.value}`);
+                        return (
+                            <FilterBadge
+                                key={filter.value}
+                                name={label}
+                                color={filter.color}
+                                isSelected={selectedFilters.includes(
+                                    filter.value
+                                )}
+                                onToggle={() => onFilterToggle(filter.value)}
+                            />
+                        );
+                    })}
                 </div>
 
-                {/* Collapsible Criteria Section */}
-                {showCriteria && (
-                    <div className="px-4 pb-4">
-                        {/* Entity Type Badges */}
-                        <div className="flex flex-wrap gap-2">
-                            {filterTypes.map((filter) => {
-                                const isSelected = selectedFilters.includes(
-                                    filter.value
-                                );
-                                return (
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
+                    {group(
+                        t('search.priorityFilter'),
+                        priorityOptions.map((option) => (
+                            <FilterBadge
+                                key={option.value}
+                                name={t(option.labelKey)}
+                                isSelected={selectedPriority === option.value}
+                                onToggle={() =>
+                                    handlePriorityToggle(option.value)
+                                }
+                            />
+                        ))
+                    )}
+                    {group(
+                        t('search.dueFilter'),
+                        dueOptions.map((option) => (
+                            <FilterBadge
+                                key={option.value}
+                                name={t(option.labelKey)}
+                                isSelected={selectedDue === option.value}
+                                onToggle={() => handleDueToggle(option.value)}
+                            />
+                        ))
+                    )}
+                </div>
+
+                <div className="flex items-center gap-4 text-xs">
+                    <button
+                        type="button"
+                        onClick={() => setShowMoreFilters((open) => !open)}
+                        aria-expanded={showMoreFilters}
+                        className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                        {showMoreFilters
+                            ? t('search.fewerFilters', 'Fewer filters')
+                            : t('search.moreFilters', 'More filters')}
+                    </button>
+                    {hasActiveFilters && !showSaveForm && (
+                        <button
+                            type="button"
+                            onClick={() => setShowSaveForm(true)}
+                            className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                            <BookmarkIcon className="h-4 w-4" />
+                            <span>{t('search.saveAsSmartView')}</span>
+                        </button>
+                    )}
+                </div>
+
+                {showMoreFilters && (
+                    <div className="space-y-2 pt-1">
+                        {group(
+                            t('search.statusFilter'),
+                            statusOptions.map((option) => (
+                                <FilterBadge
+                                    key={option.value}
+                                    name={t(option.labelKey)}
+                                    isSelected={selectedStatus === option.value}
+                                    onToggle={() =>
+                                        handleStatusToggle(option.value)
+                                    }
+                                />
+                            ))
+                        )}
+                        {group(
+                            t('search.deferUntilFilter'),
+                            deferOptions.map((option) => (
+                                <FilterBadge
+                                    key={option.value}
+                                    name={t(option.labelKey)}
+                                    isSelected={selectedDefer === option.value}
+                                    onToggle={() =>
+                                        handleDeferToggle(option.value)
+                                    }
+                                />
+                            ))
+                        )}
+                        {availableTags.length > 0 &&
+                            group(
+                                t('search.tagsFilter'),
+                                availableTags.map((tag) => (
                                     <FilterBadge
-                                        key={filter.value}
-                                        name={t(filter.labelKey)}
-                                        color={filter.color}
-                                        isSelected={isSelected}
-                                        onToggle={() =>
-                                            onFilterToggle(filter.value)
-                                        }
-                                    />
-                                );
-                            })}
-                        </div>
-
-                        {/* Divider */}
-                        <div className="my-4 border-t border-gray-300 dark:border-gray-600"></div>
-
-                        {/* Metadata Filters */}
-                        <div className="space-y-3">
-                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                                {t('search.metadataFilters')}
-                            </div>
-
-                            {/* Priority Filters */}
-                            <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                                    {t('search.priorityFilter')}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {priorityOptions.map((option) => (
-                                        <FilterBadge
-                                            key={option.value}
-                                            name={t(option.labelKey)}
-                                            isSelected={
-                                                selectedPriority ===
-                                                option.value
-                                            }
-                                            onToggle={() =>
-                                                handlePriorityToggle(
-                                                    option.value
-                                                )
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Status Filters */}
-                            <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                                    {t('search.statusFilter')}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {statusOptions.map((option) => (
-                                        <FilterBadge
-                                            key={option.value}
-                                            name={t(option.labelKey)}
-                                            isSelected={
-                                                selectedStatus === option.value
-                                            }
-                                            onToggle={() =>
-                                                handleStatusToggle(option.value)
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Due Date Filters */}
-                            <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                                    {t('search.dueFilter')}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {dueOptions.map((option) => (
-                                        <FilterBadge
-                                            key={option.value}
-                                            name={t(option.labelKey)}
-                                            isSelected={
-                                                selectedDue === option.value
-                                            }
-                                            onToggle={() =>
-                                                handleDueToggle(option.value)
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Defer Until Filters */}
-                            <div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                                    {t('search.deferUntilFilter')}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {deferOptions.map((option) => (
-                                        <FilterBadge
-                                            key={option.value}
-                                            name={t(option.labelKey)}
-                                            isSelected={
-                                                selectedDefer === option.value
-                                            }
-                                            onToggle={() =>
-                                                handleDeferToggle(option.value)
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Tags Filters */}
-                            {availableTags.length > 0 && (
-                                <div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                                        {t('search.tagsFilter')}
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {availableTags.map((tag) => (
-                                            <FilterBadge
-                                                key={tag.id}
-                                                name={tag.name}
-                                                color="bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200"
-                                                isSelected={selectedTags.includes(
-                                                    tag.name
-                                                )}
-                                                onToggle={() =>
-                                                    handleTagToggle(tag.name)
-                                                }
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Divider */}
-                        <div className="my-4 border-t border-gray-300 dark:border-gray-600"></div>
-
-                        {/* Extras Section */}
-                        <div className="space-y-3">
-                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                                {t('search.extras')}
-                            </div>
-
-                            {/* Extras Filters */}
-                            <div className="flex flex-wrap gap-2">
-                                {extrasOptions.map((option) => (
-                                    <FilterBadge
-                                        key={option.value}
-                                        name={t(option.labelKey)}
-                                        color="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
-                                        isSelected={selectedExtras.includes(
-                                            option.value
+                                        key={tag.id}
+                                        name={tag.name}
+                                        color="bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200"
+                                        isSelected={selectedTags.includes(
+                                            tag.name
                                         )}
                                         onToggle={() =>
-                                            handleExtrasToggle(option.value)
+                                            handleTagToggle(tag.name)
                                         }
                                     />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Save as Smart View Section */}
-                        {hasActiveFilters && (
-                            <div className="mt-4 pt-4 border-t border-gray-300 dark:border-gray-600">
-                                {!showSaveForm ? (
-                                    <button
-                                        onClick={() => setShowSaveForm(true)}
-                                        className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                                    >
-                                        <BookmarkIcon className="h-4 w-4" />
-                                        <span>
-                                            {t('search.saveAsSmartView')}
-                                        </span>
-                                    </button>
-                                ) : (
-                                    <div className="space-y-3">
-                                        <div>
-                                            <label
-                                                htmlFor="viewName"
-                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
-                                            >
-                                                {t('search.viewName')}{' '}
-                                                <span className="text-red-500">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="viewName"
-                                                value={viewName}
-                                                onChange={(e) => {
-                                                    setViewName(e.target.value);
-                                                    setSaveError('');
-                                                }}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        handleSaveView();
-                                                    } else if (
-                                                        e.key === 'Escape'
-                                                    ) {
-                                                        handleCancelSave();
-                                                    }
-                                                }}
-                                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder={t(
-                                                    'search.viewNamePlaceholder'
-                                                )}
-                                                autoFocus
-                                            />
-                                            {saveError && (
-                                                <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-                                                    {saveError}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div className="flex gap-2 justify-end">
-                                            <button
-                                                type="button"
-                                                onClick={handleCancelSave}
-                                                className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
-                                            >
-                                                {t('search.cancel')}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={handleSaveView}
-                                                disabled={isSaving}
-                                                className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-md transition-colors"
-                                            >
-                                                {isSaving
-                                                    ? t('search.saving')
-                                                    : t('search.saveView')}
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                                ))
+                            )}
+                        {group(
+                            t('search.extras'),
+                            extrasOptions.map((option) => (
+                                <FilterBadge
+                                    key={option.value}
+                                    name={t(option.labelKey)}
+                                    color="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
+                                    isSelected={selectedExtras.includes(
+                                        option.value
+                                    )}
+                                    onToggle={() =>
+                                        handleExtrasToggle(option.value)
+                                    }
+                                />
+                            ))
                         )}
+                    </div>
+                )}
+
+                {showSaveForm && (
+                    <div className="space-y-3 pt-2">
+                        <div>
+                            <label
+                                htmlFor="viewName"
+                                className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
+                            >
+                                {t('search.viewName')}{' '}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="viewName"
+                                value={viewName}
+                                onChange={(e) => {
+                                    setViewName(e.target.value);
+                                    setSaveError('');
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSaveView();
+                                    } else if (e.key === 'Escape') {
+                                        handleCancelSave();
+                                    }
+                                }}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder={t('search.viewNamePlaceholder')}
+                                autoFocus
+                            />
+                            {saveError && (
+                                <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                                    {saveError}
+                                </p>
+                            )}
+                        </div>
+                        <div className="flex gap-2 justify-end">
+                            <button
+                                type="button"
+                                onClick={handleCancelSave}
+                                className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                            >
+                                {t('search.cancel')}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSaveView}
+                                disabled={isSaving}
+                                className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-md transition-colors"
+                            >
+                                {isSaving
+                                    ? t('search.saving')
+                                    : t('search.saveView')}
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
 
-            {/* Search Results */}
             <SearchResults
+                navRef={navRef}
                 searchQuery={searchQuery}
                 selectedFilters={selectedFilters}
                 selectedPriority={selectedPriority}
@@ -793,8 +501,16 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                 selectedDefer={selectedDefer}
                 selectedTags={selectedTags}
                 selectedExtras={selectedExtras}
+                onCounts={setCounts}
                 onClose={onClose}
             />
+
+            <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-[11px] text-gray-500 dark:text-gray-400">
+                {t(
+                    'search.hint',
+                    'Up and Down to move, Enter to open, Esc to close'
+                )}
+            </div>
         </div>
     );
 };

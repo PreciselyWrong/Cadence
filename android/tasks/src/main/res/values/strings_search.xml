@@ -83,10 +83,33 @@
     <!-- Notes -->
     <string name="tasks_inbox_segment_ideas">Idées</string>
     <string name="tasks_inbox_segment_notes">Notes</string>
-    <string name="tasks_notes_empty">Aucune note. Celles créées sur le web apparaissent ici.</string>
+    <string name="tasks_notes_empty">Aucune note. Écrivez la première, elle se synchronise avec le web.</string>
     <string name="tasks_note_untitled">Sans titre</string>
-    <string name="tasks_note_empty_content">Cette note est vide.</string>
-    <string name="tasks_note_readonly">Lecture seule : modifiez cette note depuis le web.</string>
+    <string name="tasks_note_empty_content">Touchez pour écrire.</string>
     <string name="tasks_note_updated">Modifiée le %1$s</string>
     <string name="tasks_note_back">Retour</string>
+    <string name="tasks_note_new">Nouvelle note</string>
+    <string name="tasks_note_title_hint">Titre</string>
+    <string name="tasks_note_body_hint">Écrivez en Markdown : # titre, - liste, - [ ] case</string>
+    <string name="tasks_note_done_editing">Terminé</string>
+    <string name="tasks_note_pin">Épingler</string>
+    <string name="tasks_note_unpin">Désépingler</string>
+    <string name="tasks_note_organize">Projet, étiquettes, couleur</string>
+    <string name="tasks_note_organize_title">Organiser la note</string>
+    <string name="tasks_note_color">Couleur</string>
+    <string name="tasks_note_color_none">Aucune couleur</string>
+    <string name="tasks_note_deleted">Note supprimée</string>
+    <string name="tasks_idea_deleted">Idée supprimée</string>
+    <string name="tasks_note_checklist">Liste de cases</string>
+    <string name="tasks_note_bullets">Liste à puces</string>
+    <string name="tasks_note_heading">Titre de section</string>
+    <string name="tasks_note_bold">Gras</string>
+    <string name="tasks_note_pinned_badge">Épinglée</string>
+    <string name="tasks_links_section">Liens</string>
+    <string name="tasks_link_open">Ouvrir le lien %1$s</string>
+    <string name="tasks_idea_today">Aujourd\'hui</string>
+    <string name="tasks_idea_schedule">Planifier</string>
+    <string name="tasks_idea_project">Projet</string>
+    <string name="tasks_idea_project_title">Ranger dans un projet</string>
+    <string name="tasks_idea_swipe_delete">Supprimer l\'idée</string>
 </resources>

@@ -82,6 +82,12 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
   - Text size S/M/L, corner radius.
 - Small widgets: 2×2 tasks, 4×1 capture bar (brand mark + « Nouvelle tâche… », idea, dictate), 1×1 « Ajouter » with the brand mark.
 
+## Task detail and quick add (2026-10)
+
+- Detail (`ui/TaskDetailSheet.kt`) follows `e19`: header with back, title edited in place, focus timer and actions menu; tappable badges (date, priority, project, status, tags); sub-task card; connected rows Début → échéance, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet, each opening a design-system sheet; sticky « Planifier » / « Terminer » bar (hidden while the keyboard is up); links and comments are one muted row. There is no Save button: every picker writes its field as soon as it is chosen, title and note are written after a 700 ms pause and on close (`TaskEdits` builds the `TaskChange`).
+- Shared date sheet (`ui/TaskDateSheet.kt`, `quickadd/QuickDates.kt`): Aujourd'hui, Demain, Ce week-end, Semaine prochaine, Sans date, mini calendar, optional time. Same labels and order as the web `DatePopover`; the weekend and next-week rules mirror `frontend/utils/dateShortcuts.ts` (next week starts on Monday).
+- Quick add (`ui/QuickAddSheet.kt`): one field, parsed chips under it (tap to remove: the word goes back to the title), « Plus d'options » for priority, project and tags. The parser (`quickadd/QuickAddParser.kt`, pure Kotlin, fixed `Clock` in tests) reads aujourd'hui, demain, après-demain, weekdays (next occurrence, « lundi prochain » = that day next calendar week), « dans 3 jours / 2 semaines / 1 mois », « ce soir » (19:00), « ce week-end », « semaine prochaine », « à 14h », « 14h30 », « 14:30 », « midi », `!1`-`!3`, `+projet` / `^projet`, `#nom` (tag, else project) and `@étiquette`. `#`, `+`, `^`, `!` are the web capture tokens (`frontend/utils/inboxTokens.ts`); a word that names nothing existing stays in the title.
+
 ## Not in this pass
 
 Note editing on Android, links and comments of a task (not synced), server sync of habits (see `TODO.md` › Now), kanban/Eisenhower, review, saved views, goals, people.

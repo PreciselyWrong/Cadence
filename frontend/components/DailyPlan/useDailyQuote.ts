@@ -13,10 +13,11 @@ const pickQuote = async (language: string): Promise<string | null> => {
 
 // A random quote from the translated quotes file, falling back to English,
 // the same source the classic Today page uses.
-export const useDailyQuote = (language: string): string => {
+export const useDailyQuote = (language: string, enabled = true): string => {
     const [quote, setQuote] = useState('');
 
     useEffect(() => {
+        if (!enabled) return;
         let cancelled = false;
         (async () => {
             try {
@@ -32,7 +33,7 @@ export const useDailyQuote = (language: string): string => {
         return () => {
             cancelled = true;
         };
-    }, [language]);
+    }, [language, enabled]);
 
     return quote;
 };

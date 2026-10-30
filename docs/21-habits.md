@@ -2,6 +2,8 @@
 
 Habits are tasks with `habit_mode = true`. They live on the Habits page (`/habits`) and each has a detail page (`/habit/:uid`). A habit is not a recurring task: it never creates new task rows, it collects check-ins.
 
+On the Habits page each habit is a rounded card with a hexagon facet that fills with the period progress, a quick action (`+1`, amount or check) and a stats line; the streak, strength and best-streak overview is hidden behind the Statistics toggle. The creation panel reports the count as you type, so submitting from the keyboard keeps it.
+
 ## Types
 
 - **Build** habits are things to do: "Read 20 pages", "Meditate 3× a week".
@@ -9,16 +11,16 @@ Habits are tasks with `habit_mode = true`. They live on the Habits page (`/habit
 
 ## Goals and frequency
 
-| Setting | Field | Notes |
-|---|---|---|
-| Count | `habit_target_count` | Check-ins needed per period |
-| Amount | `habit_target_value` + `habit_unit` | Makes the habit measurable; check-ins carry a `value` and the period is met when the values add up to the target |
-| Frequency | `habit_frequency_period` | `daily`, `weekly`, `monthly` or `interval` |
-| Days | `habit_schedule_days` | Daily habits only, weekdays 0 (Sunday) to 6. `null` means every day. Unscheduled days never break a streak |
-| Interval | `habit_interval_days` | For `interval`: periods of N days, anchored on the day the habit was created |
-| Time of day | `habit_time_of_day` | `morning`, `afternoon`, `evening` or `null` (anytime). Groups cards on the Habits page |
-| Reminder | `habit_reminder_time` | `HH:MM` in the user's timezone |
-| Color | `habit_color` | A hex value from the shared palette; `null` uses the default green. Cards, progress, the history grid and buttons take this color |
+| Setting     | Field                               | Notes                                                                                                                             |
+| ----------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Count       | `habit_target_count`                | Check-ins needed per period                                                                                                       |
+| Amount      | `habit_target_value` + `habit_unit` | Makes the habit measurable; check-ins carry a `value` and the period is met when the values add up to the target                  |
+| Frequency   | `habit_frequency_period`            | `daily`, `weekly`, `monthly` or `interval`                                                                                        |
+| Days        | `habit_schedule_days`               | Daily habits only, weekdays 0 (Sunday) to 6. `null` means every day. Unscheduled days never break a streak                        |
+| Interval    | `habit_interval_days`               | For `interval`: periods of N days, anchored on the day the habit was created                                                      |
+| Time of day | `habit_time_of_day`                 | `morning`, `afternoon`, `evening` or `null` (anytime). Groups cards on the Habits page                                            |
+| Reminder    | `habit_reminder_time`               | `HH:MM` in the user's timezone                                                                                                    |
+| Color       | `habit_color`                       | A hex value from the shared palette; `null` uses the default green. Cards, progress, the history grid and buttons take this color |
 
 Weekly and monthly periods follow the user's first day of week and calendar months.
 
@@ -59,20 +61,20 @@ Archiving sets the habit's status to archived (3). It disappears from the Habits
 
 ## API
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/api/habits` | Active habits with `habit_progress`; `?archived=true` for archived; `?updated_since=` for sync (see below) |
-| GET | `/api/habits/:uid` | One habit with `habit_progress` |
-| POST | `/api/habits` | Create: `{ uid?, name, ... }`; `Idempotency-Key` header accepted |
-| PUT | `/api/habits/:uid` | Update settings (only habit fields are accepted) |
-| POST | `/api/habits/:uid/complete` | Check in: `{ uid?, completed_at?, value?, note? }`; `Idempotency-Key` accepted |
-| POST | `/api/habits/:uid/skip` | Skip a day: `{ date?, note? }`; `Idempotency-Key` accepted |
-| GET | `/api/habits/:uid/completions` | Check-ins and skips in `start_date`..`end_date`, or changed since `?updated_since=` |
-| PATCH | `/api/habits/:uid/completions/:id` | Edit a check-in's `value` or `note` |
-| DELETE | `/api/habits/:uid/completions/:id` | Remove a check-in or skip |
-| GET | `/api/habits/:uid/stats` | Streaks, strength, completion rate over judged periods |
-| POST | `/api/habits/:uid/archive`, `/unarchive` | Archive or restore |
-| DELETE | `/api/habits/:uid` | Delete with history |
+| Method | Path                                     | Purpose                                                                                                    |
+| ------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| GET    | `/api/habits`                            | Active habits with `habit_progress`; `?archived=true` for archived; `?updated_since=` for sync (see below) |
+| GET    | `/api/habits/:uid`                       | One habit with `habit_progress`                                                                            |
+| POST   | `/api/habits`                            | Create: `{ uid?, name, ... }`; `Idempotency-Key` header accepted                                           |
+| PUT    | `/api/habits/:uid`                       | Update settings (only habit fields are accepted)                                                           |
+| POST   | `/api/habits/:uid/complete`              | Check in: `{ uid?, completed_at?, value?, note? }`; `Idempotency-Key` accepted                             |
+| POST   | `/api/habits/:uid/skip`                  | Skip a day: `{ date?, note? }`; `Idempotency-Key` accepted                                                 |
+| GET    | `/api/habits/:uid/completions`           | Check-ins and skips in `start_date`..`end_date`, or changed since `?updated_since=`                        |
+| PATCH  | `/api/habits/:uid/completions/:id`       | Edit a check-in's `value` or `note`                                                                        |
+| DELETE | `/api/habits/:uid/completions/:id`       | Remove a check-in or skip                                                                                  |
+| GET    | `/api/habits/:uid/stats`                 | Streaks, strength, completion rate over judged periods                                                     |
+| POST   | `/api/habits/:uid/archive`, `/unarchive` | Archive or restore                                                                                         |
+| DELETE | `/api/habits/:uid`                       | Delete with history                                                                                        |
 
 `habit_progress` describes the current period: `period_start`, `period_end`, `progress`, `goal`, `met`, `skipped`, `check_ins`, `today_check_ins`, `scheduled_today`, `multiple_per_day` and `first_day` (the first day of history).
 

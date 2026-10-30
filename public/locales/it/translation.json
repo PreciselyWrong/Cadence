@@ -59,7 +59,8 @@
     "hideSearch": "Comprimi la ricerca",
     "showSearch": "Mostra la ricerca",
     "beta": "beta",
-    "comingSoon": "Prossimamente"
+    "comingSoon": "Prossimamente",
+    "due": "Due"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -308,7 +309,8 @@
       "nextWeek": "Settimana prossima",
       "clearDate": "Rimuovi data",
       "moveToProject": "Sposta in progetto"
-    }
+    },
+    "reorderError": "Failed to save task order"
   },
   "timeline": {
     "activityTimeline": "Timeline delle Attività",
@@ -771,7 +773,9 @@
       "maxOption": "{{count}} attività",
       "intro": "Come Pianifica la mia giornata organizza la tua giornata e quali attività ti propone.",
       "suggestedTitle": "Cosa viene suggerito",
-      "suggestedDescription": "Quali attività aperte possono comparire in Tutto il resto, e quante. Quelle scadute, in scadenza oggi e in corso compaiono sempre."
+      "suggestedDescription": "Quali attività aperte possono comparire in Tutto il resto, e quante. Quelle scadute, in scadenza oggi e in corso compaiono sempre.",
+      "taggedToday": "Tagged #today",
+      "taggedTodayDetail": "Open tasks you tagged #today, whatever their dates."
     },
     "apiKeys": {
       "nameRequired": "Il nome della chiave API è obbligatorio.",
@@ -998,7 +1002,21 @@
       "project": "Progetto",
       "priority": "Bandierina priorità",
       "due": "Scadenza"
-    }
+    },
+    "contentBackground": "Background",
+    "contentBackgroundDescription": "Show a photo behind the main content area. Photos come from Unsplash and are credited to their photographers.",
+    "contentBackgroundNone": "None",
+    "photoBy": "Photo by",
+    "photoOn": "on",
+    "groups": {
+      "account": "Account",
+      "appearance": "Appearance",
+      "planning": "Planning",
+      "integrations": "Integrations",
+      "security": "Security",
+      "advanced": "Advanced"
+    },
+    "optional": "Optional"
   },
   "productivity": {
     "stalledProjects": "Progetti Bloccati",
@@ -1253,7 +1271,63 @@
     "completeOpenTasks": "Questo progetto ha ancora attività aperte. Segnarle anche come fatte o lasciarle aperte? Le attività ricorrenti mantengono comunque la loro pianificazione.",
     "leaveTasksOpen": "Lasciale aperte",
     "completeTasksToo": "Segnale come fatte",
-    "startsOn": "Inizia il {{date}}"
+    "startsOn": "Inizia il {{date}}",
+    "attachments": "Attachments",
+    "overview": "Overview",
+    "people": "People",
+    "info": "Project info",
+    "clickToEdit": "Click to edit",
+    "addDescription": "Add a description",
+    "changeArea": "Change area",
+    "setArea": "Set area",
+    "changeGoal": "Change goal",
+    "setGoal": "Set goal",
+    "changePriority": "Change priority",
+    "setPriority": "Set priority",
+    "changeDue": "Change due date",
+    "changeTags": "Change tags",
+    "addTags": "Add tags",
+    "changeColor": "Change color",
+    "setColor": "Set color",
+    "moreOptions": "More options",
+    "pin": "Pin",
+    "pinned": "Pinned",
+    "started": "Started",
+    "startedOn": "Started {{date}}",
+    "daysToDue_one": "{{count}} day to due date",
+    "daysToDue_other": "{{count}} days to due date",
+    "daysOverdue_one": "{{count}} day overdue",
+    "daysOverdue_other": "{{count}} days overdue",
+    "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
+    "timeUsed": "{{percent}}% of time used",
+    "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
+    "openTasks": "Open tasks",
+    "overdueTasks": "Overdue",
+    "doneThisWeek": "Done this week",
+    "untilDate": "Until {{date}}",
+    "pastDate": "Past {{date}}",
+    "memberCount_one": "{{count}} member",
+    "memberCount_other": "{{count}} members",
+    "noteCount_one": "{{count}} note",
+    "noteCount_other": "{{count}} notes",
+    "roleOwner": "Owner",
+    "rolePending": "Invited",
+    "roleEdit": "Can edit",
+    "roleView": "Can view",
+    "notShared": "Only you can see this project.",
+    "addNote": "Add note",
+    "noNotesYet": "No notes yet.",
+    "allNotes": "All notes",
+    "fewerNotes": "Show fewer",
+    "fileCount_one": "{{count}} file",
+    "fileCount_other": "{{count}} files",
+    "addFile": "Add file",
+    "uploading": "Uploading...",
+    "noFilesYet": "No files yet. Drop files here or use +.",
+    "allFiles": "All files",
+    "dropToUpload": "Drop to upload",
+    "fewerFiles": "Show fewer",
+    "noTasks": "No tasks."
   },
   "errors": {
     "required": "Questo campo è obbligatorio",
@@ -1353,7 +1427,33 @@
     "aboutInbox": "Informazioni sull'Inbox",
     "shortcutTag": "per aggiungere un'etichetta",
     "shortcutProject": "per assegnare a un progetto",
-    "attachments": "Allegati"
+    "attachments": "Allegati",
+    "removeArea": "Remove area",
+    "triage": {
+      "start": "Smista",
+      "title": "Smista la Inbox",
+      "exit": "Esci",
+      "progress": "{{done}} di {{total}} smistati",
+      "done": "La Inbox è vuota. Non resta nulla da smistare.",
+      "doneLater": "{{count}} tenuti per dopo. Il resto è smistato.",
+      "suggested": "Suggerito: {{kind}}",
+      "task": "Attività",
+      "project": "Progetto",
+      "note": "Nota",
+      "later": "Più tardi",
+      "delete": "Elimina",
+      "keptLater": "Tenuto nella Inbox per dopo",
+      "madeTask": "Attività creata",
+      "madeProject": "Progetto creato",
+      "madeNote": "Nota creata",
+      "error": "Impossibile elaborare questo elemento. È ancora nella Inbox.",
+      "reasonProject": "Riguarda il progetto +{{detail}}",
+      "reasonTag": "È taggato #{{detail}}",
+      "reasonUrl": "È un link",
+      "reasonKeyword": "Inizia con “{{detail}}”",
+      "reasonLong": "È lungo, come una nota",
+      "reasonDefault": "Testo breve, spesso un'attività"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1559,7 +1659,11 @@
     "pin": "Fissa",
     "unpin": "Sblocca",
     "pinned": "Fissata",
-    "pinUpdateError": "Impossibile aggiornare il fissaggio"
+    "pinUpdateError": "Impossibile aggiornare il fissaggio",
+    "comments": "Comments",
+    "skipOccurrence": "Skip this occurrence",
+    "occurrenceSkipped": "Occurrence skipped",
+    "skipOccurrenceError": "Failed to skip occurrence"
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -1587,7 +1691,8 @@
       "systemTagCannotBeDeleted": "I tag di sistema non possono essere eliminati",
       "systemTagCannotBeRenamed": "I tag di sistema non possono essere rinominati",
       "somedayHide": "Nascondi",
-      "somedayShow": "Mostra"
+      "somedayShow": "Mostra",
+      "shared": "Shared"
     },
     "selectState": "Seleziona Stato",
     "state": "Stato del Progetto",
@@ -1654,7 +1759,24 @@
     "historyDuration_other": "durato {{count}} giorni",
     "reopen": "Riapri",
     "reopened": "\"{{name}}\" è di nuovo in corso",
-    "loadError": "Impossibile caricare i progetti"
+    "loadError": "Impossibile caricare i progetti",
+    "table": {
+      "name": "Name",
+      "status": "Status",
+      "summary": "Summary",
+      "members": "Members",
+      "due": "Due",
+      "progress": "Progress"
+    },
+    "listSettings": {
+      "title": "Projects settings",
+      "showSomeday": "Show someday projects",
+      "showSomedayHint": "Projects tagged #someday.",
+      "showCompleted": "Show completed projects",
+      "saveError": "Failed to save projects settings"
+    },
+    "reorderError": "Failed to save project order",
+    "fromTemplate": "From template"
   },
   "projectItem": {
     "edit": "Modifica",
@@ -1702,7 +1824,12 @@
     "blankSlateHint": "Le aree sono le parti della tua vita di cui ti occupi nel tempo, come Lavoro, Salute o Casa. Inserisci lì progetti e obiettivi per vedere ogni parte in un unico posto.",
     "blankSlateNew": "Crea la tua prima area",
     "blankSlateProjects": "Vai ai progetti",
-    "finishedProjects": "Completati ({{count}})"
+    "finishedProjects": "Completati ({{count}})",
+    "presetsLabel": "Most people start with",
+    "presetHome": "Home",
+    "presetWork": "Work",
+    "presetHealth": "Health",
+    "presetFamily": "Family"
   },
   "notes": {
     "loading": "Caricamento note...",
@@ -1763,7 +1890,15 @@
     "linkedNoteCreate": "Crea nota",
     "linkedNoteCreateFailed": "Impossibile creare la nota.",
     "backgroundImage": "Sfondo",
-    "noBackground": "Nessuno sfondo"
+    "noBackground": "Nessuno sfondo",
+    "openInNotes": "Open in Notes",
+    "sidebar": {
+      "recent": "Recent",
+      "projects": "Projects",
+      "tags": "Tags",
+      "noProject": "No project",
+      "more": "{{count}} more"
+    }
   },
   "tags": {
     "loading": "Caricamento tag...",
@@ -1981,7 +2116,12 @@
       "connected": "Google collegato",
       "connectError": "Google non è stato collegato",
       "saveError": "Impossibile salvare l'evento"
-    }
+    },
+    "manageCalendars": "Calendars",
+    "manageDescription": "Connect read-only calendars and choose which ones appear here. Cadence never changes them.",
+    "hideCalendar": "Hide {{name}}",
+    "showCalendar": "Show {{name}}",
+    "feedError": "Could not load: {{names}}"
   },
   "pages": {
     "notFound": {
@@ -2165,7 +2305,14 @@
       "reason": "Motivo (facoltativo)",
       "overrideSaved": "Eccezione salvata",
       "overrideCleared": "Eccezione rimossa",
-      "synced": "Sincronizzato dal fornitore di pagamento"
+      "synced": "Sincronizzato dal fornitore di pagamento",
+      "onTrial": "On trial",
+      "trialsOnly": "Trials only",
+      "trial": "Trial",
+      "trialDaysLeft_one": "{{count}} day left",
+      "trialDaysLeft_other": "{{count}} days left",
+      "trialEnded": "Trial ended",
+      "readOnlyUntil": "Read-only, deleted on {{date}}"
     },
     "dashboard": {
       "title": "Amministratore",
@@ -2185,7 +2332,12 @@
       "email": "Email",
       "source": "Fonte",
       "joined": "Iscritto",
-      "waitlistAll": "Vedi tutto"
+      "waitlistAll": "Vedi tutto",
+      "emptyAccounts": "Nothing created",
+      "emptyAccountsHint": "{{pct}} of users never created anything",
+      "tasks": "Tasks",
+      "payingShare": "{{pct}} of users",
+      "gated": "gated"
     },
     "waitlist": {
       "title": "Lista d'attesa",
@@ -2326,7 +2478,186 @@
     "mfaResetConfirm": "Disattivare l'autenticazione a due fattori per {{email}}? Fallo solo se sei sicuro che sia davvero quella persona. Verrà disconnessa ovunque e riceverà un'email al riguardo.",
     "mfaResetAction": "Reimposta",
     "mfaResetDone": "L'autenticazione a due fattori è stata reimpostata. Ora può accedere con la sua password.",
-    "mfaResetFailed": "Impossibile reimpostare la 2FA"
+    "mfaResetFailed": "Impossibile reimpostare la 2FA",
+    "verified": "Verified",
+    "verifiedYes": "Verified",
+    "verifiedNo": "Not verified",
+    "feedback": {
+      "title": "Feedback",
+      "open": "Open ({{count}})",
+      "resolved": "Resolved",
+      "all": "All",
+      "emptyOpen": "Nothing open. Nice.",
+      "empty": "No feedback yet.",
+      "markResolved": "Mark resolved",
+      "reopen": "Reopen",
+      "updateFailed": "Failed to update",
+      "deleted": "Feedback deleted",
+      "deleteFailed": "Failed to delete",
+      "deleteTitle": "Delete Feedback",
+      "confirmDelete": "Delete this feedback? This cannot be undone.",
+      "statusOpen": "Open",
+      "statusResolved": "Resolved"
+    },
+    "userStatus": {
+      "title": "Users",
+      "user": "User",
+      "signedUp": "Signed up",
+      "verified": "Verified",
+      "status": "Status",
+      "daysLeft": "Trial days left",
+      "paid": "Paid",
+      "trial": "Trial",
+      "subscribed": "Subscribed",
+      "pastDue": "Past due",
+      "comped": "Comped",
+      "admin": "Admin",
+      "member": "Member",
+      "trialEnded": "Trial ended",
+      "free": "No plan",
+      "addedBy": "Added by {{email}}",
+      "signedUpWith": "With {{provider}}",
+      "signedUpWithEmail": "With email",
+      "deletedOn": "Deleted on {{date}}",
+      "paidByOwner": "Yes, by owner",
+      "paidYes": "Yes",
+      "paidBefore": "Not now, paid before",
+      "paidNo": "No",
+      "items": "Items",
+      "itemsCreated_one": "{{count}} item",
+      "itemsCreated_other": "{{count}} items",
+      "lastCreated": "Last on {{date}}",
+      "nothingCreated": "Nothing yet",
+      "emails": "Emails",
+      "emailsSent_one": "{{count}} sent",
+      "emailsSent_other": "{{count}} sent",
+      "emailsNone": "None sent",
+      "kinds": {
+        "tasks": "Tasks",
+        "habits": "Habits",
+        "projects": "Projects",
+        "notes": "Notes",
+        "areas": "Areas",
+        "goals": "Goals",
+        "tags": "Tags",
+        "people": "People",
+        "views": "Views",
+        "inbox": "Inbox"
+      }
+    },
+    "userEmails": {
+      "title": "Emails",
+      "language": "Language: {{language}}",
+      "to": "To",
+      "subject": "Subject",
+      "confirmTitle": "Send \"{{name}}\"?",
+      "sendNow": "Send email",
+      "sending": "Sending...",
+      "send": "Send",
+      "sendAgain": "Send again",
+      "sentOn": "Sent {{date}}",
+      "sentBeforeLog": "Sent (before the log)",
+      "sentOnBeforeLog": "Sent {{date}} (before the log)",
+      "failed": "Failed",
+      "sent": "Sent",
+      "notSent": "Not sent",
+      "history": "History",
+      "noHistory": "Nothing recorded yet.",
+      "sentBy": "by {{email}}",
+      "automatic": "automatic",
+      "sentNotice": "{{name}} sent to {{to}}.",
+      "failedNotice": "Not sent: {{error}}",
+      "linkNote": "The link is created when you send, so the real email has a working link in its place.",
+      "names": {
+        "verification": "Verify your email",
+        "verificationReminder": "Verification reminder",
+        "memberInvite": "Member invite",
+        "passwordReset": "Reset your password",
+        "trialReminder": "Trial ends soon",
+        "emptyAccount": "Account still empty",
+        "comeBack": "Come back after a quiet spell",
+        "deletionWarning": "Account will be deleted"
+      }
+    },
+    "userFilter": {
+      "filter": "Filter",
+      "clear": "Clear filters",
+      "showing": "{{shown}} of {{total}}",
+      "empty": "No users match these filters.",
+      "source": "How they joined",
+      "signedUp": "Signed up",
+      "member": "Added as member",
+      "invited": "Invitation pending",
+      "verification": "Email",
+      "verified": "Verified",
+      "unverified": "Not verified",
+      "activity": "Activity",
+      "created": "Created something",
+      "nothingCreated": "Nothing created yet",
+      "plan": "Plan",
+      "trial": "On trial",
+      "trialEnded": "Trial ended",
+      "paid": "Paying",
+      "paidBefore": "Paid before",
+      "neverPaid": "Never paid"
+    },
+    "trends": {
+      "title": "Last 7 days",
+      "signups": "signups",
+      "vsLastWeek": "{{diff}} vs last week",
+      "chartLabel": "Signups per day",
+      "barTitle": "{{date}}: {{n}} signups ({{prev}} a week before)",
+      "active": "Active users",
+      "activeHint": "created something this week",
+      "waitlist": "Waitlist joins",
+      "trialsStarted": "Trials started",
+      "trialsEnding": "Trials ending in 7 days",
+      "churn": "Canceled · failed payments",
+      "firstPlan": "Planned a first day",
+      "firstPlanHint": "{{n}} of {{total}} new users planned 3+ tasks",
+      "threeDays": "Kept planning",
+      "threeDaysHint": "{{n}} of {{total}} of last week's signups planned 3 days",
+      "tasksCreated": "Tasks created",
+      "tasksCompleted": "Tasks completed",
+      "verified": "Verified email",
+      "newUsers": "New users",
+      "usage": "Usage",
+      "createdSomething": "Created something",
+      "ofNewUsers": "{{n}} of {{total}} new users",
+      "trialsAndChurn": "Trials and churn"
+    },
+    "visits": {
+      "title": "Visits, last 7 days",
+      "visitors": "visitors",
+      "chartLabel": "Visitors per day",
+      "barTitle": "{{date}}: {{n}} visitors ({{prev}} a week before)",
+      "views": "Page views",
+      "blog": "Blog readers",
+      "appOpens": "App opens",
+      "appUsers": "App users",
+      "appUsersHint": "{{day}} today · {{month}} in 30 days",
+      "topPages": "Top pages",
+      "noPages": "No page views yet",
+      "topReferrers": "Top referrers",
+      "noReferrers": "No referrers yet"
+    },
+    "funnel": {
+      "title": "Trial funnel, last {{days}} days",
+      "titleNoTrial": "Signup funnel, last {{days}} days",
+      "overall": "End to end: {{pct}}",
+      "vsBefore": "{{diff}} pts vs the {{days}} days before",
+      "visitors": "Site visitors",
+      "visitorsHint": "marketing site and blog, counted per day",
+      "trialSignups": "Trial signups",
+      "signups": "Signups",
+      "signupsHint": "made their own account, members left out",
+      "activated": "Activated",
+      "activatedHint": "{{n}}+ tasks or used the planner",
+      "paid": "Paid",
+      "paidHint": "activated and has had a subscription",
+      "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
+      "paidWithoutActivating": "{{n}} more paid without activating."
+    }
   },
   "shares": {
     "shareProject": "Condividi progetto",
@@ -2366,7 +2697,13 @@
     "groupAlreadyShared": "già condiviso",
     "groupHint": "Ogni membro riceve un invito, e anche le persone aggiunte al gruppo in seguito vengono invitate.",
     "sharedWithGroups": "Condiviso con gruppi",
-    "groupCounts": "{{accepted}} accettati, {{pending}} in attesa"
+    "groupCounts": "{{accepted}} accettati, {{pending}} in attesa",
+    "shareWith": "Share with",
+    "selectPerson": "Select a person",
+    "selectPersonError": "Choose a person",
+    "alreadyHasAccess": "already has access",
+    "someoneElseByEmail": "Someone else, by email",
+    "you": "you"
   },
   "viewType": {
     "label": "Vista",
@@ -2483,7 +2820,18 @@
       "hasNoDueDate": "non ha Scadenza",
       "isAssignedToProject": "è Assegnato al Progetto",
       "hasNoProject": "non ha Progetto"
-    }
+    },
+    "groups": {
+      "Task": "Attività",
+      "Project": "Progetti",
+      "Area": "Aree",
+      "Note": "Note",
+      "Tag": "Tag"
+    },
+    "moreFilters": "Altri filtri",
+    "fewerFilters": "Meno filtri",
+    "hint": "Su e Giù per spostarti, Enter per aprire, Esc per chiudere",
+    "searching": "Ricerca in corso..."
   },
   "subtasks": {
     "placeholder": "Aggiungi un sottocompito..."
@@ -2556,7 +2904,8 @@
       "dueProjects": "Progetti Scaduti",
       "overdueProjects": "Progetti In Ritardo",
       "taskAssigned": "Compito Assegnato",
-      "habitReminders": "Promemoria abitudini"
+      "habitReminders": "Promemoria abitudini",
+      "comments": "Comments & Mentions"
     },
     "descriptions": {
       "dueTasks": "Compiti che scadono entro 24 ore",
@@ -2565,7 +2914,8 @@
       "dueProjects": "Progetti che scadono entro 24 ore",
       "overdueProjects": "Progetti che hanno superato la loro data di scadenza",
       "taskAssigned": "Un compito ti è stato assegnato da qualcun altro",
-      "habitReminders": "All'ora di promemoria impostata sull'abitudine, finché è ancora da fare"
+      "habitReminders": "All'ora di promemoria impostata sull'abitudine, finché è ancora da fare",
+      "comments": "Replies, comments on your tasks, and @mentions"
     },
     "telegram": {
       "notConfigured": {
@@ -2577,7 +2927,12 @@
       "title": "Test delle Notifiche",
       "description": "Invia una notifica di prova per vedere come appare nell'app e sui canali abilitati (Telegram, ecc.)",
       "send": "Invia Test",
-      "sending": "Invio in corso..."
+      "sending": "Invio in corso...",
+      "rowLabel": "Send a test notification",
+      "button": "Test",
+      "sendVia": "Send a test via {{channel}}",
+      "sent": "Test sent via {{channel}}.",
+      "failed": "Could not send the test."
     },
     "info": {
       "title": "Nota:",
@@ -2642,6 +2997,17 @@
       "history": "Cronologia",
       "confirmDelete": "Eliminarlo?",
       "delete": "Elimina"
+    },
+    "push": {
+      "title": "Push notifications on this device",
+      "prompt": "Get notifications on this device even when Cadence is closed.",
+      "subscribed": "This device receives push notifications. Choose which ones in the Push column below.",
+      "needsInstall": "To get notifications on iPhone or iPad, add Cadence to your Home Screen first: tap Share, then Add to Home Screen, and open it from there.",
+      "unsupported": "This browser does not support push notifications.",
+      "denied": "Notifications are blocked for Cadence. Allow them in your browser or system settings, then come back here.",
+      "enable": "Turn on",
+      "disable": "Turn off",
+      "failed": "Something went wrong. Please try again."
     }
   },
   "projectStatus": {
@@ -2656,7 +3022,8 @@
     "done": "Completato",
     "done_desc": "Finito e completato",
     "cancelled": "Annullato",
-    "cancelled_desc": "Non sarà completato"
+    "cancelled_desc": "Non sarà completato",
+    "idea": "Idea"
   },
   "habits": {
     "completeHabit": "Completa l'abitudine",
@@ -2667,7 +3034,8 @@
     "stats": {
       "clean": "senza ricadute: {{unit}}",
       "best": "record",
-      "strength": "forza"
+      "strength": "forza",
+      "cleanFor": "{{count}} {{unit}} clean"
     },
     "quit": "Smettere",
     "confirmSlip": "Registra ricaduta",
@@ -2788,7 +3156,13 @@
     "perDay": "al giorno",
     "weekdays": "Giorni feriali",
     "weekends": "Weekend",
-    "quitTarget": "Evitare"
+    "quitTarget": "Evitare",
+    "presetsLabel": "Or start with",
+    "presetWalk": "Morning walk",
+    "presetRead": "Read 20 minutes",
+    "presetReview": "Weekly review",
+    "doneTodayLine": "{{done}} of {{total}} done for now",
+    "statistics": "Statistics"
   },
   "aiAssistant": {
     "title": "Assistente AI",
@@ -2857,7 +3231,8 @@
     "bestWeek": "migliore ({{week}})",
     "areaBalance30": "Equilibrio delle aree, ultimi 30 giorni",
     "completionRateLegend": "% = tasso di completamento",
-    "itemsToProcess_one": "{{count}} elemento da elaborare"
+    "itemsToProcess_one": "{{count}} elemento da elaborare",
+    "overview": "Overview"
   },
   "billing": {
     "title": "Piano e fatturazione",
@@ -2956,13 +3331,18 @@
     "backToApp": "Torna a Cadence",
     "trialBanner": "Prova gratuita, giorni rimanenti: {{count}}",
     "trialLock": {
-      "webhooks": "I webhook non sono inclusi nella prova gratuita. Abbonati per inviare eventi ai tuoi servizi."
+      "webhooks": "I webhook non sono inclusi nella prova gratuita. Abbonati per inviare eventi ai tuoi servizi.",
+      "ai": "The AI assistant is not part of the free trial. Subscribe to turn it on.",
+      "publicNotes": "Public note links are not part of the free trial. Subscribe to share notes with anyone.",
+      "members": "Adding members is not part of the free trial. Subscribe to add family members or teammates."
     },
     "lockedWebhooks": "I webhook fanno parte del piano a pagamento.",
     "whoFor": "Per chi è?",
     "justMe": "Solo io (Pro)",
     "teamOf": "Un team fino a {{seats}} persone",
-    "perSeat": "{{price}} a persona al mese, {{seats}} posti te compreso"
+    "perSeat": "{{price}} a persona al mese, {{seats}} posti te compreso",
+    "trialBanner_one": "You're on the free trial, {{count}} day left",
+    "trialBanner_other": "You're on the free trial, {{count}} days left"
   },
   "demo": {
     "opening": "Apertura della demo...",
@@ -2983,7 +3363,9 @@
     "nothing": "Niente in questo momento",
     "empty": "Niente condiviso è attualmente disponibile. Condividi un'area, un progetto o un obiettivo, oppure assegna a qualcuno un'attività per vederlo qui.",
     "sortableColumn": "colonna ordinabile",
-    "reorderFailed": "Impossibile salvare l'ordine delle colonne."
+    "reorderFailed": "Impossibile salvare l'ordine delle colonne.",
+    "dropHere": "Drop to assign",
+    "reassignFailed": "Could not assign this task."
   },
   "people": {
     "addMember": "Aggiungi membro",
@@ -3172,14 +3554,16 @@
       "gapFit": "{{gap}} liberi alle {{time}} bastano per {{name}} ({{duration}})",
       "place": "Inserisci",
       "noBreak": "Nessuna pausa tra {{start}} e {{end}}",
-      "next": "Consiglio successivo"
+      "next": "Consiglio successivo",
+      "missed_one": "{{count}} planned block already passed",
+      "missed_other": "{{count}} planned blocks already passed"
     },
     "more": "Altre opzioni",
     "switchToList": "Passa all'elenco",
     "switchToTimeline": "Passa alla linea temporale",
     "leaveWithoutStarting": "Torna a Oggi",
     "overdueDays": "In ritardo di {{count}} g",
-    "whatNext": "Cosa potresti fare oggi?",
+    "whatNext": "Da fare oggi",
     "whatNextOn": "Cosa potresti fare il {{date}}?",
     "dueThatDay": "In scadenza quel giorno",
     "yesterday": "Ieri",
@@ -3195,7 +3579,8 @@
       "overdue": "{{count}} in ritardo",
       "due_today": "{{count}} in scadenza oggi",
       "in_progress": "{{count}} in corso",
-      "suggested": "{{count}} suggerite"
+      "suggested": "{{count}} suggerite",
+      "tagged_today": "{{count}} tagged #today"
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
@@ -3214,7 +3599,55 @@
     "agendaEmpty": "Nothing scheduled for this day.",
     "agendaUntimed": "No set time",
     "resizePanes": "Resize the columns",
-    "calendarMenu": "Altre opzioni del calendario"
+    "calendarMenu": "Altre opzioni del calendario",
+    "addTask": "Add task",
+    "taggedToday": "Tagged #today",
+    "doneForToday": "Done for today",
+    "nextOccurrence": "Next on {{date}}",
+    "refreshCalendar": "Refresh calendar",
+    "refreshCalendarError": "Could not refresh the calendar.",
+    "refreshingCalendar": "Refreshing calendar…",
+    "capacity": "Capacità della giornata",
+    "capacityOver": "{{time}} in più per oggi: sposta qualcosa a un altro giorno.",
+    "placeAll": "Pianifica tutto",
+    "placeAllTitle": "Pianifica le attività nel tempo libero",
+    "placeAllNothing": "Non resta nessuno slot libero oggi.",
+    "placeAllHint": "{{count}} attività andranno nei prossimi slot liberi, in ordine di priorità.",
+    "placeAllUnplaced": "Non c'è spazio oggi per altre {{count}}: restano nell'elenco.",
+    "placeAllApply": "Applica",
+    "placeAllDone": "{{count}} attività pianificate.",
+    "slipped": "\"{{name}}\" era pianificata fino alle {{time}} e non è completata.",
+    "shiftRest": "Sposta il resto",
+    "placeLater": "Più tardi",
+    "shiftedRest": "Il resto della giornata è stato spostato.",
+    "placedLater": "'{{name}}' spostata in uno slot successivo.",
+    "endDay": "Chiudi la giornata",
+    "endDayClean": "Niente in sospeso. Ben fatto.",
+    "guidedTitle": "Inizia la giornata",
+    "guidedStep": "Passo {{step}} di {{total}}",
+    "guidedLeftovers": "Avanzi di ieri",
+    "guidedNoLeftovers": "Nulla di avanzato da ieri.",
+    "guidedCarry": "Porta a oggi",
+    "guidedDrop": "Scarta",
+    "guidedPick": "Scegli cosa fare oggi",
+    "guidedNoPicks": "Non c'è altro da scegliere.",
+    "guidedAdd": "Aggiungi",
+    "guidedCapacity": "Ci sta?",
+    "guidedBack": "Indietro",
+    "guidedNext": "Avanti",
+    "guidedDone": "Fatto",
+    "guidedSkip": "Non ora",
+    "focusTitle": "Tempo di concentrazione",
+    "focusHint": "Ore lasciate libere da attività: Pianifica tutto e il pulsante + le saltano.",
+    "focusNone": "Nessun tempo di concentrazione impostato.",
+    "focusBlock": "Blocco di concentrazione",
+    "focusFrom": "Dalle",
+    "focusTo": "Alle",
+    "focusLabel": "Etichetta (facoltativa)",
+    "focusAdd": "Aggiungi tempo di concentrazione",
+    "focusSaveError": "Impossibile salvare il tempo di concentrazione.",
+    "showQuote": "Mostra la citazione del giorno",
+    "hideQuote": "Nascondi la citazione del giorno"
   },
   "capture": {
     "add": "Aggiungi",
@@ -3280,7 +3713,11 @@
       "enterTouch": "Tasto Invio su telefono o tablet",
       "oneItemPerLine": "Un elemento per riga",
       "oneItemPerLineHelp": "Disattivato: tutto ciò che scrivi diventa un elemento, con la prima riga come titolo e le altre come note. Attivato: ogni riga diventa un elemento."
-    }
+    },
+    "addTitle": "Add to Inbox, Task, Note or Project",
+    "close": "Close",
+    "button": "Cattura",
+    "syntaxHint": "#tag  +project  !1 a !3 priorità  domani alle 15 per una data"
   },
   "area": {
     "loadError": "Impossibile caricare le aree"
@@ -3384,7 +3821,17 @@
     "confirmDeleteMessage": "Eliminare «{{name}}»? I progetti creati da questo modello non verranno modificati."
   },
   "publicNote": {
-    "linkedNoteNotShared": "Questa nota non è condivisa pubblicamente."
+    "linkedNoteNotShared": "Questa nota non è condivisa pubblicamente.",
+    "toggleTheme": "Toggle dark mode",
+    "openApp": "Open Cadence",
+    "updated": "Last updated {{date}}",
+    "unavailableTitle": "This note is not available",
+    "unavailableBody": "The link may be wrong, or the owner stopped sharing this note. Ask them for a new link.",
+    "failedTitle": "Could not load this note",
+    "failedBody": "Something went wrong on our side. Try again in a moment.",
+    "ctaTitle": "Do you want to share your notes?",
+    "ctaBody": "Write notes, keep them organized with your tasks and projects, and share any of them with a link.",
+    "ctaButton": "Sign up now"
   },
   "blog": {
     "nav": "Blog",
@@ -3897,5 +4344,168 @@
     "none": "Niente altro da confrontare.",
     "addToday": "Aggiungi a oggi",
     "close": "Chiudi"
+  },
+  "comments": {
+    "count": "{{count}} comments",
+    "loading": "Loading comments...",
+    "failedToLoad": "Failed to load comments",
+    "empty": "No comments yet",
+    "placeholder": "Write a comment... use @ to mention someone",
+    "replyPlaceholder": "Write a reply...",
+    "submit": "Comment",
+    "reply": "Reply",
+    "unknownAuthor": "Unknown",
+    "delete": "Delete comment",
+    "deleteConfirmTitle": "Delete Comment",
+    "deleteConfirmMessage": "Are you sure you want to delete this comment? This action cannot be undone.",
+    "deletedPlaceholder": "Comment deleted",
+    "failedToPost": "Failed to post comment",
+    "failedToDelete": "Failed to delete comment",
+    "like": "Like",
+    "dislike": "Dislike",
+    "failedToReact": "Failed to update reaction",
+    "uploadingImage": "Uploading image...",
+    "imageUploadFailed": "Could not upload image"
+  },
+  "sortable": {
+    "move": "Move",
+    "project": "sortable project",
+    "task": "sortable task"
+  },
+  "groupPage": {
+    "title": "Group",
+    "subtitle": "What each member has on now",
+    "empty": "Nothing is assigned to this group yet. Assign a task to a member to see it here.",
+    "yourGroups": "Your groups"
+  },
+  "relations": {
+    "title": "Relations",
+    "add": "Add relation",
+    "remove": "Remove relation",
+    "searchPlaceholder": "Search for a task...",
+    "addFailed": "Failed to add relation.",
+    "removeFailed": "Failed to remove relation.",
+    "blocked": "Blocked",
+    "blockedTooltip": "Blocked by {{count}} open task(s)",
+    "completeBlockedTitle": "Task is blocked",
+    "completeBlockedMessage": "This task is blocked by {{count}} open task(s). Complete it anyway?",
+    "completeAnyway": "Complete anyway",
+    "types": {
+      "blocks": "Blocks",
+      "blocked_by": "Blocked by",
+      "related_to": "Related to",
+      "duplicates": "Duplicates",
+      "duplicated_by": "Duplicated by"
+    }
+  },
+  "attachments": {
+    "limitReached": "Maximum 20 attachments allowed",
+    "addTitle": "Add a title",
+    "title": "Title",
+    "download": "Download",
+    "noPreview": "No preview for this file type.",
+    "previous": "Previous file",
+    "next": "Next file",
+    "renameError": "Could not save the title",
+    "confirmDelete": "Delete file?"
+  },
+  "feedback": {
+    "title": "Send feedback",
+    "subtitle": "Found a bug or have an idea? Let us know.",
+    "placeholder": "What happened, or what would make Cadence better?",
+    "contextNote": "The page you are on and the app version are sent along with your message.",
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Thanks! Your feedback was sent.",
+    "failed": "Could not send your feedback"
+  },
+  "onboarding": {
+    "starter": {
+      "kicker": "Welcome to Cadence",
+      "welcomeTitle": "Take a look at what you can do with Cadence in a minute",
+      "videoTitle": "A one minute tour of Cadence",
+      "letsStart": "I'm done, let's start",
+      "settingUp": "Setting up..."
+    }
+  },
+  "mobileNav": {
+    "label": "Main navigation",
+    "inbox": "Inbox",
+    "tasks": "Tasks",
+    "agenda": "Agenda",
+    "habits": "Habits",
+    "review": "Review",
+    "newTask": "New task"
+  },
+  "commandCenter": {
+    "title": "Palette dei comandi",
+    "placeholder": "Digita un comando o cerca...",
+    "empty": "Nessun risultato",
+    "hintNav": "Su e Giù per spostarti, Enter per eseguire, Esc per chiudere",
+    "pickProject": "Spostare in quale progetto?",
+    "actionError": "Impossibile aggiornare l'attività",
+    "deleteError": "Impossibile eliminare l'attività",
+    "taskDeleted": "Eliminato “{{name}}”",
+    "taskContext": "Attività: {{name}}",
+    "completeTask": "Completa attività",
+    "reopenTask": "Riapri attività",
+    "editTask": "Apri attività",
+    "moveToProject": "Sposta nel progetto...",
+    "setDate": "Data: {{when}}",
+    "setPriority": "Priorità: {{level}}",
+    "noProject": "Nessun progetto",
+    "createTask": "Crea attività",
+    "capture": "Cattura rapida",
+    "createProject": "Crea progetto",
+    "createNote": "Crea nota",
+    "createHabit": "Crea abitudine",
+    "goTo": "Vai a {{page}}",
+    "triage": "Smista la Inbox",
+    "search": "Cerca",
+    "toggleTheme": "Attiva/disattiva modalità scura",
+    "showShortcuts": "Scorciatoie da tastiera",
+    "groups": {
+      "recent": "Recenti",
+      "task": "Questa attività",
+      "create": "Crea",
+      "go": "Vai a",
+      "commands": "Comandi",
+      "projects": "Progetti",
+      "tasks": "Attività",
+      "notes": "Note",
+      "habits": "Abitudini"
+    },
+    "help": {
+      "title": "Scorciatoie da tastiera",
+      "general": "Generali",
+      "navigation": "Vai a",
+      "task": "Su un'attività",
+      "create": "Crea",
+      "triage": "Smistamento Inbox"
+    },
+    "shortcuts": {
+      "palette": "Apri la palette dei comandi",
+      "capture": "Cattura rapida",
+      "search": "Cerca",
+      "help": "Mostra le scorciatoie da tastiera",
+      "goToday": "Vai a Oggi",
+      "goInbox": "Vai alla Inbox",
+      "goUpcoming": "Vai a Prossimi",
+      "goCalendar": "Vai al Calendario",
+      "goProjects": "Vai ai Progetti",
+      "taskNav": "Spostati tra le attività",
+      "taskComplete": "Completa o riapri l'attività (o Space)",
+      "taskEdit": "Apri l'attività per modificarla (o Enter)",
+      "taskDate": "Imposta la data",
+      "taskPriority": "Imposta la priorità",
+      "taskProject": "Sposta in un progetto",
+      "taskDelete": "Elimina l'attività (con annulla)",
+      "createAlt": "Crea un elemento della Inbox, attività, progetto, nota, area o tag (con Alt+Shift)",
+      "triageTask": "Smista: rendi attività",
+      "triageProject": "Smista: rendi progetto",
+      "triageNote": "Smista: rendi nota",
+      "triageLater": "Smista: più tardi (resta nella Inbox)",
+      "triageDelete": "Smista: elimina"
+    }
   }
 }

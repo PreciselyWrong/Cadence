@@ -2964,6 +2964,15 @@ const QuickCaptureInput = React.forwardRef<
                             )}
                         </span>
                     </div>
+                    <p
+                        data-testid="capture-syntax-hint"
+                        className="order-4 w-full text-xs text-gray-500 dark:text-gray-400"
+                    >
+                        {t(
+                            'capture.syntaxHint',
+                            '#tag  +project  !1 to !3 priority  tomorrow 3pm for a date'
+                        )}
+                    </p>
                 </div>
             </div>
         ) : null;
@@ -3018,6 +3027,7 @@ const QuickCaptureInput = React.forwardRef<
                         removeProjectFromText(name);
                     }}
                     dueDate={dateChip}
+                    priority={priorityFromText(fullText) ?? null}
                     assignee={assigneeChip}
                     onDismissDate={() => {
                         const phrase = currentAnalysis?.parsed_date_text;

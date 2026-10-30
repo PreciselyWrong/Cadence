@@ -48,6 +48,10 @@ import {
     normalizeTaskRowFields,
 } from '../../../constants/taskRowFields';
 import { MINIMAL_ROW_ATTRIBUTE } from '../useMinimalRowKeyboard';
+import {
+    requestDeleteTask,
+    requestMoveToProject,
+} from '../../../utils/commandEvents';
 import PriorityBadge, {
     PriorityLevel,
     toPriorityLevel,
@@ -308,7 +312,8 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         !hideStatusControl && !task.habit_mode && !!onToggleCompletion;
 
     // Minimal rows: Enter opens the task, Space toggles completion, D and P
-    // open the inline date and priority pickers. Keys pressed on a control
+    // open the inline date and priority pickers, X completes, E opens, M asks
+    // for a project and Delete removes with undo. Keys pressed on a control
     // inside the row keep that control's meaning.
     const handleMinimalKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.target !== e.currentTarget) return;
@@ -317,9 +322,23 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         if (e.key === 'Enter') {
             e.preventDefault();
             onActivate(e);
-        } else if (e.key === ' ') {
+        } else if (e.key === ' ' || (!editable && key === 'x')) {
             e.preventDefault();
             if (showCheck && onToggleCompletion) onToggleCompletion();
+        } else if (!editable && key === 'e') {
+            e.preventDefault();
+            onActivate(e);
+        } else if (!editable && key === 'm' && task.uid) {
+            e.preventDefault();
+            requestMoveToProject(task.uid);
+        } else if (
+            !editable &&
+            e.key === 'Delete' &&
+            task.uid &&
+            !task.is_virtual_occurrence
+        ) {
+            e.preventDefault();
+            requestDeleteTask(task.uid, currentName);
         } else if (!editable && (key === 'd' || key === 'p')) {
             const trigger = rowRef.current?.querySelector<HTMLButtonElement>(
                 `[data-quick-edit="${key === 'd' ? 'due' : 'priority'}"]`
