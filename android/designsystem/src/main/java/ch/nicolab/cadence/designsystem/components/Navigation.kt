@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -35,12 +35,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
-import ch.nicolab.cadence.ui.theme.Elevation
-import ch.nicolab.cadence.ui.theme.Motion
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Elevation
+import ch.nicolab.cadence.designsystem.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 data class NavDestination(val label: String, val icon: ImageVector, val shortLabel: String = label)
 
@@ -66,8 +66,8 @@ fun CadenceNavigation(
         Surface(
             modifier = Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.md),
             shape = Radius.Pill,
-            color = palette.structural,
-            contentColor = palette.onStructural,
+            color = palette.containerHighest,
+            contentColor = palette.onSurface,
             shadowElevation = Elevation.floating,
         ) {
             Row(
@@ -88,12 +88,12 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     val background by animateColorAsState(
-        targetValue = if (active) palette.accent else Color.Transparent,
+        targetValue = if (active) palette.primary else Color.Transparent,
         animationSpec = Motion.quick(),
         label = "navBackground",
     )
     val iconTint by animateColorAsState(
-        targetValue = if (active) palette.onAccent else palette.onStructuralMuted,
+        targetValue = if (active) palette.onPrimary else palette.onSurfaceVariant,
         animationSpec = Motion.quick(),
         label = "navIconTint",
     )
@@ -139,7 +139,7 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
                 Text(
                     destination.shortLabel,
                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                    color = palette.onAccent,
+                    color = palette.onPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

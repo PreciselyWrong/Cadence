@@ -22,22 +22,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.HealthConnectSourceOption
 import ch.nicolab.cadence.HealthConnectUiState
-import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.ToggleRow
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.HealthConnectRule
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.components.ToggleRow
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 
 @Composable
 fun HealthConnectSettingsPanel(
@@ -51,7 +51,7 @@ fun HealthConnectSettingsPanel(
 ) {
     val palette = cadence
     Panel {
-        Text(stringResource(R.string.health_connect_summary), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+        Text(stringResource(R.string.health_connect_summary), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
         Spacer(Modifier.height(Space.xs))
         val status = when {
             state.availability == HealthConnectAvailability.UNAVAILABLE -> R.string.health_connect_unavailable
@@ -60,7 +60,7 @@ fun HealthConnectSettingsPanel(
             state.syncEnabled -> R.string.health_connect_connected
             else -> R.string.health_connect_paused
         }
-        Text(stringResource(status), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+        Text(stringResource(status), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
         when {
             state.failed -> {
                 Spacer(Modifier.height(Space.sm))
@@ -132,18 +132,18 @@ fun HealthConnectRulesSheet(
                 verticalArrangement = Arrangement.spacedBy(Space.md),
             ) {
                 if (habits.isEmpty()) {
-                    Text(stringResource(R.string.health_connect_no_duration_habit), color = cadence.inkMuted)
+                    Text(stringResource(R.string.health_connect_no_duration_habit), color = cadence.onSurfaceVariant)
                 }
                 habits.forEach { item ->
                     val rule = rules.firstOrNull { it.habitId == item.stored.id }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
                         Column(Modifier.weight(1f)) {
-                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+                            Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
                             Text(
                                 rule?.let { stringResource(R.string.health_connect_rule_types_count, it.exerciseTypes.size) }
                                     ?: stringResource(R.string.health_connect_rule_none),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = cadence.inkMuted,
+                                color = cadence.onSurfaceVariant,
                             )
                         }
                         SecondaryAction(stringResource(R.string.health_connect_rule_edit)) { selectedId = item.stored.id }
@@ -189,7 +189,7 @@ private fun HealthConnectRuleEditor(
         verticalArrangement = Arrangement.spacedBy(Space.lg),
     ) {
         ToggleRow(stringResource(R.string.health_connect_rule_enabled), enabled) { enabled = it }
-        Text(stringResource(R.string.health_connect_rule_types), style = MaterialTheme.typography.labelLarge, color = cadence.inkMuted)
+        Text(stringResource(R.string.health_connect_rule_types), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             HealthExerciseCatalog.types.forEach { type ->
                 ChoiceChip(stringResource(type.label), type.value in selectedTypes) {
@@ -198,7 +198,7 @@ private fun HealthConnectRuleEditor(
             }
         }
         if (attempted && selectedTypes.isEmpty()) ErrorText(stringResource(R.string.health_connect_rule_choose_type))
-        Text(stringResource(R.string.health_connect_rule_source), style = MaterialTheme.typography.labelLarge, color = cadence.inkMuted)
+        Text(stringResource(R.string.health_connect_rule_source), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             ChoiceChip(stringResource(R.string.health_connect_rule_all_sources), source == null) { source = null }
             sourceChoices.forEach { option ->
@@ -216,7 +216,7 @@ private fun HealthConnectRuleEditor(
     }
     Spacer(Modifier.height(Space.xs))
     delete?.let {
-        TertiaryAction(stringResource(R.string.health_connect_rule_delete), Modifier.fillMaxWidth(), tint = cadence.danger, onClick = it)
+        TertiaryAction(stringResource(R.string.health_connect_rule_delete), Modifier.fillMaxWidth(), tint = cadence.error, onClick = it)
     }
     TertiaryAction(stringResource(R.string.form_btn_cancel), Modifier.fillMaxWidth(), onClick = back)
 }

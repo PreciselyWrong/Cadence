@@ -14,7 +14,7 @@ import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material.icons.outlined.LocalBar
 import androidx.compose.material.icons.outlined.Speed
-import ch.nicolab.cadence.ui.components.MetricCard
+import ch.nicolab.cadence.designsystem.components.MetricCard
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -39,32 +39,32 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.Hairline
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.theme.MetricStyle
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.AlcoholStatisticsDay
 import ch.nicolab.cadence.domain.AlcoholStatisticsDayStatus
-import ch.nicolab.cadence.ui.components.ActionRow
 import ch.nicolab.cadence.ui.components.ActivityCalendar
 import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.CadenceSheet
 import ch.nicolab.cadence.ui.components.CalendarPeriod
 import ch.nicolab.cadence.ui.components.CalendarPeriodSelector
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.Hairline
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
-import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.MetricStyle
 import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.ui.unit.dp
 import java.time.Instant
@@ -107,7 +107,7 @@ fun AlcoholDetailSheet(
             item {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     Text(stats.currentSoberDays.toString(), style = MaterialTheme.typography.displayLarge, color = cadence.habitAccent(item.stored.colorArgb))
-                    Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.titleMedium, color = cadence.inkMuted)
+                    Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.titleMedium, color = cadence.onSurfaceVariant)
                 }
             }
             item { LiveAbstinenceCounter(item, cadence.habitAccent(item.stored.colorArgb)) }
@@ -118,10 +118,10 @@ fun AlcoholDetailSheet(
                         if (plan == null) stringResource(if (stats.pendingQuantityDates.isEmpty()) R.string.alcohol_rest_complete else R.string.alcohol_rest_pending)
                         else stringResource(R.string.alcohol_rest_until, displayAbstinenceDate(plan.avoidThrough)),
                         style = MaterialTheme.typography.titleMedium,
-                        color = if (plan == null) cadence.inkMuted else cadence.ink,
+                        color = if (plan == null) cadence.onSurfaceVariant else cadence.onSurface,
                     )
                     plan?.let {
-                        Text(stringResource(R.string.alcohol_rest_unrestricted, displayAbstinenceDate(it.nextUnrestrictedOn)), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                        Text(stringResource(R.string.alcohol_rest_unrestricted, displayAbstinenceDate(it.nextUnrestrictedOn)), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
                     }
                 }
             }
@@ -138,7 +138,7 @@ fun AlcoholDetailSheet(
                     SecondaryAction(stringResource(R.string.alcohol_past_action), Modifier.fillMaxWidth(), enabled = !busy) {
                         addingPast = true
                     }
-                    if (savedMessage) Text(stringResource(R.string.alcohol_today_saved), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                    if (savedMessage) Text(stringResource(R.string.alcohol_today_saved), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 }
             }
             if (stats.pendingQuantityDates.isNotEmpty()) item {
@@ -169,7 +169,7 @@ fun AlcoholDetailSheet(
                 }
             }
             item { AbstinenceMilestones(AbstinenceProfile.ALCOHOL, stats.currentSoberDays) }
-            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant) }
         }
         Spacer(Modifier.height(Space.sm))
         TextButton(enabled = !busy, onClick = editHabit) { Text(stringResource(R.string.abst_edit)) }
@@ -195,12 +195,12 @@ fun AlcoholDetailSheet(
 
 @Composable
 private fun PendingAlcoholQuantityAction(date: LocalDate, onClick: () -> Unit) {
-    val accent = cadence.accent
+    val accent = cadence.primary
     Row(
         Modifier
             .fillMaxWidth()
             .clip(Radius.Control)
-            .background(cadence.accentSoft)
+            .background(cadence.primaryContainer)
             .clickable(onClick = onClick)
             .padding(Space.md),
         verticalAlignment = Alignment.CenterVertically,
@@ -208,7 +208,7 @@ private fun PendingAlcoholQuantityAction(date: LocalDate, onClick: () -> Unit) {
     ) {
         Icon(Icons.Outlined.Edit, contentDescription = null, tint = accent, modifier = Modifier.size(Size.iconLarge))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-            Text(displayAbstinenceDate(date), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+            Text(displayAbstinenceDate(date), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
             Text(stringResource(R.string.alcohol_pending_action), style = MaterialTheme.typography.labelLarge, color = accent)
         }
         Icon(Icons.Outlined.ChevronRight, contentDescription = null, tint = accent, modifier = Modifier.size(Size.iconLarge))
@@ -232,13 +232,13 @@ private fun AlcoholConsumptionEditor(
     var dateOpen by remember { mutableStateOf(false) }
     var validation by remember { mutableStateOf<Int?>(null) }
     val today = LocalDate.now()
-    val accent = cadence.accent
+    val accent = cadence.primary
     CadenceSheet(stringResource(R.string.alcohol_count_title), stringResource(R.string.alcohol_count_subtitle), dismiss) {
         ActionRow(Icons.Outlined.DateRange, displayAbstinenceDate(date), accent) { if (!busy) dateOpen = true }
         Spacer(Modifier.height(Space.lg))
         CadenceField(drinks, { drinks = it.filter(Char::isDigit) }, stringResource(R.string.alcohol_count_label), accent = accent, numeric = true)
         Spacer(Modifier.height(Space.sm))
-        Text(stringResource(R.string.alcohol_count_examples), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+        Text(stringResource(R.string.alcohol_count_examples), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
         (validation?.let { stringResource(it) } ?: error)?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -294,7 +294,7 @@ private fun AlcoholStatisticsHero(
         modifier = Modifier
             .fillMaxWidth()
             .clip(Radius.Card)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .padding(Space.lg),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -311,7 +311,7 @@ private fun AlcoholStatisticsHero(
                     Box(
                         modifier = Modifier
                             .clip(Radius.Chip)
-                            .background(palette.successSoft)
+                            .background(palette.successContainer)
                             .padding(horizontal = Space.md, vertical = Space.sm),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -325,12 +325,12 @@ private fun AlcoholStatisticsHero(
                         Text(
                             text = stringResource(R.string.alcohol_days_hero),
                             style = MaterialTheme.typography.titleMedium,
-                            color = palette.ink,
+                            color = palette.onSurface,
                         )
                         Text(
                             text = stringResource(R.string.habit_stats_active_short),
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -340,16 +340,16 @@ private fun AlcoholStatisticsHero(
                     modifier = Modifier
                         .padding(start = Space.sm)
                         .clip(Radius.Pill)
-                        .background(palette.accentSoft)
+                        .background(palette.primaryContainer)
                         .padding(horizontal = Space.md, vertical = Space.xs),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Space.xs),
                 ) {
-                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.accent, modifier = Modifier.size(Size.iconSm))
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.primary, modifier = Modifier.size(Size.iconSm))
                     Text(
                         text = "${stringResource(R.string.alcohol_stats_record)} : ${stringResource(R.string.habit_stats_days_short, stats.bestSoberDays)}",
                         style = MaterialTheme.typography.labelMedium,
-                        color = palette.accent,
+                        color = palette.primary,
                         maxLines = 1,
                         softWrap = false,
                     )
@@ -361,7 +361,7 @@ private fun AlcoholStatisticsHero(
                     Modifier
                         .fillMaxWidth()
                         .clip(Radius.Chip)
-                        .background(palette.successSoft)
+                        .background(palette.successContainer)
                         .padding(horizontal = Space.md, vertical = Space.sm),
                     horizontalArrangement = Arrangement.spacedBy(Space.sm),
                     verticalAlignment = Alignment.CenterVertically,
@@ -396,7 +396,7 @@ private fun AlcoholStatisticsHero(
                     value = "${stats.drinkingDays90} / ${stats.observedDays90}",
                     label = stringResource(R.string.alcohol_stats_drinking_days_label),
                     icon = Icons.Outlined.DateRange,
-                    iconTint = palette.inkMuted,
+                    iconTint = palette.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -423,7 +423,7 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
                 label = null,
                 progress = 0f,
                 tint = accent,
-                trackColor = cadence.sunken,
+                trackColor = cadence.containerHigh,
                 size = 48.dp,
             )
         },
@@ -453,8 +453,8 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
                         value = "$drinkingDays / $observedDays",
                         label = stringResource(R.string.alcohol_stats_drinking_days_label),
                         icon = Icons.Outlined.EventBusy,
-                        iconTint = if (drinkingDays > 0) cadence.danger else cadence.inkMuted,
-                        valueColor = if (drinkingDays > 0) cadence.danger else cadence.ink,
+                        iconTint = if (drinkingDays > 0) cadence.error else cadence.onSurfaceVariant,
+                        valueColor = if (drinkingDays > 0) cadence.error else cadence.onSurface,
                         modifier = Modifier.weight(1f),
                     )
                     MetricCard(
@@ -500,17 +500,17 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
                 }
                 AlcoholCalendar(filteredDays)
             }
-            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted) }
+            item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant) }
             item { SectionLabel(stringResource(R.string.alcohol_stats_full_history)) }
             if (item.alcoholConsumptions.isEmpty()) item {
-                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
             }
             items(item.alcoholConsumptions, key = { "consumption-${it.id}" }) { consumption ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(displayAbstinenceDate(consumption.localDate), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+                    Text(displayAbstinenceDate(consumption.localDate), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
                     Text(consumption.standardDrinks?.let { drinks -> pluralStringResource(R.plurals.alcohol_drinks_known, drinks, drinks) }
                         ?: stringResource(R.string.alcohol_stats_unknown_history),
-                        style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                        style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 }
             }
         }
@@ -518,10 +518,10 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
 }
 
 @Composable
-private fun AlcoholMetric(value: String, label: String, color: Color = cadence.ink, modifier: Modifier = Modifier) {
+private fun AlcoholMetric(value: String, label: String, color: Color = cadence.onSurface, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Text(value, style = MaterialTheme.typography.titleLarge, color = color)
-        Text(label, style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
     }
 }
 

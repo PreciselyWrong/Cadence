@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import android.os.Build
 import android.view.HapticFeedbackConstants

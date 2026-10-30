@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
-import ch.nicolab.cadence.ui.theme.CadenceTheme
 
 class MainActivity : ComponentActivity() {
     companion object { const val EXTRA_EDIT_HABIT_ID = "edit_habit_id" }

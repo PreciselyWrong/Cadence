@@ -41,6 +41,20 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.ToCompleteItem
 import ch.nicolab.cadence.ToCompleteRow
 import ch.nicolab.cadence.abstinenceStatus
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.EmptyState
+import ch.nicolab.cadence.designsystem.components.HeaderAction
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.designsystem.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
@@ -48,20 +62,6 @@ import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.TodayPresentation
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.ScreenList
-import ch.nicolab.cadence.ui.components.ActionRow
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.EmptyState
-import ch.nicolab.cadence.ui.components.HeaderAction
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
-import ch.nicolab.cadence.ui.theme.Motion
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -126,8 +126,8 @@ internal fun HabitsTodayScreen(
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (offerReturn) item {
             Column(Modifier.fillMaxWidth().padding(vertical = Space.md), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                Text(stringResource(R.string.today_return_title), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-                Text(stringResource(R.string.today_return_message), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                Text(stringResource(R.string.today_return_title), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
+                Text(stringResource(R.string.today_return_message), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 PrimaryAction(stringResource(R.string.today_return_resume), Modifier.fillMaxWidth(), onClick = resume)
                 TertiaryAction(stringResource(R.string.today_return_adjust), Modifier.fillMaxWidth()) { adjustOpen = true }
             }
@@ -257,11 +257,11 @@ internal fun FoldHeading(label: String, expanded: Boolean, toggle: () -> Unit) {
             .padding(horizontal = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(label, Modifier.weight(1f), style = MaterialTheme.typography.labelLarge, color = cadence.inkMuted)
+        Text(label, Modifier.weight(1f), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
         Icon(
             Icons.Outlined.KeyboardArrowDown,
             null,
-            tint = cadence.inkMuted,
+            tint = cadence.onSurfaceVariant,
             modifier = Modifier
                 .size(Size.icon)
                 .graphicsLayer { rotationZ = rotation },

@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.EmptyState
+import ch.nicolab.cadence.designsystem.components.HeaderAction
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.ui.ScreenList
-import ch.nicolab.cadence.ui.components.EmptyState
-import ch.nicolab.cadence.ui.components.HeaderAction
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
 
 @Composable
 internal fun HabitsScreen(

@@ -55,34 +55,34 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
-import ch.nicolab.cadence.ui.components.HabitFacet
+import ch.nicolab.cadence.domain.WidgetSlotAlignment
+import ch.nicolab.cadence.domain.WidgetSlotMode
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.domain.WidgetSlotAlignment
-import ch.nicolab.cadence.domain.WidgetSlotMode
-import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import java.time.Instant
+import ch.nicolab.cadence.designsystem.components.CadenceScreen
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.PageHeader
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.ToggleRow
+import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.ui.widget.WidgetLayoutCalculator
-import ch.nicolab.cadence.ui.widget.WidgetSlotSolver
 import ch.nicolab.cadence.ui.widget.WidgetRenderStyle
-import ch.nicolab.cadence.ui.components.CadenceScreen
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.PageHeader
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
-import ch.nicolab.cadence.ui.components.ToggleRow
-import ch.nicolab.cadence.ui.components.onColorOf
-import ch.nicolab.cadence.ui.theme.CadenceTheme
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.ui.widget.WidgetSlotSolver
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -221,7 +221,7 @@ private fun WidgetConfiguration(
                 Text(
                     stringResource(R.string.widget_config_preview_hint),
                     style = MaterialTheme.typography.bodySmall,
-                    color = palette.inkFaint,
+                    color = palette.outline,
                 )
             }
 
@@ -255,7 +255,7 @@ private fun WidgetConfiguration(
                             },
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = palette.inkFaint,
+                        color = palette.outline,
                     )
                 }
             }
@@ -274,7 +274,7 @@ private fun WidgetConfiguration(
                                         .size(Size.touch)
                                         .clip(CircleShape)
                                         .background(swatch)
-                                        .then(if (active) Modifier.border(2.dp, palette.accent, CircleShape) else Modifier)
+                                        .then(if (active) Modifier.border(2.dp, palette.primary, CircleShape) else Modifier)
                                         .clickable { style = value },
                                     contentAlignment = Alignment.Center,
                                 ) {
@@ -284,7 +284,7 @@ private fun WidgetConfiguration(
                                 Text(
                                     stringResource(label),
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = if (active) palette.accent else palette.inkFaint,
+                                    color = if (active) palette.primary else palette.outline,
                                 )
                             }
                         }
@@ -323,7 +323,7 @@ private fun WidgetConfiguration(
                         4,
                     ) { maxHabitsPerRow = it }
                     Spacer(Modifier.height(Space.md))
-                    Text(stringResource(R.string.widget_config_slot_mode), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+                    Text(stringResource(R.string.widget_config_slot_mode), style = MaterialTheme.typography.labelMedium, color = palette.outline)
                     Spacer(Modifier.height(Space.sm))
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                         ChoiceChip(stringResource(R.string.widget_config_slot_flexible), slotMode == WidgetSlotMode.FLEXIBLE) {
@@ -354,10 +354,10 @@ private fun WidgetConfiguration(
                             else R.string.widget_config_slot_flexible_hint,
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = palette.inkFaint,
+                        color = palette.outline,
                     )
                     Spacer(Modifier.height(Space.md))
-                    Text(stringResource(R.string.widget_config_progress_style), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+                    Text(stringResource(R.string.widget_config_progress_style), style = MaterialTheme.typography.labelMedium, color = palette.outline)
                     Spacer(Modifier.height(Space.sm))
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                         ChoiceChip(stringResource(R.string.widget_config_progress_ring), progressStyle == "RING") { progressStyle = "RING" }
@@ -530,16 +530,16 @@ private fun previewIconColor(colorArgb: Int?, monochrome: Boolean, saturation: I
 @Composable
 private fun ColumnScope.SliderRow(label: String, value: Float, range: ClosedFloatingPointRange<Float>, steps: Int, onValue: (Float) -> Unit) {
     val palette = cadence
-    Text(label, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+    Text(label, style = MaterialTheme.typography.labelMedium, color = palette.outline)
     Slider(
         value,
         onValue,
         valueRange = range,
         steps = steps,
         colors = SliderDefaults.colors(
-            thumbColor = palette.accent,
-            activeTrackColor = palette.accent,
-            inactiveTrackColor = palette.sunken,
+            thumbColor = palette.primary,
+            activeTrackColor = palette.primary,
+            inactiveTrackColor = palette.containerHigh,
             activeTickColor = Color.Transparent,
             inactiveTickColor = Color.Transparent,
         ),

@@ -41,8 +41,22 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import ch.nicolab.cadence.data.local.model.PersistedHabit
-import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.FieldGroup
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.ToggleRow
+import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.theme.HabitColorChoices
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.GoalDirection
+import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodCalculator
@@ -53,22 +67,8 @@ import ch.nicolab.cadence.domain.UnitDimension
 import ch.nicolab.cadence.habits.FoldHeading
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.FieldGroup
-import ch.nicolab.cadence.ui.components.HabitFacet
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.ToggleRow
-import ch.nicolab.cadence.ui.components.onColorOf
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.HabitColorChoices
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -125,7 +125,7 @@ internal fun HabitEditor(
             else -> R.string.habit_editor_title_edit
         }),
         subtitle = null, dismiss = { if (!busy) dismiss() },
-        leading = { HabitFacet(HabitIconRegistry.getIcon(draft.iconId).imageVector, null, 0f, accent, cadence.sunken, size = Size.badge) },
+        leading = { HabitFacet(HabitIconRegistry.getIcon(draft.iconId).imageVector, null, 0f, accent, cadence.containerHigh, size = Size.badge) },
     ) {
         Column(Modifier.weight(1f, fill = false).heightIn(max = Size.sheetContent).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(Space.lg)) {
             CadenceField(draft.name, { draft = draft.copy(name = it) }, stringResource(R.string.form_name_label), placeholder = stringResource(R.string.form_name_placeholder), accent = accent)
@@ -182,8 +182,8 @@ internal fun HabitEditor(
                 }
             }
             if (!tracker && draft.scheduleMode == ScheduleMode.INTERVAL_DAYS) CadenceField(draft.intervalDays, { draft = draft.copy(intervalDays = it) }, stringResource(R.string.form_schedule_interval_days), numeric = true, accent = accent)
-            if (!tracker && draft.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
-            if (previewHabit != null) Text(habitSummary(previewHabit, context), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+            if (!tracker && draft.scheduleMode == ScheduleMode.FLEXIBLE_PERIOD) Text(stringResource(R.string.form_schedule_flexible_support), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+            if (previewHabit != null) Text(habitSummary(previewHabit, context), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
             FoldHeading(stringResource(R.string.habit_editor_section_customize), customize) { customize = !customize }
             if (customize) {
                 HabitIconPicker(draft.iconId, { draft = draft.copy(iconId = it) }, accent = accent)

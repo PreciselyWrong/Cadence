@@ -46,6 +46,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.MetricCard
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.displayAbstinenceDate
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
 import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
@@ -70,17 +78,9 @@ import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.components.ActivityCalendar
 import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
-import ch.nicolab.cadence.ui.components.CadenceSheet
 import ch.nicolab.cadence.ui.components.CalendarPeriod
 import ch.nicolab.cadence.ui.components.CalendarPeriodSelector
-import ch.nicolab.cadence.ui.components.HabitFacet
-import ch.nicolab.cadence.ui.components.MetricCard
-import ch.nicolab.cadence.ui.components.SectionLabel
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,7 +149,7 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
                 label = null,
                 progress = 0f,
                 tint = tint,
-                trackColor = cadence.sunken,
+                trackColor = cadence.containerHigh,
                 size = Size.touch,
             )
         },
@@ -187,8 +187,8 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
                         value = occurrences.toString(),
                         label = stringResource(R.string.abstinence_stats_occurrences_label),
                         icon = Icons.Outlined.EventBusy,
-                        iconTint = if (occurrences > 0) palette.danger else palette.inkMuted,
-                        valueColor = if (occurrences > 0) palette.danger else palette.ink,
+                        iconTint = if (occurrences > 0) palette.error else palette.onSurfaceVariant,
+                        valueColor = if (occurrences > 0) palette.error else palette.onSurface,
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -199,7 +199,7 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
                         value = occurrenceDays.toString(),
                         label = stringResource(R.string.abstinence_stats_occurrence_days_label),
                         icon = Icons.Outlined.DateRange,
-                        iconTint = palette.inkMuted,
+                        iconTint = palette.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
                     )
                     MetricCard(
@@ -246,7 +246,7 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
             }
             item { SectionLabel(stringResource(R.string.abstinence_stats_history)) }
             if (item.recentEntries.isEmpty()) item {
-                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }
             items(item.recentEntries, key = { "occurrence-${it.id}" }) { entry ->
                 EntryRow(entry, GoalType.COUNT, null) { onCorrect(entry) }
@@ -265,10 +265,10 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
             Modifier
                 .fillMaxWidth()
                 .clip(Radius.Card)
-                .background(palette.sunken)
+                .background(palette.containerHigh)
                 .padding(Space.lg),
         ) {
-            Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = palette.inkMuted)
+            Text(stringResource(R.string.habit_stats_no_period), style = MaterialTheme.typography.bodyLarge, color = palette.onSurfaceVariant)
         }
         return
     }
@@ -297,7 +297,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
         modifier = Modifier
             .fillMaxWidth()
             .clip(Radius.Card)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .padding(Space.lg),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -314,7 +314,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     Box(
                         modifier = Modifier
                             .clip(Radius.Chip)
-                            .background(palette.successSoft)
+                            .background(palette.successContainer)
                             .padding(horizontal = Space.md, vertical = Space.sm),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -328,12 +328,12 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                         Text(
                             text = stringResource(R.string.habit_stats_success),
                             style = MaterialTheme.typography.titleMedium,
-                            color = palette.ink,
+                            color = palette.onSurface,
                         )
                         Text(
                             text = stringResource(R.string.habit_stats_validated_compact, summary.validatedPeriods, summary.evaluatedPeriods),
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -342,8 +342,8 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                 if (comp != null) {
                     val isUp = comp.deltaPercentagePoints > 0
                     val isDown = comp.deltaPercentagePoints < 0
-                    val chipBg = if (isUp) palette.successSoft else if (isDown) palette.danger.copy(alpha = 0.15f) else palette.surface
-                    val chipColor = if (isUp) palette.success else if (isDown) palette.danger else palette.ink
+                    val chipBg = if (isUp) palette.successContainer else if (isDown) palette.error.copy(alpha = 0.15f) else palette.card
+                    val chipColor = if (isUp) palette.success else if (isDown) palette.error else palette.onSurface
                     val trendText = when {
                         isUp -> stringResource(R.string.habit_stats_trend_short_up, comp.deltaPercentagePoints)
                         isDown -> stringResource(R.string.habit_stats_trend_short_down, -comp.deltaPercentagePoints)
@@ -381,7 +381,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     .fillMaxWidth()
                     .height(Size.counterTrack)
                     .clip(CircleShape)
-                    .background(palette.surface),
+                    .background(palette.card),
             ) {
                 Box(
                     Modifier
@@ -399,7 +399,7 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                     value = streak.current.toString(),
                     label = stringResource(R.string.habit_stats_streak_label),
                     icon = Icons.Outlined.LocalFireDepartment,
-                    iconTint = palette.accent,
+                    iconTint = palette.primary,
                     modifier = Modifier.weight(1f),
                 )
                 MetricCard(
@@ -422,16 +422,16 @@ internal fun HabitStatisticsHero(summary: HabitStatisticsSummary, streak: HabitS
                 Modifier
                     .fillMaxWidth()
                     .clip(Radius.Chip)
-                    .background(palette.surface.copy(alpha = 0.5f))
+                    .background(palette.card.copy(alpha = 0.5f))
                     .padding(horizontal = Space.md, vertical = Space.sm),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
-                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.inkMuted, modifier = Modifier.size(Size.iconSm))
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.iconSm))
                 Text(
                     text = "$confidenceLabel · $completenessText\n$comparisonText",
                     style = MaterialTheme.typography.bodySmall,
-                    color = palette.inkMuted,
+                    color = palette.onSurfaceVariant,
                 )
             }
         }
@@ -450,7 +450,7 @@ internal fun TrackerStatisticsHero(
         modifier = Modifier
             .fillMaxWidth()
             .clip(Radius.Card)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .padding(Space.lg),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -481,12 +481,12 @@ internal fun TrackerStatisticsHero(
                         Text(
                             text = stringResource(R.string.habit_stats_active_days_30),
                             style = MaterialTheme.typography.titleMedium,
-                            color = palette.ink,
+                            color = palette.onSurface,
                         )
                         Text(
                             text = stringResource(R.string.habit_stats_entries_30),
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -496,13 +496,13 @@ internal fun TrackerStatisticsHero(
                     Modifier
                         .padding(start = Space.sm)
                         .clip(Radius.Pill)
-                        .background(palette.surface)
+                        .background(palette.card)
                         .padding(horizontal = Space.md, vertical = Space.xs),
                 ) {
                     Text(
                         text = "${stats.entries30} ${stringResource(R.string.habit_stats_goals_label)}",
                         style = MaterialTheme.typography.labelMedium,
-                        color = palette.ink,
+                        color = palette.onSurface,
                         maxLines = 1,
                         softWrap = false,
                     )
@@ -515,7 +515,7 @@ internal fun TrackerStatisticsHero(
                     .fillMaxWidth()
                     .height(Size.counterTrack)
                     .clip(CircleShape)
-                    .background(palette.surface),
+                    .background(palette.card),
             ) {
                 Box(
                     Modifier
@@ -544,14 +544,14 @@ internal fun TrackerStatisticsHero(
                     value = stats.averagePerActiveDayMinor30?.let { formatActivityAverage(it, unit) } ?: "—",
                     label = stringResource(R.string.habit_stats_average_active_day_30),
                     icon = Icons.Outlined.Speed,
-                    iconTint = palette.accent,
+                    iconTint = palette.primary,
                     modifier = Modifier.weight(1f),
                 )
                 MetricCard(
                     value = "${stats.activeDays90} j",
                     label = stringResource(R.string.stats_period_90d),
                     icon = Icons.Outlined.DateRange,
-                    iconTint = palette.inkMuted,
+                    iconTint = palette.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -560,16 +560,16 @@ internal fun TrackerStatisticsHero(
                 Modifier
                     .fillMaxWidth()
                     .clip(Radius.Chip)
-                    .background(palette.surface.copy(alpha = 0.5f))
+                    .background(palette.card.copy(alpha = 0.5f))
                     .padding(horizontal = Space.md, vertical = Space.sm),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
-                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.inkMuted, modifier = Modifier.size(Size.iconSm))
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.iconSm))
                 Text(
                     text = stringResource(R.string.tracker_stats_ninety_days, stats.activeDays90, stats.calendarDays90, stats.entries90),
                     style = MaterialTheme.typography.bodySmall,
-                    color = palette.inkMuted,
+                    color = palette.onSurfaceVariant,
                 )
             }
         }
@@ -590,7 +590,7 @@ private fun AbstinenceStatisticsHero(
         modifier = Modifier
             .fillMaxWidth()
             .clip(Radius.Card)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .padding(Space.lg),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -607,7 +607,7 @@ private fun AbstinenceStatisticsHero(
                     Box(
                         modifier = Modifier
                             .clip(Radius.Chip)
-                            .background(palette.successSoft)
+                            .background(palette.successContainer)
                             .padding(horizontal = Space.md, vertical = Space.sm),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -621,12 +621,12 @@ private fun AbstinenceStatisticsHero(
                         Text(
                             text = stringResource(R.string.habit_stats_abstinence_hero),
                             style = MaterialTheme.typography.titleMedium,
-                            color = palette.ink,
+                            color = palette.onSurface,
                         )
                         Text(
                             text = stringResource(R.string.habit_stats_active_short),
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -636,16 +636,16 @@ private fun AbstinenceStatisticsHero(
                     modifier = Modifier
                         .padding(start = Space.sm)
                         .clip(Radius.Pill)
-                        .background(palette.accentSoft)
+                        .background(palette.primaryContainer)
                         .padding(horizontal = Space.md, vertical = Space.xs),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Space.xs),
                 ) {
-                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.accent, modifier = Modifier.size(Size.iconSm))
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.primary, modifier = Modifier.size(Size.iconSm))
                     Text(
                         text = "${stringResource(R.string.habit_stats_record_label)} : ${stringResource(R.string.habit_stats_days_short, stats.bestDays)}",
                         style = MaterialTheme.typography.labelMedium,
-                        color = palette.accent,
+                        color = palette.primary,
                         maxLines = 1,
                         softWrap = false,
                     )
@@ -656,7 +656,7 @@ private fun AbstinenceStatisticsHero(
                     Modifier
                         .fillMaxWidth()
                         .clip(Radius.Chip)
-                        .background(palette.successSoft)
+                        .background(palette.successContainer)
                         .padding(horizontal = Space.md, vertical = Space.sm),
                     horizontalArrangement = Arrangement.spacedBy(Space.sm),
                     verticalAlignment = Alignment.CenterVertically,
@@ -671,7 +671,7 @@ private fun AbstinenceStatisticsHero(
                         Text(
                             text = stringResource(R.string.abst_savings_basis, formatMoney(spending, currency), savingsPeriodLabel(spendingPeriod)),
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                         )
                     }
                 }
@@ -691,8 +691,8 @@ private fun AbstinenceStatisticsHero(
                     value = stats.occurrences90.toString(),
                     label = stringResource(R.string.abstinence_stats_occurrences_label),
                     icon = Icons.Outlined.EventBusy,
-                    iconTint = if (stats.occurrences90 > 0) palette.danger else palette.inkMuted,
-                    valueColor = if (stats.occurrences90 > 0) palette.danger else palette.ink,
+                    iconTint = if (stats.occurrences90 > 0) palette.error else palette.onSurfaceVariant,
+                    valueColor = if (stats.occurrences90 > 0) palette.error else palette.onSurface,
                     modifier = Modifier.weight(1f),
                 )
                 MetricCard(

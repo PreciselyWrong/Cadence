@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -42,12 +42,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.nicolab.cadence.ui.theme.Elevation
-import ch.nicolab.cadence.ui.theme.Motion
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Elevation
+import ch.nicolab.cadence.designsystem.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 /**
  * Niveau 1 - fond de tout écran. Fournit explicitement fond et couleur de contenu
@@ -56,7 +56,7 @@ import ch.nicolab.cadence.ui.theme.cadence
 @Composable
 fun CadenceScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val palette = cadence
-    Surface(modifier.fillMaxSize(), color = palette.background, contentColor = palette.ink) {
+    Surface(modifier.fillMaxSize(), color = palette.background, contentColor = palette.onSurface) {
         Box(Modifier.fillMaxSize(), content = content)
     }
 }
@@ -110,8 +110,8 @@ fun Panel(
                 } else Modifier
             ),
         shape = shape,
-        color = palette.surface,
-        contentColor = palette.ink,
+        color = palette.card,
+        contentColor = palette.onSurface,
         shadowElevation = if (floating) Elevation.floating else Elevation.flat,
         tonalElevation = Elevation.flat,
     ) {
@@ -140,14 +140,14 @@ fun PageHeader(
             Text(
                 context.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
-                color = palette.inkFaint,
+                color = palette.outline,
                 letterSpacing = 0.8.sp,
             )
             Spacer(Modifier.height(Space.xs))
             Text(
                 title,
                 style = MaterialTheme.typography.displaySmall,
-                color = palette.ink,
+                color = palette.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -176,7 +176,7 @@ fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false
             }
             .size(Size.touch)
             .clip(CircleShape)
-            .background(if (accent) palette.accentSoft else palette.surface)
+            .background(if (accent) palette.primaryContainer else palette.card)
             .clickable(
                 interactionSource = interactionSource,
                 indication = androidx.compose.foundation.LocalIndication.current,
@@ -188,7 +188,7 @@ fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, null, tint = if (accent) palette.accent else palette.ink, modifier = Modifier.size(Size.iconLarge))
+        Icon(icon, null, tint = if (accent) palette.primary else palette.onSurface, modifier = Modifier.size(Size.iconLarge))
     }
 }
 
@@ -198,13 +198,13 @@ fun SectionLabel(text: String, modifier: Modifier = Modifier) = Text(
     text,
     modifier.padding(top = Space.lg, bottom = Space.xs),
     style = MaterialTheme.typography.labelMedium,
-    color = cadence.inkFaint,
+    color = cadence.outline,
 )
 
 /** Séparateur presque invisible, employé seulement à l'intérieur d'une surface. */
 @Composable
 fun Hairline(modifier: Modifier = Modifier) = Box(
-    modifier.fillMaxWidth().height(1.dp).background(cadence.hairline),
+    modifier.fillMaxWidth().height(1.dp).background(cadence.outlineVariant),
 )
 
 /**
@@ -222,8 +222,8 @@ fun ReadableColumn(modifier: Modifier = Modifier, content: @Composable ColumnSco
 /** Métrique : chiffre dominant, libellé discret dessous. */
 @Composable
 fun Metric(value: String, label: String, modifier: Modifier = Modifier) = Column(modifier) {
-    Text(value, style = ch.nicolab.cadence.ui.theme.MetricStyle, color = cadence.ink)
-    Text(label, style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
+    Text(value, style = ch.nicolab.cadence.designsystem.theme.MetricStyle, color = cadence.onSurface)
+    Text(label, style = MaterialTheme.typography.labelMedium, color = cadence.outline)
 }
 
 /** État vide : petit repère visuel, titre court, explication courte, action éventuelle. */
@@ -245,15 +245,15 @@ fun EmptyState(
             Modifier
                 .size(56.dp)
                 .clip(CircleShape)
-                .background(palette.accentSoft),
+                .background(palette.primaryContainer),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(icon, null, tint = palette.accent, modifier = Modifier.size(Size.iconLarge))
+            Icon(icon, null, tint = palette.primary, modifier = Modifier.size(Size.iconLarge))
         }
         Spacer(Modifier.height(Space.lg))
-        Text(title, style = MaterialTheme.typography.titleMedium, color = palette.ink, textAlign = TextAlign.Center)
+        Text(title, style = MaterialTheme.typography.titleMedium, color = palette.onSurface, textAlign = TextAlign.Center)
         Spacer(Modifier.height(Space.xs))
-        Text(message, style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted, textAlign = TextAlign.Center)
+        Text(message, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant, textAlign = TextAlign.Center)
         action?.let {
             Spacer(Modifier.height(Space.xl))
             it()
@@ -277,14 +277,14 @@ fun MetricCard(
     label: String,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    iconTint: Color = cadence.inkMuted,
-    valueColor: Color = cadence.ink,
+    iconTint: Color = cadence.onSurfaceVariant,
+    valueColor: Color = cadence.onSurface,
 ) {
     val palette = cadence
     Column(
         modifier = modifier
             .clip(Radius.Chip)
-            .background(palette.surface)
+            .background(palette.card)
             .padding(horizontal = Space.md, vertical = Space.sm),
         verticalArrangement = Arrangement.spacedBy(Space.xs),
     ) {
@@ -311,7 +311,7 @@ fun MetricCard(
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,
-            color = palette.inkMuted,
+            color = palette.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

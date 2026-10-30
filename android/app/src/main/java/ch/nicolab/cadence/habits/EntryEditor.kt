@@ -25,21 +25,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitEntrySource
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -65,13 +65,13 @@ internal fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUn
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(entry.localDate.toString(), style = MaterialTheme.typography.bodyMedium, color = palette.ink)
+            Text(entry.localDate.toString(), style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
             Text(
                 // La note prime sur l'heure : c'est elle qui rappelle de quoi il s'agissait.
                 entry.note ?: entry.occurredAt.atZone(entry.observedZoneId).toLocalTime()
                     .truncatedTo(ChronoUnit.MINUTES).toString(),
                 style = MaterialTheme.typography.bodySmall,
-                color = palette.inkFaint,
+                color = palette.outline,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -79,7 +79,7 @@ internal fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUn
                 Text(
                     sourceLabel,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (healthPackage != null) palette.accent else palette.inkFaint,
+                    color = if (healthPackage != null) palette.primary else palette.outline,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -88,7 +88,7 @@ internal fun EntryRow(entry: HabitEntry, goalType: GoalType, unit: MeasurementUn
         Text(
             HabitFormatter.formatValue(entry.valueMinor, goalType, unit),
             style = MaterialTheme.typography.titleMedium,
-            color = palette.ink,
+            color = palette.onSurface,
         )
     }
 }
@@ -146,14 +146,14 @@ internal fun EntryEditor(
         Text(
             stringResource(R.string.entry_zone_notice, entry.observedZoneId.id),
             style = MaterialTheme.typography.bodySmall,
-            color = palette.inkFaint,
+            color = palette.outline,
         )
         if (imported) {
             Spacer(Modifier.height(Space.sm))
             Text(
                 stringResource(R.string.health_connect_entry_detach_notice),
                 style = MaterialTheme.typography.bodySmall,
-                color = palette.inkMuted,
+                color = palette.onSurfaceVariant,
             )
         }
         (error ?: saveError)?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }

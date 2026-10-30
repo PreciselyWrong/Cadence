@@ -35,20 +35,20 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import ch.nicolab.cadence.domain.AbstinenceProfile
+import ch.nicolab.cadence.designsystem.components.FacetGauge
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
+import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AbstinenceSavingsCalculator
 import ch.nicolab.cadence.domain.AlcoholElapsedCalculator
 import ch.nicolab.cadence.domain.SavingsPeriod
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.HabitFacet
-import ch.nicolab.cadence.ui.components.FacetGauge
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.Instant
 import java.time.ZoneId
 import kotlinx.coroutines.delay
@@ -68,33 +68,33 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
                     label = null,
                     progress = 0f,
                     tint = accent,
-                    trackColor = cadence.sunken,
+                    trackColor = cadence.containerHigh,
                     size = Size.badge,
                 )
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(item.stored.name, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 }
             }
             val alcohol = item.alcoholStats
             if (alcohol != null) {
                 Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = accent)
-                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
                 LiveAbstinenceCounter(item, accent, compact = true, showSeconds = true)
                 alcohol.restPlan?.let { plan ->
-                    Text(stringResource(R.string.alcohol_home_rest, displayAbstinenceDate(plan.avoidThrough)), style = MaterialTheme.typography.bodySmall, color = cadence.ink)
+                    Text(stringResource(R.string.alcohol_home_rest, displayAbstinenceDate(plan.avoidThrough)), style = MaterialTheme.typography.bodySmall, color = cadence.onSurface)
                 }
                 val pending = alcohol.pendingQuantityDates.size
                 if (pending > 0) {
-                    Text(pluralStringResource(R.plurals.alcohol_home_pending, pending, pending), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                    Text(pluralStringResource(R.plurals.alcohol_home_pending, pending, pending), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 }
             } else {
                 LiveAbstinenceCounter(item, accent, compact = true)
                 Text(stringResource(when {
                     item.evaluation.isPaused -> R.string.abstinence_today_paused
                     else -> R.string.abst_home_open
-                }), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                }), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
                 next?.let {
-                    Text(stringResource(R.string.catalogue_home_next, milestoneTime(it)), style = MaterialTheme.typography.bodySmall, color = cadence.inkMuted)
+                    Text(stringResource(R.string.catalogue_home_next, milestoneTime(it)), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 }
             }
         }
@@ -162,7 +162,7 @@ fun LiveAbstinenceCounter(
             Modifier
                 .fillMaxWidth()
                 .clip(Radius.Card)
-                .background(cadence.sunken)
+                .background(cadence.containerHigh)
                 .padding(Space.md)
                 .testTag("abstinence_time_grid"),
             horizontalArrangement = Arrangement.spacedBy(Space.sm),
@@ -192,7 +192,7 @@ private fun SavingsTotal(item: HabitCardState, saved: Long, accent: Color, cente
         Text(
             stringResource(R.string.abst_savings_basis, formatMoney(spending, currency), savingsPeriodLabel(period)),
             style = MaterialTheme.typography.bodySmall,
-            color = cadence.inkMuted,
+            color = cadence.onSurfaceVariant,
             textAlign = if (centered) TextAlign.Center else TextAlign.Start,
         )
     }
@@ -217,8 +217,8 @@ private fun RowScope.TimeCell(value: Long, unit: String, progress: Float, accent
             style = MaterialTheme.typography.headlineSmall.copy(fontFeatureSettings = "tnum"),
             color = accent,
         )
-        Text(unit, style = MaterialTheme.typography.labelSmall, color = cadence.inkMuted, maxLines = 1)
-        Box(Modifier.fillMaxWidth().height(Size.counterTrack).clip(Radius.Pill).background(cadence.surface)) {
+        Text(unit, style = MaterialTheme.typography.labelSmall, color = cadence.onSurfaceVariant, maxLines = 1)
+        Box(Modifier.fillMaxWidth().height(Size.counterTrack).clip(Radius.Pill).background(cadence.card)) {
             Box(
                 Modifier
                     .fillMaxWidth(progress.coerceIn(0.08f, 1f))
@@ -241,11 +241,11 @@ fun AbstinenceMilestones(profile: AbstinenceProfile, currentDays: Long) {
     val content = AbstinenceGuide.content(profile)
     val milestoneSources = milestones.flatMap(AbstinenceMilestone::sources).map(EvidenceSource::url).toSet()
     Column(verticalArrangement = Arrangement.spacedBy(Space.lg)) {
-        Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
+        Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
         milestones.forEach { milestone ->
             MilestoneItem(milestone, currentDays, expanded = true)
         }
-        content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted) }
+        content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant) }
         content.sources.filterNot { it.url in milestoneSources }.forEach { SourceLink(it) }
     }
 }
@@ -259,7 +259,7 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
             Text(
                 stringResource(R.string.abstinence_evidence_timeline),
                 style = MaterialTheme.typography.titleMedium,
-                color = cadence.ink,
+                color = cadence.onSurface,
                 modifier = Modifier.weight(1f),
             )
             TextButton(onClick = { expanded = !expanded }) {
@@ -272,12 +272,12 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
         checkpoints.forEach { checkpoint ->
             val reached = currentDays >= checkpoint.days
             val unlockable = checkpoint.unlockable
-            val tone = if (unlockable && reached) cadence.success else cadence.inkMuted
+            val tone = if (unlockable && reached) cadence.success else cadence.onSurfaceVariant
             Row(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.Top) {
                 FacetGauge(
                     progress = if (unlockable) (currentDays.toFloat() / checkpoint.days).coerceIn(0f, 1f) else 0f,
                     tint = tone,
-                    trackColor = cadence.sunken,
+                    trackColor = cadence.containerHigh,
                     size = Size.badge,
                 ) {
                     Icon(
@@ -296,7 +296,7 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
                     Text(
                         stringResource(checkpoint.summary),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = cadence.ink,
+                        color = cadence.onSurface,
                     )
                     if (expanded) {
                         Text(
@@ -305,9 +305,9 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
                                 EvidenceStatus.LIMITED -> R.string.abstinence_evidence_limited
                             }),
                             style = MaterialTheme.typography.labelMedium,
-                            color = cadence.inkMuted,
+                            color = cadence.onSurfaceVariant,
                         )
-                        Text(stringResource(checkpoint.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
+                        Text(stringResource(checkpoint.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
                         checkpoint.sources.forEach { SourceLink(it) }
                     }
                 }
@@ -319,12 +319,12 @@ private fun AlcoholEvidenceTimeline(currentDays: Long) {
 @Composable
 private fun MilestoneItem(milestone: AbstinenceMilestone, currentDays: Long, expanded: Boolean) {
     val reached = milestone.reached(currentDays)
-    val tone = if (reached) cadence.success else cadence.inkMuted
+    val tone = if (reached) cadence.success else cadence.onSurfaceVariant
     Row(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalAlignment = Alignment.Top) {
         FacetGauge(
             progress = if (reached) 1f else (currentDays.toFloat() / milestone.days).coerceIn(0f, 1f),
             tint = tone,
-            trackColor = cadence.sunken,
+            trackColor = cadence.containerHigh,
             size = Size.badge,
         ) {
             Icon(
@@ -338,10 +338,10 @@ private fun MilestoneItem(milestone: AbstinenceMilestone, currentDays: Long, exp
             Text(
                 stringResource(if (reached) R.string.abstinence_reached else R.string.abstinence_upcoming),
                 style = MaterialTheme.typography.labelMedium,
-                color = cadence.inkMuted,
+                color = cadence.onSurfaceVariant,
             )
             if (expanded) {
-                Text(stringResource(milestone.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.ink)
+                Text(stringResource(milestone.detail), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
                 milestone.sources.forEach { SourceLink(it) }
             }
         }
@@ -353,10 +353,10 @@ fun AbstinenceEvidenceEmpty(profile: AbstinenceProfile) {
     if (profile == AbstinenceProfile.NONE) return
     val content = AbstinenceGuide.content(profile)
     Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        Icon(Icons.Outlined.Science, contentDescription = null, tint = cadence.inkMuted)
-        Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.ink)
-        Text(stringResource(R.string.abstinence_evidence_empty), style = MaterialTheme.typography.bodyMedium, color = cadence.inkMuted)
-        content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.ink) }
+        Icon(Icons.Outlined.Science, contentDescription = null, tint = cadence.onSurfaceVariant)
+        Text(stringResource(R.string.abstinence_milestones), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
+        Text(stringResource(R.string.abstinence_evidence_empty), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+        content.notice?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface) }
         content.sources.forEach { SourceLink(it) }
     }
 }

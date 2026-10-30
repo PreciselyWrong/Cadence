@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.ui.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Motion
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot

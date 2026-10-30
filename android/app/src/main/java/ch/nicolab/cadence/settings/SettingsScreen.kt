@@ -17,18 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HealthConnectUiState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
 import ch.nicolab.cadence.ui.ScreenList
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalTime
 import java.util.Locale
 
@@ -60,9 +60,9 @@ internal fun SettingsScreen(
         item { SectionLabel(stringResource(R.string.travel_section)) }
         item {
             Panel {
-                Text(stringResource(R.string.travel_subtitle), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+                Text(stringResource(R.string.travel_subtitle), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
                 Spacer(Modifier.height(Space.xs))
-                Text(stringResource(R.string.travel_reminders_silent), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+                Text(stringResource(R.string.travel_reminders_silent), style = MaterialTheme.typography.bodySmall, color = palette.outline)
                 Spacer(Modifier.height(Space.md))
                 SecondaryAction(stringResource(R.string.travel_title), Modifier.fillMaxWidth(), onClick = startTravel)
             }
@@ -71,7 +71,7 @@ internal fun SettingsScreen(
         item { SectionLabel(stringResource(R.string.group_section_title)) }
         item {
             Panel {
-                Text(stringResource(R.string.group_overlap_notice), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                Text(stringResource(R.string.group_overlap_notice), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
             }
         }
         items(groups, key = HabitGroup::id) { group ->
@@ -85,9 +85,9 @@ internal fun SettingsScreen(
         item { SectionLabel(stringResource(R.string.settings_widget_title)) }
         item {
             Panel {
-                Text(stringResource(R.string.settings_widget_hint), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+                Text(stringResource(R.string.settings_widget_hint), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
                 Spacer(Modifier.height(Space.xs))
-                Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+                Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = palette.outline)
             }
         }
         item { SectionLabel(stringResource(R.string.health_connect_title)) }
@@ -105,7 +105,7 @@ internal fun SettingsScreen(
         item { SectionLabel(stringResource(R.string.settings_data_title)) }
         item {
             Panel {
-                Text(stringResource(R.string.settings_data_subtitle), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                Text(stringResource(R.string.settings_data_subtitle), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
                 Spacer(Modifier.height(Space.lg))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
                     PrimaryAction(stringResource(R.string.settings_export), Modifier.weight(1f), onClick = export)
@@ -149,16 +149,16 @@ private fun GroupPanel(
     }
 
     Panel {
-        CadenceField(name, { name = it }, stringResource(R.string.group_name_label), accent = palette.accent)
+        CadenceField(name, { name = it }, stringResource(R.string.group_name_label), accent = palette.primary)
         if (!fixedAllDay) {
             Spacer(Modifier.height(Space.md))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-                CadenceField(start, { start = it }, stringResource(R.string.group_start_label), Modifier.weight(1f), accent = palette.accent)
-                CadenceField(end, { end = it }, stringResource(R.string.group_end_label), Modifier.weight(1f), accent = palette.accent)
+                CadenceField(start, { start = it }, stringResource(R.string.group_start_label), Modifier.weight(1f), accent = palette.primary)
+                CadenceField(end, { end = it }, stringResource(R.string.group_end_label), Modifier.weight(1f), accent = palette.primary)
             }
         } else {
             Spacer(Modifier.height(Space.xs))
-            Text(stringResource(R.string.group_all_day), style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+            Text(stringResource(R.string.group_all_day), style = MaterialTheme.typography.bodySmall, color = palette.outline)
         }
         Spacer(Modifier.height(Space.md))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -180,7 +180,7 @@ private fun GroupPanel(
                 stringResource(R.string.group_habit_count, habitCount) +
                     if (fixedAllDay) "" else " · " + stringResource(R.string.group_delete_notice),
                 style = MaterialTheme.typography.bodySmall,
-                color = palette.inkFaint,
+                color = palette.outline,
             )
         }
     }

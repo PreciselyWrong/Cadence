@@ -19,13 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,10 +58,10 @@ fun AbstinenceDetailSheet(
                     Text(
                         stringResource(R.string.abst_occurrence_help),
                         style = MaterialTheme.typography.bodySmall,
-                        color = cadence.inkMuted,
+                        color = cadence.onSurfaceVariant,
                     )
                     if (item.evaluation.isPaused) {
-                        Text(stringResource(R.string.abst_pause_help), color = cadence.inkMuted)
+                        Text(stringResource(R.string.abst_pause_help), color = cadence.onSurfaceVariant)
                     }
                 }
             }
@@ -79,7 +79,7 @@ fun AbstinenceDetailSheet(
                 Text(
                     stringResource(R.string.abstinence_assumption),
                     style = MaterialTheme.typography.bodySmall,
-                    color = cadence.inkMuted,
+                    color = cadence.onSurfaceVariant,
                 )
             }
         }
@@ -90,9 +90,9 @@ fun AbstinenceDetailSheet(
     if (confirmingOccurrence) {
         AlertDialog(
             onDismissRequest = { if (!busy) confirmingOccurrence = false },
-            containerColor = cadence.surface,
-            titleContentColor = cadence.ink,
-            textContentColor = cadence.inkMuted,
+            containerColor = cadence.card,
+            titleContentColor = cadence.onSurface,
+            textContentColor = cadence.onSurfaceVariant,
             title = { Text(stringResource(occurrenceAction)) },
             text = { Text(stringResource(R.string.abst_occurrence_confirm_help)) },
             confirmButton = {

@@ -35,23 +35,23 @@ import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.HabitHistoryGraph
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.TimerPanel
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.Hairline
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.ValueChip
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.ActionRow
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.Hairline
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.SectionLabel
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.components.ValueChip
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalDate
 
 /** Déplacement d'une habitude d'un groupe à l'autre, sans passer par le formulaire complet. */
@@ -145,7 +145,7 @@ internal fun HabitOptionsSheet(
         Spacer(Modifier.height(Space.sm))
         Hairline()
         Spacer(Modifier.height(Space.sm))
-        ActionRow(Icons.Outlined.Delete, stringResource(R.string.action_delete), palette.danger, delete)
+        ActionRow(Icons.Outlined.Delete, stringResource(R.string.action_delete), palette.error, delete)
     }
 }
 
@@ -226,7 +226,7 @@ internal fun QuickSheet(
         SectionLabel(stringResource(R.string.entries_section))
         Spacer(Modifier.height(Space.sm))
         if (item.recentEntries.isEmpty()) {
-            Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.inkFaint)
+            Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 item.recentEntries.take(VISIBLE_ENTRIES).forEach { entry ->

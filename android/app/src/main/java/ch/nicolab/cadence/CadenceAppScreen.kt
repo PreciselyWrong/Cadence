@@ -40,6 +40,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.bilan.StatsScreen
 import ch.nicolab.cadence.bilan.WeekScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.designsystem.components.CadenceNavigation
+import ch.nicolab.cadence.designsystem.components.CadenceScreen
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.NavDestination
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.GoalDirection
 import ch.nicolab.cadence.domain.GoalType
@@ -54,18 +66,6 @@ import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectRulesSheet
 import ch.nicolab.cadence.settings.SettingsScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
-import ch.nicolab.cadence.ui.components.CadenceNavigation
-import ch.nicolab.cadence.ui.components.CadenceScreen
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.NavDestination
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.launch
@@ -248,7 +248,7 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
             entry = entry,
             goalType = habit?.stored?.goal?.goalType ?: GoalType.QUANTITY,
             unit = habit?.stored?.goal?.unit,
-            accent = habit?.let { habitTint(it) } ?: cadence.accent,
+            accent = habit?.let { habitTint(it) } ?: cadence.primary,
             dismiss = { if (!busy) correctingId = null },
             save = { value, date, time, note ->
                 viewModel.correctEntry(entry, value, date, time, note) { correctingId = null }
@@ -348,13 +348,13 @@ private fun DeleteDialog(dismiss: () -> Unit, confirm: () -> Unit) {
     AlertDialog(
         onDismissRequest = dismiss,
         shape = Radius.Panel,
-        containerColor = palette.surface,
-        titleContentColor = palette.ink,
-        textContentColor = palette.inkMuted,
-        icon = { Icon(Icons.Outlined.Delete, null, tint = palette.danger) },
+        containerColor = palette.card,
+        titleContentColor = palette.onSurface,
+        textContentColor = palette.onSurfaceVariant,
+        icon = { Icon(Icons.Outlined.Delete, null, tint = palette.error) },
         title = { Text(stringResource(R.string.delete_dialog_title), style = MaterialTheme.typography.headlineSmall) },
         text = { Text(stringResource(R.string.delete_dialog_message), style = MaterialTheme.typography.bodySmall) },
-        confirmButton = { PrimaryAction(stringResource(R.string.delete_dialog_confirm), accent = palette.danger, onClick = confirm) },
+        confirmButton = { PrimaryAction(stringResource(R.string.delete_dialog_confirm), accent = palette.error, onClick = confirm) },
         dismissButton = { TertiaryAction(stringResource(R.string.delete_dialog_cancel), onClick = dismiss) },
     )
 }

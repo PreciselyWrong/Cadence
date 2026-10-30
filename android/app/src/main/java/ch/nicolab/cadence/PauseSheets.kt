@@ -17,16 +17,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.PauseReason
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.CadenceSheet
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.ErrorText
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.LocalDate
 
 /** Libellé français d'un motif de pause. */
@@ -78,7 +78,7 @@ internal fun SkipSheet(
         Text(
             stringResource(R.string.skip_notice),
             style = MaterialTheme.typography.bodySmall,
-            color = palette.inkFaint,
+            color = palette.outline,
         )
         Spacer(Modifier.height(Space.xl))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -109,7 +109,7 @@ internal fun TravelSheet(
     start: (List<String>, LocalDate, LocalDate) -> Unit,
 ) {
     val palette = cadence
-    val accent = palette.accent
+    val accent = palette.primary
     val selectable = habits.filterNot { it.stored.archived }
     var selected by remember { mutableStateOf(emptySet<String>()) }
     var from by remember { mutableStateOf(today.toString()) }
@@ -163,7 +163,7 @@ internal fun TravelSheet(
         Text(
             stringResource(R.string.travel_reminders_silent),
             style = MaterialTheme.typography.bodySmall,
-            color = palette.inkFaint,
+            color = palette.outline,
         )
         error?.let { Spacer(Modifier.height(Space.md)); ErrorText(it) }
         Spacer(Modifier.height(Space.xl))

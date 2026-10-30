@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import java.time.LocalDate
 
 data class DailyStat(val date: LocalDate, val valueMinor: Long, val targetMinor: Long, val paused: Boolean)
@@ -40,7 +40,7 @@ object HeatmapLevel {
 fun HabitHeatmap(days: List<DailyStat>, accent: Color, modifier: Modifier = Modifier) {
     val palette = cadence
     Column(modifier) {
-        Text(stringResource(R.string.stats_heatmap_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Text(stringResource(R.string.stats_heatmap_title), style = MaterialTheme.typography.labelMedium, color = palette.outline)
         Spacer(Modifier.height(Space.md))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
             days.chunked(7).forEach { week ->
@@ -52,7 +52,7 @@ fun HabitHeatmap(days: List<DailyStat>, accent: Color, modifier: Modifier = Modi
                             2 -> accent.copy(alpha = if (palette.isDark) 0.55f else 0.50f)
                             3 -> accent.copy(alpha = if (palette.isDark) 0.75f else 0.75f)
                             4 -> accent
-                            else -> palette.sunken
+                            else -> palette.containerHigh
                         }
                         Box(
                             Modifier.fillMaxWidth().aspectRatio(1f).background(color, RoundedCornerShape(Space.xs)),

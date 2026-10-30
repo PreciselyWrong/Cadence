@@ -20,8 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 /**
  * Le rythme des dernières périodes. Une seule question : la cadence a-t-elle tenu ?
@@ -31,7 +31,7 @@ import ch.nicolab.cadence.ui.theme.cadence
 fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifier = Modifier) {
     val palette = cadence
     Column(modifier) {
-        Text(stringResource(R.string.history_graph_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Text(stringResource(R.string.history_graph_title), style = MaterialTheme.typography.labelMedium, color = palette.outline)
         Spacer(Modifier.height(Space.md))
         Row(
             Modifier.fillMaxWidth().height(72.dp),
@@ -41,11 +41,11 @@ fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifi
             history.forEach { period ->
                 val ratio = if (period.targetMinor <= 0L) 0f else (period.progressMinor.toFloat() / period.targetMinor).coerceIn(0f, 1f)
                 val color = when {
-                    period.excludedByPause -> palette.hairline
+                    period.excludedByPause -> palette.outlineVariant
                     else -> accent
                 }
                 Box(
-                    Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(8.dp)).background(palette.sunken),
+                    Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(8.dp)).background(palette.containerHigh),
                     contentAlignment = Alignment.BottomCenter,
                 ) {
                     if (ratio > 0f || period.excludedByPause) {
@@ -66,7 +66,7 @@ fun HabitHistoryGraph(history: List<PeriodStat>, accent: Color, modifier: Modifi
                     compactLabel(period.label),
                     Modifier.weight(1f).padding(top = 2.dp),
                     style = MaterialTheme.typography.labelMedium,
-                    color = palette.inkFaint,
+                    color = palette.outline,
                     maxLines = 1,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 )

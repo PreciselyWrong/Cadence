@@ -5,10 +5,12 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import ch.nicolab.cadence.designsystem.theme.Appearance
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.ThemeMode
 import ch.nicolab.cadence.ui.components.ActivityCalendar
 import ch.nicolab.cadence.ui.components.ActivityCalendarCell
 import ch.nicolab.cadence.ui.components.ActivityCalendarTone
-import ch.nicolab.cadence.ui.theme.CadenceTheme
 import java.time.LocalDate
 import org.junit.Rule
 import org.junit.Test
@@ -24,7 +26,7 @@ class ActivityCalendarUiTest {
         val date = LocalDate.of(2026, 9, 10)
 
         compose.setContent {
-            CadenceTheme(darkTheme = false) {
+            CadenceTheme(Appearance(themeMode = ThemeMode.LIGHT)) {
                 ActivityCalendar(
                     cells = listOf(
                         ActivityCalendarCell(
@@ -49,7 +51,7 @@ class ActivityCalendarUiTest {
         val today = LocalDate.of(2026, 9, 11)
 
         compose.setContent {
-            CadenceTheme(darkTheme = true) {
+            CadenceTheme(Appearance(themeMode = ThemeMode.DARK)) {
                 ActivityCalendar(
                     cells = listOf(
                         ActivityCalendarCell(today.minusDays(1), ActivityCalendarTone.NEUTRAL, "10 septembre : neutre"),

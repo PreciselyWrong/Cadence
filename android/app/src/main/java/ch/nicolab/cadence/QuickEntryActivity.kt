@@ -50,23 +50,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.Hairline
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.ValueChip
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.Elevation
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.habits.EntryEditor
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.CadenceField
-import ch.nicolab.cadence.ui.components.ValueChip
-import ch.nicolab.cadence.ui.components.Hairline
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.components.HabitFacet
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.CadenceTheme
-import ch.nicolab.cadence.ui.theme.Elevation
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.util.UUID
 
 class QuickEntryActivity : ComponentActivity() {
@@ -106,7 +106,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
             (habitId == null || it.stored.id == habitId)
     }
     if (selected != null) {
-        Box(Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)))
+        Box(Modifier.fillMaxSize().background(palette.scrim.copy(alpha = .72f)))
         if (selected.stored.abstinenceProfile == ch.nicolab.cadence.domain.AbstinenceProfile.ALCOHOL) AlcoholDetailSheet(
             item = selected,
             dismiss = { if (!busy) { if (habitId != null) dismiss() else selectedId = null } },
@@ -135,7 +135,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
         )
         correcting?.let { entry ->
             EntryEditor(entry, selected.stored.goal.goalType, selected.stored.goal.unit,
-                selected.stored.colorArgb?.let(::Color) ?: palette.accent,
+                selected.stored.colorArgb?.let(::Color) ?: palette.primary,
                 dismiss = { if (!busy) correctingId = null },
                 save = { value, date, time, note -> viewModel.correctEntry(entry, value, date, time, note) { correctingId = null } },
                 delete = { viewModel.deleteEntry(entry.id) { correctingId = null } },
@@ -147,7 +147,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
         return
     }
     Box(
-        Modifier.fillMaxSize().background(palette.structural.copy(alpha = .72f)).clickable(onClick = dismiss),
+        Modifier.fillMaxSize().background(palette.scrim.copy(alpha = .72f)).clickable(onClick = dismiss),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Surface(
@@ -156,15 +156,15 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
                 .pointerInput(Unit) { detectVerticalDragGestures { _, drag -> if (drag > 120f) dismiss() } }
                 .clickable(onClick = {}),
             shape = Radius.Sheet,
-            color = palette.surface,
-            contentColor = palette.ink,
+            color = palette.card,
+            contentColor = palette.onSurface,
             shadowElevation = Elevation.floating,
         ) {
             Column(Modifier.navigationBarsPadding().padding(horizontal = Space.xl, vertical = Space.lg), horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(Modifier.align(Alignment.CenterHorizontally).width(36.dp).height(4.dp).background(palette.hairline, CircleShape))
+                Box(Modifier.align(Alignment.CenterHorizontally).width(36.dp).height(4.dp).background(palette.outlineVariant, CircleShape))
                 Spacer(Modifier.height(Space.lg))
-                Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint, textAlign = TextAlign.Center)
-                Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.ink, textAlign = TextAlign.Center)
+                Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.outline, textAlign = TextAlign.Center)
+                Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.onSurface, textAlign = TextAlign.Center)
                 Spacer(Modifier.height(Space.lg))
                 if (!isLoaded) {
                     Spacer(Modifier.height(100.dp))
@@ -174,7 +174,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
                             Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
                         }
                         Spacer(Modifier.width(Space.md))
-                        Text(stringResource(if (habitId != null && habits.none { it.stored.id == habitId }) R.string.abstinence_quick_unavailable else R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+                        Text(stringResource(if (habitId != null && habits.none { it.stored.id == habitId }) R.string.abstinence_quick_unavailable else R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
                     }
                 } else {
                     LazyColumn(
@@ -231,20 +231,20 @@ private fun QuickHabit(
     var noteOpen by remember(habit.stored.id) { mutableStateOf(false) }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
-    val tint = habit.stored.colorArgb?.let(::Color) ?: palette.accent
+    val tint = habit.stored.colorArgb?.let(::Color) ?: palette.primary
     val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HabitFacet(icon.imageVector, icon.labelFr, if (goal.isTracker) 0f else habit.evaluation.progressMinor.toFloat() / target, tint, tint.copy(alpha = 0.20f), size = Size.badge)
             Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
-                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(habit.stored.name, style = MaterialTheme.typography.titleMedium, color = palette.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
                     if (goal.isTracker) stringResource(R.string.tracker_today_total,
                         HabitFormatter.formatWithUnit(habit.evaluation.progressMinor, goal.goalType, goal.unit))
                     else HabitFormatter.formatProgress(habit.evaluation.progressMinor, habit.evaluation.targetMinor, goal.goalType, goal.unit),
                     style = MaterialTheme.typography.bodySmall,
-                    color = palette.inkFaint,
+                    color = palette.outline,
                 )
             }
         }

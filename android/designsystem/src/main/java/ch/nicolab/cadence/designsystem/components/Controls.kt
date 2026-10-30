@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -41,11 +41,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.ui.theme.Motion
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 /** Action principale. Accent plein, cible tactile confortable et compression physique au toucher. */
 @Composable
@@ -57,9 +57,9 @@ fun PrimaryAction(
     onClick: () -> Unit,
 ) {
     val palette = cadence
-    val fill = accent ?: palette.accent
-    val container = if (enabled) fill else palette.sunken
-    val content = if (enabled) onColorOf(fill) else palette.inkMuted
+    val fill = accent ?: palette.primary
+    val container = if (enabled) fill else palette.containerHigh
+    val content = if (enabled) onColorOf(fill) else palette.onSurfaceVariant
     val haptic = rememberCadenceHaptic()
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -118,7 +118,7 @@ fun SecondaryAction(
             }
             .heightIn(min = Size.control)
             .clip(Radius.Control)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .clickable(
                 interactionSource = interactionSource,
                 indication = androidx.compose.foundation.LocalIndication.current,
@@ -131,7 +131,7 @@ fun SecondaryAction(
             .padding(horizontal = Space.xl),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = if (enabled) palette.ink else palette.inkFaint)
+        Text(label, style = MaterialTheme.typography.labelLarge, color = if (enabled) palette.onSurface else palette.outline)
     }
 }
 
@@ -170,7 +170,7 @@ fun TertiaryAction(
             .padding(horizontal = Space.lg),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = tint ?: cadence.accent)
+        Text(label, style = MaterialTheme.typography.labelLarge, color = tint ?: cadence.primary)
     }
 }
 
@@ -184,10 +184,10 @@ fun ChoiceChip(
     onClick: () -> Unit,
 ) {
     val palette = cadence
-    val fill = accent ?: palette.accent
+    val fill = accent ?: palette.primary
     val haptic = rememberCadenceHaptic()
-    val container by animateColorAsState(if (selected) fill else palette.sunken, Motion.quick(), label = "chip")
-    val content by animateColorAsState(if (selected) onColorOf(fill) else palette.ink, Motion.quick(), label = "chipText")
+    val container by animateColorAsState(if (selected) fill else palette.containerHigh, Motion.quick(), label = "chip")
+    val content by animateColorAsState(if (selected) onColorOf(fill) else palette.onSurface, Motion.quick(), label = "chipText")
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
@@ -225,7 +225,7 @@ fun ChoiceChip(
 @Composable
 fun ValueChip(label: String, accent: Color? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val palette = cadence
-    val fill = accent ?: palette.accent
+    val fill = accent ?: palette.primary
     val haptic = rememberCadenceHaptic()
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -254,7 +254,7 @@ fun ValueChip(label: String, accent: Color? = null, modifier: Modifier = Modifie
             .padding(horizontal = Space.lg, vertical = Space.md),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = palette.ink)
+        Text(label, style = MaterialTheme.typography.labelLarge, color = palette.onSurface)
     }
 }
 
@@ -276,13 +276,13 @@ fun CadenceField(
     decimal: Boolean = false,
 ) {
     val palette = cadence
-    val fill = accent ?: palette.accent
+    val fill = accent ?: palette.primary
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
-    val resting = if (accent == null) palette.sunken else fill.copy(alpha = if (palette.isDark) 0.12f else 0.07f)
+    val resting = if (accent == null) palette.containerHigh else fill.copy(alpha = if (palette.isDark) 0.12f else 0.07f)
     val container by animateColorAsState(if (focused) fill.copy(alpha = 0.16f) else resting, Motion.quick(), label = "field")
     Column(modifier.fillMaxWidth()) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = if (focused) fill else palette.inkFaint)
+        Text(label, style = MaterialTheme.typography.labelMedium, color = if (focused) fill else palette.outline)
         Spacer(Modifier.height(Space.xs))
         Row(
             Modifier.fillMaxWidth().clip(Radius.Control).background(container).padding(horizontal = Space.lg).heightIn(min = Size.control),
@@ -290,14 +290,14 @@ fun CadenceField(
         ) {
             Box(Modifier.weight(1f)) {
                 if (value.isEmpty() && placeholder != null) {
-                    Text(placeholder, style = MaterialTheme.typography.bodyLarge, color = palette.inkFaint)
+                    Text(placeholder, style = MaterialTheme.typography.bodyLarge, color = palette.outline)
                 }
                 BasicTextField(
                     value = value,
                     onValueChange = onValue,
                     singleLine = true,
                     interactionSource = interaction,
-                    textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.ink),
+                    textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
                     cursorBrush = SolidColor(fill),
                     keyboardOptions = KeyboardOptions(keyboardType = when {
                         decimal -> KeyboardType.Decimal
@@ -309,12 +309,12 @@ fun CadenceField(
             }
             suffix?.takeIf { it.isNotBlank() }?.let {
                 Spacer(Modifier.width(Space.sm))
-                Text(it, style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+                Text(it, style = MaterialTheme.typography.bodySmall, color = palette.outline)
             }
         }
         support?.let {
             Spacer(Modifier.height(Space.xs))
-            Text(it, style = MaterialTheme.typography.bodySmall, color = palette.inkFaint)
+            Text(it, style = MaterialTheme.typography.bodySmall, color = palette.outline)
         }
     }
 }
@@ -323,7 +323,7 @@ fun CadenceField(
 @Composable
 fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked: (Boolean) -> Unit) {
     val palette = cadence
-    val fill = accent ?: palette.accent
+    val fill = accent ?: palette.primary
     val haptic = rememberCadenceHaptic()
     Row(
         Modifier
@@ -336,7 +336,7 @@ fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked:
             .heightIn(min = Size.touch),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge, color = palette.ink)
+        Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
         Switch(
             checked = checked,
             onCheckedChange = {
@@ -346,8 +346,8 @@ fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked:
             colors = SwitchDefaults.colors(
                 checkedThumbColor = onColorOf(fill),
                 checkedTrackColor = fill,
-                uncheckedThumbColor = palette.surface,
-                uncheckedTrackColor = palette.hairline,
+                uncheckedThumbColor = palette.card,
+                uncheckedTrackColor = palette.outlineVariant,
                 uncheckedBorderColor = Color.Transparent,
             ),
         )
@@ -389,14 +389,14 @@ fun ActionRow(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit
             Icon(icon, null, tint = tint, modifier = Modifier.size(Size.icon))
         }
         Spacer(Modifier.width(Space.md))
-        Text(label, style = MaterialTheme.typography.bodyLarge, color = cadence.ink)
+        Text(label, style = MaterialTheme.typography.bodyLarge, color = cadence.onSurface)
     }
 }
 
 /** Groupe de choix : un libellé, puis une grille de puces. */
 @Composable
 fun FieldGroup(label: String, content: @Composable () -> Unit) = Column {
-    Text(label, style = MaterialTheme.typography.labelMedium, color = cadence.inkFaint)
+    Text(label, style = MaterialTheme.typography.labelMedium, color = cadence.outline)
     Spacer(Modifier.height(Space.sm))
     content()
 }
@@ -404,10 +404,10 @@ fun FieldGroup(label: String, content: @Composable () -> Unit) = Column {
 /** Message d'erreur de formulaire, toujours au même endroit et toujours lisible. */
 @Composable
 fun ErrorText(message: String, modifier: Modifier = Modifier) = Row(
-    modifier.fillMaxWidth().clip(Radius.Chip).background(cadence.danger.copy(alpha = 0.12f)).padding(Space.md),
+    modifier.fillMaxWidth().clip(Radius.Chip).background(cadence.error.copy(alpha = 0.12f)).padding(Space.md),
     verticalAlignment = Alignment.CenterVertically,
 ) {
-    Text(message, style = MaterialTheme.typography.bodySmall, color = cadence.danger)
+    Text(message, style = MaterialTheme.typography.bodySmall, color = cadence.error)
 }
 
 /** Contraste garanti sur une surface accentuée, y compris pour une couleur d'habitude claire. */
@@ -415,7 +415,7 @@ fun ErrorText(message: String, modifier: Modifier = Modifier) = Row(
 fun onColorOf(background: Color): Color {
     val palette = cadence
     val luminance = 0.299f * background.red + 0.587f * background.green + 0.114f * background.blue
-    return if (luminance > 0.62f) palette.ink else Color.White
+    return if (luminance > 0.62f) palette.onSurface else Color.White
 }
 
 @Composable

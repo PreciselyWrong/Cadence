@@ -17,10 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.theme.CadenceTheme
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 class HealthConnectRationaleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +35,13 @@ class HealthConnectRationaleActivity : ComponentActivity() {
                     Text(
                         stringResource(R.string.health_connect_privacy_title),
                         style = MaterialTheme.typography.headlineMedium,
-                        color = cadence.ink,
+                        color = cadence.onSurface,
                     )
                     Spacer(Modifier.height(Space.lg))
                     Text(
                         stringResource(R.string.health_connect_privacy_body),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = cadence.inkMuted,
+                        color = cadence.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(Space.xxl))
                     PrimaryAction(

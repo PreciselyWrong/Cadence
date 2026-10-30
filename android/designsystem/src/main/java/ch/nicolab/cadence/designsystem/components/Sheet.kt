@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.components
+package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 
 /**
  * Coquille unique de tous les modals : poignée, contexte, titre, contenu.
@@ -50,12 +50,12 @@ fun CadenceSheet(
         onDismissRequest = dismiss,
         sheetState = sheetState,
         shape = Radius.Sheet,
-        containerColor = palette.surface,
-        contentColor = palette.ink,
-        scrimColor = palette.structural.copy(alpha = 0.72f),
+        containerColor = palette.card,
+        contentColor = palette.onSurface,
+        scrimColor = palette.scrim.copy(alpha = 0.72f),
         dragHandle = {
             Box(Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs), contentAlignment = Alignment.Center) {
-                Box(Modifier.width(36.dp).height(4.dp).background(palette.hairline, CircleShape))
+                Box(Modifier.width(36.dp).height(4.dp).background(palette.outlineVariant, CircleShape))
             }
         },
         modifier = modifier,
@@ -84,7 +84,7 @@ fun CadenceSheet(
                     Text(
                         title,
                         style = MaterialTheme.typography.headlineSmall,
-                        color = palette.ink,
+                        color = palette.onSurface,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = if (leading != null) TextAlign.Start else TextAlign.Center,
@@ -94,7 +94,7 @@ fun CadenceSheet(
                         Text(
                             it,
                             style = MaterialTheme.typography.bodySmall,
-                            color = palette.inkMuted,
+                            color = palette.onSurfaceVariant,
                             textAlign = if (leading != null) TextAlign.Start else TextAlign.Center,
                         )
                     }

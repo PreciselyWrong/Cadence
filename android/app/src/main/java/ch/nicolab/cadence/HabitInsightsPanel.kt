@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitInsights
@@ -19,8 +21,6 @@ import ch.nicolab.cadence.domain.HabitInsightsCalculator
 import ch.nicolab.cadence.domain.TimeSlot
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import kotlin.math.roundToInt
 
 /**
@@ -39,7 +39,7 @@ fun HabitInsightsPanel(
     val comparison = insights.monthComparison
 
     Column(modifier) {
-        Text(stringResource(R.string.insights_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Text(stringResource(R.string.insights_title), style = MaterialTheme.typography.labelMedium, color = palette.outline)
         Spacer(Modifier.height(Space.md))
 
         if (bestDay != null) {
@@ -74,7 +74,7 @@ fun HabitInsightsPanel(
 
         if (comparison != null) {
             Spacer(Modifier.height(Space.xs))
-            Text(stringResource(R.string.insights_month_title), style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+            Text(stringResource(R.string.insights_month_title), style = MaterialTheme.typography.labelMedium, color = palette.outline)
             Spacer(Modifier.height(Space.sm))
             MonthRow(
                 stringResource(R.string.insights_month_quantity),
@@ -109,7 +109,7 @@ fun HabitInsightsPanel(
             Text(
                 stringResource(R.string.insights_month_scope, comparison.current.consideredDays),
                 style = MaterialTheme.typography.labelMedium,
-                color = palette.inkFaint,
+                color = palette.outline,
             )
         } else {
             InsightAbsentLine(
@@ -124,8 +124,8 @@ fun HabitInsightsPanel(
 private fun InsightAbsentLine(label: String, reason: String) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
-        Text(reason, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+        Text(reason, style = MaterialTheme.typography.labelMedium, color = palette.outline)
     }
 }
 
@@ -134,10 +134,10 @@ private fun InsightLine(label: String, value: String, detail: String) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            Text(label, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
             Text(value, style = MaterialTheme.typography.titleSmall, color = palette.success)
         }
-        Text(detail, style = MaterialTheme.typography.labelMedium, color = palette.inkFaint)
+        Text(detail, style = MaterialTheme.typography.labelMedium, color = palette.outline)
     }
 }
 
@@ -145,16 +145,16 @@ private fun InsightLine(label: String, value: String, detail: String) {
 private fun MonthRow(label: String, value: String, delta: MonthDelta) {
     val palette = cadence
     Row(Modifier.fillMaxWidth().padding(vertical = Space.xs), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-            Text(value, style = MaterialTheme.typography.titleSmall, color = palette.ink)
+            Text(value, style = MaterialTheme.typography.titleSmall, color = palette.onSurface)
             Text(
                 delta.text,
                 style = MaterialTheme.typography.titleSmall,
                 color = when {
                     delta.value > 0 -> palette.success
-                    delta.value < 0 -> palette.inkMuted
-                    else -> palette.inkFaint
+                    delta.value < 0 -> palette.onSurfaceVariant
+                    else -> palette.outline
                 },
             )
         }

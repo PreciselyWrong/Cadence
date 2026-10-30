@@ -242,8 +242,8 @@ fun HabitIconPicker(
     modifier: Modifier = Modifier,
     accent: androidx.compose.ui.graphics.Color? = null,
 ) {
-    val palette = ch.nicolab.cadence.ui.theme.cadence
-    val fill = accent ?: palette.accent
+    val palette = ch.nicolab.cadence.designsystem.theme.cadence
+    val fill = accent ?: palette.primary
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(IconCategory.ALL) }
     val filteredIcons = remember(searchQuery, selectedCategory) {
@@ -251,21 +251,21 @@ fun HabitIconPicker(
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        ch.nicolab.cadence.ui.components.CadenceField(
+        ch.nicolab.cadence.designsystem.components.CadenceField(
             value = searchQuery,
             onValue = { searchQuery = it },
             label = stringResource(R.string.icon_picker_search_placeholder),
             accent = fill,
         )
 
-        Spacer(Modifier.height(ch.nicolab.cadence.ui.theme.Space.md))
+        Spacer(Modifier.height(ch.nicolab.cadence.designsystem.theme.Space.md))
 
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
-            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
+            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.designsystem.theme.Space.sm),
+            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.designsystem.theme.Space.sm),
         ) {
             IconCategory.entries.forEach { category ->
-                ch.nicolab.cadence.ui.components.ChoiceChip(
+                ch.nicolab.cadence.designsystem.components.ChoiceChip(
                     label = stringResource(category.labelResId),
                     selected = selectedCategory == category,
                     accent = fill,
@@ -273,12 +273,12 @@ fun HabitIconPicker(
             }
         }
 
-        Spacer(Modifier.height(ch.nicolab.cadence.ui.theme.Space.md))
+        Spacer(Modifier.height(ch.nicolab.cadence.designsystem.theme.Space.md))
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 56.dp),
-            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
-            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.ui.theme.Space.sm),
+            horizontalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.designsystem.theme.Space.sm),
+            verticalArrangement = Arrangement.spacedBy(ch.nicolab.cadence.designsystem.theme.Space.sm),
             modifier = Modifier.fillMaxWidth().height(200.dp),
         ) {
             items(filteredIcons, key = { it.id }) { icon ->
@@ -287,8 +287,8 @@ fun HabitIconPicker(
                 Box(
                     modifier = Modifier
                         .size(52.dp)
-                        .clip(ch.nicolab.cadence.ui.theme.Radius.Control)
-                        .background(if (isSelected) fill else palette.sunken)
+                        .clip(ch.nicolab.cadence.designsystem.theme.Radius.Control)
+                        .background(if (isSelected) fill else palette.containerHigh)
                         .clickable { onIconSelected(icon.id) }
                         .semantics { contentDescription = cd },
                     contentAlignment = Alignment.Center,
@@ -296,8 +296,8 @@ fun HabitIconPicker(
                     Icon(
                         imageVector = icon.imageVector,
                         contentDescription = icon.labelFr,
-                        tint = if (isSelected) ch.nicolab.cadence.ui.components.onColorOf(fill) else palette.inkMuted,
-                        modifier = Modifier.size(ch.nicolab.cadence.ui.theme.Size.iconLarge),
+                        tint = if (isSelected) ch.nicolab.cadence.designsystem.components.onColorOf(fill) else palette.onSurfaceVariant,
+                        modifier = Modifier.size(ch.nicolab.cadence.designsystem.theme.Size.iconLarge),
                     )
                 }
             }

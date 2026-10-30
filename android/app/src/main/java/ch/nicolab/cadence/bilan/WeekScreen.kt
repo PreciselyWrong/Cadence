@@ -12,13 +12,13 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
+import ch.nicolab.cadence.designsystem.components.EmptyState
+import ch.nicolab.cadence.designsystem.components.SectionLabel
 import ch.nicolab.cadence.domain.WeekEntry
 import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.domain.WeekStage
 import ch.nicolab.cadence.habits.HabitRow
 import ch.nicolab.cadence.ui.ScreenList
-import ch.nicolab.cadence.ui.components.EmptyState
-import ch.nicolab.cadence.ui.components.SectionLabel
 import java.time.LocalDate
 
 /**

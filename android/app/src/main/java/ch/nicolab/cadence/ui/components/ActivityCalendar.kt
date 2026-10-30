@@ -29,11 +29,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.ui.HabitLabels
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -72,7 +73,7 @@ fun CalendarPeriodSelector(
         modifier = modifier
             .fillMaxWidth()
             .clip(Radius.Pill)
-            .background(palette.sunken)
+            .background(palette.containerHigh)
             .padding(Space.xs),
         horizontalArrangement = Arrangement.spacedBy(Space.xs),
     ) {
@@ -82,7 +83,7 @@ fun CalendarPeriodSelector(
                 modifier = Modifier
                     .weight(1f)
                     .clip(Radius.Pill)
-                    .background(if (isSelected) palette.surface else Color.Transparent)
+                    .background(if (isSelected) palette.card else Color.Transparent)
                     .clickable { onSelect(period) }
                     .padding(vertical = Space.sm),
                 contentAlignment = Alignment.Center,
@@ -90,7 +91,7 @@ fun CalendarPeriodSelector(
                 Text(
                     text = stringResource(period.labelRes),
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (isSelected) palette.accent else palette.inkMuted,
+                    color = if (isSelected) palette.primary else palette.onSurfaceVariant,
                     maxLines = 1,
                 )
             }
@@ -117,10 +118,10 @@ fun ActivityCalendar(
 
     Column(modifier.testTag("activity_calendar")) {
         if (title != null) {
-            Text(title, style = MaterialTheme.typography.titleMedium, color = palette.ink)
+            Text(title, style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
         }
         if (helpText != null) {
-            Text(helpText, style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+            Text(helpText, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
         }
         if (title != null || helpText != null) {
             Spacer(Modifier.height(Space.md))
@@ -131,7 +132,7 @@ fun ActivityCalendar(
                 Text(
                     text = formatMonthTitle(yearMonth),
                     style = MaterialTheme.typography.labelLarge,
-                    color = palette.ink,
+                    color = palette.onSurface,
                 )
                 Spacer(Modifier.height(Space.xs))
             }
@@ -142,7 +143,7 @@ fun ActivityCalendar(
                         text = stringResource(HabitLabels.dayShort(day)),
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.labelSmall,
-                        color = palette.inkMuted,
+                        color = palette.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -162,13 +163,13 @@ fun ActivityCalendar(
                             val isToday = cell.date == today
                             val color = when (cell.tone) {
                                 ActivityCalendarTone.SUCCESS -> palette.success
-                                ActivityCalendarTone.SUCCESS_SOFT -> palette.successSoft
-                                ActivityCalendarTone.DANGER -> palette.danger
-                                ActivityCalendarTone.NEUTRAL -> palette.sunken
+                                ActivityCalendarTone.SUCCESS_SOFT -> palette.successContainer
+                                ActivityCalendarTone.DANGER -> palette.error
+                                ActivityCalendarTone.NEUTRAL -> palette.containerHigh
                             }
                             val textColor = when (cell.tone) {
                                 ActivityCalendarTone.SUCCESS, ActivityCalendarTone.DANGER -> onColorOf(color)
-                                else -> palette.ink
+                                else -> palette.onSurface
                             }
 
                             val containerModifier = Modifier
@@ -176,8 +177,8 @@ fun ActivityCalendar(
                                 .height(Size.touch)
                                 .clip(Radius.Control)
                                 .then(
-                                    if (isSelected) Modifier.background(palette.accentSoft)
-                                    else if (isToday) Modifier.background(palette.sunken)
+                                    if (isSelected) Modifier.background(palette.primaryContainer)
+                                    else if (isToday) Modifier.background(palette.containerHigh)
                                     else Modifier
                                 )
                                 .clickable {
@@ -219,7 +220,7 @@ fun ActivityCalendar(
             Text(
                 text = detail,
                 style = MaterialTheme.typography.bodyMedium,
-                color = palette.ink,
+                color = palette.onSurface,
                 modifier = Modifier.testTag("activity_calendar_selected_detail"),
             )
         }

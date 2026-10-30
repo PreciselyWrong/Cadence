@@ -18,15 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.PrimaryAction
-import ch.nicolab.cadence.ui.components.SecondaryAction
-import ch.nicolab.cadence.ui.components.TertiaryAction
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
 import java.time.Clock
 import kotlinx.coroutines.delay
 
@@ -79,7 +79,7 @@ internal fun TimerPanel(
         Text(
             HabitFormatter.formatValue(seconds, goal.goalType, goal.unit),
             style = MaterialTheme.typography.headlineSmall,
-            color = palette.ink,
+            color = palette.onSurface,
         )
         if (!goal.isTracker) Text(
             stringResource(
@@ -90,7 +90,7 @@ internal fun TimerPanel(
                 },
             ),
             style = MaterialTheme.typography.labelMedium,
-            color = if (attainment == GoalAttainment.TODO) palette.inkFaint else palette.success,
+            color = if (attainment == GoalAttainment.TODO) palette.outline else palette.success,
         )
         Spacer(Modifier.height(Space.md))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {

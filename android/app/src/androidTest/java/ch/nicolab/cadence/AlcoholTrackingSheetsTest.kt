@@ -12,6 +12,9 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.designsystem.theme.Appearance
+import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.ThemeMode
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.AlcoholStatsCalculator
@@ -24,7 +27,6 @@ import ch.nicolab.cadence.domain.HabitSchedule
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ScheduleMode
-import ch.nicolab.cadence.ui.theme.CadenceTheme
 import java.time.LocalDate
 import java.time.ZoneId
 import org.junit.Assert.assertEquals
@@ -44,7 +46,7 @@ class AlcoholTrackingSheetsTest {
         var todayActions = 0
 
         compose.setContent {
-            CadenceTheme(darkTheme = false) {
+            CadenceTheme(Appearance(themeMode = ThemeMode.LIGHT)) {
                 AlcoholDetailSheet(
                     item = item,
                     dismiss = {},
@@ -78,7 +80,7 @@ class AlcoholTrackingSheetsTest {
         val item = alcoholItem(today, listOf(consumption(today.minusDays(3), 2)))
 
         compose.setContent {
-            CadenceTheme(darkTheme = true) {
+            CadenceTheme(Appearance(themeMode = ThemeMode.DARK)) {
                 AlcoholStatisticsSheet(item = item, dismiss = {})
             }
         }

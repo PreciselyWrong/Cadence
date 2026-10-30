@@ -22,18 +22,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.AlcoholConsumption
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.HabitFacet
-import ch.nicolab.cadence.ui.components.Panel
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.Instant
 
 sealed interface ToCompleteItem {
@@ -143,14 +143,14 @@ fun ToCompleteRow(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = palette.ink,
+                    color = palette.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = palette.inkMuted,
+                    color = palette.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

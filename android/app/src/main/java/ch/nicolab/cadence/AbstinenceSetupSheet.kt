@@ -19,13 +19,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.FieldGroup
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.ToggleRow
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.*
-import ch.nicolab.cadence.ui.components.*
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -138,11 +147,11 @@ fun AbstinenceSetupSheet(
                             label = null,
                             progress = 0f,
                             tint = accent,
-                            trackColor = palette.hairline,
+                            trackColor = palette.outlineVariant,
                             size = Size.badge,
                         )
                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                            Text(stringResource(content.description), style = MaterialTheme.typography.bodyMedium, color = palette.inkMuted)
+                            Text(stringResource(content.description), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
                         }
                     }
                 }
@@ -176,7 +185,7 @@ fun AbstinenceSetupSheet(
                         if (!busy) timeOpen = true
                     }
                     Spacer(Modifier.height(Space.sm))
-                    Text(stringResource(R.string.abst_setup_start_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                    Text(stringResource(R.string.abst_setup_start_help), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
                 }
                 item {
                     CadenceField(reminder, { reminder = it }, stringResource(R.string.abst_setup_reminder),
@@ -190,7 +199,7 @@ fun AbstinenceSetupSheet(
                         accent,
                     ) { if (!busy) followUpTimeOpen = true }
                     Spacer(Modifier.height(Space.sm))
-                    Text(stringResource(R.string.alcohol_follow_up_time_help), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                    Text(stringResource(R.string.alcohol_follow_up_time_help), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
                 }
                 if (groups.size > 1) item {
                     FieldGroup(stringResource(R.string.habit_form_group_label)) {
@@ -200,9 +209,9 @@ fun AbstinenceSetupSheet(
                     }
                 }
                 if (stored != null) item { Text(stringResource(R.string.abst_setup_profile_locked),
-                    style = MaterialTheme.typography.bodySmall, color = palette.inkMuted) }
+                    style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant) }
                 content.notice?.let { notice -> item {
-                    Text(stringResource(notice), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted)
+                    Text(stringResource(notice), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
                 } }
             }
         }

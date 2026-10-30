@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ch.nicolab.cadence.ui.components.NavigationSpacer
-import ch.nicolab.cadence.ui.components.PageHeader
-import ch.nicolab.cadence.ui.theme.Space
+import ch.nicolab.cadence.designsystem.components.NavigationSpacer
+import ch.nicolab.cadence.designsystem.components.PageHeader
+import ch.nicolab.cadence.designsystem.theme.Space
 
 /** Ossature commune des écrans principaux : même gouttière, même en-tête, même respiration. */
 @Composable

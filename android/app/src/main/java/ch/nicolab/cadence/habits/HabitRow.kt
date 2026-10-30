@@ -40,24 +40,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.abstinenceStatus
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.HabitFacet
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.designsystem.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.habitAccent
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.LimitStatus
 import ch.nicolab.cadence.ui.HabitFormatter
-import ch.nicolab.cadence.ui.components.ChoiceChip
-import ch.nicolab.cadence.ui.components.HabitFacet
-import ch.nicolab.cadence.ui.components.Panel
-import ch.nicolab.cadence.ui.components.onColorOf
-import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
-import ch.nicolab.cadence.ui.theme.Motion
-import ch.nicolab.cadence.ui.theme.Radius
-import ch.nicolab.cadence.ui.theme.Size
-import ch.nicolab.cadence.ui.theme.Space
-import ch.nicolab.cadence.ui.theme.cadence
-import ch.nicolab.cadence.ui.theme.habitAccent
 
 /**
  * Unité fonctionnelle de l'application : une habitude, sa facette de progression,
@@ -83,7 +83,7 @@ internal fun HabitRow(
                 icon = HabitIconRegistry.getIcon(item.stored.iconId).imageVector,
                 label = HabitIconRegistry.getIcon(item.stored.iconId).labelFr,
                 progress = ratio,
-                tint = if (done) palette.inkFaint else tint,
+                tint = if (done) palette.outline else tint,
                 trackColor = tint.copy(alpha = 0.20f),
                 size = Size.badge,
             )
@@ -92,11 +92,11 @@ internal fun HabitRow(
                 Text(
                     item.stored.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (done) palette.inkMuted else palette.ink,
+                    color = if (done) palette.onSurfaceVariant else palette.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = palette.inkMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(conciseHabitStatus(item), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (actionLabel != null && action != null) {
                 Spacer(Modifier.width(Space.sm))
@@ -133,7 +133,7 @@ internal fun HabitRow(
                             .semantics { contentDescription = description },
                         contentAlignment = Alignment.Center,
                     ) {
-                        Icon(Icons.Outlined.Check, null, tint = if (actionEnabled) tint else palette.inkFaint, modifier = Modifier.size(Size.iconSm))
+                        Icon(Icons.Outlined.Check, null, tint = if (actionEnabled) tint else palette.outline, modifier = Modifier.size(Size.iconSm))
                     }
                 } else {
                     Box(
@@ -159,7 +159,7 @@ internal fun HabitRow(
                             .semantics { contentDescription = description },
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(actionLabel, style = MaterialTheme.typography.labelMedium, color = if (actionEnabled) tint else palette.inkFaint)
+                        Text(actionLabel, style = MaterialTheme.typography.labelMedium, color = if (actionEnabled) tint else palette.outline)
                     }
                 }
             }
@@ -256,13 +256,13 @@ internal fun StreakLine(streak: HabitStreak) {
                 stringResource(R.string.streak_none)
             },
             style = MaterialTheme.typography.titleMedium,
-            color = if (streak.current > 0) palette.ink else palette.inkFaint,
+            color = if (streak.current > 0) palette.onSurface else palette.outline,
         )
         if (streak.best > streak.current) {
             Text(
                 stringResource(R.string.streak_best, streak.best),
                 style = MaterialTheme.typography.bodySmall,
-                color = palette.inkFaint,
+                color = palette.outline,
             )
         }
     }

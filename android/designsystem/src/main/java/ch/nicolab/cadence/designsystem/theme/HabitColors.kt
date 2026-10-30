@@ -1,4 +1,4 @@
-package ch.nicolab.cadence.ui.theme
+package ch.nicolab.cadence.designsystem.theme
 
 val HabitColorChoices = listOf(
     0xFF5546EE.toInt(), 0xFF2E7BE8.toInt(), 0xFF0F9E86.toInt(), 0xFF3F9B32.toInt(),

@@ -1,8 +1,8 @@
-package ch.nicolab.cadence.ui
+package ch.nicolab.cadence.designsystem.theme
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
-import ch.nicolab.cadence.ui.theme.Motion
+import ch.nicolab.cadence.designsystem.theme.Motion
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
