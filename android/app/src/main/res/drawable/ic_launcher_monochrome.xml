@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon layer (Android 13+): only alpha is used. Source: docs/brand (generated geometry, do not hand-edit coordinates). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M26,40.56a2.43,2.43 0,1 0,4.86,0a2.43,2.43 0,1 0,-4.86,0z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M33.84,49.21a3.25,3.25 0,1 0,6.5,0a3.25,3.25 0,1 0,-6.5,0z" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="7.57"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M45.75,57.87L53.32,65.44L78.21,40.56" />
+</vector>
