@@ -21,6 +21,7 @@ data class TrayItem(
     val title: String,
     val colorArgb: Int?,
     val overdueDays: Int,
+    val estimateMinutes: Int? = null,
 )
 
 /**
@@ -34,8 +35,8 @@ fun trayItems(tasks: List<TaskItem>, projectColors: Map<String, Int?>, today: Lo
         .mapNotNull { task ->
             val overdue = task.dueDay?.let { ChronoUnit.DAYS.between(it, today).toInt() }
             when {
-                task.dueDate == null -> TrayItem(task.uid, task.name, projectColors[task.projectUid], 0)
-                overdue != null && overdue > 0 -> TrayItem(task.uid, task.name, projectColors[task.projectUid], overdue)
+                task.dueDate == null -> TrayItem(task.uid, task.name, projectColors[task.projectUid], 0, task.estimatedMinutes)
+                overdue != null && overdue > 0 -> TrayItem(task.uid, task.name, projectColors[task.projectUid], overdue, task.estimatedMinutes)
                 else -> null
             }
         }
