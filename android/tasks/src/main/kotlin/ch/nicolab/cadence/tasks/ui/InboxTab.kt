@@ -1,22 +1,27 @@
 package ch.nicolab.cadence.tasks.ui
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,13 +31,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SectionHeader
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -67,14 +79,11 @@ internal fun InboxTab(
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item(key = "capture") {
-            OutlinedTextField(
+            CaptureField(
                 value = capture,
                 onValueChange = { capture = it },
-                placeholder = { Text(stringResource(R.string.tasks_inbox_capture_hint)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { submit() }),
-                modifier = Modifier.fillMaxWidth().focusRequester(captureFocus),
+                onSubmit = submit,
+                modifier = Modifier.padding(bottom = Space.md).focusRequester(captureFocus),
             )
         }
         if (entries.isEmpty()) {
@@ -82,6 +91,7 @@ internal fun InboxTab(
         }
         items(entries, key = { it.uid }) { entry ->
             InboxRow(
+                modifier = Modifier.padding(bottom = Space.sm),
                 entry = entry,
                 onConvert = { converting = entry },
                 onDelete = { viewModel.deleteInboxItem(entry.uid) },
@@ -102,21 +112,86 @@ internal fun InboxTab(
     }
 }
 
+/** Champ de capture rempli et arrondi, avec un bouton d'envoi rond : le clavier valide aussi. */
 @Composable
-private fun InboxRow(entry: InboxEntry, onConvert: () -> Unit, onDelete: () -> Unit) {
-    Column(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+private fun CaptureField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val palette = cadence
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clip(Radius.Pill)
+            .background(palette.containerHigh)
+            .padding(start = Space.lg),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.weight(1f)) {
+            if (value.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.tasks_inbox_capture_hint),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = palette.outline,
+                )
+            }
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                singleLine = true,
+                textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
+                cursorBrush = SolidColor(palette.primary),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                keyboardActions = KeyboardActions(onSend = { onSubmit() }),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        RoundHeaderButton(
+            icon = Icons.AutoMirrored.Outlined.Send,
+            contentDescription = stringResource(R.string.tasks_inbox_capture_send),
+            style = if (value.isBlank()) HeaderButtonStyle.Plain else HeaderButtonStyle.Filled,
+            onClick = onSubmit,
+        )
+    }
+}
+
+/** Entrée de la boîte : carte arrondie, titre sur deux lignes au plus, actions icône de 48 dp. */
+@Composable
+private fun InboxRow(entry: InboxEntry, onConvert: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+    val palette = cadence
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clip(Radius.Card)
+            .background(palette.card)
+            .heightIn(min = Size.settingRow)
+            .padding(start = Space.lg),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
         Text(
             text = entry.content,
             style = MaterialTheme.typography.bodyLarge,
-            maxLines = 3,
+            color = palette.onSurface,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f).padding(vertical = Space.md),
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onConvert) { Text(stringResource(R.string.tasks_inbox_convert)) }
-            Spacer(Modifier.weight(1f))
-            IconButton(onClick = onDelete) {
-                Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.tasks_action_delete))
-            }
+        IconButton(onClick = onConvert, modifier = Modifier.size(Size.touch)) {
+            Icon(
+                Icons.Outlined.TaskAlt,
+                contentDescription = stringResource(R.string.tasks_inbox_convert),
+                tint = palette.primary,
+            )
+        }
+        IconButton(onClick = onDelete, modifier = Modifier.size(Size.touch)) {
+            Icon(
+                Icons.Outlined.Delete,
+                contentDescription = stringResource(R.string.tasks_action_delete),
+                tint = palette.onSurfaceVariant,
+            )
         }
     }
 }

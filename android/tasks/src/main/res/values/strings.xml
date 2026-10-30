@@ -41,6 +41,7 @@
 
     <string name="tasks_inbox_capture_hint">Capturer une idée…</string>
     <string name="tasks_inbox_empty">La boîte de réception est vide.</string>
+    <string name="tasks_inbox_capture_send">Ajouter à la boîte</string>
     <string name="tasks_inbox_convert">Convertir en tâche</string>
     <string name="tasks_projects_empty">Aucun projet pour l\'instant.</string>
     <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>
