@@ -3163,6 +3163,13 @@
     "whatNext": "오늘 무엇을 할 수 있을까요?",
     "whatNextOn": "{{date}}에 무엇을 할 수 있을까요?",
     "dueThatDay": "그날 마감",
+    "yesterday": "어제",
+    "backToToday": "오늘로 돌아가기",
+    "noTimeYetOn": "{{date}}, 아직 시간 없음",
+    "reviewTitle": "{{date}}에 한 일",
+    "reviewNothingDone": "그날 완료된 항목이 없습니다.",
+    "reviewDoneCount": "완료: {{count}}",
+    "reviewNotDone": "계획했지만 하지 않음",
     "browse": "둘러보기",
     "showMore": "{{count}}개 더 보기",
     "countOf": {

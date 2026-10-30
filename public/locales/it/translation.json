@@ -3171,6 +3171,13 @@
     "whatNext": "Cosa potresti fare oggi?",
     "whatNextOn": "Cosa potresti fare il {{date}}?",
     "dueThatDay": "In scadenza quel giorno",
+    "yesterday": "Ieri",
+    "backToToday": "Torna a oggi",
+    "noTimeYetOn": "{{date}}, ancora senza orario",
+    "reviewTitle": "Cosa hai fatto il {{date}}",
+    "reviewNothingDone": "Niente completato quel giorno.",
+    "reviewDoneCount": "Fatto: {{count}}",
+    "reviewNotDone": "Pianificato, non fatto",
     "browse": "Sfoglia",
     "showMore": "Mostra altre {{count}}",
     "countOf": {

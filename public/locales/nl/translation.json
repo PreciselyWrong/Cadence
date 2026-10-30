@@ -3165,6 +3165,13 @@
     "whatNext": "Wat zou je vandaag kunnen doen?",
     "whatNextOn": "Wat zou je op {{date}} kunnen doen?",
     "dueThatDay": "Die dag te doen",
+    "yesterday": "Gisteren",
+    "backToToday": "Terug naar vandaag",
+    "noTimeYetOn": "{{date}}, nog geen tijd",
+    "reviewTitle": "Wat je deed op {{date}}",
+    "reviewNothingDone": "Niets voltooid op die dag.",
+    "reviewDoneCount": "Gedaan: {{count}}",
+    "reviewNotDone": "Gepland, niet gedaan",
     "browse": "Bladeren",
     "showMore": "Nog {{count}} tonen",
     "countOf": {

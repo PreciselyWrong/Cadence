@@ -40,6 +40,8 @@ interface DayTimelineProps {
     hiddenEarlier?: CalendarBlock[];
     hiddenLater?: CalendarBlock[];
     onShowAllHours?: () => void;
+    // The shown day's name while browsing another day; empty on today.
+    dayLabel?: string;
 }
 
 interface BlockProps {
@@ -192,6 +194,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
     hiddenEarlier = [],
     hiddenLater = [],
     onShowAllHours,
+    dayLabel = '',
 }) => {
     const { t } = useTranslation();
     const { setNodeRef, isOver } = useDroppable({ id: 'timeline' });
@@ -383,6 +386,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                     items={items.filter((item) => item.start_minute === null)}
                     onRemove={onRemove}
                     onReschedule={onReschedule}
+                    dayLabel={dayLabel}
                 />
             )}
         </div>
@@ -463,12 +467,17 @@ const UnscheduledTray: React.FC<{
     items: DailyPlanItem[];
     onRemove: (taskUid: string) => void;
     onReschedule: (task: Task, when: RescheduleWhen) => void;
-}> = ({ items, onRemove, onReschedule }) => {
+    dayLabel?: string;
+}> = ({ items, onRemove, onReschedule, dayLabel = '' }) => {
     const { t } = useTranslation();
     return (
         <div className="ml-14 flex flex-col gap-2 rounded-lg bg-gray-50 p-3 dark:bg-gray-800/40">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                {t('dailyPlan.noTimeYet', 'Today, no time yet')}
+                {dayLabel
+                    ? t('dailyPlan.noTimeYetOn', '{{date}}, no time yet', {
+                          date: dayLabel,
+                      })
+                    : t('dailyPlan.noTimeYet', 'Today, no time yet')}
             </p>
             <SortableContext
                 items={items.map((item) => `item:${item.task_uid}`)}

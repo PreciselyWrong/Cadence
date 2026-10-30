@@ -3165,6 +3165,13 @@
     "whatNext": "Mitä voisit tehdä tänään?",
     "whatNextOn": "Mitä voisit tehdä {{date}}?",
     "dueThatDay": "Erääntyy sinä päivänä",
+    "yesterday": "Eilen",
+    "backToToday": "Takaisin tähän päivään",
+    "noTimeYetOn": "{{date}}, ei vielä aikaa",
+    "reviewTitle": "Mitä teit {{date}}",
+    "reviewNothingDone": "Mitään ei valmistunut sinä päivänä.",
+    "reviewDoneCount": "Valmis: {{count}}",
+    "reviewNotDone": "Suunniteltu, ei tehty",
     "browse": "Selaa",
     "showMore": "Näytä {{count}} lisää",
     "countOf": {

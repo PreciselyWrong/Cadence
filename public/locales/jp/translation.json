@@ -3163,6 +3163,13 @@
     "whatNext": "今日は何ができそうですか?",
     "whatNextOn": "{{date}}に何ができますか？",
     "dueThatDay": "その日が期限",
+    "yesterday": "昨日",
+    "backToToday": "今日に戻る",
+    "noTimeYetOn": "{{date}}、時間未定",
+    "reviewTitle": "{{date}}にしたこと",
+    "reviewNothingDone": "その日は何も完了していません。",
+    "reviewDoneCount": "完了: {{count}}",
+    "reviewNotDone": "予定したが未完了",
     "browse": "見る",
     "showMore": "さらに {{count}} 件表示",
     "countOf": {

@@ -3179,6 +3179,13 @@
     "whatNext": "Kaj bi lahko naredil danes?",
     "whatNextOn": "Kaj bi lahko naredili {{date}}?",
     "dueThatDay": "Rok na ta dan",
+    "yesterday": "Včeraj",
+    "backToToday": "Nazaj na danes",
+    "noTimeYetOn": "{{date}}, še brez ure",
+    "reviewTitle": "Kaj ste naredili {{date}}",
+    "reviewNothingDone": "Tisti dan ni bilo nič dokončano.",
+    "reviewDoneCount": "Opravljeno: {{count}}",
+    "reviewNotDone": "Načrtovano, neopravljeno",
     "browse": "Prebrskaj",
     "showMore": "Pokaži še {{count}}",
     "countOf": {

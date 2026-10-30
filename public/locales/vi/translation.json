@@ -3163,6 +3163,13 @@
     "whatNext": "Hôm nay bạn có thể làm gì?",
     "whatNextOn": "Bạn có thể làm gì vào {{date}}?",
     "dueThatDay": "Đến hạn ngày đó",
+    "yesterday": "Hôm qua",
+    "backToToday": "Quay về hôm nay",
+    "noTimeYetOn": "{{date}}, chưa có giờ",
+    "reviewTitle": "Những gì bạn đã làm vào {{date}}",
+    "reviewNothingDone": "Không có gì hoàn thành ngày đó.",
+    "reviewDoneCount": "Đã xong: {{count}}",
+    "reviewNotDone": "Đã lên kế hoạch, chưa làm",
     "browse": "Duyệt",
     "showMore": "Hiện thêm {{count}}",
     "countOf": {

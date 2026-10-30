@@ -3184,6 +3184,13 @@
         "whatNext": "Čo by ste mohli dnes urobiť?",
         "whatNextOn": "Čo by ste mohli urobiť {{date}}?",
         "dueThatDay": "Termín v ten deň",
+        "yesterday": "Včera",
+        "backToToday": "Späť na dnes",
+        "noTimeYetOn": "{{date}}, zatiaľ bez času",
+        "reviewTitle": "Čo ste urobili {{date}}",
+        "reviewNothingDone": "V ten deň nebolo nič dokončené.",
+        "reviewDoneCount": "Hotovo: {{count}}",
+        "reviewNotDone": "Naplánované, neurobené",
         "browse": "Prehľadávať",
         "showMore": "Zobraziť ďalšie ({{count}})",
         "countOf": {

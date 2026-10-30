@@ -3163,6 +3163,13 @@
     "whatNext": "今天可以做些什么?",
     "whatNextOn": "{{date}}你可以做什么？",
     "dueThatDay": "当天到期",
+    "yesterday": "昨天",
+    "backToToday": "回到今天",
+    "noTimeYetOn": "{{date}}，暂无时间",
+    "reviewTitle": "{{date}} 完成的事",
+    "reviewNothingDone": "那天没有完成任何事。",
+    "reviewDoneCount": "已完成：{{count}}",
+    "reviewNotDone": "已计划，未完成",
     "browse": "浏览",
     "showMore": "再显示 {{count}} 个",
     "countOf": {

@@ -64,6 +64,12 @@ const renderList = (
     );
 
 describe('CandidateList', () => {
+    it('labels cards due on another day "Due that day", not "Due today"', () => {
+        renderList(candidates, { isToday: false, dayLabel: 'Friday' });
+        expect(screen.queryByText(/Due today/)).not.toBeInTheDocument();
+        expect(screen.getAllByText(/Due that day/).length).toBeGreaterThan(0);
+    });
+
     it('shows overdue, due today, in progress, then the rest', () => {
         renderList();
         const names = screen

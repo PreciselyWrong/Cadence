@@ -3179,6 +3179,13 @@
     "whatNext": "Що ви могли б зробити сьогодні?",
     "whatNextOn": "Що ви могли б зробити {{date}}?",
     "dueThatDay": "Термін цього дня",
+    "yesterday": "Учора",
+    "backToToday": "Повернутися до сьогодні",
+    "noTimeYetOn": "{{date}}, час ще не задано",
+    "reviewTitle": "Що ви зробили {{date}}",
+    "reviewNothingDone": "Цього дня нічого не завершено.",
+    "reviewDoneCount": "Зроблено: {{count}}",
+    "reviewNotDone": "Заплановано, не зроблено",
     "browse": "Огляд",
     "showMore": "Показати ще {{count}}",
     "countOf": {

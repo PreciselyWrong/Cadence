@@ -3170,6 +3170,13 @@
     "whatNext": "Hva kunne du gjort i dag?",
     "whatNextOn": "Hva kunne du gjort {{date}}?",
     "dueThatDay": "Forfaller den dagen",
+    "yesterday": "I går",
+    "backToToday": "Tilbake til i dag",
+    "noTimeYetOn": "{{date}}, ikke noe tidspunkt ennå",
+    "reviewTitle": "Hva du gjorde {{date}}",
+    "reviewNothingDone": "Ingenting fullført den dagen.",
+    "reviewDoneCount": "Fullført: {{count}}",
+    "reviewNotDone": "Planlagt, ikke gjort",
     "browse": "Bla gjennom",
     "showMore": "Vis {{count}} til",
     "countOf": {

@@ -3,6 +3,7 @@ import {
     busyMinutes,
     clampDayHours,
     dayRange,
+    feedEventsToBlocks,
     findFreeSlot,
     formatDuration,
     formatMinute,
@@ -13,6 +14,7 @@ import {
 } from '../planUtils';
 import { DailyPlanItem } from '../../../utils/dailyPlanService';
 import { CalendarEvent } from '../../../utils/calendarFeedsService';
+import { countOutside } from '../../Calendar/visibleHours';
 
 const item = (
     uid: string,
@@ -240,5 +242,43 @@ describe('tasksOnDay', () => {
             span,
             deferred,
         ]);
+    });
+});
+
+describe('feedEventsToBlocks', () => {
+    const feed = (uid: string, start: number, end: number, extra = {}) =>
+        ({
+            uid,
+            title: uid,
+            all_day: false,
+            busy: true,
+            start: '',
+            end: '',
+            start_minute: start,
+            end_minute: end,
+            feed_uid: 'f',
+            feed_name: 'Feed',
+            color: null,
+            ...extra,
+        }) as CalendarEvent;
+
+    it('counts feed and Google events outside the visible hours', () => {
+        const day = new Date(2026, 9, 30);
+        const blocks = feedEventsToBlocks(
+            [
+                feed('early', 7 * 60, 7 * 60 + 30),
+                feed('inside', 10 * 60, 11 * 60),
+                feed('late', 19 * 60, 20 * 60, { source: 'google' }),
+                feed('overnight', 22 * 60, 24 * 60),
+                feed('allday', 0, 24 * 60, { all_day: true }),
+            ],
+            day
+        );
+        const { before, after } = countOutside(blocks, day, {
+            start: 9,
+            end: 17,
+        });
+        expect(before.map((b) => b.title)).toEqual(['early']);
+        expect(after.map((b) => b.title)).toEqual(['late', 'overnight']);
     });
 });

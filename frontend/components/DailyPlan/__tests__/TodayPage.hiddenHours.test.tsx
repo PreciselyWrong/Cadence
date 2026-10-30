@@ -211,4 +211,72 @@ describe('TodayPage planning mode: hidden hours', () => {
         await waitFor(() => expect(timelineStart()).toBe(0));
         expect(screen.queryByText('1 later')).not.toBeInTheDocument();
     });
+
+    it('counts calendar feed and Google events outside the visible hours', async () => {
+        (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+            date: TODAY,
+            events: [
+                {
+                    uid: 'gym',
+                    title: 'Gym',
+                    all_day: false,
+                    busy: true,
+                    start: `${TODAY}T06:00:00Z`,
+                    end: `${TODAY}T07:00:00Z`,
+                    start_minute: 360,
+                    end_minute: 420,
+                    feed_uid: 'f',
+                    feed_name: 'Feed',
+                    color: null,
+                },
+                {
+                    uid: 'dinner',
+                    title: 'Dinner',
+                    all_day: false,
+                    busy: true,
+                    start: `${TODAY}T20:00:00Z`,
+                    end: `${TODAY}T21:00:00Z`,
+                    start_minute: 1200,
+                    end_minute: 1260,
+                    feed_uid: 'g',
+                    feed_name: 'Google',
+                    color: null,
+                    source: 'google',
+                },
+            ],
+            errors: [],
+        });
+        render(<TodayPage />);
+
+        expect(await screen.findByText('2 earlier')).toBeInTheDocument();
+        expect(screen.getByText('2 later')).toBeInTheDocument();
+        expect(timelineStart()).toBe(9 * 60);
+    });
+
+    it('reviews a past day: relative label and a done summary, no suggestions', async () => {
+        const d = new Date(`${TODAY}T12:00:00Z`);
+        d.setUTCDate(d.getUTCDate() - 1);
+        const YESTERDAY = d.toISOString().slice(0, 10);
+        mockSearch = `?date=${YESTERDAY}`;
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: YESTERDAY,
+            plan: {
+                uid: 'p',
+                date: YESTERDAY,
+                started_at: null,
+                items: [
+                    { ...planned, task: { ...planned.task, status: 'done' } },
+                ],
+            },
+        });
+        render(<TodayPage />);
+
+        expect(await screen.findByTestId('day-review')).toBeInTheDocument();
+        expect(screen.getByTestId('day-label')).toHaveTextContent('Yesterday');
+        expect(screen.getByText('Done: 1')).toBeInTheDocument();
+        expect(
+            screen.queryByText('What could you do today?')
+        ).not.toBeInTheDocument();
+        expect(screen.getByTestId('day-timeline')).toBeInTheDocument();
+    });
 });

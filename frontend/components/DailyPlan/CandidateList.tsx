@@ -82,6 +82,7 @@ interface CandidateCardProps {
     duration: number;
     suggested?: number | null;
     today: string;
+    isToday?: boolean;
     onDurationChange: (minutes: number) => void;
     onAdd: () => void;
     onComplete: () => void;
@@ -98,6 +99,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     duration,
     suggested = null,
     today,
+    isToday = true,
     onDurationChange,
     onAdd,
     onComplete,
@@ -113,7 +115,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     const labels: Record<TaskGroupKey, string> = {
         tagged_today: t('dailyPlan.taggedToday', 'Tagged #today'),
         overdue: t('dailyPlan.overdue', 'Overdue'),
-        due_today: t('dailyPlan.dueToday', 'Due today'),
+        due_today: isToday
+            ? t('dailyPlan.dueToday', 'Due today')
+            : t('dailyPlan.dueThatDay', 'Due that day'),
         in_progress: t('dailyPlan.inProgress', 'In progress'),
         suggested: t('dailyPlan.suggested', 'Suggested'),
     };
@@ -439,6 +443,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                 key={task.uid}
                                 task={task}
                                 group={group}
+                                isToday={isToday}
                                 duration={
                                     durations[task.uid as string] ??
                                     taskLength(task) ??

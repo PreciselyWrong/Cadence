@@ -3514,6 +3514,13 @@
     "whatNext": "What could you do today?",
     "whatNextOn": "What could you do on {{date}}?",
     "dueThatDay": "Due that day",
+    "yesterday": "Yesterday",
+    "backToToday": "Back to today",
+    "noTimeYetOn": "{{date}}, no time yet",
+    "reviewTitle": "What you did on {{date}}",
+    "reviewNothingDone": "Nothing completed that day.",
+    "reviewDoneCount": "Done: {{count}}",
+    "reviewNotDone": "Planned, not done",
     "browse": "Browse",
     "showMore": "Show {{count}} more",
     "countOf": {

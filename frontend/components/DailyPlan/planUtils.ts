@@ -4,6 +4,7 @@ import { isTaskDone } from '../../constants/taskStatus';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { DailyPlanItem, DayHours } from '../../utils/dailyPlanService';
 import { VisibleHours } from '../Calendar/visibleHours';
+import type { CalendarEvent as CalendarBlock } from '../Calendar/taskEvents';
 
 export const DURATION_OPTIONS = [15, 30, 60, 120];
 export const DEFAULT_DURATION = 30;
@@ -348,3 +349,40 @@ export const tasksOnDay = <
         if (due && start && start <= day && day <= due) return true;
         return task.defer_until?.slice(0, 10) === day;
     });
+
+// Timed feed and Google events of `day` as calendar blocks, so they count in
+// the earlier/later hidden-hours bars like timed tasks. Their minutes are
+// already relative to the shown day (an event running past midnight ends at
+// 24:00); all-day events are not hours and are left out.
+export const feedEventsToBlocks = (
+    events: CalendarEvent[],
+    day: Date
+): CalendarBlock[] =>
+    events
+        .filter(
+            (event) =>
+                !event.all_day &&
+                event.start_minute !== null &&
+                event.end_minute !== null
+        )
+        .map((event) => {
+            const at = (minute: number) => {
+                const date = new Date(day);
+                date.setHours(0, minute, 0, 0);
+                return date;
+            };
+            return {
+                id: `feed-${event.uid}`,
+                title: event.title,
+                start: at(event.start_minute as number),
+                end: at(
+                    Math.max(
+                        event.end_minute as number,
+                        (event.start_minute as number) + 1
+                    )
+                ),
+                type: 'event' as const,
+                color: event.color ?? undefined,
+                feedUid: event.feed_uid,
+            };
+        });

@@ -3163,6 +3163,13 @@
     "whatNext": "Apa yang bisa kamu kerjakan hari ini?",
     "whatNextOn": "Apa yang bisa Anda lakukan pada {{date}}?",
     "dueThatDay": "Jatuh tempo hari itu",
+    "yesterday": "Kemarin",
+    "backToToday": "Kembali ke hari ini",
+    "noTimeYetOn": "{{date}}, belum ada waktu",
+    "reviewTitle": "Yang kamu lakukan pada {{date}}",
+    "reviewNothingDone": "Tidak ada yang selesai hari itu.",
+    "reviewDoneCount": "Selesai: {{count}}",
+    "reviewNotDone": "Direncanakan, belum selesai",
     "browse": "Jelajahi",
     "showMore": "Tampilkan {{count}} lagi",
     "countOf": {

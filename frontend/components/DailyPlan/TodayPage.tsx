@@ -69,7 +69,7 @@ import { getUserTimezone } from '../../utils/dateUtils';
 import { isHabitDoneForNow } from '../../utils/habitUtils';
 import { TASK_STATUS, isTaskDone } from '../../constants/taskStatus';
 import { countOutside } from '../Calendar/visibleHours';
-import { parseISO } from 'date-fns';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { useToast } from '../Shared/ToastContext';
 import { useStore } from '../../store/useStore';
 import { useDailyPlanProgress } from '../../store/dailyPlanStore';
@@ -84,6 +84,7 @@ import {
 import PlanTips from './PlanTips';
 import NowCard from './NowCard';
 import WrapUpCard from './WrapUpCard';
+import DayReview from './DayReview';
 import { useDailyQuote } from './useDailyQuote';
 import { buildTips, rescheduleMissed } from './tips';
 import CandidateList, { CandidateFilter } from './CandidateList';
@@ -125,6 +126,7 @@ import {
     taskLength,
     tasksOnDay,
     intlLocale,
+    feedEventsToBlocks,
 } from './planUtils';
 
 type Mode = 'timeline' | 'list';
@@ -663,13 +665,29 @@ const TodayPage: React.FC = () => {
         () => new Map(items.map((item) => [item.task_uid, item])),
         [items]
     );
+    // Feed and Google events entirely outside the visible hours stay in the
+    // earlier/later bars instead of widening the timeline.
+    const shownFeedEvents = useMemo(
+        () =>
+            showAllHours
+                ? feedEvents
+                : feedEvents.filter(
+                      (event) =>
+                          event.all_day ||
+                          event.start_minute === null ||
+                          ((event.end_minute ?? event.start_minute) >
+                              visibleHours.start * 60 &&
+                              event.start_minute < visibleHours.end * 60)
+                  ),
+        [feedEvents, showAllHours, visibleHours]
+    );
     const range = useMemo(
         () =>
             showAllHours
                 ? dayRange(items, feedEvents, { start: 0, end: 24 * 60 })
                 : dayRange(
                       items,
-                      feedEvents,
+                      shownFeedEvents,
                       clampDayHours(
                           dayHours ?? {
                               start: DEFAULT_DAY_START,
@@ -678,12 +696,19 @@ const TodayPage: React.FC = () => {
                           visibleHours
                       )
                   ),
-        [items, feedEvents, dayHours, visibleHours, showAllHours]
+        [
+            items,
+            feedEvents,
+            shownFeedEvents,
+            dayHours,
+            visibleHours,
+            showAllHours,
+        ]
     );
     // The day's calendar events plus its open timed tasks that are not in
     // the plan, so the day view shows both (one source: taskToEvents).
     const dayEvents = useMemo<CalendarEvent[]>(() => {
-        if (!date) return feedEvents;
+        if (!date) return shownFeedEvents;
         const minuteOf = (d: Date) => d.getHours() * 60 + d.getMinutes();
         const taskEvents = dayTasks
             .filter(
@@ -718,8 +743,8 @@ const TodayPage: React.FC = () => {
                     (e.end_minute as number) > range.start &&
                     (e.start_minute as number) < range.end
             );
-        return [...feedEvents, ...taskEvents];
-    }, [dayTasks, feedEvents, plannedMap, date, range]);
+        return [...shownFeedEvents, ...taskEvents];
+    }, [dayTasks, shownFeedEvents, plannedMap, date, range]);
     const freeMinutes = Math.max(
         0,
         range.end - range.start - busyMinutes(dayEvents, range)
@@ -734,12 +759,14 @@ const TodayPage: React.FC = () => {
                     !isTaskDone(task.status)
             )
             .flatMap((task) => taskToEvents(task as unknown as CalendarTask));
+        const day = date ? parseISO(date) : new Date();
+        // Calendar feed and Google events outside the hours count too.
         return countOutside(
-            unplanned,
-            date ? parseISO(date) : new Date(),
+            [...unplanned, ...feedEventsToBlocks(feedEvents, day)],
+            day,
             visibleHours
         );
-    }, [dayTasks, plannedMap, date, visibleHours]);
+    }, [dayTasks, feedEvents, plannedMap, date, visibleHours]);
     const restrictedHours = visibleHours.start > 0 || visibleHours.end < 24;
 
     const setMode = (next: Mode) => {
@@ -1511,6 +1538,17 @@ const TodayPage: React.FC = () => {
               day: 'numeric',
           }).format(new Date(`${date}T12:00:00`))
         : '';
+    // Adjacent days read "Yesterday" / "Tomorrow"; others keep the date.
+    const dayOffset = date
+        ? differenceInCalendarDays(parseISO(date), parseISO(todayString()))
+        : 0;
+    const relativeLabel =
+        dayOffset === -1
+            ? t('dailyPlan.yesterday', 'Yesterday')
+            : dayOffset === 1
+              ? t('dailyPlan.tomorrow', 'Tomorrow')
+              : '';
+    const isPast = !!date && dayOffset < 0;
     const overBooked = planned > freeMinutes;
     const doneCount = items.filter(isItemDone).length;
     const minutesLeft = items
@@ -1560,7 +1598,16 @@ const TodayPage: React.FC = () => {
                             className="text-2xl font-light"
                             data-testid="day-label"
                         >
-                            {dateLabel}
+                            {relativeLabel ? (
+                                <>
+                                    {relativeLabel}
+                                    <span className="ml-2 text-base text-gray-500 dark:text-gray-400">
+                                        {dateLabel}
+                                    </span>
+                                </>
+                            ) : (
+                                dateLabel
+                            )}
                         </h2>
                         <button
                             type="button"
@@ -1886,33 +1933,42 @@ const TodayPage: React.FC = () => {
                                     />
                                 </div>
                             )}
-                            <CandidateList
-                                candidates={candidates}
-                                planned={plannedMap}
-                                filter={filter}
-                                onFilterChange={setFilter}
-                                durations={durations}
-                                aiEstimates={aiEnabled ? aiEstimates : {}}
-                                onDurationChange={(uid, minutes) =>
-                                    setDurations((d) => ({
-                                        ...d,
-                                        [uid]: minutes,
-                                    }))
-                                }
-                                onAdd={(task) => addTask(task)}
-                                onComplete={completeCandidate}
-                                onRemove={removeItem}
-                                onReschedule={handleReschedule}
-                                onDrop={handleDrop}
-                                onAddInbox={handleAddInbox}
-                                onLoadMore={
-                                    isToday ? loadMoreCandidates : undefined
-                                }
-                                loadingMore={loadingMore}
-                                today={date ?? ''}
-                                isToday={isToday}
-                                dayLabel={dateLabel}
-                            />
+                            {isPast && date ? (
+                                <DayReview
+                                    date={date}
+                                    dayLabel={relativeLabel || dateLabel}
+                                    items={items}
+                                    dayTasks={dayTasks}
+                                />
+                            ) : (
+                                <CandidateList
+                                    candidates={candidates}
+                                    planned={plannedMap}
+                                    filter={filter}
+                                    onFilterChange={setFilter}
+                                    durations={durations}
+                                    aiEstimates={aiEnabled ? aiEstimates : {}}
+                                    onDurationChange={(uid, minutes) =>
+                                        setDurations((d) => ({
+                                            ...d,
+                                            [uid]: minutes,
+                                        }))
+                                    }
+                                    onAdd={(task) => addTask(task)}
+                                    onComplete={completeCandidate}
+                                    onRemove={removeItem}
+                                    onReschedule={handleReschedule}
+                                    onDrop={handleDrop}
+                                    onAddInbox={handleAddInbox}
+                                    onLoadMore={
+                                        isToday ? loadMoreCandidates : undefined
+                                    }
+                                    loadingMore={loadingMore}
+                                    today={date ?? ''}
+                                    isToday={isToday}
+                                    dayLabel={dateLabel}
+                                />
+                            )}
                             {isMinimal && (
                                 <CompletedTasksSection
                                     list="today"
@@ -2010,12 +2066,25 @@ const TodayPage: React.FC = () => {
                                             type="button"
                                             onClick={goToToday}
                                             disabled={isToday}
-                                            className="min-h-[30px] rounded-lg px-3 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                                            className={`min-h-[30px] rounded-lg px-3 text-xs font-medium ${
+                                                isToday
+                                                    ? 'text-gray-700 hover:bg-gray-100 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-gray-800'
+                                                    : 'bg-blue-50 text-blue-700 ring-1 ring-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:ring-blue-800 dark:hover:bg-blue-900/50'
+                                            }`}
+                                            title={
+                                                isToday
+                                                    ? undefined
+                                                    : t(
+                                                          'dailyPlan.backToToday',
+                                                          'Back to today'
+                                                      )
+                                            }
                                             data-testid="panel-today"
                                         >
                                             {isToday
                                                 ? t('tasks.today', 'Today')
-                                                : shortDateLabel}
+                                                : relativeLabel ||
+                                                  shortDateLabel}
                                         </button>
                                         <button
                                             type="button"
@@ -2212,6 +2281,12 @@ const TodayPage: React.FC = () => {
                                                 }
                                                 onShowAllHours={() =>
                                                     setShowAllHours(true)
+                                                }
+                                                dayLabel={
+                                                    isToday
+                                                        ? ''
+                                                        : relativeLabel ||
+                                                          shortDateLabel
                                                 }
                                                 onReschedule={handleReschedule}
                                             />

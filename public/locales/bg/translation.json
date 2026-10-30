@@ -3165,6 +3165,13 @@
     "whatNext": "Какво би могъл да направиш днес?",
     "whatNextOn": "Какво бихте могли да направите на {{date}}?",
     "dueThatDay": "С краен срок този ден",
+    "yesterday": "Вчера",
+    "backToToday": "Обратно към днес",
+    "noTimeYetOn": "{{date}}, все още без час",
+    "reviewTitle": "Какво направихте на {{date}}",
+    "reviewNothingDone": "Нищо не е завършено този ден.",
+    "reviewDoneCount": "Готово: {{count}}",
+    "reviewNotDone": "Планирано, несвършено",
     "browse": "Разгледай",
     "showMore": "Покажи още {{count}}",
     "countOf": {

@@ -3165,6 +3165,13 @@
     "whatNext": "Bugün ne yapabilirsin?",
     "whatNextOn": "{{date}} günü ne yapabilirsin?",
     "dueThatDay": "O gün vadesi dolan",
+    "yesterday": "Dün",
+    "backToToday": "Bugüne dön",
+    "noTimeYetOn": "{{date}}, henüz saat yok",
+    "reviewTitle": "{{date}} tarihinde yaptıkların",
+    "reviewNothingDone": "O gün hiçbir şey tamamlanmadı.",
+    "reviewDoneCount": "Tamamlanan: {{count}}",
+    "reviewNotDone": "Planlandı, yapılmadı",
     "browse": "Göz at",
     "showMore": "{{count}} tane daha göster",
     "countOf": {

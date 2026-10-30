@@ -220,12 +220,6 @@ describe('TodayPage routing and panel mode', () => {
     });
 
     it('names the shown day in the calendar pane, not "Today", on another day', async () => {
-        const short = (day: string) =>
-            new Intl.DateTimeFormat('en', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric',
-            }).format(new Date(`${day}T12:00:00`));
         renderAt('/today');
         await screen.findByText('Pay invoice');
         expect(screen.getByTestId('panel-today')).toHaveTextContent(/^Today$/);
@@ -237,8 +231,13 @@ describe('TodayPage routing and panel mode', () => {
 
         await waitFor(() =>
             expect(screen.getByTestId('panel-today')).toHaveTextContent(
-                short(NEXT)
+                /^Tomorrow$/
             )
+        );
+        expect(screen.getByTestId('day-label')).toHaveTextContent(/^Tomorrow/);
+        // Highlighted, so it does not look disabled.
+        expect(screen.getByTestId('panel-today').className).toMatch(
+            /bg-blue-50/
         );
         expect(screen.getByTestId('panel-today')).not.toBeDisabled();
         expect(

@@ -3166,6 +3166,13 @@
     "whatNext": "Τι θα μπορούσες να κάνεις σήμερα;",
     "whatNextOn": "Τι θα μπορούσατε να κάνετε στις {{date}};",
     "dueThatDay": "Λήγει εκείνη την ημέρα",
+    "yesterday": "Χθες",
+    "backToToday": "Επιστροφή στο σήμερα",
+    "noTimeYetOn": "{{date}}, χωρίς ώρα ακόμα",
+    "reviewTitle": "Τι κάνατε στις {{date}}",
+    "reviewNothingDone": "Τίποτα δεν ολοκληρώθηκε εκείνη τη μέρα.",
+    "reviewDoneCount": "Ολοκληρώθηκαν: {{count}}",
+    "reviewNotDone": "Προγραμματισμένα, όχι ολοκληρωμένα",
     "browse": "Περιήγηση",
     "showMore": "Εμφάνιση {{count}} ακόμη",
     "countOf": {

@@ -3174,6 +3174,13 @@
     "whatNext": "Ce ai putea face azi?",
     "whatNextOn": "Ce ai putea face pe {{date}}?",
     "dueThatDay": "Scadent în acea zi",
+    "yesterday": "Ieri",
+    "backToToday": "Înapoi la azi",
+    "noTimeYetOn": "{{date}}, încă fără oră",
+    "reviewTitle": "Ce ai făcut pe {{date}}",
+    "reviewNothingDone": "Nimic finalizat în acea zi.",
+    "reviewDoneCount": "Finalizat: {{count}}",
+    "reviewNotDone": "Planificat, nefăcut",
     "browse": "Răsfoiește",
     "showMore": "Arată încă {{count}}",
     "countOf": {

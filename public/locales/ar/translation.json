@@ -3193,6 +3193,13 @@
     "whatNext": "ماذا يمكنك أن تفعل اليوم؟",
     "whatNextOn": "ماذا يمكنك أن تفعل يوم {{date}}؟",
     "dueThatDay": "مستحقة في ذلك اليوم",
+    "yesterday": "أمس",
+    "backToToday": "العودة إلى اليوم",
+    "noTimeYetOn": "{{date}}، بدون وقت بعد",
+    "reviewTitle": "ما أنجزته في {{date}}",
+    "reviewNothingDone": "لم يُنجز شيء في ذلك اليوم.",
+    "reviewDoneCount": "مُنجز: {{count}}",
+    "reviewNotDone": "مخطط، لم يُنجز",
     "browse": "تصفّح",
     "showMore": "اعرض {{count}} أخرى",
     "countOf": {
