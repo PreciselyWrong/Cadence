@@ -2,6 +2,7 @@
 
 const tagsRepository = require('./repository');
 const { validateTagName } = require('./validation');
+const scopeService = require('../../services/scopeService');
 const {
     NotFoundError,
     ConflictError,
@@ -55,9 +56,28 @@ class TagsService {
     /**
      * Get all tags for a user.
      */
-    async getAllForUser(userId) {
-        const tags = await tagsRepository.findAllByUser(userId);
+    async getAllForUser(userId, query = {}) {
+        let tags = await tagsRepository.findAllByUser(userId);
+        // Built before scoping so a child's parent_uid still resolves when
+        // the parent tag itself is not used inside the scope.
         const uidById = new Map(tags.map((tag) => [tag.id, tag.uid]));
+        // area_uid / project_uid narrow the list to tags used inside that
+        // scope, so the Focus picker only offers tags of the Focus project.
+        const scope = await scopeService.resolveScope(
+            { area_uid: query.area_uid, project_uid: query.project_uid },
+            userId
+        );
+        if (scope) {
+            if (scope.matchesNothing) return [];
+            const usedIds = new Set(
+                await tagsRepository.findIdsUsedBy(userId, {
+                    taskWhere: await scopeService.taskScopeWhere(scope),
+                    noteWhere: await scopeService.noteScopeWhere(scope),
+                    projectWhere: await scopeService.projectScopeWhere(scope),
+                })
+            );
+            tags = tags.filter((tag) => usedIds.has(tag.id));
+        }
         return tags.map((tag) => ({
             uid: tag.uid,
             name: tag.name,
