@@ -56,6 +56,17 @@ data class TagEntity(
     val color: String?,
 )
 
+@Entity(tableName = "notes")
+data class NoteEntity(
+    @PrimaryKey val uid: String,
+    val title: String,
+    val content: String,
+    val color: String?,
+    val projectUid: String?,
+    val tagUidsJson: String,
+    val updatedAtRaw: String?,
+)
+
 @Entity(tableName = "inbox_items")
 data class InboxItemEntity(
     @PrimaryKey val uid: String,

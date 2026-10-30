@@ -26,6 +26,7 @@ data class BackupLearnedQuestionSettingsV3(
     val askAt: String,
     val thresholdPercent: Int,
     val mutedWeekdays: List<String> = emptyList(),
+    val silentDuringPauses: Boolean = true,
 )
 
 @Serializable

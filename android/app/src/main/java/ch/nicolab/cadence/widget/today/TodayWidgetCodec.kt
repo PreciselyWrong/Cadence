@@ -19,6 +19,8 @@ object TodayWidgetConfigCodec {
     private const val TASK_SCOPE = "taskScope"
     private const val HIGH_PRIORITY = "highPriorityOnly"
     private const val HIDE_RECURRING = "hideRecurring"
+    private const val PROJECT_IDS = "projectUids"
+    private const val TAG_IDS = "tagUids"
     private const val SORT = "sort"
     private const val MAX_ROWS = "maxRows"
     private const val OVERDUE_SECTION = "showOverdue"
@@ -28,7 +30,7 @@ object TodayWidgetConfigCodec {
     private const val TEXT_SIZE = "textSize"
     private const val CORNER = "cornerRadius"
 
-    /** Les identifiants d'habitude sont des UUID : la virgule ne peut pas s'y glisser. */
+    /** Les identifiants d'habitude, de projet et d'étiquette sont des UUID : la virgule ne peut pas s'y glisser. */
     private const val ID_SEPARATOR = ","
 
     fun encode(config: TodayWidgetConfig): Map<String, String> = mapOf(
@@ -46,6 +48,8 @@ object TodayWidgetConfigCodec {
         TASK_SCOPE to config.taskScope.name,
         HIGH_PRIORITY to flag(config.highPriorityOnly),
         HIDE_RECURRING to flag(config.hideRecurring),
+        PROJECT_IDS to config.projectUids.joinToString(ID_SEPARATOR),
+        TAG_IDS to config.tagUids.joinToString(ID_SEPARATOR),
         SORT to config.sort.name,
         MAX_ROWS to config.maxRows.toString(),
         OVERDUE_SECTION to flag(config.showOverdueSection),
@@ -68,11 +72,13 @@ object TodayWidgetConfigCodec {
             showTasks = bool(read(SHOW_TASKS), defaults.showTasks),
             habitPlacement = enumOf(read(HABIT_PLACEMENT), defaults.habitPlacement),
             habitSelection = enumOf(read(HABIT_SELECTION), defaults.habitSelection),
-            habitIds = read(HABIT_IDS).orEmpty().split(ID_SEPARATOR).filter { it.isNotBlank() }.toSet(),
+            habitIds = ids(read(HABIT_IDS)),
             maxFacets = int(read(MAX_FACETS), defaults.maxFacets, TodayWidgetLimits.FACETS),
             taskScope = enumOf(read(TASK_SCOPE), defaults.taskScope),
             highPriorityOnly = bool(read(HIGH_PRIORITY), defaults.highPriorityOnly),
             hideRecurring = bool(read(HIDE_RECURRING), defaults.hideRecurring),
+            projectUids = ids(read(PROJECT_IDS)),
+            tagUids = ids(read(TAG_IDS)),
             sort = enumOf(read(SORT), defaults.sort),
             maxRows = int(read(MAX_ROWS), defaults.maxRows, TodayWidgetLimits.ROWS),
             showOverdueSection = bool(read(OVERDUE_SECTION), defaults.showOverdueSection),
@@ -83,6 +89,8 @@ object TodayWidgetConfigCodec {
             cornerRadiusDp = int(read(CORNER), defaults.cornerRadiusDp, TodayWidgetLimits.CORNER_DP),
         )
     }
+
+    private fun ids(raw: String?): Set<String> = raw.orEmpty().split(ID_SEPARATOR).filter { it.isNotBlank() }.toSet()
 
     private fun flag(value: Boolean) = if (value) "1" else "0"
 

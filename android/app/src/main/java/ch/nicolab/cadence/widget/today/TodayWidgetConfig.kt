@@ -45,6 +45,10 @@ data class TodayWidgetConfig(
     val taskScope: TaskScope = TaskScope.OVERDUE_AND_TODAY,
     val highPriorityOnly: Boolean = false,
     val hideRecurring: Boolean = false,
+    /** Projets retenus ; vide = tous. */
+    val projectUids: Set<String> = emptySet(),
+    /** Étiquettes retenues (une suffit) ; vide = toutes. */
+    val tagUids: Set<String> = emptySet(),
     val sort: TaskSort = TaskSort.DUE,
     /** Nombre maximal de lignes de tâches, 1 à 12. */
     val maxRows: Int = 6,

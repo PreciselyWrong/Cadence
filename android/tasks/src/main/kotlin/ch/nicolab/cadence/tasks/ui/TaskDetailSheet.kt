@@ -63,6 +63,9 @@ internal fun TaskDetailSheet(
     var confirmDelete by remember { mutableStateOf(false) }
     var pickingDate by remember { mutableStateOf(false) }
     var pickingTime by remember { mutableStateOf(false) }
+    var pickingStartDate by remember { mutableStateOf(false) }
+    var pickingStartTime by remember { mutableStateOf(false) }
+    var focusOpen by remember { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
     LaunchedEffect(hasReminder) {
@@ -116,11 +119,19 @@ internal fun TaskDetailSheet(
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth(),
             )
+            SubtasksCard(parentUid = current.uid, viewModel = viewModel)
+            StartFields(
+                edit = edit,
+                onPickDate = { pickingStartDate = true },
+                onPickTime = { pickingStartTime = true },
+            )
             DueFields(
                 edit = edit,
                 onPickDate = { pickingDate = true },
                 onPickTime = { pickingTime = true },
             )
+            RepetitionFields(edit)
+            EstimateFields(edit)
             FieldLabel(R.string.tasks_field_priority)
             PrioritySelector(selected = edit.priority, onSelect = { edit.priority = it }, allowNone = false)
             FieldLabel(R.string.tasks_field_project)
@@ -135,6 +146,10 @@ internal fun TaskDetailSheet(
             }
             FieldLabel(R.string.tasks_field_status)
             StatusChips(selected = edit.status, onSelect = { edit.status = it })
+            ReadOnlyDetails(current)
+            OutlinedButton(onClick = { focusOpen = true }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.tasks_focus_open))
+            }
             TaskActions(
                 task = current,
                 onToggle = {
@@ -187,6 +202,29 @@ internal fun TaskDetailSheet(
             },
             onDismiss = { pickingTime = false },
         )
+    }
+    if (pickingStartDate) {
+        TaskDatePickerDialog(
+            initial = edit.startDate ?: LocalDate.now(),
+            onConfirm = {
+                edit.startDate = it
+                pickingStartDate = false
+            },
+            onDismiss = { pickingStartDate = false },
+        )
+    }
+    if (pickingStartTime) {
+        TaskTimePickerDialog(
+            initial = edit.startTime ?: LocalTime.of(9, 0),
+            onConfirm = {
+                edit.startTime = it
+                pickingStartTime = false
+            },
+            onDismiss = { pickingStartTime = false },
+        )
+    }
+    if (focusOpen) {
+        FocusTimerSheet(taskUid = current.uid, taskName = current.name, onDismiss = { focusOpen = false })
     }
     if (confirmDelete) {
         AlertDialog(
@@ -268,6 +306,12 @@ internal class TaskEditState(private val task: TaskItem, zone: ZoneId) {
     var tagUids by mutableStateOf(task.tagUids.toSet())
     var dueDate by mutableStateOf(originalDue)
     var dueTime by mutableStateOf(originalTime)
+    private val originalStart: LocalDate? = task.startDay
+    private val originalStartTime: LocalTime? = task.startDate?.takeIf { task.startHasTime }?.let { instantTime(it, zone) }
+    var startDate by mutableStateOf(originalStart)
+    var startTime by mutableStateOf(originalStartTime)
+    var estimate by mutableStateOf(task.estimatedMinutes)
+    var repetition by mutableStateOf(task.repetition)
 
     fun result(): EditResult {
         val dateChanged = dueDate != originalDue
@@ -289,8 +333,20 @@ internal class TaskEditState(private val task: TaskItem, zone: ZoneId) {
             clearProject = projectUid == null && task.projectUid != null,
             tagUids = tagUids.toList().takeIf { tagUids != task.tagUids.toSet() },
         )
+        val startDateChanged = startDate != originalStart
+        val startTimeChanged = startTime != originalStartTime
         return EditResult(
-            change = change.copy(dueDate = due.dueDate, dueTime = due.dueTime, clearDue = due.clearDue),
+            change = change.copy(
+                dueDate = due.dueDate,
+                dueTime = due.dueTime,
+                clearDue = due.clearDue,
+                clearStart = startDateChanged && startDate == null,
+                startDate = startDate.takeIf { startDateChanged || startTimeChanged },
+                startTime = startTime?.takeIf { startDate != null && (startDateChanged || startTimeChanged) }?.let(::wireTime),
+                estimatedMinutes = estimate.takeIf { it != task.estimatedMinutes },
+                clearEstimate = estimate == null && task.estimatedMinutes != null,
+                repetition = repetition.takeIf { it != task.repetition },
+            ),
             moveDate = moveDate,
         )
     }

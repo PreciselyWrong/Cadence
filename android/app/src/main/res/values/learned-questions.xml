@@ -35,6 +35,7 @@
     <string name="learned_panel_pattern">Jours réguliers</string>
     <string name="learned_panel_pattern_empty">Pas encore assez de saisies pour repérer un jour régulier.</string>
     <string name="learned_panel_pattern_chip">%1$s %2$d/%3$d</string>
-    <string name="learned_panel_pause">Aucune question pendant une pause ou un voyage.</string>
+    <string name="learned_panel_silent_pauses">Muet pendant les pauses</string>
+    <string name="learned_panel_silent_pauses_help">Aucune question pour un jour couvert par une pause ou un voyage.</string>
     <string name="learned_panel_muted">Ne sera plus demandé le %1$s.</string>
 </resources>

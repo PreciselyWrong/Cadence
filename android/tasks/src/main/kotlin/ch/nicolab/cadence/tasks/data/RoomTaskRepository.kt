@@ -6,6 +6,7 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -59,10 +60,16 @@ internal class RoomTaskRepository(
     private val areaDao = database.areaDao()
     private val tagDao = database.tagDao()
     private val inboxDao = database.inboxDao()
+    private val noteDao = database.noteDao()
     private val outbox = database.outboxDao()
 
     override fun observeTasks(): Flow<List<TaskItem>> =
         combine(taskDao.observeTopLevel(), accountZone(), deviceZone) { rows, account, device ->
+            rows.map { it.toItem(account, device) }
+        }
+
+    override fun observeAllTasks(): Flow<List<TaskItem>> =
+        combine(taskDao.observeEvery(), accountZone(), deviceZone) { rows, account, device ->
             rows.map { it.toItem(account, device) }
         }
 
@@ -93,6 +100,12 @@ internal class RoomTaskRepository(
     override fun observeInbox(): Flow<List<InboxEntry>> =
         inboxDao.observeAll().map { rows -> rows.map { it.toEntry() } }
 
+    override fun observeNotes(): Flow<List<NoteItem>> =
+        noteDao.observeAll().map { rows -> rows.map { it.toItem() } }
+
+    override fun observeNote(uid: String): Flow<NoteItem?> =
+        noteDao.observeOne(uid).map { it?.toItem() }
+
     override fun observeSyncStatus(): Flow<SyncStatus> = combine(
         connection.observe(),
         syncState,
@@ -115,6 +128,7 @@ internal class RoomTaskRepository(
             put("priority", jsonInt(draft.priority))
             put("project_uid", jsonString(draft.projectUid))
             put("tag_uids", jsonArray(draft.tagUids))
+            draft.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
         }
         writeFields(uid, fields)
@@ -124,6 +138,7 @@ internal class RoomTaskRepository(
     override suspend fun updateTask(uid: String, change: TaskChange) {
         // Une heure seule garde la date déjà prévue.
         val keptDate = if (change.dueDate == null && change.dueTime != null) currentDueDate(uid) else null
+        val accountZone = accountZone().first()
         val fields = buildMap<String, JsonElement> {
             change.name?.let { put("name", JsonPrimitive(it)) }
             change.note?.let { put("note", JsonPrimitive(it)) }
@@ -140,6 +155,17 @@ internal class RoomTaskRepository(
             if (change.clearProject) put("project_uid", JsonNull)
             change.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
             change.tagUids?.let { put("tag_uids", jsonArray(it)) }
+            when {
+                change.clearStart -> putAll(TaskFields.start(null, null, accountZone, deviceZone.value))
+                change.startDate != null -> putAll(TaskFields.start(change.startDate, change.startTime, accountZone, deviceZone.value))
+                change.startTime != null ->
+                    putAll(TaskFields.start(currentStartDay(uid), change.startTime, accountZone, deviceZone.value))
+            }
+            when {
+                change.clearEstimate -> putAll(TaskFields.estimate(null))
+                change.estimatedMinutes != null -> putAll(TaskFields.estimate(change.estimatedMinutes))
+            }
+            change.repetition?.let { putAll(TaskFields.repetition(it, repetitionAnchor(uid, change))) }
         }
         if (fields.isNotEmpty()) writeFields(uid, fields)
     }
@@ -249,6 +275,16 @@ internal class RoomTaskRepository(
         val task = taskDao.get(uid) ?: return null
         return dueDayOf(task.dueDateRaw, task.dueHasTime, accountZone().first(), deviceZone.value)
     }
+
+    private suspend fun currentStartDay(uid: String): LocalDate? {
+        val task = taskDao.get(uid) ?: return null
+        val extras = TaskExtras.parse(task.extrasJson)
+        return dueDayOf(extras["start_date"], extras["start_has_time"] == "true", accountZone().first(), deviceZone.value)
+    }
+
+    /** Jour qui ancre la règle : l'échéance qui vient d'être choisie, sinon celle déjà enregistrée. */
+    private suspend fun repetitionAnchor(uid: String, change: TaskChange): LocalDate? =
+        if (change.clearDue) null else change.dueDate ?: currentDueDate(uid)
 
     private suspend fun dueFields(date: LocalDate?, time: String?): Map<String, JsonElement> {
         if (date == null) return mapOf("due_date" to JsonNull, "due_has_time" to JsonPrimitive(false))

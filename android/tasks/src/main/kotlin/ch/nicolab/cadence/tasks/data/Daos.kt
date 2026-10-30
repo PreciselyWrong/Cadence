@@ -29,6 +29,12 @@ interface TaskDao {
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
+        FROM tasks""",
+    )
+    fun observeEvery(): Flow<List<TaskRow>>
+
+    @Query(
+        """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync
         FROM tasks WHERE uid = :uid""",
     )
     fun observeOne(uid: String): Flow<TaskRow?>
@@ -104,6 +110,38 @@ interface TagDao {
 
     @Query("DELETE FROM tags")
     suspend fun deleteAll()
+}
+
+data class NoteRow(
+    @Embedded val note: NoteEntity,
+    val pendingSync: Boolean,
+)
+
+@Dao
+interface NoteDao {
+    @Query(
+        """SELECT notes.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'note' AND outbox.uid = notes.uid) AS pendingSync
+        FROM notes ORDER BY updatedAtRaw DESC""",
+    )
+    fun observeAll(): Flow<List<NoteRow>>
+
+    @Query(
+        """SELECT notes.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'note' AND outbox.uid = notes.uid) AS pendingSync
+        FROM notes WHERE uid = :uid""",
+    )
+    fun observeOne(uid: String): Flow<NoteRow?>
+
+    @Query("SELECT * FROM notes WHERE uid = :uid")
+    suspend fun get(uid: String): NoteEntity?
+
+    @Upsert
+    suspend fun upsert(note: NoteEntity)
+
+    @Query("DELETE FROM notes WHERE uid = :uid")
+    suspend fun delete(uid: String)
+
+    @Query("DELETE FROM notes WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'note')")
+    suspend fun deleteSynced()
 }
 
 @Dao

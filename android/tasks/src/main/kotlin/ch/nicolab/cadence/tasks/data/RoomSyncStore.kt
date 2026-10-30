@@ -28,6 +28,7 @@ internal class RoomSyncStore(
         database.projectDao().deleteAll()
         database.areaDao().deleteAll()
         database.tagDao().deleteAll()
+        database.noteDao().deleteSynced()
         database.inboxDao().deleteSynced()
     }
 
@@ -41,6 +42,7 @@ internal class RoomSyncStore(
                 "project" -> database.projectDao().upsert(WireCodec.projectFromWire(merged))
                 "area" -> database.areaDao().upsert(WireCodec.areaFromWire(merged))
                 "tag" -> database.tagDao().upsert(WireCodec.tagFromWire(merged))
+                "note" -> database.noteDao().upsert(WireCodec.noteFromWire(merged))
                 "inbox_item" -> database.inboxDao().upsert(WireCodec.inboxFromWire(merged))
                 else -> Unit
             }
@@ -53,6 +55,7 @@ internal class RoomSyncStore(
             "project" -> database.projectDao().delete(uid)
             "area" -> database.areaDao().delete(uid)
             "tag" -> database.tagDao().delete(uid)
+            "note" -> database.noteDao().delete(uid)
             "inbox_item" -> database.inboxDao().delete(uid)
         }
     }
@@ -75,6 +78,7 @@ internal class RoomSyncStore(
         "project" -> database.projectDao().get(uid)?.name
         "area" -> database.areaDao().get(uid)?.name
         "tag" -> database.tagDao().get(uid)?.name
+        "note" -> database.noteDao().get(uid)?.title
         "inbox_item" -> database.inboxDao().get(uid)?.content
         else -> null
     }

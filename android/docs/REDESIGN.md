@@ -59,14 +59,14 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 |---|---|---|
 | e01, e02 | Tâches › Aujourd'hui | En retard (error header, « Voir les n »), Aujourd'hui, routine strip, FAB. Calendar events of the day are mixed in by time (e22). Empty day: « Journée bouclée » + Demain. |
 | e04, e05 | À venir, Projets | Week strip of 7 day cells with dots; projects grouped by area with a progress bar. |
-| e03, e20 | Boîte | Capture field, items with Aujourd'hui / Planifier / Projet actions. The Notes segment waits for note sync on Android (not in this pass). |
+| e03, e20 | Boîte | Capture field, items with Aujourd'hui / Planifier / Projet actions. Segments Idées / Notes: notes (synced read-only, `note` entity, Room v3) as a 2-column card grid and a full-screen read-only note view; editing stays on the web. |
 | e11, e21, e12, e13 | Agenda | Segmented Jour · 3 jours · Mois · Liste. Day: week strip, « À planifier » tray (dragging a task onto the grid sets its date and time), all-day row, hour grid, now line. 3 days: three columns. Month: grid with coloured dots + list of the selected day. Affichage sheet: toggles (tâches avec heure, habitudes, terminées, week-ends, n° de semaine) and calendar chips. |
 | e22, e23 | Events in the task list; Réglages › Agendas | Source: device calendars (`CalendarContract`, includes Google accounts synced on the phone). Per calendar: show in Agenda / Liste Tâches / Widget. Checking an event marks it done in Cadence only (never writes to the provider). Option « Masquer les événements faits ». |
 | e06, e07, e10, e14 | Habitudes | List, detail, abstinence with savings (e10) and without (e14: record, écart moyen, écarts / 30 j fill the slot). |
 | e15, e16, n02 | Questions apprises | Per habit (logs and abstinences). Detect weekday patterns from past entries; when an entry is missing on a usual day, ask the next day at the chosen time: Non / Oui / Oui + quantité. Settings: on/off, hour, threshold (default ≥ 1 in 2 of that weekday over the last 12 weeks), silent during pauses, « Ne plus demander le <jour> ». |
 | e17, t1–t3 | Apparence | Theme tiles Système / Clair / Sombre, accent swatches, free colour, Material You, noir pur. |
 | e08, e09 | Bilan, Réglages | Réglages rows: sync banner, Apparence, Widgets, Rappels, Agendas, Moments de la journée, Mode voyage, Health Connect, Sauvegarde, Compte. |
-| e18, e19 | Recherche, détail de tâche | Search tasks/projects/habits with filter chips. Task detail: sub-tasks, début → échéance, répétition, estimation, étiquettes, liens, commentaires; fields the app cannot store yet are read-only from `extrasJson`. |
+| e18, e19 | Recherche, détail de tâche | Search tasks/projects/habits with filter chips. Task detail: sub-tasks, début → échéance, répétition, estimation, étiquettes, liens, commentaires; fields the app cannot store yet are read-only from `extrasJson`. Built: search lives in `:tasks` (`SearchScreen`, ranking in `search/SearchEngine`), opened from the header search button of Tâches and Boîte; saved views (« Enregistrer comme vue ») are not built. Detail: sub-tasks, start, due, repetition (none/daily/weekly/monthly + interval), estimate and tags are editable and go through the outbox; start, estimate and repetition details live in `extrasJson` and are written as plain synced fields; links and comments are not in the sync registry (placeholder rows); other server fields are listed read-only. Focus timer (pomodoro 25/5/15) is local only (`focus/`), launched from the detail sheet. |
 | f01–f08 | Sheets | Quick entry stepper, capture with parsed date/#tag chips, task detail, new habit chooser, 4-step habit editor, timer, skip, options. |
 | w01–w06 | Widgets | See below. |
 | n01, n02 | Notifications | Actions as pills. |
@@ -84,4 +84,4 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 
 ## Not in this pass
 
-Notes on Android (needs note sync), server sync of habits (see `TODO.md` › Now), kanban/Eisenhower, review, saved views, goals, people.
+Note editing on Android, links and comments of a task (not synced), server sync of habits (see `TODO.md` › Now), kanban/Eisenhower, review, saved views, goals, people.

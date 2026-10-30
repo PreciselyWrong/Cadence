@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.data.local.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -25,4 +26,5 @@ data class LearnedQuestionSettingsEntity(
     val thresholdPercent: Int,
     /** Noms `DayOfWeek` séparés par des virgules, vide quand aucun jour n'est muet. */
     val mutedWeekdays: String,
+    @ColumnInfo(defaultValue = "1") val silentDuringPauses: Boolean = true,
 )

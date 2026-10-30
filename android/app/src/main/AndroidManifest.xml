@@ -94,6 +94,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/today_widget_info" />
         </receiver>
+        <service
+            android:name=".widget.today.TodayCalendarRefreshJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <receiver
             android:name=".reminder.ReminderReceiver"
             android:exported="false" />

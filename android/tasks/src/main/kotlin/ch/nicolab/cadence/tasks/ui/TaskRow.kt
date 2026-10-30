@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -59,6 +60,7 @@ import java.time.ZoneId
 internal fun TaskRow(
     task: TaskItem,
     projectName: String?,
+    projectColor: Int? = null,
     today: LocalDate,
     zone: ZoneId,
     onToggle: () -> Unit,
@@ -89,6 +91,16 @@ internal fun TaskRow(
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            if (projectColor != null) {
+                Box(
+                    Modifier
+                        .padding(start = 4.dp)
+                        .width(3.dp)
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(Color(projectColor)),
+                )
+            }
             TaskCheckbox(
                 checked = task.status == TaskStatus.DONE,
                 label = stringResource(if (task.isClosed) R.string.tasks_mark_undone else R.string.tasks_mark_done),

@@ -94,6 +94,16 @@ internal object WireCodec {
         color = wire.string("color"),
     )
 
+    fun noteFromWire(wire: JsonObject) = NoteEntity(
+        uid = wire.requireString("uid"),
+        title = wire.string("title").orEmpty(),
+        content = wire.string("content").orEmpty(),
+        color = wire.string("color"),
+        projectUid = wire.string("project_uid"),
+        tagUidsJson = (wire["tag_uids"] as? JsonArray ?: JsonArray(emptyList())).toString(),
+        updatedAtRaw = wire.string("updated_at"),
+    )
+
     fun inboxFromWire(wire: JsonObject) = InboxItemEntity(
         uid = wire.requireString("uid"),
         content = wire.string("content").orEmpty(),

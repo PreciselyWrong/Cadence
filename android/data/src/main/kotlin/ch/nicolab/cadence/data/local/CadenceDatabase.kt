@@ -55,7 +55,7 @@ import ch.nicolab.cadence.domain.HabitGroup
         LearnedQuestionSettingsEntity::class,
         LearnedQuestionRecordEntity::class,
     ],
-    version = 24,
+    version = 25,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -73,6 +73,13 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun learnedQuestionDao(): LearnedQuestionDao
 
     companion object {
+        /** Les questions apprises se taisent pendant une pause par défaut ; les réglages existants gardent ce comportement. */
+        val MIGRATION_24_25 = object : Migration(24, 25) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE learned_question_settings ADD COLUMN silentDuringPauses INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
         /**
          * Introduit les questions apprises. Les habitudes existantes n'ont aucune ligne : les
          * réglages par défaut se déduisent de l'habitude tant que l'utilisateur ne les change pas.

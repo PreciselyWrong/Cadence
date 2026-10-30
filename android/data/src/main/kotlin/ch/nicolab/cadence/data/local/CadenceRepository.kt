@@ -984,6 +984,7 @@ class CadenceRepository(
                     askAt = s.askAt,
                     thresholdPercent = s.thresholdPercent,
                     mutedWeekdays = s.mutedWeekdays.split(",").filter(String::isNotBlank),
+                    silentDuringPauses = s.silentDuringPauses,
                 )
             },
             learnedQuestionRecords = database.learnedQuestionDao().getAllRecords().map { r ->
@@ -1109,6 +1110,7 @@ class CadenceRepository(
                         askAt = s.askAt,
                         thresholdPercent = s.thresholdPercent,
                         mutedWeekdays = s.mutedWeekdays.joinToString(","),
+                        silentDuringPauses = s.silentDuringPauses,
                     ),
                 )
             }
@@ -1241,6 +1243,7 @@ class CadenceRepository(
                 askAt = LocalTime.parse(s.askAt),
                 thresholdPercent = s.thresholdPercent,
                 mutedWeekdays = s.mutedWeekdays.map(DayOfWeek::valueOf).toSet(),
+                silentDuringPauses = s.silentDuringPauses,
             )
         }
         val recordKeys = mutableSetOf<Pair<String, LocalDate>>()

@@ -4,14 +4,15 @@ import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChevronLeft
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.MaterialTheme
@@ -20,13 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
@@ -56,6 +62,8 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val calendars by viewModel.calendars.collectAsStateWithLifecycle()
     var displayOpen by rememberSaveable { mutableStateOf(false) }
+    val drag = remember { TrayDragState() }
+    var boxOrigin by remember { mutableStateOf(Offset.Zero) }
     val now by produceState(LocalTime.now()) {
         while (true) {
             delay(MINUTE_MS)
@@ -63,17 +71,29 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    Column(modifier.fillMaxSize().statusBarsPadding().padding(horizontal = Space.gutter)) {
+    Box(modifier.fillMaxSize().onGloballyPositioned { boxOrigin = it.positionInRoot() }) {
+    Column(Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = Space.gutter)) {
         ScreenHeader(
             title = stringResource(R.string.agenda_title),
             subtitle = agendaSubtitle(state),
             actions = {
                 RoundHeaderButton(
+                    icon = Icons.Outlined.ChevronLeft,
+                    contentDescription = stringResource(R.string.agenda_previous),
+                    style = HeaderButtonStyle.Plain,
+                    onClick = { viewModel.swipe(-1) },
+                )
+                RoundHeaderButton(
+                    icon = Icons.Outlined.ChevronRight,
+                    contentDescription = stringResource(R.string.agenda_next),
+                    style = HeaderButtonStyle.Plain,
+                    onClick = { viewModel.swipe(1) },
+                )
+                RoundHeaderButton(
                     icon = Icons.Outlined.Today,
                     contentDescription = stringResource(R.string.agenda_today),
                     onClick = viewModel::goToToday,
                 )
-                Spacer(Modifier.width(Space.sm))
                 RoundHeaderButton(
                     icon = Icons.Outlined.Tune,
                     contentDescription = stringResource(R.string.agenda_display),
@@ -98,6 +118,8 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
                 onSwipe = viewModel::swipe,
                 onSwipeWeek = viewModel::swipeWeek,
                 onToggleEvent = viewModel::toggleEvent,
+                drag = drag,
+                onDrop = { uid, at -> viewModel.schedule(uid, at) },
             )
             AgendaMode.MONTH -> MonthAgenda(
                 state = state,
@@ -107,6 +129,8 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
             )
             AgendaMode.LIST -> ListAgenda(state = state, onToggleEvent = viewModel::toggleEvent)
         }
+    }
+    DragGhost(drag = drag, origin = boxOrigin)
     }
 
     if (displayOpen) {
@@ -132,13 +156,15 @@ private fun agendaSubtitle(state: AgendaUiState): String {
     val selected = state.selected
     val base = when (state.mode) {
         AgendaMode.DAY -> dayLabel(selected)
-        AgendaMode.THREE_DAYS -> stringResource(
-            R.string.agenda_range,
-            selected.format(SHORT_DAY),
-            selected.plusDays(2).format(SHORT_DAY),
-        )
+        AgendaMode.THREE_DAYS -> threeDays(selected, state.options.weekends).let { days ->
+            stringResource(R.string.agenda_range, days.first().format(SHORT_DAY), days.last().format(SHORT_DAY))
+        }
         AgendaMode.MONTH -> selected.format(MONTH_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }
-        AgendaMode.LIST -> stringResource(R.string.agenda_list_subtitle, AGENDA_LIST_DAYS)
+        AgendaMode.LIST -> if (selected == state.today) {
+            stringResource(R.string.agenda_list_subtitle, AGENDA_LIST_DAYS)
+        } else {
+            stringResource(R.string.agenda_range, selected.format(SHORT_DAY), selected.plusDays(AGENDA_LIST_DAYS - 1L).format(SHORT_DAY))
+        }
     }
     if (!state.options.weekNumbers || state.mode == AgendaMode.LIST) return base
     val week = selected.get(WeekFields.ISO.weekOfWeekBasedYear())
