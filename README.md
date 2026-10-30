@@ -160,7 +160,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 
 ## Getting started
 
-Cadence keeps tududi's technical names so that existing installs keep working: the Docker image, the `TUDUDI_*` variables, the database files and the `tt_` API key prefix are unchanged. Only the displayed name changed.
+Cadence keeps tududi's technical names so that existing installs keep working: the `TUDUDI_*` variables, the database files and the `tt_` API key prefix are unchanged. Only the displayed name and the image name (`ghcr.io/preciselywrong/cadence`) changed.
 
 ### Quick start
 
@@ -173,16 +173,16 @@ docker run \
   -v ~/cadence/uploads:/app/uploads \
   -v ~/cadence/backups:/app/backups \
   -p 3002:3002 \
-  -d ghcr.io/preciselywrong/tududi:latest
+  -d ghcr.io/preciselywrong/cadence:latest
 ```
 
-The image is built from `main` by [`.github/workflows/custom-image.yml`](.github/workflows/custom-image.yml). Open [http://localhost:3002](http://localhost:3002) and sign in.
+`:latest` is built from `main`, and every push (any branch) also gets a `:sha-<short>` tag, by [`.github/workflows/custom-image.yml`](.github/workflows/custom-image.yml). Open [http://localhost:3002](http://localhost:3002) and sign in.
 
 If people reach Cadence at another address (for example `http://unraid.local:3002` or `https://cadence.example.com`), add `-e BASE_URL=<that address>` so links in emails (account verification, password reset) point there instead of `localhost`.
 
 ### Using docker-compose
 
-The repo also includes a `docker-compose.yml`. It still pulls the upstream image (`chrisvel/tududi`); set `image: ghcr.io/preciselywrong/tududi:latest` to run Cadence. It reads its configuration from a `.env` file, so copy the example first:
+The repo also includes a `docker-compose.yml`. It pulls the Cadence image (`ghcr.io/preciselywrong/cadence:latest`). It reads its configuration from a `.env` file, so copy the example first:
 
 ```bash
 cp .env.example .env
