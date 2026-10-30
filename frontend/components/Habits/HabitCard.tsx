@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Task } from '../../entities/Task';
-import {
-    FireIcon,
-    TrophyIcon,
-    BoltIcon,
-    BellIcon,
-} from '@heroicons/react/24/outline';
+import { FireIcon, BellIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import {
     fetchHabitCompletions,
@@ -14,6 +9,7 @@ import {
 import {
     dayFraction,
     formatHabitTarget,
+    habitGoal,
     habitAccentStyle,
     isHabitCompletedInPeriod,
     isQuitHabit,
@@ -23,7 +19,8 @@ import {
     totalsByDay,
 } from '../../utils/habitUtils';
 import HabitCheckIn from './HabitCheckIn';
-import { ACCENT, SURFACE } from '../../constants/colorPalette';
+import { ACCENT } from '../../constants/colorPalette';
+import HabitFacet from './HabitFacet';
 import HabitProgressBar from './HabitProgressBar';
 
 interface HabitCardProps {
@@ -32,7 +29,7 @@ interface HabitCardProps {
     onOpen: (habit: Task) => void;
 }
 
-const DAYS = 30;
+const DAYS = 7;
 
 const lastDays = (): Date[] => {
     const today = new Date();
@@ -74,7 +71,11 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
         : '';
     const done = isHabitCompletedInPeriod(habit);
     const streak = habit.habit_current_streak ?? 0;
-    const best = habit.habit_best_streak ?? 0;
+
+    const scheduledCount = days.filter((d) => isScheduledOn(habit, d)).length;
+    const doneCount = days.filter(
+        (d) => dayFraction(habit, totals.get(toDayKey(d))) >= 1
+    ).length;
 
     const dotClass = (date: Date) => {
         const key = toDayKey(date);
@@ -109,55 +110,33 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
         return fraction > 0 ? 0.35 + fraction * 0.65 : 1;
     };
 
-    const stats = [
-        {
-            icon: <FireIcon className="h-3.5 w-3.5" />,
-            value: streak,
-            label: quit
-                ? t('habits.stats.clean', 'clean {{unit}}', {
-                      unit: periodNoun(t, habit, streak),
-                  })
-                : periodNoun(t, habit, streak),
-        },
-        {
-            icon: <TrophyIcon className="h-3.5 w-3.5" />,
-            value: best,
-            label: t('habits.stats.best', 'best'),
-        },
-        {
-            icon: <BoltIcon className="h-3.5 w-3.5" />,
-            value: `${Math.round(habit.habit_strength ?? 0)}%`,
-            label: t('habits.stats.strength', 'strength'),
-        },
-    ];
+    const goal = habitGoal(habit);
+    const fraction = quit
+        ? streak > 0
+            ? 1
+            : 0
+        : Math.min(1, (habit.habit_progress?.progress ?? 0) / goal);
 
     return (
         <div
-            className={`rounded-xl shadow-sm flex flex-col overflow-hidden cursor-pointer hover:shadow-md transition-shadow ${
-                done ? `${ACCENT.surface} ${SURFACE.outline}` : SURFACE.card
+            className={`rounded-[20px] ring-1 ring-gray-900/[0.06] dark:ring-white/10 flex flex-col overflow-hidden cursor-pointer active:scale-[0.99] transition-transform ${
+                done
+                    ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-light)_26%,white),color-mix(in_srgb,var(--accent-light)_12%,white))] dark:bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-dark)_34%,#1f1e2a),color-mix(in_srgb,var(--accent-dark)_14%,#1f1e2a))]'
+                    : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-light)_14%,white),color-mix(in_srgb,var(--accent-light)_5%,white)_65%,white)] dark:bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-dark)_22%,#1f1e2a),color-mix(in_srgb,var(--accent-dark)_8%,#1f1e2a)_65%,#1f1e2a)]'
             }`}
             onClick={() => onOpen(habit)}
             style={habitAccentStyle(habit)}
+            data-testid="habit-card"
         >
-            <div className={`h-1 ${ACCENT.bg}`} aria-hidden="true" />
-            <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-3">
+            <div className="px-4 pt-4 pb-2 flex items-center gap-3">
+                <HabitFacet fraction={fraction} done={done} />
                 <div className="flex-1 min-w-0">
-                    <h3
-                        className={`flex items-baseline gap-2 text-sm font-semibold tracking-wide leading-snug break-words ${
-                            done
-                                ? ACCENT.text
-                                : 'text-gray-800 dark:text-gray-100'
-                        }`}
-                    >
-                        <span
-                            className={`shrink-0 w-2.5 h-2.5 rounded-full ${ACCENT.bg}`}
-                            aria-hidden="true"
-                        />
-                        <span className="min-w-0">{habit.name}</span>
+                    <h3 className="text-base font-bold leading-snug break-words text-gray-900 dark:text-gray-50">
+                        {habit.name}
                     </h3>
-                    <p className="flex items-center gap-1.5 text-xs mt-1.5 text-gray-400 dark:text-gray-500">
+                    <p className="flex items-center gap-1.5 text-[13px] mt-0.5 text-gray-600 dark:text-gray-300">
                         {quit && (
-                            <span className="px-1.5 py-px rounded bg-red-50 dark:bg-red-950/50 text-red-500 dark:text-red-400 text-[10px] font-medium uppercase tracking-wide">
+                            <span className="px-1.5 py-px rounded-md bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-300 text-xs font-medium">
                                 {t('habits.quit', 'Quit')}
                             </span>
                         )}
@@ -166,7 +145,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
                         </span>
                         {habit.habit_reminder_time && (
                             <span className="flex items-center gap-0.5 shrink-0">
-                                <BellIcon className="h-3 w-3" />
+                                <BellIcon className="h-3.5 w-3.5" />
                                 {habit.habit_reminder_time}
                             </span>
                         )}
@@ -179,18 +158,13 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
             </div>
 
             {!quit && habit.habit_progress && (
-                <div className="px-5 pb-3">
+                <div className="px-4 pb-2">
                     <HabitProgressBar habit={habit} />
                 </div>
             )}
 
-            <div className="px-5 pb-4">
-                <div
-                    className="grid gap-[3px]"
-                    style={{
-                        gridTemplateColumns: `repeat(${DAYS}, minmax(0, 1fr))`,
-                    }}
-                >
+            <div className="px-4 pb-3 flex items-center gap-3">
+                <div className="flex gap-1" aria-hidden="true">
                     {days.map((date) => {
                         const key = toDayKey(date);
                         return (
@@ -200,9 +174,9 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
                                     month: 'short',
                                     day: 'numeric',
                                 })}
-                                className={`aspect-square rounded-[2px] transition-colors ${dotClass(date)} ${
+                                className={`h-3 w-3 rounded-[4px] transition-colors ${dotClass(date)} ${
                                     key === todayKey
-                                        ? 'outline outline-1 outline-offset-1 outline-gray-300 dark:outline-gray-500'
+                                        ? 'outline outline-1 outline-offset-1 outline-gray-400 dark:outline-gray-500'
                                         : ''
                                 }`}
                                 style={{ opacity: dotOpacity(date) }}
@@ -210,33 +184,27 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
                         );
                     })}
                 </div>
-            </div>
-
-            <div
-                className={`mt-auto rounded-b-xl flex items-stretch ${
-                    done ? ACCENT.surfaceStrong : ACCENT.strip
-                }`}
-            >
-                {stats.map(({ icon, value, label }) => (
-                    <div
-                        key={label}
-                        className="flex-1 flex flex-col items-center py-3 gap-1"
-                    >
-                        <span
-                            className={`text-base font-semibold leading-none tabular-nums ${
-                                done
-                                    ? ACCENT.text
-                                    : 'text-gray-700 dark:text-gray-200'
-                            }`}
-                        >
-                            {value}
+                <p className="flex-1 min-w-0 flex items-center justify-end gap-2 text-xs text-gray-600 dark:text-gray-300 tabular-nums">
+                    {!quit && scheduledCount > 0 && (
+                        <span>
+                            {doneCount}/{scheduledCount}
                         </span>
-                        <span className="flex items-center gap-1 text-[10px] leading-none text-gray-400 dark:text-gray-500">
-                            <span className={ACCENT.text}>{icon}</span>
-                            {label}
-                        </span>
-                    </div>
-                ))}
+                    )}
+                    <span className="flex items-center gap-0.5">
+                        <FireIcon className={`h-3.5 w-3.5 ${ACCENT.text}`} />
+                        {quit
+                            ? t(
+                                  'habits.stats.cleanFor',
+                                  '{{count}} {{unit}} clean',
+                                  {
+                                      count: streak,
+                                      unit: periodNoun(t, habit, streak),
+                                  }
+                              )
+                            : `${streak} ${periodNoun(t, habit, streak)}`}
+                    </span>
+                    <span>{Math.round(habit.habit_strength ?? 0)}%</span>
+                </p>
             </div>
         </div>
     );

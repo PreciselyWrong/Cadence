@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '../../utils/dateUtils';
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { eachDayOfInterval, format, isToday } from 'date-fns';
@@ -73,7 +74,9 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                                 : 'bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
                         }`}
                     >
-                        {format(day, 'EEEE d MMMM')}
+                        {format(day, 'EEEE d MMMM', {
+                            locale: getCurrentLocale(),
+                        })}
                     </h3>
                     <ul>
                         {items.map((event) => (

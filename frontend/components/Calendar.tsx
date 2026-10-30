@@ -51,7 +51,6 @@ import {
     startOfYear,
     endOfYear,
 } from 'date-fns';
-import { el, enUS, es, ja, uk, de } from 'date-fns/locale';
 import CalendarMonthView from './Calendar/CalendarMonthView';
 import CalendarWeekView from './Calendar/CalendarWeekView';
 import CalendarDayView from './Calendar/CalendarDayView';
@@ -66,7 +65,7 @@ import {
     taskIdOf,
     taskToEvents,
 } from './Calendar/taskEvents';
-import { parseDateString } from '../utils/dateUtils';
+import { getDateFnsLocale, parseDateString } from '../utils/dateUtils';
 import { Holiday, fetchHolidays } from '../utils/holidaysService';
 import {
     FocusSession,
@@ -88,22 +87,7 @@ import {
 } from '../utils/profileService';
 import { openTaskPanel } from '../store/taskPanelStore';
 
-const getLocale = (language: string) => {
-    switch (language) {
-        case 'el':
-            return el;
-        case 'es':
-            return es;
-        case 'jp':
-            return ja;
-        case 'ua':
-            return uk;
-        case 'de':
-            return de;
-        default:
-            return enUS;
-    }
-};
+const getLocale = getDateFnsLocale;
 
 const localDate = (day: string, minute = 0) => {
     const [year, month, date] = day.split('-').map(Number);

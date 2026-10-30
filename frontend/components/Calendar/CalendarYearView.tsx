@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '../../utils/dateUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -70,7 +71,9 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
         end: endOfWeek(endOfMonth(month), { weekStartsOn }),
     });
     const selectedKey = selected ? format(selected, 'yyyy-MM-dd') : null;
-    const initials = days.slice(0, 7).map((day) => format(day, 'EEEEE'));
+    const initials = days
+        .slice(0, 7)
+        .map((day) => format(day, 'EEEEE', { locale: getCurrentLocale() }));
 
     return (
         <div className="grid grid-cols-7 gap-0.5 text-center text-[11px]">
@@ -95,12 +98,16 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                             count
                                 ? t('calendar.yearItems', {
                                       count,
-                                      date: format(day, 'PP'),
+                                      date: format(day, 'PP', {
+                                          locale: getCurrentLocale(),
+                                      }),
                                       defaultValue: '{{date}}: {{count}} items',
                                   })
                                 : undefined
                         }
-                        aria-label={format(day, 'PP')}
+                        aria-label={format(day, 'PP', {
+                            locale: getCurrentLocale(),
+                        })}
                         data-count={count || undefined}
                         className={`${compact ? 'h-6' : 'h-7'} rounded ${
                             inMonth
@@ -154,7 +161,9 @@ const CalendarYearView: React.FC<CalendarYearViewProps> = ({
                 {months.map((month) => (
                     <section key={month.getMonth()}>
                         <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                            {format(month, 'MMMM')}
+                            {format(month, 'MMMM', {
+                                locale: getCurrentLocale(),
+                            })}
                         </h3>
                         <MonthGrid
                             month={month}

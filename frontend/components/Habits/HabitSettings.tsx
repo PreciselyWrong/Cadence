@@ -38,6 +38,10 @@ interface HabitSettingsProps {
     firstDayOfWeek: number;
     onChange: (patch: Partial<HabitSettingsValues>) => void;
     saving?: boolean;
+    // Report whole-number edits as they are typed. The creation panel needs
+    // it: submitting from the keyboard never blurs the field, so a count of 2
+    // typed there used to be saved as 1.
+    liveCounts?: boolean;
 }
 
 const fieldClass = FORM.input;
@@ -91,6 +95,7 @@ const DraftInput: React.FC<{
     placeholder?: string;
     ariaLabel: string;
     min?: number;
+    live?: boolean;
 }> = ({
     value,
     onCommit,
@@ -99,6 +104,7 @@ const DraftInput: React.FC<{
     placeholder,
     ariaLabel,
     min,
+    live = false,
 }) => {
     const [draft, setDraft] = useState(value);
     useEffect(() => setDraft(value), [value]);
@@ -114,7 +120,10 @@ const DraftInput: React.FC<{
             inputMode={type === 'number' ? 'decimal' : undefined}
             placeholder={placeholder}
             aria-label={ariaLabel}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => {
+                setDraft(e.target.value);
+                if (live && e.target.value !== '') onCommit(e.target.value);
+            }}
             onBlur={commit}
             onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -150,6 +159,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
     firstDayOfWeek,
     onChange,
     saving,
+    liveCounts = false,
 }) => {
     const { t } = useTranslation();
     const quit = values.habit_polarity === 'quit';
@@ -275,6 +285,7 @@ const HabitSettings: React.FC<HabitSettingsProps> = ({
                             <DraftInput
                                 type="number"
                                 min={1}
+                                live={liveCounts}
                                 className="w-20"
                                 ariaLabel={t(
                                     'habits.settings.targetCount',

@@ -911,11 +911,11 @@ const Projects: React.FC = () => {
                                 to="/templates"
                                 aria-label={t(
                                     'projects.fromTemplate',
-                                    'From Template'
+                                    'From template'
                                 )}
                                 title={t(
                                     'projects.fromTemplate',
-                                    'From Template'
+                                    'From template'
                                 )}
                                 className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm text-sm font-medium text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                             >
@@ -923,7 +923,7 @@ const Projects: React.FC = () => {
                                 <span className="hidden sm:inline">
                                     {t(
                                         'projects.fromTemplate',
-                                        'From Template'
+                                        'From template'
                                     )}
                                 </span>
                             </Link>

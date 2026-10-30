@@ -8,6 +8,7 @@ import NewItemButton from '../Shared/NewItemButton';
 import BlankSlate from '../Shared/BlankSlate';
 import HabitModal from './HabitModal';
 import {
+    ChevronDownIcon,
     FireIcon,
     CheckCircleIcon,
     BoltIcon,
@@ -40,6 +41,8 @@ const Habits: React.FC = () => {
     const [showArchived, setShowArchived] = useState(false);
     const [archived, setArchived] = useState<Task[]>([]);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    // The streak/strength figures stay out of the way until asked for.
+    const [showStats, setShowStats] = useState(false);
 
     useEffect(() => {
         loadHabits();
@@ -195,7 +198,7 @@ const Habits: React.FC = () => {
     return (
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
             <div className="flex items-center justify-between gap-2 mb-8">
-                <h2 className="text-2xl font-light dark:text-white">
+                <h2 className="text-2xl font-semibold dark:text-white">
                     {t('habits.title', 'Habits')}
                 </h2>
                 <div className="flex items-center gap-2">
@@ -296,45 +299,70 @@ const Habits: React.FC = () => {
                 />
             ) : (
                 <>
-                    <div className="mb-8">
-                        <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
-                            {t('habits.overview', 'Overview')}
-                        </h3>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            {overview.map(({ label, value, icon, sub }) => (
-                                <div
-                                    key={label}
-                                    className={`${SURFACE.card} rounded-xl shadow-sm px-4 pt-4 pb-3 min-w-0`}
-                                >
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                                            {label}
-                                        </span>
-                                        <span className="text-gray-300 dark:text-gray-500">
-                                            {icon}
-                                        </span>
-                                    </div>
-                                    <p className="text-3xl font-semibold text-gray-800 dark:text-gray-100 leading-none tabular-nums">
-                                        {value}
-                                    </p>
-                                    {sub && (
-                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 truncate">
-                                            {sub}
-                                        </p>
-                                    )}
-                                </div>
-                            ))}
+                    <div className="mb-6">
+                        <div className="flex items-center justify-between gap-3">
+                            <p
+                                className="text-sm text-gray-600 dark:text-gray-300"
+                                data-testid="habits-today-line"
+                            >
+                                {t(
+                                    'habits.doneTodayLine',
+                                    '{{done}} of {{total}} done for now',
+                                    {
+                                        done: stats.doneNow,
+                                        total: stats.building.length,
+                                    }
+                                )}
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => setShowStats((v) => !v)}
+                                aria-expanded={showStats}
+                                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                                {t('habits.statistics', 'Statistics')}
+                                <ChevronDownIcon
+                                    className={`h-4 w-4 transition-transform ${showStats ? 'rotate-180' : ''}`}
+                                />
+                            </button>
                         </div>
+                        {showStats && (
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                                {overview.map(({ label, value, icon, sub }) => (
+                                    <div
+                                        key={label}
+                                        className="rounded-[20px] bg-white dark:bg-gray-700 ring-1 ring-gray-900/[0.06] dark:ring-white/10 px-4 pt-3 pb-3 min-w-0"
+                                    >
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm text-gray-600 dark:text-gray-300">
+                                                {label}
+                                            </span>
+                                            <span className="text-gray-400 dark:text-gray-500">
+                                                {icon}
+                                            </span>
+                                        </div>
+                                        <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100 leading-none tabular-nums">
+                                            {value}
+                                        </p>
+                                        {sub && (
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 truncate">
+                                                {sub}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {groups.map(({ group, items }) => (
                         <div key={group} className="mb-8">
-                            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3 px-1">
                                 {showGroupHeaders
                                     ? groupLabel(group)
                                     : t('habits.yourHabits', 'Your Habits')}
                             </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                                 {items.map((habit) => (
                                     <HabitCard
                                         key={habit.uid}

@@ -56,6 +56,33 @@ describe('formatHabitTarget', () => {
     });
 });
 
+describe('formatHabitTarget with a multi-count goal', () => {
+    it('shows the real count, also when the API sends it as a string', () => {
+        expect(formatHabitTarget(t, habit({ habit_target_count: 2 }))).toBe(
+            '2× a day'
+        );
+        expect(
+            formatHabitTarget(
+                t,
+                habit({ habit_target_count: '2' as unknown as number })
+            )
+        ).toBe('2× a day');
+    });
+
+    it('prefers the measurable amount over the count', () => {
+        expect(
+            formatHabitTarget(
+                t,
+                habit({
+                    habit_target_count: 1,
+                    habit_target_value: 2,
+                    habit_unit: 'L',
+                })
+            )
+        ).toBe('2 L a day');
+    });
+});
+
 describe('day totals', () => {
     const entry = (day: string, extra = {}) => ({
         id: Math.random(),

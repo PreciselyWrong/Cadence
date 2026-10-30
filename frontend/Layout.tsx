@@ -11,6 +11,7 @@ import Breadcrumbs from './components/Shared/Breadcrumbs';
 import CaptureHost from './components/Capture/CaptureHost';
 import TaskPanelHost from './components/Task/TaskPanelHost';
 import { openCapture } from './utils/captureUi';
+import MobileBottomBar from './components/Shared/MobileBottomBar';
 import Sidebar, { SIDEBAR_CANVAS } from './components/Sidebar';
 import './styles/tailwind.css';
 import ProjectModal from './components/Project/ProjectModal';
@@ -381,8 +382,9 @@ const Layout: React.FC<LayoutProps> = ({
         }
     };
 
+    // On phones the open sidebar is a drawer over the page, never a push.
     const mainContentMarginLeft = isSidebarOpen
-        ? 'ml-sidebar'
+        ? 'ml-0 sm:ml-sidebar'
         : 'ml-0 sm:ml-rail';
 
     // Only show the full-screen loader for a store's *first* load. Once a
@@ -483,6 +485,7 @@ const Layout: React.FC<LayoutProps> = ({
                     </div>
                 </div>
             </div>
+            <MobileBottomBar />
             {overlays}
         </div>
     );
@@ -522,7 +525,7 @@ const Layout: React.FC<LayoutProps> = ({
                                 } overflow-hidden`}
                             >
                                 <div
-                                    className={`w-full h-full ${
+                                    className={`w-full h-full max-md:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] ${
                                         isNotesView
                                             ? 'flex flex-col overflow-hidden'
                                             : 'overflow-auto'
