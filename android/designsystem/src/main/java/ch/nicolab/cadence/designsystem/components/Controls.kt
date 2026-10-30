@@ -172,13 +172,14 @@ fun TertiaryAction(
     }
 }
 
-/** Puce sélectionnable avec retour tactile et transition douce. */
+/** Puce sélectionnable avec retour tactile et transition douce. [leadingIcon] annonce l'état, par exemple une coche. */
 @Composable
 fun ChoiceChip(
     label: String,
     selected: Boolean,
     modifier: Modifier = Modifier,
     accent: Color? = null,
+    leadingIcon: ImageVector? = null,
     onClick: () -> Unit,
 ) {
     val palette = cadence
@@ -213,7 +214,13 @@ fun ChoiceChip(
             .padding(horizontal = Space.lg, vertical = Space.md),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = content)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            leadingIcon?.let {
+                Icon(it, null, tint = content, modifier = Modifier.size(Size.iconSm))
+                Spacer(Modifier.width(Space.xs))
+            }
+            Text(label, style = MaterialTheme.typography.labelLarge, color = content)
+        }
     }
 }
 

@@ -67,6 +67,7 @@ import ch.nicolab.cadence.habits.GroupPickerSheet
 import ch.nicolab.cadence.habits.HabitOptionsSheet
 import ch.nicolab.cadence.habits.HabitsTab
 import ch.nicolab.cadence.habits.QuickSheet
+import ch.nicolab.cadence.habits.RoutineStrip
 import ch.nicolab.cadence.habits.habitTint
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectRulesSheet
@@ -189,6 +190,14 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
                 Tab.TASKS -> TasksScreen(
                     openTaskUid = openTaskUid,
                     onOpenSettings = { settingsOpen = true },
+                    routineStrip = {
+                        RoutineStrip(
+                            habits = habits,
+                            groups = groups,
+                            quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                            openHabits = { tab = Tab.HABITS },
+                        )
+                    },
                 )
                 Tab.AGENDA -> AgendaScreen()
                 Tab.HABITS -> HabitsTab(

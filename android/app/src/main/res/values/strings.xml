@@ -537,4 +537,29 @@
         <item quantity="one">%1$d moment</item>
         <item quantity="other">%1$d moments</item>
     </plurals>
+    <plurals name="settings_calendars_count">
+        <item quantity="one">%1$d agenda</item>
+        <item quantity="other">%1$d agendas</item>
+    </plurals>
+    <plurals name="routine_to_complete">
+        <item quantity="one">%1$d à compléter</item>
+        <item quantity="other">%1$d à compléter</item>
+    </plurals>
+    <string name="settings_page_calendars">Agendas</string>
+    <string name="calendars_intro">Pour chaque agenda, choisissez où ses événements apparaissent.</string>
+    <string name="calendars_source_google">Google</string>
+    <string name="calendars_surface_agenda">Agenda</string>
+    <string name="calendars_surface_tasks">Liste Tâches</string>
+    <string name="calendars_surface_widget">Widget</string>
+    <string name="calendars_check_title">Cocher un événement</string>
+    <string name="calendars_check_subtitle">Le marque fait dans Cadence, sans modifier Google</string>
+    <string name="calendars_hide_done_title">Masquer les événements faits</string>
+    <string name="calendars_hide_done_subtitle">Comme les tâches terminées</string>
+    <string name="calendars_permission_title">Accès aux agendas</string>
+    <string name="calendars_permission_message">Cadence affiche les événements de vos agendas en lecture seule. Autorisez l’accès pour les voir ici.</string>
+    <string name="calendars_permission_action">Autoriser l’accès aux agendas</string>
+    <string name="calendars_empty">Aucun agenda sur cet appareil</string>
+    <string name="routine_title">Routine · %1$s %2$d/%3$d</string>
+    <string name="routine_open_habits">Ouvrir les habitudes</string>
+    <string name="routine_limit_value">%1$s max</string>
 </resources>

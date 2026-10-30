@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Flight
@@ -95,6 +96,14 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
                 Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
             }
         },
+    ),
+    SettingsPage(
+        id = "calendars",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.CalendarMonth,
+        title = R.string.settings_page_calendars,
+        subtitle = { calendarsSubtitle() },
+        content = { CalendarsPage() },
     ),
     SettingsPage(
         id = "groups",
