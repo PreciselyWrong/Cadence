@@ -215,7 +215,7 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
             Text(stringResource(R.string.habit_stats_rate_value, rate ?: 0), style = MaterialTheme.typography.displayMedium, color = palette.onSurface)
             Spacer(Modifier.weight(1f))
-            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = palette.success)
+            Text(stringResource(R.string.habit_stats_success), style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
         }
         Spacer(Modifier.height(Space.lg))
         StatisticsPulse(stats.periods.toStatisticsPulse())
@@ -246,7 +246,8 @@ private fun HabitStatisticsOverview(item: HabitCardState, onClick: () -> Unit) {
             }
             val trendColor = when {
                 comp == null -> palette.onSurfaceVariant
-                comp.deltaPercentagePoints > 0 -> palette.success
+                comp.deltaPercentagePoints >= NOTABLE_TREND_POINTS -> palette.success
+                comp.deltaPercentagePoints <= -NOTABLE_TREND_POINTS -> palette.error
                 else -> palette.onSurface
             }
             OverviewMetric(
@@ -286,7 +287,7 @@ private fun TrackerStatisticsOverview(item: HabitCardState, onClick: () -> Unit)
         Row(verticalAlignment = Alignment.Bottom) {
             Text(stats.activeDays30.toString(), style = MaterialTheme.typography.displayMedium, color = palette.onSurface)
             Spacer(Modifier.width(Space.sm))
-            Text(stringResource(R.string.tracker_stats_active_days_short), style = MaterialTheme.typography.labelMedium, color = palette.success)
+            Text(stringResource(R.string.tracker_stats_active_days_short), style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
         }
         Spacer(Modifier.height(Space.lg))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
@@ -385,7 +386,7 @@ private fun HabitActivityNumbers(stats: HabitActivityStats, goalType: GoalType, 
                     value = HabitFormatter.formatWithUnit(stats.peakDayMinor30, goalType, unit),
                     label = stringResource(R.string.habit_stats_peak_day_30),
                     icon = Icons.Outlined.EmojiEvents,
-                    iconTint = palette.success,
+                    iconTint = palette.primary,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -441,8 +442,8 @@ private fun StatisticsPulse(levels: List<StatisticsPulseLevel>) {
             val color = when (level) {
                 StatisticsPulseLevel.QUIET -> palette.containerHigh
                 StatisticsPulseLevel.MISSED -> palette.error
-                StatisticsPulseLevel.ACTIVE -> palette.successContainer
-                StatisticsPulseLevel.IDEAL -> palette.success
+                StatisticsPulseLevel.ACTIVE -> palette.primary.copy(alpha = ACTIVE_BAR_ALPHA)
+                StatisticsPulseLevel.IDEAL -> palette.primary
             }
             Box(Modifier.weight(1f).fillMaxHeight(fraction).clip(Radius.Pill).background(color))
         }
@@ -474,7 +475,7 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
                         else -> R.string.habit_stats_active_short
                     }),
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (alcohol?.isPaused == true || alcohol?.todayHasConsumption == true || stats?.isPaused == true || stats?.todayHasOccurrence == true) palette.onSurfaceVariant else palette.success,
+                    color = if (alcohol?.isPaused == true || alcohol?.todayHasConsumption == true || stats?.isPaused == true || stats?.todayHasOccurrence == true) palette.onSurfaceVariant else palette.primary,
                 )
             }
         }
@@ -483,7 +484,7 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.displayMedium, color = palette.onSurface)
                 Spacer(Modifier.width(Space.sm))
-                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.labelMedium, color = palette.success)
+                Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
             }
             Spacer(Modifier.height(Space.xl))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.xxl)) {
@@ -499,14 +500,14 @@ private fun AbstinenceStatisticsOverview(item: HabitCardState, onClick: () -> Un
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(it.currentDays.toString(), style = MaterialTheme.typography.displayMedium, color = palette.onSurface)
                 Spacer(Modifier.width(Space.sm))
-                Text(stringResource(R.string.habit_stats_abstinence_hero), style = MaterialTheme.typography.labelMedium, color = palette.success)
+                Text(stringResource(R.string.habit_stats_abstinence_hero), style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
             }
             Spacer(Modifier.height(Space.lg))
             val observed = it.observedDays30.coerceAtLeast(1)
             Box(Modifier.fillMaxWidth().height(Space.sm).clip(Radius.Pill).background(palette.containerHigh)) {
                 Box(
                     Modifier.fillMaxWidth(it.clearDays30.toFloat() / observed).fillMaxHeight()
-                        .clip(Radius.Pill).background(palette.success),
+                        .clip(Radius.Pill).background(palette.primary),
                 )
             }
             Spacer(Modifier.height(Space.sm))
@@ -531,3 +532,6 @@ private fun OverviewMetric(value: String, label: String, color: Color = cadence.
         Text(label, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
     }
 }
+
+/** Part d'opacité de la barre « jour actif, idéal non atteint » : même teinte que l'idéal, en plus discret. */
+private const val ACTIVE_BAR_ALPHA = 0.45f

@@ -15,6 +15,7 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -91,8 +92,6 @@ internal enum class DeletionKind { Note, Idea }
 
 /** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. */
 internal data class PendingDeletion(val kind: DeletionKind, val uid: String)
-
-internal data class ProjectRow(val project: ProjectItem, val openCount: Int)
 
 /** Déplacement d'une tâche récurrente en attente du choix de portée. */
 internal data class PendingMove(val taskUid: String, val date: LocalDate)
@@ -184,9 +183,12 @@ internal class TasksViewModel(
     val projects: StateFlow<List<ProjectItem>> = repository.observeProjects()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    val projectRows: StateFlow<List<ProjectRow>> = combine(projects, tasks) { ps, all ->
-        ps.map { p -> ProjectRow(p, all.count { it.projectUid == p.uid && !it.isClosed }) }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+    val areas: StateFlow<List<AreaItem>> = repository.observeAreas()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Tâches de premier niveau, ouvertes et fermées : Projets, Étiquettes, Terminées et le Bilan en dérivent. */
+    val allTasks: StateFlow<List<TaskItem>> = tasks
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val tags: StateFlow<List<TagItem>> = repository.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())

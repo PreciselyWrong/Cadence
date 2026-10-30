@@ -49,6 +49,8 @@ internal enum class TasksTab(@StringRes val label: Int) {
     TODAY(R.string.tasks_tab_today),
     UPCOMING(R.string.tasks_tab_upcoming),
     PROJECTS(R.string.tasks_tab_projects),
+    TAGS(R.string.tasks_tab_tags),
+    DONE(R.string.tasks_tab_done),
 }
 
 /**
@@ -71,6 +73,7 @@ fun TasksScreen(
     val snackbar = remember { SnackbarHostState() }
     var tab by rememberSaveable { mutableStateOf(TasksTab.TODAY) }
     var openProjectUid by rememberSaveable { mutableStateOf(showProjectUid) }
+    var openTagUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
@@ -78,6 +81,8 @@ fun TasksScreen(
     val todayState by viewModel.today.collectAsStateWithLifecycle()
     val todayEvents by viewModel.todayEvents.collectAsStateWithLifecycle()
     val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) selectedTaskUid = openTaskUid
@@ -89,11 +94,16 @@ fun TasksScreen(
         }
     }
     BackHandler(enabled = openProjectUid != null) { openProjectUid = null }
+    BackHandler(enabled = openTagUid != null && openProjectUid == null) { openTagUid = null }
 
     val overdueCount = todayState.overdue.size
     val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
     val subtitle = when {
+        tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
+        tab == TasksTab.PROJECTS -> pluralStringResource(R.plurals.tasks_projects_subtitle, projects.size, projects.size)
+        tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
+        tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
         overdueCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount)}"
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine
@@ -135,9 +145,14 @@ fun TasksScreen(
                                 upcoming.values.sumOf { it.size },
                             ),
                             TabPill(stringResource(TasksTab.PROJECTS.label)),
+                            TabPill(stringResource(TasksTab.TAGS.label)),
+                            TabPill(stringResource(TasksTab.DONE.label)),
                         ),
                         selected = tab.ordinal,
-                        onSelect = { tab = TasksTab.entries[it] },
+                        onSelect = {
+                            tab = TasksTab.entries[it]
+                            openTagUid = null
+                        },
                     )
                 }
                 SyncStatusLine(
@@ -158,8 +173,16 @@ fun TasksScreen(
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                         )
+                        tab == TasksTab.TAGS && openTagUid != null -> TagTasksPane(
+                            viewModel = viewModel,
+                            tagUid = openTagUid.orEmpty(),
+                            onBack = { openTagUid = null },
+                            onOpen = { selectedTaskUid = it.uid },
+                            modifier = Modifier.fillMaxSize(),
+                        )
                         tab == TasksTab.TODAY -> TodayTab(
                             viewModel = viewModel,
+                            snackbar = snackbar,
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                             routineStrip = routineStrip,
@@ -169,9 +192,19 @@ fun TasksScreen(
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                         )
-                        else -> ProjectsTab(
+                        tab == TasksTab.PROJECTS -> ProjectsTab(
                             viewModel = viewModel,
                             onOpenProject = { openProjectUid = it },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        tab == TasksTab.TAGS -> TagsTab(
+                            viewModel = viewModel,
+                            onOpenTag = { openTagUid = it },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        else -> DoneTab(
+                            viewModel = viewModel,
+                            onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                         )
                     }

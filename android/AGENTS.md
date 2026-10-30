@@ -73,6 +73,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Aperçus de liens : `GET /api/url/title` (serveur, garde SSRF) avec la clé API, jamais d'appel direct de l'appareil à un site. Cache Room `link_previews` (7 jours, échec 1 h, contenu périmé gardé hors ligne, `links/PreviewCachePolicy`) ; l'image rapportée par le serveur est chargée par Coil (cache disque). Pas de favicon : une pastille à l'initiale du domaine sert de repli sans requête.
 - Les champs de tâche absents des colonnes Room (début, estimation, règle de répétition) vivent dans `extrasJson` ; `TaskFields` (data) les écrit comme champs synchronisés ordinaires et `TaskItem.extras` les relit. Une règle de répétition hors none/daily/weekly/monthly reste affichée sans pouvoir être écrasée par accident.
 - La recherche (`tasks/search/SearchEngine`) est locale, sans accents ni casse, tous les mots doivent correspondre ; les habitudes y entrent par `SearchEntry` fournies par `:app`.
+- Planification des tâches, sans IA et déterministe (`tasks/planning/`) : `DayPlanner` place les tâches sans heure au premier créneau libre, triées par échéance puis priorité, avec 15 min de marge de chaque côté, sans jamais chevaucher un événement d'agenda, une plage protégée ni une tâche à heure fixe. Une proposition n'écrit rien : seule son acceptation passe par `TaskRepository.updateTask` (heure d'échéance), donc par la synchro, et se défait d'un « Annuler ». La charge (`Capacity`) compare planifié et disponible ; l'avertissement apparaît à 100 %. Les tâches récurrentes sont exclues des opérations groupées (elles demandent une portée). `Plus tard` retire l'échéance. Réglages (heures de travail, jours, fin de journée, plages protégées) : `PlanningStore` local, page `PlanningSettingsPage`.
+- Bilan : les barres de régularité sont en primaire (jours idéaux) et primaire atténué (actifs) ; rouge et vert ne servent qu'aux exceptions (jour raté, retard, évolution d'au moins 10 points). Les libellés restent en français courant, sans « recul » ni « pts ».
 - Le minuteur de concentration (`tasks/focus/PomodoroState`) est local et dérivé de l'horloge, comme `HabitTimer` : on ne stocke que l'instant de reprise et le reste figé.
 
 ## ⛔ Interdits
@@ -99,7 +101,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Faire passer les abstinences avant les habitudes dans l’accueil ou le bilan général — le suivi des habitudes reste le cœur du produit.
 - ⛔ Ajouter un journal, une note quotidienne ou un suivi des envies à une abstinence — son détail reste centré sur le compteur, l’écart et les bienfaits documentés.
 - ⛔ Créer des jalons personnels pour remplir une chronologie — seuls les bénéfices liés à une durée et suffisamment sourcés sont déblocables; sinon l’absence de preuve est affichée.
-- ⛔ Utiliser la couleur propre d’une habitude pour coder sa réussite — elle sert uniquement à l’identifier; réussite, progression, échec et neutralité gardent les mêmes couleurs sémantiques partout.
+- ⛔ Utiliser la couleur propre d’une habitude pour coder sa réussite — elle sert uniquement à l’identifier; réussite, progression, échec et neutralité gardent les mêmes couleurs sémantiques partout, sauf dans le Bilan (voir Décisions).
 - ⛔ Transposer les bénéfices de la cigarette au vapotage ou promettre des bénéfices hormonaux de l’arrêt de la masturbation — chaque profil doit refléter ses propres preuves.
 - ⛔ Stocker une progression courante - elle doit être dérivée des entrées horodatées.
 - ⛔ Réinitialiser ou supprimer des entrées à une frontière de période - les périodes sont calculées.

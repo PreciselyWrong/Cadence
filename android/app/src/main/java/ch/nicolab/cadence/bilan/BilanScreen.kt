@@ -16,10 +16,14 @@ import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.ui.ScreenList
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
+import java.util.Locale
 
 /**
- * Bilan : ce qu'il reste à faire cette semaine, puis les statistiques de chaque habitude.
+ * Bilan : chiffres des tâches de la semaine, ce qu'il reste à faire pour les habitudes, puis leurs statistiques.
  * Un seul défilement : les fiches détaillées restent des feuilles par-dessus, ouvertes
  * depuis les deux sections.
  */
@@ -39,6 +43,11 @@ internal fun BilanScreen(
             pausesOf = { id -> byId[id]?.pauses?.map(IdentifiedPause::pause).orEmpty() },
         )
     }
+    val weekStart = remember { LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)) }
+    val weekSubtitle = stringResource(
+        R.string.bilan_week_of,
+        weekStart.format(DateTimeFormatter.ofPattern("d MMMM", Locale.FRENCH)),
+    )
     var detailId by rememberSaveable { mutableStateOf<String?>(null) }
     var alcoholDetailId by rememberSaveable { mutableStateOf<String?>(null) }
     var abstinenceDetailId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -51,8 +60,9 @@ internal fun BilanScreen(
     }
 
     ScreenList(header = {
-        ScreenHeader(title = stringResource(R.string.bilan_title), subtitle = stringResource(R.string.bilan_subtitle))
+        ScreenHeader(title = stringResource(R.string.bilan_title), subtitle = weekSubtitle)
     }) {
+        item(key = "task-kpis") { TaskKpiPanel(habits) }
         weekItems(habits, outlook, quick, options)
         statisticsItems(habits, openStatistics)
     }

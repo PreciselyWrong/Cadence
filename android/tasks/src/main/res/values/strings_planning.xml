@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_day_today_short">Auj.</string>
+
+    <!-- Charge de la journée -->
+    <string name="planning_capacity">%1$s planifiées · %2$s libres</string>
+    <string name="planning_capacity_full">Journée pleine</string>
+    <string name="planning_capacity_description">%1$d %% du temps disponible est planifié</string>
+
+    <!-- Carte du matin et feuille « Planifier la journée » -->
+    <string name="planning_morning_title">Planifier la journée</string>
+    <string name="planning_morning_action">Planifier</string>
+    <string name="planning_dismiss_today">Masquer pour aujourd\'hui</string>
+    <plurals name="planning_to_place_count">
+        <item quantity="one">%d à placer</item>
+        <item quantity="other">%d à placer</item>
+    </plurals>
+    <string name="planning_sheet_title">Planifier la journée</string>
+    <string name="planning_triage_title">Trier le retard</string>
+    <string name="planning_triage_hint">« Plus tard » retire l\'échéance : la tâche reste dans votre liste, sans date.</string>
+    <string name="planning_triage_bulk">Tout le retard</string>
+    <string name="planning_target_today">Aujourd\'hui</string>
+    <string name="planning_target_tomorrow">Demain</string>
+    <string name="planning_target_later">Plus tard</string>
+    <string name="planning_place_title">Placer dans la journée</string>
+    <string name="planning_place_summary">%1$s libres · %2$s planifiées</string>
+    <string name="planning_place_auto">Placer automatiquement</string>
+    <string name="planning_place_nothing">Rien à placer : toutes les tâches du jour ont déjà une heure.</string>
+    <string name="planning_place_day_off">Ce n\'est pas un jour de travail. Les heures se règlent dans Réglages › Planification.</string>
+
+    <!-- Propositions -->
+    <plurals name="planning_proposal_title">
+        <item quantity="one">%d tâche proposée</item>
+        <item quantity="other">%d tâches proposées</item>
+    </plurals>
+    <string name="planning_proposal_hint">Rien n\'est enregistré tant que vous n\'avez pas accepté.</string>
+    <string name="planning_accept_all">Tout accepter</string>
+    <string name="planning_cancel">Annuler</string>
+    <string name="planning_ghost_remove">Retirer cette proposition</string>
+    <string name="planning_ghost_time">%1$s – %2$s</string>
+    <plurals name="planning_unplaced">
+        <item quantity="one">%d ne tient pas aujourd\'hui</item>
+        <item quantity="other">%d ne tiennent pas aujourd\'hui</item>
+    </plurals>
+    <string name="planning_unplaced_action">Reporter à demain</string>
+    <plurals name="planning_placed_message">
+        <item quantity="one">%d tâche placée</item>
+        <item quantity="other">%d tâches placées</item>
+    </plurals>
+    <plurals name="planning_moved_today">
+        <item quantity="one">%d tâche passée à aujourd\'hui</item>
+        <item quantity="other">%d tâches passées à aujourd\'hui</item>
+    </plurals>
+    <plurals name="planning_moved_tomorrow">
+        <item quantity="one">%d tâche reportée à demain</item>
+        <item quantity="other">%d tâches reportées à demain</item>
+    </plurals>
+    <plurals name="planning_moved_later">
+        <item quantity="one">%d tâche mise de côté</item>
+        <item quantity="other">%d tâches mises de côté</item>
+    </plurals>
+
+    <!-- Carte du soir et journée bouclée -->
+    <string name="planning_evening_title">Terminer la journée</string>
+    <plurals name="planning_evening_done">
+        <item quantity="one">%d terminée</item>
+        <item quantity="other">%d terminées</item>
+    </plurals>
+    <plurals name="planning_evening_left">
+        <item quantity="one">%d à reporter</item>
+        <item quantity="other">%d à reporter</item>
+    </plurals>
+    <plurals name="planning_evening_carry">
+        <item quantity="one">Reporter %d à demain</item>
+        <item quantity="other">Reporter %d à demain</item>
+    </plurals>
+    <string name="planning_evening_close">Clore la journée</string>
+    <string name="planning_evening_keep">Laisser tel quel</string>
+    <string name="planning_closed_title">Journée bouclée</string>
+    <string name="planning_closed_nothing">Rien de prévu aujourd\'hui.</string>
+    <plurals name="planning_closed_done">
+        <item quantity="one">%d tâche terminée aujourd\'hui</item>
+        <item quantity="other">%d tâches terminées aujourd\'hui</item>
+    </plurals>
+    <string name="planning_closed_tomorrow">Demain</string>
+
+    <!-- Onglets À venir, Projets, Étiquettes, Terminées -->
+    <string name="tasks_tab_tags">Étiquettes</string>
+    <string name="tasks_tab_done">Terminées</string>
+    <string name="tasks_upcoming_subtitle">7 prochains jours</string>
+    <plurals name="tasks_projects_subtitle">
+        <item quantity="one">%d projet</item>
+        <item quantity="other">%d projets</item>
+    </plurals>
+    <plurals name="tasks_tags_subtitle">
+        <item quantity="one">%d étiquette</item>
+        <item quantity="other">%d étiquettes</item>
+    </plurals>
+    <string name="tasks_done_subtitle">Les plus récentes d\'abord</string>
+    <string name="tasks_strip_day_empty">Rien de prévu ce jour-là.</string>
+    <string name="tasks_strip_day_description">%1$s : %2$d tâches</string>
+    <string name="tasks_strip_show_all">Tous les jours</string>
+    <string name="tasks_projects_next">Prochaine : %1$s</string>
+    <string name="tasks_projects_done_all">Tout est terminé</string>
+    <string name="tasks_projects_no_area">Sans domaine</string>
+    <string name="tasks_projects_progress">%1$d terminées sur %2$d</string>
+    <string name="tasks_tags_empty">Aucune étiquette pour l\'instant.</string>
+    <string name="tasks_tag_empty">Aucune tâche ouverte avec cette étiquette.</string>
+    <string name="tasks_done_empty">Aucune tâche terminée pour l\'instant.</string>
+
+    <!-- Réglages › Planification -->
+    <string name="planning_settings_title">Planification</string>
+    <string name="planning_settings_intro">Cadence propose des créneaux à partir de vos heures de travail, de vos agendas et de vos plages protégées. Tout est calculé sur l\'appareil, sans IA.</string>
+    <string name="planning_settings_hours">Heures de travail</string>
+    <string name="planning_settings_start">Début</string>
+    <string name="planning_settings_end">Fin</string>
+    <string name="planning_settings_days">Jours travaillés</string>
+    <string name="planning_settings_shutdown">Fin de journée</string>
+    <string name="planning_settings_shutdown_hint">À partir de cette heure, Cadence propose de terminer la journée.</string>
+    <string name="planning_settings_focus">Plages protégées</string>
+    <string name="planning_settings_focus_hint">Cadence n\'y place aucune tâche : travail de fond, repas, sport.</string>
+    <string name="planning_settings_focus_empty">Aucune plage protégée.</string>
+    <string name="planning_settings_focus_add">Ajouter une plage</string>
+    <string name="planning_settings_focus_default">Travail de fond</string>
+    <string name="planning_settings_focus_name">Nom</string>
+    <string name="planning_settings_focus_remove">Supprimer la plage %1$s</string>
+    <string name="planning_settings_earlier">%1$s : 30 minutes plus tôt</string>
+    <string name="planning_settings_later">%1$s : 30 minutes plus tard</string>
+</resources>
