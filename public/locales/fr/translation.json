@@ -59,7 +59,8 @@
     "hideSearch": "Replier la recherche",
     "showSearch": "Afficher la recherche",
     "beta": "bêta",
-    "comingSoon": "Bientôt disponible"
+    "comingSoon": "Bientôt disponible",
+    "due": "Échéance"
   },
   "sidebar": {
     "dashboard": "Tableau de bord",
@@ -130,7 +131,7 @@
     "settings": "Paramètres",
     "about": "À propos",
     "logout": "Déconnexion",
-    "backupRestore": "Sauvegarde & Restauration",
+    "backupRestore": "Sauvegarde & restauration",
     "toggleSearch": "Basculer la recherche",
     "quickInboxCapture": "Capture rapide de la boîte de réception",
     "userMenu": "Menu utilisateur",
@@ -140,7 +141,7 @@
     "templates": "Modèles"
   },
   "settings": {
-    "todayPageSettings": "Paramètres de la page Aujourd'hui",
+    "todayPageSettings": "Paramètres de la page aujourd'hui",
     "showDailyQuote": "Afficher la citation quotidienne",
     "showMetrics": "Afficher les métriques",
     "showProductivity": "Afficher les insights de productivité",
@@ -158,39 +159,40 @@
     "betterThanAverage": "{{percentage}}% de plus que la moyenne",
     "worseThanAverage": "{{percentage}}% de moins que la moyenne",
     "metrics": "Métriques",
-    "showMetrics": "Afficher les Métriques",
-    "hideMetrics": "Masquer les Métriques",
+    "showMetrics": "Afficher les métriques",
+    "hideMetrics": "Masquer les métriques",
     "insights": "Aperçus",
-    "showInsights": "Afficher les Aperçus",
-    "hideInsights": "Masquer les Aperçus",
+    "showInsights": "Afficher les aperçus",
+    "hideInsights": "Masquer les aperçus",
     "intelligence": "Intelligence",
-    "showIntelligence": "Afficher les Suggestions d'Intelligence",
-    "hideIntelligence": "Masquer les Suggestions d'Intelligence",
+    "showIntelligence": "Afficher les suggestions d'intelligence",
+    "hideIntelligence": "Masquer les suggestions d'intelligence",
     "completed": "Terminé",
-    "showCompleted": "Afficher les Tâches Terminées",
-    "hideCompleted": "Masquer les Tâches Terminées"
+    "showCompleted": "Afficher les tâches terminées",
+    "hideCompleted": "Masquer les tâches terminées",
+    "todayPageSettings": "Paramètres de la page Aujourd'hui"
   },
   "tasks": {
     "title": "Tâches",
     "today": "Aujourd'hui",
     "total": "Total",
     "backlog": "Retard",
-    "inProgress": "En Cours",
-    "overdue": "En Retard",
+    "inProgress": "En cours",
+    "overdue": "En retard",
     "planned": "Planifié",
-    "dueToday": "Échéance Aujourd'hui",
+    "dueToday": "Échéance aujourd'hui",
     "stale": "Obsolète",
     "suggested": "Suggéré",
     "completedToday": "Terminé",
-    "weeklyCompletions": "Progrès Hebdomadaire",
+    "weeklyCompletions": "Progrès hebdomadaire",
     "taskCompleted": "tâche terminée",
     "tasksCompleted": "tâches terminées",
     "noTasksAvailable": "Aucune tâche disponible.",
     "searchPlaceholder": "Rechercher des tâches...",
-    "addNewTask": "Ajouter une Nouvelle Tâche",
+    "addNewTask": "Ajouter une nouvelle tâche",
     "addTaskInline": "+ Ajouter une tâche",
     "metrics": "Métriques",
-    "myPlanToday": "Mon Plan pour Aujourd'hui",
+    "myPlanToday": "Mon plan pour aujourd'hui",
     "noPlanToday": "Aucune tâche prévue pour aujourd'hui",
     "addToPlanHint": "Cliquez sur l'icône 🗓 'ajouter au plan d'aujourd'hui' à droite de toute tâche pour l'ajouter ici",
     "blankSlateHint": "Commencez par créer une nouvelle tâche ou en changeant vos filtres.",
@@ -231,17 +233,17 @@
     "done": "Fait",
     "eisenhower": {
       "doNow": "À faire maintenant",
-      "doNowDesc": "Important & Urgent",
+      "doNowDesc": "Important & urgent",
       "schedule": "Planifier",
-      "scheduleDesc": "Important, Pas Urgent",
+      "scheduleDesc": "Important, pas urgent",
       "delegate": "Déléguer",
-      "delegateDesc": "Urgent, Pas Important",
+      "delegateDesc": "Urgent, pas important",
       "eliminate": "Éliminer",
-      "eliminateDesc": "Pas Important, Pas Urgent",
+      "eliminateDesc": "Pas important, pas urgent",
       "urgent": "Urgent",
-      "notUrgent": "Pas Urgent",
+      "notUrgent": "Pas urgent",
       "important": "Important",
-      "notImportant": "Pas Important",
+      "notImportant": "Pas important",
       "dropHere": "Déposez ici",
       "urgentHint": "Taguez les tâches avec 'urgent' pour les marquer comme urgentes",
       "matrix": {
@@ -308,13 +310,14 @@
       "nextWeek": "Semaine prochaine",
       "clearDate": "Effacer la date",
       "moveToProject": "Déplacer vers un projet"
-    }
+    },
+    "reorderError": "Échec de l'enregistrement de l'ordre des tâches"
   },
   "timeline": {
     "activityTimeline": "Chronologie d'Activité",
-    "showActivityTimeline": "Afficher la Chronologie d'Activité",
-    "hideActivityTimeline": "Masquer la Chronologie d'Activité",
-    "hideTimeline": "Masquer la Chronologie",
+    "showActivityTimeline": "Afficher la chronologie d'activité",
+    "hideActivityTimeline": "Masquer la chronologie d'activité",
+    "hideTimeline": "Masquer la chronologie",
     "failedToLoad": "Échec du chargement de la chronologie",
     "events": {
       "taskCreated": "Tâche créée",
@@ -328,7 +331,7 @@
       "projectChanged": "Projet changé",
       "tagsUpdated": "Tags mis à jour",
       "taskArchived": "Tâche archivée",
-      "todayFlagChanged": "Drapeau Aujourd'hui changé",
+      "todayFlagChanged": "Drapeau aujourd'hui changé",
       "status": "Statut",
       "priority": "Priorité",
       "dueDate": "Date d'échéance",
@@ -392,20 +395,20 @@
     "title": "Paramètres du profil",
     "appearance": "Apparence",
     "lightMode": "Mode clair",
-    "darkMode": "Mode Sombre",
+    "darkMode": "Mode sombre",
     "light": "Clair",
     "dark": "Sombre",
-    "timezone": "Fuseau Horaire",
-    "saveChanges": "Enregistrer les Modifications",
+    "timezone": "Fuseau horaire",
+    "saveChanges": "Enregistrer les modifications",
     "successMessage": "Profil mis à jour avec succès !",
     "languageChangedNote": "Les changements de langue sont appliqués immédiatement",
     "languageChanging": "Changement de langue...",
-    "languagePreference": "Préférence de Langue",
-    "personalInfo": "Informations Personnelles",
+    "languagePreference": "Préférence de langue",
+    "personalInfo": "Informations personnelles",
     "errorMessage": "Échec de la mise à jour du profil",
     "telegramIntegration": "Intégration Telegram",
     "telegramDescription": "Connectez votre compte Cadence à un bot Telegram pour ajouter des éléments à votre boîte de réception via des messages Telegram.",
-    "telegramBotToken": "Jeton du Bot Telegram",
+    "telegramBotToken": "Jeton du bot Telegram",
     "telegramTokenDescription": "Créez un bot avec @BotFather sur Telegram et collez le jeton ici.",
     "telegramConnected": "Votre compte Telegram est connecté ! Envoyez des messages à votre bot pour ajouter des éléments à votre boîte de réception Cadence.",
     "setupTelegram": "Configurer Telegram",
@@ -418,7 +421,7 @@
     "botConfigured": "Bot configuré avec succès !",
     "botUsername": "Nom d'utilisateur du bot :",
     "pollingStatus": "État du polling :",
-    "pollingActive": "Actif - Réception des messages",
+    "pollingActive": "Actif - réception des messages",
     "pollingInactive": "Inactif - Pas de réception des messages",
     "pollingNote": "Le polling vérifie périodiquement les nouveaux messages de Telegram et les ajoute à votre boîte de réception.",
     "pollingDescription": "Le polling vérifie périodiquement les nouveaux messages de Telegram et les ajoute à votre boîte de réception.",
@@ -454,16 +457,16 @@
       "weekly": "1 semaine"
     },
     "frequencyHelp": "Choisissez la fréquence à laquelle vous souhaitez recevoir des résumés de tâches",
-    "taskIntelligence": "Intelligence des Tâches",
-    "enableTaskIntelligence": "Activer l'Assistant d'Intelligence des Tâches",
-    "autoSuggestNextActions": "Suggérer Automatiquement les Prochaines Actions",
+    "taskIntelligence": "Intelligence des tâches",
+    "enableTaskIntelligence": "Activer l'assistant d'intelligence des tâches",
+    "autoSuggestNextActions": "Suggérer automatiquement les prochaines actions",
     "enableAutoSuggestNextActions": "Activer les Invitations à la Prochaine Action",
     "pomodoroDescription": "Activez le minuteur Pomodoro dans la barre de navigation pour des sessions de travail concentrées.",
-    "enablePomodoro": "Activer le Minuteur Pomodoro",
-    "productivityAssistant": "Assistant de Productivité",
-    "enableProductivityAssistant": "Activer les Informations sur la Productivité",
-    "nextTaskSuggestion": "Suggestion de Prochaine Tâche",
-    "enableNextTaskSuggestion": "Activer les Suggestions de Prochaine Tâche",
+    "enablePomodoro": "Activer le minuteur Pomodoro",
+    "productivityAssistant": "Assistant de productivité",
+    "enableProductivityAssistant": "Activer les informations sur la productivité",
+    "nextTaskSuggestion": "Suggestion de prochaine tâche",
+    "enableNextTaskSuggestion": "Activer les suggestions de prochaine tâche",
     "tabs": {
       "general": "Général",
       "security": "Sécurité",
@@ -471,7 +474,7 @@
       "telegram": "Telegram",
       "ai": "Fonctionnalités IA",
       "billing": "Forfait et facturation",
-      "notifications": "Préférences de Notification",
+      "notifications": "Préférences de notification",
       "oidc": "OIDC/SSO",
       "caldav": "Synchronisation CalDAV",
       "calendars": "Calendriers",
@@ -504,8 +507,8 @@
     "passwordChangeError": "Échec du changement de mot de passe",
     "passwordChangeSuccess": "Mot de passe changé avec succès !",
     "changingPassword": "Changement de mot de passe...",
-    "accountSettings": "Compte & Préférences",
-    "botSetup": "Configuration du Bot",
+    "accountSettings": "Compte & préférences",
+    "botSetup": "Configuration du bot",
     "passwordChangeNote": "Les modifications de mot de passe seront enregistrées lorsque vous cliquerez sur \"Enregistrer les modifications\" en bas du formulaire.",
     "passwordChangeOptional": "Laissez les champs de mot de passe vides pour mettre à jour d'autres paramètres sans changer votre mot de passe.",
     "bulgarian": "Bulgare",
@@ -533,31 +536,31 @@
     "avatarRemoveFailed": "Impossible de supprimer la photo",
     "notificationsDescription": "Choisissez comment vous souhaitez être informé des événements importants.",
     "aiFeatures": "Fonctionnalités d'IA",
-    "keyboardShortcuts": "Raccourcis Clavier",
+    "keyboardShortcuts": "Raccourcis clavier",
     "shortcuts": {
-      "enableShortcuts": "Activer les Raccourcis Clavier",
+      "enableShortcuts": "Activer les raccourcis clavier",
       "enableDescription": "Activez ou désactivez les raccourcis clavier globalement.",
       "duplicateWarning": "Raccourcis dupliqués détectés :",
       "pressKeys": "Appuyez sur les touches...",
       "duplicateWith": "Conflits avec {{action}}",
       "record": "Enregistrer",
-      "resetToDefaults": "Réinitialiser aux Valeurs Par Défaut",
+      "resetToDefaults": "Réinitialiser aux valeurs par défaut",
       "info": "Les raccourcis clavier vous aident à naviguer rapidement. Les modifications sont enregistrées lorsque vous cliquez sur \"Enregistrer les Modifications\" en bas de la page. Les raccourcis sont désactivés lors de la saisie dans les champs de texte.",
       "actions": {
         "inbox": "Créer un nouvel élément dans la Boîte de Réception",
-        "task": "Créer une nouvelle Tâche",
-        "project": "Créer un nouveau Projet",
-        "note": "Créer une nouvelle Note",
-        "area": "Créer une nouvelle Zone",
-        "tag": "Créer une nouvelle Étiquette"
+        "task": "Créer une nouvelle tâche",
+        "project": "Créer un nouveau projet",
+        "note": "Créer une nouvelle note",
+        "area": "Créer une nouvelle zone",
+        "tag": "Créer une nouvelle étiquette"
       }
     },
     "connectedAccounts": {
-      "title": "Comptes Connectés",
+      "title": "Comptes connectés",
       "description": "Liez des comptes externes pour vous connecter avec des fournisseurs SSO.",
       "link": "Lier {{provider}}",
       "unlink": "Dissocier",
-      "confirmUnlink": "Confirmer la Dissociation",
+      "confirmUnlink": "Confirmer la dissociation",
       "linkedOn": "Lié le {{date}}",
       "cannotUnlinkLast": "Impossible de dissocier votre dernier moyen d'authentification. Veuillez d'abord définir un mot de passe.",
       "noPasswordWarning": "Vous n'avez pas de mot de passe défini. Envisagez d'en définir un pour avoir une méthode de connexion alternative."
@@ -568,7 +571,7 @@
       "title": "Synchronisation CalDAV",
       "description": "Synchronisez vos tâches avec des serveurs CalDAV externes comme Nextcloud, iCloud ou Radicale. Configurez des calendriers, gérez les intervalles de synchronisation et résolvez les conflits.",
       "calendars": "Calendriers",
-      "addCalendar": "Ajouter un Calendrier",
+      "addCalendar": "Ajouter un calendrier",
       "noCalendars": "Aucun calendrier",
       "noCalendarsDescription": "Commencez par créer un nouveau calendrier CalDAV.",
       "syncNow": "Synchroniser maintenant",
@@ -602,7 +605,7 @@
     },
     "caldavWizard": {
       "calendarName": "Nom du calendrier",
-      "calendarNamePlaceholder": "par ex., Tâches de travail",
+      "calendarNamePlaceholder": "par ex., tâches de travail",
       "calendarNameRequired": "Le nom du calendrier est requis",
       "description": "Description",
       "descriptionPlaceholder": "Description optionnelle",
@@ -771,7 +774,9 @@
       "maxOption": "{{count}} tâches",
       "intro": "Comment Planifier ma journée organise votre journée et quelles tâches il vous propose.",
       "suggestedTitle": "Ce qui est suggéré",
-      "suggestedDescription": "Quelles tâches ouvertes peuvent apparaître dans Tout le reste, et combien. Les tâches en retard, dues aujourd'hui et en cours s'affichent toujours."
+      "suggestedDescription": "Quelles tâches ouvertes peuvent apparaître dans Tout le reste, et combien. Les tâches en retard, dues aujourd'hui et en cours s'affichent toujours.",
+      "taggedToday": "Étiquetées #today",
+      "taggedTodayDetail": "Tâches ouvertes étiquetées #today, quelles que soient leurs dates."
     },
     "apiKeys": {
       "nameRequired": "Le nom de la clé API est obligatoire.",
@@ -998,20 +1003,34 @@
       "project": "Projet",
       "priority": "Drapeau de priorité",
       "due": "Date d'échéance"
-    }
+    },
+    "contentBackground": "Arrière-plan",
+    "contentBackgroundDescription": "Afficher une photo derrière la zone de contenu principale. Les photos viennent d'Unsplash et sont créditées à leurs photographes.",
+    "contentBackgroundNone": "Aucun",
+    "photoBy": "Photo de",
+    "photoOn": "sur",
+    "groups": {
+      "account": "Compte",
+      "appearance": "Apparence",
+      "planning": "Planification",
+      "integrations": "Intégrations",
+      "security": "Sécurité",
+      "advanced": "Avancé"
+    },
+    "optional": "Optionnel"
   },
   "productivity": {
-    "stalledProjects": "Projets Bloqués",
+    "stalledProjects": "Projets bloqués",
     "stalledProjectsDesc": "Ces projets n'ont aucune tâche ou action",
-    "needsNextAction": "Projets Nécessitant une Prochaine Action",
+    "needsNextAction": "Projets nécessitant une prochaine action",
     "needsNextActionDesc": "Ces projets ont des tâches complètes mais aucune prochaine action",
-    "tasksAreProjects": "Tâches Qui Ressemblent à des Projets",
+    "tasksAreProjects": "Tâches qui ressemblent à des projets",
     "tasksAreProjectsDesc": "Ces tâches pourraient devoir être décomposées",
-    "vagueTasks": "Tâches Sans Action Claire",
+    "vagueTasks": "Tâches sans action claire",
     "vagueTasksDesc": "Ces tâches nécessitent des verbes d'action plus clairs",
-    "staleTasks": "Tâches Obsolètes",
+    "staleTasks": "Tâches obsolètes",
     "staleTasksDesc": "Tâches non mises à jour depuis {{days}} jours",
-    "stuckProjects": "Projets Coincés",
+    "stuckProjects": "Projets coincés",
     "stuckProjectsDesc": "Projets non mis à jour récemment",
     "reviewItems": "Cliquez pour examiner et améliorer votre flux de travail",
     "suggestion": "Cliquez sur n'importe quel élément ci-dessus pour l'ouvrir et apporter des améliorations.",
@@ -1083,7 +1102,7 @@
     "optional": "Optionnel",
     "task": {
       "namePlaceholder": "Ajouter le nom de la tâche",
-      "statusAndOptions": "Statut & Options",
+      "statusAndOptions": "Statut & options",
       "recurrence": "Récurrence",
       "labels": {
         "tags": "Étiquettes",
@@ -1221,7 +1240,7 @@
     "inProgress": "En cours",
     "done": "Fait",
     "archived": "Archivé",
-    "unknown": "Inconnu",
+    "unknown": "Statut {{status}}",
     "telegramConnected": "Telegram connecté et en cours de sondage",
     "telegramConnectionProblem": "Problème de connexion à Telegram",
     "completed": "Terminé",
@@ -1253,7 +1272,63 @@
     "completeOpenTasks": "Ce projet a encore des tâches ouvertes. Les marquer aussi comme faites, ou les laisser ouvertes ? Les tâches récurrentes gardent leur planification dans tous les cas.",
     "leaveTasksOpen": "Les laisser ouvertes",
     "completeTasksToo": "Les marquer comme faites",
-    "startsOn": "Commence le {{date}}"
+    "startsOn": "Commence le {{date}}",
+    "attachments": "Pièces jointes",
+    "overview": "Aperçu",
+    "people": "Personnes",
+    "info": "Infos du projet",
+    "clickToEdit": "Cliquer pour modifier",
+    "addDescription": "Ajouter une description",
+    "changeArea": "Changer de domaine",
+    "setArea": "Définir un domaine",
+    "changeGoal": "Changer d'objectif",
+    "setGoal": "Définir un objectif",
+    "changePriority": "Changer la priorité",
+    "setPriority": "Définir une priorité",
+    "changeDue": "Changer l'échéance",
+    "changeTags": "Changer les étiquettes",
+    "addTags": "Ajouter des étiquettes",
+    "changeColor": "Changer la couleur",
+    "setColor": "Définir une couleur",
+    "moreOptions": "Plus d'options",
+    "pin": "Épingler",
+    "pinned": "Épinglé",
+    "started": "Démarré",
+    "startedOn": "Démarré le {{date}}",
+    "daysToDue_one": "{{count}} jour avant l'échéance",
+    "daysToDue_other": "{{count}} jours avant l'échéance",
+    "daysOverdue_one": "{{count}} jour de retard",
+    "daysOverdue_other": "{{count}} jours de retard",
+    "progressSummary": "Progression du projet · {{done}} tâches sur {{total}} terminées",
+    "timeUsed": "{{percent}} % du temps écoulé",
+    "progressHint": "Barre : tâches terminées. Ligne : temps écoulé entre le début et l'échéance.",
+    "openTasks": "Tâches ouvertes",
+    "overdueTasks": "En retard",
+    "doneThisWeek": "Terminées cette semaine",
+    "untilDate": "Jusqu'au {{date}}",
+    "pastDate": "Dépassé le {{date}}",
+    "memberCount_one": "{{count}} membre",
+    "memberCount_other": "{{count}} membres",
+    "noteCount_one": "{{count}} note",
+    "noteCount_other": "{{count}} notes",
+    "roleOwner": "Propriétaire",
+    "rolePending": "Invité",
+    "roleEdit": "Peut modifier",
+    "roleView": "Peut consulter",
+    "notShared": "Visible uniquement par soi.",
+    "addNote": "Ajouter une note",
+    "noNotesYet": "Aucune note pour l'instant.",
+    "allNotes": "Toutes les notes",
+    "fewerNotes": "Afficher moins",
+    "fileCount_one": "{{count}} fichier",
+    "fileCount_other": "{{count}} fichiers",
+    "addFile": "Ajouter un fichier",
+    "uploading": "Envoi…",
+    "noFilesYet": "Aucun fichier pour l'instant. Déposer des fichiers ici ou utiliser +.",
+    "allFiles": "Tous les fichiers",
+    "dropToUpload": "Déposer pour envoyer",
+    "fewerFiles": "Afficher moins",
+    "noTasks": "Aucune tâche."
   },
   "errors": {
     "required": "Ce champ est requis",
@@ -1353,7 +1428,8 @@
     "aboutInbox": "À propos de la boîte de réception",
     "shortcutTag": "pour ajouter une étiquette",
     "shortcutProject": "pour l'associer à un projet",
-    "attachments": "Pièces jointes"
+    "attachments": "Pièces jointes",
+    "removeArea": "Retirer le domaine"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1559,7 +1635,11 @@
     "pin": "Épingler",
     "unpin": "Désépingler",
     "pinned": "Épinglée",
-    "pinUpdateError": "Impossible de mettre à jour l'épingle"
+    "pinUpdateError": "Impossible de mettre à jour l'épingle",
+    "comments": "Commentaires",
+    "skipOccurrence": "Ignorer cette occurrence",
+    "occurrenceSkipped": "Occurrence ignorée",
+    "skipOccurrenceError": "Impossible d'ignorer l'occurrence"
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -1587,7 +1667,8 @@
       "systemTagCannotBeDeleted": "Les étiquettes système ne peuvent pas être supprimées",
       "systemTagCannotBeRenamed": "Les étiquettes système ne peuvent pas être renommées",
       "somedayHide": "Masquer",
-      "somedayShow": "Afficher"
+      "somedayShow": "Afficher",
+      "shared": "Partagés"
     },
     "selectState": "Sélectionner l'état",
     "state": "État du projet",
@@ -1654,7 +1735,24 @@
     "historyDuration_other": "a duré {{count}} jours",
     "reopen": "Rouvrir",
     "reopened": "« {{name}} » est de nouveau en cours",
-    "loadError": "Échec du chargement des projets"
+    "loadError": "Échec du chargement des projets",
+    "table": {
+      "name": "Nom",
+      "status": "Statut",
+      "summary": "Résumé",
+      "members": "Membres",
+      "due": "Échéance",
+      "progress": "Progression"
+    },
+    "listSettings": {
+      "title": "Réglages des projets",
+      "showSomeday": "Afficher les projets « Un jour »",
+      "showSomedayHint": "Projets étiquetés #someday.",
+      "showCompleted": "Afficher les projets terminés",
+      "saveError": "Échec de l'enregistrement des réglages des projets"
+    },
+    "reorderError": "Échec de l'enregistrement de l'ordre des projets",
+    "fromTemplate": "Depuis un modèle"
   },
   "projectItem": {
     "edit": "Modifier",
@@ -1702,7 +1800,12 @@
     "blankSlateHint": "Les zones sont les parties de votre vie dont vous vous occupez dans la durée, comme Travail, Santé ou Maison. Placez-y vos projets et objectifs pour voir chaque partie au même endroit.",
     "blankSlateNew": "Créer votre première zone",
     "blankSlateProjects": "Aller aux projets",
-    "finishedProjects": "Terminés ({{count}})"
+    "finishedProjects": "Terminés ({{count}})",
+    "presetsLabel": "La plupart des gens commencent avec",
+    "presetHome": "Maison",
+    "presetWork": "Travail",
+    "presetHealth": "Santé",
+    "presetFamily": "Famille"
   },
   "notes": {
     "loading": "Chargement des notes...",
@@ -1763,7 +1866,15 @@
     "linkedNoteCreate": "Créer la note",
     "linkedNoteCreateFailed": "Impossible de créer la note.",
     "backgroundImage": "Arrière-plan",
-    "noBackground": "Aucun arrière-plan"
+    "noBackground": "Aucun arrière-plan",
+    "openInNotes": "Ouvrir dans Notes",
+    "sidebar": {
+      "recent": "Récentes",
+      "projects": "Projets",
+      "tags": "Étiquettes",
+      "noProject": "Aucun projet",
+      "more": "{{count}} de plus"
+    }
   },
   "tags": {
     "loading": "Chargement des étiquettes...",
@@ -1981,11 +2092,16 @@
       "connected": "Google connecté",
       "connectError": "Google n'a pas été connecté",
       "saveError": "Impossible d'enregistrer l'événement"
-    }
+    },
+    "manageCalendars": "Agendas",
+    "manageDescription": "Connecter des agendas en lecture seule et choisir ceux qui s'affichent ici. Cadence ne les modifie jamais.",
+    "hideCalendar": "Masquer {{name}}",
+    "showCalendar": "Afficher {{name}}",
+    "feedError": "Impossible de charger : {{names}}"
   },
   "pages": {
     "notFound": {
-      "title": "404 - Page non trouvée",
+      "title": "404 - page non trouvée",
       "message": "La page que vous recherchez n'existe pas."
     }
   },
@@ -2050,7 +2166,7 @@
       "noteNotFound": "Note non trouvée.",
       "noteDeleted": "Note supprimée avec succès.",
       "profileNotFound": "Profil non trouvé.",
-      "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+      "passwordTooShort": "Le mot de passe doit comporter au moins {{count}} caractères",
       "currentPasswordIncorrect": "Le mot de passe actuel est incorrect",
       "failedToUpdateProfile": "Échec de la mise à jour du profil.",
       "passwordChangeRequired": "Le mot de passe actuel et le nouveau mot de passe sont requis",
@@ -2165,7 +2281,14 @@
       "reason": "Motif (facultatif)",
       "overrideSaved": "Dérogation enregistrée",
       "overrideCleared": "Dérogation supprimée",
-      "synced": "Synchronisé depuis le prestataire de paiement"
+      "synced": "Synchronisé depuis le prestataire de paiement",
+      "onTrial": "En essai",
+      "trialsOnly": "Essais uniquement",
+      "trial": "Essai",
+      "trialDaysLeft_one": "{{count}} jour restant",
+      "trialDaysLeft_other": "{{count}} jours restants",
+      "trialEnded": "Essai terminé",
+      "readOnlyUntil": "Lecture seule, supprimé le {{date}}"
     },
     "dashboard": {
       "title": "Admin",
@@ -2185,7 +2308,12 @@
       "email": "Email",
       "source": "Source",
       "joined": "Rejoint",
-      "waitlistAll": "Voir tout"
+      "waitlistAll": "Voir tout",
+      "emptyAccounts": "Rien créé",
+      "emptyAccountsHint": "{{pct}} des utilisateurs n'ont jamais rien créé",
+      "tasks": "Tâches",
+      "payingShare": "{{pct}} des utilisateurs",
+      "gated": "réservé"
     },
     "waitlist": {
       "title": "Liste d'attente",
@@ -2326,7 +2454,186 @@
     "mfaResetConfirm": "Désactiver l'authentification à deux facteurs pour {{email}} ? Ne le faites que si vous êtes sûr qu'il s'agit bien de cette personne. Elle sera déconnectée partout et recevra un e-mail à ce sujet.",
     "mfaResetAction": "Réinitialiser",
     "mfaResetDone": "L'authentification à deux facteurs a été réinitialisée. La personne peut se connecter avec son mot de passe.",
-    "mfaResetFailed": "Impossible de réinitialiser la 2FA"
+    "mfaResetFailed": "Impossible de réinitialiser la 2FA",
+    "verified": "Vérifié",
+    "verifiedYes": "Vérifié",
+    "verifiedNo": "Non vérifié",
+    "feedback": {
+      "title": "Retours",
+      "open": "Ouverts ({{count}})",
+      "resolved": "Résolus",
+      "all": "Tous",
+      "emptyOpen": "Rien d'ouvert. Bien joué.",
+      "empty": "Aucun retour pour l'instant.",
+      "markResolved": "Marquer comme résolu",
+      "reopen": "Rouvrir",
+      "updateFailed": "Échec de la mise à jour",
+      "deleted": "Retour supprimé",
+      "deleteFailed": "Échec de la suppression",
+      "deleteTitle": "Supprimer le retour",
+      "confirmDelete": "Supprimer ce retour ? Cette action est irréversible.",
+      "statusOpen": "Ouvert",
+      "statusResolved": "Résolu"
+    },
+    "userStatus": {
+      "title": "Utilisateurs",
+      "user": "Utilisateur",
+      "signedUp": "Inscrit le",
+      "verified": "Vérifié",
+      "status": "Statut",
+      "daysLeft": "Jours d'essai restants",
+      "paid": "Payant",
+      "trial": "Essai",
+      "subscribed": "Abonné",
+      "pastDue": "Impayé",
+      "comped": "Offert",
+      "admin": "Admin",
+      "member": "Membre",
+      "trialEnded": "Essai terminé",
+      "free": "Aucun forfait",
+      "addedBy": "Ajouté par {{email}}",
+      "signedUpWith": "Avec {{provider}}",
+      "signedUpWithEmail": "Avec e-mail",
+      "deletedOn": "Supprimé le {{date}}",
+      "paidByOwner": "Oui, par le propriétaire",
+      "paidYes": "Oui",
+      "paidBefore": "Pas maintenant, a déjà payé",
+      "paidNo": "Non",
+      "items": "Éléments",
+      "itemsCreated_one": "{{count}} élément",
+      "itemsCreated_other": "{{count}} éléments",
+      "lastCreated": "Dernier le {{date}}",
+      "nothingCreated": "Rien pour l'instant",
+      "emails": "E-mails",
+      "emailsSent_one": "{{count}} envoyé",
+      "emailsSent_other": "{{count}} envoyés",
+      "emailsNone": "Aucun envoyé",
+      "kinds": {
+        "tasks": "Tâches",
+        "habits": "Habitudes",
+        "projects": "Projets",
+        "notes": "Notes",
+        "areas": "Domaines",
+        "goals": "Objectifs",
+        "tags": "Étiquettes",
+        "people": "Personnes",
+        "views": "Vues",
+        "inbox": "Boîte"
+      }
+    },
+    "userEmails": {
+      "title": "E-mails",
+      "language": "Langue : {{language}}",
+      "to": "À",
+      "subject": "Objet",
+      "confirmTitle": "Envoyer « {{name}} » ?",
+      "sendNow": "Envoyer l'e-mail",
+      "sending": "Envoi…",
+      "send": "Envoyer",
+      "sendAgain": "Renvoyer",
+      "sentOn": "Envoyé le {{date}}",
+      "sentBeforeLog": "Envoyé (avant le journal)",
+      "sentOnBeforeLog": "Envoyé le {{date}} (avant le journal)",
+      "failed": "Échec",
+      "sent": "Envoyé",
+      "notSent": "Non envoyé",
+      "history": "Historique",
+      "noHistory": "Rien d'enregistré pour l'instant.",
+      "sentBy": "par {{email}}",
+      "automatic": "automatique",
+      "sentNotice": "{{name}} envoyé à {{to}}.",
+      "failedNotice": "Non envoyé : {{error}}",
+      "linkNote": "Le lien est créé à l'envoi, ainsi l'e-mail réel contient un lien fonctionnel.",
+      "names": {
+        "verification": "Vérifier l'adresse e-mail",
+        "verificationReminder": "Rappel de vérification",
+        "memberInvite": "Invitation de membre",
+        "passwordReset": "Réinitialiser le mot de passe",
+        "trialReminder": "Fin d'essai bientôt",
+        "emptyAccount": "Compte toujours vide",
+        "comeBack": "Retour après une période calme",
+        "deletionWarning": "Compte qui sera supprimé"
+      }
+    },
+    "userFilter": {
+      "filter": "Filtrer",
+      "clear": "Effacer les filtres",
+      "showing": "{{shown}} sur {{total}}",
+      "empty": "Aucun utilisateur ne correspond à ces filtres.",
+      "source": "Mode d'inscription",
+      "signedUp": "Inscription",
+      "member": "Ajouté comme membre",
+      "invited": "Invitation en attente",
+      "verification": "E-mail",
+      "verified": "Vérifié",
+      "unverified": "Non vérifié",
+      "activity": "Activité",
+      "created": "A créé quelque chose",
+      "nothingCreated": "Rien créé pour l'instant",
+      "plan": "Forfait",
+      "trial": "En essai",
+      "trialEnded": "Essai terminé",
+      "paid": "Payant",
+      "paidBefore": "A déjà payé",
+      "neverPaid": "Jamais payé"
+    },
+    "trends": {
+      "title": "7 derniers jours",
+      "signups": "inscriptions",
+      "vsLastWeek": "{{diff}} vs semaine dernière",
+      "chartLabel": "Inscriptions par jour",
+      "barTitle": "{{date}} : {{n}} inscriptions ({{prev}} une semaine avant)",
+      "active": "Utilisateurs actifs",
+      "activeHint": "a créé quelque chose cette semaine",
+      "waitlist": "Inscriptions à la liste d'attente",
+      "trialsStarted": "Essais commencés",
+      "trialsEnding": "Essais se terminant dans 7 jours",
+      "churn": "Annulés · paiements échoués",
+      "firstPlan": "A planifié une première journée",
+      "firstPlanHint": "{{n}} nouveaux utilisateurs sur {{total}} ont planifié 3 tâches ou plus",
+      "threeDays": "Planification continue",
+      "threeDaysHint": "{{n}} inscrits de la semaine dernière sur {{total}} ont planifié 3 jours",
+      "tasksCreated": "Tâches créées",
+      "tasksCompleted": "Tâches terminées",
+      "verified": "E-mail vérifié",
+      "newUsers": "Nouveaux utilisateurs",
+      "usage": "Utilisation",
+      "createdSomething": "A créé quelque chose",
+      "ofNewUsers": "{{n}} nouveaux utilisateurs sur {{total}}",
+      "trialsAndChurn": "Essais et désabonnements"
+    },
+    "visits": {
+      "title": "Visites, 7 derniers jours",
+      "visitors": "visiteurs",
+      "chartLabel": "Visiteurs par jour",
+      "barTitle": "{{date}} : {{n}} visiteurs ({{prev}} une semaine avant)",
+      "views": "Pages vues",
+      "blog": "Lecteurs du blog",
+      "appOpens": "Ouvertures de l'app",
+      "appUsers": "Utilisateurs de l'app",
+      "appUsersHint": "{{day}} aujourd'hui · {{month}} sur 30 jours",
+      "topPages": "Pages les plus vues",
+      "noPages": "Aucune page vue pour l'instant",
+      "topReferrers": "Principales sources",
+      "noReferrers": "Aucune source pour l'instant"
+    },
+    "funnel": {
+      "title": "Entonnoir d'essai, {{days}} derniers jours",
+      "titleNoTrial": "Entonnoir d'inscription, {{days}} derniers jours",
+      "overall": "De bout en bout : {{pct}}",
+      "vsBefore": "{{diff}} pts vs les {{days}} jours précédents",
+      "visitors": "Visiteurs du site",
+      "visitorsHint": "site vitrine et blog, comptés par jour",
+      "trialSignups": "Inscriptions à l'essai",
+      "signups": "Inscriptions",
+      "signupsHint": "ont créé leur propre compte, membres exclus",
+      "activated": "Activés",
+      "activatedHint": "{{n}}+ tâches ou planificateur utilisé",
+      "paid": "Payants",
+      "paidHint": "activés et ayant eu un abonnement",
+      "maturity": "Les inscriptions récentes peuvent encore être en essai, donc l'étape de paiement est en retard sur les autres.",
+      "paidWithoutActivating": "{{n}} de plus ont payé sans être activés."
+    }
   },
   "shares": {
     "shareProject": "Partager le projet",
@@ -2366,7 +2673,13 @@
     "groupAlreadyShared": "déjà partagé",
     "groupHint": "Chaque membre reçoit une invitation, et les personnes ajoutées plus tard au groupe sont aussi invitées.",
     "sharedWithGroups": "Partagé avec des groupes",
-    "groupCounts": "{{accepted}} acceptées, {{pending}} en attente"
+    "groupCounts": "{{accepted}} acceptées, {{pending}} en attente",
+    "shareWith": "Partager avec",
+    "selectPerson": "Sélectionner une personne",
+    "selectPersonError": "Choisir une personne",
+    "alreadyHasAccess": "a déjà accès",
+    "someoneElseByEmail": "Quelqu'un d'autre, par e-mail",
+    "you": "vous"
   },
   "viewType": {
     "label": "Affichage",
@@ -2412,11 +2725,11 @@
     "dueLabel": "Échéance :",
     "tags": "Étiquettes",
     "recurring": "Récurrent",
-    "saveAsSmartView": "Enregistrer en tant que Vue Intelligente",
+    "saveAsSmartView": "Enregistrer en tant que vue intelligente",
     "viewNamePlaceholder": "Entrez le nom de la vue",
-    "viewNameLabel": "Nom de la Vue",
+    "viewNameLabel": "Nom de la vue",
     "viewWillSave": "Cette vue sera enregistrée :",
-    "saveView": "Enregistrer la Vue",
+    "saveView": "Enregistrer la vue",
     "filtersLabel": "Filtres :",
     "searchLabel": "Recherche :",
     "new": "Nouvelle vue",
@@ -2471,25 +2784,25 @@
     "deferUntilFilter": "Différer jusqu'à",
     "deferUntil": ", différer jusqu'à",
     "extrasFilter": {
-      "isRecurring": "est Récurrent",
-      "isNotRecurring": "n'est pas Récurrent",
-      "isOverdue": "est En Retard",
-      "hasContent": "a du Contenu",
-      "hasNoContent": "n'a pas de Contenu",
-      "isDeferred": "est Différé",
-      "isNotDeferred": "n'est pas Différé",
-      "hasTags": "a des Étiquettes",
+      "isRecurring": "est récurrent",
+      "isNotRecurring": "n'est pas récurrent",
+      "isOverdue": "est en retard",
+      "hasContent": "a du contenu",
+      "hasNoContent": "n'a pas de contenu",
+      "isDeferred": "est différé",
+      "isNotDeferred": "n'est pas différé",
+      "hasTags": "a des étiquettes",
       "hasNoTags": "n'a pas d'Étiquettes",
       "hasNoDueDate": "n'a pas d'Échéance",
-      "isAssignedToProject": "est Assigné au Projet",
-      "hasNoProject": "n'a pas de Projet"
+      "isAssignedToProject": "est assigné au projet",
+      "hasNoProject": "n'a pas de projet"
     }
   },
   "subtasks": {
     "placeholder": "Ajouter une sous-tâche..."
   },
   "backup": {
-    "title": "Sauvegarde & Restauration",
+    "title": "Sauvegarde & restauration",
     "description": "Créez des sauvegardes ou restaurez à partir de sauvegardes précédentes. Vos 5 dernières sauvegardes sont automatiquement enregistrées.",
     "createBackup": "Créer une sauvegarde",
     "importFromFile": "Importer depuis un fichier",
@@ -2541,7 +2854,7 @@
   },
   "notifications": {
     "table": {
-      "type": "Type de Notification"
+      "type": "Type de notification"
     },
     "channels": {
       "inApp": "Dans l'application",
@@ -2550,13 +2863,14 @@
       "telegram": "Telegram"
     },
     "types": {
-      "dueTasks": "Tâches Échues",
-      "overdueTasks": "Tâches En Retard",
-      "deferUntil": "Différer Jusqu'à",
-      "dueProjects": "Projets Échus",
-      "overdueProjects": "Projets En Retard",
+      "dueTasks": "Tâches échues",
+      "overdueTasks": "Tâches en retard",
+      "deferUntil": "Différer jusqu'à",
+      "dueProjects": "Projets échus",
+      "overdueProjects": "Projets en retard",
       "taskAssigned": "Tâche assignée",
-      "habitReminders": "Rappels d'habitudes"
+      "habitReminders": "Rappels d'habitudes",
+      "comments": "Commentaires et mentions"
     },
     "descriptions": {
       "dueTasks": "Tâches qui doivent être effectuées dans les 24 heures",
@@ -2565,19 +2879,25 @@
       "dueProjects": "Projets qui doivent être réalisés dans les 24 heures",
       "overdueProjects": "Projets dont la date limite est dépassée",
       "taskAssigned": "Une tâche vous a été assignée par quelqu'un d'autre",
-      "habitReminders": "À l'heure de rappel définie sur une habitude, tant qu'elle n'est pas faite"
+      "habitReminders": "À l'heure de rappel définie sur une habitude, tant qu'elle n'est pas faite",
+      "comments": "Réponses, commentaires sur les tâches et mentions @"
     },
     "telegram": {
       "notConfigured": {
-        "title": "Telegram Non Configuré :",
+        "title": "Telegram non configuré :",
         "message": "Pour recevoir des notifications Telegram, veuillez configurer votre bot Telegram dans l'onglet Telegram."
       }
     },
     "test": {
-      "title": "Tester les Notifications",
+      "title": "Tester les notifications",
       "description": "Envoyer une notification de test pour voir comment elle apparaît dans l'application et sur les canaux activés (Telegram, etc.)",
       "send": "Envoyer un test",
-      "sending": "Envoi en cours..."
+      "sending": "Envoi en cours...",
+      "rowLabel": "Envoyer une notification de test",
+      "button": "Tester",
+      "sendVia": "Envoyer un test via {{channel}}",
+      "sent": "Test envoyé via {{channel}}.",
+      "failed": "Impossible d'envoyer le test."
     },
     "info": {
       "title": "Remarque :",
@@ -2642,6 +2962,17 @@
       "history": "Historique",
       "confirmDelete": "Le supprimer ?",
       "delete": "Supprimer"
+    },
+    "push": {
+      "title": "Notifications push sur cet appareil",
+      "prompt": "Recevoir des notifications sur cet appareil même quand Cadence est fermée.",
+      "subscribed": "Cet appareil reçoit les notifications push. Choisir lesquelles dans la colonne Push ci-dessous.",
+      "needsInstall": "Pour recevoir des notifications sur iPhone ou iPad, ajouter d'abord Cadence à l'écran d'accueil : appuyer sur Partager, puis sur Sur l'écran d'accueil, et l'ouvrir depuis là.",
+      "unsupported": "Ce navigateur ne prend pas en charge les notifications push.",
+      "denied": "Les notifications sont bloquées pour Cadence. Les autoriser dans les réglages du navigateur ou du système, puis revenir ici.",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "failed": "Une erreur est survenue. Réessayer."
     }
   },
   "projectStatus": {
@@ -2656,7 +2987,8 @@
     "done": "Terminé",
     "done_desc": "Fini et terminé",
     "cancelled": "Annulé",
-    "cancelled_desc": "Ne sera pas terminé"
+    "cancelled_desc": "Ne sera pas terminé",
+    "idea": "Idée"
   },
   "habits": {
     "completeHabit": "Compléter l'habitude",
@@ -2667,7 +2999,8 @@
     "stats": {
       "clean": "sans écart : {{unit}}",
       "best": "record",
-      "strength": "force"
+      "strength": "force",
+      "cleanFor": "{{count}} {{unit}} sans écart"
     },
     "quit": "Arrêter",
     "confirmSlip": "Noter un écart",
@@ -2788,7 +3121,13 @@
     "perDay": "par jour",
     "weekdays": "En semaine",
     "weekends": "Le week-end",
-    "quitTarget": "Éviter"
+    "quitTarget": "Éviter",
+    "presetsLabel": "Ou commencer par",
+    "presetWalk": "Marche du matin",
+    "presetRead": "Lire 20 minutes",
+    "presetReview": "Revue hebdomadaire",
+    "doneTodayLine": "{{done}} sur {{total}} faites pour l'instant",
+    "statistics": "Statistiques"
   },
   "aiAssistant": {
     "title": "Assistant IA",
@@ -2830,14 +3169,14 @@
     "projectHealth": "Santé du projet",
     "allProjectsHaveActions": "Tous les projets actifs ont au moins une action suivante.",
     "projectsWithNoNextAction": "le(s) projet(s) n'ont pas d'action suivante",
-    "completionTrends": "Tendances de Complétion",
+    "completionTrends": "Tendances de complétion",
     "noCompletions": "Aucune tâche complétée au cours des 8 dernières semaines.",
-    "areaBalance": "Équilibre de Zone",
+    "areaBalance": "Équilibre de zone",
     "noAreaData": "Aucune donnée de zone disponible. Assignez des tâches aux zones pour voir l'équilibre.",
     "completed": "Complété (30j)",
     "open": "Ouvert",
     "streaks": "Séries",
-    "areaBreakdown": "Répartition par Zone",
+    "areaBreakdown": "Répartition par zone",
     "mostActive": "le plus actif",
     "needsAttention": "demande de l'attention",
     "doneOpen": "{{done}} faites · {{open}} ouvertes",
@@ -2857,7 +3196,8 @@
     "bestWeek": "record ({{week}})",
     "areaBalance30": "Équilibre des zones, 30 derniers jours",
     "completionRateLegend": "% = taux d'achèvement",
-    "itemsToProcess_one": "{{count}} élément à traiter"
+    "itemsToProcess_one": "{{count}} élément à traiter",
+    "overview": "Aperçu"
   },
   "billing": {
     "title": "Forfait et facturation",
@@ -2956,13 +3296,18 @@
     "backToApp": "Retour à Cadence",
     "trialBanner": "Essai gratuit, jours restants : {{count}}",
     "trialLock": {
-      "webhooks": "Les webhooks ne font pas partie de l'essai gratuit. Abonnez-vous pour envoyer des événements à vos propres services."
+      "webhooks": "Les webhooks ne font pas partie de l'essai gratuit. Abonnez-vous pour envoyer des événements à vos propres services.",
+      "ai": "L'assistant IA ne fait pas partie de l'essai gratuit. S'abonner pour l'activer.",
+      "publicNotes": "Les liens de notes publiques ne font pas partie de l'essai gratuit. S'abonner pour partager des notes avec n'importe qui.",
+      "members": "L'ajout de membres ne fait pas partie de l'essai gratuit. S'abonner pour ajouter des membres de la famille ou des collègues."
     },
     "lockedWebhooks": "Les webhooks font partie de l'offre payante.",
     "whoFor": "Pour qui ?",
     "justMe": "Juste moi (Pro)",
     "teamOf": "Une équipe de {{seats}} personnes maximum",
-    "perSeat": "{{price}} par personne et par mois, {{seats}} places vous compris"
+    "perSeat": "{{price}} par personne et par mois, {{seats}} places vous compris",
+    "trialBanner_one": "Essai gratuit en cours : {{count}} jour restant",
+    "trialBanner_other": "Essai gratuit en cours : {{count}} jours restants"
   },
   "demo": {
     "opening": "Ouverture de la démo...",
@@ -2983,7 +3328,9 @@
     "nothing": "Rien en ce moment",
     "empty": "Rien de partagé n'est en cours en ce moment. Partagez un domaine, un projet ou un objectif, ou assignez une tâche à quelqu'un pour le voir ici.",
     "sortableColumn": "colonne triable",
-    "reorderFailed": "Impossible d'enregistrer l'ordre des colonnes."
+    "reorderFailed": "Impossible d'enregistrer l'ordre des colonnes.",
+    "dropHere": "Déposer pour assigner",
+    "reassignFailed": "Impossible d'assigner cette tâche."
   },
   "people": {
     "addMember": "Ajouter un membre",
@@ -3172,12 +3519,14 @@
       "gapFit": "{{gap}} libres à {{time}} conviennent à {{name}} ({{duration}})",
       "place": "Placer",
       "noBreak": "Aucune pause entre {{start}} et {{end}}",
-      "next": "Conseil suivant"
+      "next": "Conseil suivant",
+      "missed_one": "{{count}} créneau planifié déjà passé",
+      "missed_other": "{{count}} créneaux planifiés déjà passés"
     },
     "more": "Plus d'options",
     "switchToList": "Passer à la liste",
     "switchToTimeline": "Passer à la chronologie",
-    "leaveWithoutStarting": "Retour à Aujourd'hui",
+    "leaveWithoutStarting": "Retour à aujourd'hui",
     "overdueDays": "En retard de {{count}} j",
     "whatNext": "Que pourriez-vous faire aujourd'hui ?",
     "whatNextOn": "Que pourriez-vous faire le {{date}} ?",
@@ -3195,7 +3544,8 @@
       "overdue": "{{count}} en retard",
       "due_today": "{{count}} pour aujourd'hui",
       "in_progress": "{{count}} en cours",
-      "suggested": "{{count}} suggérées"
+      "suggested": "{{count}} suggérées",
+      "tagged_today": "{{count}} étiquetées #today"
     },
     "durationMinutes": "{{minutes}} min",
     "durationHours": "{{hours}} h",
@@ -3214,7 +3564,14 @@
     "agendaEmpty": "Rien de prévu ce jour-là.",
     "agendaUntimed": "Sans horaire",
     "resizePanes": "Redimensionner les colonnes",
-    "calendarMenu": "Plus d’options du calendrier"
+    "calendarMenu": "Plus d’options du calendrier",
+    "addTask": "Ajouter une tâche",
+    "taggedToday": "Étiquetées #today",
+    "doneForToday": "Terminé pour aujourd'hui",
+    "nextOccurrence": "Prochaine le {{date}}",
+    "refreshCalendar": "Actualiser l'agenda",
+    "refreshCalendarError": "Impossible d'actualiser l'agenda.",
+    "refreshingCalendar": "Actualisation de l'agenda…"
   },
   "capture": {
     "add": "Ajouter",
@@ -3276,11 +3633,13 @@
       "newline": "Commence une nouvelle ligne",
       "title": "Ajout d'éléments",
       "description": "Comportement de la zone d'ajout. Ces réglages s'appliquent immédiatement et restent sur cet appareil.",
-      "enterKeyboard": "Touche Entrée sur un clavier d'ordinateur",
+      "enterKeyboard": "Touche entrée sur un clavier d'ordinateur",
       "enterTouch": "Touche Retour sur un téléphone ou une tablette",
       "oneItemPerLine": "Un élément par ligne",
       "oneItemPerLineHelp": "Désactivé : tout ce que vous tapez devient un seul élément, la première ligne en titre et les autres en notes. Activé : chaque ligne devient un élément."
-    }
+    },
+    "addTitle": "Ajouter à la Boîte, une tâche, une note ou un projet",
+    "close": "Fermer"
   },
   "area": {
     "loadError": "Impossible de charger les zones"
@@ -3384,7 +3743,17 @@
     "confirmDeleteMessage": "Supprimer « {{name}} » ? Les projets créés à partir de celui-ci ne seront pas affectés."
   },
   "publicNote": {
-    "linkedNoteNotShared": "Cette note n'est pas partagée publiquement."
+    "linkedNoteNotShared": "Cette note n'est pas partagée publiquement.",
+    "toggleTheme": "Basculer le mode sombre",
+    "openApp": "Ouvrir Cadence",
+    "updated": "Dernière mise à jour le {{date}}",
+    "unavailableTitle": "Cette note n'est pas disponible",
+    "unavailableBody": "Le lien est peut-être incorrect, ou le propriétaire a cessé de partager cette note. Demander un nouveau lien.",
+    "failedTitle": "Impossible de charger cette note",
+    "failedBody": "Une erreur est survenue de notre côté. Réessayer dans un instant.",
+    "ctaTitle": "Partager ses notes ?",
+    "ctaBody": "Écrire des notes, les organiser avec les tâches et projets, et en partager n'importe laquelle avec un lien.",
+    "ctaButton": "S'inscrire maintenant"
   },
   "blog": {
     "nav": "Blog",
@@ -3451,7 +3820,7 @@
     "spareDays": "{{count}} jours de marge",
     "projectStart": "Début du projet",
     "projectDue": "Échéance du projet",
-    "legendRange": "Début → Échéance",
+    "legendRange": "Début → échéance",
     "legendDue": "Échéance seule",
     "legendBlocks": "Bloque",
     "legendOverdue": "En retard",
@@ -3628,7 +3997,7 @@
       "importing": "Import en cours…",
       "importButton": "Importer {{count}} lignes",
       "openProject": "Ouvrir le projet",
-      "hierarchy_parent": "la colonne Tâche parente",
+      "hierarchy_parent": "la colonne tâche parente",
       "hierarchy_wbs": "les numéros WBS (1, 1.1, 1.2)",
       "hierarchy_indent": "les lignes en retrait",
       "hierarchy_flat": "aucune sous-tâche",
@@ -3897,5 +4266,97 @@
     "none": "Plus rien à comparer.",
     "addToday": "Ajouter à aujourd’hui",
     "close": "Fermer"
+  },
+  "comments": {
+    "count": "{{count}} commentaires",
+    "loading": "Chargement des commentaires…",
+    "failedToLoad": "Échec du chargement des commentaires",
+    "empty": "Aucun commentaire pour l'instant",
+    "placeholder": "Écrire un commentaire… utiliser @ pour mentionner quelqu'un",
+    "replyPlaceholder": "Écrire une réponse…",
+    "submit": "Commenter",
+    "reply": "Répondre",
+    "unknownAuthor": "Inconnu",
+    "delete": "Supprimer le commentaire",
+    "deleteConfirmTitle": "Supprimer le commentaire",
+    "deleteConfirmMessage": "Supprimer ce commentaire ? Cette action est irréversible.",
+    "deletedPlaceholder": "Commentaire supprimé",
+    "failedToPost": "Échec de la publication du commentaire",
+    "failedToDelete": "Échec de la suppression du commentaire",
+    "like": "J'aime",
+    "dislike": "Je n'aime pas",
+    "failedToReact": "Échec de la mise à jour de la réaction",
+    "uploadingImage": "Envoi de l'image…",
+    "imageUploadFailed": "Impossible d'envoyer l'image"
+  },
+  "sortable": {
+    "move": "Déplacer",
+    "project": "projet à déplacer",
+    "task": "tâche à déplacer"
+  },
+  "groupPage": {
+    "title": "Groupe",
+    "subtitle": "Ce que chaque membre a en cours",
+    "empty": "Rien n'est encore assigné à ce groupe. Assigner une tâche à un membre pour la voir ici.",
+    "yourGroups": "Groupes"
+  },
+  "relations": {
+    "title": "Relations",
+    "add": "Ajouter une relation",
+    "remove": "Retirer la relation",
+    "searchPlaceholder": "Rechercher une tâche…",
+    "addFailed": "Échec de l'ajout de la relation.",
+    "removeFailed": "Échec de la suppression de la relation.",
+    "blocked": "Bloquée",
+    "blockedTooltip": "Bloquée par {{count}} tâche(s) ouverte(s)",
+    "completeBlockedTitle": "Tâche bloquée",
+    "completeBlockedMessage": "Cette tâche est bloquée par {{count}} tâche(s) ouverte(s). La terminer quand même ?",
+    "completeAnyway": "Terminer quand même",
+    "types": {
+      "blocks": "Bloque",
+      "blocked_by": "Bloquée par",
+      "related_to": "Lié à",
+      "duplicates": "Duplique",
+      "duplicated_by": "Dupliquée par"
+    }
+  },
+  "attachments": {
+    "limitReached": "20 pièces jointes maximum",
+    "addTitle": "Ajouter un titre",
+    "title": "Titre",
+    "download": "Télécharger",
+    "noPreview": "Aucun aperçu pour ce type de fichier.",
+    "previous": "Fichier précédent",
+    "next": "Fichier suivant",
+    "renameError": "Impossible d'enregistrer le titre",
+    "confirmDelete": "Supprimer le fichier ?"
+  },
+  "feedback": {
+    "title": "Envoyer un retour",
+    "subtitle": "Bug trouvé ou idée ? Faites-le-nous savoir.",
+    "placeholder": "Qu'est-il arrivé, ou qu'est-ce qui rendrait Cadence meilleure ?",
+    "contextNote": "La page affichée et la version de l'app sont envoyées avec le message.",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "sent": "Merci ! Le retour a été envoyé.",
+    "failed": "Impossible d'envoyer le retour"
+  },
+  "onboarding": {
+    "starter": {
+      "kicker": "Bienvenue dans Cadence",
+      "welcomeTitle": "Découvrir en une minute ce que Cadence permet de faire",
+      "videoTitle": "Une visite de Cadence en une minute",
+      "letsStart": "C'est bon, commençons",
+      "settingUp": "Configuration…"
+    }
+  },
+  "mobileNav": {
+    "label": "Navigation principale",
+    "inbox": "Boîte",
+    "tasks": "Tâches",
+    "agenda": "Agenda",
+    "habits": "Habitudes",
+    "review": "Bilan",
+    "newTask": "Nouvelle tâche"
   }
 }
