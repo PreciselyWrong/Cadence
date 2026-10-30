@@ -9,37 +9,45 @@ This document explains how tasks work in Cadence from a user behavior perspectiv
 ### Basic Task Creation
 
 1. **A task requires only a name to be created**
-   - All other fields (due date, priority, project, etc.) are optional
-   - Task name cannot be empty or just whitespace
-   - Tasks are created with "Not Started" status by default
+    - All other fields (due date, priority, project, etc.) are optional
+    - Task name cannot be empty or just whitespace
+    - Tasks are created with "Not Started" status by default
 
 2. **Every task gets a unique identifier (UID)**
-   - Used in URLs and API calls
-   - Never changes during the task's lifetime
-   - Example: `tsk_abc123def456`
+    - Used in URLs and API calls
+    - Never changes during the task's lifetime
+    - Example: `tsk_abc123def456`
 
 3. **Tasks belong to a user**
-   - The creator becomes the owner
-   - Only the owner (or those with shared access) can view/modify the task
-   - Admins can access all tasks
+    - The creator becomes the owner
+    - Only the owner (or those with shared access) can view/modify the task
+    - Admins can access all tasks
 
 ### Quick Capture
 
 4. **Tasks can be created from multiple places:**
-   - Main task list (+ button)
-   - Today page quick add
-   - Inbox (converted from inbox items)
-   - Quick capture modal (keyboard shortcut)
-   - Telegram bot
-   - API
+    - Main task list (+ button)
+    - Today page quick add
+    - Inbox (converted from inbox items)
+    - Quick capture modal (keyboard shortcut)
+    - Telegram bot
+    - API
 
 ### Opening a Task
 
 - Clicking a task anywhere in the app (lists, Today and the plan, search, notifications, the calendar, the Everyone board, parent links) opens it in the side panel over the current page. Habits still open their own page.
 - A task link, `/task/:uid`, opens all tasks with that task in the side panel. The link icon next to a task's title copies it.
-- The panel form saves name, description, status, priority, project, area, start, due, tags, assignee, defer until and recurrence together on Update. Subtasks, attachments and comments save as soon as they change. Relations stay on the full task page, which is at `/task/:uid/details`.
-- The description is Markdown, with Edit and Preview buttons; a written note opens in preview.
-- With a dropdown open, Escape or a click outside closes the dropdown; the panel stays open.
+- The panel and the Minimal pane share one inline editor, with no Update button. The title is large and editable (it reads #tags, +project, ~area and dates like quick capture). Under it, one chip per field in the Android detail order: due, start, priority, project, area, tags, status, recurrence, estimate, defer until, assignee. A chip opens a popover; each choice saves at once. Empty chips show the field name.
+- Every edit saves on its own (blur, Enter, a choice in a popover) and shows "Saved" in the footer. A failed save puts the value back and shows an error; nothing is kept half-saved. Closing with Escape saves what was typed but not yet blurred.
+- The description is Markdown, edited in place: click it to type, leave it to save. Ticking a task-list box saves too.
+- The due and start chips refuse a start after the due date; the defer chip refuses a date after the due date. A recurring task still asks which occurrences a new due date moves.
+- The footer has "Tomorrow" (moves the due date to tomorrow, keeping the time) and "Complete" / "Reopen".
+- Subtasks, attachments and comments save as soon as they change. Relations stay on the full task page, which is at `/task/:uid/details`.
+- With a popover or dropdown open, Escape or a click outside closes it; the panel stays open. Up and Down move inside a list popover, Enter picks.
+
+#### Date popover
+
+One shared popover (`frontend/components/Shared/DatePopover.tsx`) for every date chip: quick choices (Today, Tomorrow, This weekend, Next week, No date), a month calendar starting on the user's first day of the week, an optional time, and a text field. The field reads natural language ("demain 14h", "vendredi", "dans 3 jours") with the same server parser as quick capture (`POST /api/inbox/analyze-text`, wrapped by `frontend/utils/naturalDate.ts`) and previews the result as you type; Enter applies it. This weekend is the coming Saturday (next week's on a weekend); next week starts on the first day of the week. A date with no time (or midnight) never shows a time.
 
 ---
 
@@ -48,35 +56,35 @@ This document explains how tasks work in Cadence from a user behavior perspectiv
 ### Name & Description
 
 5. **Task name is the primary identifier**
-   - Required field, maximum length varies by database
-   - Displayed in lists, calendars, and notifications
-   - Can be edited at any time
+    - Required field, maximum length varies by database
+    - Displayed in lists, calendars, and notifications
+    - Can be edited at any time
 
 6. **Task note is for detailed information**
-   - Optional text field for longer descriptions
-   - Supports Markdown, with Edit and Preview buttons
-   - Useful for context, instructions, or reference materials
+    - Optional text field for longer descriptions
+    - Supports Markdown, with Edit and Preview buttons
+    - Useful for context, instructions, or reference materials
 
 ### Status Lifecycle
 
 7. **Seven status states exist:**
-   - **Not Started (0):** Default state, task hasn't been worked on yet
-   - **In Progress (1):** Task is actively being worked on
-   - **Done (2):** Task is completed
-   - **Archived (3):** Task is finished and archived for historical record
-   - **Waiting (4):** Task is blocked or waiting on something/someone
-   - **Cancelled (5):** Task was abandoned or is no longer needed
-   - **Planned (6):** Task is scheduled to be worked on
+    - **Not Started (0):** Default state, task hasn't been worked on yet
+    - **In Progress (1):** Task is actively being worked on
+    - **Done (2):** Task is completed
+    - **Archived (3):** Task is finished and archived for historical record
+    - **Waiting (4):** Task is blocked or waiting on something/someone
+    - **Cancelled (5):** Task was abandoned or is no longer needed
+    - **Planned (6):** Task is scheduled to be worked on
 
 8. **Status changes affect visibility:**
-   - "Done", "Archived", and "Cancelled" remove tasks from active views
-   - "In Progress", "Planned", and "Waiting" appear in Today page Planned section
-   - Status determines which section of the Today page shows the task
+    - "Done", "Archived", and "Cancelled" remove tasks from active views
+    - "In Progress", "Planned", and "Waiting" appear in Today page Planned section
+    - Status determines which section of the Today page shows the task
 
 9. **Completion tracking is automatic:**
-   - Changing status to "Done" sets `completed_at` timestamp to current time
-   - Changing status from "Done" to anything else clears `completed_at`
-   - Completed tasks show in "Completed" section of Today page
+    - Changing status to "Done" sets `completed_at` timestamp to current time
+    - Changing status from "Done" to anything else clears `completed_at`
+    - Completed tasks show in "Completed" section of Today page
 
 ### Priority Levels
 
@@ -136,7 +144,7 @@ This document explains how tasks work in Cadence from a user behavior perspectiv
 
 In Minimal mode a click on a task row opens the task in a pane on the right. On phones the pane is a full-screen sheet with a close button.
 
-- Edits happen in place, with no save button: title (saves on blur or Enter), round check, priority, due date, project, tags, note and subtasks.
+- Edits happen in place, with no save button, in the same inline editor as the side panel (see Opening a Task): title, a chip per field, description, subtasks, attachments and comments. The decision toggles (In view, This week, Later) and the postponement history stay under the comments.
 - The open task is kept in the URL as `?task=<uid>`, so a reload keeps it. Opening or closing replaces the history entry instead of adding one.
 - Escape closes the pane. "Open full page" goes to the task page.
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
@@ -223,13 +231,13 @@ In Minimal mode, four task lists share two pieces at their top and bottom. Dense
 
 Any task can be linked to another task, in a different project or none, from the **Relations** card on the task detail page (search for a task, pick a type, add).
 
-| You choose | The other task shows |
-|------------|----------------------|
-| Blocks | Blocked by |
-| Blocked by | Blocks |
-| Related to | Related to |
-| Duplicates | Duplicated by |
-| Duplicated by | Duplicates |
+| You choose    | The other task shows |
+| ------------- | -------------------- |
+| Blocks        | Blocked by           |
+| Blocked by    | Blocks               |
+| Related to    | Related to           |
+| Duplicates    | Duplicated by        |
+| Duplicated by | Duplicates           |
 
 - One row is stored per link and the other side is derived, so removing a link from either task removes it for both
 - A task cannot be linked to itself, the same link cannot be added twice, and a circular blocking chain (A blocks B blocks A) is refused
@@ -391,11 +399,11 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
 5. **Reactions** - One reaction per person per comment, `like` or `dislike`; sending `null` removes yours. Counts come back as `likes_count` / `dislikes_count` with your own `my_reaction`
 6. **Deleting is soft and author-only** - Only the author can delete; the row keeps its place with `deleted_at` set and the body and mentions cleared, and the UI shows a "Comment deleted" placeholder so replies stay in context. Deleted comments cannot be replied to or reacted to
 7. **Notifications** (`comment_added`, `mention`, subject to each person's notification preferences, optionally also sent to Telegram):
-   - The author of the parent comment gets "replied to your comment"
-   - The task owner and the assignee get "commented on <task>"
-   - Each mentioned person gets "mentioned you"
-   - Nobody is notified twice for one comment, and never for their own comment
-   - A failed notification never fails the comment
+    - The author of the parent comment gets "replied to your comment"
+    - The task owner and the assignee get "commented on <task>"
+    - Each mentioned person gets "mentioned you"
+    - Nobody is notified twice for one comment, and never for their own comment
+    - A failed notification never fails the comment
 
 **Endpoints:** `GET`/`POST /api/task/:uid/comments` (post takes `body`, optional `mentioned_person_uids` and `parent_comment_uid`), `DELETE /api/comment/:uid`, `POST /api/comment/:uid/reaction` (takes `type`), `POST /api/task/:uid/comments/images` (multipart `file`).
 
@@ -523,7 +531,7 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Manual order (drag-and-drop, for subtasks)
     - Custom (drag-and-drop, see below)
 
-54. **Custom order (drag and drop):**
+53. **Custom order (drag and drop):**
     - Drag a task row to move it on **All Tasks** (`/tasks`), inside a **project**, and among the **Anytime** tasks on **Today**
     - Dragging under any other sort switches the list to **Custom**, starting from the order that was on screen
     - Each list keeps its own order, per user: moving a task on All Tasks does not move it inside its project, and a shared project can be ordered differently by each member
@@ -533,7 +541,7 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Storage: `user_task_orders` (`user_id`, `task_id`, `scope`, `position`), scope `all` or `project:<project id>`
     - API: `GET /api/tasks/order?scope=all|project&project_uid=...` returns the saved uids; `PUT /api/tasks/order` with `{ scope, project_uid?, task_uids, base_order_by? }` saves a drag; `GET /api/tasks?order_by=custom:asc` sorts All Tasks by it
 
-55. **Pinned tasks:**
+54. **Pinned tasks:**
     - **Pin** / **Unpin** sits in a task row's actions menu and in the task page's `...` menu; a pinned row shows a small pin icon
     - Pinned tasks come first in their list, the most recently pinned first; the rest keep the list's order (any sort, including Custom)
     - Applies to All Tasks, a project's task list, the Upcoming day groups and the Today task sections that the server sorts (Suggested and the plan lists); within a group, a pinned task still stays in its group
@@ -541,7 +549,7 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Storage: `tasks.pinned_at` (nullable date). API: `PATCH /api/task/:uid` with `{ pinned: true|false }`; responses carry `pinned` (boolean) and `pinned_at`. The MCP `update_task` tool takes `pinned` too
     - Pinning is about list order only; **In view**, **This week** and **Later** are separate decisions, see [Review](34-review.md)
 
-53. **Grouping options:**
+55. **Grouping options:**
     - By project
     - By status
     - By priority
@@ -565,11 +573,7 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
       can open and complete it, even if you don't otherwise have access to its
       project.
 
-54b. **Who a task can be assigned to:**
-    - A task in a project can be assigned to your own people, the project owner and everyone the project is shared with (directly, through an area or goal, or through a group)
-    - A task that is not in a project can be assigned to your own people and everyone you share with, are in a group with, or created
-    - Assigning to a member notifies them and gives them access to that task. Assigning to a contact (someone without an account) is only a label
-    - See [People, Members and Roles](19-people-and-roles.md)
+54b. **Who a task can be assigned to:** - A task in a project can be assigned to your own people, the project owner and everyone the project is shared with (directly, through an area or goal, or through a group) - A task that is not in a project can be assigned to your own people and everyone you share with, are in a group with, or created - Assigning to a member notifies them and gives them access to that task. Assigning to a contact (someone without an account) is only a label - See [People, Members and Roles](19-people-and-roles.md)
 
 55. **Notification channels:**
     - In-app notifications (navbar indicator)
@@ -658,6 +662,7 @@ A mode that transforms a task into a habit tracker with streak counting, target 
 - [User Management](08-user-management.md) - Permissions and sharing
 
 **Technical Implementation Files:**
+
 - Task model: `/backend/models/task.js`
 - Task service: `/backend/modules/tasks/`
 - Task completion: `/backend/modules/tasks/operations/completion.js`
@@ -671,6 +676,7 @@ A mode that transforms a task into a habit tracker with streak counting, target 
 **Document Version:** 1.1.0
 **Last Updated:** 2026-09-22
 **Audience:** Developers, AI assistants, and end users
+
 ## Task row: tags, project and due date
 
 In the default (non-minimal) task list rows, the right side of the title line shows the task's tags as small rounded chips (the tag's palette color when it has one, neutral gray otherwise), then the project name with its folder icon, then the due date (red when overdue, blue today). At most two chips show; a `+N` chip lists the remaining tags in its tooltip. On narrow screens the chips are hidden from the title line and the tags move back to the secondary line. The Plan my day candidate rows show the same chips and the project on wider screens.

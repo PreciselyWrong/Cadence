@@ -1290,7 +1290,8 @@
     "failedToDeleteGoal": "Hedef silinemedi.",
     "failedToDeleteNote": "Not silinemedi.",
     "failedToDeleteTag": "Etiket silinemedi.",
-    "projectStatusUpdateFailed": "Proje durumu güncellenemedi"
+    "projectStatusUpdateFailed": "Proje durumu güncellenemedi",
+    "failedToSaveTask": "Görev kaydedilemedi."
   },
   "inbox": {
     "title": "Gelen Kutusu",
@@ -1557,7 +1558,12 @@
     "pin": "Sabitle",
     "unpin": "Sabitlemeyi kaldır",
     "pinned": "Sabitlendi",
-    "pinUpdateError": "Sabitleme güncellenemedi"
+    "pinUpdateError": "Sabitleme güncellenemedi",
+    "nameRequired": "Görev adı gerekli",
+    "deferAfterDueError": "Erteleme tarihi bitiş tarihinden sonra olamaz",
+    "untitled": "Adsız görev",
+    "instanceOfShort": "Tekrar",
+    "comments": "Yorumlar"
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -1839,7 +1845,8 @@
     "every": "Her",
     "weeks": "hafta",
     "months": "ay",
-    "advancedHint": "Belirli günler veya bir bitiş tarihi için tam görevi açın."
+    "advancedHint": "Belirli günler veya bir bitiş tarihi için tam görevi açın.",
+    "recurring": "Tekrarlayan"
   },
   "weekdays": {
     "sunday": "Paz",
@@ -3890,5 +3897,42 @@
     "none": "Karşılaştırılacak bir şey kalmadı.",
     "addToday": "Bugüne ekle",
     "close": "Kapat"
+  },
+  "taskPanel": {
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi",
+    "saveFailed": "Kaydetme başarısız, değişiklik geri alındı",
+    "eyebrow": "Görev",
+    "titleLabel": "Görev başlığı",
+    "addDescription": "Açıklama ekle (Markdown)",
+    "fields": "Görev alanları",
+    "due": "Bitiş",
+    "project": "Proje",
+    "areaInherited": "Proje alanı",
+    "noArea": "Alan yok",
+    "unassigned": "Kimse",
+    "reopen": "Yeniden aç",
+    "complete": "Tamamla"
+  },
+  "datePopover": {
+    "today": "Bugün",
+    "tomorrow": "Yarın",
+    "weekend": "Bu hafta sonu",
+    "nextWeek": "Gelecek hafta",
+    "noDate": "Tarih yok",
+    "typePlaceholder": "Tarih yazın: yarın 14:00, Cuma…",
+    "typeLabel": "Tarihi yazıyla girin",
+    "preview": "Anlaşıldı",
+    "noMatch": "Tarih anlaşılamadı",
+    "quick": "Hızlı seçimler",
+    "prevMonth": "Önceki ay",
+    "nextMonth": "Sonraki ay",
+    "time": "Saat",
+    "clearTime": "Saat yok"
+  },
+  "relations": {
+    "completeBlockedTitle": "Görev engelli",
+    "completeBlockedMessage": "Bu görev {{count}} açık göreve bağlı. Yine de tamamlansın mı?",
+    "completeAnyway": "Yine de tamamla"
   }
 }

@@ -1292,7 +1292,8 @@
     "failedToDeleteGoal": "Não foi possível excluir a meta.",
     "failedToDeleteNote": "Não foi possível excluir a nota.",
     "failedToDeleteTag": "Não foi possível excluir a tag.",
-    "projectStatusUpdateFailed": "Falha ao atualizar o estado do projeto"
+    "projectStatusUpdateFailed": "Falha ao atualizar o estado do projeto",
+    "failedToSaveTask": "Não foi possível salvar a tarefa."
   },
   "inbox": {
     "title": "Caixa de Entrada",
@@ -1559,7 +1560,12 @@
     "pin": "Fixar",
     "unpin": "Desafixar",
     "pinned": "Fixada",
-    "pinUpdateError": "Falha ao atualizar a fixação"
+    "pinUpdateError": "Falha ao atualizar a fixação",
+    "nameRequired": "O nome da tarefa é obrigatório",
+    "deferAfterDueError": "A data de adiamento não pode ser posterior ao vencimento",
+    "untitled": "Tarefa sem título",
+    "instanceOfShort": "Ocorrência",
+    "comments": "Comentários"
   },
   "projects": {
     "parentProject": "Projeto pai",
@@ -1842,7 +1848,8 @@
     "every": "Todo",
     "weeks": "semanas",
     "months": "meses",
-    "advancedHint": "Para dias da semana específicos ou uma data final, abra a tarefa completa."
+    "advancedHint": "Para dias da semana específicos ou uma data final, abra a tarefa completa.",
+    "recurring": "Recorrente"
   },
   "weekdays": {
     "sunday": "Dom",
@@ -3897,5 +3904,42 @@
     "none": "Nada mais para comparar.",
     "addToday": "Adicionar a hoje",
     "close": "Fechar"
+  },
+  "taskPanel": {
+    "saving": "Salvando…",
+    "saved": "Salvo",
+    "saveFailed": "Falha ao salvar, alteração desfeita",
+    "eyebrow": "Tarefa",
+    "titleLabel": "Título da tarefa",
+    "addDescription": "Adicionar descrição (Markdown)",
+    "fields": "Campos da tarefa",
+    "due": "Vencimento",
+    "project": "Projeto",
+    "areaInherited": "Área do projeto",
+    "noArea": "Sem área",
+    "unassigned": "Ninguém",
+    "reopen": "Reabrir",
+    "complete": "Concluir"
+  },
+  "datePopover": {
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "weekend": "Este fim de semana",
+    "nextWeek": "Próxima semana",
+    "noDate": "Sem data",
+    "typePlaceholder": "Digite uma data: amanhã 14h, sexta…",
+    "typeLabel": "Data por extenso",
+    "preview": "Entendido",
+    "noMatch": "Data não compreendida",
+    "quick": "Escolhas rápidas",
+    "prevMonth": "Mês anterior",
+    "nextMonth": "Próximo mês",
+    "time": "Hora",
+    "clearTime": "Sem hora"
+  },
+  "relations": {
+    "completeBlockedTitle": "A tarefa está bloqueada",
+    "completeBlockedMessage": "Esta tarefa está bloqueada por {{count}} tarefa(s) aberta(s). Concluir mesmo assim?",
+    "completeAnyway": "Concluir mesmo assim"
   }
 }

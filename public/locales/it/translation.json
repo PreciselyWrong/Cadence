@@ -1292,7 +1292,8 @@
     "failedToDeleteGoal": "Impossibile eliminare l'obiettivo.",
     "failedToDeleteNote": "Impossibile eliminare la nota.",
     "failedToDeleteTag": "Impossibile eliminare il tag.",
-    "projectStatusUpdateFailed": "Impossibile aggiornare lo stato del progetto"
+    "projectStatusUpdateFailed": "Impossibile aggiornare lo stato del progetto",
+    "failedToSaveTask": "Impossibile salvare l'attività."
   },
   "inbox": {
     "title": "Inbox",
@@ -1559,7 +1560,12 @@
     "pin": "Fissa",
     "unpin": "Sblocca",
     "pinned": "Fissata",
-    "pinUpdateError": "Impossibile aggiornare il fissaggio"
+    "pinUpdateError": "Impossibile aggiornare il fissaggio",
+    "nameRequired": "Il nome dell'attività è obbligatorio",
+    "deferAfterDueError": "La data di rinvio non può essere successiva alla scadenza",
+    "untitled": "Attività senza titolo",
+    "instanceOfShort": "Occorrenza",
+    "comments": "Commenti"
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -1842,7 +1848,8 @@
     "every": "Ogni",
     "weeks": "settimane",
     "months": "mesi",
-    "advancedHint": "Per giorni specifici della settimana o una data di fine, apri il compito completo."
+    "advancedHint": "Per giorni specifici della settimana o una data di fine, apri il compito completo.",
+    "recurring": "Ricorrente"
   },
   "weekdays": {
     "sunday": "Dom",
@@ -3897,5 +3904,42 @@
     "none": "Niente altro da confrontare.",
     "addToday": "Aggiungi a oggi",
     "close": "Chiudi"
+  },
+  "taskPanel": {
+    "saving": "Salvataggio…",
+    "saved": "Salvato",
+    "saveFailed": "Salvataggio non riuscito, modifica annullata",
+    "eyebrow": "Attività",
+    "titleLabel": "Titolo attività",
+    "addDescription": "Aggiungi una descrizione (Markdown)",
+    "fields": "Campi attività",
+    "due": "Scadenza",
+    "project": "Progetto",
+    "areaInherited": "Area del progetto",
+    "noArea": "Nessuna area",
+    "unassigned": "Nessuno",
+    "reopen": "Riapri",
+    "complete": "Completa"
+  },
+  "datePopover": {
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "weekend": "Questo weekend",
+    "nextWeek": "Settimana prossima",
+    "noDate": "Nessuna data",
+    "typePlaceholder": "Scrivi una data: domani 14:00, venerdì…",
+    "typeLabel": "Data a parole",
+    "preview": "Capito",
+    "noMatch": "Data non riconosciuta",
+    "quick": "Scelte rapide",
+    "prevMonth": "Mese precedente",
+    "nextMonth": "Mese successivo",
+    "time": "Ora",
+    "clearTime": "Nessuna ora"
+  },
+  "relations": {
+    "completeBlockedTitle": "Attività bloccata",
+    "completeBlockedMessage": "Questa attività è bloccata da {{count}} attività aperta/e. Completarla comunque?",
+    "completeAnyway": "Completa comunque"
   }
 }

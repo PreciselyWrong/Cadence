@@ -1221,7 +1221,8 @@
     "failedToDeleteGoal": "目標を削除できませんでした。",
     "failedToDeleteNote": "ノートを削除できませんでした。",
     "failedToDeleteTag": "タグを削除できませんでした。",
-    "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした"
+    "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした",
+    "failedToSaveTask": "タスクを保存できませんでした。"
   },
   "success": {
     "noteUpdated": "ノートが正常に更新されました！",
@@ -1545,7 +1546,8 @@
     "every": "毎",
     "weeks": "週間",
     "months": "月",
-    "advancedHint": "特定の曜日や終了日については、タスクの詳細を開いてください。"
+    "advancedHint": "特定の曜日や終了日については、タスクの詳細を開いてください。",
+    "recurring": "繰り返し"
   },
   "weekdays": {
     "monday": "月",
@@ -1787,7 +1789,12 @@
     "pin": "ピン留め",
     "unpin": "ピン留めを解除",
     "pinned": "ピン留め済み",
-    "pinUpdateError": "ピン留めの更新に失敗しました"
+    "pinUpdateError": "ピン留めの更新に失敗しました",
+    "nameRequired": "タスク名は必須です",
+    "deferAfterDueError": "延期日は期限より後にできません",
+    "untitled": "無題のタスク",
+    "instanceOfShort": "反復",
+    "comments": "コメント"
   },
   "calendar": {
     "focusSession": "集中",
@@ -3887,5 +3894,42 @@
     "none": "比べるものは残っていません。",
     "addToday": "今日に追加",
     "close": "閉じる"
+  },
+  "taskPanel": {
+    "saving": "保存中…",
+    "saved": "保存しました",
+    "saveFailed": "保存に失敗しました。変更を取り消しました",
+    "eyebrow": "タスク",
+    "titleLabel": "タスク名",
+    "addDescription": "説明を追加 (Markdown)",
+    "fields": "タスク項目",
+    "due": "期限",
+    "project": "プロジェクト",
+    "areaInherited": "プロジェクトのエリア",
+    "noArea": "エリアなし",
+    "unassigned": "担当者なし",
+    "reopen": "再開",
+    "complete": "完了"
+  },
+  "datePopover": {
+    "today": "今日",
+    "tomorrow": "明日",
+    "weekend": "今週末",
+    "nextWeek": "来週",
+    "noDate": "日付なし",
+    "typePlaceholder": "日付を入力: 明日 14時、金曜…",
+    "typeLabel": "自然言語で日付",
+    "preview": "理解しました",
+    "noMatch": "日付を認識できません",
+    "quick": "クイック選択",
+    "prevMonth": "前の月",
+    "nextMonth": "次の月",
+    "time": "時刻",
+    "clearTime": "時刻なし"
+  },
+  "relations": {
+    "completeBlockedTitle": "タスクはブロックされています",
+    "completeBlockedMessage": "このタスクは未完了のタスク {{count}} 件にブロックされています。それでも完了しますか？",
+    "completeAnyway": "それでも完了"
   }
 }

@@ -894,7 +894,8 @@
     "failedToDeleteGoal": "No se pudo eliminar la meta.",
     "failedToDeleteNote": "No se pudo eliminar la nota.",
     "failedToDeleteTag": "No se pudo eliminar la etiqueta.",
-    "projectStatusUpdateFailed": "Error al actualizar el estado del proyecto"
+    "projectStatusUpdateFailed": "Error al actualizar el estado del proyecto",
+    "failedToSaveTask": "No se pudo guardar la tarea."
   },
   "dropdown": {
     "createNew": "Crear Nuevo",
@@ -1539,7 +1540,12 @@
     "pin": "Fijar",
     "unpin": "Desfijar",
     "pinned": "Fijada",
-    "pinUpdateError": "No se pudo actualizar la fijación"
+    "pinUpdateError": "No se pudo actualizar la fijación",
+    "nameRequired": "El nombre de la tarea es obligatorio",
+    "deferAfterDueError": "La fecha de aplazamiento no puede ser posterior al vencimiento",
+    "untitled": "Tarea sin título",
+    "instanceOfShort": "Ocurrencia",
+    "comments": "Comentarios"
   },
   "dateIndicators": {
     "today": "HOY",
@@ -1804,7 +1810,8 @@
     "every": "Cada",
     "weeks": "semanas",
     "months": "meses",
-    "advancedHint": "Para días de la semana específicos o una fecha de finalización, abre la tarea completa."
+    "advancedHint": "Para días de la semana específicos o una fecha de finalización, abre la tarea completa.",
+    "recurring": "Recurrente"
   },
   "weekdays": {
     "monday": "Lun",
@@ -3884,5 +3891,42 @@
     "none": "No queda nada que comparar.",
     "addToday": "Añadir a hoy",
     "close": "Cerrar"
+  },
+  "taskPanel": {
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "saveFailed": "Error al guardar, cambio deshecho",
+    "eyebrow": "Tarea",
+    "titleLabel": "Título de la tarea",
+    "addDescription": "Añadir descripción (Markdown)",
+    "fields": "Campos de la tarea",
+    "due": "Vencimiento",
+    "project": "Proyecto",
+    "areaInherited": "Área del proyecto",
+    "noArea": "Sin área",
+    "unassigned": "Nadie",
+    "reopen": "Reabrir",
+    "complete": "Completar"
+  },
+  "datePopover": {
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "weekend": "Este fin de semana",
+    "nextWeek": "Próxima semana",
+    "noDate": "Sin fecha",
+    "typePlaceholder": "Escribe una fecha: mañana 14:00, viernes…",
+    "typeLabel": "Fecha en texto",
+    "preview": "Entendido",
+    "noMatch": "Fecha no reconocida",
+    "quick": "Opciones rápidas",
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "time": "Hora",
+    "clearTime": "Sin hora"
+  },
+  "relations": {
+    "completeBlockedTitle": "La tarea está bloqueada",
+    "completeBlockedMessage": "Esta tarea está bloqueada por {{count}} tarea(s) abierta(s). ¿Completarla igualmente?",
+    "completeAnyway": "Completar igualmente"
   }
 }

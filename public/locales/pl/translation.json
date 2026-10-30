@@ -1294,7 +1294,8 @@
     "failedToDeleteGoal": "Nie udało się usunąć celu.",
     "failedToDeleteNote": "Nie udało się usunąć notatki.",
     "failedToDeleteTag": "Nie udało się usunąć tagu.",
-    "projectStatusUpdateFailed": "Nie udało się zaktualizować statusu projektu"
+    "projectStatusUpdateFailed": "Nie udało się zaktualizować statusu projektu",
+    "failedToSaveTask": "Nie udało się zapisać zadania."
   },
   "inbox": {
     "title": "Skrzynka odbiorcza",
@@ -1561,7 +1562,12 @@
     "pin": "Przypnij",
     "unpin": "Odepnij",
     "pinned": "Przypięte",
-    "pinUpdateError": "Nie udało się zaktualizować przypięcia"
+    "pinUpdateError": "Nie udało się zaktualizować przypięcia",
+    "nameRequired": "Nazwa zadania jest wymagana",
+    "deferAfterDueError": "Data odroczenia nie może być po terminie",
+    "untitled": "Zadanie bez tytułu",
+    "instanceOfShort": "Wystąpienie",
+    "comments": "Komentarze"
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -1845,7 +1851,8 @@
     "every": "Każdy",
     "weeks": "tygodnie",
     "months": "miesiące",
-    "advancedHint": "Aby ustawić konkretne dni tygodnia lub datę końcową, otwórz pełne zadanie."
+    "advancedHint": "Aby ustawić konkretne dni tygodnia lub datę końcową, otwórz pełne zadanie.",
+    "recurring": "Cykliczne"
   },
   "weekdays": {
     "sunday": "Nie",
@@ -3908,5 +3915,42 @@
     "none": "Nie ma już czego porównywać.",
     "addToday": "Dodaj do dzisiaj",
     "close": "Zamknij"
+  },
+  "taskPanel": {
+    "saving": "Zapisywanie…",
+    "saved": "Zapisano",
+    "saveFailed": "Nie udało się zapisać, zmiana cofnięta",
+    "eyebrow": "Zadanie",
+    "titleLabel": "Tytuł zadania",
+    "addDescription": "Dodaj opis (Markdown)",
+    "fields": "Pola zadania",
+    "due": "Termin",
+    "project": "Projekt",
+    "areaInherited": "Obszar projektu",
+    "noArea": "Brak obszaru",
+    "unassigned": "Nikt",
+    "reopen": "Otwórz ponownie",
+    "complete": "Zakończ"
+  },
+  "datePopover": {
+    "today": "Dziś",
+    "tomorrow": "Jutro",
+    "weekend": "W tym weekendzie",
+    "nextWeek": "Przyszły tydzień",
+    "noDate": "Bez daty",
+    "typePlaceholder": "Wpisz datę: jutro 14:00, piątek…",
+    "typeLabel": "Data słownie",
+    "preview": "Zrozumiano",
+    "noMatch": "Nie rozpoznano daty",
+    "quick": "Szybki wybór",
+    "prevMonth": "Poprzedni miesiąc",
+    "nextMonth": "Następny miesiąc",
+    "time": "Godzina",
+    "clearTime": "Bez godziny"
+  },
+  "relations": {
+    "completeBlockedTitle": "Zadanie jest zablokowane",
+    "completeBlockedMessage": "To zadanie jest zablokowane przez {{count}} otwarte zadanie(a). Mimo to zakończyć?",
+    "completeAnyway": "Zakończ mimo to"
   }
 }

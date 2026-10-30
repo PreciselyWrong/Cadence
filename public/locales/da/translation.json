@@ -1290,7 +1290,8 @@
     "failedToDeleteGoal": "Kunne ikke slette målet.",
     "failedToDeleteNote": "Kunne ikke slette noten.",
     "failedToDeleteTag": "Kunne ikke slette tagget.",
-    "projectStatusUpdateFailed": "Kunne ikke opdatere projektstatus"
+    "projectStatusUpdateFailed": "Kunne ikke opdatere projektstatus",
+    "failedToSaveTask": "Kunne ikke gemme opgaven."
   },
   "inbox": {
     "title": "Indbakke",
@@ -1557,7 +1558,12 @@
     "pin": "Fastgør",
     "unpin": "Frigør",
     "pinned": "Fastgjort",
-    "pinUpdateError": "Kunne ikke opdatere fastgørelse"
+    "pinUpdateError": "Kunne ikke opdatere fastgørelse",
+    "nameRequired": "Opgavenavn er påkrævet",
+    "deferAfterDueError": "Udskydningsdato kan ikke være efter fristen",
+    "untitled": "Opgave uden titel",
+    "instanceOfShort": "Forekomst",
+    "comments": "Kommentarer"
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -1839,7 +1845,8 @@
     "every": "Hver",
     "weeks": "uger",
     "months": "måneder",
-    "advancedHint": "For specifikke ugedage eller en slutdato, åbn den fulde opgave."
+    "advancedHint": "For specifikke ugedage eller en slutdato, åbn den fulde opgave.",
+    "recurring": "Gentagende"
   },
   "weekdays": {
     "sunday": "Søn",
@@ -3890,5 +3897,42 @@
     "none": "Intet tilbage at sammenligne.",
     "addToday": "Føj til i dag",
     "close": "Luk"
+  },
+  "taskPanel": {
+    "saving": "Gemmer…",
+    "saved": "Gemt",
+    "saveFailed": "Kunne ikke gemme, ændring fortrudt",
+    "eyebrow": "Opgave",
+    "titleLabel": "Opgavetitel",
+    "addDescription": "Tilføj en beskrivelse (Markdown)",
+    "fields": "Opgavefelter",
+    "due": "Frist",
+    "project": "Projekt",
+    "areaInherited": "Projektets område",
+    "noArea": "Intet område",
+    "unassigned": "Ingen",
+    "reopen": "Genåbn",
+    "complete": "Fuldfør"
+  },
+  "datePopover": {
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "weekend": "Denne weekend",
+    "nextWeek": "Næste uge",
+    "noDate": "Ingen dato",
+    "typePlaceholder": "Skriv en dato: i morgen kl. 14, fredag…",
+    "typeLabel": "Dato med ord",
+    "preview": "Forstået",
+    "noMatch": "Datoen blev ikke forstået",
+    "quick": "Hurtigvalg",
+    "prevMonth": "Forrige måned",
+    "nextMonth": "Næste måned",
+    "time": "Tid",
+    "clearTime": "Ingen tid"
+  },
+  "relations": {
+    "completeBlockedTitle": "Opgaven er blokeret",
+    "completeBlockedMessage": "Denne opgave er blokeret af {{count}} åben(e) opgave(r). Fuldfør alligevel?",
+    "completeAnyway": "Fuldfør alligevel"
   }
 }

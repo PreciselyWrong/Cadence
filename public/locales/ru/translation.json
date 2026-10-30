@@ -1294,7 +1294,8 @@
     "failedToDeleteGoal": "Не удалось удалить цель.",
     "failedToDeleteNote": "Не удалось удалить заметку.",
     "failedToDeleteTag": "Не удалось удалить тег.",
-    "projectStatusUpdateFailed": "Не удалось обновить статус проекта"
+    "projectStatusUpdateFailed": "Не удалось обновить статус проекта",
+    "failedToSaveTask": "Не удалось сохранить задачу."
   },
   "inbox": {
     "title": "Входящие",
@@ -1561,7 +1562,12 @@
     "pin": "Закрепить",
     "unpin": "Открепить",
     "pinned": "Закреплена",
-    "pinUpdateError": "Не удалось обновить закрепление"
+    "pinUpdateError": "Не удалось обновить закрепление",
+    "nameRequired": "Укажите название задачи",
+    "deferAfterDueError": "Дата откладывания не может быть позже срока",
+    "untitled": "Задача без названия",
+    "instanceOfShort": "Повторение",
+    "comments": "Комментарии"
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -1845,7 +1851,8 @@
     "every": "Каждый",
     "weeks": "недели",
     "months": "месяцы",
-    "advancedHint": "Для конкретных дней недели или конечной даты откройте полное задание."
+    "advancedHint": "Для конкретных дней недели или конечной даты откройте полное задание.",
+    "recurring": "Повторяющаяся"
   },
   "weekdays": {
     "sunday": "Вс",
@@ -3908,5 +3915,42 @@
     "none": "Больше нечего сравнивать.",
     "addToday": "Добавить на сегодня",
     "close": "Закрыть"
+  },
+  "taskPanel": {
+    "saving": "Сохранение…",
+    "saved": "Сохранено",
+    "saveFailed": "Не удалось сохранить, изменение отменено",
+    "eyebrow": "Задача",
+    "titleLabel": "Название задачи",
+    "addDescription": "Добавить описание (Markdown)",
+    "fields": "Поля задачи",
+    "due": "Срок",
+    "project": "Проект",
+    "areaInherited": "Область проекта",
+    "noArea": "Нет области",
+    "unassigned": "Никто",
+    "reopen": "Открыть снова",
+    "complete": "Выполнить"
+  },
+  "datePopover": {
+    "today": "Сегодня",
+    "tomorrow": "Завтра",
+    "weekend": "В эти выходные",
+    "nextWeek": "Следующая неделя",
+    "noDate": "Без даты",
+    "typePlaceholder": "Введите дату: завтра в 14:00, пятница…",
+    "typeLabel": "Дата текстом",
+    "preview": "Понятно",
+    "noMatch": "Дата не распознана",
+    "quick": "Быстрый выбор",
+    "prevMonth": "Предыдущий месяц",
+    "nextMonth": "Следующий месяц",
+    "time": "Время",
+    "clearTime": "Без времени"
+  },
+  "relations": {
+    "completeBlockedTitle": "Задача заблокирована",
+    "completeBlockedMessage": "Эта задача заблокирована открытыми задачами: {{count}}. Всё равно выполнить?",
+    "completeAnyway": "Выполнить всё равно"
   }
 }

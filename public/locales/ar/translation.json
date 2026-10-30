@@ -1298,7 +1298,8 @@
     "failedToDeleteGoal": "تعذر حذف الهدف.",
     "failedToDeleteNote": "تعذر حذف الملاحظة.",
     "failedToDeleteTag": "تعذر حذف الوسم.",
-    "projectStatusUpdateFailed": "فشل تحديث حالة المشروع"
+    "projectStatusUpdateFailed": "فشل تحديث حالة المشروع",
+    "failedToSaveTask": "تعذّر حفظ المهمة."
   },
   "inbox": {
     "title": "صندوق الوارد",
@@ -1565,7 +1566,12 @@
     "pin": "تثبيت",
     "unpin": "إلغاء التثبيت",
     "pinned": "مثبتة",
-    "pinUpdateError": "فشل تحديث التثبيت"
+    "pinUpdateError": "فشل تحديث التثبيت",
+    "nameRequired": "اسم المهمة مطلوب",
+    "deferAfterDueError": "لا يمكن أن يكون تاريخ التأجيل بعد تاريخ الاستحقاق",
+    "untitled": "مهمة بلا عنوان",
+    "instanceOfShort": "تكرار",
+    "comments": "التعليقات"
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -1851,7 +1857,8 @@
     "every": "كل",
     "weeks": "أسابيع",
     "months": "أشهر",
-    "advancedHint": "لأيام الأسبوع المحددة أو تاريخ انتهاء، افتح المهمة الكاملة."
+    "advancedHint": "لأيام الأسبوع المحددة أو تاريخ انتهاء، افتح المهمة الكاملة.",
+    "recurring": "متكررة"
   },
   "weekdays": {
     "sunday": "أحد",
@@ -3926,5 +3933,42 @@
     "none": "لم يبقَ شيء للمقارنة.",
     "addToday": "أضف إلى اليوم",
     "close": "إغلاق"
+  },
+  "taskPanel": {
+    "saving": "جارٍ الحفظ…",
+    "saved": "تم الحفظ",
+    "saveFailed": "فشل الحفظ، تم التراجع عن التغيير",
+    "eyebrow": "مهمة",
+    "titleLabel": "عنوان المهمة",
+    "addDescription": "أضف وصفًا (Markdown)",
+    "fields": "حقول المهمة",
+    "due": "الاستحقاق",
+    "project": "المشروع",
+    "areaInherited": "منطقة المشروع",
+    "noArea": "بلا منطقة",
+    "unassigned": "لا أحد",
+    "reopen": "إعادة فتح",
+    "complete": "إنهاء"
+  },
+  "datePopover": {
+    "today": "اليوم",
+    "tomorrow": "غدًا",
+    "weekend": "نهاية هذا الأسبوع",
+    "nextWeek": "الأسبوع القادم",
+    "noDate": "بلا تاريخ",
+    "typePlaceholder": "اكتب تاريخًا: غدًا 2 م، الجمعة…",
+    "typeLabel": "التاريخ بالكلمات",
+    "preview": "مفهوم",
+    "noMatch": "التاريخ غير مفهوم",
+    "quick": "اختيارات سريعة",
+    "prevMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
+    "time": "الوقت",
+    "clearTime": "بلا وقت"
+  },
+  "relations": {
+    "completeBlockedTitle": "المهمة محظورة",
+    "completeBlockedMessage": "هذه المهمة محظورة بسبب {{count}} مهمة مفتوحة. هل تريد إنهاءها على أي حال؟",
+    "completeAnyway": "إنهاء على أي حال"
   }
 }

@@ -1324,7 +1324,8 @@
         "failedToDeleteGoal": "Cieľ sa nepodarilo odstrániť.",
         "failedToDeleteNote": "Poznámku sa nepodarilo odstrániť.",
         "failedToDeleteTag": "Štítok sa nepodarilo odstrániť.",
-        "projectStatusUpdateFailed": "Nepodarilo sa aktualizovať stav projektu"
+        "projectStatusUpdateFailed": "Nepodarilo sa aktualizovať stav projektu",
+        "failedToSaveTask": "Úlohu sa nepodarilo uložiť."
     },
     "inbox": {
         "title": "Schránka",
@@ -1588,7 +1589,11 @@
         "pin": "Pripnúť",
         "unpin": "Odopnúť",
         "pinned": "Pripnutá",
-        "pinUpdateError": "Nepodarilo sa aktualizovať pripnutie"
+        "pinUpdateError": "Nepodarilo sa aktualizovať pripnutie",
+        "nameRequired": "Názov úlohy je povinný",
+        "deferAfterDueError": "Dátum odloženia nemôže byť po termíne",
+        "untitled": "Úloha bez názvu",
+        "instanceOfShort": "Výskyt"
     },
     "subtasks": {
         "placeholder": "Pridajte podúlohu..."
@@ -2004,7 +2009,8 @@
         "every": "Každých",
         "weeks": "týždňov",
         "months": "mesiacov",
-        "advancedHint": "Pre konkrétne dni v týždni alebo dátum ukončenia otvorte celú úlohu."
+        "advancedHint": "Pre konkrétne dni v týždni alebo dátum ukončenia otvorte celú úlohu.",
+        "recurring": "Opakujúca sa"
     },
     "weekdays": {
         "sunday": "Ne",
@@ -3923,5 +3929,37 @@
         "none": "Už nie je čo porovnávať.",
         "addToday": "Pridať na dnes",
         "close": "Zavrieť"
-    }
+    },
+  "taskPanel": {
+    "saving": "Ukladá sa…",
+    "saved": "Uložené",
+    "saveFailed": "Uloženie zlyhalo, zmena bola vrátená",
+    "eyebrow": "Úloha",
+    "titleLabel": "Názov úlohy",
+    "addDescription": "Pridať popis (Markdown)",
+    "fields": "Polia úlohy",
+    "due": "Termín",
+    "project": "Projekt",
+    "areaInherited": "Oblasť projektu",
+    "noArea": "Bez oblasti",
+    "unassigned": "Nikto",
+    "reopen": "Znova otvoriť",
+    "complete": "Dokončiť"
+  },
+  "datePopover": {
+    "today": "Dnes",
+    "tomorrow": "Zajtra",
+    "weekend": "Tento víkend",
+    "nextWeek": "Budúci týždeň",
+    "noDate": "Bez dátumu",
+    "typePlaceholder": "Zadajte dátum: zajtra o 14:00, piatok…",
+    "typeLabel": "Dátum slovami",
+    "preview": "Rozumiem",
+    "noMatch": "Dátum sa nerozpoznal",
+    "quick": "Rýchly výber",
+    "prevMonth": "Predchádzajúci mesiac",
+    "nextMonth": "Nasledujúci mesiac",
+    "time": "Čas",
+    "clearTime": "Bez času"
+  }
 }

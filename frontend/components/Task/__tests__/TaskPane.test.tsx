@@ -74,6 +74,16 @@ jest.mock('../../../utils/inboxService', () => ({
     })),
 }));
 
+jest.mock('../TaskComments', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
+jest.mock('../TaskDetails/TaskAttachmentsCard', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 jest.mock('../../Shared/MarkdownRenderer', () => ({
     __esModule: true,
     default: ({ content }: { content: string }) => <div>{content}</div>,
@@ -81,13 +91,20 @@ jest.mock('../../Shared/MarkdownRenderer', () => ({
 
 jest.mock('../../Inbox/QuickCaptureInput', () => {
     const React = jest.requireActual('react');
-    const ComposerStub = React.forwardRef(({ initialValue }: any, ref: any) => {
-        React.useImperativeHandle(ref, () => ({
-            focus: () => {},
-            submit: async () => {},
-        }));
-        return <input defaultValue={initialValue} />;
-    });
+    const ComposerStub = React.forwardRef(
+        ({ initialValue, onTextChange }: any, ref: any) => {
+            React.useImperativeHandle(ref, () => ({
+                focus: () => {},
+                submit: async () => {},
+            }));
+            return (
+                <input
+                    defaultValue={initialValue}
+                    onChange={(e) => onTextChange?.(e.target.value)}
+                />
+            );
+        }
+    );
     ComposerStub.displayName = 'ComposerStub';
     return { __esModule: true, default: ComposerStub };
 });
@@ -97,6 +114,7 @@ jest.mock('../../../store/useStore', () => {
         tagsStore: { tags: [], loadTags: jest.fn(), addNewTags: jest.fn() },
         projectsStore: { projects: [] },
         areasStore: { areas: [] },
+        tasksStore: { updateTaskInStore: jest.fn() },
     };
     const useStore: any = (selector?: any) =>
         selector ? selector(state) : state;
@@ -163,7 +181,10 @@ const renderPage = () =>
         </MemoryRouter>
     );
 
-const titleInput = () => screen.queryByRole('textbox', { name: 'Task title' });
+const titleInput = () => {
+    const pane = screen.queryByRole('complementary', { name: 'Task details' });
+    return pane ? (within(pane).queryAllByRole('textbox')[0] ?? null) : null;
+};
 
 describe('TaskPane in minimal mode', () => {
     beforeEach(() => {
@@ -190,10 +211,13 @@ describe('TaskPane in minimal mode', () => {
     it('saves an edited title once and updates the list row', async () => {
         renderPage();
         fireEvent.click(screen.getByText('Write report'));
-        const input = await screen.findByRole('textbox', {
-            name: 'Task title',
-        });
+        await waitFor(() => expect(titleInput()).not.toBeNull());
+        const input = titleInput() as HTMLElement;
 
+        mockedFetchTaskByUid.mockResolvedValue({
+            ...baseTask,
+            name: 'Renamed report',
+        });
         fireEvent.change(input, { target: { value: 'Renamed report' } });
         fireEvent.blur(input);
 
@@ -210,7 +234,7 @@ describe('TaskPane in minimal mode', () => {
     it('closes on Escape and removes ?task=', async () => {
         renderPage();
         fireEvent.click(screen.getByText('Write report'));
-        await screen.findByRole('textbox', { name: 'Task title' });
+        await waitFor(() => expect(titleInput()).not.toBeNull());
 
         fireEvent.keyDown(document, { key: 'Escape' });
 

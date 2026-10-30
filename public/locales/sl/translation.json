@@ -1294,7 +1294,8 @@
     "failedToDeleteGoal": "Cilja ni bilo mogoče izbrisati.",
     "failedToDeleteNote": "Opombe ni bilo mogoče izbrisati.",
     "failedToDeleteTag": "Oznake ni bilo mogoče izbrisati.",
-    "projectStatusUpdateFailed": "Stanja projekta ni bilo mogoče posodobiti"
+    "projectStatusUpdateFailed": "Stanja projekta ni bilo mogoče posodobiti",
+    "failedToSaveTask": "Nalogo ni bilo mogoče shraniti."
   },
   "inbox": {
     "title": "Prejeto",
@@ -1561,7 +1562,12 @@
     "pin": "Pripni",
     "unpin": "Odpni",
     "pinned": "Pripeto",
-    "pinUpdateError": "Posodobitev pripenjanja ni uspela"
+    "pinUpdateError": "Posodobitev pripenjanja ni uspela",
+    "nameRequired": "Ime naloge je obvezno",
+    "deferAfterDueError": "Datum odložitve ne sme biti po roku",
+    "untitled": "Naloga brez naslova",
+    "instanceOfShort": "Ponovitev",
+    "comments": "Komentarji"
   },
   "projects": {
     "parentProject": "Nadrejeni projekt",
@@ -1845,7 +1851,8 @@
     "every": "Vsak",
     "weeks": "tedni",
     "months": "mesece",
-    "advancedHint": "Za določene dni v tednu ali končni datum odprite celotno nalogo."
+    "advancedHint": "Za določene dni v tednu ali končni datum odprite celotno nalogo.",
+    "recurring": "Ponavljajoča se"
   },
   "weekdays": {
     "sunday": "Ned",
@@ -3908,5 +3915,42 @@
     "none": "Ni več česa primerjati.",
     "addToday": "Dodaj za danes",
     "close": "Zapri"
+  },
+  "taskPanel": {
+    "saving": "Shranjevanje…",
+    "saved": "Shranjeno",
+    "saveFailed": "Shranjevanje ni uspelo, sprememba razveljavljena",
+    "eyebrow": "Naloga",
+    "titleLabel": "Naslov naloge",
+    "addDescription": "Dodaj opis (Markdown)",
+    "fields": "Polja naloge",
+    "due": "Rok",
+    "project": "Projekt",
+    "areaInherited": "Območje projekta",
+    "noArea": "Brez območja",
+    "unassigned": "Nihče",
+    "reopen": "Ponovno odpri",
+    "complete": "Dokončaj"
+  },
+  "datePopover": {
+    "today": "Danes",
+    "tomorrow": "Jutri",
+    "weekend": "Ta konec tedna",
+    "nextWeek": "Naslednji teden",
+    "noDate": "Brez datuma",
+    "typePlaceholder": "Vnesite datum: jutri ob 14.00, petek…",
+    "typeLabel": "Datum z besedami",
+    "preview": "Razumljeno",
+    "noMatch": "Datum ni razumljiv",
+    "quick": "Hitre izbire",
+    "prevMonth": "Prejšnji mesec",
+    "nextMonth": "Naslednji mesec",
+    "time": "Čas",
+    "clearTime": "Brez časa"
+  },
+  "relations": {
+    "completeBlockedTitle": "Naloga je blokirana",
+    "completeBlockedMessage": "To nalogo blokira {{count}} odprta naloga/e. Vseeno dokončaj?",
+    "completeAnyway": "Vseeno dokončaj"
   }
 }

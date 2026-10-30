@@ -1289,7 +1289,8 @@
     "failedToDeleteGoal": "Không thể xóa mục tiêu.",
     "failedToDeleteNote": "Không thể xóa ghi chú.",
     "failedToDeleteTag": "Không thể xóa thẻ.",
-    "projectStatusUpdateFailed": "Không thể cập nhật trạng thái dự án"
+    "projectStatusUpdateFailed": "Không thể cập nhật trạng thái dự án",
+    "failedToSaveTask": "Không thể lưu công việc."
   },
   "inbox": {
     "title": "Hộp thư đến",
@@ -1556,7 +1557,12 @@
     "pin": "Ghim",
     "unpin": "Bỏ ghim",
     "pinned": "Đã ghim",
-    "pinUpdateError": "Không thể cập nhật ghim"
+    "pinUpdateError": "Không thể cập nhật ghim",
+    "nameRequired": "Tên công việc là bắt buộc",
+    "deferAfterDueError": "Ngày hoãn không được sau hạn",
+    "untitled": "Công việc không tiêu đề",
+    "instanceOfShort": "Lần xuất hiện",
+    "comments": "Bình luận"
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -1837,7 +1843,8 @@
     "every": "Mỗi",
     "weeks": "tuần",
     "months": "tháng",
-    "advancedHint": "Đối với các ngày trong tuần cụ thể hoặc một ngày kết thúc, hãy mở nhiệm vụ đầy đủ."
+    "advancedHint": "Đối với các ngày trong tuần cụ thể hoặc một ngày kết thúc, hãy mở nhiệm vụ đầy đủ.",
+    "recurring": "Lặp lại"
   },
   "weekdays": {
     "sunday": "CN",
@@ -3886,5 +3893,42 @@
     "none": "Không còn gì để so sánh.",
     "addToday": "Thêm vào hôm nay",
     "close": "Đóng"
+  },
+  "taskPanel": {
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu",
+    "saveFailed": "Lưu thất bại, đã hoàn tác thay đổi",
+    "eyebrow": "Công việc",
+    "titleLabel": "Tên công việc",
+    "addDescription": "Thêm mô tả (Markdown)",
+    "fields": "Trường công việc",
+    "due": "Hạn",
+    "project": "Dự án",
+    "areaInherited": "Khu vực dự án",
+    "noArea": "Không có khu vực",
+    "unassigned": "Không ai",
+    "reopen": "Mở lại",
+    "complete": "Hoàn thành"
+  },
+  "datePopover": {
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "weekend": "Cuối tuần này",
+    "nextWeek": "Tuần sau",
+    "noDate": "Không có ngày",
+    "typePlaceholder": "Nhập ngày: ngày mai 14:00, thứ Sáu…",
+    "typeLabel": "Ngày bằng chữ",
+    "preview": "Đã hiểu",
+    "noMatch": "Không hiểu ngày",
+    "quick": "Lựa chọn nhanh",
+    "prevMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "time": "Giờ",
+    "clearTime": "Không có giờ"
+  },
+  "relations": {
+    "completeBlockedTitle": "Công việc bị chặn",
+    "completeBlockedMessage": "Công việc này bị chặn bởi {{count}} công việc chưa xong. Vẫn hoàn thành?",
+    "completeAnyway": "Vẫn hoàn thành"
   }
 }

@@ -517,7 +517,8 @@
     "failedToDeleteGoal": "Ziel konnte nicht gelöscht werden.",
     "failedToDeleteNote": "Notiz konnte nicht gelöscht werden.",
     "failedToDeleteTag": "Tag konnte nicht gelöscht werden.",
-    "projectStatusUpdateFailed": "Projektstatus konnte nicht aktualisiert werden"
+    "projectStatusUpdateFailed": "Projektstatus konnte nicht aktualisiert werden",
+    "failedToSaveTask": "Aufgabe konnte nicht gespeichert werden."
   },
   "success": {
     "noteUpdated": "Notiz erfolgreich aktualisiert!",
@@ -622,7 +623,8 @@
     "every": "Jeden",
     "weeks": "Wochen",
     "months": "Monate",
-    "advancedHint": "Für spezifische Wochentage oder ein Enddatum, öffnen Sie die vollständige Aufgabe."
+    "advancedHint": "Für spezifische Wochentage oder ein Enddatum, öffnen Sie die vollständige Aufgabe.",
+    "recurring": "Wiederkehrend"
   },
   "weekdays": {
     "sunday": "So",
@@ -1511,7 +1513,12 @@
     "pin": "Anheften",
     "unpin": "Lösen",
     "pinned": "Angeheftet",
-    "pinUpdateError": "Anheften konnte nicht aktualisiert werden"
+    "pinUpdateError": "Anheften konnte nicht aktualisiert werden",
+    "nameRequired": "Aufgabenname ist erforderlich",
+    "deferAfterDueError": "Das Zurückstellungsdatum darf nicht nach dem Fälligkeitsdatum liegen",
+    "untitled": "Aufgabe ohne Titel",
+    "instanceOfShort": "Vorkommen",
+    "comments": "Kommentare"
   },
   "calendar": {
     "focusSession": "Fokus",
@@ -3899,5 +3906,42 @@
     "none": "Nichts mehr zu vergleichen.",
     "addToday": "Zu heute hinzufügen",
     "close": "Schließen"
+  },
+  "taskPanel": {
+    "saving": "Speichern…",
+    "saved": "Gespeichert",
+    "saveFailed": "Speichern fehlgeschlagen, Änderung rückgängig gemacht",
+    "eyebrow": "Aufgabe",
+    "titleLabel": "Aufgabentitel",
+    "addDescription": "Beschreibung hinzufügen (Markdown)",
+    "fields": "Aufgabenfelder",
+    "due": "Fällig",
+    "project": "Projekt",
+    "areaInherited": "Projektbereich",
+    "noArea": "Kein Bereich",
+    "unassigned": "Niemand",
+    "reopen": "Wieder öffnen",
+    "complete": "Erledigen"
+  },
+  "datePopover": {
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "weekend": "Dieses Wochenende",
+    "nextWeek": "Nächste Woche",
+    "noDate": "Kein Datum",
+    "typePlaceholder": "Datum eingeben: morgen 14 Uhr, Freitag…",
+    "typeLabel": "Datum in Worten",
+    "preview": "Verstanden",
+    "noMatch": "Datum nicht erkannt",
+    "quick": "Schnellauswahl",
+    "prevMonth": "Voriger Monat",
+    "nextMonth": "Nächster Monat",
+    "time": "Uhrzeit",
+    "clearTime": "Keine Uhrzeit"
+  },
+  "relations": {
+    "completeBlockedTitle": "Aufgabe ist blockiert",
+    "completeBlockedMessage": "Diese Aufgabe ist durch {{count}} offene Aufgabe(n) blockiert. Trotzdem erledigen?",
+    "completeAnyway": "Trotzdem erledigen"
   }
 }

@@ -1290,7 +1290,8 @@
     "failedToDeleteGoal": "Det gick inte att radera målet.",
     "failedToDeleteNote": "Det gick inte att ta bort anteckningen.",
     "failedToDeleteTag": "Det gick inte att ta bort taggen.",
-    "projectStatusUpdateFailed": "Det gick inte att uppdatera projektstatus"
+    "projectStatusUpdateFailed": "Det gick inte att uppdatera projektstatus",
+    "failedToSaveTask": "Kunde inte spara uppgiften."
   },
   "inbox": {
     "title": "Inkorg",
@@ -1557,7 +1558,12 @@
     "pin": "Fäst",
     "unpin": "Lossa",
     "pinned": "Fäst",
-    "pinUpdateError": "Det gick inte att uppdatera fästningen"
+    "pinUpdateError": "Det gick inte att uppdatera fästningen",
+    "nameRequired": "Uppgiftsnamn krävs",
+    "deferAfterDueError": "Uppskjutningsdatum kan inte vara efter förfallodatumet",
+    "untitled": "Namnlös uppgift",
+    "instanceOfShort": "Förekomst",
+    "comments": "Kommentarer"
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -1839,7 +1845,8 @@
     "every": "Varje",
     "weeks": "veckor",
     "months": "månader",
-    "advancedHint": "För specifika veckodagar eller ett slutdatum, öppna hela uppgiften."
+    "advancedHint": "För specifika veckodagar eller ett slutdatum, öppna hela uppgiften.",
+    "recurring": "Återkommande"
   },
   "weekdays": {
     "sunday": "Sön",
@@ -3890,5 +3897,42 @@
     "none": "Inget kvar att jämföra.",
     "addToday": "Lägg till i dag",
     "close": "Stäng"
+  },
+  "taskPanel": {
+    "saving": "Sparar…",
+    "saved": "Sparat",
+    "saveFailed": "Kunde inte spara, ändringen ångrades",
+    "eyebrow": "Uppgift",
+    "titleLabel": "Uppgiftens titel",
+    "addDescription": "Lägg till beskrivning (Markdown)",
+    "fields": "Uppgiftsfält",
+    "due": "Förfallodatum",
+    "project": "Projekt",
+    "areaInherited": "Projektets område",
+    "noArea": "Inget område",
+    "unassigned": "Ingen",
+    "reopen": "Öppna igen",
+    "complete": "Slutför"
+  },
+  "datePopover": {
+    "today": "Idag",
+    "tomorrow": "Imorgon",
+    "weekend": "Denna helg",
+    "nextWeek": "Nästa vecka",
+    "noDate": "Inget datum",
+    "typePlaceholder": "Skriv ett datum: imorgon kl. 14, fredag…",
+    "typeLabel": "Datum med ord",
+    "preview": "Förstått",
+    "noMatch": "Datumet kunde inte tolkas",
+    "quick": "Snabbval",
+    "prevMonth": "Föregående månad",
+    "nextMonth": "Nästa månad",
+    "time": "Tid",
+    "clearTime": "Ingen tid"
+  },
+  "relations": {
+    "completeBlockedTitle": "Uppgiften är blockerad",
+    "completeBlockedMessage": "Uppgiften blockeras av {{count}} öppen(na) uppgift(er). Slutför ändå?",
+    "completeAnyway": "Slutför ändå"
   }
 }

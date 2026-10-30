@@ -1290,7 +1290,8 @@
     "failedToDeleteGoal": "Doel verwijderen mislukt.",
     "failedToDeleteNote": "Notitie verwijderen mislukt.",
     "failedToDeleteTag": "Tag verwijderen mislukt.",
-    "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt"
+    "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt",
+    "failedToSaveTask": "Taak opslaan mislukt."
   },
   "inbox": {
     "title": "Inbox",
@@ -1557,7 +1558,12 @@
     "pin": "Vastzetten",
     "unpin": "Losmaken",
     "pinned": "Vastgezet",
-    "pinUpdateError": "Vastzetten bijwerken mislukt"
+    "pinUpdateError": "Vastzetten bijwerken mislukt",
+    "nameRequired": "Taaknaam is verplicht",
+    "deferAfterDueError": "Uitstellen tot kan niet na de vervaldatum liggen",
+    "untitled": "Taak zonder titel",
+    "instanceOfShort": "Herhaling",
+    "comments": "Opmerkingen"
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -1839,7 +1845,8 @@
     "every": "Elke",
     "weeks": "weken",
     "months": "maanden",
-    "advancedHint": "Voor specifieke weekdagen of een einddatum, open de volledige taak."
+    "advancedHint": "Voor specifieke weekdagen of een einddatum, open de volledige taak.",
+    "recurring": "Herhalend"
   },
   "weekdays": {
     "sunday": "Zo",
@@ -3890,5 +3897,42 @@
     "none": "Niets meer om te vergelijken.",
     "addToday": "Aan vandaag toevoegen",
     "close": "Sluiten"
+  },
+  "taskPanel": {
+    "saving": "Opslaan…",
+    "saved": "Opgeslagen",
+    "saveFailed": "Opslaan mislukt, wijziging ongedaan gemaakt",
+    "eyebrow": "Taak",
+    "titleLabel": "Taaknaam",
+    "addDescription": "Beschrijving toevoegen (Markdown)",
+    "fields": "Taakvelden",
+    "due": "Vervaldatum",
+    "project": "Project",
+    "areaInherited": "Projectgebied",
+    "noArea": "Geen gebied",
+    "unassigned": "Niemand",
+    "reopen": "Heropenen",
+    "complete": "Voltooien"
+  },
+  "datePopover": {
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "weekend": "Dit weekend",
+    "nextWeek": "Volgende week",
+    "noDate": "Geen datum",
+    "typePlaceholder": "Typ een datum: morgen 14:00, vrijdag…",
+    "typeLabel": "Datum in woorden",
+    "preview": "Begrepen",
+    "noMatch": "Datum niet herkend",
+    "quick": "Snelle keuzes",
+    "prevMonth": "Vorige maand",
+    "nextMonth": "Volgende maand",
+    "time": "Tijd",
+    "clearTime": "Geen tijd"
+  },
+  "relations": {
+    "completeBlockedTitle": "Taak is geblokkeerd",
+    "completeBlockedMessage": "Deze taak wordt geblokkeerd door {{count}} open taak/taken. Toch voltooien?",
+    "completeAnyway": "Toch voltooien"
   }
 }

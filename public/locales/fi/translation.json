@@ -1290,7 +1290,8 @@
     "failedToDeleteGoal": "Tavoitteen poistaminen epäonnistui.",
     "failedToDeleteNote": "Muistiinpanon poistaminen epäonnistui.",
     "failedToDeleteTag": "Tunnisteen poistaminen epäonnistui.",
-    "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui"
+    "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui",
+    "failedToSaveTask": "Tehtävän tallennus epäonnistui."
   },
   "inbox": {
     "title": "Saapuneet",
@@ -1557,7 +1558,12 @@
     "pin": "Kiinnitä",
     "unpin": "Irrota",
     "pinned": "Kiinnitetty",
-    "pinUpdateError": "Kiinnityksen päivitys epäonnistui"
+    "pinUpdateError": "Kiinnityksen päivitys epäonnistui",
+    "nameRequired": "Tehtävän nimi on pakollinen",
+    "deferAfterDueError": "Lykkäyspäivä ei voi olla eräpäivän jälkeen",
+    "untitled": "Nimetön tehtävä",
+    "instanceOfShort": "Esiintymä",
+    "comments": "Kommentit"
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -1839,7 +1845,8 @@
     "every": "Joka",
     "weeks": "viikkoa",
     "months": "kuukautta",
-    "advancedHint": "Tietyille viikonpäiville tai loppupäivämäärälle avaa koko tehtävä."
+    "advancedHint": "Tietyille viikonpäiville tai loppupäivämäärälle avaa koko tehtävä.",
+    "recurring": "Toistuva"
   },
   "weekdays": {
     "sunday": "Su",
@@ -3890,5 +3897,42 @@
     "none": "Ei enää vertailtavaa.",
     "addToday": "Lisää tälle päivälle",
     "close": "Sulje"
+  },
+  "taskPanel": {
+    "saving": "Tallennetaan…",
+    "saved": "Tallennettu",
+    "saveFailed": "Tallennus epäonnistui, muutos peruttu",
+    "eyebrow": "Tehtävä",
+    "titleLabel": "Tehtävän nimi",
+    "addDescription": "Lisää kuvaus (Markdown)",
+    "fields": "Tehtävän kentät",
+    "due": "Eräpäivä",
+    "project": "Projekti",
+    "areaInherited": "Projektin alue",
+    "noArea": "Ei aluetta",
+    "unassigned": "Ei kukaan",
+    "reopen": "Avaa uudelleen",
+    "complete": "Merkitse valmiiksi"
+  },
+  "datePopover": {
+    "today": "Tänään",
+    "tomorrow": "Huomenna",
+    "weekend": "Tänä viikonloppuna",
+    "nextWeek": "Ensi viikko",
+    "noDate": "Ei päivämäärää",
+    "typePlaceholder": "Kirjoita päivämäärä: huomenna klo 14, perjantai…",
+    "typeLabel": "Päivämäärä sanoin",
+    "preview": "Ymmärretty",
+    "noMatch": "Päivämäärää ei tunnistettu",
+    "quick": "Pikavalinnat",
+    "prevMonth": "Edellinen kuukausi",
+    "nextMonth": "Seuraava kuukausi",
+    "time": "Aika",
+    "clearTime": "Ei kellonaikaa"
+  },
+  "relations": {
+    "completeBlockedTitle": "Tehtävä on estetty",
+    "completeBlockedMessage": "Tehtävän estää {{count}} avoin tehtävä. Merkitäänkö valmiiksi silti?",
+    "completeAnyway": "Merkitse silti valmiiksi"
   }
 }

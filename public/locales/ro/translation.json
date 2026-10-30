@@ -1294,7 +1294,8 @@
     "failedToDeleteGoal": "Obiectivul nu a putut fi șters.",
     "failedToDeleteNote": "Nota nu a putut fi ștearsă.",
     "failedToDeleteTag": "Eticheta nu a putut fi ștearsă.",
-    "projectStatusUpdateFailed": "Nu s-a putut actualiza starea proiectului"
+    "projectStatusUpdateFailed": "Nu s-a putut actualiza starea proiectului",
+    "failedToSaveTask": "Nu s-a putut salva sarcina."
   },
   "inbox": {
     "title": "Căsuța de primire",
@@ -1561,7 +1562,12 @@
     "pin": "Fixează",
     "unpin": "Anulează fixarea",
     "pinned": "Fixată",
-    "pinUpdateError": "Actualizarea fixării a eșuat"
+    "pinUpdateError": "Actualizarea fixării a eșuat",
+    "nameRequired": "Numele sarcinii este obligatoriu",
+    "deferAfterDueError": "Data amânării nu poate fi după scadență",
+    "untitled": "Sarcină fără titlu",
+    "instanceOfShort": "Apariție",
+    "comments": "Comentarii"
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -1844,7 +1850,8 @@
     "every": "Fiecare",
     "weeks": "săptămâni",
     "months": "luni",
-    "advancedHint": "Pentru zile specifice ale săptămânii sau o dată de finalizare, deschideți sarcina completă."
+    "advancedHint": "Pentru zile specifice ale săptămânii sau o dată de finalizare, deschideți sarcina completă.",
+    "recurring": "Recurentă"
   },
   "weekdays": {
     "sunday": "Dum",
@@ -3901,5 +3908,42 @@
     "none": "Nu mai e nimic de comparat.",
     "addToday": "Adaugă la azi",
     "close": "Închide"
+  },
+  "taskPanel": {
+    "saving": "Se salvează…",
+    "saved": "Salvat",
+    "saveFailed": "Salvarea a eșuat, modificarea a fost anulată",
+    "eyebrow": "Sarcină",
+    "titleLabel": "Titlul sarcinii",
+    "addDescription": "Adaugă o descriere (Markdown)",
+    "fields": "Câmpurile sarcinii",
+    "due": "Scadență",
+    "project": "Proiect",
+    "areaInherited": "Zona proiectului",
+    "noArea": "Fără zonă",
+    "unassigned": "Nimeni",
+    "reopen": "Redeschide",
+    "complete": "Finalizează"
+  },
+  "datePopover": {
+    "today": "Azi",
+    "tomorrow": "Mâine",
+    "weekend": "Weekendul acesta",
+    "nextWeek": "Săptămâna viitoare",
+    "noDate": "Fără dată",
+    "typePlaceholder": "Scrie o dată: mâine la 14:00, vineri…",
+    "typeLabel": "Dată în cuvinte",
+    "preview": "Înțeles",
+    "noMatch": "Data nu a fost înțeleasă",
+    "quick": "Alegeri rapide",
+    "prevMonth": "Luna anterioară",
+    "nextMonth": "Luna următoare",
+    "time": "Ora",
+    "clearTime": "Fără oră"
+  },
+  "relations": {
+    "completeBlockedTitle": "Sarcina este blocată",
+    "completeBlockedMessage": "Această sarcină este blocată de {{count}} sarcină/sarcini deschisă/deschise. Finalizezi oricum?",
+    "completeAnyway": "Finalizează oricum"
   }
 }

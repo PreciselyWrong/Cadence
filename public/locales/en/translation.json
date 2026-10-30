@@ -1376,7 +1376,8 @@
     "failedToDeleteGoal": "Failed to delete goal.",
     "failedToDeleteNote": "Failed to delete note.",
     "failedToDeleteTag": "Failed to delete tag.",
-    "projectStatusUpdateFailed": "Failed to update project status"
+    "projectStatusUpdateFailed": "Failed to update project status",
+    "failedToSaveTask": "Failed to save task."
   },
   "inbox": {
     "title": "Inbox",
@@ -1644,7 +1645,11 @@
     "pin": "Pin",
     "unpin": "Unpin",
     "pinned": "Pinned",
-    "pinUpdateError": "Failed to update pin"
+    "pinUpdateError": "Failed to update pin",
+    "nameRequired": "Task name is required",
+    "deferAfterDueError": "Defer until date cannot be after the due date",
+    "untitled": "Untitled task",
+    "instanceOfShort": "Occurrence"
   },
   "subtasks": {
     "placeholder": "Add a subtask..."
@@ -2095,7 +2100,8 @@
     "every": "Every",
     "weeks": "weeks",
     "months": "months",
-    "advancedHint": "For specific weekdays or an end date, open the full task."
+    "advancedHint": "For specific weekdays or an end date, open the full task.",
+    "recurring": "Recurring"
   },
   "weekdays": {
     "sunday": "Sun",
@@ -4288,5 +4294,37 @@
     "none": "Nothing left to compare.",
     "addToday": "Add to today",
     "close": "Close"
+  },
+  "taskPanel": {
+    "saving": "Saving…",
+    "saved": "Saved",
+    "saveFailed": "Save failed, change undone",
+    "eyebrow": "Task",
+    "titleLabel": "Task title",
+    "addDescription": "Add a description (Markdown)",
+    "fields": "Task fields",
+    "due": "Due",
+    "project": "Project",
+    "areaInherited": "Project area",
+    "noArea": "No area",
+    "unassigned": "Nobody",
+    "reopen": "Reopen",
+    "complete": "Complete"
+  },
+  "datePopover": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "weekend": "This weekend",
+    "nextWeek": "Next week",
+    "noDate": "No date",
+    "typePlaceholder": "Type a date: tomorrow 2pm, Friday…",
+    "typeLabel": "Date in words",
+    "preview": "Understood",
+    "noMatch": "Date not understood",
+    "quick": "Quick choices",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "time": "Time",
+    "clearTime": "No time"
   }
 }
