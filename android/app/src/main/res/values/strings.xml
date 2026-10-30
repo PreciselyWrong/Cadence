@@ -656,4 +656,8 @@
     <string name="settings_widget_today_title">Aujourd’hui</string>
     <string name="settings_widget_today_open">Configurer le widget Aujourd’hui</string>
     <string name="settings_widget_today_none">Ajoutez le widget Aujourd’hui à l’accueil pour le configurer.</string>
+    <string name="today_config_filter_projects">Projets (aucun = tous)</string>
+    <string name="today_config_filter_tags">Étiquettes (aucune = toutes)</string>
+    <string name="today_config_preview_task_1">Appeler le dentiste</string>
+    <string name="today_config_preview_task_2">Relire le brief</string>
 </resources>

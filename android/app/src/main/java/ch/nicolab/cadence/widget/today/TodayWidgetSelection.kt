@@ -32,6 +32,8 @@ fun selectWidgetTasks(
 ): TodaySelection {
     val candidates = scopeTasks(tasks, config.taskScope, today, now)
         .filter { !config.highPriorityOnly || it.priority == TaskPriority.HIGH }
+        .filter { config.projectUids.isEmpty() || it.projectUid in config.projectUids }
+        .filter { config.tagUids.isEmpty() || it.tagUids.any(config.tagUids::contains) }
         .filter { !config.hideRecurring || !it.isRecurring }
         .sortedWith(comparatorOf(config.sort))
     val overdueFirst = config.showOverdueSection

@@ -25,12 +25,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -48,6 +50,7 @@ import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.data.local.model.PersistedHabit
+import ch.nicolab.cadence.tasks.TasksGraph
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -114,13 +117,19 @@ private fun TodayWidgetConfiguration(
     val palette = cadence
     var config by remember { mutableStateOf(initial) }
     val habits by produceState<List<PersistedHabit>>(emptyList()) { value = repository.observeHabits().first() }
+    val tasksRepository = TasksGraph.repository(LocalContext.current)
+    val projects by tasksRepository.observeProjects().collectAsState(emptyList())
+    val tags by tasksRepository.observeTags().collectAsState(emptyList())
     fun edit(change: (TodayWidgetConfig) -> TodayWidgetConfig) {
         config = change(config)
     }
 
     CadenceScreen {
-        Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
             ScreenHeader(title = stringResource(R.string.today_config_title), onBack = onBack, backDescription = stringResource(R.string.today_config_back))
+            WidgetPreviewBand(config)
+            Spacer(Modifier.height(Space.sm))
+            Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             SectionHeader(stringResource(R.string.today_config_section_background))
             Panel {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -133,6 +142,9 @@ private fun TodayWidgetConfiguration(
             Panel {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     ChoiceRow(ControlColour.entries, config.controlColour, ::controlLabel) { edit { c -> c.copy(controlColour = it) } }
+                    if (config.controlColour == ControlColour.LIBRE) {
+                        FreeColourPicker(config.freeControlArgb) { argb -> edit { c -> c.copy(freeControlArgb = argb) } }
+                    }
                     ToggleRow(stringResource(R.string.today_config_discrete), config.discreteButtons) { edit { c -> c.copy(discreteButtons = it) } }
                 }
             }
@@ -159,6 +171,7 @@ private fun TodayWidgetConfiguration(
                 Panel {
                     Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                         ChoiceRow(TaskScope.entries, config.taskScope, ::scopeLabel) { edit { c -> c.copy(taskScope = it) } }
+                        FilterChips(projects, tags, config) { updated -> config = updated }
                         ToggleRow(stringResource(R.string.today_config_high_priority), config.highPriorityOnly) { edit { c -> c.copy(highPriorityOnly = it) } }
                         ToggleRow(stringResource(R.string.today_config_hide_recurring), config.hideRecurring) { edit { c -> c.copy(hideRecurring = it) } }
                         ChoiceRow(TaskSort.entries, config.sort, ::sortLabel) { edit { c -> c.copy(sort = it) } }
@@ -180,6 +193,7 @@ private fun TodayWidgetConfiguration(
             Spacer(Modifier.height(Space.md))
             PrimaryAction(label = stringResource(R.string.today_config_save), modifier = Modifier.fillMaxWidth()) { onSave(config) }
             Spacer(Modifier.height(Space.lg))
+            }
         }
     }
 }
