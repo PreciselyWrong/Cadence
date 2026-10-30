@@ -268,7 +268,9 @@ const timeString = (date: Date) => format(date, 'HH:mm');
 export const moveUpdate = (
     task: CalendarTask,
     event: CalendarEvent,
-    newStart: Date
+    newStart: Date,
+    // Dropped on an hour: a whole-day task gets that time.
+    timed = false
 ): Record<string, unknown> => {
     if (event.id.startsWith('task-defer-')) {
         return { defer_until: newStart.toISOString() };
@@ -283,7 +285,8 @@ export const moveUpdate = (
                 addDays(localDateTime(task.due_date)!, dayShift)
             ),
         };
-        if (task.due_time) update.due_time = task.due_time;
+        if (timed) update.due_time = timeString(newStart);
+        else if (task.due_time) update.due_time = task.due_time;
         if (task.start_date) {
             update.start_date = dayString(
                 addDays(localDateTime(task.start_date)!, dayShift)

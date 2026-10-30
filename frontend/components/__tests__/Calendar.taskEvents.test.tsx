@@ -110,6 +110,14 @@ describe('moveUpdate and resizeUpdate', () => {
         });
     });
 
+    it('gives a whole-day task the hour it is dropped on', () => {
+        const task = { id: 1, due_date: '2026-10-30' };
+        const [event] = taskToEvents(task);
+        expect(
+            moveUpdate(task, event, new Date(2026, 9, 31, 10, 0), true)
+        ).toEqual({ due_date: '2026-10-31', due_time: '10:00' });
+    });
+
     it('shifts a whole-day span by days', () => {
         const task = {
             id: 1,

@@ -813,7 +813,7 @@ const Calendar: React.FC = () => {
         if (!task?.uid || !event || event.readOnly) return;
 
         const newStart = new Date(newDate);
-        if (newHour !== undefined && !event.allDay) {
+        if (newHour !== undefined) {
             newStart.setHours(newHour, 0, 0, 0);
         } else {
             newStart.setHours(
@@ -824,7 +824,10 @@ const Calendar: React.FC = () => {
             );
         }
 
-        await saveTaskChange(task, moveUpdate(task, event, newStart));
+        await saveTaskChange(
+            task,
+            moveUpdate(task, event, newStart, newHour !== undefined)
+        );
     };
 
     const handleEventResize = async (eventId: string, newEnd: Date) => {

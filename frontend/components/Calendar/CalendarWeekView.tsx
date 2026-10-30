@@ -223,9 +223,10 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 ))}
             </div>
 
+            {/* Capped at about three rows so the hours stay in view. */}
             {allDayBars.length > 0 && (
                 <div
-                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
+                    className="grid gap-y-0.5 py-1 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 max-h-[5.5rem] overflow-y-auto shrink-0"
                     style={gridColumns}
                     data-testid="calendar-all-day-row"
                 >
