@@ -470,6 +470,47 @@ describe('Daily plan routes', () => {
         expect(res.status).toBe(400);
     });
 
+    it('saves focus blocks and returns them with the plan', async () => {
+        const initial = await agent.get('/api/daily-plan');
+        expect(initial.body.focus_blocks).toEqual([]);
+
+        const saved = await agent.put('/api/daily-plan/focus-blocks').send({
+            blocks: [
+                { days: [3, 1, 1], start: 540, end: 660, label: 'Deep work' },
+            ],
+        });
+        expect(saved.status).toBe(200);
+        expect(saved.body.blocks).toHaveLength(1);
+        expect(saved.body.blocks[0]).toMatchObject({
+            days: [1, 3],
+            start: 540,
+            end: 660,
+            label: 'Deep work',
+        });
+        expect(typeof saved.body.blocks[0].id).toBe('string');
+
+        const after = await agent.get('/api/daily-plan');
+        expect(after.body.focus_blocks).toEqual(saved.body.blocks);
+
+        await agent
+            .put('/api/daily-plan/hours')
+            .send({ start: 480, end: 1080 });
+        const kept = await agent.get('/api/daily-plan/focus-blocks');
+        expect(kept.body.blocks).toEqual(saved.body.blocks);
+    });
+
+    it.each([
+        [{ blocks: 'x' }],
+        [{ blocks: [{ days: [], start: 540, end: 660 }] }],
+        [{ blocks: [{ days: [7], start: 540, end: 660 }] }],
+        [{ blocks: [{ days: [1], start: 660, end: 540 }] }],
+        [{ blocks: [{ days: [1], start: 545, end: 660 }] }],
+        [{ blocks: Array(21).fill({ days: [1], start: 540, end: 600 }) }],
+    ])('rejects invalid focus blocks %j', async (body) => {
+        const res = await agent.put('/api/daily-plan/focus-blocks').send(body);
+        expect(res.status).toBe(400);
+    });
+
     it('rejects a ranking that does not list every bucket once', async () => {
         const res = await agent
             .put('/api/daily-plan/ranking')

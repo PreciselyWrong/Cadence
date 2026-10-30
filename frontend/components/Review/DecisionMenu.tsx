@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 export interface DecisionOption {
     key: string;
@@ -63,12 +63,10 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({ options, disabled }) => {
                 aria-haspopup="menu"
                 aria-expanded={open}
                 onClick={() => setOpen((value) => !value)}
-                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-800 disabled:opacity-40 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-800 hover:bg-gray-50 disabled:opacity-40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
             >
-                <span className="max-sm:sr-only">
-                    {t('review.decide', 'Decide')}
-                </span>
-                <EllipsisHorizontalIcon className="h-4 w-4" aria-hidden />
+                <span>{t('review.decide', 'Decide')}</span>
+                <ChevronDownIcon className="h-4 w-4" aria-hidden />
             </button>
             {open && (
                 <div

@@ -85,6 +85,24 @@ const dailyPlanController = {
         }
     },
 
+    async getFocusBlocks(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await dailyPlanService.getFocusBlocks(user));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async saveFocusBlocks(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await dailyPlanService.saveFocusBlocks(user, req.body));
+        } catch (err) {
+            next(err);
+        }
+    },
+
     async saveDayHours(req, res, next) {
         try {
             const user = requireUser(req);

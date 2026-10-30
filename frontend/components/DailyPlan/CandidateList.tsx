@@ -16,6 +16,7 @@ import {
 import DurationChips from './DurationChips';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { DEFAULT_DURATION, formatDuration, taskLength } from './planUtils';
+import { GROUP_ORDER, TaskGroupKey, orderedCandidates } from './autoPlace';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { isCurrentWeek } from '../Review/TaskDecisionRow';
 import ThisOrThat from '../Review/ThisOrThat';
@@ -28,8 +29,6 @@ export type CandidateFilter =
     | 'due_today'
     | 'suggested'
     | 'inbox';
-
-type TaskGroupKey = Exclude<CandidateFilter, 'all' | 'inbox'>;
 
 interface CandidateListProps {
     candidates: PlanCandidates;
@@ -60,14 +59,6 @@ interface CandidateListProps {
 const PAGE_SIZE = 5;
 // "Help me choose" compares the first candidates in the list's order.
 const CHOOSE_FROM = 8;
-// Order of importance when everything is shown together.
-const GROUP_ORDER: TaskGroupKey[] = [
-    'tagged_today',
-    'overdue',
-    'due_today',
-    'in_progress',
-    'suggested',
-];
 
 const daysBetween = (from: string, to: string) =>
     Math.round(
@@ -277,27 +268,11 @@ const CandidateList: React.FC<CandidateListProps> = ({
 
     // One ordered list, in the user's ranking when the server sends it;
     // planned tasks are on the timeline, not here.
-    const byUid = new Map<string, { task: Task; group: TaskGroupKey }>();
-    for (const group of GROUP_ORDER) {
-        for (const task of candidates[group] ?? []) {
-            if (task.uid && !byUid.has(task.uid)) {
-                byUid.set(task.uid, { task, group });
-            }
-        }
-    }
-    const ranked = candidates.ranked ?? [];
-    const order = [
-        ...ranked,
-        ...[...byUid.keys()].filter((uid) => !ranked.includes(uid)),
-    ];
-    const entries = order
-        .map((uid) => byUid.get(uid))
-        .filter(
-            (entry): entry is { task: Task; group: TaskGroupKey } =>
-                !!entry &&
-                (filter === 'all' || filter === entry.group) &&
-                !planned.has(entry.task.uid as string)
-        );
+    const entries = orderedCandidates(candidates).filter(
+        (entry) =>
+            (filter === 'all' || filter === entry.group) &&
+            !planned.has(entry.task.uid as string)
+    );
     const shown = entries.slice(0, visible);
 
     // Suggestions still on the server, past the ones loaded so far. Only the

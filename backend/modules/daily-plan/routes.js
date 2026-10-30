@@ -19,6 +19,8 @@ router.put(
 );
 router.get('/daily-plan/hours', dailyPlanController.getDayHours);
 router.put('/daily-plan/hours', dailyPlanController.saveDayHours);
+router.get('/daily-plan/focus-blocks', dailyPlanController.getFocusBlocks);
+router.put('/daily-plan/focus-blocks', dailyPlanController.saveFocusBlocks);
 router.post(
     '/daily-plan/ai/draft',
     requireFeature('ai'),

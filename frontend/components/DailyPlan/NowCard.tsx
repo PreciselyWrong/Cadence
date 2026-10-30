@@ -4,6 +4,7 @@ import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { DailyPlanItem } from '../../utils/dailyPlanService';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { formatMinute, itemEnd, pickCurrentItem } from './planUtils';
+import { lateItems } from './tips';
 
 interface NowCardProps {
     items: DailyPlanItem[];
@@ -11,6 +12,10 @@ interface NowCardProps {
     now: number;
     onDone: (item: DailyPlanItem) => void;
     onPushLater: (item: DailyPlanItem) => void;
+    // A block whose time has passed: restart it now and move what follows
+    // later, or re-place just that block in the next free slot.
+    onShiftRest?: (item: DailyPlanItem) => void;
+    onPlaceLater?: (item: DailyPlanItem) => void;
     busyUid: string | null;
 }
 
@@ -20,6 +25,8 @@ const NowCard: React.FC<NowCardProps> = ({
     now,
     onDone,
     onPushLater,
+    onShiftRest,
+    onPlaceLater,
     busyUid,
 }) => {
     const { t } = useTranslation();
@@ -81,46 +88,91 @@ const NowCard: React.FC<NowCardProps> = ({
     }
 
     const isBusy = busyUid === item.task_uid;
+    const slipped = lateItems(items, now).sort(
+        (a, b) => (a.start_minute as number) - (b.start_minute as number)
+    )[0];
 
     return (
-        <section
-            className="flex flex-col gap-4 rounded-2xl border border-blue-300/60 bg-white px-6 py-5 shadow-sm sm:flex-row sm:items-center dark:border-blue-500/30 dark:bg-gray-900"
-            data-testid="now-card"
-        >
-            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-400">
-                    {label}
-                    {when ? ` · ${when}` : ''}
-                </span>
-                <span className="truncate text-xl text-gray-900 dark:text-gray-100">
-                    {item.task.name}
-                </span>
-                {details.length > 0 && (
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {details.join(' · ')}
+        <div className="flex flex-col gap-2">
+            <section
+                className="flex flex-col gap-4 rounded-2xl border border-blue-300/60 bg-white px-6 py-5 shadow-sm sm:flex-row sm:items-center dark:border-blue-500/30 dark:bg-gray-900"
+                data-testid="now-card"
+            >
+                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-400">
+                        {label}
+                        {when ? ` · ${when}` : ''}
                     </span>
-                )}
-            </div>
-            <div className="flex items-center gap-2">
-                <button
-                    type="button"
-                    onClick={() => onPushLater(item)}
-                    disabled={isBusy}
-                    className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                    <span className="truncate text-xl text-gray-900 dark:text-gray-100">
+                        {item.task.name}
+                    </span>
+                    {details.length > 0 && (
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {details.join(' · ')}
+                        </span>
+                    )}
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => onPushLater(item)}
+                        disabled={isBusy}
+                        className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                    >
+                        {t('dailyPlan.pushLater', 'Push to later')}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => onDone(item)}
+                        disabled={isBusy}
+                        className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                        data-testid="now-card-done"
+                    >
+                        {t('dailyPlan.markDone', 'Mark done')}
+                    </button>
+                </div>
+            </section>
+            {slipped && (onShiftRest || onPlaceLater) && (
+                <div
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm dark:bg-amber-900/20"
+                    role="status"
+                    data-testid="slip-banner"
                 >
-                    {t('dailyPlan.pushLater', 'Push to later')}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => onDone(item)}
-                    disabled={isBusy}
-                    className="min-h-[34px] rounded-lg px-3.5 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
-                    data-testid="now-card-done"
-                >
-                    {t('dailyPlan.markDone', 'Mark done')}
-                </button>
-            </div>
-        </section>
+                    <span className="min-w-0 flex-1 text-amber-900 dark:text-amber-200">
+                        {t(
+                            'dailyPlan.slipped',
+                            '"{{name}}" was planned until {{time}} and is not done.',
+                            {
+                                name: slipped.task.name,
+                                time: formatMinute(itemEnd(slipped)),
+                            }
+                        )}
+                    </span>
+                    {onShiftRest && (
+                        <button
+                            type="button"
+                            onClick={() => onShiftRest(slipped)}
+                            disabled={isBusy}
+                            className="min-h-[32px] rounded-lg bg-white px-3 text-xs font-medium text-gray-900 hover:bg-gray-50 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                            data-testid="slip-shift"
+                        >
+                            {t('dailyPlan.shiftRest', 'Shift the rest')}
+                        </button>
+                    )}
+                    {onPlaceLater && (
+                        <button
+                            type="button"
+                            onClick={() => onPlaceLater(slipped)}
+                            disabled={isBusy}
+                            className="min-h-[32px] rounded-lg bg-white px-3 text-xs font-medium text-gray-900 hover:bg-gray-50 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                            data-testid="slip-later"
+                        >
+                            {t('dailyPlan.placeLater', 'Later')}
+                        </button>
+                    )}
+                </div>
+            )}
+        </div>
     );
 };
 
