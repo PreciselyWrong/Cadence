@@ -115,6 +115,20 @@ async function completeTask(task, user, timezone) {
     );
 }
 
+// Deleted in Google Tasks: the task is finished here rather than deleted
+// (a recurring task stops too).
+async function markDone(task, user) {
+    if (isDone(task)) return;
+    const oldStatus = task.status;
+    await task.update({ status: Task.STATUS.DONE, completed_at: new Date() });
+    await handleParentChildOnStatusChange(
+        task,
+        oldStatus,
+        Task.STATUS.DONE,
+        user.id
+    );
+}
+
 async function reopenTask(task, user) {
     const oldStatus = task.status;
     await task.update({ status: Task.STATUS.NOT_STARTED, completed_at: null });
@@ -165,6 +179,7 @@ module.exports = {
     createTask,
     completeTask,
     reopenTask,
+    markDone,
     deleteTask,
     findOrCreateProject,
     taskUrl,

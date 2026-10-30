@@ -15,6 +15,11 @@ const { guard } = require('./guard');
 // ran is not missed; items already seen hash the same and change nothing.
 const UPDATED_MIN_SLACK_MS = 2 * 60 * 1000;
 
+// A Google task deleted on Google leaves this in place of its id, so the
+// finished task is not sent again; editing the task in Cadence sends it anew.
+const TOMBSTONE = 'deleted-';
+const isTombstone = (link) => Boolean(link?.google_id?.startsWith(TOMBSTONE));
+
 // Google task lists <-> Tududi projects. The default list holds tasks
 // without a project; a new Google list becomes a project of that name.
 async function syncTasklists(ctx) {
@@ -148,15 +153,21 @@ async function syncTasks(ctx, account) {
             const task = link ? tasksById.get(link.task_id) : null;
 
             if (item.deleted) {
-                if (link) {
-                    if (task) {
-                        await local.deleteTask(task);
-                        tasksById.delete(task.id);
-                    }
+                if (!link) return;
+                byGoogle.delete(item.id);
+                if (!task) {
                     await link.destroy();
-                    byGoogle.delete(item.id);
                     byTask.delete(link.task_id);
+                    return;
                 }
+                // Deleted in Google Tasks: done in Cadence, not deleted.
+                await local.markDone(task, user);
+                await task.reload();
+                await link.update({
+                    google_id: `${TOMBSTONE}${link.id}`,
+                    local_hash: hash(localTaskProjection(task, timezone)),
+                    remote_hash: null,
+                });
                 return;
             }
 
@@ -233,7 +244,9 @@ async function syncTasks(ctx, account) {
     for (const link of [...byTask.values()]) {
         await guard(ctx, 'push', async () => {
             if (tasksById.has(link.task_id)) return;
-            await client.deleteTask(link.container_id, link.google_id);
+            if (!isTombstone(link)) {
+                await client.deleteTask(link.container_id, link.google_id);
+            }
             await link.destroy();
             byTask.delete(link.task_id);
             byGoogle.delete(link.google_id);
@@ -247,7 +260,12 @@ async function syncTasks(ctx, account) {
             if (!local.belongsInTasks(task, ctx.account)) {
                 // Hidden, or timed and on the calendar instead.
                 if (link) {
-                    await client.deleteTask(link.container_id, link.google_id);
+                    if (!isTombstone(link)) {
+                        await client.deleteTask(
+                            link.container_id,
+                            link.google_id
+                        );
+                    }
                     await link.destroy();
                     byTask.delete(task.id);
                 }
@@ -257,9 +275,12 @@ async function syncTasks(ctx, account) {
             const localHash = hash(localTaskProjection(task, timezone));
             if (link && localHash === link.local_hash) return;
 
-            const parentLink = task.parent_task_id
+            const parentCandidate = task.parent_task_id
                 ? byTask.get(task.parent_task_id)
                 : null;
+            const parentLink = isTombstone(parentCandidate)
+                ? null
+                : parentCandidate;
             // A subtask lives in its parent's list on Google.
             const list =
                 (parentLink &&
@@ -269,8 +290,12 @@ async function syncTasks(ctx, account) {
                 (await listForProject(ctx, task.project_id));
             const body = toGoogleTask(task, timezone);
 
-            if (!link || link.container_id !== list.google_id) {
-                if (link)
+            if (
+                !link ||
+                isTombstone(link) ||
+                link.container_id !== list.google_id
+            ) {
+                if (link && !isTombstone(link))
                     await client.deleteTask(link.container_id, link.google_id);
                 const created = await client.insertTask(list.google_id, body, {
                     parent: parentLink?.google_id,

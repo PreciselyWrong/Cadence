@@ -520,7 +520,7 @@ describe('Google sync', () => {
             expect(liveTasks(defaultList())).toHaveLength(1);
         });
 
-        it('completes, reopens and deletes in both directions', async () => {
+        it('completes, reopens, deletes from Cadence, and finishes a task deleted in Google', async () => {
             const task = await createTask({ name: 'Both ways' });
             await connect();
             const [remote] = liveTasks(defaultList());
@@ -551,7 +551,27 @@ describe('Google sync', () => {
             );
             google.putTask(defaultList(), { ...copy, deleted: true });
             await syncUser(user.id);
-            expect(await Task.count({ where: { id: other.id } })).toBe(0);
+            // Deleted on Google: done in Cadence, not deleted, and not sent
+            // back.
+            await other.reload();
+            expect(other.status).toBe(Task.STATUS.DONE);
+            expect(other.completed_at).not.toBeNull();
+            await syncUser(user.id);
+            expect(
+                liveTasks(defaultList()).find(
+                    (t) => t.title === 'Gone on Google'
+                )
+            ).toBeUndefined();
+
+            // Reopened in Cadence: sent to Google again.
+            await agent
+                .patch(`/api/task/${other.uid}`)
+                .send({ status: 'not_started' });
+            await syncUser(user.id);
+            const again = liveTasks(defaultList()).find(
+                (t) => t.title === 'Gone on Google'
+            );
+            expect(again.status).toBe('needsAction');
         });
 
         it('advances a recurring task completed in Google and reopens it there', async () => {

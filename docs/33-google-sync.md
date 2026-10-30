@@ -44,7 +44,7 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 - Synced fields: title ↔ name, notes ↔ note, completed ↔ done, due **day** ↔ due date, parent ↔ subtask, list ↔ project.
 - Google Tasks keeps only the day of a due date (its API has no time). When Google keeps the same day, the time set in Cadence stays.
 - Completing a recurring task in Google moves it to its next occurrence in Cadence, and Google gets it back as open with the new date.
-- Deleting a task on either side deletes it on the other.
+- Deleting a task in Cadence deletes it in Google Tasks. Deleting a task in Google Tasks **marks the Cadence task done** (with its completion time; a recurring task stops) instead of deleting it; it is not sent back to Google while it stays done, and reopening or editing it in Cadence sends it again.
 - Deleting a whole list in Google does **not** delete the Cadence tasks: they are unlinked and sent to a new list on the next sync.
 - A task completed more than 7 days before the first sync is not sent; a Google task already completed before the first sync is not imported.
 - Not synced: priority, tags, status other than open/done (in progress, waiting, planned stay open in Google; archived and cancelled tasks are removed from Google), habits, recurring instances.
