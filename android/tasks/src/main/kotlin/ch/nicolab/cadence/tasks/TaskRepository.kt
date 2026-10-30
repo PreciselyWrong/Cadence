@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -21,11 +22,18 @@ interface TaskRepository {
     /** Tâches de premier niveau (sans sous-tâches), ouvertes et fermées. */
     fun observeTasks(): Flow<List<TaskItem>>
     fun observeTask(uid: String): Flow<TaskItem?>
+
+    /** Toutes les tâches, sous-tâches comprises : pour la recherche. */
+    fun observeAllTasks(): Flow<List<TaskItem>>
     fun observeSubtasks(parentUid: String): Flow<List<TaskItem>>
     fun observeProjects(): Flow<List<ProjectItem>>
     fun observeAreas(): Flow<List<AreaItem>>
     fun observeTags(): Flow<List<TagItem>>
     fun observeInbox(): Flow<List<InboxEntry>>
+
+    /** Notes du serveur, de la plus récente à la plus ancienne ; lecture seule sur l'appareil. */
+    fun observeNotes(): Flow<List<NoteItem>>
+    fun observeNote(uid: String): Flow<NoteItem?>
     fun observeSyncStatus(): Flow<SyncStatus>
 
     /** Retourne l'uid de la tâche créée. */

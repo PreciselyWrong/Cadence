@@ -69,6 +69,11 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Health Connect est une source locale facultative pour les habitudes de durée : Cadence lit au premier plan les séances des 30 derniers jours selon une règle types + application source, importe chaque identifiant une seule fois et n’exporte aucune donnée santé. Corriger une séance la détache de la source; la supprimer l’ignore durablement; suspendre une règle ou la synchronisation conserve l’historique.
 - Agendas de l'appareil : `:calendar` lit `CalendarContract` en lecture seule (permission `READ_CALENDAR`), jamais d'écriture dans le fournisseur. L'état « fait » d'une occurrence est local à Cadence (DataStore, clé agenda + événement + début d'occurrence) ; une journée entière, ancrée à minuit UTC par le fournisseur, est replacée sur son jour civil local.
 
+- Notes : l'entité serveur `note` est synchronisée en lecture seule (table Room `notes`, base v3). La migration 2→3 efface le curseur pour qu'un instantané complet ramène les notes existantes. Liens et commentaires de tâche ne sont pas dans le registre de synchro : lignes d'attente, à lire sur le web.
+- Les champs de tâche absents des colonnes Room (début, estimation, règle de répétition) vivent dans `extrasJson` ; `TaskFields` (data) les écrit comme champs synchronisés ordinaires et `TaskItem.extras` les relit. Une règle de répétition hors none/daily/weekly/monthly reste affichée sans pouvoir être écrasée par accident.
+- La recherche (`tasks/search/SearchEngine`) est locale, sans accents ni casse, tous les mots doivent correspondre ; les habitudes y entrent par `SearchEntry` fournies par `:app`.
+- Le minuteur de concentration (`tasks/focus/PomodoroState`) est local et dérivé de l'horloge, comme `HabitTimer` : on ne stocke que l'instant de reprise et le reste figé.
+
 ## ⛔ Interdits
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.
 - ⛔ Présenter une donnée à compléter comme un simple texte — l’action doit avoir une surface, un verbe et un indicateur visuel clairement touchables.

@@ -42,7 +42,7 @@ class SyncEngineTest {
         assertEquals(SyncResult.Synced, result)
         assertEquals(42L, store.cursor())
         assertEquals("Acheter du pain", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)
-        assertEquals(listOf("area", "project", "tag", "task", "inbox_item"), api.snapshotEntities)
+        assertEquals(listOf("area", "project", "tag", "note", "task", "inbox_item"), api.snapshotEntities)
     }
 
     @Test

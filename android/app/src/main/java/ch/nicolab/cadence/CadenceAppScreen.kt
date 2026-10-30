@@ -76,6 +76,9 @@ import ch.nicolab.cadence.health.HealthConnectRulesSheet
 import ch.nicolab.cadence.settings.SettingsDeps
 import ch.nicolab.cadence.settings.SettingsScreen
 import ch.nicolab.cadence.tasks.ui.InboxScreen
+import ch.nicolab.cadence.tasks.search.SearchEntry
+import ch.nicolab.cadence.tasks.search.SearchKind
+import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
 import java.time.LocalDate
 import java.util.UUID
@@ -105,6 +108,8 @@ internal fun CadenceAppScreen(
     val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableStateOf(Tab.TASKS) }
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
+    var searchOpen by rememberSaveable { mutableStateOf(false) }
+    var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
@@ -203,9 +208,12 @@ internal fun CadenceAppScreen(
         ) { current ->
             when (current) {
                 null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
-                Tab.INBOX -> InboxScreen(onOpenSettings = { settingsOpen = true })
+                Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
                 Tab.TASKS -> TasksScreen(
                     openTaskUid = openTaskUid,
+                    showProjectUid = projectToShow,
+                    onProjectShown = { projectToShow = null },
+                    onOpenSearch = { searchOpen = true },
                     onOpenSettings = { settingsOpen = true },
                     routineStrip = {
                         RoutineStrip(
@@ -253,7 +261,23 @@ internal fun CadenceAppScreen(
                 )
             }
         }
-        if (!settingsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
+        if (searchOpen) SearchScreen(
+            habits = habits.filter { !it.stored.archived }.map {
+                SearchEntry(SearchKind.HABIT, it.stored.id, it.stored.name)
+            },
+            onBack = { searchOpen = false },
+            onOpenProject = { uid ->
+                searchOpen = false
+                tab = Tab.TASKS
+                projectToShow = uid
+            },
+            onOpenHabit = { id ->
+                searchOpen = false
+                viewModel.clearSaveError()
+                quickHabitId = id
+            },
+        )
+        if (!settingsOpen && !searchOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
         androidx.compose.material3.SnackbarHost(
             snackbar,
             Modifier.align(Alignment.BottomCenter)

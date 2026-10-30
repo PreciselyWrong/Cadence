@@ -14,7 +14,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
 /** Entités synchronisées, dans l'ordre de l'instantané (les références passent avant). */
-internal val SYNCED_ENTITIES = listOf("area", "project", "tag", "task", "inbox_item")
+internal val SYNCED_ENTITIES = listOf("area", "project", "tag", "note", "task", "inbox_item")
 
 private const val PAGE_SIZE = 500
 private const val PUSH_BATCH = 500

@@ -49,9 +49,40 @@ data class TaskItem(
     val pinnedAt: Instant? = null,
     /** Une modification locale attend encore d'être envoyée au serveur. */
     val pendingSync: Boolean = false,
+    /** Début : sans heure, début du jour dans le fuseau du compte ; avec heure, un instant. */
+    val startDate: Instant? = null,
+    val startHasTime: Boolean = false,
+    val startDay: LocalDate? = null,
+    val estimatedMinutes: Int? = null,
+    val repetition: Repetition = Repetition(RepeatType.NONE),
+    /** Champs serveur que l'appareil ne sait pas modifier, lus tels quels (clé serveur, valeur en texte). */
+    val extras: Map<String, String> = emptyMap(),
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)
+}
+
+enum class RepeatType(val wire: String) {
+    NONE("none"), DAILY("daily"), WEEKLY("weekly"), MONTHLY("monthly"),
+
+    /** Règle que l'appareil affiche mais ne sait pas écrire (mensuelle par jour de semaine, dernier jour…). */
+    OTHER("other"),
+}
+
+data class Repetition(val type: RepeatType, val interval: Int = 1) {
+    companion object {
+        fun of(type: String?, interval: String?): Repetition {
+            val kind = when (type) {
+                null, "", "none" -> RepeatType.NONE
+                "daily" -> RepeatType.DAILY
+                "weekly" -> RepeatType.WEEKLY
+                "monthly" -> RepeatType.MONTHLY
+                else -> RepeatType.OTHER
+            }
+            val every = if (kind == RepeatType.NONE || kind == RepeatType.OTHER) 1 else interval?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+            return Repetition(kind, every)
+        }
+    }
 }
 
 data class ProjectItem(
@@ -66,6 +97,17 @@ data class ProjectItem(
 data class AreaItem(val uid: String, val name: String, val color: String? = null)
 
 data class TagItem(val uid: String, val name: String, val color: String? = null)
+
+data class NoteItem(
+    val uid: String,
+    val title: String,
+    val content: String,
+    val projectUid: String? = null,
+    val tagUids: List<String> = emptyList(),
+    val color: String? = null,
+    val updatedAt: Instant? = null,
+    val pendingSync: Boolean = false,
+)
 
 data class InboxEntry(
     val uid: String,
@@ -85,6 +127,8 @@ data class TaskDraft(
     val priority: Int? = null,
     val projectUid: String? = null,
     val tagUids: List<String> = emptyList(),
+    /** Fait de la tâche une sous-tâche. */
+    val parentTaskUid: String? = null,
 )
 
 /**
@@ -102,6 +146,13 @@ data class TaskChange(
     val projectUid: String? = null,
     val clearProject: Boolean = false,
     val tagUids: List<String>? = null,
+    val startDate: LocalDate? = null,
+    /** Heure locale "HH:mm" ; une heure seule garde le jour de début déjà prévu. */
+    val startTime: String? = null,
+    val clearStart: Boolean = false,
+    val estimatedMinutes: Int? = null,
+    val clearEstimate: Boolean = false,
+    val repetition: Repetition? = null,
 )
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }
