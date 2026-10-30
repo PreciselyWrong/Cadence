@@ -25,6 +25,8 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
+import java.time.temporal.WeekFields
+import java.util.Locale
 import kotlinx.coroutines.launch
 
 /**
@@ -102,11 +104,58 @@ internal fun TaskOverlays(
             }
         }
     }
+    LaunchedEffect(viewModel) {
+        viewModel.notices.collect { notice ->
+            snackbar.currentSnackbarData?.dismiss()
+            launch {
+                val result = snackbar.showSnackbar(
+                    message = notice.message,
+                    actionLabel = undoLabel,
+                    duration = SnackbarDuration.Short,
+                )
+                if (result == SnackbarResult.ActionPerformed) notice.undo()
+            }
+        }
+    }
     selectedTaskUid?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = onCloseTask)
     }
+    SwipeSheets(viewModel)
+    val pendingDelete by viewModel.pendingDelete.collectAsStateWithLifecycle()
+    if (pendingDelete != null) {
+        RecurringDeleteDialog(onAnswer = viewModel::answerRecurringDelete)
+    }
     if (pendingMove != null) {
         RecurringMoveDialog(onAnswer = viewModel::answerRecurringMove)
+    }
+}
+
+/** Feuille ouverte par un balayage (planifier, projet, priorité). */
+@Composable
+private fun SwipeSheets(viewModel: TasksViewModel) {
+    val sheet by viewModel.sheet.collectAsStateWithLifecycle()
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    when (val open = sheet) {
+        null -> Unit
+        is SwipeSheet.Schedule -> ScheduleSheet(
+            task = open.task,
+            today = moment.today,
+            firstDayOfWeek = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek },
+            onPick = { viewModel.reschedule(open.task, it) },
+            onDismiss = viewModel::dismissSheet,
+        )
+        is SwipeSheet.Project -> ProjectPickerSheet(
+            task = open.task,
+            projects = projects,
+            onPick = { viewModel.moveToProject(open.task, it) },
+            onDismiss = viewModel::dismissSheet,
+        )
+        is SwipeSheet.Priority -> PrioritySheet(
+            task = open.task,
+            onPick = { viewModel.setPriority(open.task, it) },
+            onDismiss = viewModel::dismissSheet,
+        )
     }
 }
 
@@ -129,7 +178,7 @@ internal fun LazyListScope.taskRows(
             zone = moment.zone,
             onToggle = { viewModel.toggle(task) },
             onOpen = { onOpen(task) },
-            onPostpone = { viewModel.postpone(task) },
+            onSwipeAction = { viewModel.swipe(task, it) },
         )
     }
 }

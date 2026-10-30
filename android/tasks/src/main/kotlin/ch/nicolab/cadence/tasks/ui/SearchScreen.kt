@@ -176,7 +176,7 @@ fun SearchScreen(
                                             zone = moment.zone,
                                             onToggle = { viewModel.toggle(task) },
                                             onOpen = { selectedTaskUid = task.uid },
-                                            onPostpone = { viewModel.postpone(task) },
+                                            onSwipeAction = { viewModel.swipe(task, it) },
                                             modifier = Modifier.padding(bottom = Space.xs),
                                         )
                                     }

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Flight
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Swipe
 import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +36,9 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.rememberStoredAppearance
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
+import ch.nicolab.cadence.tasks.ui.settings.SwipeSettings
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
+import ch.nicolab.cadence.tasks.ui.settings.swipeSettingsSummary
 import ch.nicolab.cadence.widget.today.TodayWidgetConfigActivity
 
 /** Rubriques de la page Réglages, dans l'ordre d'affichage. */
@@ -109,6 +112,14 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         title = R.string.settings_page_calendars,
         subtitle = { calendarsSubtitle() },
         content = { CalendarsPage() },
+    ),
+    SettingsPage(
+        id = "gestures",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.Swipe,
+        title = ch.nicolab.cadence.tasks.R.string.swipe_settings_title,
+        subtitle = { swipeSettingsSummary() },
+        content = { SwipeSettings() },
     ),
     SettingsPage(
         id = "groups",

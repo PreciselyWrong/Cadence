@@ -34,3 +34,26 @@ internal fun RecurringMoveDialog(onAnswer: (RecurringScope?) -> Unit) {
         },
     )
 }
+
+/** Choix de la portée d'une suppression de tâche récurrente ; null = annulé. */
+@Composable
+internal fun RecurringDeleteDialog(onAnswer: (RecurringScope?) -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onAnswer(null) },
+        title = { Text(stringResource(R.string.swipe_delete_recurring_title)) },
+        text = {
+            Column {
+                TextButton(onClick = { onAnswer(RecurringScope.THIS) }) {
+                    Text(stringResource(R.string.swipe_delete_this))
+                }
+                TextButton(onClick = { onAnswer(RecurringScope.ALL) }) {
+                    Text(stringResource(R.string.swipe_delete_all))
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = { onAnswer(null) }) { Text(stringResource(R.string.tasks_cancel)) }
+        },
+    )
+}

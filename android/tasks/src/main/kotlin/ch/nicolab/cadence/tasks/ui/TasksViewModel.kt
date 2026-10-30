@@ -25,6 +25,9 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.swipe.SchedulePreset
+import ch.nicolab.cadence.tasks.swipe.SwipeAction
+import ch.nicolab.cadence.tasks.swipe.UndoChanges
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -33,6 +36,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,6 +54,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private const val STOP_TIMEOUT_MS = 5_000L
+
+/** Délai avant qu'une suppression devienne définitive ; couvre la durée du bandeau « Annuler ». */
+private const val DELETE_UNDO_WINDOW_MS = 5_000L
 private const val CALENDAR_PREFS = "tududi_calendar_notice"
 private const val KEY_NOTICE_DISMISSED = "dismissed"
 
@@ -74,6 +81,18 @@ internal data class ProjectRow(val project: ProjectItem, val openCount: Int)
 /** Déplacement d'une tâche récurrente en attente du choix de portée. */
 internal data class PendingMove(val taskUid: String, val date: LocalDate)
 
+/** Bandeau avec « Annuler » pour un geste qui déplace ou supprime une tâche. */
+internal class UndoNotice(val message: String, val undo: () -> Unit)
+
+/** Feuille ouverte par un balayage ; porte la tâche visée. */
+internal sealed interface SwipeSheet {
+    val task: TaskItem
+
+    data class Schedule(override val task: TaskItem) : SwipeSheet
+    data class Project(override val task: TaskItem) : SwipeSheet
+    data class Priority(override val task: TaskItem) : SwipeSheet
+}
+
 internal class TasksViewModel(
     application: Application,
     private val calendar: CalendarRepository,
@@ -83,7 +102,11 @@ internal class TasksViewModel(
     private val repository = TasksGraph.repository(application)
     private val calendarPrefs = application.getSharedPreferences(CALENDAR_PREFS, Context.MODE_PRIVATE)
     private val genericError = application.getString(R.string.tasks_error_generic)
-    private val tasks: Flow<List<TaskItem>> = repository.observeTasks()
+    /** Tâches supprimées par geste, masquées le temps de pouvoir annuler. */
+    private val hiddenUids = MutableStateFlow<Set<String>>(emptySet())
+    private val pendingDeletes = HashMap<String, Job>()
+    private val tasks: Flow<List<TaskItem>> =
+        combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
@@ -92,6 +115,17 @@ internal class TasksViewModel(
 
     /** Tâches terminées à l'instant, pour proposer « Annuler » ; une récurrente avance d'occurrence et n'en fait pas partie. */
     val completed: Flow<TaskItem> = _completed.asSharedFlow()
+
+    private val _notices = MutableSharedFlow<UndoNotice>(extraBufferCapacity = 4)
+    val notices: Flow<UndoNotice> = _notices.asSharedFlow()
+
+    private val _sheet = MutableStateFlow<SwipeSheet?>(null)
+    val sheet: StateFlow<SwipeSheet?> = _sheet.asStateFlow()
+
+    private val _pendingDelete = MutableStateFlow<TaskItem?>(null)
+
+    /** Suppression d'une tâche récurrente en attente du choix « cette occurrence / toute la série ». */
+    val pendingDelete: StateFlow<TaskItem?> = _pendingDelete.asStateFlow()
 
     private val _pendingMove = MutableStateFlow<PendingMove?>(null)
     val pendingMove: StateFlow<PendingMove?> = _pendingMove.asStateFlow()
@@ -147,7 +181,7 @@ internal class TasksViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Chaque tâche, sous-tâches comprises ; ne sert qu'à la recherche. */
-    val everyTask: StateFlow<List<TaskItem>> = repository.observeAllTasks()
+    val everyTask: StateFlow<List<TaskItem>> = combine(repository.observeAllTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val syncStatus: StateFlow<SyncStatus> = repository.observeSyncStatus()
@@ -183,15 +217,96 @@ internal class TasksViewModel(
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }
 
     /** Report à demain ; une tâche récurrente demande d'abord la portée. */
-    fun postpone(task: TaskItem) {
+    fun postpone(task: TaskItem) = reschedule(task, moment.value.today.plusDays(1))
+
+    /** Exécute l'action d'un balayage ou d'une action d'accessibilité sur [task]. */
+    fun swipe(task: TaskItem, action: SwipeAction) {
         val current = moment.value
-        val tomorrow = current.today.plusDays(1)
-        if (task.isRecurring) {
-            askRecurringMove(task.uid, tomorrow)
-        } else {
-            update(task.uid, TaskViews.postponeChange(task, tomorrow, current.zone))
+        when (action) {
+            SwipeAction.COMPLETE -> toggle(task)
+            SwipeAction.TODAY -> reschedule(task, current.today)
+            SwipeAction.TOMORROW -> reschedule(task, current.today.plusDays(1))
+            SwipeAction.NEXT_WEEK -> reschedule(task, SchedulePreset.plusOneWeek(task.dueDay, current.today))
+            SwipeAction.SCHEDULE -> _sheet.value = SwipeSheet.Schedule(task)
+            SwipeAction.MOVE_PROJECT -> _sheet.value = SwipeSheet.Project(task)
+            SwipeAction.PRIORITY -> _sheet.value = SwipeSheet.Priority(task)
+            SwipeAction.DELETE -> if (task.isRecurring) _pendingDelete.value = task else deleteWithUndo(task)
+            SwipeAction.NONE -> Unit
         }
     }
+
+    fun dismissSheet() {
+        _sheet.value = null
+    }
+
+    /** Nouvelle échéance ; null retire l'échéance. Une récurrente passe par le déplacement d'occurrence. */
+    fun reschedule(task: TaskItem, date: LocalDate?) {
+        _sheet.value = null
+        if (date != null && task.isRecurring) {
+            askRecurringMove(task.uid, date)
+            return
+        }
+        val zone = moment.value.zone
+        val change = if (date == null) TaskChange(clearDue = true) else TaskViews.postponeChange(task, date, zone)
+        val message = getString(if (date == null) R.string.swipe_notice_unscheduled else R.string.swipe_notice_scheduled)
+        changeWithUndo(task, change, UndoChanges.restoreDue(task, zone), message)
+    }
+
+    fun moveToProject(task: TaskItem, projectUid: String?) {
+        _sheet.value = null
+        if (projectUid == task.projectUid) return
+        val change = if (projectUid == null) TaskChange(clearProject = true) else TaskChange(projectUid = projectUid)
+        changeWithUndo(task, change, UndoChanges.restoreProject(task), getString(R.string.swipe_notice_moved))
+    }
+
+    fun setPriority(task: TaskItem, priority: Int?) {
+        _sheet.value = null
+        if (priority == task.priority) return
+        val change = if (priority == null) TaskChange(clearPriority = true) else TaskChange(priority = priority)
+        changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority))
+    }
+
+    /** Réponse à « Cette occurrence / Toute la série » pour une suppression ; null = annulé. */
+    fun answerRecurringDelete(scope: RecurringScope?) {
+        val task = _pendingDelete.value ?: return
+        _pendingDelete.value = null
+        when (scope) {
+            null -> Unit
+            RecurringScope.THIS -> skipOccurrence(task)
+            else -> deleteWithUndo(task)
+        }
+    }
+
+    private fun changeWithUndo(task: TaskItem, change: TaskChange, restore: TaskChange, message: String) {
+        update(task.uid, change)
+        _notices.tryEmit(UndoNotice(message) { update(task.uid, restore) })
+    }
+
+    /** Masque la tâche tout de suite et ne la supprime pour de bon qu'une fois le délai d'annulation écoulé. */
+    private fun deleteWithUndo(task: TaskItem) {
+        hiddenUids.value += task.uid
+        pendingDeletes[task.uid] = viewModelScope.launch {
+            delay(DELETE_UNDO_WINDOW_MS)
+            pendingDeletes.remove(task.uid)
+            try {
+                repository.deleteTask(task.uid)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _messages.tryEmit(e.message ?: genericError)
+            } finally {
+                hiddenUids.value -= task.uid
+            }
+        }
+        _notices.tryEmit(UndoNotice(getString(R.string.swipe_notice_deleted)) { undoDelete(task.uid) })
+    }
+
+    private fun undoDelete(uid: String) {
+        pendingDeletes.remove(uid)?.cancel()
+        hiddenUids.value -= uid
+    }
+
+    private fun getString(res: Int): String = getApplication<Application>().getString(res)
 
     fun askRecurringMove(uid: String, date: LocalDate) {
         _pendingMove.value = PendingMove(uid, date)
@@ -248,6 +363,9 @@ internal class TasksViewModel(
         }
     }
 }
+
+private fun List<TaskItem>.withoutHidden(hidden: Set<String>): List<TaskItem> =
+    if (hidden.isEmpty()) this else filterNot { it.uid in hidden }
 
 private fun minuteTicks(): Flow<Moment> = flow {
     while (true) {

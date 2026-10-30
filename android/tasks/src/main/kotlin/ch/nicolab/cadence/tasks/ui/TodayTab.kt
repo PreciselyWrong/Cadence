@@ -128,7 +128,7 @@ private fun LazyListScope.agendaRows(
                 zone = moment.zone,
                 onToggle = { viewModel.toggle(item.task) },
                 onOpen = { onOpen(item.task) },
-                onPostpone = { viewModel.postpone(item.task) },
+                onSwipeAction = { viewModel.swipe(item.task, it) },
             )
             is TodayItem.Event -> EventRow(
                 item = item.event,

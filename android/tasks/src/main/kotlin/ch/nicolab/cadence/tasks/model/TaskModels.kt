@@ -139,6 +139,8 @@ data class TaskChange(
     val name: String? = null,
     val note: String? = null,
     val priority: Int? = null,
+    /** Retire la priorité (aucune). */
+    val clearPriority: Boolean = false,
     val status: Int? = null,
     val dueDate: LocalDate? = null,
     val dueTime: String? = null,

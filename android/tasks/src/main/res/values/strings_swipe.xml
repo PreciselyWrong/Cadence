@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="swipe_action_complete">Terminer</string>
+    <string name="swipe_action_reopen">Rouvrir</string>
+    <string name="swipe_action_schedule">Planifier</string>
+    <string name="swipe_action_today">Aujourd\'hui</string>
+    <string name="swipe_action_tomorrow">Demain</string>
+    <string name="swipe_action_next_week">Reporter d\'une semaine</string>
+    <string name="swipe_action_move_project">Déplacer vers un projet</string>
+    <string name="swipe_action_priority">Priorité</string>
+    <string name="swipe_action_delete">Supprimer</string>
+    <string name="swipe_action_none">Aucune</string>
+
+    <string name="swipe_schedule_title">Planifier</string>
+    <string name="swipe_schedule_weekend">Ce week-end</string>
+    <string name="swipe_schedule_next_week">Semaine prochaine</string>
+    <string name="swipe_schedule_pick">Choisir une date</string>
+    <string name="swipe_schedule_none">Sans date</string>
+    <string name="swipe_project_title">Déplacer vers un projet</string>
+    <string name="swipe_priority_title">Priorité</string>
+
+    <string name="swipe_notice_deleted">Tâche supprimée</string>
+    <string name="swipe_notice_scheduled">Tâche replanifiée</string>
+    <string name="swipe_notice_unscheduled">Échéance retirée</string>
+    <string name="swipe_notice_moved">Tâche déplacée</string>
+    <string name="swipe_notice_priority">Priorité modifiée</string>
+    <string name="swipe_delete_recurring_title">Supprimer une tâche récurrente</string>
+    <string name="swipe_delete_this">Seulement cette occurrence</string>
+    <string name="swipe_delete_all">Toute la série</string>
+
+    <string name="swipe_settings_title">Gestes</string>
+    <string name="swipe_settings_summary">Droite : %1$s · Gauche : %2$s</string>
+    <string name="swipe_settings_hint">Faites glisser une tâche : un court trajet déclenche la première action, un long trajet la seconde. Le fond change de couleur et l\'appareil vibre à chaque seuil.</string>
+    <string name="swipe_settings_right_short">Glisser vers la droite, court</string>
+    <string name="swipe_settings_right_long">Glisser vers la droite, long</string>
+    <string name="swipe_settings_left_short">Glisser vers la gauche, court</string>
+    <string name="swipe_settings_left_long">Glisser vers la gauche, long</string>
+    <string name="swipe_settings_reset">Rétablir les gestes par défaut</string>
+</resources>

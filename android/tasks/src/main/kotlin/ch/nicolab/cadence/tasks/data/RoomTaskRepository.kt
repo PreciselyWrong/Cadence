@@ -142,6 +142,7 @@ internal class RoomTaskRepository(
         val fields = buildMap<String, JsonElement> {
             change.name?.let { put("name", JsonPrimitive(it)) }
             change.note?.let { put("note", JsonPrimitive(it)) }
+            if (change.clearPriority) put("priority", JsonNull)
             change.priority?.let { put("priority", JsonPrimitive(it)) }
             change.status?.let { status ->
                 put("status", JsonPrimitive(status))

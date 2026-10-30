@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.background
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,24 +16,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Repeat
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
@@ -47,13 +35,14 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
-import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.swipe.SwipeAction
+import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
 import java.time.LocalDate
 import java.time.ZoneId
 
 /**
- * Une tâche dans une liste. Glisser de droite à gauche la reporte à demain ;
- * toucher ou appuyer longtemps ouvre la fiche.
+ * Une tâche dans une liste. Glisser à droite ou à gauche déclenche les actions réglées dans
+ * Réglages › Gestes ; toucher ou appuyer longtemps ouvre la fiche.
  */
 @Composable
 internal fun TaskRow(
@@ -64,28 +53,20 @@ internal fun TaskRow(
     zone: ZoneId,
     onToggle: () -> Unit,
     onOpen: () -> Unit,
-    onPostpone: () -> Unit,
+    onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val swipe = rememberSwipeToDismissBoxState()
-    val postpone by rememberUpdatedState(onPostpone)
-    LaunchedEffect(swipe.currentValue) {
-        if (swipe.currentValue == SwipeToDismissBoxValue.EndToStart) {
-            postpone()
-            swipe.reset()
-        }
-    }
-
-    SwipeToDismissBox(
-        state = swipe,
+    SwipeActionContainer(
+        config = rememberSwipeConfig(),
+        closed = task.isClosed,
+        onAction = onSwipeAction,
         modifier = modifier,
-        enableDismissFromStartToEnd = false,
-        backgroundContent = { SwipeBackground() },
-    ) {
+    ) { swipeSemantics ->
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
+                .then(swipeSemantics)
                 .combinedClickable(onClick = onOpen, onLongClick = onOpen)
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -181,28 +162,6 @@ private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zon
                     .background(MaterialTheme.colorScheme.primary)
                     .semantics { contentDescription = pendingText },
             )
-        }
-    }
-}
-
-@Composable
-private fun SwipeBackground() {
-    val onColor = MaterialTheme.colorScheme.onSecondaryContainer
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.CenterEnd,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.tasks_swipe_tomorrow),
-                style = MaterialTheme.typography.labelLarge,
-                color = onColor,
-            )
-            Spacer(Modifier.width(8.dp))
-            Icon(Icons.Outlined.Schedule, contentDescription = null, tint = onColor)
         }
     }
 }
