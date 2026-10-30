@@ -183,6 +183,16 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // A project mirrored from a TODO.md file ('todo_md') and the
+            // file's path under the TODO root. Null for every other project.
+            source_type: {
+                type: DataTypes.STRING(32),
+                allowNull: true,
+            },
+            source_path: {
+                type: DataTypes.STRING(512),
+                allowNull: true,
+            },
         },
         {
             tableName: 'projects',

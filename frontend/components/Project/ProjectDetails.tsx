@@ -38,6 +38,8 @@ import {
     updateTask,
 } from '../../utils/tasksService';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
+import { rescanTodoMd } from '../../utils/todoMdService';
+import { isTodoMdProject } from '../../utils/todoMd';
 import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { mergeVisibleOrder } from '../Shared/sortableList';
@@ -157,6 +159,8 @@ const ProjectDetails: React.FC = () => {
     const aiInsightsRef = useRef<ProjectAIInsightsHandle>(null);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
+    // TODO.md projects: the section a new task is written under.
+    const [todoSection, setTodoSection] = useState<string>('Next');
     const sortOptions = useMemo(
         () => [
             {
@@ -413,8 +417,18 @@ const ProjectDetails: React.FC = () => {
             project_uid: project.uid,
             status: 'not_started',
             completed_at: null,
+            ...(isTodoMdProject(project) ? { todo_section: todoSection } : {}),
         } as Task);
         setTasks((prev) => [created, ...prev]);
+    };
+
+    // TODO.md projects: read the files again, then show what they now hold.
+    const handleRereadTodoMd = async () => {
+        await rescanTodoMd();
+        if (!uidSlug) return;
+        const fresh = await fetchProjectBySlug(uidSlug);
+        setProject(fresh);
+        setTasks(fresh.tasks || fresh.Tasks || []);
     };
 
     const handleTaskDelete = async (taskUid: string | undefined) => {
@@ -861,6 +875,7 @@ const ProjectDetails: React.FC = () => {
                 onEditBannerClick={handleEditBannerClick}
                 onEditClick={() => setIsEditPanelOpen(true)}
                 onTogglePin={handleTogglePin}
+                onReread={handleRereadTodoMd}
                 onImportClick={() => setIsImportOpen(true)}
                 onExport={(format) =>
                     exportTasks(format, { project_uid: project.uid }).catch(
@@ -1100,6 +1115,12 @@ const ProjectDetails: React.FC = () => {
                                                     ? handleInlineCreate
                                                     : undefined
                                             }
+                                            todoSection={
+                                                isTodoMdProject(project)
+                                                    ? todoSection
+                                                    : undefined
+                                            }
+                                            onTodoSectionChange={setTodoSection}
                                             completedTasks={tasks}
                                             completedListKey={`project:${project.uid}`}
                                             t={t}

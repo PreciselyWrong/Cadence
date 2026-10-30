@@ -3901,5 +3901,17 @@
     "none": "Nu mai e nimic de comparat.",
     "addToday": "Adaugă la azi",
     "close": "Închide"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Dintr-un fișier TODO.md. Doar pentru citire aici: editează fișierul.",
+    "readOnly": "Aceasta provine dintr-un fișier TODO.md. Editează fișierul.",
+    "projectInfo": "Reflectă {{path}}. Sarcinile adăugate sunt scrise în fișier, iar bifarea uneia îl actualizează.",
+    "reread": "Reîncarcă fișierele",
+    "rereading": "Se reîncarcă...",
+    "rereadDone": "Fișierele TODO.md au fost reîncărcate.",
+    "rereadFailed": "Fișierele TODO.md nu au putut fi reîncărcate.",
+    "addTo": "Adaugă în",
+    "addFailed": "Nu s-a putut scrie în fișierul TODO.md."
   }
 }

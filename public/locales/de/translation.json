@@ -3899,5 +3899,17 @@
     "none": "Nichts mehr zu vergleichen.",
     "addToday": "Zu heute hinzufügen",
     "close": "Schließen"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Aus einer TODO.md-Datei. Hier nur lesbar: Bearbeite stattdessen die Datei.",
+    "readOnly": "Dies stammt aus einer TODO.md-Datei. Bearbeite stattdessen die Datei.",
+    "projectInfo": "Spiegelt {{path}}. Neue Aufgaben werden in die Datei geschrieben, und Abhaken aktualisiert sie.",
+    "reread": "Dateien neu laden",
+    "rereading": "Wird neu geladen...",
+    "rereadDone": "TODO.md-Dateien neu geladen.",
+    "rereadFailed": "TODO.md-Dateien konnten nicht neu geladen werden.",
+    "addTo": "Hinzufügen zu",
+    "addFailed": "In die TODO.md-Datei konnte nicht geschrieben werden."
   }
 }

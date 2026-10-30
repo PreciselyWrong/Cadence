@@ -3895,5 +3895,17 @@
     "none": "Ingenting igjen å sammenligne.",
     "addToday": "Legg til i dag",
     "close": "Lukk"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Fra en TODO.md-fil. Skrivebeskyttet her: rediger filen i stedet.",
+    "readOnly": "Dette kommer fra en TODO.md-fil. Rediger filen i stedet.",
+    "projectInfo": "Speiler {{path}}. Oppgaver du legger til, skrives til filen, og avkrysning oppdaterer den.",
+    "reread": "Last inn filene på nytt",
+    "rereading": "Laster inn på nytt...",
+    "rereadDone": "TODO.md-filene er lastet inn på nytt.",
+    "rereadFailed": "Kunne ikke laste TODO.md-filene på nytt.",
+    "addTo": "Legg til i",
+    "addFailed": "Kunne ikke skrive til TODO.md-filen."
   }
 }

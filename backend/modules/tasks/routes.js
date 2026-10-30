@@ -84,6 +84,7 @@ const scopeService = require('../../services/scopeService');
 const dailyPlanService = require('../daily-plan/service');
 
 const { getSubtasks } = require('./operations/subtasks');
+const todoMd = require('../todo-md');
 
 const {
     requireTaskReadAccess,
@@ -525,6 +526,25 @@ router.get('/tasks/smart-counts', async (req, res) => {
     }
 });
 
+// Tasks mirrored from a TODO.md file are read-only here, except for
+// checking them off, which is written back to the file.
+const todoMdTaskGuard = todoMd.guards.taskGuard(
+    async (req, res, task, done) => {
+        const project = await Project.findByPk(task.project_id);
+        await todoMd.service.setTaskDone(task, project, done);
+        const reloaded = await taskRepository.findById(task.id, {
+            include: TASK_INCLUDES_WITH_SUBTASKS,
+        });
+        res.json(
+            await serializeTask(reloaded, req.currentUser.timezone, {
+                skipDisplayNameTransform: true,
+            })
+        );
+    }
+);
+
+const taskWriteGuards = [requireTaskWriteAccess, todoMdTaskGuard];
+
 router.post(
     '/task',
     requireQuota(
@@ -631,9 +651,30 @@ router.post(
                 return res.status(400).json({ error: error.message });
             }
 
-            const task = await taskRepository.create(taskAttributes);
-            await updateTaskTags(task, tagsData, req.currentUser.id);
-            await createSubtasks(task.id, subtasks, req.currentUser.id);
+            const fileProject = taskAttributes.project_id
+                ? await Project.findByPk(taskAttributes.project_id)
+                : null;
+            let task;
+            if (todoMd.service.isFileBackedProject(fileProject)) {
+                // The bullet goes into the project's TODO.md; tags and
+                // subtasks have no place in that file.
+                try {
+                    task = await todoMd.service.createTask(fileProject, {
+                        name: req.body.name,
+                        note: req.body.note,
+                        section: req.body.todo_section,
+                    });
+                } catch (error) {
+                    if (error instanceof todoMd.service.TodoMdError) {
+                        return todoMd.guards.sendError(res, error);
+                    }
+                    throw error;
+                }
+            } else {
+                task = await taskRepository.create(taskAttributes);
+                await updateTaskTags(task, tagsData, req.currentUser.id);
+                await createSubtasks(task.id, subtasks, req.currentUser.id);
+            }
             if (req.body.today === true) {
                 await dailyPlanService.setTaskOnToday(
                     req.currentUser,
@@ -731,7 +772,7 @@ router.get('/task/:uid', requireTaskReadAccess, async (req, res) => {
     }
 });
 
-router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
+router.patch('/task/:uid', taskWriteGuards, async (req, res) => {
     try {
         const {
             status,
@@ -1122,7 +1163,7 @@ router.patch('/task/:uid', requireTaskWriteAccess, async (req, res) => {
     }
 });
 
-router.delete('/task/:uid', requireTaskWriteAccess, async (req, res) => {
+router.delete('/task/:uid', taskWriteGuards, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid, {
             include: [{ model: TaskAttachment, as: 'Attachments' }],
@@ -1243,85 +1284,76 @@ router.get('/task/:uid/next-iterations', async (req, res) => {
     }
 });
 
-router.post(
-    '/task/:uid/skip-occurrence',
-    requireTaskWriteAccess,
-    async (req, res) => {
-        try {
-            const task = await taskRepository.findByUid(req.params.uid);
+router.post('/task/:uid/skip-occurrence', taskWriteGuards, async (req, res) => {
+    try {
+        const task = await taskRepository.findByUid(req.params.uid);
 
-            if (!task) {
-                return res.status(404).json({ error: 'Task not found.' });
-            }
-
-            const result = await skipRecurringOccurrence(
-                task,
-                req.currentUser.id,
-                req.currentUser.timezone
-            );
-
-            if (result.error) {
-                return res.status(400).json({ error: result.error });
-            }
-
-            const taskWithAssociations = await taskRepository.findById(
-                task.id,
-                { include: TASK_INCLUDES_WITH_SUBTASKS }
-            );
-
-            res.json(
-                await serializeTask(
-                    taskWithAssociations,
-                    req.currentUser.timezone,
-                    { skipDisplayNameTransform: true }
-                )
-            );
-        } catch (error) {
-            logError('Error skipping recurring occurrence:', error);
-            res.status(500).json({ error: 'Failed to skip occurrence' });
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found.' });
         }
-    }
-);
 
-router.post(
-    '/task/:uid/move-occurrence',
-    requireTaskWriteAccess,
-    async (req, res) => {
-        try {
-            const task = await taskRepository.findByUid(req.params.uid);
+        const result = await skipRecurringOccurrence(
+            task,
+            req.currentUser.id,
+            req.currentUser.timezone
+        );
 
-            if (!task) {
-                return res.status(404).json({ error: 'Task not found.' });
-            }
-
-            const { task: parent, moved } = await moveOccurrence(task, {
-                scope: req.body.scope,
-                occurrenceDate: req.body.occurrence_date,
-                dueDate: req.body.due_date,
-                timezone: req.currentUser.timezone,
-            });
-
-            const include = { include: TASK_INCLUDES_WITH_SUBTASKS };
-            const serialize = async (id) =>
-                serializeTask(
-                    await taskRepository.findById(id, include),
-                    req.currentUser.timezone,
-                    { skipDisplayNameTransform: true }
-                );
-
-            res.json({
-                task: await serialize(parent.id),
-                moved: moved ? await serialize(moved.id) : null,
-            });
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                return res.status(400).json({ error: error.message });
-            }
-            logError('Error moving recurring occurrence:', error);
-            res.status(500).json({ error: 'Failed to move occurrence' });
+        if (result.error) {
+            return res.status(400).json({ error: result.error });
         }
+
+        const taskWithAssociations = await taskRepository.findById(task.id, {
+            include: TASK_INCLUDES_WITH_SUBTASKS,
+        });
+
+        res.json(
+            await serializeTask(
+                taskWithAssociations,
+                req.currentUser.timezone,
+                { skipDisplayNameTransform: true }
+            )
+        );
+    } catch (error) {
+        logError('Error skipping recurring occurrence:', error);
+        res.status(500).json({ error: 'Failed to skip occurrence' });
     }
-);
+});
+
+router.post('/task/:uid/move-occurrence', taskWriteGuards, async (req, res) => {
+    try {
+        const task = await taskRepository.findByUid(req.params.uid);
+
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found.' });
+        }
+
+        const { task: parent, moved } = await moveOccurrence(task, {
+            scope: req.body.scope,
+            occurrenceDate: req.body.occurrence_date,
+            dueDate: req.body.due_date,
+            timezone: req.currentUser.timezone,
+        });
+
+        const include = { include: TASK_INCLUDES_WITH_SUBTASKS };
+        const serialize = async (id) =>
+            serializeTask(
+                await taskRepository.findById(id, include),
+                req.currentUser.timezone,
+                { skipDisplayNameTransform: true }
+            );
+
+        res.json({
+            task: await serialize(parent.id),
+            moved: moved ? await serialize(moved.id) : null,
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(400).json({ error: error.message });
+        }
+        logError('Error moving recurring occurrence:', error);
+        res.status(500).json({ error: 'Failed to move occurrence' });
+    }
+});
 
 // Mount sub-routers for task-related routes
 router.use(attachmentsRouter);

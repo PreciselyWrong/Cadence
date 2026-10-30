@@ -3890,5 +3890,17 @@
     "none": "Inget kvar att jämföra.",
     "addToday": "Lägg till i dag",
     "close": "Stäng"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Från en TODO.md-fil. Skrivskyddad här: redigera filen i stället.",
+    "readOnly": "Detta kommer från en TODO.md-fil. Redigera filen i stället.",
+    "projectInfo": "Speglar {{path}}. Uppgifter du lägger till skrivs till filen, och att bocka av en uppdaterar den.",
+    "reread": "Läs in filerna igen",
+    "rereading": "Läser in igen...",
+    "rereadDone": "TODO.md-filerna lästes in igen.",
+    "rereadFailed": "Kunde inte läsa in TODO.md-filerna igen.",
+    "addTo": "Lägg till i",
+    "addFailed": "Kunde inte skriva till TODO.md-filen."
   }
 }

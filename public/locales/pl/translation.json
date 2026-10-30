@@ -3908,5 +3908,17 @@
     "none": "Nie ma już czego porównywać.",
     "addToday": "Dodaj do dzisiaj",
     "close": "Zamknij"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Z pliku TODO.md. Tylko do odczytu tutaj: edytuj plik.",
+    "readOnly": "To pochodzi z pliku TODO.md. Edytuj zamiast tego plik.",
+    "projectInfo": "Odzwierciedla {{path}}. Dodane zadania zapisują się w pliku, a odznaczenie ukończenia go aktualizuje.",
+    "reread": "Wczytaj pliki ponownie",
+    "rereading": "Ponowne wczytywanie...",
+    "rereadDone": "Ponownie wczytano pliki TODO.md.",
+    "rereadFailed": "Nie udało się ponownie wczytać plików TODO.md.",
+    "addTo": "Dodaj do",
+    "addFailed": "Nie udało się zapisać do pliku TODO.md."
   }
 }

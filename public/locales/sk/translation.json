@@ -3923,5 +3923,17 @@
         "none": "Už nie je čo porovnávať.",
         "addToday": "Pridať na dnes",
         "close": "Zavrieť"
+    },
+    "todoMd": {
+        "badge": "TODO.md",
+        "badgeTitle": "Zo súboru TODO.md. Tu len na čítanie: upravte súbor.",
+        "readOnly": "Toto pochádza zo súboru TODO.md. Upravte namiesto toho súbor.",
+        "projectInfo": "Zrkadlí {{path}}. Pridané úlohy sa zapisujú do súboru a ich označenie ako hotové ho aktualizuje.",
+        "reread": "Znova načítať súbory",
+        "rereading": "Načítava sa znova...",
+        "rereadDone": "Súbory TODO.md boli znova načítané.",
+        "rereadFailed": "Súbory TODO.md sa nepodarilo znova načítať.",
+        "addTo": "Pridať do",
+        "addFailed": "Do súboru TODO.md sa nepodarilo zapisovať."
     }
 }

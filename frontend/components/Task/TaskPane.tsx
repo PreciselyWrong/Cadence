@@ -31,6 +31,8 @@ import {
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
+import TodoMdBadge from '../Shared/TodoMdBadge';
+import { isTodoMdTask } from '../../utils/todoMd';
 
 const sectionLabel =
     'mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400';
@@ -136,6 +138,7 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
     };
 
     const projectId = task.project_id ?? null;
+    const fileBacked = isTodoMdTask(task);
 
     return (
         <div className="space-y-5">
@@ -147,6 +150,7 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                     aria-label={t('taskPane.titleLabel', 'Task title')}
                     value={draftName}
                     onChange={(e) => setDraftName(e.target.value)}
+                    readOnly={fileBacked}
                     onBlur={() => void commitTitle()}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') e.currentTarget.blur();
@@ -155,147 +159,164 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                 />
             </div>
 
-            <MinimalQuickEdits
-                task={task}
-                onFieldUpdate={onSaved}
-                dueClass={dueToneClass(task)}
-                dueText={
-                    task.due_date
-                        ? `${formatDueLabel(task.due_date, t)}${
-                              task.due_has_time && task.due_time
-                                  ? ` ${task.due_time}`
-                                  : ''
-                          }`
-                        : null
-                }
-            />
-
-            <TaskDecisionRow task={task} onSaved={onSaved} />
-
-            <div>
-                <p className={sectionLabel}>
-                    {t('taskPane.project', 'Project')}
+            {fileBacked && (
+                <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                    <TodoMdBadge className="ml-0" />
+                    {t(
+                        'todoMd.readOnly',
+                        'This comes from a TODO.md file. Edit the file instead.'
+                    )}
                 </p>
-                <select
-                    aria-label={t('taskPane.project', 'Project')}
-                    value={projectId ?? ''}
-                    onChange={(e) =>
-                        void setters.setProject(
-                            e.target.value ? Number(e.target.value) : null
-                        )
+            )}
+
+            <div
+                className={`space-y-5 ${fileBacked ? 'pointer-events-none select-none opacity-60' : ''}`}
+                aria-disabled={fileBacked}
+            >
+                <MinimalQuickEdits
+                    task={task}
+                    onFieldUpdate={onSaved}
+                    dueClass={dueToneClass(task)}
+                    dueText={
+                        task.due_date
+                            ? `${formatDueLabel(task.due_date, t)}${
+                                  task.due_has_time && task.due_time
+                                      ? ` ${task.due_time}`
+                                      : ''
+                              }`
+                            : null
                     }
-                    className="w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-800 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
-                >
-                    <option value="">
-                        {t('taskPane.noProject', 'No project')}
-                    </option>
-                    {(projects || []).map((p: any) => (
-                        <option key={p.id ?? p.uid} value={p.id}>
-                            {p.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <p className={sectionLabel}>{t('taskPane.tags', 'Tags')}</p>
-                <TagInput
-                    initialTags={task.tags?.map((tag) => tag.name) || []}
-                    availableTags={tagsStore?.tags || []}
-                    onTagsChange={(names) => void setters.setTags(names)}
-                    onFocus={() => void tagsStore?.loadTags?.()}
                 />
-            </div>
 
-            <div>
-                <p className={sectionLabel}>{t('taskPane.note', 'Note')}</p>
-                {isEditingNote ? (
-                    <textarea
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                        onBlur={commitNote}
-                        rows={5}
-                        autoFocus
-                        placeholder={t(
-                            'forms.task.notePlaceholder',
-                            'Add a note...'
-                        )}
-                        className="w-full resize-y rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-0 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
-                    />
-                ) : (
-                    <div
-                        role="button"
-                        tabIndex={0}
-                        onClick={(e) => {
-                            if ((e.target as HTMLElement).closest('a')) return;
-                            setIsEditingNote(true);
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') setIsEditingNote(true);
-                        }}
-                        className="min-h-[2.5rem] cursor-text rounded-md bg-gray-50 px-2 py-1.5 text-sm dark:bg-gray-800/60"
+                <TaskDecisionRow task={task} onSaved={onSaved} />
+
+                <div>
+                    <p className={sectionLabel}>
+                        {t('taskPane.project', 'Project')}
+                    </p>
+                    <select
+                        aria-label={t('taskPane.project', 'Project')}
+                        value={projectId ?? ''}
+                        onChange={(e) =>
+                            void setters.setProject(
+                                e.target.value ? Number(e.target.value) : null
+                            )
+                        }
+                        className="w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-800 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
                     >
-                        {note.trim() ? (
-                            <MarkdownRenderer
-                                content={note}
-                                className="prose prose-sm dark:prose-invert max-w-none break-words"
-                            />
-                        ) : (
-                            <span className="text-gray-400 dark:text-gray-500">
-                                {t(
-                                    'forms.task.notePlaceholder',
-                                    'Add a note...'
-                                )}
-                            </span>
-                        )}
-                    </div>
-                )}
-            </div>
+                        <option value="">
+                            {t('taskPane.noProject', 'No project')}
+                        </option>
+                        {(projects || []).map((p: any) => (
+                            <option key={p.id ?? p.uid} value={p.id}>
+                                {p.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <div>
-                <p className={sectionLabel}>
-                    {t('taskPane.subtasks', 'Subtasks')}
-                </p>
-                <ul className="space-y-1">
-                    {subtasks.map((subtask) => (
-                        <li
-                            key={subtask.uid}
-                            className={`px-1 text-sm ${
-                                isTaskCompleted(subtask.status)
-                                    ? 'text-gray-400 line-through dark:text-gray-500'
-                                    : 'text-gray-800 dark:text-gray-200'
-                            }`}
-                        >
-                            {subtask.name}
-                        </li>
-                    ))}
-                </ul>
-                <div className="mt-2 flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1.5 dark:border-gray-700">
-                    <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                    <input
-                        value={newSubtask}
-                        onChange={(e) => setNewSubtask(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                void addSubtask();
-                            }
-                        }}
-                        placeholder={t(
-                            'subtasks.placeholder',
-                            'Add a subtask...'
-                        )}
-                        className="w-full bg-transparent text-sm text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-100"
+                <div>
+                    <p className={sectionLabel}>{t('taskPane.tags', 'Tags')}</p>
+                    <TagInput
+                        initialTags={task.tags?.map((tag) => tag.name) || []}
+                        availableTags={tagsStore?.tags || []}
+                        onTagsChange={(names) => void setters.setTags(names)}
+                        onFocus={() => void tagsStore?.loadTags?.()}
                     />
                 </div>
-            </div>
 
-            {task.uid && (
-                <PostponementHistory
-                    taskUid={task.uid}
-                    version={task.due_date}
-                />
-            )}
+                <div className="pointer-events-auto select-text">
+                    <p className={sectionLabel}>{t('taskPane.note', 'Note')}</p>
+                    {isEditingNote ? (
+                        <textarea
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            onBlur={commitNote}
+                            rows={5}
+                            autoFocus
+                            placeholder={t(
+                                'forms.task.notePlaceholder',
+                                'Add a note...'
+                            )}
+                            className="w-full resize-y rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-0 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+                        />
+                    ) : (
+                        <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                                if ((e.target as HTMLElement).closest('a'))
+                                    return;
+                                if (!fileBacked) setIsEditingNote(true);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !fileBacked)
+                                    setIsEditingNote(true);
+                            }}
+                            className="min-h-[2.5rem] cursor-text rounded-md bg-gray-50 px-2 py-1.5 text-sm dark:bg-gray-800/60"
+                        >
+                            {note.trim() ? (
+                                <MarkdownRenderer
+                                    content={note}
+                                    className="prose prose-sm dark:prose-invert max-w-none break-words"
+                                />
+                            ) : (
+                                <span className="text-gray-400 dark:text-gray-500">
+                                    {t(
+                                        'forms.task.notePlaceholder',
+                                        'Add a note...'
+                                    )}
+                                </span>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <p className={sectionLabel}>
+                        {t('taskPane.subtasks', 'Subtasks')}
+                    </p>
+                    <ul className="space-y-1">
+                        {subtasks.map((subtask) => (
+                            <li
+                                key={subtask.uid}
+                                className={`px-1 text-sm ${
+                                    isTaskCompleted(subtask.status)
+                                        ? 'text-gray-400 line-through dark:text-gray-500'
+                                        : 'text-gray-800 dark:text-gray-200'
+                                }`}
+                            >
+                                {subtask.name}
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="mt-2 flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1.5 dark:border-gray-700">
+                        <PlusCircleIcon className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                        <input
+                            value={newSubtask}
+                            onChange={(e) => setNewSubtask(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    void addSubtask();
+                                }
+                            }}
+                            placeholder={t(
+                                'subtasks.placeholder',
+                                'Add a subtask...'
+                            )}
+                            className="w-full bg-transparent text-sm text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-100"
+                        />
+                    </div>
+                </div>
+
+                {task.uid && (
+                    <PostponementHistory
+                        taskUid={task.uid}
+                        version={task.due_date}
+                    />
+                )}
+            </div>
 
             {isBlockedConfirmOpen && (
                 <ConfirmDialog

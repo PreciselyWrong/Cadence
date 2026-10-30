@@ -17,6 +17,8 @@ import { Project, ProjectStatus } from '../../entities/Project';
 import { Area } from '../../entities/Area';
 import { getAssetPath } from '../../config/paths';
 import { getProjectStatusTint } from './projectStatusStyles';
+import TodoMdProjectNote from './TodoMdProjectNote';
+import { isTodoMdProject } from '../../utils/todoMd';
 
 const PROJECT_STATUSES: ProjectStatus[] = [
     'not_started',
@@ -45,6 +47,8 @@ interface ProjectHeroProps {
     onTogglePin?: () => void;
     onImportClick?: () => void;
     onExport?: (format: 'xlsx' | 'csv') => void;
+    // Rereads the TODO.md files and reloads the project (TODO.md projects).
+    onReread?: () => Promise<void>;
 }
 
 const ProjectHero: React.FC<ProjectHeroProps> = ({
@@ -62,7 +66,9 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     onTogglePin,
     onImportClick,
     onExport,
+    onReread,
 }) => {
+    const fileBacked = isTodoMdProject(project);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [statusOpen, setStatusOpen] = useState(false);
@@ -147,6 +153,8 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     const changeStatus = async (status: ProjectStatus) => {
         setStatusOpen(false);
         if (status === project.status) return;
+        // Completing goes through the file, task by task.
+        if (fileBacked && status === 'done') return;
         if (status === 'done' && onComplete) {
             onComplete();
             return;
@@ -378,16 +386,31 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             />
                         ) : (
                             <h1
-                                onClick={() => setEditingName(true)}
-                                title={t(
-                                    'project.clickToEdit',
-                                    'Click to edit'
-                                )}
+                                onClick={() => {
+                                    if (!fileBacked) setEditingName(true);
+                                }}
+                                title={
+                                    fileBacked
+                                        ? t(
+                                              'todoMd.badgeTitle',
+                                              'From a TODO.md file. Read-only here: edit the file instead.'
+                                          )
+                                        : t(
+                                              'project.clickToEdit',
+                                              'Click to edit'
+                                          )
+                                }
                                 className="-mx-1 line-clamp-2 cursor-text rounded-md px-1 text-xl font-semibold leading-tight text-gray-900 transition-colors hover:bg-white/60 sm:text-2xl dark:text-gray-100 dark:hover:bg-gray-800/60"
                                 data-testid="project-name"
                             >
                                 {project.name}
                             </h1>
+                        )}
+                        {fileBacked && (
+                            <TodoMdProjectNote
+                                path={project.source_path || ''}
+                                onReread={onReread}
+                            />
                         )}
                         {editingDescription ? (
                             <textarea
@@ -463,7 +486,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 <ArrowUturnLeftIcon className="h-4 w-4" />
                                 {t('projects.reopen', 'Reopen')}
                             </button>
-                        ) : (
+                        ) : fileBacked ? null : (
                             <button
                                 type="button"
                                 onClick={() => changeStatus('done')}
@@ -587,16 +610,18 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                             </button>
                                         </>
                                     )}
-                                    <button
-                                        type="button"
-                                        className="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
-                                        onClick={() => {
-                                            setMenuOpen(false);
-                                            onDeleteClick();
-                                        }}
-                                    >
-                                        {t('common.delete', 'Delete')}
-                                    </button>
+                                    {!fileBacked && (
+                                        <button
+                                            type="button"
+                                            className="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                onDeleteClick();
+                                            }}
+                                        >
+                                            {t('common.delete', 'Delete')}
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>

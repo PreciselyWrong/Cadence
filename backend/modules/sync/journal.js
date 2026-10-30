@@ -1,13 +1,22 @@
 'use strict';
 
-const { ENTITIES, entityForModel, listsOf } = require('./registry');
+const {
+    ENTITIES,
+    entityForModel,
+    listsOf,
+    serverFieldsOf,
+} = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { currentOpId } = require('./context');
 
 function syncedKeys(entity) {
     const def = ENTITIES[entity];
-    return [...def.fields, ...Object.values(def.refs).map((r) => r.column)];
+    return [
+        ...def.fields,
+        ...serverFieldsOf(entity),
+        ...Object.values(def.refs).map((r) => r.column),
+    ];
 }
 
 // A write that did not come through /sync/push still has to win over the

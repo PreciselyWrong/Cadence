@@ -14,6 +14,7 @@ const { hasAccess } = require('../../middleware/authorize');
 const { requireAuth } = require('../../middleware/auth');
 const { numericIdParam } = require('../../middleware/numericIdParam');
 const { Project } = require('../../models');
+const { projectGuard } = require('../todo-md/guards');
 const {
     imageFileFilter,
     randomUploadName,
@@ -88,6 +89,7 @@ router.patch(
         (req) => projectsController.getProjectUidForAuth(req),
         { notFoundMessage: 'Project not found.' }
     ),
+    projectGuard,
     projectsController.update
 );
 
@@ -100,6 +102,7 @@ router.post(
         (req) => projectsController.getProjectUidForAuth(req),
         { notFoundMessage: 'Project not found.' }
     ),
+    projectGuard,
     projectsController.complete
 );
 
@@ -113,6 +116,7 @@ router.delete(
         (req) => projectsController.getProjectUidForAuth(req),
         { notFoundMessage: 'Project not found.' }
     ),
+    projectGuard,
     projectsController.delete
 );
 

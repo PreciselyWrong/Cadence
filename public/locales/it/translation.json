@@ -3897,5 +3897,17 @@
     "none": "Niente altro da confrontare.",
     "addToday": "Aggiungi a oggi",
     "close": "Chiudi"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Da un file TODO.md. Sola lettura qui: modifica invece il file.",
+    "readOnly": "Questo proviene da un file TODO.md. Modifica invece il file.",
+    "projectInfo": "Riflette {{path}}. Le attività che aggiungi vengono scritte nel file, e spuntarne una lo aggiorna.",
+    "reread": "Ricarica i file",
+    "rereading": "Ricaricamento...",
+    "rereadDone": "File TODO.md ricaricati.",
+    "rereadFailed": "Impossibile ricaricare i file TODO.md.",
+    "addTo": "Aggiungi a",
+    "addFailed": "Impossibile scrivere nel file TODO.md."
   }
 }

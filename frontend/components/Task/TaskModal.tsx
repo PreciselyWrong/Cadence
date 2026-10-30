@@ -28,6 +28,8 @@ import {
     isStartAfterDue,
 } from '../../utils/dueDateTime';
 import EntitySidePanel from '../SidePanel/EntitySidePanel';
+import TodoMdTaskPanel from './TodoMdTaskPanel';
+import { isTodoMdTask } from '../../utils/todoMd';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import {
     SidePanelField,
@@ -425,6 +427,12 @@ const TaskModal: React.FC<TaskModalProps> = ({
             );
         }
     };
+
+    if (isTodoMdTask(task)) {
+        return (
+            <TodoMdTaskPanel isOpen={isOpen} onClose={onClose} task={task} />
+        );
+    }
 
     const isRecurringInstance = !!task.recurring_parent_id;
 

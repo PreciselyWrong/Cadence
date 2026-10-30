@@ -3887,5 +3887,17 @@
     "none": "比べるものは残っていません。",
     "addToday": "今日に追加",
     "close": "閉じる"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "TODO.mdファイル由来。ここでは読み取り専用です。ファイルを編集してください。",
+    "readOnly": "これはTODO.mdファイル由来です。代わりにファイルを編集してください。",
+    "projectInfo": "{{path}}を反映します。追加したタスクはファイルに書き込まれ、完了にするとファイルも更新されます。",
+    "reread": "ファイルを再読み込み",
+    "rereading": "再読み込み中...",
+    "rereadDone": "TODO.mdファイルを再読み込みしました。",
+    "rereadFailed": "TODO.mdファイルを再読み込みできませんでした。",
+    "addTo": "追加先:",
+    "addFailed": "TODO.mdファイルに書き込めませんでした。"
   }
 }

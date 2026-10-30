@@ -3886,5 +3886,17 @@
     "none": "Không còn gì để so sánh.",
     "addToday": "Thêm vào hôm nay",
     "close": "Đóng"
+  },
+  "todoMd": {
+    "badge": "TODO.md",
+    "badgeTitle": "Từ tệp TODO.md. Chỉ đọc tại đây: hãy sửa tệp thay thế.",
+    "readOnly": "Mục này đến từ tệp TODO.md. Hãy sửa tệp thay thế.",
+    "projectInfo": "Phản ánh {{path}}. Tác vụ bạn thêm được ghi vào tệp, và đánh dấu hoàn thành sẽ cập nhật tệp.",
+    "reread": "Tải lại tệp",
+    "rereading": "Đang tải lại...",
+    "rereadDone": "Đã tải lại các tệp TODO.md.",
+    "rereadFailed": "Không thể tải lại các tệp TODO.md.",
+    "addTo": "Thêm vào",
+    "addFailed": "Không thể ghi vào tệp TODO.md."
   }
 }
