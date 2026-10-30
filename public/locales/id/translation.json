@@ -3180,6 +3180,12 @@
     "planning": "Perencanaan",
     "completed": "'{{name}}' selesai.",
     "panelMode": "Panel kanan",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Opsi kalender lainnya"
   },
   "capture": {

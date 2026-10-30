@@ -3187,6 +3187,12 @@
     "planning": "Planlegging",
     "completed": "'{{name}}' er fullført.",
     "panelMode": "Høyre panel",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Flere kalenderalternativer"
   },
   "capture": {

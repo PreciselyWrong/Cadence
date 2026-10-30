@@ -1,7 +1,12 @@
+import TaskTagChips from '../Task/TaskRow/TaskTagChips';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { ChevronDownIcon, PlusIcon } from '@heroicons/react/24/outline';
+import {
+    ChevronDownIcon,
+    FolderIcon,
+    PlusIcon,
+} from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import {
     DailyPlanItem,
@@ -125,9 +130,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
             count: days,
         });
     }
-    const meta = [status, task.Project?.name, formatDuration(duration)]
-        .filter(Boolean)
-        .join(' · ');
+    const meta = [status, formatDuration(duration)].filter(Boolean).join(' · ');
 
     const quietAction =
         'text-xs text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-400 dark:hover:text-gray-200';
@@ -171,6 +174,18 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                         <span className="truncate">{meta}</span>
                     </span>
                 </div>
+                {task.tags && task.tags.length > 0 && (
+                    <TaskTagChips tags={task.tags} className="hidden sm:flex" />
+                )}
+                {task.Project?.name && (
+                    <span
+                        className="hidden max-w-[7rem] shrink-0 items-center gap-1 truncate text-xs text-gray-500 dark:text-gray-400 sm:flex"
+                        data-testid={`candidate-project-${task.uid}`}
+                    >
+                        <FolderIcon className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{task.Project.name}</span>
+                    </span>
+                )}
                 <button
                     type="button"
                     onClick={onAdd}

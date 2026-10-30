@@ -6,7 +6,7 @@ This document explains how the Today page, the "Plan my day" planner and calenda
 
 ## Overview
 
-Today is one page (`/today`). Its left column lists the day's candidate tasks; its right panel shows either the **Planning** timeline, where tasks are placed in free time around your meetings, or the day's **Calendar**. `/today/plan` redirects to `/today`.
+Today is one page (`/today`). Its left column lists the day's candidate tasks; its right panel shows the **Day** calendar, where tasks are placed in free time around your meetings, or the **Agenda**, a chronological list of the same day. `/today/plan` redirects to `/today`.
 
 The classic Today page was removed; `/today_legacy` now redirects to `/today`. Its section lists (Overdue, Planned, Suggested, Completed) still feed the planner's candidates, see [Today Page Sections](02-today-page-sections.md). Its charts (overview counts, completions, area balance) moved to the **Overview** tab of Insights > Reports.
 
@@ -17,13 +17,10 @@ The classic Today page was removed; `/today_legacy` now redirects to `/today`. I
 Planning and doing the day happen on one page. There is no start button: the plan saves as you edit it.
 
 - **Left column:** the day's candidates, grouped and ordered as in the planner (see **Candidate order** below), each with the round check. The round check completes the task in place; it leaves the list and an undo toast brings it back. Drag a candidate onto the timeline, or press its **+** to place it in the next free slot. On phones the **+** is the way to place a task.
-- **Right panel:** a **Planning** / **Calendar** switch, remembered per browser (`today.panelMode`, default Planning).
-  - **Planning:** the timeline (or list) of plan items. Place, resize and remove blocks; calendar events show as busy time. The Now card sits above it when the plan has items, with **Mark done** and **Push to later**. Open timed tasks that are not in the plan and fall before the visible hours show a **N earlier** bar above the timeline, and those after them a **N later** bar below it; a click on either shows the whole day. The **⋯** menu of the planning view holds **Show all hours** (a toggle that shows 0 to 24 for the page session, not saved) while the visible hours are narrower than the day.
-  - **Calendar:** the day's calendar in the Calendar page's day view: tasks by their due time and calendar feed events. Dragging uses the same system as the left column (dnd-kit), onto 15-minute slots or the **All day** row:
-    - a candidate, or a block, dropped on a slot becomes due on the shown day at that time (an all-day block becomes timed);
-    - a timed block dropped on another slot moves to that time and keeps its length;
-    - a timed block dropped on the **All day** row loses its time (due that day, whole day).
-    The visible hours (below) limit the grid. The **⋯** menu on the panel header holds **Visible hours**.
+- **Left column width:** the splitter between the task column and the right panel is draggable (and moves with the arrow keys, Home and End; double-click resets). The width stays between 280 px and what leaves the right panel 360 px, and is remembered per browser (`today.leftWidth`). It shows on wide screens only.
+- **Right panel:** a **Day** / **Agenda** switch, remembered per browser (`today.panelMode`, default Day), and previous-day, **Today** and next-day buttons that move the same `?date=` as the arrows in the page header (one selected day for the whole page).
+  - **Day:** the timeline of plan items, with the day's calendar events and the open timed tasks that are not in the plan shown as busy time (the same task source as the Calendar page, recurring occurrences included). Place, resize and remove blocks; drag a candidate onto the grid or press **+** to drop it into the next free slot; free gaps are labelled. The Now card sits above it when the plan has items, with **Mark done** and **Push to later**. Open timed tasks that are not in the plan and fall before the visible hours show a **N earlier** bar above the timeline, and those after them a **N later** bar below it; a click on either shows the whole day. The **⋯** menu holds **Visible hours** and **Show all hours** (a toggle that shows 0 to 24 for the page session, not saved) while the visible hours are narrower than the day.
+  - **Agenda:** a linear list of the day: timed plan items, timed tasks and calendar events in time order, then the entries without a time (all-day events and untimed plan items). Rows of plan items open the task pane; on today, entries already over are dimmed.
 - **Calendar toggle:** hides or shows the right panel, and the task list then takes the full width. Remembered in `today.calendarOpen`; open by default on wide screens.
 - **Day navigation:** the previous and next day arrows and **Today** move between days. The day is kept in the URL as `?date=YYYY-MM-DD` (no parameter means today), so a reload keeps it. Candidates are ranked for today only: another day lists its open tasks due that day, and that day is not started and gets no AI draft.
 - **Starting the day:** placing the first task on today's plan starts the day (`started_at`) once the plan has saved.

@@ -3180,6 +3180,12 @@
     "planning": "计划",
     "completed": "“{{name}}”已完成。",
     "panelMode": "右侧面板",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "更多日历选项"
   },
   "capture": {

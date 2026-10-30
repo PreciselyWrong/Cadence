@@ -3182,6 +3182,12 @@
     "planning": "Planning",
     "completed": "'{{name}}' voltooid.",
     "panelMode": "Rechterpaneel",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Meer agenda-opties"
   },
   "capture": {

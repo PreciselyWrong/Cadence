@@ -3183,6 +3183,12 @@
     "planning": "Σχεδιασμός",
     "completed": "Το «{{name}}» ολοκληρώθηκε.",
     "panelMode": "Δεξί πάνελ",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Περισσότερες επιλογές ημερολογίου"
   },
   "capture": {

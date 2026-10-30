@@ -3191,6 +3191,12 @@
     "planning": "Planung",
     "completed": "„{{name}}“ erledigt.",
     "panelMode": "Rechte Spalte",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Weitere Kalenderoptionen"
   },
   "capture": {

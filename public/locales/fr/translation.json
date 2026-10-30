@@ -3188,6 +3188,12 @@
     "planning": "Planification",
     "completed": "« {{name}} » terminée.",
     "panelMode": "Panneau de droite",
+    "dayView": "Jour",
+    "agenda": "Agenda",
+    "agendaAnytime": "Sans heure",
+    "agendaEmpty": "Rien de prévu ce jour-là.",
+    "agendaUntimed": "Sans horaire",
+    "resizePanes": "Redimensionner les colonnes",
     "calendarMenu": "Plus d’options du calendrier"
   },
   "capture": {

@@ -234,16 +234,6 @@ describe('TodayPage', () => {
         expect(window.localStorage.getItem('today.calendarOpen')).toBe('true');
     });
 
-    it('offers 15-minute slots and an all-day row as drop targets in calendar mode', async () => {
-        window.localStorage.setItem('today.panelMode', 'calendar');
-        render(<TodayPage />);
-
-        expect(await screen.findByTestId('cal-allday')).toBeInTheDocument();
-        expect(screen.getByTestId('cal-slot-540')).toBeInTheDocument();
-        expect(screen.getByTestId('cal-slot-555')).toBeInTheDocument();
-        window.localStorage.removeItem('today.panelMode');
-    });
-
     it('leaves calendars out when the Calendar feature is off', async () => {
         mockCalendarEnabled = false;
 
@@ -303,14 +293,30 @@ describe('TodayPage', () => {
         expect(mockSetSearchParams).toHaveBeenLastCalledWith({});
     });
 
-    it('switches the right panel to the calendar and remembers it', async () => {
+    it('lists the day chronologically in Agenda mode and remembers it', async () => {
         render(<TodayPage />);
 
         await screen.findByTestId('day-timeline');
-        fireEvent.click(screen.getByTestId('panel-calendar'));
+        fireEvent.click(screen.getByTestId('panel-agenda'));
 
-        expect(await screen.findByTestId('day-calendar')).toBeInTheDocument();
+        expect(await screen.findByTestId('agenda-empty')).toBeInTheDocument();
         expect(screen.queryByTestId('day-timeline')).not.toBeInTheDocument();
-        expect(window.localStorage.getItem('today.panelMode')).toBe('calendar');
+        expect(window.localStorage.getItem('today.panelMode')).toBe('agenda');
+    });
+
+    it('resizes the left column with the splitter and remembers the width', async () => {
+        render(<TodayPage />);
+
+        const splitter = await screen.findByTestId('pane-splitter');
+        const left = screen.getByTestId('left-pane');
+        expect(left).toHaveStyle({ width: '400px' });
+
+        fireEvent.keyDown(splitter, { key: 'ArrowRight' });
+
+        expect(left).toHaveStyle({ width: '424px' });
+        expect(window.localStorage.getItem('today.leftWidth')).toBe('424');
+
+        fireEvent.keyDown(splitter, { key: 'Home' });
+        expect(left).toHaveStyle({ width: '280px' });
     });
 });
