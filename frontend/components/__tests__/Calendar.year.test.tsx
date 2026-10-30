@@ -10,6 +10,8 @@ import CalendarWeekView from '../Calendar/CalendarWeekView';
 import CalendarMonthView from '../Calendar/CalendarMonthView';
 import { taskToEvents } from '../Calendar/taskEvents';
 
+jest.mock('../../i18n', () => ({ __esModule: true, default: {} }));
+
 jest.mock('../../utils/profileService', () => ({
     getFirstDayOfWeek: jest.fn().mockResolvedValue(1),
     getLocaleFirstDayOfWeek: jest.fn().mockReturnValue(1),

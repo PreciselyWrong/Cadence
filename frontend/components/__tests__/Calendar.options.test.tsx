@@ -11,6 +11,8 @@ import {
     visibleTasks,
 } from '../Calendar/ViewOptions';
 
+jest.mock('../../i18n', () => ({ __esModule: true, default: {} }));
+
 jest.mock('../../utils/profileService', () => ({
     getFirstDayOfWeek: jest.fn().mockResolvedValue(1),
     getLocaleFirstDayOfWeek: jest.fn().mockReturnValue(1),
