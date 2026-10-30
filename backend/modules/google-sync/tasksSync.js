@@ -244,7 +244,8 @@ async function syncTasks(ctx, account) {
     for (const task of local.parentsFirst([...tasksById.values()])) {
         await guard(ctx, 'push', async () => {
             const link = byTask.get(task.id);
-            if (!local.isSyncable(task)) {
+            if (!local.belongsInTasks(task, ctx.account)) {
+                // Hidden, or timed and on the calendar instead.
                 if (link) {
                     await client.deleteTask(link.container_id, link.google_id);
                     await link.destroy();

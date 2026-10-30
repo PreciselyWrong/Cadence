@@ -51,6 +51,24 @@ function isSyncable(task) {
     );
 }
 
+const isTimed = (task) => Boolean(task.due_date && task.due_has_time);
+
+// With both sides on, a task goes to one place only: a task with a due time
+// becomes an event of the Cadence calendar, any other task a Google Task.
+// With one side on, that side takes every task it can hold.
+function belongsOnCalendar(task, account) {
+    return Boolean(
+        isSyncable(task) &&
+        !isDone(task) &&
+        task.due_date &&
+        (!account?.sync_tasks || isTimed(task))
+    );
+}
+
+function belongsInTasks(task, account) {
+    return isSyncable(task) && !(account?.sync_events && isTimed(task));
+}
+
 // Parents before their subtasks, so a subtask can name its parent's Google id.
 function parentsFirst(tasks) {
     const byId = new Map(tasks.map((task) => [task.id, task]));
@@ -134,9 +152,15 @@ function taskUrl(task) {
     return base && task.uid ? `${base}/task/${task.uid}` : '';
 }
 
+const isDone = (task) => Number(task.status) === Task.STATUS.DONE;
+
 module.exports = {
     loadTasks,
     isSyncable,
+    isTimed,
+    belongsOnCalendar,
+    belongsInTasks,
+    isDone,
     parentsFirst,
     createTask,
     completeTask,
@@ -145,5 +169,3 @@ module.exports = {
     findOrCreateProject,
     taskUrl,
 };
-
-module.exports.isDone = (task) => Number(task.status) === Task.STATUS.DONE;

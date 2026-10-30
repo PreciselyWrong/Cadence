@@ -134,7 +134,7 @@ describe('Google sync', () => {
     });
 
     describe('Cadence calendar', () => {
-        it('puts dated open tasks on it, timed and all-day', async () => {
+        it('puts dated open tasks on it, timed and all-day, when Google Tasks is off', async () => {
             await createTask({ name: 'Undated' });
             await createTask({ name: 'All day', due_date: day(1) });
             await createTask({
@@ -144,6 +144,10 @@ describe('Google sync', () => {
                 estimated_minutes: 30,
             });
             await connect();
+            await agent
+                .patch('/api/google/settings')
+                .send({ sync_tasks: false });
+            await syncUser(user.id);
 
             const events = liveEvents(tududiCalendar());
             expect(events.map((e) => e.summary).sort()).toEqual([
@@ -196,6 +200,7 @@ describe('Google sync', () => {
             const task = await createTask({
                 name: 'Dentist',
                 due_date: day(1),
+                due_time: '08:00',
             });
             await connect();
             const calendar = tududiCalendar();
@@ -210,7 +215,11 @@ describe('Google sync', () => {
         });
 
         it('removes the event of a completed task', async () => {
-            const task = await createTask({ name: 'Pay', due_date: day(1) });
+            const task = await createTask({
+                name: 'Pay',
+                due_date: day(1),
+                due_time: '10:00',
+            });
             await connect();
             expect(liveEvents(tududiCalendar())).toHaveLength(1);
             await agent.patch(`/api/task/${task.uid}`).send({ status: 'done' });
@@ -219,23 +228,30 @@ describe('Google sync', () => {
         });
 
         it('moves the event when the task moves in Cadence', async () => {
-            const task = await createTask({ name: 'Gym', due_date: day(1) });
+            const task = await createTask({
+                name: 'Gym',
+                due_date: day(1),
+                due_time: '18:00',
+            });
             await connect();
             await agent
                 .patch(`/api/task/${task.uid}`)
-                .send({ due_date: day(4) });
+                .send({ due_date: day(4), due_time: '18:00' });
             await syncUser(user.id);
             const [event] = liveEvents(tududiCalendar());
-            expect(event.start.date).toBe(day(4));
+            expect(
+                moment(event.start.dateTime).tz(TZ).format('YYYY-MM-DD HH:mm')
+            ).toBe(`${day(4)} 18:00`);
         });
 
         it('turns an event added to the Cadence calendar into a task', async () => {
             await connect();
             const calendar = tududiCalendar();
+            const start = moment.tz(`${day(2)} 09:00`, TZ);
             google.putEvent(calendar.meta.id, {
                 summary: 'From phone',
-                start: { date: day(2) },
-                end: { date: day(3) },
+                start: { dateTime: start.toISOString() },
+                end: { dateTime: start.clone().add(1, 'hour').toISOString() },
             });
             await syncUser(user.id);
             const task = await Task.findOne({ where: { name: 'From phone' } });
@@ -480,6 +496,11 @@ describe('Google sync', () => {
                 due_time: '16:00',
             });
             await connect();
+            // With calendar sync on, a timed task is an event instead.
+            await agent
+                .patch('/api/google/settings')
+                .send({ sync_events: false });
+            await syncUser(user.id);
             const remote = liveTasks(defaultList())[0];
             google.putTask(defaultList(), {
                 ...remote,
@@ -489,6 +510,58 @@ describe('Google sync', () => {
             await task.reload();
             expect(task.name).toBe('Timed renamed');
             expect(task.due_has_time).toBe(true);
+        });
+    });
+
+    describe('both sides on', () => {
+        const defaultList = () => google.state.defaultListId;
+
+        it('sends a timed task to the calendar only and an untimed one to Google Tasks only', async () => {
+            await createTask({ name: 'Undated' });
+            await createTask({ name: 'All day', due_date: day(1) });
+            await createTask({
+                name: 'Timed',
+                due_date: day(2),
+                due_time: '14:30',
+            });
+            await connect();
+            expect(liveEvents(tududiCalendar()).map((e) => e.summary)).toEqual([
+                'Timed',
+            ]);
+            expect(
+                liveTasks(defaultList())
+                    .map((t) => t.title)
+                    .sort()
+            ).toEqual(['All day', 'Undated']);
+        });
+
+        it('moves a task across when it gains or loses its time', async () => {
+            const task = await createTask({ name: 'Shift', due_date: day(1) });
+            await connect();
+            expect(liveTasks(defaultList()).map((t) => t.title)).toEqual([
+                'Shift',
+            ]);
+            expect(liveEvents(tududiCalendar())).toHaveLength(0);
+
+            await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ due_date: day(1), due_time: '11:00' });
+            await syncUser(user.id);
+            expect(liveTasks(defaultList())).toHaveLength(0);
+            expect(liveEvents(tududiCalendar()).map((e) => e.summary)).toEqual([
+                'Shift',
+            ]);
+
+            await task.reload();
+            await task.update({ due_has_time: false });
+            await syncUser(user.id);
+            expect(liveEvents(tududiCalendar())).toHaveLength(0);
+            expect(liveTasks(defaultList()).map((t) => t.title)).toEqual([
+                'Shift',
+            ]);
+            expect(
+                await GoogleTaskLink.count({ where: { kind: 'event' } })
+            ).toBe(0);
         });
     });
 

@@ -15,6 +15,7 @@ async function runSync(account) {
     if (!user) return;
     const ctx = {
         user,
+        account,
         client: new GoogleClient(account),
         timezone: getSafeTimezone(user.timezone),
     };

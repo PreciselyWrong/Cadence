@@ -246,10 +246,9 @@ async function syncTududiCalendar(ctx, calendar) {
     for (const task of tasksById.values()) {
         await guard(ctx, 'push', async () => {
             const link = byTask.get(task.id);
-            const onCalendar =
-                local.isSyncable(task) && !local.isDone(task) && task.due_date;
-            if (!onCalendar) {
-                // Done or undated: off the calendar.
+            if (!local.belongsOnCalendar(task, ctx.account)) {
+                // Done, undated, or (with Google Tasks on) without a time:
+                // off the calendar.
                 if (link) {
                     await client.deleteEvent(link.container_id, link.google_id);
                     await link.destroy();

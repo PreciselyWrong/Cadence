@@ -9,8 +9,8 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 | Google side                                                  | Cadence side                                                                                         | Direction                                                                                                                        |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Every calendar of the account                                | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Both ways for calendars the account can write (owner/writer); read-only ones (holidays, shared "see all details") are shown only |
-| The secondary calendar **"Cadence"** (made on the first sync) | Every open task with a due date                                                                     | Both ways                                                                                                                        |
-| Google Tasks: the default list                               | Tasks without a project                                                                             | Both ways                                                                                                                        |
+| The secondary calendar **"Cadence"** (made on the first sync) | Open tasks with a due **time** (every dated task when Google Tasks sync is off)                    | Both ways                                                                                                                        |
+| Google Tasks: the default list                               | Tasks without a project (not the timed ones while calendar sync is on)                              | Both ways                                                                                                                        |
 | Google Tasks: every other list                               | One project per list (made by name when missing; a project's list is made when it first has a task) | Both ways                                                                                                                        |
 
 ### Calendar events (other calendars)
@@ -40,7 +40,11 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 - A task completed more than 7 days before the first sync is not sent; a Google task already completed before the first sync is not imported.
 - Not synced: priority, tags, status other than open/done (in progress, waiting, planned stay open in Google; archived and cancelled tasks are removed from Google), habits, recurring instances.
 
-Dated tasks show in Google twice (as a task in Google Tasks and as an event on the "Cadence" calendar). Hide "Tasks" in Google Calendar, or turn one of the two switches off in Profile → Calendars.
+### One place per task
+
+With both switches on, each task goes to Google once: a task with a due **time** becomes an event on the "Cadence" calendar, any other task (undated, or dated without a time) a Google Task. A task that gains a time leaves Google Tasks and becomes an event on the next sync; one that loses its time leaves the calendar and becomes a Google Task. An all-day event added to the "Cadence" calendar in Google therefore becomes an untimed task and moves to Google Tasks.
+
+With only one switch on, that side takes every task it can hold: calendars only → every dated open task is an event (all-day when untimed); tasks only → every task is a Google Task.
 
 ## Timing and conflicts
 
