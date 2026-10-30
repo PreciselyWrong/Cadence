@@ -54,14 +54,6 @@ import ch.nicolab.cadence.MainActivity
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
-import ch.nicolab.cadence.data.local.model.PersistedHabit
-import ch.nicolab.cadence.domain.HabitEvaluation
-import ch.nicolab.cadence.domain.HabitEvaluator
-import ch.nicolab.cadence.domain.HabitEntry
-import ch.nicolab.cadence.domain.HabitTimer
-import ch.nicolab.cadence.domain.AbstinenceProfile
-import ch.nicolab.cadence.domain.AlcoholStatsCalculator
-import ch.nicolab.cadence.domain.PeriodCalculator
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -84,15 +76,6 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
 
-private data class WidgetHabit(
-    val habit: PersistedHabit,
-    val evaluation: HabitEvaluation,
-    /** Secondes déjà mesurées lorsqu'un chronomètre est actif, nulles sinon. */
-    val timerSeconds: Long? = null,
-    val abstinenceElapsed: ch.nicolab.cadence.domain.AbstinenceElapsed? = null,
-    val alcoholSoberDays: Long? = null,
-)
-
 class CadenceWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(
         setOf(140, 220, 320).flatMap { width ->
@@ -103,48 +86,9 @@ class CadenceWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repository = (context.applicationContext as CadenceApp).repository
         val today = LocalDate.now()
-        val evaluator = HabitEvaluator()
         val now = Instant.now()
         val zone = ZoneId.systemDefault()
-        val timers = repository.getTimers()
-        val allPending = repository.getHabitsEffectiveAt(today).mapNotNull { habit ->
-            val window = PeriodCalculator.window(today, habit.goal.period, habit.schedule.firstDayOfWeek)
-            val pauses = repository.getPauses(habit.id)
-            val alcoholConsumptions = if (habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
-                repository.getAlcoholConsumptions(habit.id)
-            } else emptyList()
-            val trackingEntries = if (habit.abstinenceProfile == AbstinenceProfile.ALCOHOL) {
-                alcoholConsumptions.map { consumption ->
-                    HabitEntry(
-                        id = consumption.id,
-                        habitId = consumption.habitId,
-                        occurredAt = consumption.localDate.atStartOfDay(consumption.observedZoneId).toInstant(),
-                        localDate = consumption.localDate,
-                        observedZoneId = consumption.observedZoneId,
-                        valueMinor = 1,
-                    )
-                }
-            } else repository.getEntries(habit.id)
-            val entries = trackingEntries.filter { it.localDate >= window.start && it.localDate < window.endExclusive }
-            val evaluation = evaluator.evaluate(habit.definition, today, entries, pauses)
-            evaluation.takeIf { habit.goal.isAbstinence ||
-                (habit.goal.isTracker && it.isPlannedForDate && !it.isPaused) || it.needsAttentionNow }?.let {
-                // Un chronomètre actif s'affiche à la place de la progression : un toucher
-                // sur l'habitude ouvre la saisie rapide, qui permet de le reprendre.
-                val running = timers[habit.id]?.takeIf(HabitTimer::isRunning)?.elapsedSecondsAt(now)
-                val elapsed = habit.abstinenceStartedAt
-                    ?.takeIf { habit.goal.isAbstinence && habit.abstinenceProfile != AbstinenceProfile.ALCOHOL }
-                    ?.let { start ->
-                    ch.nicolab.cadence.domain.AbstinenceElapsedCalculator.calculate(
-                        habit.id, start, trackingEntries, now,
-                    )
-                }
-                val soberDays = habit.abstinenceStartedOn(zone)
-                    ?.takeIf { habit.abstinenceProfile == AbstinenceProfile.ALCOHOL }
-                    ?.let { start -> AlcoholStatsCalculator.compute(habit.id, start, today, alcoholConsumptions, pauses).currentSoberDays }
-                WidgetHabit(habit, evaluation, running, elapsed, soberDays)
-            }
-        }
+        val allPending = pendingWidgetHabits(repository, today, now, zone)
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val config = repository.getWidgetConfig(appWidgetId) ?: WidgetConfigurationEntity(appWidgetId, null, "HALO")
         val selected = repository.getWidgetHabitIds(appWidgetId).toSet()
@@ -273,7 +217,7 @@ private fun facetPath(cx: Float, cy: Float, radius: Float, corner: Float, sides:
     return path
 }
 
-private fun renderHabitFacet(
+internal fun renderHabitFacet(
     iconId: String?,
     colorArgb: Int,
     progress: Float,
