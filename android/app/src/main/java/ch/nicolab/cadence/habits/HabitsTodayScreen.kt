@@ -1,17 +1,12 @@
-package ch.nicolab.cadence
+package ch.nicolab.cadence.habits
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.graphics.graphicsLayer
-import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
-import ch.nicolab.cadence.ui.theme.Motion
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +17,6 @@ import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,16 +30,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import ch.nicolab.cadence.AbstinenceHomeCard
+import ch.nicolab.cadence.HabitCardState
+import ch.nicolab.cadence.R
+import ch.nicolab.cadence.ToCompleteItem
+import ch.nicolab.cadence.ToCompleteRow
+import ch.nicolab.cadence.abstinenceStatus
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.TodayPresentation
 import ch.nicolab.cadence.ui.HabitFormatter
+import ch.nicolab.cadence.ui.ScreenList
 import ch.nicolab.cadence.ui.components.ActionRow
 import ch.nicolab.cadence.ui.components.CadenceSheet
 import ch.nicolab.cadence.ui.components.EmptyState
@@ -53,6 +55,8 @@ import ch.nicolab.cadence.ui.components.HeaderAction
 import ch.nicolab.cadence.ui.components.PrimaryAction
 import ch.nicolab.cadence.ui.components.SectionLabel
 import ch.nicolab.cadence.ui.components.TertiaryAction
+import ch.nicolab.cadence.ui.components.rememberCadenceHaptic
+import ch.nicolab.cadence.ui.theme.Motion
 import ch.nicolab.cadence.ui.theme.Radius
 import ch.nicolab.cadence.ui.theme.Size
 import ch.nicolab.cadence.ui.theme.Space
@@ -66,7 +70,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-internal fun TodayScreen(
+internal fun HabitsTodayScreen(
     habits: List<HabitCardState>,
     groups: List<HabitGroup>,
     selectedGroupId: String?,

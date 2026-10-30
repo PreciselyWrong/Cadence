@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.habits.EntryEditor
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.components.CadenceField
 import ch.nicolab.cadence.ui.components.ValueChip

@@ -50,6 +50,7 @@ import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.ProgressionCadence
 import ch.nicolab.cadence.domain.ScheduleMode
 import ch.nicolab.cadence.domain.UnitDimension
+import ch.nicolab.cadence.habits.FoldHeading
 import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.HabitLabels
 import ch.nicolab.cadence.ui.components.CadenceField
