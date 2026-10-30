@@ -480,6 +480,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     return (
         <div
             ref={rowRootRef}
+            data-task-uid={task.uid}
             data-task-expanded={isExpanded || undefined}
             className={`relative ${
                 isStatusMenuOpen || isActionsMenuOpen

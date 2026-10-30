@@ -1350,7 +1350,32 @@
     "aboutInbox": "Tentang Kotak Masuk",
     "shortcutTag": "untuk memberi tag",
     "shortcutProject": "untuk menetapkan ke proyek",
-    "attachments": "Lampiran"
+    "attachments": "Lampiran",
+    "triage": {
+      "start": "Pilah",
+      "title": "Pilah kotak masuk",
+      "exit": "Keluar",
+      "progress": "{{done}} dari {{total}} sudah dipilah",
+      "done": "Kotak masuk kosong. Tidak ada lagi yang perlu dipilah.",
+      "doneLater": "{{count}} disimpan untuk nanti. Sisanya sudah dipilah.",
+      "suggested": "Disarankan: {{kind}}",
+      "task": "Tugas",
+      "project": "Proyek",
+      "note": "Catatan",
+      "later": "Nanti",
+      "delete": "Hapus",
+      "keptLater": "Disimpan di kotak masuk untuk nanti",
+      "madeTask": "Tugas dibuat",
+      "madeProject": "Proyek dibuat",
+      "madeNote": "Catatan dibuat",
+      "error": "Item ini tidak dapat diproses. Item masih ada di kotak masuk.",
+      "reasonProject": "Menyebut proyek +{{detail}}",
+      "reasonTag": "Diberi tag #{{detail}}",
+      "reasonUrl": "Ini adalah tautan",
+      "reasonKeyword": "Dimulai dengan “{{detail}}”",
+      "reasonLong": "Teksnya panjang, seperti catatan",
+      "reasonDefault": "Teks pendek, biasanya tugas"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2475,7 +2500,18 @@
       "hasNoDueDate": "tidak memiliki Tenggat",
       "isAssignedToProject": "adalah Ditugaskan ke Proyek",
       "hasNoProject": "tidak memiliki Proyek"
-    }
+    },
+    "groups": {
+      "Task": "Tugas",
+      "Project": "Proyek",
+      "Area": "Area",
+      "Note": "Catatan",
+      "Tag": "Tag"
+    },
+    "moreFilters": "Filter lainnya",
+    "fewerFilters": "Filter lebih sedikit",
+    "hint": "Atas dan Bawah untuk bergerak, Enter untuk membuka, Esc untuk menutup",
+    "searching": "Mencari..."
   },
   "subtasks": {
     "placeholder": "Tambahkan subtugas..."
@@ -3271,7 +3307,9 @@
       "oneItemPerLineHelp": "Mati: semua yang kamu ketik menjadi satu item, dengan baris pertama sebagai judul dan baris lain sebagai catatan. Nyala: setiap baris menjadi item tersendiri.",
       "save": "Menyimpan",
       "title": "Menambahkan item"
-    }
+    },
+    "button": "Tangkap",
+    "syntaxHint": "#tag  +project  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal"
   },
   "area": {
     "loadError": "Gagal memuat area"
@@ -3886,5 +3924,76 @@
     "none": "Tidak ada lagi yang dibandingkan.",
     "addToday": "Tambahkan ke hari ini",
     "close": "Tutup"
+  },
+  "commandCenter": {
+    "title": "Palet perintah",
+    "placeholder": "Ketik perintah atau cari...",
+    "empty": "Tidak ada hasil",
+    "hintNav": "Atas dan Bawah untuk bergerak, Enter untuk menjalankan, Esc untuk menutup",
+    "pickProject": "Pindahkan ke proyek mana?",
+    "actionError": "Tugas tidak dapat diperbarui",
+    "deleteError": "Tugas tidak dapat dihapus",
+    "taskDeleted": "Menghapus “{{name}}”",
+    "taskContext": "Tugas: {{name}}",
+    "completeTask": "Selesaikan tugas",
+    "reopenTask": "Buka kembali tugas",
+    "editTask": "Buka tugas",
+    "moveToProject": "Pindahkan ke proyek...",
+    "setDate": "Tanggal: {{when}}",
+    "setPriority": "Prioritas: {{level}}",
+    "noProject": "Tanpa proyek",
+    "createTask": "Buat tugas",
+    "capture": "Tangkap cepat",
+    "createProject": "Buat proyek",
+    "createNote": "Buat catatan",
+    "createHabit": "Buat kebiasaan",
+    "goTo": "Buka {{page}}",
+    "triage": "Pilah kotak masuk",
+    "search": "Cari",
+    "toggleTheme": "Ganti mode gelap",
+    "showShortcuts": "Pintasan keyboard",
+    "groups": {
+      "recent": "Terbaru",
+      "task": "Tugas ini",
+      "create": "Buat",
+      "go": "Buka",
+      "commands": "Perintah",
+      "projects": "Proyek",
+      "tasks": "Tugas",
+      "notes": "Catatan",
+      "habits": "Kebiasaan"
+    },
+    "help": {
+      "title": "Pintasan keyboard",
+      "general": "Umum",
+      "navigation": "Buka",
+      "task": "Pada tugas",
+      "create": "Buat",
+      "triage": "Pemilahan kotak masuk"
+    },
+    "shortcuts": {
+      "palette": "Buka palet perintah",
+      "capture": "Tangkap cepat",
+      "search": "Cari",
+      "help": "Tampilkan pintasan keyboard",
+      "goToday": "Buka Hari ini",
+      "goInbox": "Buka Kotak masuk",
+      "goUpcoming": "Buka Mendatang",
+      "goCalendar": "Buka Kalender",
+      "goProjects": "Buka Proyek",
+      "taskNav": "Pindah antar-tugas",
+      "taskComplete": "Selesaikan atau buka kembali tugas (atau Space)",
+      "taskEdit": "Buka tugas untuk diedit (atau Enter)",
+      "taskDate": "Atur tanggal",
+      "taskPriority": "Atur prioritas",
+      "taskProject": "Pindahkan ke proyek",
+      "taskDelete": "Hapus tugas (dengan urungkan)",
+      "createAlt": "Buat item kotak masuk, tugas, proyek, catatan, area, atau tag (dengan Alt+Shift)",
+      "triageTask": "Pilah: jadikan tugas",
+      "triageProject": "Pilah: jadikan proyek",
+      "triageNote": "Pilah: jadikan catatan",
+      "triageLater": "Pilah: nanti (tetap di kotak masuk)",
+      "triageDelete": "Pilah: hapus"
+    }
   }
 }

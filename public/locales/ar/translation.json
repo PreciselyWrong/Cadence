@@ -1359,7 +1359,32 @@
     "aboutInbox": "حول البريد الوارد",
     "shortcutTag": "لإضافة وسم",
     "shortcutProject": "للإسناد إلى مشروع",
-    "attachments": "المرفقات"
+    "attachments": "المرفقات",
+    "triage": {
+      "start": "فرز",
+      "title": "فرز صندوق الوارد",
+      "exit": "خروج",
+      "progress": "تم فرز {{done}} من {{total}}",
+      "done": "صندوق الوارد فارغ. لا يوجد ما يُفرز.",
+      "doneLater": "تم الاحتفاظ بـ {{count}} للاحقًا. تم فرز كل ما عداها.",
+      "suggested": "مقترح: {{kind}}",
+      "task": "مهمة",
+      "project": "مشروع",
+      "note": "ملاحظة",
+      "later": "لاحقًا",
+      "delete": "حذف",
+      "keptLater": "تم الاحتفاظ به في الوارد للاحقًا",
+      "madeTask": "تم إنشاء المهمة",
+      "madeProject": "تم إنشاء المشروع",
+      "madeNote": "تم إنشاء الملاحظة",
+      "error": "تعذّرت معالجة هذا العنصر. ما زال في الوارد.",
+      "reasonProject": "يذكر المشروع +{{detail}}",
+      "reasonTag": "عليه الوسم #{{detail}}",
+      "reasonUrl": "إنه رابط",
+      "reasonKeyword": "يبدأ بـ “{{detail}}”",
+      "reasonLong": "إنه طويل، مثل ملاحظة",
+      "reasonDefault": "نص قصير، غالبًا مهمة"
+    }
   },
   "dateFormats": {
     "long": "EEEE، d MMMM، yyyy",
@@ -2501,7 +2526,18 @@
       "hasNoDueDate": "بلا تاريخ استحقاق",
       "isAssignedToProject": "مخصص لمشروع",
       "hasNoProject": "بلا مشروع"
-    }
+    },
+    "groups": {
+      "Task": "المهام",
+      "Project": "المشاريع",
+      "Area": "المناطق",
+      "Note": "الملاحظات",
+      "Tag": "الوسوم"
+    },
+    "moreFilters": "مزيد من الفلاتر",
+    "fewerFilters": "فلاتر أقل",
+    "hint": "لأعلى ولأسفل للتنقل، و Enter للفتح، و Esc للإغلاق",
+    "searching": "جارٍ البحث..."
   },
   "subtasks": {
     "placeholder": "أضف مهمة فرعية..."
@@ -3306,7 +3342,9 @@
       "oneItemPerLineHelp": "إيقاف: كل ما تكتبه يصبح عنصرًا واحدًا، السطر الأول عنوانه وبقية الأسطر ملاحظاته. تشغيل: كل سطر يصبح عنصرًا مستقلًا.",
       "save": "يحفظ",
       "title": "إضافة العناصر"
-    }
+    },
+    "button": "التقاط",
+    "syntaxHint": "#tag  +project  !1 إلى !3 للأولوية  غدًا 3pm للتاريخ"
   },
   "area": {
     "loadError": "تعذر تحميل المناطق"
@@ -3926,5 +3964,76 @@
     "none": "لم يبقَ شيء للمقارنة.",
     "addToday": "أضف إلى اليوم",
     "close": "إغلاق"
+  },
+  "commandCenter": {
+    "title": "لوحة الأوامر",
+    "placeholder": "اكتب أمرًا أو ابحث...",
+    "empty": "لا توجد نتائج",
+    "hintNav": "لأعلى ولأسفل للتنقل، و Enter للتشغيل، و Esc للإغلاق",
+    "pickProject": "إلى أي مشروع تريد النقل؟",
+    "actionError": "تعذّر تحديث المهمة",
+    "deleteError": "تعذّر حذف المهمة",
+    "taskDeleted": "تم حذف “{{name}}”",
+    "taskContext": "المهمة: {{name}}",
+    "completeTask": "إكمال المهمة",
+    "reopenTask": "إعادة فتح المهمة",
+    "editTask": "فتح المهمة",
+    "moveToProject": "نقل إلى مشروع...",
+    "setDate": "التاريخ: {{when}}",
+    "setPriority": "الأولوية: {{level}}",
+    "noProject": "بدون مشروع",
+    "createTask": "إنشاء مهمة",
+    "capture": "التقاط سريع",
+    "createProject": "إنشاء مشروع",
+    "createNote": "إنشاء ملاحظة",
+    "createHabit": "إنشاء عادة",
+    "goTo": "الانتقال إلى {{page}}",
+    "triage": "فرز صندوق الوارد",
+    "search": "بحث",
+    "toggleTheme": "تبديل الوضع الداكن",
+    "showShortcuts": "اختصارات لوحة المفاتيح",
+    "groups": {
+      "recent": "الأخيرة",
+      "task": "هذه المهمة",
+      "create": "إنشاء",
+      "go": "الانتقال إلى",
+      "commands": "الأوامر",
+      "projects": "المشاريع",
+      "tasks": "المهام",
+      "notes": "الملاحظات",
+      "habits": "العادات"
+    },
+    "help": {
+      "title": "اختصارات لوحة المفاتيح",
+      "general": "عام",
+      "navigation": "الانتقال إلى",
+      "task": "على مهمة",
+      "create": "إنشاء",
+      "triage": "فرز الوارد"
+    },
+    "shortcuts": {
+      "palette": "فتح لوحة الأوامر",
+      "capture": "التقاط سريع",
+      "search": "بحث",
+      "help": "عرض اختصارات لوحة المفاتيح",
+      "goToday": "الانتقال إلى اليوم",
+      "goInbox": "الانتقال إلى الوارد",
+      "goUpcoming": "الانتقال إلى القادمة",
+      "goCalendar": "الانتقال إلى التقويم",
+      "goProjects": "الانتقال إلى المشاريع",
+      "taskNav": "التنقل بين المهام",
+      "taskComplete": "إكمال المهمة أو إعادة فتحها (أو Space)",
+      "taskEdit": "فتح المهمة للتعديل (أو Enter)",
+      "taskDate": "تحديد التاريخ",
+      "taskPriority": "تحديد الأولوية",
+      "taskProject": "نقل إلى مشروع",
+      "taskDelete": "حذف المهمة (مع إمكانية التراجع)",
+      "createAlt": "إنشاء عنصر في الوارد أو مهمة أو مشروع أو ملاحظة أو منطقة أو وسم (مع Alt+Shift)",
+      "triageTask": "فرز: تحويله إلى مهمة",
+      "triageProject": "فرز: تحويله إلى مشروع",
+      "triageNote": "فرز: تحويله إلى ملاحظة",
+      "triageLater": "فرز: لاحقًا (إبقاؤه في الوارد)",
+      "triageDelete": "فرز: حذف"
+    }
   }
 }

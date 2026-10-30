@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserIcon, BoltIcon, InboxIcon } from '@heroicons/react/24/solid';
+import { UserIcon, BoltIcon } from '@heroicons/react/24/solid';
 import {
     EnvelopeIcon,
     MagnifyingGlassIcon,
@@ -11,6 +11,7 @@ import {
     ArrowRightStartOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { shortcutKeyCaps, shortcutTooltip } from '../utils/shortcutRegistry';
 import PomodoroTimer from './Shared/PomodoroTimer';
 import UniversalSearch from './UniversalSearch/UniversalSearch';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
@@ -260,10 +261,15 @@ const Navbar: React.FC<NavbarProps> = ({
                         data-testid="capture-navbar-button"
                         className="flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 transition-all duration-200 px-2 py-2 md:px-3 md:py-2"
                         aria-label={t('navigation.quickInboxCapture')}
-                        title={t('navigation.quickInboxCapture')}
+                        title={`${t('navigation.quickInboxCapture')} (${shortcutTooltip('capture')})`}
                     >
                         <BoltIcon className="h-4 w-4 text-white" />
-                        <InboxIcon className="hidden md:inline-block ml-1.5 h-4 w-4 text-blue-200" />
+                        <span className="hidden md:inline-block ml-1.5 text-sm font-semibold">
+                            {t('capture.button', 'Capture')}
+                        </span>
+                        <kbd className="hidden lg:inline-block ml-2 px-1.5 rounded bg-blue-600/60 text-[11px] font-mono text-blue-100">
+                            {shortcutKeyCaps('capture')[0]}
+                        </kbd>
                     </button>
                     {pomodoroEnabled && <PomodoroTimer />}
 

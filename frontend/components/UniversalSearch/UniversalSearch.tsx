@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import SearchMenu from './SearchMenu';
+import type { SearchNavigation } from './SearchResults';
+import { shortcutTooltip } from '../../utils/shortcutRegistry';
 
 const UniversalSearch: React.FC = () => {
     const { t } = useTranslation();
@@ -11,6 +13,7 @@ const UniversalSearch: React.FC = () => {
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const navRef = useRef<SearchNavigation | null>(null);
 
     // Listen for mobile search toggle events
     useEffect(() => {
@@ -135,10 +138,29 @@ const UniversalSearch: React.FC = () => {
                         ref={inputRef}
                         type="text"
                         placeholder={t('search.placeholder')}
+                        title={`${t('navigation.search')} (${shortcutTooltip('search')})`}
                         className="flex-1 ml-2 bg-transparent border-none outline-none text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onClick={handleInputClick}
+                        onFocus={() => {
+                            if (window.innerWidth >= 768) setIsOpen(true);
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                navRef.current?.move(1);
+                            } else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                navRef.current?.move(-1);
+                            } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                                navRef.current?.activate();
+                            } else if (e.key === 'Escape') {
+                                setIsOpen(false);
+                                inputRef.current?.blur();
+                            }
+                        }}
                         onBlur={() => {
                             // On mobile, hide search when input loses focus
                             if (window.innerWidth < 768) {
@@ -166,6 +188,7 @@ const UniversalSearch: React.FC = () => {
                 {/* Search Menu Dropdown */}
                 {isOpen && (
                     <SearchMenu
+                        navRef={navRef}
                         searchQuery={searchQuery}
                         selectedFilters={selectedFilters}
                         onFilterToggle={handleFilterToggle}

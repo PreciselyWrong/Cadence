@@ -1350,7 +1350,32 @@
     "aboutInbox": "Giới thiệu Hộp thư đến",
     "shortcutTag": "để gắn thẻ",
     "shortcutProject": "để gán vào dự án",
-    "attachments": "Tệp đính kèm"
+    "attachments": "Tệp đính kèm",
+    "triage": {
+      "start": "Phân loại",
+      "title": "Phân loại hộp thư đến",
+      "exit": "Thoát",
+      "progress": "Đã phân loại {{done}} / {{total}}",
+      "done": "Hộp thư đến trống. Không còn gì để phân loại.",
+      "doneLater": "Đã giữ {{count}} mục để sau. Các mục khác đã được phân loại.",
+      "suggested": "Gợi ý: {{kind}}",
+      "task": "Công việc",
+      "project": "Dự án",
+      "note": "Ghi chú",
+      "later": "Để sau",
+      "delete": "Xóa",
+      "keptLater": "Đã giữ trong hộp thư đến để sau",
+      "madeTask": "Đã tạo công việc",
+      "madeProject": "Đã tạo dự án",
+      "madeNote": "Đã tạo ghi chú",
+      "error": "Không thể xử lý mục này. Mục vẫn còn trong hộp thư đến.",
+      "reasonProject": "Nhắc đến dự án +{{detail}}",
+      "reasonTag": "Được gắn thẻ #{{detail}}",
+      "reasonUrl": "Đây là một liên kết",
+      "reasonKeyword": "Bắt đầu bằng “{{detail}}”",
+      "reasonLong": "Dài, giống một ghi chú",
+      "reasonDefault": "Văn bản ngắn, thường là công việc"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d tháng MMMM, yyyy",
@@ -2475,7 +2500,18 @@
       "hasNoDueDate": "không có Hạn",
       "isAssignedToProject": "được Giao cho Dự án",
       "hasNoProject": "không có Dự án"
-    }
+    },
+    "groups": {
+      "Task": "Công việc",
+      "Project": "Dự án",
+      "Area": "Khu vực",
+      "Note": "Ghi chú",
+      "Tag": "Thẻ"
+    },
+    "moreFilters": "Thêm bộ lọc",
+    "fewerFilters": "Bớt bộ lọc",
+    "hint": "Lên và Xuống để di chuyển, Enter để mở, Esc để đóng",
+    "searching": "Đang tìm kiếm..."
   },
   "subtasks": {
     "placeholder": "Thêm một công việc phụ..."
@@ -3271,7 +3307,9 @@
       "oneItemPerLineHelp": "Tắt: mọi thứ bạn gõ trở thành một mục, dòng đầu là tiêu đề và các dòng còn lại là ghi chú. Bật: mỗi dòng trở thành một mục riêng.",
       "save": "Lưu",
       "title": "Thêm mục"
-    }
+    },
+    "button": "Ghi lại",
+    "syntaxHint": "#tag  +project  !1 đến !3 ưu tiên  ngày mai 15:00 để đặt ngày"
   },
   "area": {
     "loadError": "Không thể tải khu vực"
@@ -3886,5 +3924,76 @@
     "none": "Không còn gì để so sánh.",
     "addToday": "Thêm vào hôm nay",
     "close": "Đóng"
+  },
+  "commandCenter": {
+    "title": "Bảng lệnh",
+    "placeholder": "Nhập lệnh hoặc tìm kiếm...",
+    "empty": "Không có kết quả",
+    "hintNav": "Lên và Xuống để di chuyển, Enter để chạy, Esc để đóng",
+    "pickProject": "Chuyển đến dự án nào?",
+    "actionError": "Không thể cập nhật công việc",
+    "deleteError": "Không thể xóa công việc",
+    "taskDeleted": "Đã xóa “{{name}}”",
+    "taskContext": "Công việc: {{name}}",
+    "completeTask": "Hoàn thành công việc",
+    "reopenTask": "Mở lại công việc",
+    "editTask": "Mở công việc",
+    "moveToProject": "Chuyển đến dự án...",
+    "setDate": "Ngày: {{when}}",
+    "setPriority": "Độ ưu tiên: {{level}}",
+    "noProject": "Không có dự án",
+    "createTask": "Tạo công việc",
+    "capture": "Ghi nhanh",
+    "createProject": "Tạo dự án",
+    "createNote": "Tạo ghi chú",
+    "createHabit": "Tạo thói quen",
+    "goTo": "Đi tới {{page}}",
+    "triage": "Phân loại hộp thư đến",
+    "search": "Tìm kiếm",
+    "toggleTheme": "Bật/tắt chế độ tối",
+    "showShortcuts": "Phím tắt",
+    "groups": {
+      "recent": "Gần đây",
+      "task": "Công việc này",
+      "create": "Tạo",
+      "go": "Đi tới",
+      "commands": "Lệnh",
+      "projects": "Dự án",
+      "tasks": "Công việc",
+      "notes": "Ghi chú",
+      "habits": "Thói quen"
+    },
+    "help": {
+      "title": "Phím tắt",
+      "general": "Chung",
+      "navigation": "Đi tới",
+      "task": "Trên một công việc",
+      "create": "Tạo",
+      "triage": "Phân loại hộp thư đến"
+    },
+    "shortcuts": {
+      "palette": "Mở bảng lệnh",
+      "capture": "Ghi nhanh",
+      "search": "Tìm kiếm",
+      "help": "Hiển thị phím tắt",
+      "goToday": "Đi tới Hôm nay",
+      "goInbox": "Đi tới Hộp thư đến",
+      "goUpcoming": "Đi tới Sắp tới",
+      "goCalendar": "Đi tới Lịch",
+      "goProjects": "Đi tới Dự án",
+      "taskNav": "Di chuyển giữa các công việc",
+      "taskComplete": "Hoàn thành hoặc mở lại công việc (hoặc Space)",
+      "taskEdit": "Mở công việc để sửa (hoặc Enter)",
+      "taskDate": "Đặt ngày",
+      "taskPriority": "Đặt độ ưu tiên",
+      "taskProject": "Chuyển đến một dự án",
+      "taskDelete": "Xóa công việc (có hoàn tác)",
+      "createAlt": "Tạo mục hộp thư đến, công việc, dự án, ghi chú, khu vực hoặc thẻ (với Alt+Shift)",
+      "triageTask": "Phân loại: chuyển thành công việc",
+      "triageProject": "Phân loại: chuyển thành dự án",
+      "triageNote": "Phân loại: chuyển thành ghi chú",
+      "triageLater": "Phân loại: để sau (giữ trong hộp thư đến)",
+      "triageDelete": "Phân loại: xóa"
+    }
   }
 }

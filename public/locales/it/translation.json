@@ -1353,7 +1353,32 @@
     "aboutInbox": "Informazioni sull'Inbox",
     "shortcutTag": "per aggiungere un'etichetta",
     "shortcutProject": "per assegnare a un progetto",
-    "attachments": "Allegati"
+    "attachments": "Allegati",
+    "triage": {
+      "start": "Smista",
+      "title": "Smista la Inbox",
+      "exit": "Esci",
+      "progress": "{{done}} di {{total}} smistati",
+      "done": "La Inbox è vuota. Non resta nulla da smistare.",
+      "doneLater": "{{count}} tenuti per dopo. Il resto è smistato.",
+      "suggested": "Suggerito: {{kind}}",
+      "task": "Attività",
+      "project": "Progetto",
+      "note": "Nota",
+      "later": "Più tardi",
+      "delete": "Elimina",
+      "keptLater": "Tenuto nella Inbox per dopo",
+      "madeTask": "Attività creata",
+      "madeProject": "Progetto creato",
+      "madeNote": "Nota creata",
+      "error": "Impossibile elaborare questo elemento. È ancora nella Inbox.",
+      "reasonProject": "Riguarda il progetto +{{detail}}",
+      "reasonTag": "È taggato #{{detail}}",
+      "reasonUrl": "È un link",
+      "reasonKeyword": "Inizia con “{{detail}}”",
+      "reasonLong": "È lungo, come una nota",
+      "reasonDefault": "Testo breve, spesso un'attività"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2483,7 +2508,18 @@
       "hasNoDueDate": "non ha Scadenza",
       "isAssignedToProject": "è Assegnato al Progetto",
       "hasNoProject": "non ha Progetto"
-    }
+    },
+    "groups": {
+      "Task": "Attività",
+      "Project": "Progetti",
+      "Area": "Aree",
+      "Note": "Note",
+      "Tag": "Tag"
+    },
+    "moreFilters": "Altri filtri",
+    "fewerFilters": "Meno filtri",
+    "hint": "Su e Giù per spostarti, Enter per aprire, Esc per chiudere",
+    "searching": "Ricerca in corso..."
   },
   "subtasks": {
     "placeholder": "Aggiungi un sottocompito..."
@@ -3280,7 +3316,9 @@
       "enterTouch": "Tasto Invio su telefono o tablet",
       "oneItemPerLine": "Un elemento per riga",
       "oneItemPerLineHelp": "Disattivato: tutto ciò che scrivi diventa un elemento, con la prima riga come titolo e le altre come note. Attivato: ogni riga diventa un elemento."
-    }
+    },
+    "button": "Cattura",
+    "syntaxHint": "#tag  +project  !1 a !3 priorità  domani alle 15 per una data"
   },
   "area": {
     "loadError": "Impossibile caricare le aree"
@@ -3897,5 +3935,76 @@
     "none": "Niente altro da confrontare.",
     "addToday": "Aggiungi a oggi",
     "close": "Chiudi"
+  },
+  "commandCenter": {
+    "title": "Palette dei comandi",
+    "placeholder": "Digita un comando o cerca...",
+    "empty": "Nessun risultato",
+    "hintNav": "Su e Giù per spostarti, Enter per eseguire, Esc per chiudere",
+    "pickProject": "Spostare in quale progetto?",
+    "actionError": "Impossibile aggiornare l'attività",
+    "deleteError": "Impossibile eliminare l'attività",
+    "taskDeleted": "Eliminato “{{name}}”",
+    "taskContext": "Attività: {{name}}",
+    "completeTask": "Completa attività",
+    "reopenTask": "Riapri attività",
+    "editTask": "Apri attività",
+    "moveToProject": "Sposta nel progetto...",
+    "setDate": "Data: {{when}}",
+    "setPriority": "Priorità: {{level}}",
+    "noProject": "Nessun progetto",
+    "createTask": "Crea attività",
+    "capture": "Cattura rapida",
+    "createProject": "Crea progetto",
+    "createNote": "Crea nota",
+    "createHabit": "Crea abitudine",
+    "goTo": "Vai a {{page}}",
+    "triage": "Smista la Inbox",
+    "search": "Cerca",
+    "toggleTheme": "Attiva/disattiva modalità scura",
+    "showShortcuts": "Scorciatoie da tastiera",
+    "groups": {
+      "recent": "Recenti",
+      "task": "Questa attività",
+      "create": "Crea",
+      "go": "Vai a",
+      "commands": "Comandi",
+      "projects": "Progetti",
+      "tasks": "Attività",
+      "notes": "Note",
+      "habits": "Abitudini"
+    },
+    "help": {
+      "title": "Scorciatoie da tastiera",
+      "general": "Generali",
+      "navigation": "Vai a",
+      "task": "Su un'attività",
+      "create": "Crea",
+      "triage": "Smistamento Inbox"
+    },
+    "shortcuts": {
+      "palette": "Apri la palette dei comandi",
+      "capture": "Cattura rapida",
+      "search": "Cerca",
+      "help": "Mostra le scorciatoie da tastiera",
+      "goToday": "Vai a Oggi",
+      "goInbox": "Vai alla Inbox",
+      "goUpcoming": "Vai a Prossimi",
+      "goCalendar": "Vai al Calendario",
+      "goProjects": "Vai ai Progetti",
+      "taskNav": "Spostati tra le attività",
+      "taskComplete": "Completa o riapri l'attività (o Space)",
+      "taskEdit": "Apri l'attività per modificarla (o Enter)",
+      "taskDate": "Imposta la data",
+      "taskPriority": "Imposta la priorità",
+      "taskProject": "Sposta in un progetto",
+      "taskDelete": "Elimina l'attività (con annulla)",
+      "createAlt": "Crea un elemento della Inbox, attività, progetto, nota, area o tag (con Alt+Shift)",
+      "triageTask": "Smista: rendi attività",
+      "triageProject": "Smista: rendi progetto",
+      "triageNote": "Smista: rendi nota",
+      "triageLater": "Smista: più tardi (resta nella Inbox)",
+      "triageDelete": "Smista: elimina"
+    }
   }
 }

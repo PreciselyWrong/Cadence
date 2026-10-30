@@ -1355,7 +1355,32 @@
     "aboutInbox": "O skrzynce odbiorczej",
     "shortcutTag": "aby dodać tag",
     "shortcutProject": "aby przypisać do projektu",
-    "attachments": "Załączniki"
+    "attachments": "Załączniki",
+    "triage": {
+      "start": "Przegląd",
+      "title": "Przegląd skrzynki odbiorczej",
+      "exit": "Wyjdź",
+      "progress": "Posortowano: {{done}} z {{total}}",
+      "done": "Skrzynka odbiorcza jest pusta. Nie ma nic do posortowania.",
+      "doneLater": "{{count}} zostawiono na później. Reszta jest posortowana.",
+      "suggested": "Sugestia: {{kind}}",
+      "task": "Zadanie",
+      "project": "Projekt",
+      "note": "Notatka",
+      "later": "Później",
+      "delete": "Usuń",
+      "keptLater": "Zostawiono w skrzynce na później",
+      "madeTask": "Utworzono zadanie",
+      "madeProject": "Utworzono projekt",
+      "madeNote": "Utworzono notatkę",
+      "error": "Nie udało się przetworzyć tego elementu. Nadal jest w skrzynce odbiorczej.",
+      "reasonProject": "Dotyczy projektu +{{detail}}",
+      "reasonTag": "Ma tag #{{detail}}",
+      "reasonUrl": "To link",
+      "reasonKeyword": "Zaczyna się od „{{detail}}”",
+      "reasonLong": "Jest długi, jak notatka",
+      "reasonDefault": "Krótki tekst, najczęściej zadanie"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2489,7 +2514,18 @@
       "hasNoDueDate": "nie ma terminu",
       "isAssignedToProject": "jest przypisany do projektu",
       "hasNoProject": "nie ma projektu"
-    }
+    },
+    "groups": {
+      "Task": "Zadania",
+      "Project": "Projekty",
+      "Area": "Obszary",
+      "Note": "Notatki",
+      "Tag": "Tagi"
+    },
+    "moreFilters": "Więcej filtrów",
+    "fewerFilters": "Mniej filtrów",
+    "hint": "Strzałki w górę i w dół, aby się poruszać, Enter, aby otworzyć, Esc, aby zamknąć",
+    "searching": "Szukam..."
   },
   "subtasks": {
     "placeholder": "Dodaj podzadanie..."
@@ -3290,7 +3326,9 @@
       "oneItemPerLineHelp": "Wył.: wszystko, co wpiszesz, staje się jednym elementem, z pierwszym wierszem jako tytułem i pozostałymi jako notatkami. Wł.: każdy wiersz staje się osobnym elementem.",
       "save": "Zapisuje",
       "title": "Dodawanie elementów"
-    }
+    },
+    "button": "Przechwyć",
+    "syntaxHint": "#tag  +project  !1 do !3 priorytet  jutro 15:00 jako termin"
   },
   "area": {
     "loadError": "Nie udało się wczytać obszarów"
@@ -3908,5 +3946,76 @@
     "none": "Nie ma już czego porównywać.",
     "addToday": "Dodaj do dzisiaj",
     "close": "Zamknij"
+  },
+  "commandCenter": {
+    "title": "Paleta poleceń",
+    "placeholder": "Wpisz polecenie lub szukaj...",
+    "empty": "Brak wyników",
+    "hintNav": "Strzałki w górę i w dół, aby się poruszać, Enter, aby uruchomić, Esc, aby zamknąć",
+    "pickProject": "Przenieść do którego projektu?",
+    "actionError": "Nie udało się zaktualizować zadania",
+    "deleteError": "Nie udało się usunąć zadania",
+    "taskDeleted": "Usunięto „{{name}}”",
+    "taskContext": "Zadanie: {{name}}",
+    "completeTask": "Ukończ zadanie",
+    "reopenTask": "Otwórz zadanie ponownie",
+    "editTask": "Otwórz zadanie",
+    "moveToProject": "Przenieś do projektu...",
+    "setDate": "Termin: {{when}}",
+    "setPriority": "Priorytet: {{level}}",
+    "noProject": "Brak projektu",
+    "createTask": "Utwórz zadanie",
+    "capture": "Szybkie przechwycenie",
+    "createProject": "Utwórz projekt",
+    "createNote": "Utwórz notatkę",
+    "createHabit": "Utwórz nawyk",
+    "goTo": "Przejdź do: {{page}}",
+    "triage": "Przejrzyj skrzynkę odbiorczą",
+    "search": "Szukaj",
+    "toggleTheme": "Przełącz tryb ciemny",
+    "showShortcuts": "Skróty klawiszowe",
+    "groups": {
+      "recent": "Ostatnie",
+      "task": "To zadanie",
+      "create": "Utwórz",
+      "go": "Przejdź do",
+      "commands": "Polecenia",
+      "projects": "Projekty",
+      "tasks": "Zadania",
+      "notes": "Notatki",
+      "habits": "Nawyki"
+    },
+    "help": {
+      "title": "Skróty klawiszowe",
+      "general": "Ogólne",
+      "navigation": "Przejdź do",
+      "task": "Przy zadaniu",
+      "create": "Utwórz",
+      "triage": "Przegląd skrzynki"
+    },
+    "shortcuts": {
+      "palette": "Otwórz paletę poleceń",
+      "capture": "Szybkie przechwycenie",
+      "search": "Szukaj",
+      "help": "Pokaż skróty klawiszowe",
+      "goToday": "Przejdź do Dziś",
+      "goInbox": "Przejdź do Skrzynki odbiorczej",
+      "goUpcoming": "Przejdź do Nadchodzących",
+      "goCalendar": "Przejdź do Kalendarza",
+      "goProjects": "Przejdź do Projektów",
+      "taskNav": "Przechodź między zadaniami",
+      "taskComplete": "Ukończ lub otwórz ponownie zadanie (lub Space)",
+      "taskEdit": "Otwórz zadanie do edycji (lub Enter)",
+      "taskDate": "Ustaw termin",
+      "taskPriority": "Ustaw priorytet",
+      "taskProject": "Przenieś do projektu",
+      "taskDelete": "Usuń zadanie (z cofnięciem)",
+      "createAlt": "Utwórz element skrzynki, zadanie, projekt, notatkę, obszar lub tag (z Alt+Shift)",
+      "triageTask": "Przegląd: zamień w zadanie",
+      "triageProject": "Przegląd: zamień w projekt",
+      "triageNote": "Przegląd: zamień w notatkę",
+      "triageLater": "Przegląd: później (zostaw w skrzynce)",
+      "triageDelete": "Przegląd: usuń"
+    }
   }
 }

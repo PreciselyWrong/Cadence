@@ -1351,7 +1351,32 @@
     "aboutInbox": "Over de Inbox",
     "shortcutTag": "om een tag toe te voegen",
     "shortcutProject": "om aan een project toe te wijzen",
-    "attachments": "Bijlagen"
+    "attachments": "Bijlagen",
+    "triage": {
+      "start": "Sorteren",
+      "title": "Inbox sorteren",
+      "exit": "Sluiten",
+      "progress": "{{done}} van {{total}} gesorteerd",
+      "done": "De inbox is leeg. Er is niets meer te sorteren.",
+      "doneLater": "{{count}} bewaard voor later. Al het overige is gesorteerd.",
+      "suggested": "Voorstel: {{kind}}",
+      "task": "Taak",
+      "project": "Project",
+      "note": "Notitie",
+      "later": "Later",
+      "delete": "Verwijderen",
+      "keptLater": "In de inbox bewaard voor later",
+      "madeTask": "Taak gemaakt",
+      "madeProject": "Project gemaakt",
+      "madeNote": "Notitie gemaakt",
+      "error": "Dit item kon niet worden verwerkt. Het staat nog in de inbox.",
+      "reasonProject": "Het noemt het project +{{detail}}",
+      "reasonTag": "Het heeft de tag #{{detail}}",
+      "reasonUrl": "Het is een link",
+      "reasonKeyword": "Het begint met “{{detail}}”",
+      "reasonLong": "Het is lang, zoals een notitie",
+      "reasonDefault": "Korte tekst, meestal een taak"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2477,7 +2502,18 @@
       "hasNoDueDate": "heeft geen Vervaldatum",
       "isAssignedToProject": "is Toegewezen aan Project",
       "hasNoProject": "heeft geen Project"
-    }
+    },
+    "groups": {
+      "Task": "Taken",
+      "Project": "Projecten",
+      "Area": "Gebieden",
+      "Note": "Notities",
+      "Tag": "Tags"
+    },
+    "moreFilters": "Meer filters",
+    "fewerFilters": "Minder filters",
+    "hint": "Omhoog en omlaag om te bewegen, Enter om te openen, Esc om te sluiten",
+    "searching": "Zoeken..."
   },
   "subtasks": {
     "placeholder": "Voeg een subtaak toe..."
@@ -3274,7 +3310,9 @@
       "oneItemPerLineHelp": "Uit: alles wat je typt wordt één item, met de eerste regel als titel en de rest als notities. Aan: elke regel wordt een eigen item.",
       "save": "Slaat op",
       "title": "Items toevoegen"
-    }
+    },
+    "button": "Vastleggen",
+    "syntaxHint": "#tag  +project  !1 t/m !3 prioriteit  morgen 15:00 voor een datum"
   },
   "area": {
     "loadError": "Gebieden konden niet worden geladen"
@@ -3890,5 +3928,76 @@
     "none": "Niets meer om te vergelijken.",
     "addToday": "Aan vandaag toevoegen",
     "close": "Sluiten"
+  },
+  "commandCenter": {
+    "title": "Opdrachtenpalet",
+    "placeholder": "Typ een opdracht of zoek...",
+    "empty": "Geen resultaten",
+    "hintNav": "Omhoog en omlaag om te bewegen, Enter om uit te voeren, Esc om te sluiten",
+    "pickProject": "Naar welk project verplaatsen?",
+    "actionError": "Taak kon niet worden bijgewerkt",
+    "deleteError": "Taak kon niet worden verwijderd",
+    "taskDeleted": "“{{name}}” verwijderd",
+    "taskContext": "Taak: {{name}}",
+    "completeTask": "Taak voltooien",
+    "reopenTask": "Taak heropenen",
+    "editTask": "Taak openen",
+    "moveToProject": "Verplaatsen naar project...",
+    "setDate": "Datum: {{when}}",
+    "setPriority": "Prioriteit: {{level}}",
+    "noProject": "Geen project",
+    "createTask": "Taak maken",
+    "capture": "Snelle invoer",
+    "createProject": "Project maken",
+    "createNote": "Notitie maken",
+    "createHabit": "Gewoonte maken",
+    "goTo": "Naar {{page}}",
+    "triage": "Inbox sorteren",
+    "search": "Zoeken",
+    "toggleTheme": "Donkere modus wisselen",
+    "showShortcuts": "Sneltoetsen",
+    "groups": {
+      "recent": "Recent",
+      "task": "Deze taak",
+      "create": "Maken",
+      "go": "Ga naar",
+      "commands": "Opdrachten",
+      "projects": "Projecten",
+      "tasks": "Taken",
+      "notes": "Notities",
+      "habits": "Gewoonten"
+    },
+    "help": {
+      "title": "Sneltoetsen",
+      "general": "Algemeen",
+      "navigation": "Ga naar",
+      "task": "Bij een taak",
+      "create": "Maken",
+      "triage": "Inbox sorteren"
+    },
+    "shortcuts": {
+      "palette": "Opdrachtenpalet openen",
+      "capture": "Snelle invoer",
+      "search": "Zoeken",
+      "help": "Sneltoetsen tonen",
+      "goToday": "Ga naar Vandaag",
+      "goInbox": "Ga naar Inbox",
+      "goUpcoming": "Ga naar Aankomend",
+      "goCalendar": "Ga naar Agenda",
+      "goProjects": "Ga naar Projecten",
+      "taskNav": "Tussen taken bewegen",
+      "taskComplete": "Taak voltooien of heropenen (of Space)",
+      "taskEdit": "Taak openen om te bewerken (of Enter)",
+      "taskDate": "Datum instellen",
+      "taskPriority": "Prioriteit instellen",
+      "taskProject": "Naar project verplaatsen",
+      "taskDelete": "Taak verwijderen (met ongedaan maken)",
+      "createAlt": "Inboxitem, taak, project, notitie, gebied of tag maken (met Alt+Shift)",
+      "triageTask": "Sorteren: maak een taak",
+      "triageProject": "Sorteren: maak een project",
+      "triageNote": "Sorteren: maak een notitie",
+      "triageLater": "Sorteren: later (in de inbox houden)",
+      "triageDelete": "Sorteren: verwijderen"
+    }
   }
 }

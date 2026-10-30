@@ -1351,7 +1351,32 @@
     "aboutInbox": "Gelen Kutusu hakkında",
     "shortcutTag": "etiket eklemek için",
     "shortcutProject": "bir projeye atamak için",
-    "attachments": "Ekler"
+    "attachments": "Ekler",
+    "triage": {
+      "start": "Ayıkla",
+      "title": "Gelen kutusunu ayıkla",
+      "exit": "Çık",
+      "progress": "{{done}} / {{total}} sıralandı",
+      "done": "Gelen kutusu boş. Sıralanacak bir şey kalmadı.",
+      "doneLater": "{{count}} tanesi sonra için tutuldu. Gerisi sıralandı.",
+      "suggested": "Önerilen: {{kind}}",
+      "task": "Görev",
+      "project": "Proje",
+      "note": "Not",
+      "later": "Sonra",
+      "delete": "Sil",
+      "keptLater": "Sonra için gelen kutusunda tutuldu",
+      "madeTask": "Görev oluşturuldu",
+      "madeProject": "Proje oluşturuldu",
+      "madeNote": "Not oluşturuldu",
+      "error": "Bu öğe işlenemedi. Hâlâ gelen kutusunda.",
+      "reasonProject": "+{{detail}} projesinden bahsediyor",
+      "reasonTag": "#{{detail}} etiketi var",
+      "reasonUrl": "Bu bir bağlantı",
+      "reasonKeyword": "“{{detail}}” ile başlıyor",
+      "reasonLong": "Not gibi uzun",
+      "reasonDefault": "Kısa metin, çoğunlukla görev"
+    }
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -2477,7 +2502,18 @@
       "hasNoDueDate": "Bitiş Tarihi Yok",
       "isAssignedToProject": "Projeye Atanmış",
       "hasNoProject": "Proje Yok"
-    }
+    },
+    "groups": {
+      "Task": "Görevler",
+      "Project": "Projeler",
+      "Area": "Alanlar",
+      "Note": "Notlar",
+      "Tag": "Etiketler"
+    },
+    "moreFilters": "Daha fazla filtre",
+    "fewerFilters": "Daha az filtre",
+    "hint": "Hareket için Yukarı ve Aşağı, açmak için Enter, kapatmak için Esc",
+    "searching": "Aranıyor..."
   },
   "subtasks": {
     "placeholder": "Bir alt görev ekle..."
@@ -3274,7 +3310,9 @@
       "oneItemPerLineHelp": "Kapalı: yazdığın her şey tek bir öğe olur; ilk satır başlık, diğer satırlar not olur. Açık: her satır ayrı bir öğe olur.",
       "save": "Kaydeder",
       "title": "Öğe ekleme"
-    }
+    },
+    "button": "Yakala",
+    "syntaxHint": "#tag  +project  !1 ile !3 öncelik  yarın 15:00 tarih için"
   },
   "area": {
     "loadError": "Alanlar yüklenemedi"
@@ -3890,5 +3928,76 @@
     "none": "Karşılaştırılacak bir şey kalmadı.",
     "addToday": "Bugüne ekle",
     "close": "Kapat"
+  },
+  "commandCenter": {
+    "title": "Komut paleti",
+    "placeholder": "Bir komut yazın veya arayın...",
+    "empty": "Sonuç yok",
+    "hintNav": "Hareket için Yukarı ve Aşağı, çalıştırmak için Enter, kapatmak için Esc",
+    "pickProject": "Hangi projeye taşınsın?",
+    "actionError": "Görev güncellenemedi",
+    "deleteError": "Görev silinemedi",
+    "taskDeleted": "“{{name}}” silindi",
+    "taskContext": "Görev: {{name}}",
+    "completeTask": "Görevi tamamla",
+    "reopenTask": "Görevi yeniden aç",
+    "editTask": "Görevi aç",
+    "moveToProject": "Projeye taşı...",
+    "setDate": "Tarih: {{when}}",
+    "setPriority": "Öncelik: {{level}}",
+    "noProject": "Proje yok",
+    "createTask": "Görev oluştur",
+    "capture": "Hızlı yakalama",
+    "createProject": "Proje oluştur",
+    "createNote": "Not oluştur",
+    "createHabit": "Alışkanlık oluştur",
+    "goTo": "{{page}} sayfasına git",
+    "triage": "Gelen kutusunu ayıkla",
+    "search": "Ara",
+    "toggleTheme": "Koyu modu aç/kapat",
+    "showShortcuts": "Klavye kısayolları",
+    "groups": {
+      "recent": "Son kullanılanlar",
+      "task": "Bu görev",
+      "create": "Oluştur",
+      "go": "Git",
+      "commands": "Komutlar",
+      "projects": "Projeler",
+      "tasks": "Görevler",
+      "notes": "Notlar",
+      "habits": "Alışkanlıklar"
+    },
+    "help": {
+      "title": "Klavye kısayolları",
+      "general": "Genel",
+      "navigation": "Git",
+      "task": "Bir görevde",
+      "create": "Oluştur",
+      "triage": "Gelen kutusu ayıklama"
+    },
+    "shortcuts": {
+      "palette": "Komut paletini aç",
+      "capture": "Hızlı yakalama",
+      "search": "Ara",
+      "help": "Klavye kısayollarını göster",
+      "goToday": "Bugüne git",
+      "goInbox": "Gelen Kutusu'na git",
+      "goUpcoming": "Yaklaşanlar'a git",
+      "goCalendar": "Takvim'e git",
+      "goProjects": "Projeler'e git",
+      "taskNav": "Görevler arasında geç",
+      "taskComplete": "Görevi tamamla veya yeniden aç (ya da Space)",
+      "taskEdit": "Görevi düzenlemek için aç (ya da Enter)",
+      "taskDate": "Tarihi ayarla",
+      "taskPriority": "Önceliği ayarla",
+      "taskProject": "Bir projeye taşı",
+      "taskDelete": "Görevi sil (geri alma ile)",
+      "createAlt": "Gelen kutusu öğesi, görev, proje, not, alan veya etiket oluştur (Alt+Shift ile)",
+      "triageTask": "Ayıkla: göreve dönüştür",
+      "triageProject": "Ayıkla: projeye dönüştür",
+      "triageNote": "Ayıkla: nota dönüştür",
+      "triageLater": "Ayıkla: sonra (gelen kutusunda tut)",
+      "triageDelete": "Ayıkla: sil"
+    }
   }
 }
