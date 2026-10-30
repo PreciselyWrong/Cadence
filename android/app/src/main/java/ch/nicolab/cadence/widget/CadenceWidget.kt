@@ -52,6 +52,7 @@ import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.MainActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEvaluation
@@ -220,7 +221,7 @@ private fun WidgetLine(habits: List<WidgetHabit>, config: WidgetConfigurationEnt
         horizontalAlignment = if (slotMode == WidgetSlotMode.FIXED) rowAlignment else Alignment.Horizontal.CenterHorizontally,
     ) {
         if (habits.isEmpty()) {
-            if (config.showDoneIndicator) Image(ImageProvider(if (isMono) R.drawable.ic_widget_mark else R.drawable.ic_widget_mark_light), "À jour", modifier = GlanceModifier.size(24.dp))
+            if (config.showDoneIndicator) Image(ImageProvider(if (isMono) DesignR.drawable.ic_widget_mark else DesignR.drawable.ic_widget_mark_light), "À jour", modifier = GlanceModifier.size(24.dp))
         } else {
             habits.take(layout.visibleCount).forEach { item ->
                 Column(modifier = GlanceModifier.width(layout.slotWidthDp.dp).clickable(actionStartActivity<QuickEntryActivity>(actionParametersOf(habitIdKey to item.habit.id))), horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {

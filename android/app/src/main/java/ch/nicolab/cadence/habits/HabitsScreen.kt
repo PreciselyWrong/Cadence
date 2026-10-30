@@ -14,9 +14,10 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.HeaderAction
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.ui.ScreenList
 
@@ -39,7 +40,7 @@ internal fun HabitsScreen(
     ScreenList(
         context = stringResource(R.string.habits_subtitle),
         title = stringResource(R.string.habits_title),
-        action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
+        action = { RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), style = HeaderButtonStyle.Filled, onClick = create) },
     ) {
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (active.isEmpty() && archived.isEmpty() && selectedGroupId != null) {
@@ -56,26 +57,26 @@ internal fun HabitsScreen(
         val activeHabits = active.filter { !it.stored.goal.isTracker && !it.stored.goal.isAbstinence }
         val activeTrackers = active.filter { it.stored.goal.isTracker }
         val activeAbstinences = active.filter { it.stored.goal.isAbstinence }
-        if (activeHabits.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_regular_section)) }
+        if (activeHabits.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_regular_section)) }
         items(activeHabits, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
                 HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
             }
         }
-        if (activeTrackers.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_activities_section)) }
+        if (activeTrackers.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_activities_section)) }
         items(activeTrackers, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
                 HabitRow(it, onClick = { options(it) }, onLongClick = { options(it) })
             }
         }
-        if (activeAbstinences.isNotEmpty()) item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+        if (activeAbstinences.isNotEmpty()) item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
         items(activeAbstinences, key = { it.stored.id }) {
             Box(Modifier.animateItem().fillMaxWidth()) {
                 HabitRow(it, onClick = { open(it) }, onLongClick = { options(it) })
             }
         }
         if (archived.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.habits_archived_section)) }
+            item { SectionHeader(stringResource(R.string.habits_archived_section)) }
             items(archived, key = { "archived-${it.stored.id}" }) {
                 Box(Modifier.animateItem().fillMaxWidth()) {
                     HabitRow(it, done = true, onClick = { options(it) }, onLongClick = { options(it) })

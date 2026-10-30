@@ -33,6 +33,7 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.haze)
     api(libs.androidx.activity.compose)
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.compose.ui)

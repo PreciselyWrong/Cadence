@@ -2,7 +2,6 @@ package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -37,11 +36,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ch.nicolab.cadence.designsystem.theme.Elevation
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
@@ -119,88 +116,6 @@ fun Panel(
     }
 }
 
-/**
- * En-tête de page intégré à la composition : contexte discret, titre fort,
- * action contextuelle dans une pastille circulaire.
- */
-@Composable
-fun PageHeader(
-    context: String,
-    title: String,
-    action: (@Composable () -> Unit)? = null,
-) {
-    val palette = cadence
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(top = Space.lg, bottom = Space.xs),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(
-                context.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = palette.outline,
-                letterSpacing = 0.8.sp,
-            )
-            Spacer(Modifier.height(Space.xs))
-            Text(
-                title,
-                style = MaterialTheme.typography.displaySmall,
-                color = palette.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        action?.invoke()
-    }
-}
-
-/** Bouton iconique d'en-tête : pastille circulaire nettement distincte du fond. */
-@Composable
-fun HeaderAction(icon: ImageVector, description: String, accent: Boolean = false, onClick: () -> Unit) {
-    val palette = cadence
-    val haptic = rememberCadenceHaptic()
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(
-        targetValue = if (isPressed) 0.92f else 1f,
-        animationSpec = Motion.interactive(),
-        label = "headerActionPress",
-    )
-    Box(
-        Modifier
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .size(Size.touch)
-            .clip(CircleShape)
-            .background(if (accent) palette.primaryContainer else palette.card)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = androidx.compose.foundation.LocalIndication.current,
-                onClick = {
-                    haptic.tap()
-                    onClick()
-                },
-            )
-            .semantics { contentDescription = description },
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(icon, null, tint = if (accent) palette.primary else palette.onSurface, modifier = Modifier.size(Size.iconLarge))
-    }
-}
-
-/** Titre de groupe dans une liste : rythme la lecture sans créer de surface. */
-@Composable
-fun SectionLabel(text: String, modifier: Modifier = Modifier) = Text(
-    text,
-    modifier.padding(top = Space.lg, bottom = Space.xs),
-    style = MaterialTheme.typography.labelMedium,
-    color = cadence.outline,
-)
-
 /** Séparateur presque invisible, employé seulement à l'intérieur d'une surface. */
 @Composable
 fun Hairline(modifier: Modifier = Modifier) = Box(
@@ -263,7 +178,7 @@ fun EmptyState(
 
 /** Espace réservé sous le contenu pour que la navigation flottante ne masque rien. */
 @Composable
-fun NavigationSpacer() = Spacer(Modifier.height(Size.navBar + Space.xxl).navigationBarsPadding())
+fun NavigationSpacer() = Spacer(Modifier.height(Size.navBar + Space.sm + Space.xxl).navigationBarsPadding())
 
 @Composable
 internal fun HorizontalGap(width: androidx.compose.ui.unit.Dp) = Spacer(Modifier.width(width))

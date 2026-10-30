@@ -48,7 +48,7 @@ import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.Hairline
 import ch.nicolab.cadence.designsystem.components.MetricCard
 import ch.nicolab.cadence.designsystem.components.Panel
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -96,19 +96,19 @@ internal fun StatsScreen(
             EmptyState(Icons.Outlined.Analytics, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message))
         }
         if (regular.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.today_regular_section)) }
+            item { SectionHeader(stringResource(R.string.today_regular_section)) }
             items(regular, key = { it.stored.id }) { item ->
                 HabitStatisticsOverview(item) { detailId = item.stored.id }
             }
         }
         if (trackers.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.today_activities_section)) }
+            item { SectionHeader(stringResource(R.string.today_activities_section)) }
             items(trackers, key = { it.stored.id }) { item ->
                 TrackerStatisticsOverview(item) { detailId = item.stored.id }
             }
         }
         if (abstinences.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+            item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
             items(abstinences, key = { it.stored.id }) { item ->
                 AbstinenceStatisticsOverview(item) {
                     if (item.stored.abstinenceProfile == AbstinenceProfile.ALCOHOL) alcoholDetailId = item.stored.id
@@ -117,7 +117,7 @@ internal fun StatsScreen(
             }
         }
         if (archived.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.habits_archived_section)) }
+            item { SectionHeader(stringResource(R.string.habits_archived_section)) }
             items(archived, key = { "stats-archived-${it.stored.id}" }) { item ->
                 Panel(onClick = {
                     when {

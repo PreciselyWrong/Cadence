@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
 import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.PersistedHabit
@@ -300,7 +301,7 @@ object ReminderNotifications {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val builder = NotificationCompat.Builder(context, ReminderScheduler.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_widget_mark)
+            .setSmallIcon(DesignR.drawable.ic_widget_mark)
             .setContentTitle(habit.name)
             .setContentText(if (habit.goal.isAbstinence) context.getString(R.string.abstinence_reminder_check_in) else message)
             .setContentIntent(open)

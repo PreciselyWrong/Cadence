@@ -47,7 +47,7 @@ import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.Hairline
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.theme.MetricStyle
 import ch.nicolab.cadence.designsystem.theme.Radius
@@ -143,7 +143,7 @@ fun AlcoholDetailSheet(
             }
             if (stats.pendingQuantityDates.isNotEmpty()) item {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    SectionLabel(stringResource(R.string.alcohol_pending_title))
+                    SectionHeader(stringResource(R.string.alcohol_pending_title))
                     item.alcoholConsumptions.filter { it.standardDrinks == null }.forEach { consumption ->
                         PendingAlcoholQuantityAction(consumption.localDate) { editing = consumption }
                     }
@@ -152,7 +152,7 @@ fun AlcoholDetailSheet(
             val allKnownConsumptions = item.alcoholConsumptions.filter { it.standardDrinks != null }
             val knownConsumptions = if (historyExpanded) allKnownConsumptions else allKnownConsumptions.take(3)
             if (knownConsumptions.isNotEmpty()) {
-                item { SectionLabel(stringResource(R.string.alcohol_history_title)) }
+                item { SectionHeader(stringResource(R.string.alcohol_history_title)) }
                 items(knownConsumptions, key = { "known-${it.id}" }) { consumption ->
                     val drinks = requireNotNull(consumption.standardDrinks)
                     TertiaryAction(
@@ -501,7 +501,7 @@ fun AlcoholStatisticsSheet(item: HabitCardState, dismiss: () -> Unit) {
                 AlcoholCalendar(filteredDays)
             }
             item { Text(stringResource(R.string.abstinence_assumption), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant) }
-            item { SectionLabel(stringResource(R.string.alcohol_stats_full_history)) }
+            item { SectionHeader(stringResource(R.string.alcohol_stats_full_history)) }
             if (item.alcoholConsumptions.isEmpty()) item {
                 Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.outline)
             }

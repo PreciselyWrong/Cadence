@@ -21,7 +21,7 @@ import ch.nicolab.cadence.designsystem.components.CadenceField
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -54,10 +54,10 @@ internal fun SettingsScreen(
 ) {
     val palette = cadence
     ScreenList(context = stringResource(R.string.settings_data_subtitle), title = stringResource(R.string.tab_settings)) {
-        item { SectionLabel(stringResource(R.string.tududi_section)) }
+        item { SectionHeader(stringResource(R.string.tududi_section)) }
         item { Panel { TududiConnectionSection() } }
 
-        item { SectionLabel(stringResource(R.string.travel_section)) }
+        item { SectionHeader(stringResource(R.string.travel_section)) }
         item {
             Panel {
                 Text(stringResource(R.string.travel_subtitle), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
@@ -68,7 +68,7 @@ internal fun SettingsScreen(
             }
         }
 
-        item { SectionLabel(stringResource(R.string.group_section_title)) }
+        item { SectionHeader(stringResource(R.string.group_section_title)) }
         item {
             Panel {
                 Text(stringResource(R.string.group_overlap_notice), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
@@ -82,7 +82,7 @@ internal fun SettingsScreen(
             SecondaryAction(stringResource(R.string.group_add), Modifier.fillMaxWidth()) { addGroup(newGroupName) }
         }
 
-        item { SectionLabel(stringResource(R.string.settings_widget_title)) }
+        item { SectionHeader(stringResource(R.string.settings_widget_title)) }
         item {
             Panel {
                 Text(stringResource(R.string.settings_widget_hint), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
@@ -90,7 +90,7 @@ internal fun SettingsScreen(
                 Text(stringResource(R.string.settings_widget_options), style = MaterialTheme.typography.bodySmall, color = palette.outline)
             }
         }
-        item { SectionLabel(stringResource(R.string.health_connect_title)) }
+        item { SectionHeader(stringResource(R.string.health_connect_title)) }
         item {
             HealthConnectSettingsPanel(
                 state = healthConnectState,
@@ -102,7 +102,7 @@ internal fun SettingsScreen(
                 configure = configureHealth,
             )
         }
-        item { SectionLabel(stringResource(R.string.settings_data_title)) }
+        item { SectionHeader(stringResource(R.string.settings_data_title)) }
         item {
             Panel {
                 Text(stringResource(R.string.settings_data_subtitle), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)

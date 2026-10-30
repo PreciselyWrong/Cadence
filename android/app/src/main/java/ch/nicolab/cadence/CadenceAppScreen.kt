@@ -139,16 +139,7 @@ internal fun CadenceAppScreen(viewModel: MainViewModel, editHabitId: String? = n
             viewModel.importBackup(content, { backupMessage = importedMessage }, { backupMessage = it })
         }
     }
-    val destinations = Tab.entries.map {
-        val label = stringResource(it.label)
-        val shortLabel = stringResource(when (it) {
-            Tab.TODAY -> R.string.tab_today_navigation
-            Tab.HABITS -> R.string.tab_habits_navigation
-            Tab.STATS -> R.string.habit_stats_navigation
-            else -> it.label
-        })
-        NavDestination(label, it.icon, shortLabel)
-    }
+    val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon) }
 
     CadenceScreen {
         Crossfade(tab, label = "tab") { current ->

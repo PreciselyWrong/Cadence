@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ch.nicolab.cadence.designsystem.components.NavigationSpacer
-import ch.nicolab.cadence.designsystem.components.PageHeader
+import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.theme.Space
 
 /** Ossature commune des écrans principaux : même gouttière, même en-tête, même respiration. */
@@ -24,7 +24,7 @@ internal fun ScreenList(
     contentPadding = PaddingValues(top = Space.sm, bottom = Space.md),
     verticalArrangement = Arrangement.spacedBy(Space.md),
 ) {
-    item { PageHeader(context, title, action) }
+    item { ScreenHeader(title, subtitle = context, actions = { action?.invoke() }) }
     content()
     item { NavigationSpacer() }
 }

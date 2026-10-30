@@ -18,6 +18,7 @@ import ch.nicolab.cadence.AbstinenceMilestone
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.CadenceRepository
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.AbstinenceElapsedCalculator
@@ -149,7 +150,7 @@ class AbstinenceMilestoneReceiver : BroadcastReceiver() {
         )
         val detail = context.getString(milestone.detail)
         val notification = NotificationCompat.Builder(context, AbstinenceMilestoneScheduler.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_widget_mark)
+            .setSmallIcon(DesignR.drawable.ic_widget_mark)
             .setContentTitle(context.getString(R.string.abst_milestone_reached, milestone.days))
             .setContentText(detail)
             .setStyle(NotificationCompat.BigTextStyle().bigText(detail))

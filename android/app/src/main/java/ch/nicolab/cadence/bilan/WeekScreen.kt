@@ -13,7 +13,7 @@ import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.domain.WeekEntry
 import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.domain.WeekStage
@@ -62,7 +62,7 @@ internal fun WeekScreen(
         WeekStage.entries.forEach { stage ->
             val entries = outlook.byStage.getValue(stage).mapNotNull { byId[it.habit.id] }
             if (entries.isNotEmpty()) {
-                item(key = "stage-$stage") { SectionLabel(stringResource(labels.getValue(stage))) }
+                item(key = "stage-$stage") { SectionHeader(stringResource(labels.getValue(stage))) }
                 items(entries, key = { "$stage-${it.stored.id}" }) { card ->
                     Box(Modifier.animateItem().fillMaxWidth()) {
                         HabitRow(

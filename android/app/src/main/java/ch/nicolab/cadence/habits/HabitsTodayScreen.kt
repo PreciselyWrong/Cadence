@@ -44,9 +44,10 @@ import ch.nicolab.cadence.abstinenceStatus
 import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.HeaderAction
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Motion
@@ -121,7 +122,7 @@ internal fun HabitsTodayScreen(
     ScreenList(
         context = todayEyebrow,
         title = stringResource(R.string.today_title),
-        action = { HeaderAction(Icons.Outlined.Add, stringResource(R.string.create_habit_button), accent = true, onClick = create) },
+        action = { RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), style = HeaderButtonStyle.Filled, onClick = create) },
     ) {
         if (populatedGroups.size > 1) item { GroupFilter(populatedGroups, habits, selectedGroupId, onSelectGroup) }
         if (offerReturn) item {
@@ -134,7 +135,7 @@ internal fun HabitsTodayScreen(
         }
         if (toComplete.isNotEmpty()) {
             item(key = "section_to_complete") {
-                SectionLabel(stringResource(R.string.today_to_complete_section, toComplete.size))
+                SectionHeader(stringResource(R.string.today_to_complete_section, toComplete.size))
             }
             items(toComplete, key = { it.key }) { item ->
                 ToCompleteRow(item, onClick = { quick(item.habit) })
@@ -174,7 +175,7 @@ internal fun HabitsTodayScreen(
             }
         }
         if (trackers.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.today_activities_section)) }
+            item { SectionHeader(stringResource(R.string.today_activities_section)) }
             items(trackers, key = { it.stored.id }) { item ->
                 Box(Modifier.animateItem().fillMaxWidth()) {
                     TodayHabitRow(item, timers[item.stored.id], busy, quick, options, direct)
@@ -182,7 +183,7 @@ internal fun HabitsTodayScreen(
             }
         }
         if (abstinences.isNotEmpty()) {
-            item { SectionLabel(stringResource(R.string.today_abstinences_section)) }
+            item { SectionHeader(stringResource(R.string.today_abstinences_section)) }
             items(abstinences, key = { it.stored.id }) {
                 Box(Modifier.animateItem().fillMaxWidth()) {
                     AbstinenceHomeCard(it, { quick(it) }, { options(it) })

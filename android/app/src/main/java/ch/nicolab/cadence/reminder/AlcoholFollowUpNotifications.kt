@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.CadenceRepository
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.AbstinenceProfile
@@ -195,7 +196,7 @@ object AlcoholFollowUpScheduler {
         NotificationManagerCompat.from(context).notify(
             ("alcohol-follow-up:" + consumptionId).hashCode(),
             NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_widget_mark)
+                .setSmallIcon(DesignR.drawable.ic_widget_mark)
                 .setContentTitle(habit.name)
                 .setContentText(context.getString(R.string.alcohol_follow_up_notification))
                 .setContentIntent(open)

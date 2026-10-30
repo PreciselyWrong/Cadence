@@ -49,7 +49,7 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.MetricCard
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -244,7 +244,7 @@ internal fun AbstinenceStatisticsSheet(item: HabitCardState, dismiss: () -> Unit
                     helpText = stringResource(R.string.abstinence_assumption),
                 )
             }
-            item { SectionLabel(stringResource(R.string.abstinence_stats_history)) }
+            item { SectionHeader(stringResource(R.string.abstinence_stats_history)) }
             if (item.recentEntries.isEmpty()) item {
                 Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }

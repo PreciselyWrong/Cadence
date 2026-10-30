@@ -42,7 +42,7 @@ import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.Hairline
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.ValueChip
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -181,7 +181,7 @@ internal fun QuickSheet(
         }
         Spacer(Modifier.height(Space.xl))
         if (item.stored.timerEnabled && item.stored.goal.goalType == GoalType.DURATION) {
-            SectionLabel(stringResource(R.string.timer_section))
+            SectionHeader(stringResource(R.string.timer_section))
             Spacer(Modifier.height(Space.sm))
             TimerPanel(
                 timer = timer,
@@ -223,7 +223,7 @@ internal fun QuickSheet(
         TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.fillMaxWidth(), onClick = undo)
 
         Spacer(Modifier.height(Space.xl))
-        SectionLabel(stringResource(R.string.entries_section))
+        SectionHeader(stringResource(R.string.entries_section))
         Spacer(Modifier.height(Space.sm))
         if (item.recentEntries.isEmpty()) {
             Text(stringResource(R.string.entries_empty), style = MaterialTheme.typography.bodySmall, color = cadence.outline)

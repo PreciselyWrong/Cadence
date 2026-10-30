@@ -24,8 +24,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -323,7 +321,6 @@ fun CadenceField(
 @Composable
 fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked: (Boolean) -> Unit) {
     val palette = cadence
-    val fill = accent ?: palette.primary
     val haptic = rememberCadenceHaptic()
     Row(
         Modifier
@@ -337,20 +334,7 @@ fun ToggleRow(label: String, checked: Boolean, accent: Color? = null, onChecked:
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
-        Switch(
-            checked = checked,
-            onCheckedChange = {
-                haptic.tap()
-                onChecked(it)
-            },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = onColorOf(fill),
-                checkedTrackColor = fill,
-                uncheckedThumbColor = palette.card,
-                uncheckedTrackColor = palette.outlineVariant,
-                uncheckedBorderColor = Color.Transparent,
-            ),
-        )
+        CadenceSwitch(checked, onChecked, accent = accent)
     }
 }
 

@@ -50,6 +50,7 @@ object Radius {
     val Panel = RoundedCornerShape(panel)
     val Sheet = RoundedCornerShape(topStart = sheet, topEnd = sheet)
     val Pill = RoundedCornerShape(pill)
+    val Checkbox = RoundedCornerShape(checkbox)
 }
 
 /** Profondeur réservée à ce qui flotte au-dessus du contenu. */
@@ -59,8 +60,38 @@ object Elevation {
     val floating = 10.dp
 }
 
+/** Verre translucide : flou de la barre de navigation et voiles associés. */
+object Glass {
+    val blur = 24.dp
+
+    /** Opacité du fond de la barre de navigation, claire puis sombre. */
+    const val BarAlphaLight = 0.60f
+    const val BarAlphaDark = 0.72f
+
+    /** Opacité de repli quand le flou n'est pas disponible (API < 31). */
+    const val FallbackAlpha = 0.92f
+
+    /** Voile de fond d'un modal. */
+    const val ScrimAlpha = 0.50f
+
+    /** Poignée de feuille modale. */
+    const val HandleAlpha = 0.40f
+
+    /** Teinte d'un badge coloré par un projet ou un calendrier. */
+    const val BadgeAlpha = 0.16f
+
+    /** Compteur d'un onglet sélectionné, posé sur le fond primaire. */
+    const val CountAlpha = 0.75f
+}
+
 /** Tailles tactiles et iconographiques homogènes. */
 object Size {
+    val tab = 40.dp
+    val navItem = 44.dp
+    val settingRow = 64.dp
+    val badgeIcon = 14.dp
+    val hairline = 1.dp
+    val stroke = 2.dp
     val counterTrack = 4.dp
     val heatmapCell = 12.dp
     val iconSm = 16.dp

@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 
@@ -52,10 +54,15 @@ fun CadenceSheet(
         shape = Radius.Sheet,
         containerColor = palette.card,
         contentColor = palette.onSurface,
-        scrimColor = palette.scrim.copy(alpha = 0.72f),
+        scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
         dragHandle = {
             Box(Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs), contentAlignment = Alignment.Center) {
-                Box(Modifier.width(36.dp).height(4.dp).background(palette.outlineVariant, CircleShape))
+                Box(
+                    Modifier
+                        .width(Size.handleWidth)
+                        .height(Size.handleHeight)
+                        .background(palette.outline.copy(alpha = Glass.HandleAlpha), CircleShape),
+                )
             }
         },
         modifier = modifier,

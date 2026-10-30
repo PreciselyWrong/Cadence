@@ -69,10 +69,10 @@ import java.time.Instant
 import ch.nicolab.cadence.designsystem.components.CadenceScreen
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.ErrorText
-import ch.nicolab.cadence.designsystem.components.PageHeader
+import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
-import ch.nicolab.cadence.designsystem.components.SectionLabel
+import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.ToggleRow
 import ch.nicolab.cadence.designsystem.components.onColorOf
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
@@ -177,9 +177,9 @@ private fun WidgetConfiguration(
             Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = Space.gutter),
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
-            item { PageHeader(stringResource(R.string.widget_config_subtitle), stringResource(R.string.widget_config_title)) }
+            item { ScreenHeader(stringResource(R.string.widget_config_title), subtitle = stringResource(R.string.widget_config_subtitle)) }
 
-            item { SectionLabel(stringResource(R.string.widget_config_habits_section)) }
+            item { SectionHeader(stringResource(R.string.widget_config_habits_section)) }
             item {
                 Panel {
                     ToggleRow(stringResource(R.string.widget_config_all_habits), all) { all = it }
@@ -196,7 +196,7 @@ private fun WidgetConfiguration(
                 }
             }
 
-            item { SectionLabel(stringResource(R.string.widget_config_preview_section)) }
+            item { SectionHeader(stringResource(R.string.widget_config_preview_section)) }
             item {
                 WidgetPreview(
                     habits = previewHabits,
@@ -225,7 +225,7 @@ private fun WidgetConfiguration(
                 )
             }
 
-            item { SectionLabel(stringResource(R.string.widget_config_groups_section)) }
+            item { SectionHeader(stringResource(R.string.widget_config_groups_section)) }
             item {
                 Panel {
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -260,7 +260,7 @@ private fun WidgetConfiguration(
                 }
             }
 
-            item { SectionLabel(stringResource(R.string.widget_config_style_label)) }
+            item { SectionHeader(stringResource(R.string.widget_config_style_label)) }
             item {
                 Panel {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.md), verticalArrangement = Arrangement.spacedBy(Space.md)) {
@@ -299,7 +299,7 @@ private fun WidgetConfiguration(
                 }
             }
 
-            item { SectionLabel(stringResource(R.string.widget_config_content_section)) }
+            item { SectionHeader(stringResource(R.string.widget_config_content_section)) }
             item {
                 Panel {
                     ToggleRow(stringResource(R.string.widget_config_show_labels), showLabels) { showLabels = it }

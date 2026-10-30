@@ -11,6 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitTimer
 
@@ -41,7 +42,7 @@ object TimerNotifications {
         val startedAtRealtime = System.currentTimeMillis() - timer.accumulatedSeconds * 1_000 -
             (System.currentTimeMillis() - running.toEpochMilli())
         val builder = NotificationCompat.Builder(context, ReminderScheduler.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_widget_mark)
+            .setSmallIcon(DesignR.drawable.ic_widget_mark)
             .setContentTitle(context.getString(R.string.timer_notification_title, habit.name))
             .setContentText(context.getString(R.string.timer_notification_text))
             .setContentIntent(open)
