@@ -113,6 +113,9 @@ object Size {
     val statisticsPulse = 48.dp
     val navBar = 64.dp
     val sheetContent = 760.dp
+    val agendaHour = 56.dp
+    val agendaGutter = 44.dp
+    val agendaDot = 5.dp
 }
 
 /**
