@@ -293,6 +293,7 @@
     "assignedTo": "割り当て先",
     "subtasks": "サブタスク",
     "openFullPage": "全画面表示を開く",
+    "openPanel": "サイドパネルで開く",
     "quickEdit": {
       "setPriority": "優先度を設定",
       "setDueDate": "期限日を設定"
@@ -941,6 +942,25 @@
     "telegramRequiredForSummaries": "タスクのサマリーを使うにはTelegram連携の設定が必要です。",
     "templatesDescription": "プロジェクト構成を保存して再利用できるプロジェクトテンプレートを有効にします。",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "スマートリスト",
     "sidebarRailTitle": "アイコンバーと「その他」",
     "sidebarBadgesTitle": "件数バッジ",
@@ -1707,6 +1727,8 @@
     "recurringSetup": "繰り返し設定",
     "notRecurring": "このタスクはまだ繰り返しではありません。",
     "clickToEditTitle": "タイトルを編集するにはクリック",
+    "copyLink": "タスクへのリンクをコピー",
+    "linkCopied": "リンクをコピーしました",
     "clickToEditContent": "内容を編集するにはクリック",
     "clickToAddContent": "内容を追加するにはクリック",
     "clickToEditSubtasks": "サブタスクを編集するにはクリック",
@@ -1797,10 +1819,10 @@
       "to": "終了"
     },
     "hiddenHours": {
-        "earlier": "{{count}}件 早い時間",
-        "later": "{{count}}件 遅い時間",
-        "show": "すべての時間を表示",
-        "hide": "早い時間と遅い時間を非表示"
+      "earlier": "{{count}}件 早い時間",
+      "later": "{{count}}件 遅い時間",
+      "show": "すべての時間を表示",
+      "hide": "早い時間と遅い時間を非表示"
     },
     "arrange": {
       "title": "タスクを配置",
@@ -1854,7 +1876,26 @@
     "medium": "中",
     "low": "低",
     "time": "時刻",
-    "allDay": "終日"
+    "allDay": "終日",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "productivity": {
     "stalledProjects": "停滞しているプロジェクト",
@@ -2921,7 +2962,9 @@
     "upcoming": "今週",
     "noDate": "日付なし",
     "nothing": "今は何もありません",
-    "empty": "現在共有されているものはありません。ここに表示するために、エリア、プロジェクト、または目標を共有するか、誰かにタスクを割り当ててください。"
+    "empty": "現在共有されているものはありません。ここに表示するために、エリア、プロジェクト、または目標を共有するか、誰かにタスクを割り当ててください。",
+    "sortableColumn": "並べ替え可能な列",
+    "reorderFailed": "列の順序を保存できませんでした。"
   },
   "people": {
     "addMember": "メンバーを追加",

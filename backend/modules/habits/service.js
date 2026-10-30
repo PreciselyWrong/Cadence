@@ -3,7 +3,12 @@
 const habitsRepository = require('./repository');
 const habitService = require('./habitService');
 const { PERIODS } = require('./habitEngine');
-const { NotFoundError, ValidationError } = require('../../shared/errors');
+const {
+    NotFoundError,
+    ValidationError,
+    ConflictError,
+} = require('../../shared/errors');
+const { isValidUid } = require('../../utils/uid');
 
 const TIMES_OF_DAY = ['morning', 'afternoon', 'evening'];
 const POLARITIES = ['build', 'quit'];
@@ -12,6 +17,25 @@ const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
 function nullable(value) {
     return value === undefined || value === null || value === '';
+}
+
+// A uid the client chose for a habit or a check-in (offline sync).
+function parseClientUid(value) {
+    if (nullable(value)) return null;
+    if (!isValidUid(value)) {
+        throw new ValidationError('uid must be 15 characters: 0-9 and a-z');
+    }
+    return value;
+}
+
+// Returns a Date, or null when no updated_since was given.
+function parseUpdatedSince(value) {
+    if (nullable(value)) return null;
+    const date = new Date(value);
+    if (typeof value !== 'string' || Number.isNaN(date.getTime())) {
+        throw new ValidationError('updated_since must be an ISO 8601 time');
+    }
+    return date;
 }
 
 function positiveInt(value, field, max) {
@@ -157,14 +181,19 @@ class HabitsService {
         return habit;
     }
 
-    async getAll(userId, { archived = false } = {}) {
+    // server_time is read before the rows, so a change made while this runs
+    // is picked up by the next updated_since call.
+    async getAll(userId, { archived = false, updatedSince } = {}) {
+        const serverTime = new Date().toISOString();
         const habits = await habitsRepository.findAllByUser(userId, {
             archived,
+            updatedSince: parseUpdatedSince(updatedSince),
         });
         const ctx = await habitService.getUserContext(userId);
         const evaluations = await habitService.refreshMany(habits, ctx);
         return {
             habits: habits.map((h) => serialize(h, evaluations.get(h.id))),
+            server_time: serverTime,
         };
     }
 
@@ -175,7 +204,25 @@ class HabitsService {
         return { habit: serialize(habit, evaluation) };
     }
 
-    async create(userId, data) {
+    // A client uid that already exists for this user returns that habit
+    // (created: false); another user's uid is a conflict.
+    async create(userId, data = {}) {
+        const clientUid = parseClientUid(data.uid);
+        if (clientUid) {
+            const known = await habitsRepository.findAnyByUid(clientUid);
+            if (known) {
+                if (known.user_id !== userId || !known.habit_mode) {
+                    throw new ConflictError('This uid is already in use');
+                }
+                const ctx = await habitService.getUserContext(userId);
+                const evaluation = await habitService.refresh(known, ctx);
+                return {
+                    habit: serialize(known, evaluation),
+                    created: false,
+                };
+            }
+        }
+
         const fields = pickHabitFields(data);
         if (!fields.name) throw new ValidationError('Habit name is required');
         const habit = await habitsRepository.createHabit(userId, {
@@ -184,10 +231,11 @@ class HabitsService {
             recurrence_type: 'daily',
             recurrence_interval: 1,
             ...fields,
+            ...(clientUid ? { uid: clientUid } : {}),
         });
         const ctx = await habitService.getUserContext(userId);
         const evaluation = await habitService.refresh(habit, ctx);
-        return { habit: serialize(habit, evaluation) };
+        return { habit: serialize(habit, evaluation), created: true };
     }
 
     async logCompletion(userId, uid, body = {}) {
@@ -197,6 +245,7 @@ class HabitsService {
             completedAt: body.completed_at,
             value: body.value,
             note: body.note,
+            uid: parseClientUid(body.uid),
         });
         return {
             completion: result.completion,
@@ -217,18 +266,29 @@ class HabitsService {
         };
     }
 
-    async getCompletions(userId, uid, startDate, endDate) {
+    // Without dates, the last 30 days. With updatedSince and no dates, every
+    // check-in changed since then.
+    async getCompletions(userId, uid, startDate, endDate, updatedSince) {
+        const serverTime = new Date().toISOString();
         const habit = await this.loadHabit(userId, uid);
+        const since = parseUpdatedSince(updatedSince);
+        if (since && !startDate && !endDate) {
+            const completions = await habitsRepository.findCompletions(
+                habit.id,
+                { updatedSince: since }
+            );
+            return { completions, server_time: serverTime };
+        }
         const start = startDate
             ? new Date(startDate)
             : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const end = endDate ? new Date(endDate) : new Date();
-        const completions = await habitsRepository.findCompletions(
-            habit.id,
-            start,
-            end
-        );
-        return { completions };
+        const completions = await habitsRepository.findCompletions(habit.id, {
+            startDate: start,
+            endDate: end,
+            updatedSince: since,
+        });
+        return { completions, server_time: serverTime };
     }
 
     async updateCompletion(userId, uid, completionId, data = {}) {

@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { uid } = require('../utils/uid');
 
 module.exports = (sequelize) => {
     const RecurringCompletion = sequelize.define(
@@ -8,6 +9,20 @@ module.exports = (sequelize) => {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
+            },
+            // Client-chosen or generated; lets an offline client retry a
+            // check-in without creating a second row.
+            uid: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                unique: true,
+                defaultValue: uid,
+            },
+            // Nullable in the schema: rows older than this column are backfilled
+            // by the migration, but the column is added to a shared table.
+            updated_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
             task_id: {
                 type: DataTypes.INTEGER,
@@ -40,7 +55,10 @@ module.exports = (sequelize) => {
         },
         {
             tableName: 'recurring_completions',
-            timestamps: false,
+            // Only updated_at: check-ins are read by updated_since.
+            timestamps: true,
+            createdAt: false,
+            updatedAt: 'updated_at',
         }
     );
 

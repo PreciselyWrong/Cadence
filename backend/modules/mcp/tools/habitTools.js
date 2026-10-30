@@ -94,13 +94,22 @@ function registerHabitTools(server, context, tools) {
                     type: 'boolean',
                     description: 'List archived habits instead',
                 },
+                updated_since: {
+                    type: 'string',
+                    description:
+                        'ISO 8601 time: only habits changed after it, archived ones included',
+                },
             },
         },
         handler: async (params = {}) => {
-            const { habits } = await habitsService.getAll(context.userId, {
-                archived: params.archived === true,
-            });
-            return reply({ count: habits.length, habits });
+            const { habits, server_time } = await habitsService.getAll(
+                context.userId,
+                {
+                    archived: params.archived === true,
+                    updatedSince: params.updated_since,
+                }
+            );
+            return reply({ count: habits.length, habits, server_time });
         },
     });
 
@@ -129,15 +138,22 @@ function registerHabitTools(server, context, tools) {
             type: 'object',
             properties: {
                 name: { type: 'string', description: 'Habit name' },
+                uid: {
+                    type: 'string',
+                    description:
+                        'Optional client-chosen habit UID (15 characters: 0-9 and a-z, no l or o). Sending the same one again returns the existing habit.',
+                },
                 ...settingsProperties,
             },
             required: ['name'],
         },
         handler: async (params) => {
-            const { habit } = await habitsService.create(
-                context.userId,
-                settingsFrom(params)
-            );
+            // uid is optional: a client that sends the same one again gets the
+            // existing habit back.
+            const { habit } = await habitsService.create(context.userId, {
+                ...settingsFrom(params),
+                uid: params.uid,
+            });
             return reply({ message: 'Habit created successfully', habit });
         },
     });
@@ -203,6 +219,11 @@ function registerHabitTools(server, context, tools) {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
+                checkin_uid: {
+                    type: 'string',
+                    description:
+                        'Optional client-chosen check-in UID (15 characters: 0-9 and a-z, no l or o). Sending the same one again returns the existing check-in instead of adding another.',
+                },
                 completed_at: {
                     type: 'string',
                     description:
@@ -231,7 +252,12 @@ function registerHabitTools(server, context, tools) {
                 : await habitsService.logCompletion(
                       context.userId,
                       params.uid,
-                      params
+                      {
+                          completed_at: params.completed_at,
+                          value: params.value,
+                          note: params.note,
+                          uid: params.checkin_uid,
+                      }
                   );
             return reply({
                 message: params.skip
@@ -263,19 +289,30 @@ function registerHabitTools(server, context, tools) {
                     type: 'string',
                     description: 'End date (ISO 8601). Defaults to now.',
                 },
+                updated_since: {
+                    type: 'string',
+                    description:
+                        'ISO 8601 time: only check-ins changed after it (no date window unless start_date or end_date is given)',
+                },
             },
             required: ['uid'],
         },
         handler: async (params) => {
             checkDate(params.start_date, 'start_date');
             checkDate(params.end_date, 'end_date');
-            const { completions } = await habitsService.getCompletions(
-                context.userId,
-                params.uid,
-                params.start_date,
-                params.end_date
-            );
-            return reply({ count: completions.length, completions });
+            const { completions, server_time } =
+                await habitsService.getCompletions(
+                    context.userId,
+                    params.uid,
+                    params.start_date,
+                    params.end_date,
+                    params.updated_since
+                );
+            return reply({
+                count: completions.length,
+                completions,
+                server_time,
+            });
         },
     });
 

@@ -11,11 +11,15 @@ import {
     updateCalendarFeed,
 } from '../../utils/calendarFeedsService';
 import TaskFeedSection from './TaskFeedSection';
+import GoogleSyncSection from './GoogleSyncSection';
+import { GoogleStatus } from '../../utils/googleSyncService';
 
 interface CalendarFeedsManagerProps {
     feeds: CalendarFeed[];
     loading: boolean;
     onFeedsChange: (update: (feeds: CalendarFeed[]) => CalendarFeed[]) => void;
+    googleStatus?: GoogleStatus | null;
+    onGoogleStatusChange?: (status: GoogleStatus) => void;
 }
 
 // Rendered inside the profile page's own <form> as well as on the Calendar
@@ -25,6 +29,8 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
     feeds,
     loading,
     onFeedsChange,
+    googleStatus,
+    onGoogleStatusChange,
 }) => {
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
@@ -117,6 +123,11 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
 
     return (
         <>
+            <GoogleSyncSection
+                status={googleStatus}
+                onStatusChange={onGoogleStatusChange}
+            />
+
             <div className="mb-8 space-y-3">
                 {loading && (
                     <p className="text-sm text-gray-500 dark:text-gray-400">

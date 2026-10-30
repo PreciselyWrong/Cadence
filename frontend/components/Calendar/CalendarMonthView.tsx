@@ -17,7 +17,12 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 
-import { CalendarEvent, coversDay, layoutAllDayWeek } from './taskEvents';
+import {
+    CalendarEvent,
+    coversDay,
+    layoutAllDayWeek,
+    isMovable,
+} from './taskEvents';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -221,7 +226,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         <div
                                             key={event.id}
                                             draggable={
-                                                event.type === 'task' &&
+                                                isMovable(event) &&
                                                 !event.readOnly
                                             }
                                             onDragStart={(e) =>

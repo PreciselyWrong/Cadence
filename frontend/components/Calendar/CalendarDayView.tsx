@@ -1,7 +1,13 @@
 import React from 'react';
 import { addHours, differenceInCalendarDays, format, isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { CalendarEvent, CAL_ALL_DAY_ID, coversDay, slotId } from './taskEvents';
+import {
+    CalendarEvent,
+    CAL_ALL_DAY_ID,
+    coversDay,
+    isMovable,
+    slotId,
+} from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
@@ -144,7 +150,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                 {format(event.start, 'HH:mm')} –{' '}
                 {format(resize.endOf(event), 'HH:mm')}
             </div>
-            {event.type === 'task' && event.resize && (
+            {isMovable(event) && event.resize && (
                 <ResizeHandle
                     label={t(
                         'calendar.resizeTask',
@@ -162,7 +168,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     });
 
     const draggable = (event: CalendarEvent) =>
-        event.type === 'task' && !event.readOnly;
+        isMovable(event) && !event.readOnly;
 
     return (
         <div className="h-full bg-white dark:bg-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-600">

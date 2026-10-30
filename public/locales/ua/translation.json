@@ -295,6 +295,7 @@
     "assignedTo": "Призначено",
     "subtasks": "Підзадачі",
     "openFullPage": "Відкрити повний перегляд",
+    "openPanel": "Відкрити в бічній панелі",
     "quickEdit": {
       "setPriority": "Встановити пріоритет",
       "setDueDate": "Встановити термін"
@@ -1430,6 +1431,25 @@
     "telegramRequiredForSummaries": "Для зведень завдань потрібно налаштувати інтеграцію з Telegram.",
     "templatesDescription": "Увімкнути Шаблони проєктів, щоб зберігати й повторно використовувати структуру проєктів.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Розумні списки",
     "sidebarRailTitle": "Панель значків і Ще",
     "sidebarBadgesTitle": "Лічильники",
@@ -1513,6 +1533,8 @@
     "recurringSetup": "Налаштування повторення",
     "notRecurring": "Ця задача ще не є повторюваною.",
     "clickToEditTitle": "Натисніть, щоб редагувати заголовок",
+    "copyLink": "Скопіювати посилання на завдання",
+    "linkCopied": "Посилання скопійовано",
     "clickToEditContent": "Натисніть, щоб редагувати вміст",
     "clickToAddContent": "Натисніть, щоб додати вміст",
     "clickToEditSubtasks": "Натисніть, щоб редагувати підзадачі",
@@ -1646,10 +1668,10 @@
       "to": "До"
     },
     "hiddenHours": {
-        "earlier": "{{count}} раніше",
-        "later": "{{count}} пізніше",
-        "show": "Показати всі години",
-        "hide": "Сховати ранні та пізні години"
+      "earlier": "{{count}} раніше",
+      "later": "{{count}} пізніше",
+      "show": "Показати всі години",
+      "hide": "Сховати ранні та пізні години"
     },
     "arrange": {
       "title": "Розподілити завдання",
@@ -1703,7 +1725,26 @@
     "medium": "Середній",
     "low": "Низький",
     "time": "Час",
-    "allDay": "Весь день"
+    "allDay": "Весь день",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2937,7 +2978,9 @@
     "upcoming": "Цього тижня",
     "noDate": "Без дати",
     "nothing": "Зараз нічого",
-    "empty": "Зараз нічого не поділено. Поділіться областю, проектом або метою, або призначте комусь завдання, щоб побачити це тут."
+    "empty": "Зараз нічого не поділено. Поділіться областю, проектом або метою, або призначте комусь завдання, щоб побачити це тут.",
+    "sortableColumn": "сортована колонка",
+    "reorderFailed": "Не вдалося зберегти порядок колонок."
   },
   "people": {
     "addMember": "Додати учасника",

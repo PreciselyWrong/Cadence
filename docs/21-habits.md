@@ -61,13 +61,13 @@ Archiving sets the habit's status to archived (3). It disappears from the Habits
 
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/api/habits` | Active habits with `habit_progress`; `?archived=true` for archived |
+| GET | `/api/habits` | Active habits with `habit_progress`; `?archived=true` for archived; `?updated_since=` for sync (see below) |
 | GET | `/api/habits/:uid` | One habit with `habit_progress` |
-| POST | `/api/habits` | Create |
+| POST | `/api/habits` | Create: `{ uid?, name, ... }`; `Idempotency-Key` header accepted |
 | PUT | `/api/habits/:uid` | Update settings (only habit fields are accepted) |
-| POST | `/api/habits/:uid/complete` | Check in: `{ completed_at?, value?, note? }` |
-| POST | `/api/habits/:uid/skip` | Skip a day: `{ date?, note? }` |
-| GET | `/api/habits/:uid/completions` | Check-ins and skips in `start_date`..`end_date` |
+| POST | `/api/habits/:uid/complete` | Check in: `{ uid?, completed_at?, value?, note? }`; `Idempotency-Key` accepted |
+| POST | `/api/habits/:uid/skip` | Skip a day: `{ date?, note? }`; `Idempotency-Key` accepted |
+| GET | `/api/habits/:uid/completions` | Check-ins and skips in `start_date`..`end_date`, or changed since `?updated_since=` |
 | PATCH | `/api/habits/:uid/completions/:id` | Edit a check-in's `value` or `note` |
 | DELETE | `/api/habits/:uid/completions/:id` | Remove a check-in or skip |
 | GET | `/api/habits/:uid/stats` | Streaks, strength, completion rate over judged periods |
@@ -77,3 +77,21 @@ Archiving sets the habit's status to archived (3). It disappears from the Habits
 `habit_progress` describes the current period: `period_start`, `period_end`, `progress`, `goal`, `met`, `skipped`, `check_ins`, `today_check_ins`, `scheduled_today`, `multiple_per_day` and `first_day` (the first day of history).
 
 The legacy fields `habit_streak_mode` and `habit_flexibility_mode` are still stored and accepted but no longer affect anything.
+
+## Offline sync
+
+A client that works offline has to retry writes without making duplicates, and fetch only what changed. Three rules support that.
+
+**Client uids.** A habit or a check-in may carry a `uid` chosen by the client: 15 characters, `0-9` and `a-z` without `l` or `o`, the shape the server generates. Sending a uid the user already has for that kind of item returns the existing one with `200` (a new habit is `201`). A uid that belongs to another user, or a check-in uid already used by another habit, returns `409`. A check-in sent without a uid gets one from the server, returned as `completion.uid`. Check-ins logged before this rule have no uid.
+
+**Idempotency keys.** `POST /api/habits`, `/complete` and `/skip` accept an `Idempotency-Key` header of 1 to 255 visible ASCII characters. The first answer is kept for 24 hours per user. The same key with the same method, path and body gets that answer again, marked `Idempotent-Replayed: true`. The same key with a different body or path gets `422`. A repeat that arrives while the first request is still running gets `409`. An answer that was a server error is not kept, so a retry runs again. Keys older than 24 hours are removed on the next keyed write.
+
+**Changes since a time.** `GET /api/habits` and `GET /api/habits/:uid/completions` accept `updated_since` (ISO 8601) and return only rows changed after it. Archived habits are included with it, so a client sees the archive (`habit_archived`). With `updated_since` and no `start_date` or `end_date`, the 30-day window does not apply. Each list response carries `server_time`: send it back as the next `updated_since`. An invalid time returns `400`.
+
+Limits:
+
+- Deleted habits and check-ins are removed for good and are not reported by `updated_since`. There are no tombstones: a client that needs them must do a full fetch.
+- A habit's `updated_at` also moves when its streak and strength are recalculated on a read, so it can come back in a sync with no edit from the user.
+- A uid is unique across all users, and an idempotency key is scoped to one user.
+
+MCP: `create_habit` takes `uid`; `log_habit_completion` takes `checkin_uid` (its `uid` is the habit); `list_habits` and `get_habit_completions` take `updated_since`.

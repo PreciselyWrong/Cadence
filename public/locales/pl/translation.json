@@ -295,6 +295,7 @@
     "assignedTo": "Przypisane do",
     "subtasks": "Podzadania",
     "openFullPage": "Otwórz pełny widok",
+    "openPanel": "Otwórz w panelu bocznym",
     "quickEdit": {
       "setPriority": "Ustaw priorytet",
       "setDueDate": "Ustaw termin"
@@ -943,6 +944,25 @@
     "telegramRequiredForSummaries": "Aby korzystać z podsumowań zadań, trzeba skonfigurować integrację z Telegramem.",
     "templatesDescription": "Włącz Szablony projektów, aby zapisywać i ponownie używać struktur projektów.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Inteligentne listy",
     "sidebarRailTitle": "Pasek ikon i Więcej",
     "sidebarBadgesTitle": "Odznaki z liczbą",
@@ -1441,6 +1461,8 @@
     "recurringSetup": "Ustawienia powtarzalności",
     "notRecurring": "To zadanie jeszcze nie jest powtarzalne.",
     "clickToEditTitle": "Kliknij, aby edytować tytuł",
+    "copyLink": "Kopiuj link do zadania",
+    "linkCopied": "Skopiowano link",
     "clickToEditContent": "Kliknij, aby edytować treść",
     "clickToAddContent": "Kliknij, aby dodać treść",
     "clickToEditSubtasks": "Kliknij, aby edytować podzadania",
@@ -1877,10 +1899,10 @@
       "to": "Do"
     },
     "hiddenHours": {
-        "earlier": "{{count}} wcześniej",
-        "later": "{{count}} później",
-        "show": "Pokaż wszystkie godziny",
-        "hide": "Ukryj wczesne i późne godziny"
+      "earlier": "{{count}} wcześniej",
+      "later": "{{count}} później",
+      "show": "Pokaż wszystkie godziny",
+      "hide": "Ukryj wczesne i późne godziny"
     },
     "arrange": {
       "title": "Rozplanuj zadania",
@@ -1934,7 +1956,26 @@
     "medium": "Średni",
     "low": "Niski",
     "time": "Czas",
-    "allDay": "Cały dzień"
+    "allDay": "Cały dzień",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -2937,7 +2978,9 @@
     "upcoming": "W tym tygodniu",
     "noDate": "Brak daty",
     "nothing": "Nic teraz",
-    "empty": "Nic udostępnionego nie jest teraz aktywne. Udostępnij obszar, projekt lub cel, lub przypisz komuś zadanie, aby zobaczyć to tutaj."
+    "empty": "Nic udostępnionego nie jest teraz aktywne. Udostępnij obszar, projekt lub cel, lub przypisz komuś zadanie, aby zobaczyć to tutaj.",
+    "sortableColumn": "kolumna z możliwością sortowania",
+    "reorderFailed": "Nie udało się zapisać kolejności kolumn."
   },
   "people": {
     "addMember": "Dodaj członka",

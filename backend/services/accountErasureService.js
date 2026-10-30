@@ -24,6 +24,7 @@ const {
     ApiToken,
     Notification,
     RecurringCompletion,
+    IdempotencyKey,
     TaskAttachment,
     InboxItemAttachment,
     ProjectAttachment,
@@ -266,6 +267,7 @@ async function eraseUserAccount(userId) {
         await View.destroy(byUser);
         await Notification.destroy(byUser);
         await ApiToken.destroy(byUser);
+        await IdempotencyKey.destroy(byUser);
         await Backup.destroy(byUser);
         await OIDCIdentity.destroy(byUser);
         await AuthAuditLog.destroy(byUser);

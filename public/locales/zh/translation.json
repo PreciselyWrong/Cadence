@@ -293,6 +293,7 @@
     "assignedTo": "分配给",
     "subtasks": "子任务",
     "openFullPage": "打开完整视图",
+    "openPanel": "在侧边栏中打开",
     "quickEdit": {
       "setPriority": "设置优先级",
       "setDueDate": "设置截止日期"
@@ -941,6 +942,25 @@
     "telegramRequiredForSummaries": "必须先设置 Telegram 集成才能使用任务摘要。",
     "templatesDescription": "启用项目模板,保存并复用项目结构。",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "智能列表",
     "sidebarRailTitle": "图标栏与更多",
     "sidebarBadgesTitle": "计数徽章",
@@ -1437,6 +1457,8 @@
     "recurringSetup": "重复设置",
     "notRecurring": "此任务尚未重复。",
     "clickToEditTitle": "点击编辑标题",
+    "copyLink": "复制任务链接",
+    "linkCopied": "链接已复制",
     "clickToEditContent": "点击编辑内容",
     "clickToAddContent": "点击添加内容",
     "clickToEditSubtasks": "点击编辑子任务",
@@ -1865,10 +1887,10 @@
       "to": "到"
     },
     "hiddenHours": {
-        "earlier": "{{count}} 个更早",
-        "later": "{{count}} 个更晚",
-        "show": "显示所有时间",
-        "hide": "隐藏较早和较晚的时间"
+      "earlier": "{{count}} 个更早",
+      "later": "{{count}} 个更晚",
+      "show": "显示所有时间",
+      "hide": "隐藏较早和较晚的时间"
     },
     "arrange": {
       "title": "安排任务",
@@ -1922,7 +1944,26 @@
     "medium": "中",
     "low": "低",
     "time": "时间",
-    "allDay": "全天"
+    "allDay": "全天",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -2921,7 +2962,9 @@
     "upcoming": "本周",
     "noDate": "没有日期",
     "nothing": "现在没有任何内容",
-    "empty": "现在没有共享的内容。共享一个区域、项目或目标，或分配给某人一个任务，以便在这里查看。"
+    "empty": "现在没有共享的内容。共享一个区域、项目或目标，或分配给某人一个任务，以便在这里查看。",
+    "sortableColumn": "可排序的列",
+    "reorderFailed": "无法保存列的顺序。"
   },
   "people": {
     "addMember": "添加成员",

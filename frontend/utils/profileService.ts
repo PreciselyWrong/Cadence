@@ -83,6 +83,9 @@ interface Profile {
         } | null;
         // Keys: `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks`.
         viewTypes?: Record<string, ViewType>;
+        everyone?: {
+            column_order?: string[];
+        };
     };
 }
 

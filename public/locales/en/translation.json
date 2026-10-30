@@ -293,6 +293,7 @@
     "assignedTo": "Assigned to",
     "subtasks": "Subtasks",
     "openFullPage": "Open full view",
+    "openPanel": "Open in side panel",
     "quickEdit": {
       "setPriority": "Set priority",
       "setDueDate": "Set due date"
@@ -968,6 +969,25 @@
     },
     "telegramRequiredForSummaries": "Telegram integration must be set up to use task summaries.",
     "sendSummaryFailed": "Failed to send the summary.",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Smart lists",
     "sidebarRailTitle": "Icon rail and More",
     "sidebarBadgesTitle": "Count badges",
@@ -1524,6 +1544,8 @@
     "instanceOf": "This is an instance of a recurring task",
     "parentTask": "Parent Task",
     "clickToEditTitle": "Click to edit title",
+    "copyLink": "Copy link to task",
+    "linkCopied": "Link copied",
     "clickToEditContent": "Click to edit content",
     "clickToAddContent": "Click to add content",
     "clickToEditSubtasks": "Click to edit subtasks",
@@ -2132,10 +2154,10 @@
       "to": "To"
     },
     "hiddenHours": {
-        "earlier": "{{count}} earlier",
-        "later": "{{count}} later",
-        "show": "Show all hours",
-        "hide": "Hide early and late hours"
+      "earlier": "{{count}} earlier",
+      "later": "{{count}} later",
+      "show": "Show all hours",
+      "hide": "Hide early and late hours"
     },
     "arrange": {
       "title": "Arrange tasks",
@@ -2192,7 +2214,26 @@
     "manageDescription": "Connect read-only calendars and choose which ones appear here. Tududi never changes them.",
     "hideCalendar": "Hide {{name}}",
     "showCalendar": "Show {{name}}",
-    "feedError": "Could not load: {{names}}"
+    "feedError": "Could not load: {{names}}",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -3250,7 +3291,9 @@
     "nothing": "Nothing right now",
     "empty": "Nothing shared is on right now. Share an area, project or goal, or assign someone a task, to see it here.",
     "dropHere": "Drop to assign",
-    "reassignFailed": "Could not assign this task."
+    "reassignFailed": "Could not assign this task.",
+    "sortableColumn": "sortable column",
+    "reorderFailed": "Could not save the column order."
   },
   "people": {
     "addMember": "Add member",

@@ -22,7 +22,7 @@ More screenshots are [available here](#screenshots).
 
 ## 🍴 What this fork adds
 
-This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
+This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) at `99ef695` (last synced with upstream `f04288d`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app is unchanged.
 
 ### Calendar
 
@@ -37,6 +37,7 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 | Habits | Not on the calendar | Purple whole-day items on each day a habit asks for a check-in |
 | Print | — | Prints only the shown view |
 | Subscribe from Google / Apple / Outlook | Not possible | Secret **.ics feed** of your dated tasks (Profile → Calendars), address shown once, revocable |
+| Google Calendar & Tasks | Read-only iCal feeds | **Two-way sync**: every Google calendar shown, hidden or edited from Tududi (create, move, resize, delete); dated tasks on a **"Tududi" calendar** in Google; **all tasks** with Google Tasks (one list per project). Changes follow within ~2 minutes |
 
 ### Appearance
 
@@ -96,14 +97,15 @@ This fork ([PreciselyWrong/tududi](https://github.com/PreciselyWrong/tududi)) bu
 - Manual order of lists: the existing `user_task_orders` table gains a `tag:<id>` scope next to `all` and `project:<id>` (no new column); `GET` and `PUT /api/tasks/order` accept `scope=tag&tag_uid=`.
 - New column: `views.project_uid` (migration `20261029170000-add-project-uid-to-views`); the view search reads it through the existing `project_uid` scope.
 - New `ui_settings` key: `viewTypes` (a map of `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks` to `list`, `board` or `calendar`; at most 500 entries, sanitised in `updateUiSettings`).
-- New tables / columns: `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
-- New endpoints: `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences; `GET /api/tasks/smart-counts` returns the Today, Tomorrow and Next 7 days counts, and `GET /api/tasks?type=tomorrow` lists tomorrow.
+- New tables / columns: `google_accounts`, `google_calendars`, `google_events`, `google_tasklists`, `google_task_links`, `focus_sessions`, `project_sections`, `tasks.section_id`, `tasks.section_position`, `tasks.pinned_at`, `tags.parent_id`, `projects.parent_project_id`, `users.task_feed_token_hash` (SHA-256 only), with migrations.
+- New endpoints: `/api/google*` (connect, settings, sync, calendars, events), `/api/feeds/tasks/:token.ics`, `/api/profile/task-feed`, `/api/holidays*`, `/api/focus-sessions*`, `/api/project/:uid/sections*` (incl. card order), `/api/project/:uid/unsectioned/order`, `/api/reports/summary`; tasks accept `pinned` and `section_uid`, tags accept `parent_uid`; `GET /api/tasks?type=calendar&end=` adds recurring and habit occurrences; `GET /api/tasks/smart-counts` returns the Today, Tomorrow and Next 7 days counts, and `GET /api/tasks?type=tomorrow` lists tomorrow.
 - Minimal sidebar: `users.sidebar_settings` holds `smartLists` (show, count badge, order), `rail` (`rail` / `more` / `hidden` per item, in order) and `sectionBadges`; sanitized in `backend/modules/users/validation.js` on `PUT /api/profile/sidebar-settings`, defaults filled in by `frontend/utils/minimalSidebar.ts`.
 - Minimal row chips: `ui_settings.appearance.rowFields` is an ordered `{ key, visible }` list, sanitized in `backend/modules/users/service.js` (known keys, boolean visibility, missing chips appended visible); see [08-user-management.md](docs/08-user-management.md).
+- Habits offline sync: `recurring_completions` gains `uid` (unique, client-chosen or server-made) and `updated_at`; new table `idempotency_keys` (`user_id`, `key`, `method`, `path`, `request_hash`, `status`, `body`, `created_at`; unique on `user_id` + `key`, kept 24 hours; `backend/middleware/idempotency.js`). `POST /api/habits`, `/api/habits/:uid/complete` and `/skip` take an `Idempotency-Key` header; `POST /api/habits` and `/complete` take a `uid`; `GET /api/habits` and `GET /api/habits/:uid/completions` take `updated_since` and return `server_time`. MCP: `create_habit` takes `uid`, `log_habit_completion` takes `checkin_uid`. Docs: [Habits → Offline sync](docs/21-habits.md#offline-sync).
 - Public holidays come from the [`date-holidays`](https://www.npmjs.com/package/date-holidays) package, on the server.
-- All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language. So are `tasks.addTaskInline` (the "+ Add task" field) and the `tasks.contextMenu.*` strings of the row menu, the `profile.taskRow*` strings (row chip names), and the `viewType.*` strings (List, Board, Calendar) and the `newView.*` strings.
+- All new strings are translated into the 26 languages (machine-written, review welcome). The strings for the round check and the gate-free Today (`dailyPlan.todayTasks`, `tasks.markAsNotDone`, and the `tasks.markAsDone` translations) are agent-written and unreviewed in every language. So are `tasks.addTaskInline` (the "+ Add task" field) and the `tasks.contextMenu.*` strings of the row menu, the `profile.taskRow*` strings (row chip names), and the `viewType.*` strings (List, Board, Calendar) and the `newView.*` strings. The Google sync strings are so far only in French, German, Spanish and Italian (English elsewhere).
 - Working on the fork with an AI agent: see [AGENTS.md](AGENTS.md) and [docs/fork/FORK.md](docs/fork/FORK.md).
-- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md).
+- Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md), [Google sync](docs/33-google-sync.md).
 
 ---
 

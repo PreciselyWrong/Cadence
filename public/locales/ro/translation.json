@@ -294,6 +294,7 @@
     "assignedTo": "Atribuit lui",
     "subtasks": "Subtask-uri",
     "openFullPage": "Deschide vizualizarea completă",
+    "openPanel": "Deschide în panoul lateral",
     "quickEdit": {
       "setPriority": "Setează prioritatea",
       "setDueDate": "Setează data scadentă"
@@ -944,6 +945,25 @@
     "telegramRequiredForSummaries": "Pentru rezumatele sarcinilor trebuie configurată integrarea Telegram.",
     "templatesDescription": "Activează Șabloanele de proiect pentru a salva și refolosi structuri de proiecte.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Liste inteligente",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",
     "sidebarBadgesTitle": "Insigne cu numărător",
@@ -1441,6 +1461,8 @@
     "recurringSetup": "Configurare recurentă",
     "notRecurring": "Această sarcină nu este încă recurentă.",
     "clickToEditTitle": "Fă clic pentru a edita titlul",
+    "copyLink": "Copiază linkul sarcinii",
+    "linkCopied": "Link copiat",
     "clickToEditContent": "Fă clic pentru a edita conținutul",
     "clickToAddContent": "Fă clic pentru a adăuga conținut",
     "clickToEditSubtasks": "Fă clic pentru a edita subtasks",
@@ -1874,10 +1896,10 @@
       "to": "Până la"
     },
     "hiddenHours": {
-        "earlier": "{{count}} mai devreme",
-        "later": "{{count}} mai târziu",
-        "show": "Arată toate orele",
-        "hide": "Ascunde orele devreme și târziu"
+      "earlier": "{{count}} mai devreme",
+      "later": "{{count}} mai târziu",
+      "show": "Arată toate orele",
+      "hide": "Ascunde orele devreme și târziu"
     },
     "arrange": {
       "title": "Aranjează sarcinile",
@@ -1931,7 +1953,26 @@
     "medium": "Medie",
     "low": "Scăzut",
     "time": "Timp",
-    "allDay": "Toată ziua"
+    "allDay": "Toată ziua",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -2932,7 +2973,9 @@
     "upcoming": "Săptămâna aceasta",
     "noDate": "Nicio dată",
     "nothing": "Nimic în acest moment",
-    "empty": "Nimic împărtășit nu este activ acum. Împărtășește o zonă, un proiect sau un obiectiv, sau atribuie cuiva o sarcină, pentru a-l vedea aici."
+    "empty": "Nimic împărtășit nu este activ acum. Împărtășește o zonă, un proiect sau un obiectiv, sau atribuie cuiva o sarcină, pentru a-l vedea aici.",
+    "sortableColumn": "coloană sortabilă",
+    "reorderFailed": "Ordinea coloanelor nu a putut fi salvată."
   },
   "people": {
     "addMember": "Adaugă membru",

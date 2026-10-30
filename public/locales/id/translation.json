@@ -293,6 +293,7 @@
     "assignedTo": "Ditetapkan untuk",
     "subtasks": "Subtugas",
     "openFullPage": "Buka tampilan penuh",
+    "openPanel": "Buka di panel samping",
     "quickEdit": {
       "setPriority": "Atur prioritas",
       "setDueDate": "Atur tanggal jatuh tempo"
@@ -941,6 +942,25 @@
     "telegramRequiredForSummaries": "Integrasi Telegram harus diatur untuk memakai ringkasan tugas.",
     "templatesDescription": "Aktifkan Templat Proyek untuk menyimpan dan memakai ulang struktur proyek.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Daftar pintar",
     "sidebarRailTitle": "Rel ikon dan Lainnya",
     "sidebarBadgesTitle": "Lencana jumlah",
@@ -1476,6 +1496,8 @@
     "recurringSetup": "Pengaturan Berulang",
     "notRecurring": "Tugas ini belum berulang.",
     "clickToEditTitle": "Klik untuk mengedit judul",
+    "copyLink": "Salin tautan tugas",
+    "linkCopied": "Tautan disalin",
     "clickToEditContent": "Klik untuk mengedit konten",
     "clickToAddContent": "Klik untuk menambah konten",
     "clickToEditSubtasks": "Klik untuk mengedit subtugas",
@@ -1865,10 +1887,10 @@
       "to": "Sampai"
     },
     "hiddenHours": {
-        "earlier": "{{count}} lebih awal",
-        "later": "{{count}} lebih lambat",
-        "show": "Tampilkan semua jam",
-        "hide": "Sembunyikan jam awal dan akhir"
+      "earlier": "{{count}} lebih awal",
+      "later": "{{count}} lebih lambat",
+      "show": "Tampilkan semua jam",
+      "hide": "Sembunyikan jam awal dan akhir"
     },
     "arrange": {
       "title": "Atur tugas",
@@ -1922,7 +1944,26 @@
     "medium": "Sedang",
     "low": "Rendah",
     "time": "Waktu",
-    "allDay": "Sepanjang hari"
+    "allDay": "Sepanjang hari",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -2921,7 +2962,9 @@
     "upcoming": "Minggu ini",
     "noDate": "Tidak ada tanggal",
     "nothing": "Tidak ada saat ini",
-    "empty": "Tidak ada yang dibagikan saat ini. Bagikan area, proyek, atau tujuan, atau tugaskan seseorang sebuah tugas, untuk melihatnya di sini."
+    "empty": "Tidak ada yang dibagikan saat ini. Bagikan area, proyek, atau tujuan, atau tugaskan seseorang sebuah tugas, untuk melihatnya di sini.",
+    "sortableColumn": "kolom yang dapat diurutkan",
+    "reorderFailed": "Tidak dapat menyimpan urutan kolom."
   },
   "people": {
     "addMember": "Tambah anggota",

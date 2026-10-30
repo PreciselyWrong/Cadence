@@ -294,6 +294,7 @@
     "assignedTo": "Tildelt til",
     "subtasks": "Undertasker",
     "openFullPage": "Åpne full visning",
+    "openPanel": "Åpne i sidepanelet",
     "quickEdit": {
       "setPriority": "Sett prioritet",
       "setDueDate": "Sett forfallsdato"
@@ -942,6 +943,25 @@
     "telegramRequiredForSummaries": "Telegram-integrasjonen må være satt opp for å bruke oppgavesammendrag.",
     "templatesDescription": "Slå på Prosjektmaler for å lagre og gjenbruke prosjektstrukturer.",
     "aiApiKeyPlaceholder": "sk-...",
+    "google": {
+      "error": "Google did not answer",
+      "title": "Google Calendar and Tasks",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+      "connect": "Connect Google",
+      "lastSync": "synced {{time}}",
+      "firstSync": "first sync running…",
+      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncTasks": "All tasks with Google Tasks (one list per project)",
+      "calendars": "Shown on Calendar and Today",
+      "readOnly": "read-only",
+      "synced": "Synced with Google",
+      "syncing": "Syncing…",
+      "syncNow": "Sync now",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect Google",
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+    },
     "sidebarSmartListsTitle": "Smarte lister",
     "sidebarRailTitle": "Ikonlinje og Mer",
     "sidebarBadgesTitle": "Antallsmerker",
@@ -1479,6 +1499,8 @@
     "noDueDate": "Ingen forfallsdato",
     "notRecurring": "Denne oppgaven er ikke gjentakende ennå.",
     "clickToEditTitle": "Klikk for å redigere tittel",
+    "copyLink": "Kopier lenke til oppgaven",
+    "linkCopied": "Lenke kopiert",
     "clickToEditContent": "Klikk for å redigere innhold",
     "clickToAddContent": "Klikk for å legge til innhold",
     "clickToEditSubtasks": "Klikk for å redigere deloppgaver",
@@ -1868,10 +1890,10 @@
       "to": "Til"
     },
     "hiddenHours": {
-        "earlier": "{{count}} tidligere",
-        "later": "{{count}} senere",
-        "show": "Vis alle timer",
-        "hide": "Skjul tidlige og sene timer"
+      "earlier": "{{count}} tidligere",
+      "later": "{{count}} senere",
+      "show": "Vis alle timer",
+      "hide": "Skjul tidlige og sene timer"
     },
     "arrange": {
       "title": "Planlegg oppgaver",
@@ -1925,7 +1947,26 @@
     "medium": "Moderat",
     "low": "Lav",
     "time": "Tid",
-    "allDay": "Hele dagen"
+    "allDay": "Hele dagen",
+    "google": {
+      "endBeforeStart": "The end is before the start",
+      "editEvent": "Edit event",
+      "newEvent": "New event",
+      "title": "Title",
+      "calendar": "Calendar",
+      "allDay": "All day",
+      "start": "Start",
+      "end": "End",
+      "location": "Location",
+      "description": "Description",
+      "recurringNote": "Repeating event: changes apply to this occurrence only. Edit the series in Google Calendar.",
+      "save": "Save",
+      "delete": "Delete",
+      "openInGoogle": "Open in Google",
+      "connected": "Google connected",
+      "connectError": "Google was not connected",
+      "saveError": "Could not save the event"
+    }
   },
   "pages": {
     "notFound": {
@@ -2928,7 +2969,9 @@
     "upcoming": "Denne uken",
     "noDate": "Ingen dato",
     "nothing": "Ingenting akkurat nå",
-    "empty": "Ingenting delt er på akkurat nå. Del et område, prosjekt eller mål, eller tildel noen en oppgave, for å se det her."
+    "empty": "Ingenting delt er på akkurat nå. Del et område, prosjekt eller mål, eller tildel noen en oppgave, for å se det her.",
+    "sortableColumn": "sorterbar kolonne",
+    "reorderFailed": "Kunne ikke lagre rekkefølgen på kolonnene."
   },
   "people": {
     "addMember": "Legg til medlem",

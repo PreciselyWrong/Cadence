@@ -216,6 +216,18 @@ async function eventsBetween(
         })
     );
 
+    // Google calendars connected through Profile -> Calendars (fork).
+    try {
+        const { eventsService } = require('../google-sync');
+        events.push(
+            ...(await eventsService.eventsBetween(user, startDate, endDate, {
+                shownOnly,
+            }))
+        );
+    } catch (err) {
+        errors.push({ feed_uid: 'google', message: err.message });
+    }
+
     events.sort((a, b) => {
         if (a.date !== b.date) return a.date < b.date ? -1 : 1;
         if (a.all_day !== b.all_day) return a.all_day ? -1 : 1;

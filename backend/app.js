@@ -405,6 +405,7 @@ const goalsModule = require('./modules/goals');
 const dailyPlanModule = require('./modules/daily-plan');
 const onboardingModule = require('./modules/onboarding');
 const calendarFeedsModule = require('./modules/calendar-feeds');
+const googleSyncModule = require('./modules/google-sync');
 const taskFeedModule = require('./modules/task-feed');
 const holidaysModule = require('./modules/holidays');
 const focusSessionsModule = require('./modules/focus-sessions');
@@ -554,6 +555,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, dailyPlanModule.routes);
     app.use(basePath, onboardingModule.routes);
     app.use(basePath, calendarFeedsModule.routes);
+    app.use(basePath, googleSyncModule.routes);
     app.use(basePath, taskFeedModule.routes);
     app.use(basePath, holidaysModule.routes);
     app.use(basePath, focusSessionsModule.routes);
@@ -635,6 +637,9 @@ async function startServer() {
         // Initialize CalDAV sync scheduler
         const caldavSyncScheduler = require('./modules/caldav/services/sync-scheduler');
         await caldavSyncScheduler.initialize();
+
+        // Google Calendar / Google Tasks two-way sync (fork)
+        if (!config.disableScheduler) googleSyncModule.scheduler.initialize();
 
         // Public demo sandbox: make sure it exists, then wipe it on a timer.
         // withJobLock inside resetDemo keeps one worker doing it.

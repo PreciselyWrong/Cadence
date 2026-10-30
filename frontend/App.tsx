@@ -47,6 +47,7 @@ import { User } from './entities/User';
 import { canOpenAccess } from './entities/Role';
 import TodayPage from './components/DailyPlan/TodayPage';
 import TaskDetails from './components/Task/TaskDetails';
+import TaskLinkRedirect from './components/Task/TaskLinkRedirect';
 import LoadingScreen from './components/Shared/LoadingScreen';
 import InboxItems from './components/Inbox/InboxItems';
 import Habits from './components/Habits/Habits';
@@ -481,6 +482,10 @@ const App: React.FC = () => {
                             />
                             <Route
                                 path="/task/:uid"
+                                element={<TaskLinkRedirect />}
+                            />
+                            <Route
+                                path="/task/:uid/details"
                                 element={<TaskDetails />}
                             />
                             <Route
