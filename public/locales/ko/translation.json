@@ -963,7 +963,9 @@
       "syncMode": "{{name}} 동기화 모드",
       "modeHidden": "숨김",
       "modeRead": "읽기 전용",
-      "modeTwoWay": "양방향"
+      "modeTwoWay": "양방향",
+      "taskCalendar": "시간이 있는 작업용 캘린더",
+      "taskCalendarDefault": "Cadence (동기화로 생성)"
     },
     "sidebarSmartListsTitle": "스마트 목록",
     "sidebarRailTitle": "아이콘 레일과 더보기",

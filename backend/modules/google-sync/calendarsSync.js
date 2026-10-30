@@ -1,6 +1,10 @@
 'use strict';
 
 const { GoogleCalendar, GoogleEvent, GoogleTaskLink } = require('../../models');
+
+// Same rule as eventsService.isWritable (which requires this module).
+const isWritable = (calendar) =>
+    ['owner', 'writer'].includes(calendar.access_role);
 const {
     hash,
     localEventProjection,
@@ -136,13 +140,29 @@ async function storeEvent(userId, calendar, event) {
     return GoogleEvent.create({ ...where, user_id: userId, ...fields });
 }
 
-// Dated, open tasks <-> events of the Tududi calendar.
-async function syncTududiCalendar(ctx, calendar) {
+// Dated, open tasks <-> events of the calendar that receives them: the
+// Cadence calendar, or one of the user's own calendars. In the latter, only
+// events marked with a task uid are tasks; the others are kept as ordinary
+// events.
+async function syncTaskCalendar(ctx, calendar) {
     const { client, user, timezone } = ctx;
     const calendarId = calendar.google_id;
+    const ownCalendar = calendar.is_tududi;
     const links = await GoogleTaskLink.findAll({
         where: { user_id: user.id, kind: 'event' },
     });
+    // The target changed: events in the previous calendar are deleted there
+    // and pushed again here.
+    for (const link of links.filter((l) => l.container_id !== calendarId)) {
+        await guard(ctx, 'push', async () => {
+            await client.deleteEvent(link.container_id, link.google_id);
+            await link.update({
+                container_id: calendarId,
+                google_id: `moved-${link.id}`,
+                local_hash: null,
+            });
+        });
+    }
     const byGoogle = new Map(links.map((link) => [link.google_id, link]));
     const byTask = new Map(links.map((link) => [link.task_id, link]));
     const tasks = await local.loadTasks(
@@ -154,8 +174,18 @@ async function syncTududiCalendar(ctx, calendar) {
     const { items, nextSyncToken } = await fetchChanges(
         client,
         calendar,
-        async () => {}
+        async () => {
+            if (!ownCalendar) {
+                await GoogleEvent.destroy({
+                    where: { google_calendar_id: calendar.id },
+                });
+            }
+        }
     );
+    const keepAsEvent = (event) =>
+        calendar.sync_mode === 'hidden'
+            ? null
+            : storeEvent(user.id, calendar, event);
 
     // Pull: Google -> Tududi
     ctx.pullFailed = false;
@@ -167,7 +197,10 @@ async function syncTududiCalendar(ctx, calendar) {
             if (event.status === 'cancelled') {
                 // Deleting the event takes the date off the task; the task
                 // stays.
-                if (!link) return;
+                if (!link) {
+                    if (!ownCalendar) await keepAsEvent(event);
+                    return;
+                }
                 if (task && task.due_date) {
                     await task.update({
                         due_date: null,
@@ -187,10 +220,23 @@ async function syncTududiCalendar(ctx, calendar) {
             if (!link) {
                 const taskUid =
                     event.extendedProperties?.private?.tududiTaskUid;
+                if (!ownCalendar && !taskUid) {
+                    // The user's own event: never turned into a task.
+                    await keepAsEvent(event);
+                    return;
+                }
                 task = taskUid
                     ? tasks.find((candidate) => candidate.uid === taskUid)
                     : null;
                 if (!task && taskUid) return;
+                if (!ownCalendar) {
+                    await GoogleEvent.destroy({
+                        where: {
+                            google_calendar_id: calendar.id,
+                            event_id: event.id,
+                        },
+                    });
+                }
                 if (!task) {
                     // An event added to the Tududi calendar on Google
                     // becomes a task.
@@ -259,9 +305,11 @@ async function syncTududiCalendar(ctx, calendar) {
             const localHash = hash(localEventProjection(task, timezone));
             if (link && link.local_hash === localHash) return;
             const body = toGoogleEvent(task, timezone, local.taskUrl(task));
-            const saved = link
-                ? await client.patchEvent(calendarId, link.google_id, body)
-                : await client.insertEvent(calendarId, body);
+            const moved = link && link.google_id.startsWith('moved-');
+            const saved =
+                link && !moved
+                    ? await client.patchEvent(calendarId, link.google_id, body)
+                    : await client.insertEvent(calendarId, body);
             const fields = {
                 container_id: calendarId,
                 google_id: saved.id,
@@ -289,12 +337,35 @@ async function syncTududiCalendar(ctx, calendar) {
     }
 }
 
-async function syncCalendars(ctx, account) {
-    await ensureTududiCalendar(ctx, account);
+// The calendar that receives the tasks. A chosen calendar that is gone or
+// no longer writable falls back to the Cadence calendar.
+async function taskCalendar(ctx, account) {
+    if (account.task_calendar_id) {
+        const calendars = await syncCalendarList(ctx, account);
+        const chosen = calendars.find(
+            (row) => row.google_id === account.task_calendar_id
+        );
+        if (chosen && isWritable(chosen) && !chosen.is_tududi) {
+            return { calendars, target: chosen };
+        }
+        await account.update({ task_calendar_id: null });
+    }
+    const id = await ensureTududiCalendar(ctx, account);
     const calendars = await syncCalendarList(ctx, account);
+    return {
+        calendars,
+        target: calendars.find((row) => row.google_id === id),
+    };
+}
+
+async function syncCalendars(ctx, account) {
+    const { calendars, target } = await taskCalendar(ctx, account);
     for (const calendar of calendars) {
-        if (calendar.is_tududi) {
-            await syncTududiCalendar(ctx, calendar);
+        if (calendar === target) {
+            await syncTaskCalendar(ctx, calendar);
+        } else if (calendar.is_tududi) {
+            // Not receiving tasks at the moment: nothing to read there.
+            continue;
         } else if (
             calendar.access_role !== 'freeBusyReader' &&
             calendar.sync_mode !== 'hidden'

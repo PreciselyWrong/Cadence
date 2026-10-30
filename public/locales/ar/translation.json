@@ -967,7 +967,9 @@
       "syncMode": "وضع المزامنة لـ {{name}}",
       "modeHidden": "مخفي",
       "modeRead": "للقراءة فقط",
-      "modeTwoWay": "في الاتجاهين"
+      "modeTwoWay": "في الاتجاهين",
+      "taskCalendar": "التقويم للمهام ذات الوقت",
+      "taskCalendarDefault": "Cadence (أنشأته المزامنة)"
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",

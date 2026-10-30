@@ -964,7 +964,9 @@
       "syncMode": "Modalità di sincronizzazione per {{name}}",
       "modeHidden": "Nascosto",
       "modeRead": "Sola lettura",
-      "modeTwoWay": "Bidirezionale"
+      "modeTwoWay": "Bidirezionale",
+      "taskCalendar": "Calendario per le attività con orario",
+      "taskCalendarDefault": "Cadence (creato dalla sincronizzazione)"
     },
     "sidebarSmartListsTitle": "Elenchi intelligenti",
     "sidebarRailTitle": "Barra icone e Altro",

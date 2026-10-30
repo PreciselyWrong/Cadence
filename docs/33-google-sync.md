@@ -28,11 +28,14 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
 
 ### Tasks on the "Cadence" calendar
 
+- **Calendar for tasks with a time** (Profile → Calendars): the "Cadence" calendar made by the sync (default) or any calendar Google lets the account write to. In a chosen calendar, only events marked as tasks (`extendedProperties.private.tududiTaskUid`, set by Cadence) are tasks; the user's other events there stay ordinary events (shown per the calendar's mode) and are never turned into tasks. Changing the choice moves the task events on the next sync (deleted from the previous calendar, created in the new one). A chosen calendar that disappears or becomes read-only falls back to "Cadence". While another calendar receives the tasks, the "Cadence" calendar is not read.
+- The rest of this section applies to whichever calendar receives the tasks.
+
 - Where a task sits matches the Calendar page: due time + estimate (default 60 min), start time → due time, or whole days from a whole-day start to the due day. A task with a date but no time is an all-day event.
 - Moving or resizing the event in Google moves the task (due date/time, start, or estimate); renaming it renames the task.
 - Deleting the event in Google **takes the date off the task**; the task stays.
 - A finished task leaves the calendar. An undated task is not on it.
-- An event added to the "Cadence" calendar in Google becomes a new task.
+- An event added to the "Cadence" calendar in Google becomes a new task (only the "Cadence" calendar does this).
 - A recurring task shows only its **next occurrence**.
 - The events are "free" (transparent) so they do not block your availability in Google.
 
@@ -90,7 +93,7 @@ All under `/api`, signed in.
 | GET            | `/google/connect?origin=`              | `{ url }` of Google's sign-in page                                                                                                    |
 | GET            | `/google/oauth/callback`               | Google sends the browser back here; redirects to `/calendar?google=connected`                                                         |
 | DELETE         | `/google`                              | Disconnect                                                                                                                            |
-| PATCH          | `/google/settings`                     | `{ sync_events, sync_tasks }`                                                                                                         |
+| PATCH          | `/google/settings`                     | `{ sync_events, sync_tasks, task_calendar_uid }` (null: "Cadence")                                                                                                       |
 | POST           | `/google/sync`                         | Sync now                                                                                                                              |
 | PATCH          | `/google/calendars/:uid`               | `{ show_on_calendar, sync_mode }` (`hidden`, `read`, `two_way`)                                                                                                              |
 | POST           | `/google/events`                       | `{ calendar_uid, title, description, location, all_day, start, end }` or `{ …, all_day: true, start_date, end_date }` (end exclusive) |
@@ -100,7 +103,7 @@ Google events are also returned by `GET /api/calendar-feeds/events` with `source
 
 ## Schema
 
-`google_accounts` (one per user, tokens encrypted), `google_calendars` (calendar list, `show_on_calendar`, `sync_mode`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes). Migrations `20261030090000-create-google-sync.js`, `20261030120000-add-sync-mode-to-google-calendars.js`.
+`google_accounts` (one per user, tokens encrypted, `task_calendar_id`), `google_calendars` (calendar list, `show_on_calendar`, `sync_mode`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes). Migrations `20261030090000-create-google-sync.js`, `20261030120000-add-sync-mode-to-google-calendars.js`, `20261030130000-add-task-calendar-to-google-accounts.js`.
 
 ## Limits
 

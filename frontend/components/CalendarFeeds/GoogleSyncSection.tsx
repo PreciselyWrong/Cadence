@@ -274,6 +274,44 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                         </label>
                     </div>
 
+                    {status.sync_events && (
+                        <label className="flex items-center justify-between gap-3 text-sm text-gray-800 dark:text-gray-200">
+                            <span>
+                                {t(
+                                    'profile.google.taskCalendar',
+                                    'Calendar for tasks with a time'
+                                )}
+                            </span>
+                            <select
+                                value={status.task_calendar_uid || ''}
+                                disabled={busy}
+                                onChange={(e) => {
+                                    const value = e.target.value || null;
+                                    void run(() =>
+                                        updateGoogleSettings({
+                                            task_calendar_uid: value,
+                                        })
+                                    );
+                                }}
+                                className="max-w-[50%] rounded-md border border-gray-300 bg-white px-2 py-1 text-xs text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                            >
+                                <option value="">
+                                    {t(
+                                        'profile.google.taskCalendarDefault',
+                                        'Cadence (made by the sync)'
+                                    )}
+                                </option>
+                                {status.calendars
+                                    .filter((c) => !c.is_tududi && c.can_write)
+                                    .map((c) => (
+                                        <option key={c.uid} value={c.uid}>
+                                            {c.name}
+                                        </option>
+                                    ))}
+                            </select>
+                        </label>
+                    )}
+
                     {status.calendars.some((c) => !c.is_tududi) && (
                         <div className="space-y-2">
                             <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">

@@ -963,7 +963,9 @@
       "syncMode": "Chế độ đồng bộ cho {{name}}",
       "modeHidden": "Ẩn",
       "modeRead": "Chỉ đọc",
-      "modeTwoWay": "Hai chiều"
+      "modeTwoWay": "Hai chiều",
+      "taskCalendar": "Lịch cho công việc có giờ",
+      "taskCalendarDefault": "Cadence (do đồng bộ tạo)"
     },
     "sidebarSmartListsTitle": "Danh sách thông minh",
     "sidebarRailTitle": "Thanh biểu tượng và Khác",

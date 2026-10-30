@@ -963,7 +963,9 @@
       "syncMode": "{{name}} için eşitleme modu",
       "modeHidden": "Gizli",
       "modeRead": "Salt okunur",
-      "modeTwoWay": "Çift yönlü"
+      "modeTwoWay": "Çift yönlü",
+      "taskCalendar": "Saatli görevler için takvim",
+      "taskCalendarDefault": "Cadence (eşitleme tarafından oluşturuldu)"
     },
     "sidebarSmartListsTitle": "Akıllı listeler",
     "sidebarRailTitle": "Simge çubuğu ve Diğer",

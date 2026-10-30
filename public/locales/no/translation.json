@@ -964,7 +964,9 @@
       "syncMode": "Synkroniseringsmodus for {{name}}",
       "modeHidden": "Skjult",
       "modeRead": "Kun lesing",
-      "modeTwoWay": "Begge veier"
+      "modeTwoWay": "Begge veier",
+      "taskCalendar": "Kalender for oppgaver med klokkeslett",
+      "taskCalendarDefault": "Cadence (laget av synkroniseringen)"
     },
     "sidebarSmartListsTitle": "Smarte lister",
     "sidebarRailTitle": "Ikonlinje og Mer",

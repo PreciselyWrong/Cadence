@@ -2,7 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import GoogleSyncSection from '../GoogleSyncSection';
-import { updateGoogleCalendar } from '../../../utils/googleSyncService';
+import {
+    updateGoogleCalendar,
+    updateGoogleSettings,
+} from '../../../utils/googleSyncService';
 
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: any, options?: any) => {
@@ -97,5 +100,37 @@ describe('GoogleSyncSection', () => {
         const me = screen.getByLabelText('Sync mode for Me');
         expect(me.querySelector('option[value="two_way"]')).not.toBeDisabled();
         expect(screen.queryByLabelText('Sync mode for Cadence')).toBeNull();
+    });
+
+    it('chooses the calendar that receives timed tasks', async () => {
+        (updateGoogleSettings as jest.Mock).mockResolvedValue({
+            ...status(),
+            task_calendar_uid: 'me',
+        });
+        const onStatusChange = jest.fn();
+        render(
+            <GoogleSyncSection
+                status={status()}
+                onStatusChange={onStatusChange}
+            />
+        );
+        const select = screen.getByLabelText('Calendar for tasks with a time');
+        expect(select).toHaveValue('');
+        // Only calendars Google lets the account write to.
+        const options = Array.from(select.querySelectorAll('option')).map(
+            (o) => o.textContent
+        );
+        expect(options).toEqual(['Cadence (made by the sync)', 'Me']);
+        fireEvent.change(select, { target: { value: 'me' } });
+        await waitFor(() =>
+            expect(updateGoogleSettings).toHaveBeenCalledWith({
+                task_calendar_uid: 'me',
+            })
+        );
+        await waitFor(() =>
+            expect(onStatusChange).toHaveBeenCalledWith(
+                expect.objectContaining({ task_calendar_uid: 'me' })
+            )
+        );
     });
 });

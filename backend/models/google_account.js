@@ -23,6 +23,9 @@ module.exports = (sequelize) => {
             access_token_expires_at: { type: DataTypes.DATE, allowNull: true },
             // The secondary "Tududi" calendar that holds dated tasks.
             tududi_calendar_id: { type: DataTypes.STRING, allowNull: true },
+            // Google id of the calendar that receives the tasks instead of
+            // the "Cadence" one; empty means the "Cadence" calendar.
+            task_calendar_id: { type: DataTypes.STRING, allowNull: true },
             sync_events: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,

@@ -1331,7 +1331,9 @@
       "syncMode": "Synchronisierungsmodus für {{name}}",
       "modeHidden": "Ausgeblendet",
       "modeRead": "Nur lesen",
-      "modeTwoWay": "In beide Richtungen"
+      "modeTwoWay": "In beide Richtungen",
+      "taskCalendar": "Kalender für Aufgaben mit Uhrzeit",
+      "taskCalendarDefault": "Cadence (von der Synchronisierung erstellt)"
     },
     "sidebarSmartListsTitle": "Intelligente Listen",
     "sidebarRailTitle": "Symbolleiste und Mehr",

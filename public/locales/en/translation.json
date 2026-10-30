@@ -990,7 +990,9 @@
       "syncMode": "Sync mode for {{name}}",
       "modeHidden": "Hidden",
       "modeRead": "Read only",
-      "modeTwoWay": "Two-way"
+      "modeTwoWay": "Two-way",
+      "taskCalendar": "Calendar for tasks with a time",
+      "taskCalendarDefault": "Cadence (made by the sync)"
     },
     "sidebarSmartListsTitle": "Smart lists",
     "sidebarRailTitle": "Icon rail and More",

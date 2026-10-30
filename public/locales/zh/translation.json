@@ -963,7 +963,9 @@
       "syncMode": "{{name}} 的同步模式",
       "modeHidden": "隐藏",
       "modeRead": "只读",
-      "modeTwoWay": "双向"
+      "modeTwoWay": "双向",
+      "taskCalendar": "带时间任务的日历",
+      "taskCalendarDefault": "Cadence（由同步创建）"
     },
     "sidebarSmartListsTitle": "智能列表",
     "sidebarRailTitle": "图标栏与更多",

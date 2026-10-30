@@ -965,7 +965,9 @@
       "syncMode": "Način sinhronizacije za {{name}}",
       "modeHidden": "Skrit",
       "modeRead": "Samo branje",
-      "modeTwoWay": "Dvosmerno"
+      "modeTwoWay": "Dvosmerno",
+      "taskCalendar": "Koledar za opravila s časom",
+      "taskCalendarDefault": "Cadence (ustvarila sinhronizacija)"
     },
     "sidebarSmartListsTitle": "Pametni seznami",
     "sidebarRailTitle": "Vrstica ikon in Več",

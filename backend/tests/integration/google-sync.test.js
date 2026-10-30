@@ -667,6 +667,97 @@ describe('Google sync', () => {
         });
     });
 
+    describe('target calendar', () => {
+        it('sends timed tasks to a chosen calendar and moves them back', async () => {
+            const start = moment.tz(`${day(1)} 10:00`, TZ);
+            google.putEvent('me@gmail.com', {
+                summary: 'Meeting',
+                start: { dateTime: start.toISOString() },
+                end: { dateTime: start.clone().add(1, 'hour').toISOString() },
+            });
+            const task = await createTask({
+                name: 'Write report',
+                due_date: day(2),
+                due_time: '09:00',
+            });
+            await connect();
+            expect(liveEvents(tududiCalendar())).toHaveLength(1);
+
+            const me = await GoogleCalendar.findOne({
+                where: { google_id: 'me@gmail.com' },
+            });
+            const holidays = await GoogleCalendar.findOne({
+                where: { google_id: 'holidays' },
+            });
+            let res = await agent
+                .patch('/api/google/settings')
+                .send({ task_calendar_uid: holidays.uid });
+            expect(res.status).toBe(400);
+            res = await agent
+                .patch('/api/google/settings')
+                .send({ task_calendar_uid: me.uid });
+            expect(res.status).toBe(200);
+            expect(res.body.task_calendar_uid).toBe(me.uid);
+            await syncUser(user.id);
+
+            const meCalendar = google.state.calendars.get('me@gmail.com');
+            expect(liveEvents(tududiCalendar())).toHaveLength(0);
+            const taskEvent = liveEvents(meCalendar).find(
+                (e) => e.summary === 'Write report'
+            );
+            expect(taskEvent.extendedProperties.private.tududiTaskUid).toBe(
+                task.uid
+            );
+            // The user's own event stays an event, never a task.
+            expect(await Task.count({ where: { name: 'Meeting' } })).toBe(0);
+            res = await agent
+                .get('/api/calendar-feeds/events')
+                .query({ start: day(0), end: day(4) });
+            const titles = res.body.events
+                .filter((e) => e.source === 'google')
+                .map((e) => e.title);
+            expect(titles).toEqual(['Meeting']);
+
+            // An event added there in Google is not a task either.
+            google.putEvent('me@gmail.com', {
+                summary: 'Coffee',
+                start: { dateTime: start.clone().add(2, 'hour').toISOString() },
+                end: { dateTime: start.clone().add(3, 'hour').toISOString() },
+            });
+            // Moving the task's event in Google moves the task.
+            const moved = moment.tz(`${day(3)} 15:00`, TZ);
+            taskEvent.start = { dateTime: moved.toISOString() };
+            taskEvent.end = {
+                dateTime: moved.clone().add(1, 'hour').toISOString(),
+            };
+            google.touchEvent(meCalendar, taskEvent);
+            await syncUser(user.id);
+            await task.reload();
+            expect(
+                moment(task.due_date).tz(TZ).format('YYYY-MM-DD HH:mm')
+            ).toBe(`${day(3)} 15:00`);
+            expect(await Task.count({ where: { name: 'Coffee' } })).toBe(0);
+            expect(liveEvents(meCalendar)).toHaveLength(3);
+
+            res = await agent
+                .patch('/api/google/settings')
+                .send({ task_calendar_uid: null });
+            expect(res.body.task_calendar_uid).toBeNull();
+            await syncUser(user.id);
+            expect(
+                liveEvents(meCalendar)
+                    .map((e) => e.summary)
+                    .sort()
+            ).toEqual(['Coffee', 'Meeting']);
+            expect(liveEvents(tududiCalendar()).map((e) => e.summary)).toEqual([
+                'Write report',
+            ]);
+            expect(
+                await GoogleTaskLink.count({ where: { kind: 'event' } })
+            ).toBe(1);
+        });
+    });
+
     it('retries after a rate limit', async () => {
         client.setFetch(
             (() => {

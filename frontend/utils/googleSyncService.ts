@@ -29,6 +29,8 @@ export interface GoogleStatus {
     email?: string | null;
     sync_events?: boolean;
     sync_tasks?: boolean;
+    // Calendar that receives timed tasks; null: the "Cadence" calendar.
+    task_calendar_uid?: string | null;
     last_synced_at?: string | null;
     last_error?: string | null;
     calendars: GoogleCalendar[];
@@ -86,6 +88,7 @@ export const disconnectGoogle = async (): Promise<void> => {
 export const updateGoogleSettings = async (data: {
     sync_events?: boolean;
     sync_tasks?: boolean;
+    task_calendar_uid?: string | null;
 }): Promise<GoogleStatus> =>
     json(
         await fetch(getApiPath('google/settings'), {

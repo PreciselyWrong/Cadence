@@ -1452,7 +1452,9 @@
       "syncMode": "Режим синхронізації для {{name}}",
       "modeHidden": "Приховано",
       "modeRead": "Лише читання",
-      "modeTwoWay": "В обидва боки"
+      "modeTwoWay": "В обидва боки",
+      "taskCalendar": "Календар для завдань із часом",
+      "taskCalendarDefault": "Cadence (створений синхронізацією)"
     },
     "sidebarSmartListsTitle": "Розумні списки",
     "sidebarRailTitle": "Панель значків і Ще",

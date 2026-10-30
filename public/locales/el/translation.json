@@ -820,7 +820,9 @@
       "syncMode": "Λειτουργία συγχρονισμού για {{name}}",
       "modeHidden": "Κρυφό",
       "modeRead": "Μόνο ανάγνωση",
-      "modeTwoWay": "Αμφίδρομα"
+      "modeTwoWay": "Αμφίδρομα",
+      "taskCalendar": "Ημερολόγιο για εργασίες με ώρα",
+      "taskCalendarDefault": "Cadence (δημιουργήθηκε από τον συγχρονισμό)"
     },
     "sidebarSmartListsTitle": "Έξυπνες λίστες",
     "sidebarRailTitle": "Γραμμή εικονιδίων και Περισσότερα",

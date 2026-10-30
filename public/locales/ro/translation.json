@@ -966,7 +966,9 @@
       "syncMode": "Mod de sincronizare pentru {{name}}",
       "modeHidden": "Ascuns",
       "modeRead": "Doar citire",
-      "modeTwoWay": "Bidirecțional"
+      "modeTwoWay": "Bidirecțional",
+      "taskCalendar": "Calendar pentru sarcinile cu oră",
+      "taskCalendarDefault": "Cadence (creat de sincronizare)"
     },
     "sidebarSmartListsTitle": "Liste inteligente",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",

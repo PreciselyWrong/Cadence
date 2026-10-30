@@ -965,7 +965,9 @@
       "syncMode": "Tryb synchronizacji dla {{name}}",
       "modeHidden": "Ukryty",
       "modeRead": "Tylko do odczytu",
-      "modeTwoWay": "Dwukierunkowy"
+      "modeTwoWay": "Dwukierunkowy",
+      "taskCalendar": "Kalendarz dla zadań z godziną",
+      "taskCalendarDefault": "Cadence (utworzony przez synchronizację)"
     },
     "sidebarSmartListsTitle": "Inteligentne listy",
     "sidebarRailTitle": "Pasek ikon i Więcej",

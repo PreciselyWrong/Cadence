@@ -963,7 +963,9 @@
       "syncMode": "Synkronointitila: {{name}}",
       "modeHidden": "Piilotettu",
       "modeRead": "Vain luku",
-      "modeTwoWay": "Kaksisuuntainen"
+      "modeTwoWay": "Kaksisuuntainen",
+      "taskCalendar": "Kalenteri kellonajallisille tehtäville",
+      "taskCalendarDefault": "Cadence (synkronoinnin luoma)"
     },
     "sidebarSmartListsTitle": "Älykkäät listat",
     "sidebarRailTitle": "Kuvakepalkki ja Lisää",

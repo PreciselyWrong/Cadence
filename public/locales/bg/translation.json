@@ -963,7 +963,9 @@
       "syncMode": "Режим на синхронизация за {{name}}",
       "modeHidden": "Скрит",
       "modeRead": "Само за четене",
-      "modeTwoWay": "Двупосочно"
+      "modeTwoWay": "Двупосочно",
+      "taskCalendar": "Календар за задачи с час",
+      "taskCalendarDefault": "Cadence (създаден от синхронизацията)"
     },
     "sidebarSmartListsTitle": "Умни списъци",
     "sidebarRailTitle": "Икони и меню „Още“",

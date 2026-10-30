@@ -963,7 +963,9 @@
       "syncMode": "Mode sinkronisasi untuk {{name}}",
       "modeHidden": "Tersembunyi",
       "modeRead": "Hanya baca",
-      "modeTwoWay": "Dua arah"
+      "modeTwoWay": "Dua arah",
+      "taskCalendar": "Kalender untuk tugas dengan waktu",
+      "taskCalendarDefault": "Cadence (dibuat oleh sinkronisasi)"
     },
     "sidebarSmartListsTitle": "Daftar pintar",
     "sidebarRailTitle": "Rel ikon dan Lainnya",

@@ -988,7 +988,9 @@
             "syncMode": "Režim synchronizácie pre {{name}}",
             "modeHidden": "Skrytý",
             "modeRead": "Iba na čítanie",
-            "modeTwoWay": "Obojsmerný"
+            "modeTwoWay": "Obojsmerný",
+            "taskCalendar": "Kalendár pre úlohy s časom",
+            "taskCalendarDefault": "Cadence (vytvorený synchronizáciou)"
         },
         "sidebarSmartListsTitle": "Inteligentné zoznamy",
         "sidebarRailTitle": "Lišta ikon a Viac",

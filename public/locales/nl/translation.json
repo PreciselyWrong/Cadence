@@ -963,7 +963,9 @@
       "syncMode": "Synchronisatiemodus voor {{name}}",
       "modeHidden": "Verborgen",
       "modeRead": "Alleen lezen",
-      "modeTwoWay": "In beide richtingen"
+      "modeTwoWay": "In beide richtingen",
+      "taskCalendar": "Agenda voor taken met een tijd",
+      "taskCalendarDefault": "Cadence (gemaakt door de synchronisatie)"
     },
     "sidebarSmartListsTitle": "Slimme lijsten",
     "sidebarRailTitle": "Pictogrammenbalk en Meer",

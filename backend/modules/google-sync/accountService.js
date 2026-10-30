@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const { Op } = require('sequelize');
 const {
     GoogleAccount,
     GoogleCalendar,
@@ -53,6 +54,13 @@ async function status(userId) {
         email: account.email,
         sync_events: account.sync_events,
         sync_tasks: account.sync_tasks,
+        // null: the "Cadence" calendar receives the timed tasks.
+        task_calendar_uid:
+            (account.task_calendar_id &&
+                calendars.find(
+                    (row) => row.google_id === account.task_calendar_id
+                )?.uid) ||
+            null,
         last_synced_at: account.last_synced_at,
         last_error: account.last_error,
         calendars: calendars.map(serializeCalendar),
@@ -136,6 +144,25 @@ async function updateSettings(userId, body = {}) {
         }
         updates[key] = body[key];
     }
+    if (body.task_calendar_uid !== undefined) {
+        let target = null;
+        if (body.task_calendar_uid) {
+            const row = await GoogleCalendar.findOne({
+                where: { user_id: userId, uid: body.task_calendar_uid },
+            });
+            if (!row) throw new NotFoundError('Calendar not found');
+            if (!row.is_tududi) {
+                if (!isWritable(row)) {
+                    throw new ValidationError(
+                        'Google does not let you add events to this calendar'
+                    );
+                }
+                target = row.google_id;
+            }
+        }
+        // The next sync moves the events (see calendarsSync).
+        updates.task_calendar_id = target;
+    }
     await account.update(updates);
     // Turning a side off unlinks it, so turning it on later starts clean
     // instead of deleting what changed meanwhile.
@@ -143,9 +170,15 @@ async function updateSettings(userId, body = {}) {
         await GoogleTaskLink.destroy({
             where: { user_id: userId, kind: 'event' },
         });
+        // Read again in full next time, so marked events are linked back
+        // instead of pushed twice.
+        const receiving = [{ is_tududi: true }];
+        if (account.task_calendar_id) {
+            receiving.push({ google_id: account.task_calendar_id });
+        }
         await GoogleCalendar.update(
             { sync_token: null },
-            { where: { user_id: userId, is_tududi: true } }
+            { where: { user_id: userId, [Op.or]: receiving } }
         );
     }
     if (updates.sync_tasks === false) {
