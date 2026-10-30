@@ -52,6 +52,22 @@ internal fun rememberProjectNames(viewModel: TasksViewModel): Map<String, String
     return remember(projects) { projects.associate { it.uid to it.name } }
 }
 
+@Composable
+internal fun rememberProjectColors(viewModel: TasksViewModel): Map<String, Int> {
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    return remember(projects) {
+        projects.mapNotNull { project -> projectRailColor(project.color)?.let { project.uid to it } }.toMap()
+    }
+}
+
+/** Couleur `#RRGGBB` d'un projet en ARGB opaque ; null si elle est absente ou illisible (pas de liseré). */
+internal fun projectRailColor(value: String?): Int? {
+    val hex = value?.trim()?.removePrefix("#") ?: return null
+    if (hex.length != 6) return null
+    val rgb = hex.toIntOrNull(16) ?: return null
+    return (0xFF000000L or rgb.toLong()).toInt()
+}
+
 /**
  * Effets communs aux écrans de tâches : messages en bandeau, fiche d'une tâche et
  * question de déplacement d'une occurrence récurrente.
@@ -79,6 +95,7 @@ internal fun TaskOverlays(
 internal fun LazyListScope.taskRows(
     tasks: List<TaskItem>,
     projectNames: Map<String, String>,
+    projectColors: Map<String, Int>,
     moment: Moment,
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
@@ -87,6 +104,7 @@ internal fun LazyListScope.taskRows(
         TaskRow(
             task = task,
             projectName = task.projectUid?.let { projectNames[it] },
+            projectColor = task.projectUid?.let { projectColors[it] },
             today = moment.today,
             zone = moment.zone,
             onToggle = { viewModel.toggle(task) },

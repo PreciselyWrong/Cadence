@@ -19,6 +19,7 @@ internal fun UpcomingTab(
     val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
+    val projectColors = rememberProjectColors(viewModel)
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         if (upcoming.isEmpty()) {
@@ -26,7 +27,7 @@ internal fun UpcomingTab(
         }
         upcoming.forEach { (date, tasks) ->
             item(key = "day-$date") { SectionHeader(title = dayLabel(date, moment.today)) }
-            taskRows(tasks, projectNames, moment, viewModel, onOpen)
+            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
         }
     }
 }

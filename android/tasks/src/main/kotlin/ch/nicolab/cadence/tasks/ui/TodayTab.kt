@@ -50,6 +50,7 @@ internal fun TodayTab(
         mergeTodayItems(state.today, events, moment.zone)
     }
     val projectNames = rememberProjectNames(viewModel)
+    val projectColors = rememberProjectColors(viewModel)
     var completedExpanded by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -73,11 +74,11 @@ internal fun TodayTab(
                     tone = SectionTone.Error,
                 )
             }
-            taskRows(state.overdue, projectNames, moment, viewModel, onOpen)
+            taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen)
         }
         if (agenda.isNotEmpty()) {
             item { SectionHeader(title = stringResource(R.string.tasks_section_today), count = agenda.size) }
-            agendaRows(agenda, projectNames, moment, viewModel, onOpen, calendarSettings.checkEvents)
+            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents)
         }
         item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {
@@ -101,7 +102,7 @@ internal fun TodayTab(
                 }
             }
             if (completedExpanded) {
-                taskRows(state.completed, projectNames, moment, viewModel, onOpen)
+                taskRows(state.completed, projectNames, projectColors, moment, viewModel, onOpen)
             }
         }
     }
@@ -111,6 +112,7 @@ internal fun TodayTab(
 private fun LazyListScope.agendaRows(
     agenda: List<TodayItem>,
     projectNames: Map<String, String>,
+    projectColors: Map<String, Int>,
     moment: Moment,
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
@@ -121,6 +123,7 @@ private fun LazyListScope.agendaRows(
             is TodayItem.Task -> TaskRow(
                 task = item.task,
                 projectName = item.task.projectUid?.let { projectNames[it] },
+                projectColor = item.task.projectUid?.let { projectColors[it] },
                 today = moment.today,
                 zone = moment.zone,
                 onToggle = { viewModel.toggle(item.task) },

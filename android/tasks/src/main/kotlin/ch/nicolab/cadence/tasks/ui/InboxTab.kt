@@ -54,6 +54,7 @@ internal fun InboxTab(
     val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
+    val projectColors = rememberProjectColors(viewModel)
     var capture by rememberSaveable { mutableStateOf("") }
     var converting by remember { mutableStateOf<InboxEntry?>(null) }
     val submit = {
@@ -88,7 +89,7 @@ internal fun InboxTab(
         }
         if (unsorted.isNotEmpty()) {
             item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
-            taskRows(unsorted, projectNames, moment, viewModel, onOpen)
+            taskRows(unsorted, projectNames, projectColors, moment, viewModel, onOpen)
         }
     }
 

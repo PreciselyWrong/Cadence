@@ -77,6 +77,7 @@ internal fun ProjectTasksPane(
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
+    val projectColors = rememberProjectColors(viewModel)
     val projectName = projects.firstOrNull { it.uid == projectUid }?.name.orEmpty()
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -99,6 +100,6 @@ internal fun ProjectTasksPane(
         if (tasks.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
-        taskRows(tasks, projectNames, moment, viewModel, onOpen)
+        taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
     }
 }
