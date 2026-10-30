@@ -277,7 +277,7 @@ const CalendarFeedsManager: React.FC<CalendarFeedsManagerProps> = ({
                     >
                         {t(
                             'profile.calendars.googleHelp',
-                            'In Google Calendar: Settings → your calendar → Integrate calendar → "Secret address in iCal format". Apple Calendar and Outlook have similar links. Anyone with this address can read the calendar, so tududi stores it encrypted.'
+                            'In Google Calendar: Settings → your calendar → Integrate calendar → "Secret address in iCal format". Apple Calendar and Outlook have similar links. Anyone with this address can read the calendar, so Cadence stores it encrypted.'
                         )}
                     </p>
                 </div>

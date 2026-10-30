@@ -60,7 +60,7 @@ describe('google-sync mapping', () => {
         });
     });
 
-    it('keeps the Tududi time when Google keeps the same day', () => {
+    it('keeps the Cadence time when Google keeps the same day', () => {
         const task = {
             name: 'A',
             note: '',

@@ -127,7 +127,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                         rows={9}
                         placeholder={t(
                             'feedback.placeholder',
-                            'What happened, or what would make tududi better?'
+                            'What happened, or what would make Cadence better?'
                         )}
                         className="w-full min-h-[200px] resize-y rounded-xl bg-gray-50 dark:bg-gray-900/60 px-4 py-3 text-[15px] leading-relaxed text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                         data-testid="feedback-message"

@@ -63,7 +63,7 @@ describe('CalDAV two-way sync (#1822)', () => {
         cookie = login.headers['set-cookie'];
     });
 
-    describe('Tududi as the CalDAV server', () => {
+    describe('Cadence as the CalDAV server', () => {
         const createTask = async (fields) => {
             const res = await request(app)
                 .post('/api/task')
@@ -177,7 +177,7 @@ describe('CalDAV two-way sync (#1822)', () => {
             expect(row.completed_at).not.toBeNull();
         });
 
-        test('changing only the tags in Tududi changes the ETag and the CTag', async () => {
+        test('changing only the tags in Cadence changes the ETag and the CTag', async () => {
             const task = await createTask({ name: 'Tagged' });
 
             const ctag = async () => {
@@ -223,7 +223,7 @@ describe('CalDAV two-way sync (#1822)', () => {
         });
     });
 
-    describe('Tududi syncing to a remote CalDAV server', () => {
+    describe('Cadence syncing to a remote CalDAV server', () => {
         let calendar;
 
         const setupRemote = async (overrides = {}) => {
@@ -280,7 +280,7 @@ ${items
         const sync = (direction = 'bidirectional') =>
             syncEngine.syncCalendar(calendar.id, user.id, { direction });
 
-        test('later Tududi edits are pushed when the server lives under a path prefix', async () => {
+        test('later Cadence edits are pushed when the server lives under a path prefix', async () => {
             await setupRemote({
                 server_url: 'https://dav.example.com/radicale',
             });
@@ -351,7 +351,7 @@ ${items
                 last_synced_at: new Date(Date.now() - 3600000),
                 sync_status: 'synced',
             });
-            await task.update({ name: 'Edited in Tududi' });
+            await task.update({ name: 'Edited in Cadence' });
 
             // Someone else changed the resource between our pull and push.
             axios.mockResolvedValueOnce(
@@ -390,10 +390,10 @@ ${items
             const puts = calls('PUT');
             expect(puts).toHaveLength(2);
             expect(puts[1].headers['If-Match']).toBe('"e2"');
-            expect(puts[1].data).toContain('SUMMARY:Edited in Tududi');
+            expect(puts[1].data).toContain('SUMMARY:Edited in Cadence');
 
             await task.reload();
-            expect(task.name).toBe('Edited in Tududi');
+            expect(task.name).toBe('Edited in Cadence');
             const settled = await state();
             expect(settled.sync_status).toBe('synced');
             expect(settled.etag).toBe('e3');
@@ -494,7 +494,7 @@ ${items
                     ...overrides,
                 });
 
-            test('a task deleted on the server is deleted in Tududi on the next sync', async () => {
+            test('a task deleted on the server is deleted in Cadence on the next sync', async () => {
                 await setupRemote();
                 const task = await Task.create({
                     user_id: user.id,
@@ -561,7 +561,7 @@ ${items
                 expect(await CalDAVSyncState.count()).toBe(1);
             });
 
-            test('a task edited in Tududi after it was deleted on the server is created there again', async () => {
+            test('a task edited in Cadence after it was deleted on the server is created there again', async () => {
                 await setupRemote();
                 const task = await Task.create({
                     user_id: user.id,

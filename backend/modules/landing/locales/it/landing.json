@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Cambia lingua",
     "langSwitcherCurrent": "Lingua: {{name}}",
-    "description": "Annota tutto, pianifica la giornata con l’IA attorno al calendario e tieni aree, obiettivi, progetti, note e abitudini in un unico sistema. Un server MCP con {{tools}} strumenti fa lavorare gli agenti IA sulla tua lista. Un account tududi Cloud si crea in un minuto.",
-    "title": "tududi: gestore di attività e sistema di gestione della vita, con MCP per agenti IA"
+    "description": "Annota tutto, pianifica la giornata con l’IA attorno al calendario e tieni aree, obiettivi, progetti, note e abitudini in un unico sistema. Un server MCP con {{tools}} strumenti fa lavorare gli agenti IA sulla tua lista. Un account Cadence Cloud si crea in un minuto.",
+    "title": "Cadence: gestore di attività e sistema di gestione della vita, con MCP per agenti IA"
   },
   "nav": {
     "demo": "Demo dal vivo",
@@ -19,7 +19,7 @@
   "hero": {
     "ctaDemo": "Prova la demo dal vivo",
     "demoNote": "Un'istanza ospitata reale, con dati di esempio, condivisa e reimpostata regolarmente",
-    "screenshotAlt": "L'interfaccia di tududi, con la vista Oggi e le attività pianificate",
+    "screenshotAlt": "L'interfaccia di Cadence, con la vista Oggi e le attività pianificate",
     "cloudNote": "Nessun server da configurare. Mensile o annuale, e puoi cancellare in qualsiasi momento.",
     "ctaPrimary": "Inizia ora",
     "lede": "Annota tutto, pianifica la giornata con l’IA attorno al calendario e tieni aree, obiettivi, progetti, note e abitudini in un unico sistema. Crea un account Cloud in un minuto.",
@@ -41,7 +41,7 @@
     "featuredIn": "Ne hanno parlato",
     "eyebrow": "Stampa",
     "title": "Non fidarti solo di noi",
-    "sub": "Cosa hanno scritto i recensori dopo aver provato tududi di persona.",
+    "sub": "Cosa hanno scritto i recensori dopo aver provato Cadence di persona.",
     "readLink": "Leggi la recensione"
   },
   "ai": {
@@ -52,7 +52,7 @@
         "body": "Aggiungi, trova e completa le attività senza uscire dalla conversazione."
       },
       "dataStays": {
-        "body": "La connessione MCP va direttamente alla tua istanza tududi, su Cloud o sul tuo server. Niente passa da terzi.",
+        "body": "La connessione MCP va direttamente alla tua istanza Cadence, su Cloud o sul tuo server. Niente passa da terzi.",
         "title": "Parla con la tua istanza"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Fatto. <strong>Rivedere la bozza del redesign</strong> ora scade venerdì, e <strong>Sbloccare la coda Pagamenti</strong> è nel progetto Pagamenti, scade oggi.",
       "ask1": "Su cosa dovrei concentrarmi oggi, e c'è qualcosa in ritardo?",
       "ask2": "Sposta la revisione del redesign a venerdì e aggiungi un'attività per sbloccare Pagamenti.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "Una sessione di esempio. Il tuo agente si collega direttamente alla tua istanza via MCP.",
       "composer": "Rispondi a Claude…",
       "groupTitle": "Da sapere",
@@ -105,11 +105,11 @@
           "text": "Redesign del sito, nessuna attività da 11 giorni"
         }
       },
-      "toolLabel": "Ha usato tududi",
+      "toolLabel": "Ha usato Cadence",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP è incluso con tududi Cloud e con ogni istanza self-hosted.",
-    "ledeHtml": "tududi include un server MCP che espone <strong>{{tools}} strumenti</strong>, che coprono attività, progetti, aree, obiettivi, abitudini, note, persone, tag, viste, la posta in arrivo, la ricerca e le metriche. Collega Claude o qualsiasi agente compatibile con MCP direttamente alla tua istanza, sia il tuo account Cloud o un server che gestisci tu. La connessione va alla tua istanza invece che passare da un relay intermedio, una differenza strutturale che Todoist e Notion non possono offrire, a prescindere da cosa promettano.",
+    "footnoteIncluded": "MCP è incluso con Cadence Cloud e con ogni istanza self-hosted.",
+    "ledeHtml": "Cadence include un server MCP che espone <strong>{{tools}} strumenti</strong>, che coprono attività, progetti, aree, obiettivi, abitudini, note, persone, tag, viste, la posta in arrivo, la ricerca e le metriche. Collega Claude o qualsiasi agente compatibile con MCP direttamente alla tua istanza, sia il tuo account Cloud o un server che gestisci tu. La connessione va alla tua istanza invece che passare da un relay intermedio, una differenza strutturale che Todoist e Notion non possono offrire, a prescindere da cosa promettano.",
     "titleLine1": "Un sistema reale",
     "titleLine2": "che il tuo agente IA può davvero usare"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Installalo come app",
-        "body": "Aggiungi tududi alla schermata home o al desktop come PWA. Funziona offline e si sincronizza appena torni online."
+        "body": "Aggiungi Cadence alla schermata home o al desktop come PWA. Funziona offline e si sincronizza appena torni online."
       },
       "oidc": {
         "title": "Accesso OIDC / SSO",
@@ -232,7 +232,7 @@
         "body": "Condividi i progetti con permessi granulari - sola lettura oppure lettura e scrittura."
       }
     },
-    "sub": "tududi combina obiettivi, progetti, attività, note e viste smart in un unico sistema calmo e concentrato. Lascia che lo gestiamo noi, o gestiscilo tu se preferisci."
+    "sub": "Cadence combina obiettivi, progetti, attività, note e viste smart in un unico sistema calmo e concentrato. Lascia che lo gestiamo noi, o gestiscilo tu se preferisci."
   },
   "pricing": {
     "eyebrow": "Prezzi",
@@ -284,14 +284,14 @@
         "perYear": "/anno"
       }
     },
-    "fineprint": "Annulla quando vuoi ed esporta tutto. Se tududi Cloud dovesse mai chiudere, ricevi i tuoi dati e una guida alla migrazione self-hosted. Per spazio e volume API vale il fair use. Garanzia soddisfatti o rimborsati di 14 giorni, senza domande.",
+    "fineprint": "Annulla quando vuoi ed esporta tutto. Se Cadence Cloud dovesse mai chiudere, ricevi i tuoi dati e una guida alla migrazione self-hosted. Per spazio e volume API vale il fair use. Garanzia soddisfatti o rimborsati di 14 giorni, senza domande.",
     "perMonth": "/mese a persona",
     "nextPrice": "Dal {{date}} il prezzo a persona passa a {{monthly}} al mese o {{annual}} all'anno. Abbonati prima per mantenere il prezzo di oggi finché resti abbonato.",
     "sub": "Ogni piano ha tutte le funzioni. Pro è per una persona; un piano Team ha una dimensione fissa e aggiungi persone fino a riempirla."
   },
   "compare": {
     "title": "Confronto rapido",
-    "sub": "Come si confronta tududi Cloud con le app con cui viene più spesso paragonato, sui piani individuali.",
+    "sub": "Come si confronta Cadence Cloud con le app con cui viene più spesso paragonato, sui piani individuali.",
     "footnote": "Todoist Pro, TickTick Premium e Notion Plus, dalle loro pagine prezzi pubbliche a settembre 2026. Controlla i loro siti per i prezzi attuali. I loro prezzi sono i listini USA in dollari.",
     "rows": {
       "price": "Prezzo, fatturazione annuale",
@@ -323,11 +323,11 @@
     "joined": "Sei iscritto. Novità e aggiornamenti arriveranno via email."
   },
   "langs": {
-    "heading": "L'app tududi è disponibile in {{count}} lingue in tutto il mondo"
+    "heading": "L'app Cadence è disponibile in {{count}} lingue in tutto il mondo"
   },
   "community": {
-    "title": "Entra nella community di tududi",
-    "sub": "Confrontati con altri utenti di tududi, ricevi supporto e resta aggiornato"
+    "title": "Entra nella community di Cadence",
+    "sub": "Confrontati con altri utenti di Cadence, ricevi supporto e resta aggiornato"
   },
   "footer": {
     "colProduct": "Prodotto",
@@ -360,41 +360,41 @@
     "items": {
       "freePlan": {
         "a": "No. Pro costa {{monthly}} al mese o {{price}} all'anno per una persona, e i piani Team costano lo stesso a persona in dimensioni fisse. Nessun livello gratuito, nessun conto alla rovescia di prova, nessuna carta addebitata in silenzio più avanti. C'è una garanzia di rimborso di 14 giorni se poi non fa per te, e in questa pagina c'è una demo dal vivo se vuoi prima dare un'occhiata.",
-        "q": "C'è un piano gratuito o una prova su tududi Cloud?",
-        "aTrial": "Non esiste un piano gratuito, ma ogni nuovo account riceve una prova gratuita di {{days}} giorni, senza carta. La prova include l'assistente IA con un limite più basso e un membro che puoi aggiungere. I link pubblici alle note si sbloccano quando ti abboni. Se non ti abboni, l'account passa in sola lettura per 30 giorni così puoi esportare i tuoi dati, poi viene eliminato. Dopo la prova, Pro costa {{monthly}} al mese o {{price}} all'anno, e i piani Team costano lo stesso a persona. Il modo gratuito per usare tududi è installarlo sul tuo server, ed è la stessa applicazione."
+        "q": "C'è un piano gratuito o una prova su Cadence Cloud?",
+        "aTrial": "Non esiste un piano gratuito, ma ogni nuovo account riceve una prova gratuita di {{days}} giorni, senza carta. La prova include l'assistente IA con un limite più basso e un membro che puoi aggiungere. I link pubblici alle note si sbloccano quando ti abboni. Se non ti abboni, l'account passa in sola lettura per 30 giorni così puoi esportare i tuoi dati, poi viene eliminato. Dopo la prova, Pro costa {{monthly}} al mese o {{price}} all'anno, e i piani Team costano lo stesso a persona. Il modo gratuito per usare Cadence è installarlo sul tuo server, ed è la stessa applicazione."
       },
       "leaving": {
         "q": "Posso andarmene, e che fine fanno i miei dati?",
-        "a": "Sì, in qualsiasi momento. Esporta tutto in un unico file dal tuo profilo e importalo in un tududi self-hosted, che legge lo stesso formato. Eliminare l'account rimuove dati, allegati e backup dai nostri server e annulla qualsiasi abbonamento."
+        "a": "Sì, in qualsiasi momento. Esporta tutto in un unico file dal tuo profilo e importalo in un Cadence self-hosted, che legge lo stesso formato. Eliminare l'account rimuove dati, allegati e backup dai nostri server e annulla qualsiasi abbonamento."
       },
       "aiOptional": {
-        "a": "No. Entrambi i livelli di IA sono disattivati finché non li attivi, e tududi è un sistema completo anche senza. Se non li attivi mai, non manca nulla e nulla ti sollecita.",
+        "a": "No. Entrambi i livelli di IA sono disattivati finché non li attivi, e Cadence è un sistema completo anche senza. Se non li attivi mai, non manca nulla e nulla ti sollecita.",
         "q": "Devo usare le funzioni IA?"
       },
       "aiPrivacy": {
-        "a": "Dipende da quale dei due livelli intendi, e la differenza conta. Il server MCP funziona all'interno della tua istanza: un agente come Claude Desktop si collega direttamente a quella istanza, quindi la conversazione è tra il tuo agente e il tuo tududi, non un intermediario. L'Assistente IA è diverso. Chiama un provider compatibile con OpenAI, quindi se lo punti su uno ospitato, il contenuto di quelle richieste va a quel provider. Puntalo invece su un modello locale, come Ollama o LM Studio, e nulla lascia la tua macchina. Resta spento finché non fornisci una chiave, quindi è sempre una tua scelta, non un default.",
+        "a": "Dipende da quale dei due livelli intendi, e la differenza conta. Il server MCP funziona all'interno della tua istanza: un agente come Claude Desktop si collega direttamente a quella istanza, quindi la conversazione è tra il tuo agente e il tuo Cadence, non un intermediario. L'Assistente IA è diverso. Chiama un provider compatibile con OpenAI, quindi se lo punti su uno ospitato, il contenuto di quelle richieste va a quel provider. Puntalo invece su un modello locale, come Ollama o LM Studio, e nulla lascia la tua macchina. Resta spento finché non fornisci una chiave, quindi è sempre una tua scelta, non un default.",
         "q": "I miei dati vengono inviati a un'azienda IA?"
       },
       "commercialUse": {
         "a": "Sì, e non devi comprare nulla prima. La licenza MIT permette l'uso commerciale, anche all'interno di un'azienda e in un prodotto commerciale, senza soglia di fatturato e senza nulla da dichiarare. Se il tuo ufficio contabilità ha bisogno di una fattura, un abbonamento Cloud viene fatturato tramite il nostro fornitore di pagamenti e ne produce una. Niente in questa pagina vende un permesso, perché quel permesso è già tuo.",
-        "q": "Posso usare tududi al lavoro, o nella mia azienda?"
+        "q": "Posso usare Cadence al lavoro, o nella mia azienda?"
       },
       "maintained": {
         "a": "Sì. È sviluppato principalmente da un maintainer, con contributi dalla community, ed esce spesso. Ogni versione è elencata nella pagina delle release su GitHub, collegata dal Changelog nel menu qui sopra, così puoi giudicare il ritmo da solo invece di fidarti sulla parola. Lo sviluppo avviene in pubblico: issue, una roadmap pubblica e un Discord dove le domande trovano risposta.",
         "linkLabel": "Vedi tutte le release",
-        "q": "tududi è mantenuto attivamente?"
+        "q": "Cadence è mantenuto attivamente?"
       },
       "mcp": {
-        "a": "MCP è il Model Context Protocol, uno standard aperto per collegare agenti IA a sistemi reali. tududi include un server MCP che espone {{tools}} strumenti su attività, progetti, aree, obiettivi, abitudini, note, persone, tag, viste, posta in arrivo, ricerca e metriche, così un agente può catturare, trovare, aggiornare e completare lavoro invece di parlarne soltanto. È opzionale, è incluso con Cloud e con ogni istanza self-hosted, e funziona con Claude Desktop, Cursor, Windsurf, Cline o qualsiasi altro client MCP.",
+        "a": "MCP è il Model Context Protocol, uno standard aperto per collegare agenti IA a sistemi reali. Cadence include un server MCP che espone {{tools}} strumenti su attività, progetti, aree, obiettivi, abitudini, note, persone, tag, viste, posta in arrivo, ricerca e metriche, così un agente può catturare, trovare, aggiornare e completare lavoro invece di parlarne soltanto. È opzionale, è incluso con Cloud e con ogni istanza self-hosted, e funziona con Claude Desktop, Cursor, Windsurf, Cline o qualsiasi altro client MCP.",
         "q": "Cos'è MCP, e cosa può davvero fare un agente?"
       },
       "shutdown": {
-        "a": "L'app ha licenza MIT e il codice sorgente è pubblico, quindi non può esserti tolta. Chiunque può continuare a farla funzionare, e puoi forkarla. Su tududi Cloud i tuoi dati vivono in un database tududi standard invece di un formato proprietario, quindi se il servizio dovesse mai chiudere, otterresti i tuoi dati e una guida per trasferirli sul tuo server.",
-        "q": "Cosa succede ai miei dati se tududi scompare?"
+        "a": "L'app ha licenza MIT e il codice sorgente è pubblico, quindi non può esserti tolta. Chiunque può continuare a farla funzionare, e puoi forkarla. Su Cadence Cloud i tuoi dati vivono in un database Cadence standard invece di un formato proprietario, quindi se il servizio dovesse mai chiudere, otterresti i tuoi dati e una guida per trasferirli sul tuo server.",
+        "q": "Cosa succede ai miei dati se Cadence scompare?"
       },
       "trust": {
         "q": "Posso fidarmi di voi con i miei dati?",
-        "a": "Non devi crederci sulla parola. tududi è open source, quindi chiunque può leggere esattamente come tratta i tuoi dati. Su Cloud, tutto ciò che inserisci resta tuo: esportalo come un unico file in qualsiasi momento, elimina il tuo account da solo, e c'è una garanzia soddisfatti o rimborsati di 14 giorni se non dovesse fare per te."
+        "a": "Non devi crederci sulla parola. Cadence è open source, quindi chiunque può leggere esattamente come tratta i tuoi dati. Su Cloud, tutto ciò che inserisci resta tuo: esportalo come un unico file in qualsiasi momento, elimina il tuo account da solo, e c'è una garanzia soddisfatti o rimborsati di 14 giorni se non dovesse fare per te."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Esporta tutto, in qualsiasi momento"
     ],
     "lede": "Lo stesso sistema in entrambi i casi. La differenza è chi lo mantiene attivo, aggiornato e con backup alle tre di notte.",
-    "metaDescription": "tududi Cloud è lo stesso sistema open source, in esecuzione sui nostri server, con aggiornamenti, backup ed email gestiti per te. Pro per una persona o un piano Team per un gruppo, mensile o annuale, annulli quando vuoi.",
-    "metaTitle": "tududi Cloud: il tududi ospitato, gestito per te",
+    "metaDescription": "Cadence Cloud è lo stesso sistema open source, in esecuzione sui nostri server, con aggiornamenti, backup ed email gestiti per te. Pro per una persona o un piano Team per un gruppo, mensile o annuale, annulli quando vuoi.",
+    "metaTitle": "Cadence Cloud: il Cadence ospitato, gestito per te",
     "note": "Stessa app con licenza MIT. Esporta tutto, in qualsiasi momento.",
     "orAnnual": "o",
     "priceNote": "Fatturato dal nostro fornitore di pagamenti. I prezzi escludono le tasse applicabili.",
@@ -452,7 +452,7 @@
         "title": "Aggiornamenti applicati per te"
       }
     },
-    "title": "Perché usare tududi Cloud?",
+    "title": "Perché usare Cadence Cloud?",
     "whyEyebrow": "Cloud",
     "whySub": "Non funzioni. Ogni funzione è anche nella versione self-hosted.",
     "whyTitle": "Quello che stai davvero pagando",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Contattaci",
-    "lede": "Domande su tududi Cloud, la fatturazione o il tuo account? Scrivici un messaggio e ti risponderemo via email.",
+    "lede": "Domande su Cadence Cloud, la fatturazione o il tuo account? Scrivici un messaggio e ti risponderemo via email.",
     "name": "Nome",
     "email": "Email",
     "message": "Messaggio",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Annota tutto, con parole tue",
-        "body": "Un solo riquadro per posta in arrivo, attività, note e progetti, ovunque nell’app. Scrivi come pensi e tududi completa il resto.",
+        "body": "Un solo riquadro per posta in arrivo, attività, note e progetti, ovunque nell’app. Scrivi come pensi e Cadence completa il resto.",
         "points": [
           "“next fri”, “in 3 days” o “every first monday” imposta data o ripetizione",
           "#tag, +Progetto e @persona vengono riconosciuti mentre scrivi",
@@ -539,6 +539,6 @@
   "notFound": {
     "title": "Pagina non trovata",
     "lede": "Non c'è nulla a questo indirizzo. Potrebbe essere stata spostata, o il link contiene un errore.",
-    "home": "Torna a tududi"
+    "home": "Torna a Cadence"
   }
 }

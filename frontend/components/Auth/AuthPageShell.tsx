@@ -30,7 +30,7 @@ const AuthPageShell: React.FC<AuthPageShellProps> = ({ title, children }) => {
                                 ? 'wide-logo-light.png'
                                 : 'wide-logo-dark.png'
                         )}
-                        alt="tududi"
+                        alt="Cadence"
                         className="h-9 w-auto"
                     />
                 </div>

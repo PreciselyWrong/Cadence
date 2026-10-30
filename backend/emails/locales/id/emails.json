@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Halo,",
-        "signoff": "Salam hangat,\nTim Tududi",
+        "signoff": "Salam hangat,\nTim Cadence",
         "copyLink": "Atau salin dan tempel tautan ini ke browser Anda:",
         "trialUntil": "Uji coba gratis Anda berlaku hingga {{date}}."
     },
     "verification": {
-        "subject": "Selamat datang di Tududi - Verifikasi email Anda",
-        "welcome": "Selamat datang di Tududi!",
-        "opening": "Terima kasih telah mendaftar. Untuk menyelesaikan pendaftaran dan mulai menggunakan Tududi, verifikasi alamat email Anda dengan mengklik tautan di bawah ini:",
+        "subject": "Selamat datang di Cadence - Verifikasi email Anda",
+        "welcome": "Selamat datang di Cadence!",
+        "opening": "Terima kasih telah mendaftar. Untuk menyelesaikan pendaftaran dan mulai menggunakan Cadence, verifikasi alamat email Anda dengan mengklik tautan di bawah ini:",
         "button": "Verifikasi Alamat Email",
         "expires_other": "Tautan verifikasi ini akan kedaluwarsa dalam {{count}} jam.",
         "trial_other": "Verifikasi juga memulai uji coba gratis {{count}} hari Anda, tanpa kartu. Uji coba ini mencakup Asisten AI dengan kuota yang lebih kecil dan satu anggota yang bisa Anda tambahkan, misalnya pasangan atau rekan kerja. Tautan catatan publik aktif setelah Anda berlangganan.",
@@ -19,39 +19,39 @@
             "Mengatur tugas berulang",
             "Memantau produktivitas Anda"
         ],
-        "ignore": "Jika Anda tidak membuat akun di Tududi, abaikan saja email ini."
+        "ignore": "Jika Anda tidak membuat akun di Cadence, abaikan saja email ini."
     },
     "verificationReminder": {
-        "subject": "Pengingat: verifikasi email Anda untuk mulai menggunakan Tududi",
-        "opening": "Anda mendaftar di Tududi sekitar sehari yang lalu, tetapi alamat email Anda belum diverifikasi. Akun Anda (dan uji coba gratis Anda) dimulai begitu Anda memverifikasinya."
+        "subject": "Pengingat: verifikasi email Anda untuk mulai menggunakan Cadence",
+        "opening": "Anda mendaftar di Cadence sekitar sehari yang lalu, tetapi alamat email Anda belum diverifikasi. Akun Anda (dan uji coba gratis Anda) dimulai begitu Anda memverifikasinya."
     },
     "passwordReset": {
-        "subject": "Atur ulang kata sandi Tududi Anda",
-        "intro": "Seseorang meminta untuk mengatur ulang kata sandi akun Tududi Anda.",
+        "subject": "Atur ulang kata sandi Cadence Anda",
+        "intro": "Seseorang meminta untuk mengatur ulang kata sandi akun Cadence Anda.",
         "action": "Buka tautan ini untuk memilih kata sandi baru:",
         "button": "Pilih kata sandi baru",
         "expires_other": "Tautan ini kedaluwarsa dalam {{count}} menit. Jika Anda tidak meminta pengaturan ulang, abaikan email ini; kata sandi Anda tetap seperti semula."
     },
     "memberInvite": {
-        "subject": "Anda telah ditambahkan ke ruang kerja Tududi",
-        "intro": "Anda telah ditambahkan ke ruang kerja Tududi.",
+        "subject": "Anda telah ditambahkan ke ruang kerja Cadence",
+        "intro": "Anda telah ditambahkan ke ruang kerja Cadence.",
         "action": "Pilih kata sandi untuk mengaktifkan akun Anda dan masuk:",
         "button": "Atur kata sandi Anda",
         "expires_other": "Tautan ini kedaluwarsa dalam {{count}} jam. Jika Anda tidak menantikan email ini, abaikan saja."
     },
     "trialReminder": {
-        "subjectTomorrow": "Uji coba tududi Anda berakhir besok",
-        "subjectDays_other": "Uji coba tududi Anda berakhir dalam {{count}} hari",
-        "endsTomorrow": "Uji coba tududi Cloud Anda berakhir besok, pada {{date}}.",
-        "endsInDays_other": "Uji coba tududi Cloud Anda berakhir dalam {{count}} hari, pada {{date}}.",
+        "subjectTomorrow": "Uji coba Cadence Anda berakhir besok",
+        "subjectDays_other": "Uji coba Cadence Anda berakhir dalam {{count}} hari",
+        "endsTomorrow": "Uji coba Cadence Cloud Anda berakhir besok, pada {{date}}.",
+        "endsInDays_other": "Uji coba Cadence Cloud Anda berakhir dalam {{count}} hari, pada {{date}}.",
         "afterReadOnly_other": "Setelah itu akun Anda menjadi hanya-baca selama {{count}} hari, sehingga Anda masih bisa mengekspor data, lalu akun akan dihapus.",
         "afterFree": "Setelah itu akun Anda pindah ke paket gratis.",
-        "keep": "Untuk terus menggunakan tududi Cloud seperti sekarang, termasuk Asisten AI dan anggota, berlanggananlah:",
+        "keep": "Untuk terus menggunakan Cadence Cloud seperti sekarang, termasuk Asisten AI dan anggota, berlanggananlah:",
         "button": "Berlangganan"
     },
     "deletionWarning": {
-        "subject": "Akun tududi Anda akan dihapus pada {{date}}",
-        "ended": "Uji coba tududi Cloud Anda telah berakhir, dan sejak itu akun Anda dalam mode hanya-baca.",
+        "subject": "Akun Cadence Anda akan dihapus pada {{date}}",
+        "ended": "Uji coba Cadence Cloud Anda telah berakhir, dan sejak itu akun Anda dalam mode hanya-baca.",
         "deleteOn": "Pada {{date}}, akun beserta seluruh isinya akan dihapus.",
         "keep": "Untuk mempertahankannya, berlanggananlah:",
         "button": "Pertahankan akun saya",
@@ -59,8 +59,8 @@
         "final": "Jika Anda tidak melakukan apa pun, akun akan dihapus pada {{date}} dan ini adalah email terakhir dari kami tentang hal ini."
     },
     "emptyAccount": {
-        "subject": "tududi Anda masih kosong",
-        "intro": "Anda sudah punya akun tududi selama beberapa hari, tetapi belum ada isinya. Kebanyakan orang memulai dengan salah satu dari ini, dan masing-masing butuh kurang dari satu menit:",
+        "subject": "Cadence Anda masih kosong",
+        "intro": "Anda sudah punya akun Cadence selama beberapa hari, tetapi belum ada isinya. Kebanyakan orang memulai dengan salah satu dari ini, dan masing-masing butuh kurang dari satu menit:",
         "ideas": [
             "Tulis apa pun yang ada di pikiran Anda di Kotak Masuk, lalu rapikan nanti.",
             "Buka Rencana, pilih tiga hal untuk hari ini, dan biarkan sisanya.",
@@ -71,7 +71,7 @@
     },
     "comeBack": {
         "subject": "Tugas Anda masih di tempat Anda meninggalkannya",
-        "intro": "Sudah lama Anda tidak membuka tududi. Semua yang Anda tambahkan masih ada, persis seperti saat Anda meninggalkannya.",
+        "intro": "Sudah lama Anda tidak membuka Cadence. Semua yang Anda tambahkan masih ada, persis seperti saat Anda meninggalkannya.",
         "tip": "Jika daftarnya terlalu panjang, mulailah dari yang kecil: buka Rencana, pilih tiga hal untuk hari ini, dan simpan sisanya untuk nanti.",
         "button": "Rencanakan hari ini",
         "outro": "Kami tidak akan mengirim email seperti ini lagi sampai Anda kembali."
@@ -79,23 +79,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Verifikasi dua langkah aktif",
-            "body": "Verifikasi dua langkah telah diaktifkan untuk akun Tududi Anda. Untuk masuk, kini diperlukan kode dari aplikasi autentikator Anda, dan semua perangkat lain telah dikeluarkan."
+            "body": "Verifikasi dua langkah telah diaktifkan untuk akun Cadence Anda. Untuk masuk, kini diperlukan kode dari aplikasi autentikator Anda, dan semua perangkat lain telah dikeluarkan."
         },
         "mfaDisabled": {
             "subject": "Verifikasi dua langkah nonaktif",
-            "body": "Verifikasi dua langkah telah dinonaktifkan untuk akun Tududi Anda. Untuk masuk, kini hanya diperlukan kata sandi Anda."
+            "body": "Verifikasi dua langkah telah dinonaktifkan untuk akun Cadence Anda. Untuk masuk, kini hanya diperlukan kata sandi Anda."
         },
         "mfaReset": {
             "subject": "Verifikasi dua langkah Anda telah diatur ulang",
-            "body": "Seorang administrator mengatur ulang verifikasi dua langkah untuk akun Tududi Anda, dan semua perangkat telah dikeluarkan. Anda bisa masuk dengan kata sandi dan mengaktifkannya lagi."
+            "body": "Seorang administrator mengatur ulang verifikasi dua langkah untuk akun Cadence Anda, dan semua perangkat telah dikeluarkan. Anda bisa masuk dengan kata sandi dan mengaktifkannya lagi."
         },
         "recoveryCodeUsed": {
             "subject": "Kode pemulihan telah digunakan",
-            "body": "Seseorang masuk ke akun Tududi Anda dengan salah satu kode pemulihan Anda. Setiap kode hanya berlaku sekali."
+            "body": "Seseorang masuk ke akun Cadence Anda dengan salah satu kode pemulihan Anda. Setiap kode hanya berlaku sekali."
         },
         "recoveryCodesRegenerated": {
             "subject": "Kode pemulihan baru telah dibuat",
-            "body": "Kode pemulihan baru telah dibuat untuk akun Tududi Anda. Kode yang lama tidak berlaku lagi."
+            "body": "Kode pemulihan baru telah dibuat untuk akun Cadence Anda. Kode yang lama tidak berlaku lagi."
         },
         "button": "Buka pengaturan keamanan",
         "notYou": "Jika ini bukan Anda, segera ubah kata sandi dan beri tahu administrator Anda."

@@ -6,7 +6,7 @@
 
 ## Overview
 
-Tududi is an installable Progressive Web App (PWA). Users can add it to their home screen on Android, iOS, and desktop browsers and use it like a native app. When the network is unavailable the app stays readable from cache; write operations are queued and replayed automatically once connectivity returns.
+Cadence is an installable Progressive Web App (PWA). Users can add it to their home screen on Android, iOS, and desktop browsers and use it like a native app. When the network is unavailable the app stays readable from cache; write operations are queued and replayed automatically once connectivity returns.
 
 ---
 
@@ -20,7 +20,7 @@ Tududi is an installable Progressive Web App (PWA). Users can add it to their ho
 | Safari (iOS 16.4+) | Share sheet → Add to Home Screen |
 | Firefox (Android) | `⋮ → Install` |
 
-### Requirements satisfied by Tududi
+### Requirements satisfied by Cadence
 
 1. `public/manifest.json` — declares name, icons, `display: standalone`
 2. `<link rel="manifest">` in `public/index.html`
@@ -40,8 +40,8 @@ Tududi is an installable Progressive Web App (PWA). Users can add it to their ho
 ```json
 {
   "id": "/",
-  "name": "tududi",
-  "short_name": "tududi",
+  "name": "Cadence",
+  "short_name": "Cadence",
   "description": "A simple and effective task management application",
   "start_url": "/",
   "scope": "/",
@@ -76,11 +76,11 @@ Tududi is an installable Progressive Web App (PWA). Users can add it to their ho
 
 ## Share Target (Android / desktop share sheet)
 
-Once installed, tududi appears in the OS share sheet. Sharing a link or text from another app (Chrome, YouTube, a mail client, …) hands the content to the Inbox composer.
+Once installed, Cadence appears in the OS share sheet. Sharing a link or text from another app (Chrome, YouTube, a mail client, …) hands the content to the Inbox composer.
 
 ### How it works
 
-1. `share_target` in the manifest registers tududi as a share handler. `method: "GET"` means the OS performs a plain navigation — no service worker interception needed:
+1. `share_target` in the manifest registers Cadence as a share handler. `method: "GET"` means the OS performs a plain navigation — no service worker interception needed:
    ```
    GET /inbox?title=<page title>&text=<selected text>&url=<link>
    ```
@@ -101,7 +101,7 @@ If the session has expired, `/inbox` is redirected to `/login` by `App.tsx` and 
 ### Limitations
 
 - **Text and links only.** Sharing *files* (images, PDFs) requires `method: "POST"` with a `multipart/form-data` enctype and a service worker `fetch` handler that intercepts the POST to `/inbox` — not implemented.
-- **iOS does not support Web Share Target**, so tududi will not appear in the iOS share sheet. iOS users can still use Shortcuts against the REST API.
+- **iOS does not support Web Share Target**, so Cadence will not appear in the iOS share sheet. iOS users can still use Shortcuts against the REST API.
 - Sub-path deployments have the same `action: "/inbox"` problem as `start_url` (see above).
 
 ---
@@ -165,17 +165,17 @@ When a new version of `sw.js` is deployed:
 
 ## Push Notifications
 
-Tududi sends notifications to phones and desktops with the standard Web Push protocol (VAPID), so one implementation covers every platform. Each user turns push on per device in **Profile → Notifications**, then picks which notification types use the **Push** column.
+Cadence sends notifications to phones and desktops with the standard Web Push protocol (VAPID), so one implementation covers every platform. Each user turns push on per device in **Profile → Notifications**, then picks which notification types use the **Push** column.
 
 ### Platform support
 
 | Platform | Works | Notes |
 |----------|-------|-------|
 | Android (Chrome, Edge, Samsung Internet, Firefox) | Browser tab or installed app | Delivered through FCM / Mozilla push |
-| iPhone / iPad (iOS 16.4+) | Installed app only | Add tududi to the Home Screen first, then open it from there and turn push on. In a Safari tab the Notifications page shows this hint instead of the button |
+| iPhone / iPad (iOS 16.4+) | Installed app only | Add Cadence to the Home Screen first, then open it from there and turn push on. In a Safari tab the Notifications page shows this hint instead of the button |
 | Desktop Chrome, Edge, Firefox, Safari | Yes | |
 
-Push needs HTTPS (or `localhost`). Notifications arrive while tududi is closed.
+Push needs HTTPS (or `localhost`). Notifications arrive while Cadence is closed.
 
 ### How it works
 

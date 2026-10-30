@@ -14,7 +14,7 @@ const { guard } = require('./guard');
 
 // A first sync (or one after Google drops the sync token) starts here.
 const FULL_SYNC_PAST_DAYS = 90;
-const TUDUDI_CALENDAR_NAME = 'Tududi';
+const TUDUDI_CALENDAR_NAME = 'Cadence';
 
 const fullSyncFrom = () =>
     new Date(Date.now() - FULL_SYNC_PAST_DAYS * 86400000).toISOString();

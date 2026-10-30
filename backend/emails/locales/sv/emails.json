@@ -6,9 +6,9 @@
         "trialUntil": "Din gratis provperiod pågår till {{date}}."
     },
     "verification": {
-        "subject": "Välkommen till Tududi - bekräfta din e-postadress",
-        "welcome": "Välkommen till Tududi!",
-        "opening": "Tack för att du registrerade dig. Bekräfta din e-postadress via länken nedan för att slutföra registreringen och börja använda Tududi:",
+        "subject": "Välkommen till Cadence - bekräfta din e-postadress",
+        "welcome": "Välkommen till Cadence!",
+        "opening": "Tack för att du registrerade dig. Bekräfta din e-postadress via länken nedan för att slutföra registreringen och börja använda Cadence:",
         "button": "Bekräfta e-postadress",
         "expires_one": "Den här bekräftelselänken slutar gälla om {{count}} timme.",
         "expires_other": "Den här bekräftelselänken slutar gälla om {{count}} timmar.",
@@ -21,44 +21,44 @@
             "Lägga upp återkommande uppgifter",
             "Följa din produktivitet"
         ],
-        "ignore": "Om du inte har skapat något konto hos Tududi kan du bortse från det här mejlet."
+        "ignore": "Om du inte har skapat något konto hos Cadence kan du bortse från det här mejlet."
     },
     "verificationReminder": {
-        "subject": "Påminnelse: bekräfta din e-postadress för att börja använda Tududi",
-        "opening": "Du registrerade dig på Tududi för ungefär en dag sedan, men din e-postadress är inte bekräftad än. Ditt konto (och din kostnadsfria provperiod) startar så fort du bekräftar den."
+        "subject": "Påminnelse: bekräfta din e-postadress för att börja använda Cadence",
+        "opening": "Du registrerade dig på Cadence för ungefär en dag sedan, men din e-postadress är inte bekräftad än. Ditt konto (och din kostnadsfria provperiod) startar så fort du bekräftar den."
     },
     "passwordReset": {
-        "subject": "Återställ ditt lösenord för Tududi",
-        "intro": "Någon har bett om att återställa lösenordet för ditt Tududi-konto.",
+        "subject": "Återställ ditt lösenord för Cadence",
+        "intro": "Någon har bett om att återställa lösenordet för ditt Cadence-konto.",
         "action": "Öppna den här länken för att välja ett nytt lösenord:",
         "button": "Välj ett nytt lösenord",
         "expires_one": "Länken slutar gälla om {{count}} minut. Om du inte bad om en återställning kan du bortse från det här mejlet; ditt lösenord förblir oförändrat.",
         "expires_other": "Länken slutar gälla om {{count}} minuter. Om du inte bad om en återställning kan du bortse från det här mejlet; ditt lösenord förblir oförändrat."
     },
     "memberInvite": {
-        "subject": "Du har lagts till i en Tududi-arbetsyta",
-        "intro": "Du har lagts till i en Tududi-arbetsyta.",
+        "subject": "Du har lagts till i en Cadence-arbetsyta",
+        "intro": "Du har lagts till i en Cadence-arbetsyta.",
         "action": "Välj ett lösenord för att aktivera ditt konto och logga in:",
         "button": "Välj lösenord",
         "expires_one": "Länken slutar gälla om {{count}} timme. Om du inte väntade dig detta kan du bortse från det här mejlet.",
         "expires_other": "Länken slutar gälla om {{count}} timmar. Om du inte väntade dig detta kan du bortse från det här mejlet."
     },
     "trialReminder": {
-        "subjectTomorrow": "Din provperiod för tududi slutar i morgon",
-        "subjectDays_one": "Din provperiod för tududi slutar om {{count}} dag",
-        "subjectDays_other": "Din provperiod för tududi slutar om {{count}} dagar",
-        "endsTomorrow": "Din provperiod för tududi Cloud slutar i morgon, {{date}}.",
-        "endsInDays_one": "Din provperiod för tududi Cloud slutar om {{count}} dag, {{date}}.",
-        "endsInDays_other": "Din provperiod för tududi Cloud slutar om {{count}} dagar, {{date}}.",
+        "subjectTomorrow": "Din provperiod för Cadence slutar i morgon",
+        "subjectDays_one": "Din provperiod för Cadence slutar om {{count}} dag",
+        "subjectDays_other": "Din provperiod för Cadence slutar om {{count}} dagar",
+        "endsTomorrow": "Din provperiod för Cadence Cloud slutar i morgon, {{date}}.",
+        "endsInDays_one": "Din provperiod för Cadence Cloud slutar om {{count}} dag, {{date}}.",
+        "endsInDays_other": "Din provperiod för Cadence Cloud slutar om {{count}} dagar, {{date}}.",
         "afterReadOnly_one": "Därefter blir ditt konto skrivskyddat i {{count}} dag, så att du fortfarande kan exportera dina data, och sedan raderas det.",
         "afterReadOnly_other": "Därefter blir ditt konto skrivskyddat i {{count}} dagar, så att du fortfarande kan exportera dina data, och sedan raderas det.",
         "afterFree": "Därefter flyttas ditt konto till gratisplanen.",
-        "keep": "Prenumerera för att fortsätta använda tududi Cloud som nu, med AI-assistent och medlemmar:",
+        "keep": "Prenumerera för att fortsätta använda Cadence Cloud som nu, med AI-assistent och medlemmar:",
         "button": "Prenumerera"
     },
     "deletionWarning": {
-        "subject": "Ditt tududi-konto raderas {{date}}",
-        "ended": "Din provperiod för tududi Cloud har tagit slut, och sedan dess har ditt konto varit skrivskyddat.",
+        "subject": "Ditt Cadence-konto raderas {{date}}",
+        "ended": "Din provperiod för Cadence Cloud har tagit slut, och sedan dess har ditt konto varit skrivskyddat.",
         "deleteOn": "{{date}} raderas kontot och allt som finns i det.",
         "keep": "Prenumerera för att behålla det:",
         "button": "Behåll mitt konto",
@@ -66,8 +66,8 @@
         "final": "Om du inte gör något raderas kontot {{date}}, och det här är det sista mejlet du får från oss om det."
     },
     "emptyAccount": {
-        "subject": "Din tududi är fortfarande tom",
-        "intro": "Du har haft ett tududi-konto i ett par dagar, men det finns inget i det än. De flesta börjar med något av det här, och varje sak tar under en minut:",
+        "subject": "Din Cadence är fortfarande tom",
+        "intro": "Du har haft ett Cadence-konto i ett par dagar, men det finns inget i det än. De flesta börjar med något av det här, och varje sak tar under en minut:",
         "ideas": [
             "Skriv ner allt du har i huvudet i Inkorgen och sortera det senare.",
             "Öppna Planera, välj tre saker för i dag och låt resten vara.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Dina uppgifter finns där du lämnade dem",
-        "intro": "Du har inte varit inne i tududi på ett tag. Allt du har lagt till finns kvar, precis som du lämnade det.",
+        "intro": "Du har inte varit inne i Cadence på ett tag. Allt du har lagt till finns kvar, precis som du lämnade det.",
         "tip": "Om listan har blivit för lång, börja i liten skala: öppna Planera, välj tre saker för i dag och spara resten till senare.",
         "button": "Planera i dag",
         "outro": "Vi skickar inget nytt mejl av det här slaget förrän du har varit tillbaka."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Tvåfaktorsautentisering är på",
-            "body": "Tvåfaktorsautentisering har slagits på för ditt Tududi-konto. Inloggning kräver nu en kod från din autentiseringsapp, och alla andra enheter har loggats ut."
+            "body": "Tvåfaktorsautentisering har slagits på för ditt Cadence-konto. Inloggning kräver nu en kod från din autentiseringsapp, och alla andra enheter har loggats ut."
         },
         "mfaDisabled": {
             "subject": "Tvåfaktorsautentisering är av",
-            "body": "Tvåfaktorsautentisering har stängts av för ditt Tududi-konto. Inloggning kräver nu bara ditt lösenord."
+            "body": "Tvåfaktorsautentisering har stängts av för ditt Cadence-konto. Inloggning kräver nu bara ditt lösenord."
         },
         "mfaReset": {
             "subject": "Din tvåfaktorsautentisering har återställts",
-            "body": "En administratör har återställt tvåfaktorsautentiseringen för ditt Tududi-konto, och alla enheter har loggats ut. Du kan logga in med ditt lösenord och slå på den igen."
+            "body": "En administratör har återställt tvåfaktorsautentiseringen för ditt Cadence-konto, och alla enheter har loggats ut. Du kan logga in med ditt lösenord och slå på den igen."
         },
         "recoveryCodeUsed": {
             "subject": "En återställningskod har använts",
-            "body": "Någon loggade in på ditt Tududi-konto med en av dina återställningskoder. Varje kod fungerar en gång."
+            "body": "Någon loggade in på ditt Cadence-konto med en av dina återställningskoder. Varje kod fungerar en gång."
         },
         "recoveryCodesRegenerated": {
             "subject": "Nya återställningskoder har skapats",
-            "body": "Nya återställningskoder har skapats för ditt Tududi-konto. De gamla fungerar inte längre."
+            "body": "Nya återställningskoder har skapats för ditt Cadence-konto. De gamla fungerar inte längre."
         },
         "button": "Öppna säkerhetsinställningar",
         "notYou": "Om det inte var du, byt lösenord nu och meddela din administratör."

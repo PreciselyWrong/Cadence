@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Sprache wechseln",
     "langSwitcherCurrent": "Sprache: {{name}}",
-    "description": "Alles festhalten, den Tag mit KI rund um deinen Kalender planen und Bereiche, Ziele, Projekte, Notizen und Gewohnheiten in einem System. Ein MCP-Server mit {{tools}} Werkzeugen lässt KI-Agenten mit deiner Liste arbeiten. Ein tududi-Cloud-Konto ist in einer Minute eingerichtet.",
-    "title": "tududi: Aufgabenverwaltung und Lebensorganisationssystem, mit MCP für KI-Agenten"
+    "description": "Alles festhalten, den Tag mit KI rund um deinen Kalender planen und Bereiche, Ziele, Projekte, Notizen und Gewohnheiten in einem System. Ein MCP-Server mit {{tools}} Werkzeugen lässt KI-Agenten mit deiner Liste arbeiten. Ein Cadence-Cloud-Konto ist in einer Minute eingerichtet.",
+    "title": "Cadence: Aufgabenverwaltung und Lebensorganisationssystem, mit MCP für KI-Agenten"
   },
   "nav": {
     "demo": "Live-Demo",
@@ -19,7 +19,7 @@
   "hero": {
     "ctaDemo": "Live-Demo ausprobieren",
     "demoNote": "Eine echte gehostete Instanz mit Beispieldaten, gemeinsam genutzt und regelmäßig zurückgesetzt",
-    "screenshotAlt": "Die Oberfläche von tududi mit der Heute-Ansicht und den geplanten Aufgaben",
+    "screenshotAlt": "Die Oberfläche von Cadence mit der Heute-Ansicht und den geplanten Aufgaben",
     "cloudNote": "Kein Server einzurichten. Monatlich oder jährlich, und du kannst jederzeit kündigen.",
     "ctaPrimary": "Jetzt starten",
     "lede": "Alles festhalten, den Tag mit KI rund um deinen Kalender planen und Bereiche, Ziele, Projekte, Notizen und Gewohnheiten in einem System. In einer Minute ein Cloud-Konto anlegen.",
@@ -41,7 +41,7 @@
     "featuredIn": "Erwähnt in",
     "eyebrow": "Presse",
     "title": "Verlassen Sie sich nicht nur auf uns",
-    "sub": "Was Tester geschrieben haben, nachdem sie tududi selbst ausprobiert haben.",
+    "sub": "Was Tester geschrieben haben, nachdem sie Cadence selbst ausprobiert haben.",
     "readLink": "Rezension lesen"
   },
   "ai": {
@@ -52,7 +52,7 @@
         "body": "Aufgaben anlegen, finden und abschließen, ohne das Gespräch zu verlassen."
       },
       "dataStays": {
-        "body": "Die MCP-Verbindung geht direkt zu deiner eigenen tududi-Instanz, in der Cloud oder auf deinem eigenen Server. Nichts läuft über einen Dritten.",
+        "body": "Die MCP-Verbindung geht direkt zu deiner eigenen Cadence-Instanz, in der Cloud oder auf deinem eigenen Server. Nichts läuft über einen Dritten.",
         "title": "Sie spricht mit deiner Instanz"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Erledigt. <strong>Redesign-Entwurf prüfen</strong> ist jetzt bis Freitag fällig, und <strong>Payments-Warteschlange freigeben</strong> liegt im Projekt Zahlungen und ist heute fällig.",
       "ask1": "Worauf sollte ich mich heute konzentrieren, und gerät irgendetwas in Verzug?",
       "ask2": "Verschiebe die Redesign-Prüfung auf Freitag und füge eine Aufgabe hinzu, um Zahlungen freizugeben.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "Eine Beispielsitzung. Dein Agent verbindet sich direkt über MCP mit deiner eigenen Instanz.",
       "composer": "Claude antworten…",
       "groupTitle": "Wissenswert",
@@ -105,11 +105,11 @@
           "text": "Website-Redesign, seit 11 Tagen keine Aktivität"
         }
       },
-      "toolLabel": "tududi verwendet",
+      "toolLabel": "Cadence verwendet",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP ist in tududi Cloud und in jeder selbst gehosteten Instanz enthalten.",
-    "ledeHtml": "tududi liefert einen MCP-Server mit <strong>{{tools}} Tools</strong>, die Aufgaben, Projekte, Bereiche, Ziele, Gewohnheiten, Notizen, Personen, Tags, Ansichten, den Posteingang, die Suche und Kennzahlen abdecken. Verbinde Claude oder jeden MCP-kompatiblen Agenten direkt mit deiner eigenen Instanz, ob das nun dein Cloud-Konto ist oder ein Server, den du selbst betreibst. Die Verbindung geht zu deiner Instanz statt über ein Relais dazwischen, ein struktureller Unterschied, den Todoist und Notion nicht bieten können, egal was sie versprechen.",
+    "footnoteIncluded": "MCP ist in Cadence Cloud und in jeder selbst gehosteten Instanz enthalten.",
+    "ledeHtml": "Cadence liefert einen MCP-Server mit <strong>{{tools}} Tools</strong>, die Aufgaben, Projekte, Bereiche, Ziele, Gewohnheiten, Notizen, Personen, Tags, Ansichten, den Posteingang, die Suche und Kennzahlen abdecken. Verbinde Claude oder jeden MCP-kompatiblen Agenten direkt mit deiner eigenen Instanz, ob das nun dein Cloud-Konto ist oder ein Server, den du selbst betreibst. Die Verbindung geht zu deiner Instanz statt über ein Relais dazwischen, ein struktureller Unterschied, den Todoist und Notion nicht bieten können, egal was sie versprechen.",
     "titleLine1": "Ein echtes System",
     "titleLine2": "das dein KI-Agent tatsächlich nutzen kann"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Als App installieren",
-        "body": "Füge tududi als PWA zum Homescreen oder Desktop hinzu. Funktioniert offline und synchronisiert, sobald du wieder online bist."
+        "body": "Füge Cadence als PWA zum Homescreen oder Desktop hinzu. Funktioniert offline und synchronisiert, sobald du wieder online bist."
       },
       "oidc": {
         "title": "OIDC- / SSO-Anmeldung",
@@ -232,7 +232,7 @@
         "body": "Teile Projekte mit feingranularen Rechten - nur lesen oder lesen und schreiben."
       }
     },
-    "sub": "tududi vereint Ziele, Projekte, Aufgaben, Notizen und smarte Ansichten in einem ruhigen, fokussierten System. Lass uns es für dich betreiben, oder betreibe es selbst, wenn du das bevorzugst."
+    "sub": "Cadence vereint Ziele, Projekte, Aufgaben, Notizen und smarte Ansichten in einem ruhigen, fokussierten System. Lass uns es für dich betreiben, oder betreibe es selbst, wenn du das bevorzugst."
   },
   "pricing": {
     "eyebrow": "Preise",
@@ -284,14 +284,14 @@
         "perYear": "/Jahr"
       }
     },
-    "fineprint": "Jederzeit kündbar, alles exportierbar. Sollte tududi Cloud je eingestellt werden, bekommst du deine Daten und eine Anleitung zum Selbsthosten. Für Speicher und API-Volumen gilt Fair Use. 14 Tage Geld-zurück-Garantie, ohne Nachfragen.",
+    "fineprint": "Jederzeit kündbar, alles exportierbar. Sollte Cadence Cloud je eingestellt werden, bekommst du deine Daten und eine Anleitung zum Selbsthosten. Für Speicher und API-Volumen gilt Fair Use. 14 Tage Geld-zurück-Garantie, ohne Nachfragen.",
     "perMonth": "/Monat pro Person",
     "nextPrice": "Ab {{date}} steigt der Preis pro Person auf {{monthly}} im Monat oder {{annual}} im Jahr. Abonniere vorher, um den heutigen Preis zu behalten, solange du abonniert bleibst.",
     "sub": "Jeder Tarif hat alle Funktionen. Pro ist für eine Person, ein Team-Tarif hat eine feste Größe, bis zu der du Personen hinzufügst."
   },
   "compare": {
     "title": "Kurzer Vergleich",
-    "sub": "So schlägt sich tududi Cloud gegen die Apps, mit denen es meist verglichen wird, jeweils im Einzeltarif.",
+    "sub": "So schlägt sich Cadence Cloud gegen die Apps, mit denen es meist verglichen wird, jeweils im Einzeltarif.",
     "footnote": "Todoist Pro, TickTick Premium und Notion Plus, laut ihren öffentlichen Preisseiten im September 2026. Aktuelle Preise auf deren Websites prüfen. Ihre Preise sind US-Listenpreise in Dollar.",
     "rows": {
       "price": "Preis, jährlich",
@@ -323,11 +323,11 @@
     "joined": "Du bist angemeldet. Neuigkeiten und Updates kommen per E-Mail."
   },
   "langs": {
-    "heading": "Die tududi-App ist weltweit in {{count}} Sprachen verfügbar"
+    "heading": "Die Cadence-App ist weltweit in {{count}} Sprachen verfügbar"
   },
   "community": {
-    "title": "Werde Teil der tududi-Community",
-    "sub": "Tausch dich mit anderen tududi-Nutzern aus, hol dir Hilfe und bleib auf dem Laufenden"
+    "title": "Werde Teil der Cadence-Community",
+    "sub": "Tausch dich mit anderen Cadence-Nutzern aus, hol dir Hilfe und bleib auf dem Laufenden"
   },
   "footer": {
     "colProduct": "Produkt",
@@ -360,41 +360,41 @@
     "items": {
       "freePlan": {
         "a": "Nein. Pro kostet {{monthly}} pro Monat oder {{price}} pro Jahr für eine Person, und Team-Tarife kosten pro Person dasselbe, in festen Größen. Es gibt keine kostenlose Stufe, keine ablaufende Testuhr und keine Karte, die später still und leise belastet wird. Es gibt eine 14-tägige Geld-zurück-Garantie, falls es nicht zu Ihnen passt, und auf dieser Seite eine Live-Demo, falls Sie sich zuerst umsehen möchten.",
-        "q": "Gibt es bei tududi Cloud einen kostenlosen Tarif oder eine Testphase?",
-        "aTrial": "Einen kostenlosen Plan gibt es nicht, aber jedes neue Konto bekommt eine {{days}}-tägige kostenlose Testphase, ohne Kreditkarte. Die Testphase enthält den KI-Assistenten mit einem kleineren Kontingent und ein Mitglied, das Sie hinzufügen können. Öffentliche Notiz-Links werden freigeschaltet, sobald Sie abonnieren. Wenn Sie nicht abonnieren, wird das Konto für 30 Tage schreibgeschützt, damit Sie Ihre Daten exportieren können, und danach gelöscht. Nach der Testphase kostet Pro {{monthly}} pro Monat oder {{price}} pro Jahr, und Team-Tarife kosten pro Person dasselbe. Kostenlos nutzen Sie tududi, indem Sie es auf Ihrem eigenen Server betreiben, es ist dieselbe Anwendung."
+        "q": "Gibt es bei Cadence Cloud einen kostenlosen Tarif oder eine Testphase?",
+        "aTrial": "Einen kostenlosen Plan gibt es nicht, aber jedes neue Konto bekommt eine {{days}}-tägige kostenlose Testphase, ohne Kreditkarte. Die Testphase enthält den KI-Assistenten mit einem kleineren Kontingent und ein Mitglied, das Sie hinzufügen können. Öffentliche Notiz-Links werden freigeschaltet, sobald Sie abonnieren. Wenn Sie nicht abonnieren, wird das Konto für 30 Tage schreibgeschützt, damit Sie Ihre Daten exportieren können, und danach gelöscht. Nach der Testphase kostet Pro {{monthly}} pro Monat oder {{price}} pro Jahr, und Team-Tarife kosten pro Person dasselbe. Kostenlos nutzen Sie Cadence, indem Sie es auf Ihrem eigenen Server betreiben, es ist dieselbe Anwendung."
       },
       "leaving": {
         "q": "Kann ich gehen, und was passiert mit meinen Daten?",
-        "a": "Ja, jederzeit. Exportiere alles als eine Datei aus deinem Profil und importiere sie in ein selbst gehostetes tududi, das dasselbe Format liest. Das Löschen deines Kontos entfernt deine Daten, Anhänge und Backups von unseren Servern und kündigt jedes Abo."
+        "a": "Ja, jederzeit. Exportiere alles als eine Datei aus deinem Profil und importiere sie in ein selbst gehostetes Cadence, das dasselbe Format liest. Das Löschen deines Kontos entfernt deine Daten, Anhänge und Backups von unseren Servern und kündigt jedes Abo."
       },
       "aiOptional": {
-        "a": "Nein. Beide KI-Ebenen sind ausgeschaltet, bis du sie aktivierst, und tududi ist auch ohne sie ein vollständiges System. Wenn du sie nie aktivierst, fehlt nichts und nichts nervt dich.",
+        "a": "Nein. Beide KI-Ebenen sind ausgeschaltet, bis du sie aktivierst, und Cadence ist auch ohne sie ein vollständiges System. Wenn du sie nie aktivierst, fehlt nichts und nichts nervt dich.",
         "q": "Muss ich die KI-Funktionen nutzen?"
       },
       "aiPrivacy": {
-        "a": "Das hängt davon ab, welche der beiden Ebenen du meinst, und der Unterschied ist wichtig. Der MCP-Server läuft innerhalb deiner eigenen Instanz: Ein Agent wie Claude Desktop verbindet sich direkt mit dieser Instanz, das Gespräch findet also zwischen deinem Agenten und deinem eigenen tududi statt, nicht über einen Vermittler dazwischen. Der KI-Assistent ist anders. Er ruft einen OpenAI-kompatiblen Anbieter auf, wenn du ihn also auf einen gehosteten Anbieter richtest, gehen die Inhalte dieser Anfragen an diesen Anbieter. Richte ihn stattdessen auf ein lokales Modell wie Ollama oder LM Studio, und nichts verlässt deinen Rechner. Er bleibt aus, bis du einen Schlüssel angibst, es ist also immer deine Entscheidung, keine Vorgabe.",
+        "a": "Das hängt davon ab, welche der beiden Ebenen du meinst, und der Unterschied ist wichtig. Der MCP-Server läuft innerhalb deiner eigenen Instanz: Ein Agent wie Claude Desktop verbindet sich direkt mit dieser Instanz, das Gespräch findet also zwischen deinem Agenten und deinem eigenen Cadence statt, nicht über einen Vermittler dazwischen. Der KI-Assistent ist anders. Er ruft einen OpenAI-kompatiblen Anbieter auf, wenn du ihn also auf einen gehosteten Anbieter richtest, gehen die Inhalte dieser Anfragen an diesen Anbieter. Richte ihn stattdessen auf ein lokales Modell wie Ollama oder LM Studio, und nichts verlässt deinen Rechner. Er bleibt aus, bis du einen Schlüssel angibst, es ist also immer deine Entscheidung, keine Vorgabe.",
         "q": "Werden meine Daten an ein KI-Unternehmen gesendet?"
       },
       "commercialUse": {
         "a": "Ja, und du musst dafür nichts kaufen. Die MIT-Lizenz erlaubt die kommerzielle Nutzung, auch innerhalb eines Unternehmens und in einem kommerziellen Produkt, ohne Umsatzschwelle und ohne Meldepflicht. Falls deine Buchhaltung eine Rechnung braucht: Ein Cloud-Abo wird über unseren Zahlungsanbieter abgerechnet und erzeugt eine. Nichts auf dieser Seite verkauft eine Erlaubnis, denn diese Erlaubnis gehört dir bereits.",
-        "q": "Darf ich tududi bei der Arbeit oder in meiner Firma nutzen?"
+        "q": "Darf ich Cadence bei der Arbeit oder in meiner Firma nutzen?"
       },
       "maintained": {
         "a": "Ja. Es wird hauptsächlich von einem Maintainer entwickelt, mit Beiträgen aus der Community, und es erscheinen häufig Releases. Jede Version steht auf der GitHub-Releases-Seite, verlinkt aus dem Changelog im Menü oben, damit du das Tempo selbst beurteilen kannst, statt uns nur zu vertrauen. Die Entwicklung findet öffentlich statt: Issues, eine öffentliche Roadmap und ein Discord, in dem Fragen beantwortet werden.",
         "linkLabel": "Alle Releases ansehen",
-        "q": "Wird tududi aktiv gepflegt?"
+        "q": "Wird Cadence aktiv gepflegt?"
       },
       "mcp": {
-        "a": "MCP ist das Model Context Protocol, ein offener Standard, um KI-Agenten mit echten Systemen zu verbinden. tududi liefert einen MCP-Server mit {{tools}} Tools, die Aufgaben, Projekte, Bereiche, Ziele, Gewohnheiten, Notizen, Personen, Tags, Ansichten, den Posteingang, die Suche und Kennzahlen abdecken, damit ein Agent Arbeit erfassen, finden, aktualisieren und abschließen kann, statt nur darüber zu reden. Es ist optional, ist in Cloud und in jeder selbst gehosteten Instanz enthalten und funktioniert mit Claude Desktop, Cursor, Windsurf, Cline oder jedem anderen MCP-Client.",
+        "a": "MCP ist das Model Context Protocol, ein offener Standard, um KI-Agenten mit echten Systemen zu verbinden. Cadence liefert einen MCP-Server mit {{tools}} Tools, die Aufgaben, Projekte, Bereiche, Ziele, Gewohnheiten, Notizen, Personen, Tags, Ansichten, den Posteingang, die Suche und Kennzahlen abdecken, damit ein Agent Arbeit erfassen, finden, aktualisieren und abschließen kann, statt nur darüber zu reden. Es ist optional, ist in Cloud und in jeder selbst gehosteten Instanz enthalten und funktioniert mit Claude Desktop, Cursor, Windsurf, Cline oder jedem anderen MCP-Client.",
         "q": "Was ist MCP, und was kann ein Agent damit wirklich tun?"
       },
       "shutdown": {
-        "a": "Die App ist MIT-lizenziert und der Quellcode ist öffentlich, sie kann dir also nicht entzogen werden. Jeder kann sie weiterbetreiben, und du kannst sie forken. In tududi Cloud liegen deine Daten in einer Standard-tududi-Datenbank statt in einem proprietären Format, sollte der Dienst also je eingestellt werden, bekämst du deine Daten und eine Anleitung, sie auf deinen eigenen Server umzuziehen.",
-        "q": "Was passiert mit meinen Daten, wenn es tududi nicht mehr gibt?"
+        "a": "Die App ist MIT-lizenziert und der Quellcode ist öffentlich, sie kann dir also nicht entzogen werden. Jeder kann sie weiterbetreiben, und du kannst sie forken. In Cadence Cloud liegen deine Daten in einer Standard-tududi-Datenbank statt in einem proprietären Format, sollte der Dienst also je eingestellt werden, bekämst du deine Daten und eine Anleitung, sie auf deinen eigenen Server umzuziehen.",
+        "q": "Was passiert mit meinen Daten, wenn es Cadence nicht mehr gibt?"
       },
       "trust": {
         "q": "Kann ich euch meine Daten anvertrauen?",
-        "a": "Du musst uns nicht beim Wort nehmen. tududi ist Open Source, also kann jeder genau nachlesen, wie es mit deinen Daten umgeht. In der Cloud bleibt alles, was du einträgst, deins: exportiere es jederzeit als eine einzige Datei, lösche dein Konto selbst, und es gibt eine 14-Tage-Geld-zurück-Garantie, falls es doch nicht passt."
+        "a": "Du musst uns nicht beim Wort nehmen. Cadence ist Open Source, also kann jeder genau nachlesen, wie es mit deinen Daten umgeht. In der Cloud bleibt alles, was du einträgst, deins: exportiere es jederzeit als eine einzige Datei, lösche dein Konto selbst, und es gibt eine 14-Tage-Geld-zurück-Garantie, falls es doch nicht passt."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Exportiere jederzeit alles"
     ],
     "lede": "Das gleiche System in beiden Fällen. Der Unterschied ist, wer es um drei Uhr morgens am Laufen, gepatcht und gesichert hält.",
-    "metaDescription": "tududi Cloud ist dasselbe Open-Source-System, betrieben auf unseren Servern, mit Updates, Backups und E-Mail für Sie erledigt. Pro für eine Person oder ein Team-Tarif für eine Gruppe, monatlich oder jährlich, jederzeit kündbar.",
-    "metaTitle": "tududi Cloud: das gehostete tududi, für dich betrieben",
+    "metaDescription": "Cadence Cloud ist dasselbe Open-Source-System, betrieben auf unseren Servern, mit Updates, Backups und E-Mail für Sie erledigt. Pro für eine Person oder ein Team-Tarif für eine Gruppe, monatlich oder jährlich, jederzeit kündbar.",
+    "metaTitle": "Cadence Cloud: das gehostete Cadence, für dich betrieben",
     "note": "Dieselbe MIT-lizenzierte App. Exportiere jederzeit alles.",
     "orAnnual": "oder",
     "priceNote": "Abrechnung über unseren Zahlungsanbieter. Preise verstehen sich zzgl. anfallender Steuern.",
@@ -452,7 +452,7 @@
         "title": "Updates werden für dich eingespielt"
       }
     },
-    "title": "Warum tududi Cloud nutzen?",
+    "title": "Warum Cadence Cloud nutzen?",
     "whyEyebrow": "Cloud",
     "whySub": "Keine Funktionen. Jede Funktion steckt auch im Self-Hosted-Build.",
     "whyTitle": "Wofür du eigentlich bezahlst",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Kontakt",
-    "lede": "Fragen zu tududi Cloud, zur Abrechnung oder zu deinem Konto? Schreib uns eine Nachricht, wir antworten per E-Mail.",
+    "lede": "Fragen zu Cadence Cloud, zur Abrechnung oder zu deinem Konto? Schreib uns eine Nachricht, wir antworten per E-Mail.",
     "name": "Name",
     "email": "E-Mail",
     "message": "Nachricht",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Alles festhalten, in normalen Worten",
-        "body": "Ein Hinzufügen-Feld für Eingang, Aufgaben, Notizen und Projekte, überall in der App. Schreib, wie du denkst, tududi erledigt den Rest.",
+        "body": "Ein Hinzufügen-Feld für Eingang, Aufgaben, Notizen und Projekte, überall in der App. Schreib, wie du denkst, Cadence erledigt den Rest.",
         "points": [
           "„next fri“, „in 3 days“ oder „every first monday“ setzt Datum oder Wiederholung",
           "#Tags, +Projekt und @Person werden beim Tippen erkannt",
@@ -539,6 +539,6 @@
   "notFound": {
     "title": "Seite nicht gefunden",
     "lede": "Unter dieser Adresse gibt es nichts. Vielleicht wurde sie verschoben, oder der Link enthält einen Tippfehler.",
-    "home": "Zurück zu tududi"
+    "home": "Zurück zu Cadence"
   }
 }

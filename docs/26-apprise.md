@@ -1,6 +1,6 @@
 # Apprise Notifications
 
-Apprise sends tududi notifications through a self-hosted [apprise-api](https://github.com/caronc/apprise-api) server. Apprise then delivers them to any service it supports (Pushover, ntfy, Discord, Matrix, email and more), so tududi does not need a separate integration for each one.
+Apprise sends Cadence notifications through a self-hosted [apprise-api](https://github.com/caronc/apprise-api) server. Apprise then delivers them to any service it supports (Pushover, ntfy, Discord, Matrix, email and more), so Cadence does not need a separate integration for each one.
 
 ## Setup
 
@@ -11,7 +11,7 @@ Apprise sends tududi notifications through a self-hosted [apprise-api](https://g
    ```
 
 2. Create a configuration in apprise-api that lists the services you want (its web UI or config files), and note its config key.
-3. In tududi, open **Profile → Notifications**, enter the server address (for example `http://192.168.1.10:8000`) and the config key, then press **Save**.
+3. In Cadence, open **Profile → Notifications**, enter the server address (for example `http://192.168.1.10:8000`) and the config key, then press **Save**.
 4. Turn on the **Apprise** column for the notification types you want, and press **Test** under it.
 
 Optional tags are sent with every message, so you can route them inside apprise-api.

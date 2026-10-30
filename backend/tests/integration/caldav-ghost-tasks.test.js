@@ -169,7 +169,7 @@ describe('CalDAV ghost tasks', () => {
         });
     });
 
-    describe('deleting a task in Tududi', () => {
+    describe('deleting a task in Cadence', () => {
         test('deletes the remote resource at its real href, not <uid>.ics', async () => {
             const task = await pullGhostTask();
 
@@ -271,7 +271,7 @@ describe('CalDAV ghost tasks', () => {
                 { last_synced_at: new Date(Date.now() - 60000) },
                 { where: { task_id: task.id, calendar_id: calendar.id } }
             );
-            await task.update({ name: 'Renamed in Tududi' });
+            await task.update({ name: 'Renamed in Cadence' });
 
             axios.mockResolvedValueOnce({
                 status: 204,

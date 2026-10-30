@@ -391,7 +391,7 @@ const PersonDetails: React.FC = () => {
                     title={t('members.remove', 'Remove member')}
                     message={t('members.removeConfirm', {
                         defaultValue:
-                            'Remove {{name}}? Their account and everything in it is deleted, and this cannot be undone. On tududi Cloud their seat is taken off your subscription.',
+                            'Remove {{name}}? Their account and everything in it is deleted, and this cannot be undone. On Cadence Cloud their seat is taken off your subscription.',
                         name: person.name,
                     })}
                     onConfirm={handleRemoveMember}

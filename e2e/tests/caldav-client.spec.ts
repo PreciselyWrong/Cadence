@@ -172,7 +172,7 @@ test.describe('CalDAV Client Compatibility', () => {
             taskUID = `test-${Date.now()}@tududi.local`;
             const vtodo = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tududi//E2E Test//EN
+PRODID:-//Cadence//E2E Test//EN
 BEGIN:VTODO
 UID:${taskUID}
 SUMMARY:E2E Test Task
@@ -216,7 +216,7 @@ END:VCALENDAR`;
         test('should update task via PUT', async ({ request }) => {
             const updatedVtodo = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tududi//E2E Test//EN
+PRODID:-//Cadence//E2E Test//EN
 BEGIN:VTODO
 UID:${taskUID}
 SUMMARY:Updated E2E Test Task
@@ -277,7 +277,7 @@ END:VCALENDAR`;
             recurringUID = `recurring-${Date.now()}@tududi.local`;
             const vtodo = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tududi//E2E Test//EN
+PRODID:-//Cadence//E2E Test//EN
 BEGIN:VTODO
 UID:${recurringUID}
 SUMMARY:Daily Recurring Task
@@ -417,7 +417,7 @@ END:VCALENDAR`;
             const tzUID = `tz-${Date.now()}@tududi.local`;
             const vtodo = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tududi//E2E Test//EN
+PRODID:-//Cadence//E2E Test//EN
 BEGIN:VTODO
 UID:${tzUID}
 SUMMARY:Timezone Test

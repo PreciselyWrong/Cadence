@@ -36,12 +36,12 @@ describe('MCP Routing', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.mcpServers).toBeDefined();
-            expect(response.body.mcpServers.tududi).toBeDefined();
-            expect(response.body.mcpServers.tududi.command).toBe('npx');
-            expect(response.body.mcpServers.tududi.args).toContain(
+            expect(response.body.mcpServers.cadence).toBeDefined();
+            expect(response.body.mcpServers.cadence.command).toBe('npx');
+            expect(response.body.mcpServers.cadence.args).toContain(
                 'mcp-remote'
             );
-            expect(response.body.mcpServers.tududi.env).toBeDefined();
+            expect(response.body.mcpServers.cadence.env).toBeDefined();
         });
     });
 

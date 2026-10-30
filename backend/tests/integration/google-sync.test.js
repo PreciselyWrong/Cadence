@@ -84,7 +84,7 @@ describe('Google sync', () => {
         moment.tz(TZ).add(offset, 'day').format('YYYY-MM-DD');
     const tududiCalendar = () => {
         const entry = [...google.state.calendars.values()].find(
-            (c) => c.meta.summary === 'Tududi'
+            (c) => c.meta.summary === 'Cadence'
         );
         return entry;
     };
@@ -115,12 +115,12 @@ describe('Google sync', () => {
         expect(res.body.connected).toBe(true);
         expect(JSON.stringify(res.body)).not.toContain('refresh-1');
         const names = res.body.calendars.map((c) => c.name).sort();
-        expect(names).toEqual(['Holidays', 'Me', 'Tududi']);
+        expect(names).toEqual(['Cadence', 'Holidays', 'Me']);
         expect(
             res.body.calendars.find((c) => c.name === 'Holidays').writable
         ).toBe(false);
         expect(
-            res.body.calendars.find((c) => c.name === 'Tududi').is_tududi
+            res.body.calendars.find((c) => c.name === 'Cadence').is_tududi
         ).toBe(true);
     });
 
@@ -133,7 +133,7 @@ describe('Google sync', () => {
         expect(await GoogleAccount.count()).toBe(0);
     });
 
-    describe('Tududi calendar', () => {
+    describe('Cadence calendar', () => {
         it('puts dated open tasks on it, timed and all-day', async () => {
             await createTask({ name: 'Undated' });
             await createTask({ name: 'All day', due_date: day(1) });
@@ -218,7 +218,7 @@ describe('Google sync', () => {
             expect(liveEvents(tududiCalendar())).toHaveLength(0);
         });
 
-        it('moves the event when the task moves in Tududi', async () => {
+        it('moves the event when the task moves in Cadence', async () => {
             const task = await createTask({ name: 'Gym', due_date: day(1) });
             await connect();
             await agent
@@ -229,7 +229,7 @@ describe('Google sync', () => {
             expect(event.start.date).toBe(day(4));
         });
 
-        it('turns an event added to the Tududi calendar into a task', async () => {
+        it('turns an event added to the Cadence calendar into a task', async () => {
             await connect();
             const calendar = tududiCalendar();
             google.putEvent(calendar.meta.id, {
@@ -249,7 +249,7 @@ describe('Google sync', () => {
     });
 
     describe('other calendars', () => {
-        it('shows their events, hides a calendar, and edits from Tududi', async () => {
+        it('shows their events, hides a calendar, and edits from Cadence', async () => {
             const start = moment.tz(`${day(1)} 10:00`, TZ);
             google.putEvent('me@gmail.com', {
                 summary: 'Meeting',
@@ -473,7 +473,7 @@ describe('Google sync', () => {
             );
         });
 
-        it('keeps the Tududi time when Google keeps the same day', async () => {
+        it('keeps the Cadence time when Google keeps the same day', async () => {
             const task = await createTask({
                 name: 'Timed',
                 due_date: day(1),

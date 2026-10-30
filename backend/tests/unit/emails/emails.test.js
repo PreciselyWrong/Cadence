@@ -124,7 +124,7 @@ describe('emails', () => {
         expect(normalizeLanguage('xx')).toBe('en');
         expect(normalizeLanguage('pt-BR')).toBe('pt');
         expect(createTranslator('xx').t('passwordReset.subject')).toBe(
-            'Reset your Tududi password'
+            'Reset your Cadence password'
         );
     });
 
@@ -139,7 +139,7 @@ describe('emails', () => {
             'href="https://example.com/reset?a=1&amp;b=2"'
         );
         expect(email.text).toContain('expires in 1 minute.');
-        expect(email.text).toMatch(/Best regards,\nThe Tududi Team$/);
+        expect(email.text).toMatch(/Best regards,\nThe Cadence Team$/);
     });
 
     it('says what the trial includes only when there is one', () => {

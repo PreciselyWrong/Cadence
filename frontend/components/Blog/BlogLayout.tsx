@@ -42,7 +42,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
                                         ? 'wide-logo-light.png'
                                         : 'wide-logo-dark.png'
                                 )}
-                                alt="tududi"
+                                alt="Cadence"
                                 className="h-8 w-auto"
                             />
                         </a>
@@ -105,7 +105,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
                     <p>
                         &copy; {new Date().getFullYear()}{' '}
                         <span className="font-semibold text-gray-700 dark:text-gray-200">
-                            tududi
+                            Cadence
                         </span>
                     </p>
                     {links && (
@@ -120,7 +120,7 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({
                                 href={links.cloud}
                                 className="hover:text-gray-900 dark:hover:text-white"
                             >
-                                {t('blog.footerCloud', 'tududi Cloud')}
+                                {t('blog.footerCloud', 'Cadence Cloud')}
                             </a>
                             <a
                                 href={`${links.landing}/terms`}

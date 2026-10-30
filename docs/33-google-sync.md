@@ -1,15 +1,15 @@
 # Google Calendar & Google Tasks sync (fork)
 
-Two-way sync with one Google account per Tududi user, in the spirit of TickTick's Google integration. Module: `backend/modules/google-sync/`.
+Two-way sync with one Google account per Cadence user, in the spirit of TickTick's Google integration. Module: `backend/modules/google-sync/`.
 
 **Related:** [Daily plan & Calendar](20-daily-plan.md), [Tasks](00-tasks-behavior.md), [Recurring tasks](01-recurring-tasks-behavior.md)
 
 ## What syncs
 
-| Google side                                                  | Tududi side                                                                                         | Direction                                                                                                                        |
+| Google side                                                  | Cadence side                                                                                         | Direction                                                                                                                        |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Every calendar of the account                                | Chips on the Calendar page, events on Calendar, Today, Plan my day and the AI draft                 | Both ways for calendars the account can write (owner/writer); read-only ones (holidays, shared "see all details") are shown only |
-| The secondary calendar **"Tududi"** (made on the first sync) | Every open task with a due date                                                                     | Both ways                                                                                                                        |
+| The secondary calendar **"Cadence"** (made on the first sync) | Every open task with a due date                                                                     | Both ways                                                                                                                        |
 | Google Tasks: the default list                               | Tasks without a project                                                                             | Both ways                                                                                                                        |
 | Google Tasks: every other list                               | One project per list (made by name when missing; a project's list is made when it first has a task) | Both ways                                                                                                                        |
 
@@ -20,31 +20,31 @@ Two-way sync with one Google account per Tududi user, in the spirit of TickTick'
 - Each calendar can be shown or hidden (chip on the Calendar page, or Profile → Calendars). A hidden calendar is also left out of Today, Plan my day and the AI draft. The first time, calendars hidden in Google stay hidden.
 - Copies are stored in `google_events`; the first sync reads 90 days back and everything ahead.
 
-### Tasks on the "Tududi" calendar
+### Tasks on the "Cadence" calendar
 
 - Where a task sits matches the Calendar page: due time + estimate (default 60 min), start time → due time, or whole days from a whole-day start to the due day. A task with a date but no time is an all-day event.
 - Moving or resizing the event in Google moves the task (due date/time, start, or estimate); renaming it renames the task.
 - Deleting the event in Google **takes the date off the task**; the task stays.
 - A finished task leaves the calendar. An undated task is not on it.
-- An event added to the "Tududi" calendar in Google becomes a new task.
+- An event added to the "Cadence" calendar in Google becomes a new task.
 - A recurring task shows only its **next occurrence**.
 - The events are "free" (transparent) so they do not block your availability in Google.
 
 ### Google Tasks
 
 - Synced fields: title ↔ name, notes ↔ note, completed ↔ done, due **day** ↔ due date, parent ↔ subtask, list ↔ project.
-- Google Tasks keeps only the day of a due date (its API has no time). When Google keeps the same day, the time set in Tududi stays.
-- Completing a recurring task in Google moves it to its next occurrence in Tududi, and Google gets it back as open with the new date.
+- Google Tasks keeps only the day of a due date (its API has no time). When Google keeps the same day, the time set in Cadence stays.
+- Completing a recurring task in Google moves it to its next occurrence in Cadence, and Google gets it back as open with the new date.
 - Deleting a task on either side deletes it on the other.
-- Deleting a whole list in Google does **not** delete the Tududi tasks: they are unlinked and sent to a new list on the next sync.
+- Deleting a whole list in Google does **not** delete the Cadence tasks: they are unlinked and sent to a new list on the next sync.
 - A task completed more than 7 days before the first sync is not sent; a Google task already completed before the first sync is not imported.
 - Not synced: priority, tags, status other than open/done (in progress, waiting, planned stay open in Google; archived and cancelled tasks are removed from Google), habits, recurring instances.
 
-Dated tasks show in Google twice (as a task in Google Tasks and as an event on the "Tududi" calendar). Hide "Tasks" in Google Calendar, or turn one of the two switches off in Profile → Calendars.
+Dated tasks show in Google twice (as a task in Google Tasks and as an event on the "Cadence" calendar). Hide "Tasks" in Google Calendar, or turn one of the two switches off in Profile → Calendars.
 
 ## Timing and conflicts
 
-- The server syncs every `GOOGLE_SYNC_INTERVAL_MINUTES` (default 2), and right after connecting or changing a setting. **Sync now** in Profile → Calendars runs it at once. Edits made from Tududi's Calendar page go to Google immediately.
+- The server syncs every `GOOGLE_SYNC_INTERVAL_MINUTES` (default 2), and right after connecting or changing a setting. **Sync now** in Profile → Calendars runs it at once. Edits made from Cadence's Calendar page go to Google immediately.
 - Calendars use Google's sync tokens (only changes are fetched; an expired token restarts a full read). Google Tasks has no sync token: the sync asks for items updated since the last run.
 - Each linked item keeps a hash of its synced fields on both sides (`google_task_links`). When only one side changed, it wins. When both changed since the last sync, the later edit wins (`tasks.updated_at` against Google's `updated`).
 
@@ -52,7 +52,7 @@ Dated tasks show in Google twice (as a task in Google Tasks and as an event on t
 
 1. Google Cloud Console → new project → enable **Google Calendar API** and **Google Tasks API**.
 2. OAuth consent screen: type External, add yourself as a user, scopes `calendar` and `tasks`. Then **Publish app** (to "In production"). In "Testing" mode Google expires the refresh token after 7 days and the sync stops; an unverified app in production only shows a warning screen once, which is fine for personal use.
-3. Credentials → OAuth client ID → Web application → Authorised redirect URI: `https://<your tududi>/api/google/oauth/callback`.
+3. Credentials → OAuth client ID → Web application → Authorised redirect URI: `https://<your Cadence>/api/google/oauth/callback`.
 4. Set on the server:
 
 | Variable                                                         | Meaning                                                                                                                    |
@@ -62,13 +62,13 @@ Dated tasks show in Google twice (as a task in Google Tasks and as an event on t
 | `GOOGLE_SYNC_INTERVAL_MINUTES`                                   | Optional, 1–60, default 2.                                                                                                 |
 | `TUDUDI_SESSION_SECRET` (or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) | Required: tokens are encrypted with it.                                                                                    |
 
-The Tududi server must reach `oauth2.googleapis.com`, `www.googleapis.com`, `tasks.googleapis.com` and `openidconnect.googleapis.com`. It does not have to be reachable from the internet (no push notifications are used).
+The Cadence server must reach `oauth2.googleapis.com`, `www.googleapis.com`, `tasks.googleapis.com` and `openidconnect.googleapis.com`. It does not have to be reachable from the internet (no push notifications are used).
 
 Then each user: Profile → Calendars (or Calendar → Calendars) → **Connect Google**.
 
 ## Disconnecting
 
-**Disconnect** revokes the token and deletes every Google copy and link kept in Tududi. Tududi tasks stay, and so does everything already on Google (including the "Tududi" calendar and the lists). Turning one switch off (calendars or tasks) unlinks that side only; turning it back on starts a fresh link, which can create duplicates of items that were left on Google meanwhile.
+**Disconnect** revokes the token and deletes every Google copy and link kept in Cadence. Cadence tasks stay, and so does everything already on Google (including the "Cadence" calendar and the lists). Turning one switch off (calendars or tasks) unlinks that side only; turning it back on starts a fresh link, which can create duplicates of items that were left on Google meanwhile.
 
 ## API
 
@@ -94,7 +94,7 @@ Google events are also returned by `GET /api/calendar-feeds/events` with `source
 
 ## Limits
 
-- One Google account per Tududi user.
-- Whole recurring series cannot be edited from Tududi.
-- Google Tasks loses the time of day; the "Tududi" calendar keeps it.
+- One Google account per Cadence user.
+- Whole recurring series cannot be edited from Cadence.
+- Google Tasks loses the time of day; the "Cadence" calendar keeps it.
 - Tasks shared with you in someone else's project are not sent (only tasks you own).

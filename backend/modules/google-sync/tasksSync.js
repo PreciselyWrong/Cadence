@@ -77,7 +77,7 @@ async function listForProject(ctx, projectId) {
     if (!projectId) throw new Error('Google has no default task list');
     const project = await Project.findByPk(projectId);
     const created = await ctx.client.insertTasklist(
-        (project?.name || 'Tududi').slice(0, 1024)
+        (project?.name || 'Cadence').slice(0, 1024)
     );
     const row = await GoogleTasklist.create({
         user_id: ctx.user.id,

@@ -220,12 +220,12 @@ const Navbar: React.FC<NavbarProps> = ({
                             <Link
                                 to="/"
                                 className="sm:hidden flex items-center justify-center h-9 w-9"
-                                aria-label="tududi"
+                                aria-label="Cadence"
                                 data-testid="navbar-logo"
                             >
                                 <img
                                     src={getAssetPath('icon-logo.png')}
-                                    alt="tududi"
+                                    alt="Cadence"
                                     className="h-7 w-7 rounded-md"
                                 />
                             </Link>

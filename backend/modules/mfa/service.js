@@ -25,7 +25,7 @@ const {
     AppError,
 } = require('../../shared/errors');
 
-const ISSUER = 'Tududi';
+const ISSUER = 'Cadence';
 const SETUP_TTL_MS = 10 * 60 * 1000;
 const RECOVERY_CODE_COUNT = 10;
 // No 0/o, 1/l/i: a code is read off paper and typed back.

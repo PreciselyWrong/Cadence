@@ -73,7 +73,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
     useEffect(() => {
         const previous = document.title;
         if (stage === 'ready' && note?.title) {
-            document.title = `${note.title} | tududi`;
+            document.title = `${note.title} | Cadence`;
         }
         return () => {
             document.title = previous;
@@ -99,7 +99,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                                     ? 'wide-logo-light.png'
                                     : 'wide-logo-dark.png'
                             )}
-                            alt="tududi"
+                            alt="Cadence"
                             className="h-9 w-auto"
                         />
                     </Link>
@@ -124,7 +124,7 @@ const PublicNotePage: React.FC<PublicNotePageProps> = ({
                                 to="/today"
                                 className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
                             >
-                                {t('publicNote.openApp', 'Open tududi')}
+                                {t('publicNote.openApp', 'Open Cadence')}
                             </Link>
                         ) : (
                             <>

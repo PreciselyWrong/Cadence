@@ -43,7 +43,7 @@ async function assertCanAddSeat(ownerId) {
     }
     if (!ADD_REASONS.includes(ent.reason)) {
         throw new SubscriptionRequiredError(
-            'Subscribe to tududi Cloud to add members'
+            'Subscribe to Cadence Cloud to add members'
         );
     }
     const limit = ent.limits.max_members;

@@ -66,7 +66,7 @@ const settingsProperties = {
     habit_color: {
         type: 'string',
         description:
-            'Accent color as a hex value from the tududi palette, e.g. #1d4ed8',
+            'Accent color as a hex value from the Cadence palette, e.g. #1d4ed8',
     },
     habit_reminder_time: {
         type: 'string',

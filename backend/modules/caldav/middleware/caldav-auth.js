@@ -37,7 +37,7 @@ async function caldavAuth(req, res, next) {
             }
             return res
                 .status(401)
-                .set('WWW-Authenticate', 'Basic realm="Tududi CalDAV"')
+                .set('WWW-Authenticate', 'Basic realm="Cadence CalDAV"')
                 .json({ error: 'Invalid or expired token' });
         }
 
@@ -45,7 +45,7 @@ async function caldavAuth(req, res, next) {
         if (!authHeader?.startsWith('Basic ')) {
             return res
                 .status(401)
-                .set('WWW-Authenticate', 'Basic realm="Tududi CalDAV"')
+                .set('WWW-Authenticate', 'Basic realm="Cadence CalDAV"')
                 .json({ error: 'Authentication required' });
         }
 
@@ -58,7 +58,7 @@ async function caldavAuth(req, res, next) {
         if (colonIndex === -1) {
             return res
                 .status(401)
-                .set('WWW-Authenticate', 'Basic realm="Tududi CalDAV"')
+                .set('WWW-Authenticate', 'Basic realm="Cadence CalDAV"')
                 .json({ error: 'Invalid credentials format' });
         }
 
@@ -92,7 +92,7 @@ async function caldavAuth(req, res, next) {
         if (!user || !isValid) {
             return res
                 .status(401)
-                .set('WWW-Authenticate', 'Basic realm="Tududi CalDAV"')
+                .set('WWW-Authenticate', 'Basic realm="Cadence CalDAV"')
                 .json({ error: 'Invalid credentials' });
         }
 

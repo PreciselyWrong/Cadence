@@ -54,11 +54,11 @@ describe('totp', () => {
 
     it('builds the URI authenticator apps read', () => {
         const uri = totp.otpauthUri('ABC', {
-            issuer: 'Tududi',
+            issuer: 'Cadence',
             account: 'a@example.com',
         });
         expect(uri).toBe(
-            'otpauth://totp/Tududi%3Aa%40example.com?secret=ABC&issuer=Tududi&algorithm=SHA1&digits=6&period=30'
+            'otpauth://totp/Cadence%3Aa%40example.com?secret=ABC&issuer=Cadence&algorithm=SHA1&digits=6&period=30'
         );
     });
 });

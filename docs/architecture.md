@@ -347,7 +347,7 @@ Located in `/backend/modules/`, each follows consistent architecture:
 
 ## PWA / Offline Architecture
 
-Tududi ships as an installable Progressive Web App. See [docs/15-pwa.md](15-pwa.md) for the full specification; the key points for architecture purposes:
+Cadence ships as an installable Progressive Web App. See [docs/15-pwa.md](15-pwa.md) for the full specification; the key points for architecture purposes:
 
 - **`public/sw.js`** is the service worker. It is copied to `dist/` by `CopyWebpackPlugin` unchanged and served from the root scope.
 - **`public/manifest.json`** declares the app shell (name, icons, display mode). The `<link rel="manifest">` tag is in `public/index.html`.

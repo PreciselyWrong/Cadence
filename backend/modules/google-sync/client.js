@@ -96,7 +96,7 @@ async function exchangeCode(code, redirectUri) {
     if (!data.refresh_token) {
         throw new GoogleApiError(
             400,
-            'Google did not return offline access. Remove Tududi from your Google account permissions and connect again.'
+            'Google did not return offline access. Remove Cadence from your Google account permissions and connect again.'
         );
     }
     const scopes = String(data.scope || '').split(' ');

@@ -221,7 +221,7 @@ async function sendTest(userId, webhookUid) {
         throw new ValidationError('Turn the webhook on first');
     }
     const [delivery] = await dispatcher.emit(userId, 'test', {
-        text: 'Test message from tududi. Webhooks are working.',
+        text: 'Test message from Cadence. Webhooks are working.',
         data: { webhook: { uid: webhook.uid, name: webhook.name } },
         webhookIds: [webhook.id],
         anyEvent: true,

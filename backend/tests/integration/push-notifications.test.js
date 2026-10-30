@@ -168,7 +168,7 @@ describe('Push notifications', () => {
                 .send(subscriptionBody());
 
             const sent = await pushService.sendToUser(user.id, {
-                title: 'tududi',
+                title: 'Cadence',
                 body: 'Hello',
                 url: '/',
             });
@@ -177,7 +177,7 @@ describe('Push notifications', () => {
             expect(webpush.sendNotification).toHaveBeenCalledTimes(2);
             const [, payload, options] = webpush.sendNotification.mock.calls[0];
             expect(JSON.parse(payload)).toMatchObject({
-                title: 'tududi',
+                title: 'Cadence',
                 body: 'Hello',
                 url: '/',
             });

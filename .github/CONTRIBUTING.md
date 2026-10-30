@@ -1,6 +1,6 @@
-# Contributing to tududi
+# Contributing to Cadence
 
-Thank you for your interest in contributing to tududi! This guide will help you get started.
+Thank you for your interest in contributing to Cadence! This guide will help you get started.
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ Please be respectful and constructive in all interactions. We want to foster an 
 1. **Fork and clone the repository**
    ```bash
    git clone https://github.com/chrisvel/tududi.git
-   cd tududi
+   cd Cadence
    ```
 
 2. **Install dependencies**
@@ -81,7 +81,7 @@ Before writing any code:
 
 1. **Start a discussion** in [Feature Requests](https://github.com/chrisvel/tududi/discussions/categories/feature-requests)
    - Describe the feature and the problem it solves
-   - Explain why it would benefit tududi users
+   - Explain why it would benefit Cadence users
    - Outline your proposed approach
 
 2. **Send a direct message** to [@chrisvel](https://github.com/chrisvel) via:
@@ -247,7 +247,7 @@ If your changes require database schema changes:
 
 ## Translations
 
-tududi supports multiple languages via i18next.
+Cadence supports multiple languages via i18next.
 
 ### Adding/Updating Translations
 

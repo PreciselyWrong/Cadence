@@ -71,18 +71,18 @@ const LEGAL_DOCS = [
     {
         slug: 'terms',
         title: 'Terms of Service',
-        description: 'The terms for using tududi Cloud and tududi.com.',
+        description: 'The terms for using Cadence Cloud and tududi.com.',
     },
     {
         slug: 'privacy',
         title: 'Privacy Policy',
         description:
-            'What personal data tududi Cloud collects, why, and your rights.',
+            'What personal data Cadence Cloud collects, why, and your rights.',
     },
     {
         slug: 'refunds',
         title: 'Refund Policy',
-        description: 'Money-back and refund terms for tududi Cloud.',
+        description: 'Money-back and refund terms for Cadence Cloud.',
     },
 ];
 

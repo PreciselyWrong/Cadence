@@ -104,7 +104,7 @@ module.exports = {
             )
         ),
         new HtmlWebpackPlugin({
-            title: 'tududi',
+            title: 'Cadence',
             filename: 'index.html',
             template: 'public/index.html',
             templateParameters: {

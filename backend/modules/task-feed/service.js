@@ -129,9 +129,9 @@ async function buildFeed(user) {
 
     const calendar = new ICAL.Component('vcalendar');
     calendar.addPropertyWithValue('version', '2.0');
-    calendar.addPropertyWithValue('prodid', '-//Tududi//Task feed//EN');
+    calendar.addPropertyWithValue('prodid', '-//Cadence//Task feed//EN');
     calendar.addPropertyWithValue('calscale', 'GREGORIAN');
-    calendar.addPropertyWithValue('x-wr-calname', 'tududi');
+    calendar.addPropertyWithValue('x-wr-calname', 'Cadence');
     calendar.addPropertyWithValue('x-wr-timezone', timezone);
     tasks.forEach((task) => addEvent(calendar, task, timezone));
     return calendar.toString();

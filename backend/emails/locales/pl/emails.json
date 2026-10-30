@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Cześć,",
-        "signoff": "Pozdrawiamy,\nZespół Tududi",
+        "signoff": "Pozdrawiamy,\nZespół Cadence",
         "copyLink": "Możesz też skopiować ten link i wkleić go w przeglądarce:",
         "trialUntil": "Twój bezpłatny okres próbny trwa do {{date}}."
     },
     "verification": {
-        "subject": "Witamy w Tududi - Zweryfikuj swój adres e-mail",
-        "welcome": "Witamy w Tududi!",
-        "opening": "Dziękujemy za rejestrację. Aby ją dokończyć i zacząć korzystać z Tududi, zweryfikuj swój adres e-mail, klikając poniższy link:",
+        "subject": "Witamy w Cadence - Zweryfikuj swój adres e-mail",
+        "welcome": "Witamy w Cadence!",
+        "opening": "Dziękujemy za rejestrację. Aby ją dokończyć i zacząć korzystać z Cadence, zweryfikuj swój adres e-mail, klikając poniższy link:",
         "button": "Zweryfikuj adres e-mail",
         "expires_one": "Ten link weryfikacyjny wygaśnie za {{count}} godzinę.",
         "expires_few": "Ten link weryfikacyjny wygaśnie za {{count}} godziny.",
@@ -25,15 +25,15 @@
             "Ustawiać zadania cykliczne",
             "Śledzić swoją produktywność"
         ],
-        "ignore": "Jeśli konto w Tududi nie zostało założone przez Ciebie, możesz po prostu zignorować tę wiadomość."
+        "ignore": "Jeśli konto w Cadence nie zostało założone przez Ciebie, możesz po prostu zignorować tę wiadomość."
     },
     "verificationReminder": {
-        "subject": "Przypomnienie: zweryfikuj adres e-mail, aby zacząć korzystać z Tududi",
-        "opening": "Mniej więcej dzień temu zarejestrowano konto w Tududi na ten adres, ale adres e-mail nie został jeszcze zweryfikowany. Twoje konto (i bezpłatny okres próbny) zacznie działać, gdy tylko go zweryfikujesz."
+        "subject": "Przypomnienie: zweryfikuj adres e-mail, aby zacząć korzystać z Cadence",
+        "opening": "Mniej więcej dzień temu zarejestrowano konto w Cadence na ten adres, ale adres e-mail nie został jeszcze zweryfikowany. Twoje konto (i bezpłatny okres próbny) zacznie działać, gdy tylko go zweryfikujesz."
     },
     "passwordReset": {
-        "subject": "Zresetuj hasło do Tududi",
-        "intro": "Ktoś poprosił o zresetowanie hasła do Twojego konta Tududi.",
+        "subject": "Zresetuj hasło do Cadence",
+        "intro": "Ktoś poprosił o zresetowanie hasła do Twojego konta Cadence.",
         "action": "Otwórz ten link, aby ustawić nowe hasło:",
         "button": "Ustaw nowe hasło",
         "expires_one": "Link wygaśnie za {{count}} minutę. Jeśli to nie była Twoja prośba, zignoruj tę wiadomość; hasło pozostanie bez zmian.",
@@ -42,8 +42,8 @@
         "expires_other": "Link wygaśnie za {{count}} minuty. Jeśli to nie była Twoja prośba, zignoruj tę wiadomość; hasło pozostanie bez zmian."
     },
     "memberInvite": {
-        "subject": "Dodano Cię do obszaru roboczego Tududi",
-        "intro": "Dodano Cię do obszaru roboczego Tududi.",
+        "subject": "Dodano Cię do obszaru roboczego Cadence",
+        "intro": "Dodano Cię do obszaru roboczego Cadence.",
         "action": "Ustaw hasło, aby aktywować konto i się zalogować:",
         "button": "Ustaw hasło",
         "expires_one": "Link wygaśnie za {{count}} godzinę. Jeśli się tego nie spodziewasz, możesz zignorować tę wiadomość.",
@@ -52,27 +52,27 @@
         "expires_other": "Link wygaśnie za {{count}} godziny. Jeśli się tego nie spodziewasz, możesz zignorować tę wiadomość."
     },
     "trialReminder": {
-        "subjectTomorrow": "Twój okres próbny tududi kończy się jutro",
-        "subjectDays_one": "Twój okres próbny tududi kończy się za {{count}} dzień",
-        "subjectDays_few": "Twój okres próbny tududi kończy się za {{count}} dni",
-        "subjectDays_many": "Twój okres próbny tududi kończy się za {{count}} dni",
-        "subjectDays_other": "Twój okres próbny tududi kończy się za {{count}} dnia",
-        "endsTomorrow": "Twój okres próbny tududi Cloud kończy się jutro, {{date}}.",
-        "endsInDays_one": "Twój okres próbny tududi Cloud kończy się za {{count}} dzień, {{date}}.",
-        "endsInDays_few": "Twój okres próbny tududi Cloud kończy się za {{count}} dni, {{date}}.",
-        "endsInDays_many": "Twój okres próbny tududi Cloud kończy się za {{count}} dni, {{date}}.",
-        "endsInDays_other": "Twój okres próbny tududi Cloud kończy się za {{count}} dnia, {{date}}.",
+        "subjectTomorrow": "Twój okres próbny Cadence kończy się jutro",
+        "subjectDays_one": "Twój okres próbny Cadence kończy się za {{count}} dzień",
+        "subjectDays_few": "Twój okres próbny Cadence kończy się za {{count}} dni",
+        "subjectDays_many": "Twój okres próbny Cadence kończy się za {{count}} dni",
+        "subjectDays_other": "Twój okres próbny Cadence kończy się za {{count}} dnia",
+        "endsTomorrow": "Twój okres próbny Cadence Cloud kończy się jutro, {{date}}.",
+        "endsInDays_one": "Twój okres próbny Cadence Cloud kończy się za {{count}} dzień, {{date}}.",
+        "endsInDays_few": "Twój okres próbny Cadence Cloud kończy się za {{count}} dni, {{date}}.",
+        "endsInDays_many": "Twój okres próbny Cadence Cloud kończy się za {{count}} dni, {{date}}.",
+        "endsInDays_other": "Twój okres próbny Cadence Cloud kończy się za {{count}} dnia, {{date}}.",
         "afterReadOnly_one": "Potem przez {{count}} dzień konto będzie tylko do odczytu, aby można było jeszcze wyeksportować dane, a następnie zostanie usunięte.",
         "afterReadOnly_few": "Potem przez {{count}} dni konto będzie tylko do odczytu, aby można było jeszcze wyeksportować dane, a następnie zostanie usunięte.",
         "afterReadOnly_many": "Potem przez {{count}} dni konto będzie tylko do odczytu, aby można było jeszcze wyeksportować dane, a następnie zostanie usunięte.",
         "afterReadOnly_other": "Potem przez {{count}} dnia konto będzie tylko do odczytu, aby można było jeszcze wyeksportować dane, a następnie zostanie usunięte.",
         "afterFree": "Potem Twoje konto przejdzie na darmowy plan.",
-        "keep": "Aby dalej korzystać z tududi Cloud tak jak teraz, razem z Asystentem AI i członkami, wykup subskrypcję:",
+        "keep": "Aby dalej korzystać z Cadence Cloud tak jak teraz, razem z Asystentem AI i członkami, wykup subskrypcję:",
         "button": "Subskrybuj"
     },
     "deletionWarning": {
-        "subject": "Twoje konto tududi zostanie usunięte {{date}}",
-        "ended": "Twój okres próbny tududi Cloud dobiegł końca i od tego czasu konto jest tylko do odczytu.",
+        "subject": "Twoje konto Cadence zostanie usunięte {{date}}",
+        "ended": "Twój okres próbny Cadence Cloud dobiegł końca i od tego czasu konto jest tylko do odczytu.",
         "deleteOn": "{{date}} konto i cała jego zawartość zostaną usunięte.",
         "keep": "Aby je zachować, wykup subskrypcję:",
         "button": "Zachowaj moje konto",
@@ -80,8 +80,8 @@
         "final": "Jeśli nic nie zrobisz, konto zostanie usunięte {{date}}, a to ostatni e-mail, jaki w tej sprawie od nas otrzymasz."
     },
     "emptyAccount": {
-        "subject": "Twoje tududi jest nadal puste",
-        "intro": "Masz konto w tududi od kilku dni, ale nic w nim jeszcze nie ma. Większość osób zaczyna od jednej z tych rzeczy, a każda zajmuje mniej niż minutę:",
+        "subject": "Twoje Cadence jest nadal puste",
+        "intro": "Masz konto w Cadence od kilku dni, ale nic w nim jeszcze nie ma. Większość osób zaczyna od jednej z tych rzeczy, a każda zajmuje mniej niż minutę:",
         "ideas": [
             "Zapisz w Skrzynce odbiorczej wszystko, co masz w głowie, i uporządkuj to później.",
             "Otwórz Plan, wybierz trzy rzeczy na dziś, a resztę zostaw.",
@@ -92,7 +92,7 @@
     },
     "comeBack": {
         "subject": "Twoje zadania są tam, gdzie je zostawiłeś",
-        "intro": "Od jakiegoś czasu nie zaglądasz do tududi. Wszystko, co dodałeś, nadal tam jest, dokładnie tak, jak to zostawiłeś.",
+        "intro": "Od jakiegoś czasu nie zaglądasz do Cadence. Wszystko, co dodałeś, nadal tam jest, dokładnie tak, jak to zostawiłeś.",
         "tip": "Jeśli lista zrobiła się za długa, zacznij od małego kroku: otwórz Plan, wybierz trzy rzeczy na dziś, a resztę zostaw na później.",
         "button": "Zaplanuj dzień",
         "outro": "Nie wyślemy kolejnego takiego e-maila, dopóki nie wrócisz."
@@ -100,23 +100,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Weryfikacja dwuetapowa jest włączona",
-            "body": "Na Twoim koncie Tududi włączono weryfikację dwuetapową. Logowanie wymaga teraz kodu z aplikacji uwierzytelniającej, a wszystkie inne urządzenia zostały wylogowane."
+            "body": "Na Twoim koncie Cadence włączono weryfikację dwuetapową. Logowanie wymaga teraz kodu z aplikacji uwierzytelniającej, a wszystkie inne urządzenia zostały wylogowane."
         },
         "mfaDisabled": {
             "subject": "Weryfikacja dwuetapowa jest wyłączona",
-            "body": "Na Twoim koncie Tududi wyłączono weryfikację dwuetapową. Logowanie wymaga teraz tylko hasła."
+            "body": "Na Twoim koncie Cadence wyłączono weryfikację dwuetapową. Logowanie wymaga teraz tylko hasła."
         },
         "mfaReset": {
             "subject": "Twoja weryfikacja dwuetapowa została zresetowana",
-            "body": "Administrator zresetował weryfikację dwuetapową na Twoim koncie Tududi, a wszystkie urządzenia zostały wylogowane. Możesz zalogować się hasłem i włączyć ją ponownie."
+            "body": "Administrator zresetował weryfikację dwuetapową na Twoim koncie Cadence, a wszystkie urządzenia zostały wylogowane. Możesz zalogować się hasłem i włączyć ją ponownie."
         },
         "recoveryCodeUsed": {
             "subject": "Użyto kodu odzyskiwania",
-            "body": "Ktoś zalogował się na Twoje konto Tududi jednym z Twoich kodów odzyskiwania. Każdy kod działa raz."
+            "body": "Ktoś zalogował się na Twoje konto Cadence jednym z Twoich kodów odzyskiwania. Każdy kod działa raz."
         },
         "recoveryCodesRegenerated": {
             "subject": "Utworzono nowe kody odzyskiwania",
-            "body": "Dla Twojego konta Tududi utworzono nowe kody odzyskiwania. Stare już nie działają."
+            "body": "Dla Twojego konta Cadence utworzono nowe kody odzyskiwania. Stare już nie działają."
         },
         "button": "Otwórz ustawienia bezpieczeństwa",
         "notYou": "Jeśli to nie Ty, zmień teraz hasło i powiadom administratora."

@@ -54,14 +54,14 @@ describe('pushService', () => {
     });
 
     describe('getPushState', () => {
-        it('asks iPhone users in a Safari tab to add tududi to the Home Screen', async () => {
+        it('asks iPhone users in a Safari tab to add Cadence to the Home Screen', async () => {
             setUserAgent(IPHONE_UA);
             installPush({ permission: 'default', subscription: null });
 
             expect(await getPushState()).toBe('needs-install');
         });
 
-        it('offers push on an iPhone once tududi runs from the Home Screen', async () => {
+        it('offers push on an iPhone once Cadence runs from the Home Screen', async () => {
             setUserAgent(IPHONE_UA);
             setStandalone(true);
             installPush({ permission: 'default', subscription: null });

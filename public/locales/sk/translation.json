@@ -444,17 +444,17 @@
         "personalInfo": "Osobné údaje",
         "errorMessage": "Profil sa nepodarilo aktualizovať",
         "telegramIntegration": "Integrácia s Telegramom",
-        "telegramDescription": "Prepojte svoj účet tududi s botom v Telegrame a pridávajte položky do schránky prostredníctvom správ v Telegrame.",
+        "telegramDescription": "Prepojte svoj účet Cadence s botom v Telegrame a pridávajte položky do schránky prostredníctvom správ v Telegrame.",
         "telegramBotToken": "Token bota Telegram",
         "telegramTokenDescription": "Vytvorte bota pomocou @BotFather v Telegrame a vložte sem token.",
-        "telegramConnected": "Váš účet Telegram je pripojený! Posielajte správy svojmu botovi a pridávajte tak položky do schránky tududi.",
+        "telegramConnected": "Váš účet Telegram je pripojený! Posielajte správy svojmu botovi a pridávajte tak položky do schránky Cadence.",
         "setupTelegram": "Nastaviť Telegram",
         "setupTelegramLower": "nastaviť telegram",
         "settingUp": "Nastavuje sa...",
         "telegramSetupSuccess": "Bot Telegram „{{botName}}“ bol úspešne nakonfigurovaný!",
         "telegramSetupFailed": "Bota Telegram sa nepodarilo nastaviť.",
         "invalidTelegramToken": "Neplatný formát tokenu bota Telegram.",
-        "telegramInstructions": "Prejdite na https://t.me/{{botUsername}} a začnite konverzáciu so svojím botom, aby ste ho prepojili so svojím účtom tududi.",
+        "telegramInstructions": "Prejdite na https://t.me/{{botUsername}} a začnite konverzáciu so svojím botom, aby ste ho prepojili so svojím účtom Cadence.",
         "botConfigured": "Bot bol úspešne nakonfigurovaný!",
         "botUsername": "Používateľské meno bota:",
         "pollingStatus": "Stav dotazovania:",
@@ -605,8 +605,8 @@
             "testRequired": "Pred pokračovaním musíte otestovať pripojenie",
             "syncDirection": "Smer synchronizácie",
             "bidirectional": "Obojsmerne (synchronizácia oboma smermi)",
-            "pullOnly": "Iba sťahovať (zo servera do Tududi)",
-            "pushOnly": "Iba odosielať (z Tududi na server)",
+            "pullOnly": "Iba sťahovať (zo servera do Cadence)",
+            "pushOnly": "Iba odosielať (z Cadence na server)",
             "syncInterval": "Interval synchronizácie (minúty)",
             "syncIntervalHelp": "Ako často automaticky synchronizovať (5 – 1440 minút)",
             "conflictPolicy": "Riešenie konfliktov",
@@ -625,7 +625,7 @@
         "conflictResolver": {
             "title": "Vyriešiť konflikty synchronizácie",
             "chooseVersion": "Pre každé pole vyberte, ktorú verziu ponechať:",
-            "local": "Lokálna (Tududi)",
+            "local": "Lokálna (Cadence)",
             "remote": "Vzdialená (CalDAV)",
             "useThis": "Použiť túto",
             "useAllLocal": "Použiť všetky lokálne",
@@ -708,7 +708,7 @@
             "addError": "Tento kalendár sa nepodarilo pridať",
             "deleteError": "Tento kalendár sa nepodarilo odstrániť",
             "title": "Kalendáre",
-            "description": "Zobrazte svoje stretnutia vedľa denného plánu a na stránke Kalendár. Tududi tieto kalendáre iba číta, nikdy ich nemení.",
+            "description": "Zobrazte svoje stretnutia vedľa denného plánu a na stránke Kalendár. Cadence tieto kalendáre iba číta, nikdy ich nemení.",
             "showOnCalendar": "Zobraziť {{name}} na stránke Kalendár",
             "showOnCalendarShort": "Zobraziť na stránke Kalendár",
             "toggleError": "Tento kalendár sa nepodarilo aktualizovať",
@@ -719,7 +719,7 @@
             "name": "Názov",
             "namePlaceholder": "Práca, Rodina…",
             "url": "Tajná adresa iCal",
-            "googleHelp": "V Kalendári Google: Nastavenia → váš kalendár → Integrovať kalendár → „Tajná adresa vo formáte iCal“. Apple Calendar a Outlook majú podobné odkazy. Ktokoľvek s touto adresou môže kalendár čítať, preto ju tududi ukladá šifrovanú.",
+            "googleHelp": "V Kalendári Google: Nastavenia → váš kalendár → Integrovať kalendár → „Tajná adresa vo formáte iCal“. Apple Calendar a Outlook majú podobné odkazy. Ktokoľvek s touto adresou môže kalendár čítať, preto ju Cadence ukladá šifrovanú.",
             "color": "Farba",
             "checking": "Kontroluje sa kalendár…",
             "add": "Pripojiť",
@@ -840,7 +840,7 @@
             "revokeButton": "Zrušiť",
             "deleteAria": "Odstrániť API kľúč",
             "connectQrLabel": "QR kód na pripojenie zariadenia",
-            "connectQrHelp": "Naskenujte tento kód v aplikácii Tududi v telefóne alebo počítači a pripojte ju týmto kľúčom."
+            "connectQrHelp": "Naskenujte tento kód v aplikácii Cadence v telefóne alebo počítači a pripojte ju týmto kľúčom."
         },
         "fetchError": "Údaje profilu sa nepodarilo načítať.",
         "pollingStatusError": "Stav dotazovania sa nepodarilo načítať.",
@@ -885,7 +885,7 @@
         "templatesDescription": "Povoľte šablóny projektov na ukladanie a opätovné použitie štruktúr projektov.",
         "mcp": {
             "title": "Integrácia MCP",
-            "description": "Prepojte tududi s ľubovoľnou aplikáciou kompatibilnou s MCP pomocou protokolu Model Context Protocol. AI asistenti tak môžu pracovať s vašimi úlohami, projektmi a poznámkami – funguje s lokálnymi aj vzdialenými servermi tududi.",
+            "description": "Prepojte Cadence s ľubovoľnou aplikáciou kompatibilnou s MCP pomocou protokolu Model Context Protocol. AI asistenti tak môžu pracovať s vašimi úlohami, projektmi a poznámkami – funguje s lokálnymi aj vzdialenými servermi Cadence.",
             "step1": {
                 "title": "1. Vygenerujte API token",
                 "description": "Na overenie servera MCP potrebujete API token. Vygenerujete ho na karte API kľúče.",
@@ -893,7 +893,7 @@
             },
             "step2": {
                 "title": "2. Nakonfigurujte svojho klienta MCP",
-                "description": "Pridajte túto konfiguráciu do svojho klienta MCP. YOUR_API_TOKEN_HERE nahraďte tokenom, ktorý ste vygenerovali v kroku 1. Na pripojenie k serveru tududi cez HTTP sa používa mcp-remote. Príklad pre Claude Desktop:",
+                "description": "Pridajte túto konfiguráciu do svojho klienta MCP. YOUR_API_TOKEN_HERE nahraďte tokenom, ktorý ste vygenerovali v kroku 1. Na pripojenie k serveru Cadence cez HTTP sa používa mcp-remote. Príklad pre Claude Desktop:",
                 "copy": "Kopírovať",
                 "loading": "Načítava sa...",
                 "locationTitle": "Umiestnenie konfiguračného súboru Claude Desktop:",
@@ -903,8 +903,8 @@
                 "title": "Vzdialený prístup povolený",
                 "usesPrefix": "Táto konfigurácia používa",
                 "usesSuffix": "na pripojenie cez HTTP. Vďaka tomu môžete:",
-                "local": "Pristupovať k lokálnemu tududi (localhost)",
-                "cloud": "Pristupovať k vzdialenému tududi (cloudové servery)",
+                "local": "Pristupovať k lokálnemu Cadence (localhost)",
+                "cloud": "Pristupovať k vzdialenému Cadence (cloudové servery)",
                 "docker": "Používať z nasadení v Dockeri",
                 "tokens": "Bezpečne sa pripájať pomocou API tokenov"
             },
@@ -914,7 +914,7 @@
             },
             "step4": {
                 "title": "4. Začnite používať",
-                "description": "Po pridaní konfigurácie reštartujte svojho klienta MCP. Potom môžete s tududi komunikovať prirodzeným jazykom:",
+                "description": "Po pridaní konfigurácie reštartujte svojho klienta MCP. Potom môžete s Cadence komunikovať prirodzeným jazykom:",
                 "examplesTitle": "Príklady výziev:"
             },
             "example1": "Ukáž mi moje úlohy na dnes",
@@ -926,7 +926,7 @@
                 "title": "Riešenie problémov",
                 "intro": "Ak sa váš klient MCP nedokáže pripojiť, skontrolujte, či:",
                 "token": "Váš API token je platný a nevypršal",
-                "server": "Server tududi beží a je dostupný",
+                "server": "Server Cadence beží a je dostupný",
                 "restart": "Ste úplne reštartovali svojho klienta MCP",
                 "firewall": "Pri vzdialených serveroch skontrolujte nastavenia firewallu"
             }
@@ -970,12 +970,12 @@
         "google": {
             "error": "Google did not answer",
             "title": "Google Calendar and Tasks",
-            "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+            "description": "Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a \"Cadence\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
             "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
             "connect": "Connect Google",
             "lastSync": "synced {{time}}",
             "firstSync": "first sync running…",
-            "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+            "syncEvents": "Calendars, and dated tasks in a \"Cadence\" calendar",
             "syncTasks": "All tasks with Google Tasks (one list per project)",
             "calendars": "Shown on Calendar and Today",
             "readOnly": "read-only",
@@ -984,7 +984,7 @@
             "syncNow": "Sync now",
             "disconnect": "Disconnect",
             "disconnectTitle": "Disconnect Google",
-            "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+            "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
         },
         "sidebarSmartListsTitle": "Inteligentné zoznamy",
         "sidebarRailTitle": "Lišta ikon a Viac",
@@ -2124,7 +2124,7 @@
         "time": "Čas",
         "allDay": "Celý deň",
         "manageCalendars": "Kalendáre",
-        "manageDescription": "Pripojte kalendáre iba na čítanie a vyberte, ktoré sa tu majú zobrazovať. Tududi ich nikdy nemení.",
+        "manageDescription": "Pripojte kalendáre iba na čítanie a vyberte, ktoré sa tu majú zobrazovať. Cadence ich nikdy nemení.",
         "hideCalendar": "Skryť {{name}}",
         "showCalendar": "Zobraziť {{name}}",
         "feedError": "Nepodarilo sa načítať: {{names}}",
@@ -2155,7 +2155,7 @@
         }
     },
     "navbar": {
-        "appName": "tududi",
+        "appName": "Cadence",
         "quickInboxCapture": "Rýchly záznam do Schránky",
         "userMenu": "Ponuka používateľa",
         "collapseSidebar": "Zbaliť bočný panel",
@@ -2248,8 +2248,8 @@
         }
     },
     "telegram": {
-        "welcomeMessage": "🎉 Vitajte v tududi!\n\nVáš osobný bot na správu úloh je pripojený a pripravený pomáhať!\n\n📝 Stačí mi poslať akúkoľvek správu a pridám ju ako položku do vašej Schránky v tududi.\n\n✨ Príkazy:\n• /help - Zobraziť pomocníka\n• /start - Zobraziť uvítaciu správu\n• Napíšte ľubovoľný text - Pridá sa ako položka Schránky\n\nPoďme sa zorganizovať! 🚀",
-        "helpMessage": "📋 Pomocník tududi bota\n\nPošlite mi akúkoľvek textovú správu a pridám ju ako položku do vašej Schránky v tududi.\n\nPríkazy:\n/start - Uvítacia správa\n/help - Zobraziť tohto pomocníka\n\nStačí napísať položku a o zvyšok sa postarám!",
+        "welcomeMessage": "🎉 Vitajte v Cadence!\n\nVáš osobný bot na správu úloh je pripojený a pripravený pomáhať!\n\n📝 Stačí mi poslať akúkoľvek správu a pridám ju ako položku do vašej Schránky v Cadence.\n\n✨ Príkazy:\n• /help - Zobraziť pomocníka\n• /start - Zobraziť uvítaciu správu\n• Napíšte ľubovoľný text - Pridá sa ako položka Schránky\n\nPoďme sa zorganizovať! 🚀",
+        "helpMessage": "📋 Pomocník Cadence bota\n\nPošlite mi akúkoľvek textovú správu a pridám ju ako položku do vašej Schránky v Cadence.\n\nPríkazy:\n/start - Uvítacia správa\n/help - Zobraziť tohto pomocníka\n\nStačí napísať položku a o zvyšok sa postarám!",
         "commandProcessed": "Príkaz bol úspešne spracovaný",
         "messageProcessed": "Správa bola úspešne spracovaná",
         "failedToAddToInbox": "❌ Pridanie do Schránky zlyhalo: {{error}}"
@@ -2259,7 +2259,7 @@
         "version": "Verzia",
         "description": "Správa úloh na vlastnom serveri s hierarchickou organizáciou a podporou viacerých jazykov. Vytvorené s láskou pre nadšencov produktivity.",
         "madeWithLove": "Vytvorené s láskou",
-        "appreciation": "Ďakujeme, že používate tududi! Vaša podpora pomáha udržať tento projekt nažive a rozvíjať ho. Ak vám je užitočný, zvážte podporu jeho vývoja.",
+        "appreciation": "Ďakujeme, že používate Cadence! Vaša podpora pomáha udržať tento projekt nažive a rozvíjať ho. Ak vám je užitočný, zvážte podporu jeho vývoja.",
         "supportDevelopment": "Podporiť vývoj",
         "community": "Komunita",
         "viewOnGitHub": "Zobraziť na GitHube",
@@ -2325,7 +2325,7 @@
         "confirmDeleteUser": "Naozaj chcete odstrániť {{email}}? Túto akciu nie je možné vrátiť späť.",
         "dashboard": {
             "title": "Administrácia",
-            "subtitle": "tududi {{version}} · {{env}}",
+            "subtitle": "Cadence {{version}} · {{env}}",
             "users": "Používatelia",
             "usersHint": "{{verified}} overených · {{admins}} admin · {{new}} dnes",
             "paying": "Platiaci",
@@ -2933,9 +2933,9 @@
     },
     "subscription": {
         "title": "Predplatné",
-        "chooseForCloud": "Vyberte si plán pre tududi Cloud",
+        "chooseForCloud": "Vyberte si plán pre Cadence Cloud",
         "noActive": "Žiadne aktívne predplatné",
-        "chooseToContinue": "Vyberte si plán, aby ste mohli ďalej používať tududi Cloud.",
+        "chooseToContinue": "Vyberte si plán, aby ste mohli ďalej používať Cadence Cloud.",
         "monthly": "Mesačne",
         "yearly": "Ročne",
         "priceMonthly": "{{price}} mesačne",
@@ -3026,7 +3026,7 @@
         "nameRequiredWithoutEmail": "Ak nie je zadaný e-mail, zadajte meno",
         "failedToAdd": "Člena sa nepodarilo pridať",
         "seatNote": "Každý člen zaberá jedno miesto vášho plánu. Odstránením člena sa miesto uvoľní pre niekoho iného.",
-        "removeConfirm": "Odstrániť {{name}}? Jeho účet a všetko v ňom sa vymaže a túto akciu nie je možné vrátiť späť. V tududi Cloud sa jeho miesto uvoľní pre niekoho iného."
+        "removeConfirm": "Odstrániť {{name}}? Jeho účet a všetko v ňom sa vymaže a túto akciu nie je možné vrátiť späť. V Cadence Cloud sa jeho miesto uvoľní pre niekoho iného."
     },
     "signInLink": {
         "action": "Prihlasovací odkaz",
@@ -3053,7 +3053,7 @@
     },
     "publicNote": {
         "toggleTheme": "Prepnúť tmavý režim",
-        "openApp": "Otvoriť tududi",
+        "openApp": "Otvoriť Cadence",
         "updated": "Naposledy aktualizované {{date}}",
         "unavailableTitle": "Táto poznámka nie je dostupná",
         "unavailableBody": "Odkaz môže byť nesprávny alebo vlastník prestal túto poznámku zdieľať. Požiadajte ho o nový odkaz.",
@@ -3401,7 +3401,7 @@
     "feedback": {
         "title": "Odoslať spätnú väzbu",
         "subtitle": "Našli ste chybu alebo máte nápad? Dajte nám vedieť.",
-        "placeholder": "Čo sa stalo alebo čo by tududi zlepšilo?",
+        "placeholder": "Čo sa stalo alebo čo by Cadence zlepšilo?",
         "contextNote": "Spolu so správou sa odošle stránka, na ktorej ste, a verzia aplikácie.",
         "send": "Odoslať",
         "sending": "Odosiela sa...",
@@ -3553,7 +3553,7 @@
             "exampleTag": "stavba",
             "exampleNote": "Čokoľvek dlhšie patrí sem.",
             "instructionsSheet": "Ako vyplniť",
-            "instructionsTitle": "Vyplnenie tohto hárka pre tududi",
+            "instructionsTitle": "Vyplnenie tohto hárka pre Cadence",
             "instructionsName": "Názov je jediný povinný stĺpec. Jeden riadok je jedna úloha.",
             "instructionsProject": "Projekt: úlohy s rovnakým názvom projektu skončia spolu. Projekty, ktoré ešte neexistujú, sa vytvoria pri importe.",
             "instructionsParent": "Nadradená úloha: napíšte názov inej úlohy z hárka, aby sa tento riadok stal jej podúlohou. Funguje aj stĺpec WBS (1, 1.1, 1.2) alebo odsadené riadky.",
@@ -3596,7 +3596,7 @@
             "intoNewProject": "Do nového projektu",
             "byColumn": "Použiť stĺpec Projekt a vytvoriť projekty, ktoré ešte neexistujú",
             "noProject": "Bez projektu",
-            "updateExisting": "Aktualizovať úlohy, ktoré už v tududi sú (priradené podľa UID). Prázdne bunky nechajú pole tak, ako je.",
+            "updateExisting": "Aktualizovať úlohy, ktoré už v Cadence sú (priradené podľa UID). Prázdne bunky nechajú pole tak, ako je.",
             "countCreate": "Nových úloh: {{count}}",
             "countUpdate": "Aktualizovaných: {{count}}",
             "countSkip": "Preskočených: {{count}}",

@@ -312,7 +312,7 @@ async function draftDay(userId, { date, mode = 'fill' } = {}) {
         name: 'day_plan_draft',
         maxTokens: ai.getMaxTokens('LLM_MAX_TOKENS_DAY_PLAN', 6000),
         schema: DRAFT_SCHEMA,
-        system: `You plan one person's day in Tududi. Pick a realistic set of tasks for the free time and place them.
+        system: `You plan one person's day in Cadence. Pick a realistic set of tasks for the free time and place them.
 
 Rules:
 - Only use task_uid values from the candidate list.
@@ -527,7 +527,7 @@ async function wrapUpDay(userId, date) {
         name: 'day_wrap_up',
         maxTokens: ai.getMaxTokens('LLM_MAX_TOKENS_WRAP_UP', 3000),
         schema: WRAP_UP_SCHEMA,
-        system: `You close out someone's day in Tududi, kindly and honestly.
+        system: `You close out someone's day in Cadence, kindly and honestly.
 - summary: at most 25 words on how the day went against the plan.
 - wins: 0 to 3 short items (at most 8 words each) naming what got done.
 - carry_over: unfinished tasks worth doing tomorrow, using task_uid values from the list, each with a reason of at most 8 words. Leave out tasks that look optional.

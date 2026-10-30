@@ -6,9 +6,9 @@
         "trialUntil": "Den gratis prøveperioden din varer til {{date}}."
     },
     "verification": {
-        "subject": "Velkommen til Tududi - Bekreft e-postadressen din",
-        "welcome": "Velkommen til Tududi!",
-        "opening": "Takk for at du registrerte deg. For å fullføre registreringen og begynne å bruke Tududi, bekrefter du e-postadressen din ved å klikke på lenken nedenfor:",
+        "subject": "Velkommen til Cadence - Bekreft e-postadressen din",
+        "welcome": "Velkommen til Cadence!",
+        "opening": "Takk for at du registrerte deg. For å fullføre registreringen og begynne å bruke Cadence, bekrefter du e-postadressen din ved å klikke på lenken nedenfor:",
         "button": "Bekreft e-postadresse",
         "expires_one": "Denne bekreftelseslenken utløper om {{count}} time.",
         "expires_other": "Denne bekreftelseslenken utløper om {{count}} timer.",
@@ -21,44 +21,44 @@
             "Sette opp gjentakende oppgaver",
             "Følge med på produktiviteten din"
         ],
-        "ignore": "Hvis du ikke har opprettet en konto hos Tududi, kan du trygt se bort fra denne e-posten."
+        "ignore": "Hvis du ikke har opprettet en konto hos Cadence, kan du trygt se bort fra denne e-posten."
     },
     "verificationReminder": {
-        "subject": "Påminnelse: bekreft e-postadressen din for å begynne å bruke Tududi",
-        "opening": "Du registrerte deg hos Tududi for omtrent en dag siden, men e-postadressen din er ikke bekreftet ennå. Kontoen din (og den gratis prøveperioden) starter så snart du bekrefter den."
+        "subject": "Påminnelse: bekreft e-postadressen din for å begynne å bruke Cadence",
+        "opening": "Du registrerte deg hos Cadence for omtrent en dag siden, men e-postadressen din er ikke bekreftet ennå. Kontoen din (og den gratis prøveperioden) starter så snart du bekrefter den."
     },
     "passwordReset": {
-        "subject": "Tilbakestill Tududi-passordet ditt",
-        "intro": "Noen har bedt om å tilbakestille passordet for Tududi-kontoen din.",
+        "subject": "Tilbakestill Cadence-passordet ditt",
+        "intro": "Noen har bedt om å tilbakestille passordet for Cadence-kontoen din.",
         "action": "Åpne denne lenken for å velge et nytt passord:",
         "button": "Velg et nytt passord",
         "expires_one": "Lenken utløper om {{count}} minutt. Hvis du ikke ba om en tilbakestilling, kan du se bort fra denne e-posten; passordet ditt forblir som det er.",
         "expires_other": "Lenken utløper om {{count}} minutter. Hvis du ikke ba om en tilbakestilling, kan du se bort fra denne e-posten; passordet ditt forblir som det er."
     },
     "memberInvite": {
-        "subject": "Du er lagt til i et Tududi-arbeidsområde",
-        "intro": "Du er lagt til i et Tududi-arbeidsområde.",
+        "subject": "Du er lagt til i et Cadence-arbeidsområde",
+        "intro": "Du er lagt til i et Cadence-arbeidsområde.",
         "action": "Velg et passord for å aktivere kontoen din og logge inn:",
         "button": "Angi passordet ditt",
         "expires_one": "Lenken utløper om {{count}} time. Hvis du ikke ventet dette, kan du se bort fra denne e-posten.",
         "expires_other": "Lenken utløper om {{count}} timer. Hvis du ikke ventet dette, kan du se bort fra denne e-posten."
     },
     "trialReminder": {
-        "subjectTomorrow": "Prøveperioden din for tududi slutter i morgen",
-        "subjectDays_one": "Prøveperioden din for tududi slutter om {{count}} dag",
-        "subjectDays_other": "Prøveperioden din for tududi slutter om {{count}} dager",
-        "endsTomorrow": "Prøveperioden din for tududi Cloud slutter i morgen, {{date}}.",
-        "endsInDays_one": "Prøveperioden din for tududi Cloud slutter om {{count}} dag, {{date}}.",
-        "endsInDays_other": "Prøveperioden din for tududi Cloud slutter om {{count}} dager, {{date}}.",
+        "subjectTomorrow": "Prøveperioden din for Cadence slutter i morgen",
+        "subjectDays_one": "Prøveperioden din for Cadence slutter om {{count}} dag",
+        "subjectDays_other": "Prøveperioden din for Cadence slutter om {{count}} dager",
+        "endsTomorrow": "Prøveperioden din for Cadence Cloud slutter i morgen, {{date}}.",
+        "endsInDays_one": "Prøveperioden din for Cadence Cloud slutter om {{count}} dag, {{date}}.",
+        "endsInDays_other": "Prøveperioden din for Cadence Cloud slutter om {{count}} dager, {{date}}.",
         "afterReadOnly_one": "Deretter blir kontoen din skrivebeskyttet i {{count}} dag, slik at du fortsatt kan eksportere dataene dine, og så slettes den.",
         "afterReadOnly_other": "Deretter blir kontoen din skrivebeskyttet i {{count}} dager, slik at du fortsatt kan eksportere dataene dine, og så slettes den.",
         "afterFree": "Deretter flyttes kontoen din over til gratisplanen.",
-        "keep": "Vil du fortsette å bruke tududi Cloud slik det er nå, med AI-assistent og medlemmer, kan du abonnere her:",
+        "keep": "Vil du fortsette å bruke Cadence Cloud slik det er nå, med AI-assistent og medlemmer, kan du abonnere her:",
         "button": "Abonner"
     },
     "deletionWarning": {
-        "subject": "tududi-kontoen din slettes {{date}}",
-        "ended": "Prøveperioden din for tududi Cloud er over, og kontoen din har vært skrivebeskyttet siden da.",
+        "subject": "Cadence-kontoen din slettes {{date}}",
+        "ended": "Prøveperioden din for Cadence Cloud er over, og kontoen din har vært skrivebeskyttet siden da.",
         "deleteOn": "{{date}} slettes kontoen og alt innholdet i den.",
         "keep": "Vil du beholde den, kan du abonnere her:",
         "button": "Behold kontoen min",
@@ -66,8 +66,8 @@
         "final": "Hvis du ikke gjør noe, slettes kontoen {{date}}, og dette er den siste e-posten du får fra oss om dette."
     },
     "emptyAccount": {
-        "subject": "tududi-en din er fortsatt tom",
-        "intro": "Du har hatt en tududi-konto i et par dager, men det er ingenting i den ennå. De fleste begynner med en av disse, og hver tar under ett minutt:",
+        "subject": "Cadence-en din er fortsatt tom",
+        "intro": "Du har hatt en Cadence-konto i et par dager, men det er ingenting i den ennå. De fleste begynner med en av disse, og hver tar under ett minutt:",
         "ideas": [
             "Skriv ned det du har i hodet i Innboksen, og sorter det senere.",
             "Åpne Plan, velg tre ting for i dag, og la resten ligge.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Oppgavene dine er der du forlot dem",
-        "intro": "Du har ikke vært innom tududi på en stund. Alt du la til er der fortsatt, akkurat slik du forlot det.",
+        "intro": "Du har ikke vært innom Cadence på en stund. Alt du la til er der fortsatt, akkurat slik du forlot det.",
         "tip": "Hvis listen har blitt for lang, start i det små: åpne Plan, velg tre ting for i dag, og spar resten til senere.",
         "button": "Planlegg i dag",
         "outro": "Vi sender ikke flere slike e-poster før du har vært tilbake."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Tofaktorautentisering er på",
-            "body": "Tofaktorautentisering ble slått på for Tududi-kontoen din. Innlogging krever nå en kode fra autentiseringsappen din, og alle andre enheter ble logget ut."
+            "body": "Tofaktorautentisering ble slått på for Cadence-kontoen din. Innlogging krever nå en kode fra autentiseringsappen din, og alle andre enheter ble logget ut."
         },
         "mfaDisabled": {
             "subject": "Tofaktorautentisering er av",
-            "body": "Tofaktorautentisering ble slått av for Tududi-kontoen din. Innlogging krever nå bare passordet ditt."
+            "body": "Tofaktorautentisering ble slått av for Cadence-kontoen din. Innlogging krever nå bare passordet ditt."
         },
         "mfaReset": {
             "subject": "Tofaktorautentiseringen din ble tilbakestilt",
-            "body": "En administrator tilbakestilte tofaktorautentisering for Tududi-kontoen din, og alle enheter ble logget ut. Du kan logge inn med passordet ditt og slå den på igjen."
+            "body": "En administrator tilbakestilte tofaktorautentisering for Cadence-kontoen din, og alle enheter ble logget ut. Du kan logge inn med passordet ditt og slå den på igjen."
         },
         "recoveryCodeUsed": {
             "subject": "En gjenopprettingskode ble brukt",
-            "body": "Noen logget inn på Tududi-kontoen din med en av gjenopprettingskodene dine. Hver kode virker én gang."
+            "body": "Noen logget inn på Cadence-kontoen din med en av gjenopprettingskodene dine. Hver kode virker én gang."
         },
         "recoveryCodesRegenerated": {
             "subject": "Nye gjenopprettingskoder ble laget",
-            "body": "Nye gjenopprettingskoder ble laget for Tududi-kontoen din. De gamle virker ikke lenger."
+            "body": "Nye gjenopprettingskoder ble laget for Cadence-kontoen din. De gamle virker ikke lenger."
         },
         "button": "Åpne sikkerhetsinnstillinger",
         "notYou": "Hvis dette ikke var deg, bytt passord nå og si fra til administratoren din."

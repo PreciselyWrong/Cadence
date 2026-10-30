@@ -129,7 +129,7 @@ const AdminDashboardPage: React.FC = () => {
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                 {t(
                     'admin.dashboard.subtitleTotals',
-                    '{{users}} users · {{tasks}} tasks · {{waitlist}} on the waitlist · tududi {{version}} · {{env}}',
+                    '{{users}} users · {{tasks}} tasks · {{waitlist}} on the waitlist · Cadence {{version}} · {{env}}',
                     {
                         users: data.users.total,
                         tasks: data.content.tasks,

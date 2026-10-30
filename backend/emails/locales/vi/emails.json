@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Xin chào,",
-        "signoff": "Trân trọng,\nĐội ngũ Tududi",
+        "signoff": "Trân trọng,\nĐội ngũ Cadence",
         "copyLink": "Hoặc sao chép và dán liên kết này vào trình duyệt của bạn:",
         "trialUntil": "Bản dùng thử miễn phí của bạn kéo dài đến {{date}}."
     },
     "verification": {
-        "subject": "Chào mừng bạn đến với Tududi - Xác minh email của bạn",
-        "welcome": "Chào mừng bạn đến với Tududi!",
-        "opening": "Cảm ơn bạn đã đăng ký. Để hoàn tất đăng ký và bắt đầu sử dụng Tududi, vui lòng xác minh địa chỉ email bằng cách nhấp vào liên kết bên dưới:",
+        "subject": "Chào mừng bạn đến với Cadence - Xác minh email của bạn",
+        "welcome": "Chào mừng bạn đến với Cadence!",
+        "opening": "Cảm ơn bạn đã đăng ký. Để hoàn tất đăng ký và bắt đầu sử dụng Cadence, vui lòng xác minh địa chỉ email bằng cách nhấp vào liên kết bên dưới:",
         "button": "Xác minh địa chỉ email",
         "expires_other": "Liên kết xác minh này sẽ hết hạn sau {{count}} giờ.",
         "trial_other": "Việc xác minh cũng sẽ bắt đầu thời gian dùng thử miễn phí {{count}} ngày của bạn, không cần thẻ. Gói dùng thử bao gồm trợ lý AI với hạn mức thấp hơn và một thành viên bạn có thể thêm, chẳng hạn như người bạn đời hoặc đồng nghiệp. Liên kết công khai của ghi chú sẽ được mở khi bạn đăng ký gói.",
@@ -19,39 +19,39 @@
             "Thiết lập nhiệm vụ định kỳ",
             "Theo dõi năng suất của bạn"
         ],
-        "ignore": "Nếu bạn không tạo tài khoản Tududi, bạn có thể yên tâm bỏ qua email này."
+        "ignore": "Nếu bạn không tạo tài khoản Cadence, bạn có thể yên tâm bỏ qua email này."
     },
     "verificationReminder": {
-        "subject": "Nhắc nhở: xác minh email để bắt đầu sử dụng Tududi",
-        "opening": "Bạn đã đăng ký Tududi khoảng một ngày trước, nhưng địa chỉ email của bạn vẫn chưa được xác minh. Tài khoản của bạn (và thời gian dùng thử miễn phí) sẽ bắt đầu ngay khi bạn xác minh."
+        "subject": "Nhắc nhở: xác minh email để bắt đầu sử dụng Cadence",
+        "opening": "Bạn đã đăng ký Cadence khoảng một ngày trước, nhưng địa chỉ email của bạn vẫn chưa được xác minh. Tài khoản của bạn (và thời gian dùng thử miễn phí) sẽ bắt đầu ngay khi bạn xác minh."
     },
     "passwordReset": {
-        "subject": "Đặt lại mật khẩu Tududi của bạn",
-        "intro": "Có người đã yêu cầu đặt lại mật khẩu cho tài khoản Tududi của bạn.",
+        "subject": "Đặt lại mật khẩu Cadence của bạn",
+        "intro": "Có người đã yêu cầu đặt lại mật khẩu cho tài khoản Cadence của bạn.",
         "action": "Mở liên kết này để chọn mật khẩu mới:",
         "button": "Chọn mật khẩu mới",
         "expires_other": "Liên kết sẽ hết hạn sau {{count}} phút. Nếu bạn không yêu cầu đặt lại, hãy bỏ qua email này; mật khẩu của bạn vẫn giữ nguyên."
     },
     "memberInvite": {
-        "subject": "Bạn đã được thêm vào một không gian làm việc Tududi",
-        "intro": "Bạn đã được thêm vào một không gian làm việc Tududi.",
+        "subject": "Bạn đã được thêm vào một không gian làm việc Cadence",
+        "intro": "Bạn đã được thêm vào một không gian làm việc Cadence.",
         "action": "Hãy chọn mật khẩu để kích hoạt tài khoản và đăng nhập:",
         "button": "Đặt mật khẩu",
         "expires_other": "Liên kết sẽ hết hạn sau {{count}} giờ. Nếu bạn không mong đợi email này, bạn có thể bỏ qua nó."
     },
     "trialReminder": {
-        "subjectTomorrow": "Thời gian dùng thử tududi của bạn kết thúc vào ngày mai",
-        "subjectDays_other": "Thời gian dùng thử tududi của bạn kết thúc sau {{count}} ngày",
-        "endsTomorrow": "Thời gian dùng thử tududi Cloud của bạn kết thúc vào ngày mai, {{date}}.",
-        "endsInDays_other": "Thời gian dùng thử tududi Cloud của bạn kết thúc sau {{count}} ngày, vào {{date}}.",
+        "subjectTomorrow": "Thời gian dùng thử Cadence của bạn kết thúc vào ngày mai",
+        "subjectDays_other": "Thời gian dùng thử Cadence của bạn kết thúc sau {{count}} ngày",
+        "endsTomorrow": "Thời gian dùng thử Cadence Cloud của bạn kết thúc vào ngày mai, {{date}}.",
+        "endsInDays_other": "Thời gian dùng thử Cadence Cloud của bạn kết thúc sau {{count}} ngày, vào {{date}}.",
         "afterReadOnly_other": "Sau đó, tài khoản của bạn sẽ chuyển sang chế độ chỉ đọc trong {{count}} ngày để bạn vẫn có thể xuất dữ liệu, rồi sẽ bị xóa.",
         "afterFree": "Sau đó, tài khoản của bạn sẽ chuyển sang gói miễn phí.",
-        "keep": "Để tiếp tục dùng tududi Cloud như hiện tại, bao gồm trợ lý AI và thành viên, hãy đăng ký gói:",
+        "keep": "Để tiếp tục dùng Cadence Cloud như hiện tại, bao gồm trợ lý AI và thành viên, hãy đăng ký gói:",
         "button": "Đăng ký"
     },
     "deletionWarning": {
-        "subject": "Tài khoản tududi của bạn sẽ bị xóa vào {{date}}",
-        "ended": "Thời gian dùng thử tududi Cloud của bạn đã kết thúc và tài khoản đã ở chế độ chỉ đọc kể từ đó.",
+        "subject": "Tài khoản Cadence của bạn sẽ bị xóa vào {{date}}",
+        "ended": "Thời gian dùng thử Cadence Cloud của bạn đã kết thúc và tài khoản đã ở chế độ chỉ đọc kể từ đó.",
         "deleteOn": "Vào {{date}}, tài khoản và mọi nội dung trong đó sẽ bị xóa.",
         "keep": "Để giữ tài khoản, hãy đăng ký gói:",
         "button": "Giữ tài khoản của tôi",
@@ -59,8 +59,8 @@
         "final": "Nếu bạn không làm gì, tài khoản sẽ bị xóa vào {{date}} và đây là email cuối cùng chúng tôi gửi cho bạn về việc này."
     },
     "emptyAccount": {
-        "subject": "tududi của bạn vẫn còn trống",
-        "intro": "Bạn đã có tài khoản tududi được vài ngày nhưng vẫn chưa có gì trong đó. Hầu hết mọi người bắt đầu bằng một trong những việc sau, và mỗi việc mất chưa đến một phút:",
+        "subject": "Cadence của bạn vẫn còn trống",
+        "intro": "Bạn đã có tài khoản Cadence được vài ngày nhưng vẫn chưa có gì trong đó. Hầu hết mọi người bắt đầu bằng một trong những việc sau, và mỗi việc mất chưa đến một phút:",
         "ideas": [
             "Ghi mọi điều bạn đang nghĩ vào Hộp thư đến, rồi sắp xếp sau.",
             "Mở Kế hoạch, chọn ba việc cho hôm nay và để lại phần còn lại.",
@@ -71,7 +71,7 @@
     },
     "comeBack": {
         "subject": "Công việc của bạn vẫn ở nguyên chỗ cũ",
-        "intro": "Đã lâu bạn chưa vào tududi. Mọi thứ bạn đã thêm vẫn còn đó, đúng như lúc bạn rời đi.",
+        "intro": "Đã lâu bạn chưa vào Cadence. Mọi thứ bạn đã thêm vẫn còn đó, đúng như lúc bạn rời đi.",
         "tip": "Nếu danh sách đã quá dài, hãy bắt đầu từ việc nhỏ: mở Kế hoạch, chọn ba việc cho hôm nay và để phần còn lại cho sau.",
         "button": "Lên kế hoạch hôm nay",
         "outro": "Chúng tôi sẽ không gửi email như thế này nữa cho đến khi bạn quay lại."
@@ -79,23 +79,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Xác minh hai bước đã bật",
-            "body": "Xác minh hai bước đã được bật cho tài khoản Tududi của bạn. Giờ đây, đăng nhập cần mã từ ứng dụng xác thực, và mọi thiết bị khác đã bị đăng xuất."
+            "body": "Xác minh hai bước đã được bật cho tài khoản Cadence của bạn. Giờ đây, đăng nhập cần mã từ ứng dụng xác thực, và mọi thiết bị khác đã bị đăng xuất."
         },
         "mfaDisabled": {
             "subject": "Xác minh hai bước đã tắt",
-            "body": "Xác minh hai bước đã được tắt cho tài khoản Tududi của bạn. Giờ đây, đăng nhập chỉ cần mật khẩu."
+            "body": "Xác minh hai bước đã được tắt cho tài khoản Cadence của bạn. Giờ đây, đăng nhập chỉ cần mật khẩu."
         },
         "mfaReset": {
             "subject": "Xác minh hai bước của bạn đã được đặt lại",
-            "body": "Một quản trị viên đã đặt lại xác minh hai bước cho tài khoản Tududi của bạn, và mọi thiết bị đã bị đăng xuất. Bạn có thể đăng nhập bằng mật khẩu và bật lại."
+            "body": "Một quản trị viên đã đặt lại xác minh hai bước cho tài khoản Cadence của bạn, và mọi thiết bị đã bị đăng xuất. Bạn có thể đăng nhập bằng mật khẩu và bật lại."
         },
         "recoveryCodeUsed": {
             "subject": "Một mã khôi phục đã được dùng",
-            "body": "Có người đã đăng nhập vào tài khoản Tududi của bạn bằng một trong các mã khôi phục của bạn. Mỗi mã chỉ dùng được một lần."
+            "body": "Có người đã đăng nhập vào tài khoản Cadence của bạn bằng một trong các mã khôi phục của bạn. Mỗi mã chỉ dùng được một lần."
         },
         "recoveryCodesRegenerated": {
             "subject": "Đã tạo mã khôi phục mới",
-            "body": "Mã khôi phục mới đã được tạo cho tài khoản Tududi của bạn. Các mã cũ không còn dùng được."
+            "body": "Mã khôi phục mới đã được tạo cho tài khoản Cadence của bạn. Các mã cũ không còn dùng được."
         },
         "button": "Mở cài đặt bảo mật",
         "notYou": "Nếu không phải bạn, hãy đổi mật khẩu ngay và báo cho quản trị viên."

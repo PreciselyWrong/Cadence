@@ -43,7 +43,7 @@ const CalendarFeedsTab: React.FC<CalendarFeedsTabProps> = ({ isActive }) => {
             <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
                 {t(
                     'profile.calendars.description',
-                    'Show your meetings next to your day plan and on the Calendar page. Tududi only reads these calendars; it never changes them.'
+                    'Show your meetings next to your day plan and on the Calendar page. Cadence only reads these calendars; it never changes them.'
                 )}
             </p>
 

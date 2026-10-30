@@ -128,11 +128,11 @@ const SidebarRail: React.FC<SidebarRailProps> = ({
             <Link
                 to="/"
                 className="flex items-center justify-center h-10 w-10 mb-1"
-                aria-label="tududi"
+                aria-label="Cadence"
             >
                 <img
                     src={getAssetPath('icon-logo.png')}
-                    alt="tududi"
+                    alt="Cadence"
                     className="h-7 w-7 rounded-md"
                 />
             </Link>

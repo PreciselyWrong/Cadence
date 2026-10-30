@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Hi,",
-        "signoff": "Best regards,\nThe Tududi Team",
+        "signoff": "Best regards,\nThe Cadence Team",
         "copyLink": "Or copy and paste this link into your browser:",
         "trialUntil": "Your free trial runs until {{date}}."
     },
     "verification": {
-        "subject": "Welcome to Tududi - Verify your email",
-        "welcome": "Welcome to Tududi!",
-        "opening": "Thank you for registering. To complete your registration and start using Tududi, please verify your email address by clicking the link below:",
+        "subject": "Welcome to Cadence - Verify your email",
+        "welcome": "Welcome to Cadence!",
+        "opening": "Thank you for registering. To complete your registration and start using Cadence, please verify your email address by clicking the link below:",
         "button": "Verify Email Address",
         "expires_one": "This verification link will expire in {{count}} hour.",
         "expires_other": "This verification link will expire in {{count}} hours.",
@@ -21,44 +21,44 @@
             "Set up recurring tasks",
             "Track your productivity"
         ],
-        "ignore": "If you didn't create an account with Tududi, you can safely ignore this email."
+        "ignore": "If you didn't create an account with Cadence, you can safely ignore this email."
     },
     "verificationReminder": {
-        "subject": "Reminder: verify your email to start using Tududi",
-        "opening": "You signed up for Tududi a day or so ago, but your email address is not verified yet. Your account (and your free trial) starts as soon as you verify it."
+        "subject": "Reminder: verify your email to start using Cadence",
+        "opening": "You signed up for Cadence a day or so ago, but your email address is not verified yet. Your account (and your free trial) starts as soon as you verify it."
     },
     "passwordReset": {
-        "subject": "Reset your Tududi password",
-        "intro": "Someone asked to reset the password for your Tududi account.",
+        "subject": "Reset your Cadence password",
+        "intro": "Someone asked to reset the password for your Cadence account.",
         "action": "Open this link to choose a new password:",
         "button": "Choose a new password",
         "expires_one": "The link expires in {{count}} minute. If you did not ask for a reset, ignore this email; your password stays as it is.",
         "expires_other": "The link expires in {{count}} minutes. If you did not ask for a reset, ignore this email; your password stays as it is."
     },
     "memberInvite": {
-        "subject": "You have been added to a Tududi workspace",
-        "intro": "You have been added to a Tududi workspace.",
+        "subject": "You have been added to a Cadence workspace",
+        "intro": "You have been added to a Cadence workspace.",
         "action": "Choose a password to activate your account and sign in:",
         "button": "Set your password",
         "expires_one": "The link expires in {{count}} hour. If you were not expecting this, you can ignore this email.",
         "expires_other": "The link expires in {{count}} hours. If you were not expecting this, you can ignore this email."
     },
     "trialReminder": {
-        "subjectTomorrow": "Your tududi trial ends tomorrow",
-        "subjectDays_one": "Your tududi trial ends in {{count}} day",
-        "subjectDays_other": "Your tududi trial ends in {{count}} days",
-        "endsTomorrow": "Your tududi Cloud trial ends tomorrow, on {{date}}.",
-        "endsInDays_one": "Your tududi Cloud trial ends in {{count}} day, on {{date}}.",
-        "endsInDays_other": "Your tududi Cloud trial ends in {{count}} days, on {{date}}.",
+        "subjectTomorrow": "Your Cadence trial ends tomorrow",
+        "subjectDays_one": "Your Cadence trial ends in {{count}} day",
+        "subjectDays_other": "Your Cadence trial ends in {{count}} days",
+        "endsTomorrow": "Your Cadence Cloud trial ends tomorrow, on {{date}}.",
+        "endsInDays_one": "Your Cadence Cloud trial ends in {{count}} day, on {{date}}.",
+        "endsInDays_other": "Your Cadence Cloud trial ends in {{count}} days, on {{date}}.",
         "afterReadOnly_one": "After that your account turns read-only for {{count}} day, so you can still export your data, and is then deleted.",
         "afterReadOnly_other": "After that your account turns read-only for {{count}} days, so you can still export your data, and is then deleted.",
         "afterFree": "After that your account moves to the free plan.",
-        "keep": "To keep using tududi Cloud as it is now, AI assistant and members included, subscribe:",
+        "keep": "To keep using Cadence Cloud as it is now, AI assistant and members included, subscribe:",
         "button": "Subscribe"
     },
     "deletionWarning": {
-        "subject": "Your tududi account will be deleted on {{date}}",
-        "ended": "Your tududi Cloud trial has ended, and your account has been read-only since then.",
+        "subject": "Your Cadence account will be deleted on {{date}}",
+        "ended": "Your Cadence Cloud trial has ended, and your account has been read-only since then.",
         "deleteOn": "On {{date}} the account and everything in it will be deleted.",
         "keep": "To keep it, subscribe:",
         "button": "Keep my account",
@@ -66,8 +66,8 @@
         "final": "If you do nothing, the account is deleted on {{date}} and this is the last email you will get from us about it."
     },
     "emptyAccount": {
-        "subject": "Your tududi is still empty",
-        "intro": "You have had a tududi account for a couple of days, but nothing is in it yet. Most people start with one of these, and each takes less than a minute:",
+        "subject": "Your Cadence is still empty",
+        "intro": "You have had a Cadence account for a couple of days, but nothing is in it yet. Most people start with one of these, and each takes less than a minute:",
         "ideas": [
             "Write down whatever is on your mind in the Inbox, and sort it out later.",
             "Open Plan, pick three things for today, and leave the rest.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Your tasks are where you left them",
-        "intro": "You have not been in tududi for a while. Everything you added is still there, just as you left it.",
+        "intro": "You have not been in Cadence for a while. Everything you added is still there, just as you left it.",
         "tip": "If the list got too long, start small: open Plan, pick three things for today, and leave the rest for later.",
         "button": "Plan today",
         "outro": "We will not send another one of these until you have been back."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Two-factor sign-in is on",
-            "body": "Two-factor sign-in was turned on for your Tududi account. Signing in now takes a code from your authenticator app, and every other device was signed out."
+            "body": "Two-factor sign-in was turned on for your Cadence account. Signing in now takes a code from your authenticator app, and every other device was signed out."
         },
         "mfaDisabled": {
             "subject": "Two-factor sign-in is off",
-            "body": "Two-factor sign-in was turned off for your Tududi account. Signing in now takes only your password."
+            "body": "Two-factor sign-in was turned off for your Cadence account. Signing in now takes only your password."
         },
         "mfaReset": {
             "subject": "Your two-factor sign-in was reset",
-            "body": "An administrator reset two-factor sign-in for your Tududi account, and every device was signed out. You can sign in with your password and turn it on again."
+            "body": "An administrator reset two-factor sign-in for your Cadence account, and every device was signed out. You can sign in with your password and turn it on again."
         },
         "recoveryCodeUsed": {
             "subject": "A recovery code was used",
-            "body": "Someone signed in to your Tududi account with one of your recovery codes. Each code works once."
+            "body": "Someone signed in to your Cadence account with one of your recovery codes. Each code works once."
         },
         "recoveryCodesRegenerated": {
             "subject": "New recovery codes were made",
-            "body": "New recovery codes were made for your Tududi account. The old ones no longer work."
+            "body": "New recovery codes were made for your Cadence account. The old ones no longer work."
         },
         "button": "Open security settings",
         "notYou": "If this was not you, change your password now and tell your administrator."

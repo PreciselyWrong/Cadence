@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We release security updates for the following versions of tududi:
+We release security updates for the following versions of Cadence:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -15,7 +15,7 @@ We recommend always running the latest version to ensure you have the latest sec
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-If you discover a security vulnerability in tududi, please report it privately to help us fix it before public disclosure.
+If you discover a security vulnerability in Cadence, please report it privately to help us fix it before public disclosure.
 
 ### How to Report
 
@@ -37,7 +37,7 @@ If you discover a security vulnerability in tududi, please report it privately t
 
 ## Security Best Practices
 
-When deploying tududi, we recommend:
+When deploying Cadence, we recommend:
 
 ### Production Deployment
 
@@ -96,4 +96,4 @@ Subscribe to [GitHub Releases](https://github.com/chrisvel/tududi/releases) or w
 
 ---
 
-Thank you for helping keep tududi and its users secure!
+Thank you for helping keep Cadence and its users secure!

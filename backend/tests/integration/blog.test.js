@@ -79,7 +79,7 @@ describe('Blog', () => {
             share({
                 title: 'Blog',
                 content:
-                    'Writing about tududi.\n\n[[How to organize a family]]\n\n[[Why Cloud]]\n\n[[Drafts]]',
+                    'Writing about Cadence.\n\n[[How to organize a family]]\n\n[[Why Cloud]]\n\n[[Drafts]]',
                 user_id: admin.id,
             })
         );
@@ -293,7 +293,7 @@ describe('Blog', () => {
                 '<meta name="tududi-site" content="blog">'
             );
             expect(res.text).toContain(
-                '<title>How to organize a family | tududi</title>'
+                '<title>How to organize a family | Cadence</title>'
             );
             expect(res.text).toContain(
                 '<meta property="og:description" content="A family is not a team.">'

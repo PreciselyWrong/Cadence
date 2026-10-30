@@ -6,7 +6,7 @@
 
 ## Overview
 
-Tududi stores its data in a single SQLite file by default, which is the right choice for a personal instance. For a hosted or multi-user deployment you can point the same application at PostgreSQL instead. Nothing changes for SQLite users: PostgreSQL is opt-in through environment variables, and both engines are covered by the test suite and CI.
+Cadence stores its data in a single SQLite file by default, which is the right choice for a personal instance. For a hosted or multi-user deployment you can point the same application at PostgreSQL instead. Nothing changes for SQLite users: PostgreSQL is opt-in through environment variables, and both engines are covered by the test suite and CI.
 
 Requirements: PostgreSQL 14 or newer, an existing database (empty is fine) and a role that can create tables in it.
 
@@ -48,14 +48,14 @@ There is no built-in transfer of an existing SQLite database into PostgreSQL. Pe
 
 ## Docker Compose
 
-A complete stack lives in [examples/docker-compose.postgres.yml](examples/docker-compose.postgres.yml): a `postgres:16-alpine` service with a health check, and tududi wired to it through `DATABASE_URL`.
+A complete stack lives in [examples/docker-compose.postgres.yml](examples/docker-compose.postgres.yml): a `postgres:16-alpine` service with a health check, and Cadence wired to it through `DATABASE_URL`.
 
 ```bash
-mkdir tududi && cd tududi
+mkdir Cadence && cd Cadence
 cp /path/to/tududi/docs/examples/docker-compose.postgres.yml docker-compose.yml
 cp /path/to/tududi/.env.example .env      # set TUDUDI_* values and DB_PASSWORD
 docker compose up -d
-docker compose logs -f tududi             # watch the first boot
+docker compose logs -f Cadence             # watch the first boot
 ```
 
 The first boot log should contain:
@@ -97,7 +97,7 @@ The SQLite file backups described in [backups.md](backups.md) do not apply. Use 
 0 3 * * * pg_dump "$DATABASE_URL" | gzip > /var/backups/tududi/tududi-$(date +\%F).sql.gz && find /var/backups/tududi -mtime +14 -delete
 
 # With the compose example
-docker compose exec db pg_dump -U tududi tududi | gzip > tududi-$(date +%F).sql.gz
+docker compose exec db pg_dump -U Cadence Cadence | gzip > tududi-$(date +%F).sql.gz
 
 # Restore into an empty database
 gunzip -c tududi-2026-09-05.sql.gz | psql "$DATABASE_URL"
@@ -119,7 +119,7 @@ Uploads live on disk (`TUDUDI_UPLOAD_PATH`) and need their own backup.
 
 ## Running More Than One Process
 
-PostgreSQL is what makes a second app process possible. tududi coordinates
+PostgreSQL is what makes a second app process possible. Cadence coordinates
 through the database so that several containers can share it safely:
 
 - **Schema and migrations.** The entrypoint runs `db-prepare` and
@@ -150,7 +150,7 @@ PostgreSQL `DATABASE_URL` are all set, and prints exactly what is missing.
 
 ## Search Indexes
 
-Search runs `LOWER(column) LIKE '%term%'`. On PostgreSQL, tududi creates
+Search runs `LOWER(column) LIKE '%term%'`. On PostgreSQL, Cadence creates
 trigram GIN indexes (`pg_trgm`) over those expressions on tasks, notes and
 projects, plus an index on session expiry, both for fresh databases
 (`db-prepare`) and existing ones (migration `20260907000007`). Nothing to
@@ -177,9 +177,9 @@ configure; `pg_trgm` ships with PostgreSQL.
 | `Unsupported DB_DIALECT` | Only `sqlite` and `postgres` are supported. |
 | `password authentication failed` | Wrong credentials, or a special character in the password was not URL-encoded; use `DB_PASSWORD`. |
 | `self signed certificate` | Set `DB_SSL_REJECT_UNAUTHORIZED=false` for self-signed servers, or install the CA. |
-| `Existing database detected` but the app reports missing tables | The database has a `users` table from another application. Point tududi at its own database. |
+| `Existing database detected` but the app reports missing tables | The database has a `users` table from another application. Point Cadence at its own database. |
 | Migration failed on start | The container exits with the failing migration in the log. Restore the last dump, keep the previous image, report the migration. |
-| Container starts but `/api/health` never responds | Check `docker compose logs tududi`; a database that is not reachable shows a connection error from `db-prepare.js` before anything else. |
+| Container starts but `/api/health` never responds | Check `docker compose logs Cadence`; a database that is not reachable shows a connection error from `db-prepare.js` before anything else. |
 | `PostgreSQL is selected ... but an existing SQLite database was found` | `DATABASE_URL` or `DB_DIALECT` is set while the SQLite file at `DB_FILE` (in Docker `/app/db/production.sqlite3`) still holds data, usually a variable left over in `.env`. Unset it to stay on SQLite, or set `TUDUDI_ALLOW_DIALECT_SWITCH=true` to start on PostgreSQL anyway (the SQLite data is not transferred). |
 
 ---

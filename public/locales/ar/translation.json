@@ -627,8 +627,8 @@
       "testRequired": "يجب عليك اختبار الاتصال قبل المتابعة",
       "syncDirection": "اتجاه المزامنة",
       "bidirectional": "ثنائي الاتجاه (مزامنة في كلا الاتجاهين)",
-      "pullOnly": "سحب فقط (من الخادم إلى Tududi)",
-      "pushOnly": "دفع فقط (من Tududi إلى الخادم)",
+      "pullOnly": "سحب فقط (من الخادم إلى Cadence)",
+      "pushOnly": "دفع فقط (من Cadence إلى الخادم)",
       "syncInterval": "فترة المزامنة (دقائق)",
       "syncIntervalHelp": "كم مرة يتم المزامنة تلقائيًا (5-1440 دقيقة)",
       "conflictPolicy": "حل النزاعات",
@@ -647,7 +647,7 @@
     "conflictResolver": {
       "title": "حل تعارضات المزامنة",
       "chooseVersion": "اختر أي إصدار للاحتفاظ به لكل حقل:",
-      "local": "محلي (Tududi)",
+      "local": "محلي (Cadence)",
       "remote": "بعيد (CalDAV)",
       "useThis": "استخدم هذا",
       "useAllLocal": "استخدم جميع المحلي",
@@ -686,7 +686,7 @@
       "addError": "تعذّرت إضافة هذا التقويم",
       "deleteError": "تعذّرت إزالة هذا التقويم",
       "title": "التقويمات في صفحة اليوم",
-      "description": "اعرض اجتماعاتك بجانب خطة يومك. يقرأ tududi هذه التقويمات فقط ولا يغيّرها أبدًا.",
+      "description": "اعرض اجتماعاتك بجانب خطة يومك. يقرأ Cadence هذه التقويمات فقط ولا يغيّرها أبدًا.",
       "empty": "لم يتم ربط أي تقويم بعد.",
       "lastSync": "حُدّث {{time}}",
       "remove": "إزالة {{name}}",
@@ -694,7 +694,7 @@
       "name": "الاسم",
       "namePlaceholder": "العمل، العائلة…",
       "url": "عنوان iCal السري",
-      "googleHelp": "في تقويم Google: الإعدادات ← تقويمك ← دمج التقويم ← «العنوان السري بتنسيق iCal». يوفّر تقويم Apple وOutlook روابط مشابهة. يستطيع أي شخص يملك هذا العنوان قراءة التقويم، لذلك يحفظه tududi مشفّرًا.",
+      "googleHelp": "في تقويم Google: الإعدادات ← تقويمك ← دمج التقويم ← «العنوان السري بتنسيق iCal». يوفّر تقويم Apple وOutlook روابط مشابهة. يستطيع أي شخص يملك هذا العنوان قراءة التقويم، لذلك يحفظه Cadence مشفّرًا.",
       "color": "اللون",
       "checking": "جارٍ التحقق من التقويم…",
       "add": "ربط",
@@ -836,7 +836,7 @@
       },
       "title": "مفاتيح API",
       "connectQrLabel": "رمز QR لتوصيل جهاز",
-      "connectQrHelp": "امسح هذا الرمز من تطبيق Tududi على هاتفك أو حاسوبك لتوصيله بهذا المفتاح."
+      "connectQrHelp": "امسح هذا الرمز من تطبيق Cadence على هاتفك أو حاسوبك لتوصيله بهذا المفتاح."
     },
     "calendarDescription": "تفعيل عرض التقويم لرؤية المهام حسب تاريخ الاستحقاق يوميًا وأسبوعيًا وشهريًا.",
     "connected": {
@@ -853,16 +853,16 @@
     "habitsDescription": "تفعيل قسم العادات لتتبع السلوكيات المتكررة والسلاسل المتتالية.",
     "loading": "جارٍ التحميل...",
     "mcp": {
-      "description": "اربط tududi بأي تطبيق متوافق مع MCP عبر Model Context Protocol. يتيح ذلك لمساعدي الذكاء الاصطناعي العمل مع مهامك ومشاريعك وملاحظاتك، سواء على خادم tududi محلي أو بعيد.",
+      "description": "اربط Cadence بأي تطبيق متوافق مع MCP عبر Model Context Protocol. يتيح ذلك لمساعدي الذكاء الاصطناعي العمل مع مهامك ومشاريعك وملاحظاتك، سواء على خادم Cadence محلي أو بعيد.",
       "example1": "اعرض مهامي لليوم",
       "example2": "أنشئ مهمة لمراجعة تكامل MCP",
       "example3": "ما المشاريع التي أعمل عليها حاليًا؟",
       "example4": "أضف إلى البريد الوارد تذكيرًا بفحص البريد الإلكتروني",
       "example5": "ابحث عن المهام المتعلقة بالتوثيق",
       "remote": {
-        "cloud": "الوصول إلى tududi بعيد (خوادم سحابية)",
+        "cloud": "الوصول إلى Cadence بعيد (خوادم سحابية)",
         "docker": "الاستخدام من عمليات نشر Docker",
-        "local": "الوصول إلى tududi محلي (localhost)",
+        "local": "الوصول إلى Cadence محلي (localhost)",
         "title": "الوصول عن بُعد مفعّل",
         "tokens": "الاتصال بأمان باستخدام رموز API",
         "usesPrefix": "يستخدم هذا الإعداد",
@@ -875,7 +875,7 @@
       },
       "step2": {
         "copy": "نسخ",
-        "description": "أضف هذا الإعداد إلى عميل MCP لديك. استبدل YOUR_API_TOKEN_HERE بالرمز الذي أنشأته في الخطوة 1. يستخدم mcp-remote للاتصال بخادم tududi عبر HTTP. المثال خاص بـ Claude Desktop:",
+        "description": "أضف هذا الإعداد إلى عميل MCP لديك. استبدل YOUR_API_TOKEN_HERE بالرمز الذي أنشأته في الخطوة 1. يستخدم mcp-remote للاتصال بخادم Cadence عبر HTTP. المثال خاص بـ Claude Desktop:",
         "loading": "جارٍ التحميل...",
         "locationTitle": "موقع ملف إعدادات Claude Desktop:",
         "otherClients": "قد تستخدم عملاء MCP الأخرى طرق إعداد مختلفة، راجع توثيق العميل الذي تستخدمه.",
@@ -886,7 +886,7 @@
         "title": "3. العمليات المتاحة"
       },
       "step4": {
-        "description": "بعد إضافة الإعداد، أعد تشغيل عميل MCP. بعدها يمكنك استخدام اللغة الطبيعية للتعامل مع tududi:",
+        "description": "بعد إضافة الإعداد، أعد تشغيل عميل MCP. بعدها يمكنك استخدام اللغة الطبيعية للتعامل مع Cadence:",
         "examplesTitle": "أمثلة على الطلبات:",
         "title": "4. ابدأ الاستخدام"
       },
@@ -895,7 +895,7 @@
         "firewall": "للخوادم البعيدة، تحقّق من إعدادات جدار الحماية",
         "intro": "إذا تعذّر اتصال عميل MCP، فتحقّق من:",
         "restart": "أنك أعدت تشغيل عميل MCP بالكامل",
-        "server": "أن خادم tududi يعمل ويمكن الوصول إليه",
+        "server": "أن خادم Cadence يعمل ويمكن الوصول إليه",
         "title": "استكشاف الأخطاء وإصلاحها",
         "token": "أن رمز API صالح ولم تنتهِ صلاحيته"
       }
@@ -949,12 +949,12 @@
     "google": {
       "error": "Google did not answer",
       "title": "Google Calendar and Tasks",
-      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a \"Cadence\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
       "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
       "connect": "Connect Google",
       "lastSync": "synced {{time}}",
       "firstSync": "first sync running…",
-      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncEvents": "Calendars, and dated tasks in a \"Cadence\" calendar",
       "syncTasks": "All tasks with Google Tasks (one list per project)",
       "calendars": "Shown on Calendar and Today",
       "readOnly": "read-only",
@@ -963,7 +963,7 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",
@@ -2087,8 +2087,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 مرحبًا بك في tududi!\n\nروبوت إدارة المهام الشخصية الخاص بك متصل الآن وجاهز للمساعدة!\n\n📝 فقط أرسل لي أي رسالة وسأضيفها إلى صندوق الوارد الخاص بك في tududi كعنصر.\n\n✨ الأوامر:\n• /help - عرض معلومات المساعدة\n• /start - عرض رسالة الترحيب\n• فقط اكتب أي نص - أضفه كعنصر في صندوق الوارد\n\nلنبدأ بالتنظيم! 🚀",
-    "helpMessage": "📋 مساعدة بوت tududi\n\nأرسل لي أي رسالة نصية وسأضيفها إلى صندوق الوارد الخاص بك في tududi كعنصر في صندوق الوارد.\n\nالأوامر:\n/start - رسالة الترحيب\n/help - عرض رسالة المساعدة هذه\n\nفقط اكتب العنصر الخاص بك وسأعتني بالباقي!",
+    "welcomeMessage": "🎉 مرحبًا بك في Cadence!\n\nروبوت إدارة المهام الشخصية الخاص بك متصل الآن وجاهز للمساعدة!\n\n📝 فقط أرسل لي أي رسالة وسأضيفها إلى صندوق الوارد الخاص بك في Cadence كعنصر.\n\n✨ الأوامر:\n• /help - عرض معلومات المساعدة\n• /start - عرض رسالة الترحيب\n• فقط اكتب أي نص - أضفه كعنصر في صندوق الوارد\n\nلنبدأ بالتنظيم! 🚀",
+    "helpMessage": "📋 مساعدة بوت Cadence\n\nأرسل لي أي رسالة نصية وسأضيفها إلى صندوق الوارد الخاص بك في Cadence كعنصر في صندوق الوارد.\n\nالأوامر:\n/start - رسالة الترحيب\n/help - عرض رسالة المساعدة هذه\n\nفقط اكتب العنصر الخاص بك وسأعتني بالباقي!",
     "commandProcessed": "تم معالجة الأمر بنجاح",
     "messageProcessed": "تم معالجة الرسالة بنجاح",
     "failedToAddToInbox": "❌ فشل في الإضافة إلى صندوق الوارد: {{error}}"
@@ -2938,9 +2938,9 @@
   },
   "subscription": {
     "title": "الاشتراك",
-    "chooseForCloud": "اختر خطة لـ tududi Cloud",
+    "chooseForCloud": "اختر خطة لـ Cadence Cloud",
     "noActive": "لا توجد اشتراكات نشطة",
-    "chooseToContinue": "اختر خطة للاستمرار في استخدام سحابة tududi.",
+    "chooseToContinue": "اختر خطة للاستمرار في استخدام سحابة Cadence.",
     "monthly": "شهري",
     "yearly": "سنوي",
     "priceMonthly": "{{price}} شهرياً",
@@ -2956,15 +2956,15 @@
     "notConfigured": "الاشتراكات غير متاحة في هذه النسخة بعد. يرجى الاتصال بالدعم.",
     "exportData": "تصدير بياناتك",
     "subscribe": "اشترك",
-    "readOnlyBanner": "انتهت الفترة التجريبية، لذا أصبحت بياناتك للقراءة فقط. اشترك لمواصلة استخدام tududi أو صدّر بياناتك. سيُحذف الحساب في {{date}}.",
+    "readOnlyBanner": "انتهت الفترة التجريبية، لذا أصبحت بياناتك للقراءة فقط. اشترك لمواصلة استخدام Cadence أو صدّر بياناتك. سيُحذف الحساب في {{date}}.",
     "lockedAi": "مساعد الذكاء الاصطناعي جزء من الخطة المدفوعة.",
     "lockedPublicNotes": "روابط الملاحظات العامة جزء من الخطة المدفوعة.",
     "lockedMembers": "إضافة الأعضاء جزء من الخطة المدفوعة.",
     "trialEnded": "انتهت الفترة التجريبية",
     "onTrial": "أنت في الفترة التجريبية المجانية",
-    "readOnlyUntil": "بياناتك للقراءة فقط حتى {{date}}، ثم يُحذف الحساب. اشترك لمواصلة استخدام tududi Cloud.",
+    "readOnlyUntil": "بياناتك للقراءة فقط حتى {{date}}، ثم يُحذف الحساب. اشترك لمواصلة استخدام Cadence Cloud.",
     "trialIncludes": "تنتهي فترتك التجريبية في {{date}}. يُفتح مساعد الذكاء الاصطناعي والملاحظات العامة وإضافة الأعضاء عند الاشتراك.",
-    "backToApp": "العودة إلى tududi",
+    "backToApp": "العودة إلى Cadence",
     "trialBanner": "الفترة التجريبية المجانية، الأيام المتبقية: {{count}}",
     "trialLock": {
       "webhooks": "الـ Webhooks ليست ضمن الفترة التجريبية المجانية. اشترك لإرسال الأحداث إلى خدماتك الخاصة."
@@ -3047,7 +3047,7 @@
     "failedToUpdate": "تعذّر تحديث العضو",
     "addEmailHint": "إضافة بريد إلكتروني ترسل إليه دعوة لتعيين كلمة مرور. لا يمكن تغييره بعد ذلك.",
     "remove": "إزالة العضو",
-    "removeConfirm": "إزالة {{name}}؟ سيُحذف حسابه وكل ما فيه، ولا يمكن التراجع عن ذلك. في tududi Cloud يصبح مقعده متاحًا لشخص آخر.",
+    "removeConfirm": "إزالة {{name}}؟ سيُحذف حسابه وكل ما فيه، ولا يمكن التراجع عن ذلك. في Cadence Cloud يصبح مقعده متاحًا لشخص آخر.",
     "removed": "تمت إزالة العضو",
     "updated": "تم تحديث العضو",
     "invitationSent": "تم إرسال الدعوة",
@@ -3389,10 +3389,10 @@
   "blog": {
     "nav": "المدونة",
     "navCta": "ابدأ الآن",
-    "footerCloud": "tududi Cloud",
+    "footerCloud": "Cadence Cloud",
     "footerTerms": "الشروط",
     "footerPrivacy": "الخصوصية",
-    "ctaEyebrow": "tududi Cloud",
+    "ctaEyebrow": "Cadence Cloud",
     "ctaTitle": "أخرِج الأشياء الصغيرة من رأسك.",
     "ctaBody": "المهام والمشاريع والملاحظات والعادات في مكان واحد هادئ، مشتركة مع من تعيش وتعمل معهم. بلا خادم، ولا شيء لتثبيته.",
     "ctaPrice": "{{monthly}} شهريًا أو {{annual}} سنويًا",
@@ -3554,7 +3554,7 @@
       "exampleTag": "الموقع",
       "exampleNote": "أي نص أطول يكتب هنا.",
       "instructionsSheet": "كيف تملأ هذه الورقة",
-      "instructionsTitle": "ملء هذه الورقة لاستخدامها في tududi",
+      "instructionsTitle": "ملء هذه الورقة لاستخدامها في Cadence",
       "instructionsName": "الاسم هو العمود الوحيد الذي يجب ملؤه. كل صف يمثل مهمة واحدة.",
       "instructionsProject": "المشروع: المهام التي تحمل اسم المشروع نفسه تُجمع معًا. المشاريع غير الموجودة بعد تُنشأ عند الاستيراد.",
       "instructionsParent": "المهمة الأم: اكتب اسم مهمة أخرى في الورقة لتصبح هذه المهمة فرعية لها. كما يمكن استخدام عمود WBS (1, 1.1, 1.2) أو الصفوف المزاحة.",
@@ -3597,7 +3597,7 @@
       "intoNewProject": "في مشروع جديد",
       "byColumn": "استخدم عمود المشروع وأنشئ المشاريع غير الموجودة بعد",
       "noProject": "بدون مشروع",
-      "updateExisting": "حدّث المهام الموجودة في tududi (بالمطابقة عبر UID). الخلايا الفارغة تترك الحقل كما هو.",
+      "updateExisting": "حدّث المهام الموجودة في Cadence (بالمطابقة عبر UID). الخلايا الفارغة تترك الحقل كما هو.",
       "countCreate": "{{count}} مهمة جديدة",
       "countUpdate": "{{count}} محدّثة",
       "countSkip": "{{count}} متخطاة",

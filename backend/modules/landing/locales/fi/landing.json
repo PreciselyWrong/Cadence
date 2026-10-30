@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Vaihda kieltä",
     "langSwitcherCurrent": "Kieli: {{name}}",
-    "description": "Kirjaa kaikki, suunnittele päivä tekoälyllä kalenterisi ympärille ja pidä alueet, tavoitteet, projektit, muistiinpanot ja tavat yhdessä järjestelmässä. MCP-palvelin, jossa on {{tools}} työkalua, antaa tekoälyagenttien käsitellä listaasi. tududi Cloud -tili on valmis minuutissa.",
-    "title": "tududi: tehtävienhallinta ja elämänhallintajärjestelmä, MCP:llä AI-agenteille"
+    "description": "Kirjaa kaikki, suunnittele päivä tekoälyllä kalenterisi ympärille ja pidä alueet, tavoitteet, projektit, muistiinpanot ja tavat yhdessä järjestelmässä. MCP-palvelin, jossa on {{tools}} työkalua, antaa tekoälyagenttien käsitellä listaasi. Cadence Cloud -tili on valmis minuutissa.",
+    "title": "Cadence: tehtävienhallinta ja elämänhallintajärjestelmä, MCP:llä AI-agenteille"
   },
   "nav": {
     "demo": "Live-demo",
@@ -52,7 +52,7 @@
         "body": "Lisää, löydä ja merkitse tehtäviä valmiiksi poistumatta keskustelusta."
       },
       "dataStays": {
-        "body": "MCP-yhteys menee suoraan omaan tududi-instanssiisi, Cloudissa tai omalla palvelimellasi. Mikään ei kulje kolmannen osapuolen kautta.",
+        "body": "MCP-yhteys menee suoraan omaan Cadence-instanssiisi, Cloudissa tai omalla palvelimellasi. Mikään ei kulje kolmannen osapuolen kautta.",
         "title": "Se puhuu instanssisi kanssa"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Valmis. <strong>Tarkista uudelleensuunnittelun luonnos</strong> erääntyy nyt perjantaina, ja <strong>Poista Maksut-jonon esto</strong> on Maksut-projektissa, erääntyy tänään.",
       "ask1": "Mihin minun kannattaisi keskittyä tänään, ja on jokin myöhässä?",
       "ask2": "Siirrä uudelleensuunnittelun tarkistus perjantaihin ja lisää tehtävä Maksujen eston poistamiseksi.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "Esimerkkiistunto. Agenttisi yhdistää suoraan omaan instanssiisi MCP:n kautta.",
       "composer": "Vastaa Claudelle…",
       "groupTitle": "Hyvä tietää",
@@ -108,8 +108,8 @@
       "toolLabel": "Käytti tududia",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP sisältyy tududi Cloudiin ja kaikkiin itse ylläpidettyihin instansseihin.",
-    "ledeHtml": "tududi sisältää MCP-palvelimen, joka tarjoaa <strong>{{tools}} työkalua</strong> ja kattaa tehtävät, projektit, alueet, tavoitteet, tavat, muistiinpanot, henkilöt, tagit, näkymät, saapuneet, haun ja mittarit. Yhdistä Claude tai mikä tahansa MCP-yhteensopiva agentti suoraan omaan instanssiisi, olipa se Cloud-tilisi tai itse ylläpitämäsi palvelin. Yhteys menee instanssiisi sen sijaan, että se kulkisi välissä olevan releen kautta, rakenteellinen ero, jota Todoist ja Notion eivät voi tarjota, luvatpa ne mitä tahansa.",
+    "footnoteIncluded": "MCP sisältyy Cadence Cloudiin ja kaikkiin itse ylläpidettyihin instansseihin.",
+    "ledeHtml": "Cadence sisältää MCP-palvelimen, joka tarjoaa <strong>{{tools}} työkalua</strong> ja kattaa tehtävät, projektit, alueet, tavoitteet, tavat, muistiinpanot, henkilöt, tagit, näkymät, saapuneet, haun ja mittarit. Yhdistä Claude tai mikä tahansa MCP-yhteensopiva agentti suoraan omaan instanssiisi, olipa se Cloud-tilisi tai itse ylläpitämäsi palvelin. Yhteys menee instanssiisi sen sijaan, että se kulkisi välissä olevan releen kautta, rakenteellinen ero, jota Todoist ja Notion eivät voi tarjota, luvatpa ne mitä tahansa.",
     "titleLine1": "Todellinen järjestelmä",
     "titleLine2": "jota AI-agenttisi voi oikeasti käyttää"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Asenna sovelluksena",
-        "body": "Lisää tududi aloitusnäytölle tai työpöydälle PWA:na. Toimii offline-tilassa ja synkronoituu, kun palaat verkkoon."
+        "body": "Lisää Cadence aloitusnäytölle tai työpöydälle PWA:na. Toimii offline-tilassa ja synkronoituu, kun palaat verkkoon."
       },
       "oidc": {
         "title": "OIDC- / SSO-kirjautuminen",
@@ -232,7 +232,7 @@
         "body": "Jaa projekteja tarkoin käyttöoikeuksin - vain luku tai luku ja kirjoitus."
       }
     },
-    "sub": "tududi yhdistää tavoitteet, projektit, tehtävät, muistiinpanot ja älykkäät näkymät yhdeksi rauhalliseksi, keskittyneeksi järjestelmäksi. Anna meidän ylläpitää sitä puolestasi, tai ylläpidä se itse, jos haluat."
+    "sub": "Cadence yhdistää tavoitteet, projektit, tehtävät, muistiinpanot ja älykkäät näkymät yhdeksi rauhalliseksi, keskittyneeksi järjestelmäksi. Anna meidän ylläpitää sitä puolestasi, tai ylläpidä se itse, jos haluat."
   },
   "pricing": {
     "eyebrow": "Hinnat",
@@ -284,14 +284,14 @@
         "perYear": "/vuosi"
       }
     },
-    "fineprint": "Peruuta milloin tahansa ja vie kaikki. Jos tududi Cloud joskus suljetaan, saat tietosi ja oppaan siirtymiseen omalle palvelimelle. Tallennustilaan ja API-liikenteeseen sovelletaan kohtuullista käyttöä. 14 päivän rahat takaisin -takuu, ilman kysymyksiä.",
+    "fineprint": "Peruuta milloin tahansa ja vie kaikki. Jos Cadence Cloud joskus suljetaan, saat tietosi ja oppaan siirtymiseen omalle palvelimelle. Tallennustilaan ja API-liikenteeseen sovelletaan kohtuullista käyttöä. 14 päivän rahat takaisin -takuu, ilman kysymyksiä.",
     "perMonth": "/kk per henkilö",
     "nextPrice": "Hinta per henkilö on {{date}} alkaen {{monthly}} kuukaudessa tai {{annual}} vuodessa. Tilaa ennen sitä, niin pidät tämänpäiväisen hinnan niin kauan kuin tilaus jatkuu.",
     "sub": "Jokaisessa tilauksessa on kaikki ominaisuudet. Pro on yhdelle henkilölle, ja Tiimi-tilaus on kiinteän kokoinen, ja lisäät ihmisiä siihen asti."
   },
   "compare": {
     "title": "Nopea vertailu",
-    "sub": "Näin tududi Cloud vertautuu sovelluksiin, joihin sitä useimmiten verrataan, henkilökohtaisilla tilauksilla.",
+    "sub": "Näin Cadence Cloud vertautuu sovelluksiin, joihin sitä useimmiten verrataan, henkilökohtaisilla tilauksilla.",
     "footnote": "Todoist Pro, TickTick Premium ja Notion Plus niiden julkisilta hintasivuilta syyskuussa 2026. Tarkista ajantasaiset hinnat niiden sivuilta. Niiden hinnat ovat Yhdysvaltain listahintoja dollareissa.",
     "rows": {
       "price": "Hinta, vuosilaskutus",
@@ -326,7 +326,7 @@
     "heading": "Saatavilla {{count}} kielellä ympäri maailman"
   },
   "community": {
-    "title": "Liity tududi-yhteisöön",
+    "title": "Liity Cadence-yhteisöön",
     "sub": "Keskustele muiden tududin käyttäjien kanssa, saa tukea ja pysy ajan tasalla"
   },
   "footer": {
@@ -360,7 +360,7 @@
     "items": {
       "freePlan": {
         "a": "Ei. Pro maksaa {{monthly}} kuukaudessa tai {{price}} vuodessa yhdeltä henkilöltä, ja Tiimi-tilaukset maksavat saman verran per henkilö kiinteinä kokoina. Ilmaista tasoa ei ole, ei kokeilukelloa eikä korttia, jota aletaan myöhemmin hiljaa veloittaa. Jos palvelu ei sovi sinulle, käytössä on 14 päivän rahat takaisin -takuu, ja tällä sivulla on live-demo, jos haluat ensin katsella ympärillesi.",
-        "q": "Onko tududi Cloudissa ilmaistaso tai kokeilua?",
+        "q": "Onko Cadence Cloudissa ilmaistaso tai kokeilua?",
         "aTrial": "Ilmaista tilausta ei ole, mutta jokainen uusi tili saa {{days}} päivän ilmaisen kokeilun ilman maksukorttia. Kokeiluun sisältyy AI-avustaja pienemmällä käyttökiintiöllä ja yksi jäsen, jonka voit lisätä. Julkiset muistiinpanolinkit avautuvat, kun tilaat. Jos et tilaa, tili muuttuu vain luku -tilaan 30 päiväksi, jotta voit viedä tietosi, ja poistetaan sen jälkeen. Kokeilun jälkeen Pro maksaa {{monthly}} kuukaudessa tai {{price}} vuodessa, ja Tiimi-tilaukset maksavat saman verran per henkilö. Ilmainen tapa käyttää tududia on ajaa sitä omalla palvelimella, se on sama sovellus."
       },
       "leaving": {
@@ -368,7 +368,7 @@
         "a": "Kyllä, milloin tahansa. Vie kaikki yhtenä tiedostona profiilistasi ja tuo se itse ylläpidettyyn tududiin, joka lukee saman muodon. Tilin poistaminen poistaa tietosi, liitteesi ja varmuuskopiosi palvelimiltamme ja peruu mahdollisen tilauksen."
       },
       "aiOptional": {
-        "a": "Ei. Molemmat AI-kerrokset ovat pois päältä, kunnes otat ne käyttöön, ja tududi on täysi järjestelmä myös niitä käyttämättä. Jos et koskaan ota niitä käyttöön, mitään ei puutu ja mikään ei muistuttele sinua.",
+        "a": "Ei. Molemmat AI-kerrokset ovat pois päältä, kunnes otat ne käyttöön, ja Cadence on täysi järjestelmä myös niitä käyttämättä. Jos et koskaan ota niitä käyttöön, mitään ei puutu ja mikään ei muistuttele sinua.",
         "q": "Täytyykö minun käyttää AI-ominaisuuksia?"
       },
       "aiPrivacy": {
@@ -385,16 +385,16 @@
         "q": "Ylläpidetäänkö tududia aktiivisesti?"
       },
       "mcp": {
-        "a": "MCP on Model Context Protocol, avoin standardi AI-agenttien yhdistämiseksi oikeisiin järjestelmiin. tududi sisältää MCP-palvelimen, joka tarjoaa {{tools}} työkalua tehtäviin, projekteihin, alueisiin, tavoitteisiin, tapoihin, muistiinpanoihin, henkilöihin, tageihin, näkymiin, saapuneisiin, hakuun ja mittareihin, jotta agentti voi tallentaa, löytää, päivittää ja saattaa työn loppuun sen sijaan, että puhuisi siitä vain. Se on valinnainen, sisältyy Cloudiin ja kaikkiin itse ylläpidettyihin instansseihin, ja toimii Claude Desktopin, Cursorin, Windsurfin, Clinen tai minkä tahansa muun MCP-asiakkaan kanssa.",
+        "a": "MCP on Model Context Protocol, avoin standardi AI-agenttien yhdistämiseksi oikeisiin järjestelmiin. Cadence sisältää MCP-palvelimen, joka tarjoaa {{tools}} työkalua tehtäviin, projekteihin, alueisiin, tavoitteisiin, tapoihin, muistiinpanoihin, henkilöihin, tageihin, näkymiin, saapuneisiin, hakuun ja mittareihin, jotta agentti voi tallentaa, löytää, päivittää ja saattaa työn loppuun sen sijaan, että puhuisi siitä vain. Se on valinnainen, sisältyy Cloudiin ja kaikkiin itse ylläpidettyihin instansseihin, ja toimii Claude Desktopin, Cursorin, Windsurfin, Clinen tai minkä tahansa muun MCP-asiakkaan kanssa.",
         "q": "Mikä on MCP, ja mitä agentti voi oikeastaan tehdä?"
       },
       "shutdown": {
-        "a": "Sovellus on MIT-lisensoitu ja lähdekoodi on julkinen, niin sitä ei voida viedä sinulta. Kuka tahansa voi jatkaa sen ajamista, ja voit forkata sen. tududi Cloudissa tietosi asuvat vakiomuotoisessa tududi-tietokannassa eikä omistusoikeudellisessa muodossa, niin jos palvelu joskus suljettaisiin, saisit tietosi ja oppaan niiden siirtämiseen omalle palvelimellesi.",
-        "q": "Mitä tapahtuu tiedoillleni, jos tududi katoaa?"
+        "a": "Sovellus on MIT-lisensoitu ja lähdekoodi on julkinen, niin sitä ei voida viedä sinulta. Kuka tahansa voi jatkaa sen ajamista, ja voit forkata sen. Cadence Cloudissa tietosi asuvat vakiomuotoisessa Cadence-tietokannassa eikä omistusoikeudellisessa muodossa, niin jos palvelu joskus suljettaisiin, saisit tietosi ja oppaan niiden siirtämiseen omalle palvelimellesi.",
+        "q": "Mitä tapahtuu tiedoillleni, jos Cadence katoaa?"
       },
       "trust": {
         "q": "Voinko luottaa teihin tietojeni kanssa?",
-        "a": "Sinun ei tarvitse uskoa pelkkää sanaamme. tududi on avointa lähdekoodia, joten kuka tahansa voi lukea tarkalleen, miten se käsittelee tietojasi. Cloudissa kaikki, mitä laitat sisään, pysyy omanasi: vie se yhtenä tiedostona milloin tahansa, poista tilisi itse, ja jos se ei lopulta sovi sinulle, on 14 päivän rahat takaisin -takuu."
+        "a": "Sinun ei tarvitse uskoa pelkkää sanaamme. Cadence on avointa lähdekoodia, joten kuka tahansa voi lukea tarkalleen, miten se käsittelee tietojasi. Cloudissa kaikki, mitä laitat sisään, pysyy omanasi: vie se yhtenä tiedostona milloin tahansa, poista tilisi itse, ja jos se ei lopulta sovi sinulle, on 14 päivän rahat takaisin -takuu."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Vie kaikki, milloin tahansa"
     ],
     "lede": "Sama järjestelmä molemmissa tapauksissa. Ero on siinä, kuka pitää sen käynnissä, päivitettynä ja varmuuskopioituna kolmelta yöllä.",
-    "metaDescription": "tududi Cloud on sama avoimen lähdekoodin järjestelmä palvelimillamme, ja hoidamme päivitykset, varmuuskopiot ja sähköpostin puolestasi. Pro yhdelle henkilölle tai Tiimi-tilaus ryhmälle, kuukausittain tai vuosittain, peru milloin tahansa.",
-    "metaTitle": "tududi Cloud: isännöity tududi, ylläpidettynä puolestasi",
+    "metaDescription": "Cadence Cloud on sama avoimen lähdekoodin järjestelmä palvelimillamme, ja hoidamme päivitykset, varmuuskopiot ja sähköpostin puolestasi. Pro yhdelle henkilölle tai Tiimi-tilaus ryhmälle, kuukausittain tai vuosittain, peru milloin tahansa.",
+    "metaTitle": "Cadence Cloud: isännöity Cadence, ylläpidettynä puolestasi",
     "note": "Samat MIT-lisensoidut sovellus. Vie kaikki, milloin tahansa.",
     "orAnnual": "tai",
     "priceNote": "Maksunvälittäjämme laskuttaa. Hinnat eivät sisällä sovellettavia veroja.",
@@ -452,7 +452,7 @@
         "title": "Päivitykset asennettuna puolestasi"
       }
     },
-    "title": "Miksi käyttää tududi Cloudia?",
+    "title": "Miksi käyttää Cadence Cloudia?",
     "whyEyebrow": "Cloud",
     "whySub": "Eivät ominaisuudet. Kaikki ominaisuudet löytyvät myös itse ylläpidetystä versiosta.",
     "whyTitle": "Mistä oikeastaan maksat",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Ota yhteyttä",
-    "lede": "Kysyttävää tududi Cloudista, laskutuksesta tai tilistäsi? Lähetä viesti, niin vastaamme sähköpostitse.",
+    "lede": "Kysyttävää Cadence Cloudista, laskutuksesta tai tilistäsi? Lähetä viesti, niin vastaamme sähköpostitse.",
     "name": "Nimi",
     "email": "Sähköposti",
     "message": "Viesti",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Kirjaa kaikki omin sanoin",
-        "body": "Yksi lisäysruutu saapuneille, tehtäville, muistiinpanoille ja projekteille, kaikkialla sovelluksessa. Kirjoita kuten ajattelet, tududi hoitaa loput.",
+        "body": "Yksi lisäysruutu saapuneille, tehtäville, muistiinpanoille ja projekteille, kaikkialla sovelluksessa. Kirjoita kuten ajattelet, Cadence hoitaa loput.",
         "points": [
           "“next fri”, “in 3 days” tai “every first monday” asettaa päivän tai toiston",
           "#tunnisteet, +Projekti ja @henkilö tunnistetaan kirjoittaessa",

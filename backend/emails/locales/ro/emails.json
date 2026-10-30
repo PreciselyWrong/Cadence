@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Bună,",
-        "signoff": "Toate cele bune,\nEchipa Tududi",
+        "signoff": "Toate cele bune,\nEchipa Cadence",
         "copyLink": "Sau copiază acest link și lipește-l în browser:",
         "trialUntil": "Perioada ta de probă gratuită durează până pe {{date}}."
     },
     "verification": {
-        "subject": "Bun venit la Tududi - Verifică-ți adresa de e-mail",
-        "welcome": "Bun venit la Tududi!",
-        "opening": "Îți mulțumim că te-ai înregistrat. Pentru a finaliza înregistrarea și a începe să folosești Tududi, verifică-ți adresa de e-mail apăsând pe linkul de mai jos:",
+        "subject": "Bun venit la Cadence - Verifică-ți adresa de e-mail",
+        "welcome": "Bun venit la Cadence!",
+        "opening": "Îți mulțumim că te-ai înregistrat. Pentru a finaliza înregistrarea și a începe să folosești Cadence, verifică-ți adresa de e-mail apăsând pe linkul de mai jos:",
         "button": "Verifică adresa de e-mail",
         "expires_one": "Acest link de verificare expiră în {{count}} oră.",
         "expires_few": "Acest link de verificare expiră în {{count}} ore.",
@@ -23,15 +23,15 @@
             "Să configurezi sarcini recurente",
             "Să îți urmărești productivitatea"
         ],
-        "ignore": "Dacă nu ți-ai creat un cont Tududi, poți ignora liniștit acest e-mail."
+        "ignore": "Dacă nu ți-ai creat un cont Cadence, poți ignora liniștit acest e-mail."
     },
     "verificationReminder": {
-        "subject": "Reamintire: verifică-ți adresa de e-mail pentru a începe să folosești Tududi",
-        "opening": "Te-ai înscris în Tududi acum aproximativ o zi, dar adresa ta de e-mail nu este încă verificată. Contul tău (și perioada de probă gratuită) pornește imediat ce o verifici."
+        "subject": "Reamintire: verifică-ți adresa de e-mail pentru a începe să folosești Cadence",
+        "opening": "Te-ai înscris în Cadence acum aproximativ o zi, dar adresa ta de e-mail nu este încă verificată. Contul tău (și perioada de probă gratuită) pornește imediat ce o verifici."
     },
     "passwordReset": {
-        "subject": "Resetează-ți parola Tududi",
-        "intro": "Cineva a cerut resetarea parolei pentru contul tău Tududi.",
+        "subject": "Resetează-ți parola Cadence",
+        "intro": "Cineva a cerut resetarea parolei pentru contul tău Cadence.",
         "action": "Deschide acest link pentru a alege o parolă nouă:",
         "button": "Alege o parolă nouă",
         "expires_one": "Linkul expiră în {{count}} minut. Dacă nu ai cerut resetarea, ignoră acest e-mail; parola ta rămâne neschimbată.",
@@ -39,8 +39,8 @@
         "expires_other": "Linkul expiră în {{count}} de minute. Dacă nu ai cerut resetarea, ignoră acest e-mail; parola ta rămâne neschimbată."
     },
     "memberInvite": {
-        "subject": "Ai fost adăugat într-un spațiu de lucru Tududi",
-        "intro": "Ai fost adăugat într-un spațiu de lucru Tududi.",
+        "subject": "Ai fost adăugat într-un spațiu de lucru Cadence",
+        "intro": "Ai fost adăugat într-un spațiu de lucru Cadence.",
         "action": "Alege o parolă pentru a-ți activa contul și a te conecta:",
         "button": "Setează parola",
         "expires_one": "Linkul expiră în {{count}} oră. Dacă nu te așteptai la acest mesaj, poți ignora acest e-mail.",
@@ -48,24 +48,24 @@
         "expires_other": "Linkul expiră în {{count}} de ore. Dacă nu te așteptai la acest mesaj, poți ignora acest e-mail."
     },
     "trialReminder": {
-        "subjectTomorrow": "Perioada ta de probă tududi se încheie mâine",
-        "subjectDays_one": "Perioada ta de probă tududi se încheie în {{count}} zi",
-        "subjectDays_few": "Perioada ta de probă tududi se încheie în {{count}} zile",
-        "subjectDays_other": "Perioada ta de probă tududi se încheie în {{count}} de zile",
-        "endsTomorrow": "Perioada ta de probă tududi Cloud se încheie mâine, pe {{date}}.",
-        "endsInDays_one": "Perioada ta de probă tududi Cloud se încheie în {{count}} zi, pe {{date}}.",
-        "endsInDays_few": "Perioada ta de probă tududi Cloud se încheie în {{count}} zile, pe {{date}}.",
-        "endsInDays_other": "Perioada ta de probă tududi Cloud se încheie în {{count}} de zile, pe {{date}}.",
+        "subjectTomorrow": "Perioada ta de probă Cadence se încheie mâine",
+        "subjectDays_one": "Perioada ta de probă Cadence se încheie în {{count}} zi",
+        "subjectDays_few": "Perioada ta de probă Cadence se încheie în {{count}} zile",
+        "subjectDays_other": "Perioada ta de probă Cadence se încheie în {{count}} de zile",
+        "endsTomorrow": "Perioada ta de probă Cadence Cloud se încheie mâine, pe {{date}}.",
+        "endsInDays_one": "Perioada ta de probă Cadence Cloud se încheie în {{count}} zi, pe {{date}}.",
+        "endsInDays_few": "Perioada ta de probă Cadence Cloud se încheie în {{count}} zile, pe {{date}}.",
+        "endsInDays_other": "Perioada ta de probă Cadence Cloud se încheie în {{count}} de zile, pe {{date}}.",
         "afterReadOnly_one": "După aceea, contul tău devine doar în citire timp de {{count}} zi, ca să îți poți exporta datele, apoi este șters.",
         "afterReadOnly_few": "După aceea, contul tău devine doar în citire timp de {{count}} zile, ca să îți poți exporta datele, apoi este șters.",
         "afterReadOnly_other": "După aceea, contul tău devine doar în citire timp de {{count}} de zile, ca să îți poți exporta datele, apoi este șters.",
         "afterFree": "După aceea, contul tău trece la planul gratuit.",
-        "keep": "Pentru a folosi în continuare tududi Cloud așa cum este acum, cu asistentul AI și membrii incluși, abonează-te:",
+        "keep": "Pentru a folosi în continuare Cadence Cloud așa cum este acum, cu asistentul AI și membrii incluși, abonează-te:",
         "button": "Abonează-te"
     },
     "deletionWarning": {
-        "subject": "Contul tău tududi va fi șters pe {{date}}",
-        "ended": "Perioada ta de probă tududi Cloud s-a încheiat, iar de atunci contul tău este doar în citire.",
+        "subject": "Contul tău Cadence va fi șters pe {{date}}",
+        "ended": "Perioada ta de probă Cadence Cloud s-a încheiat, iar de atunci contul tău este doar în citire.",
         "deleteOn": "Pe {{date}}, contul și tot ce conține vor fi șterse.",
         "keep": "Pentru a-l păstra, abonează-te:",
         "button": "Păstrează-mi contul",
@@ -73,8 +73,8 @@
         "final": "Dacă nu faci nimic, contul va fi șters pe {{date}}, iar acesta este ultimul e-mail pe care ți-l trimitem despre asta."
     },
     "emptyAccount": {
-        "subject": "tududi-ul tău este încă gol",
-        "intro": "Ai un cont tududi de câteva zile, dar încă nu e nimic în el. Cei mai mulți încep cu unul dintre acești pași, și fiecare durează mai puțin de un minut:",
+        "subject": "Cadence-ul tău este încă gol",
+        "intro": "Ai un cont Cadence de câteva zile, dar încă nu e nimic în el. Cei mai mulți încep cu unul dintre acești pași, și fiecare durează mai puțin de un minut:",
         "ideas": [
             "Notează în Inbox tot ce ai în minte și organizează mai târziu.",
             "Deschide Plan, alege trei lucruri pentru azi și lasă restul.",
@@ -85,7 +85,7 @@
     },
     "comeBack": {
         "subject": "Sarcinile tale sunt unde le-ai lăsat",
-        "intro": "Nu ai mai intrat în tududi de ceva vreme. Tot ce ai adăugat este încă acolo, exact cum l-ai lăsat.",
+        "intro": "Nu ai mai intrat în Cadence de ceva vreme. Tot ce ai adăugat este încă acolo, exact cum l-ai lăsat.",
         "tip": "Dacă lista s-a lungit prea mult, începe cu puțin: deschide Plan, alege trei lucruri pentru azi și lasă restul pentru mai târziu.",
         "button": "Planifică ziua",
         "outro": "Nu îți vom mai trimite un astfel de e-mail până nu revii."
@@ -93,23 +93,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Autentificarea în doi pași este activată",
-            "body": "Autentificarea în doi pași a fost activată pentru contul tău Tududi. Pentru conectare ai nevoie acum de un cod din aplicația de autentificare, iar toate celelalte dispozitive au fost deconectate."
+            "body": "Autentificarea în doi pași a fost activată pentru contul tău Cadence. Pentru conectare ai nevoie acum de un cod din aplicația de autentificare, iar toate celelalte dispozitive au fost deconectate."
         },
         "mfaDisabled": {
             "subject": "Autentificarea în doi pași este dezactivată",
-            "body": "Autentificarea în doi pași a fost dezactivată pentru contul tău Tududi. Pentru conectare ai nevoie acum doar de parolă."
+            "body": "Autentificarea în doi pași a fost dezactivată pentru contul tău Cadence. Pentru conectare ai nevoie acum doar de parolă."
         },
         "mfaReset": {
             "subject": "Autentificarea ta în doi pași a fost resetată",
-            "body": "Un administrator a resetat autentificarea în doi pași pentru contul tău Tududi, iar toate dispozitivele au fost deconectate. Te poți conecta cu parola și o poți activa din nou."
+            "body": "Un administrator a resetat autentificarea în doi pași pentru contul tău Cadence, iar toate dispozitivele au fost deconectate. Te poți conecta cu parola și o poți activa din nou."
         },
         "recoveryCodeUsed": {
             "subject": "A fost folosit un cod de recuperare",
-            "body": "Cineva s-a conectat la contul tău Tududi cu unul dintre codurile tale de recuperare. Fiecare cod funcționează o singură dată."
+            "body": "Cineva s-a conectat la contul tău Cadence cu unul dintre codurile tale de recuperare. Fiecare cod funcționează o singură dată."
         },
         "recoveryCodesRegenerated": {
             "subject": "Au fost create coduri de recuperare noi",
-            "body": "Au fost create coduri de recuperare noi pentru contul tău Tududi. Cele vechi nu mai funcționează."
+            "body": "Au fost create coduri de recuperare noi pentru contul tău Cadence. Cele vechi nu mai funcționează."
         },
         "button": "Deschide setările de securitate",
         "notYou": "Dacă nu ai fost tu, schimbă-ți parola acum și anunță-l pe administrator."

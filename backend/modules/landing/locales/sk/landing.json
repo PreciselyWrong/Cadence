@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "tududi: správca úloh a systém na riadenie života, s MCP pre AI agentov",
-    "description": "Zachyťte čokoľvek, naplánujte si deň s AI podľa svojho kalendára a majte oblasti, ciele, projekty, poznámky a návyky v jednom systéme. MCP server so {{tools}} nástrojmi umožní AI agentom pracovať s vaším zoznamom. Účet v tududi Cloud si založíte za minútu.",
+    "title": "Cadence: správca úloh a systém na riadenie života, s MCP pre AI agentov",
+    "description": "Zachyťte čokoľvek, naplánujte si deň s AI podľa svojho kalendára a majte oblasti, ciele, projekty, poznámky a návyky v jednom systéme. MCP server so {{tools}} nástrojmi umožní AI agentom pracovať s vaším zoznamom. Účet v Cadence Cloud si založíte za minútu.",
     "langSwitcherLabel": "Zmeniť jazyk",
     "langSwitcherCurrent": "Jazyk: {{name}}"
   },
@@ -21,10 +21,10 @@
     "titleLine1": "Produktivita jednoducho",
     "titleLine2": "",
     "lede": "Zachyťte čokoľvek, naplánujte si deň s AI podľa svojho kalendára a majte oblasti, ciele, projekty, poznámky a návyky v jednom systéme. Účet v Cloude si založíte za minútu.",
-    "ctaPrimary": "Začnite v tududi Cloud",
+    "ctaPrimary": "Začnite v Cadence Cloud",
     "ctaDemo": "Vyskúšajte živé demo",
     "demoNote": "Skutočná hostovaná inštancia s ukážkovými dátami, zdieľaná a pravidelne obnovovaná",
-    "screenshotAlt": "Rozhranie tududi so zobrazením Dnes a naplánovanými úlohami",
+    "screenshotAlt": "Rozhranie Cadence so zobrazením Dnes a naplánovanými úlohami",
     "cloudNote": "Žiadny server na nastavovanie. Mesačne alebo ročne a zrušiť môžete kedykoľvek.",
     "cloudNoteTrial": "{{days}} dní zadarmo, bez platobnej karty. Potom mesačne alebo ročne, zrušiť môžete kedykoľvek.",
     "ctaTrial": "Vyskúšajte {{days}} dní zadarmo",
@@ -43,18 +43,18 @@
     "featuredIn": "Písali o nás",
     "eyebrow": "Médiá",
     "title": "Neverte len nám",
-    "sub": "Čo napísali recenzenti, keď si tududi sami vyskúšali.",
+    "sub": "Čo napísali recenzenti, keď si Cadence sami vyskúšali.",
     "readLink": "Prečítať recenziu"
   },
   "ai": {
     "kicker": "AI a MCP",
     "titleLine1": "Skutočný systém,",
     "titleLine2": "s ktorým váš AI agent naozaj dokáže pracovať",
-    "ledeHtml": "tududi obsahuje MCP server so <strong>{{tools}} nástrojmi</strong> pre úlohy, projekty, oblasti, ciele, návyky, poznámky, ľudí, štítky, zobrazenia, Schránku, vyhľadávanie a metriky. Pripojte Claude alebo akéhokoľvek agenta kompatibilného s MCP priamo k vlastnej inštancii, či už je to váš účet v Cloude, alebo server, ktorý prevádzkujete sami. Spojenie vedie do vašej inštancie, nie cez sprostredkovateľa medzi tým, a to je štrukturálny rozdiel, ktorý Todoist ani Notion ponúknuť nemôžu, nech sľubujú čokoľvek.",
+    "ledeHtml": "Cadence obsahuje MCP server so <strong>{{tools}} nástrojmi</strong> pre úlohy, projekty, oblasti, ciele, návyky, poznámky, ľudí, štítky, zobrazenia, Schránku, vyhľadávanie a metriky. Pripojte Claude alebo akéhokoľvek agenta kompatibilného s MCP priamo k vlastnej inštancii, či už je to váš účet v Cloude, alebo server, ktorý prevádzkujete sami. Spojenie vedie do vašej inštancie, nie cez sprostredkovateľa medzi tým, a to je štrukturálny rozdiel, ktorý Todoist ani Notion ponúknuť nemôžu, nech sľubujú čokoľvek.",
     "demo": {
       "windowTitle": "Claude Desktop",
-      "badge": "tududi MCP",
-      "toolLabel": "Použité tududi",
+      "badge": "Cadence MCP",
+      "toolLabel": "Použité Cadence",
       "composer": "Odpovedať Claudovi…",
       "ask1": "Na čo sa mám dnes sústrediť a nezaostáva niečo?",
       "answer1Html": "Začnite úlohou <strong>Dokončiť migráciu fakturácie</strong>. Termín je dnes a v projekte <strong>Platby</strong> na ňu čakajú tri úlohy.",
@@ -84,7 +84,7 @@
       },
       "dataStays": {
         "title": "Komunikuje s vašou inštanciou",
-        "body": "MCP spojenie vedie priamo do vášho vlastného tududi, v Cloude alebo na vašom serveri. Nič neprechádza cez tretiu stranu."
+        "body": "MCP spojenie vedie priamo do vášho vlastného Cadence, v Cloude alebo na vašom serveri. Nič neprechádza cez tretiu stranu."
       },
       "openProtocol": {
         "title": "Otvorený protokol, žiadna závislosť",
@@ -93,7 +93,7 @@
     },
     "footnoteClients": "Rovnako to funguje s Cursorom, Windsurfom, Clineom a akýmkoľvek iným MCP klientom.",
     "footnoteDocsLink": "Prečítajte si dokumentáciu MCP →",
-    "footnoteIncluded": "MCP je súčasťou tududi Cloud aj každej inštancie na vlastnom serveri.",
+    "footnoteIncluded": "MCP je súčasťou Cadence Cloud aj každej inštancie na vlastnom serveri.",
     "assistantTitle": "AI asistent",
     "assistantLede": "Samostatná, voliteľná vrstva, ktorá číta vaše dáta a vracia zhrnutia v bežnom jazyku. Funguje s akýmkoľvek poskytovateľom kompatibilným s OpenAI vrátane lokálne hostovaných, ako je Ollama.",
     "assistantCards": {
@@ -118,7 +118,7 @@
   "features": {
     "eyebrow": "Funkcie",
     "title": "Kompletný systém pre usporiadaný život",
-    "sub": "tududi spája ciele, projekty, úlohy, poznámky a inteligentné zobrazenia do jedného pokojného a sústredeného systému. Nechajte prevádzku na nás, alebo si ho spustite sami, ak chcete.",
+    "sub": "Cadence spája ciele, projekty, úlohy, poznámky a inteligentné zobrazenia do jedného pokojného a sústredeného systému. Nechajte prevádzku na nás, alebo si ho spustite sami, ak chcete.",
     "showAll": "Zobraziť všetkých {{count}} funkcií",
     "preview": "Ukážka",
     "closePreview": "Zavrieť ukážku",
@@ -208,7 +208,7 @@
       },
       "pwa": {
         "title": "Inštalácia ako aplikácia",
-        "body": "Pridajte si tududi na domovskú obrazovku alebo pracovnú plochu ako PWA. Funguje offline a synchronizuje sa, keď ste znova online."
+        "body": "Pridajte si Cadence na domovskú obrazovku alebo pracovnú plochu ako PWA. Funguje offline a synchronizuje sa, keď ste znova online."
       },
       "oidc": {
         "title": "Prihlásenie cez OIDC / SSO",
@@ -228,7 +228,7 @@
       },
       "privacy": {
         "title": "Súkromie a kontrola",
-        "body": "Udržte svoje dáta v súkromí. Prevádzkujte tududi sami pre plnú kontrolu, alebo využite spravovanú inštanciu so šifrovanými zálohami."
+        "body": "Udržte svoje dáta v súkromí. Prevádzkujte Cadence sami pre plnú kontrolu, alebo využite spravovanú inštanciu so šifrovanými zálohami."
       },
       "collab": {
         "title": "Spolupráca na projektoch",
@@ -287,13 +287,13 @@
         "perYear": "/rok"
       }
     },
-    "fineprint": "Zrušiť môžete kedykoľvek a všetko si exportovať. Ak by tududi Cloud niekedy skončil, dostanete svoje dáta a návod na migráciu na vlastný server. Na úložisko a objem API sa vzťahuje primerané používanie. 14-dňová záruka vrátenia peňazí bez otázok.",
+    "fineprint": "Zrušiť môžete kedykoľvek a všetko si exportovať. Ak by Cadence Cloud niekedy skončil, dostanete svoje dáta a návod na migráciu na vlastný server. Na úložisko a objem API sa vzťahuje primerané používanie. 14-dňová záruka vrátenia peňazí bez otázok.",
     "perMonth": "/mesiac",
     "nextPrice": "Od {{date}} sa cena za osobu zvýši na {{monthly}} mesačne alebo {{annual}} ročne. Predplaťte si skôr a dnešná cena vám zostane, kým budete predplatiteľom."
   },
   "compare": {
     "title": "Rýchle porovnanie",
-    "sub": "Ako si tududi Cloud stojí v porovnaní s aplikáciami, s ktorými ho ľudia najčastejšie porovnávajú, v ich individuálnych plánoch.",
+    "sub": "Ako si Cadence Cloud stojí v porovnaní s aplikáciami, s ktorými ho ľudia najčastejšie porovnávajú, v ich individuálnych plánoch.",
     "footnote": "Todoist Pro, TickTick Premium a Notion Plus podľa ich verejných cenníkov zo septembra 2026. Aktuálne ceny si overte na ich stránkach. Ich ceny sú americké katalógové ceny v dolároch.",
     "rows": {
       "price": "Cena pri ročnej platbe",
@@ -327,42 +327,42 @@
     },
     "items": {
       "commercialUse": {
-        "q": "Môžem tududi používať v práci alebo vo svojej firme?",
+        "q": "Môžem Cadence používať v práci alebo vo svojej firme?",
         "a": "Áno a nemusíte si nič vopred kupovať. Licencia MIT povoľuje komerčné použitie vrátane použitia vo firme a v komerčnom produkte, bez hranice obratu a bez akéhokoľvek nahlasovania. Ak vaše účtovné oddelenie potrebuje faktúru, predplatné Cloudu sa účtuje cez nášho platobného poskytovateľa, ktorý ju vystaví. Nič na tejto stránke nepredáva povolenie, pretože povolenie už máte."
       },
       "maintained": {
-        "q": "Je tududi aktívne udržiavané?",
+        "q": "Je Cadence aktívne udržiavané?",
         "a": "Áno. Vyvíja ho predovšetkým jeden správca s príspevkami komunity a nové verzie vychádzajú často. Každé vydanie je uvedené na stránke vydaní na GitHube, na ktorú vedie Changelog v menu vyššie, takže tempo môžete posúdiť sami a nemusíte sa spoliehať na naše slovo. Vývoj prebieha otvorene: issues, verejná roadmapa a Discord, kde dostanete odpovede na otázky.",
         "linkLabel": "Pozrieť všetky vydania"
       },
       "shutdown": {
-        "q": "Čo sa stane s mojimi dátami, ak tududi zanikne?",
-        "a": "Aplikácia je pod licenciou MIT a zdrojový kód je verejný, takže vám ju nikto nemôže vziať. Ktokoľvek ju môže ďalej prevádzkovať a vy si môžete vytvoriť fork. V tududi Cloud sú vaše dáta v štandardnej databáze tududi, nie v proprietárnom formáte, takže ak by služba niekedy skončila, dostanete svoje dáta a návod, ako ich presunúť na vlastný server."
+        "q": "Čo sa stane s mojimi dátami, ak Cadence zanikne?",
+        "a": "Aplikácia je pod licenciou MIT a zdrojový kód je verejný, takže vám ju nikto nemôže vziať. Ktokoľvek ju môže ďalej prevádzkovať a vy si môžete vytvoriť fork. V Cadence Cloud sú vaše dáta v štandardnej databáze Cadence, nie v proprietárnom formáte, takže ak by služba niekedy skončila, dostanete svoje dáta a návod, ako ich presunúť na vlastný server."
       },
       "aiOptional": {
         "q": "Musím používať funkcie AI?",
-        "a": "Nie. Obe vrstvy AI sú vypnuté, kým ich nezapnete, a tududi je kompletný systém aj bez nich. Ak ich nikdy nezapnete, nič vám nebude chýbať a nič vás nebude otravovať."
+        "a": "Nie. Obe vrstvy AI sú vypnuté, kým ich nezapnete, a Cadence je kompletný systém aj bez nich. Ak ich nikdy nezapnete, nič vám nebude chýbať a nič vás nebude otravovať."
       },
       "aiPrivacy": {
         "q": "Posielajú sa moje dáta nejakej AI spoločnosti?",
-        "a": "Záleží na tom, ktorú z dvoch vrstiev máte na mysli, a ten rozdiel je dôležitý. MCP server beží vo vašej vlastnej inštancii: agent ako Claude Desktop sa k nej pripája priamo, takže konverzácia prebieha medzi vaším agentom a vaším vlastným tududi, nie cez sprostredkovateľa. AI asistent funguje inak. Volá poskytovateľa kompatibilného s OpenAI, takže ak ho nasmerujete na hostovaného poskytovateľa, obsah týchto požiadaviek ide k nemu. Ak ho namiesto toho nasmerujete na lokálny model, napríklad Ollama alebo LM Studio, nič neopustí váš počítač. Zostáva vypnutý, kým nezadáte kľúč, takže je to vždy vaša voľba, nie predvolené nastavenie."
+        "a": "Záleží na tom, ktorú z dvoch vrstiev máte na mysli, a ten rozdiel je dôležitý. MCP server beží vo vašej vlastnej inštancii: agent ako Claude Desktop sa k nej pripája priamo, takže konverzácia prebieha medzi vaším agentom a vaším vlastným Cadence, nie cez sprostredkovateľa. AI asistent funguje inak. Volá poskytovateľa kompatibilného s OpenAI, takže ak ho nasmerujete na hostovaného poskytovateľa, obsah týchto požiadaviek ide k nemu. Ak ho namiesto toho nasmerujete na lokálny model, napríklad Ollama alebo LM Studio, nič neopustí váš počítač. Zostáva vypnutý, kým nezadáte kľúč, takže je to vždy vaša voľba, nie predvolené nastavenie."
       },
       "mcp": {
         "q": "Čo je MCP a čo vlastne agent dokáže?",
-        "a": "MCP je Model Context Protocol, otvorený štandard na prepojenie AI agentov so skutočnými systémami. tududi obsahuje MCP server so {{tools}} nástrojmi pre úlohy, projekty, oblasti, ciele, návyky, poznámky, ľudí, štítky, zobrazenia, Schránku, vyhľadávanie a metriky, takže agent dokáže prácu zachytiť, nájsť, upraviť a dokončiť, nielen o nej hovoriť. Je voliteľný, je súčasťou Cloudu aj každej inštancie na vlastnom serveri a funguje s Claude Desktop, Cursorom, Windsurfom, Clineom alebo akýmkoľvek iným MCP klientom."
+        "a": "MCP je Model Context Protocol, otvorený štandard na prepojenie AI agentov so skutočnými systémami. Cadence obsahuje MCP server so {{tools}} nástrojmi pre úlohy, projekty, oblasti, ciele, návyky, poznámky, ľudí, štítky, zobrazenia, Schránku, vyhľadávanie a metriky, takže agent dokáže prácu zachytiť, nájsť, upraviť a dokončiť, nielen o nej hovoriť. Je voliteľný, je súčasťou Cloudu aj každej inštancie na vlastnom serveri a funguje s Claude Desktop, Cursorom, Windsurfom, Clineom alebo akýmkoľvek iným MCP klientom."
       },
       "freePlan": {
-        "q": "Existuje v tududi Cloud bezplatný plán alebo skúšobná verzia?",
+        "q": "Existuje v Cadence Cloud bezplatný plán alebo skúšobná verzia?",
         "a": "Nie. Pro stojí {{monthly}} mesačne alebo {{price}} ročne pre jednu osobu a plány Tím stoja na osobu rovnako, v pevných veľkostiach. Žiadna bezplatná úroveň, žiadne odpočítavanie skúšobnej doby, žiadna karta, z ktorej sa neskôr potichu začne strhávať platba. Platí 14-dňová záruka vrátenia peňazí, ak vám to nebude vyhovovať, a na tejto stránke je živé demo, ak sa chcete najprv poobzerať.",
-        "aTrial": "Bezplatná úroveň neexistuje, ale každý nový účet dostane {{days}}-dňovú skúšobnú verziu zadarmo, bez platobnej karty. Skúšobná verzia obsahuje AI asistenta s menším limitom a jedného člena, ktorého môžete pridať. Verejné odkazy na poznámky sa sprístupnia po zaplatení predplatného. Ak si predplatné nezaplatíte, účet bude 30 dní len na čítanie, aby ste si mohli exportovať dáta, a potom sa vymaže. Po skúšobnej dobe stojí Pro {{monthly}} mesačne alebo {{price}} ročne a plány Tím stoja na osobu rovnako. Bezplatný spôsob, ako používať tududi, je prevádzkovať ho na vlastnom serveri, je to tá istá aplikácia."
+        "aTrial": "Bezplatná úroveň neexistuje, ale každý nový účet dostane {{days}}-dňovú skúšobnú verziu zadarmo, bez platobnej karty. Skúšobná verzia obsahuje AI asistenta s menším limitom a jedného člena, ktorého môžete pridať. Verejné odkazy na poznámky sa sprístupnia po zaplatení predplatného. Ak si predplatné nezaplatíte, účet bude 30 dní len na čítanie, aby ste si mohli exportovať dáta, a potom sa vymaže. Po skúšobnej dobe stojí Pro {{monthly}} mesačne alebo {{price}} ročne a plány Tím stoja na osobu rovnako. Bezplatný spôsob, ako používať Cadence, je prevádzkovať ho na vlastnom serveri, je to tá istá aplikácia."
       },
       "leaving": {
         "q": "Môžem odísť a čo sa stane s mojimi dátami?",
-        "a": "Áno, kedykoľvek. Vo svojom profile všetko exportujete do jedného súboru a importujete ho do tududi na vlastnom serveri, ktoré číta rovnaký formát. Zrušením účtu sa vaše dáta, prílohy a zálohy odstránia z našich serverov a zruší sa aj prípadné predplatné."
+        "a": "Áno, kedykoľvek. Vo svojom profile všetko exportujete do jedného súboru a importujete ho do Cadence na vlastnom serveri, ktoré číta rovnaký formát. Zrušením účtu sa vaše dáta, prílohy a zálohy odstránia z našich serverov a zruší sa aj prípadné predplatné."
       },
       "trust": {
         "q": "Môžem vám zveriť svoje dáta?",
-        "a": "Nemusíte nám veriť na slovo. tududi je open source, takže ktokoľvek si môže prečítať, ako presne s vašimi dátami zaobchádza. V Cloude zostáva všetko, čo vložíte, vaše: kedykoľvek to exportujte ako jeden súbor, účet si zmažte sami, a ak vám to nesadne, platí 14-dňová záruka vrátenia peňazí."
+        "a": "Nemusíte nám veriť na slovo. Cadence je open source, takže ktokoľvek si môže prečítať, ako presne s vašimi dátami zaobchádza. V Cloude zostáva všetko, čo vložíte, vaše: kedykoľvek to exportujte ako jeden súbor, účet si zmažte sami, a ak vám to nesadne, platí 14-dňová záruka vrátenia peňazí."
       }
     }
   },
@@ -375,11 +375,11 @@
     "joined": "Ste prihlásený na odber. Novinky a aktualizácie vám budú chodiť e-mailom."
   },
   "langs": {
-    "heading": "Aplikácia tududi je dostupná v {{count}} jazykoch po celom svete"
+    "heading": "Aplikácia Cadence je dostupná v {{count}} jazykoch po celom svete"
   },
   "community": {
-    "title": "Pridajte sa ku komunite tududi",
-    "sub": "Spojte sa s ďalšími používateľmi tududi, získajte podporu a buďte v obraze"
+    "title": "Pridajte sa ku komunite Cadence",
+    "sub": "Spojte sa s ďalšími používateľmi Cadence, získajte podporu a buďte v obraze"
   },
   "footer": {
     "tagline": "Pokojný a kompletný systém na organizáciu života a práce.",
@@ -403,9 +403,9 @@
     "copied": "Skopírované"
   },
   "cloud": {
-    "metaTitle": "tududi Cloud: hostované tududi, ktoré prevádzkujeme za vás",
-    "metaDescription": "tududi Cloud je ten istý open source systém, bežiaci na našich serveroch, s aktualizáciami, zálohami a e-mailom vybavenými za vás. Pro pre jednu osobu alebo plán Tím pre skupinu, mesačne alebo ročne, zrušiť môžete kedykoľvek.",
-    "title": "Prečo používať tududi Cloud?",
+    "metaTitle": "Cadence Cloud: hostované Cadence, ktoré prevádzkujeme za vás",
+    "metaDescription": "Cadence Cloud je ten istý open source systém, bežiaci na našich serveroch, s aktualizáciami, zálohami a e-mailom vybavenými za vás. Pro pre jednu osobu alebo plán Tím pre skupinu, mesačne alebo ročne, zrušiť môžete kedykoľvek.",
+    "title": "Prečo používať Cadence Cloud?",
     "lede": "Systém je v oboch prípadoch rovnaký. Rozdiel je v tom, kto ho o tretej ráno udržiava v chode, aktualizuje a zálohuje.",
     "ctaPrimary": "Začať",
     "ctaPricing": "Pozrieť cenu",
@@ -465,7 +465,7 @@
   },
   "contact": {
     "title": "Kontaktujte nás",
-    "lede": "Máte otázky k tududi Cloud, platbám alebo svojmu účtu? Pošlite nám správu a odpovieme e-mailom.",
+    "lede": "Máte otázky k Cadence Cloud, platbám alebo svojmu účtu? Pošlite nám správu a odpovieme e-mailom.",
     "name": "Meno",
     "email": "E-mail",
     "message": "Správa",
@@ -482,7 +482,7 @@
     "steps": {
       "capture": {
         "title": "Zachyťte čokoľvek, bežnými slovami",
-        "body": "Jedno pole Pridať pre Schránku, úlohy, poznámky a projekty, všade v aplikácii. Píšte tak, ako rozmýšľate, a tududi doplní zvyšok.",
+        "body": "Jedno pole Pridať pre Schránku, úlohy, poznámky a projekty, všade v aplikácii. Píšte tak, ako rozmýšľate, a Cadence doplní zvyšok.",
         "points": [
           "„next fri“, „in 3 days“ alebo „every first monday“ nastaví dátum alebo opakovanie",
           "#štítky, +Projekt a @osoba sa rozpoznajú už počas písania",
@@ -541,6 +541,6 @@
   "notFound": {
     "title": "Stránka sa nenašla",
     "lede": "Na tejto adrese nič nie je. Možno bola presunutá alebo je v odkaze preklep.",
-    "home": "Späť na tududi"
+    "home": "Späť na Cadence"
   }
 }

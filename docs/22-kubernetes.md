@@ -27,6 +27,6 @@ The first start creates the database and runs the migrations, so give it a minut
 
 **Volume permissions.** The image starts as root, fixes the ownership of `/app/db` and `/app/uploads`, then drops to uid 1001. On NFS exports with `root_squash` that ownership change fails and the pod crashes on start. In that case run as 1001 from the start with `securityContext.runAsUser: 1001` and skip the entrypoint with `command: ["dumb-init", "--", "/app/backend/cmd/start.sh"]`. The volume has to be writable by uid 1001 for this.
 
-**Upgrades.** Pin an image tag and read the release notes before bumping it. tududi copies the SQLite file next to itself before running migrations (see [backups.md](backups.md)), but that copy lives on the same volume, so it doesn't replace a real backup.
+**Upgrades.** Pin an image tag and read the release notes before bumping it. Cadence copies the SQLite file next to itself before running migrations (see [backups.md](backups.md)), but that copy lives on the same volume, so it doesn't replace a real backup.
 
 **Backups.** Either snapshot the volume with your storage tooling, or use the export API from a CronJob: `POST /api/v1/backup/export` with an API token, then `GET /api/v1/backup/<uid>/download` and copy the file somewhere off the cluster. Don't copy the SQLite file while the pod is running, the WAL makes that copy unreliable.

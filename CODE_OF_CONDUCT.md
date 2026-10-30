@@ -2,7 +2,7 @@
 
 ## Our Pledge
 
-We are committed to providing a welcoming and inclusive environment for everyone contributing to tududi, regardless of experience level, background, or identity.
+We are committed to providing a welcoming and inclusive environment for everyone contributing to Cadence, regardless of experience level, background, or identity.
 
 ## Our Standards
 

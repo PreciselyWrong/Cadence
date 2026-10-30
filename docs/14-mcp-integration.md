@@ -1,6 +1,6 @@
 # MCP Integration
 
-This guide explains how to configure and use the Model Context Protocol (MCP) integration in Tududi to enable AI assistants to interact with your tasks, projects, notes, and inbox.
+This guide explains how to configure and use the Model Context Protocol (MCP) integration in Cadence to enable AI assistants to interact with your tasks, projects, notes, and inbox.
 
 **Related:** [API Keys](08-user-management.md), [Architecture Overview](architecture.md)
 
@@ -41,7 +41,7 @@ This guide explains how to configure and use the Model Context Protocol (MCP) in
 
 ## Overview
 
-Tududi's MCP integration allows AI assistants (Claude, Cursor, VS Code extensions, etc.) to interact with your Tududi data using the [Model Context Protocol](https://modelcontextprotocol.io). This provides a standardized way for AI tools to read and modify your tasks, projects, inbox, and more.
+Cadence's MCP integration allows AI assistants (Claude, Cursor, VS Code extensions, etc.) to interact with your Cadence data using the [Model Context Protocol](https://modelcontextprotocol.io). This provides a standardized way for AI tools to read and modify your tasks, projects, inbox, and more.
 
 **Key Features:**
 
@@ -55,17 +55,17 @@ Tududi's MCP integration allows AI assistants (Claude, Cursor, VS Code extension
 
 ## History
 
-MCP was introduced in Tududi [v1.0.0](https://github.com/chrisvel/tududi/pull/953) as a way to expose Tududi's data to AI assistants through the Model Context Protocol.
+MCP was introduced in Cadence [v1.0.0](https://github.com/chrisvel/tududi/pull/953) as a way to expose Cadence's data to AI assistants through the Model Context Protocol.
 
 ---
 
 ## What is MCP?
 
-MCP (Model Context Protocol) is an open protocol developed by Anthropic that standardizes how AI applications connect to external data sources and tools. Think of it as a "USB-C port" for AI assistants — a universal connector that lets any MCP-compatible AI application interact with Tududi without custom integrations.
+MCP (Model Context Protocol) is an open protocol developed by Anthropic that standardizes how AI applications connect to external data sources and tools. Think of it as a "USB-C port" for AI assistants — a universal connector that lets any MCP-compatible AI application interact with Cadence without custom integrations.
 
-Tududi implements MCP as an MCP **Server**, exposing tools that AI clients can discover and call. This means:
+Cadence implements MCP as an MCP **Server**, exposing tools that AI clients can discover and call. This means:
 
-- **AI sees Tududi as a set of tools** — like `list_tasks`, `create_task`, `search`, etc.
+- **AI sees Cadence as a set of tools** — like `list_tasks`, `create_task`, `search`, etc.
 - **AI uses natural language** — "Show me my overdue tasks" triggers the `list_tasks` tool
 - **AI can take action** — "Create a task for X" triggers `create_task`
 - **All interactions are authenticated** — Your API token secures every connection
@@ -74,7 +74,7 @@ Tududi implements MCP as an MCP **Server**, exposing tools that AI clients can d
 
 ## Supported Clients
 
-Tududi's MCP server works with any MCP-compatible client:
+Cadence's MCP server works with any MCP-compatible client:
 
 | Client                      | Transport     | Setup Complexity |
 | --------------------------- | ------------- | ---------------- |
@@ -91,14 +91,14 @@ Tududi's MCP server works with any MCP-compatible client:
 
 ### Prerequisites
 
-1. **Tududi installed and running** — v1.0.0 or later
+1. **Cadence installed and running** — v1.0.0 or later
 2. **An API token** — Generate one at `Profile → API Keys`
 3. **An MCP-compatible client** — Claude Desktop, Cursor, etc.
 
 ### Quick Setup
 
 1. **Generate an API token:**
-    - Navigate to `Profile → API Keys` in Tududi
+    - Navigate to `Profile → API Keys` in Cadence
     - Create a new token (keep it secure)
 
 2. **Choose your transport mode:**
@@ -111,11 +111,11 @@ Tududi's MCP server works with any MCP-compatible client:
 
 ## Two Transport Modes
 
-Tududi supports two transport modes for different deployment scenarios:
+Cadence supports two transport modes for different deployment scenarios:
 
 ### Stdio Mode (Local)
 
-**Use case:** Claude Desktop or Cursor running on the same machine as Tududi.
+**Use case:** Claude Desktop or Cursor running on the same machine as Cadence.
 
 - **Authentication:** Via `TUDUDI_API_TOKEN` environment variable
 - **Communication:** Direct process communication (stdio)
@@ -130,7 +130,7 @@ Tududi supports two transport modes for different deployment scenarios:
 
 ### HTTP Mode (Remote)
 
-**Use case:** Remote Tududi server (Docker, cloud) accessed via HTTP.
+**Use case:** Remote Cadence server (Docker, cloud) accessed via HTTP.
 
 - **Authentication:** Bearer token in Authorization header
 - **Communication:** HTTP POST to `/api/mcp`
@@ -140,7 +140,7 @@ Tududi supports two transport modes for different deployment scenarios:
 **Best for:**
 
 - Docker deployments
-- Cloud-hosted Tududi
+- Cloud-hosted Cadence
 - Remote Claude Desktop access
 - Team environments
 
@@ -149,7 +149,7 @@ Tududi supports two transport modes for different deployment scenarios:
 ```json
 {
     "mcpServers": {
-        "tududi": {
+        "Cadence": {
             "command": "npx",
             "args": [
                 "-y",
@@ -171,7 +171,7 @@ Tududi supports two transport modes for different deployment scenarios:
 
 ## Available Tools
 
-Tududi exposes 65 MCP tools organized into 12 categories. All tools are scoped to the authenticated user — you can never access another user's data.
+Cadence exposes 65 MCP tools organized into 12 categories. All tools are scoped to the authenticated user — you can never access another user's data.
 
 ### Tasks Tools (12)
 
@@ -1200,14 +1200,14 @@ Universal search across tasks, projects, and notes.
 
 ### Step 1: Generate an API Token
 
-1. Log into Tududi
+1. Log into Cadence
 2. Navigate to `Profile → API Keys`
 3. Click "Generate New Token"
 4. Copy and securely store the token
 
 ### Step 2: Configure Claude Desktop
 
-#### For Stdio (Local Tududi):
+#### For Stdio (Local Cadence):
 
 1. Set your environment variable:
 
@@ -1219,11 +1219,11 @@ Universal search across tasks, projects, and notes.
     - **Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
     - **Linux:** `~/.config/claude/claude_desktop_config.json`
 
-3. Add the Tududi server:
+3. Add the Cadence server:
     ```json
     {
         "mcpServers": {
-            "tududi": {
+            "Cadence": {
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
@@ -1234,9 +1234,9 @@ Universal search across tasks, projects, and notes.
     }
     ```
 
-4. Restart Claude Desktop. Tududi tools will appear in the tool list.
+4. Restart Claude Desktop. Cadence tools will appear in the tool list.
 
-#### For HTTP (Remote Tududi):
+#### For HTTP (Remote Cadence):
 
 Use `mcp-remote` to proxy HTTP requests — see the [HTTP Mode config above](#http-mode-remote).
 
@@ -1251,7 +1251,7 @@ Use `mcp-remote` to proxy HTTP requests — see the [HTTP Mode config above](#ht
     ```json
     {
         "mcpServers": {
-            "tududi": {
+            "Cadence": {
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
@@ -1262,9 +1262,9 @@ Use `mcp-remote` to proxy HTTP requests — see the [HTTP Mode config above](#ht
     }
     ```
 
-3. Restart Cursor and open a new chat. Tududi tools will appear in the tool list.
+3. Restart Cursor and open a new chat. Cadence tools will appear in the tool list.
 
-For remote Tududi, use the HTTP transport config from [HTTP Mode](#http-mode-remote) instead.
+For remote Cadence, use the HTTP transport config from [HTTP Mode](#http-mode-remote) instead.
 
 ---
 
@@ -1280,7 +1280,7 @@ The [Continue](https://www.continue.dev/) extension adds MCP support to VS Code.
     {
         "mcpServers": [
             {
-                "name": "tududi",
+                "name": "Cadence",
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
@@ -1291,17 +1291,17 @@ The [Continue](https://www.continue.dev/) extension adds MCP support to VS Code.
     }
     ```
 
-3. Reload the Continue extension. Tududi tools will be available in the Continue chat panel.
+3. Reload the Continue extension. Cadence tools will be available in the Continue chat panel.
 
 ---
 
 ## Other MCP Clients
 
-Tududi's MCP server is compatible with any MCP SDK implementation. For custom integrations:
+Cadence's MCP server is compatible with any MCP SDK implementation. For custom integrations:
 
 ### Direct HTTP API
 
-You can interact with Tududi's MCP server directly via HTTP:
+You can interact with Cadence's MCP server directly via HTTP:
 
 **List available tools:**
 
@@ -1403,11 +1403,11 @@ Every MCP tool query includes `user_id` filtering:
 
 ### HTTP Connection Refused
 
-**Cause:** Tududi server is not accessible.
+**Cause:** Cadence server is not accessible.
 
 **Checklist:**
 
-1. Verify Tududi is running and accessible at the configured URL
+1. Verify Cadence is running and accessible at the configured URL
 2. Check firewall settings for remote deployments
 3. Verify SSL certificates for HTTPS connections
 4. Check CORS settings if using browser-based MCP clients
@@ -1422,7 +1422,7 @@ Every MCP tool query includes `user_id` filtering:
 2. Check the filter parameters (e.g., `type`, `status`)
 3. Try with broader parameters first, then narrow down
 
-### Claude Doesn't Show Tududi Tools
+### Claude Doesn't Show Cadence Tools
 
 **Cause:** Claude Desktop may not have refreshed its tool list.
 
@@ -1439,11 +1439,11 @@ Every MCP tool query includes `user_id` filtering:
 **Solutions:**
 
 - **Stdio mode:** Not recommended for Docker — use HTTP mode instead
-- **HTTP mode:** Ensure Tududi is accessible from outside the container:
+- **HTTP mode:** Ensure Cadence is accessible from outside the container:
     ```yaml
     # docker-compose.yml example
     services:
-        tududi:
+        Cadence:
             ports:
                 - '3002:3002'
             environment:
@@ -1458,7 +1458,7 @@ Every MCP tool query includes `user_id` filtering:
 
 ```
 ┌─────────────┐     MCP Protocol     ┌──────────────┐
-│   AI Client  │ ◄──────────────────► │  Tududi MCP  │
+│   AI Client  │ ◄──────────────────► │  Cadence MCP  │
 │ (Claude,     │   Tool Calls         │   Server     │
 │  Cursor, etc) │                    │              │
 └─────────────┘                      └──────┬───────┘
@@ -1469,7 +1469,7 @@ Every MCP tool query includes `user_id` filtering:
                                     └───────┬───────┘
                                             │
                                     ┌───────┴───────┐
-                                    │   Tududi DB    │
+                                    │   Cadence DB    │
                                     │ (SQLite/PG)    │
                                     └───────────────┘
 ```
@@ -1501,4 +1501,4 @@ Every MCP tool query includes `user_id` filtering:
 
 - **Document Version:** 1.1.0
 - **Last Updated:** 2026-07-27
-- **Minimum Tududi Version:** v1.0.0 (released 2026-03-27)
+- **Minimum Cadence Version:** v1.0.0 (released 2026-03-27)

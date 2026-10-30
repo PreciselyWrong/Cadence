@@ -57,7 +57,7 @@ const emails = {
             id: 1,
             email: 'verification',
             variant: null,
-            subject: 'Willkommen bei Tududi',
+            subject: 'Willkommen bei Cadence',
             recipient: 'sam@example.com',
             language: 'de',
             status: 'sent',
@@ -93,7 +93,7 @@ describe('AdminUserEmails', () => {
             await screen.findByText('The email address is already verified')
         ).toBeInTheDocument();
         expect(screen.getByText('Not sent')).toBeInTheDocument();
-        expect(screen.getByText('Willkommen bei Tududi')).toBeInTheDocument();
+        expect(screen.getByText('Willkommen bei Cadence')).toBeInTheDocument();
         expect(
             screen.getByTestId('admin-user-email-send-verification')
         ).toBeDisabled();

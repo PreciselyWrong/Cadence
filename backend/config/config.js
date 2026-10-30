@@ -90,7 +90,7 @@ const emailConfig = {
     },
     from: {
         address: process.env.EMAIL_FROM_ADDRESS,
-        name: process.env.EMAIL_FROM_NAME || 'Tududi',
+        name: process.env.EMAIL_FROM_NAME || 'Cadence',
     },
 };
 

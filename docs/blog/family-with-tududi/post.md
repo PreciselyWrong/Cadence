@@ -1,4 +1,4 @@
-# How to organize a family with tududi
+# How to organize a family with Cadence
 
 A family is not a team, and nobody in the house has a sprint. There is no manager, though there is a lot of managing. Bills arrive on the same day every month. The school sends forms home in a backpack, and someone has to find them, sign them and send them back. Plants die when nobody waters them.
 
@@ -10,7 +10,7 @@ Asking is the job. By the time you ask, you have already noticed, decided when, 
 
 A tool can't notice for anyone. What it can do is take the list out of one head and put it where everyone it concerns can see it. I wanted that to happen inside the tool I already use for my own work, not in a separate family app with chore charts and points.
 
-Everything below runs on **tududi Cloud**. Sign up at [tududi.com](https://tududi.com), and that account becomes the one that holds the house. There is nothing to install.
+Everything below runs on **Cadence Cloud**. Sign up at [tududi.com](https://tududi.com), and that account becomes the one that holds the house. There is nothing to install.
 
 I use fictional names here, so no real family ends up in a screenshot. The Parkers: Alex and Maria, two kids, Emma and Leo, and Grandma Helen, who picks the kids up on Tuesdays and Thursdays.
 
@@ -24,7 +24,7 @@ A **contact** is someone you only keep track of: a grandparent, a plumber, the f
 
 ![The People page with the Parker family](family-post/people.png)
 
-Grandma Helen is a contact. She will never open tududi, and she doesn't need to. When Alex gives her the school pickup, nothing buzzes on her phone. Someone still has to call her. But everyone can see that the job is covered, and by whom.
+Grandma Helen is a contact. She will never open Cadence, and she doesn't need to. When Alex gives her the school pickup, nothing buzzes on her phone. Someone still has to call her. But everyone can see that the job is covered, and by whom.
 
 ## Share the Projects That Matter
 
@@ -66,11 +66,11 @@ This is the screen for Sunday evening. Not to check on anyone, just to see wheth
 
 No points. No streaks for chores. No leaderboard between siblings.
 
-Recurring tasks work for the house the same way they work for anything else: the recycling every Monday, the plants every evening. Habits are there if someone wants to track their own reading. tududi doesn't turn the family into a game, because the moment it does, the game becomes the work.
+Recurring tasks work for the house the same way they work for anything else: the recycling every Monday, the plants every evening. Habits are there if someone wants to track their own reading. Cadence doesn't turn the family into a game, because the moment it does, the game becomes the work.
 
 ## Getting the House In
 
-tududi Cloud is priced per person. You pay for yourself and for each member you add, and a member without an email counts the same as a partner with one, because they get the same column. There is a 14-day money-back guarantee if it turns out not to suit you.
+Cadence Cloud is priced per person. You pay for yourself and for each member you add, and a member without an email counts the same as a partner with one, because they get the same column. There is a 14-day money-back guarantee if it turns out not to suit you.
 
 Sign up at [tududi.com](https://tududi.com), add the people who live with you, and give the first task away.
 

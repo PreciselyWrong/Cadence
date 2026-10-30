@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Hoi,",
-        "signoff": "Met vriendelijke groet,\nHet Tududi-team",
+        "signoff": "Met vriendelijke groet,\nHet Cadence-team",
         "copyLink": "Of kopieer en plak deze link in je browser:",
         "trialUntil": "Je gratis proefperiode loopt tot {{date}}."
     },
     "verification": {
-        "subject": "Welkom bij Tududi - Bevestig je e-mailadres",
-        "welcome": "Welkom bij Tududi!",
-        "opening": "Bedankt voor je registratie. Bevestig je e-mailadres via de link hieronder om je registratie af te ronden en Tududi te gaan gebruiken:",
+        "subject": "Welkom bij Cadence - Bevestig je e-mailadres",
+        "welcome": "Welkom bij Cadence!",
+        "opening": "Bedankt voor je registratie. Bevestig je e-mailadres via de link hieronder om je registratie af te ronden en Cadence te gaan gebruiken:",
         "button": "E-mailadres bevestigen",
         "expires_one": "Deze bevestigingslink verloopt over {{count}} uur.",
         "expires_other": "Deze bevestigingslink verloopt over {{count}} uur.",
@@ -21,44 +21,44 @@
             "Terugkerende taken instellen",
             "Je productiviteit bijhouden"
         ],
-        "ignore": "Heb je geen account bij Tududi aangemaakt? Dan kun je deze e-mail gerust negeren."
+        "ignore": "Heb je geen account bij Cadence aangemaakt? Dan kun je deze e-mail gerust negeren."
     },
     "verificationReminder": {
-        "subject": "Herinnering: bevestig je e-mailadres om Tududi te gaan gebruiken",
-        "opening": "Je hebt je ongeveer een dag geleden aangemeld bij Tududi, maar je e-mailadres is nog niet bevestigd. Je account (en je gratis proefperiode) start zodra je het bevestigt."
+        "subject": "Herinnering: bevestig je e-mailadres om Cadence te gaan gebruiken",
+        "opening": "Je hebt je ongeveer een dag geleden aangemeld bij Cadence, maar je e-mailadres is nog niet bevestigd. Je account (en je gratis proefperiode) start zodra je het bevestigt."
     },
     "passwordReset": {
-        "subject": "Stel je Tududi-wachtwoord opnieuw in",
-        "intro": "Iemand heeft gevraagd om het wachtwoord van je Tududi-account opnieuw in te stellen.",
+        "subject": "Stel je Cadence-wachtwoord opnieuw in",
+        "intro": "Iemand heeft gevraagd om het wachtwoord van je Cadence-account opnieuw in te stellen.",
         "action": "Open deze link om een nieuw wachtwoord te kiezen:",
         "button": "Kies een nieuw wachtwoord",
         "expires_one": "De link verloopt over {{count}} minuut. Heb je hier niet om gevraagd? Negeer dan deze e-mail; je wachtwoord blijft ongewijzigd.",
         "expires_other": "De link verloopt over {{count}} minuten. Heb je hier niet om gevraagd? Negeer dan deze e-mail; je wachtwoord blijft ongewijzigd."
     },
     "memberInvite": {
-        "subject": "Je bent toegevoegd aan een Tududi-werkruimte",
-        "intro": "Je bent toegevoegd aan een Tududi-werkruimte.",
+        "subject": "Je bent toegevoegd aan een Cadence-werkruimte",
+        "intro": "Je bent toegevoegd aan een Cadence-werkruimte.",
         "action": "Kies een wachtwoord om je account te activeren en in te loggen:",
         "button": "Stel je wachtwoord in",
         "expires_one": "De link verloopt over {{count}} uur. Verwachtte je dit niet? Dan kun je deze e-mail negeren.",
         "expires_other": "De link verloopt over {{count}} uur. Verwachtte je dit niet? Dan kun je deze e-mail negeren."
     },
     "trialReminder": {
-        "subjectTomorrow": "Je tududi-proefperiode eindigt morgen",
-        "subjectDays_one": "Je tududi-proefperiode eindigt over {{count}} dag",
-        "subjectDays_other": "Je tududi-proefperiode eindigt over {{count}} dagen",
-        "endsTomorrow": "Je proefperiode van tududi Cloud eindigt morgen, op {{date}}.",
-        "endsInDays_one": "Je proefperiode van tududi Cloud eindigt over {{count}} dag, op {{date}}.",
-        "endsInDays_other": "Je proefperiode van tududi Cloud eindigt over {{count}} dagen, op {{date}}.",
+        "subjectTomorrow": "Je Cadence-proefperiode eindigt morgen",
+        "subjectDays_one": "Je Cadence-proefperiode eindigt over {{count}} dag",
+        "subjectDays_other": "Je Cadence-proefperiode eindigt over {{count}} dagen",
+        "endsTomorrow": "Je proefperiode van Cadence Cloud eindigt morgen, op {{date}}.",
+        "endsInDays_one": "Je proefperiode van Cadence Cloud eindigt over {{count}} dag, op {{date}}.",
+        "endsInDays_other": "Je proefperiode van Cadence Cloud eindigt over {{count}} dagen, op {{date}}.",
         "afterReadOnly_one": "Daarna is je account {{count}} dag alleen-lezen, zodat je je gegevens nog kunt exporteren, en daarna wordt het verwijderd.",
         "afterReadOnly_other": "Daarna is je account {{count}} dagen alleen-lezen, zodat je je gegevens nog kunt exporteren, en daarna wordt het verwijderd.",
         "afterFree": "Daarna gaat je account over naar het gratis abonnement.",
-        "keep": "Wil je tududi Cloud blijven gebruiken zoals nu, inclusief de AI-assistent en leden? Neem dan een abonnement:",
+        "keep": "Wil je Cadence Cloud blijven gebruiken zoals nu, inclusief de AI-assistent en leden? Neem dan een abonnement:",
         "button": "Abonneren"
     },
     "deletionWarning": {
-        "subject": "Je tududi-account wordt verwijderd op {{date}}",
-        "ended": "Je proefperiode van tududi Cloud is afgelopen en sindsdien is je account alleen-lezen.",
+        "subject": "Je Cadence-account wordt verwijderd op {{date}}",
+        "ended": "Je proefperiode van Cadence Cloud is afgelopen en sindsdien is je account alleen-lezen.",
         "deleteOn": "Op {{date}} worden het account en alles wat erin staat verwijderd.",
         "keep": "Wil je het houden? Neem dan een abonnement:",
         "button": "Mijn account behouden",
@@ -66,8 +66,8 @@
         "final": "Als je niets doet, wordt het account op {{date}} verwijderd en is dit de laatste e-mail die je hierover van ons krijgt."
     },
     "emptyAccount": {
-        "subject": "Je tududi is nog leeg",
-        "intro": "Je hebt al een paar dagen een tududi-account, maar er staat nog niets in. De meeste mensen beginnen met een van deze, en elk kost minder dan een minuut:",
+        "subject": "Je Cadence is nog leeg",
+        "intro": "Je hebt al een paar dagen een Cadence-account, maar er staat nog niets in. De meeste mensen beginnen met een van deze, en elk kost minder dan een minuut:",
         "ideas": [
             "Schrijf alles wat je bezighoudt op in je Inbox en zoek het later uit.",
             "Open Plannen, kies drie dingen voor vandaag en laat de rest liggen.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Je taken staan nog waar je ze liet",
-        "intro": "Je bent al een tijdje niet in tududi geweest. Alles wat je hebt toegevoegd staat er nog, precies zoals je het achterliet.",
+        "intro": "Je bent al een tijdje niet in Cadence geweest. Alles wat je hebt toegevoegd staat er nog, precies zoals je het achterliet.",
         "tip": "Is de lijst te lang geworden? Begin klein: open Plannen, kies drie dingen voor vandaag en bewaar de rest voor later.",
         "button": "Plan vandaag",
         "outro": "We sturen je geen nieuwe e-mail als deze tot je weer bent langs geweest."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Tweestapsverificatie staat aan",
-            "body": "Tweestapsverificatie is ingeschakeld voor je Tududi-account. Voor inloggen heb je nu een code uit je authenticator-app nodig, en alle andere apparaten zijn uitgelogd."
+            "body": "Tweestapsverificatie is ingeschakeld voor je Cadence-account. Voor inloggen heb je nu een code uit je authenticator-app nodig, en alle andere apparaten zijn uitgelogd."
         },
         "mfaDisabled": {
             "subject": "Tweestapsverificatie staat uit",
-            "body": "Tweestapsverificatie is uitgeschakeld voor je Tududi-account. Voor inloggen heb je nu alleen je wachtwoord nodig."
+            "body": "Tweestapsverificatie is uitgeschakeld voor je Cadence-account. Voor inloggen heb je nu alleen je wachtwoord nodig."
         },
         "mfaReset": {
             "subject": "Je tweestapsverificatie is gereset",
-            "body": "Een beheerder heeft de tweestapsverificatie van je Tududi-account gereset, en alle apparaten zijn uitgelogd. Je kunt inloggen met je wachtwoord en het weer inschakelen."
+            "body": "Een beheerder heeft de tweestapsverificatie van je Cadence-account gereset, en alle apparaten zijn uitgelogd. Je kunt inloggen met je wachtwoord en het weer inschakelen."
         },
         "recoveryCodeUsed": {
             "subject": "Er is een herstelcode gebruikt",
-            "body": "Iemand heeft ingelogd op je Tududi-account met een van je herstelcodes. Elke code werkt één keer."
+            "body": "Iemand heeft ingelogd op je Cadence-account met een van je herstelcodes. Elke code werkt één keer."
         },
         "recoveryCodesRegenerated": {
             "subject": "Er zijn nieuwe herstelcodes gemaakt",
-            "body": "Er zijn nieuwe herstelcodes gemaakt voor je Tududi-account. De oude werken niet meer."
+            "body": "Er zijn nieuwe herstelcodes gemaakt voor je Cadence-account. De oude werken niet meer."
         },
         "button": "Beveiligingsinstellingen openen",
         "notYou": "Was jij dit niet? Wijzig dan nu je wachtwoord en laat het je beheerder weten."

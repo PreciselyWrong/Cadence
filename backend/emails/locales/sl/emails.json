@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Pozdravljeni,",
-        "signoff": "Lep pozdrav,\nEkipa Tududi",
+        "signoff": "Lep pozdrav,\nEkipa Cadence",
         "copyLink": "Lahko pa to povezavo kopirate in prilepite v brskalnik:",
         "trialUntil": "Vaše brezplačno preizkusno obdobje traja do {{date}}."
     },
     "verification": {
-        "subject": "Dobrodošli v Tududi - potrdite svoj e-poštni naslov",
-        "welcome": "Dobrodošli v Tududi!",
-        "opening": "Hvala za registracijo. Če želite dokončati registracijo in začeti uporabljati Tududi, potrdite svoj e-poštni naslov s klikom na spodnjo povezavo:",
+        "subject": "Dobrodošli v Cadence - potrdite svoj e-poštni naslov",
+        "welcome": "Dobrodošli v Cadence!",
+        "opening": "Hvala za registracijo. Če želite dokončati registracijo in začeti uporabljati Cadence, potrdite svoj e-poštni naslov s klikom na spodnjo povezavo:",
         "button": "Potrdi e-poštni naslov",
         "expires_one": "Ta potrditvena povezava poteče čez {{count}} uro.",
         "expires_two": "Ta potrditvena povezava poteče čez {{count}} uri.",
@@ -25,15 +25,15 @@
             "Nastavili ponavljajoče se naloge",
             "Spremljali svojo produktivnost"
         ],
-        "ignore": "Če niste ustvarili računa v Tududi, lahko to sporočilo mirno prezrete."
+        "ignore": "Če niste ustvarili računa v Cadence, lahko to sporočilo mirno prezrete."
     },
     "verificationReminder": {
-        "subject": "Opomnik: potrdite svoj e-poštni naslov in začnite uporabljati Tududi",
-        "opening": "Pred približno dnevom ste se registrirali v Tududi, vendar vaš e-poštni naslov še ni potrjen. Vaš račun (in brezplačni preizkus) začne delovati takoj, ko ga potrdite."
+        "subject": "Opomnik: potrdite svoj e-poštni naslov in začnite uporabljati Cadence",
+        "opening": "Pred približno dnevom ste se registrirali v Cadence, vendar vaš e-poštni naslov še ni potrjen. Vaš račun (in brezplačni preizkus) začne delovati takoj, ko ga potrdite."
     },
     "passwordReset": {
-        "subject": "Ponastavite geslo za Tududi",
-        "intro": "Nekdo je zahteval ponastavitev gesla za vaš račun Tududi.",
+        "subject": "Ponastavite geslo za Cadence",
+        "intro": "Nekdo je zahteval ponastavitev gesla za vaš račun Cadence.",
         "action": "Odprite to povezavo in izberite novo geslo:",
         "button": "Izberi novo geslo",
         "expires_one": "Povezava poteče čez {{count}} minuto. Če niste zahtevali ponastavitve, to sporočilo prezrite; vaše geslo ostane nespremenjeno.",
@@ -42,8 +42,8 @@
         "expires_other": "Povezava poteče čez {{count}} minut. Če niste zahtevali ponastavitve, to sporočilo prezrite; vaše geslo ostane nespremenjeno."
     },
     "memberInvite": {
-        "subject": "Dodani ste bili v delovni prostor Tududi",
-        "intro": "Dodani ste bili v delovni prostor Tududi.",
+        "subject": "Dodani ste bili v delovni prostor Cadence",
+        "intro": "Dodani ste bili v delovni prostor Cadence.",
         "action": "Izberite geslo, da aktivirate račun in se prijavite:",
         "button": "Nastavi geslo",
         "expires_one": "Povezava poteče čez {{count}} uro. Če tega niste pričakovali, lahko to sporočilo prezrete.",
@@ -52,27 +52,27 @@
         "expires_other": "Povezava poteče čez {{count}} ur. Če tega niste pričakovali, lahko to sporočilo prezrete."
     },
     "trialReminder": {
-        "subjectTomorrow": "Vaš preizkus tududi se izteče jutri",
-        "subjectDays_one": "Vaš preizkus tududi se izteče čez {{count}} dan",
-        "subjectDays_two": "Vaš preizkus tududi se izteče čez {{count}} dneva",
-        "subjectDays_few": "Vaš preizkus tududi se izteče čez {{count}} dni",
-        "subjectDays_other": "Vaš preizkus tududi se izteče čez {{count}} dni",
-        "endsTomorrow": "Vaš preizkus tududi Cloud se izteče jutri, {{date}}.",
-        "endsInDays_one": "Vaš preizkus tududi Cloud se izteče čez {{count}} dan, {{date}}.",
-        "endsInDays_two": "Vaš preizkus tududi Cloud se izteče čez {{count}} dneva, {{date}}.",
-        "endsInDays_few": "Vaš preizkus tududi Cloud se izteče čez {{count}} dni, {{date}}.",
-        "endsInDays_other": "Vaš preizkus tududi Cloud se izteče čez {{count}} dni, {{date}}.",
+        "subjectTomorrow": "Vaš preizkus Cadence se izteče jutri",
+        "subjectDays_one": "Vaš preizkus Cadence se izteče čez {{count}} dan",
+        "subjectDays_two": "Vaš preizkus Cadence se izteče čez {{count}} dneva",
+        "subjectDays_few": "Vaš preizkus Cadence se izteče čez {{count}} dni",
+        "subjectDays_other": "Vaš preizkus Cadence se izteče čez {{count}} dni",
+        "endsTomorrow": "Vaš preizkus Cadence Cloud se izteče jutri, {{date}}.",
+        "endsInDays_one": "Vaš preizkus Cadence Cloud se izteče čez {{count}} dan, {{date}}.",
+        "endsInDays_two": "Vaš preizkus Cadence Cloud se izteče čez {{count}} dneva, {{date}}.",
+        "endsInDays_few": "Vaš preizkus Cadence Cloud se izteče čez {{count}} dni, {{date}}.",
+        "endsInDays_other": "Vaš preizkus Cadence Cloud se izteče čez {{count}} dni, {{date}}.",
         "afterReadOnly_one": "Nato bo vaš račun {{count}} dan samo za branje, da lahko še izvozite svoje podatke, potem pa bo izbrisan.",
         "afterReadOnly_two": "Nato bo vaš račun {{count}} dneva samo za branje, da lahko še izvozite svoje podatke, potem pa bo izbrisan.",
         "afterReadOnly_few": "Nato bo vaš račun {{count}} dni samo za branje, da lahko še izvozite svoje podatke, potem pa bo izbrisan.",
         "afterReadOnly_other": "Nato bo vaš račun {{count}} dni samo za branje, da lahko še izvozite svoje podatke, potem pa bo izbrisan.",
         "afterFree": "Nato vaš račun preide na brezplačni paket.",
-        "keep": "Če želite tududi Cloud še naprej uporabljati tako kot zdaj, z AI pomočnikom in člani, se naročite:",
+        "keep": "Če želite Cadence Cloud še naprej uporabljati tako kot zdaj, z AI pomočnikom in člani, se naročite:",
         "button": "Naroči se"
     },
     "deletionWarning": {
-        "subject": "Vaš račun tududi bo izbrisan {{date}}",
-        "ended": "Vaš preizkus tududi Cloud se je iztekel in vaš račun je od takrat samo za branje.",
+        "subject": "Vaš račun Cadence bo izbrisan {{date}}",
+        "ended": "Vaš preizkus Cadence Cloud se je iztekel in vaš račun je od takrat samo za branje.",
         "deleteOn": "{{date}} bodo račun in vse v njem izbrisani.",
         "keep": "Če ga želite obdržati, se naročite:",
         "button": "Obdrži moj račun",
@@ -80,8 +80,8 @@
         "final": "Če ne storite ničesar, bo račun izbrisan {{date}} in to je zadnje sporočilo, ki vam ga pošljemo o tem."
     },
     "emptyAccount": {
-        "subject": "Vaš tududi je še vedno prazen",
-        "intro": "Račun v tududi imate že nekaj dni, vendar v njem še ni ničesar. Večina začne z enim od teh korakov, in vsak vzame manj kot minuto:",
+        "subject": "Vaš Cadence je še vedno prazen",
+        "intro": "Račun v Cadence imate že nekaj dni, vendar v njem še ni ničesar. Večina začne z enim od teh korakov, in vsak vzame manj kot minuto:",
         "ideas": [
             "V Prejeto zapišite vse, kar vam roji po glavi, in to uredite pozneje.",
             "Odprite Načrt, izberite tri stvari za danes in pustite ostalo.",
@@ -92,7 +92,7 @@
     },
     "comeBack": {
         "subject": "Vaša opravila so tam, kjer ste jih pustili",
-        "intro": "Že nekaj časa niste bili v tududi. Vse, kar ste dodali, je še vedno tam, točno tako, kot ste pustili.",
+        "intro": "Že nekaj časa niste bili v Cadence. Vse, kar ste dodali, je še vedno tam, točno tako, kot ste pustili.",
         "tip": "Če je seznam postal predolg, začnite z malim: odprite Načrt, izberite tri stvari za danes in ostalo pustite za pozneje.",
         "button": "Načrtuj dan",
         "outro": "Drugega takšnega e-sporočila vam ne bomo poslali, dokler se ne vrnete."
@@ -100,23 +100,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Dvostopenjsko preverjanje je vklopljeno",
-            "body": "Za vaš račun Tududi je bilo vklopljeno dvostopenjsko preverjanje. Za prijavo zdaj potrebujete kodo iz aplikacije za preverjanje pristnosti, vse druge naprave pa so bile odjavljene."
+            "body": "Za vaš račun Cadence je bilo vklopljeno dvostopenjsko preverjanje. Za prijavo zdaj potrebujete kodo iz aplikacije za preverjanje pristnosti, vse druge naprave pa so bile odjavljene."
         },
         "mfaDisabled": {
             "subject": "Dvostopenjsko preverjanje je izklopljeno",
-            "body": "Za vaš račun Tududi je bilo izklopljeno dvostopenjsko preverjanje. Za prijavo zdaj potrebujete samo geslo."
+            "body": "Za vaš račun Cadence je bilo izklopljeno dvostopenjsko preverjanje. Za prijavo zdaj potrebujete samo geslo."
         },
         "mfaReset": {
             "subject": "Vaše dvostopenjsko preverjanje je bilo ponastavljeno",
-            "body": "Skrbnik je ponastavil dvostopenjsko preverjanje za vaš račun Tududi, vse naprave pa so bile odjavljene. Prijavite se lahko z geslom in ga znova vklopite."
+            "body": "Skrbnik je ponastavil dvostopenjsko preverjanje za vaš račun Cadence, vse naprave pa so bile odjavljene. Prijavite se lahko z geslom in ga znova vklopite."
         },
         "recoveryCodeUsed": {
             "subject": "Uporabljena je bila obnovitvena koda",
-            "body": "Nekdo se je v vaš račun Tududi prijavil z eno od vaših obnovitvenih kod. Vsaka koda deluje enkrat."
+            "body": "Nekdo se je v vaš račun Cadence prijavil z eno od vaših obnovitvenih kod. Vsaka koda deluje enkrat."
         },
         "recoveryCodesRegenerated": {
             "subject": "Ustvarjene so bile nove obnovitvene kode",
-            "body": "Za vaš račun Tududi so bile ustvarjene nove obnovitvene kode. Stare ne delujejo več."
+            "body": "Za vaš račun Cadence so bile ustvarjene nove obnovitvene kode. Stare ne delujejo več."
         },
         "button": "Odpri varnostne nastavitve",
         "notYou": "Če to niste bili vi, takoj spremenite geslo in obvestite skrbnika."

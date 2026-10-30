@@ -1,6 +1,6 @@
 # Webhooks
 
-A webhook is an address tududi POSTs JSON to when something happens: a reminder fires, a task is completed, the day starts. Point it at n8n, Home Assistant, a Slack or Discord incoming webhook, or your own server. Each user can have up to 10 webhooks, and each one picks its own events.
+A webhook is an address Cadence POSTs JSON to when something happens: a reminder fires, a task is completed, the day starts. Point it at n8n, Home Assistant, a Slack or Discord incoming webhook, or your own server. Each user can have up to 10 webhooks, and each one picks its own events.
 
 ## Setup
 
@@ -9,7 +9,7 @@ A webhook is an address tududi POSTs JSON to when something happens: a reminder 
 3. Copy the signing secret that appears. It is shown once; **New secret** makes another.
 4. Press **Test**. The card shows whether the receiver accepted the message, and **History** lists the last 20 deliveries.
 
-On tududi Cloud, webhooks are part of the paid plan and not of the free trial.
+On Cadence Cloud, webhooks are part of the paid plan and not of the free trial.
 
 ## Events
 
@@ -26,7 +26,7 @@ On tududi Cloud, webhooks are part of the paid plan and not of the free trial.
 | `task.created`, `task.updated`, `task.completed`, `task.deleted` | One of your tasks changes, from any source (web, API, MCP, inbox) |
 | `daily_summary` | Once a day at the hour you pick, in your timezone: overdue, due today and in progress |
 
-The reminder and alert events follow the same notifications as the in-app bell: if the in-app column is off for a type, no webhook is sent for it either. `task.updated` only fires for changes that matter outside tududi (name, note, status, priority, dates, project, parent, estimate) and lists them in `data.changed`. Habit check-ins do not count as task changes. Changes to many tasks at once through a bulk update are not sent.
+The reminder and alert events follow the same notifications as the in-app bell: if the in-app column is off for a type, no webhook is sent for it either. `task.updated` only fires for changes that matter outside Cadence (name, note, status, priority, dates, project, parent, estimate) and lists them in `data.changed`. Habit check-ins do not count as task changes. Changes to many tasks at once through a bulk update are not sent.
 
 ## Payload
 

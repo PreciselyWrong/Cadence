@@ -161,7 +161,7 @@ async function handleCalendarHomePropfind(req, res) {
                 homeHref(username),
                 buildPropstat({
                     'D:resourcetype': { 'D:collection': '' },
-                    'D:displayname': 'Tududi Projects',
+                    'D:displayname': 'Cadence Projects',
                     'D:current-user-principal': {
                         'D:href': `/caldav/${enc(username)}/`,
                     },

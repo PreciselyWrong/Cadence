@@ -1,6 +1,6 @@
 # Blog
 
-The blog is made of public notes. One note is the front page; the public notes it links with `[[Title]]` are the posts. It is meant for tududi.com's own writing, and every page leads to tududi Cloud.
+The blog is made of public notes. One note is the front page; the public notes it links with `[[Title]]` are the posts. It is meant for tududi.com's own writing, and every page leads to Cadence Cloud.
 
 ## Publishing
 

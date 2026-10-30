@@ -1,6 +1,6 @@
 # OIDC/SSO Authentication
 
-This guide explains how to configure and use OpenID Connect (OIDC) Single Sign-On (SSO) authentication in Tududi.
+This guide explains how to configure and use OpenID Connect (OIDC) Single Sign-On (SSO) authentication in Cadence.
 
 **Related:** [User Management](08-user-management.md), [Architecture Overview](architecture.md)
 
@@ -39,7 +39,7 @@ This guide explains how to configure and use OpenID Connect (OIDC) Single Sign-O
 
 ## Overview
 
-OIDC (OpenID Connect) is a modern authentication protocol that allows users to sign in to Tududi using external identity providers like Google, Okta, Keycloak, or any OIDC-compliant service.
+OIDC (OpenID Connect) is a modern authentication protocol that allows users to sign in to Cadence using external identity providers like Google, Okta, Keycloak, or any OIDC-compliant service.
 
 **Key Features:**
 - **Single Sign-On:** Use your existing corporate or personal accounts
@@ -73,7 +73,7 @@ OIDC (OpenID Connect) is a modern authentication protocol that allows users to s
 
 ## Supported Providers
 
-Tududi supports any OIDC-compliant identity provider, including:
+Cadence supports any OIDC-compliant identity provider, including:
 
 | Provider | Type | Typical Use Case |
 |----------|------|------------------|
@@ -90,7 +90,7 @@ Tududi supports any OIDC-compliant identity provider, including:
 
 ## Configuration
 
-OIDC providers are configured via environment variables in your `.env` file. After making changes, **restart the Tududi server** for them to take effect.
+OIDC providers are configured via environment variables in your `.env` file. After making changes, **restart the Cadence server** for them to take effect.
 
 ### Single Provider Setup
 
@@ -184,11 +184,11 @@ OIDC_PROVIDER_3_AUTO_PROVISION=true
 | `OIDC_ADMIN_EMAIL_DOMAINS` | No | - | Comma-separated domains for auto-admin |
 | `OIDC_TRUST_UNVERIFIED_EMAIL` | No | `false` | Accept sign-ins when the provider does not report the email as verified (see [Email verification](#email-verification)). Numbered providers use `OIDC_PROVIDER_<n>_TRUST_UNVERIFIED_EMAIL`. |
 | `OIDC_ACCESS_TOKEN_AUDIENCE` | No | - | Comma-separated audiences accepted for OAuth bearer tokens (MCP and other API clients). When unset, tokens from any audience are accepted and a warning is logged. |
-| `BASE_URL` | Yes | - | Tududi base URL (for OAuth callbacks) |
+| `BASE_URL` | Yes | - | Cadence base URL (for OAuth callbacks) |
 
 **Scope Formatting:**
 
-The `OIDC_SCOPE` parameter accepts space-separated OAuth scopes. Tududi automatically normalizes the scope value by:
+The `OIDC_SCOPE` parameter accepts space-separated OAuth scopes. Cadence automatically normalizes the scope value by:
 - Trimming leading/trailing whitespace
 - Collapsing multiple spaces into single spaces
 - Ensuring `openid` is always included (adding it if missing)
@@ -201,7 +201,7 @@ OIDC_SCOPE="openid profile email groups"
 OIDC_SCOPE=openid  profile  email    # Extra spaces are automatically normalized
 ```
 
-**Note:** Do not manually URL-encode the scope value (e.g., using `%20` or `+`). Use regular spaces - Tududi handles the encoding automatically.
+**Note:** Do not manually URL-encode the scope value (e.g., using `%20` or `+`). Use regular spaces - Cadence handles the encoding automatically.
 
 **Important:** The `BASE_URL` variable must be set for OAuth redirects to work:
 ```bash
@@ -211,7 +211,7 @@ BASE_URL=https://tududi.example.com  # Production
 
 **Trust Proxy Configuration (Required for Production):**
 
-If Tududi is deployed behind a reverse proxy (nginx, Traefik, Apache, etc.), you **must** configure Express to trust the proxy:
+If Cadence is deployed behind a reverse proxy (nginx, Traefik, Apache, etc.), you **must** configure Express to trust the proxy:
 
 ```bash
 TUDUDI_TRUST_PROXY=true
@@ -256,7 +256,7 @@ A provider's client secret is never shown back in full — only whether one is s
    - Production: `https://your-domain.com/api/oidc/callback/google`
 7. Copy **Client ID** and **Client Secret**
 
-**2. Configure Tududi**
+**2. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -271,7 +271,7 @@ OIDC_AUTO_PROVISION=true
 
 **3. Test**
 
-- Restart Tududi
+- Restart Cadence
 - Navigate to login page
 - Click "Sign in with Google"
 - Approve permissions
@@ -300,7 +300,7 @@ Format: `https://{your-domain}.okta.com`
 
 Example: `https://company.okta.com`
 
-**3. Configure Tududi**
+**3. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -325,7 +325,7 @@ OIDC_ADMIN_EMAIL_DOMAINS=company.com
 3. Go to **Clients** > **Create client**
 4. Configure:
    - **Client type:** OpenID Connect
-   - **Client ID:** `tududi`
+   - **Client ID:** `Cadence`
    - **Client authentication:** ON (confidential)
    - **Valid redirect URIs:** `https://your-domain.com/api/oidc/callback/keycloak`
 5. Go to **Credentials** tab and copy **Client secret**
@@ -336,7 +336,7 @@ Format: `https://{keycloak-domain}/realms/{realm-name}`
 
 Example: `https://auth.example.com/realms/myrealm`
 
-**3. Configure Tududi**
+**3. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -359,10 +359,10 @@ OIDC_AUTO_PROVISION=true
 2. Go to **Applications** > **Applications**
 3. Click **Create with Provider**
 4. Configure:
-   - **Application Name:** Tududi
-   - **Slug:** (this will default to the app name in lower case, but you can override it--remember it as you will use it when configuring Tududi)
+   - **Application Name:** Cadence
+   - **Slug:** (this will default to the app name in lower case, but you can override it--remember it as you will use it when configuring Cadence)
 5. Click **Next** and then choose **OAuth2/OpenID Provider**
-6. Note the **Client ID** and **Client Secret**; they will be needed for the Tududi configuration
+6. Note the **Client ID** and **Client Secret**; they will be needed for the Cadence configuration
 7. Click **Next** and set the following:
    - **Authorization flow:** Choose your flow
    - **Redirect URIs:**
@@ -378,9 +378,9 @@ OIDC_AUTO_PROVISION=true
 1. Log in to Authentik admin interface
 2. Go to **Applications** > **Providers**
 3. Click on the provider you created above
-4. You will want to copy the **OpenID Configuration Issuer** which will have the format `https://{authentik-domain}/application/o/{application-slug}/`. This is the value for `OIDC_ISSUER_URL` in the Tududi configuration.
+4. You will want to copy the **OpenID Configuration Issuer** which will have the format `https://{authentik-domain}/application/o/{application-slug}/`. This is the value for `OIDC_ISSUER_URL` in the Cadence configuration.
 
-**3. Configure Tududi**
+**3. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -404,11 +404,11 @@ OIDC_AUTO_PROVISION=true
 1. Go to [PocketID Developer Console](https://pocketid.app/developer)
 2. Create a new application
 3. Configure:
-   - **Name:** Tududi
+   - **Name:** Cadence
    - **Redirect URI:** `https://your-domain.com/api/oidc/callback/pocketid`
 4. Note the **Client ID** and **Client Secret**
 
-**2. Configure Tududi**
+**2. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -431,7 +431,7 @@ OIDC_AUTO_PROVISION=true
 2. Navigate to **Azure Active Directory** > **App registrations**
 3. Click **New registration**
 4. Configure:
-   - **Name:** Tududi
+   - **Name:** Cadence
    - **Supported account types:** Choose your option
    - **Redirect URI:** Web - `https://your-domain.com/api/oidc/callback/azure`
 5. After creation, go to **Certificates & secrets**
@@ -442,7 +442,7 @@ OIDC_AUTO_PROVISION=true
 
 Go to **Azure Active Directory** > **Overview** and copy the **Tenant ID**
 
-**3. Configure Tududi**
+**3. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -463,15 +463,15 @@ Replace `{tenant-id}` with your actual tenant ID.
 
 **1. Register Application**
 
-1. In your terminal (using [kanidm cli](https://kanidm.github.io/kanidm/stable/client_tools.html)), create a new oauth2 application with `kanidm system oauth2 create [appname] [displayname] [url]` (e.g: `kanidm system oauth2 create tududi_app Tududi https://tududi.domain.tld`)
+1. In your terminal (using [kanidm cli](https://kanidm.github.io/kanidm/stable/client_tools.html)), create a new oauth2 application with `kanidm system oauth2 create [appname] [displayname] [url]` (e.g: `kanidm system oauth2 create tududi_app Cadence https://tududi.domain.tld`)
 2. Get a client secret with `kanidm system oauth2 show-basic-secret [appname]`
 3. Make sure to change the PKCE and cipher settings:
-   - Since tududi doesn't support PKCE, run: `kanidm system oauth2 warning-insecure-client-disable-pkce [appname]`
-   - Since tududi only supports RS256, not ES256, run: `kanidm system oauth2 warning-enable-legacy-crypto [appname]`
+   - Since Cadence doesn't support PKCE, run: `kanidm system oauth2 warning-insecure-client-disable-pkce [appname]`
+   - Since Cadence only supports RS256, not ES256, run: `kanidm system oauth2 warning-enable-legacy-crypto [appname]`
 4. Add a redirect URL with `kanidm system oauth2 add-redirect-url https://tududi.domain.tld/api/oidc/callback/[appname]`
 5. Configure claims with `kanidm system oauth2 update-scope-map [appname] [groupname] [scopes]`. If you're unsure, you can use `idm_all_persons` as the group to grant access to all users, or create a new groups with `kanidm group create [groupname]` and add users with `kanidm group add-members [groupname] [members]`. In scopes, you can use `openid profile email`.
 
-**2. Configure Tududi**
+**2. Configure Cadence**
 
 ```bash
 OIDC_ENABLED=true
@@ -492,11 +492,11 @@ OIDC_AUTO_PROVISION=true
 
 **First-Time Users:**
 
-1. Navigate to Tududi login page
+1. Navigate to Cadence login page
 2. Click the provider button (e.g., "Sign in with Google")
 3. You'll be redirected to the provider's login page
 4. Approve the requested permissions
-5. You'll be redirected back to Tududi and logged in
+5. You'll be redirected back to Cadence and logged in
 6. A new account is automatically created (if auto-provisioning is enabled)
 
 **Returning Users:**
@@ -553,7 +553,7 @@ When `OIDC_AUTO_PROVISION=true` (default), new users are automatically created o
 **How It Works:**
 
 1. User completes SSO login
-2. Tududi checks if an OIDC identity exists for this provider + user ID
+2. Cadence checks if an OIDC identity exists for this provider + user ID
 3. If not, checks if a user with the email exists:
    - **User exists:** Links OIDC identity to existing user
    - **User doesn't exist:** Creates new user with:
@@ -601,7 +601,7 @@ OIDC_ADMIN_EMAIL_DOMAINS=company.com,example.org
 
 ### Hybrid Authentication
 
-Tududi supports hybrid authentication where users choose their preferred method:
+Cadence supports hybrid authentication where users choose their preferred method:
 
 **Scenarios:**
 
@@ -707,7 +707,7 @@ Add to your `.env` file:
 TUDUDI_TRUST_PROXY=true
 ```
 
-Then restart the Tududi server:
+Then restart the Cadence server:
 ```bash
 docker compose restart  # For Docker
 npm start              # For standalone
@@ -793,13 +793,13 @@ ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust prox
 
 ### Callback URL Mismatch
 
-**Cause:** Redirect URI configured in provider doesn't match Tududi's callback.
+**Cause:** Redirect URI configured in provider doesn't match Cadence's callback.
 
 **Solution:**
 1. Callback URL format: `{BASE_URL}/api/oidc/callback/{slug}`
 2. Example: `https://tududi.example.com/api/oidc/callback/google`
 3. Must match exactly in provider settings (including http/https)
-4. Update provider settings and restart Tududi
+4. Update provider settings and restart Cadence
 
 ### Can't Unlink Last Auth Method
 
@@ -823,7 +823,7 @@ ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust prox
 
 ### OAuth Flow Security
 
-Tududi implements standard OAuth 2.0 security measures:
+Cadence implements standard OAuth 2.0 security measures:
 
 1. **CSRF Protection:** Cryptographically random state parameter (32 bytes)
 2. **Replay Protection:** State is one-time use, 10-minute TTL

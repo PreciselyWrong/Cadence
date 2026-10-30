@@ -164,7 +164,7 @@ async function writableCalendar(userId, calendarUid) {
     if (!calendar) throw new NotFoundError('Calendar not found');
     if (calendar.is_tududi) {
         throw new ValidationError(
-            'The Tududi calendar holds your tasks: change the task instead'
+            'The Cadence calendar holds your tasks: change the task instead'
         );
     }
     if (!isWritable(calendar)) {

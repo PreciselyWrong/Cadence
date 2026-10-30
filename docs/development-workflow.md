@@ -17,7 +17,7 @@
 ```bash
 # Clone repository
 git clone https://github.com/chrisvel/tududi.git
-cd tududi
+cd Cadence
 
 # Install all dependencies
 # This installs both frontend and backend dependencies (monorepo setup)
@@ -51,7 +51,7 @@ npm run user:create
 
 ## Daily Development
 
-Tududi runs two separate processes during development:
+Cadence runs two separate processes during development:
 
 ### Two-Server Development
 
@@ -127,7 +127,7 @@ EMAIL_SMTP_HOST=smtp.example.com
 EMAIL_SMTP_PORT=587
 EMAIL_SMTP_SECURE=false
 EMAIL_FROM_ADDRESS=noreply@example.com
-EMAIL_FROM_NAME=Tududi
+EMAIL_FROM_NAME=Cadence
 # EMAIL_SMTP_USERNAME and EMAIL_SMTP_PASSWORD are optional. Leave both unset
 # to use a passwordless SMTP relay (auth is skipped entirely in that case).
 EMAIL_SMTP_USERNAME=user

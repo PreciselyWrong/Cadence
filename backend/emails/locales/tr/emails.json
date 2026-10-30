@@ -6,9 +6,9 @@
         "trialUntil": "Ücretsiz deneme süreniz {{date}} tarihine kadar devam ediyor."
     },
     "verification": {
-        "subject": "Tududi'ye hoş geldiniz - E-posta adresinizi doğrulayın",
-        "welcome": "Tududi'ye hoş geldiniz!",
-        "opening": "Kaydolduğunuz için teşekkürler. Kaydınızı tamamlamak ve Tududi'yi kullanmaya başlamak için aşağıdaki bağlantıya tıklayarak e-posta adresinizi doğrulayın:",
+        "subject": "Cadence'ye hoş geldiniz - E-posta adresinizi doğrulayın",
+        "welcome": "Cadence'ye hoş geldiniz!",
+        "opening": "Kaydolduğunuz için teşekkürler. Kaydınızı tamamlamak ve Cadence'yi kullanmaya başlamak için aşağıdaki bağlantıya tıklayarak e-posta adresinizi doğrulayın:",
         "button": "E-posta Adresini Doğrula",
         "expires_one": "Bu doğrulama bağlantısının süresi {{count}} saat içinde dolacak.",
         "expires_other": "Bu doğrulama bağlantısının süresi {{count}} saat içinde dolacak.",
@@ -21,44 +21,44 @@
             "Tekrarlayan görevler ayarlamak",
             "Verimliliğinizi takip etmek"
         ],
-        "ignore": "Tududi'de bir hesap oluşturmadıysanız bu e-postayı güvenle yok sayabilirsiniz."
+        "ignore": "Cadence'de bir hesap oluşturmadıysanız bu e-postayı güvenle yok sayabilirsiniz."
     },
     "verificationReminder": {
-        "subject": "Hatırlatma: Tududi'yi kullanmaya başlamak için e-posta adresinizi doğrulayın",
-        "opening": "Yaklaşık bir gün önce Tududi'ye kaydoldunuz, ancak e-posta adresiniz henüz doğrulanmadı. Hesabınız (ve ücretsiz denemeniz) adresinizi doğruladığınız anda başlar."
+        "subject": "Hatırlatma: Cadence'yi kullanmaya başlamak için e-posta adresinizi doğrulayın",
+        "opening": "Yaklaşık bir gün önce Cadence'ye kaydoldunuz, ancak e-posta adresiniz henüz doğrulanmadı. Hesabınız (ve ücretsiz denemeniz) adresinizi doğruladığınız anda başlar."
     },
     "passwordReset": {
-        "subject": "Tududi şifrenizi sıfırlayın",
-        "intro": "Biri Tududi hesabınızın şifresini sıfırlamak istedi.",
+        "subject": "Cadence şifrenizi sıfırlayın",
+        "intro": "Biri Cadence hesabınızın şifresini sıfırlamak istedi.",
         "action": "Yeni bir şifre belirlemek için bu bağlantıyı açın:",
         "button": "Yeni şifre belirle",
         "expires_one": "Bağlantının süresi {{count}} dakika içinde dolacak. Sıfırlama isteğinde bulunmadıysanız bu e-postayı yok sayın; şifreniz değişmeden kalır.",
         "expires_other": "Bağlantının süresi {{count}} dakika içinde dolacak. Sıfırlama isteğinde bulunmadıysanız bu e-postayı yok sayın; şifreniz değişmeden kalır."
     },
     "memberInvite": {
-        "subject": "Bir Tududi çalışma alanına eklendiniz",
-        "intro": "Bir Tududi çalışma alanına eklendiniz.",
+        "subject": "Bir Cadence çalışma alanına eklendiniz",
+        "intro": "Bir Cadence çalışma alanına eklendiniz.",
         "action": "Hesabınızı etkinleştirip giriş yapmak için bir şifre belirleyin:",
         "button": "Şifrenizi belirleyin",
         "expires_one": "Bağlantının süresi {{count}} saat içinde dolacak. Bunu beklemiyorsanız bu e-postayı yok sayabilirsiniz.",
         "expires_other": "Bağlantının süresi {{count}} saat içinde dolacak. Bunu beklemiyorsanız bu e-postayı yok sayabilirsiniz."
     },
     "trialReminder": {
-        "subjectTomorrow": "tududi denemeniz yarın sona eriyor",
-        "subjectDays_one": "tududi denemeniz {{count}} gün içinde sona eriyor",
-        "subjectDays_other": "tududi denemeniz {{count}} gün içinde sona eriyor",
-        "endsTomorrow": "tududi Cloud denemeniz yarın, {{date}} tarihinde sona eriyor.",
-        "endsInDays_one": "tududi Cloud denemeniz {{count}} gün içinde, {{date}} tarihinde sona eriyor.",
-        "endsInDays_other": "tududi Cloud denemeniz {{count}} gün içinde, {{date}} tarihinde sona eriyor.",
+        "subjectTomorrow": "Cadence denemeniz yarın sona eriyor",
+        "subjectDays_one": "Cadence denemeniz {{count}} gün içinde sona eriyor",
+        "subjectDays_other": "Cadence denemeniz {{count}} gün içinde sona eriyor",
+        "endsTomorrow": "Cadence Cloud denemeniz yarın, {{date}} tarihinde sona eriyor.",
+        "endsInDays_one": "Cadence Cloud denemeniz {{count}} gün içinde, {{date}} tarihinde sona eriyor.",
+        "endsInDays_other": "Cadence Cloud denemeniz {{count}} gün içinde, {{date}} tarihinde sona eriyor.",
         "afterReadOnly_one": "Bundan sonra hesabınız {{count}} gün boyunca salt okunur olur, böylece verilerinizi yine de dışa aktarabilirsiniz; ardından silinir.",
         "afterReadOnly_other": "Bundan sonra hesabınız {{count}} gün boyunca salt okunur olur, böylece verilerinizi yine de dışa aktarabilirsiniz; ardından silinir.",
         "afterFree": "Bundan sonra hesabınız ücretsiz plana geçer.",
-        "keep": "tududi Cloud'u yapay zeka asistanı ve üyeler dahil şimdiki gibi kullanmaya devam etmek için abone olun:",
+        "keep": "Cadence Cloud'u yapay zeka asistanı ve üyeler dahil şimdiki gibi kullanmaya devam etmek için abone olun:",
         "button": "Abone ol"
     },
     "deletionWarning": {
-        "subject": "tududi hesabınız {{date}} tarihinde silinecek",
-        "ended": "tududi Cloud denemeniz sona erdi ve hesabınız o zamandan beri salt okunur durumda.",
+        "subject": "Cadence hesabınız {{date}} tarihinde silinecek",
+        "ended": "Cadence Cloud denemeniz sona erdi ve hesabınız o zamandan beri salt okunur durumda.",
         "deleteOn": "{{date}} tarihinde hesap ve içindeki her şey silinecek.",
         "keep": "Hesabı korumak için abone olun:",
         "button": "Hesabımı koru",
@@ -66,8 +66,8 @@
         "final": "Hiçbir şey yapmazsanız hesap {{date}} tarihinde silinir ve bu, bu konuda bizden alacağınız son e-posta olur."
     },
     "emptyAccount": {
-        "subject": "tududi hesabınız hâlâ boş",
-        "intro": "Birkaç gündür bir tududi hesabınız var ama içinde henüz hiçbir şey yok. Çoğu kişi bunlardan biriyle başlar ve her biri bir dakikadan kısa sürer:",
+        "subject": "Cadence hesabınız hâlâ boş",
+        "intro": "Birkaç gündür bir Cadence hesabınız var ama içinde henüz hiçbir şey yok. Çoğu kişi bunlardan biriyle başlar ve her biri bir dakikadan kısa sürer:",
         "ideas": [
             "Aklınızdaki her şeyi Gelen Kutusu'na yazın, düzenlemeyi sonraya bırakın.",
             "Plan'ı açın, bugün için üç şey seçin ve gerisini bırakın.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Görevleriniz bıraktığınız yerde",
-        "intro": "Bir süredir tududi'ye girmediniz. Eklediğiniz her şey hâlâ orada, tam bıraktığınız gibi.",
+        "intro": "Bir süredir Cadence'ye girmediniz. Eklediğiniz her şey hâlâ orada, tam bıraktığınız gibi.",
         "tip": "Liste çok uzadıysa küçük başlayın: Plan'ı açın, bugün için üç şey seçin ve gerisini sonraya bırakın.",
         "button": "Bugünü planla",
         "outro": "Siz geri dönene kadar bu türden başka bir e-posta göndermeyeceğiz."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "İki adımlı doğrulama açık",
-            "body": "Tududi hesabınız için iki adımlı doğrulama açıldı. Giriş yapmak için artık doğrulama uygulamanızdan bir kod gerekiyor ve diğer tüm cihazlarda oturum kapatıldı."
+            "body": "Cadence hesabınız için iki adımlı doğrulama açıldı. Giriş yapmak için artık doğrulama uygulamanızdan bir kod gerekiyor ve diğer tüm cihazlarda oturum kapatıldı."
         },
         "mfaDisabled": {
             "subject": "İki adımlı doğrulama kapalı",
-            "body": "Tududi hesabınız için iki adımlı doğrulama kapatıldı. Giriş yapmak için artık yalnızca şifreniz yeterli."
+            "body": "Cadence hesabınız için iki adımlı doğrulama kapatıldı. Giriş yapmak için artık yalnızca şifreniz yeterli."
         },
         "mfaReset": {
             "subject": "İki adımlı doğrulamanız sıfırlandı",
-            "body": "Bir yönetici Tududi hesabınızın iki adımlı doğrulamasını sıfırladı ve tüm cihazlarda oturum kapatıldı. Şifrenizle giriş yapıp yeniden açabilirsiniz."
+            "body": "Bir yönetici Cadence hesabınızın iki adımlı doğrulamasını sıfırladı ve tüm cihazlarda oturum kapatıldı. Şifrenizle giriş yapıp yeniden açabilirsiniz."
         },
         "recoveryCodeUsed": {
             "subject": "Bir kurtarma kodu kullanıldı",
-            "body": "Biri kurtarma kodlarınızdan biriyle Tududi hesabınıza giriş yaptı. Her kod bir kez çalışır."
+            "body": "Biri kurtarma kodlarınızdan biriyle Cadence hesabınıza giriş yaptı. Her kod bir kez çalışır."
         },
         "recoveryCodesRegenerated": {
             "subject": "Yeni kurtarma kodları oluşturuldu",
-            "body": "Tududi hesabınız için yeni kurtarma kodları oluşturuldu. Eskileri artık çalışmıyor."
+            "body": "Cadence hesabınız için yeni kurtarma kodları oluşturuldu. Eskileri artık çalışmıyor."
         },
         "button": "Güvenlik ayarlarını aç",
         "notYou": "Bu siz değilseniz, şifrenizi hemen değiştirin ve yöneticinize haber verin."

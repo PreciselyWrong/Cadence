@@ -264,7 +264,7 @@ const Login: React.FC = () => {
                                     ? 'wide-logo-light.png'
                                     : 'wide-logo-dark.png'
                             )}
-                            alt="tududi"
+                            alt="Cadence"
                             className="h-9 w-auto"
                         />
                     </a>

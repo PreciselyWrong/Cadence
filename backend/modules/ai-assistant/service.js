@@ -490,7 +490,7 @@ async function generateDailyBrief(userId) {
     await entitlements.consumeUsage(userId, 'ai_requests');
     await entitlements.consumeMonthlyUsage(userId, 'ai_credits');
 
-    const systemPrompt = `You are a productivity assistant in Tududi. Return a daily brief as JSON. Keep every field very short — no full sentences, no filler words.
+    const systemPrompt = `You are a productivity assistant in Cadence. Return a daily brief as JSON. Keep every field very short — no full sentences, no filler words.
 
 Return a JSON object with exactly this shape:
 {
@@ -691,7 +691,7 @@ async function generateTaskInsights(taskContext, userId) {
             );
     }
 
-    const systemPrompt = `You are a productivity assistant in Tududi. A user is viewing a task and needs real, specific help — not a paraphrase of the task name. Use the task name, project, tags, and notes to infer what this work actually involves, then give guidance that would only apply to THIS specific task.
+    const systemPrompt = `You are a productivity assistant in Cadence. A user is viewing a task and needs real, specific help — not a paraphrase of the task name. Use the task name, project, tags, and notes to infer what this work actually involves, then give guidance that would only apply to THIS specific task.
 
 LANGUAGE RULE: Detect the language of the task name and write every text field of your JSON response in that same language. If the task name is in Greek, respond in Greek. If in Spanish, respond in Spanish. If in English, respond in English. Never mix languages.
 
@@ -896,7 +896,7 @@ async function generateProjectInsights(projectContext, userId) {
     );
     if (overdueTaskCount > 0) lines.push(`Overdue tasks: ${overdueTaskCount}`);
 
-    const systemPrompt = `You are a productivity assistant in Tududi. A user is viewing a project and needs specific, actionable guidance — not generic advice. Use the project name, description, status, and task data to infer what this project is actually about, then give insights that only apply to THIS specific project.
+    const systemPrompt = `You are a productivity assistant in Cadence. A user is viewing a project and needs specific, actionable guidance — not generic advice. Use the project name, description, status, and task data to infer what this project is actually about, then give insights that only apply to THIS specific project.
 
 CRITICAL RULE: Never just echo back the project name or status. Give real domain-level analysis.
 

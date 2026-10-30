@@ -8,7 +8,7 @@
     "verification": {
         "subject": "Tervetuloa Tududiin: vahvista sähköpostiosoitteesi",
         "welcome": "Tervetuloa Tududiin!",
-        "opening": "Kiitos rekisteröitymisestä. Viimeistele rekisteröityminen ja ota Tududi käyttöön vahvistamalla sähköpostiosoitteesi alla olevasta linkistä:",
+        "opening": "Kiitos rekisteröitymisestä. Viimeistele rekisteröityminen ja ota Cadence käyttöön vahvistamalla sähköpostiosoitteesi alla olevasta linkistä:",
         "button": "Vahvista sähköpostiosoite",
         "expires_one": "Tämä vahvistuslinkki vanhenee {{count}} tunnissa.",
         "expires_other": "Tämä vahvistuslinkki vanhenee {{count}} tunnissa.",
@@ -24,41 +24,41 @@
         "ignore": "Jos et luonut tiliä Tududiin, voit jättää tämän viestin huomiotta."
     },
     "verificationReminder": {
-        "subject": "Muistutus: vahvista sähköpostiosoitteesi ja ota Tududi käyttöön",
+        "subject": "Muistutus: vahvista sähköpostiosoitteesi ja ota Cadence käyttöön",
         "opening": "Rekisteröidyit Tududiin noin päivä sitten, mutta sähköpostiosoitettasi ei ole vielä vahvistettu. Tilisi (ja ilmainen kokeilusi) alkaa heti, kun vahvistat sen."
     },
     "passwordReset": {
-        "subject": "Vaihda Tududi-salasanasi",
-        "intro": "Joku pyysi Tududi-tilisi salasanan vaihtamista.",
+        "subject": "Vaihda Cadence-salasanasi",
+        "intro": "Joku pyysi Cadence-tilisi salasanan vaihtamista.",
         "action": "Avaa tämä linkki ja valitse uusi salasana:",
         "button": "Valitse uusi salasana",
         "expires_one": "Linkki vanhenee {{count}} minuutissa. Jos et pyytänyt salasanan vaihtoa, voit jättää tämän viestin huomiotta; salasanasi pysyy ennallaan.",
         "expires_other": "Linkki vanhenee {{count}} minuutissa. Jos et pyytänyt salasanan vaihtoa, voit jättää tämän viestin huomiotta; salasanasi pysyy ennallaan."
     },
     "memberInvite": {
-        "subject": "Sinut on lisätty Tududi-työtilaan",
-        "intro": "Sinut on lisätty Tududi-työtilaan.",
+        "subject": "Sinut on lisätty Cadence-työtilaan",
+        "intro": "Sinut on lisätty Cadence-työtilaan.",
         "action": "Valitse salasana, niin voit aktivoida tilisi ja kirjautua sisään:",
         "button": "Aseta salasana",
         "expires_one": "Linkki vanhenee {{count}} tunnissa. Jos et odottanut tätä viestiä, voit jättää sen huomiotta.",
         "expires_other": "Linkki vanhenee {{count}} tunnissa. Jos et odottanut tätä viestiä, voit jättää sen huomiotta."
     },
     "trialReminder": {
-        "subjectTomorrow": "tududi-kokeilusi päättyy huomenna",
-        "subjectDays_one": "tududi-kokeilusi päättyy {{count}} päivän kuluttua",
-        "subjectDays_other": "tududi-kokeilusi päättyy {{count}} päivän kuluttua",
-        "endsTomorrow": "tududi Cloud -kokeilusi päättyy huomenna {{date}}.",
-        "endsInDays_one": "tududi Cloud -kokeilusi päättyy {{count}} päivän kuluttua, {{date}}.",
-        "endsInDays_other": "tududi Cloud -kokeilusi päättyy {{count}} päivän kuluttua, {{date}}.",
+        "subjectTomorrow": "Cadence-kokeilusi päättyy huomenna",
+        "subjectDays_one": "Cadence-kokeilusi päättyy {{count}} päivän kuluttua",
+        "subjectDays_other": "Cadence-kokeilusi päättyy {{count}} päivän kuluttua",
+        "endsTomorrow": "Cadence Cloud -kokeilusi päättyy huomenna {{date}}.",
+        "endsInDays_one": "Cadence Cloud -kokeilusi päättyy {{count}} päivän kuluttua, {{date}}.",
+        "endsInDays_other": "Cadence Cloud -kokeilusi päättyy {{count}} päivän kuluttua, {{date}}.",
         "afterReadOnly_one": "Sen jälkeen tilisi on {{count}} päivän ajan vain luku -tilassa, jotta voit vielä viedä tietosi, ja sitten se poistetaan.",
         "afterReadOnly_other": "Sen jälkeen tilisi on {{count}} päivän ajan vain luku -tilassa, jotta voit vielä viedä tietosi, ja sitten se poistetaan.",
         "afterFree": "Sen jälkeen tilisi siirtyy ilmaiseen pakettiin.",
-        "keep": "Jos haluat jatkaa tududi Cloudin käyttöä nykyiseen tapaan, AI-avustaja ja jäsenet mukaan lukien, tee tilaus:",
+        "keep": "Jos haluat jatkaa Cadence Cloudin käyttöä nykyiseen tapaan, AI-avustaja ja jäsenet mukaan lukien, tee tilaus:",
         "button": "Tilaa"
     },
     "deletionWarning": {
-        "subject": "tududi-tilisi poistetaan {{date}}",
-        "ended": "tududi Cloud -kokeilusi on päättynyt, ja tilisi on ollut siitä lähtien vain luku -tilassa.",
+        "subject": "Cadence-tilisi poistetaan {{date}}",
+        "ended": "Cadence Cloud -kokeilusi on päättynyt, ja tilisi on ollut siitä lähtien vain luku -tilassa.",
         "deleteOn": "{{date}} tili ja kaikki sen sisältö poistetaan.",
         "keep": "Jos haluat säilyttää sen, tee tilaus:",
         "button": "Säilytä tilini",
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Kaksivaiheinen tunnistautuminen on käytössä",
-            "body": "Kaksivaiheinen tunnistautuminen otettiin käyttöön Tududi-tililläsi. Kirjautumiseen tarvitaan nyt koodi todennussovelluksestasi, ja kaikki muut laitteet kirjattiin ulos."
+            "body": "Kaksivaiheinen tunnistautuminen otettiin käyttöön Cadence-tililläsi. Kirjautumiseen tarvitaan nyt koodi todennussovelluksestasi, ja kaikki muut laitteet kirjattiin ulos."
         },
         "mfaDisabled": {
             "subject": "Kaksivaiheinen tunnistautuminen ei ole käytössä",
-            "body": "Kaksivaiheinen tunnistautuminen poistettiin käytöstä Tududi-tililtäsi. Kirjautumiseen tarvitaan nyt vain salasanasi."
+            "body": "Kaksivaiheinen tunnistautuminen poistettiin käytöstä Cadence-tililtäsi. Kirjautumiseen tarvitaan nyt vain salasanasi."
         },
         "mfaReset": {
             "subject": "Kaksivaiheinen tunnistautumisesi nollattiin",
-            "body": "Ylläpitäjä nollasi Tududi-tilisi kaksivaiheisen tunnistautumisen, ja kaikki laitteet kirjattiin ulos. Voit kirjautua salasanallasi ja ottaa sen uudelleen käyttöön."
+            "body": "Ylläpitäjä nollasi Cadence-tilisi kaksivaiheisen tunnistautumisen, ja kaikki laitteet kirjattiin ulos. Voit kirjautua salasanallasi ja ottaa sen uudelleen käyttöön."
         },
         "recoveryCodeUsed": {
             "subject": "Palautuskoodia käytettiin",
-            "body": "Joku kirjautui Tududi-tilillesi yhdellä palautuskoodeistasi. Kukin koodi toimii kerran."
+            "body": "Joku kirjautui Cadence-tilillesi yhdellä palautuskoodeistasi. Kukin koodi toimii kerran."
         },
         "recoveryCodesRegenerated": {
             "subject": "Uudet palautuskoodit luotiin",
-            "body": "Tududi-tilillesi luotiin uudet palautuskoodit. Vanhat eivät enää toimi."
+            "body": "Cadence-tilillesi luotiin uudet palautuskoodit. Vanhat eivät enää toimi."
         },
         "button": "Avaa suojausasetukset",
         "notYou": "Jos tämä et ollut sinä, vaihda salasanasi heti ja kerro asiasta ylläpitäjällesi."

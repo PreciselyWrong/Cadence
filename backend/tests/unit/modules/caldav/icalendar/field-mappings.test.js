@@ -9,7 +9,7 @@ const {
 
 describe('CalDAV Field Mappings', () => {
     describe('Status Mappings', () => {
-        it('should map tududi statuses to iCalendar statuses', () => {
+        it('should map Cadence statuses to iCalendar statuses', () => {
             expect(STATUS_TUDUDI_TO_ICAL[0]).toBe('NEEDS-ACTION');
             expect(STATUS_TUDUDI_TO_ICAL[1]).toBe('IN-PROCESS');
             expect(STATUS_TUDUDI_TO_ICAL[2]).toBe('COMPLETED');
@@ -19,7 +19,7 @@ describe('CalDAV Field Mappings', () => {
             expect(STATUS_TUDUDI_TO_ICAL[6]).toBe('NEEDS-ACTION');
         });
 
-        it('should map iCalendar statuses to tududi statuses', () => {
+        it('should map iCalendar statuses to Cadence statuses', () => {
             expect(STATUS_ICAL_TO_TUDUDI['NEEDS-ACTION']).toBe(0);
             expect(STATUS_ICAL_TO_TUDUDI['IN-PROCESS']).toBe(1);
             expect(STATUS_ICAL_TO_TUDUDI['COMPLETED']).toBe(2);
@@ -29,15 +29,15 @@ describe('CalDAV Field Mappings', () => {
 
     describe('Priority Mappings', () => {
         describe('tududiToIcalPriority', () => {
-            it('should map tududi Low (0) to iCal 7', () => {
+            it('should map Cadence Low (0) to iCal 7', () => {
                 expect(tududiToIcalPriority(0)).toBe(7);
             });
 
-            it('should map tududi Medium (1) to iCal 5', () => {
+            it('should map Cadence Medium (1) to iCal 5', () => {
                 expect(tududiToIcalPriority(1)).toBe(5);
             });
 
-            it('should map tududi High (2) to iCal 3', () => {
+            it('should map Cadence High (2) to iCal 3', () => {
                 expect(tududiToIcalPriority(2)).toBe(3);
             });
 
@@ -91,7 +91,7 @@ describe('CalDAV Field Mappings', () => {
     });
 
     describe('Weekday Mappings', () => {
-        it('should map tududi weekdays to iCalendar weekdays', () => {
+        it('should map Cadence weekdays to iCalendar weekdays', () => {
             expect(WEEKDAY_MAP[0]).toBe('SU');
             expect(WEEKDAY_MAP[1]).toBe('MO');
             expect(WEEKDAY_MAP[2]).toBe('TU');
@@ -101,7 +101,7 @@ describe('CalDAV Field Mappings', () => {
             expect(WEEKDAY_MAP[6]).toBe('SA');
         });
 
-        it('should map iCalendar weekdays to tududi weekdays', () => {
+        it('should map iCalendar weekdays to Cadence weekdays', () => {
             expect(WEEKDAY_REVERSE_MAP['SU']).toBe(0);
             expect(WEEKDAY_REVERSE_MAP['MO']).toBe(1);
             expect(WEEKDAY_REVERSE_MAP['TU']).toBe(2);

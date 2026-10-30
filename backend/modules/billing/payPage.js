@@ -28,7 +28,7 @@ function payPage(req, res) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>tududi payment</title>
+<title>Cadence payment</title>
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 </head>
 <body style="font-family: system-ui, sans-serif; background: #f9fafb; color: #111827; text-align: center; padding-top: 20vh">

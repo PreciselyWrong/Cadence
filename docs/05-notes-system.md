@@ -1,12 +1,12 @@
 # Notes System - Behavior Rules
 
-This document explains how the Notes system works in tududi from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/notes/` and frontend components in `/frontend/components/Notes.tsx`.
+This document explains how the Notes system works in Cadence from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/notes/` and frontend components in `/frontend/components/Notes.tsx`.
 
 ---
 
 ## Overview
 
-**Notes** are tududi's flexible capture and reference system - a place to store information, ideas, bookmarks, meeting notes, and any other content that doesn't fit the structured task workflow. Unlike tasks, notes don't have due dates, priorities, or completion states - they're purely informational.
+**Notes** are Cadence's flexible capture and reference system - a place to store information, ideas, bookmarks, meeting notes, and any other content that doesn't fit the structured task workflow. Unlike tasks, notes don't have due dates, priorities, or completion states - they're purely informational.
 
 **Key characteristics:**
 - Rich text support via Markdown
@@ -427,7 +427,7 @@ The checkbox can be changed later while the note is public and saves straight aw
 
 ### The public page
 
-The link opens `/public/notes/<token>`, a page with no sidebar and no app navigation. It has only the tududi navbar (logo, dark mode toggle, **Sign In**, and **Sign Up** when registration is open) and the note. A visitor who is not signed in also sees a call to action: "Do you want to share your notes? Sign up now" (hidden when registration is closed). A signed-in visitor sees an **Open tududi** button instead.
+The link opens `/public/notes/<token>`, a page with no sidebar and no app navigation. It has only the Cadence navbar (logo, dark mode toggle, **Sign In**, and **Sign Up** when registration is open) and the note. A visitor who is not signed in also sees a call to action: "Do you want to share your notes? Sign up now" (hidden when registration is closed). A signed-in visitor sees an **Open Cadence** button instead.
 
 The title and content sit in one card. With styling inherited, the card uses the note's color, slightly translucent, and the note's background photo fills the page behind it with the photographer credited.
 

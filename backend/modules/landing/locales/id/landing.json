@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Ganti bahasa",
     "langSwitcherCurrent": "Bahasa: {{name}}",
-    "description": "Catat apa saja, rencanakan hari dengan AI di sekitar kalender, dan simpan area, tujuan, proyek, catatan, dan kebiasaan dalam satu sistem. Server MCP dengan {{tools}} alat memungkinkan agen AI mengerjakan daftar Anda. Akun tududi Cloud siap dalam semenit.",
-    "title": "tududi: manajer tugas dan sistem manajemen hidup, dengan MCP untuk agen AI"
+    "description": "Catat apa saja, rencanakan hari dengan AI di sekitar kalender, dan simpan area, tujuan, proyek, catatan, dan kebiasaan dalam satu sistem. Server MCP dengan {{tools}} alat memungkinkan agen AI mengerjakan daftar Anda. Akun Cadence Cloud siap dalam semenit.",
+    "title": "Cadence: manajer tugas dan sistem manajemen hidup, dengan MCP untuk agen AI"
   },
   "nav": {
     "demo": "Demo langsung",
@@ -19,7 +19,7 @@
   "hero": {
     "ctaDemo": "Coba demo langsung",
     "demoNote": "Instance terkelola sungguhan dengan data contoh, dipakai bersama dan direset secara berkala",
-    "screenshotAlt": "Antarmuka tududi, menampilkan tampilan Hari Ini dengan tugas yang direncanakan",
+    "screenshotAlt": "Antarmuka Cadence, menampilkan tampilan Hari Ini dengan tugas yang direncanakan",
     "cloudNote": "Tidak ada server yang perlu disiapkan. Bulanan atau tahunan, dan Anda bisa membatalkan kapan saja.",
     "ctaPrimary": "Mulai sekarang",
     "lede": "Catat apa saja, rencanakan hari dengan AI di sekitar kalender, dan simpan area, tujuan, proyek, catatan, dan kebiasaan dalam satu sistem. Buat akun Cloud dalam semenit.",
@@ -41,7 +41,7 @@
     "featuredIn": "Diliput oleh",
     "eyebrow": "Pers",
     "title": "Jangan hanya percaya kata kami",
-    "sub": "Yang ditulis para pengulas setelah mencoba tududi sendiri.",
+    "sub": "Yang ditulis para pengulas setelah mencoba Cadence sendiri.",
     "readLink": "Baca ulasannya"
   },
   "ai": {
@@ -52,7 +52,7 @@
         "body": "Tambah, temukan, dan selesaikan tugas tanpa keluar dari percakapan."
       },
       "dataStays": {
-        "body": "Koneksi MCP langsung menuju instans tududi Anda sendiri, di Cloud atau di server Anda sendiri. Tidak ada yang melewati pihak ketiga.",
+        "body": "Koneksi MCP langsung menuju instans Cadence Anda sendiri, di Cloud atau di server Anda sendiri. Tidak ada yang melewati pihak ketiga.",
         "title": "Ia berbicara dengan instans Anda"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Selesai. <strong>Tinjau draf desain ulang</strong> sekarang jatuh tempo Jumat, dan <strong>Buka blokir antrean Pembayaran</strong> ada di proyek Pembayaran, jatuh tempo hari ini.",
       "ask1": "Apa yang harus saya fokuskan hari ini, dan adakah sesuatu yang terlambat?",
       "ask2": "Pindahkan tinjauan desain ulang ke Jumat dan tambahkan tugas untuk membuka blokir Pembayaran.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "Sesi contoh. Agen Anda terhubung langsung ke instans Anda sendiri melalui MCP.",
       "composer": "Balas Claude…",
       "groupTitle": "Perlu diketahui",
@@ -105,11 +105,11 @@
           "text": "Desain ulang situs web, tidak ada aktivitas selama 11 hari"
         }
       },
-      "toolLabel": "tududi digunakan",
+      "toolLabel": "Cadence digunakan",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP disertakan dengan tududi Cloud, dan dengan setiap instans yang dihosting sendiri.",
-    "ledeHtml": "tududi menyediakan server MCP yang mengekspos <strong>{{tools}} alat</strong>, mencakup tugas, proyek, area, tujuan, kebiasaan, catatan, orang, tag, tampilan, kotak masuk, pencarian, dan metrik. Hubungkan Claude atau agen apa pun yang kompatibel dengan MCP langsung ke instans Anda sendiri, baik itu akun Cloud Anda maupun server yang Anda jalankan sendiri. Koneksi langsung menuju instans Anda daripada melewati relai perantara, sebuah perbedaan struktural yang tidak dapat ditawarkan Todoist dan Notion, apa pun yang mereka janjikan.",
+    "footnoteIncluded": "MCP disertakan dengan Cadence Cloud, dan dengan setiap instans yang dihosting sendiri.",
+    "ledeHtml": "Cadence menyediakan server MCP yang mengekspos <strong>{{tools}} alat</strong>, mencakup tugas, proyek, area, tujuan, kebiasaan, catatan, orang, tag, tampilan, kotak masuk, pencarian, dan metrik. Hubungkan Claude atau agen apa pun yang kompatibel dengan MCP langsung ke instans Anda sendiri, baik itu akun Cloud Anda maupun server yang Anda jalankan sendiri. Koneksi langsung menuju instans Anda daripada melewati relai perantara, sebuah perbedaan struktural yang tidak dapat ditawarkan Todoist dan Notion, apa pun yang mereka janjikan.",
     "titleLine1": "Sistem yang nyata",
     "titleLine2": "yang benar-benar dapat digunakan agen AI Anda"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Pasang sebagai aplikasi",
-        "body": "Tambahkan tududi ke layar utama atau desktop sebagai PWA. Bisa dipakai luring dan tersinkron begitu Anda daring lagi."
+        "body": "Tambahkan Cadence ke layar utama atau desktop sebagai PWA. Bisa dipakai luring dan tersinkron begitu Anda daring lagi."
       },
       "oidc": {
         "title": "Masuk lewat OIDC / SSO",
@@ -232,7 +232,7 @@
         "body": "Bagikan proyek dengan hak akses terperinci - hanya baca atau baca dan tulis."
       }
     },
-    "sub": "tududi menggabungkan tujuan, proyek, tugas, catatan, dan tampilan cerdas ke dalam satu sistem yang tenang dan terfokus. Biarkan kami menjalankannya untuk Anda, atau jalankan sendiri jika Anda lebih suka."
+    "sub": "Cadence menggabungkan tujuan, proyek, tugas, catatan, dan tampilan cerdas ke dalam satu sistem yang tenang dan terfokus. Biarkan kami menjalankannya untuk Anda, atau jalankan sendiri jika Anda lebih suka."
   },
   "pricing": {
     "eyebrow": "Harga",
@@ -284,14 +284,14 @@
         "perYear": "/tahun"
       }
     },
-    "fineprint": "Batalkan kapan saja dan ekspor semuanya. Jika tududi Cloud suatu saat ditutup, Anda mendapat data Anda dan panduan migrasi ke self-host. Penggunaan wajar berlaku untuk penyimpanan dan volume API. Garansi uang kembali 14 hari, tanpa pertanyaan.",
+    "fineprint": "Batalkan kapan saja dan ekspor semuanya. Jika Cadence Cloud suatu saat ditutup, Anda mendapat data Anda dan panduan migrasi ke self-host. Penggunaan wajar berlaku untuk penyimpanan dan volume API. Garansi uang kembali 14 hari, tanpa pertanyaan.",
     "perMonth": "/bulan per orang",
     "nextPrice": "Mulai {{date}} harga per orang menjadi {{monthly}} per bulan atau {{annual}} per tahun. Berlangganan sebelum itu untuk mempertahankan harga hari ini selama Anda tetap berlangganan.",
     "sub": "Setiap paket punya semua fitur. Pro untuk satu orang; paket Tim punya ukuran tetap dan Anda menambah orang sampai batas itu."
   },
   "compare": {
     "title": "Perbandingan singkat",
-    "sub": "Perbandingan tududi Cloud dengan aplikasi yang paling sering dibandingkan, pada paket individunya.",
+    "sub": "Perbandingan Cadence Cloud dengan aplikasi yang paling sering dibandingkan, pada paket individunya.",
     "footnote": "Todoist Pro, TickTick Premium, dan Notion Plus, dari halaman harga publik mereka pada September 2026. Cek situs mereka untuk harga terbaru. Harga mereka adalah harga daftar AS dalam dolar.",
     "rows": {
       "price": "Harga, tagihan tahunan",
@@ -326,8 +326,8 @@
     "heading": "Tersedia dalam {{count}} bahasa di seluruh dunia"
   },
   "community": {
-    "title": "Bergabunglah dengan komunitas tududi",
-    "sub": "Terhubung dengan pengguna tududi lain, dapatkan bantuan, dan ikuti perkembangannya"
+    "title": "Bergabunglah dengan komunitas Cadence",
+    "sub": "Terhubung dengan pengguna Cadence lain, dapatkan bantuan, dan ikuti perkembangannya"
   },
   "footer": {
     "colProduct": "Produk",
@@ -360,41 +360,41 @@
     "items": {
       "freePlan": {
         "a": "Tidak. Pro seharga {{monthly}} per bulan atau {{price}} per tahun untuk satu orang, dan paket Tim berharga sama per orang dalam ukuran tetap. Tidak ada tingkat gratis, tidak ada hitungan mundur uji coba, tidak ada kartu yang diam-diam mulai ditagih nanti. Ada jaminan uang kembali 14 hari jika ternyata tidak cocok, dan ada demo langsung di halaman ini jika Anda ingin melihat-lihat dulu.",
-        "q": "Apakah ada paket gratis atau percobaan di tududi Cloud?",
-        "aTrial": "Tidak ada paket gratis, tetapi setiap akun baru mendapat uji coba gratis {{days}} hari, tanpa kartu. Uji coba mencakup asisten AI dengan kuota lebih kecil dan satu anggota yang bisa Anda tambahkan. Tautan catatan publik terbuka setelah Anda berlangganan. Jika Anda tidak berlangganan, akun menjadi hanya-baca selama 30 hari agar Anda bisa mengekspor data, lalu dihapus. Setelah uji coba, Pro seharga {{monthly}} per bulan atau {{price}} per tahun, dan paket Tim berharga sama per orang. Cara gratis memakai tududi adalah menjalankannya di server Anda sendiri, aplikasinya sama."
+        "q": "Apakah ada paket gratis atau percobaan di Cadence Cloud?",
+        "aTrial": "Tidak ada paket gratis, tetapi setiap akun baru mendapat uji coba gratis {{days}} hari, tanpa kartu. Uji coba mencakup asisten AI dengan kuota lebih kecil dan satu anggota yang bisa Anda tambahkan. Tautan catatan publik terbuka setelah Anda berlangganan. Jika Anda tidak berlangganan, akun menjadi hanya-baca selama 30 hari agar Anda bisa mengekspor data, lalu dihapus. Setelah uji coba, Pro seharga {{monthly}} per bulan atau {{price}} per tahun, dan paket Tim berharga sama per orang. Cara gratis memakai Cadence adalah menjalankannya di server Anda sendiri, aplikasinya sama."
       },
       "leaving": {
         "q": "Bisakah saya pergi, dan apa yang terjadi pada data saya?",
-        "a": "Bisa, kapan saja. Ekspor semuanya sebagai satu berkas dari profil Anda dan impor ke tududi yang Anda host sendiri, yang membaca format yang sama. Menghapus akun akan menghapus data, lampiran, dan cadangan Anda dari server kami serta membatalkan langganan apa pun."
+        "a": "Bisa, kapan saja. Ekspor semuanya sebagai satu berkas dari profil Anda dan impor ke Cadence yang Anda host sendiri, yang membaca format yang sama. Menghapus akun akan menghapus data, lampiran, dan cadangan Anda dari server kami serta membatalkan langganan apa pun."
       },
       "aiOptional": {
-        "a": "Tidak. Kedua lapisan AI dimatikan sampai Anda mengaktifkannya, dan tududi adalah sistem lengkap tanpa keduanya. Jika Anda tidak pernah mengaktifkannya, tidak ada yang hilang dan tidak ada yang merepotkan Anda.",
+        "a": "Tidak. Kedua lapisan AI dimatikan sampai Anda mengaktifkannya, dan Cadence adalah sistem lengkap tanpa keduanya. Jika Anda tidak pernah mengaktifkannya, tidak ada yang hilang dan tidak ada yang merepotkan Anda.",
         "q": "Apakah saya harus menggunakan fitur AI?"
       },
       "aiPrivacy": {
-        "a": "Itu bergantung pada lapisan mana dari dua lapisan yang Anda maksud, dan perbedaannya penting. Server MCP berjalan di dalam instans Anda sendiri: agen seperti Claude Desktop terhubung langsung ke instans itu, sehingga percakapan terjadi antara agen Anda dan tududi Anda sendiri, bukan melalui perantara. Asisten AI berbeda. Ia memanggil penyedia yang kompatibel dengan OpenAI, jadi jika Anda mengarahkannya ke penyedia yang dihosting, isi permintaan itu akan pergi ke penyedia tersebut. Sebaliknya, arahkan ke model lokal, seperti Ollama atau LM Studio, dan tidak ada yang keluar dari mesin Anda. Ia tetap mati sampai Anda memberikan kunci, jadi ini selalu pilihan Anda, bukan default.",
+        "a": "Itu bergantung pada lapisan mana dari dua lapisan yang Anda maksud, dan perbedaannya penting. Server MCP berjalan di dalam instans Anda sendiri: agen seperti Claude Desktop terhubung langsung ke instans itu, sehingga percakapan terjadi antara agen Anda dan Cadence Anda sendiri, bukan melalui perantara. Asisten AI berbeda. Ia memanggil penyedia yang kompatibel dengan OpenAI, jadi jika Anda mengarahkannya ke penyedia yang dihosting, isi permintaan itu akan pergi ke penyedia tersebut. Sebaliknya, arahkan ke model lokal, seperti Ollama atau LM Studio, dan tidak ada yang keluar dari mesin Anda. Ia tetap mati sampai Anda memberikan kunci, jadi ini selalu pilihan Anda, bukan default.",
         "q": "Apakah data saya dikirim ke perusahaan AI?"
       },
       "commercialUse": {
         "a": "Ya, dan Anda tidak perlu membeli apa pun terlebih dahulu. Lisensi MIT mengizinkan penggunaan komersial, termasuk di dalam perusahaan dan dalam produk komersial, tanpa ambang batas pendapatan dan tanpa apa pun yang harus dilaporkan. Jika tim keuangan Anda membutuhkan faktur, langganan Cloud ditagih melalui penyedia pembayaran kami dan menghasilkan faktur. Tidak ada apa pun di halaman ini yang menjual izin, karena izin itu sudah milik Anda.",
-        "q": "Bisakah saya menggunakan tududi di tempat kerja, atau di perusahaan saya?"
+        "q": "Bisakah saya menggunakan Cadence di tempat kerja, atau di perusahaan saya?"
       },
       "maintained": {
         "a": "Ya. Ini dikembangkan terutama oleh satu maintainer, dengan kontribusi dari komunitas, dan sering merilis versi baru. Setiap versi terdaftar di halaman rilis GitHub, yang tertaut dari Changelog di menu di atas, sehingga Anda dapat menilai sendiri kecepatannya daripada hanya mempercayai kata-kata kami. Pengembangan dilakukan secara terbuka: isu, peta jalan publik, dan Discord tempat pertanyaan dijawab.",
         "linkLabel": "Lihat semua rilis",
-        "q": "Apakah tududi dirawat secara aktif?"
+        "q": "Apakah Cadence dirawat secara aktif?"
       },
       "mcp": {
-        "a": "MCP adalah Model Context Protocol, standar terbuka untuk menghubungkan agen AI ke sistem nyata. tududi menyediakan server MCP yang mengekspos {{tools}} alat mencakup tugas, proyek, area, tujuan, kebiasaan, catatan, orang, tag, tampilan, kotak masuk, pencarian, dan metrik, sehingga agen dapat menangkap, menemukan, memperbarui, dan menyelesaikan pekerjaan daripada hanya membicarakannya. Ini opsional, disertakan dengan Cloud dan dengan setiap instans hosting sendiri, dan berfungsi dengan Claude Desktop, Cursor, Windsurf, Cline, atau klien MCP lainnya.",
+        "a": "MCP adalah Model Context Protocol, standar terbuka untuk menghubungkan agen AI ke sistem nyata. Cadence menyediakan server MCP yang mengekspos {{tools}} alat mencakup tugas, proyek, area, tujuan, kebiasaan, catatan, orang, tag, tampilan, kotak masuk, pencarian, dan metrik, sehingga agen dapat menangkap, menemukan, memperbarui, dan menyelesaikan pekerjaan daripada hanya membicarakannya. Ini opsional, disertakan dengan Cloud dan dengan setiap instans hosting sendiri, dan berfungsi dengan Claude Desktop, Cursor, Windsurf, Cline, atau klien MCP lainnya.",
         "q": "Apa itu MCP, dan apa yang benar-benar bisa dilakukan agen?"
       },
       "shutdown": {
-        "a": "Aplikasi ini berlisensi MIT, dan kode sumbernya publik, sehingga tidak dapat diambil dari Anda. Siapa pun dapat terus menjalankannya, dan Anda bisa mem-fork-nya. Di tududi Cloud data Anda hidup dalam basis data tududi standar bukan format proprietary, sehingga jika layanan suatu saat ditutup, Anda akan mendapatkan data Anda dan panduan untuk memindahkannya ke server Anda sendiri.",
-        "q": "Apa yang terjadi pada data saya jika tududi menghilang?"
+        "a": "Aplikasi ini berlisensi MIT, dan kode sumbernya publik, sehingga tidak dapat diambil dari Anda. Siapa pun dapat terus menjalankannya, dan Anda bisa mem-fork-nya. Di Cadence Cloud data Anda hidup dalam basis data Cadence standar bukan format proprietary, sehingga jika layanan suatu saat ditutup, Anda akan mendapatkan data Anda dan panduan untuk memindahkannya ke server Anda sendiri.",
+        "q": "Apa yang terjadi pada data saya jika Cadence menghilang?"
       },
       "trust": {
         "q": "Bisakah saya mempercayakan data saya kepada Anda?",
-        "a": "Anda tidak harus percaya begitu saja. tududi bersifat open source, sehingga siapa pun dapat membaca persis bagaimana ia menangani data Anda. Di Cloud, semua yang Anda masukkan tetap milik Anda: ekspor sebagai satu berkas kapan saja, hapus akun Anda sendiri, dan ada garansi uang kembali 14 hari jika ternyata tidak cocok."
+        "a": "Anda tidak harus percaya begitu saja. Cadence bersifat open source, sehingga siapa pun dapat membaca persis bagaimana ia menangani data Anda. Di Cloud, semua yang Anda masukkan tetap milik Anda: ekspor sebagai satu berkas kapan saja, hapus akun Anda sendiri, dan ada garansi uang kembali 14 hari jika ternyata tidak cocok."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Ekspor semuanya, kapan saja"
     ],
     "lede": "Sistem yang sama pada kedua kasus. Bedanya adalah siapa yang menjaganya tetap berjalan, ditambal, dan dicadangkan pada pukul tiga pagi.",
-    "metaDescription": "tududi Cloud adalah sistem open source yang sama, berjalan di server kami dengan pembaruan, cadangan, dan email yang kami urus untuk Anda. Pro untuk satu orang atau paket Tim untuk kelompok, bulanan atau tahunan, batalkan kapan saja.",
-    "metaTitle": "tududi Cloud: tududi yang dihosting, dijalankan untuk Anda",
+    "metaDescription": "Cadence Cloud adalah sistem open source yang sama, berjalan di server kami dengan pembaruan, cadangan, dan email yang kami urus untuk Anda. Pro untuk satu orang atau paket Tim untuk kelompok, bulanan atau tahunan, batalkan kapan saja.",
+    "metaTitle": "Cadence Cloud: Cadence yang dihosting, dijalankan untuk Anda",
     "note": "Aplikasi berlisensi MIT yang sama. Ekspor semuanya, kapan saja.",
     "orAnnual": "atau",
     "priceNote": "Ditagih oleh penyedia pembayaran kami. Harga belum termasuk pajak yang berlaku.",
@@ -452,7 +452,7 @@
         "title": "Pembaruan diterapkan untuk Anda"
       }
     },
-    "title": "Mengapa menggunakan tududi Cloud?",
+    "title": "Mengapa menggunakan Cadence Cloud?",
     "whyEyebrow": "Cloud",
     "whySub": "Bukan fitur. Setiap fitur juga ada di build hosting sendiri.",
     "whyTitle": "Yang sebenarnya Anda bayar",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Hubungi kami",
-    "lede": "Ada pertanyaan tentang tududi Cloud, tagihan, atau akun Anda? Kirimi kami pesan dan kami akan membalas lewat email.",
+    "lede": "Ada pertanyaan tentang Cadence Cloud, tagihan, atau akun Anda? Kirimi kami pesan dan kami akan membalas lewat email.",
     "name": "Nama",
     "email": "Email",
     "message": "Pesan",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Catat apa saja, dengan kata-kata biasa",
-        "body": "Satu kotak Tambah untuk inbox, tugas, catatan, dan proyek, di seluruh aplikasi. Tulis seperti Anda berpikir, tududi melengkapi sisanya.",
+        "body": "Satu kotak Tambah untuk inbox, tugas, catatan, dan proyek, di seluruh aplikasi. Tulis seperti Anda berpikir, Cadence melengkapi sisanya.",
         "points": [
           "“next fri”, “in 3 days”, atau “every first monday” mengatur tanggal atau pengulangan",
           "#tag, +Proyek, dan @orang dikenali saat mengetik",
@@ -539,6 +539,6 @@
   "notFound": {
     "title": "Halaman tidak ditemukan",
     "lede": "Tidak ada apa pun di alamat ini. Mungkin sudah dipindahkan, atau tautannya salah ketik.",
-    "home": "Kembali ke tududi"
+    "home": "Kembali ke Cadence"
   }
 }

@@ -387,7 +387,7 @@ const caldavAuthLimiter = rateLimit({
     },
     handler: (req, res) => {
         res.status(429)
-            .set('WWW-Authenticate', 'Basic realm="Tududi CalDAV"')
+            .set('WWW-Authenticate', 'Basic realm="Cadence CalDAV"')
             .json({
                 error: 'Too many authentication attempts',
                 retryAfter: Math.ceil(req.rateLimit.resetTime / 1000),

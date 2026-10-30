@@ -16,7 +16,7 @@ async function getMcpConfig(req, res) {
         // Generate HTTP-based config for remote access
         const claudeConfig = {
             mcpServers: {
-                tududi: {
+                cadence: {
                     command: 'npx',
                     args: [
                         '-y',

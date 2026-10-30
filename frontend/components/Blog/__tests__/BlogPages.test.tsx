@@ -93,8 +93,8 @@ describe('Blog front page', () => {
         fetchBlogIndex.mockResolvedValue({
             title: 'Blog',
             content:
-                'Writing about tududi.\n\n[[How to organize a family]]\n\n[[Why Cloud]]',
-            excerpt: 'Writing about tududi.',
+                'Writing about Cadence.\n\n[[How to organize a family]]\n\n[[Why Cloud]]',
+            excerpt: 'Writing about Cadence.',
             linked_notes: [],
             posts: [
                 card('How to organize a family', 'how-to-organize-a-family'),
@@ -121,7 +121,7 @@ describe('Blog front page', () => {
         );
         // The link-only paragraphs are the cards, not part of the intro.
         expect(screen.getByTestId('markdown')).toHaveTextContent(
-            'Writing about tududi.'
+            'Writing about Cadence.'
         );
         expect(screen.getByTestId('markdown')).not.toHaveTextContent('[[');
         expect(screen.getByTestId('blog-cta-price')).toHaveTextContent(
@@ -195,7 +195,7 @@ describe('Blog post', () => {
             'href',
             '/blog/why-cloud'
         );
-        expect(document.title).toBe('How to organize a family | tududi');
+        expect(document.title).toBe('How to organize a family | Cadence');
     });
 
     it('says so when the post is not on the blog', async () => {

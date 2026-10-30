@@ -104,8 +104,8 @@ async function buildCalendarResponse(username, userId, propfindRequest) {
             'D:collection': '',
             'C:calendar': '',
         },
-        'D:displayname': 'Tududi Tasks',
-        'C:calendar-description': 'Tasks from Tududi',
+        'D:displayname': 'Cadence Tasks',
+        'C:calendar-description': 'Tasks from Cadence',
         'C:supported-calendar-component-set': {
             'C:comp': {
                 $: { name: 'VTODO' },

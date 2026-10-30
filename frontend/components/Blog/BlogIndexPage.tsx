@@ -50,7 +50,7 @@ const BlogIndexPage: React.FC<BlogPageProps> = (props) => {
 
     useEffect(() => {
         const previous = document.title;
-        document.title = `${BLOG_NAME} | tududi`;
+        document.title = `${BLOG_NAME} | Cadence`;
         return () => {
             document.title = previous;
         };

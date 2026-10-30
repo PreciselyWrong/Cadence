@@ -352,7 +352,7 @@ function writeCsv(headers, rows) {
 // list }]; cells may be { text, date } where `date` is a wall-clock Date.
 async function writeXlsx({ sheetName, columns, rows, extraSheets = [] }) {
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'tududi';
+    workbook.creator = 'Cadence';
     const worksheet = workbook.addWorksheet(sheetName.slice(0, 31), {
         views: [{ state: 'frozen', ySplit: 1 }],
     });

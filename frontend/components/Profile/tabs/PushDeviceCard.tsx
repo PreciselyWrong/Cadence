@@ -71,7 +71,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
     if (state === 'needs-install') {
         body = t(
             'notifications.push.needsInstall',
-            'To get notifications on iPhone or iPad, add tududi to your Home Screen first: tap Share, then Add to Home Screen, and open it from there.'
+            'To get notifications on iPhone or iPad, add Cadence to your Home Screen first: tap Share, then Add to Home Screen, and open it from there.'
         );
     } else if (state === 'unsupported') {
         body = t(
@@ -81,7 +81,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
     } else if (state === 'denied') {
         body = t(
             'notifications.push.denied',
-            'Notifications are blocked for tududi. Allow them in your browser or system settings, then come back here.'
+            'Notifications are blocked for Cadence. Allow them in your browser or system settings, then come back here.'
         );
     } else if (state === 'subscribed') {
         body = t(
@@ -91,7 +91,7 @@ const PushDeviceCard: React.FC<PushDeviceCardProps> = ({ onStateChange }) => {
     } else {
         body = t(
             'notifications.push.prompt',
-            'Get notifications on this device even when tududi is closed.'
+            'Get notifications on this device even when Cadence is closed.'
         );
     }
 

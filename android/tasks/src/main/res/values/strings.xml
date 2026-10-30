@@ -39,7 +39,7 @@
         <item quantity="one">%d modification en attente</item>
         <item quantity="other">%d modifications en attente</item>
     </plurals>
-    <string name="tasks_sync_not_connected">Non connecté à Tududi</string>
+    <string name="tasks_sync_not_connected">Non connecté au serveur Cadence</string>
     <string name="tasks_sync_running">Synchronisation…</string>
 
     <string name="tasks_field_name">Nom</string>
@@ -73,26 +73,26 @@
     <string name="tasks_action_skip">Sauter cette occurrence</string>
     <string name="tasks_action_delete">Supprimer</string>
     <string name="tasks_delete_title">Supprimer la tâche ?</string>
-    <string name="tasks_delete_message">La tâche sera supprimée de Tududi.</string>
+    <string name="tasks_delete_message">La tâche sera supprimée du serveur Cadence.</string>
 
     <string name="tasks_move_recurring_title">Déplacer une tâche récurrente</string>
     <string name="tasks_move_this">Seulement cette occurrence</string>
     <string name="tasks_move_following">Cette occurrence et les suivantes</string>
     <string name="tasks_move_all">Toutes les occurrences</string>
 
-    <string name="tasks_connect_title">Tududi</string>
+    <string name="tasks_connect_title">Serveur Cadence</string>
     <string name="tasks_connected_to">Connecté à %1$s</string>
     <string name="tasks_connected_as">Connecté à %1$s (%2$s)</string>
     <string name="tasks_sync_now">Synchroniser maintenant</string>
     <string name="tasks_disconnect">Se déconnecter</string>
-    <string name="tasks_disconnect_title">Se déconnecter de Tududi ?</string>
+    <string name="tasks_disconnect_title">Se déconnecter du serveur Cadence ?</string>
     <string name="tasks_disconnect_message">Les données synchronisées seront effacées de cet appareil.</string>
     <string name="tasks_scan_qr">Scanner le code QR</string>
     <string name="tasks_or">ou</string>
     <string name="tasks_server_address">Adresse du serveur</string>
     <string name="tasks_api_key">Clé API</string>
-    <string name="tasks_api_key_hint">La clé est créée dans Tududi, Profil, Clés API.</string>
+    <string name="tasks_api_key_hint">La clé est créée dans Cadence, Profil, Clés API.</string>
     <string name="tasks_connect">Se connecter</string>
     <string name="tasks_connect_error">Connexion impossible.</string>
-    <string name="tasks_qr_invalid">Ce code QR ne vient pas de Tududi.</string>
+    <string name="tasks_qr_invalid">Ce code QR ne vient pas de Cadence.</string>
 </resources>

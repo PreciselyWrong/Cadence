@@ -34,7 +34,7 @@ Four steps, each an API call on an import job (`import_jobs` table):
 
 | Field | Accepted |
 |---|---|
-| Status | tududi's own words in any language, common words from other tools (to do, doing, on hold, complete, yes/no, ✓), percentages (0% not started, 100% done, else in progress). Anything else is listed in the review for the user to match up |
+| Status | Cadence's own words in any language, common words from other tools (to do, doing, on hold, complete, yes/no, ✓), percentages (0% not started, 100% done, else in progress). Anything else is listed in the review for the user to match up |
 | Priority | low/medium/high in any language, normal, urgent, critical, P1–P4. Others are matched up like statuses |
 | Dates | `2026-11-20`, `2026-11-20 14:30`, `20/11/2026`, `11/20/2026`, `20.11.26`, Excel date cells, written dates (`12 March 2027`). Day-first or month-first is settled per column from values that can only be read one way; when none decide it the review asks, defaulting to month-first only for `en-US` browsers |
 | Estimate | minutes (`90`), `1h 30m`, `1,5h`, `1:30`, days counted as 8 hours; tasks hold 5 minutes to 12 hours |
@@ -50,11 +50,11 @@ Picked automatically, or chosen in the review:
 - **WBS / outline numbers**: `1`, `1.1`, `1.2` (`1.0` counts as `1`).
 - **Indented rows** in Excel: cell indentation or grouped (outline) rows, as Smartsheet and MS Project exports have.
 
-Subtasks in tududi are one level deep, so a third level goes under its top-level ancestor, with a warning. A subtask always moves into its parent's project.
+Subtasks in Cadence are one level deep, so a third level goes under its top-level ancestor, with a warning. A subtask always moves into its parent's project.
 
 ### Updating tasks
 
-When a UID column is mapped and **Update tasks that are already in tududi** is on (the default), rows whose UID matches a task the user can edit update that task instead of creating one. Only mapped columns change, and an empty cell leaves the field as it is (`clear_blanks: true` in the API clears it instead). Keep-in-the-note columns are not added to updated tasks, so re-importing does not stack lines in the note. Moving a task to another project only happens with the Project column as the target. A UID that matches nothing makes a new task, with a warning.
+When a UID column is mapped and **Update tasks that are already in Cadence** is on (the default), rows whose UID matches a task the user can edit update that task instead of creating one. Only mapped columns change, and an empty cell leaves the field as it is (`clear_blanks: true` in the API clears it instead). Keep-in-the-note columns are not added to updated tasks, so re-importing does not stack lines in the note. Moving a task to another project only happens with the Project column as the target. A UID that matches nothing makes a new task, with a warning.
 
 ### Undo
 

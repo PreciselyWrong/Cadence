@@ -901,7 +901,7 @@ const ImportWizard: React.FC<ImportWizardProps> = ({
                                         <span>
                                             {t(
                                                 'spreadsheet.import.updateExisting',
-                                                'Update tasks that are already in tududi (matched by UID). Empty cells leave a field as it is.'
+                                                'Update tasks that are already in Cadence (matched by UID). Empty cells leave a field as it is.'
                                             )}
                                         </span>
                                     </label>

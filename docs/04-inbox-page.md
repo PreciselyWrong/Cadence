@@ -1,12 +1,12 @@
 # Inbox Page - Behavior Rules
 
-This document explains how the Inbox page works in tududi from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/inbox/` and frontend components in `/frontend/components/Inbox/`.
+This document explains how the Inbox page works in Cadence from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/inbox/` and frontend components in `/frontend/components/Inbox/`.
 
 ---
 
 ## Overview
 
-The **Inbox** is tududi's quick capture system - a temporary holding area where you can rapidly dump ideas, tasks, notes, and links without worrying about organization. It's designed to get things out of your head fast, then process them later into structured tasks, projects, or notes.
+The **Inbox** is Cadence's quick capture system - a temporary holding area where you can rapidly dump ideas, tasks, notes, and links without worrying about organization. It's designed to get things out of your head fast, then process them later into structured tasks, projects, or notes.
 
 **Key characteristics:**
 - Zero friction capture - just type and submit
@@ -87,7 +87,7 @@ Located at the top of the Inbox page:
 
 ### Share Sheet (installed PWA)
 
-Share a link or selected text from another app (Android, or desktop Chrome/Edge) and pick tududi:
+Share a link or selected text from another app (Android, or desktop Chrome/Edge) and pick Cadence:
 - The app opens on `/inbox` with the shared title, text and URL prefilled in Quick Capture
 - Nothing is saved yet — edit it, then press Enter or pick Task / Note / Project
 - Smart parsing, URL preview and suggestions behave exactly as if you had typed it
@@ -99,7 +99,7 @@ See [PWA & Offline Support](15-pwa.md) for the manifest configuration and limita
 
 Telegram is off by default. Set `TELEGRAM_ENABLED=true` on the server to turn it on; until then the Telegram settings tab and sidebar icon are hidden.
 
-Send messages to your tududi bot:
+Send messages to your Cadence bot:
 - Each message creates an inbox item
 - Source is marked as `telegram`
 - Appears in your inbox within ~15 seconds

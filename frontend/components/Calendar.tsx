@@ -1314,7 +1314,7 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
                         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             {t(
                                 'calendar.manageDescription',
-                                'Connect read-only calendars and choose which ones appear here. Tududi never changes them.'
+                                'Connect read-only calendars and choose which ones appear here. Cadence never changes them.'
                             )}
                         </p>
                     </div>

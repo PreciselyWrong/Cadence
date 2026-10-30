@@ -442,7 +442,7 @@ describe('Cloud trials', () => {
                 expect(await lifecycle.remindEndingTrials()).toEqual([user.id]);
                 const [mail] = emailService.sendEmail.mock.calls[0];
                 expect(mail.to).toBe(user.email);
-                expect(mail.subject).toBe('Your tududi trial ends in 3 days');
+                expect(mail.subject).toBe('Your Cadence trial ends in 3 days');
                 expect(mail.text).toContain('/subscription/new');
 
                 // The same day again: nothing new.
@@ -453,7 +453,7 @@ describe('Cloud trials', () => {
                     await lifecycle.remindEndingTrials({ now: lastDay })
                 ).toEqual([user.id]);
                 const [last] = emailService.sendEmail.mock.calls.at(-1);
-                expect(last.subject).toBe('Your tududi trial ends tomorrow');
+                expect(last.subject).toBe('Your Cadence trial ends tomorrow');
                 expect(
                     await lifecycle.remindEndingTrials({ now: lastDay })
                 ).toEqual([]);

@@ -49,7 +49,7 @@ describe('VTODO Serializer', () => {
         );
     });
 
-    it('should map tududi status to iCalendar STATUS', async () => {
+    it('should map Cadence status to iCalendar STATUS', async () => {
         const tasks = [
             { ...basicTask, status: 0 },
             { ...basicTask, status: 1 },
@@ -75,7 +75,7 @@ describe('VTODO Serializer', () => {
         }
     });
 
-    it('should map tududi priority to iCalendar PRIORITY', async () => {
+    it('should map Cadence priority to iCalendar PRIORITY', async () => {
         const lowPriorityTask = { ...basicTask, priority: 0 };
         const mediumPriorityTask = { ...basicTask, priority: 1 };
         const highPriorityTask = { ...basicTask, priority: 2 };

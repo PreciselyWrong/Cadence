@@ -273,7 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                             ? 'wide-logo-light.png'
                                             : 'wide-logo-dark.png'
                                     )}
-                                    alt="tududi"
+                                    alt="Cadence"
                                     className="h-8 w-auto"
                                 />
                             </Link>

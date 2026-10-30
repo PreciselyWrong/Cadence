@@ -62,7 +62,7 @@ const postLinks = (posts) =>
 // readers without scripts. React replaces the body when it mounts.
 async function pageFor(req, origin) {
     const tags = ['<meta name="tududi-site" content="blog">', STATS_TAG];
-    let title = `${BLOG_NAME} | tududi`;
+    let title = `${BLOG_NAME} | Cadence`;
     let description = BLOG_TAGLINE;
     let image = null;
     let type = 'website';
@@ -77,7 +77,7 @@ async function pageFor(req, origin) {
     try {
         if (match) {
             const post = await blogService.page(match[1]);
-            title = `${post.title} | tududi`;
+            title = `${post.title} | Cadence`;
             description = post.excerpt;
             image = blogService.coverOf(post.content);
             type = 'article';
@@ -129,7 +129,7 @@ async function pageFor(req, origin) {
     }
 
     if (status === 404) {
-        title = 'Not found | tududi';
+        title = 'Not found | Cadence';
         description = '';
         type = 'website';
         tags.push('<meta name="robots" content="noindex">');
@@ -139,8 +139,8 @@ async function pageFor(req, origin) {
     tags.push(
         `<link rel="canonical" href="${escapeHtml(pageUrl)}">`,
         `<meta property="og:type" content="${type}">`,
-        `<meta property="og:site_name" content="tududi">`,
-        `<meta property="og:title" content="${escapeHtml(title.replace(/ \| tududi$/, ''))}">`,
+        `<meta property="og:site_name" content="Cadence">`,
+        `<meta property="og:title" content="${escapeHtml(title.replace(/ \| Cadence$/, ''))}">`,
         `<meta property="og:url" content="${escapeHtml(pageUrl)}">`,
         `<meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}">`
     );
@@ -156,7 +156,7 @@ async function pageFor(req, origin) {
         );
     }
     tags.push(
-        `<link rel="alternate" type="application/rss+xml" title="tududi blog" href="${escapeHtml(origin)}/rss.xml">`
+        `<link rel="alternate" type="application/rss+xml" title="Cadence blog" href="${escapeHtml(origin)}/rss.xml">`
     );
     return { status, title, tags, body };
 }

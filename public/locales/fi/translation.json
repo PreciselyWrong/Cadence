@@ -411,17 +411,17 @@
     "personalInfo": "Henkilökohtaiset tiedot",
     "errorMessage": "Profiilin päivittäminen epäonnistui",
     "telegramIntegration": "Telegram-integraatio",
-    "telegramDescription": "Yhdistä tududi-tilisi Telegram-botiin lisätäksesi kohteita saapuneet-viesteihisi Telegram-viestien kautta.",
+    "telegramDescription": "Yhdistä Cadence-tilisi Telegram-botiin lisätäksesi kohteita saapuneet-viesteihisi Telegram-viestien kautta.",
     "telegramBotToken": "Telegram-botin tunnus",
     "telegramTokenDescription": "Luo botti @BotFatherin avulla Telegramissa ja liitä tunnus tänne.",
-    "telegramConnected": "Telegram-tilisi on yhdistetty! Lähetä viestejä bottillesi lisätäksesi kohteita tududi-sisäänkirjautumiseesi.",
+    "telegramConnected": "Telegram-tilisi on yhdistetty! Lähetä viestejä bottillesi lisätäksesi kohteita Cadence-sisäänkirjautumiseesi.",
     "setupTelegram": "Aseta Telegram",
     "setupTelegramLower": "aseta telegram",
     "settingUp": "Asetetaan...",
     "telegramSetupSuccess": "Telegram-botti \"{{botName}}\" on konfiguroitu onnistuneesti!",
     "telegramSetupFailed": "Telegram-botin asetuksessa tapahtui virhe.",
     "invalidTelegramToken": "Virheellinen Telegram-botin tunnusmuoto.",
-    "telegramInstructions": "Siirry osoitteeseen https://t.me/{{botUsername}} ja aloita keskustelu bottisi kanssa yhdistääksesi sen tududi-tiliisi.",
+    "telegramInstructions": "Siirry osoitteeseen https://t.me/{{botUsername}} ja aloita keskustelu bottisi kanssa yhdistääksesi sen Cadence-tiliisi.",
     "botConfigured": "Botti on konfiguroitu onnistuneesti!",
     "botUsername": "Bottin käyttäjänimi:",
     "pollingStatus": "Polling-tila:",
@@ -643,7 +643,7 @@
     "conflictResolver": {
       "title": "Ratkaise synkronointikonfliktit",
       "chooseVersion": "Valitse, mikä versio säilytetään jokaiselle kentälle:",
-      "local": "Paikallinen (Tududi)",
+      "local": "Paikallinen (Cadence)",
       "remote": "Etäyhteys (CalDAV)",
       "useThis": "Käytä tätä",
       "useAllLocal": "Käytä kaikkia paikallisia",
@@ -682,7 +682,7 @@
       "addError": "Kalenteria ei voitu lisätä",
       "deleteError": "Kalenteria ei voitu poistaa",
       "title": "Kalenterit Tänään-näkymässä",
-      "description": "Näytä tapaamisesi päivän suunnitelman vieressä. Tududi vain lukee näitä kalentereita eikä koskaan muuta niitä.",
+      "description": "Näytä tapaamisesi päivän suunnitelman vieressä. Cadence vain lukee näitä kalentereita eikä koskaan muuta niitä.",
       "empty": "Kalentereita ei ole vielä yhdistetty.",
       "lastSync": "päivitetty {{time}}",
       "remove": "Poista {{name}}",
@@ -690,7 +690,7 @@
       "name": "Nimi",
       "namePlaceholder": "Työ, Perhe…",
       "url": "Salainen iCal-osoite",
-      "googleHelp": "Google Kalenterissa: Asetukset → kalenterisi → Kalenterin integrointi → ”Salainen osoite iCal-muodossa”. Apple Kalenterissa ja Outlookissa on vastaavat linkit. Kuka tahansa, jolla on osoite, voi lukea kalenterin, joten tududi tallentaa sen salattuna.",
+      "googleHelp": "Google Kalenterissa: Asetukset → kalenterisi → Kalenterin integrointi → ”Salainen osoite iCal-muodossa”. Apple Kalenterissa ja Outlookissa on vastaavat linkit. Kuka tahansa, jolla on osoite, voi lukea kalenterin, joten Cadence tallentaa sen salattuna.",
       "color": "Väri",
       "checking": "Tarkistetaan kalenteria…",
       "add": "Yhdistä",
@@ -832,7 +832,7 @@
       },
       "title": "API-avaimet",
       "connectQrLabel": "QR-koodi laitteen yhdistämiseen",
-      "connectQrHelp": "Skannaa tämä koodi Tududi-sovelluksella puhelimellasi tai tietokoneellasi yhdistääksesi sen tällä avaimella."
+      "connectQrHelp": "Skannaa tämä koodi Cadence-sovelluksella puhelimellasi tai tietokoneellasi yhdistääksesi sen tällä avaimella."
     },
     "calendarDescription": "Ota käyttöön Kalenteri-näkymä, jossa tehtävät näkyvät eräpäivän mukaan päivä-, viikko- ja kuukausinäkymässä.",
     "connected": {
@@ -849,7 +849,7 @@
     "habitsDescription": "Ota käyttöön Tavat-osio toistuvien tekojen ja putkien seuraamiseen.",
     "loading": "Ladataan...",
     "mcp": {
-      "description": "Yhdistä tududi mihin tahansa MCP-yhteensopivaan sovellukseen Model Context Protocolin avulla. Näin AI-avustajat voivat käsitellä tehtäviäsi, projektejasi ja muistiinpanojasi, niin paikallisella kuin etäpalvelimellakin.",
+      "description": "Yhdistä Cadence mihin tahansa MCP-yhteensopivaan sovellukseen Model Context Protocolin avulla. Näin AI-avustajat voivat käsitellä tehtäviäsi, projektejasi ja muistiinpanojasi, niin paikallisella kuin etäpalvelimellakin.",
       "example1": "Näytä tämän päivän tehtäväni",
       "example2": "Luo tehtävä MCP-integraation tarkistamisesta",
       "example3": "Mitkä projektini ovat käynnissä?",
@@ -871,7 +871,7 @@
       },
       "step2": {
         "copy": "Kopioi",
-        "description": "Lisää tämä määritys MCP-asiakasohjelmaasi. Korvaa YOUR_API_TOKEN_HERE vaiheessa 1 luomallasi tunnuksella. Yhteys tududi-palvelimeen muodostetaan HTTP:n kautta mcp-remoten avulla. Esimerkki on Claude Desktopille:",
+        "description": "Lisää tämä määritys MCP-asiakasohjelmaasi. Korvaa YOUR_API_TOKEN_HERE vaiheessa 1 luomallasi tunnuksella. Yhteys Cadence-palvelimeen muodostetaan HTTP:n kautta mcp-remoten avulla. Esimerkki on Claude Desktopille:",
         "loading": "Ladataan...",
         "locationTitle": "Claude Desktopin asetustiedoston sijainti:",
         "otherClients": "Muut MCP-asiakasohjelmat voivat käyttää eri määritystapoja, katso ohjelmasi dokumentaatio.",
@@ -891,7 +891,7 @@
         "firewall": "Tarkista etäpalvelinten palomuuriasetukset",
         "intro": "Jos MCP-asiakasohjelma ei saa yhteyttä, tarkista että:",
         "restart": "MCP-asiakasohjelma on käynnistetty kokonaan uudelleen",
-        "server": "tududi-palvelin on käynnissä ja tavoitettavissa",
+        "server": "Cadence-palvelin on käynnissä ja tavoitettavissa",
         "title": "Vianmääritys",
         "token": "API-tunnus on voimassa eikä vanhentunut"
       }
@@ -945,12 +945,12 @@
     "google": {
       "error": "Google did not answer",
       "title": "Google Calendar and Tasks",
-      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a \"Cadence\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
       "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
       "connect": "Connect Google",
       "lastSync": "synced {{time}}",
       "firstSync": "first sync running…",
-      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncEvents": "Calendars, and dated tasks in a \"Cadence\" calendar",
       "syncTasks": "All tasks with Google Tasks (one list per project)",
       "calendars": "Shown on Calendar and Today",
       "readOnly": "read-only",
@@ -959,7 +959,7 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
     },
     "sidebarSmartListsTitle": "Älykkäät listat",
     "sidebarRailTitle": "Kuvakepalkki ja Lisää",
@@ -1974,7 +1974,7 @@
     }
   },
   "navbar": {
-    "appName": "tududi",
+    "appName": "Cadence",
     "quickInboxCapture": "Nopea saapuvan postin tallennus",
     "userMenu": "Käyttäjävalikko",
     "collapseSidebar": "Pienennä sivupalkkia",
@@ -2067,8 +2067,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Tervetuloa tududiin!\n\nHenkilökohtainen tehtävienhallintabotisi on nyt yhdistetty ja valmis auttamaan!\n\n📝 Lähetä minulle vain viesti, niin lisään sen tududi-postilaatikkoosi kohteena.\n\n✨ Komennot:\n• /help - Näytä ohjeet\n• /start - Näytä tervetuloviesti\n• Kirjoita vain mitä tahansa tekstiä - Lisää se postilaatikkokohteeksi\n\nAletaan järjestää! 🚀",
-    "helpMessage": "📋 tududi Bot Ohjeet\n\nLähetä minulle mikä tahansa tekstiviesti, niin lisään sen tududi-postilaatikkoosi kohteena.\n\nKomennot:\n/start - Tervetuloviesti\n/help - Näytä tämä ohjeviesti\n\nKirjoita vain kohteesi, niin huolehdin lopusta!",
+    "welcomeMessage": "🎉 Tervetuloa tududiin!\n\nHenkilökohtainen tehtävienhallintabotisi on nyt yhdistetty ja valmis auttamaan!\n\n📝 Lähetä minulle vain viesti, niin lisään sen Cadence-postilaatikkoosi kohteena.\n\n✨ Komennot:\n• /help - Näytä ohjeet\n• /start - Näytä tervetuloviesti\n• Kirjoita vain mitä tahansa tekstiä - Lisää se postilaatikkokohteeksi\n\nAletaan järjestää! 🚀",
+    "helpMessage": "📋 Cadence Bot Ohjeet\n\nLähetä minulle mikä tahansa tekstiviesti, niin lisään sen Cadence-postilaatikkoosi kohteena.\n\nKomennot:\n/start - Tervetuloviesti\n/help - Näytä tämä ohjeviesti\n\nKirjoita vain kohteesi, niin huolehdin lopusta!",
     "commandProcessed": "Komento käsitelty onnistuneesti",
     "messageProcessed": "Viesti käsitelty onnistuneesti",
     "failedToAddToInbox": "❌ Lisääminen postilaatikkoon epäonnistui: {{error}}"
@@ -2153,7 +2153,7 @@
     },
     "dashboard": {
       "title": "Ylläpito",
-      "subtitle": "tududi {{version}} · {{env}}",
+      "subtitle": "Cadence {{version}} · {{env}}",
       "users": "Käyttäjät",
       "usersHint": "{{verified}} vahvistettua · {{admins}} ylläpitäjää · {{new}} tänään",
       "paying": "Maksava",
@@ -2910,9 +2910,9 @@
   },
   "subscription": {
     "title": "Tilauksen",
-    "chooseForCloud": "Valitse suunnitelma tududi Cloudille",
+    "chooseForCloud": "Valitse suunnitelma Cadence Cloudille",
     "noActive": "Ei aktiivista tilausta",
-    "chooseToContinue": "Valitse suunnitelma jatkaaksesi tududi Cloudin käyttöä.",
+    "chooseToContinue": "Valitse suunnitelma jatkaaksesi Cadence Cloudin käyttöä.",
     "monthly": "Kuukausittain",
     "yearly": "Vuosittain",
     "priceMonthly": "{{price}} kuukaudessa",
@@ -2934,7 +2934,7 @@
     "lockedMembers": "Jäsenten lisääminen kuuluu maksulliseen tilaukseen.",
     "trialEnded": "Kokeilujaksosi on päättynyt",
     "onTrial": "Käytät ilmaista kokeilujaksoa",
-    "readOnlyUntil": "Tietosi ovat vain luku -tilassa {{date}} asti, minkä jälkeen tili poistetaan. Tilaa jatkaaksesi tududi Cloudin käyttöä.",
+    "readOnlyUntil": "Tietosi ovat vain luku -tilassa {{date}} asti, minkä jälkeen tili poistetaan. Tilaa jatkaaksesi Cadence Cloudin käyttöä.",
     "trialIncludes": "Kokeilujaksosi päättyy {{date}}. AI-avustaja, julkiset muistiinpanot ja jäsenten lisääminen avautuvat, kun tilaat.",
     "backToApp": "Takaisin tududiin",
     "trialBanner": "Ilmainen kokeilu, päiviä jäljellä: {{count}}",
@@ -3019,7 +3019,7 @@
     "failedToUpdate": "Jäsenen päivittäminen epäonnistui",
     "addEmailHint": "Kun lisäät sähköpostiosoitteen, hän saa kutsun salasanan asettamiseen. Osoitetta ei voi muuttaa jälkikäteen.",
     "remove": "Poista jäsen",
-    "removeConfirm": "Poistetaanko {{name}}? Tili ja kaikki sen sisältö poistetaan, eikä tätä voi perua. tududi Cloudissa paikka vapautuu jollekulle toiselle.",
+    "removeConfirm": "Poistetaanko {{name}}? Tili ja kaikki sen sisältö poistetaan, eikä tätä voi perua. Cadence Cloudissa paikka vapautuu jollekulle toiselle.",
     "removed": "Jäsen poistettu",
     "updated": "Jäsen päivitetty",
     "invitationSent": "Kutsu lähetetty",
@@ -3357,10 +3357,10 @@
   "blog": {
     "nav": "Blogi",
     "navCta": "Aloita nyt",
-    "footerCloud": "tududi Cloud",
+    "footerCloud": "Cadence Cloud",
     "footerTerms": "Ehdot",
     "footerPrivacy": "Tietosuoja",
-    "ctaEyebrow": "tududi Cloud",
+    "ctaEyebrow": "Cadence Cloud",
     "ctaTitle": "Saa pienet asiat pois päästäsi.",
     "ctaBody": "Tehtävät, projektit, muistiinpanot ja tavat yhdessä rauhallisessa paikassa, jaettuna niiden kanssa, joiden kanssa asut ja teet töitä. Ei palvelinta, ei mitään asennettavaa.",
     "ctaPrice": "{{monthly}} kuukaudessa tai {{annual}} vuodessa",

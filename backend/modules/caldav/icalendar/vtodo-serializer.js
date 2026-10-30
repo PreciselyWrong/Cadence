@@ -11,7 +11,7 @@ function serializeTaskToVTODO(task, options = {}) {
 
     const comp = new ICAL.Component('vcalendar');
     comp.addPropertyWithValue('version', '2.0');
-    comp.addPropertyWithValue('prodid', '-//Tududi//Task Manager//EN');
+    comp.addPropertyWithValue('prodid', '-//Cadence//Task Manager//EN');
     comp.addPropertyWithValue('calscale', 'GREGORIAN');
 
     const vtodo = new ICAL.Component('vtodo');
@@ -241,7 +241,7 @@ function getStatusName(status) {
 async function serializeCollectionToVCALENDAR(tasks, options = {}) {
     const comp = new ICAL.Component('vcalendar');
     comp.addPropertyWithValue('version', '2.0');
-    comp.addPropertyWithValue('prodid', '-//Tududi//Task Manager//EN');
+    comp.addPropertyWithValue('prodid', '-//Cadence//Task Manager//EN');
     comp.addPropertyWithValue('calscale', 'GREGORIAN');
 
     for (const task of tasks) {

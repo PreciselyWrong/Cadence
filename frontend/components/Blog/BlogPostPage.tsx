@@ -40,7 +40,7 @@ const BlogPostPage: React.FC<BlogPageProps> = (props) => {
 
     useEffect(() => {
         const previous = document.title;
-        if (post?.title) document.title = `${post.title} | tududi`;
+        if (post?.title) document.title = `${post.title} | Cadence`;
         return () => {
             document.title = previous;
         };

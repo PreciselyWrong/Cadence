@@ -6,9 +6,9 @@
 
 ## Overview
 
-Tududi automatically creates SQLite database file backups before migrations and on startup to protect your data. These backups ensure you have a recovery point if a migration fails or if you need to restore to a previous state.
+Cadence automatically creates SQLite database file backups before migrations and on startup to protect your data. These backups ensure you have a recovery point if a migration fails or if you need to restore to a previous state.
 
-> **PostgreSQL deployments:** the file backups below apply to SQLite only. When tududi runs against PostgreSQL (`DATABASE_URL` set), `start.sh` skips them and you are expected to back up the server with `pg_dump`, for example from cron:
+> **PostgreSQL deployments:** the file backups below apply to SQLite only. When Cadence runs against PostgreSQL (`DATABASE_URL` set), `start.sh` skips them and you are expected to back up the server with `pg_dump`, for example from cron:
 >
 > ```bash
 > 0 3 * * * pg_dump "$DATABASE_URL" | gzip > /var/backups/tududi/tududi-$(date +\%F).sql.gz
@@ -185,7 +185,7 @@ password.
 ### 1. Before Major Changes
 
 Create a manual backup before:
-- Upgrading Tududi to a new version
+- Upgrading Cadence to a new version
 - Running manual migrations
 - Bulk data operations
 - Testing new features
@@ -286,7 +286,7 @@ sqlite3 backend/db/db-backup-20260314193000.sqlite3 "PRAGMA integrity_check;"
 
 ```bash
 # Kill all node processes
-pkill -f "node.*tududi"
+pkill -f "node.*Cadence"
 
 # Verify no processes are using the database
 lsof backend/db/development.sqlite3

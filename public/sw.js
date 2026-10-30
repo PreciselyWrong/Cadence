@@ -345,7 +345,7 @@ self.addEventListener('push', (event) => {
 
     // Always show something: iOS revokes the subscription of a site that
     // receives a push without displaying a notification.
-    const title = payload.title || 'tududi';
+    const title = payload.title || 'Cadence';
     event.waitUntil(
         self.registration.showNotification(title, {
             body: payload.body || '',

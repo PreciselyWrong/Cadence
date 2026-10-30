@@ -406,7 +406,7 @@ router.put('/task/:id/estimate', async (req, res, next) => {
 
 **Example: Add subtasks to a task**
 
-This is already implemented in tududi, but here's the pattern:
+This is already implemented in Cadence, but here's the pattern:
 
 ### Files Involved
 
@@ -494,7 +494,7 @@ This is already implemented in tududi, but here's the pattern:
 
 **Example: Create database backup**
 
-Already implemented in tududi:
+Already implemented in Cadence:
 
 ```bash
 # Via API (after login)

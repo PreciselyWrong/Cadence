@@ -137,7 +137,7 @@ function registerProjectTools(server, context, tools) {
     // 1. list_projects - List projects
     tools.push({
         name: 'list_projects',
-        description: 'List projects from tududi with optional filtering',
+        description: 'List projects from Cadence with optional filtering',
         inputSchema: {
             type: 'object',
             properties: {
@@ -300,7 +300,7 @@ function registerProjectTools(server, context, tools) {
     // 3. create_project - Create new project
     tools.push({
         name: 'create_project',
-        description: 'Create a new project in tududi',
+        description: 'Create a new project in Cadence',
         inputSchema: {
             type: 'object',
             properties: {

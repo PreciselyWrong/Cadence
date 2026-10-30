@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Đổi ngôn ngữ",
     "langSwitcherCurrent": "Ngôn ngữ: {{name}}",
-    "description": "Ghi lại mọi thứ, lên kế hoạch ngày bằng AI quanh lịch của bạn, và giữ lĩnh vực, mục tiêu, dự án, ghi chú, thói quen trong một hệ thống. Máy chủ MCP với {{tools}} công cụ cho phép tác tử AI làm việc với danh sách của bạn. Tài khoản tududi Cloud sẵn sàng trong một phút.",
-    "title": "tududi: trình quản lý nhiệm vụ và hệ thống quản lý cuộc sống, với MCP cho các trợ lý AI"
+    "description": "Ghi lại mọi thứ, lên kế hoạch ngày bằng AI quanh lịch của bạn, và giữ lĩnh vực, mục tiêu, dự án, ghi chú, thói quen trong một hệ thống. Máy chủ MCP với {{tools}} công cụ cho phép tác tử AI làm việc với danh sách của bạn. Tài khoản Cadence Cloud sẵn sàng trong một phút.",
+    "title": "Cadence: trình quản lý nhiệm vụ và hệ thống quản lý cuộc sống, với MCP cho các trợ lý AI"
   },
   "nav": {
     "demo": "Bản demo trực tiếp",
@@ -19,7 +19,7 @@
   "hero": {
     "ctaDemo": "Dùng thử bản demo trực tiếp",
     "demoNote": "Một phiên bản lưu trữ thật với dữ liệu mẫu, dùng chung và được đặt lại thường xuyên",
-    "screenshotAlt": "Giao diện tududi với chế độ xem Hôm nay và các công việc đã lên kế hoạch",
+    "screenshotAlt": "Giao diện Cadence với chế độ xem Hôm nay và các công việc đã lên kế hoạch",
     "cloudNote": "Không có máy chủ nào cần thiết lập. Hàng tháng hoặc hàng năm, và bạn có thể hủy bất cứ lúc nào.",
     "ctaPrimary": "Bắt đầu ngay",
     "lede": "Ghi lại mọi thứ, lên kế hoạch ngày bằng AI quanh lịch của bạn, và giữ lĩnh vực, mục tiêu, dự án, ghi chú, thói quen trong một hệ thống. Tạo tài khoản Cloud trong một phút.",
@@ -41,7 +41,7 @@
     "featuredIn": "Được nhắc đến trên",
     "eyebrow": "Báo chí",
     "title": "Đừng chỉ tin lời chúng tôi",
-    "sub": "Những gì người đánh giá viết sau khi tự chạy tududi.",
+    "sub": "Những gì người đánh giá viết sau khi tự chạy Cadence.",
     "readLink": "Đọc bài đánh giá"
   },
   "ai": {
@@ -52,7 +52,7 @@
         "body": "Thêm, tìm và hoàn tất công việc mà không cần rời khỏi cuộc trò chuyện."
       },
       "dataStays": {
-        "body": "Kết nối MCP đi thẳng đến phiên bản tududi của riêng bạn, trên Cloud hoặc trên máy chủ riêng của bạn. Không có gì đi qua bên thứ ba.",
+        "body": "Kết nối MCP đi thẳng đến phiên bản Cadence của riêng bạn, trên Cloud hoặc trên máy chủ riêng của bạn. Không có gì đi qua bên thứ ba.",
         "title": "Nó trò chuyện với phiên bản của bạn"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Xong. <strong>Xem lại bản thiết kế lại</strong> giờ hết hạn vào thứ Sáu, và <strong>Bỏ chặn hàng đợi Thanh toán</strong> nằm trong dự án Thanh toán, hết hạn hôm nay.",
       "ask1": "Hôm nay tôi nên tập trung vào điều gì, và có gì bị trễ không?",
       "ask2": "Chuyển việc xem lại bản thiết kế lại sang thứ Sáu và thêm một nhiệm vụ để bỏ chặn Thanh toán.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "Một buổi làm việc ví dụ. Trợ lý của bạn kết nối trực tiếp đến phiên bản riêng của bạn qua MCP.",
       "composer": "Trả lời Claude…",
       "groupTitle": "Điều nên biết",
@@ -105,11 +105,11 @@
           "text": "Thiết kế lại trang web, không có hoạt động trong 11 ngày"
         }
       },
-      "toolLabel": "Đã dùng tududi",
+      "toolLabel": "Đã dùng Cadence",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP đi kèm với tududi Cloud, và với mọi phiên bản tự lưu trữ.",
-    "ledeHtml": "tududi cung cấp một máy chủ MCP hiển thị <strong>{{tools}} công cụ</strong>, bao gồm nhiệm vụ, dự án, lĩnh vực, mục tiêu, thói quen, ghi chú, người, thẻ, chế độ xem, hộp thư đến, tìm kiếm và số liệu. Kết nối Claude hoặc bất kỳ trợ lý tương thích MCP nào trực tiếp đến phiên bản riêng của bạn, cho dù đó là tài khoản Cloud của bạn hay một máy chủ do bạn tự điều hành. Kết nối đi đến phiên bản của bạn thay vì qua một trạm chuyển tiếp trung gian, một sự khác biệt về cấu trúc mà Todoist và Notion không thể cung cấp, bất kể họ hứa gì.",
+    "footnoteIncluded": "MCP đi kèm với Cadence Cloud, và với mọi phiên bản tự lưu trữ.",
+    "ledeHtml": "Cadence cung cấp một máy chủ MCP hiển thị <strong>{{tools}} công cụ</strong>, bao gồm nhiệm vụ, dự án, lĩnh vực, mục tiêu, thói quen, ghi chú, người, thẻ, chế độ xem, hộp thư đến, tìm kiếm và số liệu. Kết nối Claude hoặc bất kỳ trợ lý tương thích MCP nào trực tiếp đến phiên bản riêng của bạn, cho dù đó là tài khoản Cloud của bạn hay một máy chủ do bạn tự điều hành. Kết nối đi đến phiên bản của bạn thay vì qua một trạm chuyển tiếp trung gian, một sự khác biệt về cấu trúc mà Todoist và Notion không thể cung cấp, bất kể họ hứa gì.",
     "titleLine1": "Một hệ thống thực sự",
     "titleLine2": "mà trợ lý AI của bạn có thể thực sự sử dụng"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Cài như một ứng dụng",
-        "body": "Thêm tududi vào màn hình chính hoặc màn hình nền dưới dạng PWA. Dùng được ngoại tuyến và đồng bộ khi bạn trực tuyến trở lại."
+        "body": "Thêm Cadence vào màn hình chính hoặc màn hình nền dưới dạng PWA. Dùng được ngoại tuyến và đồng bộ khi bạn trực tuyến trở lại."
       },
       "oidc": {
         "title": "Đăng nhập OIDC / SSO",
@@ -232,7 +232,7 @@
         "body": "Chia sẻ dự án với quyền truy cập chi tiết - chỉ đọc hoặc đọc và ghi."
       }
     },
-    "sub": "tududi kết hợp mục tiêu, dự án, nhiệm vụ, ghi chú và các chế độ xem thông minh vào một hệ thống bình lặng, tập trung. Hãy để chúng tôi vận hành nó cho bạn, hoặc tự vận hành nếu bạn thích như vậy."
+    "sub": "Cadence kết hợp mục tiêu, dự án, nhiệm vụ, ghi chú và các chế độ xem thông minh vào một hệ thống bình lặng, tập trung. Hãy để chúng tôi vận hành nó cho bạn, hoặc tự vận hành nếu bạn thích như vậy."
   },
   "pricing": {
     "eyebrow": "Giá",
@@ -284,14 +284,14 @@
         "perYear": "/năm"
       }
     },
-    "fineprint": "Hủy bất cứ lúc nào và xuất mọi thứ. Nếu tududi Cloud có ngày đóng cửa, bạn nhận được dữ liệu của mình cùng hướng dẫn chuyển sang tự lưu trữ. Áp dụng sử dụng hợp lý cho dung lượng và lưu lượng API. Hoàn tiền trong 14 ngày, không cần lý do.",
+    "fineprint": "Hủy bất cứ lúc nào và xuất mọi thứ. Nếu Cadence Cloud có ngày đóng cửa, bạn nhận được dữ liệu của mình cùng hướng dẫn chuyển sang tự lưu trữ. Áp dụng sử dụng hợp lý cho dung lượng và lưu lượng API. Hoàn tiền trong 14 ngày, không cần lý do.",
     "perMonth": "/tháng mỗi người",
     "nextPrice": "Từ {{date}}, giá mỗi người sẽ là {{monthly}} mỗi tháng hoặc {{annual}} mỗi năm. Đăng ký trước ngày đó để giữ giá hôm nay trong suốt thời gian bạn còn đăng ký.",
     "sub": "Gói nào cũng có đủ mọi tính năng. Pro dành cho một người; gói Nhóm có quy mô cố định và bạn thêm người cho đến mức đó."
   },
   "compare": {
     "title": "So sánh nhanh",
-    "sub": "tududi Cloud so với các ứng dụng thường được đem ra so sánh nhất, ở gói cá nhân của họ.",
+    "sub": "Cadence Cloud so với các ứng dụng thường được đem ra so sánh nhất, ở gói cá nhân của họ.",
     "footnote": "Todoist Pro, TickTick Premium và Notion Plus, theo trang giá công khai của họ vào tháng 9/2026. Hãy xem trang của họ để biết giá hiện tại. Giá của họ là giá niêm yết tại Mỹ, tính bằng đô la.",
     "rows": {
       "price": "Giá, trả theo năm",
@@ -326,8 +326,8 @@
     "heading": "Có sẵn bằng {{count}} ngôn ngữ trên toàn thế giới"
   },
   "community": {
-    "title": "Tham gia cộng đồng tududi",
-    "sub": "Kết nối với người dùng tududi khác, nhận hỗ trợ và cập nhật tin mới"
+    "title": "Tham gia cộng đồng Cadence",
+    "sub": "Kết nối với người dùng Cadence khác, nhận hỗ trợ và cập nhật tin mới"
   },
   "footer": {
     "colProduct": "Sản phẩm",
@@ -360,41 +360,41 @@
     "items": {
       "freePlan": {
         "a": "Không. Pro có giá {{monthly}} mỗi tháng hoặc {{price}} mỗi năm cho một người, và gói Nhóm có cùng giá cho mỗi người theo quy mô cố định. Không có gói miễn phí, không có đồng hồ dùng thử, không có thẻ lặng lẽ bị trừ tiền về sau. Có bảo đảm hoàn tiền trong 14 ngày nếu dịch vụ không hợp với bạn, và có bản demo trực tiếp trên trang này nếu bạn muốn xem qua trước.",
-        "q": "Có gói miễn phí hoặc bản thử nghiệm nào trên tududi Cloud không?",
-        "aTrial": "Không có gói miễn phí, nhưng mỗi tài khoản mới được dùng thử miễn phí {{days}} ngày, không cần thẻ. Bản dùng thử có trợ lý AI với hạn mức thấp hơn và một thành viên bạn có thể thêm. Liên kết ghi chú công khai sẽ mở khi bạn đăng ký. Nếu bạn không đăng ký, tài khoản chuyển sang chỉ đọc trong 30 ngày để bạn xuất dữ liệu, sau đó bị xóa. Sau thời gian dùng thử, Pro có giá {{monthly}} mỗi tháng hoặc {{price}} mỗi năm, và gói Nhóm có cùng giá cho mỗi người. Cách miễn phí để dùng tududi là chạy nó trên máy chủ của bạn, đó là cùng một ứng dụng."
+        "q": "Có gói miễn phí hoặc bản thử nghiệm nào trên Cadence Cloud không?",
+        "aTrial": "Không có gói miễn phí, nhưng mỗi tài khoản mới được dùng thử miễn phí {{days}} ngày, không cần thẻ. Bản dùng thử có trợ lý AI với hạn mức thấp hơn và một thành viên bạn có thể thêm. Liên kết ghi chú công khai sẽ mở khi bạn đăng ký. Nếu bạn không đăng ký, tài khoản chuyển sang chỉ đọc trong 30 ngày để bạn xuất dữ liệu, sau đó bị xóa. Sau thời gian dùng thử, Pro có giá {{monthly}} mỗi tháng hoặc {{price}} mỗi năm, và gói Nhóm có cùng giá cho mỗi người. Cách miễn phí để dùng Cadence là chạy nó trên máy chủ của bạn, đó là cùng một ứng dụng."
       },
       "leaving": {
         "q": "Tôi có thể rời đi không, và dữ liệu của tôi sẽ ra sao?",
-        "a": "Có, bất cứ lúc nào. Xuất mọi thứ thành một tệp duy nhất từ hồ sơ của bạn và nhập vào tududi tự lưu trữ, vốn đọc cùng định dạng. Xóa tài khoản sẽ xóa dữ liệu, tệp đính kèm và bản sao lưu của bạn khỏi máy chủ của chúng tôi và hủy mọi gói đăng ký."
+        "a": "Có, bất cứ lúc nào. Xuất mọi thứ thành một tệp duy nhất từ hồ sơ của bạn và nhập vào Cadence tự lưu trữ, vốn đọc cùng định dạng. Xóa tài khoản sẽ xóa dữ liệu, tệp đính kèm và bản sao lưu của bạn khỏi máy chủ của chúng tôi và hủy mọi gói đăng ký."
       },
       "aiOptional": {
-        "a": "Không. Cả hai lớp AI đều tắt cho đến khi bạn kích hoạt chúng, và tududi vẫn là một hệ thống hoàn chỉnh mà không cần chúng. Nếu bạn không bao giờ kích hoạt chúng, không có gì bị thiếu và không có gì làm phiền bạn.",
+        "a": "Không. Cả hai lớp AI đều tắt cho đến khi bạn kích hoạt chúng, và Cadence vẫn là một hệ thống hoàn chỉnh mà không cần chúng. Nếu bạn không bao giờ kích hoạt chúng, không có gì bị thiếu và không có gì làm phiền bạn.",
         "q": "Tôi có phải sử dụng các tính năng AI không?"
       },
       "aiPrivacy": {
-        "a": "Điều đó tùy thuộc vào lớp nào trong hai lớp mà bạn muốn nói đến, và sự khác biệt này quan trọng. Máy chủ MCP chạy bên trong phiên bản riêng của bạn: một trợ lý như Claude Desktop kết nối trực tiếp đến phiên bản đó, vì vậy cuộc trò chuyện diễn ra giữa trợ lý của bạn và tududi của riêng bạn, không qua trung gian. Trợ lý AI thì khác. Nó gọi đến một nhà cung cấp tương thích OpenAI, vì vậy nếu bạn hướng nó đến một nhà cung cấp được lưu trữ, nội dung của các yêu cầu đó sẽ đi đến nhà cung cấp đó. Thay vào đó, hướng nó đến một mô hình cục bộ, như Ollama hoặc LM Studio, và không có gì rời khỏi máy của bạn. Nó vẫn tắt cho đến khi bạn cung cấp một khóa, vì vậy đây luôn là lựa chọn của bạn, không phải mặc định.",
+        "a": "Điều đó tùy thuộc vào lớp nào trong hai lớp mà bạn muốn nói đến, và sự khác biệt này quan trọng. Máy chủ MCP chạy bên trong phiên bản riêng của bạn: một trợ lý như Claude Desktop kết nối trực tiếp đến phiên bản đó, vì vậy cuộc trò chuyện diễn ra giữa trợ lý của bạn và Cadence của riêng bạn, không qua trung gian. Trợ lý AI thì khác. Nó gọi đến một nhà cung cấp tương thích OpenAI, vì vậy nếu bạn hướng nó đến một nhà cung cấp được lưu trữ, nội dung của các yêu cầu đó sẽ đi đến nhà cung cấp đó. Thay vào đó, hướng nó đến một mô hình cục bộ, như Ollama hoặc LM Studio, và không có gì rời khỏi máy của bạn. Nó vẫn tắt cho đến khi bạn cung cấp một khóa, vì vậy đây luôn là lựa chọn của bạn, không phải mặc định.",
         "q": "Dữ liệu của tôi có được gửi đến một công ty AI không?"
       },
       "commercialUse": {
         "a": "Có, và bạn không cần mua gì trước. Bản quyền MIT cho phép sử dụng thương mại, bao gồm cả trong một công ty và trong một sản phẩm thương mại, không có ngưỡng doanh thu và không có gì phải báo cáo. Nếu bộ phận tài chính của bạn cần hóa đơn, một gói đăng ký Cloud được lập hóa đơn qua nhà cung cấp thanh toán của chúng tôi và tạo ra một hóa đơn. Không có gì trên trang này bán sự cho phép, vì sự cho phép đó đã là của bạn rồi.",
-        "q": "Tôi có thể dùng tududi tại nơi làm việc, hoặc trong công ty của mình không?"
+        "q": "Tôi có thể dùng Cadence tại nơi làm việc, hoặc trong công ty của mình không?"
       },
       "maintained": {
         "a": "Có. Nó được phát triển chủ yếu bởi một người duy trì, với sự đóng góp từ cộng đồng, và phát hành thường xuyên. Mỗi phiên bản được liệt kê trên trang phát hành GitHub, được liên kết từ Changelog trong menu ở trên, để bạn có thể tự đánh giá tốc độ chứ không chỉ dựa vào lời chúng tôi nói. Việc phát triển diễn ra công khai: các vấn đề, một lộ trình công khai, và một Discord nơi các câu hỏi được trả lời.",
         "linkLabel": "Xem tất cả các phiên bản",
-        "q": "tududi có được duy trì tích cực không?"
+        "q": "Cadence có được duy trì tích cực không?"
       },
       "mcp": {
-        "a": "MCP là Model Context Protocol, một tiêu chuẩn mở để kết nối các trợ lý AI với các hệ thống thực. tududi cung cấp một máy chủ MCP hiển thị {{tools}} công cụ bao gồm nhiệm vụ, dự án, lĩnh vực, mục tiêu, thói quen, ghi chú, người, thẻ, chế độ xem, hộp thư đến, tìm kiếm và số liệu, để một trợ lý có thể ghi lại, tìm, cập nhật và hoàn thành công việc thay vì chỉ nói về nó. Đây là tùy chọn, đi kèm với Cloud và với mọi phiên bản tự lưu trữ, và hoạt động với Claude Desktop, Cursor, Windsurf, Cline, hoặc bất kỳ ứng dụng MCP khác.",
+        "a": "MCP là Model Context Protocol, một tiêu chuẩn mở để kết nối các trợ lý AI với các hệ thống thực. Cadence cung cấp một máy chủ MCP hiển thị {{tools}} công cụ bao gồm nhiệm vụ, dự án, lĩnh vực, mục tiêu, thói quen, ghi chú, người, thẻ, chế độ xem, hộp thư đến, tìm kiếm và số liệu, để một trợ lý có thể ghi lại, tìm, cập nhật và hoàn thành công việc thay vì chỉ nói về nó. Đây là tùy chọn, đi kèm với Cloud và với mọi phiên bản tự lưu trữ, và hoạt động với Claude Desktop, Cursor, Windsurf, Cline, hoặc bất kỳ ứng dụng MCP khác.",
         "q": "MCP là gì, và một trợ lý thực sự có thể làm gì?"
       },
       "shutdown": {
-        "a": "Ứng dụng có bản quyền MIT, và mã nguồn là công khai, vì vậy nó không thể bị lấy đi từ bạn. Bất kỳ ai cũng có thể tiếp tục chạy nó, và bạn có thể fork nó. Trên tududi Cloud, dữ liệu của bạn sống trong một cơ sở dữ liệu tududi chuẩn thay vì một định dạng độc quyền, vì vậy nếu dịch vụ có bao giờ đóng lại, bạn sẽ nhận được dữ liệu của mình và một hướng dẫn để chuyển nó sang máy chủ riêng của bạn.",
-        "q": "Điều gì sẽ xảy ra với dữ liệu của tôi nếu tududi biến mất?"
+        "a": "Ứng dụng có bản quyền MIT, và mã nguồn là công khai, vì vậy nó không thể bị lấy đi từ bạn. Bất kỳ ai cũng có thể tiếp tục chạy nó, và bạn có thể fork nó. Trên Cadence Cloud, dữ liệu của bạn sống trong một cơ sở dữ liệu Cadence chuẩn thay vì một định dạng độc quyền, vì vậy nếu dịch vụ có bao giờ đóng lại, bạn sẽ nhận được dữ liệu của mình và một hướng dẫn để chuyển nó sang máy chủ riêng của bạn.",
+        "q": "Điều gì sẽ xảy ra với dữ liệu của tôi nếu Cadence biến mất?"
       },
       "trust": {
         "q": "Tôi có thể tin giao dữ liệu cho các bạn không?",
-        "a": "Bạn không cần phải tin lời chúng tôi. tududi là mã nguồn mở, nên ai cũng có thể đọc chính xác cách nó xử lý dữ liệu của bạn. Trên Cloud, mọi thứ bạn đưa vào vẫn là của bạn: xuất ra một tệp duy nhất bất cứ lúc nào, tự xóa tài khoản, và có đảm bảo hoàn tiền trong 14 ngày nếu nó không phù hợp với bạn."
+        "a": "Bạn không cần phải tin lời chúng tôi. Cadence là mã nguồn mở, nên ai cũng có thể đọc chính xác cách nó xử lý dữ liệu của bạn. Trên Cloud, mọi thứ bạn đưa vào vẫn là của bạn: xuất ra một tệp duy nhất bất cứ lúc nào, tự xóa tài khoản, và có đảm bảo hoàn tiền trong 14 ngày nếu nó không phù hợp với bạn."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Xuất mọi thứ, bất cứ lúc nào"
     ],
     "lede": "Cùng một hệ thống trong cả hai trường hợp. Sự khác biệt là ai giữ cho nó chạy, được vá lỗi và sao lưu vào lúc ba giờ sáng.",
-    "metaDescription": "tududi Cloud là cùng một hệ thống mã nguồn mở, chạy trên máy chủ của chúng tôi, với cập nhật, sao lưu và email được lo sẵn cho bạn. Pro cho một người hoặc gói Nhóm cho một nhóm, theo tháng hoặc theo năm, hủy bất cứ lúc nào.",
-    "metaTitle": "tududi Cloud: tududi được lưu trữ, vận hành cho bạn",
+    "metaDescription": "Cadence Cloud là cùng một hệ thống mã nguồn mở, chạy trên máy chủ của chúng tôi, với cập nhật, sao lưu và email được lo sẵn cho bạn. Pro cho một người hoặc gói Nhóm cho một nhóm, theo tháng hoặc theo năm, hủy bất cứ lúc nào.",
+    "metaTitle": "Cadence Cloud: Cadence được lưu trữ, vận hành cho bạn",
     "note": "Cùng một ứng dụng có bản quyền MIT. Xuất mọi thứ, bất cứ lúc nào.",
     "orAnnual": "hoặc",
     "priceNote": "Được lập hóa đơn bởi nhà cung cấp thanh toán của chúng tôi. Giá chưa bao gồm các loại thuế áp dụng.",
@@ -452,7 +452,7 @@
         "title": "Cập nhật được áp dụng cho bạn"
       }
     },
-    "title": "Vì sao nên dùng tududi Cloud?",
+    "title": "Vì sao nên dùng Cadence Cloud?",
     "whyEyebrow": "Cloud",
     "whySub": "Không phải là tính năng. Mọi tính năng đều có trong bản tự lưu trữ.",
     "whyTitle": "Bạn thực sự đang trả tiền cho điều gì",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Liên hệ với chúng tôi",
-    "lede": "Có câu hỏi về tududi Cloud, thanh toán hoặc tài khoản? Gửi tin nhắn cho chúng tôi, chúng tôi sẽ trả lời qua email.",
+    "lede": "Có câu hỏi về Cadence Cloud, thanh toán hoặc tài khoản? Gửi tin nhắn cho chúng tôi, chúng tôi sẽ trả lời qua email.",
     "name": "Tên",
     "email": "Email",
     "message": "Tin nhắn",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Ghi lại mọi thứ bằng lời thường",
-        "body": "Một ô Thêm cho hộp thư đến, công việc, ghi chú và dự án, ở mọi nơi trong ứng dụng. Viết như bạn nghĩ, tududi lo phần còn lại.",
+        "body": "Một ô Thêm cho hộp thư đến, công việc, ghi chú và dự án, ở mọi nơi trong ứng dụng. Viết như bạn nghĩ, Cadence lo phần còn lại.",
         "points": [
           "“next fri”, “in 3 days” hay “every first monday” đặt ngày hoặc lặp lại",
           "#thẻ, +Dự án và @người được nhận ra khi gõ",
@@ -539,6 +539,6 @@
   "notFound": {
     "title": "Không tìm thấy trang",
     "lede": "Không có gì ở địa chỉ này. Có thể trang đã được chuyển đi, hoặc liên kết bị gõ sai.",
-    "home": "Quay lại tududi"
+    "home": "Quay lại Cadence"
   }
 }

@@ -685,7 +685,7 @@ const Notes: React.FC = () => {
                                       },
                                       {
                                           id: 2,
-                                          name: 'tududi',
+                                          name: 'Cadence',
                                           active: true,
                                           priority: 'high',
                                       },

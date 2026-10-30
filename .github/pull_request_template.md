@@ -1,5 +1,5 @@
 <!--
-Thank you for contributing to tududi!
+Thank you for contributing to Cadence!
 
 Before submitting:
 1. Read the Contributing Guide: https://github.com/chrisvel/tududi/blob/main/.github/CONTRIBUTING.md

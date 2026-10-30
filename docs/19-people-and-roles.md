@@ -6,7 +6,7 @@
 
 ## Overview
 
-Tududi is meant for one person, a family or a small team. This page defines the words used for the people in a workspace, who can be assigned a task, how to add a member or turn a contact into one, what a member without an email is, and what an admin, a user and a guest can do.
+Cadence is meant for one person, a family or a small team. This page defines the words used for the people in a workspace, who can be assigned a task, how to add a member or turn a contact into one, what a member without an email is, and what an admin, a user and a guest can do.
 
 For sign-up, login, profiles and API tokens see [User Management](08-user-management.md). For sharing with several people at once see [User Groups](18-user-groups.md).
 
@@ -101,7 +101,7 @@ For sign-up, login, profiles and API tokens see [User Management](08-user-manage
 
 16. **The capabilities are `create_people`, `invite_members` and `create_projects`.** `invite_members` lets an account add members (see above). An account gets them from its role: an admin has all three, a user can add people and create projects, and a guest has none. The role table and where the server enforces them are in [User Management](08-user-management.md#user-roles--permissions).
 
-16b. **On tududi Cloud every customer owns an account and is an admin of it.** With hosted mode on there is a fourth role, `account_admin`, shown as **Admin**: whoever signs up gets it, and can make other members of the account admins too (a family of four can have two admins and two users). Account admins manage the members, roles and groups of their own account from Access, and every member they add takes a seat of the owner's Team plan (Pro is one person). They never see another account, and they see other members' items only when shared. The instance admin is shown as **Superadmin**, there is only one, and every other admin page is theirs alone. See [Hosted Mode](17-hosted-mode.md#accounts-customers-are-admins-of-their-own).
+16b. **On Cadence Cloud every customer owns an account and is an admin of it.** With hosted mode on there is a fourth role, `account_admin`, shown as **Admin**: whoever signs up gets it, and can make other members of the account admins too (a family of four can have two admins and two users). Account admins manage the members, roles and groups of their own account from Access, and every member they add takes a seat of the owner's Team plan (Pro is one person). They never see another account, and they see other members' items only when shared. The instance admin is shown as **Superadmin**, there is only one, and every other admin page is theirs alone. See [Hosted Mode](17-hosted-mode.md#accounts-customers-are-admins-of-their-own).
 
 17. **The Roles tab in Admin > Access shows each role, how many accounts hold it and what it may do.** The role of an account is chosen in the Users tab when adding or editing it. That form lists what the chosen role allows, but cannot change it for one account. The roles themselves are fixed for now.
 
@@ -146,4 +146,4 @@ For sign-up, login, profiles and API tokens see [User Management](08-user-manage
 - A member without an email signs in only with a link that someone makes for them. There is no PIN, and the link is not sent for you, since there is nowhere to send it.
 - Your People list only shows your workspace. An admin sees every account in Admin > Access, but not on the People page, unless they share something with it, are in a group with it, or created it.
 - Contacts and members are separate records. Turning a contact into a member merges them. Linking a contact to an existing account keeps both, and assignee lists show that person only once.
-- The Roles tab is read only. The set of roles and their defaults live in code, so no permission can be given to a user or guest yet. On a self-hosted instance that means only an admin can add members, since the invite permission belongs to the admin role. On tududi Cloud every self-registered account can (rule 16b).
+- The Roles tab is read only. The set of roles and their defaults live in code, so no permission can be given to a user or guest yet. On a self-hosted instance that means only an admin can add members, since the invite permission belongs to the admin role. On Cadence Cloud every self-registered account can (rule 16b).

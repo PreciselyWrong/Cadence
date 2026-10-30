@@ -151,7 +151,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     {t(
                         'profile.google.description',
-                        'Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a "Tududi" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.'
+                        'Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a "Cadence" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.'
                     )}
                 </p>
             </div>
@@ -204,14 +204,14 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                             <span>
                                 {t(
                                     'profile.google.syncEvents',
-                                    'Calendars, and dated tasks in a "Tududi" calendar'
+                                    'Calendars, and dated tasks in a "Cadence" calendar'
                                 )}
                             </span>
                             <Switch
                                 checked={Boolean(status.sync_events)}
                                 label={t(
                                     'profile.google.syncEvents',
-                                    'Calendars, and dated tasks in a "Tududi" calendar'
+                                    'Calendars, and dated tasks in a "Cadence" calendar'
                                 )}
                                 onChange={() =>
                                     void run(() =>
@@ -337,7 +337,7 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                     )}
                     message={t(
                         'profile.google.disconnectMessage',
-                        'Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there.'
+                        'Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there.'
                     )}
                     onConfirm={() => {
                         setConfirmDisconnect(false);

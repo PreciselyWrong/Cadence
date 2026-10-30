@@ -28,7 +28,7 @@ const TrialBanner: React.FC = () => {
             <p className="flex-1">
                 {t('subscription.readOnlyBanner', {
                     defaultValue:
-                        'Your trial has ended, so your data is read-only. Subscribe to keep using tududi, or export your data. The account will be deleted on {{date}}.',
+                        'Your trial has ended, so your data is read-only. Subscribe to keep using Cadence, or export your data. The account will be deleted on {{date}}.',
                     date: new Date(status.read_only_until).toLocaleDateString(),
                 })}
             </p>

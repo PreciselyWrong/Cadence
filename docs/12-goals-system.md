@@ -1,6 +1,6 @@
 # Goals System - Behavior Rules
 
-This document explains how goals work in tududi. For technical details see `/backend/modules/goals/` and `/frontend/components/Goal/`.
+This document explains how goals work in Cadence. For technical details see `/backend/modules/goals/` and `/frontend/components/Goal/`.
 
 ---
 

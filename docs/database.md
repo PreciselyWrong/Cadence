@@ -589,7 +589,7 @@ await queryInterface.addConstraint('Tasks', {
 
 ### Choosing a database
 
-Tududi runs on **SQLite** (default, zero configuration) or **PostgreSQL**. The engine is picked from environment variables in `/backend/config/database-settings.js` and every consumer (the app in `models/index.js`, sequelize-cli via `config/database.js`, and the scripts) builds its connection from the same `buildSequelizeOptions()` in `/backend/config/db.js`.
+Cadence runs on **SQLite** (default, zero configuration) or **PostgreSQL**. The engine is picked from environment variables in `/backend/config/database-settings.js` and every consumer (the app in `models/index.js`, sequelize-cli via `config/database.js`, and the scripts) builds its connection from the same `buildSequelizeOptions()` in `/backend/config/db.js`.
 
 | Variable | Purpose |
 |----------|---------|

@@ -6,9 +6,9 @@
         "trialUntil": "Din gratis prøveperiode løber indtil {{date}}."
     },
     "verification": {
-        "subject": "Velkommen til Tududi: Bekræft din e-mail",
-        "welcome": "Velkommen til Tududi!",
-        "opening": "Tak for din tilmelding. For at fuldføre din registrering og komme i gang med Tududi skal du bekræfte din e-mailadresse ved at klikke på linket nedenfor:",
+        "subject": "Velkommen til Cadence: Bekræft din e-mail",
+        "welcome": "Velkommen til Cadence!",
+        "opening": "Tak for din tilmelding. For at fuldføre din registrering og komme i gang med Cadence skal du bekræfte din e-mailadresse ved at klikke på linket nedenfor:",
         "button": "Bekræft e-mailadresse",
         "expires_one": "Dette bekræftelseslink udløber om {{count}} time.",
         "expires_other": "Dette bekræftelseslink udløber om {{count}} timer.",
@@ -21,44 +21,44 @@
             "Oprette tilbagevendende opgaver",
             "Følge din produktivitet"
         ],
-        "ignore": "Hvis du ikke har oprettet en konto hos Tududi, kan du roligt se bort fra denne e-mail."
+        "ignore": "Hvis du ikke har oprettet en konto hos Cadence, kan du roligt se bort fra denne e-mail."
     },
     "verificationReminder": {
-        "subject": "Påmindelse: Bekræft din e-mail for at komme i gang med Tududi",
-        "opening": "Du tilmeldte dig Tududi for omkring en dag siden, men din e-mailadresse er endnu ikke bekræftet. Din konto (og din gratis prøveperiode) starter, så snart du bekræfter den."
+        "subject": "Påmindelse: Bekræft din e-mail for at komme i gang med Cadence",
+        "opening": "Du tilmeldte dig Cadence for omkring en dag siden, men din e-mailadresse er endnu ikke bekræftet. Din konto (og din gratis prøveperiode) starter, så snart du bekræfter den."
     },
     "passwordReset": {
-        "subject": "Nulstil din Tududi-adgangskode",
-        "intro": "Nogen har bedt om at nulstille adgangskoden til din Tududi-konto.",
+        "subject": "Nulstil din Cadence-adgangskode",
+        "intro": "Nogen har bedt om at nulstille adgangskoden til din Cadence-konto.",
         "action": "Åbn dette link for at vælge en ny adgangskode:",
         "button": "Vælg en ny adgangskode",
         "expires_one": "Linket udløber om {{count}} minut. Hvis du ikke har bedt om en nulstilling, kan du se bort fra denne e-mail; din adgangskode forbliver uændret.",
         "expires_other": "Linket udløber om {{count}} minutter. Hvis du ikke har bedt om en nulstilling, kan du se bort fra denne e-mail; din adgangskode forbliver uændret."
     },
     "memberInvite": {
-        "subject": "Du er blevet tilføjet til et Tududi-arbejdsområde",
-        "intro": "Du er blevet tilføjet til et Tududi-arbejdsområde.",
+        "subject": "Du er blevet tilføjet til et Cadence-arbejdsområde",
+        "intro": "Du er blevet tilføjet til et Cadence-arbejdsområde.",
         "action": "Vælg en adgangskode for at aktivere din konto og logge ind:",
         "button": "Vælg din adgangskode",
         "expires_one": "Linket udløber om {{count}} time. Hvis du ikke ventede dette, kan du se bort fra denne e-mail.",
         "expires_other": "Linket udløber om {{count}} timer. Hvis du ikke ventede dette, kan du se bort fra denne e-mail."
     },
     "trialReminder": {
-        "subjectTomorrow": "Din tududi-prøveperiode slutter i morgen",
-        "subjectDays_one": "Din tududi-prøveperiode slutter om {{count}} dag",
-        "subjectDays_other": "Din tududi-prøveperiode slutter om {{count}} dage",
-        "endsTomorrow": "Din prøveperiode på tududi Cloud slutter i morgen, den {{date}}.",
-        "endsInDays_one": "Din prøveperiode på tududi Cloud slutter om {{count}} dag, den {{date}}.",
-        "endsInDays_other": "Din prøveperiode på tududi Cloud slutter om {{count}} dage, den {{date}}.",
+        "subjectTomorrow": "Din Cadence-prøveperiode slutter i morgen",
+        "subjectDays_one": "Din Cadence-prøveperiode slutter om {{count}} dag",
+        "subjectDays_other": "Din Cadence-prøveperiode slutter om {{count}} dage",
+        "endsTomorrow": "Din prøveperiode på Cadence Cloud slutter i morgen, den {{date}}.",
+        "endsInDays_one": "Din prøveperiode på Cadence Cloud slutter om {{count}} dag, den {{date}}.",
+        "endsInDays_other": "Din prøveperiode på Cadence Cloud slutter om {{count}} dage, den {{date}}.",
         "afterReadOnly_one": "Derefter bliver din konto skrivebeskyttet i {{count}} dag, så du stadig kan eksportere dine data, og bliver derefter slettet.",
         "afterReadOnly_other": "Derefter bliver din konto skrivebeskyttet i {{count}} dage, så du stadig kan eksportere dine data, og bliver derefter slettet.",
         "afterFree": "Derefter overgår din konto til gratisplanen.",
-        "keep": "Abonnér for at fortsætte med at bruge tududi Cloud, som du gør nu, med AI-assistent og medlemmer:",
+        "keep": "Abonnér for at fortsætte med at bruge Cadence Cloud, som du gør nu, med AI-assistent og medlemmer:",
         "button": "Abonnér"
     },
     "deletionWarning": {
-        "subject": "Din tududi-konto slettes den {{date}}",
-        "ended": "Din prøveperiode på tududi Cloud er slut, og din konto har været skrivebeskyttet siden.",
+        "subject": "Din Cadence-konto slettes den {{date}}",
+        "ended": "Din prøveperiode på Cadence Cloud er slut, og din konto har været skrivebeskyttet siden.",
         "deleteOn": "Den {{date}} slettes kontoen og alt i den.",
         "keep": "Abonnér for at beholde den:",
         "button": "Behold min konto",
@@ -66,8 +66,8 @@
         "final": "Hvis du ikke gør noget, slettes kontoen den {{date}}, og dette er den sidste e-mail, du får fra os om det."
     },
     "emptyAccount": {
-        "subject": "Din tududi er stadig tom",
-        "intro": "Du har haft en tududi-konto i et par dage, men der er ikke noget i den endnu. De fleste starter med en af disse, og hver tager under et minut:",
+        "subject": "Din Cadence er stadig tom",
+        "intro": "Du har haft en Cadence-konto i et par dage, men der er ikke noget i den endnu. De fleste starter med en af disse, og hver tager under et minut:",
         "ideas": [
             "Skriv det ned, du har i hovedet, i Indbakken, og sorter det senere.",
             "Åbn Plan, vælg tre ting til i dag, og lad resten ligge.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Dine opgaver er, hvor du efterlod dem",
-        "intro": "Du har ikke været inde i tududi i et stykke tid. Alt, hvad du har tilføjet, er der stadig, præcis som du efterlod det.",
+        "intro": "Du har ikke været inde i Cadence i et stykke tid. Alt, hvad du har tilføjet, er der stadig, præcis som du efterlod det.",
         "tip": "Hvis listen er blevet for lang, så start i det små: åbn Plan, vælg tre ting til i dag, og gem resten til senere.",
         "button": "Planlæg i dag",
         "outro": "Vi sender ikke flere af disse, før du har været tilbage."
@@ -86,23 +86,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "Totrinsbekræftelse er slået til",
-            "body": "Totrinsbekræftelse er slået til for din Tududi-konto. Når du logger ind, skal du nu bruge en kode fra din godkendelsesapp, og alle andre enheder er blevet logget ud."
+            "body": "Totrinsbekræftelse er slået til for din Cadence-konto. Når du logger ind, skal du nu bruge en kode fra din godkendelsesapp, og alle andre enheder er blevet logget ud."
         },
         "mfaDisabled": {
             "subject": "Totrinsbekræftelse er slået fra",
-            "body": "Totrinsbekræftelse er slået fra for din Tududi-konto. Når du logger ind, skal du nu kun bruge din adgangskode."
+            "body": "Totrinsbekræftelse er slået fra for din Cadence-konto. Når du logger ind, skal du nu kun bruge din adgangskode."
         },
         "mfaReset": {
             "subject": "Din totrinsbekræftelse er nulstillet",
-            "body": "En administrator har nulstillet totrinsbekræftelse for din Tududi-konto, og alle enheder er blevet logget ud. Du kan logge ind med din adgangskode og slå den til igen."
+            "body": "En administrator har nulstillet totrinsbekræftelse for din Cadence-konto, og alle enheder er blevet logget ud. Du kan logge ind med din adgangskode og slå den til igen."
         },
         "recoveryCodeUsed": {
             "subject": "En gendannelseskode blev brugt",
-            "body": "Nogen loggede ind på din Tududi-konto med en af dine gendannelseskoder. Hver kode virker én gang."
+            "body": "Nogen loggede ind på din Cadence-konto med en af dine gendannelseskoder. Hver kode virker én gang."
         },
         "recoveryCodesRegenerated": {
             "subject": "Der blev lavet nye gendannelseskoder",
-            "body": "Der blev lavet nye gendannelseskoder til din Tududi-konto. De gamle virker ikke længere."
+            "body": "Der blev lavet nye gendannelseskoder til din Cadence-konto. De gamle virker ikke længere."
         },
         "button": "Åbn sikkerhedsindstillinger",
         "notYou": "Hvis det ikke var dig, så skift din adgangskode nu og giv din administrator besked."

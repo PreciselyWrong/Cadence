@@ -1,12 +1,12 @@
 # Projects - Behavior Rules
 
-This document explains how projects work in tududi from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/projects/` and frontend components in `/frontend/components/Project/`.
+This document explains how projects work in Cadence from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/projects/` and frontend components in `/frontend/components/Project/`.
 
 ---
 
 ## Overview
 
-**Projects** are containers for organizing related tasks and notes in tududi. They sit in the middle of the hierarchy (Areas > Projects > Tasks) and provide a focused workspace for achieving specific goals.
+**Projects** are containers for organizing related tasks and notes in Cadence. They sit in the middle of the hierarchy (Areas > Projects > Tasks) and provide a focused workspace for achieving specific goals.
 
 **Key characteristics:**
 - Group related tasks and notes together
@@ -520,7 +520,7 @@ The project page has an **Attachments** tab next to Tasks and Notes. It holds fi
 - Sharing with a group invites every member separately (see [User Groups](18-user-groups.md))
 
 **Requirements:**
-- Access only takes effect for someone with a tududi account who accepts
+- Access only takes effect for someone with a Cadence account who accepts
 - Cannot share with yourself
 
 ### Access Inheritance
@@ -969,7 +969,7 @@ Displayed on project cards and detail page:
 
 **Checklist:**
 1. Did you use exact email address?
-2. Does user have tududi account with that email?
+2. Does user have Cadence account with that email?
 3. Check share count - is it > 0?
 4. Have them refresh their projects list
 5. Check notifications - did they receive share notification?

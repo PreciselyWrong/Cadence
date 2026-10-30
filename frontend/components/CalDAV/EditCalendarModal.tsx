@@ -226,13 +226,13 @@ const EditCalendarModal: React.FC<EditCalendarModalProps> = ({
                             <option value="pull_only">
                                 {t(
                                     'profile.caldavWizard.pullOnly',
-                                    'Pull only (from server to Tududi)'
+                                    'Pull only (from server to Cadence)'
                                 )}
                             </option>
                             <option value="push_only">
                                 {t(
                                     'profile.caldavWizard.pushOnly',
-                                    'Push only (from Tududi to server)'
+                                    'Push only (from Cadence to server)'
                                 )}
                             </option>
                         </select>

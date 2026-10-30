@@ -8,11 +8,11 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Tududi API',
+            title: 'Cadence API',
             version: '1.0.0',
-            description: 'REST API for Tududi task management application',
+            description: 'REST API for Cadence task management application',
             contact: {
-                name: 'Tududi',
+                name: 'Cadence',
                 url: 'https://github.com/chrisvel/tududi',
             },
             license: {

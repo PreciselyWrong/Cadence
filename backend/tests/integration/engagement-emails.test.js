@@ -56,7 +56,7 @@ describe('Engagement emails', () => {
             });
             expect(sent).toContain(user.id);
             const [mail] = sentTo(user);
-            expect(mail.subject).toBe('Your tududi is still empty');
+            expect(mail.subject).toBe('Your Cadence is still empty');
             expect(mail.text).toContain('/inbox');
 
             expect(

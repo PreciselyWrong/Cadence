@@ -2,8 +2,8 @@
   "meta": {
     "langSwitcherLabel": "Skift sprog",
     "langSwitcherCurrent": "Sprog: {{name}}",
-    "description": "Fang alt, planlæg dagen med AI omkring din kalender, og hold områder, mål, projekter, noter og vaner i ét system. En MCP-server med {{tools}} værktøjer lader AI-agenter arbejde med din liste. En tududi Cloud-konto er klar på et minut.",
-    "title": "tududi: opgavestyring og livsstyringssystem, med MCP til AI-agenter"
+    "description": "Fang alt, planlæg dagen med AI omkring din kalender, og hold områder, mål, projekter, noter og vaner i ét system. En MCP-server med {{tools}} værktøjer lader AI-agenter arbejde med din liste. En Cadence Cloud-konto er klar på et minut.",
+    "title": "Cadence: opgavestyring og livsstyringssystem, med MCP til AI-agenter"
   },
   "nav": {
     "demo": "Live-demo",
@@ -41,7 +41,7 @@
     "featuredIn": "Omtalt i",
     "eyebrow": "Presse",
     "title": "Tag ikke bare vores ord for det",
-    "sub": "Hvad anmeldere skrev, efter selv at have kørt tududi.",
+    "sub": "Hvad anmeldere skrev, efter selv at have kørt Cadence.",
     "readLink": "Læs anmeldelsen"
   },
   "ai": {
@@ -52,7 +52,7 @@
         "body": "Tilføj, find og afslut opgaver uden at forlade samtalen."
       },
       "dataStays": {
-        "body": "MCP-forbindelsen går direkte til din egen tududi-instans, på Cloud eller på din egen server. Intet går via en tredjepart.",
+        "body": "MCP-forbindelsen går direkte til din egen Cadence-instans, på Cloud eller på din egen server. Intet går via en tredjepart.",
         "title": "Den taler med din instans"
       },
       "openProtocol": {
@@ -87,7 +87,7 @@
       "answer2Html": "Klar. <strong>Gennemgå redesign-udkast</strong> forfalder nu fredag, og <strong>Fjern blokering af Betalinger-køen</strong> ligger i projektet Betalinger og forfalder i dag.",
       "ask1": "Hvad bør jeg fokusere på i dag, og er noget forsinket?",
       "ask2": "Flyt redesign-gennemgangen til fredag, og tilføj en opgave for at fjerne blokeringen af Betalinger.",
-      "badge": "tududi MCP",
+      "badge": "Cadence MCP",
       "caption": "En eksempelsession. Din agent forbinder direkte til din egen instans via MCP.",
       "composer": "Svar Claude…",
       "groupTitle": "Værd at vide",
@@ -105,11 +105,11 @@
           "text": "Redesign af hjemmesiden, ingen aktivitet i 11 dage"
         }
       },
-      "toolLabel": "Brugte tududi",
+      "toolLabel": "Brugte Cadence",
       "windowTitle": "Claude Desktop"
     },
-    "footnoteIncluded": "MCP følger med tududi Cloud og med hver selvhostet instans.",
-    "ledeHtml": "tududi leverer en MCP-server, der eksponerer <strong>{{tools}} værktøjer</strong>, som dækker opgaver, projekter, områder, mål, vaner, noter, personer, tags, visninger, indbakken, søgning og målinger. Forbind Claude eller enhver MCP-kompatibel agent direkte til din egen instans, uanset om det er din Cloud-konto eller en server, du selv kører. Forbindelsen går til din instans i stedet for via et mellemliggende relæ, en strukturel forskel Todoist og Notion ikke kan tilbyde, uanset hvad de lover.",
+    "footnoteIncluded": "MCP følger med Cadence Cloud og med hver selvhostet instans.",
+    "ledeHtml": "Cadence leverer en MCP-server, der eksponerer <strong>{{tools}} værktøjer</strong>, som dækker opgaver, projekter, områder, mål, vaner, noter, personer, tags, visninger, indbakken, søgning og målinger. Forbind Claude eller enhver MCP-kompatibel agent direkte til din egen instans, uanset om det er din Cloud-konto eller en server, du selv kører. Forbindelsen går til din instans i stedet for via et mellemliggende relæ, en strukturel forskel Todoist og Notion ikke kan tilbyde, uanset hvad de lover.",
     "titleLine1": "Et rigtigt system",
     "titleLine2": "din AI-agent faktisk kan bruge"
   },
@@ -205,7 +205,7 @@
       },
       "pwa": {
         "title": "Installér som app",
-        "body": "Læg tududi på hjemmeskærmen eller skrivebordet som PWA. Virker offline og synkroniserer, når du er online igen."
+        "body": "Læg Cadence på hjemmeskærmen eller skrivebordet som PWA. Virker offline og synkroniserer, når du er online igen."
       },
       "oidc": {
         "title": "OIDC- / SSO-login",
@@ -232,7 +232,7 @@
         "body": "Del projekter med detaljerede rettigheder - kun læsning eller læsning og skrivning."
       }
     },
-    "sub": "tududi kombinerer mål, projekter, opgaver, noter og smarte visninger i ét roligt, fokuseret system. Lad os drive det for dig, eller driv det selv, hvis du foretrækker det."
+    "sub": "Cadence kombinerer mål, projekter, opgaver, noter og smarte visninger i ét roligt, fokuseret system. Lad os drive det for dig, eller driv det selv, hvis du foretrækker det."
   },
   "pricing": {
     "eyebrow": "Priser",
@@ -284,14 +284,14 @@
         "perYear": "/år"
       }
     },
-    "fineprint": "Opsig når som helst og eksporter alt. Skulle tududi Cloud nogensinde lukke, får du dine data og en guide til selvhosting. Fair use gælder for lagerplads og API-volumen. 14 dages pengene-tilbage-garanti, ingen spørgsmål.",
+    "fineprint": "Opsig når som helst og eksporter alt. Skulle Cadence Cloud nogensinde lukke, får du dine data og en guide til selvhosting. Fair use gælder for lagerplads og API-volumen. 14 dages pengene-tilbage-garanti, ingen spørgsmål.",
     "perMonth": "/måned pr. person",
     "nextPrice": "Fra {{date}} stiger prisen pr. person til {{monthly}} om måneden eller {{annual}} om året. Abonnér inden da for at beholde dagens pris, så længe du er abonnent.",
     "sub": "Alle abonnementer har alle funktioner. Pro er til én person, og et Team-abonnement har en fast størrelse, som du tilføjer personer op til."
   },
   "compare": {
     "title": "Hurtig sammenligning",
-    "sub": "Sådan klarer tududi Cloud sig mod de apps, den oftest sammenlignes med, på deres personlige abonnementer.",
+    "sub": "Sådan klarer Cadence Cloud sig mod de apps, den oftest sammenlignes med, på deres personlige abonnementer.",
     "footnote": "Todoist Pro, TickTick Premium og Notion Plus, fra deres offentlige prissider i september 2026. Tjek deres sider for aktuelle priser. Deres priser er amerikanske listepriser i dollar.",
     "rows": {
       "price": "Pris, årlig betaling",
@@ -326,8 +326,8 @@
     "heading": "Tilgængelig på {{count}} sprog verden over"
   },
   "community": {
-    "title": "Bliv en del af tududi-fællesskabet",
-    "sub": "Tal med andre tududi-brugere, få hjælp og hold dig opdateret"
+    "title": "Bliv en del af Cadence-fællesskabet",
+    "sub": "Tal med andre Cadence-brugere, få hjælp og hold dig opdateret"
   },
   "footer": {
     "colProduct": "Produkt",
@@ -360,41 +360,41 @@
     "items": {
       "freePlan": {
         "a": "Nej. Pro koster {{monthly}} om måneden eller {{price}} om året for én person, og Team-abonnementer koster det samme pr. person i faste størrelser. Der er ingen gratis plan, intet prøveur, og intet kort, der stille og roligt begynder at blive trukket senere. Der er 14 dages pengene-tilbage-garanti, hvis det ikke passer dig, og der er en live demo på denne side, hvis du vil se dig omkring først.",
-        "q": "Er der en gratis plan eller en prøveperiode på tududi Cloud?",
-        "aTrial": "Der er ingen gratis plan, men alle nye konti får en gratis prøveperiode på {{days}} dage, uden betalingskort. Prøveperioden har AI-assistenten med en mindre kvote og ét medlem, du kan tilføje. Offentlige notelinks åbnes, når du abonnerer. Hvis du ikke abonnerer, bliver kontoen skrivebeskyttet i 30 dage, så du kan eksportere dine data, og slettes derefter. Efter prøveperioden koster Pro {{monthly}} om måneden eller {{price}} om året, og Team-abonnementer koster det samme pr. person. Den gratis måde at bruge tududi på er at køre det på din egen server, det er den samme applikation."
+        "q": "Er der en gratis plan eller en prøveperiode på Cadence Cloud?",
+        "aTrial": "Der er ingen gratis plan, men alle nye konti får en gratis prøveperiode på {{days}} dage, uden betalingskort. Prøveperioden har AI-assistenten med en mindre kvote og ét medlem, du kan tilføje. Offentlige notelinks åbnes, når du abonnerer. Hvis du ikke abonnerer, bliver kontoen skrivebeskyttet i 30 dage, så du kan eksportere dine data, og slettes derefter. Efter prøveperioden koster Pro {{monthly}} om måneden eller {{price}} om året, og Team-abonnementer koster det samme pr. person. Den gratis måde at bruge Cadence på er at køre det på din egen server, det er den samme applikation."
       },
       "leaving": {
         "q": "Kan jeg forlade tjenesten, og hvad sker der med mine data?",
-        "a": "Ja, når som helst. Eksporter alt som én fil fra din profil og importer den i en selvhostet tududi, som læser samme format. Sletning af din konto fjerner dine data, vedhæftninger og sikkerhedskopier fra vores servere og opsiger ethvert abonnement."
+        "a": "Ja, når som helst. Eksporter alt som én fil fra din profil og importer den i en selvhostet Cadence, som læser samme format. Sletning af din konto fjerner dine data, vedhæftninger og sikkerhedskopier fra vores servere og opsiger ethvert abonnement."
       },
       "aiOptional": {
-        "a": "Nej. Begge AI-lag er slukket, indtil du aktiverer dem, og tududi er et komplet system uden dem. Hvis du aldrig aktiverer dem, mangler intet, og intet nagger dig.",
+        "a": "Nej. Begge AI-lag er slukket, indtil du aktiverer dem, og Cadence er et komplet system uden dem. Hvis du aldrig aktiverer dem, mangler intet, og intet nagger dig.",
         "q": "Skal jeg bruge AI-funktionerne?"
       },
       "aiPrivacy": {
-        "a": "Det afhænger af, hvilket af de to lag du mener, og forskellen betyder noget. MCP-serveren kører inden i din egen instans: en agent som Claude Desktop forbinder direkte til den instans, så samtalen er mellem din agent og din egen tududi, ikke en mellemmand. AI-assistenten er anderledes. Den kalder en OpenAI-kompatibel udbyder, så hvis du peger den mod en hostet udbyder, går indholdet af disse anmodninger til den udbyder. Peg den i stedet mod en lokal model, som Ollama eller LM Studio, og intet forlader din maskine. Den forbliver slukket, indtil du angiver en nøgle, så det er altid dit valg, ikke en standard.",
+        "a": "Det afhænger af, hvilket af de to lag du mener, og forskellen betyder noget. MCP-serveren kører inden i din egen instans: en agent som Claude Desktop forbinder direkte til den instans, så samtalen er mellem din agent og din egen Cadence, ikke en mellemmand. AI-assistenten er anderledes. Den kalder en OpenAI-kompatibel udbyder, så hvis du peger den mod en hostet udbyder, går indholdet af disse anmodninger til den udbyder. Peg den i stedet mod en lokal model, som Ollama eller LM Studio, og intet forlader din maskine. Den forbliver slukket, indtil du angiver en nøgle, så det er altid dit valg, ikke en standard.",
         "q": "Bliver mine data sendt til et AI-firma?"
       },
       "commercialUse": {
         "a": "Ja, og du behøver ikke købe noget først. MIT-licensen tillader kommerciel brug, også inden for en virksomhed og i et kommercielt produkt, uden omsætningsgrænse og uden noget at rapportere. Hvis din regnskabsafdeling behøver en faktura, faktureres et Cloud-abonnement via vores betalingsudbyder og giver en. Intet på denne side sælger en tilladelse, fordi den tilladelse allerede er din.",
-        "q": "Kan jeg bruge tududi på arbejdet, eller i min virksomhed?"
+        "q": "Kan jeg bruge Cadence på arbejdet, eller i min virksomhed?"
       },
       "maintained": {
         "a": "Ja. Det udvikles primært af én maintainer, med bidrag fra fællesskabet, og det udgives ofte. Hver version er listet på GitHubs udgivelsesside, linket fra ændringsloggen i menuen ovenfor, så du selv kan bedømme tempoet i stedet for at tage vores ord for det. Udviklingen sker offentligt: sager, en offentlig køreplan, og en Discord, hvor spørgsmål bliver besvaret.",
         "linkLabel": "Se alle udgivelser",
-        "q": "Bliver tududi aktivt vedligeholdt?"
+        "q": "Bliver Cadence aktivt vedligeholdt?"
       },
       "mcp": {
-        "a": "MCP er Model Context Protocol, en åben standard til at forbinde AI-agenter med rigtige systemer. tududi leverer en MCP-server, der eksponerer {{tools}} værktøjer omkring opgaver, projekter, områder, mål, vaner, noter, personer, tags, visninger, indbakken, søgning og målinger, så en agent kan fange, finde, opdatere og afslutte arbejde i stedet for kun at tale om det. Det er valgfrit, følger med Cloud og med hver selvhostede instans, og fungerer med Claude Desktop, Cursor, Windsurf, Cline eller enhver anden MCP-klient.",
+        "a": "MCP er Model Context Protocol, en åben standard til at forbinde AI-agenter med rigtige systemer. Cadence leverer en MCP-server, der eksponerer {{tools}} værktøjer omkring opgaver, projekter, områder, mål, vaner, noter, personer, tags, visninger, indbakken, søgning og målinger, så en agent kan fange, finde, opdatere og afslutte arbejde i stedet for kun at tale om det. Det er valgfrit, følger med Cloud og med hver selvhostede instans, og fungerer med Claude Desktop, Cursor, Windsurf, Cline eller enhver anden MCP-klient.",
         "q": "Hvad er MCP, og hvad kan en agent egentlig gøre?"
       },
       "shutdown": {
-        "a": "Appen er MIT-licenseret, og kildekoden er offentlig, så den kan ikke blive taget fra dig. Enhver kan fortsætte med at køre den, og du kan forke den. På tududi Cloud lever dine data i en standard tududi-database i stedet for et proprietært format, så hvis tjenesten nogensinde skulle lukke, ville du få dine data og en guide til at flytte dem til din egen server.",
-        "q": "Hvad sker der med mine data, hvis tududi forsvinder?"
+        "a": "Appen er MIT-licenseret, og kildekoden er offentlig, så den kan ikke blive taget fra dig. Enhver kan fortsætte med at køre den, og du kan forke den. På Cadence Cloud lever dine data i en standard Cadence-database i stedet for et proprietært format, så hvis tjenesten nogensinde skulle lukke, ville du få dine data og en guide til at flytte dem til din egen server.",
+        "q": "Hvad sker der med mine data, hvis Cadence forsvinder?"
       },
       "trust": {
         "q": "Kan jeg betro jer mine data?",
-        "a": "Du behøver ikke tage os på ordet. tududi er open source, så alle kan læse præcis, hvordan det håndterer dine data. På Cloud forbliver alt, du lægger ind, dit: eksportér det som én fil når som helst, slet selv din konto, og der er 14 dages pengene-tilbage-garanti, hvis det viser sig ikke at passe dig."
+        "a": "Du behøver ikke tage os på ordet. Cadence er open source, så alle kan læse præcis, hvordan det håndterer dine data. På Cloud forbliver alt, du lægger ind, dit: eksportér det som én fil når som helst, slet selv din konto, og der er 14 dages pengene-tilbage-garanti, hvis det viser sig ikke at passe dig."
       }
     },
     "eyebrow": "FAQ",
@@ -419,8 +419,8 @@
       "Eksporter alt, når du vil"
     ],
     "lede": "Samme system begge veje. Forskellen er, hvem der holder det kørende, opdateret og sikkerhedskopieret klokken tre om natten.",
-    "metaDescription": "tududi Cloud er det samme open source-system, kørt på vores servere med opdateringer, backups og e-mail klaret for dig. Pro til én person eller et Team-abonnement til en gruppe, månedligt eller årligt, opsig når som helst.",
-    "metaTitle": "tududi Cloud: det hostede tududi, driftet for dig",
+    "metaDescription": "Cadence Cloud er det samme open source-system, kørt på vores servere med opdateringer, backups og e-mail klaret for dig. Pro til én person eller et Team-abonnement til en gruppe, månedligt eller årligt, opsig når som helst.",
+    "metaTitle": "Cadence Cloud: det hostede Cadence, driftet for dig",
     "note": "Samme MIT-licenserede app. Eksporter alt, når du vil.",
     "orAnnual": "eller",
     "priceNote": "Faktureret af vores betalingsudbyder. Priserne er uden gældende skatter.",
@@ -452,7 +452,7 @@
         "title": "Opdateringer udført for dig"
       }
     },
-    "title": "Hvorfor bruge tududi Cloud?",
+    "title": "Hvorfor bruge Cadence Cloud?",
     "whyEyebrow": "Cloud",
     "whySub": "Ikke funktioner. Hver funktion findes også i den selvhostede build.",
     "whyTitle": "Hvad du egentlig betaler for",
@@ -469,7 +469,7 @@
   },
   "contact": {
     "title": "Kontakt os",
-    "lede": "Spørgsmål om tududi Cloud, betaling eller din konto? Send os en besked, så svarer vi på e-mail.",
+    "lede": "Spørgsmål om Cadence Cloud, betaling eller din konto? Send os en besked, så svarer vi på e-mail.",
     "name": "Navn",
     "email": "E-mail",
     "message": "Besked",
@@ -486,7 +486,7 @@
     "steps": {
       "capture": {
         "title": "Fang alt, med almindelige ord",
-        "body": "Én tilføj-boks til indbakke, opgaver, noter og projekter, overalt i appen. Skriv, som du tænker, og tududi klarer resten.",
+        "body": "Én tilføj-boks til indbakke, opgaver, noter og projekter, overalt i appen. Skriv, som du tænker, og Cadence klarer resten.",
         "points": [
           "“next fri”, “in 3 days” eller “every first monday” sætter dato eller gentagelse",
           "#tags, +Projekt og @person genkendes, mens du skriver",
@@ -539,6 +539,6 @@
   "notFound": {
     "title": "Siden blev ikke fundet",
     "lede": "Der er intet på denne adresse. Den kan være flyttet, eller linket kan indeholde en stavefejl.",
-    "home": "Tilbage til tududi"
+    "home": "Tilbage til Cadence"
   }
 }

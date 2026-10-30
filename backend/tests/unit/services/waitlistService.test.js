@@ -8,7 +8,7 @@ const dnsError = (code) => Object.assign(new Error(code), { code });
 describe('waitlistService.isValidEmail', () => {
     it('accepts an ordinary address', () => {
         expect(waitlist.isValidEmail('jane@gmail.com')).toBe(true);
-        expect(waitlist.isValidEmail('apps+tududi@stx.addymail.com')).toBe(
+        expect(waitlist.isValidEmail('apps+Cadence@stx.addymail.com')).toBe(
             true
         );
     });

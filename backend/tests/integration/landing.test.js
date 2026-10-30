@@ -459,7 +459,7 @@ describe('Landing page', () => {
 
         const pricing = res.text.slice(res.text.indexOf('id="pricing"'));
         expect(pricing).not.toContain(
-            'tududi is open source and can be run on your own server'
+            'Cadence is open source and can be run on your own server'
         );
         expect(pricing).not.toContain('Self-host (advanced)');
     });
@@ -481,12 +481,12 @@ describe('Landing page', () => {
 
     it('keeps self-hosting out of the FAQ', async () => {
         const res = await request(app).get('/').set('Host', 'tududi.com');
-        expect(res.text).not.toContain('Is tududi really free?');
+        expect(res.text).not.toContain('Is Cadence really free?');
         expect(res.text).not.toContain(
             'Why pay for Cloud when self-hosting is free?'
         );
         expect(res.text).not.toContain(
-            'The free way to use tududi is to run it on your own server'
+            'The free way to use Cadence is to run it on your own server'
         );
         expect(res.text).toContain('id="faq-trust"');
         expect(res.text).toContain('Can I trust you with my data?');
@@ -618,7 +618,7 @@ describe('Landing page', () => {
             res.text.indexOf('compare-footnote', at)
         );
         [
-            'tududi Cloud',
+            'Cadence Cloud',
             'Todoist Pro',
             'TickTick Premium',
             'Notion Plus',
@@ -764,7 +764,7 @@ describe('Landing page', () => {
         expect(res.text).not.toContain('licensing@tududi.com');
 
         // The question it existed to answer is still answered, in the FAQ.
-        expect(res.text).toContain('Can I use tududi at work');
+        expect(res.text).toContain('Can I use Cadence at work');
         expect(res.text).toMatch(/MIT licence permits commercial use/);
     });
 
@@ -1100,7 +1100,7 @@ describe('Landing page', () => {
             const res = await request(app).get('/').set('Host', 'tududi.com');
             expect(res.text).toContain('data-testid="hero-badge"');
             expect(res.text).toContain('For busy people, nothing to install');
-            expect(res.text).not.toContain('tududi Cloud is now open');
+            expect(res.text).not.toContain('Cadence Cloud is now open');
             expect(res.text).not.toContain('data-testid="cloud-open-badge"');
         });
 
@@ -1148,7 +1148,7 @@ describe('Landing page', () => {
             expect(res.text).toContain(
                 'You are subscribed. News and updates will arrive by email.'
             );
-            expect(res.text).not.toContain('when tududi Cloud opens');
+            expect(res.text).not.toContain('when Cadence Cloud opens');
         });
     });
 

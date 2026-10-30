@@ -1,14 +1,14 @@
 {
     "common": {
         "greeting": "Olá,",
-        "signoff": "Um abraço,\nEquipe Tududi",
+        "signoff": "Um abraço,\nEquipe Cadence",
         "copyLink": "Ou copie e cole este link no seu navegador:",
         "trialUntil": "Sua avaliação gratuita vai até {{date}}."
     },
     "verification": {
-        "subject": "Boas-vindas ao Tududi - Confirme seu e-mail",
-        "welcome": "Boas-vindas ao Tududi!",
-        "opening": "Obrigado pelo cadastro. Para concluí-lo e começar a usar o Tududi, confirme seu endereço de e-mail clicando no link abaixo:",
+        "subject": "Boas-vindas ao Cadence - Confirme seu e-mail",
+        "welcome": "Boas-vindas ao Cadence!",
+        "opening": "Obrigado pelo cadastro. Para concluí-lo e começar a usar o Cadence, confirme seu endereço de e-mail clicando no link abaixo:",
         "button": "Confirmar endereço de e-mail",
         "expires_one": "Este link de confirmação expira em {{count}} hora.",
         "expires_many": "Este link de confirmação expira em {{count}} horas.",
@@ -23,15 +23,15 @@
             "Configurar tarefas recorrentes",
             "Acompanhar sua produtividade"
         ],
-        "ignore": "Se você não criou uma conta no Tududi, pode ignorar este e-mail."
+        "ignore": "Se você não criou uma conta no Cadence, pode ignorar este e-mail."
     },
     "verificationReminder": {
-        "subject": "Lembrete: confirme seu e-mail para começar a usar o Tududi",
-        "opening": "Você se cadastrou no Tududi há cerca de um dia, mas seu endereço de e-mail ainda não foi confirmado. Sua conta (e seu teste grátis) começa assim que você confirmar."
+        "subject": "Lembrete: confirme seu e-mail para começar a usar o Cadence",
+        "opening": "Você se cadastrou no Cadence há cerca de um dia, mas seu endereço de e-mail ainda não foi confirmado. Sua conta (e seu teste grátis) começa assim que você confirmar."
     },
     "passwordReset": {
-        "subject": "Redefina sua senha do Tududi",
-        "intro": "Alguém pediu para redefinir a senha da sua conta do Tududi.",
+        "subject": "Redefina sua senha do Cadence",
+        "intro": "Alguém pediu para redefinir a senha da sua conta do Cadence.",
         "action": "Abra este link para escolher uma nova senha:",
         "button": "Escolher uma nova senha",
         "expires_one": "O link expira em {{count}} minuto. Se você não pediu a redefinição, ignore este e-mail; sua senha continua a mesma.",
@@ -39,8 +39,8 @@
         "expires_other": "O link expira em {{count}} minutos. Se você não pediu a redefinição, ignore este e-mail; sua senha continua a mesma."
     },
     "memberInvite": {
-        "subject": "Você agora faz parte de um espaço de trabalho do Tududi",
-        "intro": "Você agora faz parte de um espaço de trabalho do Tududi.",
+        "subject": "Você agora faz parte de um espaço de trabalho do Cadence",
+        "intro": "Você agora faz parte de um espaço de trabalho do Cadence.",
         "action": "Escolha uma senha para ativar sua conta e entrar:",
         "button": "Definir sua senha",
         "expires_one": "O link expira em {{count}} hora. Se você não esperava por isso, pode ignorar este e-mail.",
@@ -48,24 +48,24 @@
         "expires_other": "O link expira em {{count}} horas. Se você não esperava por isso, pode ignorar este e-mail."
     },
     "trialReminder": {
-        "subjectTomorrow": "Seu teste do tududi termina amanhã",
-        "subjectDays_one": "Seu teste do tududi termina em {{count}} dia",
-        "subjectDays_many": "Seu teste do tududi termina em {{count}} dias",
-        "subjectDays_other": "Seu teste do tududi termina em {{count}} dias",
-        "endsTomorrow": "Seu teste do tududi Cloud termina amanhã, em {{date}}.",
-        "endsInDays_one": "Seu teste do tududi Cloud termina em {{count}} dia, em {{date}}.",
-        "endsInDays_many": "Seu teste do tududi Cloud termina em {{count}} dias, em {{date}}.",
-        "endsInDays_other": "Seu teste do tududi Cloud termina em {{count}} dias, em {{date}}.",
+        "subjectTomorrow": "Seu teste do Cadence termina amanhã",
+        "subjectDays_one": "Seu teste do Cadence termina em {{count}} dia",
+        "subjectDays_many": "Seu teste do Cadence termina em {{count}} dias",
+        "subjectDays_other": "Seu teste do Cadence termina em {{count}} dias",
+        "endsTomorrow": "Seu teste do Cadence Cloud termina amanhã, em {{date}}.",
+        "endsInDays_one": "Seu teste do Cadence Cloud termina em {{count}} dia, em {{date}}.",
+        "endsInDays_many": "Seu teste do Cadence Cloud termina em {{count}} dias, em {{date}}.",
+        "endsInDays_other": "Seu teste do Cadence Cloud termina em {{count}} dias, em {{date}}.",
         "afterReadOnly_one": "Depois disso, sua conta fica somente leitura por {{count}} dia, para que você ainda possa exportar seus dados, e então é excluída.",
         "afterReadOnly_many": "Depois disso, sua conta fica somente leitura por {{count}} dias, para que você ainda possa exportar seus dados, e então é excluída.",
         "afterReadOnly_other": "Depois disso, sua conta fica somente leitura por {{count}} dias, para que você ainda possa exportar seus dados, e então é excluída.",
         "afterFree": "Depois disso, sua conta passa para o plano gratuito.",
-        "keep": "Para continuar usando o tududi Cloud como está agora, com o Assistente de IA e membros incluídos, assine:",
+        "keep": "Para continuar usando o Cadence Cloud como está agora, com o Assistente de IA e membros incluídos, assine:",
         "button": "Assinar"
     },
     "deletionWarning": {
-        "subject": "Sua conta do tududi será excluída em {{date}}",
-        "ended": "Seu teste do tududi Cloud terminou, e desde então sua conta está somente leitura.",
+        "subject": "Sua conta do Cadence será excluída em {{date}}",
+        "ended": "Seu teste do Cadence Cloud terminou, e desde então sua conta está somente leitura.",
         "deleteOn": "Em {{date}}, a conta e tudo o que há nela serão excluídos.",
         "keep": "Para mantê-la, assine:",
         "button": "Manter minha conta",
@@ -73,8 +73,8 @@
         "final": "Se você não fizer nada, a conta será excluída em {{date}} e este é o último e-mail que você receberá de nós sobre isso."
     },
     "emptyAccount": {
-        "subject": "Seu tududi ainda está vazio",
-        "intro": "Você tem uma conta no tududi há alguns dias, mas ainda não há nada nela. A maioria das pessoas começa com uma destas, e cada uma leva menos de um minuto:",
+        "subject": "Seu Cadence ainda está vazio",
+        "intro": "Você tem uma conta no Cadence há alguns dias, mas ainda não há nada nela. A maioria das pessoas começa com uma destas, e cada uma leva menos de um minuto:",
         "ideas": [
             "Anote na Caixa de entrada tudo o que está na sua cabeça e organize depois.",
             "Abra Planejar, escolha três coisas para hoje e deixe o resto.",
@@ -85,7 +85,7 @@
     },
     "comeBack": {
         "subject": "Suas tarefas estão onde você as deixou",
-        "intro": "Faz um tempo que você não entra no tududi. Tudo o que você adicionou continua lá, do jeito que você deixou.",
+        "intro": "Faz um tempo que você não entra no Cadence. Tudo o que você adicionou continua lá, do jeito que você deixou.",
         "tip": "Se a lista ficou longa demais, comece pequeno: abra Planejar, escolha três coisas para hoje e deixe o resto para depois.",
         "button": "Planejar hoje",
         "outro": "Não vamos enviar outro e-mail como este até você voltar."
@@ -93,23 +93,23 @@
     "securityNotice": {
         "mfaEnabled": {
             "subject": "A verificação em duas etapas está ativada",
-            "body": "A verificação em duas etapas foi ativada na sua conta Tududi. Agora, para entrar, é preciso um código do seu app autenticador, e todos os outros dispositivos foram desconectados."
+            "body": "A verificação em duas etapas foi ativada na sua conta Cadence. Agora, para entrar, é preciso um código do seu app autenticador, e todos os outros dispositivos foram desconectados."
         },
         "mfaDisabled": {
             "subject": "A verificação em duas etapas está desativada",
-            "body": "A verificação em duas etapas foi desativada na sua conta Tududi. Agora, para entrar, basta a sua senha."
+            "body": "A verificação em duas etapas foi desativada na sua conta Cadence. Agora, para entrar, basta a sua senha."
         },
         "mfaReset": {
             "subject": "Sua verificação em duas etapas foi redefinida",
-            "body": "Um administrador redefiniu a verificação em duas etapas da sua conta Tududi, e todos os dispositivos foram desconectados. Você pode entrar com sua senha e ativá-la de novo."
+            "body": "Um administrador redefiniu a verificação em duas etapas da sua conta Cadence, e todos os dispositivos foram desconectados. Você pode entrar com sua senha e ativá-la de novo."
         },
         "recoveryCodeUsed": {
             "subject": "Um código de recuperação foi usado",
-            "body": "Alguém entrou na sua conta Tududi com um dos seus códigos de recuperação. Cada código funciona uma vez."
+            "body": "Alguém entrou na sua conta Cadence com um dos seus códigos de recuperação. Cada código funciona uma vez."
         },
         "recoveryCodesRegenerated": {
             "subject": "Novos códigos de recuperação foram criados",
-            "body": "Novos códigos de recuperação foram criados para a sua conta Tududi. Os antigos não funcionam mais."
+            "body": "Novos códigos de recuperação foram criados para a sua conta Cadence. Os antigos não funcionam mais."
         },
         "button": "Abrir configurações de segurança",
         "notYou": "Se não foi você, troque sua senha agora e avise o seu administrador."

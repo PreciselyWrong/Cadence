@@ -28,7 +28,7 @@ describe('emailService configuration', () => {
                 secure: false,
                 auth: { user, pass },
             },
-            from: { address: 'noreply@example.com', name: 'Tududi' },
+            from: { address: 'noreply@example.com', name: 'Cadence' },
         };
     };
 

@@ -6,7 +6,7 @@
 
 ## Overview
 
-The AI Assistant adds three context-aware intelligence features to Tududi:
+The AI Assistant adds three context-aware intelligence features to Cadence:
 
 1. **Daily Brief**: a morning summary with a focus task, top priority actions, and risk flags
 2. **Task Insights**: domain-level analysis, next steps, and useful links for a specific task
@@ -93,7 +93,7 @@ This sends `chat_template_kwargs: { enable_thinking: false }` on every request. 
 
 ### Reasoning-field fallback
 
-A small number of reasoning-parser configurations put the model's answer — not just its chain-of-thought — into `message.reasoning` or `message.reasoning_content` instead of `message.content`. tududi reads `content` first and falls back to `reasoning_content`, then `reasoning`, so these configurations still work without `LLM_DISABLE_THINKING`.
+A small number of reasoning-parser configurations put the model's answer — not just its chain-of-thought — into `message.reasoning` or `message.reasoning_content` instead of `message.content`. Cadence reads `content` first and falls back to `reasoning_content`, then `reasoning`, so these configurations still work without `LLM_DISABLE_THINKING`.
 
 The fallback only trusts a field if it actually parses as JSON. Most reasoning-parser configurations put hidden chain-of-thought (not the answer) in `reasoning`/`reasoning_content`, so treating that text as the result would cache and display the model's internal monologue instead of a real answer. If `content` is empty and neither fallback field parses as JSON, the feature returns its normal empty-state defaults rather than erroring or showing raw reasoning text.
 

@@ -5,7 +5,7 @@ const {
 describe('VTODO Parser', () => {
     const basicVTODO = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tududi//Task Manager//EN
+PRODID:-//Cadence//Task Manager//EN
 CALSCALE:GREGORIAN
 BEGIN:VTODO
 UID:test-task-123
@@ -41,7 +41,7 @@ END:VCALENDAR`;
         );
     });
 
-    it('should map iCalendar STATUS to tududi status', async () => {
+    it('should map iCalendar STATUS to Cadence status', async () => {
         const statuses = [
             { ical: 'NEEDS-ACTION', tududi: 0 },
             { ical: 'IN-PROCESS', tududi: 1 },
@@ -49,17 +49,17 @@ END:VCALENDAR`;
             { ical: 'CANCELLED', tududi: 5 },
         ];
 
-        for (const { ical, tududi } of statuses) {
+        for (const { ical, Cadence } of statuses) {
             const vtodo = basicVTODO.replace(
                 'STATUS:NEEDS-ACTION',
                 `STATUS:${ical}`
             );
             const task = await parseVTODOToTask(vtodo);
-            expect(task.status).toBe(tududi);
+            expect(task.status).toBe(Cadence);
         }
     });
 
-    it('should map iCalendar PRIORITY to tududi priority', async () => {
+    it('should map iCalendar PRIORITY to Cadence priority', async () => {
         const priorities = [
             { ical: 1, tududi: 2 },
             { ical: 3, tududi: 2 },
@@ -68,10 +68,10 @@ END:VCALENDAR`;
             { ical: 9, tududi: 0 },
         ];
 
-        for (const { ical, tududi } of priorities) {
+        for (const { ical, Cadence } of priorities) {
             const vtodo = basicVTODO.replace('PRIORITY:5', `PRIORITY:${ical}`);
             const task = await parseVTODOToTask(vtodo);
-            expect(task.priority).toBe(tududi);
+            expect(task.priority).toBe(Cadence);
         }
     });
 

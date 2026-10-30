@@ -19,7 +19,7 @@ const BlogCta: React.FC<{ links: BlogLinks }> = ({ links }) => {
         >
             <div className="max-w-2xl">
                 <p className="text-sm font-semibold text-blue-300">
-                    {t('blog.ctaEyebrow', 'tududi Cloud')}
+                    {t('blog.ctaEyebrow', 'Cadence Cloud')}
                 </p>
                 <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">
                     {t(

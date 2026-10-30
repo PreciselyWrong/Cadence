@@ -643,7 +643,7 @@
     "conflictResolver": {
       "title": "同期の競合を解決する",
       "chooseVersion": "各フィールドの保持するバージョンを選択してください：",
-      "local": "ローカル (Tududi)",
+      "local": "ローカル (Cadence)",
       "remote": "リモート (CalDAV)",
       "useThis": "これを使用",
       "useAllLocal": "すべてローカルを使用",
@@ -682,7 +682,7 @@
       "addError": "このカレンダーを追加できませんでした",
       "deleteError": "このカレンダーを削除できませんでした",
       "title": "今日のページのカレンダー",
-      "description": "一日の計画の横に予定を表示します。tududi はこれらのカレンダーを読み取るだけで、変更することはありません。",
+      "description": "一日の計画の横に予定を表示します。Cadence はこれらのカレンダーを読み取るだけで、変更することはありません。",
       "empty": "まだカレンダーが接続されていません。",
       "lastSync": "{{time}} に更新",
       "remove": "{{name}} を削除",
@@ -690,7 +690,7 @@
       "name": "名前",
       "namePlaceholder": "仕事、家族…",
       "url": "非公開 iCal アドレス",
-      "googleHelp": "Google カレンダーで: 設定 → 対象のカレンダー → カレンダーの統合 →「iCal 形式の非公開アドレス」。Apple カレンダーや Outlook にも同様のリンクがあります。このアドレスを知っている人は誰でもカレンダーを読めるため、tududi は暗号化して保存します。",
+      "googleHelp": "Google カレンダーで: 設定 → 対象のカレンダー → カレンダーの統合 →「iCal 形式の非公開アドレス」。Apple カレンダーや Outlook にも同様のリンクがあります。このアドレスを知っている人は誰でもカレンダーを読めるため、Cadence は暗号化して保存します。",
       "color": "色",
       "checking": "カレンダーを確認しています…",
       "add": "接続",
@@ -849,16 +849,16 @@
     "habitsDescription": "繰り返しの行動や連続記録を追跡する習慣セクションを有効にします。",
     "loading": "読み込み中...",
     "mcp": {
-      "description": "Model Context Protocol を使って、tududi を MCP 対応の任意のアプリと接続します。AIアシスタントがあなたのタスク、プロジェクト、ノートを扱えるようになります。ローカルとリモートどちらの tududi サーバーでも使えます。",
+      "description": "Model Context Protocol を使って、Cadence を MCP 対応の任意のアプリと接続します。AIアシスタントがあなたのタスク、プロジェクト、ノートを扱えるようになります。ローカルとリモートどちらの Cadence サーバーでも使えます。",
       "example1": "今日のタスクを見せて",
       "example2": "MCP連携を確認するタスクを作成して",
       "example3": "進行中のプロジェクトは何?",
       "example4": "メールを確認するリマインダーを受信箱に追加して",
       "example5": "ドキュメントに関するタスクを検索して",
       "remote": {
-        "cloud": "リモートの tududi にアクセス(クラウドサーバー)",
+        "cloud": "リモートの Cadence にアクセス(クラウドサーバー)",
         "docker": "Docker 環境から利用",
-        "local": "ローカルの tududi にアクセス(localhost)",
+        "local": "ローカルの Cadence にアクセス(localhost)",
         "title": "リモートアクセス有効",
         "tokens": "APIトークンで安全に接続",
         "usesPrefix": "この設定は",
@@ -871,7 +871,7 @@
       },
       "step2": {
         "copy": "コピー",
-        "description": "この設定をMCPクライアントに追加します。YOUR_API_TOKEN_HERE をステップ1で作成したトークンに置き換えてください。mcp-remote を使ってHTTP経由で tududi サーバーに接続します。Claude Desktop の例:",
+        "description": "この設定をMCPクライアントに追加します。YOUR_API_TOKEN_HERE をステップ1で作成したトークンに置き換えてください。mcp-remote を使ってHTTP経由で Cadence サーバーに接続します。Claude Desktop の例:",
         "loading": "読み込み中...",
         "locationTitle": "Claude Desktop の設定ファイルの場所:",
         "otherClients": "ほかのMCPクライアントでは設定方法が異なる場合があります。各クライアントのドキュメントを確認してください。",
@@ -882,7 +882,7 @@
         "title": "3. 利用できる操作"
       },
       "step4": {
-        "description": "設定を追加したらMCPクライアントを再起動してください。その後は自然な言葉で tududi を操作できます:",
+        "description": "設定を追加したらMCPクライアントを再起動してください。その後は自然な言葉で Cadence を操作できます:",
         "examplesTitle": "プロンプトの例:",
         "title": "4. 使ってみる"
       },
@@ -891,7 +891,7 @@
         "firewall": "リモートサーバーの場合はファイアウォール設定を確認する",
         "intro": "MCPクライアントが接続できない場合は、次を確認してください:",
         "restart": "MCPクライアントを完全に再起動した",
-        "server": "tududi サーバーが起動していてアクセスできる",
+        "server": "Cadence サーバーが起動していてアクセスできる",
         "title": "トラブルシューティング",
         "token": "APIトークンが有効で期限切れでない"
       }
@@ -945,12 +945,12 @@
     "google": {
       "error": "Google did not answer",
       "title": "Google Calendar and Tasks",
-      "description": "Two-way sync: your Google calendars appear here and can be edited from Tududi, dated tasks go to a \"Tududi\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
+      "description": "Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a \"Cadence\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",
       "notConfigured": "Not set up on this server: the administrator sets GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
       "connect": "Connect Google",
       "lastSync": "synced {{time}}",
       "firstSync": "first sync running…",
-      "syncEvents": "Calendars, and dated tasks in a \"Tududi\" calendar",
+      "syncEvents": "Calendars, and dated tasks in a \"Cadence\" calendar",
       "syncTasks": "All tasks with Google Tasks (one list per project)",
       "calendars": "Shown on Calendar and Today",
       "readOnly": "read-only",
@@ -959,7 +959,7 @@
       "syncNow": "Sync now",
       "disconnect": "Disconnect",
       "disconnectTitle": "Disconnect Google",
-      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Tududi and everything already on Google stays there."
+      "disconnectMessage": "Stop syncing with Google? Your tasks stay in Cadence and everything already on Google stays there."
     },
     "sidebarSmartListsTitle": "スマートリスト",
     "sidebarRailTitle": "アイコンバーと「その他」",
@@ -1972,7 +1972,7 @@
     }
   },
   "navbar": {
-    "appName": "tududi",
+    "appName": "Cadence",
     "quickInboxCapture": "クイックインボックスキャプチャ",
     "userMenu": "ユーザーメニュー",
     "collapseSidebar": "サイドバーを折りたたむ",
@@ -2065,8 +2065,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 tududi へようこそ！\n\nあなたの個人的なタスク管理ボットが接続され、助ける準備ができました！\n\n📝 どんなメッセージでも送信してください。tududi の受信トレイにアイテムとして追加します。\n\n✨ コマンド:\n• /help - ヘルプ情報を表示\n• /start - ウェルカムメッセージを表示\n• ただテキストを入力 - 受信トレイアイテムとして追加\n\n整理を始めましょう！🚀",
-    "helpMessage": "📋 tududi ボット ヘルプ\n\nどんなテキストメッセージでも送信してください。tududi の受信トレイにアイテムとして追加します。\n\nコマンド:\n/start - ウェルカムメッセージ\n/help - このヘルプメッセージを表示\n\nアイテムを入力するだけで、残りは私が処理します！",
+    "welcomeMessage": "🎉 Cadence へようこそ！\n\nあなたの個人的なタスク管理ボットが接続され、助ける準備ができました！\n\n📝 どんなメッセージでも送信してください。Cadence の受信トレイにアイテムとして追加します。\n\n✨ コマンド:\n• /help - ヘルプ情報を表示\n• /start - ウェルカムメッセージを表示\n• ただテキストを入力 - 受信トレイアイテムとして追加\n\n整理を始めましょう！🚀",
+    "helpMessage": "📋 Cadence ボット ヘルプ\n\nどんなテキストメッセージでも送信してください。Cadence の受信トレイにアイテムとして追加します。\n\nコマンド:\n/start - ウェルカムメッセージ\n/help - このヘルプメッセージを表示\n\nアイテムを入力するだけで、残りは私が処理します！",
     "commandProcessed": "コマンドが正常に処理されました",
     "messageProcessed": "メッセージが正常に処理されました",
     "failedToAddToInbox": "❌ 受信トレイに追加できませんでした: {{error}}"
@@ -2151,7 +2151,7 @@
     },
     "dashboard": {
       "title": "管理者",
-      "subtitle": "tududi {{version}} · {{env}}",
+      "subtitle": "Cadence {{version}} · {{env}}",
       "users": "ユーザー",
       "usersHint": "{{verified}} 確認済み · {{admins}} 管理者 · {{new}} 今日",
       "paying": "支払い中",
@@ -2908,9 +2908,9 @@
   },
   "subscription": {
     "title": "サブスクリプション",
-    "chooseForCloud": "tududi Cloudのプランを選択してください",
+    "chooseForCloud": "Cadence Cloudのプランを選択してください",
     "noActive": "アクティブなサブスクリプションはありません",
-    "chooseToContinue": "tududi Cloudを引き続き使用するためのプランを選択してください。",
+    "chooseToContinue": "Cadence Cloudを引き続き使用するためのプランを選択してください。",
     "monthly": "月額",
     "yearly": "年額",
     "priceMonthly": "{{price}} / 月",
@@ -2926,15 +2926,15 @@
     "notConfigured": "このインスタンスではまだサブスクリプションは利用できません。サポートにお問い合わせください。",
     "exportData": "データをエクスポート",
     "subscribe": "購読する",
-    "readOnlyBanner": "試用期間が終了したため、データは読み取り専用です。tududi を引き続き使うには購読するか、データをエクスポートしてください。アカウントは {{date}} に削除されます。",
+    "readOnlyBanner": "試用期間が終了したため、データは読み取り専用です。Cadence を引き続き使うには購読するか、データをエクスポートしてください。アカウントは {{date}} に削除されます。",
     "lockedAi": "AI アシスタントは有料プランに含まれます。",
     "lockedPublicNotes": "ノートの公開リンクは有料プランに含まれます。",
     "lockedMembers": "メンバーの追加は有料プランに含まれます。",
     "trialEnded": "試用期間が終了しました",
     "onTrial": "無料試用中です",
-    "readOnlyUntil": "データは {{date}} まで読み取り専用で、その後アカウントは削除されます。tududi Cloud を引き続き使うには購読してください。",
+    "readOnlyUntil": "データは {{date}} まで読み取り専用で、その後アカウントは削除されます。Cadence Cloud を引き続き使うには購読してください。",
     "trialIncludes": "試用期間は {{date}} に終了します。AI アシスタント、公開ノート、メンバーの追加は購読すると使えるようになります。",
-    "backToApp": "tududi に戻る",
+    "backToApp": "Cadence に戻る",
     "trialBanner": "無料試用中、残り日数：{{count}}",
     "trialLock": {
       "webhooks": "Webhook は無料トライアルには含まれていません。自分のサービスにイベントを送るには、サブスクリプションに登録してください。"
@@ -3017,7 +3017,7 @@
     "failedToUpdate": "メンバーを更新できませんでした",
     "addEmailHint": "メールアドレスを追加すると、パスワード設定の招待が送られます。後から変更することはできません。",
     "remove": "メンバーを削除",
-    "removeConfirm": "{{name}} を削除しますか？アカウントとそのすべての内容が削除され、元に戻せません。tududi Cloud では、その席が空き、別の人が使えるようになります。",
+    "removeConfirm": "{{name}} を削除しますか？アカウントとそのすべての内容が削除され、元に戻せません。Cadence Cloud では、その席が空き、別の人が使えるようになります。",
     "removed": "メンバーを削除しました",
     "updated": "メンバーを更新しました",
     "invitationSent": "招待を送信しました",
@@ -3354,10 +3354,10 @@
   "blog": {
     "nav": "ブログ",
     "navCta": "今すぐ始める",
-    "footerCloud": "tududi Cloud",
+    "footerCloud": "Cadence Cloud",
     "footerTerms": "利用規約",
     "footerPrivacy": "プライバシー",
-    "ctaEyebrow": "tududi Cloud",
+    "ctaEyebrow": "Cadence Cloud",
     "ctaTitle": "小さなことを頭の中から出そう。",
     "ctaBody": "タスク、プロジェクト、メモ、習慣をひとつの落ち着いた場所に。一緒に暮らし、働く人たちと共有できます。サーバー不要、インストール不要。",
     "ctaPrice": "月額 {{monthly}} または年額 {{annual}}",
@@ -3519,7 +3519,7 @@
       "exampleTag": "現場",
       "exampleNote": "長めのメモはここに書きます。",
       "instructionsSheet": "記入のしかた",
-      "instructionsTitle": "tududi 用のこのシートの記入のしかた",
+      "instructionsTitle": "Cadence 用のこのシートの記入のしかた",
       "instructionsName": "必須なのは「名前」列だけです。1行が1つのタスクになります。",
       "instructionsProject": "プロジェクト: 同じプロジェクト名のタスクはまとめられます。まだ存在しないプロジェクトはインポート時に作成されます。",
       "instructionsParent": "親タスク: シート内の別のタスク名を書くと、その行はそのサブタスクになります。WBS列(1, 1.1, 1.2)やインデントした行でも指定できます。",
@@ -3562,7 +3562,7 @@
       "intoNewProject": "新しいプロジェクトに入れる",
       "byColumn": "プロジェクト列を使い、まだ存在しないプロジェクトは作成する",
       "noProject": "プロジェクトに入れない",
-      "updateExisting": "tududi にすでにあるタスクを更新する(UIDで照合)。空のセルは項目をそのままにします。",
+      "updateExisting": "Cadence にすでにあるタスクを更新する(UIDで照合)。空のセルは項目をそのままにします。",
       "countCreate": "新規タスク {{count}}件",
       "countUpdate": "更新 {{count}}件",
       "countSkip": "スキップ {{count}}件",

@@ -51,7 +51,7 @@ const DeviceConnectQr: React.FC<{ token: string }> = ({ token }) => {
             <p className="text-sm text-green-900 dark:text-green-100 max-w-sm">
                 {t(
                     'profile.apiKeys.connectQrHelp',
-                    'Scan this code from the Tududi app on your phone or computer to connect it with this key.'
+                    'Scan this code from the Cadence app on your phone or computer to connect it with this key.'
                 )}
             </p>
         </div>

@@ -92,7 +92,7 @@ describe('Admin user emails', () => {
         );
         expect(preview.status).toBe(200);
         expect(preview.body.to).toBe(user.email);
-        expect(preview.body.subject).toBe('Reset your Tududi password');
+        expect(preview.body.subject).toBe('Reset your Cadence password');
         expect(preview.body.text).toContain(preview.body.link_placeholder);
         expect(emailService.sendEmail).not.toHaveBeenCalled();
 
@@ -178,7 +178,7 @@ describe('Admin user emails', () => {
                 `/api/admin/users/${user.id}/emails/trialReminder/preview`
             );
             expect(preview.body.subject).toBe(
-                'Your tududi trial ends in 3 days'
+                'Your Cadence trial ends in 3 days'
             );
 
             const sent = await adminAgent.post(
@@ -202,7 +202,7 @@ describe('Admin user emails', () => {
             const preview = await adminAgent.get(
                 `/api/admin/users/${user.id}/emails/emptyAccount/preview`
             );
-            expect(preview.body.subject).toBe('Your tududi is still empty');
+            expect(preview.body.subject).toBe('Your Cadence is still empty');
             expect(preview.body.text).toContain('Your free trial runs until');
 
             await Task.create({ name: 'First', user_id: user.id });

@@ -1,6 +1,6 @@
 # Hosted Mode
 
-Hosted mode is how tududi runs as a public, multi-user service (a single
+Hosted mode is how Cadence runs as a public, multi-user service (a single
 shared instance where unrelated people sign up). It is off by default and a
 self-hosted install never needs it. Everything in this document is a no-op
 until `TUDUDI_HOSTED_MODE=true`.
@@ -222,7 +222,7 @@ All three are removed with the account by `services/accountErasureService.js`.
 Plans are sold through one of three providers, chosen by `BILLING_PROVIDER`
 (`paddle`, `lemonsqueezy` or `stripe`; when unset, Paddle is used if
 `PADDLE_API_KEY` is set, then Lemon Squeezy if only its key is present,
-Stripe otherwise). tududi never sees card details with any of them. The
+Stripe otherwise). Cadence never sees card details with any of them. The
 billing tab, the webhook endpoint and the admin page are the same for all;
 only the credentials differ.
 
@@ -232,7 +232,7 @@ billing tab, "Manage subscription", sync and cancellation go to the
 provider in `billing_accounts.provider`, and that provider's webhooks are
 still applied. The one webhook URL tells providers apart by their signature
 header. Once such a subscription ends, the next checkout goes through the
-selling provider. The hosted tududi sells through Paddle and keeps its
+selling provider. The hosted Cadence sells through Paddle and keeps its
 earlier Lemon Squeezy subscriptions this way.
 
 **Paddle** (Paddle Billing) is a merchant of record: it charges VAT and
@@ -256,7 +256,7 @@ there, Paddle.js opens the checkout, and afterwards returns it to the
 billing tab with the transaction id, which the sync reads. The same page
 serves Paddle's emails (pay an invoice, replace a failed card) without a
 sign-in. Paddle's review refuses a domain that opens on a sign-in page, so
-the hosted tududi uses `https://tududi.com/billing/pay`, served by the same
+the hosted Cadence uses `https://tududi.com/billing/pay`, served by the same
 app as `app.tududi.com`. Without a default payment link, the overlay opens
 over the billing tab instead, which needs the app's own domain approved.
 Add a notification destination at `https://your-host/api/billing/webhook`
@@ -271,7 +271,7 @@ plans, so the billing tab offers the other plans at the same interval and
 `POST /api/billing/plan` moves the subscription (prorated immediately); a
 plan with fewer seats than are in use is refused.
 
-**Lemon Squeezy** is a merchant of record too, and sold the hosted tududi
+**Lemon Squeezy** is a merchant of record too, and sold the hosted Cadence
 before Paddle.
 
 | Variable | Meaning |
@@ -283,7 +283,7 @@ before Paddle.
 | `LEMONSQUEEZY_VARIANT_PRO_ANNUAL` | variant id of the annual Pro subscription |
 | `LEMONSQUEEZY_TEAM_VARIANTS_JSON` | Team variants, `{"team_5":{"month":"123","year":"456"}}`; put them in the same product as Pro so the portal offers them as plan changes |
 
-Create one product ("tududi Pro") with a subscription variant per
+Create one product ("Cadence Pro") with a subscription variant per
 interval, then a webhook at `https://your-host/api/billing/webhook` with the
 events `subscription_created`, `subscription_updated`,
 `subscription_cancelled`, `subscription_resumed`, `subscription_expired`,
