@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material.icons.outlined.Weekend
@@ -52,6 +53,9 @@ internal fun AgendaOptionsSheet(
         val toggles = listOf(
             OptionToggle(R.string.agenda_option_timed_tasks, R.string.agenda_option_timed_tasks_hint, Icons.Outlined.Schedule, options.timedTasks) {
                 onOptionsChange { o -> o.copy(timedTasks = it) }
+            },
+            OptionToggle(R.string.agenda_option_habits, null, Icons.Outlined.Repeat, options.habits) {
+                onOptionsChange { o -> o.copy(habits = it) }
             },
             OptionToggle(R.string.agenda_option_done, null, Icons.Outlined.DoneAll, options.showDone) {
                 onOptionsChange { o -> o.copy(showDone = it) }

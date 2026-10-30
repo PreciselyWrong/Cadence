@@ -505,6 +505,13 @@
     <string name="agenda_all_day_row">Journée</string>
     <string name="agenda_all_day">Toute la journée</string>
     <string name="agenda_task_kind">Tâche</string>
+    <string name="agenda_habit_kind">Habitude</string>
+    <string name="agenda_previous">Précédent</string>
+    <string name="agenda_next">Suivant</string>
+    <string name="agenda_tray_title">À planifier · glisser dans la journée</string>
+    <string name="agenda_tray_yesterday">Hier</string>
+    <string name="agenda_tray_overdue">%1$d j</string>
+    <string name="agenda_tray_drop_at">Déposer à %1$s</string>
     <string name="agenda_meta">%1$s · %2$s</string>
     <string name="agenda_time_range">%1$s–%2$s</string>
     <string name="agenda_untitled">Sans titre</string>
@@ -518,6 +525,7 @@
     <string name="agenda_display_title">Affichage de l’agenda</string>
     <string name="agenda_option_timed_tasks">Tâches avec heure</string>
     <string name="agenda_option_timed_tasks_hint">Placées sur la grille à leur heure, sinon dans la rangée de la journée</string>
+    <string name="agenda_option_habits">Habitudes</string>
     <string name="agenda_option_done">Tâches terminées</string>
     <string name="agenda_option_weekends">Week-ends</string>
     <string name="agenda_option_week_numbers">Numéros de semaine</string>

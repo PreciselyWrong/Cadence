@@ -56,6 +56,17 @@ sealed interface AgendaEntry {
         override val done: Boolean,
         override val colorArgb: Int?,
     ) : AgendaEntry
+
+    /** Habitude prévue ce jour-là : dans la rangée de la journée, ou à l'heure de début de son groupe. */
+    data class Habit(
+        val habitId: String,
+        override val title: String,
+        override val start: LocalDateTime,
+        override val end: LocalDateTime,
+        override val allDay: Boolean,
+        override val done: Boolean,
+        override val colorArgb: Int?,
+    ) : AgendaEntry
 }
 
 /** Bloc horaire : minutes depuis minuit, colonne et nombre de colonnes du groupe qui se chevauche. */
@@ -103,10 +114,34 @@ fun weekDays(day: LocalDate, firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY): List
     return List(7) { first.plusDays(it.toLong()) }
 }
 
+/** Jour affiché après un pas de navigation : un jour, trois jours, un mois ou une liste, selon la vue. */
+fun stepDate(mode: AgendaMode, selected: LocalDate, direction: Int, weekends: Boolean): LocalDate = when (mode) {
+    AgendaMode.DAY -> {
+        var next = selected.plusDays(direction.toLong())
+        while (!weekends && next.isWeekend()) next = next.plusDays(direction.toLong())
+        next
+    }
+    AgendaMode.THREE_DAYS -> selected.plusDays(3L * direction)
+    AgendaMode.MONTH -> selected.plusMonths(direction.toLong())
+    AgendaMode.LIST -> selected.plusDays(AGENDA_LIST_DAYS.toLong() * direction)
+}
+
+/** Les trois jours de la vue « 3 jours » : les week-ends masqués sont sautés. */
+fun threeDays(from: LocalDate, weekends: Boolean): List<LocalDate> {
+    val days = mutableListOf<LocalDate>()
+    var day = from
+    while (days.size < 3) {
+        if (weekends || !day.isWeekend()) days += day
+        day = day.plusDays(1)
+    }
+    return days
+}
+
 /** Jusqu'à [MAX_DOTS_PER_DAY] éléments par jour, pour les pastilles colorées du mois. */
 fun dotsByDay(entries: List<AgendaEntry>): Map<LocalDate, List<AgendaEntry>> {
     val byDay = mutableMapOf<LocalDate, MutableList<AgendaEntry>>()
-    for (entry in entries.sortedWith(ENTRY_ORDER)) {
+    // Une habitude quotidienne noierait les pastilles : elles restent dans la liste du jour.
+    for (entry in entries.filterNot { it is AgendaEntry.Habit }.sortedWith(ENTRY_ORDER)) {
         var day = entry.start.toLocalDate()
         val last = entry.lastDay()
         while (!day.isAfter(last)) {

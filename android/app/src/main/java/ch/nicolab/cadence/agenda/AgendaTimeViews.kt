@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -35,6 +36,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -52,6 +55,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.TextStyle
 import java.util.Locale
@@ -74,9 +78,11 @@ internal fun ColumnScope.TimeAgenda(
     onSwipe: (Int) -> Unit,
     onSwipeWeek: (Int) -> Unit,
     onToggleEvent: (EventInstanceKey) -> Unit,
+    drag: TrayDragState,
+    onDrop: (String, LocalDateTime) -> Unit,
 ) {
-    val days = remember(state.mode, state.selected) {
-        if (state.mode == AgendaMode.DAY) listOf(state.selected) else List(3) { state.selected.plusDays(it.toLong()) }
+    val days = remember(state.mode, state.selected, state.options.weekends) {
+        if (state.mode == AgendaMode.DAY) listOf(state.selected) else threeDays(state.selected, state.options.weekends)
     }
     val layouts = remember(state.entries, days) { days.associateWith { layoutDay(state.entries, it) } }
     val dotDays = remember(state.entries) { dotsByDay(state.entries).keys }
@@ -90,6 +96,7 @@ internal fun ColumnScope.TimeAgenda(
             onSelect = onSelect,
             onSwipeWeek = onSwipeWeek,
         )
+        TrayRow(items = state.tray, drag = drag, onDrop = onDrop)
     } else {
         DayColumnHeaders(days = days, today = state.today, onSwipe = onSwipe)
     }
@@ -102,6 +109,7 @@ internal fun ColumnScope.TimeAgenda(
         compactHours = state.mode != AgendaMode.DAY,
         checkEvents = state.checkEvents,
         onToggleEvent = onToggleEvent,
+        drag = drag,
         modifier = Modifier.weight(1f),
     )
 }
@@ -280,6 +288,7 @@ private fun TimeGrid(
     compactHours: Boolean,
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
+    drag: TrayDragState,
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
@@ -289,8 +298,21 @@ private fun TimeGrid(
     val gridHeight = Size.agendaHour * HOURS_PER_DAY
     val lineColor = palette.outlineVariant
     val navClearance = navigationClearance()
+    val hourHeightPx = with(density) { Size.agendaHour.toPx() }
+    val gutterPx = with(density) { Size.agendaGutter.toPx() }
+    SideEffect {
+        drag.scroll = scroll
+        drag.days = days
+        drag.hourHeightPx = hourHeightPx
+        drag.gutterPx = gutterPx
+    }
 
-    Row(modifier.verticalScroll(scroll).padding(bottom = navClearance)) {
+    Row(
+        modifier
+            .onGloballyPositioned { drag.grid = it.boundsInRoot() }
+            .verticalScroll(scroll)
+            .padding(bottom = navClearance),
+    ) {
         Column(Modifier.width(Size.agendaGutter).height(gridHeight)) {
             repeat(HOURS_PER_DAY) { hour ->
                 Box(Modifier.height(Size.agendaHour).fillMaxWidth()) {

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarRepository
 import ch.nicolab.cadence.calendar.CalendarSurface
@@ -13,6 +14,7 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
+import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
@@ -24,7 +26,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -33,10 +37,11 @@ enum class AgendaMode { DAY, THREE_DAYS, MONTH, LIST }
 
 /**
  * Réglages d'affichage, persistés dans `cadence_agenda`. Les valeurs par défaut suivent la maquette :
- * tâches à leur heure, terminées masquées, week-ends visibles, numéros de semaine cachés.
+ * tâches à leur heure, habitudes prévues, terminées masquées, week-ends visibles, numéros de semaine cachés.
  */
 data class AgendaOptions(
     val timedTasks: Boolean = true,
+    val habits: Boolean = true,
     val showDone: Boolean = false,
     val weekends: Boolean = true,
     val weekNumbers: Boolean = false,
@@ -50,6 +55,8 @@ internal data class AgendaUiState(
     val selected: LocalDate,
     val today: LocalDate,
     val entries: List<AgendaEntry> = emptyList(),
+    /** Tâches sans date ou en retard, proposées dans le bac « À planifier » de la vue Jour. */
+    val tray: List<TrayItem> = emptyList(),
     val options: AgendaOptions = AgendaOptions(),
     val permissionMissing: Boolean = false,
     val checkEvents: Boolean = false,
@@ -57,6 +64,7 @@ internal data class AgendaUiState(
 
 private const val PREFS = "cadence_agenda"
 private const val KEY_TIMED_TASKS = "timed_tasks"
+private const val KEY_HABITS = "habits"
 private const val KEY_SHOW_DONE = "show_done"
 private const val KEY_WEEKENDS = "weekends"
 private const val KEY_WEEK_NUMBERS = "week_numbers"
@@ -65,12 +73,13 @@ private const val KEY_WEEK_NUMBERS = "week_numbers"
 internal const val AGENDA_LIST_DAYS = 30
 
 /**
- * Agenda : combine les événements de l'appareil et les tâches datées pour la plage visible.
- * Les habitudes ne figurent pas dans cette passe.
+ * Agenda : combine les événements de l'appareil, les tâches datées et les habitudes prévues
+ * pour la plage visible, plus le bac des tâches à planifier.
  */
 internal class AgendaViewModel(application: Application) : AndroidViewModel(application) {
     private val calendar: CalendarRepository = CalendarGraph.repository(application)
     private val tasks: TaskRepository = TasksGraph.repository(application)
+    private val habitRepository = (application as CadenceApp).repository
     private val prefs = application.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val zone: ZoneId = ZoneId.systemDefault()
 
@@ -82,7 +91,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     private val window: Flow<AgendaWindow> = combine(_mode, _selected) { mode, selected ->
-        windowFor(mode, selected, LocalDate.now(zone))
+        windowFor(mode, selected)
     }.distinctUntilChanged()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -92,16 +101,22 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
                 calendar.events(TimeRange.ofDays(w.first, w.days, zone), CalendarSurface.AGENDA),
                 tasks.observeTasks(),
                 tasks.observeProjects(),
-            ) { events, allTasks, projects ->
+                habitEntries(w, options.habits),
+            ) { events, allTasks, projects, habits ->
                 val colors = projects.associate { it.uid to parseProjectColor(it.color) }
                 val dated = allTasks
                     .mapNotNull { task -> agendaTask(task, colors[task.projectUid], zone) }
                     .filter { it.start.toLocalDate() in w.first..w.first.plusDays(w.days.toLong() - 1) }
                     .filter { options.showDone || !it.done }
                     .map { if (!options.timedTasks && !it.allDay) it.withoutTime() else it }
-                events.map { agendaEvent(it, zone) } + dated
+                events.map { agendaEvent(it, zone) } + dated + habits.filter { options.showDone || !it.done }
             }
         }
+
+    private val tray: Flow<List<TrayItem>> = combine(tasks.observeTasks(), tasks.observeProjects()) { allTasks, projects ->
+        val colors = projects.associate { it.uid to parseProjectColor(it.color) }
+        trayItems(allTasks, colors, LocalDate.now(zone))
+    }
 
     val state: StateFlow<AgendaUiState> = combine(_mode, _selected, entries, _options) { mode, selected, all, options ->
         AgendaUiState(
@@ -111,7 +126,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
             entries = all,
             options = options,
         )
-    }.combine(calendar.permissionMissing) { ui, missing -> ui.copy(permissionMissing = missing) }
+    }.combine(tray) { ui, items -> ui.copy(tray = items) }.combine(calendar.permissionMissing) { ui, missing -> ui.copy(permissionMissing = missing) }
         .combine(calendar.globalSettings) { ui, settings -> ui.copy(checkEvents = settings.checkEvents) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), AgendaUiState(selected = LocalDate.now(zone), today = LocalDate.now(zone)))
 
@@ -127,14 +142,14 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         _selected.value = LocalDate.now(zone)
     }
 
-    /** Balayage horizontal de la vue : un jour, trois jours ou un mois selon la vue ; la liste ne bouge pas. */
+    /** Précédent (-1) ou suivant (1) : flèches de l'en-tête et balayage horizontal de la vue. */
     fun swipe(direction: Int) {
-        _selected.value = when (_mode.value) {
-            AgendaMode.DAY -> _selected.value.plusDays(direction.toLong())
-            AgendaMode.THREE_DAYS -> _selected.value.plusDays(3L * direction)
-            AgendaMode.MONTH -> _selected.value.plusMonths(direction.toLong())
-            AgendaMode.LIST -> _selected.value
-        }
+        _selected.value = stepDate(_mode.value, _selected.value, direction, _options.value.weekends)
+    }
+
+    /** Dépôt d'une tâche du bac sur la grille : date et heure passent par la mise à jour normale, donc synchronisée. */
+    fun schedule(uid: String, at: LocalDateTime) = viewModelScope.launch {
+        tasks.updateTask(uid, dropChange(at))
     }
 
     /** Balayage de la bande des jours : une semaine à la fois. */
@@ -147,6 +162,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         _options.value = next
         prefs.edit()
             .putBoolean(KEY_TIMED_TASKS, next.timedTasks)
+            .putBoolean(KEY_HABITS, next.habits)
             .putBoolean(KEY_SHOW_DONE, next.showDone)
             .putBoolean(KEY_WEEKENDS, next.weekends)
             .putBoolean(KEY_WEEK_NUMBERS, next.weekNumbers)
@@ -165,20 +181,40 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
 
     private fun readOptions(): AgendaOptions = AgendaOptions(
         timedTasks = prefs.getBoolean(KEY_TIMED_TASKS, true),
+        habits = prefs.getBoolean(KEY_HABITS, true),
         showDone = prefs.getBoolean(KEY_SHOW_DONE, false),
         weekends = prefs.getBoolean(KEY_WEEKENDS, true),
         weekNumbers = prefs.getBoolean(KEY_WEEK_NUMBERS, false),
     )
+
+    /** Habitudes prévues sur la plage, relues à chaque écriture de la base des habitudes. */
+    private fun habitEntries(w: AgendaWindow, enabled: Boolean): Flow<List<AgendaEntry>> {
+        if (!enabled) return flowOf(emptyList())
+        return habitRepository.observeWidgetRevisions().onStart { emit(0) }.map { loadHabitEntries(w) }
+    }
+
+    private suspend fun loadHabitEntries(w: AgendaWindow): List<AgendaEntry> {
+        val days = List(w.days) { w.first.plusDays(it.toLong()) }
+        val habits = habitRepository.getHabitsEffectiveAt(LocalDate.now(zone)).filter { it.isAgendaScheduled() }
+        val pauses = habits.associate { it.id to habitRepository.getPauses(it.id) }
+        val done = habits.associate { habit ->
+            habit.id to habitRepository.getEntries(habit.id, days.first(), days.last())
+                .filter { it.valueMinor > 0 }
+                .map { it.localDate }
+                .toSet()
+        }
+        return habitAgendaEntries(habits, habitRepository.getGroups(), pauses, done, days)
+    }
 
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L
     }
 }
 
-/** Plage à charger pour [mode] : la semaine entière pour la bande, la grille complète pour le mois. */
-internal fun windowFor(mode: AgendaMode, selected: LocalDate, today: LocalDate): AgendaWindow = when (mode) {
+/** Plage à charger pour [mode] : la semaine entière pour la bande, la grille complète pour le mois, la liste à partir du jour choisi. */
+internal fun windowFor(mode: AgendaMode, selected: LocalDate): AgendaWindow = when (mode) {
     AgendaMode.DAY -> AgendaWindow(weekDays(selected).first(), 7)
-    AgendaMode.THREE_DAYS -> AgendaWindow(selected, 3)
+    AgendaMode.THREE_DAYS -> AgendaWindow(selected, 5) // cinq jours : trois jours visibles même sans les week-ends
     AgendaMode.MONTH -> monthGrid(YearMonth.from(selected)).let { AgendaWindow(it.first(), it.size) }
-    AgendaMode.LIST -> AgendaWindow(today, AGENDA_LIST_DAYS)
+    AgendaMode.LIST -> AgendaWindow(selected, AGENDA_LIST_DAYS)
 }
