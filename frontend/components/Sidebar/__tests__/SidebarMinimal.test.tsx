@@ -239,6 +239,53 @@ describe('Sidebar in minimal mode', () => {
         expect(screen.getByTestId('sidebar-rail-goals')).toBeInTheDocument();
     });
 
+    it('leaves out of the rail the entries the open panel already lists', () => {
+        renderSidebar(true);
+
+        expect(screen.getByTestId('sidebar-smart-today')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-smart-inbox')).toBeInTheDocument();
+        expect(screen.getByTestId('areas')).toBeInTheDocument();
+        expect(screen.queryByTestId('sidebar-rail-today')).toBeNull();
+        expect(screen.queryByTestId('sidebar-rail-inbox')).toBeNull();
+        expect(screen.queryByTestId('sidebar-rail-areas')).toBeNull();
+        // Items the panel does not list stay on the rail.
+        expect(screen.getByTestId('sidebar-rail-notes')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-rail-goals')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-rail-more')).toBeInTheDocument();
+    });
+
+    it('keeps the rail icons for Today, Inbox and Areas when the panel is collapsed', () => {
+        renderSidebar(false);
+
+        expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-rail-inbox')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-rail-areas')).toBeInTheDocument();
+    });
+
+    it('shows the rail icon for a smart list the panel hides', () => {
+        act(() => {
+            useStore.setState((state: any) => ({
+                userSettingsStore: {
+                    ...state.userSettingsStore,
+                    sidebarMinimal: {
+                        ...state.userSettingsStore.sidebarMinimal,
+                        smartLists:
+                            state.userSettingsStore.sidebarMinimal.smartLists.map(
+                                (item: any) =>
+                                    item.key === 'today'
+                                        ? { ...item, visible: false }
+                                        : item
+                            ),
+                    },
+                },
+            }));
+        });
+        renderSidebar(true);
+
+        expect(screen.queryByTestId('sidebar-smart-today')).toBeNull();
+        expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
+    });
+
     it('puts Boards, Templates and Access in the rail More menu', () => {
         act(() => {
             useStore.setState((state: any) => ({

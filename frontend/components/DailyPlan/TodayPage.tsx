@@ -90,19 +90,19 @@ import { buildTips, rescheduleMissed } from './tips';
 import CandidateList, { CandidateFilter } from './CandidateList';
 import DayTimeline, { PX_PER_MINUTE } from './DayTimeline';
 import PlanList from './PlanList';
-import CalendarDayView from '../Calendar/CalendarDayView';
 import {
     VisibleHours,
     WHOLE_DAY,
     readVisibleHours,
 } from '../Calendar/visibleHours';
 import CalendarHoursMenu from './CalendarHoursMenu';
+import AgendaList from './AgendaList';
+import PaneSplitter, { usePaneWidth } from './PaneSplitter';
 import { fetchProfile, updateUiSettings } from '../../utils/profileService';
 import {
     CalendarEvent as CalendarBlock,
     CalendarTask,
     dropToDueUpdate,
-    resizeUpdate,
     taskIdOf,
     taskToEvents,
 } from '../Calendar/taskEvents';
@@ -124,11 +124,12 @@ import {
     overlapsItems,
     plannedMinutes,
     taskLength,
+    tasksOnDay,
     intlLocale,
 } from './planUtils';
 
 type Mode = 'timeline' | 'list';
-type PanelMode = 'planning' | 'calendar';
+type PanelMode = 'day' | 'agenda';
 const MODE_KEY = 'dailyPlanMode';
 const CALENDAR_OPEN_KEY = 'today.calendarOpen';
 const PANEL_MODE_KEY = 'today.panelMode';
@@ -175,11 +176,11 @@ const writeCalendarOpen = (open: boolean) => {
 
 const readPanelMode = (): PanelMode => {
     try {
-        return window.localStorage.getItem(PANEL_MODE_KEY) === 'calendar'
-            ? 'calendar'
-            : 'planning';
+        return window.localStorage.getItem(PANEL_MODE_KEY) === 'agenda'
+            ? 'agenda'
+            : 'day';
     } catch {
-        return 'planning';
+        return 'day';
     }
 };
 
@@ -229,29 +230,6 @@ const dayCandidates = (tasks: Task[], day: string): PlanCandidates => ({
     inbox_count: 0,
     ranked: [],
 });
-
-const feedToCalendarEvent = (
-    event: CalendarEvent,
-    day: string
-): CalendarBlock => {
-    const at = (minute: number | null) => {
-        const [year, month, date] = day.split('-').map(Number);
-        return new Date(year, month - 1, date, 0, minute ?? 0);
-    };
-    return {
-        id: `feed-${event.feed_uid}-${event.uid}-${event.start_minute ?? 'all-day'}`,
-        title: event.title || event.feed_name,
-        start: at(event.start_minute),
-        end: event.all_day
-            ? at(24 * 60)
-            : at(event.end_minute ?? event.start_minute),
-        type: 'event',
-        color: event.color || '#6b7280',
-        feedUid: event.feed_uid,
-        allDay: !!event.all_day,
-        readOnly: true,
-    };
-};
 
 const addDays = (date: string, days: number) => {
     const d = new Date(`${date}T12:00:00`);
@@ -327,32 +305,6 @@ const collisionDetection: CollisionDetection = (args) => {
     return hits.length > 0 ? hits : closestCenter(args);
 };
 
-interface DayCalendarProps {
-    date: string;
-    events: CalendarBlock[];
-    visibleHours: VisibleHours;
-    onEventResize: (eventId: string, newEnd: Date) => void;
-}
-
-// The day's calendar. Its slots and blocks are dnd-kit drop targets and
-// draggables of the page's DndContext.
-const DayCalendar: React.FC<DayCalendarProps> = ({
-    date,
-    events,
-    visibleHours,
-    onEventResize,
-}) => (
-    <div className="rounded-lg" data-testid="day-calendar">
-        <CalendarDayView
-            currentDate={new Date(`${date}T12:00:00`)}
-            events={events}
-            onEventResize={onEventResize}
-            visibleHours={visibleHours}
-            dndKit
-        />
-    </div>
-);
-
 const TodayPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const focus = useFocus();
@@ -416,6 +368,8 @@ const TodayPage: React.FC = () => {
     const [durations, setDurations] = useState<Record<string, number>>({});
     const [filter, setFilter] = useState<CandidateFilter>('all');
     const [preferredMode, setPreferredMode] = useState<Mode>(readMode);
+    const panesRef = useRef<HTMLDivElement>(null);
+    const paneWidth = usePaneWidth(panesRef);
     const [panelMode, setPanelMode] = useState<PanelMode>(readPanelMode);
     const [calendarOpen, setCalendarOpen] = useState(() =>
         readCalendarOpen(narrow)
@@ -498,7 +452,9 @@ const TodayPage: React.FC = () => {
                 );
                 const day = planResponse.date;
                 const [dueTasks, candidateList] = await Promise.all([
-                    fetchCalendarTasks(day, day).catch(() => [] as Task[]),
+                    fetchCalendarTasks(day, day)
+                        .then((list) => tasksOnDay(list, day))
+                        .catch(() => [] as Task[]),
                     day === todayString()
                         ? fetchPlanCandidates(undefined, scope)
                         : Promise.resolve(null),
@@ -719,16 +675,9 @@ const TodayPage: React.FC = () => {
         };
     }, [aiEnabled, candidates]);
 
-    const calendarEvents = useMemo<CalendarBlock[]>(
-        () => [
-            ...dayTasks.flatMap((task) =>
-                taskToEvents(task as unknown as CalendarTask)
-            ),
-            ...feedEvents.map((event) =>
-                feedToCalendarEvent(event, date ?? '')
-            ),
-        ],
-        [dayTasks, feedEvents, date]
+    const plannedMap = useMemo(
+        () => new Map(items.map((item) => [item.task_uid, item])),
+        [items]
     );
     const range = useMemo(
         () =>
@@ -747,15 +696,51 @@ const TodayPage: React.FC = () => {
                   ),
         [items, feedEvents, dayHours, visibleHours, showAllHours]
     );
+    // The day's calendar events plus its open timed tasks that are not in
+    // the plan, so the day view shows both (one source: taskToEvents).
+    const dayEvents = useMemo<CalendarEvent[]>(() => {
+        if (!date) return feedEvents;
+        const minuteOf = (d: Date) => d.getHours() * 60 + d.getMinutes();
+        const taskEvents = dayTasks
+            .filter(
+                (task) =>
+                    !plannedMap.has(task.uid as string) &&
+                    !isTaskDone(task.status)
+            )
+            .flatMap((task) => taskToEvents(task as unknown as CalendarTask))
+            .filter((block) => block.type === 'task' && !block.allDay)
+            .map<CalendarEvent>((block) => ({
+                uid: `task-${block.id}`,
+                title: block.title,
+                all_day: false,
+                busy: true,
+                start: block.start.toISOString(),
+                end: block.end.toISOString(),
+                start_minute: minuteOf(block.start),
+                end_minute:
+                    block.end.toDateString() !== block.start.toDateString()
+                        ? 24 * 60
+                        : Math.max(
+                              minuteOf(block.end),
+                              minuteOf(block.start) + 15
+                          ),
+                feed_uid: 'tasks',
+                feed_name: block.title,
+                color: block.color ?? null,
+            }))
+            // Tasks outside the visible hours stay in the earlier/later bars.
+            .filter(
+                (e) =>
+                    (e.end_minute as number) > range.start &&
+                    (e.start_minute as number) < range.end
+            );
+        return [...feedEvents, ...taskEvents];
+    }, [dayTasks, feedEvents, plannedMap, date, range]);
     const freeMinutes = Math.max(
         0,
-        range.end - range.start - busyMinutes(feedEvents, range)
+        range.end - range.start - busyMinutes(dayEvents, range)
     );
     const planned = plannedMinutes(items);
-    const plannedMap = useMemo(
-        () => new Map(items.map((item) => [item.task_uid, item])),
-        [items]
-    );
     // Open timed tasks that are not in the plan, outside the visible hours.
     const hiddenHours = useMemo(() => {
         const unplanned = dayTasks
@@ -825,7 +810,7 @@ const TodayPage: React.FC = () => {
                 if (startMinute === undefined && mode === 'timeline') {
                     start = findFreeSlot(
                         next,
-                        feedEvents,
+                        dayEvents,
                         duration,
                         range,
                         Math.max(now, range.start)
@@ -861,7 +846,7 @@ const TodayPage: React.FC = () => {
         },
         [
             items,
-            feedEvents,
+            dayEvents,
             range,
             now,
             mode,
@@ -1102,22 +1087,6 @@ const TodayPage: React.FC = () => {
         if (!update) return;
         await saveTaskChange(task, update);
         setReloadToken((count) => count + 1);
-    };
-
-    // The saved length is the task's own length in Calendar mode, so the
-    // list row follows it and an unsaved chip choice no longer overrides it.
-    const handleCalendarResize = (eventId: string, newEnd: Date) => {
-        const task = findDayTask(eventId);
-        const event = calendarEvents.find((e) => e.id === eventId);
-        if (!task?.uid || !event || event.readOnly) return;
-        const update = resizeUpdate(event, newEnd) as Partial<Task>;
-        void saveTaskChange(task, update);
-        replaceCandidate(task.uid, { ...task, ...update } as Task);
-        setDurations((current) =>
-            Object.fromEntries(
-                Object.entries(current).filter(([uid]) => uid !== task.uid)
-            )
-        );
     };
 
     // A candidate dropped on an hour of the calendar becomes due then.
@@ -1396,7 +1365,7 @@ const TodayPage: React.FC = () => {
         aiEnabled && isToday
             ? buildTips({
                   items,
-                  events: feedEvents,
+                  events: dayEvents,
                   candidates: allCandidates,
                   range,
                   now,
@@ -1896,11 +1865,20 @@ const TodayPage: React.FC = () => {
                         {t('common.loading', 'Loading...')}
                     </p>
                 ) : (
-                    <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:overflow-hidden">
+                    <div
+                        ref={panesRef}
+                        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:gap-0 md:overflow-hidden"
+                    >
                         <aside
                             className={`shrink-0 rounded-xl bg-white px-4 py-5 sm:px-5 md:max-h-full md:self-start md:overflow-y-auto dark:bg-gray-900 ${
-                                calendarOpen ? 'md:w-[400px]' : 'md:w-full'
+                                calendarOpen ? '' : 'md:w-full'
                             }`}
+                            style={
+                                calendarOpen && !narrow
+                                    ? { width: paneWidth.width }
+                                    : undefined
+                            }
+                            data-testid="left-pane"
                         >
                             {isMinimal && (
                                 <div className="mb-4">
@@ -1969,9 +1947,16 @@ const TodayPage: React.FC = () => {
                                 </CompletedTasksSection>
                             )}
                         </aside>
+                        {calendarOpen && date && !narrow && (
+                            <PaneSplitter
+                                width={paneWidth.width}
+                                containerRef={panesRef}
+                                onChange={paneWidth.update}
+                            />
+                        )}
                         {calendarOpen && date && (
-                            <section className="isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 md:max-h-full md:overflow-y-auto dark:bg-gray-900">
-                                <div className="mb-4 flex items-center justify-between gap-2">
+                            <section className="isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 md:ml-1 md:max-h-full md:overflow-y-auto dark:bg-gray-900">
+                                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                                     <div
                                         role="group"
                                         aria-label={t(
@@ -1983,42 +1968,70 @@ const TodayPage: React.FC = () => {
                                     >
                                         <button
                                             type="button"
-                                            aria-pressed={
-                                                panelMode === 'planning'
-                                            }
-                                            onClick={() =>
-                                                choosePanel('planning')
-                                            }
+                                            aria-pressed={panelMode === 'day'}
+                                            onClick={() => choosePanel('day')}
                                             className={panelSwitchClass(
-                                                panelMode === 'planning'
+                                                panelMode === 'day'
                                             )}
-                                            data-testid="panel-planning"
+                                            data-testid="panel-day"
                                         >
-                                            {t(
-                                                'dailyPlan.planning',
-                                                'Planning'
-                                            )}
+                                            {t('dailyPlan.dayView', 'Day')}
                                         </button>
                                         <button
                                             type="button"
                                             aria-pressed={
-                                                panelMode === 'calendar'
+                                                panelMode === 'agenda'
                                             }
                                             onClick={() =>
-                                                choosePanel('calendar')
+                                                choosePanel('agenda')
                                             }
                                             className={panelSwitchClass(
-                                                panelMode === 'calendar'
+                                                panelMode === 'agenda'
                                             )}
-                                            data-testid="panel-calendar"
+                                            data-testid="panel-agenda"
                                         >
-                                            {t(
-                                                'dailyPlan.calendar',
-                                                'Calendar'
-                                            )}
+                                            {t('dailyPlan.agenda', 'Agenda')}
                                         </button>
                                     </div>
-                                    {panelMode === 'calendar' && (
+                                    <div
+                                        className="flex items-center gap-1"
+                                        data-testid="panel-day-nav"
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => goToDay(-1)}
+                                            aria-label={t(
+                                                'dailyPlan.previousDay',
+                                                'Previous day'
+                                            )}
+                                            className="flex h-[30px] w-[30px] items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                            data-testid="panel-prev"
+                                        >
+                                            <ChevronLeftIcon className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={goToToday}
+                                            disabled={isToday}
+                                            className="min-h-[30px] rounded-lg px-3 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                                            data-testid="panel-today"
+                                        >
+                                            {t('tasks.today', 'Today')}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => goToDay(1)}
+                                            aria-label={t(
+                                                'dailyPlan.nextDay',
+                                                'Next day'
+                                            )}
+                                            className="flex h-[30px] w-[30px] items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                            data-testid="panel-next"
+                                        >
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                    {panelMode === 'day' && (
                                         <CalendarHoursMenu
                                             value={visibleHours}
                                             onChange={changeVisibleHours}
@@ -2026,12 +2039,11 @@ const TodayPage: React.FC = () => {
                                     )}
                                 </div>
 
-                                {panelMode === 'calendar' ? (
-                                    <DayCalendar
-                                        date={date}
-                                        events={calendarEvents}
-                                        visibleHours={visibleHours}
-                                        onEventResize={handleCalendarResize}
+                                {panelMode === 'agenda' ? (
+                                    <AgendaList
+                                        items={items}
+                                        events={dayEvents}
+                                        now={isToday ? now : null}
                                     />
                                 ) : (
                                     <>
@@ -2156,7 +2168,7 @@ const TodayPage: React.FC = () => {
                                                         persist(
                                                             rescheduleMissed(
                                                                 items,
-                                                                feedEvents,
+                                                                dayEvents,
                                                                 range,
                                                                 now
                                                             )
@@ -2176,7 +2188,7 @@ const TodayPage: React.FC = () => {
                                             <DayTimeline
                                                 aiReasons={aiDraft?.reasons}
                                                 items={items}
-                                                events={feedEvents}
+                                                events={dayEvents}
                                                 range={range}
                                                 now={now}
                                                 onResize={(uid, duration) =>

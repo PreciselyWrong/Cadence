@@ -3191,6 +3191,12 @@
     "planning": "Planificare",
     "completed": "„{{name}}” finalizată.",
     "panelMode": "Panou dreapta",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Mai multe opțiuni ale calendarului"
   },
   "capture": {

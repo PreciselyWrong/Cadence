@@ -25,6 +25,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
+import TaskTagChips from './TaskTagChips';
 import { isTaskCompleted } from '../../../constants/taskStatus';
 import { resolveTaskArea } from '../../../utils/taskArea';
 import {
@@ -617,6 +618,43 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     )}
                     {!isMinimal && commentBadge}
                     {!isMinimal && subtasksToggle}
+                    {!isMinimal && !compact && (
+                        <div
+                            className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2 text-xs text-gray-500 dark:text-gray-400 max-w-[60%]"
+                            data-testid="task-row-right"
+                        >
+                            {task.tags && task.tags.length > 0 && (
+                                <TaskTagChips
+                                    tags={task.tags}
+                                    className="hidden sm:flex"
+                                />
+                            )}
+                            {showProject && (
+                                <span className="flex min-w-0 items-center">
+                                    <FolderIcon className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                                    <Link
+                                        to={projectHref}
+                                        onClick={stop}
+                                        className="hover:underline max-w-[9rem] truncate"
+                                    >
+                                        {project!.name}
+                                    </Link>
+                                </span>
+                            )}
+                            {task.due_date && (
+                                <span
+                                    className={`flex items-center whitespace-nowrap ${dueClass}`}
+                                    data-testid="task-row-due"
+                                >
+                                    <CalendarIcon className="h-3.5 w-3.5 mr-1" />
+                                    {formatDue(task.due_date)}
+                                    {task.due_has_time &&
+                                        task.due_time &&
+                                        ` ${task.due_time}`}
+                                </span>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {isMinimal && (
@@ -649,18 +687,6 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                 </button>
                             </span>
                         )}
-                        {showProject && (
-                            <span className="flex items-center">
-                                <FolderIcon className="h-3 w-3 mr-1" />
-                                <Link
-                                    to={projectHref}
-                                    onClick={stop}
-                                    className="hover:underline max-w-[12rem] truncate"
-                                >
-                                    {project!.name}
-                                </Link>
-                            </span>
-                        )}
                         {showArea && (
                             <span
                                 className="flex items-center"
@@ -683,7 +709,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             </span>
                         )}
                         {task.tags && task.tags.length > 0 && (
-                            <span className="flex flex-wrap items-center gap-1.5">
+                            <span className="flex flex-wrap items-center gap-1.5 sm:hidden">
                                 {task.tags.map((tag) => (
                                     <Link
                                         key={tag.uid || tag.name}
@@ -707,15 +733,6 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                         {tag.name}
                                     </Link>
                                 ))}
-                            </span>
-                        )}
-                        {task.due_date && (
-                            <span className="flex items-center whitespace-nowrap">
-                                <CalendarIcon className="h-3 w-3 mr-1" />
-                                {formatDue(task.due_date)}
-                                {task.due_has_time &&
-                                    task.due_time &&
-                                    ` ${task.due_time}`}
                             </span>
                         )}
                         {isTaskCompleted(task.status) && task.completed_at && (

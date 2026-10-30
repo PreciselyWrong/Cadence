@@ -3196,6 +3196,12 @@
     "planning": "Планирование",
     "completed": "«{{name}}» выполнено.",
     "panelMode": "Правая панель",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "Другие настройки календаря"
   },
   "capture": {

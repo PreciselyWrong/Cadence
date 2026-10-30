@@ -3210,6 +3210,12 @@
     "planning": "التخطيط",
     "completed": "تم إنجاز '{{name}}'.",
     "panelMode": "اللوحة اليمنى",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "خيارات تقويم أخرى"
   },
   "capture": {

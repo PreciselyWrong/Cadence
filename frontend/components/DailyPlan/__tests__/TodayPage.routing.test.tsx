@@ -151,16 +151,35 @@ describe('TodayPage routing and panel mode', () => {
         (fetchPlanCandidates as jest.Mock).mockResolvedValue(candidates);
     });
 
-    it('switches the right panel to Calendar and remembers it', async () => {
+    it('switches the right panel to Agenda and remembers it', async () => {
         renderAt('/today');
-        const calendarButton = await screen.findByTestId('panel-calendar');
+        const agendaButton = await screen.findByTestId('panel-agenda');
 
-        fireEvent.click(calendarButton);
+        fireEvent.click(agendaButton);
 
-        expect(localStorage.getItem('today.panelMode')).toBe('calendar');
-        expect(screen.getByTestId('panel-calendar')).toHaveAttribute(
+        expect(localStorage.getItem('today.panelMode')).toBe('agenda');
+        expect(screen.getByTestId('panel-agenda')).toHaveAttribute(
             'aria-pressed',
             'true'
+        );
+    });
+
+    it('moves the calendar day with its own arrows, like the header', async () => {
+        renderAt('/today');
+        await screen.findByText('Pay invoice');
+
+        fireEvent.click(screen.getByTestId('panel-next'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('location')).toHaveTextContent(
+                `/today?date=${NEXT}`
+            )
+        );
+        fireEvent.click(screen.getByTestId('panel-today'));
+        await waitFor(() =>
+            expect(screen.getByTestId('location')).toHaveTextContent(
+                /^\/today$/
+            )
         );
     });
 

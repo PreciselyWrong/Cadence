@@ -411,3 +411,4 @@ The Today page automatically refreshes:
 **Document Version:** 1.1.0
 **Last Updated:** 2026-06-25
 **Audience:** Developers, AI assistants, and end users
+> Day plan layout: the right panel of the day plan has a **Day** view and an **Agenda** list, follows the same selected date as the header arrows, and the column splitter is draggable. See [Daily Plan](20-daily-plan.md).

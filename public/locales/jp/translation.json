@@ -3180,6 +3180,12 @@
     "planning": "計画",
     "completed": "「{{name}}」を完了しました。",
     "panelMode": "右のパネル",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "その他のカレンダーオプション"
   },
   "capture": {

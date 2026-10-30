@@ -3180,6 +3180,12 @@
     "planning": "계획",
     "completed": "'{{name}}' 완료.",
     "panelMode": "오른쪽 패널",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns",
     "calendarMenu": "캘린더 추가 옵션"
   },
   "capture": {

@@ -3531,7 +3531,13 @@
     "nextDay": "Next day",
     "planning": "Planning",
     "completed": "'{{name}}' completed.",
-    "panelMode": "Right panel"
+    "panelMode": "Right panel",
+    "dayView": "Day",
+    "agenda": "Agenda",
+    "agendaAnytime": "Any time",
+    "agendaEmpty": "Nothing scheduled for this day.",
+    "agendaUntimed": "No set time",
+    "resizePanes": "Resize the columns"
   },
   "relations": {
     "title": "Relations",

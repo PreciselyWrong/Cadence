@@ -327,3 +327,24 @@ export const tint = (
     const value = parseInt(match[1], 16);
     return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
 };
+
+// The calendar feed returns every open task (and the later occurrences of
+// recurring ones), whatever the requested range. Keeps those the day shows:
+// due that day (a virtual occurrence carries its own day), spanning it from
+// an earlier start, or deferred to it. Without this a recurring task overdue
+// since yesterday would draw its time on every day.
+export const tasksOnDay = <
+    T extends Pick<Task, 'due_date' | 'start_date'> & {
+        defer_until?: string | null;
+    },
+>(
+    tasks: T[],
+    day: string
+): T[] =>
+    tasks.filter((task) => {
+        const due = task.due_date?.slice(0, 10);
+        const start = task.start_date?.slice(0, 10);
+        if (due === day) return true;
+        if (due && start && start <= day && day <= due) return true;
+        return task.defer_until?.slice(0, 10) === day;
+    });

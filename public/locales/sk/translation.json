@@ -3202,6 +3202,12 @@
         "planning": "Plánovanie",
         "completed": "„{{name}}“ dokončené.",
         "panelMode": "Pravý panel",
+        "dayView": "Day",
+        "agenda": "Agenda",
+        "agendaAnytime": "Any time",
+        "agendaEmpty": "Nothing scheduled for this day.",
+        "agendaUntimed": "No set time",
+        "resizePanes": "Resize the columns",
         "calendarMenu": "Ďalšie možnosti kalendára"
     },
     "relations": {
