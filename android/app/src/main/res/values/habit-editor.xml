@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="habit_editor_title_new">Nouvelle habitude</string>
+    <string name="habit_editor_title_edit">Modifier l’habitude</string>
+    <string name="editor_tracker_title_new">Nouvelle activité</string>
+    <string name="editor_tracker_title_edit">Modifier l’activité</string>
+    <string name="editor_tracking_mode">Type de suivi</string>
+    <string name="editor_mode_goal">Objectif</string>
+    <string name="editor_mode_limit">Limite</string>
+    <string name="editor_mode_tracker">Activité libre</string>
+    <string name="editor_summary_tracker">Notez cette activité quand vous le souhaitez, sans objectif à atteindre.</string>
+    <string name="form_error_tracker_type">Choisissez un nombre, une quantité ou une durée pour cette activité.</string>
+    <string name="habit_editor_section_customize">Personnaliser</string>
+    <string name="habit_editor_section_refine">Affiner</string>
+    <string name="habit_editor_section_organize">Organisation et rappels</string>
+    <string name="editor_measure">Comment la suivre ?</string>
+    <string name="editor_measure_done">À cocher</string>
+    <string name="editor_period">Objectif par</string>
+    <string name="editor_schedule">Quand l’afficher ?</string>
+    <string name="editor_color_choice">Couleur %1$d</string>
+    <string name="editor_quick_help">Séparez les valeurs par un espace ou un point-virgule. Exemple : 0.5 1 2</string>
+    <string name="editor_summary_day">jour</string>
+    <string name="editor_summary_week">semaine</string>
+    <string name="editor_summary_month">mois</string>
+    <string name="editor_summary_binary">%1$s validation(s) par %2$s.</string>
+    <string name="editor_summary_limit">Au maximum %1$s par %2$s.</string>
+    <string name="editor_summary_target">%1$s au total par %2$s.</string>
+    <string name="editor_summary_minimum">Le seuil est de %1$s.</string>
+    <string name="editor_summary_frequency">Au moins %1$d saisie(s) par %2$s.</string>
+    <string name="editor_summary_every_day">Proposée chaque jour.</string>
+    <string name="editor_summary_flexible">À répartir librement sur la période.</string>
+    <string name="editor_summary_interval">Proposée tous les %1$d jours.</string>
+    <string name="editor_summary_selected">Proposée : %1$s.</string>
+    <string name="editor_summary_progression">L’objectif augmente de %1$s par %2$s.</string>
+    <string name="editor_summary_cap">Jusqu’à %1$s.</string>
+</resources>

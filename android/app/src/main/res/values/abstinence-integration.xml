@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_choose_title">Un nouveau départ</string>
+    <string name="create_choose_subtitle">Que souhaitez-vous suivre ?</string>
+    <string name="create_abstinence">Commencer une abstinence</string>
+    <string name="create_regular_habit">Construire une habitude</string>
+    <string name="create_activity">Noter une activité sans objectif</string>
+    <string name="today_abstinences_section">Mes abstinences</string>
+    <string name="today_regular_section">Mes habitudes</string>
+    <string name="abstinence_save_failed">Enregistrement impossible. Réessayez.</string>
+    <string name="abstinence_saving">Enregistrement…</string>
+    <string name="abstinence_quick_unavailable">Ce suivi n’est plus disponible.</string>
+</resources>

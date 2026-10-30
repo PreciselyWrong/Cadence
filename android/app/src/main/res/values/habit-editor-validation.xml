@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="form_error_quick_values">Indiquez uniquement des valeurs positives séparées par des virgules.</string>
+    <string name="form_error_progression_cap_below_target">Le plafond de progression ne peut pas être inférieur à la cible.</string>
+</resources>

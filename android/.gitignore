@@ -1,0 +1,17 @@
+*.iml
+.gradle
+/build
+/.idea
+/.externalNativeBuild
+.DS_Store
+/captures
+/.codex-remote-attachments/
+/.codex-ux/
+.cxx
+local.properties
+local.properties
+.gradle/
+.kotlin/
+**/build/
+.idea/
+*.iml

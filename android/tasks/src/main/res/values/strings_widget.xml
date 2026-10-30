@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_widget_label">Tududi – Aujourd\'hui</string>
+    <string name="tasks_widget_description">Les tâches du jour, à cocher directement depuis l\'écran d\'accueil.</string>
+    <string name="tasks_widget_title">Aujourd\'hui</string>
+    <string name="tasks_widget_empty">Rien pour aujourd\'hui</string>
+    <string name="tasks_quick_add_widget_label">Tududi – Ajout rapide</string>
+    <string name="tasks_quick_add_widget_description">Ajouter une tâche en un geste.</string>
+    <string name="tasks_quick_add_widget_button">+ Tâche</string>
+    <string name="tasks_quick_add_title">Nouvelle tâche</string>
+    <string name="tasks_quick_add_hint">Titre de la tâche</string>
+    <string name="tasks_quick_add_today">Aujourd\'hui</string>
+    <string name="tasks_quick_add_tomorrow">Demain</string>
+    <string name="tasks_quick_add_no_date">Sans date</string>
+    <string name="tasks_quick_add_submit">Ajouter</string>
+    <string name="tasks_quick_add_cancel">Annuler</string>
+    <string name="tasks_share_label">Tududi – Boîte de réception</string>
+    <string name="tasks_share_saved">Ajouté à la boîte de réception</string>
+    <string name="tasks_reminder_channel_name">Rappels de tâches</string>
+    <string name="tasks_reminder_complete">Terminer</string>
+    <string name="tasks_reminder_default_text">Tâche à faire</string>
+    <string name="tasks_reminder_due_time">Échéance à %1$s</string>
+    <string name="tasks_reminder_due_date">Échéance le %1$s</string>
+</resources>

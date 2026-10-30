@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_tab_today">Aujourd\'hui</string>
+    <string name="tasks_tab_upcoming">À venir</string>
+    <string name="tasks_tab_inbox">Boîte de réception</string>
+    <string name="tasks_tab_projects">Projets</string>
+    <string name="tasks_fab_add">Ajouter une tâche</string>
+    <string name="tasks_error_generic">Une erreur est survenue.</string>
+
+    <string name="tasks_day_today">Aujourd\'hui</string>
+    <string name="tasks_day_tomorrow">Demain</string>
+    <string name="tasks_day_yesterday">Hier</string>
+    <string name="tasks_section_overdue">En retard</string>
+    <string name="tasks_section_unsorted">Tâches à classer</string>
+    <string name="tasks_notifications_off">Notifications désactivées : les rappels ne s\'afficheront pas</string>
+    <string name="tasks_notifications_settings">Ouvrir les réglages</string>
+    <string name="tasks_section_today">Aujourd\'hui</string>
+    <string name="tasks_section_completed">Terminées aujourd\'hui (%1$d)</string>
+    <string name="tasks_today_empty">Rien de prévu aujourd\'hui.</string>
+    <string name="tasks_upcoming_empty">Aucune échéance dans les 7 prochains jours.</string>
+    <string name="tasks_swipe_tomorrow">Demain</string>
+    <string name="tasks_recurring">Tâche récurrente</string>
+    <string name="tasks_pending_sync">Modification non synchronisée</string>
+    <string name="tasks_mark_done">Marquer comme terminée</string>
+    <string name="tasks_mark_undone">Rouvrir la tâche</string>
+
+    <string name="tasks_inbox_capture_hint">Capturer une idée…</string>
+    <string name="tasks_inbox_empty">La boîte de réception est vide.</string>
+    <string name="tasks_inbox_convert">Convertir en tâche</string>
+    <string name="tasks_projects_empty">Aucun projet pour l\'instant.</string>
+    <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>
+    <string name="tasks_back">Retour</string>
+    <plurals name="tasks_open_count">
+        <item quantity="one">%d tâche ouverte</item>
+        <item quantity="other">%d tâches ouvertes</item>
+    </plurals>
+
+    <plurals name="tasks_sync_pending">
+        <item quantity="one">%d modification en attente</item>
+        <item quantity="other">%d modifications en attente</item>
+    </plurals>
+    <string name="tasks_sync_not_connected">Non connecté à Tududi</string>
+    <string name="tasks_sync_running">Synchronisation…</string>
+
+    <string name="tasks_field_name">Nom</string>
+    <string name="tasks_field_note">Note</string>
+    <string name="tasks_field_due">Échéance</string>
+    <string name="tasks_field_priority">Priorité</string>
+    <string name="tasks_field_project">Projet</string>
+    <string name="tasks_field_tags">Étiquettes</string>
+    <string name="tasks_field_status">Statut</string>
+    <string name="tasks_no_project">Aucun projet</string>
+    <string name="tasks_no_due_date">Sans date</string>
+    <string name="tasks_add_time">Ajouter une heure</string>
+    <string name="tasks_clear_due">Effacer</string>
+    <string name="tasks_chip_custom_date">Choisir une date</string>
+    <string name="tasks_priority_none">Aucune</string>
+    <string name="tasks_priority_low">Basse</string>
+    <string name="tasks_priority_medium">Moyenne</string>
+    <string name="tasks_priority_high">Haute</string>
+    <string name="tasks_status_todo">À faire</string>
+    <string name="tasks_status_in_progress">En cours</string>
+    <string name="tasks_status_planned">Planifiée</string>
+    <string name="tasks_status_waiting">En attente</string>
+
+    <string name="tasks_quick_title">Nouvelle tâche</string>
+    <string name="tasks_add">Ajouter</string>
+    <string name="tasks_save">Enregistrer</string>
+    <string name="tasks_cancel">Annuler</string>
+    <string name="tasks_ok">OK</string>
+    <string name="tasks_action_complete">Terminer</string>
+    <string name="tasks_action_reopen">Rouvrir</string>
+    <string name="tasks_action_skip">Sauter cette occurrence</string>
+    <string name="tasks_action_delete">Supprimer</string>
+    <string name="tasks_delete_title">Supprimer la tâche ?</string>
+    <string name="tasks_delete_message">La tâche sera supprimée de Tududi.</string>
+
+    <string name="tasks_move_recurring_title">Déplacer une tâche récurrente</string>
+    <string name="tasks_move_this">Seulement cette occurrence</string>
+    <string name="tasks_move_following">Cette occurrence et les suivantes</string>
+    <string name="tasks_move_all">Toutes les occurrences</string>
+
+    <string name="tasks_connect_title">Tududi</string>
+    <string name="tasks_connected_to">Connecté à %1$s</string>
+    <string name="tasks_connected_as">Connecté à %1$s (%2$s)</string>
+    <string name="tasks_sync_now">Synchroniser maintenant</string>
+    <string name="tasks_disconnect">Se déconnecter</string>
+    <string name="tasks_disconnect_title">Se déconnecter de Tududi ?</string>
+    <string name="tasks_disconnect_message">Les données synchronisées seront effacées de cet appareil.</string>
+    <string name="tasks_scan_qr">Scanner le code QR</string>
+    <string name="tasks_or">ou</string>
+    <string name="tasks_server_address">Adresse du serveur</string>
+    <string name="tasks_api_key">Clé API</string>
+    <string name="tasks_api_key_hint">La clé est créée dans Tududi, Profil, Clés API.</string>
+    <string name="tasks_connect">Se connecter</string>
+    <string name="tasks_connect_error">Connexion impossible.</string>
+    <string name="tasks_qr_invalid">Ce code QR ne vient pas de Tududi.</string>
+</resources>

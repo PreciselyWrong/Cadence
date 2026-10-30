@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stats_rhythm_daily">Votre rythme quotidien</string>
+    <string name="stats_rhythm_weekly">Votre rythme hebdomadaire</string>
+    <string name="stats_rhythm_monthly">Votre rythme mensuel</string>
+    <string name="stats_pulse_days">Jours terminés : %1$d · une barre par jour</string>
+    <string name="stats_pulse_weeks">Semaines terminées : %1$d · une barre par semaine</string>
+    <string name="stats_pulse_months">Mois terminés : %1$d · une barre par mois</string>
+    <string name="stats_pulse_periods">Périodes terminées : %1$d · une barre par période</string>
+</resources>
