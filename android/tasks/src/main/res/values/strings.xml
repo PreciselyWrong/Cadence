@@ -25,6 +25,19 @@
     <string name="tasks_pending_sync">Modification non synchronisée</string>
     <string name="tasks_mark_done">Marquer comme terminée</string>
     <string name="tasks_mark_undone">Rouvrir la tâche</string>
+    <string name="tasks_event_untitled">Sans titre</string>
+    <string name="tasks_event_all_day">Toute la journée</string>
+    <string name="tasks_event_time_range">%1$s–%2$s</string>
+    <string name="tasks_event_meta">%1$s · %2$s</string>
+    <string name="tasks_event_mark_done">Marquer l\'événement comme fait</string>
+    <string name="tasks_event_mark_undone">Démarquer l\'événement</string>
+    <plurals name="tasks_events_count">
+        <item quantity="one">%d événement</item>
+        <item quantity="other">%d événements</item>
+    </plurals>
+    <string name="tasks_calendar_notice_title">Afficher vos agendas</string>
+    <string name="tasks_calendar_notice_allow">Autoriser</string>
+    <string name="tasks_calendar_notice_dismiss">Masquer</string>
 
     <string name="tasks_inbox_capture_hint">Capturer une idée…</string>
     <string name="tasks_inbox_empty">La boîte de réception est vide.</string>

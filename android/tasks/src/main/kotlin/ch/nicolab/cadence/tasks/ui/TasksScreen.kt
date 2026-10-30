@@ -71,6 +71,7 @@ fun TasksScreen(
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val todayState by viewModel.today.collectAsStateWithLifecycle()
+    val todayEvents by viewModel.todayEvents.collectAsStateWithLifecycle()
     val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
@@ -79,11 +80,12 @@ fun TasksScreen(
     BackHandler(enabled = openProjectUid != null) { openProjectUid = null }
 
     val overdueCount = todayState.overdue.size
+    val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
-    val subtitle = if (overdueCount > 0) {
-        "$dateLine · ${pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount)}"
-    } else {
-        dateLine
+    val subtitle = when {
+        overdueCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount)}"
+        eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
+        else -> dateLine
     }
 
     Scaffold(
@@ -110,7 +112,7 @@ fun TasksScreen(
                         tabs = listOf(
                             TabPill(
                                 stringResource(TasksTab.TODAY.label),
-                                overdueCount + todayState.today.size,
+                                overdueCount + todayState.today.size + eventCount,
                             ),
                             TabPill(
                                 stringResource(TasksTab.UPCOMING.label),

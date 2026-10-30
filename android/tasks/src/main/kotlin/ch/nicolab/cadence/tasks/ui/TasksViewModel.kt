@@ -1,8 +1,18 @@
 package ch.nicolab.cadence.tasks.ui
 
 import android.app.Application
+import android.content.Context
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import ch.nicolab.cadence.calendar.CalendarGlobalSettings
+import ch.nicolab.cadence.calendar.CalendarGraph
+import ch.nicolab.cadence.calendar.CalendarRepository
+import ch.nicolab.cadence.calendar.CalendarSurface
+import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.EventWithDone
+import ch.nicolab.cadence.calendar.TimeRange
+import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.InboxEntry
@@ -21,6 +31,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,11 +41,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private const val STOP_TIMEOUT_MS = 5_000L
+private const val CALENDAR_PREFS = "tududi_calendar_notice"
+private const val KEY_NOTICE_DISMISSED = "dismissed"
 
 /** Date et instant courants ; rafraîchis chaque minute, ce qui couvre aussi minuit. */
 internal data class Moment(val today: LocalDate, val now: Instant, val zone: ZoneId) {
@@ -57,8 +73,14 @@ internal data class ProjectRow(val project: ProjectItem, val openCount: Int)
 /** Déplacement d'une tâche récurrente en attente du choix de portée. */
 internal data class PendingMove(val taskUid: String, val date: LocalDate)
 
-internal class TasksViewModel(application: Application) : AndroidViewModel(application) {
+internal class TasksViewModel(
+    application: Application,
+    private val calendar: CalendarRepository,
+) : AndroidViewModel(application) {
+    constructor(application: Application) : this(application, CalendarGraph.repository(application))
+
     private val repository = TasksGraph.repository(application)
+    private val calendarPrefs = application.getSharedPreferences(CALENDAR_PREFS, Context.MODE_PRIVATE)
     private val genericError = application.getString(R.string.tasks_error_generic)
     private val tasks: Flow<List<TaskItem>> = repository.observeTasks()
 
@@ -74,6 +96,24 @@ internal class TasksViewModel(application: Application) : AndroidViewModel(appli
 
     val today: StateFlow<TodayState> = combine(tasks, moment) { all, m -> todayState(all, m) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TodayState())
+
+    /** Événements de l'agenda pour le jour courant ; le flux ne se relance qu'au changement de jour ou de fuseau. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val todayEvents: StateFlow<List<EventWithDone>> = moment
+        .map { it.today to it.zone }
+        .distinctUntilChanged()
+        .flatMapLatest { (day, zone) -> calendar.events(TimeRange.ofDays(day, 1, zone), CalendarSurface.TASKS) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    val calendarSettings: StateFlow<CalendarGlobalSettings> = calendar.globalSettings
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), CalendarGlobalSettings())
+
+    private val calendarNoticeDismissed = MutableStateFlow(calendarPrefs.getBoolean(KEY_NOTICE_DISMISSED, false))
+
+    /** Carte « Afficher vos agendas » : tant que la permission manque et que l'utilisateur ne l'a pas masquée. */
+    val calendarNoticeVisible: StateFlow<Boolean> = combine(calendar.permissionMissing, calendarNoticeDismissed) { missing, dismissed ->
+        missing && !dismissed
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), false)
 
     val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(tasks, moment) { all, m ->
         TaskViews.upcoming(all, m.today, m.now)
@@ -157,6 +197,17 @@ internal class TasksViewModel(application: Application) : AndroidViewModel(appli
     fun deleteInboxItem(uid: String) = launchAction { repository.deleteInboxItem(uid) }
 
     fun requestSync() = repository.requestSync()
+
+    /** Coche ou décoche un événement, dans Cadence seulement : le fournisseur d'agendas n'est jamais modifié. */
+    fun toggleEvent(key: EventInstanceKey) = launchAction { calendar.toggleDone(key) }
+
+    /** À appeler après l'octroi de READ_CALENDAR, pour relire les agendas sans attendre le prochain changement. */
+    fun refreshCalendar() = calendar.refresh()
+
+    fun dismissCalendarNotice() {
+        calendarPrefs.edit { putBoolean(KEY_NOTICE_DISMISSED, true) }
+        calendarNoticeDismissed.value = true
+    }
 
     private fun launchAction(block: suspend () -> Unit) {
         viewModelScope.launch {
