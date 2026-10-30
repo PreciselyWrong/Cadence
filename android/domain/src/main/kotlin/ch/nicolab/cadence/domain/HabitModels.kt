@@ -241,6 +241,9 @@ data class HabitEntry(
 /** Valeurs persistées de provenance d'une saisie, avec un préfixe stable pour Health Connect. */
 object HabitEntrySource {
     const val MANUAL = "MANUAL"
+
+    /** Saisie créée en répondant à une question apprise. */
+    const val LEARNED_QUESTION = "LEARNED_QUESTION"
     private const val HEALTH_CONNECT_PREFIX = "HEALTH_CONNECT:"
 
     fun healthConnect(dataOriginPackage: String): String {

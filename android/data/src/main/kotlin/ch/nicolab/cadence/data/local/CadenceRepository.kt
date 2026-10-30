@@ -13,6 +13,11 @@ import ch.nicolab.cadence.data.local.entities.HabitScheduleEntity
 import ch.nicolab.cadence.data.local.entities.HabitTimerEntity
 import ch.nicolab.cadence.data.local.entities.HealthConnectImportEntity
 import ch.nicolab.cadence.data.local.entities.HealthConnectRuleEntity
+import ch.nicolab.cadence.data.local.entities.LearnedQuestionRecordEntity
+import ch.nicolab.cadence.data.local.entities.LearnedQuestionSettingsEntity
+import ch.nicolab.cadence.domain.LearnedQuestionOutcome
+import ch.nicolab.cadence.domain.LearnedQuestionRecord
+import ch.nicolab.cadence.domain.LearnedQuestionSettings
 import ch.nicolab.cadence.data.local.entities.WidgetConfigurationEntity
 import ch.nicolab.cadence.data.local.entities.WidgetHabitEntity
 import ch.nicolab.cadence.data.local.model.HabitWithGoalAndSchedule
@@ -972,6 +977,18 @@ class CadenceRepository(
                 BackupAbstinenceLogV2(log.id, log.habitId, log.occurredAtEpochMs, log.localDate,
                     log.observedZoneId, log.kind, log.intensity, log.note)
             },
+            learnedQuestionSettings = database.learnedQuestionDao().getAllSettings().map { s ->
+                BackupLearnedQuestionSettingsV3(
+                    habitId = s.habitId,
+                    enabled = s.enabled,
+                    askAt = s.askAt,
+                    thresholdPercent = s.thresholdPercent,
+                    mutedWeekdays = s.mutedWeekdays.split(",").filter(String::isNotBlank),
+                )
+            },
+            learnedQuestionRecords = database.learnedQuestionDao().getAllRecords().map { r ->
+                BackupLearnedQuestionRecordV3(r.habitId, r.localDate, r.outcome, r.valueMinor, r.recordedAtEpochMs)
+            },
             alcoholConsumptions = database.alcoholConsumptionDao().getAllConsumptions().map { consumption ->
                 BackupAlcoholConsumptionV3(
                     id = consumption.id,
@@ -1003,6 +1020,7 @@ class CadenceRepository(
 
         validateBackupV2(docV2)
         val journal = validateBackupJournal(docV2)
+        validateBackupLearnedQuestions(docV2)
 
         database.withTransaction {
             database.clearAllTables()
@@ -1082,6 +1100,30 @@ class CadenceRepository(
             }
 
             journal.forEach { database.abstinenceLogDao().save(it) }
+
+            docV2.learnedQuestionSettings.forEach { s ->
+                database.learnedQuestionDao().saveSettings(
+                    LearnedQuestionSettingsEntity(
+                        habitId = s.habitId,
+                        enabled = s.enabled,
+                        askAt = s.askAt,
+                        thresholdPercent = s.thresholdPercent,
+                        mutedWeekdays = s.mutedWeekdays.joinToString(","),
+                    ),
+                )
+            }
+
+            docV2.learnedQuestionRecords.forEach { r ->
+                database.learnedQuestionDao().insertRecord(
+                    LearnedQuestionRecordEntity(
+                        habitId = r.habitId,
+                        localDate = r.localDate,
+                        outcome = r.outcome,
+                        valueMinor = r.valueMinor,
+                        recordedAtEpochMs = r.recordedAtEpochMs,
+                    ),
+                )
+            }
 
             docV2.alcoholConsumptions.forEach { consumption ->
                 database.alcoholConsumptionDao().save(
@@ -1180,6 +1222,39 @@ class CadenceRepository(
                 )
                 database.widgetConfigDao().saveWidgetConfiguration(entity, w.selectedHabitIds)
             }
+        }
+    }
+
+    /**
+     * Les valeurs sont relues par les types du domaine : un fichier invalide échoue avant
+     * que la transaction n'efface les données actuelles.
+     */
+    private fun validateBackupLearnedQuestions(doc: BackupDocument) {
+        val habitIds = doc.habits.map { it.id }.toSet()
+        val settingsHabitIds = mutableSetOf<String>()
+        doc.learnedQuestionSettings.forEach { s ->
+            require(s.habitId in habitIds) { "Learned question settings reference a missing habit" }
+            require(settingsHabitIds.add(s.habitId)) { "Duplicate learned question settings" }
+            LearnedQuestionSettings(
+                habitId = s.habitId,
+                enabled = s.enabled,
+                askAt = LocalTime.parse(s.askAt),
+                thresholdPercent = s.thresholdPercent,
+                mutedWeekdays = s.mutedWeekdays.map(DayOfWeek::valueOf).toSet(),
+            )
+        }
+        val recordKeys = mutableSetOf<Pair<String, LocalDate>>()
+        doc.learnedQuestionRecords.forEach { r ->
+            require(r.habitId in habitIds) { "Learned question record references a missing habit" }
+            val date = LocalDate.parse(r.localDate)
+            require(recordKeys.add(r.habitId to date)) { "Duplicate learned question record" }
+            LearnedQuestionRecord(
+                habitId = r.habitId,
+                date = date,
+                outcome = LearnedQuestionOutcome.valueOf(r.outcome),
+                valueMinor = r.valueMinor,
+                recordedAt = Instant.ofEpochMilli(r.recordedAtEpochMs),
+            )
         }
     }
 
