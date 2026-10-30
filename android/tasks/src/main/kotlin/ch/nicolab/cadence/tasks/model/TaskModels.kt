@@ -107,6 +107,19 @@ data class NoteItem(
     val color: String? = null,
     val updatedAt: Instant? = null,
     val pendingSync: Boolean = false,
+    val pinned: Boolean = false,
+)
+
+/** Modification d'une note ; un champ nul est laissé tel quel. */
+data class NoteChange(
+    val title: String? = null,
+    val content: String? = null,
+    val color: String? = null,
+    val clearColor: Boolean = false,
+    val pinned: Boolean? = null,
+    val projectUid: String? = null,
+    val clearProject: Boolean = false,
+    val tagUids: List<String>? = null,
 )
 
 data class InboxEntry(

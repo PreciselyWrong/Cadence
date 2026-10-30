@@ -102,7 +102,20 @@ internal object WireCodec {
         projectUid = wire.string("project_uid"),
         tagUidsJson = (wire["tag_uids"] as? JsonArray ?: JsonArray(emptyList())).toString(),
         updatedAtRaw = wire.string("updated_at"),
+        pinned = wire.bool("pin_to_sidebar"),
     )
+
+    /** Ligne locale au format serveur : base des écritures partielles d'une note. */
+    fun noteToWire(note: NoteEntity): JsonObject = buildJsonObject {
+        put("uid", note.uid)
+        put("title", note.title)
+        put("content", note.content)
+        put("color", note.color)
+        put("project_uid", note.projectUid)
+        put("tag_uids", json.parseToJsonElement(note.tagUidsJson))
+        put("updated_at", note.updatedAtRaw)
+        put("pin_to_sidebar", note.pinned)
+    }
 
     fun inboxFromWire(wire: JsonObject) = InboxItemEntity(
         uid = wire.requireString("uid"),

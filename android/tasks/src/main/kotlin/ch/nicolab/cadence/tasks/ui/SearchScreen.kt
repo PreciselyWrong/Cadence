@@ -226,7 +226,7 @@ fun SearchScreen(
         selectedTaskUid = selectedTaskUid,
         onCloseTask = { selectedTaskUid = null },
     )
-    selectedNoteUid?.let { uid -> NoteScreen(viewModel, uid, onBack = { selectedNoteUid = null }) }
+    selectedNoteUid?.let { uid -> NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null }) }
 }
 
 @Composable
