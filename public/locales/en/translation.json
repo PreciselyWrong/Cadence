@@ -992,7 +992,12 @@
       "modeRead": "Read only",
       "modeTwoWay": "Two-way",
       "taskCalendar": "Calendar for tasks with a time",
-      "taskCalendarDefault": "Cadence (made by the sync)"
+      "taskCalendarDefault": "Cadence (made by the sync)",
+      "log": "Sync log",
+      "logEmpty": "Nothing recorded yet",
+      "logInfo": "Info",
+      "logConflict": "Conflict",
+      "logError": "Error"
     },
     "sidebarSmartListsTitle": "Smart lists",
     "sidebarRailTitle": "Icon rail and More",

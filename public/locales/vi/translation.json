@@ -965,7 +965,12 @@
       "modeRead": "Chỉ đọc",
       "modeTwoWay": "Hai chiều",
       "taskCalendar": "Lịch cho công việc có giờ",
-      "taskCalendarDefault": "Cadence (do đồng bộ tạo)"
+      "taskCalendarDefault": "Cadence (do đồng bộ tạo)",
+      "log": "Nhật ký đồng bộ",
+      "logEmpty": "Chưa có ghi nhận nào",
+      "logInfo": "Thông tin",
+      "logConflict": "Xung đột",
+      "logError": "Lỗi"
     },
     "sidebarSmartListsTitle": "Danh sách thông minh",
     "sidebarRailTitle": "Thanh biểu tượng và Khác",

@@ -161,6 +161,13 @@ async function syncTasks(ctx, account) {
                     return;
                 }
                 // Deleted in Google Tasks: done in Cadence, not deleted.
+                if (!local.isDone(task)) {
+                    ctx.log?.(
+                        'info',
+                        `"${task.name}" was deleted in Google Tasks: marked done`,
+                        task.uid
+                    );
+                }
                 await local.markDone(task, user);
                 await task.reload();
                 await link.update({
@@ -204,11 +211,17 @@ async function syncTasks(ctx, account) {
             const localChanged =
                 hash(localTaskProjection(task, timezone)) !== link.local_hash;
             // Both sides changed: the later edit wins.
-            if (
-                localChanged &&
-                new Date(task.updated_at) > new Date(item.updated || 0)
-            ) {
-                return;
+            if (localChanged) {
+                const cadenceWins =
+                    new Date(task.updated_at) > new Date(item.updated || 0);
+                ctx.log?.(
+                    'conflict',
+                    `"${task.name}" changed in Cadence and in Google Tasks: the ${
+                        cadenceWins ? 'Cadence' : 'Google'
+                    } edit, made later, was kept`,
+                    task.uid
+                );
+                if (cadenceWins) return;
             }
 
             const { attrs, completion } = fromGoogleTask(item, task, timezone);
@@ -255,87 +268,99 @@ async function syncTasks(ctx, account) {
 
     // Push: Tududi -> Google
     for (const task of local.parentsFirst([...tasksById.values()])) {
-        await guard(ctx, 'push', async () => {
-            const link = byTask.get(task.id);
-            if (!local.belongsInTasks(task, ctx.account)) {
-                // Hidden, or timed and on the calendar instead.
-                if (link) {
-                    if (!isTombstone(link)) {
+        await guard(
+            ctx,
+            'push',
+            async () => {
+                const link = byTask.get(task.id);
+                if (!local.belongsInTasks(task, ctx.account)) {
+                    // Hidden, or timed and on the calendar instead.
+                    if (link) {
+                        if (!isTombstone(link)) {
+                            await client.deleteTask(
+                                link.container_id,
+                                link.google_id
+                            );
+                        }
+                        await link.destroy();
+                        byTask.delete(task.id);
+                    }
+                    return;
+                }
+
+                const localHash = hash(localTaskProjection(task, timezone));
+                if (link && localHash === link.local_hash) return;
+
+                const parentCandidate = task.parent_task_id
+                    ? byTask.get(task.parent_task_id)
+                    : null;
+                const parentLink = isTombstone(parentCandidate)
+                    ? null
+                    : parentCandidate;
+                // A subtask lives in its parent's list on Google.
+                const list =
+                    (parentLink &&
+                        ctx.lists.find(
+                            (row) => row.google_id === parentLink.container_id
+                        )) ||
+                    (await listForProject(ctx, task.project_id));
+                const body = toGoogleTask(task, timezone);
+
+                if (
+                    !link ||
+                    isTombstone(link) ||
+                    link.container_id !== list.google_id
+                ) {
+                    if (link && !isTombstone(link))
                         await client.deleteTask(
                             link.container_id,
                             link.google_id
                         );
-                    }
-                    await link.destroy();
-                    byTask.delete(task.id);
+                    const created = await client.insertTask(
+                        list.google_id,
+                        body,
+                        {
+                            parent: parentLink?.google_id,
+                        }
+                    );
+                    const fields = {
+                        user_id: user.id,
+                        task_id: task.id,
+                        kind: 'task',
+                        container_id: list.google_id,
+                        google_id: created.id,
+                        local_hash: localHash,
+                        remote_hash: hash(
+                            remoteTaskProjection(created, list.google_id)
+                        ),
+                    };
+                    const saved = link
+                        ? await link.update(fields)
+                        : await GoogleTaskLink.create(fields);
+                    byTask.set(task.id, saved);
+                    byGoogle.set(created.id, saved);
+                    return;
                 }
-                return;
-            }
 
-            const localHash = hash(localTaskProjection(task, timezone));
-            if (link && localHash === link.local_hash) return;
-
-            const parentCandidate = task.parent_task_id
-                ? byTask.get(task.parent_task_id)
-                : null;
-            const parentLink = isTombstone(parentCandidate)
-                ? null
-                : parentCandidate;
-            // A subtask lives in its parent's list on Google.
-            const list =
-                (parentLink &&
-                    ctx.lists.find(
-                        (row) => row.google_id === parentLink.container_id
-                    )) ||
-                (await listForProject(ctx, task.project_id));
-            const body = toGoogleTask(task, timezone);
-
-            if (
-                !link ||
-                isTombstone(link) ||
-                link.container_id !== list.google_id
-            ) {
-                if (link && !isTombstone(link))
-                    await client.deleteTask(link.container_id, link.google_id);
-                const created = await client.insertTask(list.google_id, body, {
-                    parent: parentLink?.google_id,
-                });
-                const fields = {
-                    user_id: user.id,
-                    task_id: task.id,
-                    kind: 'task',
-                    container_id: list.google_id,
-                    google_id: created.id,
-                    local_hash: localHash,
-                    remote_hash: hash(
-                        remoteTaskProjection(created, list.google_id)
-                    ),
-                };
-                const saved = link
-                    ? await link.update(fields)
-                    : await GoogleTaskLink.create(fields);
-                byTask.set(task.id, saved);
-                byGoogle.set(created.id, saved);
-                return;
-            }
-
-            let updated = await client.patchTask(
-                list.google_id,
-                link.google_id,
-                body
-            );
-            const parentGoogleId = parentLink?.google_id || null;
-            if ((updated.parent || null) !== parentGoogleId) {
-                updated = await client.moveTask(
+                let updated = await client.patchTask(
                     list.google_id,
                     link.google_id,
-                    {
-                        parent: parentGoogleId || undefined,
-                    }
+                    body
                 );
-            }
-            await relink(link, task, updated, list);
-        });
+                const parentGoogleId = parentLink?.google_id || null;
+                if ((updated.parent || null) !== parentGoogleId) {
+                    updated = await client.moveTask(
+                        list.google_id,
+                        link.google_id,
+                        {
+                            parent: parentGoogleId || undefined,
+                        }
+                    );
+                }
+                await relink(link, task, updated, list);
+            },
+            task.uid
+        );
     }
 
     // A pull that failed for an item asks again next time.

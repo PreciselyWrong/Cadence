@@ -967,7 +967,12 @@
       "modeRead": "Samo branje",
       "modeTwoWay": "Dvosmerno",
       "taskCalendar": "Koledar za opravila s časom",
-      "taskCalendarDefault": "Cadence (ustvarila sinhronizacija)"
+      "taskCalendarDefault": "Cadence (ustvarila sinhronizacija)",
+      "log": "Dnevnik sinhronizacije",
+      "logEmpty": "Še nič zabeleženo",
+      "logInfo": "Info",
+      "logConflict": "Spor",
+      "logError": "Napaka"
     },
     "sidebarSmartListsTitle": "Pametni seznami",
     "sidebarRailTitle": "Vrstica ikon in Več",

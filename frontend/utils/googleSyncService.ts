@@ -36,6 +36,13 @@ export interface GoogleStatus {
     calendars: GoogleCalendar[];
 }
 
+export interface GoogleSyncLogEntry {
+    created_at: string;
+    kind: 'info' | 'conflict' | 'error';
+    message: string;
+    task_uid: string | null;
+}
+
 export interface GoogleEventInput {
     calendar_uid?: string;
     title?: string;
@@ -99,6 +106,18 @@ export const updateGoogleSettings = async (data: {
         }),
         'Could not save the Google settings.'
     );
+
+// Last entries of the sync log, newest first.
+export const fetchGoogleSyncLog = async (): Promise<GoogleSyncLogEntry[]> => {
+    const body = await json(
+        await fetch(getApiPath('google/log'), {
+            credentials: 'include',
+            headers: getDefaultHeaders(),
+        }),
+        'Could not load the Google sync log.'
+    );
+    return body.entries || [];
+};
 
 export const syncGoogleNow = async (): Promise<GoogleStatus> =>
     json(

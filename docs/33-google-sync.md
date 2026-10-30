@@ -59,7 +59,17 @@ With only one switch on, that side takes every task it can hold: calendars only 
 
 - The server syncs every `GOOGLE_SYNC_INTERVAL_MINUTES` (default 2), and right after connecting or changing a setting. **Sync now** in Profile → Calendars runs it at once. Edits made from Cadence's Calendar page go to Google immediately.
 - Calendars use Google's sync tokens (only changes are fetched; an expired token restarts a full read). Google Tasks has no sync token: the sync asks for items updated since the last run.
-- Each linked item keeps a hash of its synced fields on both sides (`google_task_links`). When only one side changed, it wins. When both changed since the last sync, the later edit wins (`tasks.updated_at` against Google's `updated`).
+- Each linked item keeps a hash of its synced fields on both sides (`google_task_links`). When only one side changed, it wins. When both changed since the last sync, the later edit wins (`tasks.updated_at` against Google's `updated`), and the **sync log** records the conflict and which side was kept.
+
+### Sync log
+
+Profile → Calendars → **Sync log** (collapsed; loaded when opened, refreshed after each sync) lists the user's last 50 entries, newest first: time, kind and message, linked to the task when there is one.
+
+- **conflict**: an item changed on both sides; says which edit was kept.
+- **error**: an item Google refused (the run goes on), or a whole run that failed. `last_error` on the account still holds the latest run's summary, as before.
+- **info**: a task marked done because its Google Task was deleted, task events moved to another calendar.
+
+Entries are written at the end of each run (`google_sync_logs`); older ones are dropped. Disconnecting clears the log.
 
 ## Setup (administrator)
 
@@ -94,6 +104,7 @@ All under `/api`, signed in.
 | GET            | `/google/oauth/callback`               | Google sends the browser back here; redirects to `/calendar?google=connected`                                                         |
 | DELETE         | `/google`                              | Disconnect                                                                                                                            |
 | PATCH          | `/google/settings`                     | `{ sync_events, sync_tasks, task_calendar_uid }` (null: "Cadence")                                                                                                       |
+| GET            | `/google/log`                          | `{ entries: [{ created_at, kind, message, task_uid }] }`, last 50, newest first |
 | POST           | `/google/sync`                         | Sync now                                                                                                                              |
 | PATCH          | `/google/calendars/:uid`               | `{ show_on_calendar, sync_mode }` (`hidden`, `read`, `two_way`)                                                                                                              |
 | POST           | `/google/events`                       | `{ calendar_uid, title, description, location, all_day, start, end }` or `{ …, all_day: true, start_date, end_date }` (end exclusive) |
@@ -103,7 +114,7 @@ Google events are also returned by `GET /api/calendar-feeds/events` with `source
 
 ## Schema
 
-`google_accounts` (one per user, tokens encrypted, `task_calendar_id`), `google_calendars` (calendar list, `show_on_calendar`, `sync_mode`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes). Migrations `20261030090000-create-google-sync.js`, `20261030120000-add-sync-mode-to-google-calendars.js`, `20261030130000-add-task-calendar-to-google-accounts.js`.
+`google_accounts` (one per user, tokens encrypted, `task_calendar_id`), `google_calendars` (calendar list, `show_on_calendar`, `sync_mode`, sync token, `is_tududi`), `google_events` (copies of other calendars' events), `google_tasklists` (list ↔ project), `google_task_links` (task ↔ Google event or Google task, with the hashes), `google_sync_logs` (last 50 entries per user). Migrations `20261030090000-create-google-sync.js`, `20261030120000-add-sync-mode-to-google-calendars.js`, `20261030130000-add-task-calendar-to-google-accounts.js`, `20261030140000-create-google-sync-logs.js`.
 
 ## Limits
 

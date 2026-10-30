@@ -1333,7 +1333,12 @@
       "modeRead": "Nur lesen",
       "modeTwoWay": "In beide Richtungen",
       "taskCalendar": "Kalender für Aufgaben mit Uhrzeit",
-      "taskCalendarDefault": "Cadence (von der Synchronisierung erstellt)"
+      "taskCalendarDefault": "Cadence (von der Synchronisierung erstellt)",
+      "log": "Synchronisierungsprotokoll",
+      "logEmpty": "Noch nichts aufgezeichnet",
+      "logInfo": "Info",
+      "logConflict": "Konflikt",
+      "logError": "Fehler"
     },
     "sidebarSmartListsTitle": "Intelligente Listen",
     "sidebarRailTitle": "Symbolleiste und Mehr",

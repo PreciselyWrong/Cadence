@@ -966,7 +966,12 @@
       "modeRead": "Kun lesing",
       "modeTwoWay": "Begge veier",
       "taskCalendar": "Kalender for oppgaver med klokkeslett",
-      "taskCalendarDefault": "Cadence (laget av synkroniseringen)"
+      "taskCalendarDefault": "Cadence (laget av synkroniseringen)",
+      "log": "Synkroniseringslogg",
+      "logEmpty": "Ingenting registrert ennå",
+      "logInfo": "Info",
+      "logConflict": "Konflikt",
+      "logError": "Feil"
     },
     "sidebarSmartListsTitle": "Smarte lister",
     "sidebarRailTitle": "Ikonlinje og Mer",

@@ -1454,7 +1454,12 @@
       "modeRead": "Лише читання",
       "modeTwoWay": "В обидва боки",
       "taskCalendar": "Календар для завдань із часом",
-      "taskCalendarDefault": "Cadence (створений синхронізацією)"
+      "taskCalendarDefault": "Cadence (створений синхронізацією)",
+      "log": "Журнал синхронізації",
+      "logEmpty": "Поки що нічого не записано",
+      "logInfo": "Інфо",
+      "logConflict": "Конфлікт",
+      "logError": "Помилка"
     },
     "sidebarSmartListsTitle": "Розумні списки",
     "sidebarRailTitle": "Панель значків і Ще",

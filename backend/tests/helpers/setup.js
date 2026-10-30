@@ -46,6 +46,7 @@ const CLEANUP_TABLES = [
     'daily_plans',
     'calendar_feeds',
     'focus_sessions',
+    'google_sync_logs',
     'google_task_links',
     'google_events',
     'google_calendars',

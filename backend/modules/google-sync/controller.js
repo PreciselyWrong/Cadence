@@ -2,6 +2,7 @@
 
 const accountService = require('./accountService');
 const eventsService = require('./eventsService');
+const syncLog = require('./syncLog');
 const { syncUser } = require('./syncEngine');
 const { GoogleApiError, GoogleAuthRevokedError } = require('./client');
 const { UnauthorizedError } = require('../../shared/errors');
@@ -81,6 +82,10 @@ module.exports = {
         const result = await accountService.updateSettings(user.id, req.body);
         startBackgroundSync(user.id);
         res.json(result);
+    }),
+
+    log: handle(async (req, res, user) => {
+        res.json({ entries: await syncLog.list(user.id) });
     }),
 
     syncNow: handle(async (req, res, user) => {

@@ -822,7 +822,12 @@
       "modeRead": "Μόνο ανάγνωση",
       "modeTwoWay": "Αμφίδρομα",
       "taskCalendar": "Ημερολόγιο για εργασίες με ώρα",
-      "taskCalendarDefault": "Cadence (δημιουργήθηκε από τον συγχρονισμό)"
+      "taskCalendarDefault": "Cadence (δημιουργήθηκε από τον συγχρονισμό)",
+      "log": "Αρχείο συγχρονισμού",
+      "logEmpty": "Δεν έχει καταγραφεί τίποτα ακόμη",
+      "logInfo": "Πληροφορία",
+      "logConflict": "Σύγκρουση",
+      "logError": "Σφάλμα"
     },
     "sidebarSmartListsTitle": "Έξυπνες λίστες",
     "sidebarRailTitle": "Γραμμή εικονιδίων και Περισσότερα",

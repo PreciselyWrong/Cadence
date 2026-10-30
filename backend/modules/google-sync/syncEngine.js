@@ -6,6 +6,7 @@ const { logError } = require('../../services/logService');
 const { GoogleClient, GoogleAuthRevokedError } = require('./client');
 const { syncCalendars } = require('./calendarsSync');
 const { syncTasks } = require('./tasksSync');
+const syncLog = require('./syncLog');
 
 // One run per user at a time in this process.
 const running = new Map();
@@ -18,6 +19,7 @@ async function runSync(account) {
         account,
         client: new GoogleClient(account),
         timezone: getSafeTimezone(user.timezone),
+        log: syncLog.collector(),
     };
     try {
         if (account.sync_events) await syncCalendars(ctx, account);
@@ -39,7 +41,14 @@ async function runSync(account) {
                 : `Google sync failed: ${error.message}`;
         logError(`Google sync for user ${account.user_id} failed:`, error);
         await account.update({ last_error: message.slice(0, 1000) });
+        ctx.log('error', message);
         throw error;
+    } finally {
+        try {
+            await syncLog.write(account.user_id, ctx.log.entries);
+        } catch (error) {
+            logError('Could not write the Google sync log:', error);
+        }
     }
 }
 

@@ -965,7 +965,12 @@
       "modeRead": "Само за четене",
       "modeTwoWay": "Двупосочно",
       "taskCalendar": "Календар за задачи с час",
-      "taskCalendarDefault": "Cadence (създаден от синхронизацията)"
+      "taskCalendarDefault": "Cadence (създаден от синхронизацията)",
+      "log": "Дневник на синхронизацията",
+      "logEmpty": "Все още няма записи",
+      "logInfo": "Инфо",
+      "logConflict": "Конфликт",
+      "logError": "Грешка"
     },
     "sidebarSmartListsTitle": "Умни списъци",
     "sidebarRailTitle": "Икони и меню „Още“",

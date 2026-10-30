@@ -965,7 +965,12 @@
       "modeRead": "Hanya baca",
       "modeTwoWay": "Dua arah",
       "taskCalendar": "Kalender untuk tugas dengan waktu",
-      "taskCalendarDefault": "Cadence (dibuat oleh sinkronisasi)"
+      "taskCalendarDefault": "Cadence (dibuat oleh sinkronisasi)",
+      "log": "Log sinkronisasi",
+      "logEmpty": "Belum ada catatan",
+      "logInfo": "Info",
+      "logConflict": "Konflik",
+      "logError": "Galat"
     },
     "sidebarSmartListsTitle": "Daftar pintar",
     "sidebarRailTitle": "Rel ikon dan Lainnya",

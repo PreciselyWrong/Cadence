@@ -966,7 +966,12 @@
       "modeRead": "Sola lettura",
       "modeTwoWay": "Bidirezionale",
       "taskCalendar": "Calendario per le attività con orario",
-      "taskCalendarDefault": "Cadence (creato dalla sincronizzazione)"
+      "taskCalendarDefault": "Cadence (creato dalla sincronizzazione)",
+      "log": "Registro di sincronizzazione",
+      "logEmpty": "Ancora nulla di registrato",
+      "logInfo": "Info",
+      "logConflict": "Conflitto",
+      "logError": "Errore"
     },
     "sidebarSmartListsTitle": "Elenchi intelligenti",
     "sidebarRailTitle": "Barra icone e Altro",

@@ -8,6 +8,7 @@ const {
     GoogleCalendar,
     GoogleEvent,
     GoogleTaskLink,
+    GoogleSyncLog,
 } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 const { createFakeGoogle } = require('../helpers/fakeGoogle');
@@ -775,6 +776,81 @@ describe('Google sync', () => {
             expect(
                 await GoogleTaskLink.count({ where: { kind: 'event' } })
             ).toBe(1);
+        });
+    });
+
+    describe('sync log', () => {
+        const defaultList = () => google.state.defaultListId;
+        const log = async () => {
+            const res = await agent.get('/api/google/log');
+            expect(res.status).toBe(200);
+            return res.body.entries;
+        };
+
+        it('records a conflict, which side won, and a task finished by a deletion', async () => {
+            const task = await createTask({ name: 'Both edited' });
+            await connect();
+            expect(await log()).toEqual([]);
+
+            await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ name: 'Edited in Cadence' });
+            const [remote] = liveTasks(defaultList());
+            // Google's edit is stamped after Cadence's: Google wins.
+            google.putTask(defaultList(), {
+                ...remote,
+                title: 'Edited in Google',
+            });
+            await syncUser(user.id);
+            await task.reload();
+            expect(task.name).toBe('Edited in Google');
+            let entries = await log();
+            expect(entries).toHaveLength(1);
+            expect(entries[0]).toMatchObject({
+                kind: 'conflict',
+                task_uid: task.uid,
+            });
+            expect(entries[0].message).toMatch(/Google edit/);
+            expect(entries[0].created_at).toBeTruthy();
+
+            const [again] = liveTasks(defaultList());
+            google.putTask(defaultList(), { ...again, deleted: true });
+            await syncUser(user.id);
+            entries = await log();
+            expect(entries[0].kind).toBe('info');
+            expect(entries[0].message).toMatch(/marked done/);
+        });
+
+        it('records errors and keeps only the last entries', async () => {
+            await createTask({ name: 'Refused' });
+            client.setFetch((url, options) => {
+                if (
+                    options?.method === 'POST' &&
+                    url.includes('/tasks') &&
+                    String(options.body).includes('Refused')
+                ) {
+                    return Promise.resolve({
+                        ok: false,
+                        status: 400,
+                        text: async () =>
+                            '{"error":{"message":"Invalid value"}}',
+                    });
+                }
+                return google.fetch(url, options);
+            });
+            await connect();
+            const entries = await log();
+            expect(entries).toHaveLength(1);
+            expect(entries[0].kind).toBe('error');
+            expect(entries[0].message).toMatch(/Invalid value/);
+            expect(entries[0].task_uid).toBeTruthy();
+
+            for (let i = 0; i < 55; i += 1) await syncUser(user.id);
+            expect(await log()).toHaveLength(50);
+            expect(await GoogleSyncLog.count()).toBe(50);
+
+            await agent.delete('/api/google');
+            expect(await GoogleSyncLog.count()).toBe(0);
         });
     });
 

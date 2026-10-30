@@ -5,6 +5,7 @@ import GoogleSyncSection from '../GoogleSyncSection';
 import {
     updateGoogleCalendar,
     updateGoogleSettings,
+    fetchGoogleSyncLog,
 } from '../../../utils/googleSyncService';
 
 jest.mock('react-i18next', () => {
@@ -132,5 +133,37 @@ describe('GoogleSyncSection', () => {
                 expect.objectContaining({ task_calendar_uid: 'me' })
             )
         );
+    });
+
+    it('opens the sync log on demand', async () => {
+        (fetchGoogleSyncLog as jest.Mock).mockResolvedValue([
+            {
+                created_at: '2026-10-30T10:00:00.000Z',
+                kind: 'conflict',
+                message: '"Report" changed on both sides',
+                task_uid: 'abc',
+            },
+            {
+                created_at: '2026-10-30T09:00:00.000Z',
+                kind: 'error',
+                message: 'To Google: Invalid value',
+                task_uid: null,
+            },
+        ]);
+        render(<GoogleSyncSection status={status()} />);
+        expect(fetchGoogleSyncLog).not.toHaveBeenCalled();
+        const toggle = screen.getByRole('button', { name: /Sync log/ });
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        fireEvent.click(toggle);
+        expect(
+            await screen.findByText('"Report" changed on both sides')
+        ).toHaveAttribute('href', '/task/abc');
+        expect(screen.getByText('Conflict')).toBeInTheDocument();
+        expect(screen.getByText('Error')).toBeInTheDocument();
+        expect(
+            screen.getByText('To Google: Invalid value')
+        ).toBeInTheDocument();
+        fireEvent.click(toggle);
+        expect(screen.queryByText('Conflict')).toBeNull();
     });
 });

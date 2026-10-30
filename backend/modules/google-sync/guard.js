@@ -4,7 +4,7 @@ const { logError } = require('../../services/logService');
 
 // Runs one item's sync step. A failing item is logged and counted instead of
 // stopping the run; a failed pull keeps the sync token so it is retried.
-async function guard(ctx, phase, fn) {
+async function guard(ctx, phase, fn, taskUid = null) {
     try {
         await fn();
     } catch (error) {
@@ -12,6 +12,11 @@ async function guard(ctx, phase, fn) {
         if (phase === 'pull') ctx.pullFailed = true;
         ctx.itemErrors = ctx.itemErrors || [];
         ctx.itemErrors.push(error.message);
+        ctx.log?.(
+            'error',
+            `${phase === 'pull' ? 'From Google' : 'To Google'}: ${error.message}`,
+            taskUid
+        );
         logError(`Google sync (${phase}) skipped an item:`, error);
     }
 }

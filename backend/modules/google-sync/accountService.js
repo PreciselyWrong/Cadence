@@ -12,6 +12,7 @@ const {
 const secretCipher = require('../../shared/crypto/secretCipher');
 const { ValidationError, NotFoundError } = require('../../shared/errors');
 const { getGoogleConfig, isConfigured } = require('./config');
+const syncLog = require('./syncLog');
 const client = require('./client');
 const {
     isWritable,
@@ -250,6 +251,7 @@ async function disconnect(userId) {
     await GoogleEvent.destroy({ where: { user_id: userId } });
     await GoogleCalendar.destroy({ where: { user_id: userId } });
     await GoogleTasklist.destroy({ where: { user_id: userId } });
+    await syncLog.clear(userId);
     await account.destroy();
 }
 

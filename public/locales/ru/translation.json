@@ -967,7 +967,12 @@
       "modeRead": "Только чтение",
       "modeTwoWay": "В обе стороны",
       "taskCalendar": "Календарь для задач со временем",
-      "taskCalendarDefault": "Cadence (создан синхронизацией)"
+      "taskCalendarDefault": "Cadence (создан синхронизацией)",
+      "log": "Журнал синхронизации",
+      "logEmpty": "Пока ничего не записано",
+      "logInfo": "Инфо",
+      "logConflict": "Конфликт",
+      "logError": "Ошибка"
     },
     "sidebarSmartListsTitle": "Умные списки",
     "sidebarRailTitle": "Панель значков и Ещё",

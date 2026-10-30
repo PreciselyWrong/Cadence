@@ -153,7 +153,14 @@ async function syncTaskCalendar(ctx, calendar) {
     });
     // The target changed: events in the previous calendar are deleted there
     // and pushed again here.
-    for (const link of links.filter((l) => l.container_id !== calendarId)) {
+    const moving = links.filter((l) => l.container_id !== calendarId);
+    if (moving.length) {
+        ctx.log?.(
+            'info',
+            `Moving ${moving.length} task event(s) to "${calendar.summary}"`
+        );
+    }
+    for (const link of moving) {
         await guard(ctx, 'push', async () => {
             await client.deleteEvent(link.container_id, link.google_id);
             await link.update({
@@ -264,11 +271,17 @@ async function syncTaskCalendar(ctx, calendar) {
             if (!task || remoteHash === link.remote_hash) return;
             const localChanged =
                 hash(localEventProjection(task, timezone)) !== link.local_hash;
-            if (
-                localChanged &&
-                new Date(task.updated_at) > new Date(event.updated || 0)
-            ) {
-                return;
+            if (localChanged) {
+                const cadenceWins =
+                    new Date(task.updated_at) > new Date(event.updated || 0);
+                ctx.log?.(
+                    'conflict',
+                    `"${task.name}" changed in Cadence and in Google Calendar: the ${
+                        cadenceWins ? 'Cadence' : 'Google'
+                    } edit, made later, was kept`,
+                    task.uid
+                );
+                if (cadenceWins) return;
             }
             const attrs = fromGoogleEvent(event, task, timezone);
             if (Object.keys(attrs).length) await task.update(attrs);
@@ -290,46 +303,58 @@ async function syncTaskCalendar(ctx, calendar) {
     }
 
     for (const task of tasksById.values()) {
-        await guard(ctx, 'push', async () => {
-            const link = byTask.get(task.id);
-            if (!local.belongsOnCalendar(task, ctx.account)) {
-                // Done, undated, or (with Google Tasks on) without a time:
-                // off the calendar.
-                if (link) {
-                    await client.deleteEvent(link.container_id, link.google_id);
-                    await link.destroy();
-                    byTask.delete(task.id);
+        await guard(
+            ctx,
+            'push',
+            async () => {
+                const link = byTask.get(task.id);
+                if (!local.belongsOnCalendar(task, ctx.account)) {
+                    // Done, undated, or (with Google Tasks on) without a time:
+                    // off the calendar.
+                    if (link) {
+                        await client.deleteEvent(
+                            link.container_id,
+                            link.google_id
+                        );
+                        await link.destroy();
+                        byTask.delete(task.id);
+                    }
+                    return;
                 }
-                return;
-            }
-            const localHash = hash(localEventProjection(task, timezone));
-            if (link && link.local_hash === localHash) return;
-            const body = toGoogleEvent(task, timezone, local.taskUrl(task));
-            const moved = link && link.google_id.startsWith('moved-');
-            const saved =
-                link && !moved
-                    ? await client.patchEvent(calendarId, link.google_id, body)
-                    : await client.insertEvent(calendarId, body);
-            const fields = {
-                container_id: calendarId,
-                google_id: saved.id,
-                local_hash: localHash,
-                remote_hash: hash(remoteEventProjection(saved)),
-            };
-            if (link) {
-                await link.update(fields);
-            } else {
-                byTask.set(
-                    task.id,
-                    await GoogleTaskLink.create({
-                        user_id: user.id,
-                        task_id: task.id,
-                        kind: 'event',
-                        ...fields,
-                    })
-                );
-            }
-        });
+                const localHash = hash(localEventProjection(task, timezone));
+                if (link && link.local_hash === localHash) return;
+                const body = toGoogleEvent(task, timezone, local.taskUrl(task));
+                const moved = link && link.google_id.startsWith('moved-');
+                const saved =
+                    link && !moved
+                        ? await client.patchEvent(
+                              calendarId,
+                              link.google_id,
+                              body
+                          )
+                        : await client.insertEvent(calendarId, body);
+                const fields = {
+                    container_id: calendarId,
+                    google_id: saved.id,
+                    local_hash: localHash,
+                    remote_hash: hash(remoteEventProjection(saved)),
+                };
+                if (link) {
+                    await link.update(fields);
+                } else {
+                    byTask.set(
+                        task.id,
+                        await GoogleTaskLink.create({
+                            user_id: user.id,
+                            task_id: task.id,
+                            kind: 'event',
+                            ...fields,
+                        })
+                    );
+                }
+            },
+            task.uid
+        );
     }
 
     if (nextSyncToken && !ctx.pullFailed) {

@@ -969,7 +969,12 @@
       "modeRead": "للقراءة فقط",
       "modeTwoWay": "في الاتجاهين",
       "taskCalendar": "التقويم للمهام ذات الوقت",
-      "taskCalendarDefault": "Cadence (أنشأته المزامنة)"
+      "taskCalendarDefault": "Cadence (أنشأته المزامنة)",
+      "log": "سجل المزامنة",
+      "logEmpty": "لم يُسجَّل شيء بعد",
+      "logInfo": "معلومة",
+      "logConflict": "تعارض",
+      "logError": "خطأ"
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",

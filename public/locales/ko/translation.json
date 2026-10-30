@@ -965,7 +965,12 @@
       "modeRead": "읽기 전용",
       "modeTwoWay": "양방향",
       "taskCalendar": "시간이 있는 작업용 캘린더",
-      "taskCalendarDefault": "Cadence (동기화로 생성)"
+      "taskCalendarDefault": "Cadence (동기화로 생성)",
+      "log": "동기화 로그",
+      "logEmpty": "아직 기록이 없습니다",
+      "logInfo": "정보",
+      "logConflict": "충돌",
+      "logError": "오류"
     },
     "sidebarSmartListsTitle": "스마트 목록",
     "sidebarRailTitle": "아이콘 레일과 더보기",

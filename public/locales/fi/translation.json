@@ -965,7 +965,12 @@
       "modeRead": "Vain luku",
       "modeTwoWay": "Kaksisuuntainen",
       "taskCalendar": "Kalenteri kellonajallisille tehtäville",
-      "taskCalendarDefault": "Cadence (synkronoinnin luoma)"
+      "taskCalendarDefault": "Cadence (synkronoinnin luoma)",
+      "log": "Synkronointiloki",
+      "logEmpty": "Ei vielä merkintöjä",
+      "logInfo": "Tieto",
+      "logConflict": "Ristiriita",
+      "logError": "Virhe"
     },
     "sidebarSmartListsTitle": "Älykkäät listat",
     "sidebarRailTitle": "Kuvakepalkki ja Lisää",

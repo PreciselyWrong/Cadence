@@ -968,7 +968,12 @@
       "modeRead": "Doar citire",
       "modeTwoWay": "Bidirecțional",
       "taskCalendar": "Calendar pentru sarcinile cu oră",
-      "taskCalendarDefault": "Cadence (creat de sincronizare)"
+      "taskCalendarDefault": "Cadence (creat de sincronizare)",
+      "log": "Jurnal de sincronizare",
+      "logEmpty": "Nimic înregistrat încă",
+      "logInfo": "Info",
+      "logConflict": "Conflict",
+      "logError": "Eroare"
     },
     "sidebarSmartListsTitle": "Liste inteligente",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",

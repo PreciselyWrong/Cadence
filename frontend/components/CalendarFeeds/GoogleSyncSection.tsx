@@ -6,7 +6,9 @@ import {
     GoogleCalendar,
     GoogleCalendarSyncMode,
     GoogleStatus,
+    GoogleSyncLogEntry,
     disconnectGoogle,
+    fetchGoogleSyncLog,
     fetchGoogleStatus,
     startGoogleConnect,
     syncGoogleNow,
@@ -61,6 +63,10 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
     const [ownStatus, setOwnStatus] = useState<GoogleStatus | null>(null);
     const [busy, setBusy] = useState(false);
     const [confirmDisconnect, setConfirmDisconnect] = useState(false);
+    const [logOpen, setLogOpen] = useState(false);
+    const [logEntries, setLogEntries] = useState<GoogleSyncLogEntry[] | null>(
+        null
+    );
     const controlled = givenStatus !== undefined;
     const status = controlled ? givenStatus : ownStatus;
 
@@ -134,6 +140,30 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
             );
         }
     };
+
+    const loadLog = () =>
+        fetchGoogleSyncLog()
+            .then(setLogEntries)
+            .catch(() => setLogEntries([]));
+
+    const toggleLog = () => {
+        const next = !logOpen;
+        setLogOpen(next);
+        if (next) void loadLog();
+    };
+
+    // A sync ran: the open log follows.
+    const lastSynced = status?.last_synced_at;
+    useEffect(() => {
+        if (logOpen) void loadLog();
+    }, [lastSynced]);
+
+    const kindLabel = (kind: GoogleSyncLogEntry['kind']) =>
+        kind === 'conflict'
+            ? t('profile.google.logConflict', 'Conflict')
+            : kind === 'error'
+              ? t('profile.google.logError', 'Error')
+              : t('profile.google.logInfo', 'Info');
 
     const changeMode = async (
         calendar: GoogleCalendar,
@@ -396,6 +426,65 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                                 ))}
                         </div>
                     )}
+
+                    <div>
+                        <button
+                            type="button"
+                            aria-expanded={logOpen}
+                            onClick={toggleLog}
+                            className="text-sm font-medium text-gray-700 hover:underline dark:text-gray-300"
+                        >
+                            {logOpen ? '▾ ' : '▸ '}
+                            {t('profile.google.log', 'Sync log')}
+                        </button>
+                        {logOpen && logEntries && (
+                            <ul className="mt-2 max-h-64 space-y-1 overflow-y-auto text-xs">
+                                {logEntries.length === 0 && (
+                                    <li className="text-gray-500 dark:text-gray-400">
+                                        {t(
+                                            'profile.google.logEmpty',
+                                            'Nothing recorded yet'
+                                        )}
+                                    </li>
+                                )}
+                                {logEntries.map((entry, index) => (
+                                    <li
+                                        key={`${entry.created_at}-${index}`}
+                                        className="flex gap-2"
+                                    >
+                                        <span className="shrink-0 text-gray-500 dark:text-gray-400">
+                                            {new Date(
+                                                entry.created_at
+                                            ).toLocaleString()}
+                                        </span>
+                                        <span
+                                            className={`shrink-0 font-medium ${
+                                                entry.kind === 'error'
+                                                    ? 'text-red-600 dark:text-red-400'
+                                                    : entry.kind === 'conflict'
+                                                      ? 'text-amber-700 dark:text-amber-400'
+                                                      : 'text-gray-600 dark:text-gray-300'
+                                            }`}
+                                        >
+                                            {kindLabel(entry.kind)}
+                                        </span>
+                                        <span className="min-w-0 break-words text-gray-800 dark:text-gray-200">
+                                            {entry.task_uid ? (
+                                                <a
+                                                    href={`/task/${entry.task_uid}`}
+                                                    className="hover:underline"
+                                                >
+                                                    {entry.message}
+                                                </a>
+                                            ) : (
+                                                entry.message
+                                            )}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
 
                     <div className="flex flex-wrap gap-2">
                         <button

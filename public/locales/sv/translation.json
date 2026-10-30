@@ -965,7 +965,12 @@
       "modeRead": "Endast läsning",
       "modeTwoWay": "Åt båda hållen",
       "taskCalendar": "Kalender för uppgifter med tid",
-      "taskCalendarDefault": "Cadence (skapad av synkroniseringen)"
+      "taskCalendarDefault": "Cadence (skapad av synkroniseringen)",
+      "log": "Synkroniseringslogg",
+      "logEmpty": "Inget registrerat ännu",
+      "logInfo": "Info",
+      "logConflict": "Konflikt",
+      "logError": "Fel"
     },
     "sidebarSmartListsTitle": "Smarta listor",
     "sidebarRailTitle": "Ikonlist och Mer",

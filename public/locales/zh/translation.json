@@ -965,7 +965,12 @@
       "modeRead": "只读",
       "modeTwoWay": "双向",
       "taskCalendar": "带时间任务的日历",
-      "taskCalendarDefault": "Cadence（由同步创建）"
+      "taskCalendarDefault": "Cadence（由同步创建）",
+      "log": "同步日志",
+      "logEmpty": "尚无记录",
+      "logInfo": "信息",
+      "logConflict": "冲突",
+      "logError": "错误"
     },
     "sidebarSmartListsTitle": "智能列表",
     "sidebarRailTitle": "图标栏与更多",

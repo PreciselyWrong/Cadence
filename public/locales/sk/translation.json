@@ -990,7 +990,12 @@
             "modeRead": "Iba na čítanie",
             "modeTwoWay": "Obojsmerný",
             "taskCalendar": "Kalendár pre úlohy s časom",
-            "taskCalendarDefault": "Cadence (vytvorený synchronizáciou)"
+            "taskCalendarDefault": "Cadence (vytvorený synchronizáciou)",
+            "log": "Denník synchronizácie",
+            "logEmpty": "Zatiaľ nič nezaznamenané",
+            "logInfo": "Info",
+            "logConflict": "Konflikt",
+            "logError": "Chyba"
         },
         "sidebarSmartListsTitle": "Inteligentné zoznamy",
         "sidebarRailTitle": "Lišta ikon a Viac",

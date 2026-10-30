@@ -965,7 +965,12 @@
       "modeRead": "Salt okunur",
       "modeTwoWay": "Çift yönlü",
       "taskCalendar": "Saatli görevler için takvim",
-      "taskCalendarDefault": "Cadence (eşitleme tarafından oluşturuldu)"
+      "taskCalendarDefault": "Cadence (eşitleme tarafından oluşturuldu)",
+      "log": "Eşitleme günlüğü",
+      "logEmpty": "Henüz kayıt yok",
+      "logInfo": "Bilgi",
+      "logConflict": "Çakışma",
+      "logError": "Hata"
     },
     "sidebarSmartListsTitle": "Akıllı listeler",
     "sidebarRailTitle": "Simge çubuğu ve Diğer",

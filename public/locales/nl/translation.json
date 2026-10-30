@@ -965,7 +965,12 @@
       "modeRead": "Alleen lezen",
       "modeTwoWay": "In beide richtingen",
       "taskCalendar": "Agenda voor taken met een tijd",
-      "taskCalendarDefault": "Cadence (gemaakt door de synchronisatie)"
+      "taskCalendarDefault": "Cadence (gemaakt door de synchronisatie)",
+      "log": "Synchronisatielogboek",
+      "logEmpty": "Nog niets vastgelegd",
+      "logInfo": "Info",
+      "logConflict": "Conflict",
+      "logError": "Fout"
     },
     "sidebarSmartListsTitle": "Slimme lijsten",
     "sidebarRailTitle": "Pictogrammenbalk en Meer",

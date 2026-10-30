@@ -100,6 +100,7 @@ const GoogleCalendar = require('./google_calendar')(sequelize);
 const GoogleEvent = require('./google_event')(sequelize);
 const GoogleTasklist = require('./google_tasklist')(sequelize);
 const GoogleTaskLink = require('./google_task_link')(sequelize);
+const GoogleSyncLog = require('./google_sync_log')(sequelize);
 const ProjectSection = require('./project_section')(sequelize);
 const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
@@ -473,6 +474,11 @@ FocusSession.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
 FocusSession.belongsTo(Task, { foreignKey: 'task_id', as: 'Task' });
 User.hasOne(GoogleAccount, { foreignKey: 'user_id', as: 'GoogleAccount' });
 GoogleAccount.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
+GoogleSyncLog.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'User',
+    onDelete: 'CASCADE',
+});
 GoogleCalendar.hasMany(GoogleEvent, {
     foreignKey: 'google_calendar_id',
     as: 'Events',
@@ -783,6 +789,7 @@ module.exports = {
     GoogleEvent,
     GoogleTasklist,
     GoogleTaskLink,
+    GoogleSyncLog,
     ProjectSection,
     DailyPlan,
     DailyPlanItem,

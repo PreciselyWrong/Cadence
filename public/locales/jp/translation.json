@@ -965,7 +965,12 @@
       "modeRead": "読み取り専用",
       "modeTwoWay": "双方向",
       "taskCalendar": "時刻付きタスクのカレンダー",
-      "taskCalendarDefault": "Cadence（同期で作成）"
+      "taskCalendarDefault": "Cadence（同期で作成）",
+      "log": "同期ログ",
+      "logEmpty": "まだ記録はありません",
+      "logInfo": "情報",
+      "logConflict": "競合",
+      "logError": "エラー"
     },
     "sidebarSmartListsTitle": "スマートリスト",
     "sidebarRailTitle": "アイコンバーと「その他」",
