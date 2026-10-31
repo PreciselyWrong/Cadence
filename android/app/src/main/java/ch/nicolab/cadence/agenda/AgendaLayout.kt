@@ -44,6 +44,8 @@ sealed interface AgendaEntry {
         override val allDay: Boolean,
         override val done: Boolean,
         override val colorArgb: Int,
+        val location: String? = null,
+        val description: String? = null,
     ) : AgendaEntry
 
     /** Tâche datée : sans heure c'est une entrée de journée ; avec heure, un instant (fin = début). */
@@ -177,6 +179,8 @@ fun agendaEvent(item: EventWithDone, zone: ZoneId): AgendaEntry.Event = AgendaEn
     allDay = item.event.allDay,
     done = item.done,
     colorArgb = item.event.colorArgb.takeIf { it != 0 } ?: item.calendar.colorArgb,
+    location = item.event.location,
+    description = item.event.description,
 )
 
 /** Tâche datée ; null sans échéance. Sans heure, l'échéance vaut pour son jour civil (`dueDay`). */

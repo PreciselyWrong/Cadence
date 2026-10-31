@@ -10,6 +10,7 @@ import ch.nicolab.cadence.calendar.CalendarRepository
 import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
@@ -216,6 +217,19 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     fun toggleEvent(key: EventInstanceKey) = viewModelScope.launch {
         calendar.toggleDone(key)
     }
+
+    private val _hidden = MutableSharedFlow<HiddenEvent>(extraBufferCapacity = 4)
+
+    /** Occurrences masquées à l'instant, pour proposer « Annuler ». */
+    val hidden: SharedFlow<HiddenEvent> = _hidden.asSharedFlow()
+
+    /** Masque l'occurrence dans Cadence seulement : le fournisseur d'agendas n'est jamais modifié. */
+    fun hideEvent(event: HiddenEvent) = viewModelScope.launch {
+        calendar.hideEvent(event)
+        _hidden.tryEmit(event)
+    }
+
+    fun restoreEvent(key: EventInstanceKey) = viewModelScope.launch { calendar.restoreEvent(key) }
 
     fun refreshCalendar() = calendar.refresh()
 

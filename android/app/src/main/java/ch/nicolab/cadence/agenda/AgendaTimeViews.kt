@@ -421,6 +421,7 @@ private fun AllDayChip(
             .clip(Radius.Chip)
             .background(color.copy(alpha = Glass.BadgeAlpha))
             .alpha(if (entry.done) DONE_ALPHA else 1f)
+            .eventTouch(entry)
             .then(source),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -600,7 +601,8 @@ private fun BoxWithConstraintsScope.TimedBlockView(
             .padding(horizontal = Space.xs)
             .clip(Radius.Chip)
             .background(color.copy(alpha = Glass.BadgeAlpha))
-            .alpha(if (entry.done) DONE_ALPHA else 1f),
+            .alpha(if (entry.done) DONE_ALPHA else 1f)
+            .eventTouch(entry),
     ) {
         Row(Modifier.fillMaxSize()) {
             Box(Modifier.width(Size.rail).fillMaxHeight().background(color))

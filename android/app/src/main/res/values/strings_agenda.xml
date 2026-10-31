@@ -9,6 +9,7 @@
     <string name="agenda_scheduled_at">Planifiée à %1$s</string>
     <string name="agenda_undo">Annuler</string>
     <string name="agenda_task_completed">Tâche terminée</string>
+    <string name="agenda_event_hidden">Événement masqué ici</string>
     <string name="agenda_resize_handle">Ajuster la durée</string>
     <string name="agenda_week_expand">Afficher la semaine</string>
     <string name="agenda_permission_inline">Événements de l’appareil masqués</string>

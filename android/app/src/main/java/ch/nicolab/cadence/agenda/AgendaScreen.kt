@@ -24,12 +24,11 @@ import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
-import ch.nicolab.cadence.designsystem.components.navigationClearance
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -90,7 +89,14 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
     var displayOpen by rememberSaveable { mutableStateOf(false) }
     val drag = remember { TrayDragState() }
     var boxOrigin by remember { mutableStateOf(Offset.Zero) }
-    val snackbar = remember { SnackbarHostState() }
+    val snackbar = rememberAppSnackbarHostState()
+    var eventSheet by remember { mutableStateOf<AgendaEventSheet?>(null) }
+    val eventActions = remember {
+        AgendaEventActions(
+            open = { eventSheet = AgendaEventSheet.Detail(it.eventKey) },
+            menu = { eventSheet = AgendaEventSheet.Menu(it.eventKey) },
+        )
+    }
     val resources = LocalContext.current.resources
     val requestCalendar = rememberCalendarPermissionRequest(onGranted = viewModel::refreshCalendar)
     val now by produceState(LocalTime.now()) {
@@ -110,6 +116,19 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
                     duration = SnackbarDuration.Short,
                 )
                 if (result == SnackbarResult.ActionPerformed) viewModel.undoSchedule(receipt)
+            }
+        }
+    }
+    LaunchedEffect(viewModel) {
+        viewModel.hidden.collect { event ->
+            snackbar.currentSnackbarData?.dismiss()
+            launch {
+                val result = snackbar.showSnackbar(
+                    message = resources.getString(R.string.agenda_event_hidden),
+                    actionLabel = resources.getString(R.string.agenda_undo),
+                    duration = SnackbarDuration.Short,
+                )
+                if (result == SnackbarResult.ActionPerformed) viewModel.restoreEvent(event.key)
             }
         }
     }
@@ -143,6 +162,7 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(top = Space.xs),
             )
             if (state.permissionMissing) CalendarPermissionBanner(onAllow = requestCalendar)
+            CompositionLocalProvider(LocalAgendaEventActions provides eventActions) {
             PagedSwipe(onSwipe = viewModel::swipe, modifier = Modifier.weight(1f)) {
                 Column(Modifier.fillMaxSize()) {
                     when (state.mode) {
@@ -170,15 +190,19 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
                     }
                 }
             }
+            }
         }
         DragGhost(drag = drag, origin = boxOrigin)
-        SnackbarHost(
-            snackbar,
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(start = Space.gutter, end = Space.gutter, bottom = navigationClearance() + Space.lg),
-        )
     }
+
+    AgendaEventSheets(
+        sheet = eventSheet,
+        entries = state.entries,
+        checkEvents = state.checkEvents,
+        onSheet = { eventSheet = it },
+        onToggle = viewModel::toggleEvent,
+        onHide = { viewModel.hideEvent(it.toHidden()) },
+    )
 
     if (displayOpen) {
         AgendaOptionsSheet(

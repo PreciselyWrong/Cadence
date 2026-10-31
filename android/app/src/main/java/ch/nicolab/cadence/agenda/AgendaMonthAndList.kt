@@ -295,6 +295,7 @@ internal fun AgendaEntryRow(
                 .alpha(if (entry.done) DONE_ALPHA else 1f)
                 .clip(Radius.Card)
                 .background(palette.card)
+                .eventTouch(entry)
                 .heightIn(min = ROW_MIN_HEIGHT)
                 .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically,
