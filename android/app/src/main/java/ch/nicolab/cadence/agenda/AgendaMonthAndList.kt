@@ -1,5 +1,8 @@
 package ch.nicolab.cadence.agenda
 
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -55,6 +58,10 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 
 private val HOUR_MINUTE: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+private val SPOKEN_DAY: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
+
+/** Date lue par le lecteur d'écran pour une case de jour : « mardi 27 octobre ». */
+internal fun java.time.LocalDate.agendaDayDescription(): String = format(SPOKEN_DAY)
 private val WEEKDAY_HEADER_HEIGHT = 20.dp
 private val ROW_MIN_HEIGHT = 56.dp
 private val ROW_RAIL_WIDTH = 4.dp
@@ -154,12 +161,17 @@ private fun RowScope.MonthCell(
 ) {
     val palette = cadence
     val pill = (height - Size.agendaDot - MONTH_DAY_GAP).coerceAtMost(Size.actionSm)
+    val description = day.agendaDayDescription()
     Column(
         Modifier
             .weight(1f)
             .height(height)
             .clip(Radius.Chip)
-            .clickable(role = Role.Button, onClick = onClick),
+            .clickable(role = Role.Button, onClick = onClick)
+            .semantics(mergeDescendants = true) {
+                contentDescription = description
+                this.selected = selected
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

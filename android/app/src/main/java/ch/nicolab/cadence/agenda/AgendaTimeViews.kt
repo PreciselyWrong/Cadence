@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.agenda
 
+import androidx.compose.ui.semantics.selected
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.material.icons.outlined.WbSunny
@@ -243,10 +244,16 @@ private fun DayCell(
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
+    // « M 27 » ne dit pas si c'est mardi ou mercredi : le lecteur d'écran entend la date entière.
+    val description = day.agendaDayDescription()
     Column(
         modifier
             .clip(Radius.Chip)
             .clickable(role = Role.Button, onClick = onClick)
+            .semantics(mergeDescendants = true) {
+                contentDescription = description
+                this.selected = selected
+            }
             .padding(vertical = Space.xs),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
