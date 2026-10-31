@@ -117,7 +117,6 @@ internal fun ColumnScope.TimeAgenda(
     state: AgendaUiState,
     now: LocalTime,
     onSelect: (LocalDate) -> Unit,
-    onSwipe: (Int) -> Unit,
     onSwipeWeek: (Int) -> Unit,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
@@ -158,7 +157,7 @@ internal fun ColumnScope.TimeAgenda(
             }
             TrayRow(items = state.tray, drag = drag, onDrop = onDrop)
         } else {
-            DayColumnHeaders(days = days, today = state.today, onSwipe = onSwipe)
+            DayColumnHeaders(days = days, today = state.today)
         }
         AllDayRow(
             days = days,
@@ -291,10 +290,9 @@ private fun DayCell(
 }
 
 @Composable
-private fun DayColumnHeaders(days: List<LocalDate>, today: LocalDate, onSwipe: (Int) -> Unit) {
+private fun DayColumnHeaders(days: List<LocalDate>, today: LocalDate) {
     val palette = cadence
-    val swipe = rememberHorizontalSwipe(onSwipe)
-    Row(Modifier.fillMaxWidth().padding(top = Space.sm).then(swipe)) {
+    Row(Modifier.fillMaxWidth().padding(top = Space.sm)) {
         Spacer(Modifier.width(Size.agendaGutter))
         days.forEach { day ->
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {

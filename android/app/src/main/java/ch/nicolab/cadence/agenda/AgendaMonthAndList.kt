@@ -76,7 +76,6 @@ private const val OFF_MONTH_ALPHA = 0.38f
 internal fun ColumnScope.MonthAgenda(
     state: AgendaUiState,
     onSelect: (LocalDate) -> Unit,
-    onSwipe: (Int) -> Unit,
     onToggleEvent: (EventInstanceKey) -> Unit,
     onToggleTask: (AgendaEntry.Task) -> Unit,
 ) {
@@ -86,7 +85,6 @@ internal fun ColumnScope.MonthAgenda(
     val dayEntries = remember(state.entries, state.selected) {
         listGroups(state.entries, state.selected, 1).firstOrNull()?.entries.orEmpty()
     }
-    val swipe = rememberHorizontalSwipe(onSwipe)
     val cellHeight = monthCellDp(
         rows = rows.size,
         screenDp = LocalConfiguration.current.screenHeightDp.toFloat(),
@@ -94,7 +92,7 @@ internal fun ColumnScope.MonthAgenda(
     ).dp
 
     Column(Modifier.weight(1f)) {
-        Column(Modifier.fillMaxWidth().padding(top = Space.sm).then(swipe)) {
+        Column(Modifier.fillMaxWidth().padding(top = Space.sm)) {
             Row(Modifier.fillMaxWidth().height(WEEKDAY_HEADER_HEIGHT)) {
                 weekdayNames(state.options.weekends).forEach { name ->
                     Text(

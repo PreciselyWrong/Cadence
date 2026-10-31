@@ -143,30 +143,32 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(top = Space.xs),
             )
             if (state.permissionMissing) CalendarPermissionBanner(onAllow = requestCalendar)
-            when (state.mode) {
-                AgendaMode.DAY, AgendaMode.THREE_DAYS -> TimeAgenda(
-                    state = state,
-                    now = now,
-                    onSelect = viewModel::select,
-                    onSwipe = viewModel::swipe,
-                    onSwipeWeek = viewModel::swipeWeek,
-                    onToggleEvent = viewModel::toggleEvent,
-                    drag = drag,
-                    onDrop = { uid, at -> viewModel.schedule(uid, at) },
-                    onResize = { uid, minutes -> viewModel.resizeTask(uid, minutes) },
-                )
-                AgendaMode.MONTH -> MonthAgenda(
-                    state = state,
-                    onSelect = viewModel::select,
-                    onSwipe = viewModel::swipe,
-                    onToggleEvent = viewModel::toggleEvent,
-                    onToggleTask = viewModel::toggleTask,
-                )
-                AgendaMode.LIST -> ListAgenda(
-                    state = state,
-                    onToggleEvent = viewModel::toggleEvent,
-                    onToggleTask = viewModel::toggleTask,
-                )
+            PagedSwipe(onSwipe = viewModel::swipe, modifier = Modifier.weight(1f)) {
+                Column(Modifier.fillMaxSize()) {
+                    when (state.mode) {
+                        AgendaMode.DAY, AgendaMode.THREE_DAYS -> TimeAgenda(
+                            state = state,
+                            now = now,
+                            onSelect = viewModel::select,
+                            onSwipeWeek = viewModel::swipeWeek,
+                            onToggleEvent = viewModel::toggleEvent,
+                            drag = drag,
+                            onDrop = { uid, at -> viewModel.schedule(uid, at) },
+                            onResize = { uid, minutes -> viewModel.resizeTask(uid, minutes) },
+                        )
+                        AgendaMode.MONTH -> MonthAgenda(
+                            state = state,
+                            onSelect = viewModel::select,
+                            onToggleEvent = viewModel::toggleEvent,
+                            onToggleTask = viewModel::toggleTask,
+                        )
+                        AgendaMode.LIST -> ListAgenda(
+                            state = state,
+                            onToggleEvent = viewModel::toggleEvent,
+                            onToggleTask = viewModel::toggleTask,
+                        )
+                    }
+                }
             }
         }
         DragGhost(drag = drag, origin = boxOrigin)
