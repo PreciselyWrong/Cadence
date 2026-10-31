@@ -6,6 +6,8 @@ import ch.nicolab.cadence.data.local.CadenceRepository
 import ch.nicolab.cadence.data.local.LearnedQuestionRepository
 import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.reminder.ReminderScheduler
+import ch.nicolab.cadence.data.sync.RoomHabitSyncStorage
+import ch.nicolab.cadence.tasks.sync.HabitSyncRegistry
 import ch.nicolab.cadence.tasks.sync.TasksBackground
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.widget.TasksWidgetsAndReminders
@@ -43,6 +45,8 @@ class CadenceApp : Application() {
             CadenceWidget().updateAll(this)
             ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this)
         }.start(applicationScope)
+        // Les habitudes se synchronisent avec les tâches : même serveur, même clé, même passage.
+        HabitSyncRegistry.storage = RoomHabitSyncStorage(database)
         // Tâches Tududi : synchronisation, widgets et rappels suivent leur propre base.
         TasksBackground.start(this)
         TasksWidgetsAndReminders.start(this, applicationScope)

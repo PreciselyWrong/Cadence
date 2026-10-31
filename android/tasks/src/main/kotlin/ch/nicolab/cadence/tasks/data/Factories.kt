@@ -7,6 +7,10 @@ import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.sync.Hlc
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
 import ch.nicolab.cadence.tasks.sync.AuthError
+import ch.nicolab.cadence.tasks.sync.HABIT_ENTITIES
+import ch.nicolab.cadence.tasks.sync.HabitSyncRegistry
+import ch.nicolab.cadence.tasks.sync.HabitSyncStore
+import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
 
 internal fun createRepository(context: Context): TaskRepository = TasksRuntime.get(context).repository
@@ -24,13 +28,26 @@ internal class TasksRuntime private constructor(context: Context) {
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
-    private val store = RoomSyncStore(database, clockState)
+    private val habitStore = HabitSyncRegistry.storage?.let { storage ->
+        HabitSyncStore(storage, clockState.node()) { op, reason, name ->
+            database.failedOpDao().insert(
+                FailedOpEntity(op.opId, op.entity, op.uid, reason, System.currentTimeMillis(), name),
+            )
+        }
+    }
+    private val store = RoomSyncStore(database, clockState, habits = habitStore)
     private val deviceZone = DeviceZone(appContext)
     // La connexion et le moteur se réfèrent l'un à l'autre : le moteur n'est lu qu'à l'exécution.
     val connection = ServerConnectionImpl(appContext, database, store) { engine }
     val api = HttpSyncApi { connection.currentSession() ?: throw AuthError("Aucun serveur configuré") }
     val linkPreviews = RoomLinkPreviews(database.linkPreviewDao(), api::linkMetadata)
-    val engine: SyncEngine =SyncEngine(api, store, hlc, onProfile = connection::saveProfile)
+    val engine: SyncEngine =SyncEngine(
+        api,
+        store,
+        hlc,
+        onProfile = connection::saveProfile,
+        entities = if (habitStore != null) SYNCED_ENTITIES + HABIT_ENTITIES else SYNCED_ENTITIES,
+    )
     val repository = RoomTaskRepository(
         appContext,
         database,

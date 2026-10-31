@@ -2,6 +2,7 @@ package ch.nicolab.cadence.data.local
 
 import android.content.Context
 import androidx.room.Room
+import ch.nicolab.cadence.data.sync.HabitSyncTriggers
 
 object AppDatabaseFactory {
     fun create(context: Context): CadenceDatabase {
@@ -35,7 +36,9 @@ object AppDatabaseFactory {
             CadenceDatabase.MIGRATION_22_23,
             CadenceDatabase.MIGRATION_23_24,
             CadenceDatabase.MIGRATION_24_25,
+            CadenceDatabase.MIGRATION_25_26,
         )
+        .addCallback(HabitSyncTriggers.callback)
         .build()
     }
 }

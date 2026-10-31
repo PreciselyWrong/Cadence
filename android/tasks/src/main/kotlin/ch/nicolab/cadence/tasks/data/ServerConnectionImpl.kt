@@ -69,6 +69,7 @@ internal class ServerConnectionImpl(
             api.meta()
             val profile = api.profile()
             val (cipher, iv) = TokenCipher.encrypt(token)
+            val previousUrl = context.connectionStore.data.first()[ConnectionKeys.SERVER_URL]
             context.connectionStore.edit { prefs ->
                 prefs[ConnectionKeys.SERVER_URL] = url
                 prefs[ConnectionKeys.TOKEN_CIPHER] = cipher
@@ -77,6 +78,8 @@ internal class ServerConnectionImpl(
             }
             // Le prochain passage repart d'un instantané complet, pour ce serveur.
             store.saveCursor(null)
+            // Un autre serveur ne connaît pas les habitudes du téléphone : elles repartent en entier.
+            if (previousUrl != url) store.serverChanged()
             SyncScheduler.schedulePeriodic(context)
             SyncScheduler.requestNow(context)
             Result.success(ConnectionInfo(url, profile.email, parseZone(profile.timezone)))
