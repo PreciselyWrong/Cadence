@@ -27,6 +27,7 @@ import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NotePatch
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import ch.nicolab.cadence.tasks.model.TagItem
@@ -430,6 +431,8 @@ internal class TasksViewModel(
     }
 
     fun saveNoteAttributes(uid: String, change: NoteChange) = launchAction { repository.saveNote(uid, change) }
+
+    fun setProjectStatus(uid: String, status: ProjectStatus) = launchAction { repository.setProjectStatus(uid, status) }
 
     fun deleteNoteWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Note, uid)) { repository.deleteNote(uid) }
 

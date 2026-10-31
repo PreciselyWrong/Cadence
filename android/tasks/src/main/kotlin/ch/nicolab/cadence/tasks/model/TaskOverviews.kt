@@ -19,6 +19,17 @@ data class ProjectCard(
 /** Projets d'un domaine ; [area] est null pour ceux qui n'en ont pas. */
 data class AreaGroup(val area: AreaItem?, val projects: List<ProjectCard>)
 
+/** Projets en cours, en pause (le stash) et clos, chacun groupé par domaine. */
+data class ProjectOverview(
+    val active: List<AreaGroup>,
+    val stash: List<AreaGroup>,
+    val closed: List<AreaGroup>,
+) {
+    val activeCount: Int get() = active.sumOf { it.projects.size }
+    val stashCount: Int get() = stash.sumOf { it.projects.size }
+    val closedCount: Int get() = closed.sumOf { it.projects.size }
+}
+
 data class TagCard(val tag: TagItem, val openCount: Int)
 
 /** Jour de la bande « À venir » : [count] tâches prévues, représentées par au plus trois points. */
@@ -64,6 +75,21 @@ object TaskOverviews {
         }
         val orphans = cards.filter { it.project.areaUid == null || it.project.areaUid !in known }
         return if (orphans.isEmpty()) grouped else grouped + AreaGroup(null, orphans)
+    }
+
+    fun projectOverview(
+        projects: List<ProjectItem>,
+        areas: List<AreaItem>,
+        tasks: List<TaskItem>,
+        now: Instant,
+    ): ProjectOverview {
+        fun groups(keep: (ProjectStatus) -> Boolean) =
+            projectGroups(projects.filter { keep(it.projectStatus) }, areas, tasks, now)
+        return ProjectOverview(
+            active = groups { !it.isClosed && !it.isStash },
+            stash = groups { it.isStash },
+            closed = groups { it.isClosed },
+        )
     }
 
     fun tagCards(tags: List<TagItem>, tasks: List<TaskItem>): List<TagCard> =

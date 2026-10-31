@@ -5,6 +5,7 @@ import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import ch.nicolab.cadence.tasks.model.TagItem
@@ -62,6 +63,9 @@ interface TaskRepository {
      */
     suspend fun saveNote(uid: String, change: NoteChange)
     suspend fun deleteNote(uid: String)
+
+    /** Change le statut du projet [uid] (valeur serveur, voir [ProjectStatus.wire]) ; sans effet si le projet est inconnu. */
+    suspend fun setProjectStatus(uid: String, status: ProjectStatus)
 
     suspend fun captureInbox(text: String): String
     suspend fun deleteInboxItem(uid: String)

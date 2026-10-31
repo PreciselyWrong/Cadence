@@ -107,7 +107,7 @@ fun TasksScreen(
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
     val subtitle = when {
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
-        tab == TasksTab.PROJECTS -> pluralStringResource(R.plurals.tasks_projects_subtitle, projects.size, projects.size)
+        tab == TasksTab.PROJECTS -> projectCounterLine(projects)
         tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
         tab == TasksTab.NOTES -> pluralStringResource(R.plurals.tasks_notes_subtitle, notes.size, notes.size)
         tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)

@@ -9,6 +9,7 @@ import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import ch.nicolab.cadence.tasks.model.TagItem
@@ -259,6 +260,18 @@ internal class RoomTaskRepository(
             outbox.insert(LocalOps.delete("note", uid, clock, nowMs()))
         }
         afterLocalWrite()
+    }
+
+    override suspend fun setProjectStatus(uid: String, status: ProjectStatus) {
+        val clock = hlc.now()
+        val fields = mapOf("status" to JsonPrimitive(status.wire))
+        val written = database.withTransaction {
+            val existing = projectDao.get(uid) ?: return@withTransaction false
+            projectDao.upsert(existing.copy(status = status.wire))
+            outbox.insert(LocalOps.upsert("project", uid, fields, clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
     }
 
     override suspend fun captureInbox(text: String): String {

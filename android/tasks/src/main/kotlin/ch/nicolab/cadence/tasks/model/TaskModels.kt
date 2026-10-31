@@ -97,6 +97,30 @@ data class ProjectItem(
     val sourceType: String? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
+    val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)
+}
+
+/**
+ * Statut d'un projet côté serveur, dans l'ordre du sélecteur. Terminé, abandonné et archivé
+ * sont clos ; « en pause » forme le stash ; le reste est actif. Un statut inconnu ou absent
+ * compte comme « pas commencé ».
+ */
+enum class ProjectStatus(val wire: String) {
+    NOT_STARTED("not_started"),
+    PLANNED("planned"),
+    IN_PROGRESS("in_progress"),
+    WAITING("waiting"),
+    DONE("done"),
+    CANCELLED("cancelled"),
+    PAUSED("paused"),
+    ARCHIVED("archived");
+
+    val isClosed: Boolean get() = this == DONE || this == CANCELLED || this == ARCHIVED
+    val isStash: Boolean get() = this == PAUSED
+
+    companion object {
+        fun fromWire(value: String?): ProjectStatus = entries.firstOrNull { it.wire == value } ?: NOT_STARTED
+    }
 }
 
 /** `source_type` d'un projet reflétant un dossier TODO.md du serveur. */

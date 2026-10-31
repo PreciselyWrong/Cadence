@@ -44,6 +44,36 @@ class TaskOverviewsTest {
     }
 
     @Test
+    fun `projects split into active, stash and closed with counts`() {
+        val areas = listOf(AreaItem("work", "Travail"))
+        val projects = listOf(
+            ProjectItem("a", "Alpha", status = "in_progress", areaUid = "work"),
+            ProjectItem("b", "Bravo", status = null),
+            ProjectItem("c", "Charlie", status = "paused", areaUid = "work"),
+            ProjectItem("d", "Delta", status = "done"),
+            ProjectItem("e", "Echo", status = "cancelled"),
+            ProjectItem("f", "Foxtrot", status = "archived"),
+            ProjectItem("g", "Golf", status = "waiting"),
+        )
+        val overview = TaskOverviews.projectOverview(projects, areas, emptyList(), now)
+        assertEquals(listOf("Alpha", "Bravo", "Golf"), overview.active.flatMap { g -> g.projects.map { it.project.name } })
+        assertEquals(listOf("Charlie"), overview.stash.flatMap { g -> g.projects.map { it.project.name } })
+        assertEquals(listOf("Delta", "Echo", "Foxtrot"), overview.closed.flatMap { g -> g.projects.map { it.project.name } })
+        assertEquals(3, overview.activeCount)
+        assertEquals(1, overview.stashCount)
+        assertEquals(3, overview.closedCount)
+    }
+
+    @Test
+    fun `project status groups follow the status values`() {
+        assertEquals(ProjectStatus.IN_PROGRESS, ProjectStatus.fromWire("in_progress"))
+        assertEquals(ProjectStatus.NOT_STARTED, ProjectStatus.fromWire(null))
+        assertEquals(ProjectStatus.NOT_STARTED, ProjectStatus.fromWire("inconnu"))
+        assertEquals(listOf("not_started", "planned", "in_progress", "waiting", "done", "cancelled", "paused", "archived"), ProjectStatus.entries.map { it.wire })
+        assertEquals(setOf(ProjectStatus.DONE, ProjectStatus.CANCELLED, ProjectStatus.ARCHIVED), ProjectStatus.entries.filter { it.isClosed }.toSet())
+    }
+
+    @Test
     fun `tags count open tasks and list them by due date`() {
         val tags = listOf(TagItem("t1", "Urgent"), TagItem("t2", "Admin"))
         val tasks = listOf(open("a", tags = listOf("t1")), open("b", tags = listOf("t1", "t2"), due = friday), done("c", friday).copy(tagUids = listOf("t1")))
