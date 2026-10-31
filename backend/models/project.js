@@ -173,7 +173,9 @@ module.exports = (sequelize) => {
                     'done',
                     'waiting',
                     'cancelled',
-                    'planned'
+                    'planned',
+                    'paused',
+                    'archived'
                 ),
                 allowNull: false,
                 defaultValue: 'not_started',

@@ -1,10 +1,13 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskList from '../TaskList';
 import { updateTask } from '../../../utils/tasksService';
 import { TASK_UPDATED_EVENT } from '../../../contexts/TaskPaneContext';
-import { TASK_DRAG_HOVER_EVENT } from '../taskProjectDrop';
+import {
+    NativeTaskDragContext,
+    SIDEBAR_DRAG_HOVER_EVENT,
+} from '../../Sidebar/sidebarDrop';
 
 let mockDnd: any = {};
 let mockIsMinimal = true;
@@ -28,11 +31,24 @@ jest.mock('../../../utils/tasksService', () => ({
     updateTask: jest.fn(),
 }));
 
-jest.mock('../TaskItem', () => ({
-    __esModule: true,
-    default: ({ task }: any) =>
-        jest.requireActual('react').createElement('div', null, task.name),
-}));
+// The row reads the context to decide whether it is a native drag source.
+jest.mock('../TaskItem', () => {
+    const React = jest.requireActual('react');
+    const { NativeTaskDragContext } = jest.requireActual(
+        '../../Sidebar/sidebarDrop'
+    );
+    return {
+        __esModule: true,
+        default: ({ task }: any) => {
+            const native = React.useContext(NativeTaskDragContext);
+            return React.createElement(
+                'div',
+                native ? { 'data-testid': 'native-drag-row' } : null,
+                task.name
+            );
+        },
+    };
+});
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -65,7 +81,7 @@ beforeEach(() => {
         ...body,
     }));
     sidebarProject = document.createElement('div');
-    sidebarProject.setAttribute('data-project-drop-uid', 'p9');
+    sidebarProject.setAttribute('data-sidebar-drop', 'project:p9');
     document.body.appendChild(sidebarProject);
     // jsdom has no hit testing: the pointer is over the sidebar only when a test says so.
     (document as any).elementFromPoint = jest.fn(() => null);
@@ -88,7 +104,7 @@ const renderList = (onReorder = jest.fn()) => {
     return { onReorder };
 };
 
-describe('TaskList drag in Minimal', () => {
+describe('TaskList drag onto the sidebar', () => {
     it('reorders the shown uids when the drop is inside the list', () => {
         const { onReorder } = renderList();
 
@@ -122,19 +138,19 @@ describe('TaskList drag in Minimal', () => {
         (document as any).elementFromPoint = jest.fn(() => sidebarProject);
         renderList();
         const hover = jest.fn();
-        window.addEventListener(TASK_DRAG_HOVER_EVENT, hover);
+        window.addEventListener(SIDEBAR_DRAG_HOVER_EVENT, hover);
 
         act(() => mockDnd.onDragMove(dragEvent('u2', { x: 20, y: 40 })));
-        expect(hover.mock.calls[0][0].detail).toBe('p9');
+        expect(hover.mock.calls[0][0].detail).toBe('project:p9');
 
         act(() => mockDnd.onDragEnd(dragEvent('u2', { x: 20, y: 40 })));
         expect(
             hover.mock.calls[hover.mock.calls.length - 1][0].detail
         ).toBeNull();
-        window.removeEventListener(TASK_DRAG_HOVER_EVENT, hover);
+        window.removeEventListener(SIDEBAR_DRAG_HOVER_EVENT, hover);
     });
 
-    it('does not move tasks to projects outside Minimal', async () => {
+    it('moves tasks in Dense too', async () => {
         mockIsMinimal = false;
         (document as any).elementFromPoint = jest.fn(() => sidebarProject);
         const { onReorder } = renderList();
@@ -143,7 +159,40 @@ describe('TaskList drag in Minimal', () => {
             await mockDnd.onDragEnd(dragEvent('u3', { x: 20, y: 40 }));
         });
 
-        expect(updateTask).not.toHaveBeenCalled();
-        expect(onReorder).toHaveBeenCalledWith(['u2', 'u3', 'u1']);
+        expect(updateTask).toHaveBeenCalledWith('u1', { project_uid: 'p9' });
+        expect(onReorder).not.toHaveBeenCalled();
+    });
+
+    it('lets plain rows (no reordering) take a native drag', () => {
+        render(
+            <TaskList
+                tasks={tasks}
+                onTaskUpdate={jest.fn()}
+                onTaskDelete={jest.fn()}
+                projects={[]}
+            />
+        );
+
+        expect(
+            screen
+                .getAllByTestId('native-drag-row')
+                .map((row) => row.textContent)
+        ).toEqual(['One', 'Two', 'Three']);
+    });
+
+    it('keeps native drag off rows dnd-kit sorts, even inside a plain list', () => {
+        render(
+            <NativeTaskDragContext.Provider value={true}>
+                <TaskList
+                    tasks={tasks}
+                    onTaskUpdate={jest.fn()}
+                    onTaskDelete={jest.fn()}
+                    projects={[]}
+                    onReorder={jest.fn()}
+                />
+            </NativeTaskDragContext.Provider>
+        );
+
+        expect(screen.queryByTestId('native-drag-row')).toBeNull();
     });
 });

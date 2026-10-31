@@ -1802,7 +1802,11 @@
             "due": "Due",
             "progress": "Progress"
         },
-        "fromTemplate": "From template"
+        "fromTemplate": "From template",
+        "counts": {
+            "active": "{{n}} active",
+            "stash": "{{n}} in the stash"
+        }
     },
     "projectStatus": {
         "not_started": "Nezačatý",
@@ -1817,7 +1821,11 @@
         "done_desc": "Hotový a uzavretý",
         "cancelled": "Zrušený",
         "cancelled_desc": "Nebude dokončený",
-        "idea": "Idea"
+        "idea": "Idea",
+        "paused": "Paused",
+        "paused_desc": "set aside on purpose, to resume later",
+        "archived": "Archived",
+        "archived_desc": "kept to consult, out of sight"
     },
     "projectItem": {
         "edit": "Upraviť",
@@ -4873,5 +4881,8 @@
         "label": "Ikona",
         "none": "Bez ikony",
         "search": "Hľadať ikony"
+    },
+    "sidebarDrop": {
+        "failed": "Túto položku sa nepodarilo aktualizovať."
     }
 }

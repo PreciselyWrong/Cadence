@@ -1790,7 +1790,11 @@
     "reopen": "Reopen",
     "reopened": "\"{{name}}\" is back in progress",
     "loadError": "Failed to load projects",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectStatus": {
     "not_started": "Not Started",
@@ -1803,9 +1807,13 @@
     "waiting_desc": "Waiting on external input",
     "done": "Completed",
     "done_desc": "Finished and done",
-    "cancelled": "Cancelled",
-    "cancelled_desc": "Will not be completed",
-    "idea": "Idea"
+    "cancelled": "Abandoned",
+    "cancelled_desc": "decided not to pursue",
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "projectItem": {
     "edit": "Edit",
@@ -4829,5 +4837,8 @@
     "label": "Icon",
     "none": "No icon",
     "search": "Search icons"
+  },
+  "sidebarDrop": {
+    "failed": "Could not update this item."
   }
 }

@@ -1786,7 +1786,11 @@
       "saveError": "Échec de l'enregistrement des réglages des projets"
     },
     "reorderError": "Échec de l'enregistrement de l'ordre des projets",
-    "fromTemplate": "Depuis un modèle"
+    "fromTemplate": "Depuis un modèle",
+    "counts": {
+      "active": "{{n}} actifs",
+      "stash": "{{n}} dans le stash"
+    }
   },
   "projectItem": {
     "edit": "Modifier",
@@ -3036,9 +3040,13 @@
     "waiting_desc": "En attente d'une entrée externe",
     "done": "Terminé",
     "done_desc": "Fini et terminé",
-    "cancelled": "Annulé",
-    "cancelled_desc": "Ne sera pas terminé",
-    "idea": "Idée"
+    "cancelled": "Abandonné",
+    "cancelled_desc": "décidé de ne pas poursuivre",
+    "idea": "Idée",
+    "paused": "En pause",
+    "paused_desc": "mis de côté volontairement, à reprendre plus tard",
+    "archived": "Archivé",
+    "archived_desc": "consultable, hors de vue"
   },
   "habits": {
     "completeHabit": "Compléter l'habitude",
@@ -4880,5 +4888,8 @@
     "label": "Icône",
     "none": "Aucune icône",
     "search": "Rechercher une icône"
+  },
+  "sidebarDrop": {
+    "failed": "Impossible de mettre à jour cet élément."
   }
 }

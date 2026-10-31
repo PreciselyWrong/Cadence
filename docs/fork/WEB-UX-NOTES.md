@@ -67,7 +67,15 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - les tâches des sous-projets restent dans leur projet, pas fusionnées dans le parent.
 - **Android** : l'écran d'un projet affiche ses sous-projets en lignes (icône, nom, tâches ouvertes) au-dessus des tâches ; l'en-tête d'un sous-projet montre le chemin des parents, chacun cliquable.
 
-### À faire — Glisser-déposer vers la navigation
+### 2026-10-31 — Glisser-déposer vers la barre latérale
 
-- **Demande** : glisser un projet sur une zone l'y range ; glisser une tâche ou une note sur un tag l'étiquette, sur un projet l'y déplace ; idem pour toute cible de la barre latérale.
-- **Android** : même geste vers les cibles de navigation (tiroir ou onglets) quand l'écran le permet.
+- **Problème** : seule une ligne de tâche d'une liste Minimale triable pouvait être lâchée, et seulement sur un projet ; À venir, les cartes du jour, les notes et les projets ne se glissaient nulle part, et le mode Dense n'acceptait rien.
+- **Décisions** (règles complètes dans `docs/32-sidebar.md`, « Drop on the sidebar ») :
+  - cibles : projet (section Projets et projets d'un dossier de zone), tag, zone, Aujourd'hui et Demain (listes intelligentes en Minimal, lien Aujourd'hui en Dense) ;
+  - effets : tâche ou note sur un projet → déplacée dedans ; tâche ou note sur un tag → reçoit le tag (chemin complet), ses autres tags restent ; tâche sur une zone → prend la zone ; projet sur une zone → rangé dans la zone ; tâche sur Aujourd'hui / Demain → échéance ce jour-là ;
+  - refus : une note n'a pas de zone ni d'échéance ; une tâche récurrente ne va pas sur Aujourd'hui / Demain (une date d'une série passe par le déplacement d'occurrence) ; un sous-projet ne change pas de zone (il suit son parent) ; une tâche issue d'un `TODO.md` ne se glisse pas ; une cible qui refuse ne s'allume pas ;
+  - doublon : déjà dans ce projet ou cette zone, tag déjà présent, déjà dû ce jour-là → rien n'est enregistré ;
+  - sources : lignes de tâche de toutes les listes (Tâches, À venir, pages projet, zone, tag, Aujourd'hui, cartes candidates du jour), cartes de note (page Notes, page projet) et notes de la barre, projets de la barre et cartes de la page Projets ; le tri par glisser existant reste, le dépôt sur la barre l'emporte ;
+  - retour : la cible sous le pointeur s'entoure d'un anneau bleu ; la ligne garde sa place et affiche le changement sans rechargement ; un échec affiche un toast d'erreur ; pas de toast de succès ni d'annulation (aucun motif d'annulation pour un déplacement n'existe encore) ; le clic qui termine le glisser n'ouvre pas la cible ;
+  - densités : identique en Minimal et en Dense ; le glisser au clavier réordonne toujours, sans jamais viser la barre.
+- **Android** : reprendre le geste par appui long puis glisser vers les cibles du tiroir ou de la navigation (projets, tags, zones, Aujourd'hui / Demain) quand l'écran les montre pendant le glisser (tiroir ouvert, tablette, paysage) ; mêmes effets, mêmes refus, rien d'enregistré en cas de doublon, cible surlignée pendant le survol, la ligne reste à sa place.

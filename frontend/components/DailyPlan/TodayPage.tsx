@@ -11,6 +11,7 @@ import {
     CollisionDetection,
     DndContext,
     DragEndEvent,
+    DragMoveEvent,
     DragOverlay,
     DragStartEvent,
     KeyboardSensor,
@@ -22,6 +23,7 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { mergeVisibleOrder } from '../Shared/sortableList';
+import { DragItem, useSidebarDrop } from '../Sidebar/sidebarDrop';
 import { Task } from '../../entities/Task';
 import {
     AiWrapUp,
@@ -1568,6 +1570,19 @@ const TodayPage: React.FC = () => {
         })
     );
 
+    // A candidate card dragged out of the left column can land on a sidebar
+    // row (project, tag, area, Today/Tomorrow) instead of the day.
+    const sidebarDrop = useSidebarDrop();
+    const sidebarItem = (
+        event: DragMoveEvent | DragEndEvent
+    ): DragItem | null => {
+        const data = event.active.data.current as
+            { type: string; task?: Task } | undefined;
+        return data?.type === 'candidate' && data.task
+            ? { kind: 'task', task: data.task }
+            : null;
+    };
+
     const handleDragStart = (event: DragStartEvent) => {
         const data = event.active.data.current as
             | { type: 'candidate'; task: Task }
@@ -1590,6 +1605,7 @@ const TodayPage: React.FC = () => {
 
     const handleDragEnd = (event: DragEndEvent) => {
         setDragLabel(null);
+        if (sidebarDrop.dragEnd(event, sidebarItem(event))) return;
         const { active, over, delta, activatorEvent } = event;
         const data = active.data.current as
             | { type: 'candidate'; task: Task; duration: number }
@@ -1739,8 +1755,14 @@ const TodayPage: React.FC = () => {
             sensors={sensors}
             collisionDetection={collisionDetection}
             onDragStart={handleDragStart}
+            onDragMove={(event) =>
+                sidebarDrop.dragMove(event, sidebarItem(event))
+            }
             onDragEnd={handleDragEnd}
-            onDragCancel={() => setDragLabel(null)}
+            onDragCancel={() => {
+                setDragLabel(null);
+                sidebarDrop.dragCancel();
+            }}
         >
             <div className="flex h-full w-full flex-col gap-4 px-4 pb-4 pt-4 sm:px-6 lg:px-8">
                 <header className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3">

@@ -10,7 +10,9 @@ export type ProjectStatus =
     | 'in_progress'
     | 'waiting'
     | 'done'
-    | 'cancelled';
+    | 'cancelled'
+    | 'paused'
+    | 'archived';
 
 export interface ProjectTaskStatus {
     total: number;

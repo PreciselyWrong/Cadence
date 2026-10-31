@@ -41,7 +41,9 @@ describe('BlankSlate', () => {
 
         const link = screen.getByRole('link', { name: 'Go elsewhere' });
         expect(link).toHaveAttribute('href', '/elsewhere');
-        expect(link).toHaveClass('bg-blue-50');
+        // Secondary actions are quiet text buttons, never filled.
+        expect(link).toHaveClass('text-primary');
+        expect(link).not.toHaveClass('bg-primary');
     });
 
     it('renders without actions', () => {

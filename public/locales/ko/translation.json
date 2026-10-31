@@ -1782,7 +1782,11 @@
     },
     "reorderError": "Failed to save project order",
     "historyDuration_one": "took {{count}} day",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "편집",
@@ -3031,7 +3035,11 @@
     "done_desc": "끝났고 완료됨",
     "cancelled": "취소됨",
     "cancelled_desc": "완료되지 않을 것임",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "습관 완료",
@@ -4866,5 +4874,8 @@
     "label": "아이콘",
     "none": "아이콘 없음",
     "search": "아이콘 검색"
+  },
+  "sidebarDrop": {
+    "failed": "이 항목을 업데이트할 수 없습니다."
   }
 }

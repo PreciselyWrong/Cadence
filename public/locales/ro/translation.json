@@ -1787,7 +1787,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Editează",
@@ -3039,7 +3043,11 @@
     "done_desc": "Terminată și finalizată",
     "cancelled": "Anulat",
     "cancelled_desc": "Nu va fi finalizat",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Finalizare obicei",
@@ -4883,5 +4891,8 @@
     "label": "Pictogramă",
     "none": "Fără pictogramă",
     "search": "Caută pictograme"
+  },
+  "sidebarDrop": {
+    "failed": "Acest element nu a putut fi actualizat."
   }
 }

@@ -10,11 +10,7 @@ interface IconPickerProps {
 }
 
 const normalize = (text: string) =>
-    text
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .trim();
+    text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
 
 const matches = (icon: EntityIconDef, query: string) =>
     !query ||

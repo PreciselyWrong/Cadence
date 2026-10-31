@@ -1782,7 +1782,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Bewerken",
@@ -3031,7 +3035,11 @@
     "done_desc": "Afgerond en voltooid",
     "cancelled": "Geannuleerd",
     "cancelled_desc": "Zal niet worden voltooid",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Gewoonte voltooien",
@@ -4866,5 +4874,8 @@
     "label": "Pictogram",
     "none": "Geen pictogram",
     "search": "Pictogrammen zoeken"
+  },
+  "sidebarDrop": {
+    "failed": "Dit item kon niet worden bijgewerkt."
   }
 }

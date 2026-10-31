@@ -73,12 +73,10 @@ describe('buildTagTree', () => {
     it('nests tags by namespace at any depth', () => {
         const tree = buildTagTree([urgent, calls, work, home]);
         expect(tree.map((n) => n.tag.name)).toEqual(['home', 'work']);
-        expect(tree[1].children.map((c) => c.tag.name)).toEqual([
-            'work/calls',
+        expect(tree[1].children.map((c) => c.tag.name)).toEqual(['work/calls']);
+        expect(tree[1].children[0].children.map((c) => c.tag.name)).toEqual([
+            'work/calls/urgent',
         ]);
-        expect(tree[1].children[0].children.map((c) => c.tag.name)).toEqual(
-            ['work/calls/urgent']
-        );
     });
 
     it('hangs a tag on its nearest listed ancestor', () => {
@@ -138,12 +136,7 @@ describe('TagModal parent select', () => {
     it('saves the full path built from the parent and the short name', async () => {
         const onSave = jest.fn().mockResolvedValue(undefined);
         render(
-            <TagModal
-                isOpen
-                onClose={jest.fn()}
-                onSave={onSave}
-                tag={calls}
-            />
+            <TagModal isOpen onClose={jest.fn()} onSave={onSave} tag={calls} />
         );
 
         fireEvent.change(screen.getByTestId('tag-parent-select'), {
@@ -243,7 +236,9 @@ describe('SidebarTags nesting', () => {
             'urgent',
         ]);
         const indent = (uid: string) =>
-            parseInt(screen.getByTestId(`sidebar-tag-${uid}`).style.paddingLeft);
+            parseInt(
+                screen.getByTestId(`sidebar-tag-${uid}`).style.paddingLeft
+            );
         expect(indent('calls1')).toBeGreaterThan(indent('work1'));
         expect(indent('urgent1')).toBeGreaterThan(indent('calls1'));
         expect(screen.getByTestId('sidebar-tag-urgent1')).toHaveAttribute(

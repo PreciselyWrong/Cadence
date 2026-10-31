@@ -1782,7 +1782,11 @@
     },
     "reorderError": "Failed to save project order",
     "historyDuration_one": "took {{count}} day",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Sunting",
@@ -3031,7 +3035,11 @@
     "done_desc": "Telah selesai dan selesai",
     "cancelled": "Dibatalkan",
     "cancelled_desc": "Tidak akan diselesaikan",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Selesaikan kebiasaan",
@@ -4866,5 +4874,8 @@
     "label": "Ikon",
     "none": "Tanpa ikon",
     "search": "Cari ikon"
+  },
+  "sidebarDrop": {
+    "failed": "Item ini tidak dapat diperbarui."
   }
 }

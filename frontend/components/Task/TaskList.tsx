@@ -24,14 +24,7 @@ import { Task } from '../../entities/Task';
 import { isTaskActive } from '../../constants/taskStatus';
 import { TASK_SHEET_CLASS } from './taskSheet';
 import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
-import { useIsMinimal } from '../../hooks/useUiDensity';
-import { useOptionalToast } from '../Shared/ToastContext';
-import {
-    announceProjectHover,
-    dragPointer,
-    moveTaskToProject,
-    projectUidAt,
-} from './taskProjectDrop';
+import { NativeTaskDragContext, useSidebarDrop } from '../Sidebar/sidebarDrop';
 
 interface TaskListProps {
     tasks: Task[];
@@ -70,8 +63,7 @@ const TaskList: React.FC<TaskListProps> = ({
     const { t } = useTranslation();
     const sensors = useSortableSensors();
     const { listRef, onListKeyDown, onListFocus } = useMinimalRowKeyboard();
-    const isMinimal = useIsMinimal();
-    const toast = useOptionalToast();
+    const sidebarDrop = useSidebarDrop();
 
     // Conditionally filter tasks based on showCompletedTasks prop
     const filteredTasks = showCompletedTasks
@@ -110,61 +102,47 @@ const TaskList: React.FC<TaskListProps> = ({
 
     const sortable = !!onReorder && filteredTasks.every((task) => task.uid);
 
+    // Rows of a list without reordering drag natively onto the sidebar.
     if (!sortable) {
         return (
-            <div
-                ref={listRef}
-                onKeyDown={onListKeyDown}
-                onFocus={onListFocus}
-                className={`task-list-container overflow-visible ${TASK_SHEET_CLASS}`}
-            >
-                {filteredTasks.map((task) => (
-                    <div
-                        key={task.id}
-                        className={wrapperClass}
-                        data-testid={`task-item-${task.id}`}
-                    >
-                        {renderTaskItem(task)}
-                    </div>
-                ))}
-            </div>
+            <NativeTaskDragContext.Provider value={true}>
+                <div
+                    ref={listRef}
+                    onKeyDown={onListKeyDown}
+                    onFocus={onListFocus}
+                    className={`task-list-container overflow-visible ${TASK_SHEET_CLASS}`}
+                >
+                    {filteredTasks.map((task) => (
+                        <div
+                            key={task.id}
+                            className={wrapperClass}
+                            data-testid={`task-item-${task.id}`}
+                        >
+                            {renderTaskItem(task)}
+                        </div>
+                    ))}
+                </div>
+            </NativeTaskDragContext.Provider>
         );
     }
 
     const uids = filteredTasks.map((task) => task.uid as string);
 
-    // Minimal only: the sidebar project under the pointer is highlighted.
-    const handleDragMove = ({ activatorEvent, delta }: DragMoveEvent) => {
-        if (!isMinimal) return;
-        announceProjectHover(projectUidAt(dragPointer(activatorEvent, delta)));
+    const dragItem = (id: unknown) => {
+        const task = filteredTasks.find((item) => item.uid === id);
+        return task ? ({ kind: 'task', task } as const) : null;
     };
 
-    const handleDragEnd = ({
-        active,
-        over,
-        activatorEvent,
-        delta,
-    }: DragEndEvent) => {
+    // The sidebar row under the pointer lights up while dragging.
+    const handleDragMove = (event: DragMoveEvent) =>
+        sidebarDrop.dragMove(event, dragItem(event.active.id));
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
         resetSortableCursor();
-        announceProjectHover(null);
-        // Released over a sidebar project: the row moves there and keeps its
-        // place in this list. The click that ends the drag must not open
-        // the project it lands on.
-        const projectUid = isMinimal
-            ? projectUidAt(dragPointer(activatorEvent, delta))
-            : null;
-        if (projectUid) {
-            swallowNextClick();
-            const task = filteredTasks.find((item) => item.uid === active.id);
-            if (task) {
-                moveTaskToProject(task, projectUid).catch(() => {
-                    toast?.showErrorToast(
-                        t('task.updateError', 'Failed to update task')
-                    );
-                });
-            }
-            return;
-        }
+        // Released over a sidebar row: the task takes it (project, tag, area,
+        // day) and keeps its place in this list.
+        if (sidebarDrop.dragEnd(event, dragItem(active.id))) return;
         if (!over || active.id === over.id) return;
         swallowNextClick();
         const from = uids.indexOf(active.id as string);
@@ -180,6 +158,10 @@ const TaskList: React.FC<TaskListProps> = ({
             {...sortableCursorHandlers}
             onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
+            onDragCancel={() => {
+                sortableCursorHandlers.onDragCancel();
+                sidebarDrop.dragCancel();
+            }}
         >
             <SortableContext
                 items={uids}

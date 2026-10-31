@@ -1221,7 +1221,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "notes": {
     "loading": "Φόρτωση σημειώσεων...",
@@ -3032,7 +3036,11 @@
     "done_desc": "Ολοκληρωμένο και τελειωμένο",
     "cancelled": "Ακυρώθηκε",
     "cancelled_desc": "Δεν θα ολοκληρωθεί",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Ολοκλήρωση συνήθειας",
@@ -4867,5 +4875,8 @@
     "label": "Εικονίδιο",
     "none": "Χωρίς εικονίδιο",
     "search": "Αναζήτηση εικονιδίων"
+  },
+  "sidebarDrop": {
+    "failed": "Δεν ήταν δυνατή η ενημέρωση αυτού του στοιχείου."
   }
 }

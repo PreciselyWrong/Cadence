@@ -13,6 +13,8 @@ import {
     XCircleIcon,
     ExclamationTriangleIcon,
     FolderIcon,
+    PauseCircleIcon,
+    ArchiveBoxIcon,
 } from '@heroicons/react/24/outline';
 import { Project, ProjectStatus } from '../../entities/Project';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +33,7 @@ import {
 } from '../../utils/projectShareCache';
 import { getApiPath } from '../../config/paths';
 import EntityIcon from '../Shared/EntityIcon';
+import { isProjectLive } from '../../utils/projectStatus';
 
 interface ProjectItemProps {
     project: Project;
@@ -61,6 +64,10 @@ const getStatusIcon = (status: ProjectStatus | undefined) => {
             return { icon: ClockIcon };
         case 'done':
             return { icon: CheckCircleIcon };
+        case 'paused':
+            return { icon: PauseCircleIcon };
+        case 'archived':
+            return { icon: ArchiveBoxIcon };
         case 'cancelled':
             return { icon: XCircleIcon };
         default:
@@ -80,8 +87,12 @@ const getStatusLabel = (status: ProjectStatus | undefined, t: any): string => {
             return t('projectStatus.waiting', 'Waiting');
         case 'done':
             return t('projectStatus.done', 'Completed');
+        case 'paused':
+            return t('projectStatus.paused', 'Paused');
+        case 'archived':
+            return t('projectStatus.archived', 'Archived');
         case 'cancelled':
-            return t('projectStatus.cancelled', 'Cancelled');
+            return t('projectStatus.cancelled', 'Abandoned');
         default:
             return t('projectStatus.not_started', 'Not Started');
     }
@@ -158,9 +169,19 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             Icon: CheckCircleIcon,
         },
         {
+            value: 'paused',
+            label: t('projectStatus.paused', 'Paused'),
+            Icon: PauseCircleIcon,
+        },
+        {
             value: 'cancelled',
-            label: t('projectStatus.cancelled', 'Cancelled'),
+            label: t('projectStatus.cancelled', 'Abandoned'),
             Icon: XCircleIcon,
+        },
+        {
+            value: 'archived',
+            label: t('projectStatus.archived', 'Archived'),
+            Icon: ArchiveBoxIcon,
         },
     ];
 
@@ -236,8 +257,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 isOverdue: false,
             };
         }
-        const isFinished =
-            project.status === 'done' || project.status === 'cancelled';
+        const isFinished = !isProjectLive(project.status);
         const dueDate = new Date(project.due_date_at);
         if (Number.isNaN(dueDate.getTime())) {
             return {

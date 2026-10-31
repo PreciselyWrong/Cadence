@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useTranslation } from 'react-i18next';
 import { ArrowsPointingOutIcon } from '@heroicons/react/24/solid';
+import { NativeTaskDragContext } from '../Sidebar/sidebarDrop';
 
 interface SortableItemProps {
     id: string;
@@ -111,7 +112,10 @@ const SortableItem: React.FC<SortableItemProps> = ({
                       : 'cursor-grab'
             }`}
         >
-            {children}
+            {/* dnd-kit drags this item: a native drag inside would fight it. */}
+            <NativeTaskDragContext.Provider value={false}>
+                {children}
+            </NativeTaskDragContext.Provider>
             {isActive && (
                 <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-blue-500/10">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-on shadow-md">

@@ -12,12 +12,13 @@ import { createTagUrl } from '../../utils/slugUtils';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
-import {
-    buildTagTree,
-    flattenTagTree,
-    tagLeafName,
-} from '../../utils/tagTree';
+import { buildTagTree, flattenTagTree, tagLeafName } from '../../utils/tagTree';
 import EntityIcon from '../Shared/EntityIcon';
+import {
+    DROP_HIGHLIGHT_CLASS,
+    dropTargetAttrs,
+    useDropHover,
+} from './sidebarDrop';
 
 interface SidebarTagsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -53,10 +54,14 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
         ? 'py-[7px] text-[14px]'
         : 'py-[4px] text-[13.5px]';
 
-    const itemClass = (path: string) =>
+    // A row with a uid takes tasks and notes dragged onto it (they gain the
+    // tag); a tag still being created has none yet.
+    const isDropHover = useDropHover();
+
+    const itemClass = (path: string, tagUid?: string) =>
         `group flex justify-between items-center rounded-[8px] pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
             isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
-        }`;
+        } ${isDropHover('tag', tagUid) ? DROP_HIGHLIGHT_CLASS : ''}`;
 
     const getTagPath = (tag: Tag) => {
         try {
@@ -150,7 +155,13 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                         ({ tag: item, depth }) => (
                             <div
                                 key={item.uid || item.id}
-                                className={itemClass(getTagPath(item))}
+                                {...(item.uid
+                                    ? dropTargetAttrs('tag', item.uid)
+                                    : {})}
+                                className={itemClass(
+                                    getTagPath(item),
+                                    item.uid
+                                )}
                                 style={{ paddingLeft: 30 + depth * 14 }}
                                 title={item.name}
                                 onClick={() => navigate(item)}

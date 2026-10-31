@@ -41,6 +41,23 @@ Stored in `users.sidebar_settings` as `smartLists: [{key, visible, showCount}]`,
 - **Areas** are folders. Click the arrow to show the projects inside an area; click the name to open the area page.
 - Rows are 34 px tall with 14 px text.
 
+## Drop on the sidebar
+
+Drag a task, a note or a project onto a sidebar row to file it there, in Minimal and in Dense. The row under the pointer lights up (blue ring) only when it takes what is dragged; releasing elsewhere changes nothing.
+
+| Row | Task | Note | Project |
+|---|---|---|---|
+| Project (Projects section, or under an open area folder) | moves into the project | moves into the project | — |
+| Tag | gains the tag (full path, e.g. `perso/sport`); its other tags stay | same | — |
+| Area | gets the area | — (notes have no area) | is filed in the area |
+| Today, Tomorrow (Minimal smart lists), Today (Dense links) | becomes due that day | — | — |
+
+- What can be dragged: task rows in every task list (Tasks, Upcoming, project, area, tag and Today pages, Today's candidate cards), note cards (Notes page, project page) and note rows in the sidebar, project rows in the sidebar and project cards on the Projects page. Lists that reorder by drag keep doing so; a drop on the sidebar wins over a reorder.
+- Nothing is saved when the item already has it (same project, same area, the tag already set, already due that day).
+- Not taken: recurring tasks on Today or Tomorrow (one date of a series moves through the occurrence move), a sub-project on an area (its area follows its parent), tasks mirrored from a `TODO.md` file, occurrences that only exist on screen, tags not yet saved.
+- The row keeps its place in the list it came from and shows the change at once. A failed save shows an error toast. The click that ends a drag does not open the row it lands on.
+- Keyboard reordering is unchanged and never drops on the sidebar.
+
 ## Icon rail and More
 
 By default the primary icons are Today, Inbox, Calendar, Notes, Habits, Views, Areas, Goals, People, Insights; the rest sit in **More**: All tasks, Assigned to me, Everyone, Boards, Templates, Access. Each item can be moved between the rail, More and hidden (see [Customising](#customising)). Calendar, Habits, Templates, Everyone and Access still follow their feature and visibility settings.

@@ -9,7 +9,12 @@ import ConfirmDialog from './Shared/ConfirmDialog';
 import ProjectModal from './Project/ProjectModal';
 import IconSortDropdown from './Shared/IconSortDropdown';
 import FilterDropdown, { FilterOption } from './Shared/FilterDropdown';
-import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    closestCenter,
+    DragEndEvent,
+    DragMoveEvent,
+} from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -40,6 +45,7 @@ import {
 import ProjectItem from './Project/ProjectItem';
 import { PROJECT_TABLE_GRID } from './Project/projectTableLayout';
 import SortableItem from './Shared/SortableItem';
+import { useSidebarDrop } from './Sidebar/sidebarDrop';
 import NewItemButton from './Shared/NewItemButton';
 import ImportWizard from './Spreadsheet/ImportWizard';
 import BlankSlate from './Shared/BlankSlate';
@@ -66,6 +72,7 @@ import ProjectsListSettings, {
 import { flattenProjectTree } from '../utils/projectTree';
 import OverflowMenu from './Shared/OverflowMenu';
 import SkeletonRows from './Shared/SkeletonRows';
+import { isProjectInStash, isProjectLive } from '../utils/projectStatus';
 
 // Custom order: projects without a position (new ones) come first, newest
 // first, then the rest by the position the user dragged them to.
@@ -298,7 +305,19 @@ const Projects: React.FC = () => {
         { value: 'custom:asc', label: t('sort.custom', 'Custom') },
     ];
     const isCustomOrder = orderBy.startsWith('custom:');
+    const liveProjectCount = projects.filter((p) =>
+        isProjectLive(p.status)
+    ).length;
+    const stashProjectCount = projects.filter((p) =>
+        isProjectInStash(p.status)
+    ).length;
     const sensors = useSortableSensors();
+    // A card dragged onto a sidebar area is filed there.
+    const sidebarDrop = useSidebarDrop();
+    const sidebarItem = (id: unknown) => {
+        const project = projects.find((p) => p.uid === id);
+        return project ? ({ kind: 'project', project } as const) : null;
+    };
 
     // Filter options for dropdowns
     const statusOptions: FilterOption[] = [
@@ -314,14 +333,16 @@ const Projects: React.FC = () => {
         },
         { value: 'waiting', label: t('projectStatus.waiting', 'Waiting') },
         { value: 'done', label: t('projectStatus.done', 'Completed') },
+        { value: 'paused', label: t('projectStatus.paused', 'Paused') },
         {
             value: 'cancelled',
-            label: t('projectStatus.cancelled', 'Cancelled'),
+            label: t('projectStatus.cancelled', 'Abandoned'),
         },
+        { value: 'archived', label: t('projectStatus.archived', 'Archived') },
         { value: 'divider', label: '' },
         {
             value: 'not_completed',
-            label: t('projects.filters.notCompleted', 'Not Completed'),
+            label: t('projects.filters.active', 'Active'),
         },
         { value: 'shared', label: t('projects.filters.shared', 'Shared') },
     ];
@@ -588,9 +609,8 @@ const Projects: React.FC = () => {
 
         // Apply status filter
         if (statusFilter === 'not_completed') {
-            filteredProjects = filteredProjects.filter(
-                (project) =>
-                    project.status !== 'done' && project.status !== 'cancelled'
+            filteredProjects = filteredProjects.filter((project) =>
+                isProjectLive(project.status)
             );
         } else if (statusFilter === 'shared') {
             filteredProjects = filteredProjects.filter(
@@ -636,6 +656,13 @@ const Projects: React.FC = () => {
         if (!completedFilter && statusFilter !== 'done') {
             filteredProjects = filteredProjects.filter(
                 (project) => project.status !== 'done'
+            );
+        }
+
+        // Archived projects only show when asked for
+        if (statusFilter !== 'archived' && statusFilter !== 'all') {
+            filteredProjects = filteredProjects.filter(
+                (project) => project.status !== 'archived'
             );
         }
 
@@ -695,8 +722,10 @@ const Projects: React.FC = () => {
         );
     };
 
-    const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event;
         resetSortableCursor();
+        if (sidebarDrop.dragEnd(event, sidebarItem(active.id))) return;
         if (!over || active.id === over.id) return;
         swallowNextClick();
 
@@ -825,9 +854,34 @@ const Projects: React.FC = () => {
         <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
             <div className="w-full max-w-7xl mx-auto">
                 <div className="flex items-center justify-between gap-3 mb-8">
-                    <h2 className="text-2xl font-light">
-                        {t('projects.title')}
-                    </h2>
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <h2 className="text-2xl font-light">
+                            {t('projects.title')}
+                        </h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {t('projects.counts.active', '{{n}} active', {
+                                n: liveProjectCount,
+                            })}
+                            {stashProjectCount > 0 && (
+                                <>
+                                    {' · '}
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            handleStatusFilterChange('paused')
+                                        }
+                                        className="underline-offset-2 hover:underline focus:outline-none focus-visible:underline"
+                                    >
+                                        {t(
+                                            'projects.counts.stash',
+                                            '{{n}} in the stash',
+                                            { n: stashProjectCount }
+                                        )}
+                                    </button>
+                                </>
+                            )}
+                        </p>
+                    </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() =>
@@ -1099,7 +1153,17 @@ const Projects: React.FC = () => {
                         sensors={sensors}
                         collisionDetection={closestCenter}
                         {...sortableCursorHandlers}
+                        onDragMove={(event: DragMoveEvent) =>
+                            sidebarDrop.dragMove(
+                                event,
+                                sidebarItem(event.active.id)
+                            )
+                        }
                         onDragEnd={handleDragEnd}
+                        onDragCancel={() => {
+                            sortableCursorHandlers.onDragCancel();
+                            sidebarDrop.dragCancel();
+                        }}
                     >
                         <SortableContext
                             items={displayProjects.map((p) => p.uid as string)}

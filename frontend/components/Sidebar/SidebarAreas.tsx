@@ -15,6 +15,13 @@ import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded
 import { useStore } from '../../store/useStore';
 import { flattenProjectTree } from '../../utils/projectTree';
 import { getProjectPath } from './SidebarProjects';
+import {
+    DROP_HIGHLIGHT_CLASS,
+    dropTargetAttrs,
+    useDropHover,
+    useSidebarDrop,
+} from './sidebarDrop';
+import { isProjectLive } from '../../utils/projectStatus';
 
 interface SidebarAreasProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -60,6 +67,12 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
     const loadProjects = useStore((state) => state.projectsStore.loadProjects);
     const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
 
+    // An area row takes projects and tasks dragged onto it; a project row in
+    // an open folder takes tasks and notes, and drags onto another area.
+    const isDropHover = useDropHover();
+    const { nativeSource } = useSidebarDrop();
+    const highlight = (lit: boolean) => (lit ? DROP_HIGHLIGHT_CLASS : '');
+
     useEffect(() => {
         if (isMinimal && !hasLoadedProjects) loadProjects();
     }, [isMinimal, hasLoadedProjects, loadProjects]);
@@ -69,19 +82,18 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
         const areaProjects = flattenProjectTree(
             projects.filter(
                 (p) =>
-                    p.area_id === area.id &&
-                    p.status !== 'done' &&
-                    p.status !== 'cancelled'
+                    p.area_id === area.id && isProjectLive(p.status)
             )
         );
         return (
             <div key={area.uid}>
                 <div
+                    {...dropTargetAttrs('area', area.uid as string)}
                     className={`flex items-center gap-[4px] rounded-[8px] pl-[6px] pr-[10px] h-[34px] text-[14px] text-gray-700 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
                         location.pathname === getAreaPath(area)
                             ? 'bg-gray-100 dark:bg-gray-800'
                             : ''
-                    }`}
+                    } ${highlight(isDropHover('area', area.uid))}`}
                 >
                     <button
                         type="button"
@@ -118,7 +130,14 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                     areaProjects.map(({ project, depth }) => (
                         <div
                             key={project.uid}
-                            className="flex items-center rounded-[8px] h-[34px] pr-[10px] text-[14px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800"
+                            {...dropTargetAttrs(
+                                'project',
+                                project.uid as string
+                            )}
+                            {...nativeSource({ kind: 'project', project })}
+                            className={`flex items-center rounded-[8px] h-[34px] pr-[10px] text-[14px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${highlight(
+                                isDropHover('project', project.uid)
+                            )}`}
                             style={{ paddingLeft: 30 + depth * 12 }}
                             onClick={() =>
                                 handleNavClick(
@@ -137,12 +156,12 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
         );
     };
 
-    const itemClass = (path: string) =>
+    const itemClass = (path: string, areaUid?: string) =>
         `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
             location.pathname === path
                 ? 'bg-gray-100 dark:bg-gray-800'
                 : ''
-        }`;
+        } ${highlight(isDropHover('area', areaUid))}`;
 
     const navigate = (area: Area) =>
         handleNavClick(
@@ -231,7 +250,14 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                             ) : (
                                 <div
                                     key={area.uid}
-                                    className={itemClass(getAreaPath(area))}
+                                    {...dropTargetAttrs(
+                                        'area',
+                                        area.uid as string
+                                    )}
+                                    className={itemClass(
+                                        getAreaPath(area),
+                                        area.uid
+                                    )}
                                     onClick={() => navigate(area)}
                                 >
                                     <span className="truncate min-w-0">

@@ -1,4 +1,5 @@
 import React, {
+    useContext,
     useState,
     useEffect,
     useCallback,
@@ -41,6 +42,10 @@ import { useTaskRowExpansion } from './TaskRowExpansionContext';
 import { useTaskRowSave } from './useTaskRowSave';
 import { useTaskPane } from '../../../contexts/TaskPaneContext';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
+import {
+    NativeTaskDragContext,
+    nativeDragSourceProps,
+} from '../../Sidebar/sidebarDrop';
 import {
     openTaskPanel,
     TASK_PANEL_SAVED_EVENT,
@@ -481,9 +486,23 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const shouldShowSubtasksIcon =
         hasInitialSubtasks || subtasks.length > 0 || loadingSubtasks;
 
+    // In a list without dnd-kit, the collapsed row drags natively onto the
+    // sidebar (project, tag, area, Today). An open row keeps its text
+    // fields selectable.
+    const nativeDragList = useContext(NativeTaskDragContext);
+    const dragProps =
+        nativeDragList && !isExpanded
+            ? nativeDragSourceProps({ kind: 'task', task }, () =>
+                  showErrorToast(
+                      t('sidebarDrop.failed', 'Could not update this item.')
+                  )
+              )
+            : {};
+
     return (
         <div
             ref={rowRootRef}
+            {...dragProps}
             data-task-uid={task.uid}
             data-task-row=""
             data-task-expanded={isExpanded || undefined}

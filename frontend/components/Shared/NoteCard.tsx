@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import MarkdownRenderer from './MarkdownRenderer';
 import { Note } from '../../entities/Note';
+import { useSidebarDrop } from '../Sidebar/sidebarDrop';
 
 interface NoteCardProps {
     note: Note;
@@ -30,6 +31,8 @@ const NoteCard: React.FC<NoteCardProps> = ({
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    // The card drags natively onto a sidebar project or tag.
+    const { nativeSource } = useSidebarDrop();
 
     const tags = note.tags || note.Tags || [];
     const project = note.project || note.Project;
@@ -56,7 +59,10 @@ const NoteCard: React.FC<NoteCardProps> = ({
     }, [dropdownOpen]);
 
     return (
-        <div className="relative group">
+        <div
+            className="relative group"
+            {...nativeSource({ kind: 'note', note })}
+        >
             <Link
                 to={`/note/${noteIdentifier}-${note.title
                     .toLowerCase()

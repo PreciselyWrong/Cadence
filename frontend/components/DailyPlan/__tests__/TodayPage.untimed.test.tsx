@@ -11,7 +11,7 @@ import {
     fetchCalendarEvents,
     fetchCalendarFeeds,
 } from '../../../utils/calendarFeedsService';
-import { fetchCalendarTasks } from '../../../utils/tasksService';
+import { fetchCalendarTasks, updateTask } from '../../../utils/tasksService';
 
 // The page's DndContext is wrapped so a test can deliver the drag-end event
 // dnd-kit sends after a pointer drag (jsdom has no layout to drag across).
@@ -212,5 +212,47 @@ describe('TodayPage untimed tasks', () => {
 
         await waitFor(() => expect(saveDailyPlanItems).toHaveBeenCalled());
         expect(lastSavedOrder()).toEqual(['b', 't', 'a']);
+    });
+
+    it('moves a candidate dropped on a sidebar project, without planning it', async () => {
+        const task = { uid: 'c1', name: 'Call bank', status: 0 };
+        (fetchPlanCandidates as jest.Mock).mockResolvedValue({
+            ...candidates,
+            due_today: [task],
+        });
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: TODAY,
+            plan: { uid: 'p', date: TODAY, started_at: null, items: [] },
+        });
+        render(<TodayPage />);
+        await screen.findByText('Call bank');
+        const project = document.createElement('div');
+        project.setAttribute('data-sidebar-drop', 'project:p9');
+        document.body.appendChild(project);
+        // jsdom has no hit testing: the pointer is over the project.
+        (document as any).elementFromPoint = jest.fn(() => project);
+
+        act(() => {
+            mockDnd.onDragEnd?.({
+                active: {
+                    id: 'candidate:c1',
+                    data: {
+                        current: { type: 'candidate', task, duration: 30 },
+                    },
+                },
+                over: null,
+                delta: { x: -300, y: 0 },
+                activatorEvent: { clientX: 400, clientY: 100 },
+            });
+        });
+
+        await waitFor(() =>
+            expect(updateTask).toHaveBeenCalledWith('c1', {
+                project_uid: 'p9',
+            })
+        );
+        expect(document.elementFromPoint).toHaveBeenCalledWith(100, 100);
+        expect(saveDailyPlanItems).not.toHaveBeenCalled();
+        project.remove();
     });
 });

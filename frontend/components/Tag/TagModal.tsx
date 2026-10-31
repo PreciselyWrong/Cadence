@@ -70,9 +70,7 @@ const TagModal: React.FC<TagModalProps> = ({
     // Any tag can be a parent except this one and its own descendants.
     const parentOptions = allTags
         .filter((other) => other.uid)
-        .filter(
-            (other) => !tag || !isSameOrDescendantTag(other.name, tag.name)
-        )
+        .filter((other) => !tag || !isSameOrDescendantTag(other.name, tag.name))
         .sort((a, b) =>
             a.name.toLowerCase().localeCompare(b.name.toLowerCase())
         );

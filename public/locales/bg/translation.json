@@ -1782,7 +1782,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Редактиране",
@@ -3031,7 +3035,11 @@
     "done_desc": "Завършено и готово",
     "cancelled": "Отменено",
     "cancelled_desc": "Няма да бъде завършено",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Завърши навика",
@@ -4866,5 +4874,8 @@
     "label": "Икона",
     "none": "Без икона",
     "search": "Търсене на икони"
+  },
+  "sidebarDrop": {
+    "failed": "Неуспешно обновяване на този елемент."
   }
 }

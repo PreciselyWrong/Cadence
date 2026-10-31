@@ -28,7 +28,9 @@ const PROJECT_STATUSES: ProjectStatus[] = [
     'in_progress',
     'waiting',
     'done',
+    'paused',
     'cancelled',
+    'archived',
 ];
 const MAX_NAME_LENGTH = 150;
 
@@ -252,7 +254,9 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 <EntityIcon
                                     icon={project.icon}
                                     className="h-7 w-7"
-                                    fallback={<FolderIcon className="h-7 w-7" />}
+                                    fallback={
+                                        <FolderIcon className="h-7 w-7" />
+                                    }
                                 />
                             </span>
                         )}

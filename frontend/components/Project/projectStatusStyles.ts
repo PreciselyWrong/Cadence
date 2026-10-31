@@ -14,6 +14,10 @@ export const getProjectStatusTint = (
             return 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300';
         case 'planned':
             return 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300';
+        case 'paused':
+            return 'bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300';
+        case 'archived':
+            return 'bg-stone-100 text-stone-600 dark:bg-stone-500/15 dark:text-stone-300';
         case 'cancelled':
             return 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300';
         default:

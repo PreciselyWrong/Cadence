@@ -10,6 +10,8 @@ const task = (due_date?: string) => ({ id: 1, name: 'x', due_date }) as Task;
 
 describe('dayColumnHeader', () => {
     it('uses one long date format from the first dated task', () => {
+        // Far from Nov 1, so no Today/Tomorrow hint is added.
+        jest.useFakeTimers().setSystemTime(new Date(2026, 5, 15));
         expect(
             dayColumnHeader('Sunday, November 1', [task('2026-11-01')], 'en')
         ).toEqual({
@@ -19,6 +21,7 @@ describe('dayColumnHeader', () => {
             dayColumnHeader('Dimanche, novembre 1', [task('2026-11-01')], 'fr')
                 .title
         ).toBe('dimanche 1 novembre');
+        jest.useRealTimers();
     });
 
     it('keeps the backend name as a hint for today', () => {

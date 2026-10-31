@@ -21,6 +21,7 @@ import {
     getActiveFolderKeys,
     getRecentNotes,
 } from '../../utils/notesTreeUtils';
+import { useSidebarDrop } from './sidebarDrop';
 
 interface SidebarNotesTreeProps {
     notes: Note[];
@@ -57,6 +58,8 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [showAll, setShowAll] = useState<Record<string, boolean>>({});
 
+    // A note row drags onto a sidebar project or tag.
+    const { nativeSource } = useSidebarDrop();
     const tags = useMemo(() => collectNoteTags(notes), [notes]);
     const activeTag =
         selectedTag && tags.some((tag) => tag.name === selectedTag)
@@ -136,6 +139,7 @@ const SidebarNotesTree: React.FC<SidebarNotesTreeProps> = ({
         return (
             <div
                 key={key}
+                {...nativeSource({ kind: 'note', note })}
                 onClick={() =>
                     handleNavClick(
                         path,

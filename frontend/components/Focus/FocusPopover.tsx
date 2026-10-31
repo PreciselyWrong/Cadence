@@ -8,6 +8,7 @@ import { fetchTags } from '../../utils/tagsService';
 import type { Area } from '../../entities/Area';
 import type { Project } from '../../entities/Project';
 import type { Tag } from '../../entities/Tag';
+import { isProjectLive } from '../../utils/projectStatus';
 
 // Stable fallbacks keep the selectors referentially equal when a store
 // slice is absent (page tests stub the store with only what they need).
@@ -76,8 +77,7 @@ const FocusPopover: React.FC<FocusPopoverProps> = ({ focus, onClose }) => {
             projects.filter((project) => {
                 if (
                     project.uid !== projectUid &&
-                    (project.status === 'done' ||
-                        project.status === 'cancelled')
+                    !isProjectLive(project.status)
                 ) {
                     return false;
                 }

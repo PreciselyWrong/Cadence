@@ -19,6 +19,7 @@ import {
 } from '../../../store/taskPanelStore';
 
 import { useStore } from '../../../store/useStore';
+import { NativeTaskDragContext } from '../../Sidebar/sidebarDrop';
 
 const navigateMock = jest.fn();
 
@@ -742,6 +743,73 @@ describe('TaskRow', () => {
                     status: 'in_progress',
                 })
             );
+        });
+    });
+
+    describe('native drag onto the sidebar', () => {
+        const updateTaskMock = tasksService.updateTask as jest.Mock;
+        beforeEach(() => {
+            updateTaskMock.mockReset();
+            updateTaskMock.mockResolvedValue({ uid: 'task-1' });
+        });
+
+        const rowRoot = () =>
+            document.querySelector('[data-task-row]') as HTMLElement;
+
+        it('drags from a plain list and moves the task to the project dropped on', async () => {
+            render(
+                <NativeTaskDragContext.Provider value={true}>
+                    <TaskRowExpansionProvider>
+                        <TaskRow
+                            task={baseTask()}
+                            projects={[]}
+                            onTaskUpdate={jest.fn()}
+                            onTaskDelete={jest.fn()}
+                        />
+                    </TaskRowExpansionProvider>
+                </NativeTaskDragContext.Provider>
+            );
+            const project = document.createElement('div');
+            project.setAttribute('data-sidebar-drop', 'project:p9');
+            document.body.appendChild(project);
+
+            expect(rowRoot()).toHaveAttribute('draggable', 'true');
+            fireEvent.dragStart(rowRoot(), {
+                dataTransfer: { setData: jest.fn(), effectAllowed: '' },
+            });
+            fireEvent.dragOver(project);
+            fireEvent.drop(project);
+
+            await waitFor(() =>
+                expect(updateTaskMock).toHaveBeenCalledWith('task-1', {
+                    project_uid: 'p9',
+                })
+            );
+            project.remove();
+        });
+
+        it('is not draggable outside a plain list', () => {
+            renderRow(baseTask());
+            expect(rowRoot()).not.toHaveAttribute('draggable');
+        });
+
+        it('stops being draggable once expanded, so its fields stay selectable', () => {
+            render(
+                <NativeTaskDragContext.Provider value={true}>
+                    <TaskRowExpansionProvider>
+                        <TaskRow
+                            task={baseTask()}
+                            projects={[]}
+                            onTaskUpdate={jest.fn()}
+                            onTaskDelete={jest.fn()}
+                        />
+                    </TaskRowExpansionProvider>
+                </NativeTaskDragContext.Provider>
+            );
+            fireEvent.click(screen.getByText('Buy tickets'));
+
+            expect(rowRoot()).toHaveAttribute('data-task-expanded');
+            expect(rowRoot()).not.toHaveAttribute('draggable');
         });
     });
 });

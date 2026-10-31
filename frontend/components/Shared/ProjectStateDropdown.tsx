@@ -7,6 +7,8 @@ import {
     ClockIcon,
     XCircleIcon,
     EllipsisHorizontalCircleIcon,
+    PauseCircleIcon,
+    ArchiveBoxIcon,
 } from '@heroicons/react/24/outline';
 import { ProjectStatus } from '../../entities/Project';
 import { useTranslation } from 'react-i18next';
@@ -70,13 +72,31 @@ const ProjectStateDropdown: React.FC<ProjectStateDropdownProps> = ({
             icon: <CheckCircleIcon className="w-5 h-5 text-green-600" />,
         },
         {
+            value: 'paused' as ProjectStatus,
+            label: t('projectStatus.paused', 'Paused'),
+            description: t(
+                'projectStatus.paused_desc',
+                'set aside on purpose, to resume later'
+            ),
+            icon: <PauseCircleIcon className="w-5 h-5 text-slate-500" />,
+        },
+        {
             value: 'cancelled' as ProjectStatus,
-            label: t('projectStatus.cancelled', 'Cancelled'),
+            label: t('projectStatus.cancelled', 'Abandoned'),
             description: t(
                 'projectStatus.cancelled_desc',
-                'will not be completed'
+                'decided not to pursue'
             ),
             icon: <XCircleIcon className="w-5 h-5 text-red-500" />,
+        },
+        {
+            value: 'archived' as ProjectStatus,
+            label: t('projectStatus.archived', 'Archived'),
+            description: t(
+                'projectStatus.archived_desc',
+                'kept to consult, out of sight'
+            ),
+            icon: <ArchiveBoxIcon className="w-5 h-5 text-stone-500" />,
         },
     ];
 

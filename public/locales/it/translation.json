@@ -1785,7 +1785,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Modifica",
@@ -3037,7 +3041,11 @@
     "done_desc": "Finito e completato",
     "cancelled": "Annullato",
     "cancelled_desc": "Non sarà completato",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Completa l'abitudine",
@@ -4879,5 +4887,8 @@
     "label": "Icona",
     "none": "Nessuna icona",
     "search": "Cerca icone"
+  },
+  "sidebarDrop": {
+    "failed": "Impossibile aggiornare questo elemento."
   }
 }

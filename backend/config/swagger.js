@@ -142,6 +142,8 @@ const options = {
                                 'waiting',
                                 'done',
                                 'cancelled',
+                                'paused',
+                                'archived',
                             ],
                             description: 'Project status',
                         },

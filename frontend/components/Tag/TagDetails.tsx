@@ -45,6 +45,7 @@ import { SortOption } from '../Shared/SortFilterButton';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
 import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import IconSortDropdown from '../Shared/IconSortDropdown';
+import { isProjectClosed } from '../../utils/projectStatus';
 
 const TagDetails: React.FC = () => {
     const { t } = useTranslation();
@@ -86,9 +87,9 @@ const TagDetails: React.FC = () => {
         if (!hasTag) return false;
 
         if (taskStatusFilter === 'active') {
-            return project.status !== 'done' && project.status !== 'cancelled';
+            return !isProjectClosed(project.status);
         } else if (taskStatusFilter === 'completed') {
-            return project.status === 'done' || project.status === 'cancelled';
+            return isProjectClosed(project.status);
         }
         return true;
     });

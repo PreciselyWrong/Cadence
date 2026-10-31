@@ -19,6 +19,7 @@ import ProjectItem from '../Project/ProjectItem';
 import useProjectCardActions from '../Project/useProjectCardActions';
 import ShareModal from '../Shared/ShareModal';
 import { TASK_SHEET_CLASS } from '../Task/taskSheet';
+import { isProjectLive } from '../../utils/projectStatus';
 
 type AreaTab = 'projects' | 'goals' | 'tasks';
 
@@ -114,9 +115,8 @@ const AreaDetails: React.FC = () => {
         }
     );
 
-    // Done and cancelled projects fold away below the ones still going
-    const isFinished = (p: Project) =>
-        p.status === 'done' || p.status === 'cancelled';
+    // Closed and stashed projects fold away below the ones still going
+    const isFinished = (p: Project) => !isProjectLive(p.status);
     const openProjects = areaProjects.filter((p) => !isFinished(p));
     const finishedProjects = areaProjects.filter(isFinished);
     const renderProjectCard = (project: Project) => (

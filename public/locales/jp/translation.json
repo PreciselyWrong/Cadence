@@ -1399,7 +1399,11 @@
     },
     "reorderError": "Failed to save project order",
     "historyDuration_one": "took {{count}} day",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "編集",
@@ -3031,7 +3035,11 @@
     "done_desc": "終了しました",
     "cancelled": "キャンセル",
     "cancelled_desc": "完了しません",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "習慣を完了する",
@@ -4866,5 +4874,8 @@
     "label": "アイコン",
     "none": "アイコンなし",
     "search": "アイコンを検索"
+  },
+  "sidebarDrop": {
+    "failed": "この項目を更新できませんでした。"
   }
 }

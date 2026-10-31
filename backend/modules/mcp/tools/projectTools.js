@@ -150,6 +150,8 @@ function registerProjectTools(server, context, tools) {
                         'waiting',
                         'done',
                         'cancelled',
+                        'paused',
+                        'archived',
                         'all',
                     ],
                     description: 'Filter by project status',
@@ -325,6 +327,8 @@ function registerProjectTools(server, context, tools) {
                         'waiting',
                         'done',
                         'cancelled',
+                        'paused',
+                        'archived',
                     ],
                 },
                 area_id: {
@@ -474,6 +478,8 @@ function registerProjectTools(server, context, tools) {
                         'waiting',
                         'done',
                         'cancelled',
+                        'paused',
+                        'archived',
                     ],
                 },
                 area_id: {

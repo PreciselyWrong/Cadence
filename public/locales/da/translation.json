@@ -1782,7 +1782,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Rediger",
@@ -3031,7 +3035,11 @@
     "done_desc": "Afsluttet og færdig",
     "cancelled": "Annulleret",
     "cancelled_desc": "Vil ikke blive færdiggjort",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Fuldfør vane",
@@ -4866,5 +4874,8 @@
     "label": "Ikon",
     "none": "Intet ikon",
     "search": "Søg ikoner"
+  },
+  "sidebarDrop": {
+    "failed": "Elementet kunne ikke opdateres."
   }
 }

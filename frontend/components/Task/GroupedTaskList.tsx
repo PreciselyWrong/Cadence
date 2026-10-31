@@ -5,7 +5,12 @@ import {
     ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    closestCenter,
+    DragEndEvent,
+    DragMoveEvent,
+} from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -28,6 +33,7 @@ import { toIntlLocale } from '../../utils/intlLocale';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useMinimalRowKeyboard } from './useMinimalRowKeyboard';
 import { useCollapsedGroups } from './useCollapsedGroups';
+import { NativeTaskDragContext, useSidebarDrop } from '../Sidebar/sidebarDrop';
 
 interface GroupedTaskListProps {
     tasks: Task[];
@@ -55,10 +61,19 @@ const SortableTaskGroup: React.FC<{
 }> = ({ tasks, onReorder, renderTask }) => {
     const { t } = useTranslation();
     const sensors = useSortableSensors();
+    const sidebarDrop = useSidebarDrop();
     const uids = tasks.map((task) => task.uid as string);
 
-    const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    const dragItem = (id: unknown) => {
+        const task = tasks.find((item) => item.uid === id);
+        return task ? ({ kind: 'task', task } as const) : null;
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
         resetSortableCursor();
+        // Released over a sidebar row: the task takes it instead.
+        if (sidebarDrop.dragEnd(event, dragItem(active.id))) return;
         if (!over || active.id === over.id) return;
         swallowNextClick();
         const from = uids.indexOf(active.id as string);
@@ -72,7 +87,14 @@ const SortableTaskGroup: React.FC<{
             sensors={sensors}
             collisionDetection={closestCenter}
             {...sortableCursorHandlers}
+            onDragMove={(event: DragMoveEvent) =>
+                sidebarDrop.dragMove(event, dragItem(event.active.id))
+            }
             onDragEnd={handleDragEnd}
+            onDragCancel={() => {
+                sortableCursorHandlers.onDragCancel();
+                sidebarDrop.dragCancel();
+            }}
         >
             <SortableContext
                 items={uids}
@@ -154,7 +176,7 @@ interface ProjectGroup {
     order: number;
 }
 
-const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
+const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
     tasks,
     groupedTasks,
     groupBy = 'none',
@@ -878,5 +900,13 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
         </div>
     );
 };
+
+// Rows outside a sortable group (Upcoming days, plain project groups) drag
+// natively onto the sidebar; SortableItem turns that off for sorted rows.
+const GroupedTaskList: React.FC<GroupedTaskListProps> = (props) => (
+    <NativeTaskDragContext.Provider value={true}>
+        <GroupedTaskListBody {...props} />
+    </NativeTaskDragContext.Provider>
+);
 
 export default GroupedTaskList;

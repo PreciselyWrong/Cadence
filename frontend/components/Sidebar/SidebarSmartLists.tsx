@@ -12,6 +12,14 @@ import {
     fetchSmartTaskCounts,
     SmartTaskCounts,
 } from '../../utils/tasksService';
+import {
+    DROP_HIGHLIGHT_CLASS,
+    dropTargetAttrs,
+    useDropHover,
+} from './sidebarDrop';
+
+// A task dropped on Today or Tomorrow becomes due that day.
+const DAY_TARGETS = new Set(['today', 'tomorrow']);
 
 interface SidebarSmartListsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -93,6 +101,8 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         },
     ];
 
+    const isDropHover = useDropHover();
+
     const rowById = new Map(allRows.map((row) => [row.id, row]));
     const rows = config
         .filter((item) => item.visible && rowById.has(item.key))
@@ -111,11 +121,18 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
                             handleNavClick(row.path, row.title, row.icon)
                         }
                         data-testid={`sidebar-smart-${row.id}`}
+                        {...(DAY_TARGETS.has(row.id)
+                            ? dropTargetAttrs('day', row.id)
+                            : {})}
                         aria-current={row.isActive ? 'page' : undefined}
                         className={`w-full flex items-center gap-[8px] px-[10px] h-[34px] rounded-[8px] text-[14px] transition-colors duration-150 ${
                             row.isActive
                                 ? 'bg-gray-200/70 dark:bg-gray-700 text-gray-900 dark:text-[oklch(90%_0.01_250)] font-medium'
                                 : 'text-gray-700 dark:text-[oklch(75%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800'
+                        } ${
+                            isDropHover('day', row.id)
+                                ? DROP_HIGHLIGHT_CLASS
+                                : ''
                         }`}
                     >
                         <span

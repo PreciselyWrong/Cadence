@@ -14,6 +14,11 @@ import { useStore } from '../../store/useStore';
 import { useDailyPlanProgress } from '../../store/dailyPlanStore';
 import { loadInboxItemsToStore } from '../../utils/inboxService';
 import { SidebarLinkId, sortByOrder } from '../../utils/sidebarLayout';
+import {
+    DROP_HIGHLIGHT_CLASS,
+    dropTargetAttrs,
+    useDropHover,
+} from './sidebarDrop';
 
 interface SidebarNavProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -137,8 +142,16 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         return isQueryMatch;
     };
 
+    // A task dropped on Today becomes due today.
+    const isDropHover = useDropHover();
     const isActive = (path: string, query?: string) =>
-        isActiveLink(path, query) ? activeClass : inactiveClass;
+        `${isActiveLink(path, query) ? activeClass : inactiveClass} ${
+            path === '/today' && isDropHover('day', 'today')
+                ? DROP_HIGHLIGHT_CLASS
+                : ''
+        }`;
+    const dayTarget = (path: string) =>
+        path === '/today' ? dropTargetAttrs('day', 'today') : {};
 
     if (compact) {
         return (
@@ -152,6 +165,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             title={link.title}
                             aria-label={link.title}
                             data-testid={`sidebar-rail-${link.id}`}
+                            {...dayTarget(link.path)}
                             className={`relative flex items-center justify-center h-9 w-9 rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                         >
                             <span
@@ -178,6 +192,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             handleNavClick(link.path, link.title, link.icon)
                         }
                         data-testid={`sidebar-nav-${link.path.replace(/^\//, '').replace(/\?.*$/, '')}`}
+                        {...dayTarget(link.path)}
                         className={`w-full flex items-center gap-[5px] px-[10px] py-[4px] rounded-[8px] transition-colors duration-150 ${isActive(link.path, link.query)}`}
                     >
                         <span

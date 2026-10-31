@@ -1782,7 +1782,11 @@
     },
     "reorderError": "Failed to save project order",
     "historyDuration_one": "took {{count}} day",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "编辑",
@@ -3031,7 +3035,11 @@
     "done_desc": "已完成并结束",
     "cancelled": "已取消",
     "cancelled_desc": "将不会完成",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "完成习惯",
@@ -4866,5 +4874,8 @@
     "label": "图标",
     "none": "无图标",
     "search": "搜索图标"
+  },
+  "sidebarDrop": {
+    "failed": "无法更新此项目。"
   }
 }

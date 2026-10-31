@@ -1788,7 +1788,11 @@
       "saveError": "Failed to save projects settings"
     },
     "reorderError": "Failed to save project order",
-    "fromTemplate": "From template"
+    "fromTemplate": "From template",
+    "counts": {
+      "active": "{{n}} active",
+      "stash": "{{n}} in the stash"
+    }
   },
   "projectItem": {
     "edit": "Uredi",
@@ -3043,7 +3047,11 @@
     "done_desc": "Končano in opravljeno",
     "cancelled": "Preklicano",
     "cancelled_desc": "Ne bo dokončano",
-    "idea": "Idea"
+    "idea": "Idea",
+    "paused": "Paused",
+    "paused_desc": "set aside on purpose, to resume later",
+    "archived": "Archived",
+    "archived_desc": "kept to consult, out of sight"
   },
   "habits": {
     "completeHabit": "Dokončaj navado",
@@ -4896,5 +4904,8 @@
     "label": "Ikona",
     "none": "Brez ikone",
     "search": "Iskanje ikon"
+  },
+  "sidebarDrop": {
+    "failed": "Tega elementa ni bilo mogoče posodobiti."
   }
 }
