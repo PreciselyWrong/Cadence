@@ -51,7 +51,7 @@ Existing `blue-*` and `gray-*` utilities are variable-backed so the whole app fo
 
 ## Accent (Réglages › Apparence)
 
-Presets, identical to `AccentPreset`: Violet `#5E5CE6` (default), Indigo `#3F51B5`, Bleu `#1E6FD9`, Sarcelle `#00897B`, Vert `#2E7D32`, Ambre `#C77700`, Corail `#E0483B`, Rose `#C2185B`, plus a free `#RRGGBB`. Violet keeps its exact roles. Any other seed: light = seed as primary, `onPrimary` the more contrasted of white and `#1B1B21`, container at HSL lightness 0.92, on-container 0.20; dark = primary 0.82, onPrimary 0.22, container 0.30, on-container 0.90 (same hue and saturation as the seed). Stored in `localStorage` (`cadenceAccent`, `cadencePureBlack`); theme mode (système/clair/sombre) is the existing `isDarkMode` preference. Material You has no web equivalent.
+Presets, identical to `AccentPreset`: Violet `#5E5CE6` (default), Indigo `#3F51B5`, Bleu `#1E6FD9`, Sarcelle `#00897B`, Vert `#2E7D32`, Ambre `#C77700`, Corail `#E0483B`, Rose `#C2185B`, plus a free `#RRGGBB`. Violet keeps its exact roles. Any other seed: light = seed as primary, darkened (hue and saturation kept) until 4.5:1 on the light card, `onPrimary` = `readableOn(primary)`, container at HSL lightness 0.92, on-container 0.20; dark = primary 0.82, onPrimary 0.22, container 0.30 (darkened if its on-container does not reach 4.5:1), on-container 0.90 (same hue and saturation as the seed). Every text/fill pair reaches 4.5:1 (`PaletteContrastTest`, `appearance.test.ts`). Stored in `localStorage` (`cadenceAccent`, `cadencePureBlack`); theme mode (système/clair/sombre) is the existing `isDarkMode` preference. Material You has no web equivalent.
 
 ## Radii
 

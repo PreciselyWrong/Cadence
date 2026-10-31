@@ -55,7 +55,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - La navigation est une capsule translucide flottante (flou Haze sous Android 12+, teinte seule avant) à cinq cibles égales : Boîte, Tâches (ouverte au lancement), Agenda, Habitudes, Bilan. Chaque cible montre son icône et son libellé; l'active porte une pastille `primaryContainer`. Réglages est un écran poussé, ouvert par le bouton engrenage des en-têtes.
 - Messages : un seul hôte, `CadenceSnackbarHost`, posé par la coque au-dessus de la navigation ; un écran obtient l'état par `rememberAppSnackbarHostState()` et ne pose jamais son propre `SnackbarHost`. Le message nomme l'élément (« « Acheter du pain » terminée »).
 - `ScreenHeader` a une ligne de titre de hauteur fixe (même ligne de base sur tous les onglets) et se réduit au défilement dans un `CollapsingHeaderHost` ; `NavigationBarScrim` estompe le contenu avant la barre système.
-- Une carte d'habitude (`HabitRow`, 80 dp) prend ses couleurs de `habitCardColors(tint)` : dégradé de trois arrêts, encre et pastille d'action à 4,5:1 au moins. `readableOn` / `readableTint` sont la seule dérivation d'un texte posé sur une teinte.
+- Une carte d'habitude (`HabitRow`, 80 dp) prend ses couleurs de `habitCardColors(tint)` : dégradé de trois arrêts, encre et pastille d'action à 4,5:1 au moins. `readableOn` / `readableTint` sont la seule dérivation d'un texte posé sur une teinte ; dans Compose, `onColorOf(fond)` (texte sur une couleur pleine, rôle « on » du thème pour l'accent) et `readableTintOf(teinte, fond, seuil)` (texte à 4,5:1 ou trait/icône à 3:1 dans une couleur d'habitude, d'agenda ou de projet ; `tintedSurface` donne le fond opaque d'une pastille translucide).
 - Une rubrique de Réglages s'ajoute par une seule entrée de `settings/SettingsRegistry.kt` (`settingsPages`) : ligne, sous-titre et contenu de sa sous-page.
 - Le thème suit le réglage système clair/sombre.
 - L’abstinence est un plafond quotidien à zéro, avec un profil choisi explicitement (`AbstinenceProfile`) et une date de début de suivi. Hors alcool, les jours terminés sans occurrence enregistrée sont dérivés par `AbstinenceStatsCalculator`; une pause interrompt la continuité et reste exclue des statistiques. La journée en cours reste distincte.
@@ -83,6 +83,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 
 ## ⛔ Interdits
 - ⛔ Poser du texte sur une teinte d'habitude, de projet ou d'accent sans `readableOn`/`readableTint` — la teinte seule à 10 % d'opacité passe sous 4,5:1 pour les teintes claires.
+- ⛔ Choisir l'encre d'un fond coloré par `onSurface` ou `Color.White` — `onSurface` est clair en thème sombre : texte clair sur bouton clair (agendas, interrupteurs) ; passer par `onColorOf`.
 - ⛔ Créer un `SnackbarHost` dans un écran — deux hôtes sur le même état affichent chaque message deux fois.
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.
 - ⛔ Présenter une donnée à compléter comme un simple texte — l’action doit avoir une surface, un verbe et un indicateur visuel clairement touchables.
