@@ -103,6 +103,7 @@ internal fun CadenceAppScreen(
     editHabitId: String? = null,
     openTaskUid: String? = null,
     openQuestionHabitId: String? = null,
+    openQuestionForAmount: Boolean = false,
 ) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
@@ -348,6 +349,7 @@ internal fun CadenceAppScreen(
             busy = busy,
             error = saveError,
             dismiss = { if (!busy) answeringHabitId = null },
+            startWithAmount = openQuestionForAmount && question.habitId == openQuestionHabitId,
             answer = { viewModel.answerQuestion(question, it) { answeringHabitId = null } },
             ignore = { viewModel.dismissQuestion(question); answeringHabitId = null },
             muteWeekday = { viewModel.muteLearnedWeekday(question.habitId, question.weekday) { answeringHabitId = null } },

@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.reminder
 
 import ch.nicolab.cadence.domain.LearnedQuestion
+import ch.nicolab.cadence.habits.LearnedQuestionText
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
@@ -18,6 +19,20 @@ sealed interface LearnedQuestionNotificationPlan {
             1 -> Single(questions.single())
             else -> Grouped(questions)
         }
+    }
+}
+
+/**
+ * Que fait « Oui » dans la notification. Pour l'alcool, un « Oui » direct écrirait un jour de
+ * consommation sans nombre de verres, sans jamais le demander : l'application s'ouvre alors sur la saisie.
+ */
+enum class LearnedQuestionYesAction {
+    ANSWER_IN_PLACE,
+    OPEN_TO_ENTER_AMOUNT;
+
+    companion object {
+        fun of(question: LearnedQuestion): LearnedQuestionYesAction =
+            if (LearnedQuestionText.yesRequiresAmount(question)) OPEN_TO_ENTER_AMOUNT else ANSWER_IN_PLACE
     }
 }
 

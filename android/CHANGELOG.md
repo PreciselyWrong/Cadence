@@ -13,6 +13,7 @@
 - L'icône d'une habitude sur le widget ouvre la même fiche que dans l'application, avec sa couleur et ses dernières saisies.
 - La fenêtre « Nouvelle tâche » du widget et du lanceur adopte le style de Cadence.
 - Lecteur d'écran : les jours de l'Agenda sont annoncés en entier (« mardi 27 octobre »).
+- Question « Hier, avez-vous bu ? » : « Oui » demande désormais le nombre de verres (la notification ouvre la saisie) au lieu d'enregistrer une consommation sans quantité.
 
 ## [1.2.0] — 30 octobre 2026
 

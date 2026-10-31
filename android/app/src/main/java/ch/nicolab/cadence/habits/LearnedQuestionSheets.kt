@@ -73,6 +73,7 @@ internal fun LearnedQuestionSheet(
     busy: Boolean,
     error: String?,
     dismiss: () -> Unit,
+    startWithAmount: Boolean = false,
     answer: (LearnedAnswer) -> Unit,
     ignore: () -> Unit,
     muteWeekday: () -> Unit,
@@ -81,7 +82,7 @@ internal fun LearnedQuestionSheet(
     val dayName = LearnedQuestionText.weekdayName(question.weekday)
     val dayPhrase = stringResource(R.string.learned_question_yesterday, dayName)
     val kinds = question.answerKinds
-    var choice by remember(question.habitId, question.date) { mutableStateOf<LearnedChoice?>(null) }
+    var choice by remember(question.habitId, question.date) { mutableStateOf<LearnedChoice?>(if (startWithAmount && LearnedQuestionText.yesRequiresAmount(question)) LearnedChoice.AMOUNT else null) }
     var amountText by remember(question.habitId, question.date) { mutableStateOf("1") }
     val amount = amountText.toLongOrNull()?.takeIf { it in 1..MAX_AMOUNT }
     val submission: LearnedAnswer? = when (choice) {
@@ -111,11 +112,13 @@ internal fun LearnedQuestionSheet(
                     }
                 }
                 if (LearnedAnswerKind.YES in kinds) {
-                    ChoiceChip(stringResource(R.string.learned_question_yes), choice == LearnedChoice.YES, accent = tint, leadingIcon = Icons.Outlined.Check) {
-                        choice = LearnedChoice.YES
+                    // Alcool : « Oui » ouvre directement la saisie des verres, jamais un oui sans nombre.
+                    val yesChoice = if (LearnedQuestionText.yesRequiresAmount(question)) LearnedChoice.AMOUNT else LearnedChoice.YES
+                    ChoiceChip(stringResource(R.string.learned_question_yes), choice == yesChoice, accent = tint, leadingIcon = Icons.Outlined.Check) {
+                        choice = yesChoice
                     }
                 }
-                if (LearnedQuestionText.offersAmount(question)) {
+                if (LearnedQuestionText.offersAmount(question) && !LearnedQuestionText.yesRequiresAmount(question)) {
                     ChoiceChip(stringResource(R.string.learned_question_yes_amount), choice == LearnedChoice.AMOUNT, accent = tint) {
                         choice = LearnedChoice.AMOUNT
                     }

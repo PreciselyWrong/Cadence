@@ -133,7 +133,11 @@ object LearnedQuestionScheduler {
             builder.addAction(0, context.getString(R.string.learned_question_no), answerIntent(context, question, "NO"))
         }
         if (LearnedAnswerKind.YES in question.answerKinds) {
-            builder.addAction(0, context.getString(R.string.learned_question_yes), answerIntent(context, question, "YES"))
+            val yes = when (LearnedQuestionYesAction.of(question)) {
+                LearnedQuestionYesAction.ANSWER_IN_PLACE -> answerIntent(context, question, "YES")
+                LearnedQuestionYesAction.OPEN_TO_ENTER_AMOUNT -> openIntent(context, question.habitId, enterAmount = true)
+            }
+            builder.addAction(0, context.getString(R.string.learned_question_yes), yes)
         } else {
             builder.addAction(0, context.getString(R.string.learned_question_precise), openIntent(context, question.habitId))
         }
@@ -156,12 +160,13 @@ object LearnedQuestionScheduler {
     private fun notificationId(question: LearnedQuestion): Int =
         "learned-questions:${question.habitId}:${question.date}".hashCode()
 
-    private fun openIntent(context: Context, habitId: String?): PendingIntent =
+    private fun openIntent(context: Context, habitId: String?, enterAmount: Boolean = false): PendingIntent =
         PendingIntent.getActivity(
             context,
-            "learned-open:${habitId.orEmpty()}".hashCode(),
+            "learned-open:${habitId.orEmpty()}:$enterAmount".hashCode(),
             Intent(context, MainActivity::class.java)
-                .putExtra(MainActivity.EXTRA_OPEN_QUESTION_HABIT_ID, habitId),
+                .putExtra(MainActivity.EXTRA_OPEN_QUESTION_HABIT_ID, habitId)
+                .putExtra(MainActivity.EXTRA_OPEN_QUESTION_AMOUNT, enterAmount),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
@@ -214,7 +219,10 @@ class LearnedQuestionReceiver : BroadcastReceiver() {
             else -> return
         }
         val question = learned.pendingQuestions().firstOrNull { it.habitId == habitId }
-        if (question != null) {
+        // Un « Oui » alcool sans nombre de verres ne s'enregistre jamais depuis une notification (anciennes notifications comprises).
+        val needsAmount = answer == LearnedAnswer.Yes && question != null &&
+            LearnedQuestionYesAction.of(question) == LearnedQuestionYesAction.OPEN_TO_ENTER_AMOUNT
+        if (question != null && !needsAmount) {
             try {
                 learned.answer(question, answer)
             } catch (_: IllegalArgumentException) {
