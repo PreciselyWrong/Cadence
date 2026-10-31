@@ -87,6 +87,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - ⛔ Limiter Cadence aux habitudes à objectif et aux abstinences — une activité doit pouvoir être notée sans cible; la traiter comme une habitude en retard inventerait une obligation.
 - ⛔ Présenter une donnée à compléter comme un simple texte — l’action doit avoir une surface, un verbe et un indicateur visuel clairement touchables.
 - ⛔ Publier sur NicoApps sans transmettre puis relire le bloc courant de `CHANGELOG.md` — l’APK ne contient pas les notes de version et le catalogue ne peut pas les reconstruire.
+- ⛔ Publier un APK qui n’est pas signé par la clé Cadence (`~/.config/cadence/keystore.properties` et `release.jks`, hors dépôt, depuis la 1.2.0) — sans ce fichier, Gradle signe avec la clé debug de la machine, et Android refuse la mise à jour ; sauvegarder la clé et la copier sur chaque poste qui publie.
 - ⛔ Afficher un jalon alcool vide comme « Pas de bénéfice daté établi » — chaque période donne une observation concrète, sa population et sa source sans transformer une donnée limitée en promesse générale.
 - ⛔ Remplacer le temps écoulé vivant d’une abstinence par les seuls jours complets — le suivi alcool affiche les deux, car ils répondent à deux besoins différents.
 - ⛔ Réduire le compteur détaillé d’abstinence à une ligne — les quatre barres jours, heures, minutes et secondes restent visibles dans le détail.
