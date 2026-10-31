@@ -340,7 +340,7 @@ const HabitEditor: React.FC<HabitEditorProps> = ({
                     />
                 </SidePanelField>
                 <SidePanelField
-                    label={t('cadenceHabits.editor.color', 'Colour')}
+                    label={t('cadenceHabits.editor.color', 'Color')}
                 >
                     <ColorPicker
                         large
