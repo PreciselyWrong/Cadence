@@ -69,3 +69,25 @@ internal fun renderEventMark(done: Boolean, sizeDp: Int, density: Float): Bitmap
     canvas.drawPath(check, paint)
     return bitmap
 }
+
+/**
+ * Reflet du verre : blanc à [alpha] en haut à gauche, qui s'efface vers le centre puis remonte à
+ * peine en bas à droite. Petit carré étiré sur tout le widget.
+ */
+internal fun renderGlassSheen(alpha: Float): Bitmap {
+    val bitmap = Bitmap.createBitmap(SHEEN_PX, SHEEN_PX, Bitmap.Config.ARGB_8888)
+    val white = 0x00FFFFFF
+    fun tone(a: Float) = ((a.coerceIn(0f, 1f) * 255).toInt() shl 24) or white
+    val paint = Paint().apply {
+        shader = android.graphics.LinearGradient(
+            0f, 0f, SHEEN_PX.toFloat(), SHEEN_PX.toFloat(),
+            intArrayOf(tone(alpha), tone(alpha * 0.25f), tone(0f), tone(alpha * 0.2f)),
+            floatArrayOf(0f, 0.35f, 0.6f, 1f),
+            android.graphics.Shader.TileMode.CLAMP,
+        )
+    }
+    Canvas(bitmap).drawRect(0f, 0f, SHEEN_PX.toFloat(), SHEEN_PX.toFloat(), paint)
+    return bitmap
+}
+
+private const val SHEEN_PX = 96

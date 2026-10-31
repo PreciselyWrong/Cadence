@@ -642,6 +642,9 @@
     <string name="today_config_hide_recurring">Masquer les récurrences</string>
     <string name="today_config_overdue_section">Section « En retard » séparée</string>
     <string name="today_config_group_by_day">Regrouper par jour</string>
+    <string name="today_config_glass_opacity">Opacité du verre</string>
+    <string name="today_config_glass_sheen">Reflet</string>
+    <string name="today_config_glass_rim">Liseré</string>
     <string name="today_config_check_from_widget">Cocher depuis le widget</string>
     <string name="today_config_project_rail">Couleur du projet</string>
     <string name="today_config_show_events">Événements des agendas choisis</string>

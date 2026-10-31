@@ -1,3 +1,8 @@
+## [1.5.0] — 31 octobre 2026
+
+### Nouveautés
+- Widget « Aujourd'hui » : le fond « Verre » se règle avec trois curseurs : opacité, reflet et liseré. Il est bien plus transparent par défaut, avec un reflet clair en diagonale et un liseré lumineux. Un widget ne peut pas flouter le fond d'écran : avec une opacité basse, le texte peut devenir moins lisible sur un fond d'écran chargé.
+
 ## [1.4.2] — 31 octobre 2026
 
 ### Corrections

@@ -26,6 +26,9 @@ class TodayWidgetConfigCodecTest {
             projectRail = false,
             showEvents = true,
             groupByDay = false,
+            glassOpacity = 25,
+            glassSheen = 70,
+            glassRim = 10,
             textSize = TodayTextSize.L,
             cornerRadiusDp = 8,
             projectUids = setOf("p-1", "p-2"),
@@ -110,5 +113,15 @@ class TodayWidgetConfigCodecTest {
     fun `un nouveau widget colore par priorite et regroupe par jour`() {
         assertEquals(ControlColour.PRIORITE, TodayWidgetConfig().controlColour)
         assertEquals(true, TodayWidgetConfig().groupByDay)
+    }
+
+    @Test
+    fun `les reglages du verre hors plage sont ramenes dans leur plage`() {
+        val stored = mapOf("glassOpacity" to "250", "glassSheen" to "-4", "glassRim" to "x")
+        val config = TodayWidgetConfigCodec.decode(stored::get)
+
+        assertEquals(TodayWidgetLimits.GLASS.last, config.glassOpacity)
+        assertEquals(TodayWidgetLimits.GLASS.first, config.glassSheen)
+        assertEquals(TodayWidgetConfig().glassRim, config.glassRim)
     }
 }

@@ -86,23 +86,6 @@ class TodayPaletteTest {
     }
 
     @Test
-    fun `le texte du verre reste lisible sur n'importe quel fond d'ecran`() {
-        val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE))
-        listOf(palettes.day, palettes.night).forEach { palette ->
-            (0..255 step 5).forEach { grey ->
-                val wallpaper = (0xFF shl 24) or (grey shl 16) or (grey shl 8) or grey
-                val seen = over(palette.surface, over(palette.rim, wallpaper))
-                assertTrue(contrast(palette.ink, seen) >= 4.5, "encre sur gris $grey")
-                assertTrue(contrast(palette.muted, seen) >= 4.5, "attenue sur gris $grey")
-                assertTrue(contrast(palette.overdue, seen) >= 4.5, "retard sur gris $grey")
-            }
-        }
-    }
-
-    /** Couleur vue quand [top], avec son alpha, est posé sur [bottom] opaque. */
-    private fun over(top: Int, bottom: Int): Int = compositeOver(top or (0xFF shl 24), (top ushr 24) / 255f, bottom)
-
-    @Test
     fun `le fond aucun ne pose aucune surface`() {
         val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.AUCUN))
 
@@ -135,30 +118,6 @@ class TodayPaletteTest {
     }
 
     @Test
-    fun `sur un fond d'ecran sombre connu le verre devient plus transparent`() {
-        val wallpaper = listOf(0xFF000000.toInt(), 0xFF101018.toInt())
-        val known = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE), wallpaper)
-        val unknown = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE))
-
-        assertTrue((known.night.surface ushr 24) < (unknown.night.surface ushr 24))
-        assertTrue((known.night.surface ushr 24) / 255f >= TodayPalette.GLASS_MIN_ALPHA - 0.01f)
-    }
-
-    @Test
-    fun `le verre reste lisible sur chaque couleur du fond d'ecran`() {
-        val wallpaper = listOf(0xFF000000.toInt(), 0xFFFF6A00.toInt(), 0xFF2F6BFF.toInt(), 0xFFF2F2F2.toInt())
-        val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE), wallpaper)
-        listOf(palettes.day, palettes.night).forEach { palette ->
-            wallpaper.forEach { colour ->
-                val seen = over(palette.surface, over(palette.rim, colour))
-                assertTrue(contrast(palette.ink, seen) >= 4.5, "encre sur ${Integer.toHexString(colour)}")
-                assertTrue(contrast(palette.muted, seen) >= 4.5, "attenue sur ${Integer.toHexString(colour)}")
-                assertTrue(contrast(palette.overdue, seen) >= 4.5, "retard sur ${Integer.toHexString(colour)}")
-            }
-        }
-    }
-
-    @Test
     fun `les cases prennent la couleur de la priorite et restent visibles`() {
         val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.AUTO, controlColour = ControlColour.PRIORITE))
         listOf(palettes.day, palettes.night).forEach { palette ->
@@ -178,5 +137,30 @@ class TodayPaletteTest {
         val palette = TodayPalette.of(TodayWidgetConfig(controlColour = ControlColour.CORAIL)).night
 
         assertEquals(palette.accent, palette.checkTint(TaskPriority.HIGH, ControlColour.CORAIL))
+    }
+
+    @Test
+    fun `l'opacite du verre suit le reglage, jour comme nuit`() {
+        val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE, glassOpacity = 30))
+
+        listOf(palettes.day, palettes.night).forEach { assertEquals(77, it.surface ushr 24) }
+    }
+
+    @Test
+    fun `le liseré suit son reglage et disparait a zero`() {
+        val strong = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE, glassRim = 100)).night
+        val weak = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE, glassRim = 20)).night
+        val none = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE, glassRim = 0)).night
+
+        assertTrue((strong.rim ushr 24) > (weak.rim ushr 24))
+        assertEquals(0, none.rim ushr 24)
+    }
+
+    @Test
+    fun `le reflet suit son reglage et ne touche que le verre`() {
+        assertEquals(0f, TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.VERRE, glassSheen = 0)))
+        assertTrue(TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.VERRE, glassSheen = 80)) >
+            TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.VERRE, glassSheen = 20)))
+        assertEquals(0f, TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.SOMBRE, glassSheen = 80)))
     }
 }

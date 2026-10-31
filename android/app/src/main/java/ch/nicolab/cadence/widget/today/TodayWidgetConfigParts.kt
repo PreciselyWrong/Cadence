@@ -146,9 +146,15 @@ internal fun WidgetPreviewBand(config: TodayWidgetConfig) {
         Modifier
     }
     val edge = if (glass) Color(palette.rim) else cadence.outlineVariant
+    val sheenAlpha = TodayPalette.sheenAlpha(config)
+    val sheen = if (sheenAlpha > 0f) {
+        Modifier.background(Brush.linearGradient(listOf(Color.White.copy(alpha = sheenAlpha), Color.Transparent, Color.White.copy(alpha = sheenAlpha * 0.2f))))
+    } else {
+        Modifier
+    }
     Box(Modifier.fillMaxWidth().padding(vertical = Space.md).then(backdrop)) {
         Column(
-            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).border(1.dp, edge, shape).padding(12.dp),
+            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).then(sheen).border(1.dp, edge, shape).padding(12.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(

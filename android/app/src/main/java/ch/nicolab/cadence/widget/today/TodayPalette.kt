@@ -1,15 +1,12 @@
 package ch.nicolab.cadence.widget.today
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.theme.CadencePalette
 import ch.nicolab.cadence.designsystem.theme.DarkPalette
-import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.LightPalette
-import ch.nicolab.cadence.designsystem.theme.compositeOver
-import ch.nicolab.cadence.designsystem.theme.contrastRatio
-import ch.nicolab.cadence.designsystem.theme.glassBorder
 import ch.nicolab.cadence.designsystem.theme.readableTint
 import ch.nicolab.cadence.tasks.model.TaskPriority
 
@@ -42,10 +39,6 @@ data class TodayPalette(
     }
 
     companion object {
-        /** Opacité minimale du verre : en dessous, la surface ne se distingue plus du fond d'écran. */
-        const val GLASS_MIN_ALPHA = 0.35f
-        private const val GLASS_STEP = 0.01f
-        private const val TEXT_CONTRAST = 4.5
         private const val ICON_CONTRAST = 3.0
         private const val OPAQUE = 0xFF000000.toInt()
         private const val MEDIUM_PRIORITY = 0xFFF57C00.toInt()
@@ -56,18 +49,23 @@ data class TodayPalette(
 
         /**
          * Les surfaces viennent des jetons du design system. Un widget ne peut pas flouter le fond
-         * d'écran : le « Verre » est une surface translucide dont l'opacité ([Glass.WidgetAlphaLight],
-         * [Glass.WidgetAlphaDark]) garde le texte lisible sur tout fond d'écran, bordée du liseré
-         * `glassBorder` des éléments en verre de l'application. « Aucun » ne pose aucune surface
-         * (texte blanc, pour un fond d'écran sombre).
+         * d'écran : le « Verre » est une surface translucide réglable (opacité, reflet, liseré).
+         * « Aucun » ne pose aucune surface (texte blanc, pour un fond d'écran sombre).
          */
-        fun of(config: TodayWidgetConfig, wallpaper: List<Int> = emptyList()): TodayPalettes {
+        private const val RIM_MAX_ALPHA = 0.6f
+        private const val SHEEN_MAX_ALPHA = 0.45f
+
+        /** Opacité du reflet blanc en haut à gauche du verre ; nulle hors du verre. */
+        fun sheenAlpha(config: TodayWidgetConfig): Float =
+            if (config.background == TodayBackground.VERRE) config.glassSheen / 100f * SHEEN_MAX_ALPHA else 0f
+
+        fun of(config: TodayWidgetConfig): TodayPalettes {
             val light = fromTokens(LightPalette, config)
             val dark = fromTokens(DarkPalette, config)
             return when (config.background) {
                 TodayBackground.VERRE -> TodayPalettes(
-                    light.asGlass(LightPalette, Glass.WidgetAlphaLight, wallpaper),
-                    dark.asGlass(DarkPalette, Glass.WidgetAlphaDark, wallpaper),
+                    light.asGlass(LightPalette, config),
+                    dark.asGlass(DarkPalette, config),
                 )
                 TodayBackground.AUTO -> TodayPalettes(light, dark)
                 TodayBackground.CLAIR -> TodayPalettes(light, light)
@@ -93,25 +91,13 @@ data class TodayPalette(
         }
 
         /**
-         * Verre posé dans son liseré. Sans couleurs connues du fond d'écran, l'opacité est [worstCase],
-         * lisible sur tout fond. Avec les couleurs dominantes du fond d'écran, c'est la plus basse
-         * (jusqu'à [GLASS_MIN_ALPHA]) qui garde encre, texte atténué et retard à 4,5:1 sur chacune.
+         * Verre posé dans son liseré : surface du thème à l'opacité choisie, liseré blanc. La
+         * lisibilité dépend alors du fond d'écran : c'est le prix d'une transparence réglable.
          */
-        private fun TodayPalette.asGlass(tokens: CadencePalette, worstCase: Float, wallpaper: List<Int>): TodayPalette {
-            val surfaceArgb = tokens.surface.toArgb()
-            val rim = tokens.glassBorder
-            val rimArgb = rim.toArgb()
-            fun readable(alpha: Float) = wallpaper.all { colour ->
-                val seen = compositeOver(surfaceArgb, alpha, compositeOver(rimArgb or OPAQUE, rim.alpha, colour or OPAQUE))
-                listOf(ink, muted, overdue).all { contrastRatio(it, seen) >= TEXT_CONTRAST }
-            }
-            val alpha = if (wallpaper.isEmpty()) {
-                worstCase
-            } else {
-                generateSequence(GLASS_MIN_ALPHA) { it + GLASS_STEP }.takeWhile { it < worstCase }.firstOrNull(::readable) ?: worstCase
-            }
-            return copy(surface = tokens.surface.copy(alpha = alpha).toArgb(), rim = rimArgb)
-        }
+        private fun TodayPalette.asGlass(tokens: CadencePalette, config: TodayWidgetConfig): TodayPalette = copy(
+            surface = tokens.surface.copy(alpha = config.glassOpacity / 100f).toArgb(),
+            rim = Color.White.copy(alpha = config.glassRim / 100f * RIM_MAX_ALPHA).toArgb(),
+        )
     }
 }
 

@@ -135,6 +135,12 @@ private fun TodayWidgetConfiguration(
             Panel {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     ChoiceRow(TodayBackground.entries, config.background, ::backgroundLabel) { edit { c -> c.copy(background = it) } }
+                    if (config.background == TodayBackground.VERRE) {
+                        val glass = TodayWidgetLimits.GLASS
+                        SliderRow(stringResource(R.string.today_config_glass_opacity), config.glassOpacity, glass) { edit { c -> c.copy(glassOpacity = it) } }
+                        SliderRow(stringResource(R.string.today_config_glass_sheen), config.glassSheen, glass) { edit { c -> c.copy(glassSheen = it) } }
+                        SliderRow(stringResource(R.string.today_config_glass_rim), config.glassRim, glass) { edit { c -> c.copy(glassRim = it) } }
+                    }
                 }
             }
             SectionHeader(stringResource(R.string.today_config_section_controls))

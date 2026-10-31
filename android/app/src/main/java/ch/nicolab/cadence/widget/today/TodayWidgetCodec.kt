@@ -28,6 +28,9 @@ object TodayWidgetConfigCodec {
     private const val TEXT_SIZE = "textSize"
     private const val CORNER = "cornerRadius"
     private const val GROUP_BY_DAY = "groupByDay"
+    private const val GLASS_OPACITY = "glassOpacity"
+    private const val GLASS_SHEEN = "glassSheen"
+    private const val GLASS_RIM = "glassRim"
 
     /** Absente des réglages enregistrés avant la 1.4.1, où Indigo était la couleur imposée par défaut. */
     private const val VERSION = "version"
@@ -60,6 +63,9 @@ object TodayWidgetConfigCodec {
         TEXT_SIZE to config.textSize.name,
         CORNER to config.cornerRadiusDp.toString(),
         GROUP_BY_DAY to flag(config.groupByDay),
+        GLASS_OPACITY to config.glassOpacity.toString(),
+        GLASS_SHEEN to config.glassSheen.toString(),
+        GLASS_RIM to config.glassRim.toString(),
     )
 
     fun decode(read: (String) -> String?): TodayWidgetConfig {
@@ -85,6 +91,9 @@ object TodayWidgetConfigCodec {
             projectRail = bool(read(PROJECT_RAIL), defaults.projectRail),
             showEvents = bool(read(SHOW_EVENTS), defaults.showEvents),
             groupByDay = bool(read(GROUP_BY_DAY), defaults.groupByDay),
+            glassOpacity = int(read(GLASS_OPACITY), defaults.glassOpacity, TodayWidgetLimits.GLASS),
+            glassSheen = int(read(GLASS_SHEEN), defaults.glassSheen, TodayWidgetLimits.GLASS),
+            glassRim = int(read(GLASS_RIM), defaults.glassRim, TodayWidgetLimits.GLASS),
             textSize = enumOf(read(TEXT_SIZE), defaults.textSize),
             cornerRadiusDp = int(read(CORNER), defaults.cornerRadiusDp, TodayWidgetLimits.CORNER_DP),
         )

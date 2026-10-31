@@ -59,6 +59,12 @@ data class TodayWidgetConfig(
     val showEvents: Boolean = false,
     /** Une section par jour d'échéance (retards en tête, en rouge) ; sinon une seule section « En retard ». */
     val groupByDay: Boolean = true,
+    /** Verre : opacité de la surface, en %. Plus bas, le fond d'écran transparaît davantage. */
+    val glassOpacity: Int = 45,
+    /** Verre : force du reflet diagonal, en %. */
+    val glassSheen: Int = 40,
+    /** Verre : force du liseré clair, en %. */
+    val glassRim: Int = 50,
     val textSize: TodayTextSize = TodayTextSize.M,
     /** Rayon des angles en dp, 0 à 32. */
     val cornerRadiusDp: Int = 20,
@@ -68,6 +74,7 @@ data class TodayWidgetConfig(
 object TodayWidgetLimits {
     val FACETS = 1..8
     val CORNER_DP = 0..32
+    val GLASS = 0..100
 }
 
 /**

@@ -1,12 +1,10 @@
 package ch.nicolab.cadence.widget.today
 
-import android.app.WallpaperManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -124,7 +122,8 @@ class TodayWidget : GlanceAppWidget() {
         val view = TodayView(
             appWidgetId = appWidgetId,
             config = config,
-            palette = TodayPalette.of(config, wallpaperColours(context)),
+            palette = TodayPalette.of(config),
+            sheen = TodayPalette.sheenAlpha(config).takeIf { it > 0f }?.let(::renderGlassSheen),
             checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
             eventRing = renderEventMark(done = false, CHECK_DP, density),
             eventDone = renderEventMark(done = true, CHECK_DP, density),
@@ -137,19 +136,6 @@ class TodayWidget : GlanceAppWidget() {
             zone = zone,
         )
         provideContent { TodayContent(view) }
-    }
-
-    /**
-     * Couleurs dominantes du fond d'écran (API 27+, sans permission) : le verre en tire la plus
-     * basse opacité lisible. Vide si le système ne les donne pas (fond animé, refus) : le verre
-     * garde alors l'opacité lisible sur tout fond.
-     */
-    private fun wallpaperColours(context: Context): List<Int> {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return emptyList()
-        val colours = runCatching {
-            WallpaperManager.getInstance(context).getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
-        }.getOrNull() ?: return emptyList()
-        return listOfNotNull(colours.primaryColor, colours.secondaryColor, colours.tertiaryColor).map { it.toArgb() }
     }
 
     private suspend fun eventsOf(
@@ -265,6 +251,8 @@ private class TodayView(
     val appWidgetId: Int,
     val config: TodayWidgetConfig,
     val palette: TodayPalettes,
+    /** Reflet du verre, null hors du verre ou à force nulle. */
+    val sheen: Bitmap?,
     /** Case à cocher blanche, teintée à l'affichage : une seule image partagée par toutes les lignes. */
     val checkBox: Bitmap,
     /** Anneau et disque fait des événements, blancs eux aussi, teintés de la couleur de l'agenda. */
@@ -303,31 +291,35 @@ private fun TodayContent(view: TodayView) {
     val listWanted = tasksShown || eventsShown
     val listShown = listWanted && TodayWidgetLayout.listFits(size.height.value, text, habitsShown)
     // Le verre est une surface translucide posée dans son liseré : la couche extérieure, teinte du
-    // liseré, ne dépasse que sur RIM_DP tout autour. Les fonds pleins ont un liseré transparent.
-    val rim = if (config.background == TodayBackground.VERRE) RIM_DP else 0
+    // liseré, ne dépasse que sur RIM_DP tout autour ; le reflet est une image étirée sous le contenu.
+    val rim = if (config.background == TodayBackground.VERRE && config.glassRim > 0) RIM_DP else 0
     Box(
         modifier = GlanceModifier.fillMaxSize()
             .background(palette.provider { it.rim })
             .cornerRadius(config.cornerRadiusDp.dp)
             .padding(rim.dp),
     ) {
-        Column(
+        Box(
             modifier = GlanceModifier.fillMaxSize()
                 .background(palette.provider { it.surface })
-                .cornerRadius((config.cornerRadiusDp - rim).coerceAtLeast(0).dp)
-                .padding((12 - rim).dp),
+                .cornerRadius((config.cornerRadiusDp - rim).coerceAtLeast(0).dp),
         ) {
-            Header(view, text)
-            Box(GlanceModifier.height(6.dp)) {}
-            if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
-            if (listShown) {
-                TodayList(view, text, tasksShown)
-            } else {
-                Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
-                    if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
-                }
+            view.sheen?.let {
+                Image(ImageProvider(it), null, modifier = GlanceModifier.fillMaxSize(), contentScale = ContentScale.FillBounds)
             }
-            if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
+            Column(modifier = GlanceModifier.fillMaxSize().padding((12 - rim).dp)) {
+                Header(view, text)
+                Box(GlanceModifier.height(6.dp)) {}
+                if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
+                if (listShown) {
+                    TodayList(view, text, tasksShown)
+                } else {
+                    Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
+                        if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+                    }
+                }
+                if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
+            }
         }
     }
 }
