@@ -2,7 +2,7 @@
 
 ## Quoi
 
-Cadence : un seul système personnel (tâches, projets, habitudes, notes, capture) sur le web, Android et bientôt Linux, auto-hébergé sur Unraid et joint via Tailscale, sans IA obligatoire. Fork MIT de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin : `PreciselyWrong/tududi`) ; l'attribution et la licence de l'amont restent.
+Cadence : un seul système personnel (tâches, projets, habitudes, notes, capture) sur le web, Android et bientôt Linux, auto-hébergé sur Unraid et joint via Tailscale, sans IA obligatoire. Fork MIT de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin : `PreciselyWrong/cadence`) ; l'attribution et la licence de l'amont restent.
 
 - Serveur et web : React 18 + TypeScript (webpack, Tailwind, Zustand + SWR) ; Express + Sequelize ; SQLite par défaut ou PostgreSQL via `DATABASE_URL`. Dev : deux serveurs (front `:8080` proxifie `/api` vers back `:3002`) ; prod : Express sert `/dist`.
 - Android : `android/` (ex-dépôt Cadence, historique importé) : Kotlin, Compose, Room, widgets Glance ; habitudes locales et tâches synchronisées hors ligne avec le serveur (`/api/v1/sync`).
@@ -17,6 +17,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 - donner à chaque migration un horodatage unique et vérifier la mise à niveau sur SQLite et PostgreSQL ;
 - lancer les vérifications complètes (tests backend, tests frontend, typecheck, lint, build) avant de pousser ;
 - tout sur `main`, un commit par étape vérifiée ; une branche seulement pour un essai risqué, supprimée une fois fusionnée ;
+- parité web ↔ Android : toute fonctionnalité ajoutée d'un côté est livrée de l'autre dans la même étape, ou inscrite dans `TODO.md` (`Now`) avec la raison et la vérif attendue ; elle est synchronisée avec le serveur (`backend/modules/sync/`) quand elle porte des données ; dans le même commit, mettre à jour ce `AGENTS.md` (`Quoi`, `Carte`, `État`), `android/AGENTS.md`, `docs/fork/FORK.md` et `docs/fork/WEB-UX-NOTES.md` si l'UI web change ;
 - TickTick sert de référence de comportement uniquement : jamais son code, ses ressources ni ses textes.
 
 ## Lire selon la tâche
@@ -73,7 +74,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/models/`, `backend/migrations/` : schéma Sequelize ; helpers `backend/utils/migration-utils.js`.
 - `backend/middleware/authorize.js` : `hasAccess(level, resourceType, getResourceUid)`, droits hérités du projet.
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
-- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; le reste de `habits/` est l'ancien module (tâches `habit_*`), à retirer quand le web aura migré. Fixtures partagées avec Android : `fixtures/habits/`.
+- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; le reste de `habits/` et `frontend/utils/habitsService.ts` sont l'ancien module (tâches `habit_*`), toujours en place, à retirer (voir `TODO.md`). Fixtures partagées avec Android : `fixtures/habits/`.
 - `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`).
 - `backend/modules/todo-md/` : projets miroirs de fichiers `TODO.md` (`TUDUDI_TODO_ROOT`) ; le fichier fait foi, écriture atomique (ajout, case cochée) uniquement.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).
@@ -93,6 +94,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - ⛔ Lire les droits partagés via `Permission` seul — utiliser `permissionSources` (les droits de groupe sont dans `group_permissions`).
 - ⛔ `fetch` ad hoc dans un composant — passer par `frontend/utils/*Service.ts`.
 - ⛔ Tableaux de couleurs locaux — `PALETTE` de `frontend/constants/colorPalette.ts`, via `ColorPicker`.
+- ⛔ Livrer une fonctionnalité sur le web seul ou sur Android seul sans l'équivalent de l'autre côté ni entrée dans `TODO.md` — Cadence est un seul système ; les deux clients doivent rester équivalents et ce fichier à jour.
 - ⛔ Éditer `dist/` — généré par `npm run build`.
 - ⛔ Corriger un bug sans test qui l'aurait détecté — exigence de `docs/testing.md`.
 - ⛔ Lancer toute la suite Jest d'un coup — elle a saturé la mémoire de la machine ; cibler les fichiers avec `-w 2`.
@@ -102,4 +104,4 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 
 ## État
 
-Monorepo Cadence (web, serveur, Android) sur `main`, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Android : tâches synchronisées, widgets et rappels vérifiés sur émulateur. Prochaine étape : `Now` de `TODO.md`.
+Monorepo Cadence (web, serveur, Android) sur `main`, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Android : tâches synchronisées, widgets et rappels vérifiés sur émulateur ; synchro des habitudes Android ↔ serveur décrite comme livrée dans `docs/fork/FORK.md` mais encore listée dans `Now` de `TODO.md` (à réconcilier). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.
