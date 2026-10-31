@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.data
 
+import ch.nicolab.cadence.tasks.model.RecurrenceRule
 import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.Repetition
@@ -21,6 +22,31 @@ internal object TaskExtras {
             .mapNotNull { (key, value) -> (value as? JsonPrimitive)?.contentOrNull?.let { key to it } }
             .toMap()
     }.getOrDefault(emptyMap())
+
+    /**
+     * Règle de la série d'après les champs serveur `recurrence_*` gardés dans les extras. Les tableaux
+     * (`recurrence_weekdays`, `recurrence_exdates`) arrivent en liste JSON ou en texte JSON ; une valeur illisible est ignorée.
+     */
+    fun recurrenceRule(extrasJson: String): RecurrenceRule {
+        val extras = runCatching { Json.parseToJsonElement(extrasJson).jsonObject }.getOrNull() ?: return RecurrenceRule()
+        fun scalar(key: String) = (extras[key] as? JsonPrimitive)?.contentOrNull
+        fun list(key: String): List<String> {
+            val element = extras[key]
+            val array = element as? JsonArray
+                ?: (element as? JsonPrimitive)?.contentOrNull?.let { runCatching { Json.parseToJsonElement(it) as? JsonArray }.getOrNull() }
+            return array?.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }.orEmpty()
+        }
+        return RecurrenceRule(
+            interval = scalar("recurrence_interval")?.toIntOrNull()?.coerceAtLeast(1) ?: 1,
+            weekday = scalar("recurrence_weekday")?.toIntOrNull(),
+            weekdays = list("recurrence_weekdays").mapNotNull { it.toIntOrNull() },
+            monthDay = scalar("recurrence_month_day")?.toIntOrNull(),
+            weekOfMonth = scalar("recurrence_week_of_month")?.toIntOrNull(),
+            endDay = scalar("recurrence_end_date")?.take(10)?.let { runCatching { LocalDate.parse(it) }.getOrNull() },
+            exdates = list("recurrence_exdates").mapNotNull { runCatching { LocalDate.parse(it.take(10)) }.getOrNull() }.toSet(),
+            completionBased = scalar("completion_based").let { it == "true" || it == "1" },
+        )
+    }
 }
 
 /** Valeurs envoyées au serveur pour les champs que l'appareil écrit sans colonne dédiée. */

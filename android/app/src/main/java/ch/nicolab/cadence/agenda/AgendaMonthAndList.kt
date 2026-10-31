@@ -316,6 +316,7 @@ internal fun AgendaEntryRow(
             Spacer(Modifier.width(if (hasCheck) Space.xs else Space.md))
             when {
                 entry is AgendaEntry.Task -> TaskCheckbox(
+                    modifier = Modifier.alpha(if (entry.virtual) VIRTUAL_ALPHA else 1f),
                     checked = entry.done,
                     onCheckedChange = { onToggleTask(entry) },
                     contentDescription = stringResource(
@@ -394,7 +395,7 @@ private fun EventCheckRow(entry: AgendaEntry.Event, color: Color, onToggleEvent:
 /** Clé stable d'une ligne : l'animation de retrait suit l'élément, pas sa position. */
 private fun AgendaEntry.rowKey(): String = when (this) {
     is AgendaEntry.Event -> "e-${eventKey.calendarId}-${eventKey.eventId}-${eventKey.instanceBegin}"
-    is AgendaEntry.Task -> "t-$uid"
+    is AgendaEntry.Task -> if (virtual) "t-$uid-$start" else "t-$uid"
     is AgendaEntry.Habit -> "h-$habitId-$start"
 }
 

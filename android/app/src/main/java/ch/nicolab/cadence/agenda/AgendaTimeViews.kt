@@ -690,7 +690,12 @@ private fun EntryMarker(
     when (entry) {
         is AgendaEntry.Event -> if (checkEvents) EventCheckSlot(entry, color, onToggleEvent, modifier)
         is AgendaEntry.Task -> Box(modifier.padding(start = Space.xs), contentAlignment = Alignment.Center) {
-            TaskCheckbox(checked = entry.done, onCheckedChange = { actions.toggleTask(entry) }, contentDescription = doneLabel)
+            TaskCheckbox(
+                checked = entry.done,
+                onCheckedChange = { actions.toggleTask(entry) },
+                modifier = Modifier.alpha(if (entry.virtual) VIRTUAL_ALPHA else 1f),
+                contentDescription = doneLabel,
+            )
         }
         is AgendaEntry.Habit -> Box(modifier.padding(start = Space.sm), contentAlignment = Alignment.Center) {
             Icon(
@@ -764,3 +769,6 @@ private fun DayOfWeek.narrow(): String = getDisplayName(TextStyle.NARROW, Locale
 internal fun LocalDate.isWeekend(): Boolean = dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY
 
 internal const val DONE_ALPHA = 0.55f
+
+/** Case d'une occurrence à venir : visible mais atténuée, elle ne se coche pas. */
+internal const val VIRTUAL_ALPHA = 0.4f

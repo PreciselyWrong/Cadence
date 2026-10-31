@@ -70,6 +70,8 @@ data class TaskItem(
     val someday: Boolean = false,
     /** Objectif ou résultat clé lié (`goal_uid`). */
     val goalUid: String? = null,
+    /** Règle complète de la série (jours, fin, exceptions) ; sert à [RecurrenceExpansion]. */
+    val recurrence: RecurrenceRule = RecurrenceRule(),
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)

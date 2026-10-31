@@ -4,6 +4,7 @@ import ch.nicolab.cadence.calendar.CalendarEvent
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
+import ch.nicolab.cadence.tasks.model.RecurrenceRule
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.DayOfWeek
@@ -282,6 +283,43 @@ class AgendaLayoutTest {
         assertEquals(true, dayEntry?.allDay)
         assertEquals(true, dayEntry?.done)
         assertNull(agendaTask(undated, projectColorArgb = null, zone = zone))
+    }
+
+    @Test
+    fun `a recurring task fills the visible range with its later occurrences`() {
+        val weekly = TaskItem(
+            uid = "r", name = "Sport", recurrenceType = "weekly",
+            dueDate = LocalDateTime.of(2026, 11, 2, 9, 0).atZone(zone).toInstant(), dueHasTime = true,
+            estimatedMinutes = 60, recurrence = RecurrenceRule(weekday = 1),
+        )
+
+        val entries = agendaTaskEntries(weekly, projectColorArgb = null, from = LocalDate.of(2026, 11, 2), to = LocalDate.of(2026, 11, 22), zone = zone)
+
+        assertEquals(listOf(false, true, true), entries.map { it.virtual })
+        assertEquals(
+            listOf(LocalDateTime.of(2026, 11, 2, 9, 0), LocalDateTime.of(2026, 11, 9, 9, 0), LocalDateTime.of(2026, 11, 16, 9, 0)),
+            entries.map { it.start },
+        )
+        assertEquals(listOf(10, 10, 10), entries.map { it.end.hour })
+        assertEquals(true, entries.all { it.recurring && it.uid == "r" && !it.allDay })
+    }
+
+    @Test
+    fun `a recurring task without a time repeats as all-day entries and a plain task never repeats`() {
+        val daily = TaskItem(
+            uid = "d", name = "Arroser", recurrenceType = "daily",
+            dueDate = Instant.parse("2026-11-02T22:59:59Z"), dueDay = LocalDate.of(2026, 11, 2),
+        )
+        val plain = TaskItem(uid = "p", name = "Une fois", dueDate = Instant.parse("2026-11-02T22:59:59Z"), dueDay = LocalDate.of(2026, 11, 2))
+        val range = LocalDate.of(2026, 11, 2) to LocalDate.of(2026, 11, 4)
+
+        val repeated = agendaTaskEntries(daily, null, range.first, range.second, zone)
+        val single = agendaTaskEntries(plain, null, range.first, range.second, zone)
+
+        assertEquals(listOf(true, true, true), repeated.map { it.allDay })
+        assertEquals(listOf(LocalDate.of(2026, 11, 2), LocalDate.of(2026, 11, 3), LocalDate.of(2026, 11, 4)), repeated.map { it.start.toLocalDate() })
+        assertEquals(1, single.size)
+        assertEquals(false, single.single().virtual)
     }
 
     @Test

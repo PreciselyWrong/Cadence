@@ -4,6 +4,7 @@ import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localEnd
 import ch.nicolab.cadence.calendar.localStart
+import ch.nicolab.cadence.tasks.model.RecurrenceExpansion
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.DayOfWeek
 import java.time.Duration
@@ -61,6 +62,8 @@ sealed interface AgendaEntry {
         val estimateMinutes: Int? = null,
         /** Une récurrente ne se déplace pas par simple dépôt : elle demande un périmètre. */
         val recurring: Boolean = false,
+        /** Occurrence à venir d'une série, calculée et non enregistrée : on l'ouvre, on ne la coche ni ne la déplace. */
+        val virtual: Boolean = false,
     ) : AgendaEntry
 
     /** Habitude prévue ce jour-là : dans la rangée de la journée, ou à l'heure de début de son groupe. */
@@ -213,6 +216,17 @@ fun agendaTask(task: TaskItem, projectColorArgb: Int?, zone: ZoneId): AgendaEntr
         estimateMinutes = estimate,
         recurring = task.isRecurring,
     )
+}
+
+/**
+ * Entrées d'une tâche pour [from]..[to] : l'occurrence enregistrée, puis, pour une série ouverte, ses
+ * occurrences à venir ([RecurrenceExpansion]) ; seule la première reste modifiable.
+ */
+fun agendaTaskEntries(task: TaskItem, projectColorArgb: Int?, from: LocalDate, to: LocalDate, zone: ZoneId): List<AgendaEntry.Task> {
+    val stored = agendaTask(task, projectColorArgb, zone) ?: return emptyList()
+    val later = RecurrenceExpansion.expand(task, from, to, zone)
+        .mapNotNull { agendaTask(it, projectColorArgb, zone)?.copy(virtual = true) }
+    return listOf(stored) + later
 }
 
 /** Tâche à heure rangée dans la rangée des journées entières, quand les tâches avec heure sont masquées. */

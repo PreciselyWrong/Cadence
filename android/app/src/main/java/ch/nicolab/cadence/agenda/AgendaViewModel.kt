@@ -115,9 +115,10 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
                 habitEntries(w, options.habits),
             ) { events, allTasks, projects, habits ->
                 val colors = projects.associate { it.uid to parseProjectColor(it.color) }
+                val range = w.first..w.first.plusDays(w.days.toLong() - 1)
                 val dated = allTasks
-                    .mapNotNull { task -> agendaTask(task, colors[task.projectUid], zone) }
-                    .filter { it.start.toLocalDate() in w.first..w.first.plusDays(w.days.toLong() - 1) }
+                    .flatMap { task -> agendaTaskEntries(task, colors[task.projectUid], range.start, range.endInclusive, zone) }
+                    .filter { it.start.toLocalDate() in range }
                     .filter { options.showDone || !it.done }
                     .map { if (!options.timedTasks && !it.allDay) it.withoutTime() else it }
                 events.map { agendaEvent(it, zone) } + dated + habits.filter { options.showDone || !it.done }
@@ -185,6 +186,8 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun toggleTask(task: AgendaEntry.Task) = viewModelScope.launch {
+        // Une occurrence à venir n'existe pas encore : seule l'occurrence enregistrée se coche.
+        if (task.virtual) return@launch
         if (task.done) {
             tasks.reopenTask(task.uid)
         } else {

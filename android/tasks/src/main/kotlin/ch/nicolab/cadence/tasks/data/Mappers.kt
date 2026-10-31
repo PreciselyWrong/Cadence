@@ -50,6 +50,7 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         reviewedAt = parseInstant(reviewedAtRaw),
         someday = someday,
         goalUid = extras["goal_uid"],
+        recurrence = TaskExtras.recurrenceRule(extrasJson),
     )
 }
 

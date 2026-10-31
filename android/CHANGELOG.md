@@ -10,6 +10,7 @@
 - Objectifs, depuis le Bilan : les objectifs avec leurs résultats clés et leur avancement (« 3 sur 5 faits », calculé sur les tâches et projets liés), puis la liste d'envies (Avoir, Être, Faire). Lecture seule ; la création reste sur le web.
 - Domaines : une rangée de puces filtre Aujourd'hui, À venir et Projets par domaine (le choix est gardé), et « Proposer 5 domaines » crée les domaines manquants quand il n'y en a aucun.
 - Revue : « Planifier une revue le vendredi » crée une tâche récurrente sans rappel, tant qu'aucune n'existe (connexion requise).
+- Agenda : une tâche récurrente apparaît à chaque occurrence de la plage affichée, avec son heure et sa durée, comme sur le web (une tâche hebdomadaire à 9 h se voit chaque semaine). Les occurrences à venir sont estompées : on les ouvre, mais seule la prochaine se coche ou se déplace.
 
 ### Corrections
 - Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.

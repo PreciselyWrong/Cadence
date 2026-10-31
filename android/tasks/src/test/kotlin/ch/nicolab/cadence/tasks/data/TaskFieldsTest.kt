@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.data
 
+import ch.nicolab.cadence.tasks.model.RecurrenceRule
 import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.Repetition
 import java.time.LocalDate
@@ -26,6 +27,26 @@ class TaskFieldsTest {
         assertNull(extras["nested"])
         assertNull(extras["none"])
         assertEquals(emptyMap<String, String>(), TaskExtras.parse("not json"))
+    }
+
+    @Test
+    fun `the recurrence rule is read from the server fields, lists as JSON or text`() {
+        val rule = TaskExtras.recurrenceRule(
+            """{"recurrence_interval":2,"recurrence_weekday":1,"recurrence_weekdays":[1,3],"recurrence_month_day":15,
+            "recurrence_week_of_month":2,"recurrence_end_date":"2026-12-31T00:00:00.000Z",
+            "recurrence_exdates":"[\"2026-11-09\"]","completion_based":true}""",
+        )
+
+        assertEquals(2, rule.interval)
+        assertEquals(1, rule.weekday)
+        assertEquals(listOf(1, 3), rule.weekdays)
+        assertEquals(15, rule.monthDay)
+        assertEquals(2, rule.weekOfMonth)
+        assertEquals(LocalDate.of(2026, 12, 31), rule.endDay)
+        assertEquals(setOf(LocalDate.of(2026, 11, 9)), rule.exdates)
+        assertEquals(true, rule.completionBased)
+        assertEquals(RecurrenceRule(), TaskExtras.recurrenceRule("not json"))
+        assertEquals(RecurrenceRule(), TaskExtras.recurrenceRule("""{"recurrence_exdates":null,"recurrence_weekdays":"oops"}"""))
     }
 
     @Test
