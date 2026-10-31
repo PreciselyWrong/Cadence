@@ -28,6 +28,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Feuille de route | `TODO.md` (`Now`, `Next`, `Ideas`) |
 | Guide de l'amont, index des docs | `docs/fork/UPSTREAM-GUIDE.md` |
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |
+| Décisions UX à reporter entre web et Android | `docs/fork/WEB-UX-NOTES.md` (web → Android), `docs/fork/ANDROID-UX-NOTES.md` (Android → web) |
 | Clients Android/Linux, plan de synchro | `docs/fork/PLAN-clients-sync.md`, `docs/fork/CADENCE-PARITY.md` |
 | Synchronisation hors ligne (API) | `docs/30-offline-sync.md`, `backend/modules/sync/` |
 | App Android | `android/AGENTS.md` (règles des habitudes, widget, ⛔ propres à l'app) |
