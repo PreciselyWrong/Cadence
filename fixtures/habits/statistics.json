@@ -1,0 +1,960 @@
+{
+  "suite": "statistics",
+  "cases": [
+    {
+      "kind": "statistics",
+      "name": "overview weekly periods follow completed weeks",
+      "source": "HabitStatisticsSummaryTest.kt: overview follows completed weeks and months rather than daily activity",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-08-10",
+        "goal": {
+          "targetMinor": 1,
+          "period": "WEEK"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-04",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-09-08",
+          "valueMinor": 1
+        }
+      ],
+      "expect": {
+        "periodType": "WEEK"
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "overview monthly single period",
+      "source": "HabitStatisticsSummaryTest.kt: overview follows completed weeks and months rather than daily activity",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 1,
+          "period": "MONTH"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "periodType": "MONTH"
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "fully paused week is neutral in overview",
+      "source": "HabitStatisticsSummaryTest.kt: fully paused week is neutral in overview",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 1,
+          "period": "WEEK"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "pauses": [
+        {
+          "start": "2026-08-31",
+          "endExclusive": "2026-09-07"
+        }
+      ],
+      "expect": {
+        "evaluatedPeriods": 4
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "daily summary separates minimum and ideal and ignores current day",
+      "source": "HabitStatisticsSummaryTest.kt: daily summary separates minimum and ideal and ignores current day",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 5
+        },
+        {
+          "localDate": "2026-09-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-08",
+          "valueMinor": 10
+        }
+      ],
+      "expect": {
+        "evaluatedPeriods": 30,
+        "validatedPeriods": 2,
+        "idealPeriods": 1,
+        "successRatePercent": 7,
+        "trendPercentagePoints": 7,
+        "from": "2026-08-09",
+        "dayStatuses": {
+          "2026-09-07": "MINIMUM",
+          "2026-09-06": "IDEAL"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "calendar days cover 365 days up to today",
+      "source": "HabitStatisticsSummaryTest.kt: calendar days cover 365 days up to today",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 5
+        },
+        {
+          "localDate": "2026-09-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-08",
+          "valueMinor": 10
+        }
+      ],
+      "expect": {
+        "calendarDaysCount": 365
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "closed limits reward staying below and historical goal is preserved",
+      "source": "HabitStatisticsSummaryTest.kt: closed limits reward staying below and historical goal is preserved",
+      "today": "2026-09-08",
+      "versions": [
+        {
+          "effectiveFrom": "1970-01-01",
+          "habit": {
+            "id": "h",
+            "startsOn": "2026-05-31",
+            "goal": {
+              "targetMinor": 2,
+              "period": "DAY",
+              "direction": "AT_MOST"
+            },
+            "schedule": {
+              "mode": "EVERY_DAY"
+            }
+          }
+        },
+        {
+          "effectiveFrom": "2026-08-29",
+          "habit": {
+            "id": "h",
+            "startsOn": "2026-05-31",
+            "goal": {
+              "targetMinor": 1,
+              "period": "DAY",
+              "direction": "AT_MOST"
+            },
+            "schedule": {
+              "mode": "EVERY_DAY"
+            }
+          }
+        }
+      ],
+      "entries": [
+        {
+          "localDate": "2026-08-24",
+          "valueMinor": 2
+        },
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 2
+        }
+      ],
+      "expect": {
+        "validatedPeriods": 29,
+        "idealPeriods": 29,
+        "dayStatuses": {
+          "2026-09-07": "MISSED"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "pauses and nonplanned days excluded rather than missed",
+      "source": "HabitStatisticsSummaryTest.kt: pauses and nonplanned days excluded rather than missed",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-09-05",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "pauses": [
+        {
+          "start": "2026-09-07",
+          "endExclusive": "2026-09-08"
+        }
+      ],
+      "expect": {
+        "evaluatedPeriods": 2,
+        "trendPercentagePoints": null,
+        "dayStatuses": {
+          "2026-09-07": "PAUSED",
+          "2026-08-09": "UNPLANNED"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "weekly goals count periods not daily missed goals",
+      "source": "HabitStatisticsSummaryTest.kt: weekly and monthly goals count periods not daily missed goals",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-08-10",
+        "goal": {
+          "targetMinor": 1,
+          "period": "WEEK"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 1
+        }
+      ],
+      "expect": {
+        "evaluatedPeriods": 4,
+        "validatedPeriods": 0,
+        "dayStatuses": {
+          "2026-09-07": "ACTIVITY",
+          "2026-09-06": "NO_ACTIVITY"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "monthly goals count periods not daily missed goals",
+      "source": "HabitStatisticsSummaryTest.kt: weekly and monthly goals count periods not daily missed goals",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 1,
+          "period": "MONTH"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "evaluatedPeriods": 1,
+        "previousEvaluatedPeriods": 1
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "abstinence yields no misleading rate",
+      "source": "HabitStatisticsSummaryTest.kt: abstinence and missing history yield no misleading rate",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 0,
+          "period": "DAY",
+          "direction": "AT_MOST"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "evaluatedPeriods": 0,
+        "successRatePercent": null,
+        "trendPercentagePoints": null
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "missing history yields no misleading rate",
+      "source": "HabitStatisticsSummaryTest.kt: abstinence and missing history yield no misleading rate",
+      "today": "2026-09-08",
+      "versions": [],
+      "expect": {
+        "evaluatedPeriods": 0
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "comparison needs sufficient sample for recently started habit",
+      "source": "HabitStatisticsSummaryTest.kt: comparison requires both windows to have sufficient evaluated sample",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-08-29",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "evaluatedPeriods": 10,
+        "previousEvaluatedPeriods": 0,
+        "comparison": null,
+        "trendPercentagePoints": null
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "comparison suppressed when previous window sample is below threshold",
+      "source": "HabitStatisticsSummaryTest.kt: comparison requires both windows to have sufficient evaluated sample",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-08-04",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "evaluatedPeriods": 30,
+        "previousEvaluatedPeriods": 5,
+        "comparison": null,
+        "trendPercentagePoints": null
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "broken homogeneity suppresses comparison",
+      "source": "HabitStatisticsSummaryTest.kt: broken homogeneity suppresses comparison",
+      "today": "2026-09-08",
+      "versions": [
+        {
+          "effectiveFrom": "1970-01-01",
+          "habit": {
+            "id": "h",
+            "startsOn": "2026-05-31",
+            "goal": {
+              "targetMinor": 10,
+              "period": "DAY",
+              "minimumMinor": 5
+            },
+            "schedule": {
+              "mode": "EVERY_DAY"
+            }
+          }
+        },
+        {
+          "effectiveFrom": "2026-08-04",
+          "habit": {
+            "id": "h",
+            "startsOn": "2026-05-31",
+            "goal": {
+              "targetMinor": 1,
+              "period": "WEEK"
+            },
+            "schedule": {
+              "mode": "EVERY_DAY"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "isHomogeneous": false,
+        "comparison": null,
+        "trendPercentagePoints": null
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "pauses leaving 5 evaluated days give insufficient confidence",
+      "source": "HabitStatisticsSummaryTest.kt: neutral pauses affect completeness and sample without counting as missed",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "pauses": [
+        {
+          "start": "2026-08-14",
+          "endExclusive": "2026-09-08"
+        }
+      ],
+      "expect": {
+        "observablePeriods": 30,
+        "evaluatedPeriods": 5,
+        "confidence": "INSUFFICIENT",
+        "comparison": null
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "pauses leaving 20 evaluated days give limited confidence",
+      "source": "HabitStatisticsSummaryTest.kt: neutral pauses affect completeness and sample without counting as missed",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "pauses": [
+        {
+          "start": "2026-08-29",
+          "endExclusive": "2026-09-08"
+        }
+      ],
+      "expect": {
+        "evaluatedPeriods": 20,
+        "confidence": "LIMITED"
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "no pauses give established confidence",
+      "source": "HabitStatisticsSummaryTest.kt: neutral pauses affect completeness and sample without counting as missed",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "expect": {
+        "evaluatedPeriods": 30,
+        "confidence": "ESTABLISHED"
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "weekly comparison succeeds with sufficient sample",
+      "source": "HabitStatisticsSummaryTest.kt: weekly and monthly comparisons succeed with sufficient sample",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 1,
+          "period": "WEEK"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-08-02",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-07-26",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-07-19",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-07-12",
+          "valueMinor": 1
+        }
+      ],
+      "expect": {
+        "isHomogeneous": true,
+        "comparison": {
+          "currentRatePercent": 0,
+          "previousRatePercent": 100,
+          "deltaPercentagePoints": -100,
+          "trend": "DECLINING"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "monthly comparison succeeds with sufficient sample",
+      "source": "HabitStatisticsSummaryTest.kt: weekly and monthly comparisons succeed with sufficient sample",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 1,
+          "period": "MONTH"
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-08-24",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-07-25",
+          "valueMinor": 1
+        }
+      ],
+      "expect": {
+        "isHomogeneous": true,
+        "comparison": {
+          "currentRatePercent": 100,
+          "previousRatePercent": 100,
+          "deltaPercentagePoints": 0,
+          "trend": "STABLE"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "trend detects improvement",
+      "source": "HabitStatisticsSummaryTest.kt: trend detects improvement decline and stability",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-05",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-04",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-03",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-02",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-01",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-31",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-30",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-29",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-28",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-27",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-26",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-25",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-24",
+          "valueMinor": 10
+        }
+      ],
+      "expect": {
+        "comparison": {
+          "deltaPercentagePoints": 50,
+          "trend": "IMPROVING"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "trend detects decline",
+      "source": "HabitStatisticsSummaryTest.kt: trend detects improvement decline and stability",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-08-08",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-07",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-05",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-04",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-03",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-02",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-01",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-31",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-30",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-29",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-28",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-27",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-26",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-25",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-24",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-23",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-22",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-21",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-20",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-19",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-18",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-17",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-16",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-15",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-14",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-13",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-12",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-11",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-10",
+          "valueMinor": 10
+        }
+      ],
+      "expect": {
+        "comparison": {
+          "deltaPercentagePoints": -100,
+          "trend": "DECLINING"
+        }
+      }
+    },
+    {
+      "kind": "statistics",
+      "name": "trend detects stability",
+      "source": "HabitStatisticsSummaryTest.kt: trend detects improvement decline and stability",
+      "today": "2026-09-08",
+      "habit": {
+        "id": "h",
+        "startsOn": "2026-05-31",
+        "goal": {
+          "targetMinor": 10,
+          "period": "DAY",
+          "minimumMinor": 5
+        },
+        "schedule": {
+          "mode": "EVERY_DAY"
+        }
+      },
+      "entries": [
+        {
+          "localDate": "2026-09-07",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-05",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-04",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-03",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-02",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-01",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-31",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-30",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-29",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-28",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-27",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-26",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-25",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-24",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-08",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-07",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-06",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-05",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-04",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-03",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-02",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-08-01",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-31",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-30",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-29",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-28",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-27",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-26",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-07-25",
+          "valueMinor": 10
+        }
+      ],
+      "expect": {
+        "comparison": {
+          "deltaPercentagePoints": 0,
+          "trend": "STABLE"
+        }
+      }
+    }
+  ]
+}

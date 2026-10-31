@@ -1,0 +1,217 @@
+{
+  "suite": "streak",
+  "cases": [
+    {
+      "kind": "streak",
+      "name": "no entry gives no streak",
+      "source": "HabitStreakTest.kt: no entry gives no streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [],
+      "expect": { "current": 0 }
+    },
+    {
+      "kind": "streak",
+      "name": "consecutive validated days build the streak",
+      "source": "HabitStreakTest.kt: consecutive validated days build the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-1-2026-06-15" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-2-2026-06-14" },
+        { "localDate": "2026-06-13", "valueMinor": 1, "sessionId": "session-3-2026-06-13" }
+      ],
+      "expect": { "current": 4 }
+    },
+    {
+      "kind": "streak",
+      "name": "open current period keeps the streak",
+      "source": "HabitStreakTest.kt: the current period counts only once validated and never breaks the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-1-2026-06-15" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-2-2026-06-14" }
+      ],
+      "expect": { "current": 3 }
+    },
+    {
+      "kind": "streak",
+      "name": "validated current period adds to the streak",
+      "source": "HabitStreakTest.kt: the current period counts only once validated and never breaks the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-1-2026-06-15" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-2-2026-06-14" },
+        { "localDate": "2026-06-17", "valueMinor": 1, "sessionId": "session-3-2026-06-17" }
+      ],
+      "expect": { "current": 4 }
+    },
+    {
+      "kind": "streak",
+      "name": "a missed day breaks the streak",
+      "source": "HabitStreakTest.kt: a missed day breaks the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-1-2026-06-14" },
+        { "localDate": "2026-06-13", "valueMinor": 1, "sessionId": "session-2-2026-06-13" }
+      ],
+      "expect": { "current": 1 }
+    },
+    {
+      "kind": "streak",
+      "name": "a skipped day is neither success nor failure",
+      "source": "HabitStreakTest.kt: a skipped day is neither a success nor a failure",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-1-2026-06-14" }
+      ],
+      "pauses": [
+        { "start": "2026-06-15", "endExclusive": "2026-06-16" }
+      ],
+      "expect": { "current": 2 }
+    },
+    {
+      "kind": "streak",
+      "name": "a travel does not create a streak on its own",
+      "source": "HabitStreakTest.kt: a travel does not create a streak on its own",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [],
+      "pauses": [
+        { "start": "2026-06-12", "endExclusive": "2026-06-17" }
+      ],
+      "expect": { "current": 0 }
+    },
+    {
+      "kind": "streak",
+      "name": "a travel bridges the periods around it",
+      "source": "HabitStreakTest.kt: a travel bridges the periods around it",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-11", "valueMinor": 1, "sessionId": "session-0-2026-06-11" },
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-1-2026-06-16" }
+      ],
+      "pauses": [
+        { "start": "2026-06-12", "endExclusive": "2026-06-16" }
+      ],
+      "expect": { "current": 2 }
+    },
+    {
+      "kind": "streak",
+      "name": "unplanned days are ignored",
+      "source": "HabitStreakTest.kt: unplanned days are ignored instead of breaking the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "SELECTED_DAYS", "activeDays": ["MONDAY", "WEDNESDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-0-2026-06-15" },
+        { "localDate": "2026-06-10", "valueMinor": 1, "sessionId": "session-1-2026-06-10" },
+        { "localDate": "2026-06-08", "valueMinor": 1, "sessionId": "session-2-2026-06-08" }
+      ],
+      "expect": { "current": 3 }
+    },
+    {
+      "kind": "streak",
+      "name": "every N days rhythm counts only planned days",
+      "source": "HabitStreakTest.kt: an every N days rhythm counts only its planned days",
+      "habit": { "id": "habit-1", "startsOn": "2026-06-02", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "INTERVAL_DAYS", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 3 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-0-2026-06-14" },
+        { "localDate": "2026-06-11", "valueMinor": 1, "sessionId": "session-1-2026-06-11" },
+        { "localDate": "2026-06-08", "valueMinor": 1, "sessionId": "session-2-2026-06-08" }
+      ],
+      "expect": { "current": 3 }
+    },
+    {
+      "kind": "streak",
+      "name": "a weekly goal counts weeks not days",
+      "source": "HabitStreakTest.kt: a weekly goal counts weeks not days",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 3, "period": "WEEK" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-17", "valueMinor": 1, "sessionId": "session-0-2026-06-17" },
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-1-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-2-2026-06-15" },
+        { "localDate": "2026-06-14", "valueMinor": 1, "sessionId": "session-3-2026-06-14" },
+        { "localDate": "2026-06-13", "valueMinor": 1, "sessionId": "session-4-2026-06-13" },
+        { "localDate": "2026-06-12", "valueMinor": 1, "sessionId": "session-5-2026-06-12" }
+      ],
+      "expect": { "current": 2 }
+    },
+    {
+      "kind": "streak",
+      "name": "the minimum validates the period, not the ideal",
+      "source": "HabitStreakTest.kt: the minimum validates the period, not the ideal",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 3, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 3, "sessionId": "session-1-2026-06-15" }
+      ],
+      "expect": { "current": 2 }
+    },
+    {
+      "kind": "streak",
+      "name": "the frequency gates the period as well",
+      "source": "HabitStreakTest.kt: the frequency gates the period as well",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 3, "period": "DAY", "frequencyTarget": 3 }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 3, "sessionId": "session-0-2026-06-16" }
+      ],
+      "expect": { "current": 0 }
+    },
+    {
+      "kind": "streak",
+      "name": "a goal change is read as it was at the time",
+      "source": "HabitStreakTest.kt: a goal change is read as it was at the time",
+      "versions": [
+        { "effectiveFrom": "1970-01-01", "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 10, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } } },
+        { "effectiveFrom": "2026-06-16", "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } } }
+      ],
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-1-2026-06-15" }
+      ],
+      "expect": { "current": 1 }
+    },
+    {
+      "kind": "streak",
+      "name": "days before the habit started never break the streak",
+      "source": "HabitStreakTest.kt: days before the habit started never break the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-06-15", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-15", "valueMinor": 1, "sessionId": "session-1-2026-06-15" }
+      ],
+      "expect": { "current": 2 }
+    },
+    {
+      "kind": "streak",
+      "name": "the best streak survives a later break",
+      "source": "HabitStreakTest.kt: the best streak survives a later break",
+      "habit": { "id": "habit-1", "startsOn": "2026-01-01", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 } },
+      "today": "2026-06-17",
+      "entries": [
+        { "localDate": "2026-06-16", "valueMinor": 1, "sessionId": "session-0-2026-06-16" },
+        { "localDate": "2026-06-12", "valueMinor": 1, "sessionId": "session-1-2026-06-12" },
+        { "localDate": "2026-06-11", "valueMinor": 1, "sessionId": "session-2-2026-06-11" },
+        { "localDate": "2026-06-10", "valueMinor": 1, "sessionId": "session-3-2026-06-10" },
+        { "localDate": "2026-06-09", "valueMinor": 1, "sessionId": "session-4-2026-06-09" }
+      ],
+      "expect": { "current": 1, "best": 4 }
+    }
+  ]
+}

@@ -35,7 +35,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Modèle, migration, SQLite/Postgres | `docs/database.md`, `docs/16-postgresql.md`, `docs/backups.md` |
 | Tests | `docs/testing.md` |
 | Tâches récurrentes | `docs/01-recurring-tasks-behavior.md` (avant de toucher `backend/modules/tasks/recurringTaskService.js` ou `taskScheduler.js`) |
-| Habitudes | `docs/fork/DECISIONS.md`, `docs/21-habits.md`, `backend/modules/habits/`, `android/domain/` |
+| Habitudes | `docs/fork/DECISIONS.md`, `docs/21-habits.md` (section « Cadence habits » = contrat de synchro et d'API), `fixtures/habits/README.md`, `backend/modules/habits/`, `android/domain/` |
 | Aujourd'hui / plan du jour | `docs/02-today-page-sections.md`, `docs/20-daily-plan.md` |
 | Partage, droits, groupes | `docs/08-user-management.md`, `docs/18-user-groups.md`, `docs/19-people-and-roles.md` |
 | Projets depuis des `TODO.md` | `docs/35-todo-md-projects.md`, `backend/modules/todo-md/` |
@@ -72,7 +72,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/models/`, `backend/migrations/` : schéma Sequelize ; helpers `backend/utils/migration-utils.js`.
 - `backend/middleware/authorize.js` : `hasAccess(level, resourceType, getResourceUid)`, droits hérités du projet.
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
-- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC) ; `backend/modules/habits/` : habitudes, à remplacer par les règles Cadence.
+- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; le reste de `habits/` est l'ancien module (tâches `habit_*`), à retirer quand le web aura migré. Fixtures partagées avec Android : `fixtures/habits/`.
 - `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`).
 - `backend/modules/todo-md/` : projets miroirs de fichiers `TODO.md` (`TUDUDI_TODO_ROOT`) ; le fichier fait foi, écriture atomique (ajout, case cochée) uniquement.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).

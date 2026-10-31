@@ -74,6 +74,33 @@ async function safeAddIndex(queryInterface, tableName, fields, options = {}) {
     }
 }
 
+// Adds an index unless one with the same name exists (or, without a name,
+// one on exactly these fields). Unlike safeAddIndex it is not fooled by an
+// index that merely shares a column, so several indexes on one column and
+// composite unique indexes are all created.
+async function safeEnsureIndex(
+    queryInterface,
+    tableName,
+    fields,
+    options = {}
+) {
+    const tables = await queryInterface.showAllTables();
+    if (!tables.includes(tableName)) {
+        console.log(`Table ${tableName} does not exist, skipping index`);
+        return;
+    }
+    const indexes = await queryInterface.showIndex(tableName);
+    const exists = indexes.some((index) =>
+        options.name
+            ? index.name === options.name
+            : index.fields.length === fields.length &&
+              index.fields.every((f, i) => f.attribute === fields[i])
+    );
+    if (!exists) {
+        await queryInterface.addIndex(tableName, fields, options);
+    }
+}
+
 async function safeRemoveColumn(queryInterface, tableName, columnName) {
     try {
         const tableInfo = await queryInterface.describeTable(tableName);
@@ -363,6 +390,7 @@ module.exports = {
     safeAddColumns,
     safeCreateTable,
     safeAddIndex,
+    safeEnsureIndex,
     safeRemoveColumn,
     safeChangeColumn,
 };

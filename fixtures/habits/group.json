@@ -1,0 +1,141 @@
+{
+  "suite": "group",
+  "cases": [
+    {
+      "kind": "group_active",
+      "name": "all day group is active at midnight",
+      "source": "HabitGroupTest.kt: an all day group is active at every instant",
+      "group": { "startMinute": null, "endMinute": null },
+      "time": "00:00",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "all day group is active at midday",
+      "source": "HabitGroupTest.kt: an all day group is active at every instant",
+      "group": { "startMinute": null, "endMinute": null },
+      "time": "13:37",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "all day group is active at 23:59",
+      "source": "HabitGroupTest.kt: an all day group is active at every instant",
+      "group": { "startMinute": null, "endMinute": null },
+      "time": "23:59",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "range includes its start minute",
+      "source": "HabitGroupTest.kt: a range includes its start and excludes its end",
+      "group": { "startMinute": 300, "endMinute": 720 },
+      "time": "05:00",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "range includes the minute before its end",
+      "source": "HabitGroupTest.kt: a range includes its start and excludes its end",
+      "group": { "startMinute": 300, "endMinute": 720 },
+      "time": "11:59",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "range excludes its end minute",
+      "source": "HabitGroupTest.kt: a range includes its start and excludes its end",
+      "group": { "startMinute": 300, "endMinute": 720 },
+      "time": "12:00",
+      "expect": { "active": false }
+    },
+    {
+      "kind": "group_active",
+      "name": "range excludes the minute before its start",
+      "source": "HabitGroupTest.kt: a range includes its start and excludes its end",
+      "group": { "startMinute": 300, "endMinute": 720 },
+      "time": "04:59",
+      "expect": { "active": false }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range is active at its start",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "22:00",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range is active before midnight",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "23:59",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range is active after midnight",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "00:00",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range is active before its end",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "04:59",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range excludes its end minute",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "05:00",
+      "expect": { "active": false }
+    },
+    {
+      "kind": "group_active",
+      "name": "midnight crossing range is inactive at midday",
+      "source": "HabitGroupTest.kt: a range crossing midnight stays active on both sides",
+      "group": { "startMinute": 1320, "endMinute": 300 },
+      "time": "12:00",
+      "expect": { "active": false }
+    },
+    {
+      "kind": "group_active",
+      "name": "equal bounds cover the whole clock at their minute",
+      "source": "HabitGroupTest.kt: a range covering the whole clock is always active",
+      "group": { "startMinute": 480, "endMinute": 480 },
+      "time": "08:00",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "equal bounds cover the whole clock before their minute",
+      "source": "HabitGroupTest.kt: a range covering the whole clock is always active",
+      "group": { "startMinute": 480, "endMinute": 480 },
+      "time": "07:59",
+      "expect": { "active": true }
+    },
+    {
+      "kind": "group_active",
+      "name": "idle range is inactive outside its hours",
+      "source": "HabitGroupTest.kt: an all day group remains active even when every range is idle",
+      "group": { "startMinute": 840, "endMinute": 900 },
+      "time": "03:00",
+      "expect": { "active": false }
+    },
+    {
+      "kind": "group_active",
+      "name": "all day group stays active while ranges are idle",
+      "source": "HabitGroupTest.kt: an all day group remains active even when every range is idle",
+      "group": { "startMinute": null, "endMinute": null },
+      "time": "03:00",
+      "expect": { "active": true }
+    }
+  ]
+}

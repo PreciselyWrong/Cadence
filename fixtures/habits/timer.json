@@ -1,0 +1,154 @@
+{
+  "suite": "timer",
+  "cases": [
+    {
+      "kind": "timer",
+      "name": "started timer shows zero at its start instant",
+      "source": "HabitTimerTest.kt: a started timer runs from zero",
+      "timer": { "accumulatedSeconds": 0, "runningSince": "2026-06-01T09:00:00Z" },
+      "now": "2026-06-01T09:00:00Z",
+      "expect": { "elapsedSeconds": 0, "isRunning": true }
+    },
+    {
+      "kind": "timer",
+      "name": "started timer counts elapsed seconds while running",
+      "source": "HabitTimerTest.kt: a started timer runs from zero",
+      "timer": { "accumulatedSeconds": 0, "runningSince": "2026-06-01T09:00:00Z" },
+      "now": "2026-06-01T09:01:30Z",
+      "expect": { "elapsedSeconds": 90 }
+    },
+    {
+      "kind": "timer",
+      "name": "paused timer freezes elapsed time at pause",
+      "source": "HabitTimerTest.kt: a pause freezes the elapsed time",
+      "timer": { "accumulatedSeconds": 60, "runningSince": null },
+      "now": "2026-06-01T09:01:00Z",
+      "expect": { "elapsedSeconds": 60, "isRunning": false }
+    },
+    {
+      "kind": "timer",
+      "name": "paused timer does not count a long pause",
+      "source": "HabitTimerTest.kt: a pause freezes the elapsed time",
+      "timer": { "accumulatedSeconds": 60, "runningSince": null },
+      "now": "2026-06-01T10:40:00Z",
+      "expect": { "elapsedSeconds": 60 }
+    },
+    {
+      "kind": "timer",
+      "name": "resumed timer keeps accumulated time at resume instant",
+      "source": "HabitTimerTest.kt: resuming counts again from the moment of the resume",
+      "timer": { "accumulatedSeconds": 60, "runningSince": "2026-06-01T09:10:00Z" },
+      "now": "2026-06-01T09:10:00Z",
+      "expect": { "elapsedSeconds": 60, "isRunning": true }
+    },
+    {
+      "kind": "timer",
+      "name": "resumed timer counts again after resume",
+      "source": "HabitTimerTest.kt: resuming counts again from the moment of the resume",
+      "timer": { "accumulatedSeconds": 60, "runningSince": "2026-06-01T09:10:00Z" },
+      "now": "2026-06-01T09:10:30Z",
+      "expect": { "elapsedSeconds": 90 }
+    },
+    {
+      "kind": "timer",
+      "name": "several segments keep their total at last resume",
+      "source": "HabitTimerTest.kt: several segments add up",
+      "timer": { "accumulatedSeconds": 60, "runningSince": "2026-06-01T09:03:20Z" },
+      "now": "2026-06-01T09:03:20Z",
+      "expect": { "elapsedSeconds": 60 }
+    },
+    {
+      "kind": "timer",
+      "name": "several segments add up while running",
+      "source": "HabitTimerTest.kt: several segments add up",
+      "timer": { "accumulatedSeconds": 60, "runningSince": "2026-06-01T09:03:20Z" },
+      "now": "2026-06-01T09:03:30Z",
+      "expect": { "elapsedSeconds": 70 }
+    },
+    {
+      "kind": "timer",
+      "name": "double pause keeps frozen elapsed time",
+      "source": "HabitTimerTest.kt: a double press changes nothing",
+      "timer": { "accumulatedSeconds": 60, "runningSince": null },
+      "now": "2026-06-01T09:05:00Z",
+      "expect": { "elapsedSeconds": 60 }
+    },
+    {
+      "kind": "timer",
+      "name": "reset returns stopped timer at zero",
+      "source": "HabitTimerTest.kt: a reset returns to a stopped timer at zero",
+      "timer": { "accumulatedSeconds": 0, "runningSince": null },
+      "now": "2026-06-01T09:08:20Z",
+      "expect": { "elapsedSeconds": 0, "isRunning": false }
+    },
+    {
+      "kind": "timer",
+      "name": "clock going backwards never removes counted time",
+      "source": "HabitTimerTest.kt: a clock going backwards never removes counted time",
+      "timer": { "accumulatedSeconds": 0, "runningSince": "2026-06-01T09:00:00Z" },
+      "now": "2026-06-01T08:59:30Z",
+      "expect": { "elapsedSeconds": 0 }
+    },
+    {
+      "kind": "timer",
+      "name": "finishing yields elapsed seconds of all segments",
+      "source": "HabitTimerTest.kt: finishing yields the elapsed seconds and nothing else",
+      "timer": { "accumulatedSeconds": 45, "runningSince": "2026-06-01T09:01:40Z" },
+      "now": "2026-06-01T09:02:10Z",
+      "expect": { "elapsedSeconds": 75 }
+    },
+    {
+      "kind": "timer",
+      "name": "paused timer keeps no running mark",
+      "source": "HabitTimerTest.kt: a paused timer keeps no running mark",
+      "timer": { "accumulatedSeconds": 10, "runningSince": null },
+      "now": "2026-06-01T09:00:10Z",
+      "expect": { "isRunning": false }
+    },
+    {
+      "kind": "timer_attainment",
+      "name": "attainment is todo at zero elapsed",
+      "source": "HabitTimerTest.kt: the attainment follows the elapsed time while running",
+      "goal": { "targetMinor": 1800, "period": "DAY", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "minimumMinor": 600 },
+      "progressMinor": 0,
+      "elapsedSeconds": 0,
+      "expect": { "attainment": "TODO" }
+    },
+    {
+      "kind": "timer_attainment",
+      "name": "attainment is todo just below minimum",
+      "source": "HabitTimerTest.kt: the attainment follows the elapsed time while running",
+      "goal": { "targetMinor": 1800, "period": "DAY", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "minimumMinor": 600 },
+      "progressMinor": 0,
+      "elapsedSeconds": 599,
+      "expect": { "attainment": "TODO" }
+    },
+    {
+      "kind": "timer_attainment",
+      "name": "attainment is minimum at minimum elapsed",
+      "source": "HabitTimerTest.kt: the attainment follows the elapsed time while running",
+      "goal": { "targetMinor": 1800, "period": "DAY", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "minimumMinor": 600 },
+      "progressMinor": 0,
+      "elapsedSeconds": 600,
+      "expect": { "attainment": "MINIMUM" }
+    },
+    {
+      "kind": "timer_attainment",
+      "name": "attainment is ideal at target elapsed",
+      "source": "HabitTimerTest.kt: the attainment follows the elapsed time while running",
+      "goal": { "targetMinor": 1800, "period": "DAY", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "minimumMinor": 600 },
+      "progressMinor": 0,
+      "elapsedSeconds": 1800,
+      "expect": { "attainment": "IDEAL" }
+    },
+    {
+      "kind": "timer_attainment",
+      "name": "attainment counts recorded progress with running timer",
+      "source": "HabitTimerTest.kt: the attainment follows the elapsed time while running",
+      "goal": { "targetMinor": 1800, "period": "DAY", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "minimumMinor": 600 },
+      "progressMinor": 1500,
+      "elapsedSeconds": 300,
+      "expect": { "attainment": "IDEAL" }
+    }
+  ]
+}

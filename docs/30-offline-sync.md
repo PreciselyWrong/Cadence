@@ -4,7 +4,7 @@ The sync API lets native clients (the Android app, the Linux desktop app) keep a
 
 ## What syncs
 
-`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). Version 1 covers `task`, `project`, `area`, `tag`, `note` and `inbox_item`.
+`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). `schema_version` 1 covered `task`, `project`, `area`, `tag`, `note` and `inbox_item`; version 2 adds the fifteen Cadence habit entities below.
 
 To add an entity:
 1. Add an entry to the registry.
@@ -12,6 +12,23 @@ To add an entity:
 3. Pass the model to `install()` in `backend/models/index.js`.
 
 The protocol stays the same.
+
+### Cadence habit entities
+
+Listed in `GET /sync/meta` in dependency order. Field names, types, units and rules of each one are in [21-habits.md](21-habits.md#cadence-habits): that page is the contract the Android sync and the web UI are built from. Their wire names are the snake_case of the Room properties (a Room `habitId` is the reference `habit_uid`).
+
+| Entity | References | Notes |
+|---|---|---|
+| `habit_group` | | uid unique **per user** (`uid_scope: "user"` in the metadata): `group-day` etc. exist for every user |
+| `habit` | `group_uid` | deleting it deletes the rows below, each with a tombstone |
+| `habit_goal`, `habit_schedule` | `habit_uid` | versions, valid from `effective_from` |
+| `habit_entry` | `habit_uid` | `local_date` + `observed_zone_id` kept as lived |
+| `habit_pause`, `habit_quick_value`, `habit_reminder` | `habit_uid` | |
+| `habit_timer`, `health_connect_rule`, `learned_question_settings` | `habit_uid` | one per habit, uid = the habit's uid |
+| `health_connect_import` | `habit_uid` | uid = the imported entry's id |
+| `abstinence_log`, `alcohol_consumption`, `learned_question_record` | `habit_uid` | the last two are unique per (habit, date) |
+
+Widget configuration and reminder snoozes are not synced. Rows are validated against the rules of the Kotlin domain (rejected as `invalid_value[:field]`, `missing_field:<field>`, `duplicate_key`); push parents before children.
 
 ## Endpoints
 
@@ -50,7 +67,6 @@ A pushed op:
 
 ## Not yet covered
 
-- Habits (Cadence tables).
 - Journal compaction.
 - Shared projects.
 

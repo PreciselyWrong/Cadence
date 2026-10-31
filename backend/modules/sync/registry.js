@@ -6,7 +6,9 @@
 // by the server: a push that names one is rejected. `refs` are exposed to clients by uid, never by
 // the numeric id. `lists` are many-to-many sets, exposed as arrays of uids
 // and merged as a whole.
-const SCHEMA_VERSION = 1;
+// 2: the Cadence habit entities were added (additive; a client ignores an
+// entity it does not know).
+const SCHEMA_VERSION = 2;
 
 const ENTITIES = {
     task: {
@@ -173,6 +175,12 @@ const ENTITIES = {
         refs: {},
     },
 };
+
+// Cadence habits and everything stored around them (docs/21-habits.md).
+Object.assign(
+    ENTITIES,
+    require('../habits/cadence/syncEntities').syncEntities()
+);
 
 const byModel = new Map(
     Object.entries(ENTITIES).map(([name, def]) => [def.model, name])

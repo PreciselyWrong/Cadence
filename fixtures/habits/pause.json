@@ -1,0 +1,157 @@
+{
+  "suite": "pause",
+  "cases": [
+    {
+      "kind": "pause",
+      "name": "skip includes its own day",
+      "source": "HabitPauseTest.kt: a skip covers a single day and carries its reason",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "ILLNESS" },
+      "date": "2026-05-04",
+      "expect": { "includes": true, "isSingleDay": true }
+    },
+    {
+      "kind": "pause",
+      "name": "skip excludes the next day",
+      "source": "HabitPauseTest.kt: a skip covers a single day and carries its reason",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "ILLNESS" },
+      "date": "2026-05-05",
+      "expect": { "includes": false }
+    },
+    {
+      "kind": "pause",
+      "name": "skip is cancellable on its own day",
+      "source": "HabitPauseTest.kt: a skip is cancellable on its own day only",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "REST" },
+      "date": "2026-05-04",
+      "expect": { "isCancellableOn": true }
+    },
+    {
+      "kind": "pause",
+      "name": "skip is not cancellable the next day",
+      "source": "HabitPauseTest.kt: a skip is cancellable on its own day only",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "REST" },
+      "date": "2026-05-05",
+      "expect": { "isCancellableOn": false }
+    },
+    {
+      "kind": "pause",
+      "name": "skip is not cancellable the day before",
+      "source": "HabitPauseTest.kt: a skip is cancellable on its own day only",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "REST" },
+      "date": "2026-05-03",
+      "expect": { "isCancellableOn": false }
+    },
+    {
+      "kind": "pause",
+      "name": "travel covers its first day and is not a single day",
+      "source": "HabitPauseTest.kt: a travel covers an inclusive range of days",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-08", "reason": "TRAVEL" },
+      "date": "2026-05-04",
+      "expect": { "includes": true, "isSingleDay": false }
+    },
+    {
+      "kind": "pause",
+      "name": "travel covers its last day",
+      "source": "HabitPauseTest.kt: a travel covers an inclusive range of days",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-08", "reason": "TRAVEL" },
+      "date": "2026-05-07",
+      "expect": { "includes": true }
+    },
+    {
+      "kind": "pause",
+      "name": "travel excludes the day after its last day",
+      "source": "HabitPauseTest.kt: a travel covers an inclusive range of days",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-08", "reason": "TRAVEL" },
+      "date": "2026-05-08",
+      "expect": { "includes": false }
+    },
+    {
+      "kind": "pause",
+      "name": "travel of one day is a single day",
+      "source": "HabitPauseTest.kt: a travel of one day is allowed",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-05", "reason": "TRAVEL" },
+      "date": "2026-05-04",
+      "expect": { "includes": true, "isSingleDay": true }
+    },
+    {
+      "kind": "pause",
+      "name": "early resume shortens the pause",
+      "source": "HabitPauseTest.kt: an early resume closes the pause on the chosen day",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-11", "reason": "TRAVEL" },
+      "date": "2026-05-06",
+      "expect": { "resumedOn": { "start": "2026-05-04", "endExclusive": "2026-05-06" } }
+    },
+    {
+      "kind": "pause",
+      "name": "shortened pause still covers the day before the resume",
+      "source": "HabitPauseTest.kt: an early resume closes the pause on the chosen day",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-06", "reason": "TRAVEL" },
+      "date": "2026-05-05",
+      "expect": { "includes": true }
+    },
+    {
+      "kind": "pause",
+      "name": "shortened pause excludes the resume day",
+      "source": "HabitPauseTest.kt: an early resume closes the pause on the chosen day",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-06", "reason": "TRAVEL" },
+      "date": "2026-05-06",
+      "expect": { "includes": false }
+    },
+    {
+      "kind": "pause",
+      "name": "resume on the first day removes the pause",
+      "source": "HabitPauseTest.kt: resuming on or before the first day removes the pause",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-11", "reason": "TRAVEL" },
+      "date": "2026-05-04",
+      "expect": { "resumedOn": null }
+    },
+    {
+      "kind": "pause",
+      "name": "resume before the first day removes the pause",
+      "source": "HabitPauseTest.kt: resuming on or before the first day removes the pause",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-11", "reason": "TRAVEL" },
+      "date": "2026-05-03",
+      "expect": { "resumedOn": null }
+    },
+    {
+      "kind": "pause",
+      "name": "resume after the end leaves the pause untouched",
+      "source": "HabitPauseTest.kt: resuming after the end leaves the pause untouched",
+      "pause": { "start": "2026-05-04", "endExclusive": "2026-05-07", "reason": "TRAVEL" },
+      "date": "2026-05-09",
+      "expect": { "resumedOn": { "start": "2026-05-04", "endExclusive": "2026-05-07" } }
+    },
+    {
+      "kind": "pause",
+      "name": "open pause still covers a year later",
+      "source": "HabitPauseTest.kt: an open pause has no end and can still be resumed",
+      "pause": { "start": "2026-05-04", "endExclusive": null, "reason": "MANUAL" },
+      "date": "2027-05-04",
+      "expect": { "includes": true }
+    },
+    {
+      "kind": "pause",
+      "name": "open pause resumed two days later",
+      "source": "HabitPauseTest.kt: an open pause has no end and can still be resumed",
+      "pause": { "start": "2026-05-04", "endExclusive": null, "reason": "MANUAL" },
+      "date": "2026-05-06",
+      "expect": { "resumedOn": { "start": "2026-05-04", "endExclusive": "2026-05-06" } }
+    },
+    {
+      "kind": "evaluate",
+      "name": "paused day never validates nor fails the habit",
+      "source": "HabitPauseTest.kt: a paused day never validates the habit nor counts as a failure",
+      "habit": {
+        "id": "habit-1",
+        "goal": { "targetMinor": 1, "period": "DAY", "goalType": "BINARY" },
+        "schedule": { "mode": "EVERY_DAY", "activeDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], "firstDayOfWeek": "MONDAY", "intervalDays": 2 }
+      },
+      "date": "2026-05-04",
+      "entries": [],
+      "pauses": [
+        { "start": "2026-05-04", "endExclusive": "2026-05-05" }
+      ],
+      "expect": { "isCompleted": false, "countsAsFailure": false, "needsAttentionNow": false, "isPaused": true }
+    }
+  ]
+}

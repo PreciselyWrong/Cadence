@@ -551,6 +551,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, tasksModule.routes);
     app.use(basePath, commentsModule.routes);
     app.use(basePath, habitsModule.routes);
+    app.use(basePath, habitsModule.cadenceRoutes);
     app.use(basePath, syncModule.routes);
     app.use(basePath, projectsModule.routes);
     app.use(basePath, projectSectionsModule.routes);
@@ -690,6 +691,23 @@ async function startServer() {
             }
         } catch (error) {
             console.error('Could not place users into accounts:', error);
+        }
+
+        // Habits stored as tasks become Cadence habits, once and without
+        // touching the originals (docs/21-habits.md). Set
+        // CADENCE_SKIP_LEGACY_HABIT_IMPORT=true to leave them alone.
+        if (process.env.CADENCE_SKIP_LEGACY_HABIT_IMPORT !== 'true') {
+            try {
+                const imported =
+                    await require('./modules/habits/cadence/operations/importLegacy').importAllLegacyHabits();
+                if (imported.imported > 0) {
+                    console.log(
+                        `Cadence habits: imported ${imported.imported} habits of ${imported.users} users`
+                    );
+                }
+            } catch (error) {
+                console.error('Could not import legacy habits:', error);
+            }
         }
 
         const server = app.listen(config.port, config.host, () => {

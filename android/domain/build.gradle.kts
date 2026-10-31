@@ -6,11 +6,16 @@ plugins {
 
 dependencies {
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.serialization.json)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.test {
     useJUnitPlatform()
+    // Golden fixtures shared with the server (fixtures/habits): a change reruns the tests.
+    inputs.dir(rootProject.projectDir.resolve("../fixtures/habits"))
+        .withPropertyName("goldenFixtures")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 java {
