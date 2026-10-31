@@ -111,7 +111,8 @@ internal fun CadencePalette.toColorScheme(): ColorScheme {
         surfaceContainerLowest = background,
         surfaceContainerLow = containerLow,
         surfaceContainer = card,
-        surfaceContainerHigh = containerHigh,
+        // Dialogues et sélecteurs Material : posés sur la carte, où l'accent reste lisible à 4,5:1.
+        surfaceContainerHigh = card,
         surfaceContainerHighest = containerHighest,
         inverseSurface = onSurface,
         inverseOnSurface = background,

@@ -24,8 +24,8 @@ data class AccentRoles(
     val onPrimaryContainer: Int,
 )
 
-private const val WHITE = 0xFFFFFFFF.toInt()
-private const val INK = 0xFF1B1B21.toInt()
+/** Carte claire (`LightPalette.card`), la surface claire la plus courante sous un texte d'accent. */
+private const val LIGHT_CARD = 0xFFF3F1FC.toInt()
 
 private val VioletLight = AccentRoles(
     primary = 0xFF5E5CE6.toInt(),
@@ -46,7 +46,7 @@ private val VioletDark = AccentRoles(
  *
  * Le violet par défaut garde ses valeurs exactes du design : ses conteneurs ne suivent pas la
  * lightness de la règle générale. Les autres couleurs suivent la règle HSL, pour que chaque
- * accent ait le même poids visuel.
+ * accent ait le même poids visuel, puis chaque paire texte/fond est ajustée jusqu'à 4,5:1.
  */
 fun deriveAccentRoles(seedArgb: Int, dark: Boolean): AccentRoles {
     if (seedArgb == AccentPreset.VIOLET.argb) return if (dark) VioletDark else VioletLight
@@ -55,20 +55,26 @@ fun deriveAccentRoles(seedArgb: Int, dark: Boolean): AccentRoles {
     fun tone(lightness: Float) = hslToArgb(seed.hue, seed.saturation, lightness)
 
     return if (dark) {
+        val primary = tone(0.82f)
+        val onPrimaryContainer = tone(0.90f)
         AccentRoles(
-            primary = tone(0.82f),
-            onPrimary = tone(0.22f),
-            primaryContainer = tone(0.30f),
-            onPrimaryContainer = tone(0.90f),
+            primary = primary,
+            onPrimary = readableTint(tone(0.22f), primary),
+            // Une teinte lumineuse (sarcelle, vert, jaune) à L 0,30 reste trop claire sous un texte
+            // clair : le conteneur est assombri jusqu'à 4,5:1.
+            primaryContainer = readableTint(tone(0.30f), onPrimaryContainer),
+            onPrimaryContainer = onPrimaryContainer,
         )
     } else {
-        // Le texte sur l'accent prend l'encre la plus contrastée : blanc ou #1B1B21.
-        val onPrimary = if (contrastRatio(seedArgb, WHITE) >= contrastRatio(seedArgb, INK)) WHITE else INK
+        // L'accent sert aussi de couleur de texte (liens, actions) : une source trop claire
+        // (ambre, corail, couleur libre) est assombrie, teinte gardée, jusqu'à 4,5:1 sur les cartes.
+        val primary = readableTint(seedArgb, LIGHT_CARD)
+        val primaryContainer = tone(0.92f)
         AccentRoles(
-            primary = seedArgb,
-            onPrimary = onPrimary,
-            primaryContainer = tone(0.92f),
-            onPrimaryContainer = tone(0.20f),
+            primary = primary,
+            onPrimary = readableOn(primary),
+            primaryContainer = primaryContainer,
+            onPrimaryContainer = readableTint(tone(0.20f), primaryContainer),
         )
     }
 }

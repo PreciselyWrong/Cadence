@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.FacetGauge
 import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.Panel
@@ -77,7 +78,7 @@ fun AbstinenceHomeCard(item: HabitCardState, onOpen: () -> Unit, onLongClick: ()
             }
             val alcohol = item.alcoholStats
             if (alcohol != null) {
-                Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = accent)
+                Text(alcohol.currentSoberDays.toString(), style = MaterialTheme.typography.headlineSmall, color = readableTintOf(accent))
                 Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
                 LiveAbstinenceCounter(item, accent, compact = true, showSeconds = true)
                 alcohol.restPlan?.let { plan ->
@@ -150,7 +151,7 @@ fun LiveAbstinenceCounter(
         Text(
             if (showSeconds) elapsed.formatLive() else elapsed.formatCompact(),
             style = MaterialTheme.typography.headlineSmall,
-            color = accent,
+            color = readableTintOf(accent),
         )
         SavingsTotal(item, saved, accent)
         return
@@ -186,7 +187,7 @@ private fun SavingsTotal(item: HabitCardState, saved: Long, accent: Color, cente
         Text(
             stringResource(R.string.abst_savings_total, formatMoney(saved, currency)),
             style = MaterialTheme.typography.titleMedium,
-            color = accent,
+            color = readableTintOf(accent),
             textAlign = if (centered) TextAlign.Center else TextAlign.Start,
         )
         Text(
@@ -215,7 +216,7 @@ private fun RowScope.TimeCell(value: Long, unit: String, progress: Float, accent
         Text(
             value.toString().padStart(2, '0'),
             style = MaterialTheme.typography.headlineSmall.copy(fontFeatureSettings = "tnum"),
-            color = accent,
+            color = readableTintOf(accent, cadence.containerHigh),
         )
         Text(unit, style = MaterialTheme.typography.labelSmall, color = cadence.onSurfaceVariant, maxLines = 1)
         Box(Modifier.fillMaxWidth().height(Size.counterTrack).clip(Radius.Pill).background(cadence.card)) {

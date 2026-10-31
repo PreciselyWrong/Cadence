@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -111,7 +113,7 @@ private fun EventMeta(item: EventWithDone, color: Color, zone: ZoneId) {
         Icon(
             Icons.Outlined.CalendarToday,
             contentDescription = null,
-            tint = color,
+            tint = readableTintOf(color, MaterialTheme.colorScheme.surface, ICON_CONTRAST),
             modifier = Modifier.size(14.dp),
         )
         Text(

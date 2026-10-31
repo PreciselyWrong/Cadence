@@ -30,7 +30,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -82,7 +81,7 @@ private fun PillTab(tab: TabPill, active: Boolean, onClick: () -> Unit) {
         label = "tabPillBorder",
     )
     val content = if (active) palette.onPrimary else palette.onSurface
-    val countColor = if (active) palette.onPrimary.copy(alpha = Glass.CountAlpha) else palette.onSurfaceVariant
+    val countColor = if (active) palette.onPrimary else palette.onSurfaceVariant
     Box(Modifier.minimumInteractiveComponentSize()) {
         Row(
             Modifier

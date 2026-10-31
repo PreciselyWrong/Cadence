@@ -29,7 +29,7 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 | surfaceVariant / on | `#E4E1EC` / `#46464F` | `#46454F` / `#C8C5D0` |
 | card (rows, cards) | `#F3F1FC` | `#1F1E2A` |
 | containerLow / High / Highest | `#F5F3FA` / `#E9E7F0` / `#E3E1EA` | `#1B1B21` / `#2A2930` / `#35343B` |
-| outline / outlineVariant | `#777680` / `#C7C5D0` | `#918F9A` / `#46454F` |
+| outline / outlineVariant | `#66656F` / `#C7C5D0` | `#918F9A` / `#46454F` |
 | error / errorContainer | `#BA1A1A` / `#FFDAD6` | `#FFB4AB` / `#93000A` |
 | success / successContainer | `#286C2A` / `#ABF5A3` | `#8FD88A` / `#1F5223` |
 | warning / warningContainer | `#7C5800` / `#FFDEA8` | `#F5BD52` / `#5D4200` |

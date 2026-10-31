@@ -77,7 +77,8 @@ fun EventCheck(
         modifier = modifier,
         shape = CircleShape,
         fill = color,
-        stroke = color,
+        // Le cercle vide doit se voir (3:1) : une couleur d'agenda claire est assombrie, teinte gardée.
+        stroke = readableTintOf(color, cadence.card, ICON_CONTRAST),
         mark = onColorOf(color),
         contentDescription = contentDescription,
     )

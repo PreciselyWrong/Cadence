@@ -28,7 +28,7 @@ enum class BadgeTone { Neutral, Primary, Success, Warning, Error }
 
 /**
  * Pastille d'information : date, projet, état. Une couleur de projet ou de calendrier remplace
- * le ton sémantique et reste lisible à 16 % de teinte.
+ * le ton sémantique ; son texte est ajusté jusqu'à 4,5:1 sur la teinte à 16 %.
  */
 @Composable
 fun CadenceBadge(
@@ -40,7 +40,9 @@ fun CadenceBadge(
 ) {
     val palette = cadence
     val (container, content) = if (color != null) {
-        color.copy(alpha = Glass.BadgeAlpha) to color
+        // Le texte garde la couleur du projet ou de l'agenda, ajustée jusqu'à 4,5:1 sur la pastille.
+        val pill = color.copy(alpha = Glass.BadgeAlpha)
+        pill to readableTintOf(color, tintedSurface(color, Glass.BadgeAlpha, palette.card))
     } else {
         when (tone) {
             BadgeTone.Neutral -> palette.surfaceVariant to palette.onSurfaceVariant

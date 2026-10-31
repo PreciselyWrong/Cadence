@@ -61,7 +61,8 @@ val LightPalette = CadencePalette(
     containerLow = Color(0xFFF5F3FA),
     containerHigh = Color(0xFFE9E7F0),
     containerHighest = Color(0xFFE3E1EA),
-    outline = Color(0xFF777680),
+    // Sert aussi de texte secondaire : 4,5:1 jusque sur `containerHigh`.
+    outline = Color(0xFF66656F),
     outlineVariant = Color(0xFFC7C5D0),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),

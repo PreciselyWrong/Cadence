@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.settings
 
+import androidx.compose.material3.SliderDefaults
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -223,6 +224,12 @@ private fun FreeColourDialog(initialArgb: Int, onDismiss: () -> Unit, onConfirm:
                             hex = opaqueArgbToHex(hueToArgb(value))
                         },
                         valueRange = 0f..360f,
+                        // La piste par défaut (primaryContainer) disparaît sur le fond du dialogue.
+                        colors = SliderDefaults.colors(
+                            thumbColor = preview,
+                            activeTrackColor = preview,
+                            inactiveTrackColor = cadence.outlineVariant,
+                        ),
                     )
                 }
             }

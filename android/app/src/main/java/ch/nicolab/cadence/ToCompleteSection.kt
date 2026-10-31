@@ -1,5 +1,7 @@
 package ch.nicolab.cadence
 
+import ch.nicolab.cadence.designsystem.components.tintedSurface
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -167,7 +169,7 @@ fun ToCompleteRow(
                 Text(
                     text = actionText,
                     style = MaterialTheme.typography.labelLarge,
-                    color = tint,
+                    color = readableTintOf(tint, tintedSurface(tint, if (palette.isDark) 0.22f else 0.10f, palette.card)),
                 )
             }
         }

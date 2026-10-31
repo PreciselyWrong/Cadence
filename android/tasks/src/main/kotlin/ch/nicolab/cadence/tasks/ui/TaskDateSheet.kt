@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -257,7 +258,7 @@ private fun TimeRow(time: LocalTime?, onPick: () -> Unit, onClear: () -> Unit) {
         Text(
             time?.let(::wireTime) ?: stringResource(R.string.tasks_add_time),
             style = MaterialTheme.typography.labelLarge,
-            color = if (time != null) palette.primary else palette.onSurfaceVariant,
+            color = if (time != null) readableTintOf(palette.primary, palette.containerHigh) else palette.onSurfaceVariant,
         )
         if (time != null) {
             RoundHeaderButton(

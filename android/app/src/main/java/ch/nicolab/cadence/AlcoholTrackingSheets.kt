@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material.icons.outlined.LocalBar
 import androidx.compose.material.icons.outlined.Speed
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.MetricCard
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -106,7 +107,7 @@ fun AlcoholDetailSheet(
             if (error != null) item { ErrorText(error) }
             item {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    Text(stats.currentSoberDays.toString(), style = MaterialTheme.typography.displayLarge, color = cadence.habitAccent(item.stored.colorArgb))
+                    Text(stats.currentSoberDays.toString(), style = MaterialTheme.typography.displayLarge, color = readableTintOf(cadence.habitAccent(item.stored.colorArgb)))
                     Text(stringResource(R.string.alcohol_days_hero), style = MaterialTheme.typography.titleMedium, color = cadence.onSurfaceVariant)
                 }
             }
@@ -195,7 +196,7 @@ fun AlcoholDetailSheet(
 
 @Composable
 private fun PendingAlcoholQuantityAction(date: LocalDate, onClick: () -> Unit) {
-    val accent = cadence.primary
+    val accent = cadence.onPrimaryContainer
     Row(
         Modifier
             .fillMaxWidth()
@@ -345,11 +346,11 @@ private fun AlcoholStatisticsHero(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Space.xs),
                 ) {
-                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.primary, modifier = Modifier.size(Size.iconSm))
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.onPrimaryContainer, modifier = Modifier.size(Size.iconSm))
                     Text(
                         text = "${stringResource(R.string.alcohol_stats_record)} : ${stringResource(R.string.habit_stats_days_short, stats.bestSoberDays)}",
                         style = MaterialTheme.typography.labelMedium,
-                        color = palette.primary,
+                        color = palette.onPrimaryContainer,
                         maxLines = 1,
                         softWrap = false,
                     )

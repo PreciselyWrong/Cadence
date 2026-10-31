@@ -188,12 +188,7 @@ private fun RowScope.MonthCell(
                     Modifier
                         .size(Size.agendaDot)
                         .clip(Radius.Pill)
-                        .background(
-                            when {
-                                selected -> palette.onPrimary
-                                else -> entry.colorArgb?.let { Color(it) } ?: palette.primary
-                            },
-                        ),
+                        .background(entry.colorArgb?.let { Color(it) } ?: palette.primary),
                 )
             }
         }

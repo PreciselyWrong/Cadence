@@ -22,7 +22,7 @@ The CSS variable holds RGB channels (`94 92 230`) so `bg-primary/90` works.
 | containerLow         | `#F5F3FA`              | `#1B1B21` (`#0A0A0E`)            | `--color-container-low`                        | `bg-surface-low`                                   |
 | containerHigh        | `#E9E7F0`              | `#2A2930` (`#1C1C22`)            | `--color-container-high`                       | `bg-surface-high`                                  |
 | containerHighest     | `#E3E1EA`              | `#35343B` (`#26262C`)            | `--color-container-highest`                    | `bg-surface-highest`                               |
-| outline              | `#777680`              | `#918F9A`                        | `--color-outline`                              | `border-outline`                                   |
+| outline              | `#66656F`              | `#918F9A`                        | `--color-outline`                              | `border-outline`                                   |
 | outlineVariant       | `#C7C5D0`              | `#46454F`                        | `--color-outline-variant`                      | `border-outline-variant`                           |
 | error                | `#BA1A1A`              | `#FFB4AB`                        | `--color-error`                                | `text-danger`, `bg-danger`                         |
 | onError              | `#FFFFFF`              | `#690005`                        | `--color-on-error`                             | `text-danger-on`                                   |

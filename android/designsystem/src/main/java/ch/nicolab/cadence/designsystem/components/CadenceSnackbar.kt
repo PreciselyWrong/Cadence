@@ -112,7 +112,7 @@ fun CadenceSnackbar(data: SnackbarData, backdrop: Backdrop? = null) {
                     .padding(horizontal = Space.lg),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(label, style = MaterialTheme.typography.labelLarge, color = palette.primary)
+                Text(label, style = MaterialTheme.typography.labelLarge, color = readableTintOf(palette.primary, palette.containerHighest))
             }
         } ?: Box(Modifier.padding(end = Space.lg))
     }

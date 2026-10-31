@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.tintedSurface
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -135,7 +137,7 @@ private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifie
         Text(
             domain.first().uppercase(),
             style = MaterialTheme.typography.titleLarge,
-            color = tint,
+            color = readableTintOf(tint, tintedSurface(tint, 0.18f, cadence.containerHigh)),
         )
         preview?.imageUrl?.let { image ->
             AsyncImage(
