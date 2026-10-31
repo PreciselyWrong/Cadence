@@ -15,7 +15,7 @@ object TasksBackground {
     @OptIn(FlowPreview::class)
     fun start(context: Context) {
         SyncScheduler.schedulePeriodic(context)
-        SyncScheduler.requestNow(context)
+        SyncScheduler.requestNow(context, restart = true)
         val habits = HabitSyncRegistry.storage ?: return
         // Une saisie d'habitude (écran, widget, rappel) laisse une écriture en attente : on demande un passage.
         scope.launch {
