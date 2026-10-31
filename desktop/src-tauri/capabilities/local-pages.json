@@ -1,0 +1,12 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "local-pages",
+  "description": "Setup and quick-add pages shipped with the app. The remote Cadence server page gets none of this.",
+  "windows": ["settings", "quick"],
+  "permissions": [
+    "allow-get-config",
+    "allow-save-config",
+    "allow-capture",
+    "allow-close-quick"
+  ]
+}

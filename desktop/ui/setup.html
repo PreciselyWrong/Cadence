@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadence</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title"></h1>
+  <form id="form" autocomplete="off">
+    <label for="server_url" id="l_server"></label>
+    <input id="server_url" type="url" required spellcheck="false">
+    <p class="hint" id="h_server"></p>
+
+    <label for="api_token" id="l_token"></label>
+    <input id="api_token" type="password" spellcheck="false" placeholder="tt_...">
+    <p class="hint" id="h_token"></p>
+
+    <label for="shortcut" id="l_shortcut"></label>
+    <input id="shortcut" type="text" spellcheck="false">
+    <p class="hint" id="h_shortcut"></p>
+
+    <button type="submit" id="save"></button>
+    <div id="error" role="alert"></div>
+  </form>
+  <script src="setup.js"></script>
+</body>
+</html>

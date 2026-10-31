@@ -27,7 +27,7 @@ Cadence keeps tasks, projects, areas, habits, notes and quick capture in one pla
 | ------------------------------------ | --------------------------------------------------------------------------- |
 | **Web** (installable PWA)            | Full app: every feature below                                               |
 | **Android** ([`android/`](android/)) | Habits with their widgets, and tasks synced with the server, usable offline |
-| **Linux desktop**                    | Planned (lightweight Tauri app); the web app covers it meanwhile            |
+| **Linux desktop**                    | Tauri shell in `desktop/`: tray, quick-add shortcut, native notifications    |
 
 ### Android app
 
@@ -40,6 +40,10 @@ Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the forme
 - **Habits:** kept on the phone for now; syncing them with the server is planned.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
+
+### Linux desktop app
+
+Thin Tauri 2 shell around your Cadence server (`desktop/`): the web app in a window, plus a tray icon, a quick-add capture to the inbox that works offline, and native notifications that arrive while the window is closed. About 60 MB of RAM in the tray. Build with `cd desktop && npm install && npm run build` (RPM and AppImage). See [docs/fork/DESKTOP.md](docs/fork/DESKTOP.md).
 
 ## What Cadence adds to tududi
 

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-close-quick"
+description = "Enables the close_quick command without any pre-configured scope."
+commands.allow = ["close_quick"]
+
+[[permission]]
+identifier = "deny-close-quick"
+description = "Denies the close_quick command without any pre-configured scope."
+commands.deny = ["close_quick"]
