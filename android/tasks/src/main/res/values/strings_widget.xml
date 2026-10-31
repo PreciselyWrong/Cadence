@@ -14,8 +14,8 @@
     <string name="tasks_quick_add_no_date">Sans date</string>
     <string name="tasks_quick_add_submit">Ajouter</string>
     <string name="tasks_quick_add_cancel">Annuler</string>
-    <string name="tasks_share_label">Cadence – Boîte de réception</string>
-    <string name="tasks_share_saved">Ajouté à la boîte de réception</string>
+    <string name="tasks_share_label">Cadence – Inbox</string>
+    <string name="tasks_share_saved">Ajouté à l\'Inbox</string>
     <string name="tasks_reminder_channel_name">Rappels de tâches</string>
     <string name="tasks_reminder_complete">Terminer</string>
     <string name="tasks_reminder_default_text">Tâche à faire</string>

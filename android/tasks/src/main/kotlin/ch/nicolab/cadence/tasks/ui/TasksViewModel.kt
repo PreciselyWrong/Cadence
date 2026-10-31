@@ -44,6 +44,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -380,6 +381,17 @@ internal class TasksViewModel(
 
     suspend fun saveNewTask(draft: TaskDraft) {
         repository.createTask(draft)
+    }
+
+    suspend fun captureIdea(text: String) {
+        repository.captureInbox(text)
+    }
+
+    /** Crée la note avec ce titre et retourne son uid, pour ouvrir son éditeur. */
+    suspend fun createNote(title: String): String {
+        val uid = UUID.randomUUID().toString()
+        repository.saveNote(uid, NoteChange(title = title))
+        return uid
     }
 
     suspend fun saveConversion(entry: InboxEntry, draft: TaskDraft) {

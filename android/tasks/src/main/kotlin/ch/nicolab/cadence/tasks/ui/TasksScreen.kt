@@ -44,12 +44,14 @@ import ch.nicolab.cadence.tasks.model.SyncStatus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 
 internal enum class TasksTab(@StringRes val label: Int) {
     TODAY(R.string.tasks_tab_today),
     UPCOMING(R.string.tasks_tab_upcoming),
     PROJECTS(R.string.tasks_tab_projects),
     TAGS(R.string.tasks_tab_tags),
+    NOTES(R.string.tasks_tab_notes),
     DONE(R.string.tasks_tab_done),
 }
 
@@ -76,6 +78,10 @@ fun TasksScreen(
     var openTagUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
+    var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedNoteIsNew by rememberSaveable { mutableStateOf(false) }
+    val notes by viewModel.notes.collectAsStateWithLifecycle()
+    DeletionUndoEffect(viewModel, snackbar)
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val todayState by viewModel.today.collectAsStateWithLifecycle()
@@ -103,6 +109,7 @@ fun TasksScreen(
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
         tab == TasksTab.PROJECTS -> pluralStringResource(R.plurals.tasks_projects_subtitle, projects.size, projects.size)
         tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
+        tab == TasksTab.NOTES -> pluralStringResource(R.plurals.tasks_notes_subtitle, notes.size, notes.size)
         tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
         overdueCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount)}"
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
@@ -145,6 +152,7 @@ fun TasksScreen(
                             ),
                             TabPill(stringResource(TasksTab.PROJECTS.label)),
                             TabPill(stringResource(TasksTab.TAGS.label)),
+                            TabPill(stringResource(TasksTab.NOTES.label), notes.size),
                             TabPill(stringResource(TasksTab.DONE.label)),
                         ),
                         selected = tab.ordinal,
@@ -201,6 +209,14 @@ fun TasksScreen(
                             onOpenTag = { openTagUid = it },
                             modifier = Modifier.fillMaxSize(),
                         )
+                        tab == TasksTab.NOTES -> NotesTab(
+                            viewModel = viewModel,
+                            onOpen = {
+                                selectedNoteIsNew = false
+                                selectedNoteUid = it.uid
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                        )
                         else -> DoneTab(
                             viewModel = viewModel,
                             onOpen = { selectedTaskUid = it.uid },
@@ -211,8 +227,17 @@ fun TasksScreen(
             }
             CadenceFab(
                 icon = Icons.Outlined.Add,
-                contentDescription = stringResource(R.string.tasks_fab_add),
-                onClick = { quickAddOpen = true },
+                contentDescription = stringResource(
+                    if (tab == TasksTab.NOTES) R.string.tasks_note_new else R.string.tasks_fab_add,
+                ),
+                onClick = {
+                    if (tab == TasksTab.NOTES) {
+                        selectedNoteIsNew = true
+                        selectedNoteUid = UUID.randomUUID().toString()
+                    } else {
+                        quickAddOpen = true
+                    }
+                },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Space.gutter, bottom = navigationClearance() + Space.lg),
@@ -227,7 +252,17 @@ fun TasksScreen(
         onCloseTask = { selectedTaskUid = null },
     )
     if (quickAddOpen) {
-        QuickAddSheet(onDismiss = { quickAddOpen = false })
+        QuickAddSheet(
+            onDismiss = { quickAddOpen = false },
+            targets = listOf(CaptureTarget.TASK, CaptureTarget.INBOX, CaptureTarget.NOTE),
+            onNoteCreated = {
+                selectedNoteIsNew = false
+                selectedNoteUid = it
+            },
+        )
+    }
+    selectedNoteUid?.let { uid ->
+        NoteScreen(viewModel, uid, isNew = selectedNoteIsNew, onBack = { selectedNoteUid = null })
     }
 }
 

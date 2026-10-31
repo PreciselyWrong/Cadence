@@ -491,7 +491,7 @@
     <string name="alcohol_stats_paused_day">Habitude en pause</string>
     <string name="alcohol_stats_unobserved_day">Hors période suivie</string>
     <string name="alcohol_stats_today_clear">Aujourd’hui, aucune consommation notée</string>
-    <string name="tab_inbox">Boîte</string>
+    <string name="tab_inbox">Inbox</string>
     <string name="tab_agenda">Agenda</string>
     <string name="tab_bilan">Bilan</string>
     <string name="agenda_title">Agenda</string>
@@ -678,7 +678,7 @@
     <string name="today_scope_next_3">3 prochains jours</string>
     <string name="today_scope_next_7">7 prochains jours</string>
     <string name="today_scope_no_date">Sans date</string>
-    <string name="today_scope_inbox">Boîte</string>
+    <string name="today_scope_inbox">Inbox</string>
     <string name="today_sort_due">Échéance</string>
     <string name="today_sort_priority">Priorité</string>
     <string name="today_sort_project">Projet</string>

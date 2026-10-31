@@ -81,8 +81,24 @@
     </plurals>
 
     <!-- Notes -->
-    <string name="tasks_inbox_segment_ideas">Idées</string>
     <string name="tasks_inbox_segment_notes">Notes</string>
+    <string name="tasks_tab_notes">Notes</string>
+    <string name="tasks_capture_open">Ajouter</string>
+    <string name="tasks_capture_target_inbox">Inbox</string>
+    <string name="tasks_capture_target_task">Tâche</string>
+    <string name="tasks_capture_target_note">Note</string>
+    <string name="tasks_capture_inbox_title">Capturer dans l\'Inbox</string>
+    <string name="tasks_capture_inbox_subtitle">Notez-la, vous la trierez plus tard</string>
+    <string name="tasks_capture_note_subtitle">Le titre d\'abord, le contenu ensuite</string>
+    <string name="tasks_capture_note_placeholder">Titre de la note</string>
+    <plurals name="tasks_inbox_subtitle">
+        <item quantity="one">%d idée à trier</item>
+        <item quantity="other">%d idées à trier</item>
+    </plurals>
+    <plurals name="tasks_notes_subtitle">
+        <item quantity="one">%d note</item>
+        <item quantity="other">%d notes</item>
+    </plurals>
     <string name="tasks_notes_empty">Aucune note. Écrivez la première, elle se synchronise avec le web.</string>
     <string name="tasks_note_untitled">Sans titre</string>
     <string name="tasks_note_empty_content">Touchez pour écrire.</string>

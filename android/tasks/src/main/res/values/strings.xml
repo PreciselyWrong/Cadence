@@ -3,7 +3,7 @@
     <string name="tasks_tab_today">Aujourd\'hui</string>
     <string name="tasks_tab_upcoming">À venir</string>
     <string name="tasks_title">Tâches</string>
-    <string name="tasks_inbox_title">Boîte</string>
+    <string name="tasks_inbox_title">Inbox</string>
     <string name="tasks_open_settings">Réglages</string>
     <string name="tasks_tab_projects">Projets</string>
     <string name="tasks_fab_add">Ajouter une tâche</string>
@@ -41,8 +41,8 @@
     <string name="tasks_calendar_notice_dismiss">Masquer</string>
 
     <string name="tasks_inbox_capture_hint">Capturer une idée…</string>
-    <string name="tasks_inbox_empty">La boîte de réception est vide.</string>
-    <string name="tasks_inbox_capture_send">Ajouter à la boîte</string>
+    <string name="tasks_inbox_empty">L\'Inbox est vide.</string>
+    <string name="tasks_inbox_capture_send">Ajouter à l\'Inbox</string>
     <string name="tasks_inbox_convert">Convertir en tâche</string>
     <string name="tasks_projects_empty">Aucun projet pour l\'instant.</string>
     <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>

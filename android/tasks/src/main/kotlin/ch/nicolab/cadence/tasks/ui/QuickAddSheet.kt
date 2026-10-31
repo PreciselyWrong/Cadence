@@ -92,6 +92,9 @@ import java.time.LocalTime
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
+/** Destination d'une saisie : l'Inbox (à trier), une tâche, ou une note. */
+enum class CaptureTarget { INBOX, TASK, NOTE }
+
 private class ParsedChip(val icon: ImageVector, val label: String, val onRemove: () -> Unit)
 
 /**
@@ -107,6 +110,10 @@ fun QuickAddSheet(
     modifier: Modifier = Modifier,
     initialName: String = "",
     onSave: (suspend (TaskDraft) -> Unit)? = null,
+    /** Destinations proposées, la première choisie d'office ; vide : tâche seule. */
+    targets: List<CaptureTarget> = emptyList(),
+    /** Une note vient d'être créée avec ce titre : l'écran ouvre son éditeur. */
+    onNoteCreated: (String) -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -116,6 +123,8 @@ fun QuickAddSheet(
     val clock = remember(moment.zone) { Clock.system(moment.zone) }
 
     var text by rememberSaveable { mutableStateOf(initialName) }
+    var target by rememberSaveable { mutableStateOf(targets.firstOrNull() ?: CaptureTarget.TASK) }
+    val isTask = target == CaptureTarget.TASK
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var moreOptions by rememberSaveable { mutableStateOf(false) }
     var dateOverride by remember { mutableStateOf<Pair<LocalDate, LocalTime?>?>(null) }
@@ -131,8 +140,10 @@ fun QuickAddSheet(
 
     val projectRefs = remember(projects) { projects.map { NamedRef(it.uid, it.name) } }
     val tagRefs = remember(tags) { tags.map { NamedRef(it.uid, it.name) } }
-    val parsed = remember(text, ignored, projectRefs, tagRefs, clock) {
-        QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet())
+    val parsed = remember(text, ignored, projectRefs, tagRefs, clock, isTask) {
+        val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet())
+        // Une idée ou une note garde le texte tel quel : rien n'y est reconnu.
+        if (isTask) result else result.copy(title = text.trim(), tokens = emptyList())
     }
     val date = dateOverride?.first ?: parsed.date
     val time = if (dateOverride != null) dateOverride?.second else parsed.time
@@ -149,23 +160,12 @@ fun QuickAddSheet(
 
     LaunchedEffect(Unit) { focus.requestFocus() }
 
-    fun save() {
-        val title = parsed.title
-        if (title.isEmpty() || saving) return
-        val draft = TaskDraft(
-            name = title,
-            dueDate = date,
-            dueTime = time?.let(::wireTime),
-            priority = priority,
-            projectUid = projectUid,
-            tagUids = tagUids,
-        )
-        val write: suspend (TaskDraft) -> Unit = onSave ?: viewModel::saveNewTask
+    fun launchSave(write: suspend () -> Unit) {
         saving = true
         saveError = null
         scope.launch {
             try {
-                write(draft)
+                write()
                 onDismiss()
             } catch (e: CancellationException) {
                 throw e
@@ -176,9 +176,29 @@ fun QuickAddSheet(
         }
     }
 
+    fun save() {
+        val title = parsed.title
+        if (title.isEmpty() || saving) return
+        when (target) {
+            CaptureTarget.INBOX -> return launchSave { viewModel.captureIdea(title) }
+            CaptureTarget.NOTE -> return launchSave { onNoteCreated(viewModel.createNote(title)) }
+            CaptureTarget.TASK -> Unit
+        }
+        val draft = TaskDraft(
+            name = title,
+            dueDate = date,
+            dueTime = time?.let(::wireTime),
+            priority = priority,
+            projectUid = projectUid,
+            tagUids = tagUids,
+        )
+        val write: suspend (TaskDraft) -> Unit = onSave ?: viewModel::saveNewTask
+        launchSave { write(draft) }
+    }
+
     val priorityBadgeText = priority?.let { stringResource(priorityBadge(it)) }
     val dateText = date?.let { compactDateTime(it, time, today) }
-    val chips = buildList {
+    val chips = if (!isTask) emptyList() else buildList {
         dateText?.let {
             add(ParsedChip(Icons.Outlined.Today, it) {
                 dateOverride = null
@@ -208,8 +228,20 @@ fun QuickAddSheet(
     }
 
     CadenceSheet(
-        title = stringResource(R.string.tasks_quick_title),
-        subtitle = stringResource(R.string.tasks_capture_subtitle),
+        title = stringResource(
+            when (target) {
+                CaptureTarget.INBOX -> R.string.tasks_capture_inbox_title
+                CaptureTarget.TASK -> R.string.tasks_quick_title
+                CaptureTarget.NOTE -> R.string.tasks_note_new
+            },
+        ),
+        subtitle = stringResource(
+            when (target) {
+                CaptureTarget.INBOX -> R.string.tasks_capture_inbox_subtitle
+                CaptureTarget.TASK -> R.string.tasks_capture_subtitle
+                CaptureTarget.NOTE -> R.string.tasks_capture_note_subtitle
+            },
+        ),
         dismiss = { if (!saving) onDismiss() },
         modifier = modifier,
     ) {
@@ -217,6 +249,13 @@ fun QuickAddSheet(
             Modifier.fillMaxWidth().imePadding(),
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
+            if (targets.size > 1) {
+                SegmentedTabs(
+                    labels = targets.map { stringResource(it.label) },
+                    selected = targets.indexOf(target),
+                    onSelect = { target = targets[it] },
+                )
+            }
             CaptureBox(
                 text = text,
                 onTextChange = { text = it },
@@ -225,14 +264,23 @@ fun QuickAddSheet(
                 enabled = !saving,
                 focus = focus,
                 onDone = ::save,
+                placeholder = stringResource(
+                    when (target) {
+                        CaptureTarget.INBOX -> R.string.tasks_inbox_capture_hint
+                        CaptureTarget.TASK -> R.string.tasks_capture_placeholder
+                        CaptureTarget.NOTE -> R.string.tasks_capture_note_placeholder
+                    },
+                ),
             )
-            DateShortcuts(
-                today = today,
-                date = date,
-                onPick = { picked -> dateOverride = picked to time },
-                onMore = { pickingDate = true },
-            )
-            AnimatedVisibility(moreOptions) {
+            if (isTask) {
+                DateShortcuts(
+                    today = today,
+                    date = date,
+                    onPick = { picked -> dateOverride = picked to time },
+                    onMore = { pickingDate = true },
+                )
+            }
+            AnimatedVisibility(isTask && moreOptions) {
                 MoreOptions(
                     priority = priority,
                     onPriority = { picked ->
@@ -259,9 +307,11 @@ fun QuickAddSheet(
             }
             saveError?.let { ErrorText(it) }
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                TertiaryAction(
-                    label = stringResource(if (moreOptions) R.string.tasks_capture_less else R.string.tasks_capture_more),
-                ) { moreOptions = !moreOptions }
+                if (isTask) {
+                    TertiaryAction(
+                        label = stringResource(if (moreOptions) R.string.tasks_capture_less else R.string.tasks_capture_more),
+                    ) { moreOptions = !moreOptions }
+                }
                 Spacer(Modifier.weight(1f))
                 PrimaryAction(
                     label = stringResource(R.string.tasks_add),
@@ -300,6 +350,7 @@ private fun CaptureBox(
     enabled: Boolean,
     focus: FocusRequester,
     onDone: () -> Unit,
+    placeholder: String,
 ) {
     val palette = cadence
     var focused by remember { mutableStateOf(false) }
@@ -328,7 +379,7 @@ private fun CaptureBox(
         Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
             if (text.isEmpty()) {
                 Text(
-                    stringResource(R.string.tasks_capture_placeholder),
+                    placeholder,
                     style = MaterialTheme.typography.bodyLarge,
                     color = palette.outline,
                     maxLines = 1,
@@ -469,3 +520,10 @@ private fun MoreOptions(
         }
     }
 }
+
+private val CaptureTarget.label: Int
+    get() = when (this) {
+        CaptureTarget.INBOX -> R.string.tasks_capture_target_inbox
+        CaptureTarget.TASK -> R.string.tasks_capture_target_task
+        CaptureTarget.NOTE -> R.string.tasks_capture_target_note
+    }
