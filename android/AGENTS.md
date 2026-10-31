@@ -30,6 +30,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `calendar/` - agendas de l'appareil en lecture seule, réglages par agenda et occurrences faites. Contrat : `CalendarRepository`, `CalendarGraph`.
 `app/` - UI Compose, widget Glance, rappels et assemblage (`habits/`, `bilan/`, `agenda/`, `settings/`).
 `docs/REDESIGN.md` + `docs/redesign/*.png` - refonte UI/UX 2026-10 (maquettes OpenPencil) : à suivre pour tout écran ou widget.
+`../docs/fork/WEB-UX-NOTES.md` - décisions UX prises sur le web, à reprendre dans l'app : lire avant tout travail d'interface.
 
 ## Décisions
 - Min SDK 26, compilation et cible API 36.

@@ -30,6 +30,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Clients Android/Linux, plan de synchro | `docs/fork/PLAN-clients-sync.md`, `docs/fork/CADENCE-PARITY.md` |
 | Synchronisation hors ligne (API) | `docs/30-offline-sync.md`, `backend/modules/sync/` |
 | App Android | `android/AGENTS.md` (règles des habitudes, widget, ⛔ propres à l'app) |
+| Interface web, UX à reprendre sur Android | `docs/fork/WEB-UX-NOTES.md` (journal à compléter à chaque changement d'UI web) |
 | Architecture, requêtes, auth | `docs/architecture.md` |
 | Nouveau module backend, repository | `docs/backend-patterns.md`, `docs/code-conventions.md` |
 | Modèle, migration, SQLite/Postgres | `docs/database.md`, `docs/16-postgresql.md`, `docs/backups.md` |
