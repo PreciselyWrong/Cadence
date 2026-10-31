@@ -117,6 +117,7 @@ internal fun TaskDetailSheet(
     val task by viewModel.observeTask(taskUid).collectAsStateWithLifecycle(initialValue = null)
     val current = task ?: return
     val moment by viewModel.moment.collectAsStateWithLifecycle()
+    val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val zone = moment.zone
@@ -212,6 +213,17 @@ internal fun TaskDetailSheet(
                     onTags = { picker = Picker.Tags },
                     onRepeat = { picker = Picker.Repeat },
                 )
+                if (!current.isRecurring && current.parentTaskUid == null) {
+                    FunnelSection(
+                        task = current,
+                        weekStart = weekStart,
+                        today = today,
+                        enabled = !readOnly,
+                        onToggle = { viewModel.funnel(current, it) },
+                        onReviewOn = { viewModel.reviewOn(current, it) },
+                    )
+                }
+                PostponementLine(taskUid = current.uid, version = current.dueDay)
                 NoteCard(note = note, onNoteChange = { note = it }, readOnly = readOnly)
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 if (!readOnly) SubtasksCard(parentUid = current.uid, viewModel = viewModel)

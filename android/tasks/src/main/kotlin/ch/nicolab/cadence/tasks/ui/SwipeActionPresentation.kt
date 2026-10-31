@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
@@ -12,12 +13,15 @@ import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Today
+import androidx.compose.material.icons.outlined.ViewWeek
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 
 /** Libellé d'une action ; « Terminer » devient « Rouvrir » sur une tâche déjà fermée. */
@@ -30,6 +34,9 @@ internal fun swipeActionLabelRes(action: SwipeAction, closed: Boolean = false, f
     SwipeAction.NEXT_WEEK -> R.string.swipe_action_next_week
     SwipeAction.MOVE_PROJECT -> R.string.swipe_action_move_project
     SwipeAction.PRIORITY -> R.string.swipe_action_priority
+    SwipeAction.IN_VIEW -> R.string.funnel_in_view
+    SwipeAction.THIS_WEEK -> R.string.funnel_this_week
+    SwipeAction.LATER -> R.string.funnel_later
     SwipeAction.DELETE -> if (forEvent) R.string.swipe_action_hide else R.string.swipe_action_delete
     SwipeAction.NONE -> R.string.swipe_action_none
 }
@@ -42,6 +49,9 @@ internal fun swipeActionIcon(action: SwipeAction, closed: Boolean = false, forEv
     SwipeAction.NEXT_WEEK -> Icons.Outlined.EventRepeat
     SwipeAction.MOVE_PROJECT -> Icons.Outlined.Folder
     SwipeAction.PRIORITY -> Icons.Outlined.Flag
+    SwipeAction.IN_VIEW -> funnelIcon(FunnelStage.IN_VIEW)
+    SwipeAction.THIS_WEEK -> funnelIcon(FunnelStage.THIS_WEEK)
+    SwipeAction.LATER -> funnelIcon(FunnelStage.LATER)
     SwipeAction.DELETE -> if (forEvent) Icons.Outlined.VisibilityOff else Icons.Outlined.Delete
     SwipeAction.NONE -> Icons.Outlined.Block
 }
@@ -58,4 +68,11 @@ internal fun swipeActionColors(action: SwipeAction, forEvent: Boolean = false): 
         SwipeAction.NONE -> palette.containerHigh to palette.onSurfaceVariant
         else -> palette.primary to palette.onPrimary
     }
+}
+
+/** Icône d'une étape de l'entonnoir, la même dans la fiche, le menu, le balayage et la revue. */
+internal fun funnelIcon(stage: FunnelStage): ImageVector = when (stage) {
+    FunnelStage.IN_VIEW -> Icons.Outlined.Visibility
+    FunnelStage.THIS_WEEK -> Icons.Outlined.ViewWeek
+    FunnelStage.LATER -> Icons.Outlined.Archive
 }

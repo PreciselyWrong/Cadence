@@ -35,6 +35,11 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.model.DecisionContext
+import ch.nicolab.cadence.tasks.model.Funnel
+import ch.nicolab.cadence.tasks.model.FunnelStage
+import ch.nicolab.cadence.tasks.model.ReviewDecisions
+import java.time.DayOfWeek
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
@@ -87,6 +92,12 @@ internal data class Moment(val today: LocalDate, val now: Instant, val zone: Zon
     }
 }
 
+private fun funnelNotice(stage: FunnelStage, on: Boolean): Int = when (stage) {
+    FunnelStage.IN_VIEW -> if (on) R.string.funnel_notice_in_view else R.string.funnel_notice_out_of_view
+    FunnelStage.THIS_WEEK -> if (on) R.string.funnel_notice_this_week else R.string.funnel_notice_not_this_week
+    FunnelStage.LATER -> if (on) R.string.funnel_notice_later else R.string.funnel_notice_not_later
+}
+
 internal data class TodayState(
     val overdue: List<TaskItem> = emptyList(),
     val today: List<TaskItem> = emptyList(),
@@ -129,6 +140,7 @@ internal class TasksViewModel(
     constructor(application: Application) : this(application, CalendarGraph.repository(application))
 
     private val repository = TasksGraph.repository(application)
+    private val connection = TasksGraph.connection(application)
     private val calendarPrefs = application.getSharedPreferences(CALENDAR_PREFS, Context.MODE_PRIVATE)
     private val genericError = application.getString(R.string.tasks_error_generic)
     /** Tâches supprimées par geste, masquées le temps de pouvoir annuler. */
@@ -165,6 +177,17 @@ internal class TasksViewModel(
 
     val today: StateFlow<TodayState> = combine(tasks, moment) { all, m -> todayState(all, m) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TodayState())
+
+    /** Premier jour de la semaine en cours, selon le premier jour du compte : « Cette semaine ». */
+    val weekStart: StateFlow<LocalDate> = combine(moment, connection.observe()) { m, info ->
+        Funnel.weekStart(m.today, info?.firstDayOfWeek ?: DayOfWeek.MONDAY)
+    }.distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), Funnel.weekStart(LocalDate.now(), DayOfWeek.MONDAY))
+
+    /** Suggestions du jour : Cette semaine puis En vue, hors « Plus tard ». */
+    val suggestions: StateFlow<List<TaskItem>> = combine(tasks, moment, weekStart) { all, m, week ->
+        TaskViews.suggestions(all, m.today, m.now, week)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Événements de l'agenda pour le jour courant ; le flux ne se relance qu'au changement de jour ou de fuseau. */
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -277,9 +300,28 @@ internal class TasksViewModel(
             SwipeAction.SCHEDULE -> _sheet.value = SwipeSheet.Schedule(task)
             SwipeAction.MOVE_PROJECT -> _sheet.value = SwipeSheet.Project(task)
             SwipeAction.PRIORITY -> _sheet.value = SwipeSheet.Priority(task)
+            SwipeAction.IN_VIEW -> funnel(task, FunnelStage.IN_VIEW)
+            SwipeAction.THIS_WEEK -> funnel(task, FunnelStage.THIS_WEEK)
+            SwipeAction.LATER -> funnel(task, FunnelStage.LATER)
             SwipeAction.DELETE -> if (task.isRecurring) _pendingDelete.value = task else deleteWithUndo(task)
             SwipeAction.NONE -> Unit
         }
+    }
+
+    /** Allume ou éteint une étape de l'entonnoir, avec « Annuler » ; l'échéance n'est jamais touchée. */
+    fun funnel(task: TaskItem, stage: FunnelStage) {
+        _sheet.value = null
+        if (!FileBackedActions.canEdit(task)) return
+        val ctx = DecisionContext(moment.value.today, weekStart.value, moment.value.zone)
+        val on = !Funnel.has(task, stage, ctx.weekStart)
+        val message = getString(funnelNotice(stage, on), task.name)
+        changeWithUndo(task, ReviewDecisions.toggle(stage, task, ctx), UndoChanges.restoreFunnel(task), message)
+    }
+
+    /** Date de réexamen d'une idée mise de côté ; null la retire. Ni rappel ni agenda. */
+    fun reviewOn(task: TaskItem, day: LocalDate?) {
+        if (!FileBackedActions.canEdit(task)) return
+        update(task.uid, if (day == null) TaskChange(clearReviewOn = true) else TaskChange(reviewOn = day))
     }
 
     /** Menu contextuel d'une ligne (appui long). */
@@ -362,6 +404,8 @@ internal class TasksViewModel(
     }
 
     private fun getString(res: Int): String = getApplication<Application>().getString(res)
+
+    private fun getString(res: Int, arg: String): String = getApplication<Application>().getString(res, arg)
 
     fun askRecurringMove(uid: String, date: LocalDate) {
         _pendingMove.value = PendingMove(uid, date)

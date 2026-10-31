@@ -41,6 +41,11 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         repetition = Repetition.of(recurrenceType, extras["recurrence_interval"]),
         extras = extras,
         fileBacked = fileBacked,
+        inViewAt = parseInstant(inViewAtRaw),
+        weekOf = parseDay(weekOf),
+        reviewOn = parseDay(reviewOn),
+        reviewedAt = parseInstant(reviewedAtRaw),
+        someday = someday,
     )
 }
 
@@ -83,6 +88,12 @@ internal fun dueDayOf(dueDateRaw: String?, dueHasTime: Boolean, accountZone: Zon
  */
 internal fun occurrenceDayOf(dueDateRaw: String?, accountZone: ZoneId): LocalDate? =
     parseInstant(dueDateRaw)?.atZone(accountZone)?.toLocalDate()
+
+/** Jour seul (`YYYY-MM-DD`) ; une valeur illisible reste absente. */
+internal fun parseDay(raw: String?): LocalDate? =
+    raw?.let { runCatching { LocalDate.parse(it.take(DAY_LENGTH)) }.getOrNull() }
+
+private const val DAY_LENGTH = 10
 
 /** Les dates serveur sont ISO-8601 avec un décalage ; une valeur illisible reste absente. */
 internal fun parseInstant(raw: String?): Instant? =

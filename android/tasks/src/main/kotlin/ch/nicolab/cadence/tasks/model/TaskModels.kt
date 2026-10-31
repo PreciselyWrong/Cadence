@@ -59,6 +59,15 @@ data class TaskItem(
     val extras: Map<String, String> = emptyMap(),
     /** Le projet de la tâche reflète un fichier TODO.md du serveur : seule la case se modifie ici. */
     val fileBacked: Boolean = false,
+    /** Entonnoir (docs/34-review.md) : en vue depuis cet instant ; jamais une priorité ni une épingle. */
+    val inViewAt: Instant? = null,
+    /** Premier jour de la semaine décidée ; jamais une échéance. */
+    val weekOf: LocalDate? = null,
+    /** Date où revoir une idée mise de côté ; ni rappel ni agenda. */
+    val reviewOn: LocalDate? = null,
+    val reviewedAt: Instant? = null,
+    /** Étiquette `someday` : « Plus tard », hors des suggestions et jamais en retard. */
+    val someday: Boolean = false,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)
@@ -200,6 +209,17 @@ data class TaskChange(
     val estimatedMinutes: Int? = null,
     val clearEstimate: Boolean = false,
     val repetition: Repetition? = null,
+    /** Entonnoir : true met en vue (l'instant déjà posé est gardé), false retire de la vue. */
+    val inView: Boolean? = null,
+    /** Premier jour de la semaine décidée ; [clearWeek] retire la semaine. */
+    val weekOf: LocalDate? = null,
+    val clearWeek: Boolean = false,
+    val reviewOn: LocalDate? = null,
+    val clearReviewOn: Boolean = false,
+    /** true ajoute l'étiquette `someday` et sort de la vue et de la semaine ; false la retire. */
+    val later: Boolean? = null,
+    /** Horodate la décision (`reviewed_at`) : ce que compte « décidées cette semaine ». */
+    val reviewed: Boolean = false,
 )
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }

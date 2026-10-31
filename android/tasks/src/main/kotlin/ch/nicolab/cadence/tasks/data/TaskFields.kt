@@ -1,11 +1,13 @@
 package ch.nicolab.cadence.tasks.data
 
 import ch.nicolab.cadence.tasks.model.RepeatType
+import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.Repetition
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
@@ -51,5 +53,43 @@ internal object TaskFields {
             "recurrence_weekday" to (weekday?.let { JsonPrimitive(it) } ?: JsonNull),
             "recurrence_month_day" to (monthDay?.let { JsonPrimitive(it) } ?: JsonNull),
         )
+    }
+
+    /**
+     * Champs de l'entonnoir (docs/34-review.md), comme `applyDecisionFields` du serveur : la mise en vue garde
+     * l'instant déjà posé, « Plus tard » ([TaskChange.later]) passe par l'étiquette [somedayUid] et l'emporte sur
+     * la vue et la semaine. Aucun de ces champs ne touche l'échéance.
+     */
+    fun decision(
+        change: TaskChange,
+        inViewAtRaw: String?,
+        tagUids: List<String>,
+        somedayUid: String?,
+        nowIso: String,
+    ): Map<String, JsonElement> = buildMap {
+        when (change.inView) {
+            true -> if (inViewAtRaw == null) put("in_view_at", JsonPrimitive(nowIso))
+            false -> put("in_view_at", JsonNull)
+            null -> Unit
+        }
+        when {
+            change.clearWeek -> put("week_of", JsonNull)
+            change.weekOf != null -> put("week_of", JsonPrimitive(change.weekOf.toString()))
+        }
+        when {
+            change.clearReviewOn -> put("review_on", JsonNull)
+            change.reviewOn != null -> put("review_on", JsonPrimitive(change.reviewOn.toString()))
+        }
+        if (change.reviewed) put("reviewed_at", JsonPrimitive(nowIso))
+        if (change.later == true) {
+            put("in_view_at", JsonNull)
+            put("week_of", JsonNull)
+        }
+        val tags = when {
+            change.later == null || somedayUid == null || change.tagUids != null -> null
+            change.later -> if (somedayUid in tagUids) null else tagUids + somedayUid
+            else -> if (somedayUid in tagUids) tagUids - somedayUid else null
+        }
+        tags?.let { put("tag_uids", JsonArray(it.map(::JsonPrimitive))) }
     }
 }

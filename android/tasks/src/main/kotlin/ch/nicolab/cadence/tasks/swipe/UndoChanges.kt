@@ -17,4 +17,14 @@ object UndoChanges {
 
     fun restorePriority(task: TaskItem): TaskChange =
         task.priority?.let { TaskChange(priority = it) } ?: TaskChange(clearPriority = true)
+
+    /** En vue, semaine, date de réexamen et « Plus tard » tels qu'avant le geste. */
+    fun restoreFunnel(task: TaskItem): TaskChange = TaskChange(
+        inView = task.inViewAt != null,
+        weekOf = task.weekOf,
+        clearWeek = task.weekOf == null,
+        reviewOn = task.reviewOn,
+        clearReviewOn = task.reviewOn == null,
+        later = task.someday,
+    )
 }

@@ -23,7 +23,7 @@ internal object WireCodec {
     private val taskKeys = setOf(
         "uid", "name", "note", "status", "priority", "due_date", "due_has_time", "defer_until",
         "reminder_at", "recurrence_type", "project_uid", "area_uid", "parent_task_uid", "tag_uids",
-        "completed_at", "pinned_at", "field_clocks",
+        "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "review_on", "reviewed_at",
     )
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -47,6 +47,10 @@ internal object WireCodec {
         pinnedAtRaw = wire.string("pinned_at"),
         fieldClocksJson = (wire["field_clocks"] as? JsonObject ?: JsonObject(emptyMap())).toString(),
         extrasJson = JsonObject(wire.filterKeys { it !in taskKeys }).toString(),
+        inViewAtRaw = wire.string("in_view_at"),
+        weekOf = wire.string("week_of"),
+        reviewOn = wire.string("review_on"),
+        reviewedAtRaw = wire.string("reviewed_at"),
     )
 
     fun taskToWire(task: TaskEntity): JsonObject {
@@ -68,6 +72,10 @@ internal object WireCodec {
             put("completed_at", task.completedAtRaw)
             put("pinned_at", task.pinnedAtRaw)
             put("field_clocks", json.parseToJsonElement(task.fieldClocksJson))
+            put("in_view_at", task.inViewAtRaw)
+            put("week_of", task.weekOf)
+            put("review_on", task.reviewOn)
+            put("reviewed_at", task.reviewedAtRaw)
         }
         val extras = json.parseToJsonElement(task.extrasJson).jsonObject
         return JsonObject(extras + known)
@@ -81,6 +89,7 @@ internal object WireCodec {
         areaUid = wire.string("area_uid"),
         pinToSidebar = wire.bool("pin_to_sidebar"),
         sourceType = wire.string("source_type"),
+        reviewedAtRaw = wire.string("reviewed_at"),
     )
 
     fun areaFromWire(wire: JsonObject) = AreaEntity(

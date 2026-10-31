@@ -23,12 +23,8 @@ object TaskExtraRows {
     data class Row(val key: String, val value: String)
 
     private val order = listOf(
-        "review_on",
-        "reviewed_at",
-        "week_of",
         "recurrence_end_date",
         "completion_based",
-        "in_view_at",
         "created_at",
         "updated_at",
     )

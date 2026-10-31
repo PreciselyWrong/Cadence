@@ -51,12 +51,8 @@
     <string name="tasks_web_only">Pas encore synchronisés sur l\'appareil : à consulter sur le web.</string>
     <string name="tasks_extras_title">Autres informations</string>
     <string name="tasks_extras_readonly">Lecture seule</string>
-    <string name="tasks_extra_review_on">À revoir le</string>
-    <string name="tasks_extra_reviewed_at">Revue le</string>
-    <string name="tasks_extra_week_of">Semaine du</string>
     <string name="tasks_extra_recurrence_end_date">Fin de la répétition</string>
     <string name="tasks_extra_completion_based">Répétition après terminaison</string>
-    <string name="tasks_extra_in_view_at">Mise en vue le</string>
     <string name="tasks_extra_created_at">Créée le</string>
     <string name="tasks_extra_updated_at">Modifiée le</string>
     <string name="tasks_extra_yes">Oui</string>

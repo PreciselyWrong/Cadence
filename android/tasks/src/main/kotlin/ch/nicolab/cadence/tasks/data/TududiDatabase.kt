@@ -18,7 +18,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -77,6 +77,22 @@ internal val MIGRATION_3_4 = object : Migration(3, 4) {
 internal val MIGRATION_4_5 = object : Migration(4, 5) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE projects ADD COLUMN sourceType TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Entonnoir de décision (`in_view_at`, `week_of`, `review_on`, `reviewed_at` des tâches, `reviewed_at` des
+ * projets) en colonnes. Le curseur est retiré : le prochain instantané remplit ces colonnes depuis le serveur
+ * (les valeurs étaient jusque-là gardées dans `extrasJson`).
+ */
+internal val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN inViewAtRaw TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN weekOf TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN reviewOn TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN reviewedAtRaw TEXT")
+        db.execSQL("ALTER TABLE projects ADD COLUMN reviewedAtRaw TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

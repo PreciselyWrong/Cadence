@@ -1,3 +1,14 @@
+## [1.6.0] — 31 octobre 2026
+
+### Nouveautés
+- Revue de la semaine, ouverte depuis le Bilan : six étapes une à une (À décider, Repoussées, Projets stagnants, Plus tard, Anciennes, Cette semaine), un bouton « Décider » par ligne. Chaque décision est enregistrée aussitôt, même hors ligne, et la revue reprend à l'étape où vous l'aviez laissée. Les listes sont celles du web.
+- Cette semaine : temps prévu face au temps disponible (« 4 h 30 prévues / 6 h disponibles »), réglable depuis l'étape, et « Aide-moi à choisir », deux tâches face à face.
+- Fiche d'une tâche : « En vue », « Cette semaine » et « Plus tard » en un geste, une date « Revoir le » pour une idée mise de côté, et une ligne discrète « Déplacée N fois » avec l'historique au toucher. Les mêmes choix sont dans le menu d'une ligne et peuvent être placés sur un balayage.
+- Planifier la journée : les tâches de la semaine puis celles en vue sont proposées en premier, avec « Aujourd'hui » pour les prendre.
+
+### Corrections
+- Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.
+
 ## [1.5.0] — 31 octobre 2026
 
 ### Nouveautés

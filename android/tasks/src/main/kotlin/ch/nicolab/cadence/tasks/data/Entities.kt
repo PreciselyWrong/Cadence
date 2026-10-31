@@ -29,6 +29,14 @@ data class TaskEntity(
     val fieldClocksJson: String,
     /** Champs serveur inconnus de l'appareil, gardés tels quels. */
     val extrasJson: String,
+    /** Entonnoir (docs/34-review.md) : « En vue » depuis cet instant ; null = hors de vue. */
+    val inViewAtRaw: String? = null,
+    /** « Cette semaine » : premier jour (`YYYY-MM-DD`) de la semaine choisie. */
+    val weekOf: String? = null,
+    /** Date de réexamen d'une idée mise de côté (`YYYY-MM-DD`) ; jamais une échéance. */
+    val reviewOn: String? = null,
+    /** Dernière décision prise en revue. */
+    val reviewedAtRaw: String? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
 }
@@ -43,6 +51,8 @@ data class ProjectEntity(
     val pinToSidebar: Boolean,
     /** `todo_md` pour un projet reflétant un fichier TODO.md du serveur (lecture seule ici). */
     val sourceType: String? = null,
+    /** « Garder tel quel » d'un projet stagnant en revue ; posé par le serveur. */
+    val reviewedAtRaw: String? = null,
 )
 
 @Entity(tableName = "areas")

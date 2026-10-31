@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.review.ReviewCache
+import ch.nicolab.cadence.tasks.review.ReviewRepository
+import java.io.File
 import ch.nicolab.cadence.tasks.sync.Hlc
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
 import ch.nicolab.cadence.tasks.sync.AuthError
@@ -20,11 +23,16 @@ internal fun createLinkPreviews(context: Context): ch.nicolab.cadence.tasks.link
 
 internal fun createServerConnection(context: Context): ServerConnection = TasksRuntime.get(context).connection
 
+internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
+
+/** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
+internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
+
 /** Une seule base, un seul moteur et une seule horloge par processus. */
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -41,6 +49,7 @@ internal class TasksRuntime private constructor(context: Context) {
     val connection = ServerConnectionImpl(appContext, database, store) { engine }
     val api = HttpSyncApi { connection.currentSession() ?: throw AuthError("Aucun serveur configuré") }
     val linkPreviews = RoomLinkPreviews(database.linkPreviewDao(), api::linkMetadata)
+    val review = ReviewRepository(api::call, ReviewCache(reviewCacheDir(appContext)))
     val engine: SyncEngine =SyncEngine(
         api,
         store,

@@ -33,6 +33,8 @@ import ch.nicolab.cadence.designsystem.components.SettingRow
 import ch.nicolab.cadence.designsystem.components.rowGroupShape
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.Funnel
+import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
@@ -55,12 +57,19 @@ internal fun TaskMenuSheet(
     task: TaskItem,
     today: LocalDate,
     firstDayOfWeek: DayOfWeek,
+    weekStart: LocalDate,
     onSchedule: (LocalDate?) -> Unit,
     onAction: (SwipeAction) -> Unit,
+    onFunnel: (FunnelStage) -> Unit,
     onDismiss: () -> Unit,
 ) {
     var picking by remember { mutableStateOf(false) }
     class Entry(val icon: ImageVector, val label: Int, val onClick: () -> Unit)
+    // Une série ou une sous-tâche n'entre pas dans l'entonnoir, comme dans la revue du serveur.
+    val funnel = if (task.isRecurring || task.parentTaskUid != null) emptyList() else FunnelStage.entries.map { stage ->
+        val on = Funnel.has(task, stage, weekStart)
+        Entry(funnelIcon(stage), if (on) funnelOffLabel(stage) else funnelLabel(stage)) { onFunnel(stage) }
+    }
     val quickDates = listOf(SchedulePreset.TODAY, SchedulePreset.TOMORROW, SchedulePreset.WEEKEND).map { preset ->
         Entry(presetIcon(preset), presetLabel(preset)) { onSchedule(SchedulePreset.dateFor(preset, today, firstDayOfWeek)) }
     }
@@ -76,6 +85,7 @@ internal fun TaskMenuSheet(
         )
     } else quickDates + listOf(
         Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
+    ) + funnel + listOf(
         Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
         Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) },
         Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) },
@@ -100,6 +110,12 @@ internal fun TaskMenuSheet(
             onDismiss = { picking = false },
         )
     }
+}
+
+private fun funnelOffLabel(stage: FunnelStage): Int = when (stage) {
+    FunnelStage.IN_VIEW -> R.string.funnel_out_of_view
+    FunnelStage.THIS_WEEK -> R.string.funnel_not_this_week
+    FunnelStage.LATER -> R.string.funnel_not_later
 }
 
 /** Feuille « Planifier » : raccourcis de date, choix libre ou retrait de l'échéance. */

@@ -111,11 +111,12 @@ object DayRhythm {
         dismissedDay: LocalDate?,
         overdueCount: Int,
         toPlaceCount: Int,
+        suggestionCount: Int = 0,
     ): Boolean =
         settings.hours.isWorkday(today) &&
             now.isBefore(settings.shutdown) &&
             dismissedDay != today &&
-            (overdueCount > 0 || toPlaceCount > 0)
+            (overdueCount > 0 || toPlaceCount > 0 || suggestionCount > 0)
 
     /** « Terminer la journée » apparaît à l'heure choisie, une fois par jour, s'il reste quelque chose à dire. */
     fun eveningCardVisible(

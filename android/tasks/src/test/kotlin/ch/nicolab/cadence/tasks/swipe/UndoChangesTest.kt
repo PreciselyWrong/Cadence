@@ -40,4 +40,17 @@ class UndoChangesTest {
         assertEquals(TaskChange(priority = TaskPriority.HIGH), UndoChanges.restorePriority(TaskItem(uid = "t", name = "t", priority = TaskPriority.HIGH)))
         assertEquals(TaskChange(clearPriority = true), UndoChanges.restorePriority(TaskItem(uid = "t", name = "t")))
     }
+
+    @Test
+    fun `restaurer l'étape de l'entonnoir`() {
+        val week = LocalDate.of(2026, 10, 26)
+        assertEquals(
+            TaskChange(inView = true, weekOf = week, clearReviewOn = true, later = false),
+            UndoChanges.restoreFunnel(TaskItem(uid = "t", name = "t", inViewAt = Instant.EPOCH, weekOf = week)),
+        )
+        assertEquals(
+            TaskChange(inView = false, clearWeek = true, reviewOn = day, later = true),
+            UndoChanges.restoreFunnel(TaskItem(uid = "t", name = "t", someday = true, reviewOn = day)),
+        )
+    }
 }

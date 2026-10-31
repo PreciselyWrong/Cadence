@@ -116,10 +116,17 @@ internal fun CapacityLine(capacity: Capacity, modifier: Modifier = Modifier) {
 
 /** Carte du matin : un appui ouvre la feuille de planification ; la croix la masque pour la journée. */
 @Composable
-internal fun MorningCard(overdueCount: Int, toPlaceCount: Int, onOpen: () -> Unit, onDismiss: () -> Unit) {
+internal fun MorningCard(
+    overdueCount: Int,
+    toPlaceCount: Int,
+    onOpen: () -> Unit,
+    onDismiss: () -> Unit,
+    suggestionCount: Int = 0,
+) {
     val summary = buildList {
         if (overdueCount > 0) add(pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount))
         if (toPlaceCount > 0) add(pluralStringResource(R.plurals.planning_to_place_count, toPlaceCount, toPlaceCount))
+        if (suggestionCount > 0) add(pluralStringResource(R.plurals.planning_suggestion_count, suggestionCount, suggestionCount))
     }.joinToString(" · ")
     PlanningCard(
         icon = Icons.Outlined.EventAvailable,
@@ -317,6 +324,10 @@ internal fun PlanDaySheet(
     onTriage: (List<TaskItem>, TriageTarget) -> Unit,
     onPlace: () -> Unit,
     dismiss: () -> Unit,
+    suggestions: List<TaskItem> = emptyList(),
+    weekStart: LocalDate = today,
+    onAddToday: (TaskItem) -> Unit = {},
+    onChoose: () -> Unit = {},
 ) {
     CadenceSheet(
         title = stringResource(R.string.planning_sheet_title),
@@ -366,6 +377,9 @@ internal fun PlanDaySheet(
                     }
                 }
             }
+            if (suggestions.isNotEmpty()) {
+                SuggestionList(suggestions, weekStart, onAddToday, onChoose)
+            }
             Text(
                 stringResource(R.string.planning_place_title),
                 style = MaterialTheme.typography.titleSmall,
@@ -394,6 +408,52 @@ internal fun PlanDaySheet(
             onClick = onPlace,
         )
         Spacer(Modifier.height(Space.lg))
+    }
+}
+
+/**
+ * Suggestions du jour : « Cette semaine » puis « En vue », jamais « Plus tard ». Une ligne dit pourquoi
+ * elle est là ; « Aujourd'hui » lui donne l'échéance du jour, « Aide-moi à choisir » ouvre le duel.
+ */
+@Composable
+private fun SuggestionList(
+    suggestions: List<TaskItem>,
+    weekStart: LocalDate,
+    onAddToday: (TaskItem) -> Unit,
+    onChoose: () -> Unit,
+) {
+    Text(
+        stringResource(R.string.suggestions_title),
+        style = MaterialTheme.typography.titleSmall,
+        color = cadence.onSurfaceVariant,
+        modifier = Modifier.padding(top = Space.sm),
+    )
+    if (suggestions.size >= 2) {
+        SecondaryAction(stringResource(R.string.choose_open), Modifier.fillMaxWidth(), onClick = onChoose)
+    }
+    suggestions.forEach { task ->
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(task.name, style = MaterialTheme.typography.bodyLarge, color = cadence.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(
+                    stringResource(if (task.weekOf == weekStart) R.string.funnel_this_week else R.string.funnel_in_view),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = cadence.onSurfaceVariant,
+                )
+            }
+            Spacer(Modifier.width(Space.sm))
+            Box(
+                Modifier
+                    .defaultMinSize(minHeight = Size.touch)
+                    .clip(Radius.Chip)
+                    .background(cadence.containerHigh)
+                    .clickable { onAddToday(task) }
+                    .padding(horizontal = Space.md),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(stringResource(R.string.suggestions_add_today), style = MaterialTheme.typography.labelLarge, color = cadence.onSurface)
+            }
+        }
     }
 }
 

@@ -4,7 +4,11 @@ import kotlin.math.abs
 
 /** Actions assignables à un geste de balayage ; [NONE] désactive le seuil. */
 enum class SwipeAction {
-    COMPLETE, SCHEDULE, TODAY, TOMORROW, NEXT_WEEK, MOVE_PROJECT, PRIORITY, DELETE, NONE;
+    COMPLETE, SCHEDULE, TODAY, TOMORROW, NEXT_WEEK, MOVE_PROJECT, PRIORITY,
+
+    /** Entonnoir (docs/34-review.md) : allume ou éteint l'étape, sans toucher l'échéance. */
+    IN_VIEW, THIS_WEEK, LATER,
+    DELETE, NONE;
 
     /** Ouvre une feuille de choix au lieu d'agir immédiatement. */
     val opensSheet: Boolean get() = this == SCHEDULE || this == MOVE_PROJECT || this == PRIORITY

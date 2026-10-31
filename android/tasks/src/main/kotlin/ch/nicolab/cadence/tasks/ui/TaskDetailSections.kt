@@ -271,12 +271,8 @@ internal fun ReadOnlyDetails(task: TaskItem) {
 }
 
 private fun extraLabel(key: String): Int = when (key) {
-    "review_on" -> R.string.tasks_extra_review_on
-    "reviewed_at" -> R.string.tasks_extra_reviewed_at
-    "week_of" -> R.string.tasks_extra_week_of
     "recurrence_end_date" -> R.string.tasks_extra_recurrence_end_date
     "completion_based" -> R.string.tasks_extra_completion_based
-    "in_view_at" -> R.string.tasks_extra_in_view_at
     "created_at" -> R.string.tasks_extra_created_at
     else -> R.string.tasks_extra_updated_at
 }

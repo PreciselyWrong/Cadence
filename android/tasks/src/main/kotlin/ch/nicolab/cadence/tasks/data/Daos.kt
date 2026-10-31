@@ -14,6 +14,8 @@ data class TaskRow(
     val pendingSync: Boolean,
     /** Le projet de la tâche reflète un fichier TODO.md (`source_type`). */
     val fileBacked: Boolean = false,
+    /** La tâche porte l'étiquette système `someday` : « Plus tard ». */
+    val someday: Boolean = false,
 )
 
 data class InboxRow(
@@ -25,28 +27,32 @@ data class InboxRow(
 interface TaskDao {
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE parentTaskUid IS NULL""",
     )
     fun observeTopLevel(): Flow<List<TaskRow>>
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks""",
     )
     fun observeEvery(): Flow<List<TaskRow>>
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE uid = :uid""",
     )
     fun observeOne(uid: String): Flow<TaskRow?>
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked
+        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE parentTaskUid = :parentUid""",
     )
     fun observeChildren(parentUid: String): Flow<List<TaskRow>>
@@ -107,6 +113,9 @@ interface TagDao {
 
     @Query("SELECT * FROM tags WHERE uid = :uid")
     suspend fun get(uid: String): TagEntity?
+
+    @Query("SELECT * FROM tags WHERE name = :name LIMIT 1")
+    suspend fun findByName(name: String): TagEntity?
 
     @Upsert
     suspend fun upsert(tag: TagEntity)

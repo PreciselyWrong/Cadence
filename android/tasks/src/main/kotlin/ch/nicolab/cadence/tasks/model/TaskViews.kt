@@ -15,16 +15,32 @@ object TaskViews {
         task.parentTaskUid == null && !task.isClosed &&
             (task.deferUntil == null || !task.deferUntil.isAfter(now))
 
-    /** En retard, prévues aujourd'hui, ou en cours / planifiées / en attente. */
+    /**
+     * En retard, prévues aujourd'hui, ou en cours / planifiées / en attente. Une tâche mise de côté
+     * (« Plus tard », `someday`) n'est jamais en retard : son échéance passée ne la ramène pas.
+     */
     fun today(tasks: List<TaskItem>, today: LocalDate, now: Instant): List<TaskItem> =
         tasks.filter { task ->
             if (!visibleNow(task, now)) return@filter false
             val due = task.dueDay
+            if (task.someday && due != null && due.isBefore(today)) return@filter false
             (due != null && !due.isAfter(today)) ||
                 task.status == TaskStatus.IN_PROGRESS ||
                 task.status == TaskStatus.PLANNED ||
                 task.status == TaskStatus.WAITING
         }.sortedWith(todayOrder)
+
+    /**
+     * Suggestions du jour : les tâches décidées pour la semaine [weekStart], puis celles en vue (la plus
+     * récemment mise en vue d'abord), hors « Plus tard » et hors ce qu'Aujourd'hui montre déjà.
+     */
+    fun suggestions(tasks: List<TaskItem>, today: LocalDate, now: Instant, weekStart: LocalDate): List<TaskItem> {
+        val shown = today(tasks, today, now).mapTo(hashSetOf()) { it.uid }
+        val open = tasks.filter { visibleNow(it, now) && !it.someday && it.uid !in shown }
+        val week = open.filter { it.weekOf == weekStart }.sortedBy { it.name.lowercase() }
+        val inView = open.filter { it.weekOf != weekStart && it.inViewAt != null }.sortedByDescending { it.inViewAt }
+        return week + inView
+    }
 
     fun overdue(tasks: List<TaskItem>, today: LocalDate, now: Instant): List<TaskItem> =
         today(tasks, today, now).filter { it.dueDay?.isBefore(today) == true }

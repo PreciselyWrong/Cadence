@@ -17,12 +17,12 @@ class TaskDisplayTest {
         val rows = TaskExtraRows.visible(
             mapOf(
                 "updated_at" to "2026-10-28T10:00:00Z",
-                "review_on" to "2026-11-02",
-                "week_of" to "",
+                "recurrence_end_date" to "2026-11-02",
+                "completion_based" to "",
                 "start_date" to "2026-10-27T00:00:00Z",
                 "estimated_minutes" to "90",
             ),
         )
-        assertEquals(listOf("review_on", "updated_at"), rows.map { it.key })
+        assertEquals(listOf("recurrence_end_date", "updated_at"), rows.map { it.key })
     }
 }

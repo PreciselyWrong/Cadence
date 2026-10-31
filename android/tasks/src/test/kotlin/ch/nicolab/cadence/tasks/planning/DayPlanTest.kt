@@ -89,6 +89,12 @@ class DayPlanTest {
     }
 
     @Test
+    fun `morning card also offers the week's suggestions`() {
+        assertTrue(DayRhythm.morningCardVisible(settings, friday, LocalTime.NOON, null, 0, 0, suggestionCount = 2))
+        assertFalse(DayRhythm.morningCardVisible(settings, friday, LocalTime.NOON, friday, 0, 0, suggestionCount = 2))
+    }
+
+    @Test
     fun `evening card shows from the shutdown hour until the day is closed`() {
         val evening = LocalTime.of(18, 0)
         assertTrue(DayRhythm.eveningCardVisible(settings, friday, evening, null, doneCount = 3, unfinishedCount = 2))

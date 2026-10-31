@@ -128,4 +128,33 @@ class TaskViewsTest {
 
         assertEquals(TaskChange(dueDate = LocalDate.of(2026, 10, 31)), change)
     }
+
+    @Test
+    fun `une tâche mise de côté n'est jamais en retard`() {
+        val tasks = listOf(
+            TaskItem("plus-tard", "plus tard", dueDay = LocalDate.of(2026, 10, 20), someday = true),
+            TaskItem("retard", "retard", dueDay = LocalDate.of(2026, 10, 20)),
+        )
+        assertEquals(listOf("retard"), TaskViews.today(tasks, today, now).map { it.uid })
+        assertEquals(listOf("retard"), TaskViews.overdue(tasks, today, now).map { it.uid })
+    }
+
+    @Test
+    fun `suggestions du jour, cette semaine puis en vue, sans plus tard ni ce qui est déjà du jour`() {
+        val week = LocalDate.of(2026, 10, 26)
+        val tasks = listOf(
+            TaskItem("vue-ancienne", "a", inViewAt = Instant.parse("2026-10-01T00:00:00Z")),
+            TaskItem("vue-recente", "b", inViewAt = Instant.parse("2026-10-29T00:00:00Z")),
+            TaskItem("semaine", "c", weekOf = week),
+            TaskItem("semaine-passee", "d", weekOf = week.minusWeeks(1)),
+            TaskItem("semaine-plus-tard", "e", weekOf = week, someday = true),
+            TaskItem("semaine-du-jour", "f", weekOf = week, dueDay = today),
+            TaskItem("vue-reportee", "g", inViewAt = Instant.EPOCH, deferUntil = Instant.parse("2026-11-05T00:00:00Z")),
+            TaskItem("vue-terminee", "h", inViewAt = Instant.EPOCH, status = TaskStatus.DONE),
+        )
+        assertEquals(
+            listOf("semaine", "vue-recente", "vue-ancienne"),
+            TaskViews.suggestions(tasks, today, now, week).map { it.uid },
+        )
+    }
 }

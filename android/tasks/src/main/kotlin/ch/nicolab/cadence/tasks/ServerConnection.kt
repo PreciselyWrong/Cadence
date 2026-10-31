@@ -1,13 +1,18 @@
 package ch.nicolab.cadence.tasks
 
+import java.time.DayOfWeek
 import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
 
-/** [accountZone] : fuseau du compte Tududi, qui fixe le jour des échéances sans heure. */
+/**
+ * [accountZone] : fuseau du compte Tududi, qui fixe le jour des échéances sans heure ;
+ * [firstDayOfWeek] : premier jour de sa semaine, qui fixe « Cette semaine ».
+ */
 data class ConnectionInfo(
     val serverUrl: String,
     val userEmail: String?,
     val accountZone: ZoneId = ZoneId.systemDefault(),
+    val firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
 )
 
 /** Lien avec le serveur Tududi : adresse et clé API (`tt_…`) de cet appareil. */

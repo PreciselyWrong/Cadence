@@ -35,6 +35,7 @@ import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.SectionTone
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.DayPlans
@@ -61,6 +62,8 @@ internal fun TodayTab(
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val events by viewModel.todayEvents.collectAsStateWithLifecycle()
     val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
+    val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
+    val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val calendarSettings by viewModel.calendarSettings.collectAsStateWithLifecycle()
     val calendarNoticeVisible by viewModel.calendarNoticeVisible.collectAsStateWithLifecycle()
     val settings by planning.settings.collectAsStateWithLifecycle()
@@ -74,6 +77,7 @@ internal fun TodayTab(
     val undoLabel = stringResource(R.string.tasks_undo)
     var completedExpanded by rememberSaveable { mutableStateOf(false) }
     var planSheetOpen by rememberSaveable { mutableStateOf(false) }
+    var choosing by remember { mutableStateOf(false) }
     var proposals by remember { mutableStateOf<Proposals?>(null) }
 
     val today = moment.today
@@ -97,7 +101,7 @@ internal fun TodayTab(
     val localNow = remember(moment.now, zone) { LocalTime.ofSecondOfDay(moment.now.atZone(zone).toLocalTime().toSecondOfDay().toLong()) }
     val closed = closedDay == today
     val morningVisible = proposals == null && DayRhythm.morningCardVisible(
-        settings, today, localNow, dismissedDay, triageable.size, plan.toPlace.size,
+        settings, today, localNow, dismissedDay, triageable.size, plan.toPlace.size, suggestions.size,
     )
     val eveningVisible = DayRhythm.eveningCardVisible(
         settings, today, localNow, closedDay, state.completed.size, unfinished.size,
@@ -144,6 +148,14 @@ internal fun TodayTab(
         val changes = current.blocks.mapNotNull { block -> byUid[block.uid]?.let { it to PlanningChanges.place(today, block) } }
         proposals = null
         commit(changes, context.resources.getQuantityString(R.plurals.planning_placed_message, changes.size, changes.size))
+    }
+
+    /** Une suggestion passe à aujourd'hui : elle reçoit l'échéance du jour, annulable. */
+    fun addToday(task: TaskItem) {
+        commit(
+            listOf(task to PlanningChanges.moveToDay(task, today, zone)),
+            context.resources.getQuantityString(R.plurals.planning_moved_today, 1, 1),
+        )
     }
 
     fun carryToTomorrow() {
@@ -207,6 +219,7 @@ internal fun TodayTab(
                     MorningCard(
                         overdueCount = triageable.size,
                         toPlaceCount = plan.toPlace.size,
+                        suggestionCount = suggestions.size,
                         onOpen = { planSheetOpen = true },
                         onDismiss = { planning.dismissMorning(today) },
                     )
@@ -293,6 +306,27 @@ internal fun TodayTab(
                 planSheetOpen = false
             },
             dismiss = { planSheetOpen = false },
+            suggestions = suggestions,
+            weekStart = weekStart,
+            onAddToday = ::addToday,
+            onChoose = { choosing = true },
+        )
+    }
+    if (choosing) {
+        val byUid = remember(suggestions) { suggestions.associateBy { it.uid } }
+        ThisOrThatSheet(
+            cards = suggestions.map { task ->
+                ChoiceCard(
+                    task.uid,
+                    task.name,
+                    listOfNotNull(task.projectUid?.let { projectNames[it] }, task.estimatedMinutes?.let(EstimateFormat::format)).joinToString(" · "),
+                )
+            },
+            onChoose = { uid ->
+                choosing = false
+                byUid[uid]?.let(::addToday)
+            },
+            dismiss = { choosing = false },
         )
     }
 }

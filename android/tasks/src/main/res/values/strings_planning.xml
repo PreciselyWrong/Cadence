@@ -11,6 +11,10 @@
     <string name="planning_morning_title">Planifier la journée</string>
     <string name="planning_morning_action">Planifier</string>
     <string name="planning_dismiss_today">Masquer pour aujourd\'hui</string>
+    <plurals name="planning_suggestion_count">
+        <item quantity="one">%d suggestion</item>
+        <item quantity="other">%d suggestions</item>
+    </plurals>
     <plurals name="planning_to_place_count">
         <item quantity="one">%d à placer</item>
         <item quantity="other">%d à placer</item>

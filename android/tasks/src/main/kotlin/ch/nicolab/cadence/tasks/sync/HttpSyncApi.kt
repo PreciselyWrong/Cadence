@@ -12,6 +12,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -63,6 +64,10 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
 
     /** Métadonnées d'une page (titre, image, description) : le serveur la lit, jamais l'appareil. */
     internal suspend fun linkMetadata(url: String): JsonObject = request("GET", "/api/url/title", mapOf("url" to url))
+
+    /** Appel direct à l'API (revue) : en ligne seulement, mêmes erreurs que la synchronisation. */
+    internal suspend fun call(method: String, path: String, query: Map<String, String> = emptyMap(), body: JsonObject? = null): JsonObject =
+        request(method, path, query, body)
 
     private suspend fun request(
         method: String,
@@ -117,6 +122,7 @@ internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
     AccountProfile(
         email = (fields["email"] as? JsonPrimitive)?.contentOrNull,
         timezone = (fields["timezone"] as? JsonPrimitive)?.contentOrNull,
+        firstDayOfWeek = (fields["first_day_of_week"] as? JsonPrimitive)?.intOrNull,
     )
 }
 

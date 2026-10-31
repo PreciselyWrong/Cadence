@@ -5,9 +5,11 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import ch.nicolab.cadence.tasks.ConnectionInfo
 import ch.nicolab.cadence.tasks.ServerConnection
+import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
@@ -32,6 +34,7 @@ private object ConnectionKeys {
     val SERVER_URL = stringPreferencesKey("server_url")
     val USER_EMAIL = stringPreferencesKey("user_email")
     val ACCOUNT_TIMEZONE = stringPreferencesKey("account_timezone")
+    val FIRST_DAY_OF_WEEK = intPreferencesKey("first_day_of_week")
     val TOKEN_CIPHER = stringPreferencesKey("token_cipher")
     val TOKEN_IV = stringPreferencesKey("token_iv")
 }
@@ -46,7 +49,12 @@ internal class ServerConnectionImpl(
     override fun observe(): Flow<ConnectionInfo?> = context.connectionStore.data
         .map { prefs ->
             prefs[ConnectionKeys.SERVER_URL]?.let {
-                ConnectionInfo(it, prefs[ConnectionKeys.USER_EMAIL], parseZone(prefs[ConnectionKeys.ACCOUNT_TIMEZONE]))
+                ConnectionInfo(
+                    it,
+                    prefs[ConnectionKeys.USER_EMAIL],
+                    parseZone(prefs[ConnectionKeys.ACCOUNT_TIMEZONE]),
+                    Funnel.firstDayOf(prefs[ConnectionKeys.FIRST_DAY_OF_WEEK]),
+                )
             }
         }
         .distinctUntilChanged()
@@ -82,7 +90,7 @@ internal class ServerConnectionImpl(
             if (previousUrl != url) store.serverChanged()
             SyncScheduler.schedulePeriodic(context)
             SyncScheduler.requestNow(context)
-            Result.success(ConnectionInfo(url, profile.email, parseZone(profile.timezone)))
+            Result.success(ConnectionInfo(url, profile.email, parseZone(profile.timezone), Funnel.firstDayOf(profile.firstDayOfWeek)))
         } catch (error: CancellationException) {
             throw error
         } catch (error: AuthError) {
@@ -111,7 +119,10 @@ internal class ServerConnectionImpl(
         SyncScheduler.cancel(context)
         engine.whileIdle {
             context.connectionStore.edit { prefs -> prefs.clear() }
-            withContext(Dispatchers.IO) { database.clearAllTables() }
+            withContext(Dispatchers.IO) {
+                database.clearAllTables()
+                reviewCacheDir(context).deleteRecursively()
+            }
         }
     }
 }
@@ -119,6 +130,7 @@ internal class ServerConnectionImpl(
 private fun applyProfile(prefs: MutablePreferences, profile: AccountProfile) {
     setOrRemove(prefs, ConnectionKeys.USER_EMAIL, profile.email)
     setOrRemove(prefs, ConnectionKeys.ACCOUNT_TIMEZONE, profile.timezone)
+    setOrRemove(prefs, ConnectionKeys.FIRST_DAY_OF_WEEK, profile.firstDayOfWeek)
 }
 
 private fun <T : Any> setOrRemove(prefs: MutablePreferences, key: Preferences.Key<T>, value: T?) {

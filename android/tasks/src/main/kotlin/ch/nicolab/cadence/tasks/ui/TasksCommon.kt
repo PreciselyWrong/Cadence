@@ -175,6 +175,7 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
     val sheet by viewModel.sheet.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val firstDay = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek }
     when (val open = sheet) {
         null -> Unit
@@ -182,8 +183,10 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
             task = open.task,
             today = moment.today,
             firstDayOfWeek = firstDay,
+            weekStart = weekStart,
             onSchedule = { viewModel.reschedule(open.task, it) },
             onAction = { viewModel.swipe(open.task, it) },
+            onFunnel = { viewModel.funnel(open.task, it) },
             onDismiss = viewModel::dismissSheet,
         )
         is SwipeSheet.Schedule -> ScheduleSheet(

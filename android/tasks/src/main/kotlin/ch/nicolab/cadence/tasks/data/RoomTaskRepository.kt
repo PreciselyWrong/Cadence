@@ -169,8 +169,38 @@ internal class RoomTaskRepository(
                 change.estimatedMinutes != null -> putAll(TaskFields.estimate(change.estimatedMinutes))
             }
             change.repetition?.let { putAll(TaskFields.repetition(it, repetitionAnchor(uid, change))) }
+            if (change.hasDecision()) putAll(decisionFields(uid, change))
         }
         if (fields.isNotEmpty()) writeFields(uid, fields)
+    }
+
+    /** Champs de l'entonnoir ; « Plus tard » crée l'étiquette `someday` si l'appareil ne la connaît pas encore. */
+    private suspend fun decisionFields(uid: String, change: TaskChange): Map<String, JsonElement> {
+        val task = taskDao.get(uid)
+        val tagUids = task?.let { WireCodec.decodeTagUids(it.tagUidsJson) }.orEmpty()
+        val somedayUid = when (change.later) {
+            true -> somedayTagUid()
+            false -> tagDao.findByName(SOMEDAY_TAG)?.uid
+            null -> null
+        }
+        return TaskFields.decision(
+            change = change,
+            inViewAtRaw = task?.inViewAtRaw,
+            tagUids = tagUids,
+            somedayUid = somedayUid,
+            nowIso = Instant.ofEpochMilli(nowMs()).toString(),
+        )
+    }
+
+    private suspend fun somedayTagUid(): String {
+        tagDao.findByName(SOMEDAY_TAG)?.let { return it.uid }
+        val uid = UUID.randomUUID().toString()
+        val clock = hlc.now()
+        database.withTransaction {
+            tagDao.upsert(TagEntity(uid, SOMEDAY_TAG, null))
+            outbox.insert(LocalOps.upsert("tag", uid, mapOf("name" to JsonPrimitive(SOMEDAY_TAG)), clock, nowMs()))
+        }
+        return uid
     }
 
     override suspend fun completeTask(uid: String) {
@@ -358,6 +388,8 @@ internal class RoomTaskRepository(
         const val ACTION_SKIP_OCCURRENCE = "skip_occurrence"
         const val INBOX_STATUS = "added"
         const val INBOX_SOURCE = "android"
+        /** Étiquette système de « Plus tard », comme `review/repository.js` du serveur. */
+        const val SOMEDAY_TAG = "someday"
     }
 }
 
@@ -373,6 +405,9 @@ internal fun dueInstant(date: LocalDate, time: String?, accountZone: ZoneId, dev
     }
 
 private val END_OF_DAY = LocalTime.of(23, 59, 59, 999_000_000)
+
+private fun TaskChange.hasDecision(): Boolean =
+    inView != null || weekOf != null || clearWeek || reviewOn != null || clearReviewOn || later != null || reviewed
 
 private fun jsonString(value: String?): JsonElement = value?.let { JsonPrimitive(it) } ?: JsonNull
 

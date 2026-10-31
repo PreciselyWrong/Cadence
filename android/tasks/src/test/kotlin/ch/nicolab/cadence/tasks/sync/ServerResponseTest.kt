@@ -38,4 +38,11 @@ class ServerResponseTest {
         assertEquals(500L, page.next)
         assertEquals("t1", page.rows.single()["uid"]!!.jsonPrimitive.content)
     }
+
+    @Test
+    fun `le profil donne le premier jour de la semaine du compte`() {
+        val profile = profileOf(parseResponse("""{"email":"a@b.c","timezone":"Europe/Zurich","first_day_of_week":0}"""))
+        assertEquals(0, profile.firstDayOfWeek)
+        assertEquals(null, profileOf(parseResponse("""{"email":"a@b.c"}""")).firstDayOfWeek)
+    }
 }

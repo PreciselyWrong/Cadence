@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Entonnoir (docs/34-review.md) : jamais une échéance, une priorité ni un rappel. -->
+    <string name="funnel_in_view">En vue</string>
+    <string name="funnel_this_week">Cette semaine</string>
+    <string name="funnel_later">Plus tard</string>
+    <string name="funnel_out_of_view">Retirer de la vue</string>
+    <string name="funnel_not_this_week">Pas cette semaine</string>
+    <string name="funnel_not_later">Ressortir de Plus tard</string>
+    <string name="funnel_review_on">Revoir le %1$s</string>
+    <string name="funnel_review_on_pick">Revoir le…</string>
+    <string name="funnel_review_on_clear">Retirer la date</string>
+    <string name="funnel_notice_in_view">« %1$s » en vue</string>
+    <string name="funnel_notice_out_of_view">« %1$s » retirée de la vue</string>
+    <string name="funnel_notice_this_week">« %1$s » pour cette semaine</string>
+    <string name="funnel_notice_not_this_week">« %1$s » retirée de la semaine</string>
+    <string name="funnel_notice_later">« %1$s » mise de côté</string>
+    <string name="funnel_notice_not_later">« %1$s » ressortie</string>
+
+    <!-- Historique des dates : ton neutre, « déplacée », jamais « reportée ». -->
+    <plurals name="history_summary">
+        <item quantity="one">Déplacée %1$d fois, %2$d ces 30 derniers jours</item>
+        <item quantity="other">Déplacée %1$d fois, %2$d ces 30 derniers jours</item>
+    </plurals>
+    <string name="history_last">%1$s · %2$s</string>
+    <string name="history_title">Historique des dates</string>
+    <string name="history_postponed">Déplacée plus tard</string>
+    <string name="history_rescheduled">Replanifiée</string>
+    <string name="history_unscheduled">Date retirée</string>
+    <string name="history_advanced">Avancée</string>
+    <string name="history_missed">Au plan du jour</string>
+    <string name="history_move">%1$s → %2$s</string>
+
+    <!-- Revue -->
+    <string name="review_title">Revue</string>
+    <string name="review_back">Retour</string>
+    <plurals name="review_attention">
+        <item quantity="one">%d à regarder</item>
+        <item quantity="other">%d à regarder</item>
+    </plurals>
+    <plurals name="review_decided">
+        <item quantity="one">%d décidée cette semaine</item>
+        <item quantity="other">%d décidées cette semaine</item>
+    </plurals>
+    <string name="review_step_undecided">À décider</string>
+    <string name="review_step_pushed">Repoussées</string>
+    <string name="review_step_projects">Projets stagnants</string>
+    <string name="review_step_later">Plus tard</string>
+    <string name="review_step_stale">Anciennes</string>
+    <string name="review_step_week">Cette semaine</string>
+    <string name="review_next">Suivant : %1$s</string>
+    <string name="review_decide">Décider</string>
+    <string name="review_offline">Hors ligne · lecture du %1$s</string>
+    <string name="review_unavailable_title">Revue indisponible</string>
+    <string name="review_unavailable">La revue est calculée par le serveur : elle s\'ouvre une fois connecté. Les décisions prises ici partent avec la synchronisation.</string>
+    <string name="review_retry">Réessayer</string>
+    <string name="review_more">%1$d de plus sur le web</string>
+    <string name="review_not_synced">« %1$s » n\'est pas encore sur le téléphone : synchronisez puis réessayez.</string>
+    <string name="review_online_only">Connexion requise pour ce choix.</string>
+    <string name="review_saved">« %1$s » : %2$s</string>
+    <string name="review_empty_undecided">La boîte est vide.</string>
+    <string name="review_empty_pushed">Rien ne glisse en ce moment.</string>
+    <string name="review_empty_projects">Chaque projet actif avance.</string>
+    <string name="review_empty_later">Rien de mis de côté.</string>
+    <string name="review_empty_stale">Aucune tâche ancienne.</string>
+    <string name="review_empty_week">Rien de décidé pour la semaine.</string>
+
+    <!-- Lignes -->
+    <plurals name="review_pushed_meta">
+        <item quantity="one">Déplacée %d fois en 30 jours</item>
+        <item quantity="other">Déplacée %d fois en 30 jours</item>
+    </plurals>
+    <string name="review_planned_for">prévue le %1$s</string>
+    <string name="review_due_now">À revoir</string>
+    <string name="review_due_on">À revoir le %1$s</string>
+    <string name="review_unchanged_since">Inchangée depuis le %1$s</string>
+    <string name="review_captured_on">Notée le %1$s</string>
+    <string name="review_reason_no_next_action">Pas de prochaine tâche</string>
+    <string name="review_reason_quiet">Rien de changé depuis 30 jours</string>
+    <string name="review_reason_pushed_tasks">Plusieurs tâches déplacées</string>
+
+    <!-- Choix -->
+    <string name="review_action_today">Faire aujourd\'hui</string>
+    <string name="review_action_split">Découper en étapes</string>
+    <string name="review_action_later">Plus tard</string>
+    <string name="review_action_drop">Abandonner</string>
+    <string name="review_action_keep">Garder tel quel</string>
+    <string name="review_action_this_week">Cette semaine</string>
+    <string name="review_action_in_view">En vue</string>
+    <string name="review_action_review30">Revoir dans 30 jours</string>
+    <string name="review_action_review_on">Revoir le…</string>
+    <string name="review_action_keep_parked">Laisser de côté</string>
+    <string name="review_action_not_this_week">Pas cette semaine</string>
+    <string name="review_action_out_of_view">Retirer de la vue</string>
+    <string name="review_action_to_task">Créer une tâche</string>
+    <string name="review_action_park">Mettre de côté</string>
+    <string name="review_action_discard">Supprimer</string>
+    <string name="review_action_next_task">Ajouter la prochaine tâche</string>
+    <string name="review_action_hold">Mettre en attente</string>
+    <string name="review_action_open_project">Ouvrir le projet</string>
+    <string name="review_next_task_hint">Prochaine tâche</string>
+    <string name="review_next_task_add">Ajouter</string>
+
+    <!-- Semaine -->
+    <string name="review_week_committed">Décidées cette semaine</string>
+    <string name="review_week_in_view">En vue</string>
+    <plurals name="review_week_unestimated">
+        <item quantity="one">%d sans estimation</item>
+        <item quantity="other">%d sans estimation</item>
+    </plurals>
+    <string name="review_capacity_set">Régler le temps disponible</string>
+    <string name="review_capacity_title">Temps disponible cette semaine</string>
+    <string name="review_capacity_none">Aucun</string>
+    <string name="review_capacity_saved">Temps disponible enregistré</string>
+
+    <!-- Aide-moi à choisir -->
+    <string name="choose_open">Aide-moi à choisir</string>
+    <string name="choose_title">Laquelle d\'abord ?</string>
+    <string name="choose_neither">Aucune des deux</string>
+    <string name="choose_add_today">Ajouter à aujourd\'hui</string>
+    <string name="choose_none_left">Aucune ne reste. Rien n\'a changé sur les tâches.</string>
+    <string name="choose_close">Fermer</string>
+
+    <!-- Bilan -->
+    <string name="review_entry_title">Revue de la semaine</string>
+    <string name="review_entry_clear">Rien n\'attend de décision</string>
+    <string name="review_entry_offline">Ouvrir la revue</string>
+
+    <!-- Aujourd'hui -->
+    <string name="suggestions_title">Suggestions</string>
+    <string name="suggestions_add_today">Aujourd\'hui</string>
+</resources>

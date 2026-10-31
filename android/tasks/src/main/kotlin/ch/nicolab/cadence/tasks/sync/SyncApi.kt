@@ -27,8 +27,11 @@ data class RemoteChange(
 
 data class PullPage(val cursor: Long, val hasMore: Boolean, val changes: List<RemoteChange>)
 
-/** Compte du jeton : son courriel et son fuseau horaire (`timezone`, ex. "Europe/Zurich"). */
-data class AccountProfile(val email: String?, val timezone: String?)
+/**
+ * Compte du jeton : son courriel, son fuseau horaire (`timezone`, ex. "Europe/Zurich") et le premier jour
+ * de sa semaine (`first_day_of_week`, 0 = dimanche), qui fixe « Cette semaine ».
+ */
+data class AccountProfile(val email: String?, val timezone: String?, val firstDayOfWeek: Int? = null)
 
 data class PushResult(val opId: String, val status: String, val reason: String?)
 
