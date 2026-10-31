@@ -3,6 +3,10 @@
 ### Nouveautés
 - Les habitudes se synchronisent avec votre serveur, dans les deux sens et hors ligne : habitudes, objectifs, saisies, pauses, rappels, chronomètres, abstinences et questions apprises suivent le même serveur et la même clé que les tâches. Au premier passage, tout ce que contient le téléphone est envoyé sans rien perdre ; les habitudes déjà présentes sur le serveur apparaissent à côté, sans fusion automatique.
 
+- Agenda : un balayage horizontal change de période dans toutes les vues (jour, 3 jours, mois, liste), avec une animation de page ; il ne gêne ni le défilement vertical, ni le dépôt d'une tâche « À planifier », ni l'appui sur un événement.
+- Événements d'agenda : toucher un événement ouvre sa fiche (horaire, agenda, lieu, description, aperçus de liens), un appui long ouvre son menu. « Masquer ici » le retire d'Agenda, de Tâches et du widget sans rien modifier dans votre agenda de l'appareil ni dans Google ; « Annuler » le rend. Réglages › Agendas liste les événements masqués avec « Rétablir ».
+- Dans Tâches, un événement du jour a la même ligne qu'une tâche : balayage réglé dans Réglages › Gestes (Terminer coche l'événement, Supprimer le masque ; les autres gestes n'ont pas d'effet), appui long, fiche. Cocher et masquer restent propres à ce téléphone et ne se synchronisent pas avec le serveur.
+
 ### Corrections
 - Widget « Aujourd'hui » : les habitudes restent toujours visibles, même quand le widget est agrandi.
 - Widget « Aujourd'hui » : la liste affiche toutes les tâches du jour et défile, sans limite de lignes ni « +N ».

@@ -150,7 +150,7 @@ internal fun CalendarsPage() {
     }
 }
 
-private val HIDDEN_DAY: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+private val HIDDEN_DAY: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(java.util.Locale.FRENCH)
 
 /** Événements masqués dans Cadence : ils restent dans l'agenda de l'appareil et se rétablissent ici. */
 @Composable
