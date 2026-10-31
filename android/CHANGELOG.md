@@ -1,3 +1,8 @@
+## [Non publié]
+
+### Corrections
+- Question « Hier, avez-vous bu ? » : « Oui » demande désormais le nombre de verres (la notification ouvre la saisie) au lieu d'enregistrer une consommation sans quantité.
+
 ## [1.2.0] — 30 octobre 2026
 
 ### Nouveautés

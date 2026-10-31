@@ -18,6 +18,10 @@ internal object LearnedQuestionText {
     fun canonicalAmount(displayAmount: Long, question: LearnedQuestion): Long =
         if (isAlcohol(question)) displayAmount else displayAmount * (question.unit?.scaleToCanonical ?: 1L)
 
+    /** Pour l'alcool, « Oui » doit toujours mener au nombre de verres : sans lui, la journée resterait inconnue. */
+    fun yesRequiresAmount(question: LearnedQuestion): Boolean =
+        isAlcohol(question) && LearnedAnswerKind.YES in question.answerKinds
+
     fun offersAmount(question: LearnedQuestion): Boolean =
         question.answerKinds.any {
             it == LearnedAnswerKind.QUANTITY || it == LearnedAnswerKind.DURATION || it == LearnedAnswerKind.STANDARD_DRINKS

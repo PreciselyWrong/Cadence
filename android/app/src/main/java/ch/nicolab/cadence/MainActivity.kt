@@ -12,6 +12,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val EXTRA_EDIT_HABIT_ID = "edit_habit_id"
         const val EXTRA_OPEN_QUESTION_HABIT_ID = "open_question_habit_id"
+        const val EXTRA_OPEN_QUESTION_AMOUNT = "open_question_amount"
     }
     private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(application as CadenceApp) }
 
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     intent.getStringExtra(EXTRA_EDIT_HABIT_ID),
                     intent.getStringExtra(EXTRA_OPEN_TASK_UID),
                     intent.getStringExtra(EXTRA_OPEN_QUESTION_HABIT_ID),
+                    intent.getBooleanExtra(EXTRA_OPEN_QUESTION_AMOUNT, false),
                 )
             }
         }
