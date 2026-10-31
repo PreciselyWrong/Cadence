@@ -1,161 +1,158 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useStore } from '../../store/useStore';
-import { Task, HabitTimeOfDay } from '../../entities/Task';
-import HabitCard from './HabitCard';
-import { SURFACE } from '../../constants/colorPalette';
-import NewItemButton from '../Shared/NewItemButton';
-import BlankSlate from '../Shared/BlankSlate';
-import HabitModal from './HabitModal';
-import {
-    ChevronDownIcon,
-    FireIcon,
-    CheckCircleIcon,
-    BoltIcon,
-    TrophyIcon,
-    PlusIcon,
-    ArchiveBoxIcon,
-    ArrowUturnLeftIcon,
-} from '@heroicons/react/24/outline';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-    createHabit,
-    fetchHabits,
-    setHabitArchived,
-} from '../../utils/habitsService';
+    ArrowUturnLeftIcon,
+    PauseCircleIcon,
+    PlusIcon,
+} from '@heroicons/react/24/outline';
+import HabitCard from './HabitCard';
+import HabitEditor from './HabitEditor';
+import PauseEditor from './PauseEditor';
+import TabPills from '../Shared/ui/TabPills';
+import BlankSlate from '../Shared/BlankSlate';
 import {
-    TIMES_OF_DAY,
-    formatHabitTarget,
-    isHabitDoneForNow,
-    isQuitHabit,
-} from '../../utils/habitUtils';
+    CadenceGroup,
+    CadenceHabit,
+    CadenceQuickValue,
+    createRow,
+    fetchCadenceGroups,
+    fetchCadenceHabits,
+    fetchRows,
+    updateCadenceHabit,
+} from '../../utils/cadenceHabitsService';
+import { groupHabits, kindOf } from '../../utils/cadenceHabitUtils';
 
-type Group = HabitTimeOfDay | 'anytime';
+type Tab = 'habits' | 'archived';
+
+const clock = (minute: number) =>
+    `${String(Math.floor(minute / 60)).padStart(2, '0')}:${String(minute % 60).padStart(2, '0')}`;
+
+// Habits that offer quick amounts: everything but yes/no and abstinence.
+const wantsQuickValues = (habit: CadenceHabit) =>
+    !!habit.goal &&
+    habit.goal.goal_type !== 'BINARY' &&
+    kindOf(habit.goal) !== 'abstinence';
 
 const Habits: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { habits, isLoading, loadHabits, logCompletion } = useStore(
-        (state) => state.habitsStore
-    );
-    const [showArchived, setShowArchived] = useState(false);
-    const [archived, setArchived] = useState<Task[]>([]);
-    const [isCreateOpen, setIsCreateOpen] = useState(false);
-    // The streak/strength figures stay out of the way until asked for.
-    const [showStats, setShowStats] = useState(false);
+    const [tab, setTab] = useState<Tab>('habits');
+    const [habits, setHabits] = useState<CadenceHabit[]>([]);
+    const [archived, setArchived] = useState<CadenceHabit[]>([]);
+    const [groups, setGroups] = useState<CadenceGroup[]>([]);
+    const [quickValues, setQuickValues] = useState<
+        Record<string, CadenceQuickValue[]>
+    >({});
+    const [today, setToday] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [failed, setFailed] = useState(false);
+    const [editorOpen, setEditorOpen] = useState(false);
+    const [pauseOpen, setPauseOpen] = useState(false);
+    const fetchedQuick = useRef(new Set<string>());
 
-    useEffect(() => {
-        loadHabits();
-    }, [loadHabits]);
+    const loadQuickValues = useCallback((list: CadenceHabit[]) => {
+        for (const habit of list.filter(wantsQuickValues)) {
+            if (fetchedQuick.current.has(habit.uid)) continue;
+            fetchedQuick.current.add(habit.uid);
+            fetchRows<CadenceQuickValue>(habit.uid, 'quick-values')
+                .then((rows) =>
+                    setQuickValues((current) => ({
+                        ...current,
+                        [habit.uid]: [...rows].sort(
+                            (a, b) => a.sort_order - b.sort_order
+                        ),
+                    }))
+                )
+                .catch(() => fetchedQuick.current.delete(habit.uid));
+        }
+    }, []);
 
-    useEffect(() => {
-        if (!showArchived) return;
-        fetchHabits(true)
-            .then(setArchived)
-            .catch((error) =>
-                console.error('Failed to load archived habits:', error)
-            );
-    }, [showArchived]);
-
-    // One click from the blank slate: a daily (or weekly) build habit with
-    // just a name, opened straight away so the schedule can be changed.
-    const habitPresets: { name: string; period: 'daily' | 'weekly' }[] = [
-        { name: t('habits.presetWalk', 'Morning walk'), period: 'daily' },
-        { name: t('habits.presetRead', 'Read 20 minutes'), period: 'daily' },
-        { name: t('habits.presetReview', 'Weekly review'), period: 'weekly' },
-    ];
-
-    const addPresetHabit = async (preset: {
-        name: string;
-        period: 'daily' | 'weekly';
-    }) => {
+    const load = useCallback(async () => {
         try {
-            const created = await createHabit({
-                name: preset.name,
-                habit_mode: true,
-                habit_polarity: 'build',
-                habit_target_count: 1,
-                habit_frequency_period: preset.period,
+            const [list, groupList, archivedList] = await Promise.all([
+                fetchCadenceHabits(),
+                fetchCadenceGroups(),
+                fetchCadenceHabits({ archived: true }),
+            ]);
+            setHabits(list.habits);
+            setArchived(archivedList.habits);
+            setGroups(groupList);
+            setToday(list.date);
+            setFailed(false);
+            loadQuickValues(list.habits);
+        } catch (error) {
+            console.error('Failed to load the habits:', error);
+            setFailed(true);
+        } finally {
+            setLoading(false);
+        }
+    }, [loadQuickValues]);
+
+    useEffect(() => {
+        load();
+    }, [load]);
+
+    const log = async (
+        habit: CadenceHabit,
+        amountMinor: number,
+        note?: string
+    ) => {
+        try {
+            await createRow(habit.uid, 'entries', {
+                value_minor: amountMinor,
+                note: note ?? null,
             });
-            await loadHabits();
-            if (created.uid) navigate(`/habit/${created.uid}`);
+            await load();
         } catch (error) {
-            console.error('Failed to create habit:', error);
+            console.error('Failed to log an entry:', error);
+            setFailed(true);
         }
     };
 
-    const openHabit = (habit: Task) => {
-        if (habit.uid) navigate(`/habit/${habit.uid}`);
-    };
-
-    const handleCheckIn = async (habit: Task, options?: { value?: number }) => {
+    const restore = async (habit: CadenceHabit) => {
         try {
-            await logCompletion(habit.uid!, undefined, options);
+            await updateCadenceHabit(habit.uid, { archived: false });
+            await load();
         } catch (error) {
-            console.error('Failed to log completion:', error);
+            console.error('Failed to restore the habit:', error);
+            setFailed(true);
         }
     };
 
-    const handleRestore = async (habit: Task) => {
-        try {
-            await setHabitArchived(habit.uid!, false);
-            setArchived((prev) => prev.filter((h) => h.uid !== habit.uid));
-            loadHabits();
-        } catch (error) {
-            console.error('Failed to restore habit:', error);
-        }
-    };
+    const sections = useMemo(
+        () => groupHabits(habits, groups),
+        [habits, groups]
+    );
+    const pausable = useMemo(
+        () => habits.filter((habit) => !!habit.goal),
+        [habits]
+    );
+    const preselected = useMemo(
+        () => pausable.map((habit) => habit.uid),
+        [pausable]
+    );
 
-    const stats = useMemo(() => {
-        const building = habits.filter((h) => !isQuitHabit(h));
-        const doneNow = building.filter((h) => isHabitDoneForNow(h)).length;
-        const strength =
-            habits.length > 0
-                ? Math.round(
-                      habits.reduce(
-                          (sum, h) => sum + (h.habit_strength || 0),
-                          0
-                      ) / habits.length
-                  )
-                : 0;
-        const activeStreaks = habits.filter(
-            (h) => (h.habit_current_streak || 0) > 0
-        ).length;
-        let best: Task | null = null;
-        for (const h of habits as Task[]) {
-            if (
-                !best ||
-                (h.habit_best_streak || 0) > (best.habit_best_streak || 0)
-            ) {
-                best = h;
-            }
-        }
-        return { building, doneNow, strength, activeStreaks, best };
-    }, [habits]);
+    const planned = habits.filter(
+        (habit) =>
+            habit.goal &&
+            kindOf(habit.goal) === 'goal' &&
+            habit.status.evaluation?.is_planned &&
+            !habit.status.evaluation.is_paused
+    );
+    const doneCount = planned.filter(
+        (habit) => habit.status.evaluation?.validates_period
+    ).length;
 
-    const groups = useMemo(() => {
-        const order: Group[] = [...TIMES_OF_DAY, 'anytime'];
-        return order
-            .map((group) => ({
-                group,
-                items: habits.filter(
-                    (h) => (h.habit_time_of_day || 'anytime') === group
-                ),
-            }))
-            .filter(({ items }) => items.length > 0);
-    }, [habits]);
-
-    const groupLabel = (group: Group) =>
-        ({
-            morning: t('habits.timeOfDay.morning', 'Morning'),
-            afternoon: t('habits.timeOfDay.afternoon', 'Afternoon'),
-            evening: t('habits.timeOfDay.evening', 'Evening'),
-            anytime: t('habits.timeOfDay.anytime', 'Anytime'),
-        })[group];
-
-    if (isLoading && habits.length === 0) {
+    if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex h-64 items-center justify-center">
                 <div className="text-lg dark:text-white">
                     {t('common.loading', 'Loading...')}
                 </div>
@@ -163,223 +160,221 @@ const Habits: React.FC = () => {
         );
     }
 
-    const overview = [
-        {
-            label: t('habits.doneNow', 'Done for now'),
-            value: `${stats.doneNow}/${stats.building.length}`,
-            icon: <CheckCircleIcon className="h-4 w-4" />,
-            sub: t('habits.doneNowHint', 'habits with their goal met'),
-        },
-        {
-            label: t('habits.activeStreaks', 'Active Streaks'),
-            value: stats.activeStreaks,
-            icon: <FireIcon className="h-4 w-4" />,
-            sub: t('habits.ofHabits', 'of {{count}} habits', {
-                count: habits.length,
-            }),
-        },
-        {
-            label: t('habits.avgStrength', 'Average Strength'),
-            value: `${stats.strength}%`,
-            icon: <BoltIcon className="h-4 w-4" />,
-            sub: t('habits.strengthHint', 'rises with repetition'),
-        },
-        {
-            label: t('habits.bestStreak', 'Best Streak'),
-            value: stats.best?.habit_best_streak || 0,
-            icon: <TrophyIcon className="h-4 w-4" />,
-            sub: stats.best?.habit_best_streak ? stats.best.name : null,
-        },
-    ];
-
-    // Grouping headers only help once some habit has a time of day.
-    const showGroupHeaders = groups.some(({ group }) => group !== 'anytime');
+    const buttonClass =
+        'inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-control px-4 text-label focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 active:scale-[0.97] transition-transform duration-[220ms]';
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-            <div className="flex items-center justify-between gap-2 mb-8">
-                <h2 className="text-2xl font-semibold dark:text-white">
-                    {t('habits.title', 'Habits')}
-                </h2>
+        <div className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 sm:px-6 lg:px-8">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <h1 className="text-headline text-surface-on">
+                    {t('cadenceHabits.title', 'Habits')}
+                </h1>
                 <div className="flex items-center gap-2">
+                    {pausable.length > 0 && (
+                        <button
+                            type="button"
+                            onClick={() => setPauseOpen(true)}
+                            className={`${buttonClass} border border-outline/35 bg-surface-variant/60 text-surface-on dark:bg-surface-variant/35`}
+                        >
+                            <PauseCircleIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                            />
+                            <span className="hidden sm:inline">
+                                {t(
+                                    'cadenceHabits.pause.title',
+                                    'Pause or trip'
+                                )}
+                            </span>
+                            <span className="sr-only sm:hidden">
+                                {t(
+                                    'cadenceHabits.pause.title',
+                                    'Pause or trip'
+                                )}
+                            </span>
+                        </button>
+                    )}
                     <button
-                        onClick={() => setShowArchived((v) => !v)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                            showArchived
-                                ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100'
-                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                        }`}
+                        type="button"
+                        onClick={() => setEditorOpen(true)}
+                        aria-label={t('cadenceHabits.new', 'New habit')}
+                        className={`${buttonClass} bg-primary text-primary-on shadow-sm hover:bg-primary/90`}
                     >
-                        <ArchiveBoxIcon className="w-4 h-4" />
-                        {t('habits.archived', 'Archived')}
+                        <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                        <span className="hidden sm:inline">
+                            {t('cadenceHabits.new', 'New habit')}
+                        </span>
                     </button>
-                    <NewItemButton
-                        label={t('habits.new', 'New Habit')}
-                        onClick={() => setIsCreateOpen(true)}
-                    />
                 </div>
             </div>
 
-            {showArchived && (
-                <div className="mb-8">
-                    <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-3">
-                        {t('habits.archived', 'Archived')}
-                    </h3>
-                    {archived.length === 0 ? (
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                            {t('habits.noArchived', 'No archived habits.')}
-                        </p>
-                    ) : (
-                        <ul
-                            className={`rounded-xl ${SURFACE.card} shadow-sm divide-y divide-gray-100 dark:divide-gray-600/40`}
-                        >
-                            {archived.map((habit) => (
-                                <li
-                                    key={habit.uid}
-                                    className="flex items-center justify-between gap-3 px-4 py-3"
-                                >
-                                    <button
-                                        type="button"
-                                        onClick={() => openHabit(habit)}
-                                        className="min-w-0 text-left"
-                                    >
-                                        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
-                                            {habit.name}
-                                        </p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            {formatHabitTarget(t, habit)} ·{' '}
-                                            {t(
-                                                'habits.bestStreakShort',
-                                                'best {{count}}',
-                                                {
-                                                    count:
-                                                        habit.habit_best_streak ||
-                                                        0,
-                                                }
-                                            )}
-                                        </p>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRestore(habit)}
-                                        className="flex items-center gap-1 px-2.5 py-1 text-xs rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                    >
-                                        <ArrowUturnLeftIcon className="h-3.5 w-3.5" />
-                                        {t('habits.restore', 'Restore')}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+            {failed && (
+                <div
+                    role="alert"
+                    className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-control bg-danger-container px-4 py-3 text-danger-on-container"
+                >
+                    <span>
+                        {t(
+                            'cadenceHabits.errors.load',
+                            'Could not load your habits.'
+                        )}
+                    </span>
+                    <button
+                        type="button"
+                        onClick={load}
+                        className={`${buttonClass} bg-danger text-danger-on`}
+                    >
+                        {t('cadenceHabits.retry', 'Try again')}
+                    </button>
                 </div>
             )}
 
-            {habits.length === 0 ? (
+            <TabPills
+                aria-label={t('cadenceHabits.tabs', 'Habit lists')}
+                className="mb-4"
+                selected={tab}
+                onSelect={(id) => setTab(id as Tab)}
+                tabs={[
+                    {
+                        id: 'habits',
+                        label: t('cadenceHabits.tabHabits', 'Habits'),
+                    },
+                    {
+                        id: 'archived',
+                        label: t('cadenceHabits.tabArchived', 'Archived'),
+                        count: archived.length,
+                    },
+                ]}
+            />
+
+            {tab === 'archived' ? (
+                archived.length === 0 ? (
+                    <p className="text-body-m text-surface-on-variant">
+                        {t('cadenceHabits.noArchived', 'No archived habits.')}
+                    </p>
+                ) : (
+                    <ul className="divide-y divide-outline-variant overflow-hidden rounded-card bg-surface-card">
+                        {archived.map((habit) => (
+                            <li
+                                key={habit.uid}
+                                className="flex min-h-[56px] items-center justify-between gap-3 px-4"
+                            >
+                                <Link
+                                    to={`/habit/${habit.uid}`}
+                                    className="min-w-0 truncate py-3 text-body text-surface-on hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                >
+                                    {habit.name}
+                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={() => restore(habit)}
+                                    aria-label={t(
+                                        'cadenceHabits.restoreFor',
+                                        'Restore {{name}}',
+                                        { name: habit.name }
+                                    )}
+                                    className={`${buttonClass} text-primary`}
+                                >
+                                    <ArrowUturnLeftIcon
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                    />
+                                    {t('cadenceHabits.restore', 'Restore')}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            ) : habits.length === 0 && !failed ? (
                 <BlankSlate
-                    title={t('habits.noHabitsYet', 'No habits yet.')}
+                    title={t('cadenceHabits.empty.title', 'No habits yet.')}
                     hint={t(
-                        'habits.blankSlateHint',
-                        'A habit is something you want to do regularly, like reading or a morning walk, or something you want to quit. Check in each time and watch your streak and strength grow.'
+                        'cadenceHabits.empty.hint',
+                        'A habit is something you do regularly, like reading or a walk, something you keep under a limit, or something you go without. Note it each time and watch your streak grow.'
                     )}
                     actions={[
                         {
                             label: t(
-                                'habits.blankSlateNew',
+                                'cadenceHabits.empty.create',
                                 'Create your first habit'
                             ),
                             icon: PlusIcon,
-                            onClick: () => setIsCreateOpen(true),
+                            onClick: () => setEditorOpen(true),
                         },
                     ]}
-                    presetsLabel={t('habits.presetsLabel', 'Or start with')}
-                    presets={habitPresets.map((preset) => ({
-                        label: preset.name,
-                        onClick: () => addPresetHabit(preset),
-                    }))}
                 />
             ) : (
                 <>
-                    <div className="mb-6">
-                        <div className="flex items-center justify-between gap-3">
-                            <p
-                                className="text-sm text-gray-600 dark:text-gray-300"
-                                data-testid="habits-today-line"
+                    {planned.length > 0 && (
+                        <p
+                            className="mb-4 text-body-m text-surface-on-variant"
+                            data-testid="habits-today-line"
+                        >
+                            {t(
+                                'cadenceHabits.doneLine',
+                                '{{done}} of {{total}} done for now',
+                                { done: doneCount, total: planned.length }
+                            )}
+                        </p>
+                    )}
+                    {sections.map(({ group, habits: items }) => (
+                        <section
+                            key={group.uid}
+                            aria-labelledby={`group-${group.uid}`}
+                            className="mb-8"
+                        >
+                            <h2
+                                id={`group-${group.uid}`}
+                                className="mb-3 px-1 text-title-m text-surface-on"
                             >
-                                {t(
-                                    'habits.doneTodayLine',
-                                    '{{done}} of {{total}} done for now',
-                                    {
-                                        done: stats.doneNow,
-                                        total: stats.building.length,
-                                    }
-                                )}
-                            </p>
-                            <button
-                                type="button"
-                                onClick={() => setShowStats((v) => !v)}
-                                aria-expanded={showStats}
-                                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            >
-                                {t('habits.statistics', 'Statistics')}
-                                <ChevronDownIcon
-                                    className={`h-4 w-4 transition-transform ${showStats ? 'rotate-180' : ''}`}
-                                />
-                            </button>
-                        </div>
-                        {showStats && (
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
-                                {overview.map(({ label, value, icon, sub }) => (
-                                    <div
-                                        key={label}
-                                        className="rounded-[20px] bg-white dark:bg-gray-700 ring-1 ring-gray-900/[0.06] dark:ring-white/10 px-4 pt-3 pb-3 min-w-0"
-                                    >
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-sm text-gray-600 dark:text-gray-300">
-                                                {label}
-                                            </span>
-                                            <span className="text-gray-500 dark:text-gray-400">
-                                                {icon}
-                                            </span>
-                                        </div>
-                                        <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100 leading-none tabular-nums">
-                                            {value}
-                                        </p>
-                                        {sub && (
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 truncate">
-                                                {sub}
-                                            </p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {groups.map(({ group, items }) => (
-                        <div key={group} className="mb-8">
-                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3 px-1">
-                                {showGroupHeaders
-                                    ? groupLabel(group)
-                                    : t('habits.yourHabits', 'Your Habits')}
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                                {group.name}
+                                {group.start_minute !== null &&
+                                    group.end_minute !== null && (
+                                        <span className="ml-2 text-label-m text-surface-on-variant">
+                                            {clock(group.start_minute)}
+                                            {'–'}
+                                            {clock(group.end_minute)}
+                                        </span>
+                                    )}
+                            </h2>
+                            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                                 {items.map((habit) => (
                                     <HabitCard
                                         key={habit.uid}
                                         habit={habit}
-                                        onCheckIn={handleCheckIn}
-                                        onOpen={openHabit}
+                                        quickValues={
+                                            quickValues[habit.uid] ?? []
+                                        }
+                                        onLog={log}
                                     />
                                 ))}
                             </div>
-                        </div>
+                        </section>
                     ))}
                 </>
             )}
 
-            <HabitModal
-                isOpen={isCreateOpen}
-                onClose={() => setIsCreateOpen(false)}
+            <HabitEditor
+                isOpen={editorOpen}
+                onClose={() => setEditorOpen(false)}
+                groups={groups}
+                today={today}
+                onSaved={(uid) => {
+                    setEditorOpen(false);
+                    fetchedQuick.current.clear();
+                    navigate(`/habit/${uid}`);
+                }}
+            />
+            <PauseEditor
+                isOpen={pauseOpen}
+                onClose={() => setPauseOpen(false)}
+                habits={pausable}
+                preselected={preselected}
+                today={today}
+                onSaved={() => {
+                    setPauseOpen(false);
+                    load();
+                }}
             />
         </div>
     );

@@ -319,6 +319,20 @@ export function habitCardColors(tint: string): HabitCardColors {
     };
 }
 
+// The accent of the app (Réglages › Apparence), for a habit that has no colour
+// of its own. The CSS variable holds RGB channels ("94 92 230").
+export function accentHex(): string {
+    const fallback = '#5e5ce6';
+    if (typeof document === 'undefined') return fallback;
+    const raw = getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-primary')
+        .trim();
+    const channels = raw.split(/\s+/).map(Number);
+    return channels.length === 3 && channels.every((c) => c >= 0 && c <= 255)
+        ? toHex(channels)
+        : fallback;
+}
+
 // --- Dates -------------------------------------------------------------------
 
 const toUtc = (date: string) => {
@@ -326,6 +340,32 @@ const toUtc = (date: string) => {
     return Date.UTC(y, m - 1, d);
 };
 const fromUtc = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+// "lun.", "Mon" ... in the language of the app, from the day's name.
+export function dayLabel(
+    day: DayName,
+    language: string,
+    style: 'short' | 'long' = 'short'
+): string {
+    const index = DAY_NAMES.indexOf(day);
+    // 2024-01-01 is a Monday
+    return new Intl.DateTimeFormat(language, {
+        weekday: style,
+        timeZone: 'UTC',
+    }).format(new Date(Date.UTC(2024, 0, 1 + index)));
+}
+
+// "5 oct. 2026" for a civil date, never shifted by the local time zone.
+export function formatDate(
+    date: string,
+    language: string,
+    options: Intl.DateTimeFormatOptions = { dateStyle: 'medium' }
+): string {
+    return new Intl.DateTimeFormat(language, {
+        ...options,
+        timeZone: 'UTC',
+    }).format(new Date(toUtc(date)));
+}
 
 export const addDays = (date: string, days: number) =>
     fromUtc(toUtc(date) + days * 86_400_000);
@@ -345,9 +385,58 @@ export function shiftMonth(date: string, delta: number) {
     return fromUtc(Date.UTC(y, m - 1 + delta, 1));
 }
 
-// An instant that falls on the given civil date in any zone within +-11 h of
-// UTC, for entries typed by date only.
-export const instantOnDate = (date: string) => `${date}T12:00:00.000Z`;
+// Today on the clock of this device, as a civil date.
+export const localToday = (): string => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+
+export const browserZone = (): string => {
+    try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    } catch {
+        return 'UTC';
+    }
+};
+
+function zoneOffsetMs(instantMs: number, zone: string): number {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: zone,
+        hourCycle: 'h23',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    }).formatToParts(new Date(instantMs));
+    const get = (type: string) =>
+        Number(parts.find((p) => p.type === type)?.value);
+    const asUtc = Date.UTC(
+        get('year'),
+        get('month') - 1,
+        get('day'),
+        get('hour'),
+        get('minute'),
+        get('second')
+    );
+    return asUtc - Math.floor(instantMs / 1000) * 1000;
+}
+
+// The instant of noon on a civil date in a zone, for an entry typed by date
+// only: it stays on that date wherever the zone is.
+export function instantOnDate(date: string, zone = 'UTC'): string {
+    const guess = toUtc(date) + 12 * 3_600_000;
+    let instant = guess;
+    try {
+        instant = guess - zoneOffsetMs(guess, zone);
+        instant = guess - zoneOffsetMs(instant, zone);
+    } catch {
+        instant = guess;
+    }
+    return new Date(instant).toISOString();
+}
 
 // --- Groups ------------------------------------------------------------------
 
@@ -804,3 +893,24 @@ export const newId = (): string =>
               const r = (Math.random() * 16) | 0;
               return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
           });
+
+// --- Pauses ------------------------------------------------------------------
+
+interface PauseLike {
+    start: string;
+    end_exclusive: string | null;
+}
+
+export const pauseIncludes = (pause: PauseLike, date: string) =>
+    date >= pause.start && (!pause.end_exclusive || date < pause.end_exclusive);
+
+// A pause that has not begun is cancelled; one that has begun is ended today, so
+// the days already paused stay paused.
+export function pauseEnding(
+    pause: PauseLike,
+    today: string
+): { kind: 'delete' } | { kind: 'end'; end_exclusive: string } | null {
+    if (pause.end_exclusive && pause.end_exclusive <= today) return null;
+    if (pause.start >= today) return { kind: 'delete' };
+    return { kind: 'end', end_exclusive: today };
+}

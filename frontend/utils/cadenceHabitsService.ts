@@ -371,6 +371,11 @@ export const fetchEntries = (
         `cadence/habits/${habitUid}/entries${query({ from: range.from, to: range.to })}`
     );
 
+export const fetchRows = <T = unknown>(
+    habitUid: string,
+    collection: RowCollection
+): Promise<T[]> => read(`cadence/habits/${habitUid}/${collection}`);
+
 export const createRow = <T = unknown>(
     habitUid: string,
     collection: RowCollection,

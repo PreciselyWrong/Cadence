@@ -10,7 +10,9 @@ import {
     groupHabits,
     habitCardColors,
     hexToArgb,
+    instantOnDate,
     kindOf,
+    pauseEnding,
     quickAmounts,
     toMinor,
     validateDraft,
@@ -432,5 +434,52 @@ describe('abstinenceDays', () => {
             ['2026-10-05', 'CLEAR'],
             ['2026-10-06', 'TODAY_CLEAR'],
         ]);
+    });
+});
+
+describe('pauses', () => {
+    it('cancels a pause that has not begun and ends one in progress today', () => {
+        expect(
+            pauseEnding(
+                { start: '2026-10-10', end_exclusive: null },
+                '2026-10-05'
+            )
+        ).toEqual({ kind: 'delete' });
+        expect(
+            pauseEnding(
+                { start: '2026-10-01', end_exclusive: null },
+                '2026-10-05'
+            )
+        ).toEqual({ kind: 'end', end_exclusive: '2026-10-05' });
+        expect(
+            pauseEnding(
+                { start: '2026-10-01', end_exclusive: '2026-10-20' },
+                '2026-10-05'
+            )
+        ).toEqual({ kind: 'end', end_exclusive: '2026-10-05' });
+    });
+
+    it('has nothing to end once it is over', () => {
+        expect(
+            pauseEnding(
+                { start: '2026-09-01', end_exclusive: '2026-09-10' },
+                '2026-10-05'
+            )
+        ).toBeNull();
+    });
+});
+
+describe('instantOnDate', () => {
+    it('is noon on the civil date in the zone of the person', () => {
+        expect(instantOnDate('2026-10-05')).toBe('2026-10-05T12:00:00.000Z');
+        expect(instantOnDate('2026-10-05', 'Europe/Zurich')).toBe(
+            '2026-10-05T10:00:00.000Z'
+        );
+        expect(instantOnDate('2026-01-05', 'Europe/Zurich')).toBe(
+            '2026-01-05T11:00:00.000Z'
+        );
+        expect(instantOnDate('2026-10-05', 'Pacific/Auckland')).toBe(
+            '2026-10-04T23:00:00.000Z'
+        );
     });
 });

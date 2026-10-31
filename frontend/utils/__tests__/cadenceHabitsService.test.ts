@@ -8,6 +8,7 @@ import {
     fetchCadenceHabit,
     fetchCadenceHabits,
     fetchEntries,
+    fetchRows,
     updateCadenceHabit,
     updateRow,
 } from '../cadenceHabitsService';
@@ -93,6 +94,12 @@ describe('cadenceHabitsService', () => {
         expect(lastCall()[0]).toContain(
             '/cadence/habits/h1/entries?from=2026-10-01&to=2026-10-31'
         );
+    });
+
+    it('lists the rows of a collection', async () => {
+        fetchMock.mockResolvedValue(respond(200, []));
+        await fetchRows('h1', 'quick-values');
+        expect(lastCall()[0]).toMatch(/\/cadence\/habits\/h1\/quick-values$/);
     });
 
     it('adds, edits and removes rows that hang from a habit', async () => {
