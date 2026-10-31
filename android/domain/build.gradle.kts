@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.serialization.json)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

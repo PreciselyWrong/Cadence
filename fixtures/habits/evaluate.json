@@ -1,0 +1,576 @@
+{
+  "suite": "evaluate",
+  "cases": [
+    {
+      "kind": "evaluate",
+      "name": "exact cardio 15+20+25 completes target of 60 minutes",
+      "source": "HabitEvaluatorTest.kt: exact cardio 15+20+25 completes target of 60 minutes",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 60, "period": "WEEK", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 } }
+      },
+      "date": "2026-08-15",
+      "entries": [
+        { "localDate": "2026-08-11", "valueMinor": 15 },
+        { "localDate": "2026-08-13", "valueMinor": 20 },
+        { "localDate": "2026-08-15", "valueMinor": 25 }
+      ],
+      "expect": { "progressMinor": 60, "completedQuantity": true, "isCompleted": true, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "partial cardio 15+20 is incomplete against target of 60",
+      "source": "HabitEvaluatorTest.kt: partial cardio 15+20 is incomplete against target of 60",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 60, "period": "WEEK", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 } }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-11", "valueMinor": 15 },
+        { "localDate": "2026-08-13", "valueMinor": 20 }
+      ],
+      "expect": { "progressMinor": 35, "completedQuantity": false, "isCompleted": false, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "next week evaluates zero progress regardless of previous week entries",
+      "source": "HabitEvaluatorTest.kt: next week evaluates zero progress regardless of previous week entries",
+      "habit": { "id": "habit", "goal": { "targetMinor": 60, "period": "WEEK" } },
+      "date": "2026-08-17",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 60 }
+      ],
+      "expect": { "progressMinor": 0, "isCompleted": false, "needsAttentionNow": true }
+    },
+    {
+      "kind": "window",
+      "name": "Thursday boundary starts week window on Thursday",
+      "source": "HabitEvaluatorTest.kt: Thursday boundary starts week window on Thursday",
+      "date": "2026-08-13",
+      "period": "WEEK",
+      "firstDayOfWeek": "THURSDAY",
+      "expect": { "start": "2026-08-13", "endExclusive": "2026-08-20" }
+    },
+    {
+      "kind": "evaluate",
+      "name": "two habits with different week starts: Monday week counts Wednesday entry",
+      "source": "HabitEvaluatorTest.kt: two habits with different week starts evaluate independent windows on same date",
+      "habit": {
+        "id": "h-mon",
+        "goal": { "targetMinor": 60, "period": "WEEK" },
+        "schedule": { "firstDayOfWeek": "MONDAY" }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-12", "valueMinor": 40, "habitId": "h-mon" }
+      ],
+      "expect": { "progressMinor": 40 }
+    },
+    {
+      "kind": "evaluate",
+      "name": "two habits with different week starts: Thursday week excludes Wednesday entry",
+      "source": "HabitEvaluatorTest.kt: two habits with different week starts evaluate independent windows on same date",
+      "habit": {
+        "id": "h-thu",
+        "goal": { "targetMinor": 60, "period": "WEEK" },
+        "schedule": { "firstDayOfWeek": "THURSDAY" }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-12", "valueMinor": 40, "habitId": "h-thu" }
+      ],
+      "expect": { "progressMinor": 0 }
+    },
+    {
+      "kind": "evaluate",
+      "name": "daily counter partial 5 of 8 is not completed",
+      "source": "HabitEvaluatorTest.kt: daily counter tracks count progress towards daily goal",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 8, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 } }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 }
+      ],
+      "expect": { "progressMinor": 5, "isCompleted": false, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "daily counter 8 of 8 is completed",
+      "source": "HabitEvaluatorTest.kt: daily counter tracks count progress towards daily goal",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 8, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 } }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 },
+        { "localDate": "2026-08-13", "valueMinor": 1 }
+      ],
+      "expect": { "progressMinor": 8, "isCompleted": true, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "binary goal completed today needs no action",
+      "source": "HabitEvaluatorTest.kt: binary goal requires action on next day after being completed today",
+      "habit": { "id": "habit", "goal": { "targetMinor": 1, "period": "DAY", "goalType": "BINARY" } },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 1 }
+      ],
+      "expect": { "isCompleted": true, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "binary goal done yesterday requires action the next day",
+      "source": "HabitEvaluatorTest.kt: binary goal requires action on next day after being completed today",
+      "habit": { "id": "habit", "goal": { "targetMinor": 1, "period": "DAY", "goalType": "BINARY" } },
+      "date": "2026-08-14",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 1 }
+      ],
+      "expect": { "isCompleted": false, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "flexible weekly planning: nothing logged still needs attention",
+      "source": "HabitEvaluatorTest.kt: flexible weekly planning allows completion on any day in the period",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 3, "period": "WEEK", "frequencyTarget": 3 },
+        "schedule": { "mode": "FLEXIBLE_PERIOD" }
+      },
+      "date": "2026-08-11",
+      "entries": [],
+      "expect": { "isPlannedForDate": true, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "flexible weekly planning: three sessions in the week complete it",
+      "source": "HabitEvaluatorTest.kt: flexible weekly planning allows completion on any day in the period",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 3, "period": "WEEK", "frequencyTarget": 3 },
+        "schedule": { "mode": "FLEXIBLE_PERIOD" }
+      },
+      "date": "2026-08-11",
+      "entries": [
+        { "localDate": "2026-08-10", "valueMinor": 1, "sessionId": "s1" },
+        { "localDate": "2026-08-11", "valueMinor": 1, "sessionId": "s2" },
+        { "localDate": "2026-08-12", "valueMinor": 1, "sessionId": "s3" }
+      ],
+      "expect": { "isCompleted": true, "needsAttentionNow": false }
+    },
+    {
+      "kind": "is_planned",
+      "name": "every three days anchored to start: 2026-08-10 is planned",
+      "source": "HabitEvaluatorTest.kt: every three days is anchored to the habit start date",
+      "habit": { "id": "habit", "startsOn": "2026-08-10", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "INTERVAL_DAYS", "intervalDays": 3 } },
+      "date": "2026-08-10",
+      "expect": { "planned": true }
+    },
+    {
+      "kind": "is_planned",
+      "name": "every three days anchored to start: 2026-08-11 is not planned",
+      "source": "HabitEvaluatorTest.kt: every three days is anchored to the habit start date",
+      "habit": { "id": "habit", "startsOn": "2026-08-10", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "INTERVAL_DAYS", "intervalDays": 3 } },
+      "date": "2026-08-11",
+      "expect": { "planned": false }
+    },
+    {
+      "kind": "is_planned",
+      "name": "every three days anchored to start: 2026-08-12 is not planned",
+      "source": "HabitEvaluatorTest.kt: every three days is anchored to the habit start date",
+      "habit": { "id": "habit", "startsOn": "2026-08-10", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "INTERVAL_DAYS", "intervalDays": 3 } },
+      "date": "2026-08-12",
+      "expect": { "planned": false }
+    },
+    {
+      "kind": "is_planned",
+      "name": "every three days anchored to start: 2026-08-13 is planned",
+      "source": "HabitEvaluatorTest.kt: every three days is anchored to the habit start date",
+      "habit": { "id": "habit", "startsOn": "2026-08-10", "goal": { "targetMinor": 1, "period": "DAY" }, "schedule": { "mode": "INTERVAL_DAYS", "intervalDays": 3 } },
+      "date": "2026-08-13",
+      "expect": { "planned": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "frequency target: single 60-minute session meets quantity only",
+      "source": "HabitEvaluatorTest.kt: frequency target is distinct from quantity target",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 60, "period": "WEEK", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "frequencyTarget": 3 }
+      },
+      "date": "2026-08-15",
+      "entries": [
+        { "localDate": "2026-08-11", "valueMinor": 60, "sessionId": "sess-1" }
+      ],
+      "expect": { "completedQuantity": true, "completedFrequency": false, "isCompleted": false, "sessionCount": 1 }
+    },
+    {
+      "kind": "evaluate",
+      "name": "frequency target: three short sessions meet frequency only",
+      "source": "HabitEvaluatorTest.kt: frequency target is distinct from quantity target",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 60, "period": "WEEK", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "frequencyTarget": 3 }
+      },
+      "date": "2026-08-15",
+      "entries": [
+        { "localDate": "2026-08-10", "valueMinor": 10, "sessionId": "sess-1" },
+        { "localDate": "2026-08-12", "valueMinor": 10, "sessionId": "sess-2" },
+        { "localDate": "2026-08-14", "valueMinor": 10, "sessionId": "sess-3" }
+      ],
+      "expect": { "completedQuantity": false, "completedFrequency": true, "isCompleted": false, "sessionCount": 3 }
+    },
+    {
+      "kind": "evaluate",
+      "name": "frequency target: three sessions totalling 60 minutes complete both",
+      "source": "HabitEvaluatorTest.kt: frequency target is distinct from quantity target",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 60, "period": "WEEK", "goalType": "DURATION", "unit": { "id": "minutes", "dimension": "TIME", "nameFr": "Minutes", "symbol": "min", "scaleToCanonical": 60 }, "frequencyTarget": 3 }
+      },
+      "date": "2026-08-15",
+      "entries": [
+        { "localDate": "2026-08-10", "valueMinor": 20, "sessionId": "sess-1" },
+        { "localDate": "2026-08-12", "valueMinor": 20, "sessionId": "sess-2" },
+        { "localDate": "2026-08-14", "valueMinor": 20, "sessionId": "sess-3" }
+      ],
+      "expect": { "completedQuantity": true, "completedFrequency": true, "isCompleted": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "unstarted habit is neither planned nor pending",
+      "source": "HabitEvaluatorTest.kt: date start and archive filtering exclude unstarted or archived habits from attention",
+      "habit": { "id": "habit", "startsOn": "2026-09-01", "goal": { "targetMinor": 1, "period": "DAY" } },
+      "date": "2026-08-13",
+      "entries": [],
+      "expect": { "isPlannedForDate": false, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "archived habit is neither planned nor pending",
+      "source": "HabitEvaluatorTest.kt: date start and archive filtering exclude unstarted or archived habits from attention",
+      "habit": { "id": "habit", "archived": true, "goal": { "targetMinor": 1, "period": "DAY" } },
+      "date": "2026-08-13",
+      "entries": [],
+      "expect": { "isPlannedForDate": false, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "duration normalization: 30 min plus 1 h in seconds completes 90 minutes",
+      "source": "HabitEvaluatorTest.kt: duration normalization scales 30 min plus 1 h to 5400 seconds canonical or 90 min",
+      "habit": {
+        "id": "habit",
+        "goal": { "targetMinor": 5400, "period": "DAY", "goalType": "DURATION", "unit": { "id": "seconds", "dimension": "TIME", "nameFr": "Secondes", "symbol": "s", "scaleToCanonical": 1 } }
+      },
+      "date": "2026-08-13",
+      "entries": [
+        { "localDate": "2026-08-13", "valueMinor": 1800 },
+        { "localDate": "2026-08-13", "valueMinor": 3600 }
+      ],
+      "expect": { "progressMinor": 5400, "isCompleted": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "monthly goal starts on first day of month",
+      "source": "HabitEvaluatorTest.kt: monthly goal starts on first day of month",
+      "habit": { "id": "habit", "goal": { "targetMinor": 10, "period": "MONTH" } },
+      "date": "2026-08-31",
+      "entries": [
+        { "localDate": "2026-07-31", "valueMinor": 8 },
+        { "localDate": "2026-08-01", "valueMinor": 3 }
+      ],
+      "expect": { "period": { "start": "2026-08-01", "endExclusive": "2026-09-01" }, "progressMinor": 3 }
+    },
+    {
+      "kind": "evaluate",
+      "name": "pause hides a habit and is not treated as a failed period",
+      "source": "HabitEvaluatorTest.kt: pause hides a habit and is not treated as a failed period",
+      "habit": { "id": "habit", "goal": { "targetMinor": 1, "period": "DAY" } },
+      "date": "2026-08-13",
+      "entries": [],
+      "pauses": [
+        { "start": "2026-08-10", "endExclusive": "2026-08-15" }
+      ],
+      "expect": { "isPaused": true, "needsAttentionNow": false, "countsAsFailure": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "without progress nothing is reached",
+      "source": "GoalAttainmentTest.kt: without progress nothing is reached",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY", "goalType": "QUANTITY" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [],
+      "expect": { "attainment": "TODO", "reachedMinimum": false, "isCompleted": false, "countsAsFailure": true, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "the minimum validates the period without a complete success",
+      "source": "GoalAttainmentTest.kt: the minimum validates the period without marking a complete success",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY", "goalType": "QUANTITY" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [
+        { "localDate": "2026-04-14", "valueMinor": 3, "sessionId": "session-0" }
+      ],
+      "expect": { "attainment": "MINIMUM", "reachedMinimum": true, "validatesPeriod": true, "isCompleted": false, "countsAsFailure": false, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "the ideal marks a complete success",
+      "source": "GoalAttainmentTest.kt: the ideal marks a complete success",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY", "goalType": "QUANTITY" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [
+        { "localDate": "2026-04-14", "valueMinor": 10, "sessionId": "session-0" }
+      ],
+      "expect": { "attainment": "IDEAL", "reachedMinimum": true, "isCompleted": true, "needsAttentionNow": false, "countsAsFailure": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "an absent minimum falls back to the ideal",
+      "source": "GoalAttainmentTest.kt: an absent minimum falls back to the ideal",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": null, "period": "DAY", "goalType": "QUANTITY" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [
+        { "localDate": "2026-04-14", "valueMinor": 9, "sessionId": "session-0" }
+      ],
+      "expect": { "reachedMinimum": false, "attainment": "TODO", "countsAsFailure": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "the frequency still gates the period even at the ideal quantity",
+      "source": "GoalAttainmentTest.kt: the frequency still gates the period even at the ideal quantity",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY", "goalType": "QUANTITY", "frequencyTarget": 3 }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [
+        { "localDate": "2026-04-14", "valueMinor": 10, "sessionId": "session-0" }
+      ],
+      "expect": { "completedQuantity": true, "validatesPeriod": false, "isCompleted": false, "attainment": "TODO", "countsAsFailure": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "frequency and minimum together validate the period",
+      "source": "GoalAttainmentTest.kt: frequency and minimum together validate the period",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 10, "minimumMinor": 3, "period": "DAY", "goalType": "QUANTITY", "frequencyTarget": 3 }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-04-14",
+      "entries": [
+        { "localDate": "2026-04-14", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-04-14", "valueMinor": 1, "sessionId": "session-1" },
+        { "localDate": "2026-04-14", "valueMinor": 1, "sessionId": "session-2" }
+      ],
+      "expect": { "validatesPeriod": true, "attainment": "MINIMUM", "countsAsFailure": false }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "a minimum above the ideal is refused",
+      "source": "GoalAttainmentTest.kt: a minimum above the ideal is refused",
+      "goal": { "targetMinor": 5, "minimumMinor": 6, "period": "DAY" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "a zero minimum is refused",
+      "source": "GoalAttainmentTest.kt: a minimum above the ideal is refused",
+      "goal": { "targetMinor": 5, "minimumMinor": 0, "period": "DAY" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "nothing consumed stays under the limit",
+      "source": "LimitedHabitTest.kt: nothing consumed stays under the limit",
+      "habit": { "id": "habit-1", "startsOn": "2020-01-01", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [],
+      "expect": { "limitStatus": "UNDER", "validatesPeriod": true, "countsAsFailure": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "staying below the limit is a success and still leaves room",
+      "source": "LimitedHabitTest.kt: staying below the limit is a success and still leaves room",
+      "habit": { "id": "habit-1", "startsOn": "2020-01-01", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-0" }
+      ],
+      "expect": { "limitStatus": "UNDER", "validatesPeriod": true, "needsAttentionNow": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "reaching the limit validates the period but closes the room",
+      "source": "LimitedHabitTest.kt: reaching the limit still validates the period but closes the room",
+      "habit": { "id": "habit-1", "startsOn": "2020-01-01", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-1" }
+      ],
+      "expect": { "limitStatus": "AT_LIMIT", "validatesPeriod": true, "countsAsFailure": false, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "exceeding the limit fails the period",
+      "source": "LimitedHabitTest.kt: exceeding the limit fails the period",
+      "habit": { "id": "habit-1", "startsOn": "2020-01-01", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-1" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-2" }
+      ],
+      "expect": { "limitStatus": "EXCEEDED", "validatesPeriod": false, "countsAsFailure": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "a paused limited habit is neither a success nor a failure to act on",
+      "source": "LimitedHabitTest.kt: a paused limited habit is neither a success nor a failure to act on",
+      "habit": { "id": "habit-1", "startsOn": "2020-01-01", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-1" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-2" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-3" },
+        { "localDate": "2026-07-08", "valueMinor": 1, "sessionId": "session-4" }
+      ],
+      "pauses": [
+        { "start": "2026-07-08", "endExclusive": "2026-07-09" }
+      ],
+      "expect": { "isPaused": true, "countsAsFailure": false, "needsAttentionNow": false }
+    },
+    {
+      "kind": "evaluate",
+      "name": "an ordinary habit carries no limit status",
+      "source": "LimitedHabitTest.kt: an ordinary habit carries no limit status",
+      "habit": { "id": "habit-1", "goal": { "targetMinor": 3, "period": "DAY" }, "schedule": { "mode": "EVERY_DAY" } },
+      "date": "2026-07-08",
+      "entries": [],
+      "expect": { "limitStatus": null }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "a limit refuses a minimum",
+      "source": "LimitedHabitTest.kt: a limit refuses a minimum, which would have no meaning",
+      "goal": { "targetMinor": 2, "minimumMinor": 1, "period": "DAY", "direction": "AT_MOST" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "a limit refuses a binary goal",
+      "source": "LimitedHabitTest.kt: a limit refuses a binary goal, which cannot be counted",
+      "goal": { "targetMinor": 1, "period": "DAY", "goalType": "BINARY", "direction": "AT_MOST" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "streak",
+      "name": "every past period held under the limit counts in the streak",
+      "source": "LimitedHabitTest.kt: every past period held under the limit counts in the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-07-05", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "today": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-07", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-06", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-05", "valueMinor": 1, "sessionId": "session-0" }
+      ],
+      "expect": { "current": 3 }
+    },
+    {
+      "kind": "streak",
+      "name": "a past period without any entry also holds under the limit",
+      "source": "LimitedHabitTest.kt: a past period without any entry also holds under the limit",
+      "habit": { "id": "habit-1", "startsOn": "2026-07-05", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "today": "2026-07-08",
+      "entries": [],
+      "expect": { "current": 3 }
+    },
+    {
+      "kind": "streak",
+      "name": "the running period never counts early for a limit",
+      "source": "LimitedHabitTest.kt: the running period never counts early for a limit",
+      "habit": { "id": "habit-1", "startsOn": "2026-07-08", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "today": "2026-07-08",
+      "entries": [],
+      "expect": { "current": 0 }
+    },
+    {
+      "kind": "streak",
+      "name": "exceeding the limit breaks the streak",
+      "source": "LimitedHabitTest.kt: exceeding the limit breaks the streak",
+      "habit": { "id": "habit-1", "startsOn": "2026-07-06", "goal": { "targetMinor": 2, "period": "DAY", "goalType": "COUNT", "direction": "AT_MOST" }, "schedule": { "mode": "EVERY_DAY" } },
+      "today": "2026-07-08",
+      "entries": [
+        { "localDate": "2026-07-07", "valueMinor": 1, "sessionId": "session-0" },
+        { "localDate": "2026-07-07", "valueMinor": 1, "sessionId": "session-1" },
+        { "localDate": "2026-07-07", "valueMinor": 1, "sessionId": "session-2" }
+      ],
+      "expect": { "current": 0 }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "tracker goal rejects a non-zero target",
+      "source": "TrackerModeTest.kt: a tracker has a measurement but no target or goal options",
+      "goal": { "targetMinor": 1, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "tracker goal rejects a minimum",
+      "source": "TrackerModeTest.kt: a tracker has a measurement but no target or goal options",
+      "goal": { "targetMinor": 0, "minimumMinor": 1, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "goal_invalid",
+      "name": "tracker goal rejects a binary goal type",
+      "source": "TrackerModeTest.kt: a tracker has a measurement but no target or goal options",
+      "goal": { "targetMinor": 0, "period": "DAY", "goalType": "BINARY", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" },
+      "expect": { "error": true }
+    },
+    {
+      "kind": "evaluate",
+      "name": "logging activity on a tracker never produces a fictional goal result",
+      "source": "TrackerModeTest.kt: logging activity never produces a fictional goal result",
+      "habit": { "id": "tracker", "startsOn": "2026-09-07", "goal": { "targetMinor": 0, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" }, "schedule": { "mode": "SELECTED_DAYS", "activeDays": ["MONDAY"] } },
+      "date": "2026-09-17",
+      "entries": [
+        { "localDate": "2026-09-17", "valueMinor": 5 }
+      ],
+      "expect": { "isPlannedForDate": true, "progressMinor": 5, "completedQuantity": false, "isCompleted": false, "validatesPeriod": false, "countsAsFailure": false, "needsAttentionNow": false }
+    },
+    {
+      "kind": "streak",
+      "name": "logging activity on a tracker produces no streak",
+      "source": "TrackerModeTest.kt: logging activity never produces a fictional goal result",
+      "habit": { "id": "tracker", "startsOn": "2026-09-07", "goal": { "targetMinor": 0, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" }, "schedule": { "mode": "SELECTED_DAYS", "activeDays": ["MONDAY"] } },
+      "today": "2026-09-17",
+      "entries": [
+        { "localDate": "2026-09-17", "valueMinor": 5 }
+      ],
+      "expect": { "current": 0, "best": 0 }
+    },
+    {
+      "kind": "statistics",
+      "name": "logging activity on a tracker has no evaluated periods",
+      "source": "TrackerModeTest.kt: logging activity never produces a fictional goal result",
+      "habit": { "id": "tracker", "startsOn": "2026-09-07", "goal": { "targetMinor": 0, "period": "DAY", "goalType": "COUNT", "unit": { "id": "count", "dimension": "COUNT", "nameFr": "Fois", "symbol": "x", "scaleToCanonical": 1 }, "direction": "TRACK_ONLY" }, "schedule": { "mode": "SELECTED_DAYS", "activeDays": ["MONDAY"] } },
+      "today": "2026-09-17",
+      "entries": [
+        { "localDate": "2026-09-17", "valueMinor": 5 }
+      ],
+      "expect": { "evaluatedPeriods": 0 }
+    }
+  ]
+}

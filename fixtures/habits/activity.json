@@ -1,0 +1,83 @@
+{
+  "suite": "activity",
+  "cases": [
+    {
+      "kind": "activity",
+      "name": "activity counts logs independently of target success including today",
+      "source": "HabitActivityStatsTest.kt: activity counts logs independently of target success including today",
+      "habitId": "h",
+      "startsOn": "2026-07-19",
+      "today": "2026-09-17",
+      "entries": [
+        {
+          "localDate": "2026-09-17",
+          "valueMinor": 2
+        },
+        {
+          "localDate": "2026-09-17",
+          "valueMinor": 3
+        },
+        {
+          "localDate": "2026-09-12",
+          "valueMinor": 4
+        },
+        {
+          "localDate": "2026-08-19",
+          "valueMinor": 1
+        },
+        {
+          "localDate": "2026-08-18",
+          "valueMinor": 10
+        },
+        {
+          "localDate": "2026-09-17",
+          "valueMinor": 99,
+          "habitId": "other"
+        }
+      ],
+      "expect": {
+        "entries30": 4,
+        "activeDays30": 3,
+        "totalMinor30": 10,
+        "peakDayMinor30": 5,
+        "averagePerActiveDayMinor30": 3.3333333333333335,
+        "calendarDays30": 30,
+        "entries90": 5,
+        "activeDays90": 4,
+        "totalMinor90": 20,
+        "calendarDays90": 61,
+        "entries365": 5,
+        "activeDays365": 4,
+        "totalMinor365": 20,
+        "calendarDays365": 61,
+        "entriesAllTime": 5,
+        "activeDaysAllTime": 4,
+        "totalMinorAllTime": 20,
+        "calendarDaysAllTime": 61
+      }
+    },
+    {
+      "kind": "activity",
+      "name": "start date and empty history limit activity window",
+      "source": "HabitActivityStatsTest.kt: start date and empty history limit activity window",
+      "habitId": "h",
+      "startsOn": "2026-09-15",
+      "today": "2026-09-17",
+      "entries": [
+        {
+          "localDate": "2026-09-14",
+          "valueMinor": 8
+        }
+      ],
+      "expect": {
+        "entries30": 0,
+        "activeDays30": 0,
+        "totalMinor30": 0,
+        "peakDayMinor30": 0,
+        "averagePerActiveDayMinor30": null,
+        "calendarDays30": 3,
+        "calendarDays90": 3
+      }
+    }
+  ]
+}
