@@ -181,9 +181,12 @@ const HabitDetails: React.FC = () => {
             }
         } else {
             for (const day of summary?.calendarDays ?? []) {
+                // today is still open: it is not missed yet
+                const pending = day.date === today && day.status === 'MISSED';
                 if (
                     day.status !== 'UNPLANNED' &&
-                    day.status !== 'NO_ACTIVITY'
+                    day.status !== 'NO_ACTIVITY' &&
+                    !pending
                 ) {
                     map.set(day.date, day.status);
                 }

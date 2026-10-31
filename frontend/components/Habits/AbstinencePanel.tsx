@@ -17,7 +17,7 @@ interface AbstinencePanelProps {
 }
 
 const SPAN = 90;
-const field = `${sidePanelInputClass} min-h-[44px]`;
+const field = `${sidePanelInputClass} min-h-[44px] border border-outline/50`;
 
 // The days clear of an abstinence, what was noted (check-ins and urges), and a
 // way to note more. No savings, no health claims: it only counts what is noted.

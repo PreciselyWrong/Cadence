@@ -189,11 +189,13 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, quickValues, onLog }) => {
                         </Link>
                     </h3>
                     <p
-                        className={`flex items-center gap-2 truncate text-body-m ${
+                        className={`flex flex-wrap items-center gap-x-2 text-body-m ${
                             calm ? 'text-surface-on-variant' : ''
                         }`}
                     >
-                        <span className="truncate">{statusLine(t, habit)}</span>
+                        <span className="min-w-0 break-words">
+                            {statusLine(t, habit)}
+                        </span>
                         {streak > 0 && (
                             <span
                                 className="flex shrink-0 items-center gap-0.5"

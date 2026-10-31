@@ -16,7 +16,7 @@ interface AlcoholPanelProps {
     onChanged: () => void;
 }
 
-const field = `${sidePanelInputClass} min-h-[44px]`;
+const field = `${sidePanelInputClass} min-h-[44px] border border-outline/50`;
 
 // The standard drinks noted per day for an alcohol abstinence. One row per
 // date: noting a date again corrects it.
