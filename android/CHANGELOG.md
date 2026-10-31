@@ -4,6 +4,15 @@
 - Widget « Aujourd'hui » : les habitudes restent toujours visibles, même quand le widget est agrandi.
 - Widget « Aujourd'hui » : la liste affiche toutes les tâches du jour et défile, sans limite de lignes ni « +N ».
 - Widget « Aujourd'hui » : le fond flou et le verre translucide laissent place à un fond plein (automatique clair/sombre, clair ou sombre) ; un ancien fond « Flou » devient « Automatique » et « Verre » devient « Sombre ».
+- Thème sombre : les boutons, interrupteurs et puces de couleur claire (agendas, accent, habitudes) affichent désormais un texte sombre lisible, au lieu d'un texte clair sur fond clair.
+- Les couleurs d'agenda restent visibles dans les deux thèmes : un agenda sombre ne disparaît plus en thème sombre, ni un agenda clair en thème clair.
+- Les accents Ambre, Corail, Sarcelle, Bleu et les couleurs libres sont légèrement assombris en thème clair pour que liens et actions restent lisibles.
+- Les textes secondaires sont un peu plus contrastés en thème clair.
+- Agenda : la rangée « Toute la journée » montre une icône soleil au lieu du libellé tronqué « Jour. ».
+- Corriger une saisie d'habitude se fait au calendrier et au cadran, avec la date en toutes lettres, au lieu de taper « 2026-10-30 ».
+- L'icône d'une habitude sur le widget ouvre la même fiche que dans l'application, avec sa couleur et ses dernières saisies.
+- La fenêtre « Nouvelle tâche » du widget et du lanceur adopte le style de Cadence.
+- Lecteur d'écran : les jours de l'Agenda sont annoncés en entier (« mardi 27 octobre »).
 
 ## [1.2.0] — 30 octobre 2026
 

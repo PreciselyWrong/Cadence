@@ -1,5 +1,9 @@
 package ch.nicolab.cadence.agenda
 
+import androidx.compose.ui.semantics.selected
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -240,10 +244,16 @@ private fun DayCell(
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
+    // « M 27 » ne dit pas si c'est mardi ou mercredi : le lecteur d'écran entend la date entière.
+    val description = day.agendaDayDescription()
     Column(
         modifier
             .clip(Radius.Chip)
             .clickable(role = Role.Button, onClick = onClick)
+            .semantics(mergeDescendants = true) {
+                contentDescription = description
+                this.selected = selected
+            }
             .padding(vertical = Space.xs),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -338,14 +348,12 @@ private fun AllDayRow(
             .verticalScroll(rememberScrollState()),
     ) {
         Column(Modifier.width(Size.agendaGutter).padding(end = Space.xs), horizontalAlignment = Alignment.End) {
-            Text(
-                text = stringResource(R.string.agenda_all_day_row),
-                style = MaterialTheme.typography.labelSmall,
-                color = palette.onSurfaceVariant,
-                maxLines = 1,
-                softWrap = false,
-                textAlign = TextAlign.End,
-                modifier = Modifier.padding(top = Space.sm),
+            // La gouttière des heures (44 dp) ne loge aucun mot entier : une icône nommée remplace « Jour. ».
+            Icon(
+                Icons.Outlined.WbSunny,
+                contentDescription = stringResource(R.string.agenda_all_day),
+                tint = palette.onSurfaceVariant,
+                modifier = Modifier.padding(top = Space.sm).size(Size.iconSm),
             )
             if (expanded && overflowing) {
                 Icon(
@@ -405,7 +413,8 @@ private fun AllDayChip(
     onDrop: (String, LocalDateTime) -> Unit,
 ) {
     val palette = cadence
-    val color = entry.colorArgb?.let { Color(it) } ?: palette.primary
+    // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
+    val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
     val dragItem = draggableTaskItem(entry)
     val source = if (dragItem != null) Modifier.trayDragSource(dragItem, drag, onDrop) else Modifier
     Row(
@@ -576,7 +585,8 @@ private fun BoxWithConstraintsScope.TimedBlockView(
 ) {
     val palette = cadence
     val entry = block.entry
-    val color = entry.colorArgb?.let { Color(it) } ?: palette.primary
+    // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
+    val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
     val columnWidth = maxWidth / block.columnCount
     val task = (entry as? AgendaEntry.Task)?.takeIf { !it.done && !it.recurring }
     var liveEnd by remember(block.startMinute, block.endMinute) { mutableStateOf<Int?>(null) }

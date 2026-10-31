@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.designsystem.theme
 
+import androidx.compose.ui.graphics.toArgb
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
@@ -43,16 +44,16 @@ class AccentTest {
     }
 
     @Test
-    fun `light primary is the seed and on-primary keeps the higher contrast`() {
+    fun `light primary is the seed when it already reads on cards, darkened otherwise`() {
+        val card = LightPalette.card.toArgb()
         AccentPreset.entries.forEach { preset ->
             val roles = deriveAccentRoles(preset.argb, dark = false)
-            val expectedOn = if (contrastRatio(preset.argb, white) >= contrastRatio(preset.argb, ink)) white else ink
 
-            assertEquals(preset.argb, roles.primary, preset.id)
-            assertEquals(expectedOn, roles.onPrimary, preset.id)
-            // Sarcelle et Corail restent sous 4.5 avec ces deux seules encres (4.3 et 4.2) : seuil documenté.
-            assertTrue(contrastRatio(roles.primary, roles.onPrimary) >= 4.0, "light contrast of ${preset.id}")
+            if (contrastRatio(preset.argb, card) >= 4.5) assertEquals(preset.argb, roles.primary, preset.id)
+            assertTrue(contrastRatio(roles.primary, card) >= 4.5, "light primary of ${preset.id}")
+            assertTrue(contrastRatio(roles.primary, roles.onPrimary) >= 4.5, "light contrast of ${preset.id}")
         }
+        assertEquals(AccentPreset.VERT.argb, deriveAccentRoles(AccentPreset.VERT.argb, dark = false).primary)
     }
 
     @Test
@@ -73,7 +74,8 @@ class AccentTest {
             val dark = deriveAccentRoles(seed, dark = true).primaryContainer.toHsl().lightness
 
             assertTrue(abs(light - 0.92f) <= 0.015f, "light container lightness $light for ${seed.toHex()}")
-            assertTrue(abs(dark - 0.30f) <= 0.015f, "dark container lightness $dark for ${seed.toHex()}")
+            // Assombri sous 0,30 seulement quand le texte clair n'y atteint pas 4,5:1.
+            assertTrue(dark <= 0.315f && dark >= 0.15f, "dark container lightness $dark for ${seed.toHex()}")
         }
     }
 
@@ -94,9 +96,9 @@ class AccentTest {
         val light = deriveAccentRoles(freeColour, dark = false)
         val dark = deriveAccentRoles(freeColour, dark = true)
 
-        assertEquals(freeColour, light.primary)
+        assertEquals(freeColour.toHsl().hue, light.primary.toHsl().hue, 2f)
         assertTrue(light.onPrimary == white || light.onPrimary == ink)
-        assertTrue(contrastRatio(light.primary, light.onPrimary) >= 4.0)
+        assertTrue(contrastRatio(light.primary, light.onPrimary) >= 4.5)
         assertTrue(contrastRatio(dark.primary, dark.onPrimary) >= 4.5)
     }
 

@@ -1,5 +1,8 @@
 package ch.nicolab.cadence.designsystem.components
 
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -35,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +48,9 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.theme.compositeOver
+import ch.nicolab.cadence.designsystem.theme.readableOn
+import ch.nicolab.cadence.designsystem.theme.readableTint
 
 /** Action principale. Accent plein, cible tactile confortable et compression physique au toucher. */
 @Composable
@@ -279,6 +286,9 @@ fun CadenceField(
     accent: Color? = null,
     numeric: Boolean = false,
     decimal: Boolean = false,
+    enabled: Boolean = true,
+    fieldModifier: Modifier = Modifier,
+    onDone: (() -> Unit)? = null,
 ) {
     val palette = cadence
     val fill = accent ?: palette.primary
@@ -287,7 +297,7 @@ fun CadenceField(
     val resting = if (accent == null) palette.containerHigh else fill.copy(alpha = if (palette.isDark) 0.12f else 0.07f)
     val container by animateColorAsState(if (focused) fill.copy(alpha = 0.16f) else resting, Motion.quick(), label = "field")
     Column(modifier.fillMaxWidth()) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = if (focused) fill else palette.outline)
+        Text(label, style = MaterialTheme.typography.labelMedium, color = if (focused) readableTintOf(fill) else palette.outline)
         Spacer(Modifier.height(Space.xs))
         Row(
             Modifier.fillMaxWidth().clip(Radius.Control).background(container).padding(horizontal = Space.lg).heightIn(min = Size.control),
@@ -301,15 +311,21 @@ fun CadenceField(
                     value = value,
                     onValueChange = onValue,
                     singleLine = true,
+                    enabled = enabled,
                     interactionSource = interaction,
                     textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
                     cursorBrush = SolidColor(fill),
-                    keyboardOptions = KeyboardOptions(keyboardType = when {
-                        decimal -> KeyboardType.Decimal
-                        numeric -> KeyboardType.Number
-                        else -> KeyboardType.Text
-                    }),
-                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = if (numeric || decimal) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
+                        keyboardType = when {
+                            decimal -> KeyboardType.Decimal
+                            numeric -> KeyboardType.Number
+                            else -> KeyboardType.Text
+                        },
+                        imeAction = if (onDone != null) ImeAction.Done else ImeAction.Default,
+                    ),
+                    keyboardActions = KeyboardActions(onDone = onDone?.let { done -> { done() } }),
+                    modifier = Modifier.fillMaxWidth().then(fieldModifier),
                 )
             }
             suffix?.takeIf { it.isNotBlank() }?.let {
@@ -401,13 +417,37 @@ fun ErrorText(message: String, modifier: Modifier = Modifier) = Row(
     Text(message, style = MaterialTheme.typography.bodySmall, color = cadence.error)
 }
 
-/** Contraste garanti sur une surface accentuée, y compris pour une couleur d'habitude claire. */
+/**
+ * Encre d'un texte ou d'une icône posés sur une couleur pleine (accent, habitude, agenda, projet) :
+ * le rôle « on » du thème pour l'accent et l'erreur, sinon blanc ou encre sombre selon la luminance,
+ * à 4,5:1 au moins. Jamais `onSurface`, qui est clair en thème sombre.
+ */
 @Composable
 fun onColorOf(background: Color): Color {
     val palette = cadence
-    val luminance = 0.299f * background.red + 0.587f * background.green + 0.114f * background.blue
-    return if (luminance > 0.62f) palette.onSurface else Color.White
+    return when (background) {
+        palette.primary -> palette.onPrimary
+        palette.error -> palette.onError
+        else -> Color(readableOn(background.toArgb()))
+    }
 }
+
+/**
+ * Texte ou icône dessinés dans une couleur d'utilisateur (habitude, agenda, projet, accent) sur
+ * [background] : la teinte est gardée, seule sa luminosité bouge jusqu'à [minContrast]
+ * (4,5:1 pour un texte, 3:1 pour une icône ou un trait). Pour un fond teinté translucide,
+ * passer son rendu opaque ([tintedSurface]).
+ */
+@Composable
+fun readableTintOf(tint: Color, background: Color = cadence.card, minContrast: Double = TEXT_CONTRAST): Color =
+    Color(readableTint(tint.toArgb(), background.toArgb(), minContrast))
+
+/** Rendu opaque de [tint] à l'opacité [alpha] sur [base] : référence de contraste d'une pastille teintée. */
+fun tintedSurface(tint: Color, alpha: Float, base: Color): Color =
+    Color(compositeOver(tint.toArgb(), alpha, base.toArgb()))
+
+const val TEXT_CONTRAST = 4.5
+const val ICON_CONTRAST = 3.0
 
 @Composable
 internal fun DisabledContent(enabled: Boolean, content: @Composable () -> Unit) =

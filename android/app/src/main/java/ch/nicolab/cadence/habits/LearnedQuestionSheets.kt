@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.habits
 
+import ch.nicolab.cadence.designsystem.components.tintedSurface
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -287,7 +289,11 @@ private fun EvidenceChip(label: String, regular: Boolean, tint: Color) {
             .background(if (regular) tint.copy(alpha = 0.16f) else cadence.containerHigh)
             .padding(horizontal = Space.md, vertical = Space.xs),
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = if (regular) tint else cadence.onSurfaceVariant)
+        Text(
+            label,
+            style = MaterialTheme.typography.labelLarge,
+            color = if (regular) readableTintOf(tint, tintedSurface(tint, 0.16f, cadence.card)) else cadence.onSurfaceVariant,
+        )
     }
 }
 

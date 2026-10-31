@@ -116,4 +116,5 @@
     <string name="tasks_connect">Se connecter</string>
     <string name="tasks_connect_error">Connexion impossible.</string>
     <string name="tasks_qr_invalid">Ce code QR ne vient pas de Cadence.</string>
+    <string name="tasks_quick_add_saving">Ajout…</string>
 </resources>

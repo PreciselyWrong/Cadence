@@ -1,5 +1,7 @@
 package ch.nicolab.cadence
 
+import ch.nicolab.cadence.ui.TimePickerDialog24
+import ch.nicolab.cadence.ui.FrenchDatePickerDialog
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
@@ -261,66 +263,37 @@ fun AbstinenceSetupSheet(
         ) { if (!busy) { if (!choosing && stored == null) choosing = true else close() } }
     }
     if (dateOpen) {
-        val context = LocalContext.current
-        val configuration = LocalConfiguration.current
-        val calendarConfiguration = remember(configuration) {
-            Configuration(configuration).apply { setLocale(Locale.FRENCH) }
-        }
-        val calendarContext = remember(context, calendarConfiguration) {
-            context.createConfigurationContext(calendarConfiguration)
-        }
-        val dateState = remember(startText) {
-            DatePickerState(
-                locale = Locale.FRENCH,
-                initialSelectedDateMillis = start.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(),
-                selectableDates = object : SelectableDates {
-                    override fun isSelectableDate(utcTimeMillis: Long): Boolean =
-                        Instant.ofEpochMilli(utcTimeMillis).atZone(ZoneOffset.UTC).toLocalDate() <= LocalDate.now()
-                },
-            )
-        }
-        DatePickerDialog(onDismissRequest = { dateOpen = false },
-            confirmButton = { TextButton(enabled = dateState.selectedDateMillis != null, onClick = {
-                dateState.selectedDateMillis?.let { startText = Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate().toString() }
-                dateOpen = false
-            }) { Text(stringResource(R.string.abst_setup_date_confirm)) } },
-            dismissButton = { TextButton(onClick = { dateOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
+        FrenchDatePickerDialog(
+            initial = start,
+            title = stringResource(R.string.abst_setup_date_title),
+            confirmLabel = stringResource(R.string.abst_setup_date_confirm),
+            latest = LocalDate.now(),
+            onDismiss = { dateOpen = false },
         ) {
-            // Le dialogue recrée ses locaux : la langue se fournit dans son contenu.
-            CompositionLocalProvider(
-                LocalContext provides calendarContext,
-                LocalConfiguration provides calendarConfiguration,
-                LocalResources provides calendarContext.resources,
-            ) {
-                DatePicker(state = dateState, title = { Text(stringResource(R.string.abst_setup_date_title), Modifier.padding(Space.lg)) })
-            }
+            startText = it.toString()
+            dateOpen = false
         }
     }
     if (timeOpen) {
-        val timeState = rememberTimePickerState(startTime.hour, startTime.minute, is24Hour = true)
-        AlertDialog(
-            onDismissRequest = { timeOpen = false },
-            title = { Text(stringResource(R.string.abst_setup_time_title)) },
-            text = { TimePicker(timeState) },
-            confirmButton = { TextButton(onClick = {
-                startTimeText = LocalTime.of(timeState.hour, timeState.minute).toString()
-                timeOpen = false
-            }) { Text(stringResource(R.string.abst_setup_time_confirm)) } },
-            dismissButton = { TextButton(onClick = { timeOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
-        )
+        TimePickerDialog24(
+            initial = startTime,
+            title = stringResource(R.string.abst_setup_time_title),
+            confirmLabel = stringResource(R.string.abst_setup_time_confirm),
+            onDismiss = { timeOpen = false },
+        ) {
+            startTimeText = it.toString()
+            timeOpen = false
+        }
     }
     if (followUpTimeOpen) {
-        val parsed = runCatching { LocalTime.parse(alcoholFollowUpTime) }.getOrDefault(LocalTime.of(9, 0))
-        val followUpState = rememberTimePickerState(parsed.hour, parsed.minute, is24Hour = true)
-        AlertDialog(
-            onDismissRequest = { followUpTimeOpen = false },
-            title = { Text(stringResource(R.string.alcohol_follow_up_time)) },
-            text = { TimePicker(followUpState) },
-            confirmButton = { TextButton(onClick = {
-                alcoholFollowUpTime = LocalTime.of(followUpState.hour, followUpState.minute).toString()
-                followUpTimeOpen = false
-            }) { Text(stringResource(R.string.abst_setup_time_confirm)) } },
-            dismissButton = { TextButton(onClick = { followUpTimeOpen = false }) { Text(stringResource(R.string.form_btn_cancel)) } },
-        )
+        TimePickerDialog24(
+            initial = runCatching { LocalTime.parse(alcoholFollowUpTime) }.getOrDefault(LocalTime.of(9, 0)),
+            title = stringResource(R.string.alcohol_follow_up_time),
+            confirmLabel = stringResource(R.string.abst_setup_time_confirm),
+            onDismiss = { followUpTimeOpen = false },
+        ) {
+            alcoholFollowUpTime = it.toString()
+            followUpTimeOpen = false
+        }
     }
 }

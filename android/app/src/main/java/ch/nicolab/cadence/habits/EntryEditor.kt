@@ -1,5 +1,12 @@
 package ch.nicolab.cadence.habits
 
+import ch.nicolab.cadence.ui.longFrench
+import ch.nicolab.cadence.ui.TimePickerDialog24
+import ch.nicolab.cadence.ui.FrenchDatePickerDialog
+import ch.nicolab.cadence.designsystem.components.ActionRow
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -119,13 +126,13 @@ internal fun EntryEditor(
     val scale = unit?.scaleToCanonical ?: 1L
     val zoned = remember(entry.id) { entry.occurredAt.atZone(entry.observedZoneId) }
     var value by rememberSaveable(entry.id) { mutableStateOf((entry.valueMinor / scale).toString()) }
-    var date by rememberSaveable(entry.id) { mutableStateOf(entry.localDate.toString()) }
-    var time by rememberSaveable(entry.id) { mutableStateOf(zoned.toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString()) }
+    var date by rememberSaveable(entry.id) { mutableStateOf(entry.localDate) }
+    var time by rememberSaveable(entry.id) { mutableStateOf(zoned.toLocalTime().truncatedTo(ChronoUnit.MINUTES)) }
     var note by rememberSaveable(entry.id) { mutableStateOf(entry.note.orEmpty()) }
     var error by remember(entry.id) { mutableStateOf<String?>(null) }
+    var dateOpen by remember { mutableStateOf(false) }
+    var timeOpen by remember { mutableStateOf(false) }
     val badValue = stringResource(R.string.entry_error_value)
-    val badDate = stringResource(R.string.entry_error_date)
-    val badTime = stringResource(R.string.entry_error_time)
     val imported = HabitEntrySource.isHealthConnect(entry.source)
 
     CadenceSheet(
@@ -137,9 +144,13 @@ internal fun EntryEditor(
             CadenceField(value, { value = it.filter(Char::isDigit) }, stringResource(R.string.entry_value_label), suffix = unit?.symbol, accent = accent, numeric = true)
             Spacer(Modifier.height(Space.md))
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-            CadenceField(date, { date = it }, stringResource(R.string.entry_date_label), Modifier.weight(1f), accent = accent)
-            CadenceField(time, { time = it }, stringResource(R.string.entry_time_label), Modifier.weight(1f), accent = accent)
+        // Date et heure se choisissent au calendrier et au cadran : jamais d'écriture ISO à taper.
+        ActionRow(Icons.Outlined.DateRange, stringResource(R.string.entry_date_value, date.longFrench()), accent) {
+            if (!busy) dateOpen = true
+        }
+        Spacer(Modifier.height(Space.sm))
+        ActionRow(Icons.Outlined.AccessTime, stringResource(R.string.entry_time_value, time.toString()), accent) {
+            if (!busy) timeOpen = true
         }
         Spacer(Modifier.height(Space.md))
         CadenceField(note, { note = it }, stringResource(R.string.entry_note_label), accent = accent)
@@ -163,19 +174,14 @@ internal fun EntryEditor(
             SecondaryAction(stringResource(R.string.form_btn_cancel), Modifier.weight(1f), onClick = dismiss)
             PrimaryAction(stringResource(if (busy) R.string.abstinence_saving else R.string.form_btn_save), Modifier.weight(1f), accent = accent, enabled = !busy) {
                 val amount = if (occurrenceOnly) entry.valueMinor else value.toLongOrNull() ?: 0
-                val parsedDate = runCatching { LocalDate.parse(date.trim()) }.getOrNull()
-                val parsedTime = runCatching { LocalTime.parse(time.trim()) }.getOrNull()
-                when {
-                    amount <= 0 -> error = badValue
-                    parsedDate == null -> error = badDate
-                    parsedTime == null -> error = badTime
-                    else -> {
-                        error = null
-                        // Une correction de note ne doit pas arrondir l'instant d'origine à la minute.
-                        val observedTime = zoned.toLocalTime()
-                        val correctedTime = if (parsedTime == observedTime.truncatedTo(ChronoUnit.MINUTES)) observedTime else parsedTime
-                        save(if (occurrenceOnly) entry.valueMinor else amount * scale, parsedDate, correctedTime, note)
-                    }
+                if (amount <= 0) {
+                    error = badValue
+                } else {
+                    error = null
+                    // Une correction de note ne doit pas arrondir l'instant d'origine à la minute.
+                    val observedTime = zoned.toLocalTime()
+                    val correctedTime = if (time == observedTime.truncatedTo(ChronoUnit.MINUTES)) observedTime else time
+                    save(if (occurrenceOnly) entry.valueMinor else amount * scale, date, correctedTime, note)
                 }
             }
         }
@@ -185,5 +191,28 @@ internal fun EntryEditor(
             Modifier.fillMaxWidth(),
             onClick = { if (!busy) { error = null; delete() } },
         )
+    }
+    if (dateOpen) {
+        FrenchDatePickerDialog(
+            initial = date,
+            title = stringResource(R.string.entry_date_title),
+            confirmLabel = stringResource(R.string.abst_setup_date_confirm),
+            latest = LocalDate.now(entry.observedZoneId),
+            onDismiss = { dateOpen = false },
+        ) {
+            date = it
+            dateOpen = false
+        }
+    }
+    if (timeOpen) {
+        TimePickerDialog24(
+            initial = time,
+            title = stringResource(R.string.entry_time_title),
+            confirmLabel = stringResource(R.string.abst_setup_time_confirm),
+            onDismiss = { timeOpen = false },
+        ) {
+            time = it
+            timeOpen = false
+        }
     }
 }

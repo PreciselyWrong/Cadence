@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -302,12 +303,14 @@ private fun CaptureBox(
 ) {
     val palette = cadence
     var focused by remember { mutableStateOf(false) }
-    val highlight = remember(parsed.tokens, palette.primary) {
+    // Le champ est sur containerHigh, où l'accent clair seul passe sous 4,5:1.
+    val tokenColor = readableTintOf(palette.primary, palette.containerHigh)
+    val highlight = remember(parsed.tokens, tokenColor) {
         VisualTransformation { source ->
             val styled = buildAnnotatedString {
                 append(source)
                 parsed.tokens.forEach { token ->
-                    if (token.end <= source.length) addStyle(SpanStyle(color = palette.primary), token.start, token.end)
+                    if (token.end <= source.length) addStyle(SpanStyle(color = tokenColor), token.start, token.end)
                 }
             }
             TransformedText(styled, OffsetMapping.Identity)

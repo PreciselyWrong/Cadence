@@ -46,6 +46,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.tintedSurface
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.MetricCard
@@ -476,7 +478,7 @@ internal fun TrackerStatisticsHero(
                         Text(
                             text = stringResource(R.string.habit_stats_days_short, stats.activeDays30),
                             style = MaterialTheme.typography.headlineMedium,
-                            color = tint,
+                            color = readableTintOf(tint, tintedSurface(tint, 0.15f, palette.containerHigh)),
                         )
                     }
                     Column(Modifier.weight(1f)) {
@@ -643,11 +645,11 @@ private fun AbstinenceStatisticsHero(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Space.xs),
                 ) {
-                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.primary, modifier = Modifier.size(Size.iconSm))
+                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null, tint = palette.onPrimaryContainer, modifier = Modifier.size(Size.iconSm))
                     Text(
                         text = "${stringResource(R.string.habit_stats_record_label)} : ${stringResource(R.string.habit_stats_days_short, stats.bestDays)}",
                         style = MaterialTheme.typography.labelMedium,
-                        color = palette.primary,
+                        color = palette.onPrimaryContainer,
                         maxLines = 1,
                         softWrap = false,
                     )

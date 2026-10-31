@@ -2,6 +2,9 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.components.tintedSurface
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -152,7 +155,8 @@ internal fun NoteCard(note: NoteItem, previews: LinkPreviews, onClick: () -> Uni
             Text(
                 note.title.ifBlank { stringResource(R.string.tasks_note_untitled) },
                 style = MaterialTheme.typography.titleSmall,
-                color = accent ?: palette.onSurface,
+                color = accent?.let { readableTintOf(it, tintedSurface(it, if (palette.isDark) TINT_ALPHA_DARK else TINT_ALPHA_LIGHT, palette.card)) }
+                    ?: palette.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
@@ -475,7 +479,7 @@ private fun Swatch(color: NoteColor?, dark: Boolean, selected: Boolean, label: S
             Icon(
                 Icons.Filled.Check,
                 contentDescription = null,
-                tint = if (color == null) palette.onSurface else Color.White,
+                tint = if (color == null) palette.onSurface else onColorOf(fill),
                 modifier = Modifier.size(Size.icon),
             )
         }

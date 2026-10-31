@@ -156,11 +156,19 @@ private fun StripCell(
             .padding(vertical = Space.sm),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(weekday, style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
+        Text(
+            weekday,
+            style = MaterialTheme.typography.labelMedium,
+            color = if (isSelected) palette.onPrimaryContainer else palette.onSurfaceVariant,
+        )
         Text(
             day.date.dayOfMonth.toString(),
             style = MaterialTheme.typography.titleMedium,
-            color = if (isToday) palette.primary else palette.onSurface,
+            color = when {
+                isSelected -> palette.onPrimaryContainer
+                isToday -> palette.primary
+                else -> palette.onSurface
+            },
         )
         Spacer(Modifier.height(Space.xs))
         Row(Modifier.height(Size.agendaDot), horizontalArrangement = Arrangement.spacedBy(Space.groupGap)) {

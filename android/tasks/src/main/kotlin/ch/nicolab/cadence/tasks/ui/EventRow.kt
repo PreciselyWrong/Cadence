@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,7 +54,8 @@ internal fun EventRow(
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val color = Color(item.calendar.colorArgb)
+    // Rail, cercle et icône dans la couleur de l'agenda, ajustée pour rester visible (3:1).
+    val color = readableTintOf(Color(item.calendar.colorArgb), MaterialTheme.colorScheme.surface, ICON_CONTRAST)
     val title = item.event.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val markLabel = stringResource(
         if (item.done) R.string.tasks_event_mark_undone else R.string.tasks_event_mark_done,

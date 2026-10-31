@@ -29,13 +29,13 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 | surfaceVariant / on | `#E4E1EC` / `#46464F` | `#46454F` / `#C8C5D0` |
 | card (rows, cards) | `#F3F1FC` | `#1F1E2A` |
 | containerLow / High / Highest | `#F5F3FA` / `#E9E7F0` / `#E3E1EA` | `#1B1B21` / `#2A2930` / `#35343B` |
-| outline / outlineVariant | `#777680` / `#C7C5D0` | `#918F9A` / `#46454F` |
+| outline / outlineVariant | `#66656F` / `#C7C5D0` | `#918F9A` / `#46454F` |
 | error / errorContainer | `#BA1A1A` / `#FFDAD6` | `#FFB4AB` / `#93000A` |
 | success / successContainer | `#286C2A` / `#ABF5A3` | `#8FD88A` / `#1F5223` |
 | warning / warningContainer | `#7C5800` / `#FFDEA8` | `#F5BD52` / `#5D4200` |
 
 - Glass (idle buttons, chips): `surfaceVariant` @ 60 % light / 35 % dark, 1 dp border `outline` @ 35 %. Selected glass: `primaryContainer` @ 72 % / 55 %, border `primary` @ 45 %.
-- Accent is user-chosen (Réglages › Apparence): presets Violet `#5E5CE6` (default), Indigo `#3F51B5`, Bleu `#1E6FD9`, Sarcelle `#00897B`, Vert `#2E7D32`, Ambre `#C77700`, Corail `#E0483B`, Rose `#C2185B`, free colour, or Material You (API 31+). Derive container and on-roles from the seed with HSL lightness (container ≈ L 0.92 in light, ≈ L 0.30 in dark; on-colours by contrast). Theme mode: Système / Clair / Sombre; option « Noir pur » in dark. Habit tints keep their own colour.
+- Accent is user-chosen (Réglages › Apparence): presets Violet `#5E5CE6` (default), Indigo `#3F51B5`, Bleu `#1E6FD9`, Sarcelle `#00897B`, Vert `#2E7D32`, Ambre `#C77700`, Corail `#E0483B`, Rose `#C2185B`, free colour, or Material You (API 31+). Derive container and on-roles from the seed with HSL lightness (container ≈ L 0.92 in light, ≈ L 0.30 in dark; on-colours by contrast). In light, a seed too light to read as text (Ambre, Corail, Sarcelle, Bleu, most free colours) is darkened, hue kept, to 4.5:1 on the card; every text/fill pair reaches 4.5:1. Theme mode: Système / Clair / Sombre; option « Noir pur » in dark. Habit tints keep their own colour.
 - Radii: chip 12, control 16, card/row group 20, panel 24, sheet 28 (top corners), pills 999. Connected row groups: outer 20, inner 4, 2 dp gap.
 - Spacing: gutter 16, steps 4/8/12/16/24/32. Touch targets ≥ 48 dp.
 - Type: keep the embedded Plus Jakarta Sans. Roles: display 30/36 semibold, headline 24/32 semibold, title 20/26 semibold, titleM 16/22 bold, body 16/24, bodyM 14/20, label 14/20 medium, labelM 12/16 medium, metric 32/36 semibold.

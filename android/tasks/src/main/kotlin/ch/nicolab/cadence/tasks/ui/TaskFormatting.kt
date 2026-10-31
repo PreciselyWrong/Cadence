@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -26,8 +28,9 @@ internal fun instantTime(instant: Instant, zone: ZoneId): LocalTime = instant.at
 @Composable
 internal fun priorityColor(priority: Int): Color = when (priority) {
     TaskPriority.HIGH -> MaterialTheme.colorScheme.error
-    TaskPriority.MEDIUM -> MediumPriorityColor
-    else -> LowPriorityColor
+    // Orange et bleu fixes : assez contrastés (3:1) pour une pastille, sur fond clair comme sombre.
+    TaskPriority.MEDIUM -> readableTintOf(MediumPriorityColor, minContrast = ICON_CONTRAST)
+    else -> readableTintOf(LowPriorityColor, minContrast = ICON_CONTRAST)
 }
 
 internal fun statusLabelRes(status: Int): Int = when (status) {

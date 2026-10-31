@@ -51,7 +51,7 @@ internal fun CalendarPermissionNotice(
             modifier = Modifier.weight(1f),
         )
         TextButton(onClick = { launcher.launch(Manifest.permission.READ_CALENDAR) }) {
-            Text(stringResource(R.string.tasks_calendar_notice_allow))
+            Text(stringResource(R.string.tasks_calendar_notice_allow), color = MaterialTheme.colorScheme.onSecondaryContainer)
         }
         IconButton(onClick = onDismiss) {
             Icon(
