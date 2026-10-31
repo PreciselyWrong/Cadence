@@ -84,7 +84,7 @@ private val CAPSULE_CELL_WIDTH = 44.dp
  * La permission des agendas de l'appareil est proposée ici ; sans elle, les tâches restent visibles.
  */
 @Composable
-fun AgendaScreen(modifier: Modifier = Modifier) {
+fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = {}) {
     val viewModel: AgendaViewModel = viewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val calendars by viewModel.calendars.collectAsStateWithLifecycle()
@@ -97,6 +97,8 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
         AgendaEventActions(
             open = { eventSheet = AgendaEventSheet.Detail(it.eventKey) },
             menu = { eventSheet = AgendaEventSheet.Menu(it.eventKey) },
+            toggleTask = viewModel::toggleTask,
+            openHabit = { onOpenHabit(it.habitId) },
         )
     }
     val resources = LocalContext.current.resources

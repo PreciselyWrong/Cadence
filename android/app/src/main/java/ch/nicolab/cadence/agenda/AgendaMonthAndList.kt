@@ -31,6 +31,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Hexagon
+import androidx.compose.material.icons.filled.Hexagon
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -287,7 +291,7 @@ internal fun AgendaEntryRow(
     val palette = cadence
     // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
     val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
-    val hasCheck = entry is AgendaEntry.Task || (entry is AgendaEntry.Event && checkEvents)
+    val hasCheck = entry is AgendaEntry.Task || entry is AgendaEntry.Habit || (entry is AgendaEntry.Event && checkEvents)
     Column(modifier.padding(bottom = Space.sm)) {
         Row(
             Modifier
@@ -319,6 +323,15 @@ internal fun AgendaEntryRow(
                     ),
                 )
                 entry is AgendaEntry.Event && checkEvents -> EventCheckRow(entry = entry, color = color, onToggleEvent = onToggleEvent)
+                // Hexagone : repère des habitudes ; toucher la ligne ouvre leur saisie.
+                entry is AgendaEntry.Habit -> Box(Modifier.size(Size.touch), contentAlignment = Alignment.Center) {
+                    Icon(
+                        if (entry.done) Icons.Filled.Hexagon else Icons.Outlined.Hexagon,
+                        contentDescription = null,
+                        tint = color,
+                        modifier = Modifier.size(Size.icon),
+                    )
+                }
             }
             Column(
                 Modifier

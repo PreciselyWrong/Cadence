@@ -232,7 +232,7 @@ internal fun CadenceAppScreen(
                             )
                         },
                     )
-                    Tab.AGENDA -> AgendaScreen()
+                    Tab.AGENDA -> AgendaScreen(onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it })
                     Tab.HABITS -> HabitsTab(
                         habits = habits,
                         groups = groups,

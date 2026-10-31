@@ -2,6 +2,8 @@ package ch.nicolab.cadence.agenda
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.ui.semantics.Role
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -29,6 +31,9 @@ internal fun AgendaEntry.Event.toDetail(): EventDetail = EventDetail(
 internal class AgendaEventActions(
     val open: (AgendaEntry.Event) -> Unit,
     val menu: (AgendaEntry.Event) -> Unit,
+    val toggleTask: (AgendaEntry.Task) -> Unit = {},
+    /** Ouvre la saisie de l'habitude : c'est là qu'on la note faite, avec sa quantité éventuelle. */
+    val openHabit: (AgendaEntry.Habit) -> Unit = {},
 ) {
     companion object {
         val None = AgendaEventActions({}, {})
@@ -37,12 +42,16 @@ internal class AgendaEventActions(
 
 internal val LocalAgendaEventActions = staticCompositionLocalOf { AgendaEventActions.None }
 
-/** Rend un événement touchable (fiche) et appuyable longtemps (menu) ; les autres éléments restent inchangés. */
+/**
+ * Rend un événement touchable (fiche) et appuyable longtemps (menu), une habitude touchable (saisie) ;
+ * une tâche reste inchangée.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun Modifier.eventTouch(entry: AgendaEntry): Modifier {
-    if (entry !is AgendaEntry.Event) return this
     val actions = LocalAgendaEventActions.current
+    if (entry is AgendaEntry.Habit) return clickable(role = Role.Button) { actions.openHabit(entry) }
+    if (entry !is AgendaEntry.Event) return this
     val haptic = rememberCadenceHaptic()
     return combinedClickable(
         onClick = { actions.open(entry) },

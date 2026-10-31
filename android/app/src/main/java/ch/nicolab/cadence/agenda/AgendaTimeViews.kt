@@ -48,6 +48,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ch.nicolab.cadence.designsystem.components.TaskCheckbox
+import androidx.compose.material.icons.outlined.Hexagon
+import androidx.compose.material.icons.filled.Hexagon
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -402,14 +405,7 @@ private fun AllDayChip(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.width(Size.rail).height(ALL_DAY_CHIP_HEIGHT).background(color))
-        if (entry is AgendaEntry.Event && checkEvents) {
-            EventCheckSlot(
-                entry = entry,
-                color = color,
-                onToggleEvent = onToggleEvent,
-                modifier = Modifier.size(ALL_DAY_CHIP_HEIGHT),
-            )
-        }
+        EntryMarker(entry, color, checkEvents, onToggleEvent, Modifier.size(ALL_DAY_CHIP_HEIGHT))
         Text(
             text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
             style = MaterialTheme.typography.labelLarge,
@@ -568,7 +564,8 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     val endMinute = liveEnd ?: block.endMinute
     val top = Size.agendaHour * (block.startMinute / 60f)
     val height = Size.agendaHour * ((endMinute - block.startMinute) / 60f)
-    val checkable = (entry as? AgendaEntry.Event)?.takeIf { checkEvents && height >= Size.actionSm }
+    // L'hexagone tient sur un bloc court ; une case demande la hauteur d'une cible.
+    val marked = height >= Size.actionSm || entry is AgendaEntry.Habit
     Box(
         Modifier
             .offset(x = columnWidth * block.column, y = top)
@@ -582,7 +579,7 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     ) {
         Row(Modifier.fillMaxSize()) {
             Box(Modifier.width(Size.rail).fillMaxHeight().background(color))
-            checkable?.let { EventCheckSlot(entry = it, color = color, onToggleEvent = onToggleEvent) }
+            if (marked) EntryMarker(entry, color, checkEvents, onToggleEvent)
             Column(Modifier.padding(horizontal = Space.sm, vertical = Space.xs)) {
                 Text(
                     text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
@@ -673,6 +670,36 @@ private fun ResizeHandle(
                 .clip(Radius.Pill)
                 .background(color.copy(alpha = GRIP_ALPHA)),
         )
+    }
+}
+
+/**
+ * Repère du type d'élément, à gauche du titre : rond à la couleur de l'agenda pour un événement,
+ * case carrée pour une tâche, hexagone pour une habitude (réservé aux habitudes partout dans Cadence).
+ */
+@Composable
+private fun EntryMarker(
+    entry: AgendaEntry,
+    color: Color,
+    checkEvents: Boolean,
+    onToggleEvent: (EventInstanceKey) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val actions = LocalAgendaEventActions.current
+    val doneLabel = stringResource(if (entry.done) R.string.agenda_mark_undone else R.string.agenda_mark_done)
+    when (entry) {
+        is AgendaEntry.Event -> if (checkEvents) EventCheckSlot(entry, color, onToggleEvent, modifier)
+        is AgendaEntry.Task -> Box(modifier.padding(start = Space.xs), contentAlignment = Alignment.Center) {
+            TaskCheckbox(checked = entry.done, onCheckedChange = { actions.toggleTask(entry) }, contentDescription = doneLabel)
+        }
+        is AgendaEntry.Habit -> Box(modifier.padding(start = Space.sm), contentAlignment = Alignment.Center) {
+            Icon(
+                if (entry.done) Icons.Filled.Hexagon else Icons.Outlined.Hexagon,
+                contentDescription = stringResource(R.string.agenda_habit_kind),
+                tint = color,
+                modifier = Modifier.size(Size.icon),
+            )
+        }
     }
 }
 
