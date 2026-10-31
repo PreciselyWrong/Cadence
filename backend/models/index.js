@@ -129,6 +129,7 @@ const Account = require('./account')(sequelize);
 const SyncChange = require('./sync_change')(sequelize);
 const SyncOp = require('./sync_op')(sequelize);
 const SyncConflict = require('./sync_conflict')(sequelize);
+const cadenceHabitModels = require('./cadence_habits')(sequelize);
 const { selfPersonName } = require('../utils/selfPersonName');
 
 User.hasOne(BillingAccount, { foreignKey: 'user_id', as: 'BillingAccount' });
@@ -738,6 +739,7 @@ require('../modules/sync/journal').install({
     Tag,
     Note,
     InboxItem,
+    ...cadenceHabitModels,
     SyncChange,
 });
 
@@ -817,4 +819,5 @@ module.exports = {
     SyncChange,
     SyncOp,
     SyncConflict,
+    ...cadenceHabitModels,
 };

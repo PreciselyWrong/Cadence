@@ -198,13 +198,21 @@ async function wasDeleted(userId, entity, uid) {
     return last?.op === 'delete';
 }
 
+// A uid is unique across users, except for entities with `uidScope: 'user'`
+// (the default habit groups share fixed ids between users).
+function findByUid(def, userId, uid) {
+    return models()[def.model].findOne({
+        where: def.uidScope === 'user' ? { uid, user_id: userId } : { uid },
+    });
+}
+
 async function applyUpsert(userId, op) {
     const def = ENTITIES[op.entity];
     const invalid = validateFields(def, op.fields);
     if (invalid) return rejected(invalid);
 
     const Model = models()[def.model];
-    const row = await Model.findOne({ where: { uid: op.uid } });
+    const row = await findByUid(def, userId, op.uid);
     if (row && row.user_id !== userId) return rejected('forbidden');
     // Delete wins: an edit made offline to a row removed elsewhere must
     // not bring it back.
@@ -295,7 +303,7 @@ async function applyUpsert(userId, op) {
 async function applyDelete(userId, op) {
     if (!hlc.isAcceptable(op.hlc)) return rejected('invalid_clock');
     const def = ENTITIES[op.entity];
-    const row = await models()[def.model].findOne({ where: { uid: op.uid } });
+    const row = await findByUid(def, userId, op.uid);
     if (!row) return { status: 'applied' };
     if (row.user_id !== userId) return rejected('forbidden');
     const fromFile = await todoMdSync.intercept(userId, op, row);

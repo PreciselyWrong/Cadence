@@ -32,6 +32,21 @@ const { isSqlite, truncateTables } = require('../../utils/db-dialect');
 
 // Children before parents: PostgreSQL deletes these with constraints on.
 const CLEANUP_TABLES = [
+    'learned_question_records',
+    'learned_question_settings',
+    'alcohol_consumptions',
+    'abstinence_logs',
+    'health_connect_imports',
+    'health_connect_rules',
+    'habit_timers',
+    'habit_reminders',
+    'habit_quick_values',
+    'habit_pauses',
+    'habit_entries',
+    'habit_schedule_versions',
+    'habit_goal_versions',
+    'habits',
+    'habit_groups',
     'tasks_tags',
     'notes_tags',
     'projects_tags',

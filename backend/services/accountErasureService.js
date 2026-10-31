@@ -63,6 +63,10 @@ const {
     UserMfa,
     UserRecoveryCode,
 } = require('../models');
+const models = require('../models');
+const {
+    ENTITIES: CADENCE_HABIT_ENTITIES,
+} = require('../modules/habits/cadence/schema');
 const { getConfig } = require('../config/config');
 const { assertAnotherAdminRemains } = require('./rolesService');
 const { getBackupsDirectory } = require('./backupService');
@@ -265,6 +269,10 @@ async function eraseUserAccount(userId) {
         await InboxItemAttachment.destroy(byUser);
         await InboxItem.destroy(byUser);
         await View.destroy(byUser);
+        // Cadence habits: children before their habit, all before the journal.
+        for (const def of Object.values(CADENCE_HABIT_ENTITIES).reverse()) {
+            await models[def.model].destroy(byUser);
+        }
         await Notification.destroy(byUser);
         await ApiToken.destroy(byUser);
         await IdempotencyKey.destroy(byUser);
