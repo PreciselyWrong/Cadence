@@ -1,13 +1,13 @@
 {
     "common": {
         "greeting": "Hei,",
-        "signoff": "Ystävällisin terveisin\nTududi-tiimi",
+        "signoff": "Ystävällisin terveisin\nCadence-tiimi",
         "copyLink": "Tai kopioi ja liitä tämä linkki selaimeesi:",
         "trialUntil": "Ilmainen kokeilujaksosi on voimassa {{date}} asti."
     },
     "verification": {
-        "subject": "Tervetuloa Tududiin: vahvista sähköpostiosoitteesi",
-        "welcome": "Tervetuloa Tududiin!",
+        "subject": "Tervetuloa Cadenceen: vahvista sähköpostiosoitteesi",
+        "welcome": "Tervetuloa Cadenceen!",
         "opening": "Kiitos rekisteröitymisestä. Viimeistele rekisteröityminen ja ota Cadence käyttöön vahvistamalla sähköpostiosoitteesi alla olevasta linkistä:",
         "button": "Vahvista sähköpostiosoite",
         "expires_one": "Tämä vahvistuslinkki vanhenee {{count}} tunnissa.",
@@ -21,11 +21,11 @@
             "Määrittää toistuvia tehtäviä",
             "Seurata tuottavuuttasi"
         ],
-        "ignore": "Jos et luonut tiliä Tududiin, voit jättää tämän viestin huomiotta."
+        "ignore": "Jos et luonut tiliä Cadenceen, voit jättää tämän viestin huomiotta."
     },
     "verificationReminder": {
         "subject": "Muistutus: vahvista sähköpostiosoitteesi ja ota Cadence käyttöön",
-        "opening": "Rekisteröidyit Tududiin noin päivä sitten, mutta sähköpostiosoitettasi ei ole vielä vahvistettu. Tilisi (ja ilmainen kokeilusi) alkaa heti, kun vahvistat sen."
+        "opening": "Rekisteröidyit Cadenceen noin päivä sitten, mutta sähköpostiosoitettasi ei ole vielä vahvistettu. Tilisi (ja ilmainen kokeilusi) alkaa heti, kun vahvistat sen."
     },
     "passwordReset": {
         "subject": "Vaihda Cadence-salasanasi",
@@ -66,8 +66,8 @@
         "final": "Jos et tee mitään, tili poistetaan {{date}}, ja tämä on viimeinen viesti, jonka saat meiltä asiasta."
     },
     "emptyAccount": {
-        "subject": "tududisi on vielä tyhjä",
-        "intro": "Olet ollut tududin käyttäjä pari päivää, mutta tililläsi ei ole vielä mitään. Useimmat aloittavat jollakin näistä, ja jokainen vie alle minuutin:",
+        "subject": "cadencesi on vielä tyhjä",
+        "intro": "Olet ollut Cadencen käyttäjä pari päivää, mutta tililläsi ei ole vielä mitään. Useimmat aloittavat jollakin näistä, ja jokainen vie alle minuutin:",
         "ideas": [
             "Kirjoita Saapuneisiin kaikki, mitä sinulla on mielessä, ja järjestä se myöhemmin.",
             "Avaa Suunnitelma, valitse kolme asiaa tälle päivälle ja jätä loput.",
@@ -78,7 +78,7 @@
     },
     "comeBack": {
         "subject": "Tehtäväsi ovat siellä, mihin ne jätit",
-        "intro": "Et ole käynyt tududissa vähään aikaan. Kaikki, mitä lisäsit, on yhä tallessa juuri niin kuin sen jätit.",
+        "intro": "Et ole käynyt Cadencessa vähään aikaan. Kaikki, mitä lisäsit, on yhä tallessa juuri niin kuin sen jätit.",
         "tip": "Jos lista kasvoi liian pitkäksi, aloita pienestä: avaa Suunnitelma, valitse kolme asiaa tälle päivälle ja jätä loput myöhemmäksi.",
         "button": "Suunnittele päivä",
         "outro": "Emme lähetä toista tällaista viestiä ennen kuin olet käynyt takaisin."

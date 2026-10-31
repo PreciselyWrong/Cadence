@@ -1,7 +1,7 @@
 {
     "common": {
         "greeting": "Merhaba,",
-        "signoff": "Saygılarımızla,\nTududi Ekibi",
+        "signoff": "Saygılarımızla,\nCadence Ekibi",
         "copyLink": "Ya da bu bağlantıyı kopyalayıp tarayıcınıza yapıştırın:",
         "trialUntil": "Ücretsiz deneme süreniz {{date}} tarihine kadar devam ediyor."
     },

@@ -1,7 +1,7 @@
 {
     "common": {
         "greeting": "您好，",
-        "signoff": "祝好，\nTududi 团队",
+        "signoff": "祝好，\nCadence 团队",
         "copyLink": "或将此链接复制并粘贴到浏览器中：",
         "trialUntil": "您的免费试用期至 {{date}}。"
     },

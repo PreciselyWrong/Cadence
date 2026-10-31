@@ -1,7 +1,7 @@
 {
     "common": {
         "greeting": "Hej,",
-        "signoff": "Venlig hilsen\nTududi-teamet",
+        "signoff": "Venlig hilsen\nCadence-teamet",
         "copyLink": "Eller kopiér og indsæt dette link i din browser:",
         "trialUntil": "Din gratis prøveperiode løber indtil {{date}}."
     },
