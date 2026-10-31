@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.data
 
 import androidx.room.withTransaction
+import ch.nicolab.cadence.tasks.sync.HABIT_ENTITIES
+import ch.nicolab.cadence.tasks.sync.HabitSyncStore
 import ch.nicolab.cadence.tasks.sync.OutboxOp
 import ch.nicolab.cadence.tasks.sync.PendingOverlay
 import ch.nicolab.cadence.tasks.sync.SyncStore
@@ -13,14 +15,35 @@ internal class RoomSyncStore(
     private val database: TududiDatabase,
     private val clockState: ClockStateStore,
     private val nowMs: () -> Long = System::currentTimeMillis,
+    /** Habitudes (base `:data`) : absent tant que l'application ne les a pas branchées. */
+    private val habits: HabitSyncStore? = null,
 ) : SyncStore {
     private val meta = database.syncMetaDao()
     private val outbox = database.outboxDao()
 
-    override suspend fun cursor(): Long? = meta.get(CURSOR)?.toLongOrNull()
+    /**
+     * Sans le repère des habitudes, le curseur est vu comme absent : une installation qui synchronisait
+     * déjà les tâches repart d'un instantané complet, habitudes comprises.
+     */
+    override suspend fun cursor(): Long? {
+        if (habits != null && meta.get(HABITS_SNAPSHOT) == null) return null
+        return meta.get(CURSOR)?.toLongOrNull()
+    }
 
     override suspend fun saveCursor(cursor: Long?) {
-        if (cursor == null) meta.delete(CURSOR) else meta.put(SyncMetaEntity(CURSOR, cursor.toString()))
+        if (cursor == null) {
+            meta.delete(CURSOR)
+            meta.delete(HABITS_SNAPSHOT)
+        } else {
+            meta.put(SyncMetaEntity(CURSOR, cursor.toString()))
+            if (habits != null) meta.put(SyncMetaEntity(HABITS_SNAPSHOT, "1"))
+        }
+    }
+
+    override fun discardsRejectedCreation(entity: String) = entity !in HABIT_ENTITIES
+
+    override suspend fun serverChanged() {
+        habits?.markAllDirty()
     }
 
     override suspend fun clearSyncedRows() = database.withTransaction {
@@ -33,6 +56,10 @@ internal class RoomSyncStore(
     }
 
     override suspend fun applyServerRow(entity: String, data: JsonObject) {
+        if (entity in HABIT_ENTITIES) {
+            habits?.applyServerRow(entity, data)
+            return
+        }
         database.withTransaction {
             val uid = data.getValue("uid").jsonPrimitive.content
             val pending = outbox.forUid(entity, uid).map(::toOp)
@@ -50,6 +77,10 @@ internal class RoomSyncStore(
     }
 
     override suspend fun deleteRow(entity: String, uid: String) {
+        if (entity in HABIT_ENTITIES) {
+            habits?.deleteRow(entity, uid)
+            return
+        }
         when (entity) {
             "task" -> database.taskDao().delete(uid)
             "project" -> database.projectDao().delete(uid)
@@ -60,14 +91,24 @@ internal class RoomSyncStore(
         }
     }
 
-    override suspend fun pendingOps(limit: Int): List<OutboxOp> = outbox.pending(limit).map(::toOp)
+    override suspend fun pendingOps(limit: Int): List<OutboxOp> {
+        val own = outbox.pending(limit).map(::toOp)
+        return own + (habits?.pendingOps(limit - own.size) ?: emptyList())
+    }
 
-    override suspend fun removeOps(opIds: List<String>) = outbox.deleteByIds(opIds)
+    override suspend fun removeOps(opIds: List<String>) {
+        outbox.deleteByIds(opIds)
+        habits?.removeOps(opIds)
+    }
 
     override suspend fun recordFailure(opIds: List<String>, message: String) = outbox.markFailed(opIds, message)
 
     /** Appelé avant que la ligne rejetée ne soit retirée : son nom est encore disponible. */
     override suspend fun recordRejected(op: OutboxOp, reason: String?) {
+        if (op.entity in HABIT_ENTITIES) {
+            habits?.recordRejected(op, reason)
+            return
+        }
         database.failedOpDao().insert(
             FailedOpEntity(op.opId, op.entity, op.uid, reason, nowMs(), displayName(op.entity, op.uid)),
         )
@@ -101,5 +142,6 @@ internal class RoomSyncStore(
     companion object {
         const val CURSOR = "cursor"
         const val LAST_SYNC = "last_sync_at"
+        const val HABITS_SNAPSHOT = "habits_snapshot"
     }
 }

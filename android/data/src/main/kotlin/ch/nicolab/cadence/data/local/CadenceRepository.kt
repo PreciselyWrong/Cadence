@@ -776,7 +776,13 @@ class CadenceRepository(
 
     suspend fun ensureDefaultGroups() {
         if (database.habitGroupDao().getGroups().isNotEmpty()) return
-        database.habitGroupDao().upsertAll(HabitGroup.defaults().map(::mapToGroupEntity))
+        val defaults = HabitGroup.defaults()
+        database.withTransaction {
+            database.habitGroupDao().upsertAll(defaults.map(::mapToGroupEntity))
+            // Groupes livrés, pas choisis : sur un second appareil ils ne doivent jamais l'emporter sur
+            // un nom ou une plage que le serveur connaît déjà.
+            database.habitSyncDao().restamp("habit_group", defaults.map { it.id }, 1L)
+        }
     }
 
     suspend fun saveGroup(group: HabitGroup) {

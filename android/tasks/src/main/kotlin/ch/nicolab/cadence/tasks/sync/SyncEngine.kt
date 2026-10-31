@@ -44,6 +44,8 @@ class SyncEngine(
     /** Reçoit le profil à chaque passage : le fuseau du compte peut changer côté web. */
     private val onProfile: suspend (AccountProfile) -> Unit = {},
     private val nowMs: () -> Long = System::currentTimeMillis,
+    /** Entités du passage, les références d'abord : tâches seules, ou tâches et habitudes. */
+    private val entities: List<String> = SYNCED_ENTITIES,
 ) {
     private val mutex = Mutex()
     private val generation = AtomicLong(0)
@@ -100,7 +102,7 @@ class SyncEngine(
         pushed.stale.forEach { downloadEntity(it, seen) }
         // Une création rejetée que le serveur ne connaît pas n'a plus de raison d'exister localement.
         pushed.rejected
-            .filter { (it.entity to it.uid) !in seen }
+            .filter { (it.entity to it.uid) !in seen && store.discardsRejectedCreation(it.entity) }
             .forEach {
                 checkOpen()
                 store.deleteRow(it.entity, it.uid)
@@ -115,7 +117,7 @@ class SyncEngine(
         checkOpen()
         store.clearSyncedRows()
         var cursor: Long? = null
-        for (entity in SYNCED_ENTITIES) {
+        for (entity in entities) {
             val firstCursor = downloadEntity(entity)
             cursor = cursor ?: firstCursor
         }
@@ -202,7 +204,7 @@ class SyncEngine(
     }
 
     private suspend fun applyChange(change: RemoteChange) {
-        if (change.entity !in SYNCED_ENTITIES) return
+        if (change.entity !in entities) return
         when {
             change.op == "delete" -> store.deleteRow(change.entity, change.uid)
             change.data != null -> {

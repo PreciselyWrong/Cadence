@@ -21,6 +21,10 @@ import ch.nicolab.cadence.data.local.dao.HabitTimerDao
 import ch.nicolab.cadence.data.local.dao.HealthConnectDao
 import ch.nicolab.cadence.data.local.dao.LearnedQuestionDao
 import ch.nicolab.cadence.data.local.entities.HabitGoalEntity
+import ch.nicolab.cadence.data.local.entities.HabitSyncOutboxEntity
+import ch.nicolab.cadence.data.local.entities.HabitSyncStateEntity
+import ch.nicolab.cadence.data.local.dao.HabitSyncDao
+import ch.nicolab.cadence.data.sync.HabitSyncTriggers
 import ch.nicolab.cadence.data.local.entities.HabitGroupEntity
 import ch.nicolab.cadence.data.local.entities.HabitPauseEntity
 import ch.nicolab.cadence.data.local.entities.HabitQuickValueEntity
@@ -54,8 +58,10 @@ import ch.nicolab.cadence.domain.HabitGroup
         WidgetHabitEntity::class,
         LearnedQuestionSettingsEntity::class,
         LearnedQuestionRecordEntity::class,
+        HabitSyncOutboxEntity::class,
+        HabitSyncStateEntity::class,
     ],
-    version = 25,
+    version = 26,
     exportSchema = true,
 )
 abstract class CadenceDatabase : RoomDatabase() {
@@ -71,8 +77,26 @@ abstract class CadenceDatabase : RoomDatabase() {
     abstract fun healthConnectDao(): HealthConnectDao
     abstract fun widgetConfigDao(): WidgetConfigDao
     abstract fun learnedQuestionDao(): LearnedQuestionDao
+    abstract fun habitSyncDao(): HabitSyncDao
 
     companion object {
+        /**
+         * Introduit la synchro des habitudes avec le serveur : la file des écritures à envoyer et ses
+         * réglages. Les identifiants Room sont déjà les uid du serveur ; rien à renuméroter. Tout ce
+         * que le téléphone contient part à la première synchro, sans perte : chaque champ de chaque
+         * ligne est noté comme à envoyer. Les déclencheurs sont posés à l'ouverture suivante.
+         */
+        val MIGRATION_25_26 = object : Migration(25, 26) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS habit_sync_outbox (entity TEXT NOT NULL, uid TEXT NOT NULL, " +
+                        "field TEXT NOT NULL, changedMs INTEGER NOT NULL, PRIMARY KEY(entity, uid, field))",
+                )
+                db.execSQL("CREATE TABLE IF NOT EXISTS habit_sync_state (`key` TEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY(`key`))")
+                HabitSyncTriggers.markAllDirty(db)
+            }
+        }
+
         /** Les questions apprises se taisent pendant une pause par défaut ; les réglages existants gardent ce comportement. */
         val MIGRATION_24_25 = object : Migration(24, 25) {
             override fun migrate(db: SupportSQLiteDatabase) {
