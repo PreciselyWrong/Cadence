@@ -1,7 +1,16 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import groovy.json.JsonSlurper
+import java.util.Properties
 
 val releaseVersion = JsonSlurper().parse(rootProject.file("app-release/version.json")) as Map<*, *>
+
+// The published APK is the debug build, so every machine that publishes must sign with the same
+// key, kept outside the repository; without the file, Gradle falls back to the machine's debug key.
+val signingFile = File(
+    System.getenv("CADENCE_SIGNING_PROPERTIES")
+        ?: "${System.getProperty("user.home")}/.config/cadence/keystore.properties"
+)
+val signingProperties = Properties().apply { if (signingFile.isFile) signingFile.inputStream().use(::load) }
 
 plugins {
     alias(libs.plugins.android.application)
@@ -27,7 +36,22 @@ android {
         }
     }
 
+    signingConfigs {
+        if (signingFile.isFile) {
+            create("cadence") {
+                storeFile = file(signingProperties.getProperty("storeFile"))
+                storePassword = signingProperties.getProperty("storePassword")
+                keyAlias = signingProperties.getProperty("keyAlias")
+                keyPassword = signingProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
+        signingConfigs.findByName("cadence")?.let { cadence ->
+            debug { signingConfig = cadence }
+            release { signingConfig = cadence }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
