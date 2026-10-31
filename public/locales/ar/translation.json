@@ -1306,8 +1306,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "الاستحقاق {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1562,9 +1561,8 @@
       "noVerb": "ما الإجراء المحدد الذي تحتاج إلى اتخاذه؟ حاول البدء بفعل.",
       "vague": "حاول البدء بفعل عمل مثل \"اتصل\"، \"اكتب\"، \"جدول\"، أو \"ابحث\""
     },
-    "overdueAlert": "كانت هذه المهمة في خطتك بالأمس ولم تكتمل.",
-    "overdueYesterday": "فكر في إعطاء أولوية لهذه المهمة أو تقسيمها إلى خطوات أصغر.",
-    "overdueMultipleDays": "تم تأجيل هذه المهمة {{count}} مرات.",
+    "overdueAlert": "كانت هذه المهمة في خطة الأمس.",
+    "overdueYesterday": "خطّط لها مجددًا، أو قسّمها إلى خطوات أصغر.",
     "content": "المحتوى",
     "noNotes": "أضف بعض المحتوى",
     "subtasks": "المهام الفرعية",
@@ -3606,7 +3604,7 @@
     "switchToList": "التبديل إلى القائمة",
     "switchToTimeline": "التبديل إلى الخط الزمني",
     "leaveWithoutStarting": "العودة إلى اليوم",
-    "overdueDays": "متأخرة {{count}} يوم",
+    "dueSince": "الاستحقاق {{date}}",
     "whatNext": "للقيام به اليوم",
     "whatNextOn": "ماذا يمكنك أن تفعل يوم {{date}}؟",
     "dueThatDay": "مستحقة في ذلك اليوم",
@@ -4312,7 +4310,7 @@
     "loadMore": "عرض المزيد",
     "next": "التالي: {{name}}",
     "addedToday": "أضيفت إلى اليوم",
-    "pushedCount": "أُجّلت {{count}} مرات",
+    "movedCount": "نُقلت {{count}} مرات",
     "lastPlanned": "آخر موعد مخطط {{date}}",
     "reviewDue": "حان وقت المراجعة",
     "reviewOn": "مراجعة في {{date}}",
@@ -4375,7 +4373,7 @@
     }
   },
   "postponements": {
-    "summary": "أُجّلت {{total}} مرات، منها {{count}} في آخر 30 يومًا",
+    "summary": "نُقلت {{total}} مرات، منها {{count}} في آخر 30 يومًا",
     "kinds": {
       "postponed": "أُجّلت",
       "rescheduled": "أُعيدت جدولتها",

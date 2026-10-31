@@ -257,6 +257,7 @@ async function applyUpsert(userId, op) {
         if (invalidValue) return rejected(invalidValue);
     }
 
+    const previous = row && def.afterApply ? row.toJSON() : null;
     try {
         let target = row;
         if (!target) {
@@ -278,6 +279,15 @@ async function applyUpsert(userId, op) {
             await target.save({ syncApplied: true });
         }
         await writeLists(def, target, listValues);
+        if (def.afterApply) {
+            await def.afterApply({
+                row: target,
+                previous,
+                values,
+                clocks,
+                userId,
+            });
+        }
     } catch (error) {
         if (error.name && error.name.startsWith('Sequelize')) {
             return rejected('invalid_value');

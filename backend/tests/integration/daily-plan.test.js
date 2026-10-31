@@ -357,6 +357,10 @@ describe('Daily plan routes', () => {
             due_date: moment().subtract(2, 'days').toDate(),
         });
 
+        // Suggestions need a few open tasks to be worth showing.
+        await makeTask({ name: 'Filler one' });
+        await makeTask({ name: 'Filler two' });
+
         const res = await agent.get('/api/daily-plan/candidates');
         const uids = (group) => res.body[group].map((task) => task.uid);
 

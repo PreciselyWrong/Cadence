@@ -1299,8 +1299,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Forfall {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1555,9 +1554,8 @@
       "noVerb": "Hvilken spesifikk handling må du ta? Prøv å starte med et verb.",
       "vague": "Prøv å starte med et handlingsverb som \"Ring\", \"Skriv\", \"Planlegg\" eller \"Undersøk\""
     },
-    "overdueAlert": "Denne oppgaven var i planen din i går og ble ikke fullført.",
-    "overdueYesterday": "Vurder å prioritere denne oppgaven eller dele den opp i mindre trinn.",
-    "overdueMultipleDays": "Denne oppgaven har blitt utsatt {{count}} ganger.",
+    "overdueAlert": "Denne oppgaven var i gårsdagens plan.",
+    "overdueYesterday": "Planlegg den på nytt, eller del den opp i mindre trinn.",
     "content": "Innhold",
     "noNotes": "Ingen innhold lagt til ennå",
     "subtasks": "Undertasker",
@@ -3583,7 +3581,7 @@
     "switchToList": "Bytt til liste",
     "switchToTimeline": "Bytt til tidslinje",
     "leaveWithoutStarting": "Tilbake til I dag",
-    "overdueDays": "Forfalt {{count}} d",
+    "dueSince": "Forfall {{date}}",
     "whatNext": "Å gjøre i dag",
     "whatNextOn": "Hva kunne du gjort {{date}}?",
     "dueThatDay": "Forfaller den dagen",
@@ -4281,7 +4279,7 @@
     "loadMore": "Vis flere",
     "next": "Neste: {{name}}",
     "addedToday": "Lagt til i dag",
-    "pushedCount": "utsatt {{count}} ganger",
+    "movedCount": "flyttet {{count}} ganger",
     "lastPlanned": "sist planlagt {{date}}",
     "reviewDue": "gjennomgang forfalt",
     "reviewOn": "gjennomgang {{date}}",
@@ -4344,7 +4342,7 @@
     }
   },
   "postponements": {
-    "summary": "Utsatt {{total}} ganger, {{count}} de siste 30 dagene",
+    "summary": "Flyttet {{total}} ganger, {{count}} de siste 30 dagene",
     "kinds": {
       "postponed": "Utsatt",
       "rescheduled": "Omplanlagt",

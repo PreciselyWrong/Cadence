@@ -142,6 +142,29 @@ describe('Task Metrics Overdue and Due Today Tasks', () => {
         user = await createTestUser({ email: 'overdue-test@example.com' });
     });
 
+    it('never lists an undated task as overdue because its project is late', async () => {
+        const lateProject = await Project.create({
+            name: 'Late project',
+            user_id: user.id,
+            due_date_at: dayFromNow(-5),
+        });
+        await createTask({
+            name: 'Undated in late project',
+            project_id: lateProject.id,
+        });
+        await createTask({
+            name: 'Dated in late project',
+            project_id: lateProject.id,
+            due_date: dayFromNow(-2),
+        });
+
+        const metrics = await getTaskMetrics(user.id, 'UTC');
+        const overdueNames = metrics.tasks_overdue.map((task) => task.name);
+
+        expect(overdueNames).toContain('Dated in late project');
+        expect(overdueNames).not.toContain('Undated in late project');
+    });
+
     it('excludes overdue tasks with active status from tasks_overdue (they show in Planned)', async () => {
         // Create an overdue task with IN_PROGRESS status (shows in Planned section)
         await createTask({

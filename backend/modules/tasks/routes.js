@@ -52,6 +52,7 @@ const { createSubtasks, updateSubtasks } = require('./operations/subtasks');
 const { requireQuota } = require('../../middleware/entitlements');
 const { handleCompletionStatus } = require('./operations/completion');
 const { captureOldValues, logTaskChanges } = require('./utils/logging');
+const { logOccurrenceMove } = require('./taskEventService');
 const decisionFields = require('../review/fields');
 const { notifyAssignee } = require('./operations/assignment');
 const { destroyTaskRows } = require('./operations/deletion');
@@ -1333,6 +1334,22 @@ router.post('/task/:uid/move-occurrence', taskWriteGuards, async (req, res) => {
             dueDate: req.body.due_date,
             timezone: req.currentUser.timezone,
         });
+
+        // The review reads this as any other due date change.
+        try {
+            await logOccurrenceMove(
+                parent.id,
+                req.currentUser.id,
+                req.body.occurrence_date,
+                req.body.due_date,
+                {
+                    source: req.authToken ? 'api' : 'web',
+                    scope: req.body.scope,
+                }
+            );
+        } catch (error) {
+            logError('Error logging moved occurrence:', error);
+        }
 
         const include = { include: TASK_INCLUDES_WITH_SUBTASKS };
         const serialize = async (id) =>

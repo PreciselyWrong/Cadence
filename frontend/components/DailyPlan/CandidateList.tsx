@@ -45,7 +45,6 @@ interface CandidateListProps {
     onReschedule: (task: Task, when: 'tomorrow' | 'next_week') => void;
     onDrop: (task: Task) => void;
     onAddInbox: (item: InboxCandidate) => void;
-    today: string;
     // False while browsing another day: titles then name that day.
     isToday?: boolean;
     dayLabel?: string;
@@ -54,19 +53,11 @@ interface CandidateListProps {
 // "Help me choose" compares the first candidates in the list's order.
 const CHOOSE_FROM = 8;
 
-const daysBetween = (from: string, to: string) =>
-    Math.round(
-        (new Date(`${to}T12:00:00`).getTime() -
-            new Date(`${from}T12:00:00`).getTime()) /
-            (24 * 60 * 60 * 1000)
-    );
-
 interface CandidateCardProps {
     task: Task;
     group: TaskGroupKey;
     duration: number;
     suggested?: number | null;
-    today: string;
     isToday?: boolean;
     onDurationChange: (minutes: number) => void;
     onAdd: () => void;
@@ -83,7 +74,6 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     group,
     duration,
     suggested = null,
-    today,
     isToday = true,
     onDurationChange,
     onAdd,
@@ -91,7 +81,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     onReschedule,
     onDrop,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: `candidate:${task.uid}`,
         data: { type: 'candidate', task, duration },
@@ -114,12 +104,13 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
         status = t('review.actions.inView', 'In view');
     }
     if (group === 'overdue' && task.due_date) {
-        const days = Math.max(
-            1,
-            daysBetween(task.due_date.slice(0, 10), today)
-        );
-        status = t('dailyPlan.overdueDays', 'Overdue {{count}}d', {
-            count: days,
+        status = t('dailyPlan.dueSince', 'Due {{date}}', {
+            date: new Date(
+                `${task.due_date.slice(0, 10)}T12:00:00`
+            ).toLocaleDateString(i18n.language, {
+                day: 'numeric',
+                month: 'short',
+            }),
         });
     }
     const meta = [status, formatDuration(duration)].filter(Boolean).join(' · ');
@@ -247,7 +238,6 @@ const CandidateList: React.FC<CandidateListProps> = ({
     onReschedule,
     onDrop,
     onAddInbox,
-    today,
     isToday = true,
     dayLabel = '',
 }) => {
@@ -398,7 +388,6 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                         : (aiEstimates[task.uid as string] ??
                                           null)
                                 }
-                                today={today}
                                 onDurationChange={(minutes) =>
                                     onDurationChange(
                                         task.uid as string,

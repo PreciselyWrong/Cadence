@@ -91,7 +91,7 @@ const PostponementHistory: React.FC<PostponementHistoryProps> = ({
             >
                 {t(
                     'postponements.summary',
-                    'Pushed back {{total}} times, {{count}} in the last 30 days',
+                    'Moved {{total}} times, {{count}} in the last 30 days',
                     { total: data.total_count, count: data.recent_count }
                 )}
                 {data.last_postponed_on &&

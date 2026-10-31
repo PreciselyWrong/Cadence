@@ -3,7 +3,6 @@ const { Task, Project } = require('../../../../models');
 const permissionsService = require('../../../../services/permissionsService');
 const {
     fetchTasksDueToday,
-    fetchOverdueTasks,
 } = require('../../../../modules/tasks/queries/metrics-queries');
 const { createTestUser } = require('../../../helpers/testUtils');
 
@@ -17,14 +16,13 @@ describe('metrics queries: shared project condition', () => {
         user = await createTestUser({
             email: `metrics_${Date.now()}@example.com`,
         });
-        const yesterday = new Date(Date.now() - 36 * 60 * 60 * 1000);
         project = await Project.create({
-            name: 'Overdue project',
+            name: 'Project due today',
             user_id: user.id,
-            due_date_at: yesterday,
+            due_date_at: new Date(),
         });
         await Task.create({
-            name: 'Task in overdue project',
+            name: 'Task in project due today',
             user_id: user.id,
             project_id: project.id,
             status: Task.STATUS.NOT_STARTED,
@@ -47,17 +45,14 @@ describe('metrics queries: shared project condition', () => {
     it('treats a uid containing a quote as a value, not as SQL', async () => {
         shareUids(["x') OR 1=1 --", "a'b"]);
         await expect(
-            fetchOverdueTasks(visibleTo(user), 'UTC', user.id)
-        ).resolves.toEqual([]);
-        await expect(
             fetchTasksDueToday(visibleTo(user), 'UTC', user.id)
         ).resolves.toEqual([]);
     });
 
     it('still matches a real shared project uid', async () => {
         shareUids([project.uid]);
-        const tasks = await fetchOverdueTasks(visibleTo(user), 'UTC', user.id);
-        expect(tasks.map((t) => t.name)).toEqual(['Task in overdue project']);
+        const tasks = await fetchTasksDueToday(visibleTo(user), 'UTC', user.id);
+        expect(tasks.map((t) => t.name)).toEqual(['Task in project due today']);
     });
 
     it('never writes an owner id that is not a number into the query', async () => {
@@ -69,7 +64,7 @@ describe('metrics queries: shared project condition', () => {
         });
         // Unescaped, this is a syntax error; dropped, the query just runs.
         await expect(
-            fetchOverdueTasks(visibleTo(user), 'UTC', user.id)
+            fetchTasksDueToday(visibleTo(user), 'UTC', user.id)
         ).resolves.toBeInstanceOf(Array);
     });
 });

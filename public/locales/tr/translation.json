@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Son tarih {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Hangi spesifik eylemi gerçekleştirmeniz gerekiyor? Bir fiil ile başlamayı deneyin.",
       "vague": "\"Ara\", \"Yaz\", \"Planla\" veya \"Araştır\" gibi bir eylem fiili ile başlamayı deneyin"
     },
-    "overdueAlert": "Bu görev dün planınızdaydı ve tamamlanmadı.",
-    "overdueYesterday": "Bu görevi önceliklendirmeyi veya daha küçük adımlara ayırmayı düşünün.",
-    "overdueMultipleDays": "Bu görev {{count}} kez ertelendi.",
+    "overdueAlert": "Bu görev dünkü planındaydı.",
+    "overdueYesterday": "Yeniden planla ya da daha küçük adımlara böl.",
     "content": "İçerik",
     "noNotes": "Henüz içerik eklenmedi",
     "subtasks": "Alt görevler",
@@ -3578,7 +3576,7 @@
     "switchToList": "Listeye geç",
     "switchToTimeline": "Zaman çizelgesine geç",
     "leaveWithoutStarting": "Bugün'e dön",
-    "overdueDays": "{{count}} gün gecikti",
+    "dueSince": "Son tarih {{date}}",
     "whatNext": "Bugün yapılacaklar",
     "whatNextOn": "{{date}} günü ne yapabilirsin?",
     "dueThatDay": "O gün vadesi dolan",
@@ -4276,7 +4274,7 @@
     "loadMore": "Daha fazla göster",
     "next": "Sonraki: {{name}}",
     "addedToday": "Bugüne eklendi",
-    "pushedCount": "{{count}} kez ertelendi",
+    "movedCount": "{{count}} kez taşındı",
     "lastPlanned": "son planlanan {{date}}",
     "reviewDue": "gözden geçirme zamanı",
     "reviewOn": "{{date}} tarihinde gözden geçir",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "{{total}} kez ertelendi, son 30 günde {{count}}",
+    "summary": "{{total}} kez taşındı, son 30 günde {{count}}",
     "kinds": {
       "postponed": "Ertelendi",
       "rescheduled": "Yeniden planlandı",

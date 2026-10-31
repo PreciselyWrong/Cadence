@@ -1301,8 +1301,7 @@
     "startedOn": "Démarré le {{date}}",
     "daysToDue_one": "{{count}} jour avant l'échéance",
     "daysToDue_other": "{{count}} jours avant l'échéance",
-    "daysOverdue_one": "{{count}} jour de retard",
-    "daysOverdue_other": "{{count}} jours de retard",
+    "dueOn": "Échéance {{date}}",
     "progressSummary": "Progression du projet · {{done}} tâches sur {{total}} terminées",
     "timeUsed": "{{percent}} % du temps écoulé",
     "progressHint": "Barre : tâches terminées. Ligne : temps écoulé entre le début et l'échéance.",
@@ -1557,9 +1556,8 @@
       "noVerb": "Quelle action spécifique devez-vous entreprendre ? Essayez de commencer par un verbe.",
       "vague": "Essayez de commencer par un verbe d'action comme \"Appeler\", \"Écrire\", \"Planifier\" ou \"Rechercher\""
     },
-    "overdueAlert": "Cette tâche était dans votre plan hier et n'a pas été complétée.",
-    "overdueYesterday": "Envisagez de prioriser cette tâche ou de la décomposer en étapes plus petites.",
-    "overdueMultipleDays": "Cette tâche a été reportée {{count}} fois.",
+    "overdueAlert": "Cette tâche figurait dans le plan d'hier.",
+    "overdueYesterday": "Replanifiez-la, ou découpez-la en étapes plus petites.",
     "content": "Contenu",
     "noNotes": "Aucun contenu ajouté pour le moment",
     "subtasks": "Sous-tâches",
@@ -3585,7 +3583,7 @@
     "switchToList": "Passer à la liste",
     "switchToTimeline": "Passer à la chronologie",
     "leaveWithoutStarting": "Retour à aujourd'hui",
-    "overdueDays": "En retard de {{count}} j",
+    "dueSince": "Échéance {{date}}",
     "whatNext": "À faire aujourd'hui",
     "whatNextOn": "Que pourriez-vous faire le {{date}} ?",
     "dueThatDay": "À faire ce jour-là",
@@ -4284,7 +4282,7 @@
     "loadMore": "Afficher plus",
     "next": "Suivant : {{name}}",
     "addedToday": "Ajoutée à aujourd’hui",
-    "pushedCount": "reportée {{count}} fois",
+    "movedCount": "déplacée {{count}} fois",
     "lastPlanned": "dernière date prévue {{date}}",
     "reviewDue": "à revoir",
     "reviewOn": "revue le {{date}}",
@@ -4347,7 +4345,7 @@
     }
   },
   "postponements": {
-    "summary": "Reportée {{total}} fois, dont {{count}} ces 30 derniers jours",
+    "summary": "Déplacée {{total}} fois, dont {{count}} ces 30 derniers jours",
     "kinds": {
       "postponed": "Reportée",
       "rescheduled": "Replanifiée",

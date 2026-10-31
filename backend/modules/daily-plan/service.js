@@ -411,8 +411,8 @@ async function getCandidates(
     ]);
 
     // Groups follow the task's own due date, as Profile > Planning
-    // describes them. The Today page lists also count a late or due-today
-    // project, which put undated tasks under "Overdue". Started tasks that
+    // describes them. The Today page's due-today list also counts a project
+    // due today, which puts undated tasks there. Started tasks that
     // are past due count as overdue here, so late work is never ranked below
     // fresh work.
     const bounds = getTodayBoundsInUTC(timezone);
@@ -428,10 +428,9 @@ async function getCandidates(
         dueTime(task) >= todayStart &&
         dueTime(task) <= todayEnd;
     const started = [...metrics.tasks_in_progress, ...metrics.today_plan_tasks];
-    const fromProjectDates = [
-        ...metrics.tasks_overdue,
-        ...metrics.tasks_due_today,
-    ].filter((task) => !isLate(task) && !isDueToday(task));
+    const fromProjectDates = metrics.tasks_due_today.filter(
+        (task) => !isLate(task) && !isDueToday(task)
+    );
 
     // Tasks tagged #today come first by default and leave the other groups.
     const groupTasks = {

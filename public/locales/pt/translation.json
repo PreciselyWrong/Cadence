@@ -1300,8 +1300,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Vence {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1556,9 +1555,8 @@
       "noVerb": "Qual ação específica você precisa realizar? Tente começar com um verbo.",
       "vague": "Tente começar com um verbo de ação como \"Ligar\", \"Escrever\", \"Agendar\" ou \"Pesquisar\""
     },
-    "overdueAlert": "Esta tarefa estava no seu plano ontem e não foi concluída.",
-    "overdueYesterday": "Considere priorizar esta tarefa ou dividi-la em etapas menores.",
-    "overdueMultipleDays": "Esta tarefa foi adiada {{count}} vezes.",
+    "overdueAlert": "Esta tarefa estava no plano de ontem.",
+    "overdueYesterday": "Planeje-a de novo ou divida-a em passos menores.",
     "content": "Conteúdo",
     "noNotes": "Nenhum conteúdo adicionado ainda",
     "subtasks": "Subtarefas",
@@ -3584,7 +3582,7 @@
     "switchToList": "Mudar para lista",
     "switchToTimeline": "Mudar para linha temporal",
     "leaveWithoutStarting": "Voltar a Hoje",
-    "overdueDays": "Em atraso {{count}} d",
+    "dueSince": "Vence {{date}}",
     "whatNext": "A fazer hoje",
     "whatNextOn": "O que você poderia fazer em {{date}}?",
     "dueThatDay": "Vence nesse dia",
@@ -4283,7 +4281,7 @@
     "loadMore": "Mostrar mais",
     "next": "Seguinte: {{name}}",
     "addedToday": "Adicionada a hoje",
-    "pushedCount": "adiada {{count}} vezes",
+    "movedCount": "movida {{count}} vezes",
     "lastPlanned": "última data prevista {{date}}",
     "reviewDue": "revisão pendente",
     "reviewOn": "rever em {{date}}",
@@ -4346,7 +4344,7 @@
     }
   },
   "postponements": {
-    "summary": "Adiada {{total}} vezes, {{count}} nos últimos 30 dias",
+    "summary": "Movida {{total}} vezes, {{count}} nos últimos 30 dias",
     "kinds": {
       "postponed": "Adiada",
       "rescheduled": "Reagendada",

@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Падеж {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Какво конкретно действие трябва да предприемете? Опитайте да започнете с глагол.",
       "vague": "Опитайте да започнете с глагол за действие като \"Обадете се\", \"Напишете\", \"Планирайте\" или \"Проучете\""
     },
-    "overdueAlert": "Тази задача беше в плана ви вчера и не беше завършена.",
-    "overdueYesterday": "Помислете за приоритизиране на тази задача или разделянето ѝ на по-малки стъпки.",
-    "overdueMultipleDays": "Тази задача е отложена {{count}} пъти.",
+    "overdueAlert": "Тази задача беше в плана за вчера.",
+    "overdueYesterday": "Планирайте я отново или я разделете на по-малки стъпки.",
     "content": "Съдържание",
     "noNotes": "Все още не е добавено съдържание",
     "subtasks": "Подзадачи",
@@ -3578,7 +3576,7 @@
     "switchToList": "Превключи към списък",
     "switchToTimeline": "Превключи към времева линия",
     "leaveWithoutStarting": "Обратно към „Днес“",
-    "overdueDays": "Просрочена {{count}} д.",
+    "dueSince": "Падеж {{date}}",
     "whatNext": "За днес",
     "whatNextOn": "Какво бихте могли да направите на {{date}}?",
     "dueThatDay": "С краен срок този ден",
@@ -4276,7 +4274,7 @@
     "loadMore": "Покажи още",
     "next": "Напред: {{name}}",
     "addedToday": "Добавена за днес",
-    "pushedCount": "отложена {{count}} пъти",
+    "movedCount": "преместена {{count}} пъти",
     "lastPlanned": "последно планирана {{date}}",
     "reviewDue": "време за преглед",
     "reviewOn": "преглед на {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Отложена {{total}} пъти, {{count}} през последните 30 дни",
+    "summary": "Преместена {{total}} пъти, {{count}} през последните 30 дни",
     "kinds": {
       "postponed": "Отложена",
       "rescheduled": "Пренасрочена",

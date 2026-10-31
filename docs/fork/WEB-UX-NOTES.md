@@ -79,3 +79,14 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - retour : la cible sous le pointeur s'entoure d'un anneau bleu ; la ligne garde sa place et affiche le changement sans rechargement ; un échec affiche un toast d'erreur ; pas de toast de succès ni d'annulation (aucun motif d'annulation pour un déplacement n'existe encore) ; le clic qui termine le glisser n'ouvre pas la cible ;
   - densités : identique en Minimal et en Dense ; le glisser au clavier réordonne toujours, sans jamais viser la barre.
 - **Android** : reprendre le geste par appui long puis glisser vers les cibles du tiroir ou de la navigation (projets, tags, zones, Aujourd'hui / Demain) quand l'écran les montre pendant le glisser (tiroir ouvert, tablette, paysage) ; mêmes effets, mêmes refus, rien d'enregistré en cas de doublon, cible surlignée pendant le survol, la ligne reste à sa place.
+
+### 2026-10-31 — Ton sans culpabilité, revue et récurrence
+
+- **Problème** : « 3 jours de retard », « reportée N fois » et « cette tâche n'a pas été complétée » culpabilisent ; une tâche sans date apparaissait « En retard » parce que son projet l'était.
+- **Décisions** (règles dans `docs/34-review.md` et `docs/02-today-page-sections.md`) :
+  - plus aucun compteur de jours de retard : les cartes en retard du planificateur et l'en-tête de projet disent « Échéance 20 sept. » (`dailyPlan.dueSince`, `project.dueOn`) ; l'alerte du panneau de tâche dit seulement que la tâche était dans le plan d'hier et propose de la replanifier ou de la découper ;
+  - « Déplacée N fois » (`review.movedCount`, `postponements.summary`) dans la revue et dans l'historique du panneau seulement, jamais sur une ligne de tâche normale ;
+  - une tâche sans échéance n'est jamais « En retard » à cause de son projet (elle reste dans les listes et suggestions ordinaires) ; une échéance de projet « aujourd'hui » classe toujours ses tâches sans date dans « Aujourd'hui » ;
+  - reporter une occurrence récurrente (`move-occurrence`) et une échéance reçue depuis un appareil par la synchro (source `device`) comptent comme des reports volontaires dans la revue ;
+  - la rangée de décision (En vue / Cette semaine / Plus tard) et la ligne d'historique des reports sont aussi sur la page complète d'une tâche (`/task/:uid`), donc en Dense.
+- **Android** : retirer tout libellé « en retard de N jours » (afficher la date d'échéance), employer « déplacée N fois » dans l'historique des reports, ne jamais marquer en retard une tâche sans échéance ; reprendre la rangée de décision dans le détail de tâche.

@@ -1302,8 +1302,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Scadență {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1558,9 +1557,8 @@
       "noVerb": "Ce acțiune specifică trebuie să întreprindeți? Încercați să începeți cu un verb.",
       "vague": "Începeți cu un verb de acțiune, cum ar fi \"Sună\", \"Scrie\", \"Programează\" sau \"Cercetează\""
     },
-    "overdueAlert": "Această sarcină a fost în planul tău ieri și nu a fost finalizată.",
-    "overdueYesterday": "Ia în considerare prioritizarea acestei sarcini sau împărțirea ei în pași mai mici.",
-    "overdueMultipleDays": "Această sarcină a fost amânată de {{count}} ori.",
+    "overdueAlert": "Această sarcină era în planul de ieri.",
+    "overdueYesterday": "Planifică-o din nou sau împarte-o în pași mai mici.",
     "content": "Conținut",
     "noNotes": "Nu a fost adăugat încă niciun conținut",
     "subtasks": "Subsarci",
@@ -3587,7 +3585,7 @@
     "switchToList": "Comută la listă",
     "switchToTimeline": "Comută la cronologie",
     "leaveWithoutStarting": "Înapoi la Astăzi",
-    "overdueDays": "Întârziată {{count}} z",
+    "dueSince": "Scadență {{date}}",
     "whatNext": "De făcut azi",
     "whatNextOn": "Ce ai putea face pe {{date}}?",
     "dueThatDay": "Scadent în acea zi",
@@ -4287,7 +4285,7 @@
     "loadMore": "Arată mai multe",
     "next": "Următorul: {{name}}",
     "addedToday": "Adăugată la azi",
-    "pushedCount": "amânată de {{count}} ori",
+    "movedCount": "mutată de {{count}} ori",
     "lastPlanned": "ultima dată planificată {{date}}",
     "reviewDue": "revizuire scadentă",
     "reviewOn": "revizuire pe {{date}}",
@@ -4350,7 +4348,7 @@
     }
   },
   "postponements": {
-    "summary": "Amânată de {{total}} ori, {{count}} în ultimele 30 de zile",
+    "summary": "Mutată de {{total}} ori, {{count}} în ultimele 30 de zile",
     "kinds": {
       "postponed": "Amânată",
       "rescheduled": "Replanificată",

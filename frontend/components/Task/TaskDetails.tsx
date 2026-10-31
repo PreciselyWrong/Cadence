@@ -28,6 +28,8 @@ import { fetchComments } from '../../utils/commentsService';
 import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
 import LoadingScreen from '../Shared/LoadingScreen';
+import TaskDecisionRow from '../Review/TaskDecisionRow';
+import PostponementHistory from '../Review/PostponementHistory';
 import TaskTimeline from './TaskTimeline';
 import TaskComments from './TaskComments';
 import {
@@ -909,6 +911,18 @@ const TaskDetails: React.FC = () => {
         }
     };
 
+    // In view, This week or Later, decided from this page; the review page
+    // and the pane save the same way.
+    const handleDecisionSaved = async (saved: Task) => {
+        const taskIndex = tasksStore.tasks.findIndex(
+            (t: Task) => t.uid === saved.uid
+        );
+        if (taskIndex < 0) return;
+        const updatedTasks = [...tasksStore.tasks];
+        updatedTasks[taskIndex] = { ...updatedTasks[taskIndex], ...saved };
+        tasksStore.setTasks(updatedTasks);
+    };
+
     const handleSubtaskDelete = async (taskUid: string) => {
         try {
             await deleteTask(taskUid);
@@ -1776,6 +1790,16 @@ const TaskDetails: React.FC = () => {
                                     nextIterations={nextIterations}
                                     canEdit={!task.recurring_parent_id}
                                 />
+                                <div className="space-y-3">
+                                    <TaskDecisionRow
+                                        task={task}
+                                        onSaved={handleDecisionSaved}
+                                    />
+                                    <PostponementHistory
+                                        taskUid={task.uid}
+                                        version={task.due_date}
+                                    />
+                                </div>
                             </div>
 
                             <div className="space-y-6">

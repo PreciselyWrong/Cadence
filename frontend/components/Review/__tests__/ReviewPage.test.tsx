@@ -109,12 +109,10 @@ describe('ReviewPage', () => {
             </MemoryRouter>
         );
 
-    it('lists pushed back tasks with their count and no score', async () => {
+    it('lists frequently moved tasks with a neutral count and no score', async () => {
         renderPage();
         expect(await screen.findByText('Test app X')).toBeInTheDocument();
-        expect(
-            screen.getByText(/Apps · pushed back 6 times/)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Apps · moved 6 times/)).toBeInTheDocument();
         expect(
             screen.getByText(/1 to look at · 2 decided this week/)
         ).toBeInTheDocument();

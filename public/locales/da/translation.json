@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Forfald {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Hvilken specifik handling skal du udføre? Prøv at starte med et verbum.",
       "vague": "Prøv at starte med et handlingsverb som \"Ring\", \"Skriv\", \"Planlæg\" eller \"Undersøg\""
     },
-    "overdueAlert": "Denne opgave var i din plan i går og blev ikke fuldført.",
-    "overdueYesterday": "Overvej at prioritere denne opgave eller opdele den i mindre trin.",
-    "overdueMultipleDays": "Denne opgave er blevet udsat {{count}} gange.",
+    "overdueAlert": "Denne opgave var i gårsdagens plan.",
+    "overdueYesterday": "Planlæg den igen, eller del den op i mindre trin.",
     "content": "Indhold",
     "noNotes": "Ingen indhold tilføjet endnu",
     "subtasks": "Underopgaver",
@@ -3578,7 +3576,7 @@
     "switchToList": "Skift til liste",
     "switchToTimeline": "Skift til tidslinje",
     "leaveWithoutStarting": "Tilbage til I dag",
-    "overdueDays": "Forfalden {{count}} d",
+    "dueSince": "Forfald {{date}}",
     "whatNext": "At gøre i dag",
     "whatNextOn": "Hvad kunne du lave {{date}}?",
     "dueThatDay": "Forfalder den dag",
@@ -4276,7 +4274,7 @@
     "loadMore": "Vis flere",
     "next": "Næste: {{name}}",
     "addedToday": "Føjet til i dag",
-    "pushedCount": "udskudt {{count}} gange",
+    "movedCount": "flyttet {{count}} gange",
     "lastPlanned": "sidst planlagt {{date}}",
     "reviewDue": "gennemgang forfalden",
     "reviewOn": "gennemgang {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Udskudt {{total}} gange, {{count}} de sidste 30 dage",
+    "summary": "Flyttet {{total}} gange, {{count}} de sidste 30 dage",
     "kinds": {
       "postponed": "Udskudt",
       "rescheduled": "Omplanlagt",

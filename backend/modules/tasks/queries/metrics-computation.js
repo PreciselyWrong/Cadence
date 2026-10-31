@@ -310,13 +310,7 @@ async function computeTaskMetrics(
             somedayExcludedIds,
             permissionCache
         ),
-        fetchOverdueTasks(
-            visibleTasksWhere,
-            userTimezone,
-            userId,
-            somedayExcludedIds,
-            permissionCache
-        ),
+        fetchOverdueTasks(visibleTasksWhere, userTimezone, somedayExcludedIds),
         fetchTasksCompletedToday(userId, userTimezone, scopeWhere),
         computeWeeklyCompletions(userId, userTimezone),
     ]);

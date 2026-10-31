@@ -1302,8 +1302,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Termin {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1558,9 +1557,8 @@
       "noVerb": "Jaką konkretną akcję musisz podjąć? Spróbuj zacząć od czasownika.",
       "vague": "Spróbuj zacząć od czasownika akcji, takiego jak \"Zadzwoń\", \"Napisz\", \"Zaplanuj\" lub \"Zbadaj\""
     },
-    "overdueAlert": "To zadanie było w Twoim planie wczoraj i nie zostało ukończone.",
-    "overdueYesterday": "Rozważ nadanie priorytetu temu zadaniu lub podzielenie go na mniejsze kroki.",
-    "overdueMultipleDays": "To zadanie zostało odłożone {{count}} razy.",
+    "overdueAlert": "To zadanie było we wczorajszym planie.",
+    "overdueYesterday": "Zaplanuj je ponownie lub podziel na mniejsze kroki.",
     "content": "Treść",
     "noNotes": "Nie dodano jeszcze treści",
     "subtasks": "Podzadania",
@@ -3592,7 +3590,7 @@
     "switchToList": "Przełącz na listę",
     "switchToTimeline": "Przełącz na oś czasu",
     "leaveWithoutStarting": "Wróć do Dziś",
-    "overdueDays": "Zaległe {{count}} d",
+    "dueSince": "Termin {{date}}",
     "whatNext": "Do zrobienia dziś",
     "whatNextOn": "Co możesz zrobić {{date}}?",
     "dueThatDay": "Termin tego dnia",
@@ -4294,7 +4292,7 @@
     "loadMore": "Pokaż więcej",
     "next": "Dalej: {{name}}",
     "addedToday": "Dodano do dzisiaj",
-    "pushedCount": "odłożone {{count}} razy",
+    "movedCount": "przeniesione {{count}} razy",
     "lastPlanned": "ostatnio zaplanowane {{date}}",
     "reviewDue": "czas na przegląd",
     "reviewOn": "przegląd {{date}}",
@@ -4357,7 +4355,7 @@
     }
   },
   "postponements": {
-    "summary": "Odłożone {{total}} razy, {{count}} w ostatnich 30 dniach",
+    "summary": "Przeniesione {{total}} razy, {{count}} w ostatnich 30 dniach",
     "kinds": {
       "postponed": "Odłożone",
       "rescheduled": "Przełożone",

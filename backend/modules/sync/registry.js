@@ -69,6 +69,17 @@ const ENTITIES = {
                 entity: 'tag',
             },
         },
+        // A due date changed on the user's device counts for the review.
+        afterApply: async ({ row, previous, values, clocks, userId }) => {
+            if (!previous || !('due_date' in values)) return;
+            const { logDeviceDueChange } = require('../tasks/utils/logging');
+            await logDeviceDueChange(
+                row,
+                previous.due_date,
+                userId,
+                clocks.due_date
+            );
+        },
         // Removes events, tags, relations and attachments with the row.
         destroy: async (row) => {
             const { TaskAttachment } = require('../../models');

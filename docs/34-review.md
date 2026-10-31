@@ -24,7 +24,7 @@ Three different intentions stay three different things:
 
 ### Setting them
 
-- Task pane (Minimal): three chips, **In view**, **This week**, **Later**. A **Review on** date appears only for a parked task or one that already has a date.
+- Task pane (Minimal) and the full task page (`/task/:uid`, the only detail view in Dense): three chips, **In view**, **This week**, **Later**, with the postponement line under them. A **Review on** date appears only for a parked task or one that already has a date.
 - Right-click menu of a Minimal row: the same three choices.
 - Review page: one visible **Decide** button per row (label always shown, with a chevron) that opens a menu with the choices that fit the list.
 - API: `PATCH /api/task/:uid` accepts `in_view` (boolean), `week_of` (`YYYY-MM-DD` in that week, `this_week`, `next_week` or `null`), `review_on` (`YYYY-MM-DD` or `null`), `later` (boolean) and `reviewed: true`. MCP `update_task` takes the first four.
@@ -51,7 +51,7 @@ Each due date change is read in the user's timezone:
 | Rescheduled | Moved to a later day well ahead of time | No: a plan change |
 | Time changed | Same day, another time ("Push to later" in the planner does not even touch the due date) | No |
 | Moved earlier, date set, date removed | — | No |
-| Changed automatically | Written by an import, a sync, recurrence or any source other than the app or an API key | No |
+| Changed automatically | Written by an import, a server-side sync (Google, CalDAV), recurrence or any source other than the app, an API key or the user's own device | No |
 
 A day plan counts too: a one-off task that was on a past day's plan and was not completed by the end of that day was *planned, not done*. Recurring tasks and habits are left out of this, since they reopen on their own.
 
@@ -59,7 +59,13 @@ A day plan counts too: a one-off task that was on a past day's plan and was not 
 
 Only the user's own writes count for them. On a shared task, another person's changes are theirs, and the pane shows only the viewer's own history.
 
-Writes that are never logged as due date changes: completing a recurring task (logged as an occurrence), skipping or moving an occurrence, Google Calendar/Tasks sync, offline sync, MCP, spreadsheet import (logged with source `import`). A save that sends the same due date again logs nothing.
+Moving an occurrence of a recurring task (`POST /api/task/:uid/move-occurrence`, any scope) is logged on the series as a due date change from the occurrence's day to the new day, with source `web` or `api`, so it counts like any other push. The days are stored as the local days the user gave.
+
+A due date received through offline sync (`/api/v1/sync`) from one of the user's own devices is logged with source `device`, dated when the device made the change (its clock, never later than now), and counts like a change made in the app. Nothing is logged for a new task, an unchanged date, a change that lost the merge, a done or cancelled task, or a recurring task (its date also moves when an occurrence is completed on the device).
+
+Writes that are never logged as due date changes: completing a recurring task (logged as an occurrence), skipping an occurrence, Google Calendar/Tasks and CalDAV sync, MCP, spreadsheet import (logged with source `import`). A save that sends the same due date again logs nothing.
+
+No wording in the app counts days of delay: an undated task is never late, and an overdue task in Today or in the planner shows its due date (*Due 20 Sep*), not a number of days.
 
 ### Frequently pushed back
 
@@ -69,7 +75,7 @@ History older than the logs is unknown, not rebuilt: older events stored the dat
 
 ### In the task pane
 
-Once a task has been pushed back, a single grey line shows *Pushed back N times, M in the last 30 days · last date*. A click lists the history (pushed back, rescheduled, date removed, planned not done) newest first. Rows in lists carry no new badge.
+Once a task has been pushed back, a single grey line shows *Moved N times, M in the last 30 days · last date*. The wording is neutral: it describes what happened, never how late anything is. The review rows say *moved N times*; ordinary task rows carry nothing. A click lists the history (pushed back, rescheduled, date removed, planned not done) newest first. Rows in lists carry no new badge.
 
 ## The Review page
 

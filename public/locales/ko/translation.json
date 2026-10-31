@@ -1297,8 +1297,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "마감 {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "어떤 특정한 행동을 취해야 하나요? 동사로 시작해 보세요.",
       "vague": "\"전화하기\", \"작성하기\", \"일정 잡기\" 또는 \"조사하기\"와 같은 동사로 시작해 보세요"
     },
-    "overdueAlert": "이 작업은 어제 귀하의 계획에 있었으나 완료되지 않았습니다.",
-    "overdueYesterday": "이 작업의 우선 순위를 정하거나 더 작은 단계로 나누는 것을 고려해 보세요.",
-    "overdueMultipleDays": "이 작업은 {{count}} 번 연기되었습니다.",
+    "overdueAlert": "이 작업은 어제 계획에 있었습니다.",
+    "overdueYesterday": "다시 계획하거나 더 작은 단계로 나눠 보세요.",
     "content": "내용",
     "noNotes": "아직 추가된 내용이 없습니다",
     "subtasks": "하위 작업",
@@ -3578,7 +3576,7 @@
     "switchToList": "목록으로 전환",
     "switchToTimeline": "타임라인으로 전환",
     "leaveWithoutStarting": "오늘로 돌아가기",
-    "overdueDays": "{{count}}일 지남",
+    "dueSince": "마감 {{date}}",
     "whatNext": "오늘 할 일",
     "whatNextOn": "{{date}}에 무엇을 할 수 있을까요?",
     "dueThatDay": "그날 마감",
@@ -4276,7 +4274,7 @@
     "loadMore": "더 보기",
     "next": "다음: {{name}}",
     "addedToday": "오늘에 추가됨",
-    "pushedCount": "{{count}}번 미룸",
+    "movedCount": "{{count}}번 옮김",
     "lastPlanned": "마지막 예정일 {{date}}",
     "reviewDue": "검토할 때",
     "reviewOn": "{{date}} 검토",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "{{total}}번 미룸, 최근 30일 {{count}}번",
+    "summary": "{{total}}번 옮김, 최근 30일 {{count}}번",
     "kinds": {
       "postponed": "미룸",
       "rescheduled": "일정 변경",

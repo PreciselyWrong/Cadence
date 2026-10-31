@@ -74,6 +74,16 @@ const REVIEWABLE = {
     parent_task_id: null,
 };
 
+const PUSH_RULE_COLUMNS = [
+    'id',
+    'project_id',
+    'habit_mode',
+    'recurrence_type',
+    'recurring_parent_id',
+    'completed_at',
+    'reviewed_at',
+];
+
 // Frequently pushed open tasks, with their push summary, most pushed first.
 // Reads only the last 30 days of the user's own due changes and plans.
 async function computePushed(user, timezone, today) {
@@ -96,9 +106,12 @@ async function computePushed(user, timezone, today) {
     const ids = new Set([...changesByTask.keys(), ...planDays.keys()]);
     if (ids.size === 0) return [];
 
+    // Only the columns the rules read: the page that is shown is loaded in
+    // full afterwards, so thousands of candidates stay cheap.
     const tasks = await repository.findOpenTasks(
         await visibleTasksWhere(user.id),
-        { ...REVIEWABLE, id: { [Op.in]: [...ids] } }
+        { ...REVIEWABLE, id: { [Op.in]: [...ids] } },
+        { attributes: PUSH_RULE_COLUMNS, include: [] }
     );
 
     const result = [];
@@ -324,13 +337,19 @@ async function getCategory(user, category, query = {}) {
             };
         }
         const page = pushed.slice(offset, offset + limit);
+        const full = await repository.findOpenTasks(
+            await visibleTasksWhere(user.id),
+            { id: { [Op.in]: page.map(({ task }) => task.id) } }
+        );
+        const byId = new Map(full.map((task) => [task.id, task]));
+        const shown = page.filter(({ task }) => byId.has(task.id));
         const serialized = await serialize(
-            page.map(({ task }) => task),
+            shown.map(({ task }) => byId.get(task.id)),
             timezone
         );
         return {
             total: pushed.length,
-            items: page.map(({ push }, i) => ({
+            items: shown.map(({ push }, i) => ({
                 task: serialized[i],
                 push,
             })),

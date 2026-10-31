@@ -84,6 +84,16 @@ const mockParentTaskInStore = {
 };
 
 const mockUpdateTask = jest.fn();
+const mockDecideTask = jest.fn();
+
+jest.mock('../../../utils/reviewService', () => ({
+    decideTask: (...args: any[]) => mockDecideTask(...args),
+    isParked: (task: any) =>
+        (task.tags || []).some((tag: any) => tag.name === 'someday'),
+    fetchTaskPostponements: jest.fn(() =>
+        Promise.resolve({ total_count: 0, recent_count: 0, changes: [] })
+    ),
+}));
 
 jest.mock('../../../utils/tasksService', () => ({
     updateTask: (...args: any[]) => mockUpdateTask(...args),
@@ -258,5 +268,43 @@ describe('TaskDetails project selection', () => {
 
         const list = await screen.findByTestId('task-project-card-projects');
         expect(list.textContent).toBe('Active Project');
+    });
+});
+
+describe('TaskDetails decision row', () => {
+    beforeEach(() => {
+        mockTasksInStore = [{ ...mockParentTaskInStore, subtasks: [] }];
+        mockSetTasks.mockClear();
+        mockDecideTask.mockReset();
+    });
+
+    it('decides In view, This week or Later from the full page too', async () => {
+        mockDecideTask.mockResolvedValue({
+            ...mockParentTaskInStore,
+            in_view: true,
+            subtasks: [],
+        });
+        render(<TaskDetails />);
+
+        fireEvent.click(await screen.findByRole('button', { name: 'In view' }));
+
+        await waitFor(() =>
+            expect(mockDecideTask).toHaveBeenCalledWith('task-1', {
+                in_view: true,
+            })
+        );
+        await waitFor(() => {
+            const saved = mockSetTasks.mock.calls
+                .map((call) => call[0])
+                .flat()
+                .find((task: any) => task.uid === 'task-1' && task.in_view);
+            expect(saved).toBeTruthy();
+        });
+        expect(
+            screen.getByRole('button', { name: 'This week' })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Later' })
+        ).toBeInTheDocument();
     });
 });

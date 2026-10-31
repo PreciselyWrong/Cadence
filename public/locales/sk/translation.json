@@ -1331,8 +1331,7 @@
         "startedOn": "Started {{date}}",
         "daysToDue_one": "{{count}} day to due date",
         "daysToDue_other": "{{count}} days to due date",
-        "daysOverdue_one": "{{count}} day overdue",
-        "daysOverdue_other": "{{count}} days overdue",
+        "dueOn": "Termín {{date}}",
         "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
         "timeUsed": "{{percent}}% of time used",
         "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1584,9 +1583,8 @@
             "noVerb": "Aký konkrétny krok musíte urobiť? Skúste začať slovesom.",
             "vague": "Skúste začať akčným slovesom, napríklad „Zavolať“, „Napísať“, „Naplánovať“ alebo „Preskúmať“"
         },
-        "overdueAlert": "Táto úloha bola včera vo vašom pláne a nebola dokončená.",
-        "overdueYesterday": "Zvážte uprednostnenie tejto úlohy alebo jej rozdelenie na menšie kroky.",
-        "overdueMultipleDays": "Táto úloha bola odložená už {{count}}-krát.",
+        "overdueAlert": "Táto úloha bola vo včerajšom pláne.",
+        "overdueYesterday": "Naplánujte ju znova alebo ju rozdeľte na menšie kroky.",
         "content": "Obsah",
         "noNotes": "Pridajte obsah",
         "subtasks": "Podúlohy",
@@ -3611,7 +3609,7 @@
         "switchToList": "Prepnúť na zoznam",
         "switchToTimeline": "Prepnúť na časovú os",
         "leaveWithoutStarting": "Späť na Dnes",
-        "overdueDays": "Po termíne {{count}} d",
+        "dueSince": "Termín {{date}}",
         "whatNext": "Na dnes",
         "whatNextOn": "Čo by ste mohli urobiť {{date}}?",
         "dueThatDay": "Termín v ten deň",
@@ -4316,7 +4314,7 @@
         "loadMore": "Zobraziť viac",
         "next": "Ďalej: {{name}}",
         "addedToday": "Pridané na dnes",
-        "pushedCount": "odložené {{count}}-krát",
+        "movedCount": "presunuté {{count}}-krát",
         "lastPlanned": "naposledy plánované {{date}}",
         "reviewDue": "prehľad je na rade",
         "reviewOn": "prehľad {{date}}",
@@ -4379,7 +4377,7 @@
         }
     },
     "postponements": {
-        "summary": "Odložené {{total}}-krát, {{count}} za posledných 30 dní",
+        "summary": "Presunuté {{total}}-krát, {{count}} za posledných 30 dní",
         "kinds": {
             "postponed": "Odložené",
             "rescheduled": "Preplánované",

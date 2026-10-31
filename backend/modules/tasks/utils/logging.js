@@ -1,4 +1,6 @@
 const { logError } = require('../../../services/logService');
+const { Task } = require('../../../models');
+const hlc = require('../../sync/hlc');
 const { logTaskUpdate, logEvent } = require('../taskEventService');
 
 function captureOldValues(task) {
@@ -130,7 +132,45 @@ async function logTaskChanges(
     }
 }
 
+const CLOSED_STATUSES = [
+    Task.STATUS.DONE,
+    Task.STATUS.ARCHIVED,
+    Task.STATUS.CANCELLED,
+];
+
+// A due date pushed from one of the user's own devices through offline sync.
+// It is logged like a change made in the app, at the moment the device made
+// it (its clock), so the review reads it as the user's decision. Recurring
+// tasks are left out: their dates also move when an occurrence is completed
+// on the device, which is not a postponement.
+async function logDeviceDueChange(task, previousDue, userId, hlcValue) {
+    try {
+        if (timeOf(previousDue) === timeOf(task.due_date)) return;
+        if (task.habit_mode || task.recurring_parent_id) return;
+        if (task.recurrence_type && task.recurrence_type !== 'none') return;
+        if (CLOSED_STATUSES.includes(task.status)) return;
+
+        const parsed = hlc.parse(hlcValue);
+        const now = Date.now();
+        const createdAt =
+            parsed && parsed.ms <= now ? new Date(parsed.ms) : new Date(now);
+        await logEvent({
+            taskId: task.id,
+            userId,
+            eventType: 'due_date_changed',
+            fieldName: 'due_date',
+            oldValue: previousDue,
+            newValue: task.due_date,
+            metadata: { source: 'device', action: 'due_date_change' },
+            createdAt,
+        });
+    } catch (error) {
+        logError('Error logging device due date change:', error);
+    }
+}
+
 module.exports = {
     captureOldValues,
     logTaskChanges,
+    logDeviceDueChange,
 };

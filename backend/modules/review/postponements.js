@@ -6,9 +6,10 @@
 // rows. See docs/34-review.md for the rules in plain words.
 const moment = require('moment-timezone');
 
-// Writes that come from the person using the app. Anything else (sync,
-// import, recurrence, scripts) is never a postponement.
-const USER_SOURCES = new Set(['web', 'api']);
+// Writes that come from the person using the app or one of their own
+// devices (offline sync). Anything else (server-side sync, import,
+// recurrence, scripts) is never a postponement.
+const USER_SOURCES = new Set(['web', 'api', 'device']);
 
 const WINDOW_DAYS = 30;
 const FREQUENT_THRESHOLD = 3;

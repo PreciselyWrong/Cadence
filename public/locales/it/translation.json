@@ -1300,8 +1300,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Scadenza {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1556,9 +1555,8 @@
       "noVerb": "Quale azione specifica devi intraprendere? Prova a iniziare con un verbo.",
       "vague": "Prova a iniziare con un verbo d'azione come \"Chiama\", \"Scrivi\", \"Pianifica\" o \"Ricerca\""
     },
-    "overdueAlert": "Questo compito era nel tuo piano ieri e non è stato completato.",
-    "overdueYesterday": "Considera di dare priorità a questo compito o di suddividerlo in passaggi più piccoli.",
-    "overdueMultipleDays": "Questo compito è stato posticipato {{count}} volte.",
+    "overdueAlert": "Questo compito era nel piano di ieri.",
+    "overdueYesterday": "Pianificalo di nuovo oppure dividilo in passaggi più piccoli.",
     "content": "Contenuto",
     "noNotes": "Nessun contenuto aggiunto ancora",
     "subtasks": "Sottocompiti",
@@ -3584,7 +3582,7 @@
     "switchToList": "Passa all'elenco",
     "switchToTimeline": "Passa alla linea temporale",
     "leaveWithoutStarting": "Torna a Oggi",
-    "overdueDays": "In ritardo di {{count}} g",
+    "dueSince": "Scadenza {{date}}",
     "whatNext": "Da fare oggi",
     "whatNextOn": "Cosa potresti fare il {{date}}?",
     "dueThatDay": "In scadenza quel giorno",
@@ -4283,7 +4281,7 @@
     "loadMore": "Mostra altro",
     "next": "Avanti: {{name}}",
     "addedToday": "Aggiunta a oggi",
-    "pushedCount": "rimandata {{count}} volte",
+    "movedCount": "spostata {{count}} volte",
     "lastPlanned": "ultima data prevista {{date}}",
     "reviewDue": "revisione scaduta",
     "reviewOn": "revisione il {{date}}",
@@ -4346,7 +4344,7 @@
     }
   },
   "postponements": {
-    "summary": "Rimandata {{total}} volte, {{count}} negli ultimi 30 giorni",
+    "summary": "Spostata {{total}} volte, {{count}} negli ultimi 30 giorni",
     "kinds": {
       "postponed": "Rimandata",
       "rescheduled": "Ripianificata",

@@ -1297,8 +1297,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "到期 {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "您需要采取什么具体行动？尝试以动词开头。",
       "vague": "尝试以动词开头，例如 \"拨打电话\"、\"写作\"、\"安排\" 或 \"研究\""
     },
-    "overdueAlert": "此任务昨天在您的计划中，但未完成。",
-    "overdueYesterday": "考虑优先处理此任务或将其拆分为更小的步骤。",
-    "overdueMultipleDays": "此任务已推迟 {{count }} 次。",
+    "overdueAlert": "此任务在昨天的计划中。",
+    "overdueYesterday": "可以重新安排，或拆分成更小的步骤。",
     "content": "内容",
     "noNotes": "尚未添加内容",
     "subtasks": "子任务",
@@ -3578,7 +3576,7 @@
     "switchToList": "切换到列表",
     "switchToTimeline": "切换到时间线",
     "leaveWithoutStarting": "返回今天",
-    "overdueDays": "逾期 {{count}} 天",
+    "dueSince": "到期 {{date}}",
     "whatNext": "今日待办",
     "whatNextOn": "{{date}}你可以做什么？",
     "dueThatDay": "当天到期",
@@ -4276,7 +4274,7 @@
     "loadMore": "显示更多",
     "next": "下一步：{{name}}",
     "addedToday": "已加入今天",
-    "pushedCount": "推迟了 {{count}} 次",
+    "movedCount": "已移动 {{count}} 次",
     "lastPlanned": "上次计划 {{date}}",
     "reviewDue": "该回顾了",
     "reviewOn": "{{date}} 回顾",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "推迟了 {{total}} 次，近 30 天 {{count}} 次",
+    "summary": "已移动 {{total}} 次，近 30 天 {{count}} 次",
     "kinds": {
       "postponed": "推迟",
       "rescheduled": "重新安排",

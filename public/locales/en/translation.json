@@ -1311,8 +1311,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Due {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1574,9 +1573,8 @@
       "noVerb": "What specific action do you need to take? Try starting with a verb.",
       "vague": "Try starting with an action verb like \"Call\", \"Write\", \"Schedule\", or \"Research\""
     },
-    "overdueAlert": "This task was in your plan yesterday and wasn't completed.",
-    "overdueYesterday": "Consider prioritizing this task or breaking it into smaller steps.",
-    "overdueMultipleDays": "This task has been postponed {{count}} times.",
+    "overdueAlert": "This task was in yesterday's plan.",
+    "overdueYesterday": "Plan it again, or split it into smaller steps.",
     "content": "Content",
     "noNotes": "Add some content",
     "subtasks": "Subtasks",
@@ -3595,7 +3593,7 @@
     "switchToList": "Switch to list",
     "switchToTimeline": "Switch to timeline",
     "leaveWithoutStarting": "Back to Today",
-    "overdueDays": "Overdue {{count}}d",
+    "dueSince": "Due {{date}}",
     "whatNext": "To do today",
     "whatNextOn": "What could you do on {{date}}?",
     "dueThatDay": "Due that day",
@@ -4322,7 +4320,7 @@
     "loadMore": "Show more",
     "next": "Next: {{name}}",
     "addedToday": "Added to today",
-    "pushedCount": "pushed back {{count}} times",
+    "movedCount": "moved {{count}} times",
     "lastPlanned": "last planned {{date}}",
     "reviewDue": "review due",
     "reviewOn": "review {{date}}",
@@ -4385,7 +4383,7 @@
     }
   },
   "postponements": {
-    "summary": "Pushed back {{total}} times, {{count}} in the last 30 days",
+    "summary": "Moved {{total}} times, {{count}} in the last 30 days",
     "kinds": {
       "postponed": "Pushed back",
       "rescheduled": "Rescheduled",

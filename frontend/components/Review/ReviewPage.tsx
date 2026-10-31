@@ -403,7 +403,7 @@ const ReviewPage: React.FC = () => {
         const parts: (string | null | undefined)[] = [task.Project?.name];
         if (row.kind === 'pushed') {
             parts.push(
-                t('review.pushedCount', 'pushed back {{count}} times', {
+                t('review.movedCount', 'moved {{count}} times', {
                     count: row.item.push.recent_count,
                 })
             );

@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Vervalt {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Welke specifieke actie moet je ondernemen? Probeer te beginnen met een werkwoord.",
       "vague": "Probeer te beginnen met een actie werkwoord zoals \"Bel\", \"Schrijf\", \"Plan\" of \"Onderzoek\""
     },
-    "overdueAlert": "Deze taak stond gisteren in je planning en is niet voltooid.",
-    "overdueYesterday": "Overweeg deze taak prioriteit te geven of deze in kleinere stappen op te splitsen.",
-    "overdueMultipleDays": "Deze taak is {{count}} keer uitgesteld.",
+    "overdueAlert": "Deze taak stond in het plan van gisteren.",
+    "overdueYesterday": "Plan hem opnieuw in of splits hem op in kleinere stappen.",
     "content": "Inhoud",
     "noNotes": "Nog geen inhoud toegevoegd",
     "subtasks": "Subtaken",
@@ -3578,7 +3576,7 @@
     "switchToList": "Naar lijst",
     "switchToTimeline": "Naar tijdlijn",
     "leaveWithoutStarting": "Terug naar Vandaag",
-    "overdueDays": "{{count}} d achterstallig",
+    "dueSince": "Vervalt {{date}}",
     "whatNext": "Te doen vandaag",
     "whatNextOn": "Wat zou je op {{date}} kunnen doen?",
     "dueThatDay": "Die dag te doen",
@@ -4276,7 +4274,7 @@
     "loadMore": "Meer tonen",
     "next": "Volgende: {{name}}",
     "addedToday": "Aan vandaag toegevoegd",
-    "pushedCount": "{{count}} keer uitgesteld",
+    "movedCount": "{{count}} keer verplaatst",
     "lastPlanned": "laatst gepland {{date}}",
     "reviewDue": "herziening nodig",
     "reviewOn": "herzien op {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "{{total}} keer uitgesteld, {{count}} in de laatste 30 dagen",
+    "summary": "{{total}} keer verplaatst, {{count}} in de laatste 30 dagen",
     "kinds": {
       "postponed": "Uitgesteld",
       "rescheduled": "Opnieuw gepland",

@@ -14,6 +14,7 @@ const createValueObject = (fieldName, value) =>
  * @param {any} eventData.oldValue - Old value (optional)
  * @param {any} eventData.newValue - New value (optional)
  * @param {Object} eventData.metadata - Additional metadata (optional)
+ * @param {Date} eventData.createdAt - When it happened, if not now (optional)
  */
 const logEvent = async ({
     taskId,
@@ -23,6 +24,7 @@ const logEvent = async ({
     oldValue = null,
     newValue = null,
     metadata = {},
+    createdAt = undefined,
 }) => {
     try {
         const finalMetadata = {
@@ -38,6 +40,7 @@ const logEvent = async ({
             old_value: createValueObject(fieldName, oldValue),
             new_value: createValueObject(fieldName, newValue),
             metadata: finalMetadata,
+            ...(createdAt ? { created_at: createdAt } : {}),
         });
 
         return event;
@@ -127,6 +130,30 @@ const logDueDateChange = async (
         oldValue: oldDueDate,
         newValue: newDueDate,
         metadata: { ...metadata, action: 'due_date_change' },
+    });
+};
+
+/**
+ * Log that one occurrence (or the series) of a recurring task was moved to
+ * another day. The days are local calendar days as the user gave them. The
+ * review reads this like any other due date change.
+ */
+const logOccurrenceMove = async (
+    taskId,
+    userId,
+    fromDay,
+    toDay,
+    metadata = {}
+) => {
+    if (fromDay === toDay) return null;
+    return await logEvent({
+        taskId,
+        userId,
+        eventType: 'due_date_changed',
+        fieldName: 'due_date',
+        oldValue: fromDay,
+        newValue: toDay,
+        metadata: { ...metadata, action: 'move_occurrence' },
     });
 };
 
@@ -480,6 +507,7 @@ module.exports = {
     logNameChange,
     logDescriptionChange,
     logTaskUpdate,
+    logOccurrenceMove,
     getTaskTimeline,
     getTaskCompletionTime,
     getUserProductivityMetrics,

@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Erääntyy {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Mitä erityistä toimintoa sinun tarvitsee tehdä? Yritä aloittaa verbillä.",
       "vague": "Yritä aloittaa toimintaverbillä kuten \"Soita\", \"Kirjoita\", \"Aikatauluta\" tai \"Tutki\""
     },
-    "overdueAlert": "Tämä tehtävä oli suunnitelmassasi eilen eikä sitä ole suoritettu.",
-    "overdueYesterday": "Harkitse tämän tehtävän priorisoimista tai jakamista pienempiin vaiheisiin.",
-    "overdueMultipleDays": "Tätä tehtävää on siirretty {{count}} kertaa.",
+    "overdueAlert": "Tämä tehtävä oli eilisessä suunnitelmassa.",
+    "overdueYesterday": "Suunnittele se uudelleen tai jaa se pienempiin vaiheisiin.",
     "content": "Sisältö",
     "noNotes": "Ei vielä lisättyä sisältöä",
     "subtasks": "Ala-tehtävät",
@@ -3578,7 +3576,7 @@
     "switchToList": "Vaihda luetteloon",
     "switchToTimeline": "Vaihda aikajanaan",
     "leaveWithoutStarting": "Takaisin Tänään-näkymään",
-    "overdueDays": "Myöhässä {{count}} pv",
+    "dueSince": "Erääntyy {{date}}",
     "whatNext": "Tehtävät tänään",
     "whatNextOn": "Mitä voisit tehdä {{date}}?",
     "dueThatDay": "Erääntyy sinä päivänä",
@@ -4276,7 +4274,7 @@
     "loadMore": "Näytä lisää",
     "next": "Seuraava: {{name}}",
     "addedToday": "Lisätty tälle päivälle",
-    "pushedCount": "lykätty {{count}} kertaa",
+    "movedCount": "siirretty {{count}} kertaa",
     "lastPlanned": "viimeksi suunniteltu {{date}}",
     "reviewDue": "katselmointi erääntynyt",
     "reviewOn": "katselmointi {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Lykätty {{total}} kertaa, {{count}} viimeisten 30 päivän aikana",
+    "summary": "Siirretty {{total}} kertaa, {{count}} viimeisten 30 päivän aikana",
     "kinds": {
       "postponed": "Lykätty",
       "rescheduled": "Siirretty",

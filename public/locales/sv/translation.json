@@ -1298,8 +1298,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Förfaller {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Vilken specifik åtgärd behöver du vidta? Försök börja med ett verb.",
       "vague": "Försök börja med ett handlingsverb som \"Ring\", \"Skriv\", \"Schemalägg\" eller \"Forska\""
     },
-    "overdueAlert": "Denna uppgift var i din plan igår och blev inte slutförd.",
-    "overdueYesterday": "Överväg att prioritera denna uppgift eller dela upp den i mindre steg.",
-    "overdueMultipleDays": "Denna uppgift har blivit uppskjuten {{count}} gånger.",
+    "overdueAlert": "Den här uppgiften fanns i gårdagens plan.",
+    "overdueYesterday": "Planera den igen eller dela upp den i mindre steg.",
     "content": "Innehåll",
     "noNotes": "Inga anteckningar tillagda än",
     "subtasks": "Deluppgifter",
@@ -3578,7 +3576,7 @@
     "switchToList": "Byt till lista",
     "switchToTimeline": "Byt till tidslinje",
     "leaveWithoutStarting": "Tillbaka till Idag",
-    "overdueDays": "Försenad {{count}} d",
+    "dueSince": "Förfaller {{date}}",
     "whatNext": "Att göra idag",
     "whatNextOn": "Vad skulle du kunna göra {{date}}?",
     "dueThatDay": "Förfaller den dagen",
@@ -4276,7 +4274,7 @@
     "loadMore": "Visa fler",
     "next": "Nästa: {{name}}",
     "addedToday": "Tillagd i dag",
-    "pushedCount": "uppskjuten {{count}} gånger",
+    "movedCount": "flyttad {{count}} gånger",
     "lastPlanned": "senast planerad {{date}}",
     "reviewDue": "genomgång förfallen",
     "reviewOn": "genomgång {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Uppskjuten {{total}} gånger, {{count}} de senaste 30 dagarna",
+    "summary": "Flyttad {{total}} gånger, {{count}} de senaste 30 dagarna",
     "kinds": {
       "postponed": "Uppskjuten",
       "rescheduled": "Omplanerad",

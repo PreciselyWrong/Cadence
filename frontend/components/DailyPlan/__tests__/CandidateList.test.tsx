@@ -58,7 +58,6 @@ const renderList = (
                 onReschedule={jest.fn()}
                 onDrop={jest.fn()}
                 onAddInbox={jest.fn()}
-                today="2026-09-25"
             />
         </MemoryRouter>
     );
@@ -81,6 +80,12 @@ describe('CandidateList', () => {
             'Draft report',
             'Sort photos',
         ]);
+    });
+
+    it('says since when an overdue task is due, without counting days late', () => {
+        renderList();
+        expect(screen.getByText(/Due Sep 20/)).toBeInTheDocument();
+        expect(screen.queryByText(/overdue|late|\d+d\b/i)).toBeNull();
     });
 
     it('follows the ranking order from the server', () => {

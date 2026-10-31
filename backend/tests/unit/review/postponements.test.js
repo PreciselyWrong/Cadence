@@ -82,6 +82,22 @@ describe('classifyDueChange', () => {
         }
     });
 
+    it('counts what the user did on their own device and through an API key', () => {
+        for (const source of ['device', 'api']) {
+            expect(
+                classifyDueChange(
+                    event(
+                        '2026-10-20',
+                        '2026-10-22',
+                        '2026-10-20T08:00:00Z',
+                        source
+                    ),
+                    tz
+                ).kind
+            ).toBe('postponed');
+        }
+    });
+
     it('reads the day in the user timezone', () => {
         // 23:30 UTC on the 20th is already the 21st in Zurich.
         expect(

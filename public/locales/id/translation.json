@@ -1297,8 +1297,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Jatuh tempo {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Apa tindakan spesifik yang perlu Anda ambil? Cobalah mulai dengan kata kerja.",
       "vague": "Cobalah mulai dengan kata kerja aksi seperti \"Panggil\", \"Tulis\", \"Jadwalkan\", atau \"Riset\""
     },
-    "overdueAlert": "Tugas ini ada dalam rencana Anda kemarin dan belum diselesaikan.",
-    "overdueYesterday": "Pertimbangkan untuk memprioritaskan tugas ini atau membaginya menjadi langkah-langkah yang lebih kecil.",
-    "overdueMultipleDays": "Tugas ini telah ditunda {{count}} kali.",
+    "overdueAlert": "Tugas ini ada dalam rencana kemarin.",
+    "overdueYesterday": "Rencanakan lagi, atau pecah menjadi langkah yang lebih kecil.",
     "content": "Konten",
     "noNotes": "Belum ada konten yang ditambahkan",
     "subtasks": "Subtugas",
@@ -3578,7 +3576,7 @@
     "switchToList": "Beralih ke daftar",
     "switchToTimeline": "Beralih ke linimasa",
     "leaveWithoutStarting": "Kembali ke Hari Ini",
-    "overdueDays": "Terlambat {{count}} hr",
+    "dueSince": "Jatuh tempo {{date}}",
     "whatNext": "Yang perlu dilakukan hari ini",
     "whatNextOn": "Apa yang bisa Anda lakukan pada {{date}}?",
     "dueThatDay": "Jatuh tempo hari itu",
@@ -4276,7 +4274,7 @@
     "loadMore": "Tampilkan lebih banyak",
     "next": "Berikutnya: {{name}}",
     "addedToday": "Ditambahkan ke hari ini",
-    "pushedCount": "ditunda {{count}} kali",
+    "movedCount": "dipindahkan {{count}} kali",
     "lastPlanned": "terakhir direncanakan {{date}}",
     "reviewDue": "waktunya ditinjau",
     "reviewOn": "tinjau pada {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Ditunda {{total}} kali, {{count}} dalam 30 hari terakhir",
+    "summary": "Dipindahkan {{total}} kali, {{count}} dalam 30 hari terakhir",
     "kinds": {
       "postponed": "Ditunda",
       "rescheduled": "Dijadwalkan ulang",

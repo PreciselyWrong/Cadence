@@ -1302,8 +1302,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Rok {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1558,9 +1557,8 @@
       "noVerb": "Katero specifično dejanje morate izvesti? Poskusite začeti z glagolom.",
       "vague": "Poskusite začeti z glagolom, kot je \"Pokliči\", \"Napiši\", \"Načrtuj\" ali \"Raziskuj\""
     },
-    "overdueAlert": "Ta naloga je bila v vašem načrtu včeraj in ni bila dokončana.",
-    "overdueYesterday": "Razmislite o prioriteti te naloge ali jo razdelite na manjše korake.",
-    "overdueMultipleDays": "Ta naloga je bila prestavljena {{count}}-krat.",
+    "overdueAlert": "Ta naloga je bila v včerajšnjem načrtu.",
+    "overdueYesterday": "Načrtuj jo znova ali jo razdeli na manjše korake.",
     "content": "Vsebina",
     "noNotes": "Še ni dodane vsebine",
     "subtasks": "Podnaloge",
@@ -3592,7 +3590,7 @@
     "switchToList": "Preklopi na seznam",
     "switchToTimeline": "Preklopi na časovnico",
     "leaveWithoutStarting": "Nazaj na Danes",
-    "overdueDays": "Zamujeno {{count}} d",
+    "dueSince": "Rok {{date}}",
     "whatNext": "Za danes",
     "whatNextOn": "Kaj bi lahko naredili {{date}}?",
     "dueThatDay": "Rok na ta dan",
@@ -4294,7 +4292,7 @@
     "loadMore": "Pokaži več",
     "next": "Naprej: {{name}}",
     "addedToday": "Dodano za danes",
-    "pushedCount": "odloženo {{count}}-krat",
+    "movedCount": "premaknjeno {{count}}-krat",
     "lastPlanned": "nazadnje načrtovano {{date}}",
     "reviewDue": "pregled zapadel",
     "reviewOn": "pregled {{date}}",
@@ -4357,7 +4355,7 @@
     }
   },
   "postponements": {
-    "summary": "Odloženo {{total}}-krat, {{count}} v zadnjih 30 dneh",
+    "summary": "Premaknjeno {{total}}-krat, {{count}} v zadnjih 30 dneh",
     "kinds": {
       "postponed": "Odloženo",
       "rescheduled": "Prestavljeno",

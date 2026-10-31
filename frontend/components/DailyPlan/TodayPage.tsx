@@ -2219,7 +2219,6 @@ const TodayPage: React.FC = () => {
                                     onReschedule={handleReschedule}
                                     onDrop={handleDrop}
                                     onAddInbox={handleAddInbox}
-                                    today={date ?? ''}
                                     isToday={isToday}
                                     dayLabel={dateLabel}
                                 />

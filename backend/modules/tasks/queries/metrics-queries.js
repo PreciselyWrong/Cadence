@@ -271,45 +271,15 @@ async function fetchTasksDueToday(
     });
 }
 
+// Only a task's own due date makes it overdue: an undated task is never
+// late, whatever its project's date says.
 async function fetchOverdueTasks(
     visibleTasksWhere,
     userTimezone,
-    userId,
-    somedayExcludedIds = [],
-    permissionCache = null
+    somedayExcludedIds = []
 ) {
     const safeTimezone = getSafeTimezone(userTimezone);
     const todayBounds = getTodayBoundsInUTC(safeTimezone);
-
-    // Get project permissions
-    const projectWhere = await permissionsService.ownershipOrPermissionWhere(
-        'project',
-        userId,
-        permissionCache
-    );
-
-    // Build project access SQL condition
-    let projectAccessSQL = '';
-    if (projectWhere && projectWhere[Op.or]) {
-        const conditions = [];
-        projectWhere[Op.or].forEach((condition) => {
-            const ownerId = Number(condition.user_id);
-            if (Number.isInteger(ownerId)) {
-                conditions.push(`projects.user_id = ${ownerId}`);
-            }
-            if (condition.uid && condition.uid[Op.in]) {
-                const uids = condition.uid[Op.in]
-                    .map((uid) => sequelize.escape(String(uid)))
-                    .join(',');
-                if (uids) {
-                    conditions.push(`projects.uid IN (${uids})`);
-                }
-            }
-        });
-        if (conditions.length > 0) {
-            projectAccessSQL = ` AND (${conditions.join(' OR ')})`;
-        }
-    }
 
     const overdueFilter = {
         status: {
@@ -322,14 +292,7 @@ async function fetchOverdueTasks(
         },
         parent_task_id: null,
         recurring_parent_id: null,
-        [Op.or]: [
-            { due_date: { [Op.lt]: todayBounds.start } },
-            sequelize.literal(`EXISTS (
-          SELECT 1 FROM projects
-          WHERE projects.id = "Task"."project_id"
-          AND projects.due_date_at < ${sequelize.escape(todayBounds.start)}${projectAccessSQL}
-        )`),
-        ],
+        due_date: { [Op.lt]: todayBounds.start },
     };
     if (somedayExcludedIds.length > 0) {
         overdueFilter.id = { [Op.notIn]: somedayExcludedIds };

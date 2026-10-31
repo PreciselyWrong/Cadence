@@ -84,9 +84,9 @@ Tasks with a due date **before today** that are **NOT already in the Planned sec
 3. **No completed or cancelled tasks**
    - Done, archived, and cancelled tasks don't appear
 
-4. **Project deadlines affect task visibility**
-   - If a task has no due date but its project is overdue, the task appears here
-   - Helps you see work related to overdue projects
+4. **Only the task's own due date counts**
+   - A task with no due date is never listed here, even when its project's due date has passed
+   - An undated task is never "late": it stays in the regular lists and suggestions
 
 5. **Deferred tasks are hidden**
    - If you deferred a task to tomorrow, it won't show in Overdue today

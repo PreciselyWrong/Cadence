@@ -1297,8 +1297,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Hạn {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1554,9 +1553,8 @@
       "noVerb": "Bạn cần thực hiện hành động cụ thể nào? Hãy thử bắt đầu bằng một động từ.",
       "vague": "Hãy bắt đầu với một động từ hành động như \"Gọi\", \"Viết\", \"Lên lịch\", hoặc \"Nghiên cứu\""
     },
-    "overdueAlert": "Nhiệm vụ này đã có trong kế hoạch của bạn hôm qua và chưa được hoàn thành.",
-    "overdueYesterday": "Hãy xem xét ưu tiên nhiệm vụ này hoặc chia nhỏ nó thành các bước nhỏ hơn.",
-    "overdueMultipleDays": "Nhiệm vụ này đã bị hoãn lại {{count}} lần.",
+    "overdueAlert": "Nhiệm vụ này nằm trong kế hoạch hôm qua.",
+    "overdueYesterday": "Hãy lên kế hoạch lại hoặc chia nhỏ thành các bước.",
     "content": "Nội dung",
     "noNotes": "Chưa có nội dung nào được thêm vào",
     "subtasks": "Công việc con",
@@ -3578,7 +3576,7 @@
     "switchToList": "Chuyển sang danh sách",
     "switchToTimeline": "Chuyển sang dòng thời gian",
     "leaveWithoutStarting": "Quay lại Hôm nay",
-    "overdueDays": "Quá hạn {{count}} ngày",
+    "dueSince": "Hạn {{date}}",
     "whatNext": "Việc cần làm hôm nay",
     "whatNextOn": "Bạn có thể làm gì vào {{date}}?",
     "dueThatDay": "Đến hạn ngày đó",
@@ -4276,7 +4274,7 @@
     "loadMore": "Hiện thêm",
     "next": "Tiếp: {{name}}",
     "addedToday": "Đã thêm vào hôm nay",
-    "pushedCount": "đã hoãn {{count}} lần",
+    "movedCount": "đã chuyển {{count}} lần",
     "lastPlanned": "lần cuối dự định {{date}}",
     "reviewDue": "đến hạn xem lại",
     "reviewOn": "xem lại ngày {{date}}",
@@ -4339,7 +4337,7 @@
     }
   },
   "postponements": {
-    "summary": "Đã hoãn {{total}} lần, {{count}} trong 30 ngày qua",
+    "summary": "Đã chuyển {{total}} lần, {{count}} trong 30 ngày qua",
     "kinds": {
       "postponed": "Đã hoãn",
       "rescheduled": "Đã dời lịch",

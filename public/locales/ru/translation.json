@@ -1302,8 +1302,7 @@
     "startedOn": "Started {{date}}",
     "daysToDue_one": "{{count}} day to due date",
     "daysToDue_other": "{{count}} days to due date",
-    "daysOverdue_one": "{{count}} day overdue",
-    "daysOverdue_other": "{{count}} days overdue",
+    "dueOn": "Срок {{date}}",
     "progressSummary": "Project progress · {{done}} of {{total}} tasks done",
     "timeUsed": "{{percent}}% of time used",
     "progressHint": "Bar: tasks done. Line: time passed between start and due date.",
@@ -1558,9 +1557,8 @@
       "noVerb": "Какое конкретное действие вам нужно предпринять? Попробуйте начать с глагола.",
       "vague": "Попробуйте начать с глагола действия, например \"Позвонить\", \"Написать\", \"Запланировать\" или \"Исследовать\""
     },
-    "overdueAlert": "Эта задача была в вашем плане вчера и не была выполнена.",
-    "overdueYesterday": "Рассмотрите возможность приоритизировать эту задачу или разбить её на более мелкие шаги.",
-    "overdueMultipleDays": "Эта задача была отложена {{count}} раз.",
+    "overdueAlert": "Эта задача была в плане на вчера.",
+    "overdueYesterday": "Запланируйте её снова или разбейте на более мелкие шаги.",
     "content": "Содержание",
     "noNotes": "Содержимое ещё не добавлено",
     "subtasks": "Подзадачи",
@@ -3592,7 +3590,7 @@
     "switchToList": "Переключиться на список",
     "switchToTimeline": "Переключиться на шкалу",
     "leaveWithoutStarting": "Назад к «Сегодня»",
-    "overdueDays": "Просрочено на {{count}} дн.",
+    "dueSince": "Срок {{date}}",
     "whatNext": "Сегодня",
     "whatNextOn": "Что вы могли бы сделать {{date}}?",
     "dueThatDay": "Срок в этот день",
@@ -4294,7 +4292,7 @@
     "loadMore": "Показать ещё",
     "next": "Далее: {{name}}",
     "addedToday": "Добавлено на сегодня",
-    "pushedCount": "отложено {{count}} раз",
+    "movedCount": "перенесено {{count}} раз",
     "lastPlanned": "последний план {{date}}",
     "reviewDue": "пора пересмотреть",
     "reviewOn": "пересмотреть {{date}}",
@@ -4357,7 +4355,7 @@
     }
   },
   "postponements": {
-    "summary": "Отложено {{total}} раз, {{count}} за последние 30 дней",
+    "summary": "Перенесено {{total}} раз, {{count}} за последние 30 дней",
     "kinds": {
       "postponed": "Отложено",
       "rescheduled": "Перенесено",

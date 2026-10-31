@@ -210,8 +210,12 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                 })
               : daysLeft === 0
                 ? t('projectItem.dueToday', 'Due today')
-                : t('project.daysOverdue', '{{count}} days overdue', {
-                      count: Math.abs(daysLeft),
+                : t('project.dueOn', 'Due {{date}}', {
+                      date: dueDate
+                          ? format(dueDate, 'PP', {
+                                locale: getCurrentLocale(),
+                            })
+                          : '',
                   });
 
     const tint = project.color || '#3b82f6';
