@@ -12,6 +12,7 @@ import ch.nicolab.cadence.tasks.sync.TasksBackground
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.widget.TasksWidgetsAndReminders
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
@@ -54,6 +55,13 @@ class CadenceApp : Application() {
             TasksGraph.repository(this@CadenceApp).observeTasks()
                 .distinctUntilChanged()
                 .debounce(100)
+                .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
+        }
+        // Masquer ou rétablir un événement le retire ou le rend aussitôt au widget du jour.
+        applicationScope.launch {
+            ch.nicolab.cadence.calendar.CalendarGraph.repository(this@CadenceApp).hiddenEvents()
+                .distinctUntilChanged()
+                .drop(1)
                 .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
         }
     }

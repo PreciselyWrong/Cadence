@@ -28,6 +28,21 @@ class EventDetailTest {
     }
 
     @Test
+    fun `le jour d'un événement masqué horaire est son jour local`() {
+        val begin = LocalDate.of(2026, 10, 30).atTime(23, 30).atZone(zone).toInstant().toEpochMilli()
+
+        assertEquals(LocalDate.of(2026, 10, 30), HiddenEvent(EventInstanceKey(1L, 2L, begin), "Soirée", allDay = false).day(zone))
+    }
+
+    @Test
+    fun `le jour d'une journée entière masquée est son jour civil UTC, pas décalé par le fuseau`() {
+        val begin = LocalDate.of(2026, 10, 30).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val west = ZoneId.of("America/Los_Angeles")
+
+        assertEquals(LocalDate.of(2026, 10, 30), HiddenEvent(EventInstanceKey(1L, 2L, begin), "Férié", allDay = true).day(west))
+    }
+
+    @Test
     fun `une journée entière ancrée en UTC reste sur son jour civil local`() {
         val begin = LocalDate.of(2026, 10, 30).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         val event = CalendarEvent(1L, 3L, begin, begin + 86_400_000L, true, "Férié", null, 0x00FF00)

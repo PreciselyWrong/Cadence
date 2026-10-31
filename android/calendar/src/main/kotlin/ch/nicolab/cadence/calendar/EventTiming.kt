@@ -45,6 +45,10 @@ fun EventWithDone.toDetail(zone: ZoneId): EventDetail = EventDetail(
     done = done,
 )
 
+/** Jour civil d'une occurrence masquée : une journée entière garde son jour UTC, le reste suit [zone]. */
+fun HiddenEvent.day(zone: ZoneId): LocalDate =
+    Instant.ofEpochMilli(key.instanceBegin).atZone(if (allDay) ZoneOffset.UTC else zone).toLocalDate()
+
 private fun utcDayToLocalMidnight(epochMillis: Long, zone: ZoneId): Long {
     val day = Instant.ofEpochMilli(epochMillis).atZone(ZoneOffset.UTC).toLocalDate()
     return day.atStartOfDay(zone).toInstant().toEpochMilli()

@@ -45,6 +45,13 @@ import ch.nicolab.cadence.calendar.CalendarGlobalSettings
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.DeviceCalendar
+import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.HiddenEvent
+import ch.nicolab.cadence.calendar.day
+import ch.nicolab.cadence.designsystem.components.SettingRow
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
@@ -81,6 +88,8 @@ internal fun CalendarsPage() {
     val calendars by calendarsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     val permissionMissing by repository.permissionMissing.collectAsStateWithLifecycle(initialValue = true)
     val settings by repository.globalSettings.collectAsStateWithLifecycle(initialValue = CalendarGlobalSettings())
+    val hiddenFlow = remember(repository) { repository.hiddenEvents() }
+    val hidden by hiddenFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     val scope = rememberCoroutineScope()
     val requestPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         repository.refresh()
@@ -117,6 +126,10 @@ internal fun CalendarsPage() {
             }
         }
     }
+    HiddenEventsSection(
+        hidden = hidden,
+        onRestore = { key -> scope.launch { repository.restoreEvent(key) } },
+    )
     RowGroup {
         SettingToggleRow(
             title = stringResource(R.string.calendars_check_title),
@@ -134,6 +147,46 @@ internal fun CalendarsPage() {
             subtitle = stringResource(R.string.calendars_hide_done_subtitle),
             shape = rowGroupShape(1, 2),
         )
+    }
+}
+
+private val HIDDEN_DAY: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+
+/** Événements masqués dans Cadence : ils restent dans l'agenda de l'appareil et se rétablissent ici. */
+@Composable
+private fun HiddenEventsSection(hidden: List<HiddenEvent>, onRestore: (EventInstanceKey) -> Unit) {
+    val palette = cadence
+    Text(
+        stringResource(R.string.calendars_hidden_title),
+        style = MaterialTheme.typography.titleMedium,
+        color = palette.onSurface,
+    )
+    if (hidden.isEmpty()) {
+        Text(
+            stringResource(R.string.calendars_hidden_empty),
+            style = MaterialTheme.typography.bodyMedium,
+            color = palette.onSurfaceVariant,
+        )
+        return
+    }
+    val zone = remember { ZoneId.systemDefault() }
+    RowGroup {
+        hidden.forEachIndexed { index, item ->
+            SettingRow(
+                title = item.title.ifBlank { stringResource(R.string.agenda_untitled) },
+                subtitle = item.day(zone).format(HIDDEN_DAY),
+                icon = Icons.Outlined.VisibilityOff,
+                shape = rowGroupShape(index, hidden.size),
+                trailing = {
+                    Text(
+                        stringResource(R.string.calendars_hidden_restore),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = readableTintOf(palette.primary, palette.card),
+                    )
+                },
+                onClick = { onRestore(item.key) },
+            )
+        }
     }
 }
 

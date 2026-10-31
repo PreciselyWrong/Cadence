@@ -598,6 +598,9 @@
     <string name="calendars_surface_widget">Widget</string>
     <string name="calendars_check_title">Cocher un événement</string>
     <string name="calendars_check_subtitle">Le marque fait dans Cadence, sans modifier Google</string>
+    <string name="calendars_hidden_title">Événements masqués</string>
+    <string name="calendars_hidden_empty">Aucun. Appuyez longtemps sur un événement, ou balayez-le, pour le masquer ici sans le toucher dans votre agenda.</string>
+    <string name="calendars_hidden_restore">Rétablir</string>
     <string name="calendars_hide_done_title">Masquer les événements faits</string>
     <string name="calendars_hide_done_subtitle">Comme les tâches terminées</string>
     <string name="calendars_permission_title">Accès aux agendas</string>
