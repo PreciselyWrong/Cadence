@@ -425,7 +425,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                     /* Responsive board layout */
                     <div className="pb-4">
                         {/* Mobile: Stack vertically, Desktop: Horizontal board */}
-                        <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4 xl:gap-6 w-full">
                             {Object.entries(filteredGroupedTasks).map(
                                 ([groupName, dayTasks]) => {
                                     const header = dayColumnHeader(
@@ -448,7 +448,7 @@ const GroupedTaskList: React.FC<GroupedTaskListProps> = ({
                                     return (
                                         <div
                                             key={groupName}
-                                            className="day-column w-full xl:flex-1 xl:min-w-64"
+                                            className="day-column w-full min-w-0"
                                         >
                                             {/* Day column header */}
                                             <div className="pb-3 mb-4">
