@@ -51,3 +51,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : le Bilan parlait surtout des habitudes ; côté tâches, trois chiffres.
 - **Décision** : après les chiffres, « Tâches de la semaine » : terminées par jour (lundi → dimanche, aujourd'hui en primaire plein), par projet (5 au plus), en retard (5 plus anciennes, puis « et N autres, dans Tâches ») ; toucher une tâche en retard l'ouvre. Commit `d4118a54`.
 - **Web** : la page Revue/Insights montre la même lecture de la semaine.
+
+### 2026-10-31 — Widget « Verre » : transparent, sans flou
+
+- **Problème** : le verre s'affichait opaque (l'opacité réglée était écrasée à 100 %) ; le flou attendu derrière n'existe pas.
+- **Décision** : opacité réelle corrigée (commit `86d97635`). Pas de flou : un widget ne peut pas flouter ce qui est derrière lui, et lire le fond d'écran demanderait l'« Accès à tous les fichiers ». Le verre reste une surface translucide réglable (opacité, reflet, liseré).
+- **Web** : sans objet (le web floute avec `backdrop-filter`).
