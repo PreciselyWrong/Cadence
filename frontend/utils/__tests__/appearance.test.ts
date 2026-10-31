@@ -7,6 +7,27 @@ import {
     rgbToHex,
 } from '../appearance';
 
+/** Free colour of the hue picker: saturation 0.7, lightness 0.5 (Android hueToArgb). */
+function hslSeed(hue: number): number {
+    const c = (1 - Math.abs(2 * 0.5 - 1)) * 0.7;
+    const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
+    const m = 0.5 - c / 2;
+    const [r, g, b] =
+        hue < 60
+            ? [c, x, 0]
+            : hue < 120
+              ? [x, c, 0]
+              : hue < 180
+                ? [0, c, x]
+                : hue < 240
+                  ? [0, x, c]
+                  : hue < 300
+                    ? [x, 0, c]
+                    : [c, 0, x];
+    const ch = (v: number) => Math.round((v + m) * 255);
+    return (ch(r) << 16) | (ch(g) << 8) | ch(b);
+}
+
 describe('deriveAccentRoles (Android Accent.kt parity)', () => {
     it('keeps the exact violet roles in light and dark', () => {
         const light = deriveAccentRoles(hexToRgb('#5E5CE6'), false);
@@ -18,14 +39,36 @@ describe('deriveAccentRoles (Android Accent.kt parity)', () => {
         expect(rgbToHex(dark.onPrimary)).toBe('#1B1680');
     });
 
-    it('uses the seed as primary in light and keeps text readable on it', () => {
+    it('keeps a readable seed and darkens a light one to 4.5:1 on cards', () => {
+        expect(deriveAccentRoles(hexToRgb('#2E7D32'), false).primary).toBe(
+            hexToRgb('#2E7D32')
+        );
         for (const hex of ['#1E6FD9', '#00897B', '#C77700', '#E0483B']) {
-            const seed = hexToRgb(hex);
-            const roles = deriveAccentRoles(seed, false);
-            expect(roles.primary).toBe(seed);
+            const roles = deriveAccentRoles(hexToRgb(hex), false);
+            expect(
+                contrastRatio(roles.primary, 0xf3f1fc)
+            ).toBeGreaterThanOrEqual(4.5);
             expect(
                 contrastRatio(roles.primary, roles.onPrimary)
-            ).toBeGreaterThan(3);
+            ).toBeGreaterThanOrEqual(4.5);
+        }
+    });
+
+    it('keeps every on-role at 4.5:1 for any free colour', () => {
+        for (let hue = 0; hue < 360; hue += 15) {
+            for (const dark of [false, true]) {
+                const seed = hexToRgb(rgbToHex(hslSeed(hue)));
+                const roles = deriveAccentRoles(seed, dark);
+                expect(
+                    contrastRatio(roles.primary, roles.onPrimary)
+                ).toBeGreaterThanOrEqual(4.5);
+                expect(
+                    contrastRatio(
+                        roles.primaryContainer,
+                        roles.onPrimaryContainer
+                    )
+                ).toBeGreaterThanOrEqual(4.5);
+            }
         }
     });
 
@@ -46,10 +89,10 @@ describe('applyAppearance', () => {
     });
 
     it('writes the accent roles and the blue scale as CSS variables', () => {
-        applyAppearance('#00897B', false);
+        applyAppearance('#2E7D32', false);
         const style = document.documentElement.style;
-        expect(style.getPropertyValue('--color-primary')).toBe('0 137 123');
-        expect(style.getPropertyValue('--blue-500')).toBe('0 137 123');
+        expect(style.getPropertyValue('--color-primary')).toBe('46 125 50');
+        expect(style.getPropertyValue('--blue-500')).toBe('46 125 50');
         expect(style.getPropertyValue('--blue-600')).not.toBe('');
     });
 

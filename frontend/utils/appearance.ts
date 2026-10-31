@@ -141,26 +141,66 @@ export function contrastRatio(a: number, b: number): number {
     return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
+const MIN_CONTRAST = 4.5;
+const LIGHTNESS_STEP = 0.02;
+const BLACK = 0x000000;
+/** Light card (`--color-card`), the most common light surface under accent text. */
+const LIGHT_CARD = 0xf3f1fc;
+
+/** Same rules as Android readableOn: white or ink, else the background hue darkened to 4.5:1. */
+export function readableOn(background: number): number {
+    if (contrastRatio(WHITE, background) >= MIN_CONTRAST) return WHITE;
+    if (contrastRatio(INK, background) >= MIN_CONTRAST) return INK;
+    return readableTint(background, background);
+}
+
+/** Same rules as Android readableTint: keeps hue and saturation, moves lightness until minContrast. */
+export function readableTint(
+    tint: number,
+    background: number,
+    minContrast = MIN_CONTRAST
+): number {
+    if (contrastRatio(tint, background) >= minContrast) return tint;
+    const { hue, saturation, lightness: start } = toHsl(tint);
+    const towardDark =
+        contrastRatio(BLACK, background) >= contrastRatio(WHITE, background);
+    let lightness = start;
+    while (lightness >= 0 && lightness <= 1) {
+        lightness += towardDark ? -LIGHTNESS_STEP : LIGHTNESS_STEP;
+        const candidate = fromHsl(
+            hue,
+            saturation,
+            Math.min(1, Math.max(0, lightness))
+        );
+        if (contrastRatio(candidate, background) >= minContrast)
+            return candidate;
+    }
+    return readableOn(background);
+}
+
 /** Same rules as Android deriveAccentRoles. */
 export function deriveAccentRoles(seed: number, dark: boolean): AccentRoles {
     if (seed === VIOLET_LIGHT.primary) return dark ? VIOLET_DARK : VIOLET_LIGHT;
     const { hue, saturation } = toHsl(seed);
     const tone = (l: number) => fromHsl(hue, saturation, l);
     if (dark) {
+        const primary = tone(0.82);
+        const onPrimaryContainer = tone(0.9);
         return {
-            primary: tone(0.82),
-            onPrimary: tone(0.22),
-            primaryContainer: tone(0.3),
-            onPrimaryContainer: tone(0.9),
+            primary,
+            onPrimary: readableTint(tone(0.22), primary),
+            primaryContainer: readableTint(tone(0.3), onPrimaryContainer),
+            onPrimaryContainer,
         };
     }
-    const onPrimary =
-        contrastRatio(seed, WHITE) >= contrastRatio(seed, INK) ? WHITE : INK;
+    // A light seed (amber, coral, free colours) is darkened, hue kept, until text reads on cards.
+    const primary = readableTint(seed, LIGHT_CARD);
+    const primaryContainer = tone(0.92);
     return {
-        primary: seed,
-        onPrimary,
-        primaryContainer: tone(0.92),
-        onPrimaryContainer: tone(0.2),
+        primary,
+        onPrimary: readableOn(primary),
+        primaryContainer,
+        onPrimaryContainer: readableTint(tone(0.2), primaryContainer),
     };
 }
 
