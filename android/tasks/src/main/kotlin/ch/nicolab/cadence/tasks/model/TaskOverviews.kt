@@ -27,6 +27,16 @@ data class StripDay(val date: LocalDate, val count: Int)
 /** Chiffres du Bilan pour les tâches. */
 data class TaskStats(val doneThisWeek: Int, val doneLastWeek: Int, val overdue: Int)
 
+/**
+ * Revue des tâches de la semaine pour le Bilan : terminées par jour (lundi à dimanche), par projet
+ * (null : sans projet), du plus au moins fourni, et tâches en retard, la plus ancienne d'abord.
+ */
+data class WeekReview(
+    val donePerDay: List<Pair<LocalDate, Int>>,
+    val doneByProject: List<Pair<String?, Int>>,
+    val overdue: List<TaskItem>,
+)
+
 /** Vues dérivées de la liste de tâches pour Projets, Étiquettes, Terminées, À venir et le Bilan. */
 object TaskOverviews {
     private const val STRIP_DAYS = 7
@@ -78,6 +88,20 @@ object TaskOverviews {
             val date = today.plusDays(offset.toLong())
             StripDay(date, if (offset == 0) todayCount else upcoming[date]?.size ?: 0)
         }
+
+    fun weekReview(tasks: List<TaskItem>, today: LocalDate, now: Instant, zone: ZoneId): WeekReview {
+        val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val doneThisWeek = tasks.filter { it.status == TaskStatus.DONE && it.completedAt != null }
+            .map { it to it.completedAt!!.atZone(zone).toLocalDate() }
+            .filter { (_, day) -> !day.isBefore(weekStart) && !day.isAfter(weekStart.plusDays(6)) }
+        val perDay = doneThisWeek.groupingBy { it.second }.eachCount()
+        return WeekReview(
+            donePerDay = (0L..6L).map { offset -> weekStart.plusDays(offset).let { it to (perDay[it] ?: 0) } },
+            doneByProject = doneThisWeek.groupingBy { it.first.projectUid }.eachCount().toList()
+                .sortedWith(compareByDescending<Pair<String?, Int>> { it.second }.thenBy { it.first == null }),
+            overdue = TaskViews.overdue(tasks, today, now).sortedBy { it.dueDay },
+        )
+    }
 
     fun taskStats(tasks: List<TaskItem>, today: LocalDate, now: Instant, zone: ZoneId): TaskStats {
         val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))

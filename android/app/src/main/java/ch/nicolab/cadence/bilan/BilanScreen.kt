@@ -23,7 +23,7 @@ import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 
 /**
- * Bilan : chiffres des tâches de la semaine, ce qu'il reste à faire pour les habitudes, puis leurs statistiques.
+ * Bilan : chiffres et revue des tâches de la semaine, ce qu'il reste à faire pour les habitudes, puis leurs statistiques.
  * Un seul défilement : les fiches détaillées restent des feuilles par-dessus, ouvertes
  * depuis les deux sections.
  */
@@ -33,6 +33,7 @@ internal fun BilanScreen(
     quick: (HabitCardState) -> Unit,
     options: (HabitCardState) -> Unit,
     onCorrect: (HabitEntry) -> Unit,
+    onOpenTask: (String) -> Unit,
 ) {
     val byId = habits.associateBy { it.stored.id }
     val outlook = remember(habits) {
@@ -63,6 +64,7 @@ internal fun BilanScreen(
         ScreenHeader(title = stringResource(R.string.bilan_title), subtitle = weekSubtitle)
     }) {
         item(key = "task-kpis") { TaskKpiPanel(habits) }
+        item(key = "task-review") { TaskReviewPanel(onOpenTask) }
         weekItems(habits, outlook, quick, options)
         statisticsItems(habits, openStatistics)
     }

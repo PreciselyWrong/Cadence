@@ -115,6 +115,8 @@ internal fun CadenceAppScreen(
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
+    // Tâche ouverte depuis le Bilan ; effacée dès qu'on change d'onglet pour ne pas la rouvrir.
+    var taskToOpen by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
@@ -216,7 +218,7 @@ internal fun CadenceAppScreen(
                     null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
                     Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
                     Tab.TASKS -> TasksScreen(
-                        openTaskUid = openTaskUid,
+                        openTaskUid = taskToOpen ?: openTaskUid,
                         showProjectUid = projectToShow,
                         onProjectShown = { projectToShow = null },
                         onOpenSearch = { searchOpen = true },
@@ -264,6 +266,10 @@ internal fun CadenceAppScreen(
                         quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
                         options = { options = it },
                         onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
+                        onOpenTask = { uid ->
+                            taskToOpen = uid
+                            tab = Tab.TASKS
+                        },
                     )
                 }
             }
@@ -284,7 +290,10 @@ internal fun CadenceAppScreen(
                 },
             )
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index -> tab = Tab.entries[index] }
+            if (!settingsOpen && !searchOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+                tab = Tab.entries[index]
+                taskToOpen = null
+            }
             CadenceSnackbarHost(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen) Space.lg else navigationClearance() + Space.sm),

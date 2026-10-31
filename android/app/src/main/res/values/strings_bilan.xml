@@ -6,4 +6,14 @@
     <string name="bilan_kpi_overdue">en retard</string>
     <string name="bilan_kpi_regularity">régularité des habitudes</string>
     <string name="bilan_kpi_regularity_hint">moyenne sur 30 jours</string>
+    <string name="bilan_tasks_title">Tâches de la semaine</string>
+    <string name="bilan_tasks_per_day">Terminées par jour</string>
+    <string name="bilan_tasks_by_project">Par projet</string>
+    <string name="bilan_tasks_no_project">Sans projet</string>
+    <string name="bilan_tasks_overdue">En retard</string>
+    <string name="bilan_tasks_none">Aucune tâche terminée cette semaine pour l’instant.</string>
+    <plurals name="bilan_tasks_overdue_more">
+        <item quantity="one">et %d autre, dans Tâches</item>
+        <item quantity="other">et %d autres, dans Tâches</item>
+    </plurals>
 </resources>

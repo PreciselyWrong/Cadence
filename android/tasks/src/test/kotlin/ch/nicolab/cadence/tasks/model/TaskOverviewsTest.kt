@@ -80,4 +80,21 @@ class TaskOverviewsTest {
         val stats = TaskOverviews.taskStats(tasks, friday, now, zone)
         assertEquals(TaskStats(doneThisWeek = 2, doneLastWeek = 2, overdue = 1), stats)
     }
+
+    @Test
+    fun `week review counts done per day from monday, groups by project and lists overdue oldest first`() {
+        val monday = LocalDate.of(2026, 10, 26)
+        val tasks = listOf(
+            done("a", monday, project = "p1"), done("b", monday, project = "p1"), done("c", friday, project = "p2"),
+            done("d", friday), done("lastWeek", monday.minusDays(1), project = "p2"),
+            open("late", due = friday.minusDays(1)), open("older", due = friday.minusDays(4)), open("fine", due = friday),
+        )
+
+        val review = TaskOverviews.weekReview(tasks, friday, now, zone)
+
+        assertEquals((0L..6L).map { monday.plusDays(it) }, review.donePerDay.map { it.first })
+        assertEquals(listOf(2, 0, 0, 0, 2, 0, 0), review.donePerDay.map { it.second })
+        assertEquals(listOf("p1" to 2, "p2" to 1, null to 1), review.doneByProject)
+        assertEquals(listOf("older", "late"), review.overdue.map { it.uid })
+    }
 }
