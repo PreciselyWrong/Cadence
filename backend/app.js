@@ -692,6 +692,23 @@ async function startServer() {
             console.error('Could not place users into accounts:', error);
         }
 
+        // Habits stored as tasks become Cadence habits, once and without
+        // touching the originals (docs/21-habits.md). Set
+        // CADENCE_SKIP_LEGACY_HABIT_IMPORT=true to leave them alone.
+        if (process.env.CADENCE_SKIP_LEGACY_HABIT_IMPORT !== 'true') {
+            try {
+                const imported =
+                    await require('./modules/habits/cadence/operations/importLegacy').importAllLegacyHabits();
+                if (imported.imported > 0) {
+                    console.log(
+                        `Cadence habits: imported ${imported.imported} habits of ${imported.users} users`
+                    );
+                }
+            } catch (error) {
+                console.error('Could not import legacy habits:', error);
+            }
+        }
+
         const server = app.listen(config.port, config.host, () => {
             console.log(`Server running on port ${config.port}`);
             console.log(`Server listening on http://localhost:${config.port}`);
