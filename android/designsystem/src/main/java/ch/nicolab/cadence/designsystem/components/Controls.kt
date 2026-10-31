@@ -1,5 +1,8 @@
 package ch.nicolab.cadence.designsystem.components
 
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -283,6 +286,9 @@ fun CadenceField(
     accent: Color? = null,
     numeric: Boolean = false,
     decimal: Boolean = false,
+    enabled: Boolean = true,
+    fieldModifier: Modifier = Modifier,
+    onDone: (() -> Unit)? = null,
 ) {
     val palette = cadence
     val fill = accent ?: palette.primary
@@ -305,15 +311,21 @@ fun CadenceField(
                     value = value,
                     onValueChange = onValue,
                     singleLine = true,
+                    enabled = enabled,
                     interactionSource = interaction,
                     textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
                     cursorBrush = SolidColor(fill),
-                    keyboardOptions = KeyboardOptions(keyboardType = when {
-                        decimal -> KeyboardType.Decimal
-                        numeric -> KeyboardType.Number
-                        else -> KeyboardType.Text
-                    }),
-                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = if (numeric || decimal) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
+                        keyboardType = when {
+                            decimal -> KeyboardType.Decimal
+                            numeric -> KeyboardType.Number
+                            else -> KeyboardType.Text
+                        },
+                        imeAction = if (onDone != null) ImeAction.Done else ImeAction.Default,
+                    ),
+                    keyboardActions = KeyboardActions(onDone = onDone?.let { done -> { done() } }),
+                    modifier = Modifier.fillMaxWidth().then(fieldModifier),
                 )
             }
             suffix?.takeIf { it.isNotBlank() }?.let {

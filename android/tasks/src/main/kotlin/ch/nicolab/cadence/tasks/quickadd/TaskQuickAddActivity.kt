@@ -13,43 +13,38 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ErrorText
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
+import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.designsystem.theme.Elevation
+import ch.nicolab.cadence.designsystem.theme.Glass
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.TaskDraft
@@ -137,71 +132,57 @@ private fun QuickAddCard(onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () ->
         }
     }
 
+    val palette = cadence
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.32f))
-            .clickable(onClick = onDismiss),
+            .background(palette.scrim.copy(alpha = Glass.ScrimAlpha))
+            .clickable(onClick = onDismiss)
+            .imePadding(),
         contentAlignment = Alignment.Center,
     ) {
         Surface(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(Space.xl)
                 .fillMaxWidth()
                 // Consomme le toucher : taper dans la carte ne ferme pas la fenêtre.
                 .clickable(interactionSource = interactionSource, indication = null) {},
-            shape = RoundedCornerShape(28.dp),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            shape = Radius.Panel,
+            color = palette.card,
+            contentColor = palette.onSurface,
+            shadowElevation = Elevation.floating,
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(Space.xl), verticalArrangement = Arrangement.spacedBy(Space.lg)) {
                 Text(
                     stringResource(R.string.tasks_quick_add_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = palette.onSurface,
                 )
-                Spacer(Modifier.height(12.dp))
-                OutlinedTextField(
+                CadenceField(
                     value = name,
-                    onValueChange = { name = it },
-                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                    placeholder = { Text(stringResource(R.string.tasks_quick_add_hint)) },
-                    singleLine = true,
+                    onValue = { name = it },
+                    label = stringResource(R.string.tasks_quick_add_hint),
                     enabled = !saving,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(onDone = { submit() }),
+                    fieldModifier = Modifier.focusRequester(focusRequester),
+                    onDone = { submit() },
                 )
-                Spacer(Modifier.height(12.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                     DueChoice.entries.forEach { choice ->
-                        FilterChip(
+                        ChoiceChip(
+                            label = stringResource(choice.label),
                             selected = due == choice,
                             onClick = { due = choice },
-                            label = { Text(stringResource(choice.label)) },
                         )
                     }
                 }
-                if (saving) {
-                    Spacer(Modifier.height(12.dp))
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
-                saveError?.let {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                }
-                Spacer(Modifier.height(16.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss, enabled = !saving) { Text(stringResource(R.string.tasks_quick_add_cancel)) }
-                    Spacer(Modifier.width(8.dp))
-                    Button(onClick = { submit() }, enabled = name.isNotBlank() && !saving) {
-                        Text(stringResource(R.string.tasks_quick_add_submit))
-                    }
+                saveError?.let { ErrorText(it) }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+                    SecondaryAction(stringResource(R.string.tasks_quick_add_cancel), Modifier.weight(1f), enabled = !saving, onClick = onDismiss)
+                    PrimaryAction(
+                        stringResource(if (saving) R.string.tasks_quick_add_saving else R.string.tasks_quick_add_submit),
+                        Modifier.weight(1f),
+                        enabled = name.isNotBlank() && !saving,
+                    ) { submit() }
                 }
             }
         }
