@@ -77,6 +77,21 @@ fun taskSections(selection: TodaySelection, config: TodayWidgetConfig, today: Lo
     }
 }
 
+/**
+ * Identifiants des intitulés de la liste du widget. Les tâches prennent le `hashCode` de leur uid
+ * (plage d'un Int) ; Glance refuse tout identifiant inférieur à -2^62. Les intitulés vivent entre
+ * les deux, autour de -2^40.
+ */
+object TodayListIds {
+    private const val BASE = -(1L shl 40)
+    const val OVERDUE = BASE - 1
+    const val EVENTS = BASE - 2
+    const val UNDATED = BASE - 3
+    private const val DAYS = BASE - (1L shl 32)
+
+    fun day(day: LocalDate): Long = DAYS + day.toEpochDay()
+}
+
 private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate, now: Instant): List<TaskItem> =
     when (scope) {
         TaskScope.OVERDUE_AND_TODAY -> TaskViews.today(tasks, today, now)

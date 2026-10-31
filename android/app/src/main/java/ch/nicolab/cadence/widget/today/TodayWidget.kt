@@ -258,11 +258,6 @@ class ToggleTodayEventAction : ActionCallback {
 private const val FACET_ICON_DP = 22
 private const val CHECK_DP = 22
 private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
-private const val OVERDUE_LABEL_ID = Long.MIN_VALUE
-private const val EVENTS_LABEL_ID = Long.MIN_VALUE + 1
-private const val UNDATED_LABEL_ID = Long.MIN_VALUE + 2
-/** Les intitulés de jour prennent leur identifiant hors de la plage des `hashCode` des tâches. */
-private const val DAY_LABEL_BASE = Long.MIN_VALUE + 1_000
 private const val RIM_DP = 1
 private const val OPAQUE_MASK = 0xFF000000.toInt()
 
@@ -364,7 +359,7 @@ private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksSh
         }
         if (view.config.showEvents && selection.events.isNotEmpty()) {
             if (tasksShown) {
-                item(itemId = EVENTS_LABEL_ID) {
+                item(itemId = TodayListIds.EVENTS) {
                     SectionLabel(context.getString(R.string.today_events_label), view.palette.provider { it.muted }, text)
                 }
             }
@@ -628,9 +623,9 @@ private fun TaskItem.dueTimeLabel(view: TodayView): String? =
     if (dueHasTime) dueDate?.atZone(view.zone)?.format(TIME_FORMAT) else null
 
 private fun TodaySection.labelId(): Long = when {
-    day != null -> DAY_LABEL_BASE + day.toEpochDay()
-    overdue -> OVERDUE_LABEL_ID
-    else -> UNDATED_LABEL_ID
+    day != null -> TodayListIds.day(day)
+    overdue -> TodayListIds.OVERDUE
+    else -> TodayListIds.UNDATED
 }
 
 /** « En retard · 19 » sans regroupement ; sinon Hier, Aujourd'hui, Demain ou « Mardi 27 octobre ». */

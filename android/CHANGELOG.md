@@ -1,3 +1,8 @@
+## [1.4.2] — 31 octobre 2026
+
+### Corrections
+- Widget « Aujourd'hui » : il s'affiche de nouveau. La 1.4.1 affichait « Impossible d'afficher le contenu » dès qu'une liste était regroupée par jour.
+
 ## [1.4.1] — 31 octobre 2026
 
 ### Corrections
