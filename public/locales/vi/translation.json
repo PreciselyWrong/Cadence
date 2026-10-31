@@ -1171,7 +1171,10 @@
     "color": "Màu",
     "goalArea": "Khu vực",
     "noArea": "Không có khu vực",
-    "startDate": "Bắt đầu"
+    "startDate": "Bắt đầu",
+    "goalBucket": "Nhóm danh sách mong muốn",
+    "goalParent": "Kết quả chính của",
+    "noParentGoal": "Không có (độc lập)"
   },
   "auth": {
     "login": "Đăng Nhập",
@@ -1328,7 +1331,9 @@
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Hành động tiếp theo",
+    "nextActionLine": "Hành động tiếp theo: {{name}}"
   },
   "errors": {
     "required": "Trường này là bắt buộc",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Gợi ý 5 lĩnh vực",
+    "domains": {
+      "business": "Kinh doanh & Tài chính",
+      "tech": "Công nghệ & Hệ thống",
+      "personal": "Cá nhân",
+      "family": "Gia đình & Xã hội",
+      "logistics": "Hậu cần"
+    }
   },
   "notes": {
     "loading": "Đang tải ghi chú...",
@@ -3745,13 +3758,16 @@
     "title": "Mục tiêu",
     "stats": {
       "projects": "dự án",
-      "tasks": "công việc"
+      "tasks": "công việc",
+      "keyResults": "Kết quả chính: {{count}}"
     },
     "notFound": "Không tìm thấy mục tiêu",
     "editGoal": "Sửa mục tiêu",
     "horizon": {
       "season": "Mùa",
-      "year": "Năm"
+      "year": "Năm",
+      "month": "Tháng",
+      "quarter": "Quý"
     },
     "status": {
       "active": "Đang thực hiện",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Bỏ mục tiêu",
     "noGoalsFound": "Không tìm thấy mục tiêu",
     "inactive": "Không hoạt động",
-    "viewGoal": "Đến mục tiêu"
+    "viewGoal": "Đến mục tiêu",
+    "bucket": {
+      "title": "Danh sách mong muốn",
+      "have": "Có",
+      "be": "Trở thành",
+      "do": "Làm",
+      "add": "+ Thêm",
+      "none": "Không có trong danh sách mong muốn"
+    },
+    "keyResults": {
+      "title": "Kết quả chính",
+      "add": "Thêm kết quả chính",
+      "placeholder": "Kết quả chính",
+      "progress": "{{done}} / {{total}} đã xong"
+    },
+    "progressSummary": "Tiến độ mục tiêu · {{done}} / {{total}} đã xong"
   },
   "templates": {
     "new": "Mẫu mới",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Chưa quyết gì cho tuần này.",
       "emptyInView": "Không có gì trong tầm mắt. Đưa một việc vào tầm mắt từ menu của nó.",
       "choose": "Giúp tôi chọn"
+    },
+    "routine": {
+      "offer": "Lên lịch đánh giá hàng tuần vào thứ Sáu",
+      "taskName": "Đánh giá hàng tuần",
+      "created": "Đã lên lịch đánh giá hàng tuần vào thứ Sáu.",
+      "error": "Không thể lên lịch đánh giá hàng tuần."
     }
   },
   "postponements": {

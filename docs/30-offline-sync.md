@@ -4,7 +4,7 @@ The sync API lets native clients (the Android app, the Linux desktop app) keep a
 
 ## What syncs
 
-`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). `schema_version` 1 covered `task`, `project`, `area`, `tag`, `note` and `inbox_item`; version 2 adds the fifteen Cadence habit entities below.
+`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). `schema_version` 1 covered `task`, `project`, `area`, `tag`, `note` and `inbox_item`; version 2 adds the fifteen Cadence habit entities below; version 3 adds the `goal` entity, a `goal_uid` reference on `task` and `project`, and the project field `next_task_uid`.
 
 To add an entity:
 1. Add an entry to the registry.
@@ -12,6 +12,14 @@ To add an entity:
 3. Pass the model to `install()` in `backend/models/index.js`.
 
 The protocol stays the same.
+
+### Goals
+
+| Entity | Fields | References | Notes |
+|---|---|---|---|
+| `goal` | `title`, `why`, `horizon` (`month`, `quarter`, `season`, `year`), `target_date`, `status`, `color`, `bucket` (`have`, `be`, `do`, or null) | `area_uid`, `parent_goal_uid` | a goal with a parent is a key result (one level only); rows with a `bucket` are the bucket list |
+
+`task` and `project` gain the reference `goal_uid` (their existing goal link, which may now point at a key result), and `project` gains the field `next_task_uid` (uid of an open task of that project, or null; the server clears it when the task is done, deleted or moved). A push is rejected as `invalid_hierarchy` when a goal would have a parent that is not the user's own, a parent that itself has a parent, key results of its own, or a bucket together with a parent. Deleting a goal on a device deletes its key results and clears the goal link of their projects and tasks, as the web does. Progress (`done/total` of the linked items) is not synced: a client computes it from the tasks and projects it holds.
 
 ### Cadence habit entities
 

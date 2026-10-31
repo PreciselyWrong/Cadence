@@ -1175,7 +1175,10 @@
     "color": "اللون",
     "goalArea": "المنطقة",
     "noArea": "بلا منطقة",
-    "startDate": "البدء"
+    "startDate": "البدء",
+    "goalBucket": "مجموعة قائمة الأمنيات",
+    "goalParent": "نتيجة رئيسية لـ",
+    "noParentGoal": "بدون (مستقل)"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -1336,7 +1339,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "الإجراء التالي",
+    "nextActionLine": "الإجراء التالي: {{name}}"
   },
   "errors": {
     "required": "هذا الحقل مطلوب",
@@ -1849,7 +1854,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "اقتراح 5 مجالات",
+    "domains": {
+      "business": "الأعمال والمال",
+      "tech": "التقنية والأنظمة",
+      "personal": "شخصي",
+      "family": "العائلة والمجتمع",
+      "logistics": "اللوجستيات"
+    }
   },
   "notes": {
     "loading": "جارٍ تحميل الملاحظات...",
@@ -3777,13 +3790,16 @@
     "title": "الأهداف",
     "stats": {
       "projects": "مشاريع",
-      "tasks": "مهام"
+      "tasks": "مهام",
+      "keyResults": "النتائج الرئيسية: {{count}}"
     },
     "notFound": "لم يتم العثور على الهدف",
     "editGoal": "تعديل الهدف",
     "horizon": {
       "season": "موسم",
-      "year": "سنة"
+      "year": "سنة",
+      "month": "شهر",
+      "quarter": "ربع سنة"
     },
     "status": {
       "active": "نشط",
@@ -3799,7 +3815,22 @@
     "clearGoal": "إزالة الهدف",
     "noGoalsFound": "لم يتم العثور على أهداف",
     "inactive": "غير نشط",
-    "viewGoal": "الانتقال إلى الهدف"
+    "viewGoal": "الانتقال إلى الهدف",
+    "bucket": {
+      "title": "قائمة الأمنيات",
+      "have": "أن أملك",
+      "be": "أن أكون",
+      "do": "أن أفعل",
+      "add": "+ إضافة",
+      "none": "ليس في قائمة الأمنيات"
+    },
+    "keyResults": {
+      "title": "النتائج الرئيسية",
+      "add": "إضافة نتيجة رئيسية",
+      "placeholder": "نتيجة رئيسية",
+      "progress": "{{done}} من {{total}} منجز"
+    },
+    "progressSummary": "تقدم الهدف · {{done}} من {{total}} منجز"
   },
   "templates": {
     "new": "قالب جديد",
@@ -4370,6 +4401,12 @@
       "emptyCommitted": "لم يتقرر شيء لهذا الأسبوع بعد.",
       "emptyInView": "لا شيء في الأفق. ضع مهمة في الأفق من قائمتها.",
       "choose": "ساعدني على الاختيار"
+    },
+    "routine": {
+      "offer": "جدولة مراجعة أسبوعية كل جمعة",
+      "taskName": "المراجعة الأسبوعية",
+      "created": "تمت جدولة المراجعة الأسبوعية ليوم الجمعة.",
+      "error": "تعذّرت جدولة المراجعة الأسبوعية."
     }
   },
   "postponements": {

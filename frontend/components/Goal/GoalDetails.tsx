@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Goal, GoalStatus } from '../../entities/Goal';
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import {
+    createGoal,
     fetchGoalByUid,
     deleteGoal,
     updateGoal,
 } from '../../utils/goalsService';
 import { fetchProjects } from '../../utils/projectsService';
-import { extractUidFromSlug } from '../../utils/slugUtils';
+import { createGoalUrl, extractUidFromSlug } from '../../utils/slugUtils';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import ShareModal from '../Shared/ShareModal';
 import TaskList from '../Task/TaskList';
@@ -38,6 +39,8 @@ const GoalDetails: React.FC = () => {
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<GoalTab>('tasks');
+    const [addingKeyResult, setAddingKeyResult] = useState(false);
+    const [keyResultTitle, setKeyResultTitle] = useState('');
     // Full project records (completion, sharing) for the project cards, the
     // same data /projects shows. Goal.Projects only carries a few fields.
     const [projectCards, setProjectCards] = useState<Project[]>([]);
@@ -118,6 +121,31 @@ const GoalDetails: React.FC = () => {
         }
     };
 
+    const handleAddKeyResult = async () => {
+        const title = keyResultTitle.trim();
+        if (!goal?.uid || !title) {
+            setAddingKeyResult(false);
+            return;
+        }
+        try {
+            await createGoal({
+                title,
+                parent_goal_uid: goal.uid,
+                horizon: goal.horizon,
+                status: 'active',
+            });
+            const refreshed = await fetchGoalByUid(goal.uid);
+            setGoal((prev) => (prev ? { ...prev, ...refreshed } : refreshed));
+            loadGoals(true);
+            setKeyResultTitle('');
+            setAddingKeyResult(false);
+        } catch {
+            showErrorToast(
+                t('errors.failedToSaveGoal', 'Failed to save goal.')
+            );
+        }
+    };
+
     const handleTaskUpdate = async (updatedTask: Task) => {
         setGoal((prev) => {
             if (!prev) return prev;
@@ -171,6 +199,10 @@ const GoalDetails: React.FC = () => {
         (p) => p.uid && goalUids.has(p.uid)
     );
 
+    const keyResults: Goal[] = goal.KeyResults ?? [];
+    // One level only: a key result has none, and neither has a bucket-list goal.
+    const canHaveKeyResults = !goal.parent_goal_uid && !goal.bucket;
+
     const tabClass = (tab: GoalTab) =>
         `relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
             activeTab === tab
@@ -183,13 +215,122 @@ const GoalDetails: React.FC = () => {
             <GoalHero
                 goal={goal}
                 t={t}
-                doneCount={completedTasks.length}
-                totalCount={tasks.length}
+                doneCount={goal.progress?.done ?? completedTasks.length}
+                totalCount={goal.progress?.total ?? tasks.length}
                 onStatusChange={handleStatusChange}
                 onShareClick={() => setIsShareModalOpen(true)}
                 onEditClick={() => setIsEditing(true)}
                 onDeleteClick={() => setIsConfirmDeleteOpen(true)}
             />
+
+            {goal.parent_goal && (
+                <p className="mb-3 px-2 text-sm text-gray-600 dark:text-gray-300">
+                    {t('forms.goalParent', 'Key result of')}{' '}
+                    <Link
+                        to={createGoalUrl(goal.parent_goal)}
+                        className="underline-offset-2 hover:underline"
+                    >
+                        {goal.parent_goal.title}
+                    </Link>
+                </p>
+            )}
+
+            {(keyResults.length > 0 || canHaveKeyResults) && (
+                <section
+                    className="mb-6 px-2"
+                    data-testid={
+                        keyResults.length > 0 ? 'key-results' : undefined
+                    }
+                    aria-label={t('goals.keyResults.title', 'Key results')}
+                >
+                    {keyResults.length > 0 && (
+                        <>
+                            <h3 className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {t('goals.keyResults.title', 'Key results')}
+                            </h3>
+                            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                                {keyResults.map((kr) => (
+                                    <li key={kr.uid} className="py-2">
+                                        <Link
+                                            to={createGoalUrl({
+                                                uid: kr.uid,
+                                                title: kr.title,
+                                            })}
+                                            className="flex items-center gap-3"
+                                        >
+                                            <span className="min-w-0 flex-1 truncate text-sm text-gray-900 dark:text-gray-100">
+                                                {kr.title}
+                                            </span>
+                                            <span className="flex-shrink-0 text-xs tabular-nums text-gray-600 dark:text-gray-300">
+                                                {t(
+                                                    'goals.keyResults.progress',
+                                                    '{{done}} of {{total}} done',
+                                                    {
+                                                        done:
+                                                            kr.progress?.done ??
+                                                            0,
+                                                        total:
+                                                            kr.progress
+                                                                ?.total ?? 0,
+                                                    }
+                                                )}
+                                            </span>
+                                            <span
+                                                className="h-1 w-20 flex-shrink-0 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
+                                                aria-hidden="true"
+                                            >
+                                                <span
+                                                    className="block h-full rounded-full bg-blue-500"
+                                                    style={{
+                                                        width: `${kr.progress?.percent ?? 0}%`,
+                                                    }}
+                                                />
+                                            </span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+                    {canHaveKeyResults &&
+                        (addingKeyResult ? (
+                            <input
+                                autoFocus
+                                type="text"
+                                value={keyResultTitle}
+                                onChange={(e) =>
+                                    setKeyResultTitle(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        void handleAddKeyResult();
+                                    } else if (e.key === 'Escape') {
+                                        setAddingKeyResult(false);
+                                        setKeyResultTitle('');
+                                    }
+                                }}
+                                onBlur={() => {
+                                    if (!keyResultTitle.trim()) {
+                                        setAddingKeyResult(false);
+                                    }
+                                }}
+                                placeholder={t(
+                                    'goals.keyResults.placeholder',
+                                    'Key result'
+                                )}
+                                className="mt-2 w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
+                            />
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => setAddingKeyResult(true)}
+                                className="mt-1 text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
+                            >
+                                {t('goals.keyResults.add', 'Add a key result')}
+                            </button>
+                        ))}
+                </section>
+            )}
 
             <div className="mb-4">
                 <div className="flex items-center min-h-[2.5rem]">

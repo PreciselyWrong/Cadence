@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Goal, GoalHorizon, GoalStatus } from '../../entities/Goal';
+import { Goal, GoalBucket, GoalHorizon, GoalStatus } from '../../entities/Goal';
 import { createGoal, updateGoal } from '../../utils/goalsService';
 import { createGoalUrl } from '../../utils/slugUtils';
 import { useStore } from '../../store/useStore';
@@ -20,9 +20,19 @@ interface GoalModalProps {
     onClose: () => void;
     goal?: Goal | null;
     onSaved?: (goal: Goal) => void;
+    // Opens a new goal already on the bucket list, in that group.
+    defaultBucket?: GoalBucket | null;
 }
 
-const emptyGoal = (): Partial<Goal> => ({
+const BUCKETS: GoalBucket[] = ['have', 'be', 'do'];
+const BUCKET_FALLBACKS: Record<GoalBucket, string> = {
+    have: 'Have',
+    be: 'Be',
+    do: 'Do',
+};
+const HORIZONS: GoalHorizon[] = ['month', 'quarter', 'season', 'year'];
+
+const emptyGoal = (bucket: GoalBucket | null = null): Partial<Goal> => ({
     title: '',
     why: '',
     horizon: 'season' as GoalHorizon,
@@ -30,9 +40,14 @@ const emptyGoal = (): Partial<Goal> => ({
     target_date: '',
     area_id: null,
     color: '',
+    bucket,
+    parent_goal_uid: null,
 });
 
-const toFormData = (goal?: Goal | null): Partial<Goal> =>
+const toFormData = (
+    goal?: Goal | null,
+    defaultBucket: GoalBucket | null = null
+): Partial<Goal> =>
     goal
         ? {
               title: goal.title,
@@ -42,8 +57,10 @@ const toFormData = (goal?: Goal | null): Partial<Goal> =>
               target_date: goal.target_date ?? '',
               area_id: goal.area_id ?? null,
               color: goal.color ?? '',
+              bucket: goal.bucket ?? null,
+              parent_goal_uid: goal.parent_goal_uid ?? null,
           }
-        : emptyGoal();
+        : emptyGoal(defaultBucket);
 
 // Creates a goal, or edits one, in the side panel. A new goal opens its page
 // once saved, the same as before the panel existed.
@@ -52,24 +69,26 @@ const GoalModal: React.FC<GoalModalProps> = ({
     onClose,
     goal,
     onSaved,
+    defaultBucket = null,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { showSuccessToast, showErrorToast } = useToast();
     const areas = useStore((state: any) => state.areasStore.areas) as any[];
     const loadGoals = useStore((state: any) => state.goalsStore.loadGoals);
+    const allGoals = useStore((state: any) => state.goalsStore.goals) as Goal[];
 
     const [formData, setFormData] = useState<Partial<Goal>>(() =>
-        toFormData(goal)
+        toFormData(goal, defaultBucket)
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!isOpen) return;
-        setFormData(toFormData(goal));
+        setFormData(toFormData(goal, defaultBucket));
         setError(null);
-    }, [isOpen, goal]);
+    }, [isOpen, goal, defaultBucket]);
 
     const isEdit = !!goal?.uid;
 
@@ -77,7 +96,7 @@ const GoalModal: React.FC<GoalModalProps> = ({
         if (!isEdit) {
             return !!formData.title?.trim() || !!formData.why?.trim();
         }
-        const original = toFormData(goal);
+        const original = toFormData(goal, defaultBucket);
         return (Object.keys(original) as (keyof Goal)[]).some(
             (key) => (formData[key] ?? '') !== (original[key] ?? '')
         );
@@ -96,9 +115,22 @@ const GoalModal: React.FC<GoalModalProps> = ({
                     ? value
                         ? parseInt(value, 10)
                         : null
-                    : value,
+                    : name === 'bucket' || name === 'parent_goal_uid'
+                      ? value || null
+                      : value,
         }));
     };
+
+    // Only an objective can take key results, so only top-level goals off
+    // the bucket list are offered, and not one that already has some.
+    const isBucketGoal = Boolean(formData.bucket);
+    const objectives = allGoals.filter(
+        (g) => g.uid && g.uid !== goal?.uid && !g.parent_goal_uid && !g.bucket
+    );
+    const canBeKeyResult =
+        !isBucketGoal &&
+        objectives.length > 0 &&
+        !(goal?.key_results_count && goal.key_results_count > 0);
 
     const handleSubmit = async () => {
         if (!formData.title?.trim()) {
@@ -110,8 +142,12 @@ const GoalModal: React.FC<GoalModalProps> = ({
         try {
             const payload = {
                 ...formData,
-                target_date: formData.target_date || null,
+                target_date: isBucketGoal ? null : formData.target_date || null,
                 area_id: formData.area_id || null,
+                bucket: formData.bucket || null,
+                parent_goal_uid: isBucketGoal
+                    ? null
+                    : formData.parent_goal_uid || null,
             };
             if (isEdit) {
                 const result = await updateGoal(goal!.uid!, payload);
@@ -198,22 +234,57 @@ const GoalModal: React.FC<GoalModalProps> = ({
                 />
             </SidePanelField>
 
-            <SidePanelSection title={t('forms.goalHorizon', 'Horizon')}>
-                <div className="grid grid-cols-2 gap-3">
+            {isBucketGoal && (
+                <SidePanelField
+                    label={t('forms.goalBucket', 'Bucket list group')}
+                    htmlFor="goalBucket"
+                >
                     <select
-                        aria-label={t('forms.goalHorizon', 'Horizon')}
-                        name="horizon"
-                        value={formData.horizon ?? 'season'}
+                        id="goalBucket"
+                        aria-label={t('forms.goalBucket', 'Bucket list group')}
+                        name="bucket"
+                        value={formData.bucket ?? ''}
                         onChange={handleChange}
                         className={sidePanelInputClass}
                     >
-                        <option value="season">
-                            {t('goals.horizon.season', 'Season')}
+                        <option value="">
+                            {t('goals.bucket.none', 'Not on the bucket list')}
                         </option>
-                        <option value="year">
-                            {t('goals.horizon.year', 'Year')}
-                        </option>
+                        {BUCKETS.map((bucket) => (
+                            <option key={bucket} value={bucket}>
+                                {t(
+                                    `goals.bucket.${bucket}`,
+                                    BUCKET_FALLBACKS[bucket]
+                                )}
+                            </option>
+                        ))}
                     </select>
+                </SidePanelField>
+            )}
+
+            <SidePanelSection
+                title={
+                    isBucketGoal
+                        ? t('forms.goalStatus', 'Status')
+                        : t('forms.goalHorizon', 'Horizon')
+                }
+            >
+                <div className="grid grid-cols-2 gap-3">
+                    {!isBucketGoal && (
+                        <select
+                            aria-label={t('forms.goalHorizon', 'Horizon')}
+                            name="horizon"
+                            value={formData.horizon ?? 'season'}
+                            onChange={handleChange}
+                            className={sidePanelInputClass}
+                        >
+                            {HORIZONS.map((horizon) => (
+                                <option key={horizon} value={horizon}>
+                                    {t(`goals.horizon.${horizon}`, horizon)}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                     <select
                         aria-label={t('forms.goalStatus', 'Status')}
                         name="status"
@@ -237,18 +308,48 @@ const GoalModal: React.FC<GoalModalProps> = ({
                 </div>
             </SidePanelSection>
 
-            <SidePanelField
-                label={t('forms.goalTargetDate', 'Target Date')}
-                htmlFor="goalTargetDate"
-            >
-                <DatePicker
-                    value={formData.target_date ?? ''}
-                    onChange={(value) =>
-                        setFormData((prev) => ({ ...prev, target_date: value }))
-                    }
-                    placeholder={t('forms.goalTargetDate', 'Target Date')}
-                />
-            </SidePanelField>
+            {!isBucketGoal && (
+                <SidePanelField
+                    label={t('forms.goalTargetDate', 'Target Date')}
+                    htmlFor="goalTargetDate"
+                >
+                    <DatePicker
+                        value={formData.target_date ?? ''}
+                        onChange={(value) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                target_date: value,
+                            }))
+                        }
+                        placeholder={t('forms.goalTargetDate', 'Target Date')}
+                    />
+                </SidePanelField>
+            )}
+
+            {canBeKeyResult && (
+                <SidePanelField
+                    label={`${t('forms.goalParent', 'Key result of')} (${t('common.optional', 'optional')})`}
+                    htmlFor="goalParent"
+                >
+                    <select
+                        id="goalParent"
+                        aria-label={t('forms.goalParent', 'Key result of')}
+                        name="parent_goal_uid"
+                        value={formData.parent_goal_uid ?? ''}
+                        onChange={handleChange}
+                        className={sidePanelInputClass}
+                    >
+                        <option value="">
+                            {t('forms.noParentGoal', 'None (stands alone)')}
+                        </option>
+                        {objectives.map((objective) => (
+                            <option key={objective.uid} value={objective.uid}>
+                                {objective.title}
+                            </option>
+                        ))}
+                    </select>
+                </SidePanelField>
+            )}
 
             <SidePanelField
                 label={`${t('forms.goalArea', 'Area')} (${t('common.optional', 'optional')})`}

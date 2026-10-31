@@ -173,6 +173,26 @@ export const keepProject = async (projectUid: string): Promise<void> => {
     await handleAuthResponse(response, 'Could not save the decision.');
 };
 
+// Whether a weekly review routine (a weekly task linking to /review) exists.
+export const fetchWeeklyRoutine = async (): Promise<boolean> =>
+    (
+        await get<{ exists: boolean }>(
+            'review/weekly-routine',
+            'Could not load the review.'
+        )
+    ).exists;
+
+// Creates the Friday routine, titled in the user's language. Idempotent.
+export const createWeeklyRoutine = async (name: string): Promise<void> => {
+    const response = await fetch(getApiPath('review/weekly-routine'), {
+        method: 'POST',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+        body: JSON.stringify({ name }),
+    });
+    await handleAuthResponse(response, 'Could not create the routine.');
+};
+
 export const saveWeekCapacity = async (
     minutes: number | null
 ): Promise<number | null> => {

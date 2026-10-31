@@ -32,7 +32,6 @@ const {
     getUpcomingRangeInUTC,
 } = require('../../utils/timezone-utils');
 const permissionsService = require('../../services/permissionsService');
-const habitService = require('../habits/habitService');
 
 const {
     isValidTaskUid,
@@ -100,8 +99,7 @@ function expandRecurringTasks(
     tasks,
     maxDays = 7,
     statusFilter = null,
-    userTimezone = 'UTC',
-    habitDays = new Map()
+    userTimezone = 'UTC'
 ) {
     const expandedTasks = [];
     const moment = require('moment-timezone');
@@ -112,20 +110,6 @@ function expandRecurringTasks(
             task.recurrence_type &&
             task.recurrence_type !== 'none' &&
             !task.recurring_parent_id;
-
-        // Habits follow their own schedule and progress, not the recurrence.
-        if (task.habit_mode && !task.recurring_parent_id) {
-            (habitDays.get(task.id) || []).forEach((day, index) => {
-                expandedTasks.push({
-                    ...(task.toJSON ? task.toJSON() : task),
-                    due_date: day,
-                    is_virtual_occurrence: true,
-                    occurrence_index: index,
-                    virtual_id: `${task.id}_occurrence_${index}`,
-                });
-            });
-            return;
-        }
 
         if (!isRecurring) {
             expandedTasks.push(task);
@@ -187,12 +171,7 @@ function expandRecurringTasks(
 // Calendar: keeps every task as stored and adds the later occurrences of
 // each open recurring parent up to `endDay` (YYYY-MM-DD, user timezone).
 // Days that already have a generated instance are skipped.
-function expandCalendarOccurrences(
-    tasks,
-    endDay,
-    userTimezone = 'UTC',
-    habitDays = new Map()
-) {
+function expandCalendarOccurrences(tasks, endDay, userTimezone = 'UTC') {
     const moment = require('moment-timezone');
     const localDay = (date) =>
         typeof date === 'string'
@@ -207,27 +186,10 @@ function expandCalendarOccurrences(
 
     tasks.forEach((task) => {
         expanded.push(task);
-        // Habits add a whole-day item on each day they ask for a check-in.
-        if (task.habit_mode && !task.recurring_parent_id) {
-            (habitDays.get(task.id) || []).forEach((day, index) => {
-                if (day > endDay) return;
-                expanded.push({
-                    ...(task.toJSON ? task.toJSON() : task),
-                    due_date: day,
-                    due_has_time: false,
-                    start_date: null,
-                    is_virtual_occurrence: true,
-                    occurrence_index: index,
-                    virtual_id: `${task.id}_habit_${index}`,
-                });
-            });
-            return;
-        }
         const isOpenParent =
             task.recurrence_type &&
             task.recurrence_type !== 'none' &&
             !task.recurring_parent_id &&
-            !task.habit_mode &&
             task.due_date &&
             ![2, 3, 5, 'done', 'archived', 'cancelled'].includes(task.status);
         if (!isOpenParent) return;
@@ -346,17 +308,11 @@ router.get('/tasks', async (req, res) => {
         if (type === 'upcoming' && groupBy === 'day') {
             const days = maxDays ? parseInt(maxDays, 10) : 7;
             const safeTimezone = getSafeTimezone(timezone);
-            const habitDays = await habitService.dueDays(
-                tasks,
-                await habitService.getUserContext(userId),
-                days
-            );
             tasks = expandRecurringTasks(
                 tasks,
                 days,
                 req.query.status,
-                safeTimezone,
-                habitDays
+                safeTimezone
             );
         }
 
@@ -364,31 +320,11 @@ router.get('/tasks', async (req, res) => {
             type === 'calendar' &&
             /^\d{4}-\d{2}-\d{2}$/.test(req.query.end || '')
         ) {
-            const moment = require('moment-timezone');
             const safeTimezone = getSafeTimezone(timezone);
-            // Habit check-ins from today up to the end day (at most 62 days).
-            const daysAhead = Math.min(
-                62,
-                Math.max(
-                    0,
-                    moment
-                        .tz(req.query.end, safeTimezone)
-                        .diff(moment.tz(safeTimezone).startOf('day'), 'days') +
-                        1
-                )
-            );
-            const habitDays = daysAhead
-                ? await habitService.dueDays(
-                      tasks,
-                      await habitService.getUserContext(userId),
-                      daysAhead
-                  )
-                : new Map();
             tasks = expandCalendarOccurrences(
                 tasks,
                 req.query.end,
-                safeTimezone,
-                habitDays
+                safeTimezone
             );
         }
 

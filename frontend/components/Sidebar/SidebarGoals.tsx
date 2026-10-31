@@ -42,7 +42,11 @@ const SidebarGoals: React.FC<SidebarGoalsProps> = ({
             isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
         }`;
 
-    const activeGoals = goals.filter((g: Goal) => g.status === 'active');
+    // Key results live under their objective and the bucket list has its own
+    // tab, so the sidebar keeps to the objectives.
+    const activeGoals = goals.filter(
+        (g: Goal) => g.status === 'active' && !g.bucket && !g.parent_goal_uid
+    );
 
     useEffect(() => {
         if (

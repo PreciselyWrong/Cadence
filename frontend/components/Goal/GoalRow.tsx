@@ -55,6 +55,7 @@ const GoalRow: React.FC<GoalRowProps> = ({
     const projectsCount =
         (goal as any).projects_count ?? goal.Projects?.length ?? 0;
     const tasksCount = (goal as any).tasks_count ?? goal.Tasks?.length ?? 0;
+    const keyResultsCount = goal.key_results_count ?? 0;
 
     const menuItemClass =
         'block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-gray-600';
@@ -90,12 +91,23 @@ const GoalRow: React.FC<GoalRowProps> = ({
                 >
                     {t(`goals.status.${goal.status}`, goal.status)}
                 </span>
-                <span className="inline-flex items-center px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-                    {t(`goals.horizon.${goal.horizon}`, goal.horizon)}
-                </span>
+                {!goal.bucket && (
+                    <span className="inline-flex items-center px-2 py-px rounded-full text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                        {t(`goals.horizon.${goal.horizon}`, goal.horizon)}
+                    </span>
+                )}
             </div>
 
             <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 w-40 justify-end">
+                {keyResultsCount > 0 && (
+                    <span>
+                        {t('goals.stats.keyResults', 'Key results: {{count}}', {
+                            count: keyResultsCount,
+                        })}
+                        {goal.progress?.percent != null &&
+                            ` · ${goal.progress.percent}%`}
+                    </span>
+                )}
                 <span>
                     {projectsCount} {t('goals.stats.projects', 'projects')}
                 </span>

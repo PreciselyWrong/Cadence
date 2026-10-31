@@ -1171,7 +1171,10 @@
     "color": "Kleur",
     "goalArea": "Gebied",
     "noArea": "Geen gebied",
-    "startDate": "Start"
+    "startDate": "Start",
+    "goalBucket": "Bucketlistgroep",
+    "goalParent": "Kernresultaat van",
+    "noParentGoal": "Geen (zelfstandig)"
   },
   "auth": {
     "login": "Inloggen",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Volgende actie",
+    "nextActionLine": "Volgende actie: {{name}}"
   },
   "errors": {
     "required": "Dit veld is verplicht",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "5 domeinen voorstellen",
+    "domains": {
+      "business": "Business & Geld",
+      "tech": "Tech & Systemen",
+      "personal": "Persoonlijk",
+      "family": "Familie & Sociaal",
+      "logistics": "Logistiek"
+    }
   },
   "notes": {
     "loading": "Bezig met het laden van notities...",
@@ -3745,13 +3758,16 @@
     "title": "Doelen",
     "stats": {
       "projects": "projecten",
-      "tasks": "taken"
+      "tasks": "taken",
+      "keyResults": "Kernresultaten: {{count}}"
     },
     "notFound": "Doel niet gevonden",
     "editGoal": "Doel bewerken",
     "horizon": {
       "season": "Seizoen",
-      "year": "Jaar"
+      "year": "Jaar",
+      "month": "Maand",
+      "quarter": "Kwartaal"
     },
     "status": {
       "active": "Actief",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Doel verwijderen",
     "noGoalsFound": "Geen doelen gevonden",
     "inactive": "Inactief",
-    "viewGoal": "Naar doel"
+    "viewGoal": "Naar doel",
+    "bucket": {
+      "title": "Bucketlist",
+      "have": "Hebben",
+      "be": "Zijn",
+      "do": "Doen",
+      "add": "+ Toevoegen",
+      "none": "Niet op de bucketlist"
+    },
+    "keyResults": {
+      "title": "Kernresultaten",
+      "add": "Kernresultaat toevoegen",
+      "placeholder": "Kernresultaat",
+      "progress": "{{done}} van {{total}} klaar"
+    },
+    "progressSummary": "Doelvoortgang · {{done}} van {{total}} klaar"
   },
   "templates": {
     "new": "Nieuw sjabloon",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Nog niets besloten voor deze week.",
       "emptyInView": "Niets in beeld. Zet een taak in beeld via het menu.",
       "choose": "Help me kiezen"
+    },
+    "routine": {
+      "offer": "Wekelijkse review plannen op vrijdag",
+      "taskName": "Wekelijkse review",
+      "created": "Wekelijkse review gepland voor vrijdag.",
+      "error": "Kon de wekelijkse review niet plannen."
     }
   },
   "postponements": {

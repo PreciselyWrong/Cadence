@@ -168,13 +168,6 @@ export const toggleTaskCompletion = async (
 ): Promise<Task> => {
     const task = currentTask ?? (await fetchTaskByUid(taskUid));
 
-    // Handle habits differently - log completion instead of marking as done
-    if (task.habit_mode) {
-        const { logHabitCompletion } = await import('./habitsService');
-        const result = await logHabitCompletion(taskUid);
-        return result.task;
-    }
-
     const newStatus = isTaskDone(task.status)
         ? task.note
             ? TASK_STATUS.IN_PROGRESS

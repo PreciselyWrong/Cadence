@@ -1173,7 +1173,10 @@
     "color": "Barva",
     "goalArea": "Področje",
     "noArea": "Brez področja",
-    "startDate": "Začetek"
+    "startDate": "Začetek",
+    "goalBucket": "Skupina seznama želja",
+    "goalParent": "Ključni rezultat za",
+    "noParentGoal": "Brez (samostojen)"
   },
   "auth": {
     "login": "Prijava",
@@ -1332,7 +1335,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Naslednje dejanje",
+    "nextActionLine": "Naslednje dejanje: {{name}}"
   },
   "errors": {
     "required": "To polje je obvezno",
@@ -1843,7 +1848,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Predlagaj 5 področij",
+    "domains": {
+      "business": "Posel in denar",
+      "tech": "Tehnologija in sistemi",
+      "personal": "Osebno",
+      "family": "Družina in družba",
+      "logistics": "Logistika"
+    }
   },
   "notes": {
     "loading": "Nalaganje opomb...",
@@ -3761,13 +3774,16 @@
     "title": "Cilji",
     "stats": {
       "projects": "projekti",
-      "tasks": "naloge"
+      "tasks": "naloge",
+      "keyResults": "Ključni rezultati: {{count}}"
     },
     "notFound": "Cilja ni mogoče najti",
     "editGoal": "Uredi cilj",
     "horizon": {
       "season": "Sezona",
-      "year": "Leto"
+      "year": "Leto",
+      "month": "Mesec",
+      "quarter": "Četrtletje"
     },
     "status": {
       "active": "Aktiven",
@@ -3783,7 +3799,22 @@
     "clearGoal": "Odstrani cilj",
     "noGoalsFound": "Ni najdenih ciljev",
     "inactive": "Neaktiven",
-    "viewGoal": "Pojdi na cilj"
+    "viewGoal": "Pojdi na cilj",
+    "bucket": {
+      "title": "Seznam želja",
+      "have": "Imeti",
+      "be": "Biti",
+      "do": "Narediti",
+      "add": "+ Dodaj",
+      "none": "Ni na seznamu želja"
+    },
+    "keyResults": {
+      "title": "Ključni rezultati",
+      "add": "Dodaj ključni rezultat",
+      "placeholder": "Ključni rezultat",
+      "progress": "{{done}} od {{total}} opravljenih"
+    },
+    "progressSummary": "Napredek cilja · {{done}} od {{total}} opravljenih"
   },
   "templates": {
     "new": "Nova predloga",
@@ -4352,6 +4383,12 @@
       "emptyCommitted": "Za ta teden še ni nič odločeno.",
       "emptyInView": "Nič na očeh. Postavite opravilo na oči iz njegovega menija.",
       "choose": "Pomagaj mi izbrati"
+    },
+    "routine": {
+      "offer": "Načrtuj tedenski pregled za petek",
+      "taskName": "Tedenski pregled",
+      "created": "Tedenski pregled načrtovan za petek.",
+      "error": "Tedenskega pregleda ni bilo mogoče načrtovati."
     }
   },
   "postponements": {

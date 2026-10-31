@@ -1,8 +1,13 @@
 'use strict';
 
-const habitsService = require('../../habits/service');
+const moment = require('moment-timezone');
+const read = require('../../habits/cadence/operations/read');
+const write = require('../../habits/cadence/operations/write');
+const repository = require('../../habits/cadence/repository');
 
-const PRIORITIES = { low: 0, medium: 1, high: 2 };
+// MCP tools over the Cadence habits (docs/21-habits.md, "Cadence habits").
+// They call the same operations as the REST routes, so a habit created here
+// reaches the web and the devices through the sync journal.
 
 function reply(payload) {
     return {
@@ -10,83 +15,118 @@ function reply(payload) {
     };
 }
 
-function checkDate(value, field) {
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+function checkDay(value, field) {
+    if (value !== undefined && !DAY.test(value)) {
+        throw new Error(`Invalid ${field}: ${value} (expected YYYY-MM-DD)`);
+    }
+}
+
+function checkInstant(value, field) {
     if (value !== undefined && isNaN(new Date(value).getTime())) {
         throw new Error(`Invalid ${field}: ${value}`);
     }
 }
 
-const settingsProperties = {
-    note: { type: 'string', description: 'Description or notes' },
-    priority: {
-        type: 'string',
-        enum: ['low', 'medium', 'high'],
-        description: 'Priority level',
-    },
-    habit_polarity: {
-        type: 'string',
-        enum: ['build', 'quit'],
-        description:
-            'build = a habit to do; quit = a habit to avoid (e.g. "no sugar"), where each logged completion records a slip',
-    },
-    habit_target_count: {
-        type: 'number',
-        description: 'Check-ins needed per period (build habits)',
-    },
-    habit_frequency_period: {
-        type: 'string',
-        enum: ['daily', 'weekly', 'monthly', 'interval'],
-        description:
-            'Period for the target; interval means every habit_interval_days days',
-    },
-    habit_target_value: {
+const UID_HELP =
+    'Optional client-chosen UID (8-64 characters: letters, digits, - and _). Sending the same one again returns the existing item.';
+
+const goalProperties = {
+    target_minor: {
         type: 'number',
         description:
-            'Makes the habit measurable: total amount needed per period (e.g. 20 for 20 pages). Null for a simple count.',
+            'Target per period in minor units: a count for yes/no and count goals, the canonical unit times the scale for amounts (seconds for time). Maximum for a limit.',
     },
-    habit_unit: {
+    period: { type: 'string', enum: ['DAY', 'WEEK', 'MONTH'] },
+    goal_type: {
         type: 'string',
-        description: 'Unit for a measurable habit, e.g. "pages" or "km"',
+        enum: ['BINARY', 'COUNT', 'QUANTITY', 'DURATION'],
+        description: 'BINARY = yes/no; defaults to BINARY with a target of 1',
     },
-    habit_schedule_days: {
-        type: 'array',
-        items: { type: 'number' },
+    direction: {
+        type: 'string',
+        enum: ['AT_LEAST', 'AT_MOST', 'TRACK_ONLY'],
         description:
-            'Daily habits only: weekdays it is due, 0=Sunday..6=Saturday. Omit or null for every day.',
+            'AT_LEAST = a target; AT_MOST = a limit (target 0 is an abstinence); TRACK_ONLY = a free activity',
     },
-    habit_interval_days: {
+    unit_id: { type: 'string' },
+    unit_dimension: {
+        type: 'string',
+        enum: ['TIME', 'COUNT', 'DISTANCE', 'MASS', 'VOLUME', 'CUSTOM'],
+    },
+    unit_name_fr: { type: 'string' },
+    unit_symbol: { type: 'string' },
+    unit_scale_to_canonical: {
         type: 'number',
-        description: 'For the interval period: length in days (2-365)',
+        description: 'Minor units per unit (60 for minutes over seconds)',
     },
-    habit_time_of_day: {
-        type: 'string',
-        enum: ['morning', 'afternoon', 'evening'],
-        description: 'Group the habit by time of day',
+    minimum_minor: {
+        type: 'number',
+        description: 'Threshold that validates the period when below the ideal',
     },
-    habit_color: {
-        type: 'string',
-        description:
-            'Accent color as a hex value from the Cadence palette, e.g. #1d4ed8',
-    },
-    habit_reminder_time: {
-        type: 'string',
-        description: 'Daily reminder time HH:MM in the user timezone',
+    frequency_target: {
+        type: 'number',
+        description: 'Distinct sessions required in the period',
     },
 };
 
-function settingsFrom(params) {
-    const data = { ...params };
-    delete data.uid;
-    delete data.archived;
-    if (params.priority) data.priority = PRIORITIES[params.priority];
-    return data;
+const scheduleProperties = {
+    schedule_mode: {
+        type: 'string',
+        enum: [
+            'EVERY_DAY',
+            'SELECTED_DAYS',
+            'FLEXIBLE_PERIOD',
+            'INTERVAL_DAYS',
+        ],
+    },
+    active_days: {
+        type: 'string',
+        description:
+            'Comma-separated weekdays for SELECTED_DAYS, e.g. MONDAY,WEDNESDAY',
+    },
+    interval_days: {
+        type: 'number',
+        description: 'For INTERVAL_DAYS: every N days (at least 2)',
+    },
+    first_day_of_week: {
+        type: 'string',
+        enum: [
+            'MONDAY',
+            'TUESDAY',
+            'WEDNESDAY',
+            'THURSDAY',
+            'FRIDAY',
+            'SATURDAY',
+            'SUNDAY',
+        ],
+    },
+};
+
+function pickDefined(params, keys) {
+    const out = {};
+    for (const key of keys) {
+        if (params[key] !== undefined) out[key] = params[key];
+    }
+    return out;
 }
+
+const HABIT_FIELDS = [
+    'name',
+    'description',
+    'group_uid',
+    'color_argb',
+    'icon_id',
+    'starts_on',
+    'active',
+];
 
 function registerHabitTools(server, context, tools) {
     tools.push({
         name: 'list_habits',
         description:
-            'List habits with streaks, strength (0-100) and progress for the current period',
+            'List Cadence habits with the goal and schedule in force, the progress of the current period and the streak',
         inputSchema: {
             type: 'object',
             properties: {
@@ -94,38 +134,44 @@ function registerHabitTools(server, context, tools) {
                     type: 'boolean',
                     description: 'List archived habits instead',
                 },
-                updated_since: {
+                date: {
                     type: 'string',
                     description:
-                        'ISO 8601 time: only habits changed after it, archived ones included',
+                        'Evaluate on this day (YYYY-MM-DD). Defaults to today in the user timezone.',
                 },
             },
         },
         handler: async (params = {}) => {
-            const { habits, server_time } = await habitsService.getAll(
-                context.userId,
-                {
-                    archived: params.archived === true,
-                    updatedSince: params.updated_since,
-                }
-            );
-            return reply({ count: habits.length, habits, server_time });
+            checkDay(params.date, 'date');
+            const result = await read.listHabits(context.userId, {
+                archived: params.archived === true,
+                date: params.date,
+            });
+            return reply({ count: result.habits.length, ...result });
         },
     });
 
     tools.push({
         name: 'get_habit',
-        description: 'Get a specific habit by its UID',
+        description:
+            'Get a habit by UID with every goal and schedule version, pauses, reminders and statistics',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
+                date: {
+                    type: 'string',
+                    description: 'Evaluate on this day (YYYY-MM-DD)',
+                },
             },
             required: ['uid'],
         },
         handler: async (params) => {
+            checkDay(params.date, 'date');
             return reply(
-                await habitsService.getOne(context.userId, params.uid)
+                await read.getHabit(context.userId, params.uid, {
+                    date: params.date,
+                })
             );
         },
     });
@@ -133,64 +179,85 @@ function registerHabitTools(server, context, tools) {
     tools.push({
         name: 'create_habit',
         description:
-            'Create a habit to build (e.g. "read 20 pages", "meditate 3x a week") or to quit (e.g. "no sugar")',
+            'Create a habit. Without a goal it is a daily yes/no habit. Examples: "read 20 pages" (QUANTITY, target 20), "meditate 3 times a week" (COUNT, period WEEK, target 3), "no sugar" (COUNT, AT_MOST, target 0).',
         inputSchema: {
             type: 'object',
             properties: {
                 name: { type: 'string', description: 'Habit name' },
-                uid: {
+                uid: { type: 'string', description: UID_HELP },
+                description: { type: 'string' },
+                group_uid: {
                     type: 'string',
                     description:
-                        'Optional client-chosen habit UID (15 characters: 0-9 and a-z, no l or o). Sending the same one again returns the existing habit.',
+                        'Time-of-day group: group-morning, group-afternoon, group-evening or group-day',
                 },
-                ...settingsProperties,
+                starts_on: {
+                    type: 'string',
+                    description: 'First day (YYYY-MM-DD). Defaults to today.',
+                },
+                goal: {
+                    type: 'object',
+                    description: 'First goal version',
+                    properties: goalProperties,
+                },
+                schedule: {
+                    type: 'object',
+                    description: 'First schedule version (default every day)',
+                    properties: scheduleProperties,
+                },
             },
             required: ['name'],
         },
         handler: async (params) => {
-            // uid is optional: a client that sends the same one again gets the
-            // existing habit back.
-            const { habit } = await habitsService.create(context.userId, {
-                ...settingsFrom(params),
-                uid: params.uid,
+            checkDay(params.starts_on, 'starts_on');
+            const { habit } = await write.createHabit(context.userId, {
+                ...pickDefined(params, ['uid', ...HABIT_FIELDS]),
+                goal: params.goal ?? {
+                    target_minor: 1,
+                    period: 'DAY',
+                    goal_type: 'BINARY',
+                    direction: 'AT_LEAST',
+                },
+                ...(params.schedule ? { schedule: params.schedule } : {}),
             });
-            return reply({ message: 'Habit created successfully', habit });
+            return reply({
+                message: 'Habit created successfully',
+                habit: await read.getHabit(context.userId, habit.uid),
+            });
         },
     });
 
     tools.push({
         name: 'update_habit',
-        description: 'Update a habit, or archive / unarchive it',
+        description:
+            'Rename a habit, change its group or description, or archive / unarchive it. Goals and schedules are versioned and not changed here.',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
-                name: { type: 'string', description: 'New habit name' },
+                name: { type: 'string' },
+                description: { type: 'string' },
+                group_uid: { type: 'string' },
                 archived: {
                     type: 'boolean',
                     description:
                         'true archives the habit (keeps history), false restores it',
                 },
-                ...settingsProperties,
             },
             required: ['uid'],
         },
         handler: async (params) => {
-            let result = await habitsService.update(
-                context.userId,
-                params.uid,
-                settingsFrom(params)
-            );
-            if (typeof params.archived === 'boolean') {
-                result = await habitsService.setArchived(
-                    context.userId,
-                    params.uid,
-                    params.archived
-                );
-            }
+            await write.updateHabit(context.userId, params.uid, {
+                ...pickDefined(params, [
+                    'name',
+                    'description',
+                    'group_uid',
+                    'archived',
+                ]),
+            });
             return reply({
                 message: 'Habit updated successfully',
-                habit: result.habit,
+                habit: await read.getHabit(context.userId, params.uid),
             });
         },
     });
@@ -206,7 +273,7 @@ function registerHabitTools(server, context, tools) {
             required: ['uid'],
         },
         handler: async (params) => {
-            await habitsService.delete(context.userId, params.uid);
+            await write.deleteHabit(context.userId, params.uid);
             return reply({ message: 'Habit deleted successfully' });
         },
     });
@@ -214,60 +281,91 @@ function registerHabitTools(server, context, tools) {
     tools.push({
         name: 'log_habit_completion',
         description:
-            'Check in a habit (for a quit habit this records a slip), or skip a day so the streak is kept',
+            'Record an entry for a habit (for a limit or an abstinence this records a slip), or skip a day with a one-day pause so the streak is kept',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
-                checkin_uid: {
-                    type: 'string',
-                    description:
-                        'Optional client-chosen check-in UID (15 characters: 0-9 and a-z, no l or o). Sending the same one again returns the existing check-in instead of adding another.',
-                },
-                completed_at: {
-                    type: 'string',
-                    description:
-                        'Completion timestamp (ISO 8601). Defaults to now.',
-                },
-                value: {
+                entry_uid: { type: 'string', description: UID_HELP },
+                value_minor: {
                     type: 'number',
-                    description: 'Amount, required for measurable habits',
+                    description:
+                        'Amount in minor units of the goal (default 1, a single check-in)',
+                },
+                occurred_at: {
+                    type: 'string',
+                    description: 'Instant (ISO 8601). Defaults to now.',
+                },
+                local_date: {
+                    type: 'string',
+                    description:
+                        'Civil day (YYYY-MM-DD). Defaults to the day of occurred_at in the user timezone.',
                 },
                 note: { type: 'string', description: 'Optional note' },
                 skip: {
                     type: 'boolean',
                     description:
-                        'Skip this day instead (rest day, illness). Build habits only.',
+                        'Skip local_date (default today) instead: rest day, illness',
                 },
             },
             required: ['uid'],
         },
         handler: async (params) => {
-            checkDate(params.completed_at, 'completed_at');
-            const result = params.skip
-                ? await habitsService.skipDay(context.userId, params.uid, {
-                      date: params.completed_at,
-                      note: params.note,
-                  })
-                : await habitsService.logCompletion(
-                      context.userId,
-                      params.uid,
-                      {
-                          completed_at: params.completed_at,
-                          value: params.value,
-                          note: params.note,
-                          uid: params.checkin_uid,
-                      }
-                  );
+            checkInstant(params.occurred_at, 'occurred_at');
+            checkDay(params.local_date, 'local_date');
+            const userId = context.userId;
+            const habit = await read.getHabitRow(userId, params.uid);
+
+            if (params.skip) {
+                const { today } = await read.userContext(userId);
+                const day = params.local_date ?? today;
+                const { row } = await write.createChild(
+                    userId,
+                    habit,
+                    'habit_pause',
+                    {
+                        start: day,
+                        end_exclusive: moment
+                            .utc(day)
+                            .add(1, 'day')
+                            .format('YYYY-MM-DD'),
+                        reason: 'REST',
+                    }
+                );
+                return reply({
+                    message: 'Day skipped',
+                    pause: await write.view('habit_pause', row, userId),
+                    status: (
+                        await read.getHabit(userId, params.uid, { date: day })
+                    ).status,
+                });
+            }
+
+            const { row, created } = await write.createChild(
+                userId,
+                habit,
+                'habit_entry',
+                {
+                    ...(params.entry_uid ? { uid: params.entry_uid } : {}),
+                    value_minor: params.value_minor ?? 1,
+                    ...pickDefined(params, [
+                        'occurred_at',
+                        'local_date',
+                        'note',
+                    ]),
+                }
+            );
+            const entry = await write.view('habit_entry', row, userId);
             return reply({
-                message: params.skip
-                    ? 'Day skipped'
-                    : 'Completion logged successfully',
-                current_streak: result.task.habit_current_streak,
-                best_streak: result.task.habit_best_streak,
-                total_completions: result.task.habit_total_completions,
-                strength: result.task.habit_strength,
-                progress: result.task.habit_progress,
+                message: created
+                    ? 'Completion logged successfully'
+                    : 'Completion already logged',
+                entry,
+                status: (
+                    await read.getHabit(userId, params.uid, {
+                        date: entry.local_date,
+                    })
+                ).status,
             });
         },
     });
@@ -275,66 +373,66 @@ function registerHabitTools(server, context, tools) {
     tools.push({
         name: 'get_habit_completions',
         description:
-            'Get check-ins (with value and note) and skipped days for a habit within a date range',
+            'Get the entries (check-ins, amounts, slips with their notes) of a habit, optionally within a range of civil days',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
-                start_date: {
+                from: {
                     type: 'string',
-                    description:
-                        'Start date (ISO 8601). Defaults to 30 days ago.',
+                    description: 'First day (YYYY-MM-DD), inclusive',
                 },
-                end_date: {
+                to: {
                     type: 'string',
-                    description: 'End date (ISO 8601). Defaults to now.',
-                },
-                updated_since: {
-                    type: 'string',
-                    description:
-                        'ISO 8601 time: only check-ins changed after it (no date window unless start_date or end_date is given)',
+                    description: 'Last day (YYYY-MM-DD), inclusive',
                 },
             },
             required: ['uid'],
         },
         handler: async (params) => {
-            checkDate(params.start_date, 'start_date');
-            checkDate(params.end_date, 'end_date');
-            const { completions, server_time } =
-                await habitsService.getCompletions(
-                    context.userId,
-                    params.uid,
-                    params.start_date,
-                    params.end_date,
-                    params.updated_since
-                );
-            return reply({
-                count: completions.length,
-                completions,
-                server_time,
-            });
+            checkDay(params.from, 'from');
+            checkDay(params.to, 'to');
+            const userId = context.userId;
+            const habit = await read.getHabitRow(userId, params.uid);
+            const where = {};
+            if (params.from || params.to) {
+                const { Op } = require('sequelize');
+                where.local_date = {
+                    ...(params.from ? { [Op.gte]: params.from } : {}),
+                    ...(params.to ? { [Op.lte]: params.to } : {}),
+                };
+            }
+            const rows = await repository.listChildren(
+                'habit_entry',
+                userId,
+                habit,
+                where
+            );
+            const entries = await Promise.all(
+                rows.map((row) => write.view('habit_entry', row, userId))
+            );
+            return reply({ count: entries.length, entries });
         },
     });
 
     tools.push({
         name: 'delete_habit_completion',
-        description: 'Delete a habit check-in or skipped day',
+        description: 'Delete a habit entry',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
-                completion_id: {
-                    type: 'number',
-                    description: 'Completion ID to delete',
-                },
+                entry_uid: { type: 'string', description: 'Entry UID' },
             },
-            required: ['uid', 'completion_id'],
+            required: ['uid', 'entry_uid'],
         },
         handler: async (params) => {
-            await habitsService.deleteCompletion(
+            const habit = await read.getHabitRow(context.userId, params.uid);
+            await write.deleteChild(
                 context.userId,
-                params.uid,
-                params.completion_id
+                habit,
+                'habit_entry',
+                params.entry_uid
             );
             return reply({ message: 'Completion deleted successfully' });
         },
@@ -343,33 +441,26 @@ function registerHabitTools(server, context, tools) {
     tools.push({
         name: 'get_habit_stats',
         description:
-            'Get habit statistics: streaks, strength, completion rate over judged periods, totals',
+            'Get habit statistics: the state of the current period, current and best streak, success rate and activity over time',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Habit UID' },
-                start_date: {
+                date: {
                     type: 'string',
-                    description: 'Start date (ISO 8601)',
-                },
-                end_date: {
-                    type: 'string',
-                    description: 'End date (ISO 8601)',
+                    description: 'Evaluate on this day (YYYY-MM-DD)',
                 },
             },
             required: ['uid'],
         },
         handler: async (params) => {
-            checkDate(params.start_date, 'start_date');
-            checkDate(params.end_date, 'end_date');
-            return reply(
-                await habitsService.getStats(
-                    context.userId,
-                    params.uid,
-                    params.start_date,
-                    params.end_date
-                )
+            checkDay(params.date, 'date');
+            const { status, stats } = await read.getHabit(
+                context.userId,
+                params.uid,
+                { date: params.date }
             );
+            return reply({ status, ...stats });
         },
     });
 }

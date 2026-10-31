@@ -30,7 +30,6 @@ const Breadcrumbs: React.FC = () => {
     const notes = useStore((s) => s.notesStore.notes);
     const goals = useStore((s) => s.goalsStore.goals);
     const people = useStore((s) => s.peopleStore.people);
-    const habits = useStore((s) => s.habitsStore.habits);
     const tasks = useStore((s) => s.tasksStore.tasks);
 
     const [, section, param] = pathname.split('/');
@@ -150,10 +149,9 @@ const Breadcrumbs: React.FC = () => {
             break;
         }
         case 'habit': {
-            const habit = habits.find((h) => h.uid === uid);
             crumbs = [
                 { label: t('sidebar.habits', 'Habits'), to: '/habits' },
-                { label: habit?.name || '' },
+                { label: '' },
             ];
             break;
         }

@@ -323,3 +323,66 @@ describe('Task Metrics Someday Exclusion', () => {
         expect(inProgressNames).toContain('Regular In Progress');
     });
 });
+
+describe('Task Metrics Suggested Tasks with a designated next action', () => {
+    let user;
+
+    const make = (attrs) =>
+        Task.create({
+            user_id: user.id,
+            status: Task.STATUS.NOT_STARTED,
+            priority: Task.PRIORITY.LOW,
+            ...attrs,
+        });
+    const suggestedNames = async () =>
+        (await getTaskMetrics(user.id, 'UTC')).suggested_tasks.map(
+            (task) => task.name
+        );
+
+    beforeEach(async () => {
+        user = await createTestUser({ email: 'metrics-next@example.com' });
+    });
+
+    it('suggests only the designated task of a project that has one', async () => {
+        const project = await Project.create({
+            name: 'With a pick',
+            user_id: user.id,
+        });
+        const other = await Project.create({
+            name: 'Without',
+            user_id: user.id,
+        });
+        await make({
+            name: 'Big and urgent',
+            priority: Task.PRIORITY.HIGH,
+            project_id: project.id,
+        });
+        const picked = await make({
+            name: 'The pick',
+            project_id: project.id,
+        });
+        await make({ name: 'Free one', project_id: other.id });
+        await make({ name: 'Free two', project_id: other.id });
+        await project.update({ next_task_uid: picked.uid });
+
+        const names = await suggestedNames();
+
+        expect(names).toContain('The pick');
+        expect(names).not.toContain('Big and urgent');
+        expect(names).toEqual(expect.arrayContaining(['Free one', 'Free two']));
+    });
+
+    it('leaves a project without a designated task as it was', async () => {
+        const project = await Project.create({
+            name: 'No pick',
+            user_id: user.id,
+        });
+        await make({ name: 'One', project_id: project.id });
+        await make({ name: 'Two', project_id: project.id });
+        await make({ name: 'Three', project_id: project.id });
+
+        expect(await suggestedNames()).toEqual(
+            expect.arrayContaining(['One', 'Two', 'Three'])
+        );
+    });
+});

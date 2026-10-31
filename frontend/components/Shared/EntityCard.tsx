@@ -17,6 +17,9 @@ interface EntityCardProps {
     to: string;
     title: string;
     description?: string | null;
+    // One quiet line under the description (e.g. a project's next action).
+    note?: string | null;
+    noteTestId?: string;
     actions?: React.ReactNode;
     progress?: EntityCardProgress;
     details?: React.ReactNode;
@@ -38,6 +41,8 @@ const EntityCard: React.FC<EntityCardProps> = ({
     to,
     title,
     description,
+    note,
+    noteTestId,
     actions,
     progress,
     details,
@@ -73,6 +78,16 @@ const EntityCard: React.FC<EntityCardProps> = ({
             {description && (
                 <p className="line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
                     {description}
+                </p>
+            )}
+
+            {note && (
+                <p
+                    className="truncate text-xs text-gray-700 dark:text-gray-200"
+                    title={note}
+                    data-testid={noteTestId}
+                >
+                    {note}
                 </p>
             )}
 

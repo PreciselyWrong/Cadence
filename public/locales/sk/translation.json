@@ -1197,7 +1197,10 @@
         "color": "Farba",
         "goalArea": "Oblasť",
         "noArea": "Bez oblasti",
-        "startDate": "Začiatok"
+        "startDate": "Začiatok",
+        "goalBucket": "Skupina zoznamu prianí",
+        "goalParent": "Kľúčový výsledok cieľa",
+        "noParentGoal": "Žiadny (samostatný)"
     },
     "auth": {
         "login": "Prihlásiť sa",
@@ -1361,7 +1364,9 @@
         "allFiles": "All files",
         "dropToUpload": "Drop to upload",
         "fewerFiles": "Show fewer",
-        "noTasks": "No tasks."
+        "noTasks": "No tasks.",
+        "nextAction": "Ďalšia akcia",
+        "nextActionLine": "Ďalšia akcia: {{name}}"
     },
     "errors": {
         "required": "Toto pole je povinné",
@@ -1876,7 +1881,15 @@
         "presetHome": "Home",
         "presetWork": "Work",
         "presetHealth": "Health",
-        "presetFamily": "Family"
+        "presetFamily": "Family",
+        "suggestDomains": "Navrhnúť 5 oblastí",
+        "domains": {
+            "business": "Biznis a peniaze",
+            "tech": "Technológie a systémy",
+            "personal": "Osobné",
+            "family": "Rodina a spoločnosť",
+            "logistics": "Logistika"
+        }
     },
     "notes": {
         "addNote": "Pridať poznámku",
@@ -3809,13 +3822,16 @@
         "title": "Ciele",
         "stats": {
             "projects": "projekty",
-            "tasks": "úlohy"
+            "tasks": "úlohy",
+            "keyResults": "Kľúčové výsledky: {{count}}"
         },
         "notFound": "Cieľ sa nenašiel",
         "editGoal": "Upraviť cieľ",
         "horizon": {
             "season": "Obdobie",
-            "year": "Rok"
+            "year": "Rok",
+            "month": "Mesiac",
+            "quarter": "Štvrťrok"
         },
         "status": {
             "active": "Aktívny",
@@ -3831,7 +3847,22 @@
         "clearGoal": "Odstrániť cieľ",
         "noGoalsFound": "Nenašli sa žiadne ciele",
         "inactive": "Neaktívne",
-        "viewGoal": "Prejsť na cieľ"
+        "viewGoal": "Prejsť na cieľ",
+        "bucket": {
+            "title": "Zoznam prianí",
+            "have": "Mať",
+            "be": "Byť",
+            "do": "Robiť",
+            "add": "+ Pridať",
+            "none": "Nie je v zozname prianí"
+        },
+        "keyResults": {
+            "title": "Kľúčové výsledky",
+            "add": "Pridať kľúčový výsledok",
+            "placeholder": "Kľúčový výsledok",
+            "progress": "{{done}} z {{total}} hotové"
+        },
+        "progressSummary": "Pokrok cieľa · {{done}} z {{total}} hotové"
     },
     "templates": {
         "new": "Nová šablóna",
@@ -4374,6 +4405,12 @@
             "emptyCommitted": "Na tento týždeň zatiaľ nič rozhodnuté.",
             "emptyInView": "Nič na očiach. Dajte úlohu na oči z jej ponuky.",
             "choose": "Pomôžte mi vybrať"
+        },
+        "routine": {
+            "offer": "Naplánovať týždenný prehľad na piatok",
+            "taskName": "Týždenný prehľad",
+            "created": "Týždenný prehľad naplánovaný na piatok.",
+            "error": "Týždenný prehľad sa nepodarilo naplánovať."
         }
     },
     "postponements": {

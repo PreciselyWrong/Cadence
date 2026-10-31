@@ -34,6 +34,7 @@ const {
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
 const { Project, Area, Task } = require('../../models');
+const nextAction = require('./nextAction');
 const {
     resolveParent,
     resolveParentChange,
@@ -53,6 +54,43 @@ function toPriorityValue(priority) {
         return PRIORITY_VALUES[priority];
     }
     return priority;
+}
+
+// The designated next action of each project, as { uid, name } (null when
+// none or no longer open), read in one query for a whole list.
+async function nextTasksByProject(projects) {
+    const uids = projects.map((p) => p.next_task_uid).filter(Boolean);
+    if (uids.length === 0) return new Map();
+    const tasks = await Task.findAll({
+        where: { uid: { [Op.in]: uids } },
+        attributes: ['uid', 'name', 'status', 'project_id'],
+    });
+    const byUid = new Map(tasks.map((task) => [task.uid, task]));
+    return new Map(
+        projects.map((project) => {
+            const task = byUid.get(project.next_task_uid);
+            const valid = task && !nextAction.problemWith(task, project);
+            return [
+                project.uid,
+                valid ? { uid: task.uid, name: task.name } : null,
+            ];
+        })
+    );
+}
+
+// null/'' clears the next action; a uid must name an open task of the project.
+async function resolveNextTaskUid(project, taskUid) {
+    if (taskUid === null || taskUid === '') return null;
+    const task =
+        typeof taskUid === 'string'
+            ? await Task.findOne({
+                  where: { uid: taskUid },
+                  attributes: ['uid', 'status', 'project_id'],
+              })
+            : null;
+    const problem = nextAction.problemWith(task, project);
+    if (problem) throw new ValidationError(problem);
+    return task.uid;
 }
 
 const PROJECT_STATUSES = Project.rawAttributes.status.values;
@@ -350,6 +388,8 @@ class ProjectsService {
         const positions =
             await projectsRepository.getUserProjectPositions(userId);
 
+        const nextTasks = await nextTasksByProject(projects);
+
         const enhancedProjects = projects
             .map((project) => {
                 const taskStatus = calculateTaskStatus(project.Tasks);
@@ -377,6 +417,7 @@ class ProjectsService {
                     tags: sortTags(projectJson.Tags),
                     due_date_at: formatDate(project.due_date_at),
                     ...startFields(project, userTimezone),
+                    next_task: nextTasks.get(project.uid) ?? null,
                     task_status: taskStatus,
                     completion_percentage:
                         taskStatus.total > 0
@@ -565,6 +606,8 @@ class ProjectsService {
             due_date_at: formatDate(project.due_date_at),
             ...startFields(project, userTimezone),
             task_links: await getBlockLinks(projectJson.Tasks || []),
+            next_task:
+                (await nextTasksByProject([project])).get(project.uid) ?? null,
             user_id: project.user_id,
             share_count: shareCount,
             is_shared: sharedUids.has(project.uid),
@@ -689,6 +732,7 @@ class ProjectsService {
             visibility,
             tags,
             Tags,
+            next_task_uid,
         } = data;
 
         const tagsData = tags || Tags;
@@ -707,6 +751,12 @@ class ProjectsService {
             updateData.visibility = nextVisibility;
 
         if (name !== undefined) updateData.name = name;
+        if (next_task_uid !== undefined) {
+            updateData.next_task_uid = await resolveNextTaskUid(
+                project,
+                next_task_uid
+            );
+        }
         if (description !== undefined) updateData.description = description;
         if (goal_id !== undefined)
             updateData.goal_id =

@@ -53,6 +53,9 @@ interface ProjectHeroProps {
     onExport?: (format: 'xlsx' | 'csv') => void;
     // Rereads the TODO.md files and reloads the project (TODO.md projects).
     onReread?: () => Promise<void>;
+    // The task to do next: the one the user designated, else the page's own
+    // suggestion.
+    nextAction?: { uid?: string; name: string } | null;
 }
 
 const ProjectHero: React.FC<ProjectHeroProps> = ({
@@ -71,6 +74,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     onImportClick,
     onExport,
     onReread,
+    nextAction,
 }) => {
     const fileBacked = isTodoMdProject(project);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -670,6 +674,17 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                         </div>
                     </div>
                 </div>
+
+                {nextAction && !isDone && (
+                    <p
+                        className="truncate text-sm text-gray-700 dark:text-gray-200"
+                        data-testid="project-next-action"
+                    >
+                        {t('project.nextActionLine', 'Next action: {{name}}', {
+                            name: nextAction.name,
+                        })}
+                    </p>
+                )}
 
                 <div
                     className="space-y-2"

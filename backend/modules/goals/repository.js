@@ -19,11 +19,124 @@ const AREA_INCLUDE = {
     attributes: ['id', 'uid', 'name', 'color'],
 };
 
+const OBJECTIVE_INCLUDE = {
+    model: Goal,
+    as: 'Objective',
+    attributes: ['uid'],
+};
+
+// Done, archived: finished. Cancelled work does not count against progress.
+const DONE_TASK_STATUSES = [2, 3];
+const CANCELLED_TASK_STATUS = 5;
+
+const percentOf = ({ done, total }) =>
+    total > 0 ? Math.round((done / total) * 100) : null;
+
+const sumProgress = (parts) => {
+    const sum = parts.reduce(
+        (acc, p) => ({ done: acc.done + p.done, total: acc.total + p.total }),
+        { done: 0, total: 0 }
+    );
+    return { ...sum, percent: percentOf(sum) };
+};
+
 class GoalsRepository {
+    // Own progress of each goal id: the share of its linked projects and
+    // tasks that are finished, as { done, total }.
+    async _ownProgress(goalIds, userId) {
+        const [projectWhere, taskWhere] = await Promise.all([
+            visibleWhere('project', userId),
+            visibleWhere('task', userId),
+        ]);
+        const [projects, tasks] = await Promise.all([
+            Project.findAll({
+                where: {
+                    [Op.and]: [{ goal_id: { [Op.in]: goalIds } }, projectWhere],
+                },
+                attributes: ['goal_id', 'status'],
+                raw: true,
+            }),
+            Task.findAll({
+                where: {
+                    [Op.and]: [
+                        { goal_id: { [Op.in]: goalIds }, parent_task_id: null },
+                        taskWhere,
+                    ],
+                },
+                attributes: ['goal_id', 'status'],
+                raw: true,
+            }),
+        ]);
+
+        const progress = new Map(
+            goalIds.map((id) => [id, { done: 0, total: 0 }])
+        );
+        const count = (rows, isDone, isCancelled) => {
+            for (const row of rows) {
+                if (isCancelled(row.status)) continue;
+                const entry = progress.get(row.goal_id);
+                entry.total += 1;
+                if (isDone(row.status)) entry.done += 1;
+            }
+        };
+        count(
+            projects,
+            (status) => status === 'done',
+            (status) => status === 'cancelled'
+        );
+        count(
+            tasks,
+            (status) => DONE_TASK_STATUSES.includes(status),
+            (status) => status === CANCELLED_TASK_STATUS
+        );
+        return progress;
+    }
+
+    // Progress per goal id; an objective also counts its key results' items.
+    async _progressWithKeyResults(goals, userId) {
+        const keyResults = await Goal.findAll({
+            where: { parent_goal_id: { [Op.in]: goals.map((g) => g.id) } },
+            attributes: ['id', 'parent_goal_id'],
+            raw: true,
+        });
+        const childrenOf = new Map();
+        for (const kr of keyResults) {
+            const list = childrenOf.get(kr.parent_goal_id) || [];
+            list.push(kr.id);
+            childrenOf.set(kr.parent_goal_id, list);
+        }
+        const ids = [
+            ...new Set([
+                ...goals.map((g) => g.id),
+                ...keyResults.map((k) => k.id),
+            ]),
+        ];
+        const own = await this._ownProgress(ids, userId);
+        return new Map(
+            goals.map((goal) => {
+                const parts = [goal.id, ...(childrenOf.get(goal.id) || [])].map(
+                    (id) => own.get(id)
+                );
+                return [
+                    goal.id,
+                    {
+                        progress: sumProgress(parts),
+                        key_results_count: (childrenOf.get(goal.id) || [])
+                            .length,
+                    },
+                ];
+            })
+        );
+    }
+
     async _attachCounts(goals, userId) {
         if (goals.length === 0) return [];
 
         const goalIds = goals.map((g) => g.id);
+        const progressByGoal = await this._progressWithKeyResults(
+            goals,
+            userId
+        );
         const [projectWhere, taskWhere] = await Promise.all([
             visibleWhere('project', userId),
             visibleWhere('task', userId),
@@ -66,11 +179,16 @@ class GoalsRepository {
             taskMap[r.goal_id] = parseInt(r.count, 10);
         });
 
-        return goals.map((goal) => ({
-            ...goal.toJSON(),
-            projects_count: projectMap[goal.id] || 0,
-            tasks_count: taskMap[goal.id] || 0,
-        }));
+        return goals.map((goal) => {
+            const { Objective, ...json } = goal.toJSON();
+            return {
+                ...json,
+                parent_goal_uid: Objective ? Objective.uid : null,
+                projects_count: projectMap[goal.id] || 0,
+                tasks_count: taskMap[goal.id] || 0,
+                ...progressByGoal.get(goal.id),
+            };
+        });
     }
 
     // Custom order positions of the Goals page for a user, by goal_id.
@@ -117,7 +235,7 @@ class GoalsRepository {
     async findAllByUser(userId) {
         const goals = await Goal.findAll({
             where: await visibleWhere('goal', userId),
-            include: [AREA_INCLUDE],
+            include: [AREA_INCLUDE, OBJECTIVE_INCLUDE],
             order: [['title', 'ASC']],
         });
         return this._attachCounts(goals, userId);
@@ -131,7 +249,7 @@ class GoalsRepository {
                     await visibleWhere('goal', userId),
                 ],
             },
-            include: [AREA_INCLUDE],
+            include: [AREA_INCLUDE, OBJECTIVE_INCLUDE],
             order: [['title', 'ASC']],
         });
         return this._attachCounts(goals, userId);
@@ -173,6 +291,22 @@ class GoalsRepository {
                 },
             ],
         });
+    }
+
+    // Key results of an objective with their counts and progress.
+    async findKeyResults(userId, objective) {
+        const keyResults = await Goal.findAll({
+            where: { parent_goal_id: objective.id },
+            include: [AREA_INCLUDE, OBJECTIVE_INCLUDE],
+            order: [['title', 'ASC']],
+        });
+        return this._attachCounts(keyResults, userId);
+    }
+
+    // The objective's own progress: its items plus its key results'.
+    async progressOf(userId, goal) {
+        const map = await this._progressWithKeyResults([goal], userId);
+        return map.get(goal.id);
     }
 
     async findByUid(userId, uid) {

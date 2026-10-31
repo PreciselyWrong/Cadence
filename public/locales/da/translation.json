@@ -1171,7 +1171,10 @@
     "color": "Farve",
     "goalArea": "Område",
     "noArea": "Intet område",
-    "startDate": "Start"
+    "startDate": "Start",
+    "goalBucket": "Bucket list-gruppe",
+    "goalParent": "Nøgleresultat af",
+    "noParentGoal": "Ingen (står alene)"
   },
   "auth": {
     "login": "Log ind",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Næste handling",
+    "nextActionLine": "Næste handling: {{name}}"
   },
   "errors": {
     "required": "Dette felt er påkrævet",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Foreslå 5 domæner",
+    "domains": {
+      "business": "Business & Penge",
+      "tech": "Tech & Systemer",
+      "personal": "Privat",
+      "family": "Familie & Socialt",
+      "logistics": "Logistik"
+    }
   },
   "notes": {
     "loading": "Indlæser noter...",
@@ -3745,13 +3758,16 @@
     "title": "Mål",
     "stats": {
       "projects": "projekter",
-      "tasks": "opgaver"
+      "tasks": "opgaver",
+      "keyResults": "Nøgleresultater: {{count}}"
     },
     "notFound": "Målet blev ikke fundet",
     "editGoal": "Rediger mål",
     "horizon": {
       "season": "Sæson",
-      "year": "År"
+      "year": "År",
+      "month": "Måned",
+      "quarter": "Kvartal"
     },
     "status": {
       "active": "Aktiv",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Fjern mål",
     "noGoalsFound": "Ingen mål fundet",
     "inactive": "Inaktiv",
-    "viewGoal": "Gå til mål"
+    "viewGoal": "Gå til mål",
+    "bucket": {
+      "title": "Bucket list",
+      "have": "Have",
+      "be": "Være",
+      "do": "Gøre",
+      "add": "+ Tilføj",
+      "none": "Ikke på bucket list"
+    },
+    "keyResults": {
+      "title": "Nøgleresultater",
+      "add": "Tilføj et nøgleresultat",
+      "placeholder": "Nøgleresultat",
+      "progress": "{{done}} af {{total}} færdige"
+    },
+    "progressSummary": "Målfremskridt · {{done}} af {{total}} færdige"
   },
   "templates": {
     "new": "Ny skabelon",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Intet besluttet for denne uge endnu.",
       "emptyInView": "Intet i syne. Sæt en opgave i syne fra dens menu.",
       "choose": "Hjælp mig med at vælge"
+    },
+    "routine": {
+      "offer": "Planlæg en ugentlig gennemgang om fredagen",
+      "taskName": "Ugentlig gennemgang",
+      "created": "Ugentlig gennemgang planlagt til fredag.",
+      "error": "Kunne ikke planlægge den ugentlige gennemgang."
     }
   },
   "postponements": {

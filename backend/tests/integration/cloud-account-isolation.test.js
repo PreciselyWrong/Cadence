@@ -26,6 +26,7 @@ const {
     Setting,
     Tag,
     Task,
+    Habit,
     User,
     View,
     sequelize,
@@ -173,10 +174,9 @@ async function seedItems(user, marker) {
         user_id: user.id,
     });
     const tag = await Tag.create({ name: `${marker}tag`, user_id: user.id });
-    const habit = await Task.create({
+    const habit = await Habit.create({
         name: `${marker} habit`,
         user_id: user.id,
-        habit_mode: true,
     });
     const person = await Person.create({
         name: `${marker} contact`,
@@ -206,7 +206,9 @@ async function expectUntouched(items, marker) {
     expect((await Task.findByPk(items.task.id))?.name).toBe(`${marker} task`);
     expect((await Note.findByPk(items.note.id))?.title).toBe(`${marker} note`);
     expect((await Tag.findByPk(items.tag.id))?.name).toBe(`${marker}tag`);
-    expect((await Task.findByPk(items.habit.id))?.name).toBe(`${marker} habit`);
+    expect((await Habit.findByPk(items.habit.id))?.name).toBe(
+        `${marker} habit`
+    );
     expect((await Person.findByPk(items.person.id))?.name).toBe(
         `${marker} contact`
     );
@@ -224,8 +226,8 @@ const singleReads = (items) => [
     `/api/task/${items.task.uid}/subtasks`,
     `/api/note/${items.note.uid}`,
     `/api/tag?uid=${items.tag.uid}`,
-    `/api/habits/${items.habit.uid}`,
-    `/api/habits/${items.habit.uid}/stats`,
+    `/api/cadence/habits/${items.habit.uid}`,
+    `/api/cadence/habits/${items.habit.uid}/entries`,
     `/api/people/${items.person.uid}`,
     `/api/inbox/${items.inbox.uid}`,
     `/api/views/${items.view.uid}`,
@@ -238,7 +240,7 @@ const singleWrites = (items) => [
     ['patch', `/api/task/${items.task.uid}`, { name: 'pwned' }],
     ['patch', `/api/note/${items.note.uid}`, { title: 'pwned' }],
     ['patch', `/api/tag/${items.tag.uid}`, { name: 'pwned' }],
-    ['put', `/api/habits/${items.habit.uid}`, { name: 'pwned' }],
+    ['patch', `/api/cadence/habits/${items.habit.uid}`, { name: 'pwned' }],
     ['patch', `/api/people/${items.person.uid}`, { name: 'pwned' }],
     ['patch', `/api/inbox/${items.inbox.uid}`, { content: 'pwned' }],
     ['patch', `/api/views/${items.view.uid}`, { name: 'pwned' }],
@@ -248,7 +250,7 @@ const singleWrites = (items) => [
     ['delete', `/api/task/${items.task.uid}`],
     ['delete', `/api/note/${items.note.uid}`],
     ['delete', `/api/tag/${items.tag.uid}`],
-    ['delete', `/api/habits/${items.habit.uid}`],
+    ['delete', `/api/cadence/habits/${items.habit.uid}`],
     ['delete', `/api/people/${items.person.uid}`],
     ['delete', `/api/inbox/${items.inbox.uid}`],
     ['delete', `/api/views/${items.view.uid}`],
@@ -263,7 +265,7 @@ const LISTS = [
     '/api/tasks?type=upcoming',
     '/api/notes',
     '/api/tags',
-    '/api/habits',
+    '/api/cadence/habits',
     '/api/people',
     '/api/people/assignable',
     '/api/inbox',

@@ -1171,7 +1171,10 @@
     "color": "Warna",
     "goalArea": "Area",
     "noArea": "Tanpa area",
-    "startDate": "Mulai"
+    "startDate": "Mulai",
+    "goalBucket": "Grup daftar impian",
+    "goalParent": "Hasil utama dari",
+    "noParentGoal": "Tidak ada (berdiri sendiri)"
   },
   "auth": {
     "login": "Masuk",
@@ -1328,7 +1331,9 @@
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Tindakan berikutnya",
+    "nextActionLine": "Tindakan berikutnya: {{name}}"
   },
   "errors": {
     "required": "Kolom ini diperlukan",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Sarankan 5 area",
+    "domains": {
+      "business": "Bisnis & Uang",
+      "tech": "Teknologi & Sistem",
+      "personal": "Pribadi",
+      "family": "Keluarga & Sosial",
+      "logistics": "Logistik"
+    }
   },
   "notes": {
     "loading": "Memuat catatan...",
@@ -3745,13 +3758,16 @@
     "title": "Tujuan",
     "stats": {
       "projects": "proyek",
-      "tasks": "tugas"
+      "tasks": "tugas",
+      "keyResults": "Hasil utama: {{count}}"
     },
     "notFound": "Tujuan tidak ditemukan",
     "editGoal": "Edit tujuan",
     "horizon": {
       "season": "Musim",
-      "year": "Tahun"
+      "year": "Tahun",
+      "month": "Bulan",
+      "quarter": "Kuartal"
     },
     "status": {
       "active": "Aktif",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Hapus tujuan",
     "noGoalsFound": "Tujuan tidak ditemukan",
     "inactive": "Tidak aktif",
-    "viewGoal": "Buka tujuan"
+    "viewGoal": "Buka tujuan",
+    "bucket": {
+      "title": "Daftar impian",
+      "have": "Memiliki",
+      "be": "Menjadi",
+      "do": "Melakukan",
+      "add": "+ Tambah",
+      "none": "Tidak ada dalam daftar impian"
+    },
+    "keyResults": {
+      "title": "Hasil utama",
+      "add": "Tambah hasil utama",
+      "placeholder": "Hasil utama",
+      "progress": "{{done}} dari {{total}} selesai"
+    },
+    "progressSummary": "Progres tujuan · {{done}} dari {{total}} selesai"
   },
   "templates": {
     "new": "Templat Baru",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Belum ada yang diputuskan untuk minggu ini.",
       "emptyInView": "Tidak ada dalam pandangan. Masukkan tugas ke pandangan dari menunya.",
       "choose": "Bantu saya memilih"
+    },
+    "routine": {
+      "offer": "Jadwalkan tinjauan mingguan setiap Jumat",
+      "taskName": "Tinjauan mingguan",
+      "created": "Tinjauan mingguan dijadwalkan untuk Jumat.",
+      "error": "Tidak dapat menjadwalkan tinjauan mingguan."
     }
   },
   "postponements": {

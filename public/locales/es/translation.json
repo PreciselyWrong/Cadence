@@ -1369,7 +1369,10 @@
     "color": "Color",
     "goalArea": "Área",
     "noArea": "Sin área",
-    "startDate": "Inicio"
+    "startDate": "Inicio",
+    "goalBucket": "Grupo de la lista de deseos",
+    "goalParent": "Resultado clave de",
+    "noParentGoal": "Ninguno (independiente)"
   },
   "dateFormats": {
     "long": "EEEE, d 'de' MMMM 'de' yyyy",
@@ -1493,7 +1496,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Siguiente acción",
+    "nextActionLine": "Siguiente acción: {{name}}"
   },
   "task": {
     "recurringMove": {
@@ -1773,7 +1778,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Sugerir 5 ámbitos",
+    "domains": {
+      "business": "Negocio y Dinero",
+      "tech": "Tecnología y Sistemas",
+      "personal": "Personal",
+      "family": "Familia y Social",
+      "logistics": "Logística"
+    }
   },
   "notes": {
     "loading": "Cargando notas...",
@@ -3738,13 +3751,16 @@
     "title": "Metas",
     "stats": {
       "projects": "proyectos",
-      "tasks": "tareas"
+      "tasks": "tareas",
+      "keyResults": "Resultados clave: {{count}}"
     },
     "notFound": "Meta no encontrada",
     "editGoal": "Editar meta",
     "horizon": {
       "season": "Temporada",
-      "year": "Año"
+      "year": "Año",
+      "month": "Mes",
+      "quarter": "Trimestre"
     },
     "status": {
       "active": "Activa",
@@ -3760,7 +3776,22 @@
     "clearGoal": "Quitar meta",
     "noGoalsFound": "No se encontraron metas",
     "inactive": "Inactiva",
-    "viewGoal": "Ir a la meta"
+    "viewGoal": "Ir a la meta",
+    "bucket": {
+      "title": "Lista de deseos",
+      "have": "Tener",
+      "be": "Ser",
+      "do": "Hacer",
+      "add": "+ Añadir",
+      "none": "No está en la lista de deseos"
+    },
+    "keyResults": {
+      "title": "Resultados clave",
+      "add": "Añadir un resultado clave",
+      "placeholder": "Resultado clave",
+      "progress": "{{done}} de {{total}} hechos"
+    },
+    "progressSummary": "Progreso del objetivo · {{done}} de {{total}} hechos"
   },
   "templates": {
     "new": "Nueva plantilla",
@@ -4328,6 +4359,12 @@
       "emptyCommitted": "Aún no hay nada decidido para esta semana.",
       "emptyInView": "Nada a la vista. Pon una tarea a la vista desde su menú.",
       "choose": "Ayúdame a elegir"
+    },
+    "routine": {
+      "offer": "Planificar una revisión semanal los viernes",
+      "taskName": "Revisión semanal",
+      "created": "Revisión semanal planificada para los viernes.",
+      "error": "No se pudo planificar la revisión semanal."
     }
   },
   "postponements": {

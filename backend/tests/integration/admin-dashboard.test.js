@@ -6,6 +6,7 @@ const {
     BillingAccount,
     Project,
     Task,
+    Habit,
     Note,
     Tag,
     Person,
@@ -360,7 +361,7 @@ describe('Admin dashboard', () => {
             user_id: plain.id,
             recurring_parent_id: parent.id,
         });
-        await Task.create({ name: 'Run', user_id: plain.id, habit_mode: true });
+        await Habit.create({ name: 'Run', user_id: plain.id });
         await Note.create({ title: 'N', content: 'x', user_id: plain.id });
         await Tag.create({ name: 'home', user_id: plain.id });
         await Person.create({ name: 'Alex', user_id: plain.id });

@@ -1173,7 +1173,10 @@
     "color": "Kolor",
     "goalArea": "Obszar",
     "noArea": "Brak obszaru",
-    "startDate": "Początek"
+    "startDate": "Początek",
+    "goalBucket": "Grupa listy marzeń",
+    "goalParent": "Kluczowy wynik celu",
+    "noParentGoal": "Brak (samodzielny)"
   },
   "auth": {
     "login": "Zaloguj się",
@@ -1332,7 +1335,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Następne działanie",
+    "nextActionLine": "Następne działanie: {{name}}"
   },
   "errors": {
     "required": "To pole jest wymagane",
@@ -1843,7 +1848,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Zaproponuj 5 obszarów",
+    "domains": {
+      "business": "Biznes i pieniądze",
+      "tech": "Technologia i systemy",
+      "personal": "Osobiste",
+      "family": "Rodzina i towarzystwo",
+      "logistics": "Logistyka"
+    }
   },
   "notes": {
     "loading": "Ładowanie notatek...",
@@ -3761,13 +3774,16 @@
     "title": "Cele",
     "stats": {
       "projects": "projekty",
-      "tasks": "zadania"
+      "tasks": "zadania",
+      "keyResults": "Kluczowe wyniki: {{count}}"
     },
     "notFound": "Nie znaleziono celu",
     "editGoal": "Edytuj cel",
     "horizon": {
       "season": "Sezon",
-      "year": "Rok"
+      "year": "Rok",
+      "month": "Miesiąc",
+      "quarter": "Kwartał"
     },
     "status": {
       "active": "Aktywny",
@@ -3783,7 +3799,22 @@
     "clearGoal": "Usuń cel",
     "noGoalsFound": "Nie znaleziono celów",
     "inactive": "Nieaktywny",
-    "viewGoal": "Przejdź do celu"
+    "viewGoal": "Przejdź do celu",
+    "bucket": {
+      "title": "Lista marzeń",
+      "have": "Mieć",
+      "be": "Być",
+      "do": "Robić",
+      "add": "+ Dodaj",
+      "none": "Brak na liście marzeń"
+    },
+    "keyResults": {
+      "title": "Kluczowe wyniki",
+      "add": "Dodaj kluczowy wynik",
+      "placeholder": "Kluczowy wynik",
+      "progress": "{{done}} z {{total}} gotowe"
+    },
+    "progressSummary": "Postęp celu · {{done}} z {{total}} gotowe"
   },
   "templates": {
     "new": "Nowy szablon",
@@ -4352,6 +4383,12 @@
       "emptyCommitted": "Nic jeszcze nie zdecydowano na ten tydzień.",
       "emptyInView": "Nic na widoku. Dodaj zadanie do widoku z jego menu.",
       "choose": "Pomóż mi wybrać"
+    },
+    "routine": {
+      "offer": "Zaplanuj cotygodniowy przegląd na piątki",
+      "taskName": "Cotygodniowy przegląd",
+      "created": "Cotygodniowy przegląd zaplanowany na piątki.",
+      "error": "Nie udało się zaplanować cotygodniowego przeglądu."
     }
   },
   "postponements": {

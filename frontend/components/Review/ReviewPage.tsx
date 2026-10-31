@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import {
+    createWeeklyRoutine,
     decideTask,
     fetchReviewCategory,
+    fetchWeeklyRoutine,
     fetchReviewSummary,
     InboxReviewItem,
     keepProject,
@@ -85,7 +87,7 @@ const toRows = (step: ReviewCategory, items: unknown[]): Row[] =>
 const ReviewPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     const isMinimal = useIsMinimal();
     const { openTask } = useTaskPane();
     const [step, setStepState] = useState<Step>(readStep);
@@ -96,7 +98,38 @@ const ReviewPage: React.FC = () => {
     const [busy, setBusy] = useState<string | null>(null);
     const [nextTaskFor, setNextTaskFor] = useState<string | null>(null);
     const [nextTaskName, setNextTaskName] = useState('');
+    // The Friday routine is offered only while none exists.
+    const [routineMissing, setRoutineMissing] = useState(false);
     const locale = i18n.language;
+
+    useEffect(() => {
+        let active = true;
+        fetchWeeklyRoutine()
+            .then((exists) => active && setRoutineMissing(!exists))
+            .catch(() => undefined);
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    const planWeeklyRoutine = async () => {
+        try {
+            await createWeeklyRoutine(
+                t('review.routine.taskName', 'Weekly review')
+            );
+            setRoutineMissing(false);
+            showSuccessToast(
+                t(
+                    'review.routine.created',
+                    'Weekly review planned for Fridays.'
+                )
+            );
+        } catch {
+            showErrorToast(
+                t('review.routine.error', 'Could not plan the weekly review.')
+            );
+        }
+    };
 
     const setStep = (next: Step) => {
         setStepState(next);
@@ -481,6 +514,18 @@ const ReviewPage: React.FC = () => {
                             .filter(Boolean)
                             .join(' · ')}
                     </p>
+                )}
+                {routineMissing && (
+                    <button
+                        type="button"
+                        onClick={planWeeklyRoutine}
+                        className="mt-2 text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
+                    >
+                        {t(
+                            'review.routine.offer',
+                            'Plan a weekly review on Fridays'
+                        )}
+                    </button>
                 )}
             </header>
 

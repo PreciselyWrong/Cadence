@@ -1171,7 +1171,10 @@
     "color": "Färg",
     "goalArea": "Område",
     "noArea": "Inget område",
-    "startDate": "Start"
+    "startDate": "Start",
+    "goalBucket": "Bucket list-grupp",
+    "goalParent": "Nyckelresultat för",
+    "noParentGoal": "Ingen (fristående)"
   },
   "auth": {
     "login": "Logga in",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Nästa åtgärd",
+    "nextActionLine": "Nästa åtgärd: {{name}}"
   },
   "errors": {
     "required": "Detta fält är obligatoriskt",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Föreslå 5 domäner",
+    "domains": {
+      "business": "Affär & Pengar",
+      "tech": "Teknik & System",
+      "personal": "Privat",
+      "family": "Familj & Socialt",
+      "logistics": "Logistik"
+    }
   },
   "notes": {
     "loading": "Laddar anteckningar...",
@@ -3745,13 +3758,16 @@
     "title": "Mål",
     "stats": {
       "projects": "projekt",
-      "tasks": "uppgifter"
+      "tasks": "uppgifter",
+      "keyResults": "Nyckelresultat: {{count}}"
     },
     "notFound": "Målet hittades inte",
     "editGoal": "Redigera mål",
     "horizon": {
       "season": "Säsong",
-      "year": "År"
+      "year": "År",
+      "month": "Månad",
+      "quarter": "Kvartal"
     },
     "status": {
       "active": "Aktivt",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Ta bort mål",
     "noGoalsFound": "Inga mål hittades",
     "inactive": "Inaktivt",
-    "viewGoal": "Gå till målet"
+    "viewGoal": "Gå till målet",
+    "bucket": {
+      "title": "Bucket list",
+      "have": "Ha",
+      "be": "Vara",
+      "do": "Göra",
+      "add": "+ Lägg till",
+      "none": "Inte på bucket list"
+    },
+    "keyResults": {
+      "title": "Nyckelresultat",
+      "add": "Lägg till ett nyckelresultat",
+      "placeholder": "Nyckelresultat",
+      "progress": "{{done}} av {{total}} klara"
+    },
+    "progressSummary": "Målframsteg · {{done}} av {{total}} klara"
   },
   "templates": {
     "new": "Ny mall",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Inget beslutat för denna vecka än.",
       "emptyInView": "Inget i sikte. Sätt en uppgift i sikte från dess meny.",
       "choose": "Hjälp mig välja"
+    },
+    "routine": {
+      "offer": "Planera en veckogenomgång på fredagar",
+      "taskName": "Veckogenomgång",
+      "created": "Veckogenomgång planerad för fredagar.",
+      "error": "Kunde inte planera veckogenomgången."
     }
   },
   "postponements": {

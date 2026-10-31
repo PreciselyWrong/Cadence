@@ -20,7 +20,8 @@ const {
 const { compareCandidates } = require('../../daily-plan/ranking');
 const { comparePinned } = require('../core/comparators');
 const { isSuggestible } = require('../../daily-plan/planningSettings');
-const habitService = require('../../habits/habitService');
+
+const { keepDesignated } = require('../../projects/nextAction');
 
 const MAX_SUGGESTED_TASKS = 50;
 
@@ -117,7 +118,11 @@ async function computeSuggestedTasks(
             excludedTaskIds,
             somedayTaskIds
         ),
-        fetchProjectTasks(visibleTasksWhere, excludedTaskIds, somedayTaskIds),
+        fetchProjectTasks(
+            visibleTasksWhere,
+            excludedTaskIds,
+            somedayTaskIds
+        ).then(keepDesignated),
     ]);
 
     // Plan my day passes the user's planning settings: filter first, sort
@@ -129,12 +134,7 @@ async function computeSuggestedTasks(
         ? (tasks) => tasks.filter((task) => isSuggestible(task, planning, now))
         : (tasks) => tasks;
 
-    // Habits stay open, so only the ones asking for a check-in today count.
-    const keepDue = (tasks) => habitService.keepHabitsDueToday(tasks, userId);
-
-    let combinedTasks = keep(
-        await keepDue([...nonProjectTasks, ...projectTasks])
-    );
+    let combinedTasks = keep([...nonProjectTasks, ...projectTasks]);
 
     // Plan my day never falls back on #someday: parked ideas stay parked.
     if (!planning && combinedTasks.length < 6) {
@@ -151,10 +151,7 @@ async function computeSuggestedTasks(
             scopeWhere
         );
 
-        combinedTasks = [
-            ...combinedTasks,
-            ...keep(await keepDue(somedayFallbackTasks)),
-        ];
+        combinedTasks = [...combinedTasks, ...keep(somedayFallbackTasks)];
     }
 
     if (planning) {
@@ -273,6 +270,7 @@ async function computeTaskMetrics(
     planning = null,
     scopeWhere = null
 ) {
+    // Habits left over from before Cadence habits are not tasks any more.
     const visibleTasksWhere = withScope(
         {
             [Op.and]: [
@@ -282,6 +280,7 @@ async function computeTaskMetrics(
                     permissionCache
                 ),
                 await permissionsService.myWorkWhere(userId),
+                { habit_mode: { [Op.not]: true } },
             ],
         },
         scopeWhere

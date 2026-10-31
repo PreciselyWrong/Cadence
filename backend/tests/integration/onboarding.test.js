@@ -5,7 +5,17 @@ const { createTestUser } = require('../helpers/testUtils');
 const moment = require('moment-timezone');
 
 describe('Onboarding starters', () => {
-    const { Area, Goal, Project, Task, Note, Tag } = require('../../models');
+    const {
+        Area,
+        Goal,
+        Project,
+        Task,
+        Note,
+        Tag,
+        Habit,
+        HabitGoal,
+        HabitSchedule,
+    } = require('../../models');
     const { resolveDue } = require('../../modules/onboarding/service');
     let user, agent;
 
@@ -106,16 +116,29 @@ describe('Onboarding starters', () => {
         expect(book.due_date).toBeNull();
         expect(book.area_id).toBe(areas.find((a) => a.name === 'Me').id);
 
-        const habits = await Task.findAll({
-            where: { user_id: user.id, habit_mode: true },
-        });
+        expect(
+            await Task.count({ where: { user_id: user.id, habit_mode: true } })
+        ).toBe(0);
+        const habits = await Habit.findAll({ where: { user_id: user.id } });
         expect(habits.map((h) => h.name).sort()).toEqual([
             'Evening tidy',
             'Sunday weekly review',
         ]);
         const review = habits.find((h) => h.name === 'Sunday weekly review');
-        expect(review.habit_frequency_period).toBe('weekly');
-        expect(review.habit_schedule_days).toEqual([0]);
+        const reviewGoal = await HabitGoal.findOne({
+            where: { habit_id: review.id },
+        });
+        expect(reviewGoal.period).toBe('WEEK');
+        const reviewSchedule = await HabitSchedule.findOne({
+            where: { habit_id: review.id },
+        });
+        expect(reviewSchedule.schedule_mode).toBe('FLEXIBLE_PERIOD');
+        const tidy = habits.find((h) => h.name === 'Evening tidy');
+        const tidyGoal = await HabitGoal.findOne({
+            where: { habit_id: tidy.id },
+        });
+        expect(tidyGoal.goal_type).toBe('BINARY');
+        expect(tidyGoal.period).toBe('DAY');
 
         expect(await Note.count({ where: { user_id: user.id } })).toBe(1);
 
@@ -126,11 +149,7 @@ describe('Onboarding starters', () => {
 
     it('reuses areas, projects and habits the account already has', async () => {
         await Area.create({ name: 'home', user_id: user.id });
-        await Task.create({
-            name: 'Evening tidy',
-            user_id: user.id,
-            habit_mode: true,
-        });
+        await Habit.create({ name: 'Evening tidy', user_id: user.id });
 
         const res = await agent.post('/api/onboarding/starter').send(household);
 

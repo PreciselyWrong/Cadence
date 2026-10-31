@@ -69,7 +69,6 @@ import CompletedTasksSection, {
 import { onCaptureSaved, openCapture } from '../../utils/captureUi';
 import { processInboxItem } from '../../utils/inboxService';
 import { getUserTimezone } from '../../utils/dateUtils';
-import { isHabitDoneForNow } from '../../utils/habitUtils';
 import { TASK_STATUS, isTaskDone } from '../../constants/taskStatus';
 import { countOutside } from '../Calendar/visibleHours';
 import { differenceInCalendarDays, parseISO } from 'date-fns';
@@ -235,18 +234,14 @@ const todayString = () =>
     );
 
 const isRecurring = (task: Task): boolean =>
-    !task.habit_mode &&
-    !!task.recurrence_type &&
-    task.recurrence_type !== 'none';
+    !!task.recurrence_type && task.recurrence_type !== 'none';
 
 // A recurring task's day is done once it reopened for a later date.
 const occurrenceDone = (task: Task, day: string): boolean =>
-    task.habit_mode
-        ? isHabitDoneForNow(task)
-        : isRecurring(task) &&
-          !isTaskDone(task.status) &&
-          !!task.due_date &&
-          task.due_date.slice(0, 10) > day;
+    isRecurring(task) &&
+    !isTaskDone(task.status) &&
+    !!task.due_date &&
+    task.due_date.slice(0, 10) > day;
 
 // The open tasks due on a day, shaped like the planner's candidates for a
 // day that is not today (the server only ranks today's candidates).
@@ -257,7 +252,6 @@ const dayCandidates = (tasks: Task[], day: string): PlanCandidates => ({
     due_today: tasks.filter(
         (task) =>
             !task.is_virtual_occurrence &&
-            !task.habit_mode &&
             !isTaskDone(task.status) &&
             task.due_date?.slice(0, 10) === day
     ),

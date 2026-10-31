@@ -132,6 +132,11 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
     const statusDropdownRef = useRef<HTMLDivElement>(null);
     const descriptionText = project.description?.trim();
+    const nextActionLine = project.next_task
+        ? t('project.nextActionLine', 'Next action: {{name}}', {
+              name: project.next_task.name,
+          })
+        : null;
     const projectPath = project.uid
         ? `/project/${project.uid}-${project.name
               .toLowerCase()
@@ -536,6 +541,8 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 to={projectPath}
                 title={project.name}
                 description={descriptionText}
+                note={nextActionLine}
+                noteTestId={`project-next-action-${project.id}`}
                 testId={`project-card-${project.id}`}
                 actions={actionsMenu}
                 progress={{
@@ -646,9 +653,20 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                         {descriptionText}
                     </p>
                 ) : (
-                    <span className="text-xs text-gray-500 dark:text-gray-600">
-                        –
-                    </span>
+                    !nextActionLine && (
+                        <span className="text-xs text-gray-500 dark:text-gray-600">
+                            –
+                        </span>
+                    )
+                )}
+                {nextActionLine && (
+                    <p
+                        className="truncate text-xs text-gray-700 dark:text-gray-200"
+                        title={nextActionLine}
+                        data-testid={`project-next-action-${project.id}`}
+                    >
+                        {nextActionLine}
+                    </p>
                 )}
             </div>
 

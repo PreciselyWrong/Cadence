@@ -2,6 +2,7 @@
 
 const express = require('express');
 const review = require('./service');
+const weeklyRoutine = require('./weeklyRoutine');
 const taskRepository = require('../tasks/repository');
 const { hasAccess } = require('../../middleware/authorize');
 const { logError } = require('../../services/logService');
@@ -37,6 +38,23 @@ router.put(
         )
     )
 );
+router.get(
+    '/review/weekly-routine',
+    handle((req) => weeklyRoutine.exists(req.currentUser))
+);
+// Idempotent: 201 when the routine was created, 200 when it already existed.
+router.post('/review/weekly-routine', async (req, res) => {
+    try {
+        const result = await weeklyRoutine.ensure(
+            req.currentUser,
+            req.body?.name
+        );
+        res.status(result.created ? 201 : 200).json(result);
+    } catch (error) {
+        logError('Error creating the weekly review routine:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 router.get(
     '/review/:category',
     handle((req) =>

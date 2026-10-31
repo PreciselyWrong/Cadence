@@ -65,7 +65,7 @@ function slug(text) {
 const dayKey = (date, timezone) =>
     moment(date).tz(timezone).format('YYYY-MM-DD');
 
-// Reads the legacy columns the way habitEngine.normalizeConfig does.
+// Reads the legacy columns with the defaults the removed habit engine applied.
 function legacyConfig(task) {
     const frequency = ['daily', 'weekly', 'monthly', 'interval'].includes(
         task.habit_frequency_period

@@ -23,7 +23,7 @@ Areas (life domains, organizational containers)  ← parallel, not parent
 - Top-level standalone entities — accessible from `/goals` and the sidebar
 - Not tied to any area; goals are independent of the Areas system
 - Projects can link to a goal regardless of which area they belong to
-- Have a time horizon: `season` or `year`
+- Have a time horizon: `month`, `quarter`, `season` or `year`
 - Have a status lifecycle: `active → achieved / paused / dropped`
 - Tasks can be assigned directly to a goal (in addition to the project→goal path)
 
@@ -35,7 +35,9 @@ Areas (life domains, organizational containers)  ← parallel, not parent
 |-------|------|----------|-------|
 | `title` | string | yes | The outcome statement. Max 255 chars. |
 | `why` | text | no | The motivation behind the goal. Displayed in italics. |
-| `horizon` | enum | yes | `season` or `year`. Default: `season`. |
+| `horizon` | enum | yes | `month`, `quarter`, `season` or `year`. Default: `season`. |
+| `parent_goal_uid` (row: `parent_goal_id`) | uid | no | Makes the goal a **key result** of that objective. See below. |
+| `bucket` | enum | no | `have`, `be`, `do`: puts the goal on the **bucket list**. See below. |
 | `target_date` | date | no | Optional deadline for the goal. |
 | `status` | enum | yes | `active`, `achieved`, `paused`, `dropped`. Default: `active`. |
 | `area_id` | integer | no | Stored in DB but not exposed in UI. Goals are area-independent. |
@@ -83,6 +85,21 @@ From the Area detail page: click the pencil icon on a goal row — same GoalModa
 Click the trash icon (Goals list page, Goal detail page, or Area detail page). A confirmation dialog warns that linked projects will become unlinked. The goal record is deleted; projects that referenced it have `goal_id` set to `null`.
 
 ---
+
+## Key results
+
+A goal with a parent is a key result of that objective; the tree is one level deep.
+
+- Rules (`backend/modules/goals/hierarchy.js`, shared by the REST API and sync): the parent must be one of the user's own goals and itself have no parent; a goal that has key results cannot become a key result; a goal cannot be its own parent; a key result is never on the bucket list. Breaking one is a 400 (`invalid_hierarchy` in sync).
+- Create with `POST /api/goals { title, parent_goal_uid }`, attach with `PATCH /api/goals/:uid { parent_goal_uid }`, detach with `null`. Goal responses carry `parent_goal_uid`; the goal page also carries `parent_goal: { uid, title }`.
+- Projects and tasks keep their ordinary goal link (`goal_id`) and attach to a key result the same way they attach to any goal; pickers show it as *Objective › Key result*.
+- **Progress** is the share of finished items among the projects (done) and tasks (done or archived, no subtasks) linked to a goal; cancelled items are not counted. Responses carry `progress: { done, total, percent }` (`percent` is `null` when nothing is linked) and `key_results_count`. An objective counts its own items plus those of its key results.
+- The goal page lists the key results under the objective (`KeyResults`, each with its own progress) with a quiet **Add a key result** field; a key result's page links back to its objective. The Goals list and the sidebar show objectives only.
+- Deleting an objective deletes its key results; the goal link of their projects and tasks is cleared.
+
+## Bucket list
+
+A goal with a `bucket` (`have`, `be` or `do`) is a wish, not a plan: no target date is asked, and it never shows in Today, the daily plan or the sidebar. The **Bucket list** tab of the Goals page groups them as *Have / Be / Do* (Avoir / Être / Faire) with a **+ Add** per group. Moving a goal off the list is `bucket: null`. A bucket-list goal can still be linked to projects and tasks like any other.
 
 ## Scarcity Rule
 
@@ -251,7 +268,7 @@ Returns `{ goal: Goal }`. The `goal` object includes `Tasks` and `Projects` arra
 
 ```
 POST /api/goals
-Body: { title, area_id?, why?, horizon?, target_date?, status? }
+Body: { title, area_id?, why?, horizon?, target_date?, status?, color?, bucket?, parent_goal_uid? }
 ```
 
 Returns `{ goal: Goal, active_goals_count: number }`.
@@ -264,7 +281,7 @@ Returns `{ goal: Goal, active_goals_count: number }`.
 
 ```
 PATCH /api/goals/:uid
-Body: { title?, area_id?, why?, horizon?, target_date?, status? }
+Body: { title?, area_id?, why?, horizon?, target_date?, status?, color?, bucket?, parent_goal_uid? }
 ```
 
 Returns `{ goal: Goal, active_goals_count: number }`.
@@ -290,14 +307,17 @@ area_id     INTEGER  NULL  → areas.id  SET NULL on delete
 user_id     INTEGER  NOT NULL  → users.id  CASCADE DELETE
 title       STRING   NOT NULL
 why         TEXT
-horizon     ENUM('season', 'year')  DEFAULT 'season'
+horizon     ENUM('month', 'quarter', 'season', 'year')  DEFAULT 'season'
+bucket      ENUM('have', 'be', 'do')  NULL
+parent_goal_id INTEGER NULL  → goals.id  CASCADE DELETE
+field_clocks JSON NULL   (offline sync)
 target_date DATEONLY
 status      ENUM('active','achieved','paused','dropped')  DEFAULT 'active'
 created_at  DATETIME
 updated_at  DATETIME
 ```
 
-**Indexes:** `area_id`, `user_id`, `status`
+**Indexes:** `area_id`, `user_id`, `status`, `parent_goal_id`
 
 > Note: `area_id` changed from `NOT NULL` to nullable in migration `20260730000001-make-goals-area-id-nullable.js`.
 
@@ -328,6 +348,9 @@ goal_id  INTEGER  → goals.id  SET NULL on delete
 | Migration (project columns) | `/backend/migrations/20260624000002-add-goal-columns-to-projects.js` |
 | Migration (nullable area_id) | `/backend/migrations/20260730000001-make-goals-area-id-nullable.js` |
 | Migration (task goal_id) | `/backend/migrations/20260730000002-add-goal-id-to-tasks.js` |
+| Migration (key results, bucket, sync clocks) | `/backend/migrations/20261101110000-add-key-results-and-bucket-to-goals.js` |
+| Migration (month and quarter horizons) | `/backend/migrations/20261101120000-add-month-quarter-goal-horizons.js` |
+| Hierarchy rules, delete | `/backend/modules/goals/hierarchy.js` |
 | Sequelize model | `/backend/models/goal.js` |
 | Repository | `/backend/modules/goals/repository.js` |
 | Service | `/backend/modules/goals/service.js` |
@@ -369,6 +392,7 @@ See [MCP Integration](14-mcp-integration.md#goals-tools-5) for full parameter de
 - [Areas](07-areas.md) - Goals can optionally belong to areas; the Area detail page shows goals for that area
 - [Projects](06-projects.md) - Projects carry `goal_id` and `is_maintenance` fields
 - [Tasks Behavior](00-tasks-behavior.md) - Tasks carry their own `goal_id` for direct goal assignment
+- [Offline Sync](30-offline-sync.md) - Goals sync as the `goal` entity; tasks and projects carry `goal_uid`
 - [Tags System](09-tags-system.md) - Goal detail page follows the same section layout as the Tag detail page
 - [Database & Migrations](database.md) - Migration workflow
 - [Backend Patterns](backend-patterns.md) - Module structure followed by the goals module

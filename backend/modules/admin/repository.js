@@ -44,7 +44,7 @@ class AdminRepository {
         const { Op, fn, col } = require('sequelize');
         const kinds = [
             ['tasks', 'Task', { habit_mode: false, recurring_parent_id: null }],
-            ['habits', 'Task', { habit_mode: true, recurring_parent_id: null }],
+            ['habits', 'Habit', {}],
             ['projects', 'Project', {}],
             ['notes', 'Note', {}],
             ['areas', 'Area', {}],

@@ -1475,7 +1475,10 @@
     "color": "Χρώμα",
     "goalArea": "Περιοχή",
     "noArea": "Χωρίς περιοχή",
-    "startDate": "Έναρξη"
+    "startDate": "Έναρξη",
+    "goalBucket": "Ομάδα λίστας επιθυμιών",
+    "goalParent": "Βασικό αποτέλεσμα του",
+    "noParentGoal": "Κανένας (αυτόνομος)"
   },
   "priority": {
     "low": "Χαμηλή",
@@ -1815,7 +1818,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Πρότεινε 5 τομείς",
+    "domains": {
+      "business": "Επιχειρήσεις & Χρήμα",
+      "tech": "Τεχνολογία & Συστήματα",
+      "personal": "Προσωπικά",
+      "family": "Οικογένεια & Κοινωνία",
+      "logistics": "Εφοδιαστική"
+    }
   },
   "tags": {
     "loading": "Φόρτωση ετικετών...",
@@ -1995,7 +2006,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Επόμενη ενέργεια",
+    "nextActionLine": "Επόμενη ενέργεια: {{name}}"
   },
   "pomodoro": {
     "play": "Αναπαραγωγή",
@@ -3746,13 +3759,16 @@
     "title": "Στόχοι",
     "stats": {
       "projects": "έργα",
-      "tasks": "εργασίες"
+      "tasks": "εργασίες",
+      "keyResults": "Βασικά αποτελέσματα: {{count}}"
     },
     "notFound": "Ο στόχος δεν βρέθηκε",
     "editGoal": "Επεξεργασία στόχου",
     "horizon": {
       "season": "Σεζόν",
-      "year": "Έτος"
+      "year": "Έτος",
+      "month": "Μήνας",
+      "quarter": "Τρίμηνο"
     },
     "status": {
       "active": "Ενεργός",
@@ -3768,7 +3784,22 @@
     "clearGoal": "Αφαίρεση στόχου",
     "noGoalsFound": "Δεν βρέθηκαν στόχοι",
     "inactive": "Ανενεργός",
-    "viewGoal": "Μετάβαση στον στόχο"
+    "viewGoal": "Μετάβαση στον στόχο",
+    "bucket": {
+      "title": "Λίστα επιθυμιών",
+      "have": "Έχω",
+      "be": "Είμαι",
+      "do": "Κάνω",
+      "add": "+ Προσθήκη",
+      "none": "Δεν είναι στη λίστα επιθυμιών"
+    },
+    "keyResults": {
+      "title": "Βασικά αποτελέσματα",
+      "add": "Πρόσθεσε βασικό αποτέλεσμα",
+      "placeholder": "Βασικό αποτέλεσμα",
+      "progress": "{{done}} από {{total}} ολοκληρωμένα"
+    },
+    "progressSummary": "Πρόοδος στόχου · {{done}} από {{total}} ολοκληρωμένα"
   },
   "templates": {
     "new": "Νέο πρότυπο",
@@ -4335,6 +4366,12 @@
       "emptyCommitted": "Τίποτα δεν έχει αποφασιστεί ακόμη για αυτή την εβδομάδα.",
       "emptyInView": "Τίποτα σε θέα. Βάλτε μια εργασία σε θέα από το μενού της.",
       "choose": "Βοήθησέ με να διαλέξω"
+    },
+    "routine": {
+      "offer": "Προγραμμάτισε εβδομαδιαία ανασκόπηση για Παρασκευή",
+      "taskName": "Εβδομαδιαία ανασκόπηση",
+      "created": "Η εβδομαδιαία ανασκόπηση προγραμματίστηκε για Παρασκευή.",
+      "error": "Δεν ήταν δυνατός ο προγραμματισμός της εβδομαδιαίας ανασκόπησης."
     }
   },
   "postponements": {

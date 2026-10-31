@@ -10,6 +10,7 @@ import {
     getTomorrowDateString,
 } from '../../../utils/dateUtils';
 import { TASK_UPDATED_EVENT } from '../../../contexts/TaskPaneContext';
+import { NextActionContext } from '../../../contexts/NextActionContext';
 
 jest.mock('../../../utils/tasksService', () => ({
     updateTask: jest.fn(),
@@ -302,5 +303,76 @@ describe('MinimalContextMenu', () => {
             configurable: true,
             value: originalHeight,
         });
+    });
+});
+
+describe('MinimalContextMenu next action', () => {
+    const setNextAction = jest.fn().mockResolvedValue(undefined);
+    const renderWithContext = (
+        task: Task,
+        nextTaskUid: string | null,
+        onClose = jest.fn()
+    ) =>
+        render(
+            <NextActionContext.Provider value={{ nextTaskUid, setNextAction }}>
+                <MinimalContextMenu
+                    x={10}
+                    y={10}
+                    task={task}
+                    projects={projects}
+                    onTaskUpdate={jest.fn().mockResolvedValue(undefined)}
+                    onDelete={jest.fn()}
+                    onClose={onClose}
+                />
+            </NextActionContext.Provider>
+        );
+
+    beforeEach(() => setNextAction.mockClear());
+
+    it('has no next action entry outside a project page', () => {
+        renderMenu();
+        expect(
+            screen.queryByRole('menuitemcheckbox', { name: 'Next action' })
+        ).toBeNull();
+    });
+
+    it('sets the task as the next action', () => {
+        const onClose = jest.fn();
+        renderWithContext(baseTask(), null, onClose);
+
+        fireEvent.click(
+            screen.getByRole('menuitemcheckbox', { name: 'Next action' })
+        );
+
+        expect(setNextAction).toHaveBeenCalledWith('task-7');
+        expect(onClose).toHaveBeenCalled();
+    });
+
+    it('clears the pick when the task already is the next action', () => {
+        renderWithContext(baseTask(), 'task-7');
+
+        const entry = screen.getByRole('menuitemcheckbox', {
+            name: 'Next action',
+        });
+        expect(entry).toHaveAttribute('aria-checked', 'true');
+        fireEvent.click(entry);
+
+        expect(setNextAction).toHaveBeenCalledWith(null);
+    });
+
+    it('is not offered for a finished task or a subtask', () => {
+        const { unmount } = renderWithContext(
+            baseTask({ status: 'done' }),
+            null
+        );
+        expect(
+            screen.queryByRole('menuitemcheckbox', { name: 'Next action' })
+        ).toBeNull();
+        unmount();
+
+        renderWithContext(baseTask({ parent_task_id: 3 }), null);
+        expect(
+            screen.queryByRole('menuitemcheckbox', { name: 'Next action' })
+        ).toBeNull();
     });
 });

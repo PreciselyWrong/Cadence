@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import type { Project } from '../../entities/Project';
 import { searchUniversal } from '../../utils/searchService';
-import { fetchHabits } from '../../utils/habitsService';
+import { fetchCadenceHabits } from '../../utils/cadenceHabitsService';
 import { openCapture } from '../../utils/captureUi';
 import {
     normalizeText,
@@ -128,16 +128,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
 
     useEffect(() => {
         let cancelled = false;
-        fetchHabits()
-            .then((list) => {
+        fetchCadenceHabits()
+            .then(({ habits: list }) => {
                 if (cancelled) return;
                 setHabits(
-                    list
-                        .filter((habit) => habit.uid)
-                        .map((habit) => ({
-                            uid: habit.uid as string,
-                            name: habit.name,
-                        }))
+                    list.map((habit) => ({
+                        uid: habit.uid,
+                        name: habit.name,
+                    }))
                 );
             })
             .catch(() => undefined);

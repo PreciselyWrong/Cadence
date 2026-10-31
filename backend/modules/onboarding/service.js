@@ -10,8 +10,10 @@ const {
     Task,
     Tag,
     Note,
+    Habit,
     sequelize,
 } = require('../../models');
+const cadenceHabits = require('../habits/cadence/operations/write');
 const { ValidationError } = require('../../shared/errors');
 const { validateTagName } = require('../tags/tagsService');
 const entitlements = require('../../services/entitlementsService');
@@ -27,6 +29,15 @@ const {
 const STARTER_KEYS = ['household', 'work-side', 'studying', 'simple', 'empty'];
 const LIMITS = { areas: 6, projects: 8, tasks: 15, habits: 4 };
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const WEEKDAY_NAMES = [
+    'SUNDAY',
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+];
 const DONE_STATUSES = [Task.STATUS.DONE, Task.STATUS.ARCHIVED];
 
 function text(value, label, max = 255) {
@@ -167,6 +178,40 @@ function normalizeStarter(body) {
     return { key, areas, habits, note, counts: { projectCount, taskCount } };
 }
 
+// A starter habit as a Cadence habit: a yes/no every day, on chosen weekdays,
+// or once in the week.
+function habitInput(habit) {
+    if (habit.period === 'weekly') {
+        return {
+            name: habit.name,
+            goal: {
+                target_minor: 1,
+                period: 'WEEK',
+                goal_type: 'COUNT',
+                direction: 'AT_LEAST',
+            },
+            schedule: { schedule_mode: 'FLEXIBLE_PERIOD' },
+        };
+    }
+    return {
+        name: habit.name,
+        goal: {
+            target_minor: 1,
+            period: 'DAY',
+            goal_type: 'BINARY',
+            direction: 'AT_LEAST',
+        },
+        schedule: habit.days
+            ? {
+                  schedule_mode: 'SELECTED_DAYS',
+                  active_days: habit.days
+                      .map((d) => WEEKDAY_NAMES[d])
+                      .join(','),
+              }
+            : { schedule_mode: 'EVERY_DAY' },
+    };
+}
+
 const onboardingService = {
     // Applies a starter and records the choice. Areas, projects and habits
     // the account already has (by name) are reused rather than duplicated,
@@ -212,11 +257,6 @@ const onboardingService = {
             });
             const existingProjects = await Project.findAll({
                 where: { user_id: userId },
-                attributes: ['id', 'name'],
-                transaction,
-            });
-            const existingHabits = await Task.findAll({
-                where: { user_id: userId, habit_mode: true },
                 attributes: ['id', 'name'],
                 transaction,
             });
@@ -315,28 +355,6 @@ const onboardingService = {
                 }
             }
 
-            for (const habit of starter.habits) {
-                if (existingHabits.some((h) => sameName(h.name, habit.name))) {
-                    continue;
-                }
-                await Task.create(
-                    {
-                        name: habit.name,
-                        user_id: userId,
-                        habit_mode: true,
-                        habit_polarity: 'build',
-                        habit_target_count: 1,
-                        habit_frequency_period: habit.period,
-                        habit_schedule_days: habit.days,
-                        recurrence_type: 'daily',
-                        recurrence_interval: 1,
-                        status: Task.STATUS.NOT_STARTED,
-                    },
-                    { transaction }
-                );
-                created.habits += 1;
-            }
-
             if (starter.note) {
                 const existing = await Note.findOne({
                     where: { user_id: userId, title: starter.note.title },
@@ -367,6 +385,20 @@ const onboardingService = {
                 transaction,
             });
         });
+
+        // Cadence habits write through their own transaction, so they follow
+        // the one above.
+        const existingHabits = await Habit.findAll({
+            where: { user_id: userId },
+            attributes: ['name'],
+        });
+        for (const habit of starter.habits) {
+            if (existingHabits.some((h) => sameName(h.name, habit.name))) {
+                continue;
+            }
+            await cadenceHabits.createHabit(userId, habitInput(habit));
+            created.habits += 1;
+        }
 
         const row = await User.findByPk(userId, {
             attributes: ['onboarded_at', 'onboarding_starter'],

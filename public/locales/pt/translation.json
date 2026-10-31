@@ -1172,7 +1172,10 @@
     "color": "Cor",
     "goalArea": "Área",
     "noArea": "Sem área",
-    "startDate": "Início"
+    "startDate": "Início",
+    "goalBucket": "Grupo da lista de desejos",
+    "goalParent": "Resultado-chave de",
+    "noParentGoal": "Nenhum (independente)"
   },
   "auth": {
     "login": "Entrar",
@@ -1330,7 +1333,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Próxima ação",
+    "nextActionLine": "Próxima ação: {{name}}"
   },
   "errors": {
     "required": "Este campo é obrigatório",
@@ -1840,7 +1845,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Sugerir 5 áreas",
+    "domains": {
+      "business": "Negócios e Dinheiro",
+      "tech": "Tecnologia e Sistemas",
+      "personal": "Pessoal",
+      "family": "Família e Social",
+      "logistics": "Logística"
+    }
   },
   "notes": {
     "loading": "Carregando notas...",
@@ -3751,13 +3764,16 @@
     "title": "Metas",
     "stats": {
       "projects": "projetos",
-      "tasks": "tarefas"
+      "tasks": "tarefas",
+      "keyResults": "Resultados-chave: {{count}}"
     },
     "notFound": "Meta não encontrada",
     "editGoal": "Editar meta",
     "horizon": {
       "season": "Temporada",
-      "year": "Ano"
+      "year": "Ano",
+      "month": "Mês",
+      "quarter": "Trimestre"
     },
     "status": {
       "active": "Ativa",
@@ -3773,7 +3789,22 @@
     "clearGoal": "Remover meta",
     "noGoalsFound": "Nenhuma meta encontrada",
     "inactive": "Inativa",
-    "viewGoal": "Ir para a meta"
+    "viewGoal": "Ir para a meta",
+    "bucket": {
+      "title": "Lista de desejos",
+      "have": "Ter",
+      "be": "Ser",
+      "do": "Fazer",
+      "add": "+ Adicionar",
+      "none": "Fora da lista de desejos"
+    },
+    "keyResults": {
+      "title": "Resultados-chave",
+      "add": "Adicionar um resultado-chave",
+      "placeholder": "Resultado-chave",
+      "progress": "{{done}} de {{total}} concluídos"
+    },
+    "progressSummary": "Progresso da meta · {{done}} de {{total}} concluídos"
   },
   "templates": {
     "new": "Novo modelo",
@@ -4341,6 +4372,12 @@
       "emptyCommitted": "Ainda nada decidido para esta semana.",
       "emptyInView": "Nada em vista. Ponha uma tarefa em vista a partir do seu menu.",
       "choose": "Ajude-me a escolher"
+    },
+    "routine": {
+      "offer": "Planejar uma revisão semanal às sextas",
+      "taskName": "Revisão semanal",
+      "created": "Revisão semanal planejada para as sextas.",
+      "error": "Não foi possível planejar a revisão semanal."
     }
   },
   "postponements": {

@@ -69,8 +69,10 @@ import ProjectOverviewRail from './ProjectOverviewRail';
 import ProjectAttachmentsWidget from './ProjectAttachmentsWidget';
 import { ownerAttachmentsApi } from '../../utils/attachmentsService';
 import { useProjectMetrics } from './useProjectMetrics';
+import { NextActionContext } from '../../contexts/NextActionContext';
 import useCompleteProject from './useCompleteProject';
 import {
+    isTaskCompleted,
     matchesTaskStatusFilter,
     TaskStatusFilter,
 } from '../../constants/taskStatus';
@@ -750,11 +752,30 @@ const ProjectDetails: React.FC = () => {
         return [...filteredTasks].sort(compareTasks);
     }, [tasks, taskStatusFilter, taskSearchQuery, compareTasks]);
 
-    const { taskStats } = useProjectMetrics(
+    const { taskStats, nextBestAction } = useProjectMetrics(
         tasks,
         handleTaskUpdate,
         t,
-        showSuccessToast
+        showSuccessToast,
+        project?.next_task_uid
+    );
+
+    // The pick follows the project; the server clears it when the task is
+    // done, deleted or moved, and the page forgets it in step.
+    const designatedOpen = tasks.some(
+        (task) =>
+            task.uid === project?.next_task_uid && !isTaskCompleted(task.status)
+    );
+    const nextActionContext = useMemo(
+        () => ({
+            nextTaskUid: designatedOpen
+                ? (project?.next_task_uid ?? null)
+                : null,
+            setNextAction: async (taskUid: string | null) => {
+                await handleUpdateProject({ next_task_uid: taskUid });
+            },
+        }),
+        [designatedOpen, project?.next_task_uid, project?.uid]
     );
 
     if (loading) return <LoadingSpinner message="Loading project details..." />;
@@ -853,464 +874,485 @@ const ProjectDetails: React.FC = () => {
     );
 
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
-            <ProjectHero
-                project={project}
-                areas={areas}
-                t={t}
-                doneCount={taskStats.completed}
-                totalCount={taskStats.total}
-                onUpdate={handleUpdateProject}
-                onComplete={() =>
-                    requestComplete(
-                        project,
-                        taskStats.total - taskStats.completed,
-                        handleProjectCompleted
-                    )
-                }
-                onDeleteClick={() => {
-                    setNoteToDelete(null);
-                    setIsConfirmDialogOpen(true);
-                }}
-                onShareClick={() => setIsShareModalOpen(true)}
-                onSaveAsTemplate={
-                    templatesEnabled ? handleSaveAsTemplate : undefined
-                }
-                onEditBannerClick={handleEditBannerClick}
-                onEditClick={() => setIsEditPanelOpen(true)}
-                onTogglePin={handleTogglePin}
-                onReread={handleRereadTodoMd}
-                onImportClick={() => setIsImportOpen(true)}
-                onExport={(format) =>
-                    exportTasks(format, { project_uid: project.uid }).catch(
-                        (e: Error) => showErrorToast(spreadsheetErrorText(t, e))
-                    )
-                }
-            />
-
-            {isImportOpen && project.uid && (
-                <ImportWizard
-                    projectUid={project.uid}
-                    onClose={() => setIsImportOpen(false)}
-                    onImported={() => setReloadKey((key) => key + 1)}
+        <NextActionContext.Provider value={nextActionContext}>
+            <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
+                <ProjectHero
+                    project={project}
+                    nextAction={nextBestAction}
+                    areas={areas}
+                    t={t}
+                    doneCount={taskStats.completed}
+                    totalCount={taskStats.total}
+                    onUpdate={handleUpdateProject}
+                    onComplete={() =>
+                        requestComplete(
+                            project,
+                            taskStats.total - taskStats.completed,
+                            handleProjectCompleted
+                        )
+                    }
+                    onDeleteClick={() => {
+                        setNoteToDelete(null);
+                        setIsConfirmDialogOpen(true);
+                    }}
+                    onShareClick={() => setIsShareModalOpen(true)}
+                    onSaveAsTemplate={
+                        templatesEnabled ? handleSaveAsTemplate : undefined
+                    }
+                    onEditBannerClick={handleEditBannerClick}
+                    onEditClick={() => setIsEditPanelOpen(true)}
+                    onTogglePin={handleTogglePin}
+                    onReread={handleRereadTodoMd}
+                    onImportClick={() => setIsImportOpen(true)}
+                    onExport={(format) =>
+                        exportTasks(format, { project_uid: project.uid }).catch(
+                            (e: Error) =>
+                                showErrorToast(spreadsheetErrorText(t, e))
+                        )
+                    }
                 />
-            )}
 
-            {project.SubProjects && project.SubProjects.length > 0 && (
-                <section
-                    aria-labelledby="sub-projects-heading"
-                    className="mb-4 pl-2 sm:pl-3"
-                >
-                    <h2
-                        id="sub-projects-heading"
-                        className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                {isImportOpen && project.uid && (
+                    <ImportWizard
+                        projectUid={project.uid}
+                        onClose={() => setIsImportOpen(false)}
+                        onImported={() => setReloadKey((key) => key + 1)}
+                    />
+                )}
+
+                {project.SubProjects && project.SubProjects.length > 0 && (
+                    <section
+                        aria-labelledby="sub-projects-heading"
+                        className="mb-4 pl-2 sm:pl-3"
                     >
-                        {t('projects.subProjects', 'Sub-projects')}
-                    </h2>
-                    {/* One row per sub-project, like a folder in a list:
+                        <h2
+                            id="sub-projects-heading"
+                            className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                        >
+                            {t('projects.subProjects', 'Sub-projects')}
+                        </h2>
+                        {/* One row per sub-project, like a folder in a list:
                         icon, name, open tasks, chevron. */}
-                    <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
-                        {project.SubProjects.map((subProject) => (
-                            <li
-                                key={subProject.uid}
-                                className="border-b border-gray-100 last:border-b-0 dark:border-gray-800"
-                            >
-                                <Link
-                                    to={`/project/${createUidSlug(subProject.uid, subProject.name)}`}
-                                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800"
+                        <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
+                            {project.SubProjects.map((subProject) => (
+                                <li
+                                    key={subProject.uid}
+                                    className="border-b border-gray-100 last:border-b-0 dark:border-gray-800"
                                 >
-                                    <EntityIcon
-                                        icon={subProject.icon}
-                                        className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                                        fallback={
-                                            <FolderIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
-                                        }
-                                    />
-                                    <span className="min-w-0 flex-1 truncate">
-                                        {subProject.name}
-                                    </span>
-                                    {!!subProject.open_tasks_count && (
-                                        <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
-                                            {subProject.open_tasks_count}
-                                        </span>
-                                    )}
-                                    <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            <div className="w-full">
-                <div className="w-full">
-                    <div className="mb-4">
-                        <div className="flex items-center justify-between min-h-[2.5rem]">
-                            <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                                {projectViewTabs(isMinimal).map((tab) => (
-                                    <button
-                                        key={tab}
-                                        type="button"
-                                        aria-pressed={view === tab}
-                                        data-testid={`project-view-${tab}`}
-                                        onClick={() => changeView(tab)}
-                                        className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
-                                            view === tab
-                                                ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                                        }`}
+                                    <Link
+                                        to={`/project/${createUidSlug(subProject.uid, subProject.name)}`}
+                                        className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800"
                                     >
-                                        {tab === 'tasks'
-                                            ? t('tasks.title', 'Tasks')
-                                            : tab === 'board'
-                                              ? t('projectBoard.title', 'Board')
-                                              : tab === 'calendar'
-                                                ? t(
-                                                      'viewType.calendar',
-                                                      'Calendar'
-                                                  )
-                                                : t(
-                                                      'projectTimeline.title',
-                                                      'Timeline'
-                                                  )}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {
-                                <div className="flex items-center justify-end gap-2 sm:gap-4">
-                                    <NewItemButton
-                                        label={t('capture.add', 'Add')}
-                                        onClick={() => openCaptureForProject()}
-                                        testId="project-add-button"
-                                    />
-                                    <button
-                                        onClick={() =>
-                                            aiInsightsRef.current?.activate()
-                                        }
-                                        className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
-                                            aiInsightsActive
-                                                ? 'bg-indigo-100 dark:bg-indigo-900/40'
-                                                : 'bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
-                                        }`}
-                                        aria-pressed={aiInsightsActive}
-                                        aria-label={t(
-                                            'aiAssistant.projectInsightsTitle',
-                                            'AI Insights'
-                                        )}
-                                        title={t(
-                                            'aiAssistant.projectInsightsTitle',
-                                            'AI Insights'
-                                        )}
-                                    >
-                                        <SparklesIcon
-                                            className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                                                aiInsightsActive
-                                                    ? 'text-indigo-600 dark:text-indigo-300'
-                                                    : 'text-gray-600 dark:text-gray-200'
-                                            }`}
+                                        <EntityIcon
+                                            icon={subProject.icon}
+                                            className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                            fallback={
+                                                <FolderIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
+                                            }
                                         />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setIsSearchExpanded((v) => !v)
-                                        }
-                                        className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
-                                            isSearchExpanded
-                                                ? 'bg-blue-50/70 dark:bg-blue-900/20'
-                                                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-                                        }`}
-                                        aria-expanded={isSearchExpanded}
-                                        aria-label={
-                                            isSearchExpanded
-                                                ? 'Collapse search panel'
-                                                : 'Show search input'
-                                        }
-                                    >
-                                        <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-200" />
-                                    </button>
-                                    <IconSortDropdown
-                                        options={sortOptions}
-                                        value={orderBy}
-                                        onChange={handleSortChange}
-                                        ariaLabel={t(
-                                            'projects.sortTasks',
-                                            'Sort tasks'
+                                        <span className="min-w-0 flex-1 truncate">
+                                            {subProject.name}
+                                        </span>
+                                        {!!subProject.open_tasks_count && (
+                                            <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                                                {subProject.open_tasks_count}
+                                            </span>
                                         )}
-                                        title={t(
-                                            'projects.sortTasks',
-                                            'Sort tasks'
-                                        )}
-                                        dropdownLabel={t(
-                                            'tasks.sortBy',
-                                            'Sort by'
-                                        )}
-                                        footerContent={renderStatusFilter()}
-                                    />
+                                        <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+
+                <div className="w-full">
+                    <div className="w-full">
+                        <div className="mb-4">
+                            <div className="flex items-center justify-between min-h-[2.5rem]">
+                                <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
+                                    {projectViewTabs(isMinimal).map((tab) => (
+                                        <button
+                                            key={tab}
+                                            type="button"
+                                            aria-pressed={view === tab}
+                                            data-testid={`project-view-${tab}`}
+                                            onClick={() => changeView(tab)}
+                                            className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
+                                                view === tab
+                                                    ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
+                                                    : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
+                                            }`}
+                                        >
+                                            {tab === 'tasks'
+                                                ? t('tasks.title', 'Tasks')
+                                                : tab === 'board'
+                                                  ? t(
+                                                        'projectBoard.title',
+                                                        'Board'
+                                                    )
+                                                  : tab === 'calendar'
+                                                    ? t(
+                                                          'viewType.calendar',
+                                                          'Calendar'
+                                                      )
+                                                    : t(
+                                                          'projectTimeline.title',
+                                                          'Timeline'
+                                                      )}
+                                        </button>
+                                    ))}
                                 </div>
-                            }
-                        </div>
-                    </div>
 
-                    {
-                        <>
-                            <div className="mb-6">
-                                <ProjectAIInsights
-                                    ref={aiInsightsRef}
-                                    project={project}
-                                    taskStats={taskStats}
-                                    onActiveChange={setAiInsightsActive}
-                                />
-                            </div>
-
-                            <div
-                                className={`transition-all duration-300 ease-in-out ${
-                                    isSearchExpanded
-                                        ? 'max-h-24 opacity-100 mb-4'
-                                        : 'max-h-0 opacity-0 mb-0'
-                                } overflow-hidden`}
-                            >
-                                <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
-                                    <input
-                                        type="text"
-                                        placeholder={t(
-                                            'tasks.searchPlaceholder',
-                                            'Search tasks...'
-                                        )}
-                                        value={taskSearchQuery}
-                                        onChange={(e) =>
-                                            setTaskSearchQuery(e.target.value)
-                                        }
-                                        className="w-full bg-transparent border-none focus:ring-0 focus:outline-none dark:text-white"
-                                    />
-                                </div>
-                            </div>
-
-                            {view === 'board' ? (
-                                <ProjectBoard
-                                    project={project}
-                                    tasks={displayTasks}
-                                    onMoveTask={handleTaskSectionChange}
-                                    onOrderColumn={handleColumnOrder}
-                                    readOnly={project.access_level === 'ro'}
-                                    onOpenTask={setPanelTask}
-                                    t={t}
-                                />
-                            ) : view === 'calendar' ? (
-                                <TaskMonthCalendar
-                                    tasks={displayTasks}
-                                    onOpenTask={setPanelTask}
-                                    onMoveDue={(task, dueDate) =>
-                                        handleTaskUpdate({
-                                            ...task,
-                                            due_date: dueDate,
-                                        })
-                                    }
-                                />
-                            ) : view === 'timeline' ? (
-                                <ProjectTimeline
-                                    project={project}
-                                    tasks={displayTasks}
-                                    links={project.task_links || []}
-                                    onDatesChange={handleTaskDatesChange}
-                                    onOpenTask={setPanelTask}
-                                    t={t}
-                                />
-                            ) : (
-                                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem] xl:grid-cols-[minmax(0,1fr)_20rem] gap-6 items-start">
-                                    <div className="min-w-0 space-y-4">
-                                        <ProjectTasksSection
-                                            displayTasks={displayTasks}
-                                            onTaskUpdate={handleTaskUpdate}
-                                            onTaskCompletionToggle={
-                                                handleTaskCompletionToggle
+                                {
+                                    <div className="flex items-center justify-end gap-2 sm:gap-4">
+                                        <NewItemButton
+                                            label={t('capture.add', 'Add')}
+                                            onClick={() =>
+                                                openCaptureForProject()
                                             }
-                                            onTaskDelete={handleTaskDelete}
-                                            onToggleToday={undefined}
-                                            allProjects={allProjects}
-                                            showCompleted={
-                                                taskStatusFilter !== 'active'
+                                            testId="project-add-button"
+                                        />
+                                        <button
+                                            onClick={() =>
+                                                aiInsightsRef.current?.activate()
                                             }
-                                            taskSearchQuery={taskSearchQuery}
-                                            onTaskReorder={handleTaskReorder}
-                                            onInlineCreate={
-                                                isMinimal
-                                                    ? handleInlineCreate
-                                                    : undefined
+                                            className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
+                                                aiInsightsActive
+                                                    ? 'bg-indigo-100 dark:bg-indigo-900/40'
+                                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
+                                            }`}
+                                            aria-pressed={aiInsightsActive}
+                                            aria-label={t(
+                                                'aiAssistant.projectInsightsTitle',
+                                                'AI Insights'
+                                            )}
+                                            title={t(
+                                                'aiAssistant.projectInsightsTitle',
+                                                'AI Insights'
+                                            )}
+                                        >
+                                            <SparklesIcon
+                                                className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                                                    aiInsightsActive
+                                                        ? 'text-indigo-600 dark:text-indigo-300'
+                                                        : 'text-gray-600 dark:text-gray-200'
+                                                }`}
+                                            />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setIsSearchExpanded((v) => !v)
                                             }
-                                            todoSection={
-                                                isTodoMdProject(project)
-                                                    ? todoSection
-                                                    : undefined
+                                            className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
+                                                isSearchExpanded
+                                                    ? 'bg-blue-50/70 dark:bg-blue-900/20'
+                                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                            }`}
+                                            aria-expanded={isSearchExpanded}
+                                            aria-label={
+                                                isSearchExpanded
+                                                    ? 'Collapse search panel'
+                                                    : 'Show search input'
                                             }
-                                            onTodoSectionChange={setTodoSection}
-                                            completedTasks={tasks}
-                                            completedListKey={`project:${project.uid}`}
-                                            t={t}
+                                        >
+                                            <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-200" />
+                                        </button>
+                                        <IconSortDropdown
+                                            options={sortOptions}
+                                            value={orderBy}
+                                            onChange={handleSortChange}
+                                            ariaLabel={t(
+                                                'projects.sortTasks',
+                                                'Sort tasks'
+                                            )}
+                                            title={t(
+                                                'projects.sortTasks',
+                                                'Sort tasks'
+                                            )}
+                                            dropdownLabel={t(
+                                                'tasks.sortBy',
+                                                'Sort by'
+                                            )}
+                                            footerContent={renderStatusFilter()}
                                         />
                                     </div>
+                                }
+                            </div>
+                        </div>
 
-                                    <div className="space-y-4">
-                                        <ProjectOverviewRail
-                                            project={project}
-                                            areas={areas}
-                                            notes={notes}
-                                            t={t}
-                                            onUpdate={handleUpdateProject}
-                                            onShareClick={() =>
-                                                setIsShareModalOpen(true)
+                        {
+                            <>
+                                <div className="mb-6">
+                                    <ProjectAIInsights
+                                        ref={aiInsightsRef}
+                                        project={project}
+                                        taskStats={taskStats}
+                                        onActiveChange={setAiInsightsActive}
+                                    />
+                                </div>
+
+                                <div
+                                    className={`transition-all duration-300 ease-in-out ${
+                                        isSearchExpanded
+                                            ? 'max-h-24 opacity-100 mb-4'
+                                            : 'max-h-0 opacity-0 mb-0'
+                                    } overflow-hidden`}
+                                >
+                                    <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
+                                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
+                                        <input
+                                            type="text"
+                                            placeholder={t(
+                                                'tasks.searchPlaceholder',
+                                                'Search tasks...'
+                                            )}
+                                            value={taskSearchQuery}
+                                            onChange={(e) =>
+                                                setTaskSearchQuery(
+                                                    e.target.value
+                                                )
                                             }
-                                            onCreateNote={() =>
-                                                openCaptureForProject('note')
-                                            }
-                                            onOpenNote={setPreviewNote}
+                                            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none dark:text-white"
                                         />
-                                        {attachmentsApi && (
-                                            <ProjectAttachmentsWidget
-                                                api={attachmentsApi}
+                                    </div>
+                                </div>
+
+                                {view === 'board' ? (
+                                    <ProjectBoard
+                                        project={project}
+                                        tasks={displayTasks}
+                                        onMoveTask={handleTaskSectionChange}
+                                        onOrderColumn={handleColumnOrder}
+                                        readOnly={project.access_level === 'ro'}
+                                        onOpenTask={setPanelTask}
+                                        t={t}
+                                    />
+                                ) : view === 'calendar' ? (
+                                    <TaskMonthCalendar
+                                        tasks={displayTasks}
+                                        onOpenTask={setPanelTask}
+                                        onMoveDue={(task, dueDate) =>
+                                            handleTaskUpdate({
+                                                ...task,
+                                                due_date: dueDate,
+                                            })
+                                        }
+                                    />
+                                ) : view === 'timeline' ? (
+                                    <ProjectTimeline
+                                        project={project}
+                                        tasks={displayTasks}
+                                        links={project.task_links || []}
+                                        onDatesChange={handleTaskDatesChange}
+                                        onOpenTask={setPanelTask}
+                                        t={t}
+                                    />
+                                ) : (
+                                    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem] xl:grid-cols-[minmax(0,1fr)_20rem] gap-6 items-start">
+                                        <div className="min-w-0 space-y-4">
+                                            <ProjectTasksSection
+                                                displayTasks={displayTasks}
+                                                onTaskUpdate={handleTaskUpdate}
+                                                onTaskCompletionToggle={
+                                                    handleTaskCompletionToggle
+                                                }
+                                                onTaskDelete={handleTaskDelete}
+                                                onToggleToday={undefined}
+                                                allProjects={allProjects}
+                                                showCompleted={
+                                                    taskStatusFilter !==
+                                                    'active'
+                                                }
+                                                taskSearchQuery={
+                                                    taskSearchQuery
+                                                }
+                                                onTaskReorder={
+                                                    handleTaskReorder
+                                                }
+                                                onInlineCreate={
+                                                    isMinimal
+                                                        ? handleInlineCreate
+                                                        : undefined
+                                                }
+                                                todoSection={
+                                                    isTodoMdProject(project)
+                                                        ? todoSection
+                                                        : undefined
+                                                }
+                                                onTodoSectionChange={
+                                                    setTodoSection
+                                                }
+                                                completedTasks={tasks}
+                                                completedListKey={`project:${project.uid}`}
                                                 t={t}
                                             />
-                                        )}
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <ProjectOverviewRail
+                                                project={project}
+                                                areas={areas}
+                                                notes={notes}
+                                                t={t}
+                                                onUpdate={handleUpdateProject}
+                                                onShareClick={() =>
+                                                    setIsShareModalOpen(true)
+                                                }
+                                                onCreateNote={() =>
+                                                    openCaptureForProject(
+                                                        'note'
+                                                    )
+                                                }
+                                                onOpenNote={setPreviewNote}
+                                            />
+                                            {attachmentsApi && (
+                                                <ProjectAttachmentsWidget
+                                                    api={attachmentsApi}
+                                                    t={t}
+                                                />
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </>
-                    }
+                                )}
+                            </>
+                        }
 
-                    {panelTask && (
-                        <TaskModal
-                            isOpen
-                            onClose={() => setPanelTask(null)}
-                            task={panelTask}
-                            onSaved={(fresh) =>
-                                setTasks((prev) =>
-                                    prev.map((item) =>
-                                        item.uid === fresh.uid
-                                            ? { ...item, ...fresh }
-                                            : item
+                        {panelTask && (
+                            <TaskModal
+                                isOpen
+                                onClose={() => setPanelTask(null)}
+                                task={panelTask}
+                                onSaved={(fresh) =>
+                                    setTasks((prev) =>
+                                        prev.map((item) =>
+                                            item.uid === fresh.uid
+                                                ? { ...item, ...fresh }
+                                                : item
+                                        )
                                     )
-                                )
-                            }
-                        />
-                    )}
+                                }
+                            />
+                        )}
 
-                    {previewNote && (
-                        <NoteSidePanel
-                            note={previewNote}
-                            onClose={() => setPreviewNote(null)}
-                            onSaved={(saved) => {
-                                const savedProjectUid =
-                                    saved.project_uid ??
-                                    saved.project?.uid ??
-                                    saved.Project?.uid;
-                                setNotes((prev) =>
-                                    savedProjectUid &&
-                                    savedProjectUid !== project.uid
-                                        ? // Moved to another project
-                                          prev.filter(
-                                              (n) => n.uid !== saved.uid
-                                          )
-                                        : prev.map((n) =>
-                                              n.uid === saved.uid
-                                                  ? { ...n, ...saved }
-                                                  : n
-                                          )
-                                );
-                                const { notesStore } = useStore.getState();
-                                notesStore.setNotes(
-                                    notesStore.notes.map((n) =>
-                                        n.uid === saved.uid ? saved : n
-                                    )
-                                );
-                            }}
-                            onDelete={(note) => {
-                                setPreviewNote(null);
-                                setNoteToDelete(note);
-                                setIsConfirmDialogOpen(true);
-                            }}
-                        />
-                    )}
+                        {previewNote && (
+                            <NoteSidePanel
+                                note={previewNote}
+                                onClose={() => setPreviewNote(null)}
+                                onSaved={(saved) => {
+                                    const savedProjectUid =
+                                        saved.project_uid ??
+                                        saved.project?.uid ??
+                                        saved.Project?.uid;
+                                    setNotes((prev) =>
+                                        savedProjectUid &&
+                                        savedProjectUid !== project.uid
+                                            ? // Moved to another project
+                                              prev.filter(
+                                                  (n) => n.uid !== saved.uid
+                                              )
+                                            : prev.map((n) =>
+                                                  n.uid === saved.uid
+                                                      ? { ...n, ...saved }
+                                                      : n
+                                              )
+                                    );
+                                    const { notesStore } = useStore.getState();
+                                    notesStore.setNotes(
+                                        notesStore.notes.map((n) =>
+                                            n.uid === saved.uid ? saved : n
+                                        )
+                                    );
+                                }}
+                                onDelete={(note) => {
+                                    setPreviewNote(null);
+                                    setNoteToDelete(note);
+                                    setIsConfirmDialogOpen(true);
+                                }}
+                            />
+                        )}
 
-                    <BannerEditModal
-                        isOpen={isBannerEditModalOpen}
-                        onClose={() => setIsBannerEditModalOpen(false)}
-                        onSave={handleSaveBanner}
-                        currentImageUrl={project.image_url}
-                    />
+                        <BannerEditModal
+                            isOpen={isBannerEditModalOpen}
+                            onClose={() => setIsBannerEditModalOpen(false)}
+                            onSave={handleSaveBanner}
+                            currentImageUrl={project.image_url}
+                        />
 
-                    {isEditPanelOpen && (
-                        <ProjectModal
-                            isOpen={isEditPanelOpen}
-                            onClose={() => setIsEditPanelOpen(false)}
-                            onSave={handleUpdateProject}
-                            onDelete={handleDeleteProject}
-                            project={project}
-                            areas={areas}
-                        />
-                    )}
+                        {isEditPanelOpen && (
+                            <ProjectModal
+                                isOpen={isEditPanelOpen}
+                                onClose={() => setIsEditPanelOpen(false)}
+                                onSave={handleUpdateProject}
+                                onDelete={handleDeleteProject}
+                                project={project}
+                                areas={areas}
+                            />
+                        )}
 
-                    {isShareModalOpen && (
-                        <ProjectShareModal
-                            isOpen={isShareModalOpen}
-                            onClose={() => setIsShareModalOpen(false)}
-                            project={project}
-                        />
-                    )}
+                        {isShareModalOpen && (
+                            <ProjectShareModal
+                                isOpen={isShareModalOpen}
+                                onClose={() => setIsShareModalOpen(false)}
+                                project={project}
+                            />
+                        )}
 
-                    {isConfirmDialogOpen && noteToDelete && (
-                        <ConfirmDialog
-                            title={t('modals.deleteNote.title')}
-                            message={`Are you sure you want to delete the note "${noteToDelete.title}"?`}
-                            onConfirm={() => {
-                                const identifier =
-                                    noteToDelete?.uid ??
-                                    (noteToDelete?.id !== undefined
-                                        ? String(noteToDelete.id)
-                                        : null);
-                                if (identifier) handleDeleteNote(identifier);
-                            }}
-                            onCancel={() => {
-                                setIsConfirmDialogOpen(false);
-                                setNoteToDelete(null);
-                            }}
-                        />
-                    )}
-                    {isConfirmDialogOpen && !noteToDelete && (
-                        <ConfirmDialog
-                            title={t(
-                                'modals.deleteProject.title',
-                                'Delete Project'
-                            )}
-                            message={t(
-                                'modals.deleteProject.message',
-                                'Deleting this project will remove the project only. All items inside will be retained but will no longer belong to any project. Continue?',
-                                { projectName: project?.name }
-                            )}
-                            onConfirm={handleDeleteProject}
-                            onCancel={() => setIsConfirmDialogOpen(false)}
-                        />
-                    )}
-                    {isTemplateConfirmOpen && (
-                        <ConfirmDialog
-                            title={t(
-                                'modals.saveAsTemplate.title',
-                                'Save as Template'
-                            )}
-                            message={t(
-                                'modals.saveAsTemplate.message',
-                                'Save "{{name}}" as a template? This will create a reusable template based on this project.',
-                                { name: project?.name }
-                            )}
-                            onConfirm={handleConfirmSaveAsTemplate}
-                            onCancel={() => setIsTemplateConfirmOpen(false)}
-                            confirmButtonText={t('common.save', 'Save')}
-                        />
-                    )}
-                    {completeDialog}
+                        {isConfirmDialogOpen && noteToDelete && (
+                            <ConfirmDialog
+                                title={t('modals.deleteNote.title')}
+                                message={`Are you sure you want to delete the note "${noteToDelete.title}"?`}
+                                onConfirm={() => {
+                                    const identifier =
+                                        noteToDelete?.uid ??
+                                        (noteToDelete?.id !== undefined
+                                            ? String(noteToDelete.id)
+                                            : null);
+                                    if (identifier)
+                                        handleDeleteNote(identifier);
+                                }}
+                                onCancel={() => {
+                                    setIsConfirmDialogOpen(false);
+                                    setNoteToDelete(null);
+                                }}
+                            />
+                        )}
+                        {isConfirmDialogOpen && !noteToDelete && (
+                            <ConfirmDialog
+                                title={t(
+                                    'modals.deleteProject.title',
+                                    'Delete Project'
+                                )}
+                                message={t(
+                                    'modals.deleteProject.message',
+                                    'Deleting this project will remove the project only. All items inside will be retained but will no longer belong to any project. Continue?',
+                                    { projectName: project?.name }
+                                )}
+                                onConfirm={handleDeleteProject}
+                                onCancel={() => setIsConfirmDialogOpen(false)}
+                            />
+                        )}
+                        {isTemplateConfirmOpen && (
+                            <ConfirmDialog
+                                title={t(
+                                    'modals.saveAsTemplate.title',
+                                    'Save as Template'
+                                )}
+                                message={t(
+                                    'modals.saveAsTemplate.message',
+                                    'Save "{{name}}" as a template? This will create a reusable template based on this project.',
+                                    { name: project?.name }
+                                )}
+                                onConfirm={handleConfirmSaveAsTemplate}
+                                onCancel={() => setIsTemplateConfirmOpen(false)}
+                                confirmButtonText={t('common.save', 'Save')}
+                            />
+                        )}
+                        {completeDialog}
+                    </div>
                 </div>
             </div>
-        </div>
+        </NextActionContext.Provider>
     );
 };
 

@@ -135,6 +135,15 @@ Area: "Personal"
     - Triggers notifications when approaching or overdue
     - Displayed in project cards and detail view
 
+11. **Next action** (optional, `next_task_uid`)
+    - One open task of the project that the user picked as "what to do next"
+    - Set from the project page: right-click a task row (Minimal) and tick **Next action**; tick it again to clear. The API takes `next_task_uid` on `PATCH /api/project/:uid` (`null` clears it)
+    - Must be an open task of that project (not done, archived or cancelled, not another project's); anything else is a 400
+    - Cleared automatically, on every write path, when the task is done, archived, cancelled, deleted or moved to another project
+    - The project page header and the project cards show *Next action: title*. When nothing is picked, the project page falls back on its automatic suggestion (the Insights "next best action"); cards show nothing
+    - Today's Suggested list shows only that task for a project that has a pick (its other tasks are not suggested; tasks already in progress, due or overdue still show in their own sections). A project without a pick behaves as before
+    - Part of the offline sync project fields (`next_task_uid`); the project list and page responses add `next_task: { uid, name }` while the task is open
+
 ### Display and Organization
 
 11. **Pin to Sidebar** (boolean, default: `false`)

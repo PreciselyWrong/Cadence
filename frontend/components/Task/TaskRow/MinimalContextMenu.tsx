@@ -24,6 +24,8 @@ import {
 } from '../../../utils/reviewService';
 import { isCurrentWeek } from '../../Review/TaskDecisionRow';
 import { useToast } from '../../Shared/ToastContext';
+import { useNextAction } from '../../../contexts/NextActionContext';
+import { isTaskCompleted } from '../../../constants/taskStatus';
 
 const VIEWPORT_MARGIN = 8;
 
@@ -77,6 +79,15 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
     );
     const setters = useTaskRowSave(task, saveAndAnnounce);
     const { showErrorToast } = useToast();
+    // Only on a project page, for an open task of the project itself.
+    const nextAction = useNextAction();
+    const canBeNextAction =
+        Boolean(nextAction && task.uid) &&
+        !task.parent_task_id &&
+        !isTaskCompleted(task.status);
+    const isNextAction = Boolean(
+        nextAction && nextAction.nextTaskUid === task.uid
+    );
     const parked = isParked(task);
     const thisWeek = isCurrentWeek(task.week_of);
     const decide = async (decision: TaskDecision) => {
@@ -303,6 +314,25 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
             >
                 {t('review.actions.later', 'Later')}
             </button>
+            {canBeNextAction && nextAction && (
+                <button
+                    type="button"
+                    role="menuitemcheckbox"
+                    aria-checked={isNextAction}
+                    onClick={() =>
+                        run(() =>
+                            nextAction.setNextAction(
+                                isNextAction ? null : (task.uid as string)
+                            )
+                        )
+                    }
+                    className={`${itemClass} ${
+                        isNextAction ? selectedClass : ''
+                    }`}
+                >
+                    {t('project.nextAction', 'Next action')}
+                </button>
+            )}
             <button
                 type="button"
                 role="menuitem"

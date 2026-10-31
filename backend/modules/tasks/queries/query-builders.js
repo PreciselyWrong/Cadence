@@ -472,8 +472,14 @@ async function filterTasksByParams(
         }
     }
 
+    // Habits from before Cadence habits stay in the database (they were
+    // imported once) but are not tasks: no list shows them.
     const finalWhereClause = {
-        [Op.and]: [ownedOrShared, whereClause],
+        [Op.and]: [
+            ownedOrShared,
+            whereClause,
+            { habit_mode: { [Op.not]: true } },
+        ],
     };
     if (params.type === 'today' || params.type === 'upcoming') {
         finalWhereClause[Op.and].push(

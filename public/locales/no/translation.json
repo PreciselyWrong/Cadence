@@ -1172,7 +1172,10 @@
     "color": "Farge",
     "goalArea": "Område",
     "noArea": "Ikke noe område",
-    "startDate": "Start"
+    "startDate": "Start",
+    "goalBucket": "Bucket list-gruppe",
+    "goalParent": "Nøkkelresultat for",
+    "noParentGoal": "Ingen (frittstående)"
   },
   "auth": {
     "login": "Logg inn",
@@ -1329,7 +1332,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Neste handling",
+    "nextActionLine": "Neste handling: {{name}}"
   },
   "errors": {
     "required": "Dette feltet er påkrevd",
@@ -1838,7 +1843,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Foreslå 5 domener",
+    "domains": {
+      "business": "Business og penger",
+      "tech": "Teknologi og systemer",
+      "personal": "Privat",
+      "family": "Familie og sosialt",
+      "logistics": "Logistikk"
+    }
   },
   "notes": {
     "loading": "Laster notater...",
@@ -3750,13 +3763,16 @@
     "title": "Mål",
     "stats": {
       "projects": "prosjekter",
-      "tasks": "oppgaver"
+      "tasks": "oppgaver",
+      "keyResults": "Nøkkelresultater: {{count}}"
     },
     "notFound": "Fant ikke målet",
     "editGoal": "Rediger mål",
     "horizon": {
       "season": "Sesong",
-      "year": "År"
+      "year": "År",
+      "month": "Måned",
+      "quarter": "Kvartal"
     },
     "status": {
       "active": "Aktiv",
@@ -3772,7 +3788,22 @@
     "clearGoal": "Fjern mål",
     "noGoalsFound": "Fant ingen mål",
     "inactive": "Inaktiv",
-    "viewGoal": "Gå til mål"
+    "viewGoal": "Gå til mål",
+    "bucket": {
+      "title": "Bucket list",
+      "have": "Ha",
+      "be": "Være",
+      "do": "Gjøre",
+      "add": "+ Legg til",
+      "none": "Ikke på bucket list"
+    },
+    "keyResults": {
+      "title": "Nøkkelresultater",
+      "add": "Legg til et nøkkelresultat",
+      "placeholder": "Nøkkelresultat",
+      "progress": "{{done}} av {{total}} ferdig"
+    },
+    "progressSummary": "Måloppnåelse · {{done}} av {{total}} ferdig"
   },
   "templates": {
     "new": "Ny mal",
@@ -4339,6 +4370,12 @@
       "emptyCommitted": "Ingenting bestemt for denne uken ennå.",
       "emptyInView": "Ingenting i sikte. Sett en oppgave i sikte fra menyen.",
       "choose": "Hjelp meg å velge"
+    },
+    "routine": {
+      "offer": "Planlegg en ukentlig gjennomgang på fredager",
+      "taskName": "Ukentlig gjennomgang",
+      "created": "Ukentlig gjennomgang planlagt til fredager.",
+      "error": "Kunne ikke planlegge den ukentlige gjennomgangen."
     }
   },
   "postponements": {

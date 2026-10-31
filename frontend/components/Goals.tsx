@@ -7,7 +7,7 @@ import BlankSlate from './Shared/BlankSlate';
 import { useCan } from '../hooks/useCan';
 import { useStore } from '../store/useStore';
 import { deleteGoal, reorderGoals } from '../utils/goalsService';
-import { Goal } from '../entities/Goal';
+import { Goal, GoalBucket } from '../entities/Goal';
 import { Area } from '../entities/Area';
 import GoalModal from './Goal/GoalModal';
 import GoalRow from './Goal/GoalRow';
@@ -29,6 +29,15 @@ import {
     useSortableSensors,
 } from './Shared/sortableList';
 import { SortOption } from './Shared/SortFilterButton';
+
+const BUCKETS: GoalBucket[] = ['have', 'be', 'do'];
+const BUCKET_FALLBACKS: Record<GoalBucket, string> = {
+    have: 'Have',
+    be: 'Be',
+    do: 'Do',
+};
+
+type GoalsTab = 'goals' | 'bucket';
 
 const GOAL_STATUS_ORDER: Record<string, number> = {
     active: 0,
@@ -102,6 +111,9 @@ const Goals: React.FC = () => {
 
     const canCreateGoals = useCan('create_projects');
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [tab, setTab] = useState<GoalsTab>('goals');
+    // The group a new bucket-list goal starts in (null: a regular goal).
+    const [createBucket, setCreateBucket] = useState<GoalBucket | null>(null);
     const [selectedAreaUid, setSelectedAreaUid] = useState<string | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
@@ -171,9 +183,16 @@ const Goals: React.FC = () => {
         )
     );
 
+    // Key results show under their objective and the bucket list has its own
+    // tab, so neither crowds the dated goals.
+    const datedGoals = goals.filter(
+        (g: Goal) => !g.bucket && !g.parent_goal_uid
+    );
+    const bucketGoals = goals.filter((g: Goal) => g.bucket);
+
     const filteredGoals = selectedAreaUid
-        ? goals.filter((g: Goal) => g.Area?.uid === selectedAreaUid)
-        : goals;
+        ? datedGoals.filter((g: Goal) => g.Area?.uid === selectedAreaUid)
+        : datedGoals;
 
     const sortedGoals = [...filteredGoals].sort((a: Goal, b: Goal) =>
         compareGoals(a, b, orderBy)
@@ -232,141 +251,243 @@ const Goals: React.FC = () => {
                     {canCreateGoals && (
                         <NewItemButton
                             label={t('goals.newGoal', 'New Goal')}
-                            onClick={() => setIsCreateOpen(true)}
+                            onClick={() => {
+                                setCreateBucket(null);
+                                setIsCreateOpen(true);
+                            }}
                             testId="new-goal-button"
                         />
                     )}
                 </div>
 
-                {/* Area filter tabs and sort */}
-                {goals.length > 0 && (
-                    <div className="flex items-start justify-between gap-2 mb-6">
-                        <div className="flex flex-wrap gap-2">
-                            <button
-                                onClick={() => setSelectedAreaUid(null)}
-                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                                    selectedAreaUid === null
-                                        ? 'bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                                }`}
-                            >
-                                {t('common.all', 'All')}
-                            </button>
-                            {areasWithGoals.map((area) => (
-                                <button
-                                    key={area.uid}
-                                    onClick={() =>
-                                        setSelectedAreaUid(
-                                            area.uid === selectedAreaUid
-                                                ? null
-                                                : area.uid!
-                                        )
-                                    }
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                                        selectedAreaUid === area.uid
-                                            ? 'text-white'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                                    }`}
-                                    style={
-                                        selectedAreaUid === area.uid &&
-                                        area.color
-                                            ? { backgroundColor: area.color }
-                                            : selectedAreaUid === area.uid
-                                              ? { backgroundColor: '#374151' }
-                                              : {}
-                                    }
+                <div
+                    role="tablist"
+                    aria-label={t('goals.title', 'Goals')}
+                    className="mb-6 flex gap-4 border-b border-gray-200 dark:border-gray-800"
+                >
+                    {(['goals', 'bucket'] as GoalsTab[]).map((id) => (
+                        <button
+                            key={id}
+                            type="button"
+                            role="tab"
+                            aria-selected={tab === id}
+                            onClick={() => setTab(id)}
+                            className={`-mb-px border-b-2 px-1 py-2 text-sm ${
+                                tab === id
+                                    ? 'border-blue-500 text-gray-900 dark:text-gray-100'
+                                    : 'border-transparent text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
+                            }`}
+                        >
+                            {id === 'goals'
+                                ? t('goals.title', 'Goals')
+                                : t('goals.bucket.title', 'Bucket list')}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === 'bucket' && (
+                    <div className="space-y-8">
+                        {BUCKETS.map((bucket) => {
+                            const label = t(
+                                `goals.bucket.${bucket}`,
+                                BUCKET_FALLBACKS[bucket]
+                            );
+                            const inGroup = bucketGoals.filter(
+                                (g: Goal) => g.bucket === bucket
+                            );
+                            return (
+                                <section
+                                    key={bucket}
+                                    aria-label={label}
+                                    data-testid={`bucket-${bucket}`}
                                 >
-                                    {area.name}
-                                </button>
-                            ))}
-                        </div>
-                        <IconSortDropdown
-                            options={sortOptions}
-                            value={orderBy}
-                            onChange={setOrderBy}
-                            ariaLabel={t('goals.sort.label', 'Sort goals')}
-                            title={t('goals.sort.label', 'Sort goals')}
-                            dropdownLabel={t('goals.sort.label', 'Sort goals')}
-                            align="right"
-                        />
+                                    <div className="mb-2 flex items-center justify-between gap-2">
+                                        <h3 className="text-lg font-light text-gray-900 dark:text-gray-100">
+                                            {label}
+                                        </h3>
+                                        {canCreateGoals && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setCreateBucket(bucket);
+                                                    setIsCreateOpen(true);
+                                                }}
+                                                className="text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
+                                                data-testid={`bucket-add-${bucket}`}
+                                            >
+                                                {t('goals.bucket.add', '+ Add')}
+                                            </button>
+                                        )}
+                                    </div>
+                                    {inGroup.length > 0 && (
+                                        <div
+                                            className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
+                                        >
+                                            {inGroup.map((goal: Goal) => (
+                                                <GoalRow
+                                                    key={goal.uid}
+                                                    goal={goal}
+                                                    onDelete={openConfirmDelete}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </section>
+                            );
+                        })}
                     </div>
                 )}
 
-                {filteredGoals.length === 0 ? (
-                    hasLoaded && (
-                        <BlankSlate
-                            title={t('goals.noGoalsYet', 'No goals yet.')}
-                            hint={t(
-                                'goals.blankSlateHint',
-                                'A goal is an outcome you want to reach this season or this year, like running a half marathon. Link projects to it to see the work that gets you there.'
-                            )}
-                            actions={
-                                canCreateGoals
-                                    ? [
-                                          {
-                                              label: t(
-                                                  'goals.blankSlateNew',
-                                                  'Create your first goal'
-                                              ),
-                                              icon: PlusIcon,
-                                              onClick: () =>
-                                                  setIsCreateOpen(true),
-                                          },
-                                          {
-                                              label: t(
-                                                  'goals.blankSlateAreas',
-                                                  'Set up areas'
-                                              ),
-                                              icon: Squares2X2Icon,
-                                              to: '/areas',
-                                          },
-                                      ]
-                                    : []
-                            }
-                        />
-                    )
-                ) : (
-                    <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        {...sortableCursorHandlers}
-                        onDragEnd={handleDragEnd}
-                    >
-                        <SortableContext
-                            items={sortedGoals.map(
-                                (g: Goal) => g.uid as string
-                            )}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <div
-                                className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
-                            >
-                                {sortedGoals.map((goal: Goal) => (
-                                    <SortableItem
-                                        key={goal.uid}
-                                        id={goal.uid as string}
-                                        label={goal.title}
-                                        roleDescription={t(
-                                            'sortable.goal',
-                                            'sortable goal'
-                                        )}
-                                        testIdPrefix="sortable-goal"
+                {tab === 'goals' && (
+                    <>
+                        {/* Area filter tabs and sort */}
+                        {datedGoals.length > 0 && (
+                            <div className="flex items-start justify-between gap-2 mb-6">
+                                <div className="flex flex-wrap gap-2">
+                                    <button
+                                        onClick={() => setSelectedAreaUid(null)}
+                                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                            selectedAreaUid === null
+                                                ? 'bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                                        }`}
                                     >
-                                        <GoalRow
-                                            goal={goal}
-                                            onDelete={openConfirmDelete}
-                                        />
-                                    </SortableItem>
-                                ))}
+                                        {t('common.all', 'All')}
+                                    </button>
+                                    {areasWithGoals.map((area) => (
+                                        <button
+                                            key={area.uid}
+                                            onClick={() =>
+                                                setSelectedAreaUid(
+                                                    area.uid === selectedAreaUid
+                                                        ? null
+                                                        : area.uid!
+                                                )
+                                            }
+                                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                                selectedAreaUid === area.uid
+                                                    ? 'text-white'
+                                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                                            }`}
+                                            style={
+                                                selectedAreaUid === area.uid &&
+                                                area.color
+                                                    ? {
+                                                          backgroundColor:
+                                                              area.color,
+                                                      }
+                                                    : selectedAreaUid ===
+                                                        area.uid
+                                                      ? {
+                                                            backgroundColor:
+                                                                '#374151',
+                                                        }
+                                                      : {}
+                                            }
+                                        >
+                                            {area.name}
+                                        </button>
+                                    ))}
+                                </div>
+                                <IconSortDropdown
+                                    options={sortOptions}
+                                    value={orderBy}
+                                    onChange={setOrderBy}
+                                    ariaLabel={t(
+                                        'goals.sort.label',
+                                        'Sort goals'
+                                    )}
+                                    title={t('goals.sort.label', 'Sort goals')}
+                                    dropdownLabel={t(
+                                        'goals.sort.label',
+                                        'Sort goals'
+                                    )}
+                                    align="right"
+                                />
                             </div>
-                        </SortableContext>
-                    </DndContext>
+                        )}
+
+                        {filteredGoals.length === 0 ? (
+                            hasLoaded && (
+                                <BlankSlate
+                                    title={t(
+                                        'goals.noGoalsYet',
+                                        'No goals yet.'
+                                    )}
+                                    hint={t(
+                                        'goals.blankSlateHint',
+                                        'A goal is an outcome you want to reach this season or this year, like running a half marathon. Link projects to it to see the work that gets you there.'
+                                    )}
+                                    actions={
+                                        canCreateGoals
+                                            ? [
+                                                  {
+                                                      label: t(
+                                                          'goals.blankSlateNew',
+                                                          'Create your first goal'
+                                                      ),
+                                                      icon: PlusIcon,
+                                                      onClick: () =>
+                                                          setIsCreateOpen(true),
+                                                  },
+                                                  {
+                                                      label: t(
+                                                          'goals.blankSlateAreas',
+                                                          'Set up areas'
+                                                      ),
+                                                      icon: Squares2X2Icon,
+                                                      to: '/areas',
+                                                  },
+                                              ]
+                                            : []
+                                    }
+                                />
+                            )
+                        ) : (
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                {...sortableCursorHandlers}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={sortedGoals.map(
+                                        (g: Goal) => g.uid as string
+                                    )}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    <div
+                                        className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
+                                    >
+                                        {sortedGoals.map((goal: Goal) => (
+                                            <SortableItem
+                                                key={goal.uid}
+                                                id={goal.uid as string}
+                                                label={goal.title}
+                                                roleDescription={t(
+                                                    'sortable.goal',
+                                                    'sortable goal'
+                                                )}
+                                                testIdPrefix="sortable-goal"
+                                            >
+                                                <GoalRow
+                                                    goal={goal}
+                                                    onDelete={openConfirmDelete}
+                                                />
+                                            </SortableItem>
+                                        ))}
+                                    </div>
+                                </SortableContext>
+                            </DndContext>
+                        )}
+                    </>
                 )}
             </div>
 
             <GoalModal
                 isOpen={isCreateOpen}
                 onClose={() => setIsCreateOpen(false)}
+                defaultBucket={createBucket}
             />
 
             {isConfirmDialogOpen && goalToDelete && (

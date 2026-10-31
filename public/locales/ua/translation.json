@@ -578,7 +578,10 @@
     "color": "Колір",
     "goalArea": "Область",
     "noArea": "Без області",
-    "startDate": "Початок"
+    "startDate": "Початок",
+    "goalBucket": "Група списку бажань",
+    "goalParent": "Ключовий результат для",
+    "noParentGoal": "Немає (окрема ціль)"
   },
   "modals": {
     "updateNote": "Оновити нотатку",
@@ -956,7 +959,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Наступна дія",
+    "nextActionLine": "Наступна дія: {{name}}"
   },
   "profile": {
     "taskFeed": {
@@ -2079,7 +2084,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Запропонувати 5 сфер",
+    "domains": {
+      "business": "Бізнес і гроші",
+      "tech": "Технології та системи",
+      "personal": "Особисте",
+      "family": "Сім'я та спільнота",
+      "logistics": "Логістика"
+    }
   },
   "tags": {
     "loading": "Завантаження тегів...",
@@ -3761,13 +3774,16 @@
     "title": "Цілі",
     "stats": {
       "projects": "проекти",
-      "tasks": "завдання"
+      "tasks": "завдання",
+      "keyResults": "Ключові результати: {{count}}"
     },
     "notFound": "Ціль не знайдено",
     "editGoal": "Редагувати ціль",
     "horizon": {
       "season": "Сезон",
-      "year": "Рік"
+      "year": "Рік",
+      "month": "Місяць",
+      "quarter": "Квартал"
     },
     "status": {
       "active": "Активна",
@@ -3783,7 +3799,22 @@
     "clearGoal": "Прибрати ціль",
     "noGoalsFound": "Цілей не знайдено",
     "inactive": "Неактивна",
-    "viewGoal": "Перейти до цілі"
+    "viewGoal": "Перейти до цілі",
+    "bucket": {
+      "title": "Список бажань",
+      "have": "Мати",
+      "be": "Бути",
+      "do": "Робити",
+      "add": "+ Додати",
+      "none": "Немає в списку бажань"
+    },
+    "keyResults": {
+      "title": "Ключові результати",
+      "add": "Додати ключовий результат",
+      "placeholder": "Ключовий результат",
+      "progress": "{{done}} з {{total}} виконано"
+    },
+    "progressSummary": "Прогрес цілі · {{done}} з {{total}} виконано"
   },
   "templates": {
     "new": "Новий шаблон",
@@ -4352,6 +4383,12 @@
       "emptyCommitted": "На цей тиждень ще нічого не вирішено.",
       "emptyInView": "Нічого в полі зору. Додайте завдання через його меню.",
       "choose": "Допоможіть вибрати"
+    },
+    "routine": {
+      "offer": "Запланувати щотижневий огляд на п'ятницю",
+      "taskName": "Щотижневий огляд",
+      "created": "Щотижневий огляд заплановано на п'ятницю.",
+      "error": "Не вдалося запланувати щотижневий огляд."
     }
   },
   "postponements": {

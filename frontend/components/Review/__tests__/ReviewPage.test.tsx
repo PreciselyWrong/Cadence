@@ -12,6 +12,8 @@ jest.mock('../../../utils/reviewService', () => ({
     decideTask: jest.fn(),
     keepProject: jest.fn(),
     saveWeekCapacity: jest.fn(),
+    fetchWeeklyRoutine: jest.fn(),
+    createWeeklyRoutine: jest.fn(),
     isParked: () => false,
 }));
 jest.mock('../../../utils/tasksService', () => ({ createTask: jest.fn() }));
@@ -95,6 +97,7 @@ describe('ReviewPage', () => {
         mocked.fetchReviewSummary.mockResolvedValue(summary as any);
         mocked.fetchReviewCategory.mockResolvedValue(pushed as any);
         mocked.decideTask.mockResolvedValue({} as any);
+        mocked.fetchWeeklyRoutine.mockResolvedValue(true);
     });
 
     afterEach(() => {
@@ -157,5 +160,72 @@ describe('ReviewPage', () => {
         expect(mockOpenTask).toHaveBeenCalledWith('t1');
         fireEvent.click(screen.getByRole('tab', { name: /Stalled projects/ }));
         expect(localStorage.getItem('review.step')).toBe('projects');
+    });
+
+    describe('weekly review routine', () => {
+        const offer = () =>
+            screen.queryByRole('button', {
+                name: 'Plan a weekly review on Fridays',
+            });
+
+        it('offers one quiet button when no routine exists', async () => {
+            mocked.fetchWeeklyRoutine.mockResolvedValue(false);
+            renderPage();
+
+            expect(await screen.findByText('Test app X')).toBeInTheDocument();
+            expect(
+                await screen.findByRole('button', {
+                    name: 'Plan a weekly review on Fridays',
+                })
+            ).toBeInTheDocument();
+        });
+
+        it('stays out of the way when a routine exists', async () => {
+            mocked.fetchWeeklyRoutine.mockResolvedValue(true);
+            renderPage();
+
+            await screen.findByText('Test app X');
+            await waitFor(() =>
+                expect(mocked.fetchWeeklyRoutine).toHaveBeenCalled()
+            );
+            expect(offer()).toBeNull();
+        });
+
+        it('creates the routine once and then hides the button', async () => {
+            mocked.fetchWeeklyRoutine.mockResolvedValue(false);
+            mocked.createWeeklyRoutine.mockResolvedValue(undefined);
+            renderPage();
+
+            fireEvent.click(
+                await screen.findByRole('button', {
+                    name: 'Plan a weekly review on Fridays',
+                })
+            );
+
+            await waitFor(() =>
+                expect(mocked.createWeeklyRoutine).toHaveBeenCalledWith(
+                    'Weekly review'
+                )
+            );
+            await waitFor(() => expect(offer()).toBeNull());
+            expect(mockToast.showSuccessToast).toHaveBeenCalled();
+        });
+
+        it('keeps the button when the routine could not be created', async () => {
+            mocked.fetchWeeklyRoutine.mockResolvedValue(false);
+            mocked.createWeeklyRoutine.mockRejectedValue(new Error('boom'));
+            renderPage();
+
+            fireEvent.click(
+                await screen.findByRole('button', {
+                    name: 'Plan a weekly review on Fridays',
+                })
+            );
+
+            await waitFor(() =>
+                expect(mockToast.showErrorToast).toHaveBeenCalled()
+            );
+            expect(offer()).toBeInTheDocument();
+        });
     });
 });

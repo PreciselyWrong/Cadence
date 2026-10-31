@@ -8,7 +8,9 @@
 // and merged as a whole.
 // 2: the Cadence habit entities were added (additive; a client ignores an
 // entity it does not know).
-const SCHEMA_VERSION = 2;
+// 3: goals (objectives, key results, bucket list) were added, with a
+// `goal_uid` reference on tasks and projects and `next_task_uid` on projects.
+const SCHEMA_VERSION = 3;
 
 const { normalizeIcon } = require('../../utils/icon-validation');
 
@@ -60,6 +62,7 @@ const ENTITIES = {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },
             parent_task_uid: { column: 'parent_task_id', entity: 'task' },
+            goal_uid: { column: 'goal_id', entity: 'goal' },
         },
         lists: {
             tag_uids: {
@@ -124,6 +127,7 @@ const ENTITIES = {
             'task_show_completed',
             'task_sort_order',
             'is_maintenance',
+            'next_task_uid',
             'completed_at',
         ],
         // 'todo_md' for a project mirrored from a TODO.md file: its tasks
@@ -131,6 +135,7 @@ const ENTITIES = {
         serverFields: ['source_type'],
         refs: {
             area_uid: { column: 'area_id', entity: 'area' },
+            goal_uid: { column: 'goal_id', entity: 'goal' },
             parent_project_uid: {
                 column: 'parent_project_id',
                 entity: 'project',
@@ -143,6 +148,42 @@ const ENTITIES = {
                 otherKey: 'tag_id',
                 entity: 'tag',
             },
+        },
+    },
+    // Objectives, their key results (a goal with a parent) and the bucket
+    // list (a goal with a bucket). Tasks and projects point at them through
+    // `goal_uid`.
+    goal: {
+        model: 'Goal',
+        destroy: async (row) => {
+            const { destroyWithDependents } = require('../goals/hierarchy');
+            await destroyWithDependents(row);
+        },
+        validate: async (row, values, userId) => {
+            if (!('parent_goal_id' in values) && !('bucket' in values)) {
+                return null;
+            }
+            const { problemWith } = require('../goals/hierarchy');
+            return problemWith({
+                goal: row,
+                parentId: values.parent_goal_id,
+                bucket: values.bucket,
+                userId,
+            });
+        },
+        version: 1,
+        fields: [
+            'title',
+            'why',
+            'horizon',
+            'target_date',
+            'status',
+            'color',
+            'bucket',
+        ],
+        refs: {
+            area_uid: { column: 'area_id', entity: 'area' },
+            parent_goal_uid: { column: 'parent_goal_id', entity: 'goal' },
         },
     },
     area: {

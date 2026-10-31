@@ -100,6 +100,12 @@ Every choice also stamps `tasks.reviewed_at`; that is what "decided this week" c
 
 The week tab shows *4h 30m planned / 6h available*: the sum of the estimates of the tasks decided for the week, against a weekly time the user sets by clicking **Set available time** (stored in `ui_settings.planning.weekCapacityMinutes`; leave it empty to see only the planned time). Tasks without an estimate are counted, never required. The day planner and its hours are unchanged.
 
+## Friday routine
+
+Optional and never automatic. While the user has no weekly review routine, the Review header shows one quiet link, **Plan a weekly review on Fridays**. Clicking it creates a recurring weekly task named *Weekly review* (in the user's language) on Friday whose note links to `/review`. It sets no reminder and sends no notification; it is a normal task the user can edit, move or delete.
+
+A routine exists when the user has an open (not done, archived or cancelled) weekly recurring task, not an occurrence, whose note contains `/review`, whoever created it. The link disappears once one exists and comes back if it is deleted. Creating it twice does nothing.
+
 ## Sync and other clients
 
 - `in_view_at`, `week_of`, `review_on` and `reviewed_at` are in the offline sync registry, so clients carry them.
@@ -114,5 +120,7 @@ The week tab shows *4h 30m planned / 6h available*: the sum of the estimates of 
 - `PUT /api/review/week/capacity` `{ capacity_minutes: number | null }`
 - `GET /api/task/:uid/postponements` → counts, `last_postponed_on`, `last_planned_for`, `changes` (each with `kind`, `from`, `to`, `at`, `source`), `missed_days`; read access to the task is required
 - `POST /api/project/:uid/reviewed` → keeps a stalled project as it is; write access required
+- `GET /api/review/weekly-routine` → `{ exists }`
+- `POST /api/review/weekly-routine` `{ name? }` → `201 { created: true, task }`, or `200 { created: false, task }` when a routine exists (idempotent)
 
 Lists are computed per request from indexed queries over the last 30 days of the user's own events and plans, so the page stays quick with thousands of tasks; long lists are paged.

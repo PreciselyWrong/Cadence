@@ -138,7 +138,7 @@ tududi/                      # Repository root
 │   ├── mcp/              # Model Context Protocol server and tools
 │   ├── ai-assistant/     # Daily Brief, task and project insights
 │   ├── inbox/            # Inbox items
-│   ├── habits/           # Habit tracking
+│   ├── habits/           # Cadence habits (routes, rule engine, import of the old ones)
 │   ├── notifications/    # Notification system
 │   ├── reports/          # GTD report
 │   ├── search/           # Universal search
@@ -397,7 +397,7 @@ tududi/                      # Repository root
 │   └── useStore.ts    # Global store
 │                       # - notesStore, areasStore, goalsStore
 │                       # - projectsStore, tagsStore, tasksStore
-│                       # - inboxStore, habitsStore, userSettingsStore
+│                       # - inboxStore, userSettingsStore
 │
 ├── contexts/           # React contexts
 │   ├── SidebarContext.tsx        # Sidebar state
@@ -421,7 +421,7 @@ tududi/                      # Repository root
 │   │   ├── sharesService.ts       # Project sharing API
 │   │   ├── backupService.ts       # Backup/restore API
 │   │   ├── inboxService.ts        # Inbox API
-│   │   ├── habitsService.ts       # Habits/recurring API
+│   │   ├── cadenceHabitsService.ts # Cadence habits API
 │   │   ├── taskEventService.ts    # Task history API
 │   │   ├── taskIntelligenceService.ts # AI-assisted task mgmt
 │   │   └── attachmentsService.ts  # File attachment handling

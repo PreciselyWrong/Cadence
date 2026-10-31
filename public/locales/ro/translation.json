@@ -1174,7 +1174,10 @@
     "color": "Culoare",
     "goalArea": "Arie",
     "noArea": "Nicio arie",
-    "startDate": "Început"
+    "startDate": "Început",
+    "goalBucket": "Grupul listei de dorințe",
+    "goalParent": "Rezultat cheie al",
+    "noParentGoal": "Niciunul (independent)"
   },
   "auth": {
     "login": "Conectare",
@@ -1332,7 +1335,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Următoarea acțiune",
+    "nextActionLine": "Următoarea acțiune: {{name}}"
   },
   "errors": {
     "required": "Acest câmp este obligatoriu",
@@ -1842,7 +1847,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Sugerează 5 domenii",
+    "domains": {
+      "business": "Afaceri și bani",
+      "tech": "Tehnologie și sisteme",
+      "personal": "Personal",
+      "family": "Familie și social",
+      "logistics": "Logistică"
+    }
   },
   "notes": {
     "loading": "Se încarcă notițele...",
@@ -3755,13 +3768,16 @@
     "title": "Obiective",
     "stats": {
       "projects": "proiecte",
-      "tasks": "sarcini"
+      "tasks": "sarcini",
+      "keyResults": "Rezultate cheie: {{count}}"
     },
     "notFound": "Obiectivul nu a fost găsit",
     "editGoal": "Editează obiectivul",
     "horizon": {
       "season": "Sezon",
-      "year": "An"
+      "year": "An",
+      "month": "Lună",
+      "quarter": "Trimestru"
     },
     "status": {
       "active": "Activ",
@@ -3777,7 +3793,22 @@
     "clearGoal": "Elimină obiectivul",
     "noGoalsFound": "Nu s-au găsit obiective",
     "inactive": "Inactiv",
-    "viewGoal": "Mergi la obiectiv"
+    "viewGoal": "Mergi la obiectiv",
+    "bucket": {
+      "title": "Lista de dorințe",
+      "have": "A avea",
+      "be": "A fi",
+      "do": "A face",
+      "add": "+ Adaugă",
+      "none": "Nu este pe lista de dorințe"
+    },
+    "keyResults": {
+      "title": "Rezultate cheie",
+      "add": "Adaugă un rezultat cheie",
+      "placeholder": "Rezultat cheie",
+      "progress": "{{done}} din {{total}} finalizate"
+    },
+    "progressSummary": "Progres obiectiv · {{done}} din {{total}} finalizate"
   },
   "templates": {
     "new": "Șablon nou",
@@ -4345,6 +4376,12 @@
       "emptyCommitted": "Nimic decis încă pentru săptămâna aceasta.",
       "emptyInView": "Nimic în vedere. Pune o sarcină în vedere din meniul ei.",
       "choose": "Ajută-mă să aleg"
+    },
+    "routine": {
+      "offer": "Planifică o revizuire săptămânală vinerea",
+      "taskName": "Revizuire săptămânală",
+      "created": "Revizuire săptămânală planificată vineri.",
+      "error": "Nu s-a putut planifica revizuirea săptămânală."
     }
   },
   "postponements": {

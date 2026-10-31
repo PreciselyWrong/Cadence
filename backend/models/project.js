@@ -118,6 +118,13 @@ module.exports = (sequelize) => {
                 allowNull: false,
                 defaultValue: false,
             },
+            // The task the user picked as this project's next action. Not a
+            // foreign key: the application clears it when the task is done,
+            // deleted or moved out (modules/projects/nextAction.js).
+            next_task_uid: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
             // A sub-project's parent. Its area follows the parent's (see
             // projects/hierarchy.js).
             parent_project_id: {
@@ -211,6 +218,10 @@ module.exports = (sequelize) => {
                 },
                 {
                     fields: ['is_template'],
+                },
+                {
+                    fields: ['next_task_uid'],
+                    name: 'projects_next_task_uid',
                 },
                 {
                     fields: ['user_id', 'completed_at'],

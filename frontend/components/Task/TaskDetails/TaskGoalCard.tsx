@@ -5,6 +5,7 @@ import { ArrowRightIcon, FlagIcon, XMarkIcon } from '@heroicons/react/24/outline
 import { Goal } from '../../../entities/Goal';
 import { Task } from '../../../entities/Task';
 import { createGoalUrl } from '../../../utils/slugUtils';
+import { goalLabel } from '../../../utils/goalLabel';
 
 interface TaskGoalCardProps {
     task: Task;
@@ -45,7 +46,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
     }, [dropdownOpen]);
 
     const filteredGoals = goals.filter((g) =>
-        g.title.toLowerCase().includes(searchQuery.toLowerCase())
+        goalLabel(g, goals).toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const activeGoals = filteredGoals.filter((g) => g.status === 'active');
@@ -99,7 +100,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                                             className="w-full text-left text-sm px-3 py-1.5 rounded text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
                                         >
                                             <FlagIcon className="h-3.5 w-3.5 text-blue-500 flex-shrink-0" />
-                                            {goal.title}
+                                            {goalLabel(goal, goals)}
                                         </button>
                                     ))}
                                     {inactiveGoals.length > 0 && (
@@ -114,7 +115,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                                                     className="w-full text-left text-sm px-3 py-1.5 rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
                                                 >
                                                     <FlagIcon className="h-3.5 w-3.5 flex-shrink-0" />
-                                                    {goal.title} ({t(`goals.status.${goal.status}`, goal.status)})
+                                                    {goalLabel(goal, goals)} ({t(`goals.status.${goal.status}`, goal.status)})
                                                 </button>
                                             ))}
                                         </>
@@ -133,7 +134,7 @@ const TaskGoalCard: React.FC<TaskGoalCardProps> = ({
                         >
                             <FlagIcon className="h-4 w-4 text-blue-500 flex-shrink-0" />
                             <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
-                                {selectedGoal.title}
+                                {goalLabel(selectedGoal, goals)}
                             </span>
                         </div>
                         <div className="flex items-center gap-1 flex-shrink-0">

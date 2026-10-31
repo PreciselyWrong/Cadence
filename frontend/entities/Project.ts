@@ -38,6 +38,10 @@ export interface Project {
     goal?: Goal | null;
     Goal?: Goal | null;
     is_maintenance?: boolean;
+    // The task the user designated as the next action (uid), and its title
+    // while it is still open.
+    next_task_uid?: string | null;
+    next_task?: { uid: string; name: string } | null;
     // A sub-project's parent; its area follows the parent's.
     parent_project_uid?: string | null;
     // Direct sub-projects the viewer can see (project page only).

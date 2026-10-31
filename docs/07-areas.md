@@ -157,6 +157,10 @@ Name: "Work"
 Description: "Professional projects, career development, and work-related tasks"
 ```
 
+### Suggesting five life domains
+
+Never automatic. On the empty Areas page a **Suggest 5 domains** button, and above the list (once areas exist, while at least one is missing) a discreet **Suggest 5 domains** link, create these areas in the user's language: *Business & Money*, *Tech & Systems*, *Personal*, *Family & Social*, *Logistics* (French: Business et Argent, Tech et Systèmes, Perso, Famille et Social, Logistique). A name that already exists, whatever its case, is skipped. The names are translation strings (`areas.domains.*`); the areas are ordinary areas the user can rename, reorder or delete.
+
 ### Editing an Area
 
 **What you can edit:**

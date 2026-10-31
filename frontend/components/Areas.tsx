@@ -13,6 +13,7 @@ import {
     FlagIcon,
     CheckCircleIcon,
     PlusIcon,
+    Squares2X2Icon,
 } from '@heroicons/react/24/outline';
 import ConfirmDialog from './Shared/ConfirmDialog';
 import AreaModal from './Area/AreaModal';
@@ -223,6 +224,28 @@ const Areas: React.FC = () => {
         }
     };
 
+    // The five domains offered on request (never created on their own), in
+    // the user's language; names that already exist are left alone.
+    const suggestedDomains = [
+        t('areas.domains.business', 'Business & Money'),
+        t('areas.domains.tech', 'Tech & Systems'),
+        t('areas.domains.personal', 'Personal'),
+        t('areas.domains.family', 'Family & Social'),
+        t('areas.domains.logistics', 'Logistics'),
+    ];
+    const missingDomains = suggestedDomains.filter(
+        (name) =>
+            !areas.some(
+                (area: Area) => area.name?.toLowerCase() === name.toLowerCase()
+            )
+    );
+
+    const addSuggestedDomains = async () => {
+        for (const name of suggestedDomains) {
+            await addPresetArea(name);
+        }
+    };
+
     const areaPresets = [
         t('areas.presetHome', 'Home'),
         t('areas.presetWork', 'Work'),
@@ -343,6 +366,18 @@ const Areas: React.FC = () => {
                 {/* Areas Header */}
                 <div className="flex items-center justify-between gap-2 mb-8">
                     <h2 className="text-2xl font-light">{t('areas.title')}</h2>
+                    {canCreateAreas &&
+                        areas.length > 0 &&
+                        missingDomains.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={addSuggestedDomains}
+                                className="ml-auto text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
+                                data-testid="suggest-domains-link"
+                            >
+                                {t('areas.suggestDomains', 'Suggest 5 domains')}
+                            </button>
+                        )}
                     {canCreateAreas && (
                         <NewItemButton
                             label={t('areas.new', 'New Area')}
@@ -369,6 +404,15 @@ const Areas: React.FC = () => {
                                           ),
                                           icon: PlusIcon,
                                           onClick: handleNewArea,
+                                      },
+                                      {
+                                          label: t(
+                                              'areas.suggestDomains',
+                                              'Suggest 5 domains'
+                                          ),
+                                          icon: Squares2X2Icon,
+                                          onClick: addSuggestedDomains,
+                                          testId: 'suggest-domains-button',
                                       },
                                   ]
                                 : []),

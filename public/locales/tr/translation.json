@@ -1171,7 +1171,10 @@
     "color": "Renk",
     "goalArea": "Alan",
     "noArea": "Alan yok",
-    "startDate": "Başlangıç"
+    "startDate": "Başlangıç",
+    "goalBucket": "Yapılacaklar listesi grubu",
+    "goalParent": "Şu hedefin ana sonucu",
+    "noParentGoal": "Yok (bağımsız)"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Sonraki eylem",
+    "nextActionLine": "Sonraki eylem: {{name}}"
   },
   "errors": {
     "required": "Bu alan gereklidir",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "5 alan öner",
+    "domains": {
+      "business": "İş ve Para",
+      "tech": "Teknoloji ve Sistemler",
+      "personal": "Kişisel",
+      "family": "Aile ve Sosyal",
+      "logistics": "Lojistik"
+    }
   },
   "notes": {
     "loading": "Notlar yükleniyor...",
@@ -3745,13 +3758,16 @@
     "title": "Hedefler",
     "stats": {
       "projects": "proje",
-      "tasks": "görev"
+      "tasks": "görev",
+      "keyResults": "Ana sonuçlar: {{count}}"
     },
     "notFound": "Hedef bulunamadı",
     "editGoal": "Hedefi düzenle",
     "horizon": {
       "season": "Sezon",
-      "year": "Yıl"
+      "year": "Yıl",
+      "month": "Ay",
+      "quarter": "Çeyrek"
     },
     "status": {
       "active": "Etkin",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Hedefi kaldır",
     "noGoalsFound": "Hedef bulunamadı",
     "inactive": "Etkin değil",
-    "viewGoal": "Hedefe git"
+    "viewGoal": "Hedefe git",
+    "bucket": {
+      "title": "Yapılacaklar listesi",
+      "have": "Sahip olmak",
+      "be": "Olmak",
+      "do": "Yapmak",
+      "add": "+ Ekle",
+      "none": "Yapılacaklar listesinde değil"
+    },
+    "keyResults": {
+      "title": "Ana sonuçlar",
+      "add": "Ana sonuç ekle",
+      "placeholder": "Ana sonuç",
+      "progress": "{{done}} / {{total}} tamamlandı"
+    },
+    "progressSummary": "Hedef ilerlemesi · {{done}} / {{total}} tamamlandı"
   },
   "templates": {
     "new": "Yeni Şablon",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Bu hafta için henüz karar verilmedi.",
       "emptyInView": "Görünürde bir şey yok. Bir görevi menüsünden görünüre ekleyin.",
       "choose": "Seçmeme yardım et"
+    },
+    "routine": {
+      "offer": "Cuma günleri haftalık gözden geçirme planla",
+      "taskName": "Haftalık gözden geçirme",
+      "created": "Haftalık gözden geçirme cumalara planlandı.",
+      "error": "Haftalık gözden geçirme planlanamadı."
     }
   },
   "postponements": {

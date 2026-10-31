@@ -437,7 +437,10 @@
     "color": "Farbe",
     "goalArea": "Bereich",
     "noArea": "Kein Bereich",
-    "startDate": "Beginn"
+    "startDate": "Beginn",
+    "goalBucket": "Bucket-List-Gruppe",
+    "goalParent": "Schlüsselergebnis von",
+    "noParentGoal": "Keines (eigenständig)"
   },
   "modals": {
     "updateNote": "Notiz aktualisieren",
@@ -813,7 +816,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Nächste Aktion",
+    "nextActionLine": "Nächste Aktion: {{name}}"
   },
   "profile": {
     "taskFeed": {
@@ -2078,7 +2083,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "5 Bereiche vorschlagen",
+    "domains": {
+      "business": "Business & Geld",
+      "tech": "Tech & Systeme",
+      "personal": "Privat",
+      "family": "Familie & Soziales",
+      "logistics": "Logistik"
+    }
   },
   "tags": {
     "loading": "Tags laden...",
@@ -3754,13 +3767,16 @@
     "title": "Ziele",
     "stats": {
       "projects": "Projekte",
-      "tasks": "Aufgaben"
+      "tasks": "Aufgaben",
+      "keyResults": "Schlüsselergebnisse: {{count}}"
     },
     "notFound": "Ziel nicht gefunden",
     "editGoal": "Ziel bearbeiten",
     "horizon": {
       "season": "Saison",
-      "year": "Jahr"
+      "year": "Jahr",
+      "month": "Monat",
+      "quarter": "Quartal"
     },
     "status": {
       "active": "Aktiv",
@@ -3776,7 +3792,22 @@
     "clearGoal": "Ziel entfernen",
     "noGoalsFound": "Keine Ziele gefunden",
     "inactive": "Inaktiv",
-    "viewGoal": "Zum Ziel"
+    "viewGoal": "Zum Ziel",
+    "bucket": {
+      "title": "Bucket List",
+      "have": "Haben",
+      "be": "Sein",
+      "do": "Tun",
+      "add": "+ Hinzufügen",
+      "none": "Nicht auf der Bucket List"
+    },
+    "keyResults": {
+      "title": "Schlüsselergebnisse",
+      "add": "Schlüsselergebnis hinzufügen",
+      "placeholder": "Schlüsselergebnis",
+      "progress": "{{done}} von {{total}} erledigt"
+    },
+    "progressSummary": "Zielfortschritt · {{done}} von {{total}} erledigt"
   },
   "templates": {
     "new": "Neue Vorlage",
@@ -4343,6 +4374,12 @@
       "emptyCommitted": "Für diese Woche ist noch nichts entschieden.",
       "emptyInView": "Nichts im Blick. Nehmen Sie eine Aufgabe über ihr Menü in den Blick.",
       "choose": "Hilf mir wählen"
+    },
+    "routine": {
+      "offer": "Wöchentliche Überprüfung freitags planen",
+      "taskName": "Wöchentliche Überprüfung",
+      "created": "Wöchentliche Überprüfung für freitags geplant.",
+      "error": "Wöchentliche Überprüfung konnte nicht geplant werden."
     }
   },
   "postponements": {

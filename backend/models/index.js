@@ -168,6 +168,12 @@ User.hasMany(Goal, { foreignKey: 'user_id', as: 'Goals' });
 Goal.belongsTo(User, { foreignKey: 'user_id' });
 Area.hasMany(Goal, { foreignKey: 'area_id', as: 'Goals' });
 Goal.belongsTo(Area, { foreignKey: 'area_id' });
+Goal.hasMany(Goal, {
+    foreignKey: 'parent_goal_id',
+    as: 'KeyResults',
+    onDelete: 'CASCADE',
+});
+Goal.belongsTo(Goal, { foreignKey: 'parent_goal_id', as: 'Objective' });
 Goal.hasMany(Project, { foreignKey: 'goal_id', as: 'Projects' });
 Goal.hasMany(Task, { foreignKey: 'goal_id', as: 'Tasks' });
 Task.belongsTo(Goal, { foreignKey: 'goal_id', allowNull: true, as: 'Goal' });
@@ -739,9 +745,12 @@ require('../modules/sync/journal').install({
     Tag,
     Note,
     InboxItem,
+    Goal,
     ...cadenceHabitModels,
     SyncChange,
 });
+
+require('../modules/projects/nextAction').install({ Task, Project });
 
 module.exports = {
     sequelize,

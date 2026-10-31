@@ -242,7 +242,7 @@ Located in `/backend/modules/`, each follows consistent architecture:
 | **tags** | Tagging system, `today`/`someday` system tags | Low |
 | **comments** | Task comments, replies, @mentions, reactions | Medium |
 | **templates** | Project templates and the optional marketplace | Medium |
-| **habits** | Habit tracking | Medium |
+| **habits** | Cadence habits (`/api/cadence/*`) | Medium |
 | **inbox** | Quick capture inbox | Low |
 | **views** | Saved custom views | Low |
 | **search** | Universal search | Medium |

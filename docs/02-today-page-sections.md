@@ -60,7 +60,7 @@ Tasks are sorted by:
 
 ### Special Cases
 
-- **Habits**: Appear under a separate "Habits planned for today" header
+- **Habits**: not tasks, so never listed here (see [Habits](21-habits.md))
 - **Recurring tasks**: Only today's occurrence shows, not the template
 
 ---
@@ -140,6 +140,7 @@ If none of these are true, no suggestions are shown.
 
 5. **One task per project**
    - The system picks the single best next action per active project
+   - A project with a next action picked by the user ([Projects](06-projects.md)) suggests only that task; the others of that project stay out of Suggested
    - Inactive (done/cancelled) projects are excluded entirely
 
 6. **No subtasks or recurring templates**
@@ -363,10 +364,7 @@ Each section can be collapsed or expanded:
 
 ### Habits
 
-**Special handling:**
-- Habits appear in the Planned section under "Habits planned for today"
-- Separate from regular tasks
-- Have their own "Habits completed today" subsection in Completed
+Habits are Cadence habits, not tasks: they have their own page and appear in no Today section. Tasks stored as habits before the Cadence habits (`habit_mode`) are skipped by every Today query. See [Habits](21-habits.md).
 
 ### When a Focus is active
 

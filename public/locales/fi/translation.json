@@ -1171,7 +1171,10 @@
     "color": "Väri",
     "goalArea": "Alue",
     "noArea": "Ei aluetta",
-    "startDate": "Alkaa"
+    "startDate": "Alkaa",
+    "goalBucket": "Toivelistan ryhmä",
+    "goalParent": "Tavoitteen tulos",
+    "noParentGoal": "Ei mitään (itsenäinen)"
   },
   "auth": {
     "login": "Kirjaudu",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Seuraava toimi",
+    "nextActionLine": "Seuraava toimi: {{name}}"
   },
   "errors": {
     "required": "Tämä kenttä on pakollinen",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Ehdota 5 aluetta",
+    "domains": {
+      "business": "Business ja raha",
+      "tech": "Tekniikka ja järjestelmät",
+      "personal": "Henkilökohtainen",
+      "family": "Perhe ja sosiaalinen",
+      "logistics": "Logistiikka"
+    }
   },
   "notes": {
     "loading": "Ladataan muistiinpanoja...",
@@ -3745,13 +3758,16 @@
     "title": "Tavoitteet",
     "stats": {
       "projects": "projektia",
-      "tasks": "tehtävää"
+      "tasks": "tehtävää",
+      "keyResults": "Tärkeimmät tulokset: {{count}}"
     },
     "notFound": "Tavoitetta ei löytynyt",
     "editGoal": "Muokkaa tavoitetta",
     "horizon": {
       "season": "Kausi",
-      "year": "Vuosi"
+      "year": "Vuosi",
+      "month": "Kuukausi",
+      "quarter": "Neljännes"
     },
     "status": {
       "active": "Aktiivinen",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Poista tavoite",
     "noGoalsFound": "Tavoitteita ei löytynyt",
     "inactive": "Ei aktiivinen",
-    "viewGoal": "Siirry tavoitteeseen"
+    "viewGoal": "Siirry tavoitteeseen",
+    "bucket": {
+      "title": "Toivelista",
+      "have": "Omistaa",
+      "be": "Olla",
+      "do": "Tehdä",
+      "add": "+ Lisää",
+      "none": "Ei toivelistalla"
+    },
+    "keyResults": {
+      "title": "Tärkeimmät tulokset",
+      "add": "Lisää tärkein tulos",
+      "placeholder": "Tärkein tulos",
+      "progress": "{{done}} / {{total}} valmiina"
+    },
+    "progressSummary": "Tavoitteen edistyminen · {{done}} / {{total}} valmiina"
   },
   "templates": {
     "new": "Uusi malli",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Tälle viikolle ei ole vielä päätetty mitään.",
       "emptyInView": "Ei mitään näkyvissä. Tuo tehtävä näkyviin sen valikosta.",
       "choose": "Auta minua valitsemaan"
+    },
+    "routine": {
+      "offer": "Suunnittele viikkokatsaus perjantaiksi",
+      "taskName": "Viikkokatsaus",
+      "created": "Viikkokatsaus suunniteltu perjantaiksi.",
+      "error": "Viikkokatsauksen suunnittelu epäonnistui."
     }
   },
   "postponements": {

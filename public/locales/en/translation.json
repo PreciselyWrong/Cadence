@@ -1189,7 +1189,10 @@
     "color": "Color",
     "goalArea": "Area",
     "noArea": "No area",
-    "startDate": "Start"
+    "startDate": "Start",
+    "goalBucket": "Bucket list group",
+    "goalParent": "Key result of",
+    "noParentGoal": "None (stands alone)"
   },
   "auth": {
     "login": "Login",
@@ -1351,7 +1354,9 @@
     "leaveTasksOpen": "Leave them open",
     "completeTasksToo": "Mark them done too",
     "startsOn": "Starts {{date}}",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Next action",
+    "nextActionLine": "Next action: {{name}}"
   },
   "errors": {
     "required": "This field is required",
@@ -1864,7 +1869,15 @@
     "presetWork": "Work",
     "presetHealth": "Health",
     "presetFamily": "Family",
-    "finishedProjects": "Finished ({{count}})"
+    "finishedProjects": "Finished ({{count}})",
+    "suggestDomains": "Suggest 5 domains",
+    "domains": {
+      "business": "Business & Money",
+      "tech": "Tech & Systems",
+      "personal": "Personal",
+      "family": "Family & Social",
+      "logistics": "Logistics"
+    }
   },
   "notes": {
     "addNote": "Add Note",
@@ -3785,13 +3798,16 @@
     "title": "Goals",
     "stats": {
       "projects": "projects",
-      "tasks": "tasks"
+      "tasks": "tasks",
+      "keyResults": "Key results: {{count}}"
     },
     "notFound": "Goal not found",
     "editGoal": "Edit Goal",
     "horizon": {
       "season": "Season",
-      "year": "Year"
+      "year": "Year",
+      "month": "Month",
+      "quarter": "Quarter"
     },
     "status": {
       "active": "Active",
@@ -3807,7 +3823,22 @@
     "clearGoal": "Remove goal",
     "noGoalsFound": "No goals found",
     "inactive": "Inactive",
-    "viewGoal": "Go to goal"
+    "viewGoal": "Go to goal",
+    "bucket": {
+      "title": "Bucket list",
+      "have": "Have",
+      "be": "Be",
+      "do": "Do",
+      "add": "+ Add",
+      "none": "Not on the bucket list"
+    },
+    "keyResults": {
+      "title": "Key results",
+      "add": "Add a key result",
+      "placeholder": "Key result",
+      "progress": "{{done}} of {{total}} done"
+    },
+    "progressSummary": "Goal progress · {{done}} of {{total}} done"
   },
   "templates": {
     "new": "New Template",
@@ -4380,6 +4411,12 @@
       "emptyCommitted": "Nothing decided for this week yet.",
       "emptyInView": "Nothing in view. Put a task in view from its menu.",
       "choose": "Help me choose"
+    },
+    "routine": {
+      "offer": "Plan a weekly review on Fridays",
+      "taskName": "Weekly review",
+      "created": "Weekly review planned for Fridays.",
+      "error": "Could not plan the weekly review."
     }
   },
   "postponements": {

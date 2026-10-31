@@ -1171,7 +1171,10 @@
     "color": "Цвят",
     "goalArea": "Област",
     "noArea": "Без област",
-    "startDate": "Начало"
+    "startDate": "Начало",
+    "goalBucket": "Група от списъка с желания",
+    "goalParent": "Ключов резултат на",
+    "noParentGoal": "Няма (самостоятелна)"
   },
   "auth": {
     "login": "Вход",
@@ -1328,7 +1331,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Следващо действие",
+    "nextActionLine": "Следващо действие: {{name}}"
   },
   "errors": {
     "required": "Това поле е задължително",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Предложи 5 области",
+    "domains": {
+      "business": "Бизнес и пари",
+      "tech": "Технологии и системи",
+      "personal": "Лични",
+      "family": "Семейство и общност",
+      "logistics": "Логистика"
+    }
   },
   "notes": {
     "loading": "Зареждане на бележки...",
@@ -3745,13 +3758,16 @@
     "title": "Цели",
     "stats": {
       "projects": "проекта",
-      "tasks": "задачи"
+      "tasks": "задачи",
+      "keyResults": "Ключови резултати: {{count}}"
     },
     "notFound": "Целта не е намерена",
     "editGoal": "Редактирай целта",
     "horizon": {
       "season": "Сезон",
-      "year": "Година"
+      "year": "Година",
+      "month": "Месец",
+      "quarter": "Тримесечие"
     },
     "status": {
       "active": "Активна",
@@ -3767,7 +3783,22 @@
     "clearGoal": "Премахни целта",
     "noGoalsFound": "Не са намерени цели",
     "inactive": "Неактивна",
-    "viewGoal": "Към целта"
+    "viewGoal": "Към целта",
+    "bucket": {
+      "title": "Списък с желания",
+      "have": "Притежавам",
+      "be": "Бъда",
+      "do": "Правя",
+      "add": "+ Добави",
+      "none": "Не е в списъка с желания"
+    },
+    "keyResults": {
+      "title": "Ключови резултати",
+      "add": "Добави ключов резултат",
+      "placeholder": "Ключов резултат",
+      "progress": "{{done}} от {{total}} готови"
+    },
+    "progressSummary": "Напредък на целта · {{done}} от {{total}} готови"
   },
   "templates": {
     "new": "Нов шаблон",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "Още нищо не е решено за тази седмица.",
       "emptyInView": "Нищо пред очите. Добавете задача от нейното меню.",
       "choose": "Помогни ми да избера"
+    },
+    "routine": {
+      "offer": "Планирай седмичен преглед в петък",
+      "taskName": "Седмичен преглед",
+      "created": "Седмичният преглед е планиран за петък.",
+      "error": "Седмичният преглед не можа да бъде планиран."
     }
   },
   "postponements": {

@@ -762,9 +762,10 @@ Create a new goal within an area.
 | `title` | string | Yes | Goal title |
 | `area_id` | number | Yes | Parent area ID |
 | `why` | string | No | Motivation behind the goal |
-| `horizon` | string | No | `season` or `year` (default: `season`) |
+| `horizon` | string | No | `month`, `quarter`, `season` or `year` (default: `season`) |
 | `target_date` | string | No | Target date (YYYY-MM-DD) |
 | `status` | string | No | `active`, `achieved`, `paused`, `dropped` (default: `active`) |
+| `bucket` | string | No | `have`, `be` or `do` to put the goal on the bucket list |
 
 **Example:**
 
@@ -790,9 +791,10 @@ Update an existing goal.
 | `uid` | string | Yes | Goal UID |
 | `title` | string | No | New title |
 | `why` | string | No | New motivation text |
-| `horizon` | string | No | `season` or `year` |
+| `horizon` | string | No | `month`, `quarter`, `season` or `year` |
 | `target_date` | string | No | New target date or empty string to clear |
 | `status` | string | No | `active`, `achieved`, `paused`, `dropped` |
+| `bucket` | string | No | `have`, `be` or `do`; bucket list group |
 
 ---
 
@@ -976,66 +978,67 @@ Delete a tag. Removes it from all entities.
 
 ### Habits Tools (9)
 
-Habits are either **build** habits (do something) or **quit** habits (avoid something, where each logged completion records a slip). See [Habits](21-habits.md) for how streaks and strength are calculated.
+These tools read and write Cadence habits, the same data as the web and the phone ([Habits](21-habits.md)). A habit has a goal (target per period, a limit or a free activity) and a schedule, both versioned. Quantities are integers in minor units of the goal (see [Conventions](21-habits.md#conventions)).
 
 #### `list_habits`
 
-List habits with their streaks, strength (0-100) and `habit_progress` for the current period.
+List habits with the goal and schedule in force on a day, the progress of that day's period and the streak.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `archived` | boolean | No | List archived habits instead |
+| `date` | string | No | Evaluate on this day (`YYYY-MM-DD`), default today in the user's timezone |
 
 ---
 
 #### `get_habit`
 
-Get a specific habit by UID.
+Get a habit by UID with every goal and schedule version, pauses, reminders and statistics.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
+| `date` | string | No | Evaluate on this day (`YYYY-MM-DD`) |
 
 ---
 
 #### `create_habit`
 
-Create a new habit.
+Create a habit. Without `goal` it is a daily yes/no habit.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `name` | string | Yes | Habit name |
-| `habit_polarity` | string | No | `build` (default) or `quit` |
-| `habit_frequency_period` | string | No | `daily`, `weekly`, `monthly` or `interval` |
-| `habit_target_count` | number | No | Check-ins needed per period |
-| `habit_target_value` | number | No | Makes the habit measurable: amount needed per period |
-| `habit_unit` | string | No | Unit for a measurable habit, e.g. `pages` |
-| `habit_schedule_days` | number[] | No | Daily habits only: weekdays it is due, 0 = Sunday |
-| `habit_interval_days` | number | No | Length of an `interval` period in days |
-| `habit_time_of_day` | string | No | `morning`, `afternoon` or `evening` |
-| `habit_reminder_time` | string | No | Reminder time `HH:MM` in the user's timezone |
+| `uid` | string | No | Client-chosen UID; sending it again returns the existing habit |
+| `description` | string | No | Notes |
+| `group_uid` | string | No | `group-morning`, `group-afternoon`, `group-evening` or `group-day` |
+| `starts_on` | string | No | First day (`YYYY-MM-DD`), default today |
+| `goal` | object | No | `target_minor`, `period` (`DAY`, `WEEK`, `MONTH`), `goal_type` (`BINARY`, `COUNT`, `QUANTITY`, `DURATION`), `direction` (`AT_LEAST`, `AT_MOST`, `TRACK_ONLY`), unit fields, `minimum_minor`, `frequency_target` |
+| `schedule` | object | No | `schedule_mode` (`EVERY_DAY`, `SELECTED_DAYS`, `FLEXIBLE_PERIOD`, `INTERVAL_DAYS`), `active_days` (`MONDAY,WEDNESDAY`), `interval_days`, `first_day_of_week` |
 
 ---
 
 #### `update_habit`
 
-Update a habit, or archive / restore it. Accepts the same settings as `create_habit`.
+Rename a habit, change its description or group, or archive / restore it. Goals and schedules are versions and are not changed here.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
 | `name` | string | No | New name |
+| `description` | string | No | Notes |
+| `group_uid` | string | No | New group |
 | `archived` | boolean | No | `true` archives (keeps history), `false` restores |
 
 ---
 
 #### `delete_habit`
 
-Delete a habit and all its completions.
+Delete a habit and everything under it.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
@@ -1046,54 +1049,55 @@ Delete a habit and all its completions.
 
 #### `log_habit_completion`
 
-Check in a habit, record a slip on a quit habit, or skip a day.
+Record an entry (for a limit or an abstinence it is a slip), or skip a day with a one-day pause so the streak is kept.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
-| `completed_at` | string | No | ISO 8601 datetime (defaults to now) |
-| `value` | number | No | Amount, required for measurable habits |
+| `entry_uid` | string | No | Client-chosen entry UID; sending it again returns the existing entry |
+| `value_minor` | number | No | Amount in minor units of the goal (default 1) |
+| `occurred_at` | string | No | ISO 8601 instant (defaults to now) |
+| `local_date` | string | No | Civil day (`YYYY-MM-DD`), default the day of `occurred_at` in the user's timezone |
 | `note` | string | No | Optional note |
-| `skip` | boolean | No | Skip this day instead; keeps the streak (build habits only) |
+| `skip` | boolean | No | Skip `local_date` (default today) instead |
 
 ---
 
 #### `get_habit_completions`
 
-Get check-ins (with value and note) and skipped days for a habit.
+Get the entries of a habit.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
-| `start_date` | string | No | ISO 8601, defaults to 30 days ago |
-| `end_date` | string | No | ISO 8601, defaults to now |
+| `from` | string | No | First day (`YYYY-MM-DD`) |
+| `to` | string | No | Last day (`YYYY-MM-DD`) |
 
 ---
 
 #### `delete_habit_completion`
 
-Remove a check-in or a skipped day.
+Remove an entry.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
-| `completion_id` | number | Yes | Completion ID |
+| `entry_uid` | string | Yes | Entry UID |
 
 ---
 
 #### `get_habit_stats`
 
-Get streaks, strength, the completion rate over judged periods and totals.
+Get the state of the current period, the current and best streak, the success rate and the activity over time.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Habit UID |
-| `start_date` | string | No | ISO 8601 |
-| `end_date` | string | No | ISO 8601 |
+| `date` | string | No | Evaluate on this day (`YYYY-MM-DD`) |
 
 ---
 

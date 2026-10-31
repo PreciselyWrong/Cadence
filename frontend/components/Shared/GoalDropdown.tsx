@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDownIcon, FlagIcon } from '@heroicons/react/24/outline';
 import { Goal } from '../../entities/Goal';
+import { goalLabel } from '../../utils/goalLabel';
 
 interface GoalDropdownProps {
     goalId: number | null;
@@ -33,7 +34,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
 
     const getLabel = () => {
         if (isMaintenance) return 'Maintenance';
-        if (selectedGoal) return selectedGoal.title;
+        if (selectedGoal) return goalLabel(selectedGoal, goals);
         return 'No goal';
     };
 
@@ -131,7 +132,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                                 }
                                 className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 w-full"
                             >
-                                {g.title}
+                                {goalLabel(g, goals)}
                             </button>
                         ))}
                         {inactiveGoals.length > 0 && (
@@ -147,7 +148,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                                         }
                                         className="flex items-center px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full last:rounded-b-md"
                                     >
-                                        {g.title} ({g.status})
+                                        {goalLabel(g, goals)} ({g.status})
                                     </button>
                                 ))}
                             </>

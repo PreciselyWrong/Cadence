@@ -1173,7 +1173,10 @@
     "color": "Цвет",
     "goalArea": "Область",
     "noArea": "Без области",
-    "startDate": "Начало"
+    "startDate": "Начало",
+    "goalBucket": "Группа списка желаний",
+    "goalParent": "Ключевой результат для",
+    "noParentGoal": "Нет (отдельная цель)"
   },
   "auth": {
     "login": "Войти",
@@ -1332,7 +1335,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Следующее действие",
+    "nextActionLine": "Следующее действие: {{name}}"
   },
   "errors": {
     "required": "Это поле обязательно для заполнения",
@@ -1843,7 +1848,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Предложить 5 сфер",
+    "domains": {
+      "business": "Бизнес и деньги",
+      "tech": "Технологии и системы",
+      "personal": "Личное",
+      "family": "Семья и общение",
+      "logistics": "Логистика"
+    }
   },
   "notes": {
     "loading": "Загрузка заметок...",
@@ -3761,13 +3774,16 @@
     "title": "Цели",
     "stats": {
       "projects": "проекты",
-      "tasks": "задачи"
+      "tasks": "задачи",
+      "keyResults": "Ключевые результаты: {{count}}"
     },
     "notFound": "Цель не найдена",
     "editGoal": "Изменить цель",
     "horizon": {
       "season": "Сезон",
-      "year": "Год"
+      "year": "Год",
+      "month": "Месяц",
+      "quarter": "Квартал"
     },
     "status": {
       "active": "Активна",
@@ -3783,7 +3799,22 @@
     "clearGoal": "Убрать цель",
     "noGoalsFound": "Цели не найдены",
     "inactive": "Неактивна",
-    "viewGoal": "Перейти к цели"
+    "viewGoal": "Перейти к цели",
+    "bucket": {
+      "title": "Список желаний",
+      "have": "Иметь",
+      "be": "Быть",
+      "do": "Делать",
+      "add": "+ Добавить",
+      "none": "Нет в списке желаний"
+    },
+    "keyResults": {
+      "title": "Ключевые результаты",
+      "add": "Добавить ключевой результат",
+      "placeholder": "Ключевой результат",
+      "progress": "{{done}} из {{total}} выполнено"
+    },
+    "progressSummary": "Прогресс цели · {{done}} из {{total}} выполнено"
   },
   "templates": {
     "new": "Новый шаблон",
@@ -4352,6 +4383,12 @@
       "emptyCommitted": "На эту неделю пока ничего не решено.",
       "emptyInView": "Ничего в поле зрения. Добавьте задачу через её меню.",
       "choose": "Помогите выбрать"
+    },
+    "routine": {
+      "offer": "Запланировать еженедельный обзор на пятницу",
+      "taskName": "Еженедельный обзор",
+      "created": "Еженедельный обзор запланирован на пятницу.",
+      "error": "Не удалось запланировать еженедельный обзор."
     }
   },
   "postponements": {

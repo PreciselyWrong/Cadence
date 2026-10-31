@@ -1171,7 +1171,10 @@
     "color": "색상",
     "goalArea": "영역",
     "noArea": "영역 없음",
-    "startDate": "시작"
+    "startDate": "시작",
+    "goalBucket": "버킷 리스트 그룹",
+    "goalParent": "다음 목표의 핵심 결과",
+    "noParentGoal": "없음 (단독)"
   },
   "auth": {
     "login": "로그인",
@@ -1328,7 +1331,9 @@
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "다음 작업",
+    "nextActionLine": "다음 작업: {{name}}"
   },
   "errors": {
     "required": "이 필드는 필수입니다",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "영역 5개 제안",
+    "domains": {
+      "business": "비즈니스 & 돈",
+      "tech": "기술 & 시스템",
+      "personal": "개인",
+      "family": "가족 & 사회",
+      "logistics": "물류"
+    }
   },
   "notes": {
     "loading": "노트 로딩 중...",
@@ -3745,13 +3758,16 @@
     "title": "목표",
     "stats": {
       "projects": "프로젝트",
-      "tasks": "작업"
+      "tasks": "작업",
+      "keyResults": "핵심 결과: {{count}}"
     },
     "notFound": "목표를 찾을 수 없습니다",
     "editGoal": "목표 편집",
     "horizon": {
       "season": "시즌",
-      "year": "연도"
+      "year": "연도",
+      "month": "월",
+      "quarter": "분기"
     },
     "status": {
       "active": "진행 중",
@@ -3767,7 +3783,22 @@
     "clearGoal": "목표 제거",
     "noGoalsFound": "목표를 찾을 수 없습니다",
     "inactive": "비활성",
-    "viewGoal": "목표로 이동"
+    "viewGoal": "목표로 이동",
+    "bucket": {
+      "title": "버킷 리스트",
+      "have": "가지기",
+      "be": "되기",
+      "do": "하기",
+      "add": "+ 추가",
+      "none": "버킷 리스트에 없음"
+    },
+    "keyResults": {
+      "title": "핵심 결과",
+      "add": "핵심 결과 추가",
+      "placeholder": "핵심 결과",
+      "progress": "{{done}}/{{total}} 완료"
+    },
+    "progressSummary": "목표 진행 · {{done}}/{{total}} 완료"
   },
   "templates": {
     "new": "새 템플릿",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "이번 주에 결정한 것이 아직 없습니다.",
       "emptyInView": "시야에 둔 것이 없습니다. 작업 메뉴에서 추가하세요.",
       "choose": "고르기 도와줘"
+    },
+    "routine": {
+      "offer": "매주 금요일에 주간 리뷰 계획",
+      "taskName": "주간 리뷰",
+      "created": "주간 리뷰를 금요일로 계획했습니다.",
+      "error": "주간 리뷰를 계획할 수 없습니다."
     }
   },
   "postponements": {

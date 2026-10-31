@@ -1172,7 +1172,10 @@
     "color": "Colore",
     "goalArea": "Area",
     "noArea": "Nessuna area",
-    "startDate": "Inizio"
+    "startDate": "Inizio",
+    "goalBucket": "Gruppo lista dei desideri",
+    "goalParent": "Risultato chiave di",
+    "noParentGoal": "Nessuno (autonomo)"
   },
   "auth": {
     "login": "Accedi",
@@ -1330,7 +1333,9 @@
     "allFiles": "All files",
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "Prossima azione",
+    "nextActionLine": "Prossima azione: {{name}}"
   },
   "errors": {
     "required": "Questo campo è obbligatorio",
@@ -1840,7 +1845,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "Suggerisci 5 ambiti",
+    "domains": {
+      "business": "Business e Denaro",
+      "tech": "Tech e Sistemi",
+      "personal": "Personale",
+      "family": "Famiglia e Social",
+      "logistics": "Logistica"
+    }
   },
   "notes": {
     "loading": "Caricamento note...",
@@ -3751,13 +3764,16 @@
     "title": "Obiettivi",
     "stats": {
       "projects": "progetti",
-      "tasks": "attività"
+      "tasks": "attività",
+      "keyResults": "Risultati chiave: {{count}}"
     },
     "notFound": "Obiettivo non trovato",
     "editGoal": "Modifica obiettivo",
     "horizon": {
       "season": "Stagione",
-      "year": "Anno"
+      "year": "Anno",
+      "month": "Mese",
+      "quarter": "Trimestre"
     },
     "status": {
       "active": "Attivo",
@@ -3773,7 +3789,22 @@
     "clearGoal": "Rimuovi obiettivo",
     "noGoalsFound": "Nessun obiettivo trovato",
     "inactive": "Inattivo",
-    "viewGoal": "Vai all'obiettivo"
+    "viewGoal": "Vai all'obiettivo",
+    "bucket": {
+      "title": "Lista dei desideri",
+      "have": "Avere",
+      "be": "Essere",
+      "do": "Fare",
+      "add": "+ Aggiungi",
+      "none": "Non nella lista dei desideri"
+    },
+    "keyResults": {
+      "title": "Risultati chiave",
+      "add": "Aggiungi un risultato chiave",
+      "placeholder": "Risultato chiave",
+      "progress": "{{done}} di {{total}} completati"
+    },
+    "progressSummary": "Avanzamento obiettivo · {{done}} di {{total}} completati"
   },
   "templates": {
     "new": "Nuovo modello",
@@ -4341,6 +4372,12 @@
       "emptyCommitted": "Ancora niente deciso per questa settimana.",
       "emptyInView": "Niente in vista. Metti un’attività in vista dal suo menu.",
       "choose": "Aiutami a scegliere"
+    },
+    "routine": {
+      "offer": "Pianifica una revisione settimanale il venerdì",
+      "taskName": "Revisione settimanale",
+      "created": "Revisione settimanale pianificata per il venerdì.",
+      "error": "Impossibile pianificare la revisione settimanale."
     }
   },
   "postponements": {

@@ -176,10 +176,12 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                                 )}
                             </div>
                             <span>
-                                {t(
-                                    `goals.horizon.${goal.horizon}`,
-                                    goal.horizon
-                                )}
+                                {goal.bucket
+                                    ? t('goals.bucket.title', 'Bucket list')
+                                    : t(
+                                          `goals.horizon.${goal.horizon}`,
+                                          goal.horizon
+                                      )}
                             </span>
                             {targetDate && (
                                 <>
@@ -270,7 +272,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                         timeUsed !== null
                             ? t(
                                   'goals.progressHint',
-                                  'Bar: tasks done. Line: time passed between creation and target date.'
+                                  'Bar: tasks and projects done. Line: time passed between creation and target date.'
                               )
                             : undefined
                     }
@@ -279,7 +281,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                         <span>
                             {t(
                                 'goals.progressSummary',
-                                'Goal progress · {{done}} of {{total}} tasks done',
+                                'Goal progress · {{done}} of {{total}} done',
                                 {
                                     done: doneCount,
                                     total: totalCount,

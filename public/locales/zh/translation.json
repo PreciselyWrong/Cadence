@@ -1171,7 +1171,10 @@
     "color": "颜色",
     "goalArea": "区域",
     "noArea": "无区域",
-    "startDate": "开始"
+    "startDate": "开始",
+    "goalBucket": "愿望清单分组",
+    "goalParent": "所属目标的关键结果",
+    "noParentGoal": "无（独立）"
   },
   "auth": {
     "login": "登录",
@@ -1328,7 +1331,9 @@
     "dropToUpload": "Drop to upload",
     "fewerFiles": "Show fewer",
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
-    "noTasks": "No tasks."
+    "noTasks": "No tasks.",
+    "nextAction": "下一步行动",
+    "nextActionLine": "下一步行动：{{name}}"
   },
   "errors": {
     "required": "此字段为必填项",
@@ -1837,7 +1842,15 @@
     "presetHome": "Home",
     "presetWork": "Work",
     "presetHealth": "Health",
-    "presetFamily": "Family"
+    "presetFamily": "Family",
+    "suggestDomains": "建议 5 个领域",
+    "domains": {
+      "business": "商业与财务",
+      "tech": "技术与系统",
+      "personal": "个人",
+      "family": "家庭与社交",
+      "logistics": "物流"
+    }
   },
   "notes": {
     "loading": "加载笔记...",
@@ -3745,13 +3758,16 @@
     "title": "目标",
     "stats": {
       "projects": "项目",
-      "tasks": "任务"
+      "tasks": "任务",
+      "keyResults": "关键结果：{{count}}"
     },
     "notFound": "未找到目标",
     "editGoal": "编辑目标",
     "horizon": {
       "season": "季度",
-      "year": "年度"
+      "year": "年度",
+      "month": "月",
+      "quarter": "季度"
     },
     "status": {
       "active": "进行中",
@@ -3767,7 +3783,22 @@
     "clearGoal": "移除目标",
     "noGoalsFound": "未找到目标",
     "inactive": "未启用",
-    "viewGoal": "前往目标"
+    "viewGoal": "前往目标",
+    "bucket": {
+      "title": "愿望清单",
+      "have": "拥有",
+      "be": "成为",
+      "do": "做",
+      "add": "+ 添加",
+      "none": "不在愿望清单中"
+    },
+    "keyResults": {
+      "title": "关键结果",
+      "add": "添加关键结果",
+      "placeholder": "关键结果",
+      "progress": "已完成 {{done}} / {{total}}"
+    },
+    "progressSummary": "目标进度 · 已完成 {{done}} / {{total}}"
   },
   "templates": {
     "new": "新建模板",
@@ -4334,6 +4365,12 @@
       "emptyCommitted": "本周还没有决定任何事。",
       "emptyInView": "没有关注中的任务。可从任务菜单加入关注。",
       "choose": "帮我选"
+    },
+    "routine": {
+      "offer": "计划每周五的每周回顾",
+      "taskName": "每周回顾",
+      "created": "已将每周回顾计划在周五。",
+      "error": "无法计划每周回顾。"
     }
   },
   "postponements": {

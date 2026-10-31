@@ -147,7 +147,7 @@ function registerGoalTools(server, context, tools) {
                 },
                 horizon: {
                     type: 'string',
-                    enum: ['season', 'year'],
+                    enum: ['month', 'quarter', 'season', 'year'],
                     description: 'Time horizon (default: season)',
                 },
                 target_date: {
@@ -158,6 +158,12 @@ function registerGoalTools(server, context, tools) {
                     type: 'string',
                     enum: ['active', 'achieved', 'paused', 'dropped'],
                     description: 'Goal status (default: active)',
+                },
+                bucket: {
+                    type: 'string',
+                    enum: ['have', 'be', 'do'],
+                    description:
+                        'Put the goal on the bucket list (have, be or do)',
                 },
             },
             required: ['title', 'area_id'],
@@ -175,6 +181,7 @@ function registerGoalTools(server, context, tools) {
                 horizon: params.horizon || 'season',
                 target_date: params.target_date || null,
                 status: params.status || 'active',
+                bucket: params.bucket || null,
             });
 
             const reloaded = await goalsRepository.findByUid(
@@ -239,7 +246,7 @@ function registerGoalTools(server, context, tools) {
                 },
                 horizon: {
                     type: 'string',
-                    enum: ['season', 'year'],
+                    enum: ['month', 'quarter', 'season', 'year'],
                     description: 'New time horizon',
                 },
                 target_date: {
@@ -251,6 +258,11 @@ function registerGoalTools(server, context, tools) {
                     type: 'string',
                     enum: ['active', 'achieved', 'paused', 'dropped'],
                     description: 'New status',
+                },
+                bucket: {
+                    type: 'string',
+                    enum: ['have', 'be', 'do'],
+                    description: 'Bucket list group (have, be or do)',
                 },
             },
             required: ['uid'],
@@ -273,6 +285,8 @@ function registerGoalTools(server, context, tools) {
                 updates.target_date =
                     params.target_date === '' ? null : params.target_date;
             if (params.status !== undefined) updates.status = params.status;
+            if (params.bucket !== undefined)
+                updates.bucket = params.bucket || null;
 
             await goalsRepository.update(goal, updates);
 

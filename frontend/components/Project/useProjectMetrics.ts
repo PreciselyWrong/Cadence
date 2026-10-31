@@ -19,7 +19,9 @@ export const useProjectMetrics = (
     tasks: Task[],
     handleTaskUpdate: (task: Task) => Promise<void>,
     t: TFunction,
-    showSuccessToast?: (message: string | React.ReactNode) => void
+    showSuccessToast?: (message: string | React.ReactNode) => void,
+    // The task the user designated as the project's next action, if any.
+    nextTaskUid?: string | null
 ) => {
     const taskStats = useMemo(() => {
         const stats = {
@@ -321,6 +323,11 @@ export const useProjectMetrics = (
             status === 2 ||
             status === 3;
 
+        const designated = nextTaskUid
+            ? tasks.find((task) => task.uid === nextTaskUid)
+            : undefined;
+        if (designated && !isCompleted(designated.status)) return designated;
+
         const candidates = tasks.filter(
             (task) =>
                 !isCompleted(task.status) &&
@@ -384,7 +391,7 @@ export const useProjectMetrics = (
             });
 
         return scored[0]?.task ?? null;
-    }, [tasks]);
+    }, [tasks, nextTaskUid]);
 
     const getDueDescriptor = useCallback(
         (task: Task): string => {
