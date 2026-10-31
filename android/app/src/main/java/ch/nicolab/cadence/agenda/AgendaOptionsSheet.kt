@@ -46,6 +46,8 @@ import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.CadenceSwitch
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
@@ -152,7 +154,8 @@ internal fun AgendaOptionsSheet(
                     ChoiceChip(
                         label = item.calendar.displayName,
                         selected = shown,
-                        accent = Color(item.calendar.colorArgb),
+                        // Un agenda sombre en thème sombre (ou clair en thème clair) doit se distinguer du fond.
+                        accent = readableTintOf(Color(item.calendar.colorArgb), minContrast = ICON_CONTRAST),
                         leadingIcon = if (shown) Icons.Outlined.Check else null,
                         onClick = { onCalendarShown(item, !shown) },
                     )

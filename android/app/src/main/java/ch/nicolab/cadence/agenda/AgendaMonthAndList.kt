@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.agenda
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -273,7 +275,8 @@ internal fun AgendaEntryRow(
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
-    val color = entry.colorArgb?.let { Color(it) } ?: palette.primary
+    // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
+    val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
     val hasCheck = entry is AgendaEntry.Task || (entry is AgendaEntry.Event && checkEvents)
     Column(modifier.padding(bottom = Space.sm)) {
         Row(

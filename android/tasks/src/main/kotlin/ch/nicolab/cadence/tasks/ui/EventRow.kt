@@ -54,7 +54,8 @@ internal fun EventRow(
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val color = Color(item.calendar.colorArgb)
+    // Rail, cercle et icône dans la couleur de l'agenda, ajustée pour rester visible (3:1).
+    val color = readableTintOf(Color(item.calendar.colorArgb), MaterialTheme.colorScheme.surface, ICON_CONTRAST)
     val title = item.event.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val markLabel = stringResource(
         if (item.done) R.string.tasks_event_mark_undone else R.string.tasks_event_mark_done,
@@ -113,7 +114,7 @@ private fun EventMeta(item: EventWithDone, color: Color, zone: ZoneId) {
         Icon(
             Icons.Outlined.CalendarToday,
             contentDescription = null,
-            tint = readableTintOf(color, MaterialTheme.colorScheme.surface, ICON_CONTRAST),
+            tint = color,
             modifier = Modifier.size(14.dp),
         )
         Text(

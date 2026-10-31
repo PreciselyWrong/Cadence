@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.settings
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -154,7 +156,7 @@ private fun CalendarBlock(
         verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(Size.eventIcon).clip(CircleShape).background(Color(calendar.colorArgb)))
+            Box(Modifier.size(Size.eventIcon).clip(CircleShape).background(readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST)))
             Spacer(Modifier.width(Space.md))
             Text(
                 calendar.displayName,

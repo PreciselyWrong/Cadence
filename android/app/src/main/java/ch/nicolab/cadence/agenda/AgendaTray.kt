@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.agenda
 
+import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateContentSize
@@ -196,7 +198,7 @@ internal fun Modifier.trayDragSource(
 @Composable
 private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
     val palette = cadence
-    val color = item.colorArgb?.let { Color(it) } ?: palette.primary
+    val color = readableTintOf(item.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
     val tint = if (item.overdueDays > 0) palette.error else color
     Row(
         Modifier
