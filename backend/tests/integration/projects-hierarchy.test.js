@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Project, Area } = require('../../models');
+const { Project, Area, Task } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 describe('Sub-projects (projects.parent_project_id)', () => {
@@ -197,10 +197,27 @@ describe('Sub-projects (projects.parent_project_id)', () => {
                 parent_project_id: child.id,
             });
 
+            await Task.bulkCreate([
+                { name: 'Open', user_id: user.id, project_id: child.id },
+                {
+                    name: 'Done',
+                    user_id: user.id,
+                    project_id: child.id,
+                    status: Task.STATUS.DONE,
+                },
+            ]);
+            await child.update({ icon: 'home' });
+
             const page = await agent.get(`/api/project/${parent.uid}`);
             expect(page.status).toBe(200);
             expect(page.body.SubProjects).toEqual([
-                { uid: child.uid, name: 'Child', status: 'in_progress' },
+                {
+                    uid: child.uid,
+                    name: 'Child',
+                    status: 'in_progress',
+                    icon: 'home',
+                    open_tasks_count: 1,
+                },
             ]);
 
             const list = await agent.get('/api/projects');

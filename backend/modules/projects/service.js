@@ -33,7 +33,7 @@ const {
     syncProjectSharesFromContainer,
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
-const { Project, Area } = require('../../models');
+const { Project, Area, Task } = require('../../models');
 const {
     resolveParent,
     resolveParentChange,
@@ -526,12 +526,35 @@ class ProjectsService {
                 'project',
                 userId
             );
-        const subProjects = await Project.findAll({
+        const subProjectRows = await Project.findAll({
             where: { ...visibleWhere, parent_project_id: project.id },
-            attributes: ['uid', 'name', 'status'],
+            attributes: ['id', 'uid', 'name', 'status', 'icon'],
             order: [['name', 'ASC']],
             raw: true,
         });
+        // Open = not done, archived or cancelled, as the parent page shows it.
+        const openCounts = subProjectRows.length
+            ? await Task.count({
+                  where: {
+                      project_id: subProjectRows.map((row) => row.id),
+                      status: {
+                          [Op.notIn]: [
+                              Task.STATUS.DONE,
+                              Task.STATUS.ARCHIVED,
+                              Task.STATUS.CANCELLED,
+                          ],
+                      },
+                  },
+                  group: ['project_id'],
+              })
+            : [];
+        const openByProject = new Map(
+            openCounts.map((row) => [row.project_id, Number(row.count)])
+        );
+        const subProjects = subProjectRows.map(({ id, ...row }) => ({
+            ...row,
+            open_tasks_count: openByProject.get(id) ?? 0,
+        }));
 
         return {
             ...projectJson,

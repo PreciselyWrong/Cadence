@@ -39,7 +39,13 @@ export interface Project {
     // A sub-project's parent; its area follows the parent's.
     parent_project_uid?: string | null;
     // Direct sub-projects the viewer can see (project page only).
-    SubProjects?: { uid: string; name: string; status: ProjectStatus }[];
+    SubProjects?: {
+        uid: string;
+        name: string;
+        status: ProjectStatus;
+        icon?: string | null;
+        open_tasks_count?: number;
+    }[];
     tags?: Tag[];
     priority?: PriorityType;
     tasks?: Task[];

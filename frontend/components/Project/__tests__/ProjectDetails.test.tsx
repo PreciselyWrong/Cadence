@@ -5,6 +5,11 @@ import ProjectDetails from '../ProjectDetails';
 import { fetchProjectBySlug } from '../../../utils/projectsService';
 
 jest.mock('react-router-dom', () => ({
+    Link: ({ children, to, ...rest }: any) => (
+        <a href={to} {...rest}>
+            {children}
+        </a>
+    ),
     useParams: () => ({ uidSlug: 'project-slug-123' }),
     useNavigate: () => jest.fn(),
     useLocation: () => ({ pathname: '/projects/project-slug-123', state: {} }),
@@ -185,6 +190,33 @@ describe('ProjectDetails delete confirmation (#1826)', () => {
 });
 
 describe('ProjectDetails edit menu item', () => {
+    it('lists sub-projects as rows with their open task count', async () => {
+        (fetchProjectBySlug as jest.Mock).mockResolvedValue({
+            id: 101,
+            uid: 'house1',
+            name: 'Maison',
+            status: 'in_progress',
+            tasks: [],
+            notes: [],
+            SubProjects: [
+                {
+                    uid: 'kit1',
+                    name: 'Cuisine',
+                    status: 'in_progress',
+                    icon: 'cook',
+                    open_tasks_count: 3,
+                },
+            ],
+        });
+
+        render(<ProjectDetails />);
+
+        const row = await screen.findByRole('link', { name: /Cuisine/ });
+        expect(row).toHaveAttribute('href', '/project/kit1-cuisine');
+        expect(row).toHaveTextContent('3');
+        expect(row.querySelector('svg path')).toBeInTheDocument();
+    });
+
     it('opens the project side panel from the three dot menu', async () => {
         (fetchProjectBySlug as jest.Mock).mockResolvedValue({
             id: 100,

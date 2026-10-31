@@ -12,7 +12,11 @@ import {
     MagnifyingGlassIcon,
     CheckIcon,
     SparklesIcon,
+    FolderIcon,
+    ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import EntityIcon from '../Shared/EntityIcon';
+import { createUidSlug } from '../../utils/slugUtils';
 import { useToast } from '../Shared/ToastContext';
 import ProjectAIInsights, {
     ProjectAIInsightsHandle,
@@ -903,14 +907,34 @@ const ProjectDetails: React.FC = () => {
                     >
                         {t('projects.subProjects', 'Sub-projects')}
                     </h2>
-                    <ul className="flex flex-wrap gap-2">
+                    {/* One row per sub-project, like a folder in a list:
+                        icon, name, open tasks, chevron. */}
+                    <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
                         {project.SubProjects.map((subProject) => (
-                            <li key={subProject.uid}>
+                            <li
+                                key={subProject.uid}
+                                className="border-b border-gray-100 last:border-b-0 dark:border-gray-800"
+                            >
                                 <Link
-                                    to={`/project/${subProject.uid}`}
-                                    className="inline-block rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                                    to={`/project/${createUidSlug(subProject.uid, subProject.name)}`}
+                                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800"
                                 >
-                                    {subProject.name}
+                                    <EntityIcon
+                                        icon={subProject.icon}
+                                        className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                        fallback={
+                                            <FolderIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
+                                        }
+                                    />
+                                    <span className="min-w-0 flex-1 truncate">
+                                        {subProject.name}
+                                    </span>
+                                    {!!subProject.open_tasks_count && (
+                                        <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                                            {subProject.open_tasks_count}
+                                        </span>
+                                    )}
+                                    <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
                                 </Link>
                             </li>
                         ))}

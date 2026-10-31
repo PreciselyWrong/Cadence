@@ -384,10 +384,11 @@ A project can have a **parent project** it owns. Use it to split a big project i
 - **Area follows the parent.** A sub-project always sits in its parent's area. The area it is sent is ignored, and the Area picker is locked while a parent is chosen. Moving a parent to another area moves all of its sub-projects, at any depth, with it.
 - **Cycles are refused.** A project cannot become its own parent or be placed under one of its own sub-projects. A parent owned by someone else is refused too.
 - **Only the owner** can set or clear the parent. Sharing is not inherited: sharing a parent does not share its sub-projects.
-- **Own tasks stay separate.** A project page shows only its own tasks, plus a compact **Sub-projects** list linking to its direct sub-projects. Sub-project tasks are not merged into the parent.
+- **Own tasks stay separate.** A project page shows only its own tasks, plus a **Sub-projects** list above them: one row per direct sub-project with its icon, name and open task count (not done, archived or cancelled), opening it on click. Sub-project tasks are not merged into the parent.
+- **Breadcrumb.** A sub-project page reads Projects (or the root's area) › each parent, root first › the sub-project, every parent a link.
 - **Deleting a parent** keeps its sub-projects; they become top-level projects.
 - The project list and sidebar show sub-projects indented under their parent. In dropdowns they read "Parent / Child".
-- API and MCP: `parent_project_uid` on create and update (`null` detaches). Lists and project pages return `parent_project_uid`; the project page also returns `SubProjects` (direct children the viewer can see).
+- API and MCP: `parent_project_uid` on create and update (`null` detaches). Lists and project pages return `parent_project_uid`; the project page also returns `SubProjects` (direct children the viewer can see: `uid`, `name`, `status`, `icon`, `open_tasks_count`).
 - Backups carry `parent_project_uid`; on import the parent links are set after every project exists.
 
 ---

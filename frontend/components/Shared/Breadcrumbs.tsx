@@ -68,9 +68,22 @@ const Breadcrumbs: React.FC = () => {
         }
         case 'project': {
             const project = projects.find((p) => p.uid === uid);
+            // A sub-project lists its parents, root first; the root's area
+            // comes before them. The seen set stops on a broken cycle.
+            const ancestors: typeof projects = [];
+            const seen = new Set([uid]);
+            let parentUid = project?.parent_project_uid;
+            while (parentUid && !seen.has(parentUid)) {
+                seen.add(parentUid);
+                const parent = projects.find((p) => p.uid === parentUid);
+                if (!parent) break;
+                ancestors.unshift(parent);
+                parentUid = parent.parent_project_uid;
+            }
+            const root = ancestors[0] ?? project;
             const parents = areaCrumbs(
-                project?.area_uid ?? project?.area?.uid,
-                project?.area_id ?? project?.area?.id
+                root?.area_uid ?? root?.area?.uid,
+                root?.area_id ?? root?.area?.id
             );
             crumbs = [
                 ...(parents.length
@@ -81,6 +94,10 @@ const Breadcrumbs: React.FC = () => {
                               to: '/projects',
                           },
                       ]),
+                ...ancestors.map((ancestor) => ({
+                    label: ancestor.name,
+                    to: `/project/${createUidSlug(ancestor.uid as string, ancestor.name)}`,
+                })),
                 { label: project?.name || labelFromSlug(param) },
             ];
             break;

@@ -58,6 +58,15 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - affichée dans la barre latérale (projets, tags), l'en-tête et la carte du projet, la puce projet du panneau de tâche, les lignes de tâche (projet et tags, modes Minimal et Dense) et la page Tags.
 - **Android** : lire et écrire le champ `icon` des projets et des tags (il arrive déjà par la synchro, ignoré pour l'instant) ; l'afficher avec `HabitIconRegistry` aux mêmes endroits ; ajouter une icône au registre l'ajoute aux deux clients (relancer le script web).
 
+### 2026-10-31 — Sous-projets lisibles
+
+- **Problème** : sur un sous-projet, rien n'indiquait son parent (fil d'Ariane « Projects › Cuisine ») ; sur le parent, les sous-projets n'étaient qu'une petite puce peu visible.
+- **Décisions** :
+  - fil d'Ariane complet : Projects (ou la zone du projet racine) › chaque parent, racine d'abord › le sous-projet ; chaque parent est un lien ;
+  - sur le parent, une liste « Sous-projets » au-dessus des tâches : une ligne par sous-projet direct, avec son icône, son nom, le nombre de tâches ouvertes et un chevron, comme un dossier ;
+  - les tâches des sous-projets restent dans leur projet, pas fusionnées dans le parent.
+- **Android** : l'écran d'un projet affiche ses sous-projets en lignes (icône, nom, tâches ouvertes) au-dessus des tâches ; l'en-tête d'un sous-projet montre le chemin des parents, chacun cliquable.
+
 ### À faire — Glisser-déposer vers la navigation
 
 - **Demande** : glisser un projet sur une zone l'y range ; glisser une tâche ou une note sur un tag l'étiquette, sur un projet l'y déplace ; idem pour toute cible de la barre latérale.
