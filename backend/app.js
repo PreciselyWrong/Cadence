@@ -551,6 +551,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, tasksModule.routes);
     app.use(basePath, commentsModule.routes);
     app.use(basePath, habitsModule.routes);
+    app.use(basePath, habitsModule.cadenceRoutes);
     app.use(basePath, syncModule.routes);
     app.use(basePath, projectsModule.routes);
     app.use(basePath, projectSectionsModule.routes);
