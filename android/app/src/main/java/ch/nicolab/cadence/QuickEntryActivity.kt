@@ -1,5 +1,7 @@
 package ch.nicolab.cadence
 
+import ch.nicolab.cadence.habits.habitTint
+import ch.nicolab.cadence.habits.QuickSheet
 import android.os.Bundle
 import android.content.Intent
 import androidx.activity.ComponentActivity
@@ -135,13 +137,41 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
         )
         correcting?.let { entry ->
             EntryEditor(entry, selected.stored.goal.goalType, selected.stored.goal.unit,
-                selected.stored.colorArgb?.let(::Color) ?: palette.primary,
+                habitTint(selected),
                 dismiss = { if (!busy) correctingId = null },
                 save = { value, date, time, note -> viewModel.correctEntry(entry, value, date, time, note) { correctingId = null } },
                 delete = { viewModel.deleteEntry(entry.id) { correctingId = null } },
                 busy = busy,
                 saveError = saveError,
                 occurrenceOnly = selected.stored.goal.isAbstinence,
+            )
+        }
+        return
+    }
+    // Une habitude précise (icône du widget, rappel) ouvre la même feuille que dans l'application :
+    // couleur de l'habitude, rythme récent et saisies corrigeables.
+    val single = habitId?.let { id -> habits.firstOrNull { it.stored.id == id && !it.stored.goal.isAbstinence } }
+    if (single != null) {
+        QuickSheet(
+            single,
+            { value, note -> viewModel.addEntry(single, value, "QUICK_MODAL", UUID.randomUUID().toString(), note) },
+            viewModel::undoLastEntry,
+            { viewModel.clearSaveError(); correctingId = it.id },
+            timers[single.stored.id],
+            { viewModel.startTimer(single.stored.id) },
+            { viewModel.pauseTimer(single.stored.id) },
+            { viewModel.finishTimer(single) },
+            { viewModel.resetTimer(single.stored.id) },
+            dismiss,
+        )
+        correcting?.let { entry ->
+            EntryEditor(entry, single.stored.goal.goalType, single.stored.goal.unit, habitTint(single),
+                dismiss = { if (!busy) correctingId = null },
+                save = { value, date, time, note -> viewModel.correctEntry(entry, value, date, time, note) { correctingId = null } },
+                delete = { viewModel.deleteEntry(entry.id) { correctingId = null } },
+                busy = busy,
+                saveError = saveError,
+                occurrenceOnly = false,
             )
         }
         return
@@ -231,7 +261,7 @@ private fun QuickHabit(
     var noteOpen by remember(habit.stored.id) { mutableStateOf(false) }
     val goal = habit.stored.goal
     val icon = HabitIconRegistry.getIcon(habit.stored.iconId)
-    val tint = habit.stored.colorArgb?.let(::Color) ?: palette.primary
+    val tint = habitTint(habit)
     val target = habit.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
