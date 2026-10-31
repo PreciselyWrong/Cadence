@@ -3584,7 +3584,6 @@
     "reviewDoneCount": "Ολοκληρώθηκαν: {{count}}",
     "reviewNotDone": "Προγραμματισμένα, όχι ολοκληρωμένα",
     "browse": "Περιήγηση",
-    "showMore": "Εμφάνιση {{count}} ακόμη",
     "countOf": {
       "overdue": "{{count}} εκπρόθεσμες",
       "due_today": "{{count}} λήγουν σήμερα",

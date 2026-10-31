@@ -3611,7 +3611,6 @@
     "reviewDoneCount": "مُنجز: {{count}}",
     "reviewNotDone": "مخطط، لم يُنجز",
     "browse": "تصفّح",
-    "showMore": "اعرض {{count}} أخرى",
     "countOf": {
       "overdue": "{{count}} متأخرة",
       "due_today": "{{count}} مستحقة اليوم",

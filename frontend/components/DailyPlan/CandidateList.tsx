@@ -45,18 +45,12 @@ interface CandidateListProps {
     onReschedule: (task: Task, when: 'tomorrow' | 'next_week') => void;
     onDrop: (task: Task) => void;
     onAddInbox: (item: InboxCandidate) => void;
-    // Asks the server for the next page of suggestions once the loaded
-    // ones run out; "Show more" keeps going until there are none left.
-    onLoadMore?: () => void;
-    loadingMore?: boolean;
     today: string;
     // False while browsing another day: titles then name that day.
     isToday?: boolean;
     dayLabel?: string;
 }
 
-// Few choices at a time: a short list, then "Show more" on request.
-const PAGE_SIZE = 5;
 // "Help me choose" compares the first candidates in the list's order.
 const CHOOSE_FROM = 8;
 
@@ -253,14 +247,11 @@ const CandidateList: React.FC<CandidateListProps> = ({
     onReschedule,
     onDrop,
     onAddInbox,
-    onLoadMore,
-    loadingMore = false,
     today,
     isToday = true,
     dayLabel = '',
 }) => {
     const { t } = useTranslation();
-    const [visible, setVisible] = useState(PAGE_SIZE);
     const [showFilters, setShowFilters] = useState(false);
     const [choosing, setChoosing] = useState(false);
     // Dropping a planned block back here takes it off the plan.
@@ -273,24 +264,6 @@ const CandidateList: React.FC<CandidateListProps> = ({
             (filter === 'all' || filter === entry.group) &&
             !planned.has(entry.task.uid as string)
     );
-    const shown = entries.slice(0, visible);
-
-    // Suggestions still on the server, past the ones loaded so far. Only the
-    // views that list suggestions can ask for them.
-    const suggestedTotal =
-        candidates.suggested_total ?? candidates.suggested.length;
-    const remote =
-        (filter === 'all' || filter === 'suggested') && onLoadMore
-            ? Math.max(0, suggestedTotal - candidates.suggested.length)
-            : 0;
-    const remaining = entries.length - visible + remote;
-
-    const showMore = () => {
-        const next = visible + PAGE_SIZE;
-        setVisible(next);
-        // Fetch ahead so the next click never waits on the server.
-        if (remote > 0 && entries.length - next < PAGE_SIZE) onLoadMore?.();
-    };
 
     const counts: { key: CandidateFilter; label: string; count: number }[] = [
         { key: 'all', label: t('dailyPlan.all', 'All'), count: entries.length },
@@ -305,10 +278,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                 in_progress: t('dailyPlan.inProgress', 'In progress'),
                 suggested: t('dailyPlan.suggested', 'Suggested'),
             }[key],
-            count:
-                key === 'suggested'
-                    ? suggestedTotal
-                    : (candidates[key] ?? []).length,
+            count: (candidates[key] ?? []).length,
         })).filter((pill) => pill.count > 0),
         {
             key: 'inbox',
@@ -317,10 +287,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
         },
     ];
 
-    const changeFilter = (next: CandidateFilter) => {
-        onFilterChange(next);
-        setVisible(PAGE_SIZE);
-    };
+    const changeFilter = (next: CandidateFilter) => onFilterChange(next);
 
     return (
         <div
@@ -407,13 +374,13 @@ const CandidateList: React.FC<CandidateListProps> = ({
 
             {filter !== 'inbox' && (
                 <>
-                    {shown.length === 0 && (
+                    {entries.length === 0 && (
                         <p className="px-3 text-sm text-gray-600 dark:text-gray-300">
                             {t('dailyPlan.noCandidates', 'Nothing here. Nice.')}
                         </p>
                     )}
                     <div className="-mx-1 flex flex-col">
-                        {shown.map(({ task, group }) => (
+                        {entries.map(({ task, group }) => (
                             <CandidateCard
                                 key={task.uid}
                                 task={task}
@@ -447,25 +414,6 @@ const CandidateList: React.FC<CandidateListProps> = ({
                             />
                         ))}
                     </div>
-                    {remaining > 0 && (
-                        <button
-                            type="button"
-                            onClick={showMore}
-                            disabled={loadingMore && entries.length <= visible}
-                            className="self-start px-3 text-xs text-gray-600 hover:text-gray-800 disabled:cursor-wait disabled:opacity-60 dark:text-gray-300 dark:hover:text-gray-200"
-                            data-testid="candidates-show-more"
-                        >
-                            {loadingMore && entries.length <= visible
-                                ? t('common.loading', 'Loading...')
-                                : t(
-                                      'dailyPlan.showMore',
-                                      'Show {{count}} more',
-                                      {
-                                          count: Math.min(PAGE_SIZE, remaining),
-                                      }
-                                  )}
-                        </button>
-                    )}
                 </>
             )}
 

@@ -3600,7 +3600,6 @@
     "reviewDoneCount": "Done: {{count}}",
     "reviewNotDone": "Planned, not done",
     "browse": "Browse",
-    "showMore": "Show {{count}} more",
     "countOf": {
       "tagged_today": "{{count}} tagged #today",
       "overdue": "{{count}} overdue",

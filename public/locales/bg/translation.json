@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Готово: {{count}}",
     "reviewNotDone": "Планирано, несвършено",
     "browse": "Разгледай",
-    "showMore": "Покажи още {{count}}",
     "countOf": {
       "overdue": "{{count}} просрочени",
       "due_today": "{{count}} със срок днес",

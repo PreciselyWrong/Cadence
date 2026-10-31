@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Gedaan: {{count}}",
     "reviewNotDone": "Gepland, niet gedaan",
     "browse": "Bladeren",
-    "showMore": "Nog {{count}} tonen",
     "countOf": {
       "overdue": "{{count}} achterstallig",
       "due_today": "{{count}} vandaag",

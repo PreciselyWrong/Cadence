@@ -3589,7 +3589,6 @@
     "reviewDoneCount": "Fatto: {{count}}",
     "reviewNotDone": "Pianificato, non fatto",
     "browse": "Sfoglia",
-    "showMore": "Mostra altre {{count}}",
     "countOf": {
       "overdue": "{{count}} in ritardo",
       "due_today": "{{count}} in scadenza oggi",

@@ -3592,7 +3592,6 @@
     "reviewDoneCount": "Finalizat: {{count}}",
     "reviewNotDone": "Planificat, nefăcut",
     "browse": "Răsfoiește",
-    "showMore": "Arată încă {{count}}",
     "countOf": {
       "overdue": "{{count}} întârziate",
       "due_today": "{{count}} scadente azi",

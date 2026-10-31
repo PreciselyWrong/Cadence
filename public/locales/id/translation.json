@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Selesai: {{count}}",
     "reviewNotDone": "Direncanakan, belum selesai",
     "browse": "Jelajahi",
-    "showMore": "Tampilkan {{count}} lagi",
     "countOf": {
       "overdue": "{{count}} terlambat",
       "due_today": "{{count}} jatuh tempo hari ini",

@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Klart: {{count}}",
     "reviewNotDone": "Planerat, inte gjort",
     "browse": "Bläddra",
-    "showMore": "Visa {{count}} till",
     "countOf": {
       "overdue": "{{count}} försenade",
       "due_today": "{{count}} förfaller idag",

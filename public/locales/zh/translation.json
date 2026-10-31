@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "已完成：{{count}}",
     "reviewNotDone": "已计划，未完成",
     "browse": "浏览",
-    "showMore": "再显示 {{count}} 个",
     "countOf": {
       "overdue": "{{count}} 个已逾期",
       "due_today": "{{count}} 个今天到期",

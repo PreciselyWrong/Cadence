@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Valmis: {{count}}",
     "reviewNotDone": "Suunniteltu, ei tehty",
     "browse": "Selaa",
-    "showMore": "Näytä {{count}} lisää",
     "countOf": {
       "overdue": "{{count}} myöhässä",
       "due_today": "{{count}} erääntyy tänään",

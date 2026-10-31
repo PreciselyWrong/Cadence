@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Đã xong: {{count}}",
     "reviewNotDone": "Đã lên kế hoạch, chưa làm",
     "browse": "Duyệt",
-    "showMore": "Hiện thêm {{count}}",
     "countOf": {
       "overdue": "{{count}} quá hạn",
       "due_today": "{{count}} đến hạn hôm nay",

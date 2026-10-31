@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "完了: {{count}}",
     "reviewNotDone": "予定したが未完了",
     "browse": "見る",
-    "showMore": "さらに {{count}} 件表示",
     "countOf": {
       "overdue": "期限切れ {{count}}",
       "due_today": "今日が期限 {{count}}",

@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Udført: {{count}}",
     "reviewNotDone": "Planlagt, ikke udført",
     "browse": "Gennemse",
-    "showMore": "Vis {{count}} mere",
     "countOf": {
       "overdue": "{{count}} forfaldne",
       "due_today": "{{count}} forfalder i dag",

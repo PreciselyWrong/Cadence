@@ -151,8 +151,6 @@ const PANEL_MODE_KEY = 'today.panelMode';
 const QUOTE_KEY = 'today.showQuote';
 const GUIDE_KEY_PREFIX = 'today.guide.';
 const SAVE_DELAY_MS = 500;
-// How many more suggestions each "Show more" past the loaded ones asks for.
-const SUGGESTIONS_PAGE = 20;
 const DATE_PARAM = /^\d{4}-\d{2}-\d{2}$/;
 
 // The server's count of suggestions, moved by a local add or removal so
@@ -407,11 +405,6 @@ const TodayPage: React.FC = () => {
     // A task saved from the task pane may appear in or leave the candidate
     // list and the plan, so reload the day rather than patch each list.
     useTaskUpdatedEvent(() => setReloadToken((count) => count + 1));
-    // How many suggestions the server was last asked for; null is the
-    // Planning setting. "Show more" raises it and the whole list reloads,
-    // so the first entries keep their order and refreshes never shrink it.
-    const suggestedLimit = useRef<number | null>(null);
-    const [loadingMore, setLoadingMore] = useState(false);
     const [feedEvents, setFeedEvents] = useState<CalendarEvent[]>([]);
     const [refreshingEvents, setRefreshingEvents] = useState(false);
     const [durations, setDurations] = useState<Record<string, number>>({});
@@ -505,7 +498,7 @@ const TodayPage: React.FC = () => {
                         .then((list) => tasksOnDay(list, day))
                         .catch(() => [] as Task[]),
                     day === todayString()
-                        ? fetchPlanCandidates(undefined, scope)
+                        ? fetchPlanCandidates(scope)
                         : Promise.resolve(null),
                 ]);
                 if (cancelled) return;
@@ -566,7 +559,7 @@ const TodayPage: React.FC = () => {
     useEffect(() => {
         const refresh = () => {
             if (document.visibilityState !== 'visible' || !isToday) return;
-            fetchPlanCandidates(suggestedLimit.current, focusScopeParams(focus))
+            fetchPlanCandidates(focusScopeParams(focus))
                 .then(setCandidates)
                 .catch(() => undefined);
         };
@@ -1292,35 +1285,6 @@ const TodayPage: React.FC = () => {
     };
 
     // A candidate dropped on an hour of the calendar becomes due then.
-    // The next page of suggestions: everything loaded so far plus one more
-    // page, until the server has nothing left.
-    const loadMoreCandidates = useCallback(async () => {
-        if (!candidates || loadingMore || !isToday) return;
-        const total = candidates.suggested_total ?? candidates.suggested.length;
-        if (candidates.suggested.length >= total) return;
-        const next = Math.min(
-            total,
-            candidates.suggested.length + SUGGESTIONS_PAGE
-        );
-        setLoadingMore(true);
-        try {
-            const list = await fetchPlanCandidates(
-                next,
-                focusScopeParams(focus)
-            );
-            suggestedLimit.current = next;
-            setCandidates(list);
-        } catch (err) {
-            showErrorToast(
-                err instanceof Error
-                    ? err.message
-                    : t('errors.generic', 'Something went wrong')
-            );
-        } finally {
-            setLoadingMore(false);
-        }
-    }, [candidates, focus, isToday, loadingMore, showErrorToast, t]);
-
     // A planned task whose due date moves past this day leaves the day's plan,
     // with an undo that puts it back.
     const leavePlanIfMovedPast = (
@@ -2233,10 +2197,6 @@ const TodayPage: React.FC = () => {
                                     onReschedule={handleReschedule}
                                     onDrop={handleDrop}
                                     onAddInbox={handleAddInbox}
-                                    onLoadMore={
-                                        isToday ? loadMoreCandidates : undefined
-                                    }
-                                    loadingMore={loadingMore}
                                     today={date ?? ''}
                                     isToday={isToday}
                                     dayLabel={dateLabel}

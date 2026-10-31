@@ -3597,7 +3597,6 @@
     "reviewDoneCount": "Opravljeno: {{count}}",
     "reviewNotDone": "Načrtovano, neopravljeno",
     "browse": "Prebrskaj",
-    "showMore": "Pokaži še {{count}}",
     "countOf": {
       "overdue": "zamujeno: {{count}}",
       "due_today": "rok danes: {{count}}",

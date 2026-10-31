@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "Tamamlanan: {{count}}",
     "reviewNotDone": "Planlandı, yapılmadı",
     "browse": "Göz at",
-    "showMore": "{{count}} tane daha göster",
     "countOf": {
       "overdue": "{{count}} gecikmiş",
       "due_today": "{{count}} bugün son gün",

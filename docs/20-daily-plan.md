@@ -63,7 +63,7 @@ Groups follow the task's own due date. A task with no date of its own in a late 
 | `horizonDays`        | `3`                | `1`, `3`, `7`: nothing due further ahead is suggested          |
 | `maxSuggestions`     | `20`               | `10`, `20`, `50`: how many suggestions load at first           |
 
-Plan my day never adds `#someday` tasks to fill a short list. These only filter the suggested group: overdue, due-today and in-progress tasks always show, even from an excluded project. Filters run before the limit, and the limit keeps the first suggestions in the final order. The limit is a first page, not a ceiling: the response carries `suggested_total`, and `?suggested_limit=N` (1 to 1000) raises the cap so **Show more** can page through the rest. The underlying Today suggestions list keeps its own rules (50, three days ahead, no project filter).
+Plan my day never adds `#someday` tasks to fill a short list. These only filter the suggested group: overdue, due-today and in-progress tasks always show, even from an excluded project. Filters run before the limit, and the limit keeps the first suggestions in the final order. The planner lists every candidate it receives at once, with no **Show more** step: the Planning limit is how many suggestions you see. The response still carries `suggested_total`, and `?suggested_limit=N` (1 to 1000) raises the cap for API clients. The underlying Today suggestions list keeps its own rules (50, three days ahead, no project filter).
 
 ### Day hours
 

@@ -175,21 +175,12 @@ export const fetchDailyPlan = async (
     return response.json();
 };
 
-// `suggestedLimit` asks for more suggestions than the Planning setting
-// sends at first; the planner raises it page by page from "Show more".
+// The number of suggestions follows the Planning setting.
 export const fetchPlanCandidates = async (
-    suggestedLimit?: number | null,
     scope: FocusScopeParams = {}
 ): Promise<PlanCandidates> => {
     const response = await fetch(
-        getApiPath(
-            withQuery('daily-plan/candidates', {
-                suggested_limit: suggestedLimit
-                    ? String(suggestedLimit)
-                    : undefined,
-                ...scope,
-            })
-        ),
+        getApiPath(withQuery('daily-plan/candidates', { ...scope })),
         {
             credentials: 'include',
             headers: getDefaultHeaders(),

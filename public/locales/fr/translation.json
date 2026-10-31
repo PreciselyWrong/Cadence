@@ -3590,7 +3590,6 @@
     "reviewDoneCount": "Terminé : {{count}}",
     "reviewNotDone": "Prévu, non fait",
     "browse": "Parcourir",
-    "showMore": "Afficher {{count}} de plus",
     "countOf": {
       "overdue": "{{count}} en retard",
       "due_today": "{{count}} pour aujourd'hui",

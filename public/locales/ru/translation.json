@@ -3597,7 +3597,6 @@
     "reviewDoneCount": "Сделано: {{count}}",
     "reviewNotDone": "Запланировано, не сделано",
     "browse": "Обзор",
-    "showMore": "Показать ещё {{count}}",
     "countOf": {
       "overdue": "просрочено: {{count}}",
       "due_today": "срок сегодня: {{count}}",

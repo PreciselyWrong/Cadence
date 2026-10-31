@@ -3616,7 +3616,6 @@
         "reviewDoneCount": "Hotovo: {{count}}",
         "reviewNotDone": "Naplánované, neurobené",
         "browse": "Prehľadávať",
-        "showMore": "Zobraziť ďalšie ({{count}})",
         "countOf": {
             "tagged_today": "So štítkom #today: {{count}}",
             "overdue": "Po termíne: {{count}}",

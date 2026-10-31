@@ -3597,7 +3597,6 @@
     "reviewDoneCount": "Zrobione: {{count}}",
     "reviewNotDone": "Zaplanowane, niezrobione",
     "browse": "Przeglądaj",
-    "showMore": "Pokaż jeszcze {{count}}",
     "countOf": {
       "overdue": "zaległe: {{count}}",
       "due_today": "na dziś: {{count}}",

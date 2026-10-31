@@ -3583,7 +3583,6 @@
     "reviewDoneCount": "완료: {{count}}",
     "reviewNotDone": "계획했지만 하지 않음",
     "browse": "둘러보기",
-    "showMore": "{{count}}개 더 보기",
     "countOf": {
       "overdue": "기한 지남 {{count}}",
       "due_today": "오늘 마감 {{count}}",

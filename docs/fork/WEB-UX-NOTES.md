@@ -18,8 +18,19 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : la vue occupe toute la largeur ; les jours forment une grille qui passe à la ligne (1 colonne étroit, 2 moyen, 4 large). Commit `2b15bb93`.
 - **Android** : la liste des prochains jours ne défile jamais horizontalement ; sur tablette ou en paysage, les jours passent sur plusieurs colonnes au lieu de s'étirer.
 
+### 2026-10-31 — « Aujourd'hui » sans « Show more »
+
+- **Problème** : la liste « To do today » n'affichait que 5 tâches, le reste derrière « Show 5 more ».
+- **Décision** : tout ce qui est prévu aujourd'hui s'affiche d'un coup (marqué #today, en retard, dû aujourd'hui, en cours, suggestions) ; le nombre de suggestions suit le réglage Planning, sans pagination.
+- **Android** : l'écran Aujourd'hui ne tronque jamais la liste du jour derrière un bouton « voir plus ».
+
 ### En cours — Icônes et tags imbriqués
 
 - **Demande** : projets et tags portent une petite icône, visible partout où ils apparaissent (barre latérale, lignes de tâche, détail, sélecteurs).
 - **Demande** : tags imbriqués à la manière des namespaces Logseq (`parent/enfant`, profondeur libre), affichés en arbre dans la barre latérale.
 - **Android** : reprendre le même modèle (icône du projet et du tag, hiérarchie de tags) une fois le contrat serveur fixé ; le détail sera ajouté ici.
+
+### À faire — Glisser-déposer vers la navigation
+
+- **Demande** : glisser un projet sur une zone l'y range ; glisser une tâche ou une note sur un tag l'étiquette, sur un projet l'y déplace ; idem pour toute cible de la barre latérale.
+- **Android** : même geste vers les cibles de navigation (tiroir ou onglets) quand l'écran le permet.
