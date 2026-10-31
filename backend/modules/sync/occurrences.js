@@ -3,17 +3,34 @@
 const hlc = require('./hlc');
 
 const rejected = (reason) => ({ status: 'rejected', reason });
+const duplicate = Object.freeze({ status: 'applied', duplicate: true });
+
+// Claims the occurrence in sync_ops under a key no client op_id can take
+// (client op_ids never contain "/"). Its unique (user_id, op_id) index makes
+// the claim atomic, even between server processes that do not share the
+// in-process row lock: the second claim of an occurrence fails. The
+// completion itself cannot be the claim, since the task moves before it is
+// recorded and that write is not ours to wrap in a transaction.
+async function claimOccurrence(userId, task, date) {
+    const { SyncOp } = require('../../models');
+    try {
+        return await SyncOp.create({
+            user_id: userId,
+            op_id: `occurrence/${task.id}/${date.toISOString()}`,
+            result: { status: 'applied', duplicate: true },
+        });
+    } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError') return null;
+        throw error;
+    }
+}
 
 // Completing or skipping a recurring task moves its due date, which a field
 // merge cannot express: two devices completing the same day offline would
 // advance it twice. These ops name the occurrence they act on, and an
-// occurrence already recorded is answered as done.
+// occurrence already recorded or claimed is answered as done.
 async function applyOccurrence(userId, op) {
-    const { Task, User, RecurringCompletion } = require('../../models');
-    const {
-        completeOccurrence,
-        skipRecurringOccurrence,
-    } = require('../tasks/operations/recurring');
+    const { Task, RecurringCompletion } = require('../../models');
 
     if (!hlc.isAcceptable(op.hlc)) return rejected('invalid_clock');
     const date = new Date(op.occurrence_date);
@@ -29,7 +46,31 @@ async function applyOccurrence(userId, op) {
     const recorded = await RecurringCompletion.findOne({
         where: { task_id: task.id, original_due_date: date },
     });
-    if (recorded) return { status: 'applied', duplicate: true };
+    if (recorded) return duplicate;
+
+    const claim = await claimOccurrence(userId, task, date);
+    if (!claim) return duplicate;
+
+    let outcome;
+    try {
+        // Read again: the task may have moved before the claim was won.
+        await task.reload();
+        outcome = await advance(userId, op, task, date);
+    } catch (error) {
+        await claim.destroy();
+        throw error;
+    }
+    // A refused occurrence may come due later: it must stay claimable.
+    if (outcome.status !== 'applied') await claim.destroy();
+    return outcome;
+}
+
+async function advance(userId, op, task, date) {
+    const { User } = require('../../models');
+    const {
+        completeOccurrence,
+        skipRecurringOccurrence,
+    } = require('../tasks/operations/recurring');
 
     if (
         !task.due_date ||

@@ -11,6 +11,9 @@ const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { runWithOp } = require('./context');
 const { applyOccurrence } = require('./occurrences');
+const { runExclusive } = require('./rowMutex');
+const { purgedThrough } = require('./compaction');
+const { withRowLock } = require('../../utils/db-dialect');
 const todoMdSync = require('../todo-md/syncHook');
 
 const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
@@ -28,6 +31,7 @@ function describe() {
             'snapshot',
             'op_echo',
             'occurrence_ops',
+            'journal_compaction',
         ],
         entities: Object.entries(ENTITIES).map(([name, def]) => ({
             name,
@@ -51,14 +55,31 @@ function describe() {
 
 const rejected = (reason) => ({ status: 'rejected', reason });
 
+// Thrown inside the row transaction so that a refused write rolls back.
+class Refusal extends Error {
+    constructor(reason) {
+        super(reason);
+        this.reason = reason;
+    }
+}
+
+// Another process created the row between the read and the insert.
+class CreateRaceLost extends Error {}
+
+// Never below the compaction watermark: a journal compacted down to nothing
+// must still hand out a cursor its pulls accept.
 async function latestCursor(userId) {
     const max = await models().SyncChange.max('id', {
         where: { user_id: userId },
     });
-    return max || 0;
+    return Math.max(max || 0, await purgedThrough(userId));
 }
 
 async function pull(userId, cursor, limit) {
+    // Entries below the watermark may include dropped tombstones.
+    if (cursor < (await purgedThrough(userId))) {
+        return { schema_version: SCHEMA_VERSION, reset_required: true };
+    }
     const rows = await models().SyncChange.findAll({
         where: { user_id: userId, id: { [Op.gt]: cursor } },
         order: [['id', 'ASC']],
@@ -102,7 +123,7 @@ async function snapshot(userId, entity, after, limit, startCursor = null) {
     };
 }
 
-async function resolveRefs(def, userId, fields) {
+async function resolveRefs(def, userId, fields, transaction) {
     const columns = {};
     for (const [key, ref] of Object.entries(def.refs)) {
         if (!(key in fields)) continue;
@@ -114,6 +135,7 @@ async function resolveRefs(def, userId, fields) {
         const target = await models()[ENTITIES[ref.entity].model].findOne({
             where: { uid, user_id: userId },
             attributes: ['id'],
+            transaction,
         });
         if (!target) return { error: `invalid_reference:${key}` };
         columns[key] = target.id;
@@ -121,7 +143,7 @@ async function resolveRefs(def, userId, fields) {
     return { columns };
 }
 
-async function resolveLists(def, userId, fields) {
+async function resolveLists(def, userId, fields, transaction) {
     const ids = {};
     for (const [key, list] of Object.entries(def.lists || {})) {
         if (!(key in fields)) continue;
@@ -129,6 +151,7 @@ async function resolveLists(def, userId, fields) {
         const found = await models()[ENTITIES[list.entity].model].findAll({
             where: { uid: uids, user_id: userId },
             attributes: ['id'],
+            transaction,
         });
         if (found.length !== uids.length) {
             return { error: `invalid_reference:${key}` };
@@ -138,7 +161,7 @@ async function resolveLists(def, userId, fields) {
     return { ids };
 }
 
-async function writeLists(def, row, lists) {
+async function writeLists(def, row, lists, transaction) {
     const { sequelize } = models();
     for (const [key, ids] of Object.entries(lists)) {
         const list = def.lists[key];
@@ -146,11 +169,12 @@ async function writeLists(def, row, lists) {
         await Through.destroy({
             where: { [list.key]: row.id },
             syncApplied: true,
+            transaction,
         });
         if (ids.length > 0) {
             await Through.bulkCreate(
                 ids.map((id) => ({ [list.key]: row.id, [list.otherKey]: id })),
-                { syncApplied: true }
+                { syncApplied: true, transaction }
             );
         }
     }
@@ -191,21 +215,43 @@ function validateFields(def, fields) {
     return null;
 }
 
-async function wasDeleted(userId, entity, uid) {
+async function wasDeleted(userId, entity, uid, transaction) {
     const last = await models().SyncChange.findOne({
         where: { user_id: userId, entity, uid },
         order: [['id', 'DESC']],
         attributes: ['op'],
+        transaction,
     });
     return last?.op === 'delete';
 }
 
 // A uid is unique across users, except for entities with `uidScope: 'user'`
 // (the default habit groups share fixed ids between users).
-function findByUid(def, userId, uid) {
+function findByUid(def, userId, uid, { transaction, lock } = {}) {
     return models()[def.model].findOne({
         where: def.uidScope === 'user' ? { uid, user_id: userId } : { uid },
+        ...(transaction ? { transaction } : {}),
+        ...(lock ? { lock } : {}),
     });
+}
+
+// Same key for every op on one row; null for an op too malformed to name one.
+function rowKey(userId, op) {
+    const def = op && ENTITIES[op.entity];
+    if (!def || typeof op.uid !== 'string') return null;
+    return def.uidScope === 'user'
+        ? `${op.entity}:${userId}:${op.uid}`
+        : `${op.entity}:${op.uid}`;
+}
+
+async function refuseUpsert(userId, op, row, transaction) {
+    if (row && row.user_id !== userId) return rejected('forbidden');
+    // Delete wins: an edit made offline to a row removed elsewhere must
+    // not bring it back.
+    if (!row && (await wasDeleted(userId, op.entity, op.uid, transaction))) {
+        return rejected('deleted');
+    }
+    return null;
 }
 
 async function applyUpsert(userId, op) {
@@ -213,23 +259,55 @@ async function applyUpsert(userId, op) {
     const invalid = validateFields(def, op.fields);
     if (invalid) return rejected(invalid);
 
-    const Model = models()[def.model];
     const row = await findByUid(def, userId, op.uid);
-    if (row && row.user_id !== userId) return rejected('forbidden');
-    // Delete wins: an edit made offline to a row removed elsewhere must
-    // not bring it back.
-    if (!row && (await wasDeleted(userId, op.entity, op.uid))) {
-        return rejected('deleted');
-    }
+    const refused = await refuseUpsert(userId, op, row);
+    if (refused) return refused;
 
     // Rows mirrored from a TODO.md file answer to the file, not to the merge.
+    // The file write happens outside any transaction, so before the row
+    // lock: inside it, its own write to the row would wait on that lock.
     const fromFile = await todoMdSync.intercept(userId, op, row);
     if (fromFile) return fromFile;
 
-    const refs = await resolveRefs(def, userId, op.fields);
-    if (refs.error) return rejected(refs.error);
-    const lists = await resolveLists(def, userId, op.fields);
-    if (lists.error) return rejected(lists.error);
+    // A create that lost the race to another process is merged again, onto
+    // the row that process made.
+    let merged;
+    try {
+        merged = await mergeLocked(userId, op, false);
+    } catch (error) {
+        if (!(error instanceof CreateRaceLost)) throw error;
+        merged = await mergeLocked(userId, op, true);
+    }
+    if (merged instanceof Refusal) return rejected(merged.reason);
+
+    // After the commit: the task event it writes references the row.
+    if (def.afterApply) await def.afterApply(merged.applied);
+    return merged.outcome;
+}
+
+function mergeLocked(userId, op, lastTry) {
+    return withRowLock(models().sequelize, (lock) =>
+        mergeUpsert(userId, op, lock, lastTry)
+    ).catch((error) => {
+        if (error instanceof Refusal) return error;
+        throw error;
+    });
+}
+
+// Reads the row under the lock, merges the pushed fields by clock and writes
+// it back, all in `transaction` when the dialect gives one.
+async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
+    const def = ENTITIES[op.entity];
+    const Model = models()[def.model];
+    const row = await findByUid(def, userId, op.uid, { transaction, lock });
+    // Checked again: the row may have gone, or come, since the first read.
+    const refused = await refuseUpsert(userId, op, row, transaction);
+    if (refused) throw new Refusal(refused.reason);
+
+    const refs = await resolveRefs(def, userId, op.fields, transaction);
+    if (refs.error) throw new Refusal(refs.error);
+    const lists = await resolveLists(def, userId, op.fields, transaction);
+    if (lists.error) throw new Refusal(lists.error);
 
     const clocks = { ...(row?.field_clocks || {}) };
     const values = {};
@@ -254,12 +332,13 @@ async function applyUpsert(userId, op) {
 
     if (def.validate) {
         const invalidValue = await def.validate(row, values, userId);
-        if (invalidValue) return rejected(invalidValue);
+        if (invalidValue) throw new Refusal(invalidValue);
     }
 
     const previous = row && def.afterApply ? row.toJSON() : null;
+    const writeOptions = { syncApplied: true, transaction };
+    let target = row;
     try {
-        let target = row;
         if (!target) {
             target = await Model.create(
                 {
@@ -268,34 +347,35 @@ async function applyUpsert(userId, op) {
                     user_id: userId,
                     field_clocks: clocks,
                 },
-                { syncApplied: true }
+                writeOptions
             );
         } else if (Object.keys(values).length > 0) {
             target.set({ ...values, field_clocks: clocks });
-            await target.save({ syncApplied: true });
+            await target.save(writeOptions);
         } else if (Object.keys(listValues).length > 0) {
             // Only a list changed: its clock still has to be stored.
             target.set('field_clocks', clocks);
-            await target.save({ syncApplied: true });
+            await target.save(writeOptions);
         }
-        await writeLists(def, target, listValues);
-        if (def.afterApply) {
-            await def.afterApply({
-                row: target,
-                previous,
-                values,
-                clocks,
-                userId,
-            });
-        }
+        await writeLists(def, target, listValues, transaction);
     } catch (error) {
+        if (
+            !row &&
+            !lastTry &&
+            error.name === 'SequelizeUniqueConstraintError'
+        ) {
+            throw new CreateRaceLost();
+        }
         if (error.name && error.name.startsWith('Sequelize')) {
-            return rejected('invalid_value');
+            throw new Refusal('invalid_value');
         }
         throw error;
     }
 
-    if (rejectedFields.length === 0) return { status: 'applied' };
+    const applied = { row: target, previous, values, clocks, userId };
+    if (rejectedFields.length === 0) {
+        return { outcome: { status: 'applied' }, applied };
+    }
 
     await models().SyncConflict.bulkCreate(
         rejectedFields.map((field) => ({
@@ -307,9 +387,13 @@ async function applyUpsert(userId, op) {
             losing_hlc: op.fields[field].hlc,
             winning_hlc: row.field_clocks[field],
             op_id: op.op_id,
-        }))
+        })),
+        { transaction }
     );
-    return { status: 'conflict', rejected_fields: rejectedFields };
+    return {
+        outcome: { status: 'conflict', rejected_fields: rejectedFields },
+        applied,
+    };
 }
 
 async function applyDelete(userId, op) {
@@ -344,9 +428,9 @@ async function applyOp(userId, op) {
 }
 
 // Operations apply one after the other, in the order the device made them;
-// one bad op is answered as rejected without stopping the batch.
+// one bad op is answered as rejected without stopping the batch. Ops on the
+// same row from parallel pushes wait for each other.
 async function push(userId, ops) {
-    const { SyncOp } = models();
     const results = [];
     for (const op of ops) {
         const opId = op && op.op_id;
@@ -354,30 +438,36 @@ async function push(userId, ops) {
             results.push({ op_id: opId ?? null, ...rejected('invalid_op_id') });
             continue;
         }
-        const seen = await SyncOp.findOne({
-            where: { user_id: userId, op_id: opId },
-        });
-        if (seen) {
-            results.push(seen.result);
-            continue;
-        }
-        const outcome = await runWithOp(opId, () => applyOp(userId, op));
-        const result = { op_id: opId, ...outcome };
-        try {
-            await SyncOp.create({ user_id: userId, op_id: opId, result });
-        } catch (error) {
-            // The same op raced in from a parallel request: answer as that
-            // request did.
-            if (error.name !== 'SequelizeUniqueConstraintError') throw error;
-            const winner = await SyncOp.findOne({
-                where: { user_id: userId, op_id: opId },
-            });
-            results.push(winner.result);
-            continue;
-        }
-        results.push(result);
+        results.push(
+            await runExclusive(rowKey(userId, op), () =>
+                pushOne(userId, op, opId)
+            )
+        );
     }
     return { schema_version: SCHEMA_VERSION, results };
+}
+
+async function pushOne(userId, op, opId) {
+    const { SyncOp } = models();
+    const seen = await SyncOp.findOne({
+        where: { user_id: userId, op_id: opId },
+    });
+    if (seen) return seen.result;
+
+    const outcome = await runWithOp(opId, () => applyOp(userId, op));
+    const result = { op_id: opId, ...outcome };
+    try {
+        await SyncOp.create({ user_id: userId, op_id: opId, result });
+    } catch (error) {
+        // The same op raced in from a parallel request: answer as that
+        // request did.
+        if (error.name !== 'SequelizeUniqueConstraintError') throw error;
+        const winner = await SyncOp.findOne({
+            where: { user_id: userId, op_id: opId },
+        });
+        return winner.result;
+    }
+    return result;
 }
 
 module.exports = { describe, pull, snapshot, push, PAGE_MAX };

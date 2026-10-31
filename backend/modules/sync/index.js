@@ -9,5 +9,6 @@
  */
 
 const routes = require('./routes');
+const compaction = require('./compaction');
 
-module.exports = { routes };
+module.exports = { routes, compaction };

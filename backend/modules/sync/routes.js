@@ -19,13 +19,20 @@ router.get('/sync/meta', (req, res) => {
 
 router.get('/sync/pull', async (req, res, next) => {
     try {
-        res.json(
-            await syncService.pull(
-                req.currentUser.id,
-                readInt(req.query.cursor, 0),
-                readInt(req.query.limit, 500, syncService.PAGE_MAX) || 500
-            )
+        const page = await syncService.pull(
+            req.currentUser.id,
+            readInt(req.query.cursor, 0),
+            readInt(req.query.limit, 500, syncService.PAGE_MAX) || 500
         );
+        // 410: the journal no longer reaches back to this cursor; the device
+        // takes a new snapshot and pulls from its cursor.
+        if (page.reset_required) {
+            return res.status(410).json({
+                error: 'reset_required',
+                schema_version: page.schema_version,
+            });
+        }
+        res.json(page);
     } catch (error) {
         next(error);
     }

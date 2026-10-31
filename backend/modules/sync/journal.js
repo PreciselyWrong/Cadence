@@ -9,6 +9,18 @@ const {
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { currentOpId } = require('./context');
+const { withJournalOrder } = require('../../utils/db-dialect');
+
+// Every journal row goes through here, so ids reach readers in commit order
+// on every engine (see db-dialect.withJournalOrder).
+function append(SyncChange, values, transaction) {
+    return withJournalOrder(
+        SyncChange.sequelize,
+        values.user_id,
+        transaction,
+        (t) => SyncChange.create(values, { transaction: t })
+    );
+}
 
 function syncedKeys(entity) {
     const def = ENTITIES[entity];
@@ -139,7 +151,8 @@ function install(models) {
             if (instance._syncChanged === false && !options.syncApplied) {
                 return;
             }
-            await SyncChange.create(
+            await append(
+                SyncChange,
                 {
                     user_id: instance.user_id,
                     entity,
@@ -152,14 +165,15 @@ function install(models) {
                     ),
                     op_id: currentOpId(),
                 },
-                { transaction: options.transaction }
+                options.transaction
             );
         };
         Model.addHook('afterCreate', record);
         Model.addHook('afterUpdate', record);
 
         Model.addHook('afterDestroy', async (instance, options) => {
-            await SyncChange.create(
+            await append(
+                SyncChange,
                 {
                     user_id: instance.user_id,
                     entity,
@@ -168,7 +182,7 @@ function install(models) {
                     data: { hlc: hlc.now() },
                     op_id: currentOpId(),
                 },
-                { transaction: options.transaction }
+                options.transaction
             );
         });
     }

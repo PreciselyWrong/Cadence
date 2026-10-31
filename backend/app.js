@@ -642,6 +642,9 @@ async function startServer() {
         // Initialize task scheduler
         await taskScheduler.initialize();
 
+        // Daily compaction of the offline sync journal
+        syncModule.compaction.initialize();
+
         // Initialize CalDAV sync scheduler
         const caldavSyncScheduler = require('./modules/caldav/services/sync-scheduler');
         await caldavSyncScheduler.initialize();

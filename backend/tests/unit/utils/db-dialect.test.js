@@ -69,6 +69,27 @@ describe('db-dialect', () => {
                 'PRAGMA foreign_keys = ON',
             ]);
         });
+
+        it('withJournalOrder inserts on the caller transaction without locking', async () => {
+            const sequelize = { query: jest.fn(), transaction: jest.fn() };
+            const insert = jest.fn().mockResolvedValue('row');
+
+            expect(
+                await helpers.withJournalOrder(sequelize, 7, 'tx', insert)
+            ).toBe('row');
+            expect(insert).toHaveBeenCalledWith('tx');
+            expect(sequelize.query).not.toHaveBeenCalled();
+            expect(sequelize.transaction).not.toHaveBeenCalled();
+        });
+
+        it('withRowLock runs fn without a transaction', async () => {
+            const sequelize = { transaction: jest.fn() };
+            const fn = jest.fn().mockResolvedValue('done');
+
+            expect(await helpers.withRowLock(sequelize, fn)).toBe('done');
+            expect(fn).toHaveBeenCalledWith({ transaction: null, lock: null });
+            expect(sequelize.transaction).not.toHaveBeenCalled();
+        });
     });
 
     describe('on postgres', () => {
@@ -102,6 +123,76 @@ describe('db-dialect', () => {
                 'DELETE FROM "a"',
                 'DELETE FROM "b"',
             ]);
+        });
+
+        // A journal id must reach readers in commit order, or a pull that
+        // saw id 11 would skip id 10 committed after it.
+        it('withJournalOrder takes the per-user journal lock in the caller transaction', async () => {
+            const sequelize = {
+                query: jest.fn().mockResolvedValue([]),
+                transaction: jest.fn(),
+            };
+            const insert = jest.fn().mockResolvedValue('row');
+
+            expect(
+                await helpers.withJournalOrder(sequelize, 7, 'tx', insert)
+            ).toBe('row');
+            expect(sequelize.query).toHaveBeenCalledTimes(1);
+            const [sql, options] = sequelize.query.mock.calls[0];
+            expect(sql).toBe('SELECT pg_advisory_xact_lock(:space, :userId)');
+            expect(options).toEqual({
+                replacements: {
+                    space: helpers.JOURNAL_LOCK_SPACE,
+                    userId: 7,
+                },
+                transaction: 'tx',
+            });
+            expect(insert).toHaveBeenCalledWith('tx');
+            expect(sequelize.transaction).not.toHaveBeenCalled();
+        });
+
+        it('withJournalOrder wraps a lone insert in a short locked transaction', async () => {
+            const t = { id: 't1' };
+            const order = [];
+            const sequelize = {
+                query: jest.fn(async (sql) => {
+                    order.push(sql);
+                    return [];
+                }),
+                transaction: jest.fn(async (fn) => fn(t)),
+            };
+            const insert = jest.fn(async (tx) => {
+                order.push(`insert:${tx.id}`);
+                return 'row';
+            });
+
+            expect(
+                await helpers.withJournalOrder(sequelize, 7, undefined, insert)
+            ).toBe('row');
+            expect(order).toEqual([
+                "SET LOCAL lock_timeout = '10s'",
+                'SELECT pg_advisory_xact_lock(:space, :userId)',
+                'insert:t1',
+            ]);
+            expect(
+                sequelize.query.mock.calls.every(
+                    ([, options]) => options.transaction === t
+                )
+            ).toBe(true);
+        });
+
+        it('withRowLock runs fn in a transaction that locks the row for update', async () => {
+            const t = { id: 't1' };
+            const sequelize = { transaction: jest.fn(async (fn) => fn(t)) };
+            const fn = jest.fn().mockResolvedValue('done');
+
+            expect(await helpers.withRowLock(sequelize, fn)).toBe('done');
+            // NO KEY UPDATE, not UPDATE: it still serializes writers of the
+            // row but lets other connections insert rows that reference it.
+            expect(fn).toHaveBeenCalledWith({
+                transaction: t,
+                lock: 'NO KEY UPDATE',
+            });
         });
 
         it('truncateTables is a no-op for an empty list', async () => {
