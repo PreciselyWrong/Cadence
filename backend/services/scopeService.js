@@ -103,6 +103,8 @@ async function resolveScope(query, userId) {
         projectIds: null,
         projectId: null,
         tagIds: null,
+        // Tag lookups match descendants of this user's tags only.
+        userId,
         matchesNothing: false,
     };
 
@@ -173,7 +175,10 @@ async function taskScopeWhere(scope) {
         });
     }
     if (scope.tagIds) {
-        const ids = await searchRepository.findTaskIdsWithAllTags(scope.tagIds);
+        const ids = await searchRepository.findTaskIdsWithAllTags(
+            scope.userId,
+            scope.tagIds
+        );
         parts.push({ id: { [Op.in]: ids } });
     }
     return andAll(parts);
@@ -190,6 +195,7 @@ async function projectScopeWhere(scope) {
     }
     if (scope.tagIds) {
         const ids = await searchRepository.findProjectIdsWithAllTags(
+            scope.userId,
             scope.tagIds
         );
         parts.push({ id: { [Op.in]: ids } });
@@ -209,7 +215,10 @@ async function noteScopeWhere(scope) {
         parts.push({ project_id: { [Op.in]: scope.projectIds } });
     }
     if (scope.tagIds) {
-        const ids = await searchRepository.findNoteIdsWithAllTags(scope.tagIds);
+        const ids = await searchRepository.findNoteIdsWithAllTags(
+            scope.userId,
+            scope.tagIds
+        );
         parts.push({ id: { [Op.in]: ids } });
     }
     return andAll(parts);
