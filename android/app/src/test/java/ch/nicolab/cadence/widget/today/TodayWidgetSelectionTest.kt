@@ -98,24 +98,25 @@ class TodayWidgetSelectionTest {
     }
 
     @Test
-    fun `le nombre maximal de lignes tronque la liste sans changer le total`() {
-        val tasks = (1..5).map { task("t$it", today) }
+    fun `toutes les taches du jour sont gardees, sans limite de lignes`() {
+        val tasks = (1..40).map { task("t$it", today) }
 
-        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY, maxRows = 2))
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY))
 
-        assertEquals(2, selection.tasks.size)
-        assertEquals(5, selection.total)
+        assertEquals(40, selection.tasks.size)
+        assertEquals(40, selection.total)
     }
 
     @Test
-    fun `les retards comptent dans le maximum de lignes`() {
-        val tasks = listOf(task("late1", today.minusDays(2)), task("late2", today.minusDays(1)), task("today", today))
+    fun `tous les retards sont gardes avant les taches du jour`() {
+        val late = (1..15).map { task("late$it", today.minusDays(it.toLong())) }
+        val tasks = late + task("today", today)
 
-        val selection = select(tasks, TodayWidgetConfig(maxRows = 2, showOverdueSection = true))
+        val selection = select(tasks, TodayWidgetConfig(showOverdueSection = true))
 
-        assertEquals(listOf("late1", "late2"), selection.overdue.map { it.uid })
-        assertEquals(emptyList<String>(), selection.tasks.map { it.uid })
-        assertEquals(3, selection.total)
+        assertEquals(15, selection.overdue.size)
+        assertEquals(listOf("today"), selection.tasks.map { it.uid })
+        assertEquals(16, selection.total)
     }
 
     @Test

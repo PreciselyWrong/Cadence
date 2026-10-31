@@ -2,12 +2,11 @@ package ch.nicolab.cadence.widget.today
 
 /**
  * Stockage textuel de [TodayWidgetConfig] : une clé par réglage, lue par [decode] avec un repli
- * sur la valeur par défaut pour toute valeur absente, inconnue ou hors plage.
+ * sur la valeur par défaut pour toute valeur absente, inconnue ou hors plage. Les clés retirées
+ * (intensité, voile, lignes max.) restent dans les anciennes données et sont ignorées.
  */
 object TodayWidgetConfigCodec {
     private const val BACKGROUND = "background"
-    private const val INTENSITY = "intensity"
-    private const val VEIL = "veil"
     private const val CONTROL = "control"
     private const val FREE_CONTROL = "freeControl"
     private const val DISCRETE = "discreteButtons"
@@ -22,7 +21,6 @@ object TodayWidgetConfigCodec {
     private const val PROJECT_IDS = "projectUids"
     private const val TAG_IDS = "tagUids"
     private const val SORT = "sort"
-    private const val MAX_ROWS = "maxRows"
     private const val OVERDUE_SECTION = "showOverdue"
     private const val CHECK_FROM_WIDGET = "checkFromWidget"
     private const val PROJECT_RAIL = "projectRail"
@@ -35,8 +33,6 @@ object TodayWidgetConfigCodec {
 
     fun encode(config: TodayWidgetConfig): Map<String, String> = mapOf(
         BACKGROUND to config.background.name,
-        INTENSITY to config.intensity.toString(),
-        VEIL to config.veil.toString(),
         CONTROL to config.controlColour.name,
         FREE_CONTROL to config.freeControlArgb.toString(),
         DISCRETE to flag(config.discreteButtons),
@@ -51,7 +47,6 @@ object TodayWidgetConfigCodec {
         PROJECT_IDS to config.projectUids.joinToString(ID_SEPARATOR),
         TAG_IDS to config.tagUids.joinToString(ID_SEPARATOR),
         SORT to config.sort.name,
-        MAX_ROWS to config.maxRows.toString(),
         OVERDUE_SECTION to flag(config.showOverdueSection),
         CHECK_FROM_WIDGET to flag(config.checkFromWidget),
         PROJECT_RAIL to flag(config.projectRail),
@@ -63,9 +58,7 @@ object TodayWidgetConfigCodec {
     fun decode(read: (String) -> String?): TodayWidgetConfig {
         val defaults = TodayWidgetConfig()
         return TodayWidgetConfig(
-            background = enumOf(read(BACKGROUND), defaults.background),
-            intensity = int(read(INTENSITY), defaults.intensity, 0..TodayWidgetLimits.INTENSITY_MAX),
-            veil = int(read(VEIL), defaults.veil, 0..TodayWidgetLimits.VEIL_MAX),
+            background = background(read(BACKGROUND), defaults.background),
             controlColour = enumOf(read(CONTROL), defaults.controlColour),
             freeControlArgb = read(FREE_CONTROL)?.toIntOrNull() ?: defaults.freeControlArgb,
             discreteButtons = bool(read(DISCRETE), defaults.discreteButtons),
@@ -80,7 +73,6 @@ object TodayWidgetConfigCodec {
             projectUids = ids(read(PROJECT_IDS)),
             tagUids = ids(read(TAG_IDS)),
             sort = enumOf(read(SORT), defaults.sort),
-            maxRows = int(read(MAX_ROWS), defaults.maxRows, TodayWidgetLimits.ROWS),
             showOverdueSection = bool(read(OVERDUE_SECTION), defaults.showOverdueSection),
             checkFromWidget = bool(read(CHECK_FROM_WIDGET), defaults.checkFromWidget),
             projectRail = bool(read(PROJECT_RAIL), defaults.projectRail),
@@ -88,6 +80,16 @@ object TodayWidgetConfigCodec {
             textSize = enumOf(read(TEXT_SIZE), defaults.textSize),
             cornerRadiusDp = int(read(CORNER), defaults.cornerRadiusDp, TodayWidgetLimits.CORNER_DP),
         )
+    }
+
+    /**
+     * Les fonds translucides d'avant (« Flou », « Verre ») n'existent plus : « Flou » retombe sur le
+     * fond plein par défaut, « Verre » (teinte sombre) sur le fond sombre plein.
+     */
+    private fun background(raw: String?, default: TodayBackground): TodayBackground = when (raw) {
+        "FLOU" -> default
+        "VERRE" -> TodayBackground.SOMBRE
+        else -> enumOf(raw, default)
     }
 
     private fun ids(raw: String?): Set<String> = raw.orEmpty().split(ID_SEPARATOR).filter { it.isNotBlank() }.toSet()

@@ -6,10 +6,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
@@ -30,13 +30,17 @@ import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity as actionStartActivityIntent
 import androidx.glance.appwidget.cornerRadius
+import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
+import androidx.glance.unit.ColorProvider as GlanceColor
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.ColumnScope
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
@@ -113,6 +117,7 @@ class TodayWidget : GlanceAppWidget() {
             appWidgetId = appWidgetId,
             config = config,
             palette = TodayPalette.of(config),
+            checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, context.resources.displayMetrics.density),
             selection = selection,
             facets = facets,
             projects = projects,
@@ -155,7 +160,7 @@ class TodayWidget : GlanceAppWidget() {
             HabitSelection.ALL -> pending
             HabitSelection.CHOOSE -> pending.filter { it.habit.id in config.habitIds }
         }
-        val ink = TodayPalette.of(config).ink
+        val ink = TodayPalette.of(config).day.ink
         return chosen.take(config.maxFacets).map { item ->
             val progress = WidgetHabitPresentation.progress(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor)
             val colour = item.habit.colorArgb ?: TodayControlPalette.argb(config.controlColour, config.freeControlArgb) ?: ink
@@ -214,12 +219,15 @@ class CompleteTodayTaskAction : ActionCallback {
 
 private const val FACET_ICON_DP = 22
 private const val CHECK_DP = 22
-private const val MAX_EVENT_ROWS = 3
+private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
+private const val OVERDUE_LABEL_ID = Long.MIN_VALUE
 
 private class TodayView(
     val appWidgetId: Int,
     val config: TodayWidgetConfig,
-    val palette: TodayPalette,
+    val palette: TodayPalettes,
+    /** Case à cocher blanche, teintée à l'affichage : une seule image partagée par toutes les lignes. */
+    val checkBox: Bitmap,
     val selection: TodaySelection,
     val facets: List<FacetView>,
     val projects: Map<String, ProjectItem>,
@@ -227,6 +235,16 @@ private class TodayView(
     val zone: ZoneId,
 )
 
+private fun TodayPalettes.provider(alpha: Float = 1f, pick: (TodayPalette) -> Int): GlanceColor =
+    ColorProvider(day = Color(pick(day)).copy(alpha = alpha), night = Color(pick(night)).copy(alpha = alpha))
+
+private fun constantProvider(argb: Int): GlanceColor = ColorProvider(day = Color(argb), night = Color(argb))
+
+/**
+ * En-tête, habitudes et liste. L'en-tête et les habitudes gardent leur hauteur ; la liste, qui
+ * défile, prend le reste (`defaultWeight`). Les habitudes ne sont donc jamais poussées hors du
+ * widget, quelle que soit sa taille ni le nombre de tâches.
+ */
 @Composable
 private fun TodayContent(view: TodayView) {
     val context = LocalContext.current
@@ -234,54 +252,53 @@ private fun TodayContent(view: TodayView) {
     val palette = view.palette
     val text = TodayTextSizes.of(config.textSize)
     val size = LocalSize.current
-    val density = context.resources.displayMetrics.density
+    val habitsShown = view.facets.isNotEmpty()
     val tasksShown = config.showTasks && (view.selection.tasks.isNotEmpty() || view.selection.overdue.isNotEmpty())
     val eventsShown = config.showEvents && view.selection.events.isNotEmpty()
-    val habitsShown = view.facets.isNotEmpty()
-    val events = if (eventsShown) view.selection.events.take(MAX_EVENT_ROWS) else emptyList()
-    val capacity = TodayWidgetLayout.rowCapacity(size.height.value, text, habitsShown, view.selection.overdue.isNotEmpty()) - events.size
-    val fit = TodayWidgetLayout.fit(view.selection, capacity.coerceAtLeast(1))
-    val frame = remember(size, config.cornerRadiusDp, palette.ink, density) {
-        renderGlassFrame(size.width.value, size.height.value, config.cornerRadiusDp.toFloat(), density, palette.ink, sheen = config.background == TodayBackground.VERRE)
-    }
-    Box(
+    val listWanted = tasksShown || eventsShown
+    val listShown = listWanted && TodayWidgetLayout.listFits(size.height.value, text, habitsShown)
+    Column(
         modifier = GlanceModifier.fillMaxSize()
-            .background(ColorProvider(day = Color(palette.surface), night = Color(palette.surface)))
-            .cornerRadius(config.cornerRadiusDp.dp),
+            .background(palette.provider { it.surface })
+            .cornerRadius(config.cornerRadiusDp.dp)
+            .padding(12.dp),
     ) {
-        Column(
-            modifier = GlanceModifier.fillMaxSize()
-                .background(ColorProvider(day = Color(palette.veil), night = Color(palette.veil)))
-                .cornerRadius(config.cornerRadiusDp.dp)
-                .padding(12.dp),
-        ) {
-            Header(view, text)
-            Box(GlanceModifier.height(6.dp)) {}
-            if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
-            if (config.showTasks) {
-                if (fit.overdue.isNotEmpty()) {
-                    SectionLabel(context.getString(R.string.today_overdue_label, view.selection.overdueTotal), palette.overdue, text)
-                    fit.overdue.forEach { TaskRowView(it, view, it.dueLabel(view, context), overdue = true, text) }
-                }
-                fit.tasks.forEach { TaskRowView(it, view, it.dueLabel(view, context), overdue = false, text) }
-                if (fit.overflow > 0) OverflowFooter(fit.overflow, palette.muted, text)
-                if (!tasksShown && !eventsShown && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), text)
+        Header(view, text)
+        Box(GlanceModifier.height(6.dp)) {}
+        if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
+        if (listShown) {
+            TodayList(view, text)
+        } else {
+            Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
+                if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
             }
-            events.forEach { EventRowView(it, view, text) }
-            if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
         }
-        Image(ImageProvider(frame), null, modifier = GlanceModifier.fillMaxSize(), contentScale = ContentScale.FillBounds)
+        if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
     }
 }
 
+/** Toutes les tâches (retards d'abord) puis les événements du jour, dans une liste qui défile. */
 @Composable
-private fun OverflowFooter(count: Int, mutedArgb: Int, sizes: TodayTextSizes) {
-    Row(modifier = GlanceModifier.fillMaxWidth().padding(top = 2.dp), horizontalAlignment = Alignment.Horizontal.End) {
-        Text(
-            LocalContext.current.getString(R.string.today_widget_overflow, count),
-            maxLines = 1,
-            style = TextStyle(color = ColorProvider(day = Color(mutedArgb), night = Color(mutedArgb)), fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
-        )
+private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes) {
+    val context = LocalContext.current
+    val selection = view.selection
+    LazyColumn(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
+        if (view.config.showTasks) {
+            if (selection.overdue.isNotEmpty()) {
+                item(itemId = OVERDUE_LABEL_ID) {
+                    SectionLabel(context.getString(R.string.today_overdue_label, selection.overdueTotal), view.palette, text)
+                }
+                items(selection.overdue, itemId = { it.uid.hashCode().toLong() }) {
+                    TaskRowView(it, view, it.dueLabel(view, context), overdue = true, text)
+                }
+            }
+            items(selection.tasks, itemId = { it.uid.hashCode().toLong() }) {
+                TaskRowView(it, view, it.dueLabel(view, context), overdue = false, text)
+            }
+        }
+        if (view.config.showEvents) {
+            items(selection.events) { EventRowView(it, view, text) }
+        }
     }
 }
 
@@ -293,18 +310,18 @@ private fun Header(view: TodayView, text: TodayTextSizes) {
         Text(
             context.getString(scopeTitle(view.config.taskScope)),
             maxLines = 1,
-            style = TextStyle(color = ColorProvider(day = Color(palette.ink), night = Color(palette.ink)), fontSize = text.title.sp, fontWeight = FontWeight.Bold),
+            style = TextStyle(color = palette.provider { it.ink }, fontSize = text.title.sp, fontWeight = FontWeight.Bold),
             modifier = GlanceModifier.defaultWeight(),
         )
         Box(
             modifier = GlanceModifier
-                .background(ColorProvider(day = Color(palette.ink).copy(alpha = 0.14f), night = Color(palette.ink).copy(alpha = 0.14f)))
+                .background(palette.provider(alpha = 0.14f) { it.ink })
                 .cornerRadius(10.dp)
                 .padding(horizontal = 7.dp, vertical = 1.dp),
         ) {
             Text(
                 view.selection.total.toString(),
-                style = TextStyle(color = ColorProvider(day = Color(palette.muted), night = Color(palette.muted)), fontSize = text.small.sp, fontWeight = FontWeight.Medium),
+                style = TextStyle(color = palette.provider { it.muted }, fontSize = text.small.sp, fontWeight = FontWeight.Medium),
             )
         }
         Box(GlanceModifier.width(8.dp)) {}
@@ -332,68 +349,62 @@ private fun IconButton(
     action: Action,
 ) {
     val palette = view.palette
-    val accent = Color(palette.accent)
     val discrete = view.config.discreteButtons
     Box(
         modifier = GlanceModifier.size(30.dp)
-            .then(if (discrete) GlanceModifier else GlanceModifier.background(ColorProvider(day = accent.copy(alpha = 0.18f), night = accent.copy(alpha = 0.18f))).cornerRadius(15.dp))
+            .then(if (discrete) GlanceModifier else GlanceModifier.background(palette.provider(alpha = 0.18f) { it.accent }).cornerRadius(15.dp))
             .clickable(action),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             glyph,
-            style = TextStyle(color = ColorProvider(day = accent, night = accent), fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            style = TextStyle(color = palette.provider { it.accent }, fontSize = 20.sp, fontWeight = FontWeight.Bold),
         )
     }
 }
 
 @Composable
-private fun SectionLabel(text: String, colour: Int, sizes: TodayTextSizes) {
+private fun SectionLabel(text: String, palette: TodayPalettes, sizes: TodayTextSizes) {
     Text(
         text,
         maxLines = 1,
-        style = TextStyle(color = ColorProvider(day = Color(colour), night = Color(colour)), fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
+        style = TextStyle(color = palette.provider { it.overdue }, fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
         modifier = GlanceModifier.padding(top = 4.dp, bottom = 2.dp),
     )
 }
 
 @Composable
-private fun EmptyLabel(text: String, sizes: TodayTextSizes) {
-    Box(modifier = GlanceModifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Text(text, style = TextStyle(color = ColorProvider(day = Color(0x99808080), night = Color(0x99808080)), fontSize = sizes.body.sp))
-    }
+private fun EmptyLabel(text: String, palette: TodayPalettes, sizes: TodayTextSizes) {
+    Text(text, style = TextStyle(color = palette.provider { it.muted }, fontSize = sizes.body.sp))
 }
 
 @Composable
 private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, overdue: Boolean, sizes: TodayTextSizes) {
     val palette = view.palette
     val config = view.config
-    val projectArgb = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)
-    val accent = (if (config.controlColour == ControlColour.PROJET) projectArgb else null)
-        ?: TodayControlPalette.argb(config.controlColour, config.freeControlArgb)
-        ?: palette.accent
+    val projectColour = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)?.let(::constantProvider)
+    val accent = (if (config.controlColour == ControlColour.PROJET) projectColour else null) ?: palette.provider { it.accent }
     val context = LocalContext.current
-    val density = context.resources.displayMetrics.density
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (config.projectRail) {
-            val rail = projectArgb ?: palette.accent
-            Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(ColorProvider(day = Color(rail), night = Color(rail))).cornerRadius(2.dp)) {}
+            val rail = projectColour ?: palette.provider { it.accent }
+            Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(rail).cornerRadius(2.dp)) {}
             Box(GlanceModifier.width(6.dp)) {}
         }
         val checkbox = GlanceModifier.size(CHECK_DP.dp)
-        val checkBitmap = remember(accent, density) { renderCheckBox(accent, CHECK_DP, density) }
         Image(
-            ImageProvider(checkBitmap),
+            ImageProvider(view.checkBox),
             context.getString(R.string.today_widget_check_description, task.name),
             modifier = if (config.checkFromWidget) {
                 checkbox.clickable(actionRunCallback<CompleteTodayTaskAction>(actionParametersOf(taskUidKey to task.uid)))
             } else {
                 checkbox.clickable(actionStartActivityIntent(openIntent))
             },
+            colorFilter = ColorFilter.tint(accent),
         )
         Column(
             modifier = GlanceModifier.defaultWeight().padding(start = 8.dp).clickable(actionStartActivityIntent(openIntent)),
@@ -401,15 +412,18 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
             Text(
                 task.name,
                 maxLines = 1,
-                style = TextStyle(color = ColorProvider(day = Color(palette.ink), night = Color(palette.ink)), fontSize = sizes.body.sp),
+                style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.body.sp),
             )
         }
         dueLabel?.let {
-            val colour = if (overdue) palette.overdue else palette.muted
             Text(
                 it,
                 maxLines = 1,
-                style = TextStyle(color = ColorProvider(day = Color(colour), night = Color(colour)), fontSize = sizes.small.sp, fontWeight = if (overdue) FontWeight.Medium else null),
+                style = TextStyle(
+                    color = if (overdue) palette.provider { p -> p.overdue } else palette.provider { p -> p.muted },
+                    fontSize = sizes.small.sp,
+                    fontWeight = if (overdue) FontWeight.Medium else null,
+                ),
             )
         }
     }
@@ -435,13 +449,13 @@ private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayText
         Text(
             event.event.title,
             maxLines = 1,
-            style = TextStyle(color = ColorProvider(day = Color(palette.ink), night = Color(palette.ink)), fontSize = sizes.body.sp),
+            style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.body.sp),
             modifier = GlanceModifier.defaultWeight().padding(start = 8.dp),
         )
         Text(
             time,
             maxLines = 1,
-            style = TextStyle(color = ColorProvider(day = Color(palette.muted), night = Color(palette.muted)), fontSize = sizes.small.sp),
+            style = TextStyle(color = palette.provider { it.muted }, fontSize = sizes.small.sp),
         )
     }
 }
@@ -471,12 +485,12 @@ private fun HabitsRow(view: TodayView, sizes: TodayTextSizes) {
                 Text(
                     habit.habit.name,
                     maxLines = 1,
-                    style = TextStyle(color = ColorProvider(day = Color(palette.ink), night = Color(palette.ink)), fontSize = sizes.small.sp, textAlign = TextAlign.Center),
+                    style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.small.sp, textAlign = TextAlign.Center),
                 )
                 Text(
                     value,
                     maxLines = 1,
-                    style = TextStyle(color = ColorProvider(day = Color(palette.muted), night = Color(palette.muted)), fontSize = sizes.small.sp, textAlign = TextAlign.Center),
+                    style = TextStyle(color = palette.provider { it.muted }, fontSize = sizes.small.sp, textAlign = TextAlign.Center),
                 )
             }
         }

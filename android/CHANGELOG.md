@@ -1,3 +1,10 @@
+## [Non publié]
+
+### Corrections
+- Widget « Aujourd'hui » : les habitudes restent toujours visibles, même quand le widget est agrandi.
+- Widget « Aujourd'hui » : la liste affiche toutes les tâches du jour et défile, sans limite de lignes ni « +N ».
+- Widget « Aujourd'hui » : le fond flou et le verre translucide laissent place à un fond plein (automatique clair/sombre, clair ou sombre) ; un ancien fond « Flou » devient « Automatique » et « Verre » devient « Sombre ».
+
 ## [1.2.0] — 30 octobre 2026
 
 ### Nouveautés

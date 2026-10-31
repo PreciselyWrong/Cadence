@@ -135,8 +135,6 @@ private fun TodayWidgetConfiguration(
             Panel {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     ChoiceRow(TodayBackground.entries, config.background, ::backgroundLabel) { edit { c -> c.copy(background = it) } }
-                    SliderRow(stringResource(R.string.today_config_intensity), config.intensity, 0..TodayWidgetLimits.INTENSITY_MAX) { edit { c -> c.copy(intensity = it) } }
-                    SliderRow(stringResource(R.string.today_config_veil), config.veil, 0..TodayWidgetLimits.VEIL_MAX) { edit { c -> c.copy(veil = it) } }
                 }
             }
             SectionHeader(stringResource(R.string.today_config_section_controls))
@@ -176,7 +174,6 @@ private fun TodayWidgetConfiguration(
                         ToggleRow(stringResource(R.string.today_config_high_priority), config.highPriorityOnly) { edit { c -> c.copy(highPriorityOnly = it) } }
                         ToggleRow(stringResource(R.string.today_config_hide_recurring), config.hideRecurring) { edit { c -> c.copy(hideRecurring = it) } }
                         ChoiceRow(TaskSort.entries, config.sort, ::sortLabel) { edit { c -> c.copy(sort = it) } }
-                        SliderRow(stringResource(R.string.today_config_max_rows), config.maxRows, TodayWidgetLimits.ROWS.first..TodayWidgetLimits.ROWS.last) { edit { c -> c.copy(maxRows = it) } }
                         ToggleRow(stringResource(R.string.today_config_overdue_section), config.showOverdueSection) { edit { c -> c.copy(showOverdueSection = it) } }
                         ToggleRow(stringResource(R.string.today_config_check_from_widget), config.checkFromWidget) { edit { c -> c.copy(checkFromWidget = it) } }
                         ToggleRow(stringResource(R.string.today_config_project_rail), config.projectRail) { edit { c -> c.copy(projectRail = it) } }
@@ -226,9 +223,9 @@ private fun SliderRow(label: String, value: Int, range: IntRange, onChange: (Int
 
 @StringRes
 private fun backgroundLabel(value: TodayBackground): Int = when (value) {
-    TodayBackground.FLOU -> R.string.today_bg_blur
-    TodayBackground.VERRE -> R.string.today_bg_glass
+    TodayBackground.AUTO -> R.string.today_bg_auto
     TodayBackground.CLAIR -> R.string.today_bg_light
+    TodayBackground.SOMBRE -> R.string.today_bg_dark
     TodayBackground.AUCUN -> R.string.today_bg_none
 }
 

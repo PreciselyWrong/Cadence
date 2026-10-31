@@ -10,8 +10,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /**
- * Ce que le widget affiche pour une configuration. [total] compte toutes les tâches retenues
- * avant la limite de lignes ; [overdue] reste vide quand la section « En retard » est désactivée.
+ * Ce que le widget affiche pour une configuration : toutes les tâches retenues, sans limite de
+ * lignes (la liste défile). [overdue] reste vide quand la section « En retard » est désactivée.
  */
 data class TodaySelection(
     val total: Int,
@@ -21,7 +21,7 @@ data class TodaySelection(
     val events: List<EventWithDone>,
 )
 
-/** Filtre, trie et tronque les tâches et événements du jour selon [config]. Fonction pure. */
+/** Filtre et trie les tâches et événements du jour selon [config]. Fonction pure. */
 fun selectWidgetTasks(
     tasks: List<TaskItem>,
     events: List<EventWithDone>,
@@ -39,8 +39,6 @@ fun selectWidgetTasks(
     val overdueFirst = config.showOverdueSection
     val overdue = if (overdueFirst) candidates.filter { it.isOverdue(today) }.sortedWith(dueOrder) else emptyList()
     val others = candidates.filterNot { overdueFirst && it.isOverdue(today) }
-    val shownOverdue = overdue.take(config.maxRows)
-    val shownOthers = others.take(config.maxRows - shownOverdue.size)
     val shownEvents = if (config.showEvents) {
         events.sortedWith(compareBy<EventWithDone>({ !it.event.allDay }, { it.event.localStart(zone) }, { it.event.title }))
     } else {
@@ -49,8 +47,8 @@ fun selectWidgetTasks(
     return TodaySelection(
         total = candidates.size,
         overdueTotal = overdue.size,
-        overdue = shownOverdue,
-        tasks = shownOthers,
+        overdue = overdue,
+        tasks = others,
         events = shownEvents,
     )
 }

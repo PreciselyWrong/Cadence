@@ -1,10 +1,10 @@
 package ch.nicolab.cadence.widget.today
 
 /**
- * Fond du widget. Un widget d'accueil ne peut pas flouter le fond d'écran : « Flou » est donc
- * une teinte claire translucide, « Verre » une teinte sombre, « Clair » une surface pleine.
+ * Fond du widget : toujours une surface pleine tirée des jetons du design system. [AUTO] suit le
+ * thème clair ou sombre du téléphone, [CLAIR] et [SOMBRE] le forcent, [AUCUN] ne pose aucune surface.
  */
-enum class TodayBackground { FLOU, VERRE, CLAIR, AUCUN }
+enum class TodayBackground { AUTO, CLAIR, SOMBRE, AUCUN }
 
 /** Couleur des icônes et des cases. [PROJET] colore chaque case dans la couleur de son projet. */
 enum class ControlColour { BLANC, PROJET, INDIGO, CORAIL, MENTHE, AMBRE, LIBRE }
@@ -25,12 +25,8 @@ enum class TodayTextSize { S, M, L }
  * valeurs par défaut sont celles du premier placement.
  */
 data class TodayWidgetConfig(
-    val background: TodayBackground = TodayBackground.FLOU,
-    /** Opacité de la teinte de fond, 0 à 100. */
-    val intensity: Int = 32,
-    /** Voile superposé au fond pour la lisibilité, 0 à 100. */
-    val veil: Int = 14,
-    val controlColour: ControlColour = ControlColour.CORAIL,
+    val background: TodayBackground = TodayBackground.AUTO,
+    val controlColour: ControlColour = ControlColour.INDIGO,
     /** Couleur choisie librement, utilisée quand [controlColour] vaut [ControlColour.LIBRE]. */
     val freeControlArgb: Int = TodayControlPalette.DEFAULT_FREE_ARGB,
     /** « Boutons discrets » : icônes seules, sans pastille. */
@@ -50,8 +46,6 @@ data class TodayWidgetConfig(
     /** Étiquettes retenues (une suffit) ; vide = toutes. */
     val tagUids: Set<String> = emptySet(),
     val sort: TaskSort = TaskSort.DUE,
-    /** Nombre maximal de lignes de tâches, 1 à 12. */
-    val maxRows: Int = 6,
     /** Section « En retard » séparée, en tête de liste. */
     val showOverdueSection: Boolean = true,
     /** Cocher depuis le widget ; sinon un appui ouvre la tâche. */
@@ -66,10 +60,7 @@ data class TodayWidgetConfig(
 
 /** Plages admises pour les réglages numériques. */
 object TodayWidgetLimits {
-    const val INTENSITY_MAX = 100
-    const val VEIL_MAX = 100
     val FACETS = 1..8
-    val ROWS = 1..12
     val CORNER_DP = 0..32
 }
 

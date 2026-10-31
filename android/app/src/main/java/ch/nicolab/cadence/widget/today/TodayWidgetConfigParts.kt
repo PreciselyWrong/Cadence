@@ -2,6 +2,7 @@ package ch.nicolab.cadence.widget.today
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -126,19 +126,19 @@ private fun Set<String>.toggled(id: String): Set<String> = if (id in this) this 
 
 private fun parseHex(hex: String): Int? = runCatching { android.graphics.Color.parseColor(hex) }.getOrNull()
 
-/** Aperçu vivant du widget : mêmes teintes, rayon et couleur de contrôle que le rendu, sur un fond de couleur qui laisse voir la translucidité. */
+/** Aperçu vivant du widget : mêmes surfaces, rayon et couleur de contrôle que le rendu, avec le thème du téléphone. */
 @Composable
 internal fun WidgetPreviewBand(config: TodayWidgetConfig) {
-    val palette = remember(config) { TodayPalette.of(config) }
+    val palettes = remember(config) { TodayPalette.of(config) }
+    val palette = if (isSystemInDarkTheme()) palettes.night else palettes.day
     val text = TodayTextSizes.of(config.textSize)
     val shape = RoundedCornerShape(config.cornerRadiusDp.dp)
     val ink = Color(palette.ink)
     val muted = Color(palette.muted)
     val accent = Color(palette.accent)
-    val wallpaper = Brush.linearGradient(listOf(Color(0xFF3A5BA0), Color(0xFFB4567C), Color(0xFFE9A15B)))
-    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(Size.control)).background(wallpaper).padding(Space.md)) {
+    Box(Modifier.fillMaxWidth().padding(vertical = Space.md)) {
         Column(
-            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).background(Color(palette.veil)).padding(12.dp),
+            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).border(1.dp, cadence.outlineVariant, shape).padding(12.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(

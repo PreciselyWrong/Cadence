@@ -8,9 +8,7 @@ class TodayWidgetConfigCodecTest {
     @Test
     fun `une configuration survit a un aller-retour`() {
         val config = TodayWidgetConfig(
-            background = TodayBackground.VERRE,
-            intensity = 77,
-            veil = 5,
+            background = TodayBackground.SOMBRE,
             controlColour = ControlColour.LIBRE,
             freeControlArgb = 0xFF123456.toInt(),
             discreteButtons = true,
@@ -23,7 +21,6 @@ class TodayWidgetConfigCodecTest {
             highPriorityOnly = true,
             hideRecurring = true,
             sort = TaskSort.PROJECT,
-            maxRows = 9,
             showOverdueSection = false,
             checkFromWidget = false,
             projectRail = false,
@@ -58,18 +55,38 @@ class TodayWidgetConfigCodecTest {
         val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig())
             .plus(
                 mapOf(
-                    "intensity" to "999",
                     "maxFacets" to "0",
-                    "maxRows" to "40",
                     "cornerRadius" to "-5",
                 ),
             )
 
         val config = TodayWidgetConfigCodec.decode(stored::get)
 
-        assertEquals(100, config.intensity)
         assertEquals(1, config.maxFacets)
-        assertEquals(12, config.maxRows)
         assertEquals(0, config.cornerRadiusDp)
+    }
+
+    @Test
+    fun `un ancien fond flou donne le fond plein par defaut`() {
+        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig()) + mapOf("background" to "FLOU")
+
+        assertEquals(TodayWidgetConfig().background, TodayWidgetConfigCodec.decode(stored::get).background)
+    }
+
+    @Test
+    fun `un ancien fond verre devient le fond sombre plein`() {
+        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig()) + mapOf("background" to "VERRE")
+
+        assertEquals(TodayBackground.SOMBRE, TodayWidgetConfigCodec.decode(stored::get).background)
+    }
+
+    @Test
+    fun `les anciens reglages d'intensite, de voile et de lignes max sont ignores`() {
+        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig()) +
+            mapOf("background" to "FLOU", "intensity" to "32", "veil" to "14", "maxRows" to "6", "taskScope" to "TODAY")
+
+        val config = TodayWidgetConfigCodec.decode(stored::get)
+
+        assertEquals(TodayWidgetConfig(taskScope = TaskScope.TODAY), config)
     }
 }

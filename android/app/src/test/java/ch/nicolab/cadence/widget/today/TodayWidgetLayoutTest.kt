@@ -1,60 +1,59 @@
 package ch.nicolab.cadence.widget.today
 
-import ch.nicolab.cadence.tasks.model.TaskItem
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TodayWidgetLayoutTest {
-    private fun task(n: Int) = TaskItem(uid = "t$n", name = "Tâche $n")
-
-    private fun selection(overdue: Int, tasks: Int, total: Int = overdue + tasks) = TodaySelection(
-        total = total,
-        overdueTotal = overdue,
-        overdue = List(overdue) { task(it) },
-        tasks = List(tasks) { task(100 + it) },
-        events = emptyList(),
-    )
-
-    private val medium = TodayTextSizes.of(TodayTextSize.M)
+    private val sizes = TodayTextSize.entries.map { TodayTextSizes.of(it) }
 
     @Test
-    fun `everything fits so there is no footer`() {
-        val fit = TodayWidgetLayout.fit(selection(overdue = 1, tasks = 2), capacity = 6)
-        assertEquals(1, fit.overdue.size)
-        assertEquals(2, fit.tasks.size)
-        assertEquals(0, fit.overflow)
+    fun `les habitudes sont reservees avant la liste, a toutes les hauteurs`() {
+        sizes.forEach { text ->
+            val reserved = TodayWidgetLayout.reservedHeightDp(text, habitsShown = true)
+            listOf(reserved, reserved + 10f, 200f, 400f, 900f).forEach { height ->
+                val list = TodayWidgetLayout.listHeightDp(height, text, habitsShown = true)
+                assertEquals(height - reserved, list, 0.001f)
+            }
+        }
     }
 
     @Test
-    fun `rows that do not fit leave one line for the footer and are counted`() {
-        val fit = TodayWidgetLayout.fit(selection(overdue = 4, tasks = 4), capacity = 6)
-        assertEquals(5, fit.overdue.size + fit.tasks.size)
-        assertEquals(3, fit.overflow)
+    fun `agrandir le widget donne toute la place gagnee a la liste`() {
+        val text = TodayTextSizes.of(TodayTextSize.M)
+        val small = TodayWidgetLayout.listHeightDp(200f, text, habitsShown = true)
+        val tall = TodayWidgetLayout.listHeightDp(500f, text, habitsShown = true)
+
+        assertEquals(300f, tall - small, 0.001f)
     }
 
     @Test
-    fun `overdue rows come first when the room is short`() {
-        val fit = TodayWidgetLayout.fit(selection(overdue = 4, tasks = 4), capacity = 3)
-        assertEquals(2, fit.overdue.size)
-        assertEquals(0, fit.tasks.size)
-        assertEquals(6, fit.overflow)
+    fun `sans habitudes la liste prend la place des habitudes`() {
+        val text = TodayTextSizes.of(TodayTextSize.M)
+
+        assertTrue(
+            TodayWidgetLayout.listHeightDp(300f, text, habitsShown = false) >
+                TodayWidgetLayout.listHeightDp(300f, text, habitsShown = true),
+        )
     }
 
     @Test
-    fun `tasks cut by the row setting still show in the footer count`() {
-        val fit = TodayWidgetLayout.fit(selection(overdue = 0, tasks = 3, total = 9), capacity = 12)
-        assertEquals(3, fit.tasks.size)
-        assertEquals(6, fit.overflow)
+    fun `la hauteur minimale du widget garde en-tete et habitudes entiers pour chaque taille de texte`() {
+        sizes.forEach { text ->
+            assertTrue(
+                TodayWidgetLayout.reservedHeightDp(text, habitsShown = true) <= TodayWidgetLayout.MIN_HEIGHT_DP,
+                "taille ${text.body}",
+            )
+        }
     }
 
     @Test
-    fun `a taller widget holds more rows and habits take room`() {
-        val small = TodayWidgetLayout.rowCapacity(180f, medium, habitsShown = false, overdueLabelShown = false)
-        val tall = TodayWidgetLayout.rowCapacity(360f, medium, habitsShown = false, overdueLabelShown = false)
-        val withHabits = TodayWidgetLayout.rowCapacity(360f, medium, habitsShown = true, overdueLabelShown = false)
-        assertTrue(tall > small)
-        assertTrue(withHabits < tall)
-        assertTrue(TodayWidgetLayout.rowCapacity(10f, medium, habitsShown = true, overdueLabelShown = true) >= 1)
+    fun `la hauteur de liste n'est jamais negative et la liste se cache sous une ligne`() {
+        val text = TodayTextSizes.of(TodayTextSize.M)
+
+        assertEquals(0f, TodayWidgetLayout.listHeightDp(10f, text, habitsShown = true), 0.001f)
+        assertFalse(TodayWidgetLayout.listFits(TodayWidgetLayout.reservedHeightDp(text, true) + 5f, text, habitsShown = true))
+        assertTrue(TodayWidgetLayout.listFits(TodayWidgetLayout.MIN_HEIGHT_DP + 80f, text, habitsShown = true))
     }
 }

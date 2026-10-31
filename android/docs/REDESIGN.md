@@ -75,11 +75,12 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 
 - The habit widget (`CadenceWidget`) keeps its rendering and configuration.
 - New combined widget « Aujourd'hui » replaces the tasks list widget: header (scope title + count + chevron, bare `+` and `⋮` icons), tasks module, habits module (facets with name and value). Configuration screen (`w04`), also reachable from Réglages › Widgets:
-  - Fond: Flou, Verre, Clair, Aucun + intensity and veil sliders. App widgets cannot blur the wallpaper: « Flou » is a light translucent tint, « Verre » a dark one; the setting says so.
+  - Fond: Automatique (follows the phone's light/dark theme, default), Clair, Sombre, Aucun. Always a solid opaque surface from the design-system tokens (`LightPalette` / `DarkPalette`); the frosted « Flou » / « Verre » styles and the intensity and veil sliders were removed (app widgets cannot blur the wallpaper, and a translucent tint was unreadable). Saved « Flou » falls back to Automatique, « Verre » to Sombre.
   - Control colour for icons and checkboxes: Blanc, Projet (each checkbox in its project colour), Indigo, Corail, Menthe, Ambre, free colour; « Boutons discrets » (icons only).
   - Modules: Tâches and Habitudes toggles, order (habits above / below / hidden), habits « Selon l'heure / Toutes / Choisir », max facets.
-  - Tâches: scope (En retard + aujourd'hui, Aujourd'hui, Demain, 3 / 7 prochains jours, Sans date, Boîte, Projet…), filters (projects, #tags, high priority, hide recurring), sort (échéance, priorité, projet), max rows, overdue section, check from widget, project rail, calendar events of calendars enabled for the widget.
+  - Tâches: scope (En retard + aujourd'hui, Aujourd'hui, Demain, 3 / 7 prochains jours, Sans date, Boîte, Projet…), filters (projects, #tags, high priority, hide recurring), sort (échéance, priorité, projet), overdue section, check from widget, project rail, calendar events of calendars enabled for the widget.
   - Text size S/M/L, corner radius.
+- Layout: header and habits keep their own height and are always visible (minimum widget height 140 dp, `TodayWidgetLayout`); the task list (overdue first, then the day's tasks, then calendar events) is a scrolling `LazyColumn` that takes the remaining height and shows every task, with no row cap and no « +N » footer.
 - Small widgets: 2×2 tasks, 4×1 capture bar (brand mark + « Nouvelle tâche… », idea, dictate), 1×1 « Ajouter » with the brand mark.
 
 ## Task detail and quick add (2026-10)

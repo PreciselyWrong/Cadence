@@ -1,54 +1,65 @@
 package ch.nicolab.cadence.widget.today
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.toArgb
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.theme.CadencePalette
+import ch.nicolab.cadence.designsystem.theme.DarkPalette
+import ch.nicolab.cadence.designsystem.theme.LightPalette
 
-/**
- * Couleurs ARGB du widget « Aujourd'hui » dérivées de sa configuration. Un widget ne peut pas
- * flouter le fond d'écran : « Flou » et « Verre » sont des teintes translucides, « Clair » une
- * surface pleine, « Aucun » ne pose aucune surface.
- */
+/** Couleurs ARGB du widget « Aujourd'hui » pour un thème donné. */
 data class TodayPalette(
     val surface: Int,
-    val veil: Int,
     val ink: Int,
     val muted: Int,
     val accent: Int,
     val overdue: Int,
 ) {
     companion object {
-        private const val OVERDUE_ARGB = 0xFFE4574A.toInt()
-        private const val LIGHT_INK = 0xFF1C1B1F.toInt()
-        private const val DARK_INK = 0xFFFFFFFF.toInt()
-        private const val LIGHT_SURFACE = 0xFFF7F7FA.toInt()
-        private const val DARK_SURFACE = 0xFF000000.toInt()
-        private const val MUTED_ALPHA = 0xB3
+        private const val NO_SURFACE = 0x00000000
+        private const val WHITE = 0xFFFFFFFF.toInt()
+        private const val BARE_MUTED = 0xB3FFFFFF.toInt()
 
-        fun of(config: TodayWidgetConfig): TodayPalette {
-            val lightText = config.background == TodayBackground.FLOU || config.background == TodayBackground.CLAIR
-            val ink = if (lightText) LIGHT_INK else DARK_INK
+        /**
+         * Les surfaces sont pleines et viennent des jetons du design system : un widget ne peut pas
+         * flouter le fond d'écran, et une teinte translucide devenait illisible sur les fonds clairs.
+         * Seul « Aucun » ne pose aucune surface (texte blanc, pour un fond d'écran sombre).
+         */
+        fun of(config: TodayWidgetConfig): TodayPalettes {
+            val light = fromTokens(LightPalette, config)
+            val dark = fromTokens(DarkPalette, config)
+            return when (config.background) {
+                TodayBackground.AUTO -> TodayPalettes(light, dark)
+                TodayBackground.CLAIR -> TodayPalettes(light, light)
+                TodayBackground.SOMBRE -> TodayPalettes(dark, dark)
+                TodayBackground.AUCUN -> {
+                    val bare = dark.copy(surface = NO_SURFACE, ink = WHITE, muted = BARE_MUTED)
+                    TodayPalettes(bare, bare)
+                }
+            }
+        }
+
+        private fun fromTokens(tokens: CadencePalette, config: TodayWidgetConfig): TodayPalette {
+            val ink = tokens.onSurface.toArgb()
+            val chosen = TodayControlPalette.argb(config.controlColour, config.freeControlArgb)
             return TodayPalette(
-                surface = surfaceArgb(config),
-                veil = withAlpha(0x000000, percentToAlpha(config.veil)),
+                surface = tokens.surface.toArgb(),
                 ink = ink,
-                muted = (ink and 0x00FFFFFF) or (MUTED_ALPHA shl 24),
-                accent = TodayControlPalette.argb(config.controlColour, config.freeControlArgb) ?: 0xFF7C8CFF.toInt(),
-                overdue = OVERDUE_ARGB,
+                muted = tokens.onSurfaceVariant.toArgb(),
+                // Le contrôle « Blanc » est invisible sur une surface claire : il prend l'encre du thème.
+                accent = if (config.controlColour == ControlColour.BLANC) ink else chosen ?: tokens.primary.toArgb(),
+                overdue = tokens.error.toArgb(),
             )
         }
-
-        private fun surfaceArgb(config: TodayWidgetConfig): Int = when (config.background) {
-            TodayBackground.FLOU -> withAlpha(0xFFFFFF, percentToAlpha(config.intensity))
-            TodayBackground.VERRE -> withAlpha(DARK_SURFACE, percentToAlpha(config.intensity))
-            TodayBackground.CLAIR -> LIGHT_SURFACE
-            TodayBackground.AUCUN -> 0x00000000
-        }
-
-        private fun withAlpha(rgb: Int, alpha: Int): Int = (alpha shl 24) or (rgb and 0x00FFFFFF)
-
-        private fun percentToAlpha(percent: Int): Int = percent.coerceIn(0, 100) * 255 / 100
     }
 }
+
+/**
+ * Palettes de jour et de nuit du widget. Le widget fournit les deux au lanceur, qui choisit selon
+ * le thème du téléphone sans attendre une mise à jour : un changement de thème ne le laisse donc
+ * jamais illisible.
+ */
+data class TodayPalettes(val day: TodayPalette, val night: TodayPalette)
 
 /** Tailles de texte du widget, en sp, selon [TodayTextSize]. */
 data class TodayTextSizes(val title: Int, val body: Int, val small: Int) {
