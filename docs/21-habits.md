@@ -1,6 +1,6 @@
 # Habits
 
-> Cadence habits (the model of the Android app: goal and schedule versions, limits, pauses, timers, groups, synced to devices) are described in [Cadence habits](#cadence-habits) below. The rest of this page describes the original habits-as-tasks, which keep working until the web screens move over.
+> Cadence habits (the model of the Android app: goal and schedule versions, limits, pauses, timers, groups, synced to devices) are described in [Cadence habits](#cadence-habits) below, and the pages `/habits` and `/habit/:uid` show them ([Web screens](#web-screens)). The rest of this page describes the original habits-as-tasks, still served by `/api/habits`; the web no longer shows them.
 
 Habits are tasks with `habit_mode = true`. They live on the Habits page (`/habits`) and each has a detail page (`/habit/:uid`). A habit is not a recurring task: it never creates new task rows, it collects check-ins.
 
@@ -102,7 +102,7 @@ MCP: `create_habit` takes `uid`; `log_habit_completion` takes `checkin_uid` (its
 
 ## Cadence habits
 
-Cadence habits are the habits of the Android app, stored on the server so that every device and the web read and write the same data. They replace the habits-as-tasks described above, which keep working until the web screens move over. The rules (period status, streaks, statistics) are those of the app's pure-Kotlin domain (`android/domain`); the server runs a JavaScript twin of them and both are proven against the same fixtures.
+Cadence habits are the habits of the Android app, stored on the server so that every device and the web read and write the same data. They replace the habits-as-tasks described above: the web screens now read and write Cadence habits (see [Web screens](#web-screens)), and the old `/api/habits` stays on the server for existing clients. The rules (period status, streaks, statistics) are those of the app's pure-Kotlin domain (`android/domain`); the server runs a JavaScript twin of them and both are proven against the same fixtures.
 
 Where to look:
 
@@ -421,3 +421,14 @@ At start-up (and on `POST /cadence/import-legacy`) every task with `habit_mode` 
 | skipped day | one-day `habit_pause`, reason `REST` |
 
 Differences to know: an amount check-in without a value counted for nothing before and is not imported (the response counts them in `droppedEntries`); the interval period of a legacy habit (one goal per window of N days) becomes a daily goal on every Nth day; streaks and strength are recomputed by the Cadence rules and may differ from the cached figures of the old engine.
+
+### Web screens
+
+`frontend/components/Habits/`, client in `frontend/utils/cadenceHabitsService.ts`, rules in `frontend/utils/cadenceHabitUtils.ts` (units, quantity formatting, card colours, drafts) and `frontend/utils/cadenceHabitSave.ts` (writes). Colours come from `PALETTE` through `ColorPicker` and are stored as signed ARGB; a habit without colour takes the accent of the app.
+
+- **Habits page** (`/habits`): habits grouped by time of day (`habit_group`, empty groups hidden), one card per habit with the Android look: tinted gradient with an ink that reaches 4.5:1 on every stop, hexagon facet filled by the period progress, status line (`2 / 30 min`, `1 of 2 glasses max`, `12 days clear`, paused, not planned), streak, and the quick action: one tap for yes/no, the first quick value for amounts, a chevron for the other quick values and a free amount with a note. Tabs Habits / Archived (restore), a "done for now" line, and "Pause or trip".
+- **Habit page** (`/habit/:uid`): streak, best streak, success over 30 days, active days and totals (engine output); a month calendar of the last 365 days where each day shows its status with a glyph as well as a colour, its entries (add, edit date / amount / note, delete); goal and schedule versions in force and past; pauses and trips (create, end today, cancel before they start); edit, archive, delete.
+- **Editor** (side panel, also opened by the sidebar "New habit"): name, description, colour, time of day, kind (goal, limit, free activity, abstinence), measure (yes/no, count, quantity, duration) and unit, ideal, minimum, sessions per period, period, schedule (every day, selected days, any day of the period, every N days), quick values, reminders, timer. Changing the goal or the schedule of an existing habit asks how to apply it: **from a date** (default today) appends a version with `POST .../goals` or `.../schedules` so earlier days keep their goal, or **correct the current version** (`PATCH`). Automatic progression is kept when the unit is unchanged but has no editor yet.
+- **Abstinence and alcohol**: days clear (current and best run from the engine, 90-day strip, clear days and slips noted), check-ins and urges (`abstinence_log`), a slip today (an entry), and for the alcohol profile the standard drinks per date (`alcohol_consumption`). No savings and no health claim.
+
+Entries typed for a past date send `local_date`, `observed_zone_id` (the zone of the browser) and an `occurred_at` at noon of that date in that zone; for today the server fills them in.

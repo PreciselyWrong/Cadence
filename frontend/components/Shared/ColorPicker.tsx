@@ -16,6 +16,8 @@ interface ColorPickerProps {
     // What "no color" looks like where it is used, e.g. a habit's default.
     noneLabel?: string;
     disabled?: boolean;
+    // 44 px swatches for touch and keyboard users
+    large?: boolean;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({
@@ -24,6 +26,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     allowNone = true,
     noneLabel,
     disabled,
+    large,
 }) => {
     const { t } = useTranslation();
     const selected = resolveColor(value)?.value.toLowerCase() || '';
@@ -50,7 +53,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                         title={label}
                         disabled={disabled}
                         onClick={() => onChange(color.value)}
-                        className={`w-7 h-7 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 disabled:opacity-50 ${
+                        className={`${large ? 'w-11 h-11' : 'w-7 h-7'} rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 disabled:opacity-50 ${
                             isSelected
                                 ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white ring-offset-white dark:ring-offset-gray-900 scale-110'
                                 : 'hover:scale-110'

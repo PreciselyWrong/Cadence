@@ -1,212 +1,260 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Task } from '../../entities/Task';
-import { FireIcon, BellIcon } from '@heroicons/react/24/outline';
+import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-    fetchHabitCompletions,
-    HabitCompletion,
-} from '../../utils/habitsService';
+    CheckIcon,
+    ChevronDownIcon,
+    FireIcon,
+} from '@heroicons/react/24/outline';
+import FacetGauge from '../Shared/ui/FacetGauge';
+import HabitQuickEntry from './HabitQuickEntry';
+import { statusLine } from './habitStatus';
+import type {
+    CadenceHabit,
+    CadenceQuickValue,
+} from '../../utils/cadenceHabitsService';
 import {
-    dayFraction,
-    formatHabitTarget,
-    habitGoal,
-    habitAccentStyle,
-    isHabitCompletedInPeriod,
-    isQuitHabit,
-    isScheduledOn,
-    periodNoun,
-    toDayKey,
-    totalsByDay,
-} from '../../utils/habitUtils';
-import HabitCheckIn from './HabitCheckIn';
-import { ACCENT } from '../../constants/colorPalette';
-import HabitFacet from './HabitFacet';
-import HabitProgressBar from './HabitProgressBar';
+    accentHex,
+    argbToHex,
+    formatWithUnit,
+    habitCardColors,
+    kindOf,
+    unitOfGoal,
+} from '../../utils/cadenceHabitUtils';
 
 interface HabitCardProps {
-    habit: Task;
-    onCheckIn: (habit: Task, options?: { value?: number }) => Promise<void>;
-    onOpen: (habit: Task) => void;
+    habit: CadenceHabit;
+    quickValues: CadenceQuickValue[];
+    onLog: (
+        habit: CadenceHabit,
+        amountMinor: number,
+        note?: string
+    ) => Promise<void>;
 }
 
-const DAYS = 7;
+export const habitTint = (habit: Pick<CadenceHabit, 'color_argb'>) =>
+    argbToHex(habit.color_argb) ?? accentHex();
 
-const lastDays = (): Date[] => {
-    const today = new Date();
-    return Array.from({ length: DAYS }, (_, i) => {
-        const d = new Date(today);
-        d.setDate(today.getDate() - (DAYS - 1 - i));
-        return d;
-    });
-};
-
-const HabitCard: React.FC<HabitCardProps> = ({ habit, onCheckIn, onOpen }) => {
+// One habit: a card of 80 px at least, tinted with the habit's colour, its
+// facet filling with the period's progress, and the quick action on the right
+// (Android HabitRow). The name is the link to the habit; the action buttons
+// sit above it so the card stays one tab stop per control.
+const HabitCard: React.FC<HabitCardProps> = ({ habit, quickValues, onLog }) => {
     const { t } = useTranslation();
-    const [completions, setCompletions] = useState<HabitCompletion[]>([]);
-    const [loadingDots, setLoadingDots] = useState(true);
-    const quit = isQuitHabit(habit);
+    const [open, setOpen] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const goal = habit.goal;
+    const evaluation = habit.status.evaluation;
+    const kind = goal ? kindOf(goal) : 'goal';
+    const paused = !!evaluation?.is_paused;
+    const done =
+        kind === 'goal' && !!evaluation?.is_completed && !habit.archived;
+    const calm = done || habit.archived;
+    const tint = habitTint(habit);
+    const colors = useMemo(() => habitCardColors(tint), [tint]);
 
-    // Reload the strip whenever the server-side counters move.
-    const version = `${habit.habit_total_completions}-${habit.habit_last_completion_at}-${habit.habit_progress?.skipped}`;
-    useEffect(() => {
-        if (!habit.uid) return;
-        const end = new Date();
-        const start = new Date();
-        start.setDate(start.getDate() - (DAYS - 1));
-        start.setHours(0, 0, 0, 0);
-        fetchHabitCompletions(habit.uid, start, end)
-            .then(setCompletions)
-            .catch(() => {})
-            .finally(() => setLoadingDots(false));
-    }, [habit.uid, version]);
+    const ratio =
+        kind === 'goal' || kind === 'limit'
+            ? Math.min(
+                  1,
+                  (evaluation?.progress_minor ?? 0) /
+                      (evaluation?.target_minor || 1)
+              )
+            : 0;
+    const streak = habit.status.streak?.current ?? 0;
 
-    const totals = useMemo(
-        () => totalsByDay(habit, completions),
-        [habit, completions]
-    );
-    const days = lastDays();
-    const todayKey = toDayKey(new Date());
-    const createdKey = habit.created_at
-        ? toDayKey(new Date(habit.created_at))
-        : '';
-    const done = isHabitCompletedInPeriod(habit);
-    const streak = habit.habit_current_streak ?? 0;
-
-    const scheduledCount = days.filter((d) => isScheduledOn(habit, d)).length;
-    const doneCount = days.filter(
-        (d) => dayFraction(habit, totals.get(toDayKey(d))) >= 1
-    ).length;
-
-    const dotClass = (date: Date) => {
-        const key = toDayKey(date);
-        const dayTotals = totals.get(key);
-        if (loadingDots) return 'bg-gray-100 dark:bg-gray-700 animate-pulse';
-        if (quit) {
-            if (dayTotals && dayTotals.checkIns > 0) {
-                return 'bg-red-400 dark:bg-red-500';
-            }
-            return key >= createdKey
-                ? ACCENT.bg
-                : 'bg-gray-100 dark:bg-gray-600/50';
+    const log = async (amountMinor: number, note?: string) => {
+        setBusy(true);
+        try {
+            await onLog(habit, amountMinor, note);
+        } finally {
+            setBusy(false);
         }
-        if (dayTotals?.skipped && dayTotals.checkIns === 0) {
-            return 'bg-sky-200 dark:bg-sky-800';
-        }
-        if (!isScheduledOn(habit, date)) {
-            return 'bg-gray-50 dark:bg-gray-800';
-        }
-        return dayFraction(habit, dayTotals) > 0
-            ? ACCENT.bg
-            : 'bg-gray-100 dark:bg-gray-600/50';
     };
 
-    const dotOpacity = (date: Date) => {
-        if (loadingDots) return 1;
-        if (quit) {
-            const slipped = (totals.get(toDayKey(date))?.checkIns ?? 0) > 0;
-            return slipped || toDayKey(date) < createdKey ? 1 : 0.55;
-        }
-        const fraction = dayFraction(habit, totals.get(toDayKey(date)));
-        return fraction > 0 ? 0.35 + fraction * 0.65 : 1;
-    };
+    const firstQuick = quickValues[0];
+    const oneUnit = goal ? (unitOfGoal(goal)?.scale ?? 1) : 1;
+    const primaryAmount = firstQuick?.amount_minor ?? oneUnit;
+    const showEntryPanel =
+        !!goal &&
+        !paused &&
+        !habit.archived &&
+        goal.goal_type !== 'BINARY' &&
+        kind !== 'abstinence';
 
-    const goal = habitGoal(habit);
-    const fraction = quit
-        ? streak > 0
-            ? 1
-            : 0
-        : Math.min(1, (habit.habit_progress?.progress ?? 0) / goal);
+    const pillClass =
+        'inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full px-4 text-label transition-transform duration-[220ms] active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 disabled:opacity-60';
+    const pillStyle = calm ? undefined : { background: colors.pillFill };
+
+    let action: React.ReactNode = null;
+    if (goal && !paused && !habit.archived) {
+        if (done) {
+            action = (
+                <span
+                    role="img"
+                    aria-label={t('cadenceHabits.status.done', 'Done')}
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-success-container text-success"
+                >
+                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                </span>
+            );
+        } else if (kind === 'abstinence') {
+            action = (
+                <button
+                    type="button"
+                    disabled={busy}
+                    style={pillStyle}
+                    className={pillClass}
+                    onClick={() => log(1)}
+                    aria-label={t(
+                        'cadenceHabits.abstinence.recordFor',
+                        'Record a slip for {{name}}',
+                        { name: habit.name }
+                    )}
+                >
+                    {t('cadenceHabits.abstinence.record', 'Slip')}
+                </button>
+            );
+        } else if (goal.goal_type === 'BINARY') {
+            action = (
+                <button
+                    type="button"
+                    disabled={busy}
+                    style={pillStyle}
+                    className={`${pillClass} !px-0 w-11`}
+                    onClick={() => log(1)}
+                    aria-label={t(
+                        'cadenceHabits.quick.doneFor',
+                        'Mark {{name}} as done',
+                        { name: habit.name }
+                    )}
+                >
+                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+            );
+        } else {
+            const label = `+${formatWithUnit(primaryAmount, goal)}`;
+            action = (
+                <button
+                    type="button"
+                    disabled={busy}
+                    style={pillStyle}
+                    className={pillClass}
+                    onClick={() => log(primaryAmount)}
+                    aria-label={t(
+                        'cadenceHabits.quick.addFor',
+                        'Add {{amount}} to {{name}}',
+                        { amount: label.slice(1), name: habit.name }
+                    )}
+                >
+                    {label}
+                </button>
+            );
+        }
+    }
 
     return (
-        <div
-            className={`rounded-[20px] ring-1 ring-gray-900/[0.06] dark:ring-white/10 flex flex-col overflow-hidden cursor-pointer active:scale-[0.99] transition-transform ${
-                done
-                    ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-light)_26%,white),color-mix(in_srgb,var(--accent-light)_12%,white))] dark:bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-dark)_34%,#1f1e2a),color-mix(in_srgb,var(--accent-dark)_14%,#1f1e2a))]'
-                    : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-light)_14%,white),color-mix(in_srgb,var(--accent-light)_5%,white)_65%,white)] dark:bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-dark)_22%,#1f1e2a),color-mix(in_srgb,var(--accent-dark)_8%,#1f1e2a)_65%,#1f1e2a)]'
-            }`}
-            onClick={() => onOpen(habit)}
-            style={habitAccentStyle(habit)}
+        <article
             data-testid="habit-card"
+            className={`relative overflow-hidden rounded-card border border-outline/35 ${
+                calm ? 'bg-surface-card text-surface-on' : ''
+            }`}
+            style={
+                calm
+                    ? undefined
+                    : {
+                          backgroundImage: `linear-gradient(90deg, ${colors.stops.join(', ')})`,
+                          color: colors.ink,
+                      }
+            }
         >
-            <div className="px-4 pt-4 pb-2 flex items-center gap-3">
-                <HabitFacet fraction={fraction} done={done} />
-                <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-bold leading-snug break-words text-gray-900 dark:text-gray-50">
-                        {habit.name}
+            <div className="flex min-h-[80px] items-center gap-4 px-4">
+                <FacetGauge
+                    progress={ratio}
+                    tint={calm ? 'rgb(var(--color-outline))' : colors.ink}
+                    size={44}
+                    className="opacity-95"
+                >
+                    <span className="text-label" aria-hidden="true">
+                        {habit.name.trim().charAt(0).toUpperCase()}
+                    </span>
+                </FacetGauge>
+                <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-title-m">
+                        <Link
+                            to={`/habit/${habit.uid}`}
+                            className="after:absolute after:inset-0 focus:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current"
+                        >
+                            {habit.name}
+                        </Link>
                     </h3>
-                    <p className="flex items-center gap-1.5 text-[13px] mt-0.5 text-gray-600 dark:text-gray-300">
-                        {quit && (
-                            <span className="px-1.5 py-px rounded-md bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-300 text-xs font-medium">
-                                {t('habits.quit', 'Quit')}
-                            </span>
-                        )}
-                        <span className="truncate">
-                            {formatHabitTarget(t, habit)}
+                    <p
+                        className={`flex flex-wrap items-center gap-x-2 text-body-m ${
+                            calm ? 'text-surface-on-variant' : ''
+                        }`}
+                    >
+                        <span className="min-w-0 break-words">
+                            {statusLine(t, habit)}
                         </span>
-                        {habit.habit_reminder_time && (
-                            <span className="flex items-center gap-0.5 shrink-0">
-                                <BellIcon className="h-3.5 w-3.5" />
-                                {habit.habit_reminder_time}
+                        {streak > 0 && (
+                            <span
+                                className="flex shrink-0 items-center gap-0.5"
+                                title={t(
+                                    'cadenceHabits.streak.current',
+                                    '{{count}} periods in a row',
+                                    { count: streak }
+                                )}
+                            >
+                                <FireIcon
+                                    className="h-4 w-4"
+                                    aria-hidden="true"
+                                />
+                                <span aria-hidden="true">{streak}</span>
+                                <span className="sr-only">
+                                    {t(
+                                        'cadenceHabits.streak.current',
+                                        '{{count}} periods in a row',
+                                        { count: streak }
+                                    )}
+                                </span>
                             </span>
                         )}
                     </p>
                 </div>
-                <HabitCheckIn
-                    habit={habit}
-                    onCheckIn={(options) => onCheckIn(habit, options)}
-                />
-            </div>
-
-            {!quit && habit.habit_progress && (
-                <div className="px-4 pb-2">
-                    <HabitProgressBar habit={habit} />
-                </div>
-            )}
-
-            <div className="px-4 pb-3 flex items-center gap-3">
-                <div className="flex gap-1" aria-hidden="true">
-                    {days.map((date) => {
-                        const key = toDayKey(date);
-                        return (
-                            <div
-                                key={key}
-                                title={date.toLocaleDateString(undefined, {
-                                    month: 'short',
-                                    day: 'numeric',
-                                })}
-                                className={`h-3 w-3 rounded-[4px] transition-colors ${dotClass(date)} ${
-                                    key === todayKey
-                                        ? 'outline outline-1 outline-offset-1 outline-gray-400 dark:outline-gray-500'
-                                        : ''
+                <div className="relative z-10 flex shrink-0 items-center gap-1">
+                    {action}
+                    {showEntryPanel && (
+                        <button
+                            type="button"
+                            aria-expanded={open}
+                            aria-controls={`quick-${habit.uid}`}
+                            aria-label={t(
+                                'cadenceHabits.quick.more',
+                                'More amounts for {{name}}',
+                                { name: habit.name }
+                            )}
+                            onClick={() => setOpen((v) => !v)}
+                            className="flex h-11 w-11 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
+                        >
+                            <ChevronDownIcon
+                                className={`h-5 w-5 transition-transform duration-[220ms] motion-reduce:transition-none ${
+                                    open ? 'rotate-180' : ''
                                 }`}
-                                style={{ opacity: dotOpacity(date) }}
+                                aria-hidden="true"
                             />
-                        );
-                    })}
-                </div>
-                <p className="flex-1 min-w-0 flex items-center justify-end gap-2 text-xs text-gray-600 dark:text-gray-300 tabular-nums">
-                    {!quit && scheduledCount > 0 && (
-                        <span>
-                            {doneCount}/{scheduledCount}
-                        </span>
+                        </button>
                     )}
-                    <span className="flex items-center gap-0.5">
-                        <FireIcon className={`h-3.5 w-3.5 ${ACCENT.text}`} />
-                        {quit
-                            ? t(
-                                  'habits.stats.cleanFor',
-                                  '{{count}} {{unit}} clean',
-                                  {
-                                      count: streak,
-                                      unit: periodNoun(t, habit, streak),
-                                  }
-                              )
-                            : `${streak} ${periodNoun(t, habit, streak)}`}
-                    </span>
-                    <span>{Math.round(habit.habit_strength ?? 0)}%</span>
-                </p>
+                </div>
             </div>
-        </div>
+            {open && showEntryPanel && goal && (
+                <HabitQuickEntry
+                    id={`quick-${habit.uid}`}
+                    goal={goal}
+                    quickValues={quickValues}
+                    onLog={log}
+                />
+            )}
+        </article>
     );
 };
 
