@@ -104,4 +104,4 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 
 ## État
 
-Monorepo Cadence (web, serveur, Android) sur `main`, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Android : tâches synchronisées, widgets et rappels vérifiés sur émulateur ; synchro des habitudes Android ↔ serveur décrite comme livrée dans `docs/fork/FORK.md` mais encore listée dans `Now` de `TODO.md` (à réconcilier). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.
+Monorepo Cadence (web, serveur, Android) sur `main`, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Android : tâches synchronisées, widgets et rappels vérifiés sur émulateur ; habitudes synchronisées Android ↔ serveur (15 entités, Room v26). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.
