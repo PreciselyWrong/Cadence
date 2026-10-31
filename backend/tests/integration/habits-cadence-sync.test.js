@@ -108,6 +108,12 @@ describe('Cadence habits over /sync', () => {
                 'learned_question_record',
             ])
         );
+        expect(
+            res.body.entities.find((e) => e.name === 'habit_group').uid_scope
+        ).toBe('user');
+        expect(
+            res.body.entities.find((e) => e.name === 'habit').uid_scope
+        ).toBe('global');
         const entry = res.body.entities.find((e) => e.name === 'habit_entry');
         expect(entry.refs).toEqual({ habit_uid: 'habit' });
         expect(entry.fields).toEqual(

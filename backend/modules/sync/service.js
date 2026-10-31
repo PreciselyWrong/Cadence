@@ -32,6 +32,8 @@ function describe() {
         entities: Object.entries(ENTITIES).map(([name, def]) => ({
             name,
             version: def.version,
+            // 'user': the uid is unique per user (default habit groups).
+            uid_scope: def.uidScope ?? 'global',
             fields: def.fields,
             server_fields: serverFieldsOf(name),
             refs: Object.fromEntries(
