@@ -58,15 +58,19 @@ class NotesRepository extends BaseRepository {
                       ...TAG_INCLUDE,
                       // A parent tag also matches notes carrying its children.
                       where: {
+                          // A tag name is a path: a parent tag also matches
+                          // notes carrying any tag under it, at any depth.
                           [Op.or]: [
                               { name: tagFilter },
-                              {
-                                  parent_id: {
-                                      [Op.in]: Tag.sequelize.literal(
-                                          `(SELECT parent_tags.id FROM tags AS parent_tags WHERE parent_tags.name = ${Tag.sequelize.escape(tagFilter)})`
-                                      ),
-                                  },
-                              },
+                              Tag.sequelize.where(
+                                  Tag.sequelize.fn(
+                                      'SUBSTR',
+                                      Tag.sequelize.col('Tags.name'),
+                                      1,
+                                      tagFilter.length + 1
+                                  ),
+                                  `${tagFilter}/`
+                              ),
                           ],
                       },
                       required: true,

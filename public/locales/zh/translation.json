@@ -1957,7 +1957,6 @@
     "pinTag": "置顶以便快速访问",
     "parentTag": "父标签",
     "noParent": "无（顶级）",
-    "parentTagHasChildren": "此标签有子标签，因此不能放在其他标签下。",
     "showChildTags": "显示子标签",
     "hideChildTags": "隐藏子标签"
   },

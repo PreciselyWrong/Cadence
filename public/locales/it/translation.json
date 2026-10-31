@@ -1960,7 +1960,6 @@
     "pinTag": "Fissa per un accesso rapido",
     "parentTag": "Tag padre",
     "noParent": "Nessuno (livello superiore)",
-    "parentTagHasChildren": "Questo tag ha tag figli, quindi non può essere messo sotto un altro tag.",
     "showChildTags": "Mostra tag figli",
     "hideChildTags": "Nascondi tag figli"
   },

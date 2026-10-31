@@ -1957,7 +1957,6 @@
     "pinTag": "Kiinnitä nopeaa käyttöä varten",
     "parentTag": "Ylätunniste",
     "noParent": "Ei mitään (ylin taso)",
-    "parentTagHasChildren": "Tällä tunnisteella on alatunnisteita, joten sitä ei voi sijoittaa toisen tunnisteen alle.",
     "showChildTags": "Näytä alatunnisteet",
     "hideChildTags": "Piilota alatunnisteet"
   },

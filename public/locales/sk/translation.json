@@ -1992,7 +1992,6 @@
         "pinTag": "Pripnúť pre rýchly prístup",
         "parentTag": "Nadradený štítok",
         "noParent": "Žiadny (najvyššia úroveň)",
-        "parentTagHasChildren": "Tento štítok má podradené štítky, preto ho nemožno umiestniť pod iný štítok.",
         "showChildTags": "Zobraziť podradené štítky",
         "hideChildTags": "Skryť podradené štítky"
     },

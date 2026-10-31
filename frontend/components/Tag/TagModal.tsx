@@ -4,6 +4,11 @@ import { useToast } from '../Shared/ToastContext';
 import { useTranslation } from 'react-i18next';
 import ColorPicker from '../Shared/ColorPicker';
 import { useStore } from '../../store/useStore';
+import {
+    isSameOrDescendantTag,
+    TAG_PATH_SEPARATOR,
+    tagLeafName,
+} from '../../utils/tagTree';
 import EntitySidePanel from '../SidePanel/EntitySidePanel';
 import {
     SidePanelField,
@@ -19,7 +24,20 @@ interface TagModalProps {
     tag?: Tag | null;
 }
 
-const toFormData = (tag?: Tag | null): Tag => tag || { name: '' };
+// The form edits the short name and the parent; the saved name is the full
+// namespace path built from both.
+const toFormData = (tag: Tag | null | undefined, allTags: Tag[]): Tag => {
+    if (!tag) return { name: '', parent_uid: null };
+    const parentName = tag.name.includes(TAG_PATH_SEPARATOR)
+        ? tag.name.slice(0, tag.name.lastIndexOf(TAG_PATH_SEPARATOR))
+        : null;
+    const parent = parentName
+        ? allTags.find((other) => other.name === parentName && other.uid)
+        : undefined;
+    return parent
+        ? { ...tag, name: tagLeafName(tag.name), parent_uid: parent.uid }
+        : { ...tag, parent_uid: null };
+};
 
 const TagModal: React.FC<TagModalProps> = ({
     isOpen,
@@ -29,31 +47,42 @@ const TagModal: React.FC<TagModalProps> = ({
     tag,
 }) => {
     const { t } = useTranslation();
-    const [formData, setFormData] = useState<Tag>(() => toFormData(tag));
+    const allTags = useStore((state) => state.tagsStore.tags);
+    const [formData, setFormData] = useState<Tag>(() =>
+        toFormData(tag, allTags)
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { showSuccessToast, showErrorToast } = useToast();
 
     useEffect(() => {
         if (isOpen) {
-            setFormData(toFormData(tag));
+            setFormData(toFormData(tag, allTags));
             setError(null);
         }
+        // allTags is read once per opening; a reload while editing must not
+        // reset what the user typed.
     }, [tag, isOpen]);
 
     const isSystemTag = tag?.tag_type === 'system';
 
-    // One level of nesting: only top-level tags can be parents, and a tag
-    // that already has children stays at the top level.
-    const allTags = useStore((state) => state.tagsStore.tags);
-    const hasChildren =
-        !!tag?.uid && allTags.some((other) => other.parent_uid === tag.uid);
+    // Any tag can be a parent except this one and its own descendants.
     const parentOptions = allTags
-        .filter((other) => other.uid && !other.parent_uid)
-        .filter((other) => other.uid !== tag?.uid)
+        .filter((other) => other.uid)
+        .filter(
+            (other) => !tag || !isSameOrDescendantTag(other.name, tag.name)
+        )
         .sort((a, b) =>
             a.name.toLowerCase().localeCompare(b.name.toLowerCase())
         );
+
+    const fullName = () => {
+        const leaf = formData.name.trim();
+        const parent = parentOptions.find(
+            (option) => option.uid === formData.parent_uid
+        );
+        return parent ? `${parent.name}${TAG_PATH_SEPARATOR}${leaf}` : leaf;
+    };
 
     const hasUnsavedChanges = () => {
         if (!tag) {
@@ -65,10 +94,9 @@ const TagModal: React.FC<TagModalProps> = ({
             );
         }
         return (
-            formData.name !== tag.name ||
+            fullName() !== tag.name ||
             formData.pinned !== tag.pinned ||
-            formData.color !== tag.color ||
-            (formData.parent_uid || null) !== (tag.parent_uid || null)
+            formData.color !== tag.color
         );
     };
 
@@ -82,10 +110,10 @@ const TagModal: React.FC<TagModalProps> = ({
         setError(null);
 
         try {
-            await onSave({
-                ...formData,
-                parent_uid: formData.parent_uid || null,
-            });
+            // The server derives the parent from the path.
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { parent_uid, ...rest } = formData;
+            await onSave({ ...rest, name: fullName() });
             showSuccessToast(
                 tag
                     ? t('success.tagUpdated', 'Tag updated successfully!')
@@ -184,8 +212,8 @@ const TagModal: React.FC<TagModalProps> = ({
                             parent_uid: e.target.value || null,
                         }))
                     }
-                    disabled={hasChildren}
-                    className={`${sidePanelInputClass} ${hasChildren ? 'cursor-default opacity-70' : ''}`}
+                    disabled={isSystemTag}
+                    className={`${sidePanelInputClass} ${isSystemTag ? 'cursor-default opacity-70' : ''}`}
                     data-testid="tag-parent-select"
                 >
                     <option value="">
@@ -197,14 +225,6 @@ const TagModal: React.FC<TagModalProps> = ({
                         </option>
                     ))}
                 </select>
-                {hasChildren && (
-                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
-                        {t(
-                            'tags.parentTagHasChildren',
-                            'This tag has child tags, so it cannot go under another tag.'
-                        )}
-                    </p>
-                )}
             </SidePanelField>
 
             <SidePanelSection title={t('tags.pinTag', 'Quick access')}>

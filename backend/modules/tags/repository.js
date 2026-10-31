@@ -154,7 +154,7 @@ class TagsRepository extends BaseRepository {
     async findAnyByUid(uid) {
         return this.model.findOne({
             where: { uid },
-            attributes: ['id', 'uid', 'user_id', 'parent_id'],
+            attributes: ['id', 'uid', 'name', 'user_id', 'parent_id'],
         });
     }
 
@@ -167,10 +167,6 @@ class TagsRepository extends BaseRepository {
             where: { id: { [Op.in]: ids } },
             attributes: ['id', 'uid'],
         });
-    }
-
-    async hasChildren(tagId) {
-        return this.exists({ parent_id: tagId });
     }
 
     async createSystemTag(userId, name) {
@@ -203,13 +199,17 @@ class TagsRepository extends BaseRepository {
                 });
             }
 
-            // Children survive their parent as top-level tags. Done here as
-            // well as by the foreign key, which SQLite only enforces when
-            // foreign_keys is on.
-            await Tag.update(
-                { parent_id: null },
-                { where: { parent_id: tag.id }, transaction }
-            );
+            // Children survive their parent: they move up to its parent (or
+            // to the top level) and their names follow, through the Tag hooks.
+            // Saved one by one so those hooks run.
+            const children = await Tag.findAll({
+                where: { parent_id: tag.id },
+                transaction,
+            });
+            for (const child of children) {
+                child.parent_id = tag.parent_id ?? null;
+                await child.save({ transaction });
+            }
 
             await tag.destroy({ transaction });
             await transaction.commit();

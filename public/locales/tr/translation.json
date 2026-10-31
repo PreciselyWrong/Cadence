@@ -1957,7 +1957,6 @@
     "pinTag": "Hızlı erişim için sabitle",
     "parentTag": "Üst etiket",
     "noParent": "Yok (en üst düzey)",
-    "parentTagHasChildren": "Bu etiketin alt etiketleri olduğu için başka bir etiketin altına konamaz.",
     "showChildTags": "Alt etiketleri göster",
     "hideChildTags": "Alt etiketleri gizle"
   },

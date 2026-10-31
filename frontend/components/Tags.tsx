@@ -16,15 +16,19 @@ import {
     updateTag,
 } from '../utils/tagsService';
 import { useStore } from '../store/useStore';
-import { buildTagTree } from '../utils/tagTree';
+import { buildTagTree, tagLeafName, TagTreeNode } from '../utils/tagTree';
 
-// Removing a tag also lifts its children to the top level, as the API does.
-const withoutTag = (tags: Tag[], tagUid: string): Tag[] =>
-    tags
-        .filter((tag) => tag.uid !== tagUid)
-        .map((tag) =>
-            tag.parent_uid === tagUid ? { ...tag, parent_uid: null } : tag
-        );
+// A search keeps a tag when it matches, with its whole subtree, and keeps an
+// ancestor when one of its descendants matches.
+const filterTagTree = (
+    nodes: TagTreeNode[],
+    matches: (tag: Tag) => boolean
+): TagTreeNode[] =>
+    nodes.flatMap((node) => {
+        if (matches(node.tag)) return [node];
+        const children = filterTagTree(node.children, matches);
+        return children.length > 0 ? [{ ...node, children }] : [];
+    });
 
 const Tags: React.FC = () => {
     const { t } = useTranslation();
@@ -61,7 +65,9 @@ const Tags: React.FC = () => {
         if (!tagToDelete) return;
         try {
             await apiDeleteTag(tagToDelete.uid!);
-            setTags(withoutTag(tags, tagToDelete.uid!));
+            setTags(tags.filter((tag) => tag.uid !== tagToDelete.uid));
+            // Child tags lose their parent server-side.
+            await loadTags(true);
             setIsConfirmDialogOpen(false);
             setTagToDelete(null);
         } catch (err) {
@@ -83,15 +89,12 @@ const Tags: React.FC = () => {
         try {
             if (tagData.uid) {
                 await updateTag(tagData.uid, tagData);
-                setTags(
-                    tags.map((tag) =>
-                        tag.uid === tagData.uid ? { ...tag, ...tagData } : tag
-                    )
-                );
             } else {
-                const newTag = await createTag(tagData);
-                setTags([...tags, newTag]);
+                await createTag(tagData);
             }
+            // A rename moves the whole namespace and a nested name creates
+            // its missing ancestors, so reload the list from the server.
+            await loadTags(true);
             setIsTagModalOpen(false);
             setSelectedTag(null);
         } catch (error) {
@@ -113,15 +116,7 @@ const Tags: React.FC = () => {
     const query = searchQuery.toLowerCase();
     const matches = (tag: Tag) => tag.name.toLowerCase().includes(query);
 
-    // Child tags sit under their parent. A search keeps a parent when it or
-    // any of its children match, and shows the matching children.
-    const filteredTree = buildTagTree(tags)
-        .map(({ tag, children }) => ({
-            tag,
-            children: matches(tag) ? children : children.filter(matches),
-            hasChildren: children.length > 0,
-        }))
-        .filter(({ tag, children }) => matches(tag) || children.length > 0);
+    const filteredTree = filterTagTree(buildTagTree(tags), matches);
 
     const groupedTags = filteredTree.reduce(
         (groups, node) => {
@@ -137,17 +132,16 @@ const Tags: React.FC = () => {
 
     const sortedGroupKeys = Object.keys(groupedTags).sort();
 
-    const renderNode = ({
-        tag,
-        children,
-        hasChildren,
-    }: (typeof filteredTree)[number]) => {
+    const renderNode = (
+        { tag, children }: TagTreeNode,
+        depth = 0
+    ): JSX.Element => {
         const uid = tag.uid || '';
         const isCollapsed = !query && collapsedParents.has(uid);
         return (
             <div key={tag.uid || tag.id}>
                 <div className="relative">
-                    {hasChildren && (
+                    {children.length > 0 && (
                         <button
                             type="button"
                             onClick={() => toggleParent(uid)}
@@ -172,20 +166,14 @@ const Tags: React.FC = () => {
                     )}
                     <TagRow
                         tag={tag}
+                        label={depth > 0 ? tagLeafName(tag.name) : tag.name}
                         onEdit={handleEditTag}
                         onDelete={openConfirmDialog}
                     />
                 </div>
                 {!isCollapsed && children.length > 0 && (
                     <div className="pl-6" data-testid={`tag-children-${uid}`}>
-                        {children.map((child) => (
-                            <TagRow
-                                key={child.uid || child.id}
-                                tag={child}
-                                onEdit={handleEditTag}
-                                onDelete={openConfirmDialog}
-                            />
-                        ))}
+                        {children.map((child) => renderNode(child, depth + 1))}
                     </div>
                 )}
             </div>
@@ -312,7 +300,10 @@ const Tags: React.FC = () => {
                         onDelete={async (tagUid) => {
                             try {
                                 await apiDeleteTag(tagUid);
-                                setTags(withoutTag(tags, tagUid));
+                                setTags(
+                                    tags.filter((tag) => tag.uid !== tagUid)
+                                );
+                                await loadTags(true);
                                 setIsTagModalOpen(false);
                                 setSelectedTag(null);
                             } catch (error) {

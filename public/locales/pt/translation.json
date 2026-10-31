@@ -1960,7 +1960,6 @@
     "pinTag": "Fixar para acesso rápido",
     "parentTag": "Etiqueta pai",
     "noParent": "Nenhuma (nível superior)",
-    "parentTagHasChildren": "Esta etiqueta tem etiquetas filhas, por isso não pode ficar sob outra etiqueta.",
     "showChildTags": "Mostrar etiquetas filhas",
     "hideChildTags": "Ocultar etiquetas filhas"
   },

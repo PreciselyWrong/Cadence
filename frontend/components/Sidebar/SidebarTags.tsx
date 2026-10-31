@@ -12,7 +12,11 @@ import { createTagUrl } from '../../utils/slugUtils';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
-import { buildTagTree } from '../../utils/tagTree';
+import {
+    buildTagTree,
+    flattenTagTree,
+    tagLeafName,
+} from '../../utils/tagTree';
 
 interface SidebarTagsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -48,8 +52,8 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
         ? 'py-[7px] text-[14px]'
         : 'py-[4px] text-[13.5px]';
 
-    const itemClass = (path: string, nested = false) =>
-        `group flex justify-between items-center rounded-[8px] ${nested ? 'pl-[44px]' : 'pl-[30px]'} pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+    const itemClass = (path: string) =>
+        `group flex justify-between items-center rounded-[8px] pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
             isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
         }`;
 
@@ -141,22 +145,23 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
 
             {isExpanded && (
                 <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
-                    {buildTagTree(tags).flatMap(({ tag, children }) =>
-                        [tag, ...children].map((item) => (
+                    {flattenTagTree(buildTagTree(tags)).map(
+                        ({ tag: item, depth }) => (
                             <div
                                 key={item.uid || item.id}
-                                className={itemClass(
-                                    getTagPath(item),
-                                    item !== tag
-                                )}
+                                className={itemClass(getTagPath(item))}
+                                style={{ paddingLeft: 30 + depth * 14 }}
+                                title={item.name}
                                 onClick={() => navigate(item)}
                                 data-testid={`sidebar-tag-${item.uid || item.id}`}
                             >
                                 <span className="truncate min-w-0">
-                                    {item.name}
+                                    {depth > 0
+                                        ? tagLeafName(item.name)
+                                        : item.name}
                                 </span>
                             </div>
-                        ))
+                        )
                     )}
                 </div>
             )}

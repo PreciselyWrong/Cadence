@@ -74,15 +74,16 @@ async function updateNoteTags(note, tagsArray, userId) {
         );
     }
 
-    const tags = await Promise.all(
-        validTagNames.map(async (name) => {
-            const [tag] = await Tag.findOrCreate({
-                where: { name, user_id: userId },
-                defaults: { name, user_id: userId },
-            });
-            return tag;
-        })
-    );
+    // One at a time: a path creates its missing ancestors, and two paths
+    // sharing an ancestor must not both create it.
+    const tags = [];
+    for (const name of validTagNames) {
+        const [tag] = await Tag.findOrCreate({
+            where: { name, user_id: userId },
+            defaults: { name, user_id: userId },
+        });
+        tags.push(tag);
+    }
     await note.setTags(tags);
 }
 

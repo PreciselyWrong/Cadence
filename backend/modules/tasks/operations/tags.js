@@ -60,9 +60,16 @@ async function updateTaskTags(task, tagsData, userId) {
         (name) => !existingTagNames.includes(name)
     );
 
-    const createdTags = await Promise.all(
-        newTagNames.map((name) => Tag.create({ name, user_id: userId }))
-    );
+    // One at a time: a path creates its missing ancestors, so a later name
+    // may already exist by the time it is reached.
+    const createdTags = [];
+    for (const name of newTagNames) {
+        const [tag] = await Tag.findOrCreate({
+            where: { name, user_id: userId },
+            defaults: { name, user_id: userId },
+        });
+        createdTags.push(tag);
+    }
 
     const allTags = [...existingTags, ...createdTags];
     await setTagsAndTouch(task, allTags);

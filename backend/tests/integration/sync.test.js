@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Task, Project, SyncOp } = require('../../models');
+const { Task, Project, SyncOp, Tag } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 const hlc = (ms, counter = 0, node = 'devA') =>
@@ -442,7 +442,7 @@ describe('Offline sync API', () => {
             ).toBe(0);
         });
 
-        it('refuses to nest a tag under a child tag', async () => {
+        it('accepts a tag nested under a grandchild level', async () => {
             const res = await push(agent, [
                 upsert(
                     'op-n1',
@@ -464,6 +464,40 @@ describe('Offline sync API', () => {
                     'clienttag000012',
                     { name: 'c', parent_uid: 'clienttag000011' },
                     hlc(1)
+                ),
+            ]);
+
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'applied',
+                'applied',
+            ]);
+            const c = await Tag.findOne({ where: { uid: 'clienttag000012' } });
+            expect(c.name).toBe('a/b/c');
+        });
+
+        it('refuses to move a tag under one of its descendants', async () => {
+            const res = await push(agent, [
+                upsert(
+                    'op-m1',
+                    'tag',
+                    'clienttag000013',
+                    { name: 'top' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-m2',
+                    'tag',
+                    'clienttag000014',
+                    { name: 'mid', parent_uid: 'clienttag000013' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-m3',
+                    'tag',
+                    'clienttag000013',
+                    { parent_uid: 'clienttag000014' },
+                    hlc(2)
                 ),
             ]);
 

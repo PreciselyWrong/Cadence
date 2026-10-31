@@ -1574,7 +1574,6 @@
     "pinTag": "すぐ使えるようにピン留め",
     "parentTag": "親タグ",
     "noParent": "なし（最上位）",
-    "parentTagHasChildren": "このタグには子タグがあるため、他のタグの下に置くことはできません。",
     "showChildTags": "子タグを表示",
     "hideChildTags": "子タグを非表示"
   },

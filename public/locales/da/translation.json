@@ -1957,7 +1957,6 @@
     "pinTag": "Fastgør for hurtig adgang",
     "parentTag": "Overordnet tag",
     "noParent": "Ingen (øverste niveau)",
-    "parentTagHasChildren": "Dette tag har underordnede tags og kan derfor ikke placeres under et andet tag.",
     "showChildTags": "Vis underordnede tags",
     "hideChildTags": "Skjul underordnede tags"
   },

@@ -13,13 +13,15 @@ import PushPinIcon from '../Shared/Icons/PushPinIcon';
 
 interface TagRowProps {
     tag: Tag;
+    // Shown instead of the full name, e.g. the leaf of a nested tag.
+    label?: string;
     onEdit: (tag: Tag) => void;
     onDelete: (tag: Tag) => void;
 }
 
 // One tag in a list. Its color shows as a left border, the same row as the
 // goal and area lists. The root is meant to sit inside a task-sheet list.
-const TagRow: React.FC<TagRowProps> = ({ tag, onEdit, onDelete }) => {
+const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
     const { t } = useTranslation();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -78,8 +80,11 @@ const TagRow: React.FC<TagRowProps> = ({ tag, onEdit, onDelete }) => {
                 to={tagPath}
                 className="flex flex-1 min-w-0 items-center gap-2"
             >
-                <h4 className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 truncate">
-                    {tag.name}
+                <h4
+                    className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 truncate"
+                    title={tag.name}
+                >
+                    {label ?? tag.name}
                 </h4>
                 {tag.pinned && !isSystem && (
                     <PushPinIcon

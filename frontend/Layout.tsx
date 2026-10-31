@@ -314,24 +314,14 @@ const Layout: React.FC<LayoutProps> = ({
 
     const handleSaveTag = async (tagData: Tag) => {
         try {
-            let result: Tag;
             if (tagData.uid) {
-                result = await updateTag(tagData.uid, tagData);
-                // Update existing tag in global store
-                const currentTags = useStore.getState().tagsStore.tags;
-                useStore
-                    .getState()
-                    .tagsStore.setTags(
-                        currentTags.map((tag) =>
-                            tag.uid === result.uid ? result : tag
-                        )
-                    );
+                await updateTag(tagData.uid, tagData);
             } else {
-                result = await createTag(tagData);
-                // Add new tag to global store
-                const currentTags = useStore.getState().tagsStore.tags;
-                useStore.getState().tagsStore.setTags([...currentTags, result]);
+                await createTag(tagData);
             }
+            // A rename moves the whole namespace and a nested name creates
+            // its missing ancestors, so reload the list from the server.
+            await useStore.getState().tagsStore.loadTags(true);
             closeTagModal();
         } catch (error: any) {
             console.error('Error saving tag:', error);

@@ -712,11 +712,11 @@ describe('MCP Tools Integration', () => {
             });
 
             it('should roll back the task and new tags when a tag fails', async () => {
-                const bulkCreate = Tag.bulkCreate;
+                const findOrCreate = Tag.findOrCreate;
                 const bulkCreateSpy = jest
-                    .spyOn(Tag, 'bulkCreate')
+                    .spyOn(Tag, 'findOrCreate')
                     .mockImplementation(async (...args) => {
-                        await bulkCreate.apply(Tag, args);
+                        await findOrCreate.apply(Tag, args);
                         throw new Error('Tag write failed');
                     });
 
@@ -2695,11 +2695,11 @@ describe('MCP Tools Integration', () => {
             });
 
             it('should roll back the project and new tags when a tag fails', async () => {
-                const bulkCreate = Tag.bulkCreate;
+                const findOrCreate = Tag.findOrCreate;
                 const bulkCreateSpy = jest
-                    .spyOn(Tag, 'bulkCreate')
+                    .spyOn(Tag, 'findOrCreate')
                     .mockImplementation(async (...args) => {
-                        await bulkCreate.apply(Tag, args);
+                        await findOrCreate.apply(Tag, args);
                         throw new Error('Tag write failed');
                     });
 

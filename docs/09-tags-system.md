@@ -15,7 +15,8 @@ This document explains how the Tags system works in Cadence from a user behavior
 - Auto-created on-the-fly
 - Case-insensitive
 - Character restrictions for URL safety
-- Maximum 50 characters per tag name
+- Namespaces: `/` separates levels (`perso/sport/course`), at any depth
+- Maximum 50 characters per part of a name, 200 for the whole path
 
 **URL:** `/tags` (tag list) or `/tag/:uid-:slug` (tag detail page)
 
@@ -31,7 +32,7 @@ This document explains how the Tags system works in Cadence from a user behavior
 2. **Flexible categorization**
    - No predefined taxonomy
    - Create tags as needed
-   - One optional level of nesting (a tag can sit under a parent tag)
+   - Namespaces of any depth: a tag's name is its full path, and its parent is the tag named by the path without its last part
    - Multiple tags per item (up to 10 tags per task/note/project)
 
 3. **User-scoped isolation**
@@ -49,12 +50,12 @@ This document explains how the Tags system works in Cadence from a user behavior
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | **UID** | String | Auto | Unique identifier (immutable) |
-| **Name** | String | Yes | Tag name (unique per user) |
+| **Name** | String | Yes | Tag path (unique per user), e.g. `perso/sport/course`. Each part is trimmed |
 | **User ID** | Integer | Auto | Owner of the tag |
 | **Tag type** | String | Auto | `user` for your own tags, `system` for the built-in `today` and `someday` |
 | **Pinned** | Boolean | No | Pinned tags come first in the tag input's quick-access chips |
 | **Color** | String | No | Optional chip color |
-| **Parent** | Integer (`parent_id`) | No | Parent tag, for nested tags. The API reads and writes it as `parent_uid` |
+| **Parent** | Integer (`parent_id`) | Auto | The tag named by the path without its last part (`null` for a name without `/`). Kept in step with the name. The API reads and writes it as `parent_uid` |
 | **Created At** | Timestamp | Auto | Creation timestamp |
 | **Updated At** | Timestamp | Auto | Last modification timestamp |
 
@@ -81,12 +82,14 @@ The tag input shows up to 5 quick-access chips for tags not yet on the item: you
 ### Validation Rules
 
 **Tag name restrictions:**
-- **Length:** 1-50 characters (after trimming whitespace)
-- **Invalid characters:** `# % & { } \ < > * ? / $ ! ' " @ + \` | =`
+- **Length:** 1-50 characters per part, 200 for the whole path (each part is trimmed)
+- **Separator:** `/` splits the parts of a namespace (`perso/sport/course`). A part cannot be empty, so a name cannot start or end with `/` or contain `//`
+- **Invalid characters:** `# % & { } \ < > * ? $ ! ' " @ + \` | =`
 - **Valid characters:** Letters, numbers, spaces, hyphens, underscores
 - **Case:** Stored as-is, but treated case-insensitively for uniqueness
   - ✅ Valid examples: `work`, `Work Projects`, `Q1-2026`, `backend_dev`
-  - ❌ Invalid examples (contain special chars): `foo/bar`, `price$`, `email@domain`
+  - ✅ Namespaces: `perso/sport/course`, ` a / b ` (saved as `a/b`)
+  - ❌ Invalid examples (contain special chars): `price$`, `email@domain`, `perso//sport`
   - ❌ Invalid: `#hashtag` - the `#` character cannot be part of the tag name
 
 > **Note about Inbox hashtag syntax:** When using the Inbox quick capture, you can type `#work` and the system will extract `work` as the tag name. The `#` is a syntax marker, not part of the actual tag. Similarly, project references like `+ProjectName` use `+` as a marker, and the project name cannot contain `+`.
@@ -231,8 +234,11 @@ Tags are automatically created when you add them to a task, note, or project:
 - No broken links (UID remains the same)
 
 **Rename restrictions:**
-- Must follow validation rules (1-50 chars, valid characters)
-- Cannot rename to existing tag name (conflict error)
+- Must follow validation rules (parts of 1-50 chars, valid characters)
+- Cannot rename to existing tag name (conflict error). The whole subtree is checked too: a rename that would give a child an existing name also fails with `409`
+- A tag cannot move under itself or one of its descendants (`400`)
+
+**Renaming a namespace:** renaming `a` to `x` renames its whole subtree: `a/b` becomes `x/b` and `a/b/c` becomes `x/b/c`. Their parents follow the new names.
 
 ### Deleting Tags
 
@@ -261,7 +267,7 @@ Tags are automatically created when you add them to a task, note, or project:
 - Tasks, notes, and projects themselves (only tag link removed)
 - No cascading deletion
 - Other tags remain intact
-- Child tags of a deleted parent stay, and become top-level tags
+- Child tags of a deleted parent stay, and move up to the deleted tag's parent (or to the top level); their names lose the deleted part of the path
 
 **No undo:**
 - Deletion is immediate and irreversible
@@ -492,11 +498,14 @@ A tag can sit under a **parent tag**, like folders of tags (`work` > `calls`,
   (`null` or `""` clears it). `GET /api/tags` and `GET /api/tag` return
   `parent_uid` (`null` for a top-level tag)
 
+**Creating a namespace:** a name with `/` creates its missing parents too.
+Saving a task with the tag `perso/sport/course` creates `perso` and
+`perso/sport` if they do not exist. With `parent_uid`, the name is the part
+under that parent (`b` under `a` gives `a/b`).
+
 **Rules:**
-- **One level only.** A parent tag cannot itself have a parent, and a tag that
-  already has children cannot be put under another tag. The select only lists
-  top-level tags and is disabled for a tag with children
-- A tag cannot be its own parent (no cycles)
+- There is no depth limit. A tag can sit under a parent that is itself nested
+- A tag cannot be its own parent or move under one of its descendants (`400`)
 - The parent must be one of your own tags: a parent owned by another user is
   rejected with `403`, an unknown `parent_uid` with `400`
 - Deleting a parent keeps its children; they become top-level tags
@@ -504,14 +513,15 @@ A tag can sit under a **parent tag**, like folders of tags (`work` > `calls`,
 
 **Filtering:**
 - Filtering tasks (`GET /api/tasks?tag=work`) or notes
-  (`GET /api/notes?tag=work`) by a parent tag also returns items tagged with
-  any of its child tags. Filtering by a child tag returns only that child
+  (`GET /api/notes?tag=work`) by a tag also returns items tagged with any tag
+  under it, at any depth: `tag=perso` matches `perso/sport/course`. It does not
+  match a tag that only starts with the same letters (`perso2`)
 - Universal search (`GET /api/search?tags=...`), saved views (which run
   through search) and the Focus chip (`tags` scope param) treat each listed
-  parent tag the same way: it stands for the parent or any of its children.
-  Several listed tags still use AND: an item matches when, for every listed
-  tag, it carries that tag or one of its children (`work,urgent` matches a
-  task tagged `calls` + `urgent`)
+  listed tag the same way: it stands for the tag or any tag under it. Several
+  listed tags still use AND: an item matches when, for every listed tag, it
+  carries that tag or one of the tags under it (`work,urgent` matches a task
+  tagged `work/calls` + `urgent`)
 
 **Where nesting shows:**
 - Tags page: children grouped under their parent, collapsible
@@ -804,11 +814,7 @@ A tag can sit under a **parent tag**, like folders of tags (`work` > `calls`,
 
 ### Current Limitations
 
-1. **One level of tag nesting:**
-   - A tag can have a parent tag, but a parent cannot have a parent
-   - Deeper structures need naming conventions (`work-backend-api`)
-
-2. **User-scoped only:**
+1. **User-scoped only:**
    - Cannot share tags with other users
    - Collaborators on shared projects have separate tag sets
    - No team-wide tag taxonomy

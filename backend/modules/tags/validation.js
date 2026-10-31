@@ -2,39 +2,54 @@
 
 const { ValidationError } = require('../../shared/errors');
 
-const INVALID_CHARS = /[#%&{}\\<>*?/$!'"@+`|=]/;
-const MAX_LENGTH = 50;
+// A tag name is a path: `perso/sport/course`. `/` separates namespaces and is
+// allowed; every other character listed here is rejected inside a segment.
+const INVALID_CHARS = /[#%&{}\\<>*?$!'"@+`|=]/;
+const MAX_SEGMENT_LENGTH = 50;
+const MAX_LENGTH = 200;
 
 /**
- * Validates and sanitizes a tag name.
+ * Validates and normalizes a tag name (a `/`-separated path).
+ * Each segment is trimmed, then the path is rejoined, so ' a / b ' becomes 'a/b'.
  * @param {string} name - The tag name to validate
- * @returns {string} - The sanitized tag name
+ * @returns {string} - The normalized tag name
  * @throws {ValidationError} - If validation fails
  */
 function validateTagName(name) {
-    if (!name || typeof name !== 'string') {
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
         throw new ValidationError('Tag name is required');
     }
 
-    const trimmed = name.trim();
+    const segments = name.split('/').map((segment) => segment.trim());
 
-    if (trimmed.length === 0) {
-        throw new ValidationError('Tag name cannot be empty');
+    if (segments.some((segment) => segment.length === 0)) {
+        throw new ValidationError(
+            'Tag name cannot be empty, and a path cannot start, end or contain an empty segment around "/"'
+        );
     }
 
-    if (trimmed.length > MAX_LENGTH) {
+    for (const segment of segments) {
+        if (segment.length > MAX_SEGMENT_LENGTH) {
+            throw new ValidationError(
+                `Tag name must be ${MAX_SEGMENT_LENGTH} characters or less`
+            );
+        }
+        if (INVALID_CHARS.test(segment)) {
+            throw new ValidationError(
+                'Tag name contains invalid characters. Please avoid: # % & { } \\ < > * ? $ ! \' " @ + ` | ='
+            );
+        }
+    }
+
+    const normalized = segments.join('/');
+
+    if (normalized.length > MAX_LENGTH) {
         throw new ValidationError(
             `Tag name must be ${MAX_LENGTH} characters or less`
         );
     }
 
-    if (INVALID_CHARS.test(trimmed)) {
-        throw new ValidationError(
-            'Tag name contains invalid characters. Please avoid: # % & { } \\ < > * ? / $ ! \' " @ + ` | ='
-        );
-    }
-
-    return trimmed;
+    return normalized;
 }
 
 module.exports = {

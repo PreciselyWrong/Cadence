@@ -1957,7 +1957,6 @@
     "pinTag": "Vastzetten voor snelle toegang",
     "parentTag": "Bovenliggende tag",
     "noParent": "Geen (hoogste niveau)",
-    "parentTagHasChildren": "Deze tag heeft onderliggende tags en kan daarom niet onder een andere tag worden geplaatst.",
     "showChildTags": "Onderliggende tags tonen",
     "hideChildTags": "Onderliggende tags verbergen"
   },

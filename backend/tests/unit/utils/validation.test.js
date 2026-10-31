@@ -70,7 +70,6 @@ describe('validation utils', () => {
                 '>',
                 '*',
                 '?',
-                '/',
                 '$',
                 '!',
                 "'",

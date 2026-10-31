@@ -30,11 +30,28 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : un menu déroulant s'affiche toujours au-dessus de la page, à côté de son bouton, jamais dans un conteneur qui défile ou masque son contenu.
 - **Android** : un menu ou une feuille ouverts depuis la navigation passent au premier plan ; tout bouton doit produire un effet visible.
 
-### En cours — Icônes et tags imbriqués
+### 2026-10-31 — Tags imbriqués (namespaces façon Logseq)
+
+- **Demande** : des tags imbriqués comme les namespaces Logseq, à profondeur libre.
+- **Décisions** (contrat serveur dans `docs/09-tags-system.md`) :
+  - le nom d'un tag est son chemin complet : `perso/sport/course` ; deux `sport` peuvent coexister sous des parents différents ;
+  - saisir `perso/sport` n'importe où (tâche, note, projet, panneau de tag) crée les ancêtres manquants ;
+  - renommer un tag renomme tout son sous-arbre ; un conflit de nom refuse l'opération (409) ;
+  - un tag ne peut pas aller sous lui-même ni sous un de ses descendants ;
+  - filtrer par un tag parent inclut tous ses descendants, à toute profondeur ;
+  - supprimer un parent remonte ses enfants d'un niveau ;
+  - affichage : dans un arbre (barre latérale, page Tags), le nom court sous son parent, le chemin complet en infobulle ; ailleurs (puces de tâche, sélecteurs), le chemin complet ;
+  - le panneau d'un tag édite le nom court et le parent (liste de tous les tags sauf lui et ses descendants, par chemin complet) et enregistre le chemin.
+- **Android** :
+  - afficher les tags en arbre dans les écrans de navigation et de filtre, avec le nom court sous le parent ; puces avec le chemin complet ;
+  - accepter `/` dans la saisie d'un tag ; le serveur crée les ancêtres à la synchro ;
+  - la migration serveur a renommé les tags imbriqués existants (`sport` → `perso/sport`) sans entrée de journal : la version qui adopte les namespaces doit retélécharger le snapshot des tags (`GET /api/v1/sync/snapshot?entity=tag`) une fois.
+
+### En cours — Icônes des projets et des tags
 
 - **Demande** : projets et tags portent une petite icône, visible partout où ils apparaissent (barre latérale, lignes de tâche, détail, sélecteurs).
-- **Demande** : tags imbriqués à la manière des namespaces Logseq (`parent/enfant`, profondeur libre), affichés en arbre dans la barre latérale.
-- **Android** : reprendre le même modèle (icône du projet et du tag, hiérarchie de tags) une fois le contrat serveur fixé ; le détail sera ajouté ici.
+- **Décisions** : jeu d'icônes partagé, mêmes identifiants que `android/app/src/main/java/ch/nicolab/cadence/ui/icon/HabitIconRegistry.kt` (60 icônes Material) ; le web en garde une copie générée (`frontend/constants/entityIcons.ts`, `scripts/gen-entity-icons.py`) ; aucune icône par défaut, l'icône habituelle (dossier, étiquette) s'affiche tant qu'aucune n'est choisie.
+- **Android** : stocker et afficher le champ `icon` des projets et des tags avec `HabitIconRegistry` ; ajouter une icône au registre l'ajoute aux deux clients (régénérer le fichier web).
 
 ### À faire — Glisser-déposer vers la navigation
 

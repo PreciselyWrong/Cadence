@@ -391,17 +391,23 @@ async function filterTasksByParams(
     orderClause = [PINNED_ORDER, ...orderClause];
 
     if (params.tag) {
+        // A tag name is a path: the tag matches itself and every tag under it
+        // at any depth. Matched by name prefix, not LIKE (engines differ).
+        const tagPrefix = `${params.tag}/`;
         const taggedTaskIds = await sequelize.query(
             `SELECT DISTINCT tasks_tags.task_id
              FROM tasks_tags
              INNER JOIN tags ON tags.id = tasks_tags.tag_id
-             WHERE tags.name = :tagName
-                OR tags.parent_id IN (
-                    SELECT parent_tags.id FROM tags AS parent_tags
-                    WHERE parent_tags.name = :tagName
-                )`,
+             WHERE tags.user_id = :userId
+               AND (tags.name = :tagName
+                    OR SUBSTR(tags.name, 1, :prefixLen) = :tagPrefix)`,
             {
-                replacements: { tagName: params.tag },
+                replacements: {
+                    userId,
+                    tagName: params.tag,
+                    tagPrefix,
+                    prefixLen: tagPrefix.length,
+                },
                 type: QueryTypes.SELECT,
             }
         );

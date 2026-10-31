@@ -1962,7 +1962,6 @@
     "pinTag": "Fixează pentru acces rapid",
     "parentTag": "Etichetă părinte",
     "noParent": "Niciuna (nivel superior)",
-    "parentTagHasChildren": "Această etichetă are etichete copil, deci nu poate fi pusă sub altă etichetă.",
     "showChildTags": "Afișează etichetele copil",
     "hideChildTags": "Ascunde etichetele copil"
   },

@@ -11,12 +11,12 @@ const {
 } = require('../../shared/errors');
 
 /**
- * Resolve a parent_uid from a request into a parent tag id.
+ * Resolve a parent_uid from a request into the parent tag.
  * Returns undefined when parent_uid was not sent, null to clear the parent.
- * One level of nesting only: a parent cannot have a parent itself, and a tag
- * that already has children cannot be put under another tag.
+ * Tag names are paths, so the parent must not be the tag itself or one of its
+ * descendants (a descendant's name starts with the tag's name and a "/").
  */
-async function resolveParentId(userId, parentUid, tag = null) {
+async function resolveParent(userId, parentUid, tag = null) {
     if (parentUid === undefined) return undefined;
     if (parentUid === null || parentUid === '') return null;
     if (typeof parentUid !== 'string') {
@@ -33,17 +33,12 @@ async function resolveParentId(userId, parentUid, tag = null) {
     if (tag && parent.id === tag.id) {
         throw new ValidationError('A tag cannot be its own parent');
     }
-    if (parent.parent_id) {
+    if (tag && parent.name.startsWith(`${tag.name}/`)) {
         throw new ValidationError(
-            'Tags can only be nested one level deep: the parent tag is itself nested'
+            'A tag cannot be moved under one of its own children'
         );
     }
-    if (tag && (await tagsRepository.hasChildren(tag.id))) {
-        throw new ValidationError(
-            'Tags can only be nested one level deep: this tag has child tags'
-        );
-    }
-    return parent.id;
+    return parent;
 }
 
 async function parentUidFor(parentId) {
@@ -124,35 +119,45 @@ class TagsService {
     }
 
     /**
-     * Create a new tag.
+     * Create a new tag. With parent_uid, `name` is the leaf under that parent.
+     * Missing ancestors of a path are created by the Tag model hooks.
      */
     async create(userId, name, { parent_uid } = {}) {
         const validatedName = validateTagName(name);
+        const parent = await resolveParent(userId, parent_uid);
+        if (parent && validatedName.includes('/')) {
+            throw new ValidationError(
+                'A tag nested under a parent cannot have "/" in its name'
+            );
+        }
+        const fullName = parent
+            ? `${parent.name}/${validatedName}`
+            : validatedName;
 
-        const exists = await tagsRepository.nameExists(userId, validatedName);
+        const exists = await tagsRepository.nameExists(userId, fullName);
         if (exists) {
             throw new ConflictError(
-                `A tag with the name "${validatedName}" already exists.`
+                `A tag with the name "${fullName}" already exists.`
             );
         }
 
-        const parentId = await resolveParentId(userId, parent_uid);
-
         const tag = await tagsRepository.createForUser(
             userId,
-            validatedName,
-            parentId ?? null
+            fullName,
+            parent ? parent.id : null
         );
 
         return {
             uid: tag.uid,
             name: tag.name,
-            parent_uid: parentId ? parent_uid : null,
+            parent_uid: parent ? parent.uid : null,
         };
     }
 
     /**
-     * Update a tag's name and/or pinned state.
+     * Update a tag's name, parent, pinned and color.
+     * A rename cascades to the subtree in the Tag model hooks; moving a tag
+     * with parent_uid rebuilds its name from the new parent.
      */
     async update(userId, identifier, { name, pinned, color, parent_uid } = {}) {
         const decodedIdentifier = decodeURIComponent(identifier);
@@ -165,26 +170,30 @@ class TagsService {
             throw new NotFoundError('Tag not found');
         }
 
+        const parent = await resolveParent(userId, parent_uid, tag);
         const updates = {};
 
-        if (name !== undefined) {
-            if (tag.tag_type === 'system') {
-                // Silently ignore name field for system tags - the form always sends it
-            } else {
-                const validatedName = validateTagName(name);
-                if (validatedName !== tag.name) {
-                    const exists = await tagsRepository.nameExists(
-                        userId,
-                        validatedName,
-                        tag.id
+        if (name !== undefined && tag.tag_type !== 'system') {
+            let newName = validateTagName(name);
+            if (parent && newName.includes('/')) {
+                throw new ValidationError(
+                    'A tag nested under a parent cannot have "/" in its name'
+                );
+            }
+            if (parent) newName = `${parent.name}/${newName}`;
+
+            if (newName !== tag.name) {
+                const exists = await tagsRepository.nameExists(
+                    userId,
+                    newName,
+                    tag.id
+                );
+                if (exists) {
+                    throw new ConflictError(
+                        `A tag with the name "${newName}" already exists.`
                     );
-                    if (exists) {
-                        throw new ConflictError(
-                            `A tag with the name "${validatedName}" already exists.`
-                        );
-                    }
-                    updates.name = validatedName;
                 }
+                updates.name = newName;
             }
         }
 
@@ -196,9 +205,8 @@ class TagsService {
             updates.color = color === '' ? null : color;
         }
 
-        const parentId = await resolveParentId(userId, parent_uid, tag);
-        if (parentId !== undefined) {
-            updates.parent_id = parentId;
+        if (parent !== undefined) {
+            updates.parent_id = parent ? parent.id : null;
         }
 
         if (Object.keys(updates).length > 0) {
@@ -208,14 +216,10 @@ class TagsService {
         return {
             id: tag.id,
             uid: tag.uid,
-            name: updates.name ?? tag.name,
-            pinned: updates.pinned !== undefined ? updates.pinned : tag.pinned,
-            color: updates.color !== undefined ? updates.color : tag.color,
-            parent_uid: await parentUidFor(
-                updates.parent_id !== undefined
-                    ? updates.parent_id
-                    : tag.parent_id
-            ),
+            name: tag.name,
+            pinned: tag.pinned,
+            color: tag.color,
+            parent_uid: await parentUidFor(tag.parent_id),
         };
     }
 

@@ -290,7 +290,10 @@ class SearchService {
     ) {
         let matchingIds = null;
         if (tagIds.length > 0) {
-            matchingIds = await searchRepository.findTaskIdsWithAllTags(tagIds);
+            matchingIds = await searchRepository.findTaskIdsWithAllTags(
+                userId,
+                tagIds
+            );
             if (matchingIds.length === 0) {
                 return { count: 0, results: [] };
             }
@@ -309,7 +312,7 @@ class SearchService {
         }
         // The tag include also matches child tags of a listed parent.
         const { include, tagInclude } = this.buildTaskInclude(
-            await searchRepository.expandWithChildTagIds(tagIds),
+            await searchRepository.expandWithChildTagIds(userId, tagIds),
             params.extras
         );
 
@@ -357,8 +360,10 @@ class SearchService {
 
         let matchingIds = null;
         if (tagIds.length > 0) {
-            matchingIds =
-                await searchRepository.findProjectIdsWithAllTags(tagIds);
+            matchingIds = await searchRepository.findProjectIdsWithAllTags(
+                userId,
+                tagIds
+            );
             if (matchingIds.length === 0) {
                 return { count: 0, results: [] };
             }
@@ -435,7 +440,10 @@ class SearchService {
             };
             if (tagIds.length > 0) {
                 const tagFilterIds =
-                    await searchRepository.expandWithChildTagIds(tagIds);
+                    await searchRepository.expandWithChildTagIds(
+                        userId,
+                        tagIds
+                    );
                 tagInclude.where = { id: { [Op.in]: tagFilterIds } };
             }
             include.push(tagInclude);
@@ -530,7 +538,10 @@ class SearchService {
 
         let matchingIds = null;
         if (tagIds.length > 0) {
-            matchingIds = await searchRepository.findNoteIdsWithAllTags(tagIds);
+            matchingIds = await searchRepository.findNoteIdsWithAllTags(
+                userId,
+                tagIds
+            );
             if (matchingIds.length === 0) {
                 return { count: 0, results: [] };
             }
@@ -565,8 +576,10 @@ class SearchService {
 
         const include = [];
         if (tagIds.length > 0) {
-            const tagFilterIds =
-                await searchRepository.expandWithChildTagIds(tagIds);
+            const tagFilterIds = await searchRepository.expandWithChildTagIds(
+                userId,
+                tagIds
+            );
             include.push({
                 model: Tag,
                 where: { id: { [Op.in]: tagFilterIds } },

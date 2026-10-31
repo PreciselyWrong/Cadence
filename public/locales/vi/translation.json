@@ -1957,7 +1957,6 @@
     "pinTag": "Ghim để truy cập nhanh",
     "parentTag": "Thẻ cha",
     "noParent": "Không có (cấp cao nhất)",
-    "parentTagHasChildren": "Thẻ này có thẻ con nên không thể đặt dưới thẻ khác.",
     "showChildTags": "Hiện thẻ con",
     "hideChildTags": "Ẩn thẻ con"
   },

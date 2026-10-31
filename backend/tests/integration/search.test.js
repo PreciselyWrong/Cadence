@@ -847,10 +847,10 @@ describe('Universal Search Routes', () => {
                     user_id: user.id,
                     name: 'work',
                 });
+                // A tag name is its path; the parent is derived from it.
                 const calls = await Tag.create({
                     user_id: user.id,
-                    name: 'calls',
-                    parent_id: work.id,
+                    name: 'work/calls',
                 });
                 const urgent = await Tag.create({
                     user_id: user.id,
@@ -907,9 +907,9 @@ describe('Universal Search Routes', () => {
             });
 
             it('a child tag matches only itself', async () => {
-                expect(await names({ tags: 'calls', filters: 'Task' })).toEqual(
-                    ['Child and urgent', 'Child only']
-                );
+                expect(
+                    await names({ tags: 'work/calls', filters: 'Task' })
+                ).toEqual(['Child and urgent', 'Child only']);
             });
 
             it('keeps AND across listed tags', async () => {
@@ -918,7 +918,7 @@ describe('Universal Search Routes', () => {
                 ).toEqual(['Child and urgent']);
                 // A parent and its child both listed: the child satisfies both
                 expect(
-                    await names({ tags: 'work,calls', filters: 'Task' })
+                    await names({ tags: 'work,work/calls', filters: 'Task' })
                 ).toEqual(['Child and urgent', 'Child only']);
             });
         });

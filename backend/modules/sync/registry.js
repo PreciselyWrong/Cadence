@@ -126,14 +126,16 @@ const ENTITIES = {
     },
     tag: {
         model: 'Tag',
-        // One level of nesting, as in tags/service.js.
+        // Tags nest at any depth, but a tag cannot be its own parent or move
+        // under one of its descendants. A tag name is a path, so a descendant
+        // is a tag whose name starts with the row's name and a "/".
         validate: async (row, values) => {
             if (!values.parent_id) return null;
             const { Tag } = require('../../models');
             if (row && values.parent_id === row.id) return 'invalid_hierarchy';
             const parent = await Tag.findByPk(values.parent_id);
-            if (parent.parent_id) return 'invalid_hierarchy';
-            if (row && (await Tag.count({ where: { parent_id: row.id } }))) {
+            if (!parent) return 'invalid_hierarchy';
+            if (row && parent.name.startsWith(`${row.name}/`)) {
                 return 'invalid_hierarchy';
             }
             return null;

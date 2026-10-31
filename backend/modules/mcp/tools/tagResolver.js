@@ -59,10 +59,15 @@ async function resolveTagsForTransaction(tagsInput, userId, transaction) {
         return [];
     }
 
-    await Tag.bulkCreate(
-        validTagNames.map((name) => ({ name, user_id: userId })),
-        { ignoreDuplicates: true, transaction }
-    );
+    // One at a time: bulkCreate skips the per-row hooks that create the
+    // missing ancestors of a path.
+    for (const name of validTagNames) {
+        await Tag.findOrCreate({
+            where: { name, user_id: userId },
+            defaults: { name, user_id: userId },
+            transaction,
+        });
+    }
 
     return Tag.findAll({
         where: {

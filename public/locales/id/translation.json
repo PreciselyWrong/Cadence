@@ -1957,7 +1957,6 @@
     "pinTag": "Sematkan untuk akses cepat",
     "parentTag": "Tag induk",
     "noParent": "Tidak ada (tingkat atas)",
-    "parentTagHasChildren": "Tag ini memiliki tag anak, jadi tidak dapat ditempatkan di bawah tag lain.",
     "showChildTags": "Tampilkan tag anak",
     "hideChildTags": "Sembunyikan tag anak"
   },

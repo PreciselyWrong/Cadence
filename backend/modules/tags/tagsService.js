@@ -1,32 +1,18 @@
+'use strict';
+
+const { validateTagName: validatePath } = require('./validation');
+
+/**
+ * Returns `{valid: true, name}` or `{valid: false, error}` for the callers that
+ * report per-item errors (tasks, notes, projects, templates, onboarding, MCP).
+ * The rules live in validation.js; this only adapts the return shape.
+ */
 function validateTagName(name) {
-    if (!name || !name.trim()) {
-        return { valid: false, error: 'Tag name is required' };
+    try {
+        return { valid: true, name: validatePath(name) };
+    } catch (error) {
+        return { valid: false, error: error.message };
     }
-
-    const trimmedName = name.trim();
-
-    // Check for invalid characters that can break URLs or cause issues
-    const invalidChars = /[#%&{}\\<>*?/$!'"@+`|=]/;
-    if (invalidChars.test(trimmedName)) {
-        return {
-            valid: false,
-            error: 'Tag name contains invalid characters. Please avoid: # % & { } \\ < > * ? / $ ! \' " @ + ` | =',
-        };
-    }
-
-    // Check length limits
-    if (trimmedName.length > 50) {
-        return {
-            valid: false,
-            error: 'Tag name must be 50 characters or less',
-        };
-    }
-
-    if (trimmedName.length < 1) {
-        return { valid: false, error: 'Tag name cannot be empty' };
-    }
-
-    return { valid: true, name: trimmedName };
 }
 
 module.exports = {
