@@ -1,5 +1,8 @@
 ## [Non publié]
 
+### Nouveautés
+- Les habitudes se synchronisent avec votre serveur, dans les deux sens et hors ligne : habitudes, objectifs, saisies, pauses, rappels, chronomètres, abstinences et questions apprises suivent le même serveur et la même clé que les tâches. Au premier passage, tout ce que contient le téléphone est envoyé sans rien perdre ; les habitudes déjà présentes sur le serveur apparaissent à côté, sans fusion automatique.
+
 ### Corrections
 - Widget « Aujourd'hui » : les habitudes restent toujours visibles, même quand le widget est agrandi.
 - Widget « Aujourd'hui » : la liste affiche toutes les tâches du jour et défile, sans limite de lignes ni « +N ».

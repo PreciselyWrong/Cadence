@@ -182,6 +182,36 @@ class SyncEngineTest {
     }
 
     @Test
+    fun `un refus sur une habitude garde la ligne locale, la montre et ne reboucle pas`() = runTest {
+        val habitOp = op("op-1", "habit-0001").let {
+            OutboxOp(it.opId, "habit_goal", "habit-0001", "upsert", it.payload)
+        }
+        val store = FakeSyncStore(
+            cursor = 5,
+            ops = listOf(habitOp),
+            rows = mapOf(("habit_goal" to "habit-0001") to row("habit-0001", "local")),
+            keepsRejected = setOf("habit_goal"),
+        )
+        var pushes = 0
+        val api = FakeSyncApi().apply {
+            onPush = { pushes += 1; listOf(PushResult("op-1", "rejected", "invalid_value:target_minor")) }
+            onSnapshot = { _, _, _ -> SnapshotPage(5, null, emptyList()) }
+            onPull = { PullPage(5, false, emptyList()) }
+        }
+        val engine = SyncEngine(
+            api, store, Hlc(node = "and12345678a", wallClock = { 1_700_000_000_000L }),
+            nowMs = { 1L }, entities = listOf("habit_group", "habit", "habit_goal"),
+        )
+
+        engine.sync()
+        engine.sync()
+
+        assertEquals("local", store.row("habit_goal", "habit-0001")["name"]!!.jsonPrimitive.content)
+        assertEquals(listOf("op-1"), store.rejected)
+        assertEquals(1, pushes)
+    }
+
+    @Test
     fun `une création rejetée et absente du serveur disparaît et laisse un échec nommé`() = runTest {
         val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1")), rows = mapOf(("task" to "task-1") to row("task-1", "Acheter du lait")))
         val api = FakeSyncApi().apply {
@@ -319,7 +349,10 @@ private class FakeSyncStore(
     private var cursor: Long? = null,
     ops: List<OutboxOp> = emptyList(),
     rows: Map<Pair<String, String>, JsonObject> = emptyMap(),
+    private val keepsRejected: Set<String> = emptySet(),
 ) : SyncStore {
+    override fun discardsRejectedCreation(entity: String) = entity !in keepsRejected
+
     private val queue = ops.toMutableList()
     private val table = rows.toMutableMap()
     val rejected = mutableListOf<String>()
