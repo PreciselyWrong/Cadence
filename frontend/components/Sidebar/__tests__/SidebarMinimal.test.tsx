@@ -286,6 +286,28 @@ describe('Sidebar in minimal mode', () => {
         expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
     });
 
+    it('opens the rail More menu outside the clipped rail, and keeps it open on press', () => {
+        renderSidebar(false);
+
+        fireEvent.click(screen.getByTestId('sidebar-rail-more'));
+        const item = screen.getByTestId('sidebar-rail-more-boards');
+        const menu = item.closest('ul') as HTMLElement;
+
+        // The rail scrolls with overflow hidden: a menu inside it is cut off
+        // and hidden under the panel, so it renders over the page instead.
+        const railScroller = screen
+            .getByTestId('sidebar-rail-more')
+            .closest('.overflow-x-hidden') as HTMLElement;
+        expect(railScroller).not.toBeNull();
+        expect(railScroller.contains(menu)).toBe(false);
+        expect(menu.style.position).toBe('fixed');
+
+        fireEvent.mouseDown(item);
+        expect(
+            screen.getByTestId('sidebar-rail-more-boards')
+        ).toBeInTheDocument();
+    });
+
     it('puts Boards, Templates and Access in the rail More menu', () => {
         act(() => {
             useStore.setState((state: any) => ({

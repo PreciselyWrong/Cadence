@@ -24,6 +24,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : tout ce qui est prévu aujourd'hui s'affiche d'un coup (marqué #today, en retard, dû aujourd'hui, en cours, suggestions) ; le nombre de suggestions suit le réglage Planning, sans pagination.
 - **Android** : l'écran Aujourd'hui ne tronque jamais la liste du jour derrière un bouton « voir plus ».
 
+### 2026-10-31 — Menu « … » du rail invisible
+
+- **Problème** : le bouton « … » du rail ouvrait son menu (vues masquées, réglage de la barre), mais le menu était rogné par le rail et caché sous le panneau : rien ne semblait se passer.
+- **Décision** : un menu déroulant s'affiche toujours au-dessus de la page, à côté de son bouton, jamais dans un conteneur qui défile ou masque son contenu.
+- **Android** : un menu ou une feuille ouverts depuis la navigation passent au premier plan ; tout bouton doit produire un effet visible.
+
 ### En cours — Icônes et tags imbriqués
 
 - **Demande** : projets et tags portent une petite icône, visible partout où ils apparaissent (barre latérale, lignes de tâche, détail, sélecteurs).
