@@ -4,7 +4,7 @@ import androidx.compose.ui.semantics.selected
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.material.icons.outlined.WbSunny
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -95,7 +95,6 @@ private val ALL_DAY_MORE_HEIGHT = 28.dp
 private val ALL_DAY_EXPANDED_MAX = 168.dp
 private val RESIZE_HANDLE_HEIGHT = 20.dp
 private val RESIZE_GRIP_WIDTH = 28.dp
-private val COLLAPSED_DATE_HEIGHT = 32.dp
 private val COLLAPSE_TRAVEL = 36.dp
 private val EDGE_SCROLL_ZONE = 56.dp
 private const val EDGE_SCROLL_MAX_PX = 22f
@@ -105,7 +104,6 @@ private const val HOURS_PER_DAY = 24
 private const val DEFAULT_START_HOUR = 8
 /** Glissement franc, en pixels, au-delà duquel un balayage change de semaine ou de période. */
 private const val SWIPE_THRESHOLD_PX = 80f
-private val SHORT_DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE d MMM", Locale.FRENCH)
 
 /**
  * Vue Jour et 3 jours : bandeau des jours (ou en-têtes de colonnes), rangée des journées entières,
@@ -141,19 +139,16 @@ internal fun ColumnScope.TimeAgenda(
 
     Column(Modifier.weight(1f).nestedScroll(connection)) {
         if (state.mode == AgendaMode.DAY) {
-            AnimatedContent(targetState = collapse.collapsed, label = "weekStrip") { collapsed ->
-                if (collapsed) {
-                    CollapsedDate(day = state.selected, onExpand = { collapse = ScrollCollapse() })
-                } else {
-                    WeekStrip(
-                        week = weekDays(state.selected).filter { state.options.weekends || !it.isWeekend() },
-                        selected = state.selected,
-                        today = state.today,
-                        daysWithEntries = dotDays,
-                        onSelect = onSelect,
-                        onSwipeWeek = onSwipeWeek,
-                    )
-                }
+            // Replié, la semaine disparaît : l'en-tête porte déjà la date ; remonter la rouvre.
+            AnimatedVisibility(visible = !collapse.collapsed, label = "weekStrip") {
+                WeekStrip(
+                    week = weekDays(state.selected).filter { state.options.weekends || !it.isWeekend() },
+                    selected = state.selected,
+                    today = state.today,
+                    daysWithEntries = dotDays,
+                    onSelect = onSelect,
+                    onSwipeWeek = onSwipeWeek,
+                )
             }
             TrayRow(items = state.tray, drag = drag, onDrop = onDrop)
         } else {
@@ -162,6 +157,7 @@ internal fun ColumnScope.TimeAgenda(
         AllDayRow(
             days = days,
             layouts = layouts,
+            compact = collapse.collapsed,
             checkEvents = state.checkEvents,
             onToggleEvent = onToggleEvent,
             drag = drag,
@@ -179,28 +175,6 @@ internal fun ColumnScope.TimeAgenda(
             onResize = onResize,
             modifier = Modifier.weight(1f),
         )
-    }
-}
-
-/** Bandeau replié : la date du jour choisi sur une ligne ; un toucher rouvre la semaine. */
-@Composable
-private fun CollapsedDate(day: LocalDate, onExpand: () -> Unit) {
-    val palette = cadence
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(COLLAPSED_DATE_HEIGHT)
-            .clip(Radius.Chip)
-            .clickable(role = Role.Button, onClickLabel = stringResource(R.string.agenda_week_expand), onClick = onExpand),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = day.format(SHORT_DATE).replaceFirstChar { it.titlecase(Locale.FRENCH) },
-            style = MaterialTheme.typography.labelLarge,
-            color = palette.onSurface,
-            modifier = Modifier.weight(1f),
-        )
-        Icon(Icons.Outlined.ExpandMore, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.icon))
     }
 }
 
@@ -328,6 +302,7 @@ private fun DayColumnHeaders(days: List<LocalDate>, today: LocalDate) {
 private fun AllDayRow(
     days: List<LocalDate>,
     layouts: Map<LocalDate, DayLayout>,
+    compact: Boolean,
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
@@ -367,7 +342,8 @@ private fun AllDayRow(
             }
         }
         columns.forEach { entries ->
-            val cap = capAllDay(entries, expanded)
+            // En défilant, une seule ligne : la grille reprend la place des journées entières.
+            val cap = if (compact) capAllDay(entries, expanded = false, maxRows = 1) else capAllDay(entries, expanded)
             Column(Modifier.weight(1f).padding(horizontal = Space.xs), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 cap.visible.forEach { entry ->
                     AllDayChip(entry = entry, checkEvents = checkEvents, onToggleEvent = onToggleEvent, drag = drag, onDrop = onDrop)

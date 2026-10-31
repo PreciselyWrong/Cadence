@@ -494,7 +494,6 @@
     <string name="tab_inbox">Inbox</string>
     <string name="tab_agenda">Agenda</string>
     <string name="tab_bilan">Bilan</string>
-    <string name="agenda_title">Agenda</string>
     <string name="agenda_today">Aujourd’hui</string>
     <string name="agenda_display">Affichage</string>
     <string name="agenda_mode_day">Jour</string>

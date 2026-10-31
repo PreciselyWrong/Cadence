@@ -38,6 +38,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -219,8 +221,8 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
 }
 
 /**
- * En-tête : le titre et, alignés sur lui, le groupe précédent · aujourd'hui · suivant puis l'affichage ;
- * le contexte (jour, plage, mois) passe dessous sur toute la largeur.
+ * En-tête sur une seule ligne : le contexte (jour, plage, mois) tient lieu de titre — la barre du bas
+ * nomme déjà l'Agenda —, puis précédent · aujourd'hui · suivant et l'affichage. La grille garde la hauteur.
  */
 @Composable
 private fun AgendaHeader(
@@ -231,39 +233,35 @@ private fun AgendaHeader(
     onDisplay: () -> Unit,
 ) {
     val palette = cadence
-    Column(Modifier.fillMaxWidth().padding(top = Space.md)) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.agenda_title),
-                style = MaterialTheme.typography.displaySmall,
-                color = palette.onSurface,
-                maxLines = 1,
-                modifier = Modifier.weight(1f),
-            )
-            Row(
-                Modifier
-                    .height(Size.headerButton)
-                    .clip(Radius.Pill)
-                    .background(palette.glass)
-                    .border(Size.hairline, palette.glassBorder, Radius.Pill),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CapsuleButton(Icons.Outlined.ChevronLeft, stringResource(R.string.agenda_previous), onPrevious)
-                CapsuleButton(Icons.Outlined.Today, stringResource(R.string.agenda_today), onToday)
-                CapsuleButton(Icons.Outlined.ChevronRight, stringResource(R.string.agenda_next), onNext)
-            }
-            Spacer(Modifier.width(Space.sm))
-            RoundHeaderButton(
-                icon = Icons.Outlined.Tune,
-                contentDescription = stringResource(R.string.agenda_display),
-                onClick = onDisplay,
-            )
-        }
+    Row(
+        Modifier.fillMaxWidth().padding(top = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(
             text = subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = palette.onSurfaceVariant,
+            style = MaterialTheme.typography.titleMedium,
+            color = palette.onSurface,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f).semantics { heading() },
+        )
+        Row(
+            Modifier
+                .height(Size.headerButton)
+                .clip(Radius.Pill)
+                .background(palette.glass)
+                .border(Size.hairline, palette.glassBorder, Radius.Pill),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CapsuleButton(Icons.Outlined.ChevronLeft, stringResource(R.string.agenda_previous), onPrevious)
+            CapsuleButton(Icons.Outlined.Today, stringResource(R.string.agenda_today), onToday)
+            CapsuleButton(Icons.Outlined.ChevronRight, stringResource(R.string.agenda_next), onNext)
+        }
+        Spacer(Modifier.width(Space.sm))
+        RoundHeaderButton(
+            icon = Icons.Outlined.Tune,
+            contentDescription = stringResource(R.string.agenda_display),
+            onClick = onDisplay,
         )
     }
 }
