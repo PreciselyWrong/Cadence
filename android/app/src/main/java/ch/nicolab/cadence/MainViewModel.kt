@@ -530,7 +530,8 @@ class MainViewModel(
             )
         }
         repository.replaceReminders(habit.id, reminders)
-        reminders.forEach { ReminderScheduler.schedule(app, it) }
+        val quiet = ReminderScheduler.quietPolicy(app)
+        reminders.forEach { ReminderScheduler.schedule(app, it, quiet = quiet) }
     }
 
     fun archiveHabit(habit: PersistedHabit, archived: Boolean) = viewModelScope.launch {
@@ -747,7 +748,8 @@ class MainViewModel(
     fun importBackup(content: String, onComplete: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {
         runCatching { repository.importBackup(content) }
             .onSuccess {
-                repository.getAllReminders().forEach { ReminderScheduler.schedule(app, it) }
+                val quiet = ReminderScheduler.quietPolicy(app)
+                repository.getAllReminders().forEach { ReminderScheduler.schedule(app, it, quiet = quiet) }
                 AlcoholFollowUpScheduler.scheduleAll(app, repository, clock.zone, clock.instant())
                 LearnedQuestionScheduler.scheduleAll(app, learnedQuestions)
                 refreshAll()

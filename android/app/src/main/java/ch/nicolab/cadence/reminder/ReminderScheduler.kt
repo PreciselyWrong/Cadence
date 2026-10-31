@@ -29,6 +29,8 @@ import ch.nicolab.cadence.domain.HabitEvaluator
 import ch.nicolab.cadence.domain.HabitPause
 import ch.nicolab.cadence.domain.PauseReason
 import ch.nicolab.cadence.domain.PeriodCalculator
+import ch.nicolab.cadence.domain.QuietPolicy
+import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.ui.HabitFormatter
 import java.time.DayOfWeek
 import java.time.Instant
@@ -40,15 +42,59 @@ import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+
+/** Pose et retire les alarmes de rappels d'habitudes ; l'implémentation Android est [AlarmManagerHabitSink]. */
+internal interface HabitAlarmSink {
+    fun set(reminderId: String, triggerAtEpochMilli: Long)
+    fun cancel(reminderId: String)
+}
+
+internal object HabitReminderSync {
+    /**
+     * Aligne les alarmes sur [reminders] : les actifs sont (re)posés à leur prochaine heure, repoussée hors de la
+     * plage silencieuse ; les désactivés et ceux de [previouslyArmed] qui ont disparu (supprimés par une synchro)
+     * sont retirés. Retourne les identifiants maintenant armés.
+     */
+    fun apply(
+        sink: HabitAlarmSink,
+        reminders: List<HabitReminderEntity>,
+        previouslyArmed: Set<String>,
+        now: ZonedDateTime,
+        quiet: QuietPolicy,
+    ): Set<String> {
+        val armed = reminders.filter { it.enabled }
+        armed.forEach { sink.set(it.id, ReminderScheduler.triggerAt(it, now, quiet).toEpochMilli()) }
+        val keep = armed.mapTo(HashSet()) { it.id }
+        val gone = (previouslyArmed - keep) + reminders.filterNot { it.enabled }.map { it.id }
+        gone.forEach(sink::cancel)
+        return keep
+    }
+}
+
+internal class AlarmManagerHabitSink(private val context: Context) : HabitAlarmSink {
+    override fun set(reminderId: String, triggerAtEpochMilli: Long) {
+        context.getSystemService(AlarmManager::class.java).setWindow(
+            AlarmManager.RTC_WAKEUP,
+            triggerAtEpochMilli,
+            ReminderScheduler.WINDOW_MILLIS,
+            ReminderScheduler.pendingIntent(context, reminderId),
+        )
+    }
+
+    override fun cancel(reminderId: String) = ReminderScheduler.cancel(context, reminderId)
+}
 
 object ReminderScheduler {
     const val CHANNEL_ID = "habit_reminders"
     const val EXTRA_REMINDER_ID = "reminder_id"
     const val EXTRA_SNOOZE_TRIGGER_AT = "snooze_trigger_at"
     const val ACTION_DELIVER_SNOOZE = "ch.nicolab.cadence.reminder.DELIVER_SNOOZE"
-    private const val WINDOW_MILLIS = 15 * 60 * 1000L
+    internal const val WINDOW_MILLIS = 15 * 60 * 1000L
 
     fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -58,23 +104,46 @@ object ReminderScheduler {
         }
     }
 
-    fun schedule(context: Context, reminder: HabitReminderEntity, now: ZonedDateTime = ZonedDateTime.now()) {
-        cancel(context, reminder.id)
-        if (!reminder.enabled) return
-        val trigger = nextTrigger(reminder, now)
-        context.getSystemService(AlarmManager::class.java).setWindow(
-            AlarmManager.RTC_WAKEUP,
-            trigger.toInstant().toEpochMilli(),
-            WINDOW_MILLIS,
-            pendingIntent(context, reminder.id),
-        )
+    fun schedule(
+        context: Context,
+        reminder: HabitReminderEntity,
+        now: ZonedDateTime = ZonedDateTime.now(),
+        quiet: QuietPolicy = QuietPolicy.NONE,
+    ) {
+        HabitReminderSync.apply(AlarmManagerHabitSink(context), listOf(reminder), emptySet(), now, quiet)
+    }
+
+    /** Plage silencieuse du compte, gardée par la connexion au serveur ; aucune sans compte. */
+    suspend fun quietPolicy(context: Context): QuietPolicy =
+        TasksGraph.connection(context).observe().first()?.quiet ?: QuietPolicy.NONE
+
+    /**
+     * Repose tous les rappels : au démarrage de l'app, après une synchro qui en applique, et quand la plage
+     * silencieuse change. Rejouer la liste est sans effet de bord (une clé existante est remplacée).
+     */
+    fun observeAndKeepScheduled(context: Context, repository: ch.nicolab.cadence.data.local.CadenceRepository, scope: CoroutineScope) {
+        val sink = AlarmManagerHabitSink(context)
+        scope.launch {
+            var armed = emptySet<String>()
+            combine(
+                repository.observeAllReminders(),
+                TasksGraph.connection(context).observe().map { it?.quiet ?: QuietPolicy.NONE }.distinctUntilChanged(),
+            ) { reminders, quiet -> reminders to quiet }
+                .collect { (reminders, quiet) -> armed = HabitReminderSync.apply(sink, reminders, armed, ZonedDateTime.now(), quiet) }
+        }
     }
 
     @Synchronized
-    fun snooze(context: Context, habitId: String, reminderId: String, now: ZonedDateTime = ZonedDateTime.now()) {
+    fun snooze(
+        context: Context,
+        habitId: String,
+        reminderId: String,
+        now: ZonedDateTime = ZonedDateTime.now(),
+        quiet: QuietPolicy = QuietPolicy.NONE,
+    ) {
         cancelSnooze(context, habitId)
         val trigger = ReminderSnooze.nextTrigger(now)
-        val triggerAtEpochMilli = trigger.toInstant().toEpochMilli()
+        val triggerAtEpochMilli = quiet.shift(trigger.toInstant()).toEpochMilli()
         context.getSystemService(AlarmManager::class.java).setWindow(
             AlarmManager.RTC_WAKEUP,
             triggerAtEpochMilli,
@@ -164,6 +233,10 @@ object ReminderScheduler {
         return true
     }
 
+    /** Prochaine sonnerie, repoussée à la fin de la plage silencieuse du compte si elle y tombe. */
+    internal fun triggerAt(reminder: HabitReminderEntity, now: ZonedDateTime, quiet: QuietPolicy): java.time.Instant =
+        quiet.shift(nextTrigger(reminder, now).toInstant())
+
     internal fun nextTrigger(reminder: HabitReminderEntity, now: ZonedDateTime): ZonedDateTime {
         val time = LocalTime.parse(reminder.time)
         val days = reminder.daysOfWeek.split(',').filter(String::isNotBlank).map(DayOfWeek::valueOf).toSet()
@@ -174,7 +247,7 @@ object ReminderScheduler {
             .first { it.isAfter(now) }
     }
 
-    private fun pendingIntent(context: Context, reminderId: String): PendingIntent {
+    internal fun pendingIntent(context: Context, reminderId: String): PendingIntent {
         val intent = Intent(context, ReminderReceiver::class.java).putExtra(EXTRA_REMINDER_ID, reminderId)
         return PendingIntent.getBroadcast(context, reminderId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     }
@@ -241,7 +314,7 @@ class ReminderReceiver : BroadcastReceiver() {
                         reminderId = reminder.id,
                     )
                 }
-                ReminderScheduler.schedule(context, reminder)
+                ReminderScheduler.schedule(context, reminder, quiet = ReminderScheduler.quietPolicy(context))
             } finally {
                 pending.finish()
             }
@@ -376,7 +449,7 @@ class ReminderActionReceiver : BroadcastReceiver() {
                     val reminderId = intent.getStringExtra(ReminderScheduler.EXTRA_REMINDER_ID)
                         ?: repository.getAllReminders().firstOrNull { it.habitId == habitId && it.enabled }?.id
                     if (reminderId != null) {
-                        ReminderScheduler.snooze(context, habitId, reminderId)
+                        ReminderScheduler.snooze(context, habitId, reminderId, quiet = ReminderScheduler.quietPolicy(context))
                     }
                     return@launch
                 }
@@ -462,14 +535,16 @@ class ReminderActionReceiver : BroadcastReceiver() {
     }
 }
 
+/** Les alarmes disparaissent au redémarrage, à la mise à jour de l'app et se décalent quand l'heure ou le fuseau change. */
 class ReminderBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_BOOT_COMPLETED && intent.action != Intent.ACTION_TIMEZONE_CHANGED && intent.action != Intent.ACTION_TIME_CHANGED) return
+        if (!handles(intent.action)) return
         val pending = goAsync()
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             try {
                 val repository = (context.applicationContext as CadenceApp).repository
-                repository.getAllReminders().forEach { ReminderScheduler.schedule(context, it) }
+                val quiet = ReminderScheduler.quietPolicy(context)
+                repository.getAllReminders().forEach { ReminderScheduler.schedule(context, it, quiet = quiet) }
                 AbstinenceMilestoneScheduler.scheduleAll(context, repository)
                 AlcoholFollowUpScheduler.scheduleAll(context, repository)
                 LearnedQuestionScheduler.scheduleAll(context, (context.applicationContext as CadenceApp).learnedQuestions)
@@ -478,5 +553,16 @@ class ReminderBootReceiver : BroadcastReceiver() {
                 pending.finish()
             }
         }
+    }
+
+    companion object {
+        private val ACTIONS = setOf(
+            Intent.ACTION_BOOT_COMPLETED,
+            Intent.ACTION_MY_PACKAGE_REPLACED,
+            Intent.ACTION_TIMEZONE_CHANGED,
+            Intent.ACTION_TIME_CHANGED,
+        )
+
+        internal fun handles(action: String?): Boolean = action in ACTIONS
     }
 }

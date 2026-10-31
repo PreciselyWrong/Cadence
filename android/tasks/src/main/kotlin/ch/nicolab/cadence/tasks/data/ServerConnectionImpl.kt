@@ -5,8 +5,10 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import ch.nicolab.cadence.domain.QuietHours
 import ch.nicolab.cadence.tasks.ConnectionInfo
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.model.Funnel
@@ -35,6 +37,9 @@ private object ConnectionKeys {
     val USER_EMAIL = stringPreferencesKey("user_email")
     val ACCOUNT_TIMEZONE = stringPreferencesKey("account_timezone")
     val FIRST_DAY_OF_WEEK = intPreferencesKey("first_day_of_week")
+    val QUIET_ENABLED = booleanPreferencesKey("quiet_hours_enabled")
+    val QUIET_START = stringPreferencesKey("quiet_hours_start")
+    val QUIET_END = stringPreferencesKey("quiet_hours_end")
     val TOKEN_CIPHER = stringPreferencesKey("token_cipher")
     val TOKEN_IV = stringPreferencesKey("token_iv")
 }
@@ -54,6 +59,11 @@ internal class ServerConnectionImpl(
                     prefs[ConnectionKeys.USER_EMAIL],
                     parseZone(prefs[ConnectionKeys.ACCOUNT_TIMEZONE]),
                     Funnel.firstDayOf(prefs[ConnectionKeys.FIRST_DAY_OF_WEEK]),
+                    QuietHours.parse(
+                        prefs[ConnectionKeys.QUIET_ENABLED] == true,
+                        prefs[ConnectionKeys.QUIET_START],
+                        prefs[ConnectionKeys.QUIET_END],
+                    ),
                 )
             }
         }
@@ -90,7 +100,15 @@ internal class ServerConnectionImpl(
             if (previousUrl != url) store.serverChanged()
             SyncScheduler.schedulePeriodic(context)
             SyncScheduler.requestNow(context)
-            Result.success(ConnectionInfo(url, profile.email, parseZone(profile.timezone), Funnel.firstDayOf(profile.firstDayOfWeek)))
+            Result.success(
+                ConnectionInfo(
+                    url,
+                    profile.email,
+                    parseZone(profile.timezone),
+                    Funnel.firstDayOf(profile.firstDayOfWeek),
+                    profile.quietHours,
+                ),
+            )
         } catch (error: CancellationException) {
             throw error
         } catch (error: AuthError) {
@@ -131,6 +149,9 @@ private fun applyProfile(prefs: MutablePreferences, profile: AccountProfile) {
     setOrRemove(prefs, ConnectionKeys.USER_EMAIL, profile.email)
     setOrRemove(prefs, ConnectionKeys.ACCOUNT_TIMEZONE, profile.timezone)
     setOrRemove(prefs, ConnectionKeys.FIRST_DAY_OF_WEEK, profile.firstDayOfWeek)
+    setOrRemove(prefs, ConnectionKeys.QUIET_ENABLED, profile.quietHours?.enabled)
+    setOrRemove(prefs, ConnectionKeys.QUIET_START, profile.quietHours?.start?.toString())
+    setOrRemove(prefs, ConnectionKeys.QUIET_END, profile.quietHours?.end?.toString())
 }
 
 private fun <T : Any> setOrRemove(prefs: MutablePreferences, key: Preferences.Key<T>, value: T?) {

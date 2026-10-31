@@ -18,6 +18,8 @@
     <string name="tasks_share_saved">Ajouté à l\'Inbox</string>
     <string name="tasks_reminder_channel_name">Rappels de tâches</string>
     <string name="tasks_reminder_complete">Terminer</string>
+    <string name="tasks_reminder_snooze_10_min">Plus tard · 10 min</string>
+    <string name="tasks_reminder_snooze_1_hour">Plus tard · 1 h</string>
     <string name="tasks_reminder_default_text">Tâche à faire</string>
     <string name="tasks_reminder_due_time">Échéance à %1$s</string>
     <string name="tasks_reminder_due_date">Échéance le %1$s</string>

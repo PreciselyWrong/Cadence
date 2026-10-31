@@ -95,6 +95,25 @@ class SyncEngine(
         checkOpen()
         onProfile(api.profile())
         if (store.cursor() == null) snapshotAll()
+        var rejected = pushAndReconcile()
+        try {
+            pullAll()
+        } catch (reset: ResetRequired) {
+            // Le journal compacté ne remonte plus jusqu'au curseur : on repart d'un instantané. La file
+            // d'envoi reste intacte (ses lignes sont réappliquées sur l'instantané) et repart avant le tirage.
+            checkOpen()
+            store.saveCursor(null)
+            snapshotAll()
+            rejected += pushAndReconcile()
+            pullAll()
+        }
+        checkOpen()
+        store.markSynced(nowMs())
+        return rejected
+    }
+
+    /** Envoie la file, relit les entités en conflit ; retourne le nombre d'opérations rejetées. */
+    private suspend fun pushAndReconcile(): Int {
         val pushed = pushPending()
         // Un conflit ou un rejet n'émet aucun changement : on relit l'entité pour
         // montrer la valeur qui a gagné côté serveur.
@@ -107,9 +126,6 @@ class SyncEngine(
                 checkOpen()
                 store.deleteRow(it.entity, it.uid)
             }
-        pullAll()
-        checkOpen()
-        store.markSynced(nowMs())
         return pushed.rejected.size
     }
 

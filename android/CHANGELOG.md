@@ -11,9 +11,13 @@
 - Domaines : une rangée de puces filtre Aujourd'hui, À venir et Projets par domaine (le choix est gardé), et « Proposer 5 domaines » crée les domaines manquants quand il n'y en a aucun.
 - Revue : « Planifier une revue le vendredi » crée une tâche récurrente sans rappel, tant qu'aucune n'existe (connexion requise).
 - Agenda : une tâche récurrente apparaît à chaque occurrence de la plage affichée, avec son heure et sa durée, comme sur le web (une tâche hebdomadaire à 9 h se voit chaque semaine). Les occurrences à venir sont estompées : on les ouvre, mais seule la prochaine se coche ou se déplace.
+- Rappels de tâches : deux actions « Plus tard · 10 min » et « Plus tard · 1 h » sur la notification. Le report reste sur le téléphone et s'éteint si la tâche est terminée ou son rappel déplacé.
+- Heures calmes : la plage silencieuse du compte (réglée sur le web) repousse à sa fin les rappels de tâches et d'habitudes qui y tombent, y compris les « Plus tard » et à travers minuit.
 
 ### Corrections
 - Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.
+- Rappels d'habitudes : ils ne se perdent plus. Ils sont reposés à chaque ouverture de l'app, après une synchronisation qui en ajoute ou en retire, après une mise à jour de l'app et quand l'heure ou le fuseau change (c'était déjà le cas pour les tâches, sauf l'heure et le fuseau).
+- Synchronisation : quand le serveur a compacté son journal au-delà du point où le téléphone s'était arrêté (réponse 410), le téléphone reprend un instantané complet au lieu d'échouer, sans perdre les modifications en attente d'envoi.
 
 ## [1.5.0] — 31 octobre 2026
 

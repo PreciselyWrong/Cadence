@@ -286,6 +286,65 @@ class SyncEngineTest {
         assertEquals(listOf("passage", "effacement"), order)
     }
 
+    @Test
+    fun `un 410 sur le pull jette le curseur, reprend un instantané complet et garde la file`() = runTest {
+        val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1", "name" to "modifié ici")))
+        var pushes = 0
+        var pulls = 0
+        val api = FakeSyncApi().apply {
+            // Le serveur n'acquitte rien au premier envoi : l'opération doit survivre au rechargement.
+            onPush = { if (pushes++ == 0) emptyList() else listOf(PushResult("op-1", "applied", null)) }
+            onSnapshot = { entity, _, _ ->
+                SnapshotPage(
+                    cursor = 99,
+                    next = null,
+                    rows = if (entity == "task") listOf(row("task-1", "valeur serveur")) else emptyList(),
+                )
+            }
+            onPull = { cursor -> if (pulls++ == 0) throw ResetRequired() else PullPage(cursor, false, emptyList()) }
+        }
+
+        val result = engine(api, store).sync()
+
+        assertEquals(SyncResult.Synced, result)
+        assertEquals(5L, api.pullCursors.first())
+        assertEquals(99L, api.pullCursors.last())
+        assertEquals(99L, store.cursor())
+        assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item"), api.snapshotEntities)
+        assertEquals(2, pushes)
+        assertTrue(store.pendingOps(10).isEmpty())
+        assertEquals("modifié ici", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `une opération en attente est réappliquée sur l'instantané du rechargement`() = runTest {
+        val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1", "name" to "modifié ici")))
+        var pulls = 0
+        val api = FakeSyncApi().apply {
+            onPush = { emptyList() }
+            onSnapshot = { entity, _, _ ->
+                SnapshotPage(99, null, if (entity == "task") listOf(row("task-1", "valeur serveur")) else emptyList())
+            }
+            onPull = { cursor -> if (pulls++ == 0) throw ResetRequired() else PullPage(cursor, false, emptyList()) }
+        }
+
+        engine(api, store).sync()
+
+        assertEquals(listOf("op-1"), store.pendingOps(10).map { it.opId })
+        assertEquals("modifié ici", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `deux 410 de suite ne bouclent pas, le passage est réessayé plus tard`() = runTest {
+        val store = FakeSyncStore(cursor = 5)
+        val api = FakeSyncApi().apply { onPull = { throw ResetRequired() } }
+
+        val result = engine(api, store).sync()
+
+        assertTrue(result is SyncResult.Offline)
+        assertEquals(2, api.pullCursors.size)
+    }
+
     private fun row(uid: String, name: String, status: Int = 0, clock: String = fieldClock): JsonObject = buildJsonObject {
         put("uid", uid)
         put("name", name)

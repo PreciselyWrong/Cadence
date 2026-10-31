@@ -44,6 +44,7 @@ dependencies {
     implementation(projects.designsystem)
     implementation(projects.calendar)
     implementation(projects.data)
+    implementation(projects.domain)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

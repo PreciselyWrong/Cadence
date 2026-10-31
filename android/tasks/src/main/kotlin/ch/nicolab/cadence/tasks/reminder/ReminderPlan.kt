@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.reminder
 
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.domain.QuietPolicy
 import java.time.Duration
 import java.time.Instant
 
@@ -41,6 +42,49 @@ internal object ReminderPlan {
                 if (upcoming || late) put(task.uid, at)
             }
         }
+    }
+
+    /** Alarme d'un rappel : [reminderAt] reste la clé de remise, [triggerAt] est l'heure repoussée par la plage silencieuse. */
+    data class PlannedAlarm(val reminderAt: Instant, val triggerAt: Instant)
+
+    /**
+     * Ce qu'il faut poser et retirer. [scheduledUids] : alarmes de rappel déjà posées ; [storedSnoozes] : reports
+     * enregistrés. Un report encore valable (tâche ouverte, même rappel, pas plus vieux que [LATE_WINDOW]) est
+     * reposé, les autres sont à oublier.
+     */
+    data class AlarmPlan(
+        val reminders: Map<String, PlannedAlarm>,
+        val staleReminders: Set<String>,
+        val snoozes: Map<String, TaskSnooze>,
+        val staleSnoozes: Set<String>,
+    )
+
+    fun alarms(
+        tasks: List<TaskItem>,
+        delivered: Set<String>,
+        scheduledUids: Set<String>,
+        storedSnoozes: Set<String>,
+        now: Instant,
+        quiet: QuietPolicy,
+    ): AlarmPlan {
+        val wanted = wanted(tasks, delivered, now)
+        val byUid = tasks.associateBy { it.uid }
+        val earliest = now.minus(LATE_WINDOW)
+        val valid = mutableMapOf<String, TaskSnooze>()
+        val stale = mutableSetOf<String>()
+        for (raw in storedSnoozes) {
+            val snooze = TaskSnooze.decode(raw)
+            val task = snooze?.let { byUid[it.uid] }
+            val alive = snooze != null && task != null && !task.isClosed &&
+                task.reminderAt?.toEpochMilli() == snooze.reminderAt && !snooze.triggerAt.isBefore(earliest)
+            if (alive) valid[snooze.uid] = snooze else stale += raw
+        }
+        return AlarmPlan(
+            reminders = wanted.mapValues { (_, at) -> PlannedAlarm(at, quiet.shift(at)) },
+            staleReminders = scheduledUids.filterNotTo(HashSet()) { it in wanted },
+            snoozes = valid,
+            staleSnoozes = stale,
+        )
     }
 
     /** Retire les remises trop anciennes pour pouvoir encore être rattrapées. */

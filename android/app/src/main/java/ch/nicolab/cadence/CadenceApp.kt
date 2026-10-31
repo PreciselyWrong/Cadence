@@ -36,6 +36,9 @@ class CadenceApp : Application() {
         AbstinenceMilestoneScheduler.createChannel(this)
         AlcoholFollowUpScheduler.createChannel(this)
         LearnedQuestionScheduler.createChannel(this)
+        // Les alarmes disparaissent à la mise à jour ou au redémarrage et une synchro peut ajouter ou retirer des
+        // rappels : on les suit sur la table plutôt que sur chaque appelant.
+        ReminderScheduler.observeAndKeepScheduled(this, repository, applicationScope)
         applicationScope.launch {
             AbstinenceMilestoneScheduler.scheduleAll(this@CadenceApp, repository)
             AlcoholFollowUpScheduler.scheduleAll(this@CadenceApp, repository)

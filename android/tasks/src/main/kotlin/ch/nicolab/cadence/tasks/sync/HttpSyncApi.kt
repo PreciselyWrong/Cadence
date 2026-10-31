@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.sync
 
+import ch.nicolab.cadence.domain.QuietHours
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -94,10 +95,10 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
                 connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
             }
             val code = connection.responseCode
-            if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-                throw AuthError("Clé API refusée ($code)")
+            if (code !in 200..299) {
+                val errorBody = runCatching { connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } }.getOrNull()
+                throw httpFailure(code, errorBody)
             }
-            if (code !in 200..299) throw IOException("HTTP $code")
             val text = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
             parseResponse(text)
         } finally {
@@ -118,11 +119,33 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
  */
 internal fun parseResponse(text: String): JsonObject = shaped { Json.parseToJsonElement(text).jsonObject }
 
+/**
+ * Erreur d'une réponse hors 2xx. Un 410 `reset_required` du pull dit que le journal compacté ne remonte plus
+ * jusqu'au curseur : l'appareil doit reprendre un instantané.
+ */
+internal fun httpFailure(code: Int, body: String?): Exception = when {
+    code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN ->
+        AuthError("Clé API refusée ($code)")
+    code == HttpURLConnection.HTTP_GONE && isResetRequired(body) -> ResetRequired()
+    else -> IOException("HTTP $code")
+}
+
+private fun isResetRequired(body: String?): Boolean = body != null && runCatching {
+    (Json.parseToJsonElement(body).jsonObject["error"] as? JsonPrimitive)?.contentOrNull == "reset_required"
+}.getOrDefault(false)
+
 internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
     AccountProfile(
         email = (fields["email"] as? JsonPrimitive)?.contentOrNull,
         timezone = (fields["timezone"] as? JsonPrimitive)?.contentOrNull,
         firstDayOfWeek = (fields["first_day_of_week"] as? JsonPrimitive)?.intOrNull,
+        quietHours = (fields["quiet_hours"] as? JsonObject)?.let { quiet ->
+            QuietHours.parse(
+                enabled = (quiet["enabled"] as? JsonPrimitive)?.booleanOrNull == true,
+                start = (quiet["start"] as? JsonPrimitive)?.contentOrNull,
+                end = (quiet["end"] as? JsonPrimitive)?.contentOrNull,
+            )
+        },
     )
 }
 
