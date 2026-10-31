@@ -112,6 +112,7 @@ class TodayWidget : GlanceAppWidget() {
         val tasksRepository = TasksGraph.repository(context)
         val tasks = tasksRepository.observeTasks().first()
         val projects = tasksRepository.observeProjects().first().associateBy { it.uid }
+        val tagNames = tasksRepository.observeTags().first().associate { it.uid to it.name }
         val selection = selectWidgetTasks(tasks, eventsOf(context, config, today, zone), config, today, zone, now)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
@@ -132,6 +133,7 @@ class TodayWidget : GlanceAppWidget() {
             selection = selection,
             facets = facets,
             projects = projects,
+            tagNames = tagNames,
             today = today,
             zone = zone,
         )
@@ -264,6 +266,7 @@ private class TodayView(
     val selection: TodaySelection,
     val facets: List<FacetView>,
     val projects: Map<String, ProjectItem>,
+    val tagNames: Map<String, String>,
     val today: LocalDate,
     val zone: ZoneId,
 )
@@ -443,9 +446,10 @@ private fun EmptyLabel(text: String, palette: TodayPalettes, sizes: TodayTextSiz
 private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, overdue: Boolean, sizes: TodayTextSizes) {
     val palette = view.palette
     val config = view.config
-    val projectColour = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)?.let(::constantProvider)
-    val accent = (if (config.controlColour == ControlColour.PROJET) projectColour else null)
-        ?: palette.provider { it.checkTint(task.priority, config.controlColour) }
+    val projectArgb = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)
+    val projectColour = projectArgb?.let(::constantProvider)
+    val accent = palette.provider { it.taskTint(task.priority, config.controlColour, projectArgb) }
+    val meta = if (config.showTaskMeta) taskMeta(task, view.projects.mapValues { it.value.name }, view.tagNames) else null
     val context = LocalContext.current
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
@@ -476,6 +480,9 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
                 maxLines = 1,
                 style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.body.sp),
             )
+            meta?.let {
+                Text(it, maxLines = 1, style = TextStyle(color = palette.provider { p -> p.muted }, fontSize = sizes.small.sp))
+            }
         }
         dueLabel?.let {
             Text(

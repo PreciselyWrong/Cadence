@@ -637,6 +637,7 @@
     <string name="today_config_section_shape">Texte et forme</string>
     <string name="today_config_discrete">Boutons discrets</string>
     <string name="today_config_show_tasks">Afficher les tâches</string>
+    <string name="today_config_show_task_meta">Projet et étiquettes sous chaque tâche</string>
     <string name="today_config_habit_placement">Position des habitudes</string>
     <string name="today_config_habit_selection">Habitudes affichées</string>
     <string name="today_config_max_facets">Facettes max.</string>

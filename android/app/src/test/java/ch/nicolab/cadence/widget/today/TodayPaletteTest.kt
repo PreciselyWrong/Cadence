@@ -171,4 +171,14 @@ class TodayPaletteTest {
         assertEquals(0.15f, layerColor(glass).alpha, 0.01f)
         assertEquals(0.15f * 0.5f, layerColor(glass, alpha = 0.5f).alpha, 0.01f)
     }
+
+    @Test
+    fun `en couleur de projet, un projet sans couleur prend la couleur de priorité`() {
+        val palette = TodayPalette.of(TodayWidgetConfig(controlColour = ControlColour.PROJET)).night
+        val red = 0xFFE53935.toInt()
+
+        assertEquals(red, palette.taskTint(TaskPriority.HIGH, ControlColour.PROJET, projectArgb = red))
+        assertEquals(palette.checkTint(TaskPriority.HIGH, ControlColour.PRIORITE), palette.taskTint(TaskPriority.HIGH, ControlColour.PROJET, projectArgb = null))
+        assertEquals(palette.accent, palette.taskTint(TaskPriority.HIGH, ControlColour.INDIGO, projectArgb = red))
+    }
 }

@@ -11,6 +11,7 @@ object TodayWidgetConfigCodec {
     private const val FREE_CONTROL = "freeControl"
     private const val DISCRETE = "discreteButtons"
     private const val SHOW_TASKS = "showTasks"
+    private const val SHOW_TASK_META = "showTaskMeta"
     private const val HABIT_PLACEMENT = "habitPlacement"
     private const val HABIT_SELECTION = "habitSelection"
     private const val HABIT_IDS = "habitIds"
@@ -46,6 +47,7 @@ object TodayWidgetConfigCodec {
         FREE_CONTROL to config.freeControlArgb.toString(),
         DISCRETE to flag(config.discreteButtons),
         SHOW_TASKS to flag(config.showTasks),
+        SHOW_TASK_META to flag(config.showTaskMeta),
         HABIT_PLACEMENT to config.habitPlacement.name,
         HABIT_SELECTION to config.habitSelection.name,
         HABIT_IDS to config.habitIds.joinToString(ID_SEPARATOR),
@@ -76,6 +78,7 @@ object TodayWidgetConfigCodec {
             freeControlArgb = read(FREE_CONTROL)?.toIntOrNull() ?: defaults.freeControlArgb,
             discreteButtons = bool(read(DISCRETE), defaults.discreteButtons),
             showTasks = bool(read(SHOW_TASKS), defaults.showTasks),
+            showTaskMeta = bool(read(SHOW_TASK_META), defaults.showTaskMeta),
             habitPlacement = enumOf(read(HABIT_PLACEMENT), defaults.habitPlacement),
             habitSelection = enumOf(read(HABIT_SELECTION), defaults.habitSelection),
             habitIds = ids(read(HABIT_IDS)),

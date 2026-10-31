@@ -57,3 +57,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : le verre s'affichait opaque (l'opacité réglée était écrasée à 100 %) ; le flou attendu derrière n'existe pas.
 - **Décision** : opacité réelle corrigée (commit `86d97635`). Pas de flou : un widget ne peut pas flouter ce qui est derrière lui, et lire le fond d'écran demanderait l'« Accès à tous les fichiers ». Le verre reste une surface translucide réglable (opacité, reflet, liseré).
 - **Web** : sans objet (le web floute avec `backdrop-filter`).
+
+### 2026-10-31 — Widget : cases colorées, projet et étiquettes
+
+- **Problème** : en couleur « Projet », toutes les cases avaient la même teinte (aucun projet n'a de couleur) ; le widget ne montrait ni projet ni étiquettes.
+- **Décision** : un projet sans couleur rend la couleur de priorité (haute rouge, moyenne orange, basse bleue, aucune gris) ; une ligne discrète sous le titre donne « projet · #étiquettes », désactivable. Les événements gardent leur rond à la couleur de l'agenda.
+- **Web** : dans les listes compactes, une case n'est jamais neutre par défaut quand la tâche a une priorité ; projet et étiquettes restent lisibles sous le titre.

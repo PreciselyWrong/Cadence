@@ -157,6 +157,7 @@ private fun TodayWidgetConfiguration(
             Panel {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                     ToggleRow(stringResource(R.string.today_config_show_tasks), config.showTasks) { edit { c -> c.copy(showTasks = it) } }
+                    ToggleRow(stringResource(R.string.today_config_show_task_meta), config.showTaskMeta) { edit { c -> c.copy(showTaskMeta = it) } }
                     Text(stringResource(R.string.today_config_habit_placement), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
                     ChoiceRow(HabitPlacement.entries, config.habitPlacement, ::placementLabel) { edit { c -> c.copy(habitPlacement = it) } }
                     Text(stringResource(R.string.today_config_habit_selection), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)

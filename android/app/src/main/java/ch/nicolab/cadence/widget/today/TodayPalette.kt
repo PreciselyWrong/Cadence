@@ -27,6 +27,13 @@ data class TodayPalette(
      * comme dans l'application (haute = rouge du retard, moyenne orange, basse bleue) et une tâche
      * sans priorité garde une case discrète ; chaque teinte reste à 3:1 sur la surface.
      */
+    /**
+     * Teinte de la case d'une tâche : en mode [ControlColour.PROJET], la couleur du projet ; un projet
+     * sans couleur prend celle de la priorité, pour que les cases ne soient pas toutes pareilles.
+     */
+    fun taskTint(priority: Int?, control: ControlColour, projectArgb: Int?): Int =
+        if (control == ControlColour.PROJET) projectArgb ?: checkTint(priority, ControlColour.PRIORITE) else checkTint(priority, control)
+
     fun checkTint(priority: Int?, control: ControlColour): Int {
         if (control != ControlColour.PRIORITE) return accent
         val behind = surface or OPAQUE

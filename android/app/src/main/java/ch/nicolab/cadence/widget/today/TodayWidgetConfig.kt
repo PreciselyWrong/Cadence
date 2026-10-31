@@ -54,6 +54,8 @@ data class TodayWidgetConfig(
     val showOverdueSection: Boolean = true,
     /** Cocher depuis le widget ; sinon un appui ouvre la tâche. */
     val checkFromWidget: Boolean = true,
+    /** Projet et étiquettes sur une seconde ligne, sous le titre. */
+    val showTaskMeta: Boolean = true,
     /** Trait de couleur du projet à gauche de chaque tâche. */
     val projectRail: Boolean = true,
     val showEvents: Boolean = false,
