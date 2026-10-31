@@ -7,6 +7,7 @@ import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
+import ch.nicolab.cadence.calendar.toHidden
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -149,7 +150,7 @@ class DefaultCalendarRepositoryTest {
         val repo = repository(source)
         repo.setDisplay(1L, CalendarDisplay(agenda = true, tasks = true, widget = true))
 
-        repo.hideEvent(event(eventId = 1L))
+        repo.hideEvent(event(eventId = 1L).toHidden())
 
         CalendarSurface.entries.forEach { surface ->
             assertEquals(listOf(2L), repo.events(range, surface).first().map { it.event.eventId })
@@ -170,7 +171,7 @@ class DefaultCalendarRepositoryTest {
         val repo = repository(source)
         repo.toggleDone(event().key)
 
-        repo.hideEvent(event())
+        repo.hideEvent(event().toHidden())
         repo.restoreEvent(event().key)
 
         assertTrue(repo.events(range, CalendarSurface.AGENDA).first().single().done)
@@ -181,8 +182,8 @@ class DefaultCalendarRepositoryTest {
         val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
         val repo = repository(source)
 
-        repo.hideEvent(event())
-        repo.hideEvent(event())
+        repo.hideEvent(event().toHidden())
+        repo.hideEvent(event().toHidden())
 
         assertEquals(1, repo.hiddenEvents().first().size)
     }

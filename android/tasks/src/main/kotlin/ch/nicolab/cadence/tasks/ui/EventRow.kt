@@ -3,6 +3,8 @@ package ch.nicolab.cadence.tasks.ui
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -34,6 +37,12 @@ import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localEnd
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.designsystem.components.EventCheck
+import ch.nicolab.cadence.designsystem.components.pressable
+import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.tasks.swipe.EventActions
+import ch.nicolab.cadence.tasks.swipe.SwipeAction
+import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.tasks.R
 import java.time.Instant
@@ -52,19 +61,44 @@ internal fun EventRow(
     zone: ZoneId,
     checkable: Boolean,
     onToggle: () -> Unit,
+    onOpen: () -> Unit,
+    onMenu: () -> Unit,
+    onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val haptic = rememberCadenceHaptic()
+    val interaction = remember { MutableInteractionSource() }
+    val swipeConfig = rememberSwipeConfig()
     // Rail, cercle et icône dans la couleur de l'agenda, ajustée pour rester visible (3:1).
     val color = readableTintOf(Color(item.calendar.colorArgb), MaterialTheme.colorScheme.surface, ICON_CONTRAST)
     val title = item.event.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val markLabel = stringResource(
         if (item.done) R.string.tasks_event_mark_undone else R.string.tasks_event_mark_done,
     )
+    SwipeActionContainer(
+        config = remember(swipeConfig, checkable) { EventActions.swipeConfig(swipeConfig, checkable) },
+        closed = item.done,
+        onAction = onSwipeAction,
+        shape = RowShape,
+        forEvent = true,
+        modifier = modifier,
+    ) { swipeSemantics ->
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .background(MaterialTheme.colorScheme.surface)
+            .pressable(interaction, RowShape)
+            .background(MaterialTheme.colorScheme.surface, RowShape)
+            .then(swipeSemantics)
+            .combinedClickable(
+                interactionSource = interaction,
+                indication = null,
+                onClick = onOpen,
+                onLongClick = {
+                    haptic.longPress()
+                    onMenu()
+                },
+            )
             .alpha(if (item.done) DONE_ALPHA else 1f)
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -93,6 +127,7 @@ internal fun EventRow(
             )
             EventMeta(item, color, zone)
         }
+    }
     }
 }
 
@@ -131,3 +166,4 @@ private fun clockText(epochMillis: Long, zone: ZoneId): String =
     wireTime(instantTime(Instant.ofEpochMilli(epochMillis), zone))
 
 private val RAIL_WIDTH = 3.dp
+private val RowShape = Radius.Control

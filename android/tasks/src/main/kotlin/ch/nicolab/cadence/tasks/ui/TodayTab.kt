@@ -331,6 +331,10 @@ private fun LazyListScope.agendaRows(
                 zone = moment.zone,
                 checkable = checkEvents,
                 onToggle = { viewModel.toggleEvent(item.event.event.key) },
+                onOpen = { viewModel.openEventDetail(item.event.event.key) },
+                onMenu = { viewModel.openEventMenu(item.event.event.key) },
+                onSwipeAction = { viewModel.swipeEvent(item.event, it) },
+                modifier = Modifier.animateItem(),
             )
         }
     }

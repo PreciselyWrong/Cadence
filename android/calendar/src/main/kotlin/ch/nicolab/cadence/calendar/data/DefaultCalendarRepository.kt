@@ -83,8 +83,8 @@ internal class DefaultCalendarRepository(
         settings.setHideDone(enabled)
     }
 
-    override suspend fun hideEvent(event: CalendarEvent) {
-        hiddenStore.setHidden(HiddenEvent(event.key, event.title, event.allDay), hidden = true)
+    override suspend fun hideEvent(event: HiddenEvent) {
+        hiddenStore.setHidden(event, hidden = true)
     }
 
     override suspend fun restoreEvent(key: EventInstanceKey) {

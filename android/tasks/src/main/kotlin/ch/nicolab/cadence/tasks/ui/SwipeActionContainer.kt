@@ -75,6 +75,7 @@ internal fun SwipeActionContainer(
     onAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
+    forEvent: Boolean = false,
     content: @Composable (swipeSemantics: Modifier) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -105,7 +106,7 @@ internal fun SwipeActionContainer(
         scope.launch { offset.snapTo(next) }
     }
 
-    val actionLabels = config.distinctActions().map { it to stringResource(swipeActionLabelRes(it, closed)) }
+    val actionLabels = config.distinctActions().map { it to stringResource(swipeActionLabelRes(it, closed, forEvent)) }
     val a11y = Modifier.semantics {
         customActions = actionLabels.map { (action, label) ->
             CustomAccessibilityAction(label) {
@@ -122,6 +123,7 @@ internal fun SwipeActionContainer(
                 config = config,
                 reached = reached,
                 closed = closed,
+                forEvent = forEvent,
                 modifier = Modifier.matchParentSize(),
             )
         }
@@ -171,6 +173,7 @@ private fun SwipeBackdrop(
     config: SwipeConfig,
     reached: SwipeAction,
     closed: Boolean,
+    forEvent: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val armed = reached != SwipeAction.NONE
@@ -178,7 +181,7 @@ private fun SwipeBackdrop(
     val shown = if (armed) reached else {
         config.actionFor(side, SwipeStage.SHORT).takeIf { it != SwipeAction.NONE } ?: config.actionFor(side, SwipeStage.LONG)
     }
-    val (container, ink) = swipeActionColors(if (armed) reached else SwipeAction.NONE)
+    val (container, ink) = swipeActionColors(if (armed) reached else SwipeAction.NONE, forEvent)
     val background by animateColorAsState(container, tween(140), label = "swipeBackground")
     val tint by animateColorAsState(if (armed) ink else cadence.onSurfaceVariant, tween(140), label = "swipeTint")
     val scale by animateFloatAsState(
@@ -190,8 +193,8 @@ private fun SwipeBackdrop(
         modifier.background(background).padding(horizontal = 20.dp),
         contentAlignment = if (side == SwipeSide.RIGHT) Alignment.CenterStart else Alignment.CenterEnd,
     ) {
-        val label = stringResource(swipeActionLabelRes(shown, closed))
-        val icon = swipeActionIcon(shown, closed)
+        val label = stringResource(swipeActionLabelRes(shown, closed, forEvent))
+        val icon = swipeActionIcon(shown, closed, forEvent)
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (side == SwipeSide.LEFT) {
                 Text(label, style = MaterialTheme.typography.labelLarge, color = tint)

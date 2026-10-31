@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="swipe_action_hide">Masquer ici</string>
+    <string name="tasks_event_hidden_notice">Événement masqué ici</string>
+    <string name="tasks_event_menu_title">Événement</string>
+    <string name="tasks_event_menu_details">Voir les détails</string>
+    <string name="tasks_event_hide">Masquer ici</string>
+    <string name="tasks_event_hide_hint">Reste dans votre agenda : il n\'est caché que dans Cadence. Les événements masqués se retrouvent dans Réglages › Agendas.</string>
+    <string name="tasks_event_field_calendar">Agenda</string>
+    <string name="tasks_event_field_when">Quand</string>
+    <string name="tasks_event_field_location">Lieu</string>
+    <string name="tasks_event_field_description">Description</string>
+    <string name="tasks_event_read_only">Lecture seule : cocher ou masquer un événement ne modifie jamais votre agenda.</string>
+    <string name="tasks_event_complete">Marquer fait</string>
+    <string name="tasks_event_reopen">Démarquer</string>
+    <string name="tasks_event_date_range">%1$s → %2$s</string>
+    <string name="tasks_event_date_time_range">%1$s · %2$s–%3$s</string>
+</resources>

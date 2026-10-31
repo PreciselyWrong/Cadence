@@ -53,6 +53,27 @@ data class HiddenEvent(
     val allDay: Boolean,
 )
 
+fun CalendarEvent.toHidden(): HiddenEvent = HiddenEvent(key, title, allDay)
+
+/**
+ * Ce qu'une fiche d'événement montre, dans le fuseau de l'appareil. [start] et [end] sont des heures
+ * locales (une journée entière va de minuit à minuit du lendemain, fin exclusive).
+ */
+data class EventDetail(
+    val key: EventInstanceKey,
+    val title: String,
+    val calendarName: String,
+    val colorArgb: Int,
+    val allDay: Boolean,
+    val start: java.time.LocalDateTime,
+    val end: java.time.LocalDateTime,
+    val location: String?,
+    val description: String?,
+    val done: Boolean,
+) {
+    fun toHidden(): HiddenEvent = HiddenEvent(key, title, allDay)
+}
+
 /** Surface de Cadence où un agenda peut apparaître. */
 enum class CalendarSurface { AGENDA, TASKS, WIDGET }
 

@@ -65,7 +65,7 @@ interface CalendarRepository {
     suspend fun setHideDone(enabled: Boolean)
 
     /** Masque l'occurrence sur toutes les surfaces, dans Cadence seulement (aucune écriture dans le fournisseur). */
-    suspend fun hideEvent(event: CalendarEvent)
+    suspend fun hideEvent(event: HiddenEvent)
 
     /** Rend une occurrence masquée ; sans effet si elle ne l'était pas. */
     suspend fun restoreEvent(key: EventInstanceKey)

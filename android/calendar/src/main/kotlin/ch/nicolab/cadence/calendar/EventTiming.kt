@@ -31,6 +31,20 @@ fun TimeRange.Companion.ofDays(start: LocalDate, days: Int, zone: ZoneId): TimeR
     )
 }
 
+/** Fiche d'une occurrence : couleur de l'occurrence, sinon celle de l'agenda. */
+fun EventWithDone.toDetail(zone: ZoneId): EventDetail = EventDetail(
+    key = event.key,
+    title = event.title,
+    calendarName = calendar.displayName,
+    colorArgb = event.colorArgb.takeIf { it != 0 } ?: calendar.colorArgb,
+    allDay = event.allDay,
+    start = Instant.ofEpochMilli(event.localStart(zone)).atZone(zone).toLocalDateTime(),
+    end = Instant.ofEpochMilli(event.localEnd(zone)).atZone(zone).toLocalDateTime(),
+    location = event.location,
+    description = event.description,
+    done = done,
+)
+
 private fun utcDayToLocalMidnight(epochMillis: Long, zone: ZoneId): Long {
     val day = Instant.ofEpochMilli(epochMillis).atZone(ZoneOffset.UTC).toLocalDate()
     return day.atStartOfDay(zone).toInstant().toEpochMilli()

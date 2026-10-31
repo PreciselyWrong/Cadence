@@ -13,6 +13,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import ch.nicolab.cadence.calendar.toDetail
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -123,12 +124,48 @@ internal fun TaskOverlays(
         TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = onCloseTask)
     }
     SwipeSheets(viewModel)
+    EventSheets(viewModel)
     val pendingDelete by viewModel.pendingDelete.collectAsStateWithLifecycle()
     if (pendingDelete != null) {
         RecurringDeleteDialog(onAnswer = viewModel::answerRecurringDelete)
     }
     if (pendingMove != null) {
         RecurringMoveDialog(onAnswer = viewModel::answerRecurringMove)
+    }
+}
+
+/** Menu et fiche d'un événement d'agenda ; relus dans les événements du jour pour suivre l'état coché. */
+@Composable
+private fun EventSheets(viewModel: TasksViewModel) {
+    val sheet by viewModel.eventSheet.collectAsStateWithLifecycle()
+    val events by viewModel.todayEvents.collectAsStateWithLifecycle()
+    val settings by viewModel.calendarSettings.collectAsStateWithLifecycle()
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
+    val open = sheet ?: return
+    val item = events.firstOrNull { it.event.key == open.key }
+    if (item == null) {
+        // L'événement a disparu (masqué, agenda retiré) : rien à montrer.
+        LaunchedEffect(open) { viewModel.dismissEventSheet() }
+        return
+    }
+    val detail = item.toDetail(moment.zone)
+    val hide = { viewModel.hideEvent(detail.toHidden()) }
+    when (open) {
+        is EventSheet.Menu -> EventMenuSheet(
+            detail = detail,
+            checkable = settings.checkEvents,
+            onToggle = { viewModel.toggleEvent(open.key) },
+            onHide = { hide() },
+            onOpenDetails = { viewModel.openEventDetail(open.key) },
+            onDismiss = viewModel::dismissEventSheet,
+        )
+        is EventSheet.Detail -> EventDetailSheet(
+            detail = detail,
+            checkable = settings.checkEvents,
+            onToggle = { viewModel.toggleEvent(open.key) },
+            onHide = { hide() },
+            onDismiss = viewModel::dismissEventSheet,
+        )
     }
 }
 

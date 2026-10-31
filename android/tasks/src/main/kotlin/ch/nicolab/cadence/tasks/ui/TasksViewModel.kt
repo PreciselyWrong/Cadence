@@ -11,6 +11,8 @@ import ch.nicolab.cadence.calendar.CalendarRepository
 import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
+import ch.nicolab.cadence.calendar.HiddenEvent
+import ch.nicolab.cadence.calendar.toHidden
 import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
@@ -108,6 +110,14 @@ internal sealed interface SwipeSheet {
     data class Schedule(override val task: TaskItem) : SwipeSheet
     data class Project(override val task: TaskItem) : SwipeSheet
     data class Priority(override val task: TaskItem) : SwipeSheet
+}
+
+/** Fiche ou menu ouvert sur un événement d'agenda ; porte sa clé, la fiche relit l'état courant. */
+internal sealed interface EventSheet {
+    val key: EventInstanceKey
+
+    data class Menu(override val key: EventInstanceKey) : EventSheet
+    data class Detail(override val key: EventInstanceKey) : EventSheet
 }
 
 internal class TasksViewModel(
@@ -457,6 +467,38 @@ internal class TasksViewModel(
     fun deleteInboxItem(uid: String) = launchAction { repository.deleteInboxItem(uid) }
 
     fun requestSync() = repository.requestSync()
+
+    private val _eventSheet = MutableStateFlow<EventSheet?>(null)
+    val eventSheet: StateFlow<EventSheet?> = _eventSheet.asStateFlow()
+
+    fun openEventMenu(key: EventInstanceKey) {
+        _eventSheet.value = EventSheet.Menu(key)
+    }
+
+    fun openEventDetail(key: EventInstanceKey) {
+        _eventSheet.value = EventSheet.Detail(key)
+    }
+
+    fun dismissEventSheet() {
+        _eventSheet.value = null
+    }
+
+    /** Balayage d'une ligne d'événement : seules les actions de [EventActions] ont un effet. */
+    fun swipeEvent(item: EventWithDone, action: SwipeAction) {
+        when (action) {
+            SwipeAction.COMPLETE -> toggleEvent(item.event.key)
+            SwipeAction.DELETE -> hideEvent(item.event.toHidden())
+            else -> Unit
+        }
+    }
+
+    /** Masque l'occurrence dans Cadence seulement ; « Annuler » la rend. */
+    fun hideEvent(event: HiddenEvent) = launchAction {
+        calendar.hideEvent(event)
+        _notices.tryEmit(UndoNotice(getString(R.string.tasks_event_hidden_notice)) { restoreEvent(event.key) })
+    }
+
+    fun restoreEvent(key: EventInstanceKey) = launchAction { calendar.restoreEvent(key) }
 
     /** Coche ou décoche un événement, dans Cadence seulement : le fournisseur d'agendas n'est jamais modifié. */
     fun toggleEvent(key: EventInstanceKey) = launchAction { calendar.toggleDone(key) }
