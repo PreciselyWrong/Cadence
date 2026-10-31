@@ -82,13 +82,9 @@ object TodayWidgetConfigCodec {
         )
     }
 
-    /**
-     * Les fonds translucides d'avant (« Flou », « Verre ») n'existent plus : « Flou » retombe sur le
-     * fond plein par défaut, « Verre » (teinte sombre) sur le fond sombre plein.
-     */
+    /** L'ancien fond « Flou » translucide revient au verre. */
     private fun background(raw: String?, default: TodayBackground): TodayBackground = when (raw) {
-        "FLOU" -> default
-        "VERRE" -> TodayBackground.SOMBRE
+        "FLOU" -> TodayBackground.VERRE
         else -> enumOf(raw, default)
     }
 

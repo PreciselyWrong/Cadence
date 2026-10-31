@@ -68,6 +68,14 @@ object Glass {
     const val BarAlphaLight = 0.60f
     const val BarAlphaDark = 0.72f
 
+    /**
+     * Opacité du fond « Verre » des widgets, clair puis sombre. Un widget ne peut pas flouter le
+     * fond d'écran : ces valeurs sont les plus basses qui gardent encre, texte atténué et retard à
+     * 4,5:1 sur n'importe quel fond d'écran, du noir au blanc (`TodayPaletteTest`).
+     */
+    const val WidgetAlphaLight = 0.86f
+    const val WidgetAlphaDark = 0.72f
+
     /** Opacité de repli quand le flou n'est pas disponible (API < 31). */
     const val FallbackAlpha = 0.92f
 

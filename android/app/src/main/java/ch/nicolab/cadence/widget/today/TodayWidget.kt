@@ -51,6 +51,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.MainActivity
@@ -58,9 +59,10 @@ import ch.nicolab.cadence.QuickEntryActivity
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarSurface
+import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.TimeRange
-import ch.nicolab.cadence.calendar.localStart
+import ch.nicolab.cadence.designsystem.theme.readableTint
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.tasks.TasksGraph
@@ -85,6 +87,9 @@ import kotlinx.coroutines.launch
 private val taskUidKey = ActionParameters.Key<String>("today_task_uid")
 private val appWidgetIdKey = ActionParameters.Key<Int>("today_app_widget_id")
 private val habitIdKey = ActionParameters.Key<String>(QuickEntryActivity.EXTRA_HABIT_ID)
+private val eventCalendarKey = ActionParameters.Key<Long>("today_event_calendar")
+private val eventIdKey = ActionParameters.Key<Long>("today_event_id")
+private val eventBeginKey = ActionParameters.Key<Long>("today_event_begin")
 
 /** Facette d'habitude prête à dessiner : le bitmap est rendu hors composition. */
 private data class FacetView(val habit: WidgetHabit, val bitmap: Bitmap)
@@ -113,11 +118,16 @@ class TodayWidget : GlanceAppWidget() {
         } else {
             habitFacets(app, config, today, now, zone)
         }
+        val density = context.resources.displayMetrics.density
         val view = TodayView(
             appWidgetId = appWidgetId,
             config = config,
             palette = TodayPalette.of(config),
-            checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, context.resources.displayMetrics.density),
+            checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
+            eventRing = renderEventMark(done = false, CHECK_DP, density),
+            eventDone = renderEventMark(done = true, CHECK_DP, density),
+            checkEvents = config.showEvents && CalendarGraph.repository(context).globalSettings.first().checkEvents,
+            now = now,
             selection = selection,
             facets = facets,
             projects = projects,
@@ -217,10 +227,26 @@ class CompleteTodayTaskAction : ActionCallback {
     }
 }
 
+/** Coche ou décoche une occurrence, dans Cadence seulement (jamais d'écriture dans l'agenda). */
+class ToggleTodayEventAction : ActionCallback {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+        val key = EventInstanceKey(
+            calendarId = parameters[eventCalendarKey] ?: return,
+            eventId = parameters[eventIdKey] ?: return,
+            instanceBegin = parameters[eventBeginKey] ?: return,
+        )
+        CalendarGraph.repository(context).toggleDone(key)
+        TodayWidget().updateAll(context)
+    }
+}
+
 private const val FACET_ICON_DP = 22
 private const val CHECK_DP = 22
 private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
 private const val OVERDUE_LABEL_ID = Long.MIN_VALUE
+private const val EVENTS_LABEL_ID = Long.MIN_VALUE + 1
+private const val RIM_DP = 1
+private const val OPAQUE_MASK = 0xFF000000.toInt()
 
 private class TodayView(
     val appWidgetId: Int,
@@ -228,6 +254,12 @@ private class TodayView(
     val palette: TodayPalettes,
     /** Case à cocher blanche, teintée à l'affichage : une seule image partagée par toutes les lignes. */
     val checkBox: Bitmap,
+    /** Anneau et disque fait des événements, blancs eux aussi, teintés de la couleur de l'agenda. */
+    val eventRing: Bitmap,
+    val eventDone: Bitmap,
+    /** « Cocher un événement » est actif : l'anneau coche l'occurrence au lieu d'ouvrir l'application. */
+    val checkEvents: Boolean,
+    val now: Instant,
     val selection: TodaySelection,
     val facets: List<FacetView>,
     val projects: Map<String, ProjectItem>,
@@ -257,36 +289,49 @@ private fun TodayContent(view: TodayView) {
     val eventsShown = config.showEvents && view.selection.events.isNotEmpty()
     val listWanted = tasksShown || eventsShown
     val listShown = listWanted && TodayWidgetLayout.listFits(size.height.value, text, habitsShown)
-    Column(
+    // Le verre est une surface translucide posée dans son liseré : la couche extérieure, teinte du
+    // liseré, ne dépasse que sur RIM_DP tout autour. Les fonds pleins ont un liseré transparent.
+    val rim = if (config.background == TodayBackground.VERRE) RIM_DP else 0
+    Box(
         modifier = GlanceModifier.fillMaxSize()
-            .background(palette.provider { it.surface })
+            .background(palette.provider { it.rim })
             .cornerRadius(config.cornerRadiusDp.dp)
-            .padding(12.dp),
+            .padding(rim.dp),
     ) {
-        Header(view, text)
-        Box(GlanceModifier.height(6.dp)) {}
-        if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
-        if (listShown) {
-            TodayList(view, text)
-        } else {
-            Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
-                if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+        Column(
+            modifier = GlanceModifier.fillMaxSize()
+                .background(palette.provider { it.surface })
+                .cornerRadius((config.cornerRadiusDp - rim).coerceAtLeast(0).dp)
+                .padding((12 - rim).dp),
+        ) {
+            Header(view, text)
+            Box(GlanceModifier.height(6.dp)) {}
+            if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
+            if (listShown) {
+                TodayList(view, text, tasksShown)
+            } else {
+                Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
+                    if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+                }
             }
+            if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
         }
-        if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
     }
 }
 
-/** Toutes les tâches (retards d'abord) puis les événements du jour, dans une liste qui défile. */
+/**
+ * Toutes les tâches (retards d'abord) puis les événements du jour, dans une liste qui défile. Les
+ * événements suivent un intitulé « Agenda » quand des tâches les précèdent.
+ */
 @Composable
-private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes) {
+private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksShown: Boolean) {
     val context = LocalContext.current
     val selection = view.selection
     LazyColumn(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
         if (view.config.showTasks) {
             if (selection.overdue.isNotEmpty()) {
                 item(itemId = OVERDUE_LABEL_ID) {
-                    SectionLabel(context.getString(R.string.today_overdue_label, selection.overdueTotal), view.palette, text)
+                    SectionLabel(context.getString(R.string.today_overdue_label, selection.overdueTotal), view.palette.provider { it.overdue }, text)
                 }
                 items(selection.overdue, itemId = { it.uid.hashCode().toLong() }) {
                     TaskRowView(it, view, it.dueLabel(view, context), overdue = true, text)
@@ -296,7 +341,12 @@ private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes) {
                 TaskRowView(it, view, it.dueLabel(view, context), overdue = false, text)
             }
         }
-        if (view.config.showEvents) {
+        if (view.config.showEvents && selection.events.isNotEmpty()) {
+            if (tasksShown) {
+                item(itemId = EVENTS_LABEL_ID) {
+                    SectionLabel(context.getString(R.string.today_events_label), view.palette.provider { it.muted }, text)
+                }
+            }
             items(selection.events) { EventRowView(it, view, text) }
         }
     }
@@ -364,11 +414,11 @@ private fun IconButton(
 }
 
 @Composable
-private fun SectionLabel(text: String, palette: TodayPalettes, sizes: TodayTextSizes) {
+private fun SectionLabel(text: String, colour: GlanceColor, sizes: TodayTextSizes) {
     Text(
         text,
         maxLines = 1,
-        style = TextStyle(color = palette.provider { it.overdue }, fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
+        style = TextStyle(color = colour, fontSize = sizes.small.sp, fontWeight = FontWeight.Medium),
         modifier = GlanceModifier.padding(top = 4.dp, bottom = 2.dp),
     )
 }
@@ -429,36 +479,73 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
     }
 }
 
+/**
+ * Événement d'agenda, distinct d'une tâche : rail et anneau rond à la couleur de l'agenda (une
+ * tâche a une case carrée), plage horaire à droite, colorée tant que l'événement est en cours.
+ * Passé, le titre s'atténue ; fait, l'anneau devient un disque coché et le titre est barré.
+ */
 @Composable
 private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayTextSizes) {
+    val context = LocalContext.current
     val palette = view.palette
-    val time = if (event.event.allDay) {
-        LocalContext.current.getString(R.string.today_event_all_day)
+    val state = TodayEventPresentation.state(event, view.now, view.zone)
+    val time = TodayEventPresentation.timeLabel(event.event, view.zone, context.getString(R.string.today_event_all_day))
+    val calendarArgb = event.event.colorArgb
+    // La teinte de l'agenda est éclaircie ou assombrie jusqu'à 4,5:1 sur la surface de chaque thème.
+    val tint = ColorProvider(
+        day = Color(readableTint(calendarArgb, opaque(palette.day.surface))),
+        night = Color(readableTint(calendarArgb, opaque(palette.night.surface))),
+    )
+    val faded = state == TodayEventState.PAST || state == TodayEventState.DONE
+    val markAction = if (view.checkEvents) {
+        actionRunCallback<ToggleTodayEventAction>(
+            actionParametersOf(
+                eventCalendarKey to event.event.calendarId,
+                eventIdKey to event.event.eventId,
+                eventBeginKey to event.event.instanceBegin,
+            ),
+        )
     } else {
-        Instant.ofEpochMilli(event.event.localStart(view.zone)).atZone(view.zone).format(TIME_FORMAT)
+        actionStartActivity<MainActivity>()
     }
     Row(
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
+        if (view.config.projectRail) {
+            Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(constantProvider(calendarArgb)).cornerRadius(2.dp)) {}
+            Box(GlanceModifier.width(6.dp)) {}
+        }
         Image(
-            ImageProvider(android.R.drawable.ic_menu_today),
-            contentDescription = event.event.title,
-            modifier = GlanceModifier.size(16.dp),
+            ImageProvider(if (state == TodayEventState.DONE) view.eventDone else view.eventRing),
+            context.getString(R.string.today_event_check_description, event.event.title),
+            modifier = GlanceModifier.size(CHECK_DP.dp).clickable(markAction),
+            colorFilter = ColorFilter.tint(tint),
         )
         Text(
             event.event.title,
             maxLines = 1,
-            style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.body.sp),
-            modifier = GlanceModifier.defaultWeight().padding(start = 8.dp),
+            style = TextStyle(
+                color = if (faded) palette.provider { it.muted } else palette.provider { it.ink },
+                fontSize = sizes.body.sp,
+                textDecoration = if (state == TodayEventState.DONE) TextDecoration.LineThrough else null,
+            ),
+            modifier = GlanceModifier.defaultWeight().padding(start = 8.dp).clickable(actionStartActivity<MainActivity>()),
         )
         Text(
             time,
             maxLines = 1,
-            style = TextStyle(color = palette.provider { it.muted }, fontSize = sizes.small.sp),
+            style = TextStyle(
+                color = if (state == TodayEventState.ONGOING) tint else palette.provider { it.muted },
+                fontSize = sizes.small.sp,
+                fontWeight = if (state == TodayEventState.ONGOING) FontWeight.Medium else null,
+            ),
         )
     }
 }
+
+/** Surface rendue opaque pour mesurer un contraste ; « Aucun » (transparent) se lit comme du noir. */
+private fun opaque(argb: Int): Int = argb or OPAQUE_MASK
 
 @Composable
 private fun HabitsRow(view: TodayView, sizes: TodayTextSizes) {

@@ -2,6 +2,7 @@ package ch.nicolab.cadence.widget.today
 
 import ch.nicolab.cadence.designsystem.theme.DarkPalette
 import ch.nicolab.cadence.designsystem.theme.LightPalette
+import ch.nicolab.cadence.designsystem.theme.compositeOver
 import androidx.compose.ui.graphics.toArgb
 import kotlin.math.pow
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -61,6 +62,44 @@ class TodayPaletteTest {
             }
         }
     }
+
+    @Test
+    fun `le verre est translucide, borde d'un liseré et suit le theme`() {
+        val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE))
+
+        listOf(palettes.day, palettes.night).forEach {
+            assertTrue((it.surface ushr 24) in 1 until 0xFF, "surface translucide")
+            assertTrue((it.rim ushr 24) > 0, "liseré visible")
+        }
+        assertEquals(LightPalette.onSurface.toArgb(), palettes.day.ink)
+        assertEquals(DarkPalette.onSurface.toArgb(), palettes.night.ink)
+    }
+
+    @Test
+    fun `les fonds pleins n'ont pas de liseré`() {
+        listOf(TodayBackground.AUTO, TodayBackground.CLAIR, TodayBackground.SOMBRE, TodayBackground.AUCUN).forEach { background ->
+            val palettes = TodayPalette.of(TodayWidgetConfig(background = background))
+            assertEquals(0, palettes.day.rim ushr 24, "$background")
+            assertEquals(0, palettes.night.rim ushr 24, "$background")
+        }
+    }
+
+    @Test
+    fun `le texte du verre reste lisible sur n'importe quel fond d'ecran`() {
+        val palettes = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE))
+        listOf(palettes.day, palettes.night).forEach { palette ->
+            (0..255 step 5).forEach { grey ->
+                val wallpaper = (0xFF shl 24) or (grey shl 16) or (grey shl 8) or grey
+                val seen = over(palette.surface, over(palette.rim, wallpaper))
+                assertTrue(contrast(palette.ink, seen) >= 4.5, "encre sur gris $grey")
+                assertTrue(contrast(palette.muted, seen) >= 4.5, "attenue sur gris $grey")
+                assertTrue(contrast(palette.overdue, seen) >= 4.5, "retard sur gris $grey")
+            }
+        }
+    }
+
+    /** Couleur vue quand [top], avec son alpha, est posé sur [bottom] opaque. */
+    private fun over(top: Int, bottom: Int): Int = compositeOver(top or (0xFF shl 24), (top ushr 24) / 255f, bottom)
 
     @Test
     fun `le fond aucun ne pose aucune surface`() {

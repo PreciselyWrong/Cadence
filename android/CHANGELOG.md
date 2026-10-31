@@ -1,3 +1,9 @@
+## [1.4.0] — 31 octobre 2026
+
+### Nouveautés
+- Widget « Aujourd'hui » : nouveau fond « Verre », translucide et bordé d'un liseré, qui suit le thème clair ou sombre du téléphone et reste lisible sur n'importe quel fond d'écran. C'est le fond par défaut ; pour un widget déjà posé, choisissez ⋮ › Fond › Verre.
+- Widget « Aujourd'hui » : les événements d'agenda se distinguent des tâches : section « Agenda », pastille ronde et liseré à la couleur de l'agenda, plage horaire, événement en cours mis en avant, événements passés atténués, événement fait barré. Toucher la pastille coche l'événement.
+
 ## [1.3.1] — 31 octobre 2026
 
 ### Corrections

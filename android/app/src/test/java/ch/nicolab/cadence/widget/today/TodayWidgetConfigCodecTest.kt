@@ -67,17 +67,18 @@ class TodayWidgetConfigCodecTest {
     }
 
     @Test
-    fun `un ancien fond flou donne le fond plein par defaut`() {
+    fun `un ancien fond flou devient le verre`() {
         val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig()) + mapOf("background" to "FLOU")
 
-        assertEquals(TodayWidgetConfig().background, TodayWidgetConfigCodec.decode(stored::get).background)
+        assertEquals(TodayBackground.VERRE, TodayWidgetConfigCodec.decode(stored::get).background)
     }
 
     @Test
-    fun `un ancien fond verre devient le fond sombre plein`() {
-        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig()) + mapOf("background" to "VERRE")
+    fun `le verre est le fond d'un nouveau widget et se relit`() {
+        assertEquals(TodayBackground.VERRE, TodayWidgetConfig().background)
+        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig(background = TodayBackground.VERRE))
 
-        assertEquals(TodayBackground.SOMBRE, TodayWidgetConfigCodec.decode(stored::get).background)
+        assertEquals(TodayBackground.VERRE, TodayWidgetConfigCodec.decode(stored::get).background)
     }
 
     @Test

@@ -223,6 +223,7 @@ private fun SliderRow(label: String, value: Int, range: IntRange, onChange: (Int
 
 @StringRes
 private fun backgroundLabel(value: TodayBackground): Int = when (value) {
+    TodayBackground.VERRE -> R.string.today_bg_glass
     TodayBackground.AUTO -> R.string.today_bg_auto
     TodayBackground.CLAIR -> R.string.today_bg_light
     TodayBackground.SOMBRE -> R.string.today_bg_dark

@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -136,9 +137,17 @@ internal fun WidgetPreviewBand(config: TodayWidgetConfig) {
     val ink = Color(palette.ink)
     val muted = Color(palette.muted)
     val accent = Color(palette.accent)
-    Box(Modifier.fillMaxWidth().padding(vertical = Space.md)) {
+    val glass = config.background == TodayBackground.VERRE
+    // Le verre est montré sur un dégradé d'accent, pour que sa transparence se voie dans l'aperçu.
+    val backdrop = if (glass) {
+        Modifier.clip(shape).background(Brush.linearGradient(listOf(cadence.primary, cadence.primaryContainer)))
+    } else {
+        Modifier
+    }
+    val edge = if (glass) Color(palette.rim) else cadence.outlineVariant
+    Box(Modifier.fillMaxWidth().padding(vertical = Space.md).then(backdrop)) {
         Column(
-            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).border(1.dp, cadence.outlineVariant, shape).padding(12.dp),
+            Modifier.fillMaxWidth().clip(shape).background(Color(palette.surface)).border(1.dp, edge, shape).padding(12.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(

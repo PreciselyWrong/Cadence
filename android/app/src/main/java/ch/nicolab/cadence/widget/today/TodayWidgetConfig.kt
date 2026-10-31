@@ -1,10 +1,11 @@
 package ch.nicolab.cadence.widget.today
 
 /**
- * Fond du widget : toujours une surface pleine tirée des jetons du design system. [AUTO] suit le
- * thème clair ou sombre du téléphone, [CLAIR] et [SOMBRE] le forcent, [AUCUN] ne pose aucune surface.
+ * Fond du widget, tiré des jetons du design system. [VERRE] est une surface translucide bordée
+ * d'un liseré qui suit le thème du téléphone ; [AUTO] la même surface pleine, [CLAIR] et [SOMBRE]
+ * forcent un thème plein, [AUCUN] ne pose aucune surface.
  */
-enum class TodayBackground { AUTO, CLAIR, SOMBRE, AUCUN }
+enum class TodayBackground { VERRE, AUTO, CLAIR, SOMBRE, AUCUN }
 
 /** Couleur des icônes et des cases. [PROJET] colore chaque case dans la couleur de son projet. */
 enum class ControlColour { BLANC, PROJET, INDIGO, CORAIL, MENTHE, AMBRE, LIBRE }
@@ -25,7 +26,7 @@ enum class TodayTextSize { S, M, L }
  * valeurs par défaut sont celles du premier placement.
  */
 data class TodayWidgetConfig(
-    val background: TodayBackground = TodayBackground.AUTO,
+    val background: TodayBackground = TodayBackground.VERRE,
     val controlColour: ControlColour = ControlColour.INDIGO,
     /** Couleur choisie librement, utilisée quand [controlColour] vaut [ControlColour.LIBRE]. */
     val freeControlArgb: Int = TodayControlPalette.DEFAULT_FREE_ARGB,
