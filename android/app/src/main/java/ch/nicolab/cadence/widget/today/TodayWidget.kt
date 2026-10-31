@@ -1,10 +1,12 @@
 package ch.nicolab.cadence.widget.today
 
+import android.app.WallpaperManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -122,7 +124,7 @@ class TodayWidget : GlanceAppWidget() {
         val view = TodayView(
             appWidgetId = appWidgetId,
             config = config,
-            palette = TodayPalette.of(config),
+            palette = TodayPalette.of(config, wallpaperColours(context)),
             checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
             eventRing = renderEventMark(done = false, CHECK_DP, density),
             eventDone = renderEventMark(done = true, CHECK_DP, density),
@@ -135,6 +137,19 @@ class TodayWidget : GlanceAppWidget() {
             zone = zone,
         )
         provideContent { TodayContent(view) }
+    }
+
+    /**
+     * Couleurs dominantes du fond d'écran (API 27+, sans permission) : le verre en tire la plus
+     * basse opacité lisible. Vide si le système ne les donne pas (fond animé, refus) : le verre
+     * garde alors l'opacité lisible sur tout fond.
+     */
+    private fun wallpaperColours(context: Context): List<Int> {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return emptyList()
+        val colours = runCatching {
+            WallpaperManager.getInstance(context).getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
+        }.getOrNull() ?: return emptyList()
+        return listOfNotNull(colours.primaryColor, colours.secondaryColor, colours.tertiaryColor).map { it.toArgb() }
     }
 
     private suspend fun eventsOf(
@@ -245,6 +260,9 @@ private const val CHECK_DP = 22
 private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
 private const val OVERDUE_LABEL_ID = Long.MIN_VALUE
 private const val EVENTS_LABEL_ID = Long.MIN_VALUE + 1
+private const val UNDATED_LABEL_ID = Long.MIN_VALUE + 2
+/** Les intitulés de jour prennent leur identifiant hors de la plage des `hashCode` des tâches. */
+private const val DAY_LABEL_BASE = Long.MIN_VALUE + 1_000
 private const val RIM_DP = 1
 private const val OPAQUE_MASK = 0xFF000000.toInt()
 
@@ -327,18 +345,21 @@ private fun TodayContent(view: TodayView) {
 private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksShown: Boolean) {
     val context = LocalContext.current
     val selection = view.selection
+    val grouped = view.config.groupByDay
     LazyColumn(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
         if (view.config.showTasks) {
-            if (selection.overdue.isNotEmpty()) {
-                item(itemId = OVERDUE_LABEL_ID) {
-                    SectionLabel(context.getString(R.string.today_overdue_label, selection.overdueTotal), view.palette.provider { it.overdue }, text)
+            taskSections(selection, view.config, view.today).forEach { section ->
+                if (section.labelled) {
+                    item(itemId = section.labelId()) {
+                        val colour = if (section.overdue) view.palette.provider { it.overdue } else view.palette.provider { it.muted }
+                        SectionLabel(section.label(view, context), colour, text)
+                    }
                 }
-                items(selection.overdue, itemId = { it.uid.hashCode().toLong() }) {
-                    TaskRowView(it, view, it.dueLabel(view, context), overdue = true, text)
+                items(section.tasks, itemId = { it.uid.hashCode().toLong() }) {
+                    // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
+                    val due = if (grouped) it.dueTimeLabel(view) else it.dueLabel(view, context)
+                    TaskRowView(it, view, due, overdue = section.overdue, text)
                 }
-            }
-            items(selection.tasks, itemId = { it.uid.hashCode().toLong() }) {
-                TaskRowView(it, view, it.dueLabel(view, context), overdue = false, text)
             }
         }
         if (view.config.showEvents && selection.events.isNotEmpty()) {
@@ -361,7 +382,7 @@ private fun Header(view: TodayView, text: TodayTextSizes) {
             context.getString(scopeTitle(view.config.taskScope)),
             maxLines = 1,
             style = TextStyle(color = palette.provider { it.ink }, fontSize = text.title.sp, fontWeight = FontWeight.Bold),
-            modifier = GlanceModifier.defaultWeight(),
+            modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()),
         )
         Box(
             modifier = GlanceModifier
@@ -433,7 +454,8 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
     val palette = view.palette
     val config = view.config
     val projectColour = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)?.let(::constantProvider)
-    val accent = (if (config.controlColour == ControlColour.PROJET) projectColour else null) ?: palette.provider { it.accent }
+    val accent = (if (config.controlColour == ControlColour.PROJET) projectColour else null)
+        ?: palette.provider { it.checkTint(task.priority, config.controlColour) }
     val context = LocalContext.current
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
@@ -601,11 +623,37 @@ private fun TaskItem.dueLabel(view: TodayView, context: Context): String? {
     return listOfNotNull(day, time).joinToString(" ").ifEmpty { null }
 }
 
+/** Heure seule de l'échéance, quand la section donne déjà le jour. */
+private fun TaskItem.dueTimeLabel(view: TodayView): String? =
+    if (dueHasTime) dueDate?.atZone(view.zone)?.format(TIME_FORMAT) else null
+
+private fun TodaySection.labelId(): Long = when {
+    day != null -> DAY_LABEL_BASE + day.toEpochDay()
+    overdue -> OVERDUE_LABEL_ID
+    else -> UNDATED_LABEL_ID
+}
+
+/** « En retard · 19 » sans regroupement ; sinon Hier, Aujourd'hui, Demain ou « Mardi 27 octobre ». */
+private fun TodaySection.label(view: TodayView, context: Context): String {
+    val day = day ?: return if (overdue) {
+        context.getString(R.string.today_overdue_label, tasks.size)
+    } else {
+        context.getString(R.string.today_no_date_label)
+    }
+    return when (RelativeDay.of(day, view.today)) {
+        RelativeDay.YESTERDAY -> context.getString(R.string.today_day_yesterday)
+        RelativeDay.TODAY -> context.getString(R.string.today_scope_today)
+        RelativeDay.TOMORROW -> context.getString(R.string.today_day_tomorrow)
+        RelativeDay.OTHER -> day.format(SECTION_DAY_FORMAT).replaceFirstChar { it.titlecase(Locale.FRENCH) }
+    }
+}
+
 private fun parseColour(hex: String): Int? =
     runCatching { AndroidColor.parseColor(hex) }.getOrNull()
 
 private val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val DAY_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.FRENCH)
+private val SECTION_DAY_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
 
 private fun configIntent(context: Context, appWidgetId: Int): Intent =
     Intent(context, TodayWidgetConfigActivity::class.java)

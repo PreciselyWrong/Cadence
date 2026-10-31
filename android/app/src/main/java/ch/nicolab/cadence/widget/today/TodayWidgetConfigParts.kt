@@ -46,6 +46,7 @@ import ch.nicolab.cadence.designsystem.theme.hueToArgb
 import ch.nicolab.cadence.designsystem.theme.opaqueArgbToHex
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TagItem
+import ch.nicolab.cadence.tasks.model.TaskPriority
 
 /** Couleur libre : curseur de teinte et code `#RRGGBB` synchronisés, appliqués à chaque changement valide. */
 @Composable
@@ -162,13 +163,14 @@ internal fun WidgetPreviewBand(config: TodayWidgetConfig) {
                 PreviewIcon("+", accent, config.discreteButtons)
             }
             Box(Modifier.height(6.dp))
-            listOf(R.string.today_config_preview_task_1, R.string.today_config_preview_task_2).forEach { name ->
+            listOf(R.string.today_config_preview_task_1 to TaskPriority.HIGH, R.string.today_config_preview_task_2 to null).forEach { (name, priority) ->
+                val check = Color(palette.checkTint(priority, config.controlColour))
                 Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (config.projectRail) {
                         Box(Modifier.width(3.dp).height(20.dp).clip(RoundedCornerShape(2.dp)).background(accent))
                         Box(Modifier.width(6.dp))
                     }
-                    Box(Modifier.size(22.dp).border(2.dp, accent, RoundedCornerShape(6.dp)))
+                    Box(Modifier.size(22.dp).border(2.dp, check, RoundedCornerShape(6.dp)))
                     Text(stringResource(name), color = ink, fontSize = text.body.sp, maxLines = 1, modifier = Modifier.padding(start = 8.dp))
                 }
             }

@@ -27,11 +27,17 @@ object TodayWidgetConfigCodec {
     private const val SHOW_EVENTS = "showEvents"
     private const val TEXT_SIZE = "textSize"
     private const val CORNER = "cornerRadius"
+    private const val GROUP_BY_DAY = "groupByDay"
+
+    /** Absente des réglages enregistrés avant la 1.4.1, où Indigo était la couleur imposée par défaut. */
+    private const val VERSION = "version"
+    private const val CURRENT_VERSION = "2"
 
     /** Les identifiants d'habitude, de projet et d'étiquette sont des UUID : la virgule ne peut pas s'y glisser. */
     private const val ID_SEPARATOR = ","
 
     fun encode(config: TodayWidgetConfig): Map<String, String> = mapOf(
+        VERSION to CURRENT_VERSION,
         BACKGROUND to config.background.name,
         CONTROL to config.controlColour.name,
         FREE_CONTROL to config.freeControlArgb.toString(),
@@ -53,13 +59,14 @@ object TodayWidgetConfigCodec {
         SHOW_EVENTS to flag(config.showEvents),
         TEXT_SIZE to config.textSize.name,
         CORNER to config.cornerRadiusDp.toString(),
+        GROUP_BY_DAY to flag(config.groupByDay),
     )
 
     fun decode(read: (String) -> String?): TodayWidgetConfig {
         val defaults = TodayWidgetConfig()
         return TodayWidgetConfig(
             background = background(read(BACKGROUND), defaults.background),
-            controlColour = enumOf(read(CONTROL), defaults.controlColour),
+            controlColour = control(read(CONTROL), read(VERSION), defaults.controlColour),
             freeControlArgb = read(FREE_CONTROL)?.toIntOrNull() ?: defaults.freeControlArgb,
             discreteButtons = bool(read(DISCRETE), defaults.discreteButtons),
             showTasks = bool(read(SHOW_TASKS), defaults.showTasks),
@@ -77,6 +84,7 @@ object TodayWidgetConfigCodec {
             checkFromWidget = bool(read(CHECK_FROM_WIDGET), defaults.checkFromWidget),
             projectRail = bool(read(PROJECT_RAIL), defaults.projectRail),
             showEvents = bool(read(SHOW_EVENTS), defaults.showEvents),
+            groupByDay = bool(read(GROUP_BY_DAY), defaults.groupByDay),
             textSize = enumOf(read(TEXT_SIZE), defaults.textSize),
             cornerRadiusDp = int(read(CORNER), defaults.cornerRadiusDp, TodayWidgetLimits.CORNER_DP),
         )
@@ -87,6 +95,10 @@ object TodayWidgetConfigCodec {
         "FLOU" -> TodayBackground.VERRE
         else -> enumOf(raw, default)
     }
+
+    /** Avant la 1.4.1, Indigo n'était que la valeur par défaut : ces widgets passent aux couleurs de priorité. */
+    private fun control(raw: String?, version: String?, default: ControlColour): ControlColour =
+        if (version == null && raw == ControlColour.INDIGO.name) ControlColour.PRIORITE else enumOf(raw, default)
 
     private fun ids(raw: String?): Set<String> = raw.orEmpty().split(ID_SEPARATOR).filter { it.isNotBlank() }.toSet()
 

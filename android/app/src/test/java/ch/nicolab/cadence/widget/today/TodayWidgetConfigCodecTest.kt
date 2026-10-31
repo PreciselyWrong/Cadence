@@ -25,6 +25,7 @@ class TodayWidgetConfigCodecTest {
             checkFromWidget = false,
             projectRail = false,
             showEvents = true,
+            groupByDay = false,
             textSize = TodayTextSize.L,
             cornerRadiusDp = 8,
             projectUids = setOf("p-1", "p-2"),
@@ -89,5 +90,25 @@ class TodayWidgetConfigCodecTest {
         val config = TodayWidgetConfigCodec.decode(stored::get)
 
         assertEquals(TodayWidgetConfig(taskScope = TaskScope.TODAY), config)
+    }
+
+    @Test
+    fun `l'indigo par defaut d'avant le regroupement par jour passe aux couleurs de priorite`() {
+        val old = TodayWidgetConfigCodec.encode(TodayWidgetConfig(controlColour = ControlColour.INDIGO)) - "version"
+
+        assertEquals(ControlColour.PRIORITE, TodayWidgetConfigCodec.decode(old::get).controlColour)
+    }
+
+    @Test
+    fun `un indigo choisi depuis reste indigo`() {
+        val stored = TodayWidgetConfigCodec.encode(TodayWidgetConfig(controlColour = ControlColour.INDIGO))
+
+        assertEquals(ControlColour.INDIGO, TodayWidgetConfigCodec.decode(stored::get).controlColour)
+    }
+
+    @Test
+    fun `un nouveau widget colore par priorite et regroupe par jour`() {
+        assertEquals(ControlColour.PRIORITE, TodayWidgetConfig().controlColour)
+        assertEquals(true, TodayWidgetConfig().groupByDay)
     }
 }

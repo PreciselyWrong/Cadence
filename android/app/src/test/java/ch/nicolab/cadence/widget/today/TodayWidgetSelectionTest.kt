@@ -233,4 +233,42 @@ class TodayWidgetSelectionTest {
         calendar = DeviceCalendar(1L, "compte", "local", "Agenda", 0xFF00AA00.toInt(), true),
         done = false,
     )
+
+    @Test
+    fun `par jour les taches forment une section par echeance, les retards en tete`() {
+        val tasks = listOf(
+            task("today", today),
+            task("yesterday-a", today.minusDays(1)),
+            task("old", today.minusDays(3)),
+            task("yesterday-b", today.minusDays(1)),
+        )
+
+        val sections = taskSections(select(tasks, TodayWidgetConfig(groupByDay = true)), TodayWidgetConfig(groupByDay = true), today)
+
+        assertEquals(listOf(today.minusDays(3), today.minusDays(1), today), sections.map { it.day })
+        assertEquals(listOf(true, true, false), sections.map { it.overdue })
+        assertEquals(listOf(1, 2, 1), sections.map { it.tasks.size })
+        assertTrue(sections.all { it.labelled })
+    }
+
+    @Test
+    fun `une seule section du jour n'a pas d'intitule`() {
+        val config = TodayWidgetConfig(groupByDay = true)
+        val sections = taskSections(select(listOf(task("a", today), task("b", today)), config), config, today)
+
+        assertEquals(1, sections.size)
+        assertEquals(false, sections.single().labelled)
+    }
+
+    @Test
+    fun `sans regroupement par jour les retards gardent leur section unique`() {
+        val config = TodayWidgetConfig(groupByDay = false)
+        val tasks = listOf(task("today", today), task("old", today.minusDays(3)), task("y", today.minusDays(1)))
+
+        val sections = taskSections(select(tasks, config), config, today)
+
+        assertEquals(listOf(true, false), sections.map { it.overdue })
+        assertEquals(listOf(true, false), sections.map { it.labelled })
+        assertEquals(listOf(listOf("old", "y"), listOf("today")), sections.map { s -> s.tasks.map { it.uid } })
+    }
 }

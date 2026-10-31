@@ -174,6 +174,7 @@ private fun TodayWidgetConfiguration(
                         ToggleRow(stringResource(R.string.today_config_high_priority), config.highPriorityOnly) { edit { c -> c.copy(highPriorityOnly = it) } }
                         ToggleRow(stringResource(R.string.today_config_hide_recurring), config.hideRecurring) { edit { c -> c.copy(hideRecurring = it) } }
                         ChoiceRow(TaskSort.entries, config.sort, ::sortLabel) { edit { c -> c.copy(sort = it) } }
+                        ToggleRow(stringResource(R.string.today_config_group_by_day), config.groupByDay) { edit { c -> c.copy(groupByDay = it) } }
                         ToggleRow(stringResource(R.string.today_config_overdue_section), config.showOverdueSection) { edit { c -> c.copy(showOverdueSection = it) } }
                         ToggleRow(stringResource(R.string.today_config_check_from_widget), config.checkFromWidget) { edit { c -> c.copy(checkFromWidget = it) } }
                         ToggleRow(stringResource(R.string.today_config_project_rail), config.projectRail) { edit { c -> c.copy(projectRail = it) } }
@@ -232,6 +233,7 @@ private fun backgroundLabel(value: TodayBackground): Int = when (value) {
 
 @StringRes
 private fun controlLabel(value: ControlColour): Int = when (value) {
+    ControlColour.PRIORITE -> R.string.today_control_priority
     ControlColour.BLANC -> R.string.today_control_white
     ControlColour.PROJET -> R.string.today_control_project
     ControlColour.INDIGO -> R.string.today_control_indigo

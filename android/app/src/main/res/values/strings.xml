@@ -618,6 +618,7 @@
     <string name="today_widget_add">Ajouter une tâche</string>
     <string name="today_widget_configure">Configurer le widget</string>
     <string name="today_overdue_label">En retard · %1$d</string>
+    <string name="today_no_date_label">Sans date</string>
     <string name="today_event_all_day">Journée</string>
     <string name="today_events_label">Agenda</string>
     <string name="today_event_check_description">Marquer %1$s comme fait</string>
@@ -640,6 +641,7 @@
     <string name="today_config_high_priority">Priorité haute seulement</string>
     <string name="today_config_hide_recurring">Masquer les récurrences</string>
     <string name="today_config_overdue_section">Section « En retard » séparée</string>
+    <string name="today_config_group_by_day">Regrouper par jour</string>
     <string name="today_config_check_from_widget">Cocher depuis le widget</string>
     <string name="today_config_project_rail">Couleur du projet</string>
     <string name="today_config_show_events">Événements des agendas choisis</string>
@@ -650,6 +652,7 @@
     <string name="today_bg_dark">Sombre</string>
     <string name="today_bg_light">Clair</string>
     <string name="today_bg_none">Aucun</string>
+    <string name="today_control_priority">Priorité</string>
     <string name="today_control_white">Blanc</string>
     <string name="today_control_project">Projet</string>
     <string name="today_control_indigo">Indigo</string>

@@ -7,8 +7,11 @@ package ch.nicolab.cadence.widget.today
  */
 enum class TodayBackground { VERRE, AUTO, CLAIR, SOMBRE, AUCUN }
 
-/** Couleur des icônes et des cases. [PROJET] colore chaque case dans la couleur de son projet. */
-enum class ControlColour { BLANC, PROJET, INDIGO, CORAIL, MENTHE, AMBRE, LIBRE }
+/**
+ * Couleur des icônes et des cases. [PRIORITE] colore chaque case selon la priorité de la tâche
+ * (comme l'application), [PROJET] dans la couleur de son projet.
+ */
+enum class ControlColour { PRIORITE, BLANC, PROJET, INDIGO, CORAIL, MENTHE, AMBRE, LIBRE }
 
 enum class HabitPlacement { ABOVE, BELOW, HIDDEN }
 
@@ -27,7 +30,7 @@ enum class TodayTextSize { S, M, L }
  */
 data class TodayWidgetConfig(
     val background: TodayBackground = TodayBackground.VERRE,
-    val controlColour: ControlColour = ControlColour.INDIGO,
+    val controlColour: ControlColour = ControlColour.PRIORITE,
     /** Couleur choisie librement, utilisée quand [controlColour] vaut [ControlColour.LIBRE]. */
     val freeControlArgb: Int = TodayControlPalette.DEFAULT_FREE_ARGB,
     /** « Boutons discrets » : icônes seules, sans pastille. */
@@ -54,6 +57,8 @@ data class TodayWidgetConfig(
     /** Trait de couleur du projet à gauche de chaque tâche. */
     val projectRail: Boolean = true,
     val showEvents: Boolean = false,
+    /** Une section par jour d'échéance (retards en tête, en rouge) ; sinon une seule section « En retard ». */
+    val groupByDay: Boolean = true,
     val textSize: TodayTextSize = TodayTextSize.M,
     /** Rayon des angles en dp, 0 à 32. */
     val cornerRadiusDp: Int = 20,
@@ -74,7 +79,7 @@ object TodayControlPalette {
 
     fun argb(colour: ControlColour, freeArgb: Int): Int? = when (colour) {
         ControlColour.BLANC -> 0xFFFFFFFF.toInt()
-        ControlColour.PROJET -> null
+        ControlColour.PRIORITE, ControlColour.PROJET -> null
         ControlColour.INDIGO -> 0xFF6F62F2.toInt()
         ControlColour.CORAIL -> 0xFFF0705C.toInt()
         ControlColour.MENTHE -> 0xFF3DD6A0.toInt()

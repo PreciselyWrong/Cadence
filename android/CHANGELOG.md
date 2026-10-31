@@ -1,3 +1,11 @@
+## [1.4.1] — 31 octobre 2026
+
+### Corrections
+- Widget « Aujourd'hui » : le verre est nettement plus transparent. Il s'adapte aux couleurs de votre fond d'écran et descend aussi bas que le permet un texte lisible.
+- Widget « Aujourd'hui » : les cases prennent la couleur de la priorité, comme dans l'application (haute en rouge, moyenne en orange, basse en bleu, sans priorité en gris). Les widgets qui étaient en Indigo par défaut passent à ce réglage.
+- Widget « Aujourd'hui » : les tâches sont regroupées par jour (Hier, Aujourd'hui, « Mardi 27 octobre »…), les jours en retard en rouge ; « Regrouper par jour » se désactive dans les réglages du widget.
+- Widget « Aujourd'hui » : toucher le titre ouvre l'application.
+
 ## [1.4.0] — 31 octobre 2026
 
 ### Nouveautés

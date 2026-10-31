@@ -53,6 +53,30 @@ fun selectWidgetTasks(
     )
 }
 
+/**
+ * Section de la liste du widget. [day] est le jour d'échéance quand les tâches sont regroupées par
+ * jour, null pour la section « En retard » unique, le reste non regroupé ou les tâches sans date.
+ * [labelled] dit si la section porte un intitulé : une section seule et à jour n'en a pas, le
+ * titre du widget le dit déjà.
+ */
+data class TodaySection(val day: LocalDate?, val overdue: Boolean, val labelled: Boolean, val tasks: List<TaskItem>)
+
+/** Découpe les tâches de [selection] en sections, par jour d'échéance ou en « retards puis le reste ». */
+fun taskSections(selection: TodaySelection, config: TodayWidgetConfig, today: LocalDate): List<TodaySection> {
+    if (!config.groupByDay) {
+        return listOfNotNull(
+            selection.overdue.takeIf { it.isNotEmpty() }?.let { TodaySection(null, overdue = true, labelled = true, tasks = it) },
+            selection.tasks.takeIf { it.isNotEmpty() }?.let { TodaySection(null, overdue = false, labelled = false, tasks = it) },
+        )
+    }
+    val byDay = (selection.overdue + selection.tasks).groupBy { it.dueDay }
+    val days = byDay.keys.sortedWith(nullsLast())
+    val single = days.size == 1 && days.single()?.isBefore(today) != true
+    return days.map { day ->
+        TodaySection(day, overdue = day?.isBefore(today) == true, labelled = !single, tasks = byDay.getValue(day))
+    }
+}
+
 private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate, now: Instant): List<TaskItem> =
     when (scope) {
         TaskScope.OVERDUE_AND_TODAY -> TaskViews.today(tasks, today, now)
