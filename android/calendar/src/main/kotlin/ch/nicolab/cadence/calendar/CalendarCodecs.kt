@@ -5,6 +5,8 @@ internal object CalendarCodecs {
     private const val AGENDA_BIT = 1
     private const val TASKS_BIT = 2
     private const val WIDGET_BIT = 4
+    private const val USED_SET_BIT = 8
+    private const val USED_VALUE_BIT = 16
     private const val HIDDEN_PARTS = 5
 
     /** "calendarId:eventId:instanceBegin" */
@@ -36,15 +38,27 @@ internal object CalendarCodecs {
         return HiddenEvent(key, title = parts[4], allDay = allDay)
     }
 
-    /** Bits: agenda = 1, tasks = 2, widget = 4. */
-    fun encodeDisplay(display: CalendarDisplay): Int =
-        (if (display.agenda) AGENDA_BIT else 0) or
+    /**
+     * Bits: agenda = 1, tasks = 2, widget = 4. Choix « utilisé » : bit 8 posé s'il est fait, bit 16 posé s'il vaut oui.
+     * Sans bit 8 (réglage antérieur au choix), `used` vaut null.
+     */
+    fun encodeDisplay(display: CalendarDisplay): Int {
+        val used = display.used
+        val usedBits = when (used) {
+            null -> 0
+            true -> USED_SET_BIT or USED_VALUE_BIT
+            false -> USED_SET_BIT
+        }
+        return (if (display.agenda) AGENDA_BIT else 0) or
             (if (display.tasks) TASKS_BIT else 0) or
-            (if (display.widget) WIDGET_BIT else 0)
+            (if (display.widget) WIDGET_BIT else 0) or
+            usedBits
+    }
 
     fun decodeDisplay(bits: Int): CalendarDisplay = CalendarDisplay(
         agenda = bits and AGENDA_BIT != 0,
         tasks = bits and TASKS_BIT != 0,
         widget = bits and WIDGET_BIT != 0,
+        used = if (bits and USED_SET_BIT != 0) bits and USED_VALUE_BIT != 0 else null,
     )
 }

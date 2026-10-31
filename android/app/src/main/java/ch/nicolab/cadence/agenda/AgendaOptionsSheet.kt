@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.DoneAll
@@ -70,8 +68,9 @@ internal fun rememberCalendarPermissionRequest(onGranted: () -> Unit): () -> Uni
 }
 
 /**
- * Affichage de l'agenda : options de présentation et choix des agendas visibles. Les agendas sont
- * réglés ici pour la surface Agenda seulement ; Aujourd'hui et le widget ont leurs propres réglages.
+ * Affichage de l'agenda : options de présentation et choix des agendas visibles. Seuls les agendas
+ * utilisés dans Cadence sont listés (la liste est filtrée en amont) ; chacun se règle pour l'Agenda
+ * et la Liste Tâches. Aujourd'hui et le widget ont leurs propres réglages.
  * Sans la permission de lecture, la liste des agendas est remplacée par le bouton qui la demande.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,6 +82,7 @@ internal fun AgendaOptionsSheet(
     onRequestPermission: () -> Unit,
     onOptionsChange: ((AgendaOptions) -> AgendaOptions) -> Unit,
     onCalendarShown: (CalendarWithDisplay, Boolean) -> Unit,
+    onCalendarTasksShown: (CalendarWithDisplay, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val palette = cadence
@@ -145,19 +145,13 @@ internal fun AgendaOptionsSheet(
                 color = palette.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth(),
             )
-            else -> Row(
-                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                calendars.forEach { item ->
-                    val shown = item.display.agenda
-                    ChoiceChip(
-                        label = item.calendar.displayName,
-                        selected = shown,
-                        // Un agenda sombre en thème sombre (ou clair en thème clair) doit se distinguer du fond.
-                        accent = readableTintOf(Color(item.calendar.colorArgb), minContrast = ICON_CONTRAST),
-                        leadingIcon = if (shown) Icons.Outlined.Check else null,
-                        onClick = { onCalendarShown(item, !shown) },
+            else -> RowGroup {
+                calendars.forEachIndexed { index, item ->
+                    CalendarShownRow(
+                        item = item,
+                        shape = rowGroupShape(index, calendars.size),
+                        onAgendaShown = { onCalendarShown(item, !item.display.agenda) },
+                        onTasksShown = { onCalendarTasksShown(item, !item.display.tasks) },
                     )
                 }
             }
@@ -208,6 +202,61 @@ private fun OptionRow(toggle: OptionToggle, shape: Shape) {
         }
         Spacer(Modifier.width(Space.lg))
         CadenceSwitch(checked = toggle.checked, onCheckedChange = toggle.onChange)
+    }
+}
+
+/** Un agenda utilisé : son nom, son compte pour le distinguer d'un homonyme, puis Agenda et Liste Tâches. */
+@Composable
+private fun CalendarShownRow(
+    item: CalendarWithDisplay,
+    shape: Shape,
+    onAgendaShown: () -> Unit,
+    onTasksShown: () -> Unit,
+) {
+    val palette = cadence
+    val calendar = item.calendar
+    val display = item.display
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(palette.card)
+            .padding(horizontal = Space.lg, vertical = Space.md),
+        verticalArrangement = Arrangement.spacedBy(Space.sm),
+    ) {
+        Column {
+            Text(
+                calendar.displayName,
+                style = MaterialTheme.typography.bodyLarge,
+                color = palette.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                calendar.accountName,
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            ChoiceChip(
+                label = stringResource(R.string.calendars_surface_agenda),
+                selected = display.agenda,
+                // Un agenda sombre en thème sombre (ou clair en thème clair) doit se distinguer du fond.
+                accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
+                leadingIcon = if (display.agenda) Icons.Outlined.Check else null,
+                onClick = onAgendaShown,
+            )
+            ChoiceChip(
+                label = stringResource(R.string.calendars_surface_tasks),
+                selected = display.tasks,
+                accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
+                leadingIcon = if (display.tasks) Icons.Outlined.Check else null,
+                onClick = onTasksShown,
+            )
+        }
     }
 }
 

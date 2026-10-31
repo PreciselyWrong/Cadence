@@ -12,6 +12,7 @@ import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.TimeRange
+import ch.nicolab.cadence.calendar.isUsed
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
@@ -97,6 +98,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     private val _options = MutableStateFlow(readOptions())
 
     val calendars: StateFlow<List<CalendarWithDisplay>> = calendar.calendars()
+        .map { items -> items.filter { it.display.isUsed(it.calendar) } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     private val window: Flow<AgendaWindow> = combine(_mode, _selected) { mode, selected ->
@@ -212,6 +214,10 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
 
     fun setCalendarShown(item: CalendarWithDisplay, shown: Boolean) = viewModelScope.launch {
         calendar.setDisplay(item.calendar.id, item.display.copy(agenda = shown))
+    }
+
+    fun setCalendarTasks(item: CalendarWithDisplay, shown: Boolean) = viewModelScope.launch {
+        calendar.setDisplay(item.calendar.id, item.display.copy(tasks = shown))
     }
 
     fun toggleEvent(key: EventInstanceKey) = viewModelScope.launch {

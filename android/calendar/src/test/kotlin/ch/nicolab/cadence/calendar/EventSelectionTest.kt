@@ -188,4 +188,33 @@ class EventSelectionTest {
 
         assertEquals(0, select(listOf(e), done = setOf(e.key), hidden = setOf(e.key)).size)
     }
+
+    @Test
+    fun `un agenda non synchronisé et jamais choisi est écarté de toutes les surfaces`() {
+        val unsynced = calendar(id = 1L).copy(syncEvents = false)
+        val events = listOf(event())
+
+        CalendarSurface.entries.forEach { surface ->
+            assertEquals(0, select(events, calendars = listOf(unsynced), surface = surface).size, surface.name)
+        }
+    }
+
+    @Test
+    fun `un agenda non synchronisé que l'on choisit d'utiliser reste affiché`() {
+        val unsynced = calendar(id = 1L).copy(syncEvents = false)
+        val displays = mapOf(1L to CalendarDisplay(used = true))
+
+        assertEquals(1, select(listOf(event()), calendars = listOf(unsynced), displays = displays).size)
+    }
+
+    @Test
+    fun `un agenda synchronisé que l'on retire est écarté de toutes les surfaces`() {
+        val synced = calendar(id = 1L).copy(syncEvents = true)
+        val displays = mapOf(1L to CalendarDisplay(agenda = true, tasks = true, widget = true, used = false))
+        val events = listOf(event())
+
+        CalendarSurface.entries.forEach { surface ->
+            assertEquals(0, select(events, calendars = listOf(synced), displays = displays, surface = surface).size, surface.name)
+        }
+    }
 }

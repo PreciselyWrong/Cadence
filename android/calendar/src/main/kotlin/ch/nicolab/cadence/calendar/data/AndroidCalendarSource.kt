@@ -91,6 +91,7 @@ internal class AndroidCalendarSource(
         displayName = getStringOrEmpty(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME),
         colorArgb = getIntOrZero(CalendarContract.Calendars.CALENDAR_COLOR),
         visibleOnDevice = getIntOrZero(CalendarContract.Calendars.VISIBLE) == 1,
+        syncEvents = getIntOrZero(CalendarContract.Calendars.SYNC_EVENTS) == 1,
     )
 
     private fun Cursor.toCalendarEvent() = CalendarEvent(
@@ -127,6 +128,7 @@ internal class AndroidCalendarSource(
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
             CalendarContract.Calendars.CALENDAR_COLOR,
             CalendarContract.Calendars.VISIBLE,
+            CalendarContract.Calendars.SYNC_EVENTS,
         )
 
         val INSTANCE_PROJECTION = arrayOf(

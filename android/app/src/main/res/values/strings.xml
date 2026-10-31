@@ -607,6 +607,9 @@
     <string name="calendars_permission_message">Cadence affiche les événements de vos agendas en lecture seule. Autorisez l’accès pour les voir ici.</string>
     <string name="calendars_permission_action">Autoriser l’accès aux agendas</string>
     <string name="calendars_empty">Aucun agenda sur cet appareil</string>
+    <string name="calendars_use">Utiliser dans Cadence</string>
+    <string name="calendars_use_hint">Les agendas non utilisés n’apparaissent nulle part dans Cadence.</string>
+    <string name="calendars_unused_header">Non utilisés (%1$d)</string>
     <string name="routine_title">Routine · %1$s %2$d/%3$d</string>
     <string name="routine_open_habits">Ouvrir les habitudes</string>
     <string name="routine_limit_value">%1$s max</string>

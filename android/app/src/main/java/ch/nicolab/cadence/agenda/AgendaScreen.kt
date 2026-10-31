@@ -212,6 +212,7 @@ fun AgendaScreen(modifier: Modifier = Modifier) {
             onRequestPermission = requestCalendar,
             onOptionsChange = viewModel::updateOptions,
             onCalendarShown = viewModel::setCalendarShown,
+            onCalendarTasksShown = viewModel::setCalendarTasks,
             onDismiss = { displayOpen = false },
         )
     }

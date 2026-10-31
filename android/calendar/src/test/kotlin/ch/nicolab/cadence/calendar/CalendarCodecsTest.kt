@@ -39,6 +39,21 @@ class CalendarCodecsTest {
     }
 
     @Test
+    fun `le choix utilisé survit à l'aller-retour (jamais choisi, oui, non)`() {
+        listOf(null, true, false).forEach { used ->
+            val display = CalendarDisplay(agenda = false, tasks = true, widget = true, used = used)
+            assertEquals(display, CalendarCodecs.decodeDisplay(CalendarCodecs.encodeDisplay(display)))
+        }
+    }
+
+    @Test
+    fun `des réglages enregistrés sans choix utilisé se lisent comme jamais choisi`() {
+        (0 until 8).forEach { bits ->
+            assertNull(CalendarCodecs.decodeDisplay(bits).used, "bits=$bits")
+        }
+    }
+
+    @Test
     fun `une clé mal formée donne null`() {
         listOf("", "1:2", "a:b:c", "1:2:3:4").forEach { value ->
             assertNull(CalendarCodecs.decodeKey(value), value)

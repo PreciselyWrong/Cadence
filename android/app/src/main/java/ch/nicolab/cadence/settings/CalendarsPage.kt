@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircleOutline
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.R
@@ -48,6 +50,8 @@ import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.day
+import ch.nicolab.cadence.calendar.isUsed
+import ch.nicolab.cadence.designsystem.components.CadenceSwitch
 import ch.nicolab.cadence.designsystem.components.SettingRow
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -72,7 +76,7 @@ internal fun calendarsSubtitle(): String? {
     val permissionMissing by repository.permissionMissing.collectAsStateWithLifecycle(initialValue = true)
     val calendars by calendarsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     if (permissionMissing) return null
-    val shown = calendars.count { it.display.agenda || it.display.tasks || it.display.widget }
+    val shown = calendars.count { it.display.isUsed(it.calendar) && (it.display.agenda || it.display.tasks || it.display.widget) }
     return pluralStringResource(R.plurals.settings_calendars_count, shown, shown)
 }
 
@@ -101,6 +105,11 @@ internal fun CalendarsPage() {
         style = MaterialTheme.typography.bodyMedium,
         color = palette.onSurfaceVariant,
     )
+    Text(
+        stringResource(R.string.calendars_use_hint),
+        style = MaterialTheme.typography.bodySmall,
+        color = palette.onSurfaceVariant,
+    )
     if (permissionMissing) {
         Panel {
             Text(stringResource(R.string.calendars_permission_title), style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
@@ -118,12 +127,33 @@ internal fun CalendarsPage() {
             color = palette.onSurfaceVariant,
         )
     } else {
-        RowGroup {
-            calendars.forEachIndexed { index, item ->
-                CalendarBlock(item, rowGroupShape(index, calendars.size)) { display ->
-                    scope.launch { repository.setDisplay(item.calendar.id, display) }
+        calendars.groupBy { it.calendar.accountName to it.calendar.accountType }.forEach { (_, items) ->
+            val (used, unused) = items.partition { it.display.isUsed(it.calendar) }
+            AccountHeader(items.first().calendar)
+            if (used.isNotEmpty()) {
+                RowGroup {
+                    used.forEachIndexed { index, item ->
+                        CalendarBlock(item, rowGroupShape(index, used.size)) { display ->
+                            scope.launch { repository.setDisplay(item.calendar.id, display) }
+                        }
+                    }
                 }
             }
+            if (unused.isNotEmpty()) {
+                Text(
+                    stringResource(R.string.calendars_unused_header, unused.size),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = palette.onSurfaceVariant,
+                )
+                RowGroup {
+                    unused.forEachIndexed { index, item ->
+                        CalendarBlock(item, rowGroupShape(index, unused.size)) { display ->
+                            scope.launch { repository.setDisplay(item.calendar.id, display) }
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(Space.lg))
         }
     }
     HiddenEventsSection(
@@ -190,6 +220,29 @@ private fun HiddenEventsSection(hidden: List<HiddenEvent>, onRestore: (EventInst
     }
 }
 
+@Composable
+private fun AccountHeader(calendar: DeviceCalendar) {
+    val palette = cadence
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Space.lg, vertical = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            calendar.accountName,
+            Modifier.weight(1f),
+            style = MaterialTheme.typography.labelLarge,
+            color = palette.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        if (calendar.accountType == GOOGLE_ACCOUNT_TYPE) {
+            Text(stringResource(R.string.calendars_source_google), style = MaterialTheme.typography.bodySmall, color = palette.outline)
+        }
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CalendarBlock(
@@ -200,6 +253,7 @@ private fun CalendarBlock(
     val palette = cadence
     val calendar = item.calendar
     val display = item.display
+    val used = display.isUsed(calendar)
     Column(
         Modifier
             .fillMaxWidth()
@@ -219,34 +273,44 @@ private fun CalendarBlock(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.width(Space.sm))
-            Text(sourceLabel(calendar), style = MaterialTheme.typography.bodySmall, color = palette.outline)
         }
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(Space.sm),
-            verticalArrangement = Arrangement.spacedBy(Space.sm),
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .toggleable(value = used, role = Role.Switch) { onDisplay(display.copy(used = it)) },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            ChoiceChip(
-                label = stringResource(R.string.calendars_surface_agenda),
-                selected = display.agenda,
-                leadingIcon = if (display.agenda) Icons.Rounded.Check else null,
-            ) { onDisplay(display.copy(agenda = !display.agenda)) }
-            ChoiceChip(
-                label = stringResource(R.string.calendars_surface_tasks),
-                selected = display.tasks,
-                leadingIcon = if (display.tasks) Icons.Rounded.Check else null,
-            ) { onDisplay(display.copy(tasks = !display.tasks)) }
-            ChoiceChip(
-                label = stringResource(R.string.calendars_surface_widget),
-                selected = display.widget,
-                leadingIcon = if (display.widget) Icons.Rounded.Check else null,
-            ) { onDisplay(display.copy(widget = !display.widget)) }
+            Text(
+                stringResource(R.string.calendars_use),
+                Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+                color = palette.onSurface,
+            )
+            CadenceSwitch(checked = used, onCheckedChange = null)
+        }
+        if (used) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                verticalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                ChoiceChip(
+                    label = stringResource(R.string.calendars_surface_agenda),
+                    selected = display.agenda,
+                    leadingIcon = if (display.agenda) Icons.Rounded.Check else null,
+                ) { onDisplay(display.copy(agenda = !display.agenda)) }
+                ChoiceChip(
+                    label = stringResource(R.string.calendars_surface_tasks),
+                    selected = display.tasks,
+                    leadingIcon = if (display.tasks) Icons.Rounded.Check else null,
+                ) { onDisplay(display.copy(tasks = !display.tasks)) }
+                ChoiceChip(
+                    label = stringResource(R.string.calendars_surface_widget),
+                    selected = display.widget,
+                    leadingIcon = if (display.widget) Icons.Rounded.Check else null,
+                ) { onDisplay(display.copy(widget = !display.widget)) }
+            }
         }
     }
 }
-
-@Composable
-private fun sourceLabel(calendar: DeviceCalendar): String =
-    if (calendar.accountType == GOOGLE_ACCOUNT_TYPE) stringResource(R.string.calendars_source_google) else calendar.accountName
 
 private const val GOOGLE_ACCOUNT_TYPE = "com.google"
