@@ -12,6 +12,10 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    // Golden fixtures shared with the server (fixtures/habits): a change reruns the tests.
+    inputs.dir(rootProject.projectDir.resolve("../fixtures/habits"))
+        .withPropertyName("goldenFixtures")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 java {
