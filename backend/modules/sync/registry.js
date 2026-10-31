@@ -10,6 +10,19 @@
 // entity it does not know).
 const SCHEMA_VERSION = 2;
 
+const { normalizeIcon } = require('../../utils/icon-validation');
+
+// Rejects a bad icon from a client; the stored value is the normalized id.
+async function checkIcon(values) {
+    if (!('icon' in values)) return null;
+    try {
+        values.icon = normalizeIcon(values.icon);
+        return null;
+    } catch {
+        return 'invalid_icon';
+    }
+}
+
 const ENTITIES = {
     task: {
         model: 'Task',
@@ -74,6 +87,8 @@ const ENTITIES = {
             await projectsRepository.deleteWithOrphaning(row, row.user_id);
         },
         validate: async (row, values) => {
+            const invalidIcon = await checkIcon(values);
+            if (invalidIcon) return invalidIcon;
             if (!row || !values.parent_project_id) return null;
             const { assertNoCycle } = require('../projects/hierarchy');
             try {
@@ -90,6 +105,7 @@ const ENTITIES = {
             'status',
             'priority',
             'color',
+            'icon',
             'pin_to_sidebar',
             'due_date_at',
             'start_date_at',
@@ -130,6 +146,8 @@ const ENTITIES = {
         // under one of its descendants. A tag name is a path, so a descendant
         // is a tag whose name starts with the row's name and a "/".
         validate: async (row, values) => {
+            const invalidIcon = await checkIcon(values);
+            if (invalidIcon) return invalidIcon;
             if (!values.parent_id) return null;
             const { Tag } = require('../../models');
             if (row && values.parent_id === row.id) return 'invalid_hierarchy';
@@ -141,7 +159,7 @@ const ENTITIES = {
             return null;
         },
         version: 1,
-        fields: ['name', 'color', 'pinned'],
+        fields: ['name', 'color', 'icon', 'pinned'],
         refs: {
             parent_uid: { column: 'parent_id', entity: 'tag' },
         },

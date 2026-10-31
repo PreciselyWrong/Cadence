@@ -4866,5 +4866,10 @@
       "reminders": "Påminnelser: {{times}}",
       "title": "Mål og plan"
     }
+  },
+  "iconPicker": {
+    "label": "Ikon",
+    "none": "Ingen ikon",
+    "search": "Søk etter ikoner"
   }
 }

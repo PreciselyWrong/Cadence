@@ -17,6 +17,7 @@ import {
     flattenTagTree,
     tagLeafName,
 } from '../../utils/tagTree';
+import EntityIcon from '../Shared/EntityIcon';
 
 interface SidebarTagsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -155,7 +156,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                 onClick={() => navigate(item)}
                                 data-testid={`sidebar-tag-${item.uid || item.id}`}
                             >
-                                <span className="truncate min-w-0">
+                                <EntityIcon
+                                    icon={item.icon}
+                                    className="mr-1.5 h-[15px] w-[15px] text-gray-500 dark:text-gray-400"
+                                />
+                                <span className="truncate min-w-0 flex-1">
                                     {depth > 0
                                         ? tagLeafName(item.name)
                                         : item.name}

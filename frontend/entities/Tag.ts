@@ -5,6 +5,8 @@ export interface Tag {
     tag_type?: 'system' | 'user';
     pinned?: boolean;
     color?: string;
+    // Id from the icon set shared with Android (constants/entityIcons.ts).
+    icon?: string | null;
     // Nested tags: the name is the namespace path (`perso/sport`) and the API
     // keeps parent_uid in step with it.
     parent_uid?: string | null;

@@ -142,6 +142,11 @@ Area: "Personal"
     - Pinned projects shown above unpinned ones
     - Useful for currently active projects
 
+12. **Icon** (optional, `icon`)
+    - Icon id from the shared set, see `frontend/constants/entityIcons.ts` and `HabitIconRegistry.kt` on Android
+    - Lowercase kebab-case, 40 characters max; `null` or `""` clears it
+    - The server stores the id only; an unknown id falls back to the default glyph
+
 12. **Banner Image** (optional)
     - Visual header image for the project
     - Uploaded via image picker

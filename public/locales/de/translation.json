@@ -4870,5 +4870,10 @@
       "reminders": "Erinnerungen: {{times}}",
       "title": "Ziel und Zeitplan"
     }
+  },
+  "iconPicker": {
+    "label": "Symbol",
+    "none": "Kein Symbol",
+    "search": "Symbole suchen"
   }
 }

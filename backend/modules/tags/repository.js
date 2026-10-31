@@ -22,6 +22,7 @@ class TagsRepository extends BaseRepository {
                 'tag_type',
                 'pinned',
                 'color',
+                'icon',
                 'parent_id',
                 // CAST keeps the counts numeric on PostgreSQL, where COUNT(*)
                 // is a bigint that the driver would otherwise return as a string.
@@ -111,6 +112,7 @@ class TagsRepository extends BaseRepository {
                 'tag_type',
                 'pinned',
                 'color',
+                'icon',
                 'parent_id',
             ],
         });
@@ -139,12 +141,13 @@ class TagsRepository extends BaseRepository {
     /**
      * Create a new tag for a user.
      */
-    async createForUser(userId, name, parentId = null) {
+    async createForUser(userId, name, parentId = null, icon = null) {
         return this.model.create({
             name,
             user_id: userId,
             tag_type: 'user',
             parent_id: parentId,
+            icon,
         });
     }
 

@@ -30,6 +30,7 @@ import {
     projectShareCache,
 } from '../../utils/projectShareCache';
 import { getApiPath } from '../../config/paths';
+import EntityIcon from '../Shared/EntityIcon';
 
 interface ProjectItemProps {
     project: Project;
@@ -585,7 +586,11 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                             className="h-full w-full object-cover"
                         />
                     ) : (
-                        <FolderIcon className="h-5 w-5" />
+                        <EntityIcon
+                            icon={project.icon}
+                            className="h-5 w-5"
+                            fallback={<FolderIcon className="h-5 w-5" />}
+                        />
                     )}
                 </Link>
                 <div className="min-w-0">

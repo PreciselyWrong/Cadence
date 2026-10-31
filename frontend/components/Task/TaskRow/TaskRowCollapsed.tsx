@@ -26,6 +26,7 @@ import {
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import TaskTagChips from './TaskTagChips';
+import EntityIcon from '../../Shared/EntityIcon';
 import TodoMdBadge from '../../Shared/TodoMdBadge';
 import { isTodoMdTask } from '../../../utils/todoMd';
 import { isTaskCompleted } from '../../../constants/taskStatus';
@@ -444,7 +445,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             !compact && task.tags && task.tags.length > 0 ? (
                 <span className="flex items-center gap-1.5">
                     {task.tags.slice(0, 2).map((tag) => (
-                        <span key={tag.uid || tag.name}>{`#${tag.name}`}</span>
+                        <span
+                            key={tag.uid || tag.name}
+                            className="inline-flex items-center gap-0.5"
+                        >
+                            <EntityIcon icon={tag.icon} className="h-3 w-3" />
+                            {`#${tag.name}`}
+                        </span>
                     ))}
                     {task.tags.length > 2 && (
                         <span>
@@ -460,9 +467,10 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 <Link
                     to={projectHref}
                     onClick={stop}
-                    className="max-w-[10rem] truncate hover:underline"
+                    className="inline-flex max-w-[10rem] items-center gap-0.5 hover:underline"
                 >
-                    {project!.name}
+                    <EntityIcon icon={project!.icon} className="h-3 w-3" />
+                    <span className="truncate">{project!.name}</span>
                 </Link>
             ) : null,
         priority:
@@ -654,7 +662,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             )}
                             {showProject && (
                                 <span className="flex min-w-0 items-center">
-                                    <FolderIcon className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                                    <EntityIcon
+                                        icon={project!.icon}
+                                        className="h-3.5 w-3.5 mr-1"
+                                        fallback={
+                                            <FolderIcon className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                                        }
+                                    />
                                     <Link
                                         to={projectHref}
                                         onClick={stop}

@@ -4861,5 +4861,10 @@
       "reminders": "Nhắc nhở: {{times}}",
       "title": "Mục tiêu và lịch"
     }
+  },
+  "iconPicker": {
+    "label": "Biểu tượng",
+    "none": "Không có biểu tượng",
+    "search": "Tìm biểu tượng"
   }
 }

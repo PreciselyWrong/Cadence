@@ -4878,5 +4878,10 @@
       "reminders": "Mementouri: {{times}}",
       "title": "Obiectiv și program"
     }
+  },
+  "iconPicker": {
+    "label": "Pictogramă",
+    "none": "Fără pictogramă",
+    "search": "Caută pictograme"
   }
 }

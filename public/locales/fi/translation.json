@@ -4861,5 +4861,10 @@
       "reminders": "Muistutukset: {{times}}",
       "title": "Tavoite ja aikataulu"
     }
+  },
+  "iconPicker": {
+    "label": "Kuvake",
+    "none": "Ei kuvaketta",
+    "search": "Hae kuvakkeita"
   }
 }

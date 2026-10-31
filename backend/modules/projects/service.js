@@ -13,6 +13,7 @@ const { validateTagName } = require('../tags/tagsService');
 const permissionsService = require('../../services/permissionsService');
 const scopeService = require('../../services/scopeService');
 const { sortTags } = require('../tasks/core/serializers');
+const { normalizeIcon } = require('../../utils/icon-validation');
 const {
     getBlockedCountMap,
     getBlockLinks,
@@ -571,6 +572,7 @@ class ProjectsService {
             due_date_at,
             image_url,
             color,
+            icon,
             status,
             state,
             visibility,
@@ -599,6 +601,7 @@ class ProjectsService {
             due_date_at: due_date_at || null,
             image_url: image_url || null,
             color: color || null,
+            icon: normalizeIcon(icon),
             status: status || state || 'not_started',
             visibility:
                 visibility === undefined
@@ -657,6 +660,7 @@ class ProjectsService {
             due_date_at,
             image_url,
             color,
+            icon,
             status,
             state,
             visibility,
@@ -696,6 +700,7 @@ class ProjectsService {
         if (image_url !== undefined)
             updateData.image_url = image_url === '' ? null : image_url;
         if (color !== undefined) updateData.color = color === '' ? null : color;
+        if (icon !== undefined) updateData.icon = normalizeIcon(icon);
         if (status !== undefined) updateData.status = status;
         else if (state !== undefined) updateData.status = state;
 

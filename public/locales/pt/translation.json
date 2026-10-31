@@ -4874,5 +4874,10 @@
       "reminders": "Lembretes: {{times}}",
       "title": "Meta e programação"
     }
+  },
+  "iconPicker": {
+    "label": "Ícone",
+    "none": "Sem ícone",
+    "search": "Pesquisar ícones"
   }
 }

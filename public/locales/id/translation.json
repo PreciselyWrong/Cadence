@@ -4861,5 +4861,10 @@
       "reminders": "Pengingat: {{times}}",
       "title": "Target dan jadwal"
     }
+  },
+  "iconPicker": {
+    "label": "Ikon",
+    "none": "Tanpa ikon",
+    "search": "Cari ikon"
   }
 }

@@ -4861,5 +4861,10 @@
       "reminders": "リマインダー：{{times}}",
       "title": "目標と予定"
     }
+  },
+  "iconPicker": {
+    "label": "アイコン",
+    "none": "アイコンなし",
+    "search": "アイコンを検索"
   }
 }

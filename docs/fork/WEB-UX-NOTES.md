@@ -47,11 +47,16 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - accepter `/` dans la saisie d'un tag ; le serveur crée les ancêtres à la synchro ;
   - la migration serveur a renommé les tags imbriqués existants (`sport` → `perso/sport`) sans entrée de journal : la version qui adopte les namespaces doit retélécharger le snapshot des tags (`GET /api/v1/sync/snapshot?entity=tag`) une fois.
 
-### En cours — Icônes des projets et des tags
+### 2026-10-31 — Icônes des projets et des tags
 
-- **Demande** : projets et tags portent une petite icône, visible partout où ils apparaissent (barre latérale, lignes de tâche, détail, sélecteurs).
-- **Décisions** : jeu d'icônes partagé, mêmes identifiants que `android/app/src/main/java/ch/nicolab/cadence/ui/icon/HabitIconRegistry.kt` (60 icônes Material) ; le web en garde une copie générée (`frontend/constants/entityIcons.ts`, `scripts/gen-entity-icons.py`) ; aucune icône par défaut, l'icône habituelle (dossier, étiquette) s'affiche tant qu'aucune n'est choisie.
-- **Android** : stocker et afficher le champ `icon` des projets et des tags avec `HabitIconRegistry` ; ajouter une icône au registre l'ajoute aux deux clients (régénérer le fichier web).
+- **Demande** : projets et tags portent une petite icône, visible partout où ils apparaissent.
+- **Décisions** :
+  - jeu d'icônes partagé, mêmes identifiants que `android/app/src/main/java/ch/nicolab/cadence/ui/icon/HabitIconRegistry.kt` (60 icônes Material, mêmes libellés FR/EN et mots-clés) ; le web en garde une copie générée (`frontend/constants/entityIcons.ts`, régénérée par `scripts/gen-entity-icons.py`) ;
+  - le serveur stocke seulement l'identifiant (`icon`, kebab-case, 40 caractères max, sinon 400 ou `invalid_icon` en synchro) ; un identifiant inconnu s'affiche avec l'icône par défaut ;
+  - aucune icône imposée : sans choix, le projet garde son dossier et le tag rien de plus (barre latérale épurée) ;
+  - choix dans le panneau du projet et du tag : grille avec recherche (libellé ou mot-clé, accents ignorés) et « Aucune icône » ;
+  - affichée dans la barre latérale (projets, tags), l'en-tête et la carte du projet, la puce projet du panneau de tâche, les lignes de tâche (projet et tags, modes Minimal et Dense) et la page Tags.
+- **Android** : lire et écrire le champ `icon` des projets et des tags (il arrive déjà par la synchro, ignoré pour l'instant) ; l'afficher avec `HabitIconRegistry` aux mêmes endroits ; ajouter une icône au registre l'ajoute aux deux clients (relancer le script web).
 
 ### À faire — Glisser-déposer vers la navigation
 

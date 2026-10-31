@@ -4861,5 +4861,10 @@
       "reminders": "알림: {{times}}",
       "title": "목표와 일정"
     }
+  },
+  "iconPicker": {
+    "label": "아이콘",
+    "none": "아이콘 없음",
+    "search": "아이콘 검색"
   }
 }

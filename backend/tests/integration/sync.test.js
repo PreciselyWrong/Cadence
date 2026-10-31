@@ -604,6 +604,54 @@ describe('Offline sync API', () => {
         });
     });
 
+    describe('icons', () => {
+        it('syncs a project and a tag icon both ways', async () => {
+            const res = await push(agent, [
+                upsert(
+                    'op-ic1',
+                    'project',
+                    'clientproj00ic1',
+                    { name: 'Bike', icon: 'bike' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-ic2',
+                    'tag',
+                    'clienttag00icon2',
+                    { name: 'fit', icon: 'smoke-free' },
+                    hlc(1)
+                ),
+            ]);
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'applied',
+            ]);
+
+            const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+            const project = pulled.body.changes
+                .filter((c) => c.uid === 'clientproj00ic1')
+                .pop();
+            const tag = pulled.body.changes
+                .filter((c) => c.uid === 'clienttag00icon2')
+                .pop();
+            expect(project.data.icon).toBe('bike');
+            expect(tag.data.icon).toBe('smoke-free');
+        });
+
+        it('rejects an invalid icon from a client', async () => {
+            const res = await push(agent, [
+                upsert(
+                    'op-ic3',
+                    'tag',
+                    'clienttag00icon3',
+                    { name: 'bad', icon: 'Home!' },
+                    hlc(1)
+                ),
+            ]);
+            expect(res.body.results[0].status).toBe('rejected');
+        });
+    });
+
     describe('tags', () => {
         it('sets task tags by uid and pulls them back', async () => {
             const res = await push(agent, [

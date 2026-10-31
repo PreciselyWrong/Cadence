@@ -4891,5 +4891,10 @@
       "reminders": "Opomniki: {{times}}",
       "title": "Cilj in urnik"
     }
+  },
+  "iconPicker": {
+    "label": "Ikona",
+    "none": "Brez ikone",
+    "search": "Iskanje ikon"
   }
 }

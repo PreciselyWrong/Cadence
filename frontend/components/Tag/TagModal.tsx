@@ -3,6 +3,7 @@ import { Tag } from '../../entities/Tag';
 import { useToast } from '../Shared/ToastContext';
 import { useTranslation } from 'react-i18next';
 import ColorPicker from '../Shared/ColorPicker';
+import IconPicker from '../Shared/IconPicker';
 import { useStore } from '../../store/useStore';
 import {
     isSameOrDescendantTag,
@@ -90,13 +91,15 @@ const TagModal: React.FC<TagModalProps> = ({
                 formData.name.trim() !== '' ||
                 !!formData.color ||
                 !!formData.pinned ||
-                !!formData.parent_uid
+                !!formData.parent_uid ||
+                !!formData.icon
             );
         }
         return (
             fullName() !== tag.name ||
             formData.pinned !== tag.pinned ||
-            formData.color !== tag.color
+            formData.color !== tag.color ||
+            (formData.icon ?? null) !== (tag.icon ?? null)
         );
     };
 
@@ -258,6 +261,15 @@ const TagModal: React.FC<TagModalProps> = ({
                             ...prev,
                             color: color || undefined,
                         }))
+                    }
+                />
+            </SidePanelSection>
+
+            <SidePanelSection title={t('iconPicker.label', 'Icon')}>
+                <IconPicker
+                    value={formData.icon}
+                    onChange={(icon) =>
+                        setFormData((prev) => ({ ...prev, icon }))
                     }
                 />
             </SidePanelSection>

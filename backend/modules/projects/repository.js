@@ -77,7 +77,7 @@ class ProjectsRepository extends BaseRepository {
                 },
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                 },
                 {
@@ -139,7 +139,7 @@ class ProjectsRepository extends BaseRepository {
                     include: [
                         {
                             model: Tag,
-                            attributes: ['id', 'name', 'uid', 'color'],
+                            attributes: ['id', 'name', 'uid', 'color', 'icon'],
                             through: { attributes: [] },
                             required: false,
                         },
@@ -155,7 +155,13 @@ class ProjectsRepository extends BaseRepository {
                             include: [
                                 {
                                     model: Tag,
-                                    attributes: ['id', 'name', 'uid', 'color'],
+                                    attributes: [
+                                        'id',
+                                        'name',
+                                        'uid',
+                                        'color',
+                                        'icon',
+                                    ],
                                     through: { attributes: [] },
                                     required: false,
                                 },
@@ -178,7 +184,7 @@ class ProjectsRepository extends BaseRepository {
                     include: [
                         {
                             model: Tag,
-                            attributes: ['id', 'name', 'uid', 'color'],
+                            attributes: ['id', 'name', 'uid', 'color', 'icon'],
                             through: { attributes: [] },
                         },
                     ],
@@ -204,7 +210,7 @@ class ProjectsRepository extends BaseRepository {
                 },
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                 },
             ],
@@ -226,7 +232,7 @@ class ProjectsRepository extends BaseRepository {
                 },
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                 },
                 {

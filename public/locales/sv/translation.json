@@ -4861,5 +4861,10 @@
       "reminders": "Påminnelser: {{times}}",
       "title": "Mål och schema"
     }
+  },
+  "iconPicker": {
+    "label": "Ikon",
+    "none": "Ingen ikon",
+    "search": "Sök ikoner"
   }
 }

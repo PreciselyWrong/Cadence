@@ -4861,5 +4861,10 @@
       "reminders": "Recordatorios: {{times}}",
       "title": "Objetivo y programación"
     }
+  },
+  "iconPicker": {
+    "label": "Icono",
+    "none": "Sin icono",
+    "search": "Buscar iconos"
   }
 }

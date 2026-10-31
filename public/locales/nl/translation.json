@@ -4861,5 +4861,10 @@
       "reminders": "Herinneringen: {{times}}",
       "title": "Doel en schema"
     }
+  },
+  "iconPicker": {
+    "label": "Pictogram",
+    "none": "Geen pictogram",
+    "search": "Pictogrammen zoeken"
   }
 }

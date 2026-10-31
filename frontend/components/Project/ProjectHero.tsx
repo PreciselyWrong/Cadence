@@ -20,6 +20,7 @@ import { getAssetPath } from '../../config/paths';
 import { getProjectStatusTint } from './projectStatusStyles';
 import TodoMdProjectNote from './TodoMdProjectNote';
 import { isTodoMdProject } from '../../utils/todoMd';
+import EntityIcon from '../Shared/EntityIcon';
 
 const PROJECT_STATUSES: ProjectStatus[] = [
     'not_started',
@@ -248,7 +249,11 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                     color: tint,
                                 }}
                             >
-                                <FolderIcon className="h-7 w-7" />
+                                <EntityIcon
+                                    icon={project.icon}
+                                    className="h-7 w-7"
+                                    fallback={<FolderIcon className="h-7 w-7" />}
+                                />
                             </span>
                         )}
                         {onEditBannerClick && (

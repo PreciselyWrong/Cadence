@@ -11,12 +11,12 @@ const {
 const TASK_INCLUDES = [
     {
         model: Tag,
-        attributes: ['id', 'name', 'uid', 'color'],
+        attributes: ['id', 'name', 'uid', 'color', 'icon'],
         through: { attributes: [] },
     },
     {
         model: Project,
-        attributes: ['id', 'name', 'uid', 'image_url', 'color'],
+        attributes: ['id', 'name', 'uid', 'image_url', 'color', 'icon'],
         required: false,
     },
     {
@@ -53,7 +53,7 @@ const TASK_INCLUDES_WITH_SUBTASKS = [
         include: [
             {
                 model: Tag,
-                attributes: ['id', 'name', 'uid', 'color'],
+                attributes: ['id', 'name', 'uid', 'color', 'icon'],
                 through: { attributes: [] },
             },
         ],

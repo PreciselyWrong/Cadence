@@ -143,6 +143,19 @@ describe('ProjectModal side panel', () => {
         expect(onClose).toHaveBeenCalled();
     });
 
+    it('saves the picked icon', async () => {
+        const { onSave } = renderModal();
+        fireEvent.change(screen.getByTestId('project-name-input'), {
+            target: { value: 'Garden shed' },
+        });
+        fireEvent.click(screen.getByRole('radio', { name: 'Cycling' }));
+        fireEvent.click(screen.getByTestId('project-save-button'));
+        await flush();
+        expect(onSave).toHaveBeenCalledWith(
+            expect.objectContaining({ icon: 'bike' })
+        );
+    });
+
     it('stays open when clicking inside the due date calendar (#1620)', async () => {
         const { onClose } = renderModal();
 

@@ -55,6 +55,7 @@ This document explains how the Tags system works in Cadence from a user behavior
 | **Tag type** | String | Auto | `user` for your own tags, `system` for the built-in `today` and `someday` |
 | **Pinned** | Boolean | No | Pinned tags come first in the tag input's quick-access chips |
 | **Color** | String | No | Optional chip color |
+| **Icon** | String | No | Optional icon id from the shared set (see `frontend/constants/entityIcons.ts` and `HabitIconRegistry.kt`). Lowercase kebab-case, 40 characters max; `null` or `""` clears it |
 | **Parent** | Integer (`parent_id`) | Auto | The tag named by the path without its last part (`null` for a name without `/`). Kept in step with the name. The API reads and writes it as `parent_uid` |
 | **Created At** | Timestamp | Auto | Creation timestamp |
 | **Updated At** | Timestamp | Auto | Last modification timestamp |

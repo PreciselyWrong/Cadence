@@ -14,6 +14,7 @@ import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { flattenProjectTree } from '../../utils/projectTree';
 import { TASK_DRAG_HOVER_EVENT } from '../Task/taskProjectDrop';
+import EntityIcon from '../Shared/EntityIcon';
 
 interface SidebarProjectsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -196,7 +197,11 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                     }
                                     onClick={() => navigate(project)}
                                 >
-                                    <span className="truncate min-w-0">
+                                    <EntityIcon
+                                        icon={project.icon}
+                                        className="mr-1.5 h-[15px] w-[15px] text-gray-500 dark:text-gray-400"
+                                    />
+                                    <span className="truncate min-w-0 flex-1">
                                         {project.name}
                                     </span>
                                 </div>

@@ -72,12 +72,12 @@ async function filterTasksByParams(
     let includeClause = [
         {
             model: Tag,
-            attributes: ['id', 'name', 'uid', 'color'],
+            attributes: ['id', 'name', 'uid', 'color', 'icon'],
             through: { attributes: [] },
         },
         {
             model: Project,
-            attributes: ['id', 'name', 'status', 'uid', 'color'],
+            attributes: ['id', 'name', 'status', 'uid', 'color', 'icon'],
             required: false,
         },
         {
@@ -91,7 +91,7 @@ async function filterTasksByParams(
             include: [
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                     required: false,
                 },
@@ -520,13 +520,13 @@ function getTaskIncludeConfig() {
     return [
         {
             model: Tag,
-            attributes: ['id', 'name', 'uid', 'color'],
+            attributes: ['id', 'name', 'uid', 'color', 'icon'],
             through: { attributes: [] },
             required: false,
         },
         {
             model: Project,
-            attributes: ['id', 'name', 'status', 'uid'],
+            attributes: ['id', 'name', 'status', 'uid', 'icon'],
             required: false,
         },
         {
@@ -540,7 +540,7 @@ function getTaskIncludeConfig() {
             include: [
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                     required: false,
                 },
@@ -566,13 +566,13 @@ function getTaskIncludeConfigLight() {
     return [
         {
             model: Tag,
-            attributes: ['id', 'name', 'uid', 'color'],
+            attributes: ['id', 'name', 'uid', 'color', 'icon'],
             through: { attributes: [] },
             required: false,
         },
         {
             model: Project,
-            attributes: ['id', 'name', 'status', 'uid'],
+            attributes: ['id', 'name', 'status', 'uid', 'icon'],
             required: false,
         },
         {

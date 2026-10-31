@@ -4868,5 +4868,10 @@
             "reminders": "Pripomienky: {{times}}",
             "title": "Cieľ a plán"
         }
+    },
+    "iconPicker": {
+        "label": "Ikona",
+        "none": "Bez ikony",
+        "search": "Hľadať ikony"
     }
 }

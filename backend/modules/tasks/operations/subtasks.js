@@ -26,12 +26,12 @@ async function getSubtasks(parentTaskId, userId, timezone) {
             include: [
                 {
                     model: Tag,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     through: { attributes: [] },
                 },
                 {
                     model: Project,
-                    attributes: ['id', 'name', 'uid', 'color'],
+                    attributes: ['id', 'name', 'uid', 'color', 'icon'],
                     required: false,
                 },
             ],

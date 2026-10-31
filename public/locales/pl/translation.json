@@ -4891,5 +4891,10 @@
       "reminders": "Przypomnienia: {{times}}",
       "title": "Cel i harmonogram"
     }
+  },
+  "iconPicker": {
+    "label": "Ikona",
+    "none": "Brak ikony",
+    "search": "Szukaj ikon"
   }
 }

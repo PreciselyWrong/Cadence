@@ -4824,5 +4824,10 @@
       "reminders": "Reminders: {{times}}",
       "title": "Goal and schedule"
     }
+  },
+  "iconPicker": {
+    "label": "Icon",
+    "none": "No icon",
+    "search": "Search icons"
   }
 }

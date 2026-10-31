@@ -97,6 +97,23 @@ describe('TaskRowCollapsed in minimal mode', () => {
         (useIsMinimal as jest.Mock).mockReturnValue(true);
     });
 
+    it('shows the project and tag icons in the metadata line', () => {
+        renderRow(
+            baseTask({
+                tags: [
+                    { uid: 't1', name: 'velo', icon: 'bike' },
+                ] as Task['tags'],
+            }),
+            { project: { ...project, icon: 'home' } }
+        );
+
+        const link = screen.getByText('Work Project').closest('a')!;
+        expect(link.querySelector('svg path')).toBeInTheDocument();
+        expect(
+            screen.getByText('#velo').closest('span')!.querySelector('svg')
+        ).toBeInTheDocument();
+    });
+
     it('drops the priority badge and shows tags as plain #names', () => {
         renderRow(
             baseTask({

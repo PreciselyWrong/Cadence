@@ -4875,5 +4875,10 @@
       "reminders": "Rappels : {{times}}",
       "title": "Objectif et planning"
     }
+  },
+  "iconPicker": {
+    "label": "Icône",
+    "none": "Aucune icône",
+    "search": "Rechercher une icône"
   }
 }

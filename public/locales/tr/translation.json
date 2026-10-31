@@ -4861,5 +4861,10 @@
       "reminders": "Hatırlatıcılar: {{times}}",
       "title": "Hedef ve program"
     }
+  },
+  "iconPicker": {
+    "label": "Simge",
+    "none": "Simge yok",
+    "search": "Simge ara"
   }
 }

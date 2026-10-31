@@ -160,6 +160,26 @@ describe('TagModal parent select', () => {
     });
 });
 
+describe('TagModal icon', () => {
+    beforeEach(() => {
+        mockTags = [work, calls, urgent, home];
+    });
+
+    it('saves the picked icon', async () => {
+        const onSave = jest.fn().mockResolvedValue(undefined);
+        render(
+            <TagModal isOpen onClose={jest.fn()} onSave={onSave} tag={home} />
+        );
+        fireEvent.click(screen.getByRole('radio', { name: 'Home' }));
+        fireEvent.click(screen.getByTestId('tag-save-button'));
+        await waitFor(() =>
+            expect(onSave).toHaveBeenCalledWith(
+                expect.objectContaining({ uid: 'home1', icon: 'home' })
+            )
+        );
+    });
+});
+
 describe('Tags page grouping', () => {
     beforeEach(() => {
         mockTags = [work, calls, urgent, home];

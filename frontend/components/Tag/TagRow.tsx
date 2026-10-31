@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Tag } from '../../entities/Tag';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
+import EntityIcon from '../Shared/EntityIcon';
 
 interface TagRowProps {
     tag: Tag;
@@ -80,6 +81,10 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
                 to={tagPath}
                 className="flex flex-1 min-w-0 items-center gap-2"
             >
+                <EntityIcon
+                    icon={tag.icon}
+                    className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                />
                 <h4
                     className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 truncate"
                     title={tag.name}

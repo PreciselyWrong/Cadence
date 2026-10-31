@@ -4861,5 +4861,10 @@
       "reminders": "提醒：{{times}}",
       "title": "目标与计划"
     }
+  },
+  "iconPicker": {
+    "label": "图标",
+    "none": "无图标",
+    "search": "搜索图标"
   }
 }

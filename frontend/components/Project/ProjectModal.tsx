@@ -19,6 +19,7 @@ import { PriorityType } from '../../entities/Task';
 import { useStore } from '../../store/useStore';
 import { useTranslation } from 'react-i18next';
 import ColorPicker from '../Shared/ColorPicker';
+import IconPicker from '../Shared/IconPicker';
 import GoalDropdown from '../Shared/GoalDropdown';
 import { fetchGoals } from '../../utils/goalsService';
 import EntitySidePanel from '../SidePanel/EntitySidePanel';
@@ -265,7 +266,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                 formData.priority !== null ||
                 formData.due_date_at !== null ||
                 !!formData.start_date ||
-                !!formData.color
+                !!formData.color ||
+                !!formData.icon
             );
         }
 
@@ -279,6 +281,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             (formData.start_date ?? null) !== (project.start_date ?? null) ||
             (formData.start_time ?? null) !== (project.start_time ?? null) ||
             formData.color !== project.color ||
+            (formData.icon ?? null) !== (project.icon ?? null) ||
             formData.goal_id !== project.goal_id ||
             formData.is_maintenance !== project.is_maintenance ||
             (formData.parent_project_uid ?? null) !==
@@ -490,6 +493,15 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                         value={formData.color || ''}
                         onChange={(color) =>
                             setFormData((prev) => ({ ...prev, color }))
+                        }
+                    />
+                </SidePanelSection>
+
+                <SidePanelSection title={t('iconPicker.label', 'Icon')}>
+                    <IconPicker
+                        value={formData.icon}
+                        onChange={(icon) =>
+                            setFormData((prev) => ({ ...prev, icon }))
                         }
                     />
                 </SidePanelSection>

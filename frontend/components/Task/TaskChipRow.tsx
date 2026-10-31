@@ -35,6 +35,7 @@ import { getTodayDateString } from '../../utils/dateUtils';
 import { fromDueParts, toDueParts } from '../../utils/dueDateTime';
 import { resolveTaskArea } from '../../utils/taskArea';
 import { useStore } from '../../store/useStore';
+import EntityIcon from '../Shared/EntityIcon';
 
 // One place for the chip colours, so they can follow the shared tokens.
 const FILLED =
@@ -358,7 +359,12 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     renderTrigger={(props) => (
                         <Chip
                             {...props}
-                            icon={<FolderIcon />}
+                            icon={
+                                <EntityIcon
+                                    icon={project?.icon}
+                                    fallback={<FolderIcon />}
+                                />
+                            }
                             text={
                                 project?.name ??
                                 t('taskPanel.project', 'Project')

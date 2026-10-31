@@ -2,6 +2,7 @@
 
 const tagsRepository = require('./repository');
 const { validateTagName } = require('./validation');
+const { normalizeIcon } = require('../../utils/icon-validation');
 const scopeService = require('../../services/scopeService');
 const {
     NotFoundError,
@@ -79,6 +80,7 @@ class TagsService {
             tag_type: tag.tag_type,
             pinned: tag.pinned,
             color: tag.color || null,
+            icon: tag.icon || null,
             parent_uid: tag.parent_id
                 ? (uidById.get(tag.parent_id) ?? null)
                 : null,
@@ -114,6 +116,7 @@ class TagsService {
             tag_type: tag.tag_type,
             pinned: tag.pinned,
             color: tag.color || null,
+            icon: tag.icon || null,
             parent_uid: await parentUidFor(tag.parent_id),
         };
     }
@@ -122,8 +125,9 @@ class TagsService {
      * Create a new tag. With parent_uid, `name` is the leaf under that parent.
      * Missing ancestors of a path are created by the Tag model hooks.
      */
-    async create(userId, name, { parent_uid } = {}) {
+    async create(userId, name, { parent_uid, icon } = {}) {
         const validatedName = validateTagName(name);
+        const validatedIcon = normalizeIcon(icon);
         const parent = await resolveParent(userId, parent_uid);
         if (parent && validatedName.includes('/')) {
             throw new ValidationError(
@@ -144,12 +148,14 @@ class TagsService {
         const tag = await tagsRepository.createForUser(
             userId,
             fullName,
-            parent ? parent.id : null
+            parent ? parent.id : null,
+            validatedIcon
         );
 
         return {
             uid: tag.uid,
             name: tag.name,
+            icon: tag.icon,
             parent_uid: parent ? parent.uid : null,
         };
     }
@@ -159,7 +165,11 @@ class TagsService {
      * A rename cascades to the subtree in the Tag model hooks; moving a tag
      * with parent_uid rebuilds its name from the new parent.
      */
-    async update(userId, identifier, { name, pinned, color, parent_uid } = {}) {
+    async update(
+        userId,
+        identifier,
+        { name, pinned, color, icon, parent_uid } = {}
+    ) {
         const decodedIdentifier = decodeURIComponent(identifier);
         const tag = await tagsRepository.findByIdentifier(
             userId,
@@ -205,6 +215,10 @@ class TagsService {
             updates.color = color === '' ? null : color;
         }
 
+        if (icon !== undefined) {
+            updates.icon = normalizeIcon(icon);
+        }
+
         if (parent !== undefined) {
             updates.parent_id = parent ? parent.id : null;
         }
@@ -219,6 +233,7 @@ class TagsService {
             name: tag.name,
             pinned: tag.pinned,
             color: tag.color,
+            icon: tag.icon,
             parent_uid: await parentUidFor(tag.parent_id),
         };
     }

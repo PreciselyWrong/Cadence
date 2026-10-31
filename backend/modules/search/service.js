@@ -245,14 +245,14 @@ class SearchService {
      */
     buildTaskInclude(tagIds, extras) {
         const include = [
-            { model: Project, attributes: ['id', 'uid', 'name'] },
+            { model: Project, attributes: ['id', 'uid', 'name', 'icon'] },
             {
                 model: Task,
                 as: 'Subtasks',
                 include: [
                     {
                         model: Tag,
-                        attributes: ['id', 'name', 'uid'],
+                        attributes: ['id', 'name', 'uid', 'icon'],
                         through: { attributes: [] },
                     },
                 ],
@@ -263,7 +263,7 @@ class SearchService {
         const tagInclude = {
             model: Tag,
             through: { attributes: [] },
-            attributes: ['id', 'name', 'uid'],
+            attributes: ['id', 'name', 'uid', 'icon'],
             required: requireTags,
         };
 

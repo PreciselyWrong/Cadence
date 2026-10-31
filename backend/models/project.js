@@ -91,6 +91,10 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            icon: {
+                type: DataTypes.STRING(40),
+                allowNull: true,
+            },
             task_show_completed: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

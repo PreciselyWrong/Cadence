@@ -28,6 +28,13 @@ describe('TaskTagChips', () => {
         expect(screen.getByText('+2')).toHaveAttribute('title', 'c, d');
     });
 
+    it('shows the tag icon before its name', () => {
+        render(<TaskTagChips tags={[{ name: 'velo', icon: 'bike' }]} />);
+        expect(
+            screen.getByText('velo').querySelector('svg path')
+        ).toBeInTheDocument();
+    });
+
     it('uses the palette accent when a tag has a color', () => {
         render(<TaskTagChips tags={[{ name: 'a', color: '#1d4ed8' }]} />);
         expect(screen.getByText('a').getAttribute('style')).toContain(

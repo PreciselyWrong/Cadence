@@ -4874,5 +4874,10 @@
       "reminders": "Promemoria: {{times}}",
       "title": "Obiettivo e programmazione"
     }
+  },
+  "iconPicker": {
+    "label": "Icona",
+    "none": "Nessuna icona",
+    "search": "Cerca icone"
   }
 }

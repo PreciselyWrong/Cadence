@@ -5,11 +5,13 @@ import {
     accentVars,
     resolveColor,
 } from '../../../constants/colorPalette';
+import EntityIcon from '../../Shared/EntityIcon';
 
 interface TagLike {
     uid?: string;
     name: string;
     color?: string | null;
+    icon?: string | null;
 }
 
 interface TaskTagChipsProps {
@@ -50,6 +52,10 @@ const TaskTagChips: React.FC<TaskTagChipsProps> = ({
                             color ? `${ACCENT.softBg} ${ACCENT.text}` : neutral
                         }`}
                     >
+                        <EntityIcon
+                            icon={tag.icon}
+                            className="mr-1 inline h-3 w-3 align-[-2px]"
+                        />
                         {tag.name}
                     </span>
                 );
