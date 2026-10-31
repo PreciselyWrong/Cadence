@@ -62,6 +62,12 @@ python3 $S/render_png.py docs/brand/app-icon.svg -o public/icon-logo.png --size 
 python3 $S/render_png.py /tmp/cadence-apple-touch.svg -o public/apple-touch-icon.png --size 180
 python3 $S/render_png.py docs/brand/wordmark-light.svg -o public/wide-logo-dark.png --width 1558 --height 429
 python3 $S/render_png.py docs/brand/wordmark-dark.svg -o public/wide-logo-light.png --width 1558 --height 429
+# Android raster launcher icons: APK tools (catalogues, installers) cannot draw the adaptive XML icon
+R=android/app/src/main/res
+for d in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do n=${d%%:*}; s=${d##*:}
+  magick public/icon-logo.png -resize ${s}x${s} -strip $R/mipmap-$n/ic_launcher.png
+  magick public/icon-logo.png -resize ${s}x${s} \( -size ${s}x${s} xc:none -fill white -draw "circle $((s/2)),$((s/2)) $((s/2)),0" \) -compose DstIn -composite -strip $R/mipmap-$n/ic_launcher_round.png
+done
 ```
 
 After that, copy `favicon-32.png` to `favicon.png`, copy `favicon.ico` to `favicon-dark.ico` and `favicon-light.ico`, and copy `favicon.ico`, `icon-logo.png` and `wide-logo-dark.png` into `backend/modules/landing/public/`.
