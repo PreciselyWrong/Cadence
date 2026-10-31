@@ -10,6 +10,8 @@ import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventDoneStore
+import ch.nicolab.cadence.calendar.EventHiddenStore
+import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.TimeRange
@@ -38,6 +40,7 @@ internal class DefaultCalendarRepository(
     private val source: CalendarSource,
     private val settings: CalendarSettingsStore,
     private val doneStore: EventDoneStore,
+    private val hiddenStore: EventHiddenStore,
     private val zone: () -> ZoneId = ZoneId::systemDefault,
 ) : CalendarRepository {
 
@@ -63,8 +66,9 @@ internal class DefaultCalendarRepository(
         settings.displays,
         settings.global,
         doneStore.done,
-    ) { (calendars, events), displays, global, done ->
-        selectEvents(events, calendars, displays, global, done, range, surface, zone())
+        hiddenStore.hidden,
+    ) { (calendars, events), displays, global, done, hidden ->
+        selectEvents(events, calendars, displays, global, done, range, surface, zone(), hidden.mapTo(HashSet()) { it.key })
     }.distinctUntilChanged()
 
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
@@ -78,6 +82,18 @@ internal class DefaultCalendarRepository(
     override suspend fun setHideDone(enabled: Boolean) {
         settings.setHideDone(enabled)
     }
+
+    override suspend fun hideEvent(event: CalendarEvent) {
+        hiddenStore.setHidden(HiddenEvent(event.key, event.title, event.allDay), hidden = true)
+    }
+
+    override suspend fun restoreEvent(key: EventInstanceKey) {
+        val current = hiddenStore.hidden.first().firstOrNull { it.key == key } ?: return
+        hiddenStore.setHidden(current, hidden = false)
+    }
+
+    override fun hiddenEvents(): Flow<List<HiddenEvent>> =
+        hiddenStore.hidden.map { set -> set.sortedByDescending { it.key.instanceBegin } }
 
     override suspend fun toggleDone(key: EventInstanceKey) {
         if (!settings.global.first().checkEvents) return

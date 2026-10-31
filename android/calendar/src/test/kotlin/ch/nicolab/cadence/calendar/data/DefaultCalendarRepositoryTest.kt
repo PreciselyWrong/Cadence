@@ -49,7 +49,7 @@ class DefaultCalendarRepositoryTest {
     }
 
     private fun repository(source: FakeCalendarSource, store: InMemoryCalendarStore = InMemoryCalendarStore()) =
-        DefaultCalendarRepository(source, store, store, zone = { zone })
+        DefaultCalendarRepository(source, store, store, store, zone = { zone })
 
     @Test
     fun `missing permission gives empty lists until refresh after the grant`() = runTest {
@@ -138,5 +138,52 @@ class DefaultCalendarRepositoryTest {
         assertFalse(repo.calendars().first().single().display.tasks)
         assertTrue(repo.events(range, CalendarSurface.TASKS).first().isEmpty())
         assertEquals(1, repo.events(range, CalendarSurface.AGENDA).first().size)
+    }
+
+    @Test
+    fun `hideEvent retire l'occurrence de toutes les surfaces et restoreEvent la rend`() = runTest {
+        val source = FakeCalendarSource().apply {
+            calendars = listOf(calendar)
+            events = listOf(event(eventId = 1L), event(eventId = 2L, hour = 11))
+        }
+        val repo = repository(source)
+        repo.setDisplay(1L, CalendarDisplay(agenda = true, tasks = true, widget = true))
+
+        repo.hideEvent(event(eventId = 1L))
+
+        CalendarSurface.entries.forEach { surface ->
+            assertEquals(listOf(2L), repo.events(range, surface).first().map { it.event.eventId })
+        }
+        val listed = repo.hiddenEvents().first().single()
+        assertEquals(event(eventId = 1L).key, listed.key)
+        assertEquals("Réunion 1", listed.title)
+
+        repo.restoreEvent(listed.key)
+
+        assertEquals(listOf(1L, 2L), repo.events(range, CalendarSurface.AGENDA).first().map { it.event.eventId }.sorted())
+        assertTrue(repo.hiddenEvents().first().isEmpty())
+    }
+
+    @Test
+    fun `un événement masqué garde son état fait quand il est rendu`() = runTest {
+        val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
+        val repo = repository(source)
+        repo.toggleDone(event().key)
+
+        repo.hideEvent(event())
+        repo.restoreEvent(event().key)
+
+        assertTrue(repo.events(range, CalendarSurface.AGENDA).first().single().done)
+    }
+
+    @Test
+    fun `masquer deux fois le même événement ne crée qu'une entrée`() = runTest {
+        val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
+        val repo = repository(source)
+
+        repo.hideEvent(event())
+        repo.hideEvent(event())
+
+        assertEquals(1, repo.hiddenEvents().first().size)
     }
 }

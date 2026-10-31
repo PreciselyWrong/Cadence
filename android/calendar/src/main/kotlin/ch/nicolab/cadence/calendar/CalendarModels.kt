@@ -38,9 +38,20 @@ data class CalendarEvent(
     val title: String,
     val location: String?,
     val colorArgb: Int,
+    val description: String? = null,
 ) {
     val key: EventInstanceKey get() = EventInstanceKey(calendarId, eventId, instanceBegin)
 }
+
+/**
+ * Occurrence masquée dans Cadence seulement. Le titre et le jour d'une journée entière sont gardés
+ * pour la lister dans les réglages, même quand l'occurrence sort de la plage chargée.
+ */
+data class HiddenEvent(
+    val key: EventInstanceKey,
+    val title: String,
+    val allDay: Boolean,
+)
 
 /** Surface de Cadence où un agenda peut apparaître. */
 enum class CalendarSurface { AGENDA, TASKS, WIDGET }

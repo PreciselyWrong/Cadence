@@ -14,7 +14,9 @@ import ch.nicolab.cadence.calendar.CalendarDisplay
 import ch.nicolab.cadence.calendar.CalendarGlobalSettings
 import ch.nicolab.cadence.calendar.CalendarSettingsStore
 import ch.nicolab.cadence.calendar.EventDoneStore
+import ch.nicolab.cadence.calendar.EventHiddenStore
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.HiddenEvent
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -28,7 +30,7 @@ internal fun Context.calendarPreferences(): DataStore<Preferences> = calendarDat
 /** Réglages d'agenda et occurrences faites, dans un même DataStore Preferences. */
 internal class PreferencesCalendarStore(
     private val dataStore: DataStore<Preferences>,
-) : CalendarSettingsStore, EventDoneStore {
+) : CalendarSettingsStore, EventDoneStore, EventHiddenStore {
 
     private val prefs: Flow<Preferences> = dataStore.data.catch { error ->
         if (error is IOException) emit(emptyPreferences()) else throw error
@@ -54,6 +56,10 @@ internal class PreferencesCalendarStore(
         p[DONE_INSTANCES].orEmpty().mapNotNull(CalendarCodecs::decodeKey).toSet()
     }.distinctUntilChanged()
 
+    override val hidden: Flow<Set<HiddenEvent>> = prefs.map { p ->
+        p[HIDDEN_INSTANCES].orEmpty().mapNotNull(CalendarCodecs::decodeHidden).toSet()
+    }.distinctUntilChanged()
+
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
         dataStore.edit { it[intPreferencesKey("$DISPLAY_PREFIX$calendarId")] = CalendarCodecs.encodeDisplay(display) }
     }
@@ -74,10 +80,19 @@ internal class PreferencesCalendarStore(
         }
     }
 
+    override suspend fun setHidden(event: HiddenEvent, hidden: Boolean) {
+        val prefix = CalendarCodecs.encodeKey(event.key) + ":"
+        dataStore.edit { p ->
+            val kept = p[HIDDEN_INSTANCES].orEmpty().filterNot { it.startsWith(prefix) }.toSet()
+            p[HIDDEN_INSTANCES] = if (hidden) kept + CalendarCodecs.encodeHidden(event) else kept
+        }
+    }
+
     private companion object {
         const val DISPLAY_PREFIX = "display_"
         val CHECK_EVENTS = booleanPreferencesKey("check_events")
         val HIDE_DONE = booleanPreferencesKey("hide_done")
         val DONE_INSTANCES = stringSetPreferencesKey("done_instances")
+        val HIDDEN_INSTANCES = stringSetPreferencesKey("hidden_instances")
     }
 }

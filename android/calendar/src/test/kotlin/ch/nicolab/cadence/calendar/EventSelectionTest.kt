@@ -51,7 +51,8 @@ class EventSelectionTest {
         global: CalendarGlobalSettings = defaults,
         done: Set<EventInstanceKey> = emptySet(),
         surface: CalendarSurface = CalendarSurface.AGENDA,
-    ): List<EventWithDone> = selectEvents(events, calendars, displays, global, done, range, surface, zone)
+        hidden: Set<EventInstanceKey> = emptySet(),
+    ): List<EventWithDone> = selectEvents(events, calendars, displays, global, done, range, surface, zone, hidden)
 
     @Test
     fun `un agenda sans réglage s'affiche sur l'agenda et les tâches, pas sur le widget`() {
@@ -158,5 +159,33 @@ class EventSelectionTest {
         assertEquals(listOf(3L, 2L, 1L), result.map { it.calendar.id })
         assertEquals(CalendarDisplay(), result.first { it.calendar.id == 3L }.display)
         assertEquals(CalendarDisplay(agenda = false, tasks = false, widget = true), result.first { it.calendar.id == 2L }.display)
+    }
+
+    @Test
+    fun `une occurrence masquée disparaît de chaque surface`() {
+        val events = listOf(event(eventId = 1L), event(eventId = 2L, begin = at(11)))
+        val hidden = setOf(events[0].key)
+
+        CalendarSurface.entries.forEach { surface ->
+            val displays = mapOf(1L to CalendarDisplay(agenda = true, tasks = true, widget = true))
+            assertEquals(listOf(2L), select(events, displays = displays, surface = surface, hidden = hidden).map { it.event.eventId })
+        }
+    }
+
+    @Test
+    fun `masquer une occurrence d'une série garde les autres occurrences`() {
+        val first = event(eventId = 5L, begin = at(10))
+        val second = event(eventId = 5L, begin = at(14))
+
+        val shown = select(listOf(first, second), hidden = setOf(first.key))
+
+        assertEquals(listOf(second.instanceBegin), shown.map { it.event.instanceBegin })
+    }
+
+    @Test
+    fun `un événement masqué et fait ne revient pas via le réglage masquer les faits`() {
+        val e = event()
+
+        assertEquals(0, select(listOf(e), done = setOf(e.key), hidden = setOf(e.key)).size)
     }
 }

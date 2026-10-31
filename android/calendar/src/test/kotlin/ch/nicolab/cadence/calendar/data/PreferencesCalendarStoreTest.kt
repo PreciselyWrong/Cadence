@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import ch.nicolab.cadence.calendar.CalendarDisplay
 import ch.nicolab.cadence.calendar.CalendarGlobalSettings
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.HiddenEvent
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,5 +81,20 @@ class PreferencesCalendarStoreTest {
 
         store.setDone(key, false)
         assertTrue(store.done.first().isEmpty())
+    }
+
+    @Test
+    fun `hidden events persist, replace by key and are removed on restore`() = runBlocking {
+        val store = store()
+        val hidden = HiddenEvent(key, "Dentiste", allDay = false)
+
+        store.setHidden(hidden, true)
+        store.setHidden(hidden.copy(title = "Dentiste (renommé)"), true)
+
+        assertEquals(setOf(hidden.copy(title = "Dentiste (renommé)")), store.hidden.first())
+
+        store.setHidden(hidden, false)
+
+        assertTrue(store.hidden.first().isEmpty())
     }
 }

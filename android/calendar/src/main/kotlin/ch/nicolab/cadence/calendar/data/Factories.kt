@@ -9,5 +9,6 @@ internal fun createCalendarRepository(context: Context): CalendarRepository {
         source = AndroidCalendarSource(context),
         settings = store,
         doneStore = store,
+        hiddenStore = store,
     )
 }

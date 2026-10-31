@@ -102,6 +102,7 @@ internal class AndroidCalendarSource(
         title = getStringOrEmpty(CalendarContract.Instances.TITLE),
         location = getStringOrEmpty(CalendarContract.Instances.EVENT_LOCATION).takeIf { it.isNotBlank() },
         colorArgb = getIntOrZero(CalendarContract.Instances.DISPLAY_COLOR),
+        description = getStringOrEmpty(CalendarContract.Instances.DESCRIPTION).take(DESCRIPTION_MAX).takeIf { it.isNotBlank() },
     )
 
     private fun Cursor.getStringOrEmpty(column: String): String =
@@ -115,6 +116,9 @@ internal class AndroidCalendarSource(
     private companion object {
         /** Les journées entières sont ancrées à minuit UTC : on élargit d'un jour de chaque côté. */
         const val DAY_MS = 86_400_000L
+
+        /** Une description démesurée n'a pas sa place dans une fiche d'événement. */
+        const val DESCRIPTION_MAX = 8_000
 
         val CALENDAR_PROJECTION = arrayOf(
             CalendarContract.Calendars._ID,
@@ -135,6 +139,7 @@ internal class AndroidCalendarSource(
             CalendarContract.Instances.EVENT_LOCATION,
             CalendarContract.Instances.DISPLAY_COLOR,
             CalendarContract.Instances.STATUS,
+            CalendarContract.Instances.DESCRIPTION,
         )
 
         const val NOT_CANCELED_SELECTION =

@@ -36,7 +36,15 @@ interface EventDoneStore {
     suspend fun setDone(key: EventInstanceKey, done: Boolean)
 }
 
-/** Contrat du module pour l'interface : agendas, occurrences filtrées par surface, réglages. */
+/** Occurrences masquées dans Cadence seulement ; l'agenda de l'appareil n'est jamais touché. */
+interface EventHiddenStore {
+    val hidden: Flow<Set<HiddenEvent>>
+
+    /** Ajoute ou retire [event] (identifié par sa clé ; un titre plus récent remplace l'ancien). */
+    suspend fun setHidden(event: HiddenEvent, hidden: Boolean)
+}
+
+/** Contrat du module pour l'interface : agendas, occurrences filtrées par surface, masquées, réglages. */
 interface CalendarRepository {
     /** Vrai tant que `READ_CALENDAR` manque ; les flux renvoient alors des listes vides. */
     val permissionMissing: Flow<Boolean>
@@ -48,13 +56,22 @@ interface CalendarRepository {
     /**
      * Occurrences qui chevauchent [range] dans le fuseau de l'appareil, des agendas affichés sur
      * [surface] ; journées entières d'abord, puis par début et titre. Les faites disparaissent si
-     * [CalendarGlobalSettings.hideDone].
+     * [CalendarGlobalSettings.hideDone]. Les occurrences masquées (voir [hideEvent]) n'y figurent jamais.
      */
     fun events(range: TimeRange, surface: CalendarSurface): Flow<List<EventWithDone>>
 
     suspend fun setDisplay(calendarId: Long, display: CalendarDisplay)
     suspend fun setCheckEvents(enabled: Boolean)
     suspend fun setHideDone(enabled: Boolean)
+
+    /** Masque l'occurrence sur toutes les surfaces, dans Cadence seulement (aucune écriture dans le fournisseur). */
+    suspend fun hideEvent(event: CalendarEvent)
+
+    /** Rend une occurrence masquée ; sans effet si elle ne l'était pas. */
+    suspend fun restoreEvent(key: EventInstanceKey)
+
+    /** Occurrences masquées, les plus récentes d'abord, pour les réglages. */
+    fun hiddenEvents(): Flow<List<HiddenEvent>>
 
     /** Inverse l'état fait de l'occurrence ; sans effet si « Cocher un événement » est désactivé. */
     suspend fun toggleDone(key: EventInstanceKey)

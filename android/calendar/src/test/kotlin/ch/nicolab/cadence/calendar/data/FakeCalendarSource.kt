@@ -7,7 +7,9 @@ import ch.nicolab.cadence.calendar.CalendarSettingsStore
 import ch.nicolab.cadence.calendar.CalendarSource
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventDoneStore
+import ch.nicolab.cadence.calendar.EventHiddenStore
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.TimeRange
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,7 +33,9 @@ internal class FakeCalendarSource : CalendarSource {
 
 internal class InMemoryCalendarStore :
     CalendarSettingsStore,
-    EventDoneStore {
+    EventDoneStore,
+    EventHiddenStore {
+    private val hiddenState = MutableStateFlow<Set<HiddenEvent>>(emptySet())
     private val displayState = MutableStateFlow<Map<Long, CalendarDisplay>>(emptyMap())
     private val globalState = MutableStateFlow(CalendarGlobalSettings())
     private val doneState = MutableStateFlow<Set<EventInstanceKey>>(emptySet())
@@ -39,6 +43,7 @@ internal class InMemoryCalendarStore :
     override val displays: Flow<Map<Long, CalendarDisplay>> = displayState
     override val global: Flow<CalendarGlobalSettings> = globalState
     override val done: Flow<Set<EventInstanceKey>> = doneState
+    override val hidden: Flow<Set<HiddenEvent>> = hiddenState
 
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
         displayState.value = displayState.value + (calendarId to display)
@@ -54,5 +59,9 @@ internal class InMemoryCalendarStore :
 
     override suspend fun setDone(key: EventInstanceKey, done: Boolean) {
         doneState.value = if (done) doneState.value + key else doneState.value - key
+    }
+
+    override suspend fun setHidden(event: HiddenEvent, hidden: Boolean) {
+        hiddenState.value = hiddenState.value.filterNot { it.key == event.key }.toSet() + if (hidden) setOf(event) else emptySet()
     }
 }

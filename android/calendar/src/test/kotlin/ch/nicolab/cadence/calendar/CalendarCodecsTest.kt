@@ -44,4 +44,22 @@ class CalendarCodecsTest {
             assertNull(CalendarCodecs.decodeKey(value), value)
         }
     }
+
+    @Test
+    fun `un événement masqué survit à l'aller-retour, titre avec séparateurs compris`() {
+        listOf(
+            HiddenEvent(EventInstanceKey(1L, 2L, 3L), "Réunion", allDay = false),
+            HiddenEvent(EventInstanceKey(-1L, 2L, -3L), "Rendez-vous : 10:30 | salle 2\nsuite", allDay = true),
+            HiddenEvent(EventInstanceKey(1L, 2L, 3L), "", allDay = false),
+        ).forEach { hidden ->
+            assertEquals(hidden, CalendarCodecs.decodeHidden(CalendarCodecs.encodeHidden(hidden)))
+        }
+    }
+
+    @Test
+    fun `un événement masqué mal formé est ignoré`() {
+        assertNull(CalendarCodecs.decodeHidden("1:2:3"))
+        assertNull(CalendarCodecs.decodeHidden("a:2:3:0:titre"))
+        assertNull(CalendarCodecs.decodeHidden("1:2:3:x:titre"))
+    }
 }

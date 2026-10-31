@@ -16,7 +16,7 @@ fun withDisplays(calendars: List<DeviceCalendar>, displays: Map<Long, CalendarDi
 
 /**
  * Occurrences à montrer sur [surface] dans [range]. Garde celles dont l'agenda est connu dans [calendars] et affiché sur [surface],
- * qui chevauchent [range] dans [zone]. done = global.checkEvents && key in done. Retire les faites si global.hideDone.
+ * qui chevauchent [range] dans [zone]. done = global.checkEvents && key in done. Retire les faites si global.hideDone et les occurrences de [hidden], sur toute surface.
  * Tri : allDay d'abord, puis localStart, puis title (insensible à la casse), puis eventId.
  */
 fun selectEvents(
@@ -28,10 +28,12 @@ fun selectEvents(
     range: TimeRange,
     surface: CalendarSurface,
     zone: ZoneId,
+    hidden: Set<EventInstanceKey> = emptySet(),
 ): List<EventWithDone> {
     val calendarsById = calendars.associateBy { it.id }
     return events
         .distinctBy { it.key }
+        .filterNot { it.key in hidden }
         .mapNotNull { event ->
             val calendar = calendarsById[event.calendarId] ?: return@mapNotNull null
             if (!displays.displayFor(calendar.id).shows(surface)) return@mapNotNull null
