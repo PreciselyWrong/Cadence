@@ -1,3 +1,8 @@
+## [1.3.1] — 31 octobre 2026
+
+### Corrections
+- Le logo de Cadence s'affiche dans le catalogue NicoApps et les installateurs d'APK.
+
 ## [1.3.0] — 31 octobre 2026
 
 ### Nouveautés
