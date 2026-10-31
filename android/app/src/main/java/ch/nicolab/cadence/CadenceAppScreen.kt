@@ -46,6 +46,7 @@ import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.agenda.AgendaScreen
 import ch.nicolab.cadence.bilan.BilanScreen
+import ch.nicolab.cadence.tasks.ui.GoalsScreen
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.designsystem.components.CadenceNavigation
@@ -116,6 +117,7 @@ internal fun CadenceAppScreen(
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
+    var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
     // Tâche ouverte depuis le Bilan ; effacée dès qu'on change d'onglet pour ne pas la rouvrir.
     var taskToOpen by rememberSaveable { mutableStateOf<String?>(null) }
@@ -273,6 +275,7 @@ internal fun CadenceAppScreen(
                             tab = Tab.TASKS
                         },
                         onOpenReview = { reviewOpen = true },
+                        onOpenGoals = { goalsOpen = true },
                     )
                 }
             }
@@ -300,14 +303,15 @@ internal fun CadenceAppScreen(
                     projectToShow = uid
                 },
             )
+            if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 taskToOpen = null
             }
             CadenceSnackbarHost(
                 snackbar,
-                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen || reviewOpen) Space.lg else navigationClearance() + Space.sm),
+                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen) Space.lg else navigationClearance() + Space.sm),
                 backdrop = backdrop,
             )
         }

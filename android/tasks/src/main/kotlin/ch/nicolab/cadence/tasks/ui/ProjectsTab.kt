@@ -42,6 +42,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.ProjectCard
 import ch.nicolab.cadence.tasks.model.TaskOverviews
 import ch.nicolab.cadence.tasks.R
@@ -123,8 +124,10 @@ internal fun ProjectsTab(
     onOpenProject: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val projects by viewModel.visibleProjects.collectAsStateWithLifecycle()
+    val allProjects by viewModel.projects.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
+    val areaNames = suggestedAreaNames()
     val tasks by viewModel.allTasks.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val overview = remember(projects, areas, tasks, moment.now) {
@@ -135,6 +138,9 @@ internal fun ProjectsTab(
     val onLongClick = { card: ProjectCard -> statusFor = card.project.uid }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+        if (areas.isEmpty()) {
+            item(key = "suggest-areas") { SuggestAreasButton(onClick = { viewModel.suggestAreas(areaNames) }) }
+        }
         if (overview.activeCount + overview.stashCount + overview.closedCount == 0) {
             item { EmptyState(R.string.tasks_projects_empty) }
         }
@@ -176,7 +182,7 @@ internal fun ProjectsTab(
         }
     }
 
-    val editing = projects.firstOrNull { it.uid == statusFor }
+    val editing = allProjects.firstOrNull { it.uid == statusFor }
     if (editing != null) {
         ProjectStatusSheet(
             project = editing,
@@ -232,7 +238,8 @@ private fun ProjectCardRow(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    card.nextTaskName?.let { stringResource(R.string.tasks_projects_next, it) }
+                    card.nextActionName?.let { stringResource(R.string.next_action_line, it) }
+                        ?: card.nextTaskName?.let { stringResource(R.string.tasks_projects_next, it) }
                         ?: stringResource(R.string.tasks_projects_done_all),
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.onSurfaceVariant,
@@ -275,6 +282,9 @@ internal fun ProjectTasksPane(
     val project = projects.firstOrNull { it.uid == projectUid }
     val projectName = project?.name.orEmpty()
     var editingStatus by remember { mutableStateOf(false) }
+    // La prochaine action choisie ; sinon la suggestion automatique (la première tâche ouverte).
+    val nextLine = project?.let { NextAction.of(it, tasks) }?.let { stringResource(R.string.next_action_line, it.name) }
+        ?: tasks.firstOrNull()?.let { stringResource(R.string.tasks_projects_next, it.name) }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item {
@@ -297,6 +307,18 @@ internal fun ProjectTasksPane(
                         Text(stringResource(projectStatusLabel(project.projectStatus)))
                     }
                 }
+            }
+        }
+        if (nextLine != null) {
+            item(key = "next-action") {
+                Text(
+                    nextLine,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = cadence.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = Space.md, end = Space.md, bottom = Space.sm),
+                )
             }
         }
         if (tasks.isEmpty()) {

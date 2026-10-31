@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 
 /** Réponse lue en ligne, ou la dernière gardée quand le serveur ne répond pas ([fromCache]). */
@@ -75,6 +76,21 @@ class ReviewRepository internal constructor(
     /** « Garder tel quel » pour un projet stagnant (`projects.reviewed_at`), qui n'est pas synchronisé. */
     suspend fun keepProject(uid: String): Result<Unit> = write {
         call("POST", "/api/v1/project/${encode(uid)}/reviewed", emptyMap(), JsonObject(emptyMap()))
+    }
+
+    /** Le serveur a-t-il déjà une routine de revue hebdomadaire ? En ligne seulement : jamais gardé en cache. */
+    suspend fun weeklyRoutineExists(): Result<Boolean> = try {
+        val body = call("GET", "/api/v1/review/weekly-routine", emptyMap(), null)
+        Result.success((body["exists"] as? JsonPrimitive)?.contentOrNull == "true")
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Result.failure(error)
+    }
+
+    /** Crée la tâche récurrente du vendredi ; idempotent côté serveur. Jamais automatique. */
+    suspend fun planWeeklyRoutine(name: String): Result<Unit> = write {
+        call("POST", "/api/v1/review/weekly-routine", emptyMap(), JsonObject(mapOf("name" to JsonPrimitive(name))))
     }
 
     private suspend fun <T> read(

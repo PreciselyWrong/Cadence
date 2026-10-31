@@ -17,7 +17,10 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.AreaSuggestions
+import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -81,6 +84,8 @@ private const val UNDO_WINDOW_MS = 4_500L
 private const val NOTE_SAVE_DELAY_MS = 700L
 private const val CALENDAR_PREFS = "tududi_calendar_notice"
 private const val KEY_NOTICE_DISMISSED = "dismissed"
+private const val FILTER_PREFS = "tududi_tasks_filter"
+private const val KEY_AREA = "area"
 
 /** Date et instant courants ; rafraîchis chaque minute, ce qui couvre aussi minuit. */
 internal data class Moment(val today: LocalDate, val now: Instant, val zone: ZoneId) {
@@ -146,8 +151,28 @@ internal class TasksViewModel(
     /** Tâches supprimées par geste, masquées le temps de pouvoir annuler. */
     private val hiddenUids = MutableStateFlow<Set<String>>(emptySet())
     private val pendingDeletes = HashMap<String, Job>()
+    private val filterPrefs = application.getSharedPreferences(FILTER_PREFS, Context.MODE_PRIVATE)
+
+    val projects: StateFlow<List<ProjectItem>> = repository.observeProjects()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    val areas: StateFlow<List<AreaItem>> = repository.observeAreas()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    private val chosenArea = MutableStateFlow(filterPrefs.getString(KEY_AREA, null))
+
+    private val _areaFilter: Flow<String?> = combine(chosenArea, areas) { chosen, all -> chosen?.takeIf { uid -> all.any { it.uid == uid } } }
+
+    /** Domaine filtré sur les listes de tâches et de projets, gardé entre les sessions ; null = tous. */
+    val areaFilter: StateFlow<String?> = _areaFilter
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), chosenArea.value)
+
     private val tasks: Flow<List<TaskItem>> =
         combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
+
+    /** Tâches du domaine filtré : Aujourd'hui, À venir et les suggestions ; Étiquettes, Terminées et les projets gardent [tasks]. */
+    private val scopedTasks: Flow<List<TaskItem>> =
+        combine(tasks, _areaFilter, projects) { all, area, projects -> AreaFilter.tasks(all, projects, area) }
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
@@ -175,7 +200,7 @@ internal class TasksViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), Moment.current(),
     )
 
-    val today: StateFlow<TodayState> = combine(tasks, moment) { all, m -> todayState(all, m) }
+    val today: StateFlow<TodayState> = combine(scopedTasks, moment) { all, m -> todayState(all, m) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TodayState())
 
     /** Premier jour de la semaine en cours, selon le premier jour du compte : « Cette semaine ». */
@@ -185,8 +210,8 @@ internal class TasksViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), Funnel.weekStart(LocalDate.now(), DayOfWeek.MONDAY))
 
     /** Suggestions du jour : Cette semaine puis En vue, hors « Plus tard ». */
-    val suggestions: StateFlow<List<TaskItem>> = combine(tasks, moment, weekStart) { all, m, week ->
-        TaskViews.suggestions(all, m.today, m.now, week)
+    val suggestions: StateFlow<List<TaskItem>> = combine(scopedTasks, moment, weekStart, projects) { all, m, week, projects ->
+        TaskViews.suggestions(all, m.today, m.now, week, NextAction.byProject(projects))
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Événements de l'agenda pour le jour courant ; le flux ne se relance qu'au changement de jour ou de fuseau. */
@@ -207,20 +232,19 @@ internal class TasksViewModel(
         missing && !dismissed
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), false)
 
-    val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(tasks, moment) { all, m ->
+    val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(scopedTasks, moment) { all, m ->
         TaskViews.upcoming(all, m.today, m.now)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */
-    val unsorted: StateFlow<List<TaskItem>> = combine(tasks, moment) { all, m ->
+    val unsorted: StateFlow<List<TaskItem>> = combine(scopedTasks, moment) { all, m ->
         TaskViews.unsorted(all, m.now)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    val projects: StateFlow<List<ProjectItem>> = repository.observeProjects()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
-
-    val areas: StateFlow<List<AreaItem>> = repository.observeAreas()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+    /** Projets du domaine filtré : la liste de l'onglet Projets ; les sélecteurs gardent [projects]. */
+    val visibleProjects: StateFlow<List<ProjectItem>> = combine(projects, _areaFilter) { all, area ->
+        AreaFilter.projects(all, area)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Tâches de premier niveau, ouvertes et fermées : Projets, Étiquettes, Terminées et le Bilan en dérivent. */
     val allTasks: StateFlow<List<TaskItem>> = tasks
@@ -477,6 +501,25 @@ internal class TasksViewModel(
     fun saveNoteAttributes(uid: String, change: NoteChange) = launchAction { repository.saveNote(uid, change) }
 
     fun setProjectStatus(uid: String, status: ProjectStatus) = launchAction { repository.setProjectStatus(uid, status) }
+
+    /** Choisit ou retire la prochaine action de son projet ; une seule par projet. */
+    fun toggleNextAction(task: TaskItem) {
+        _sheet.value = null
+        val projectUid = task.projectUid ?: return
+        if (!NextAction.canDesignate(task)) return
+        val designated = NextAction.isDesignated(task, projects.value)
+        launchAction { repository.setNextAction(projectUid, if (designated) null else task.uid) }
+    }
+
+    fun selectArea(uid: String?) {
+        chosenArea.value = uid
+        filterPrefs.edit().apply { if (uid == null) remove(KEY_AREA) else putString(KEY_AREA, uid) }.apply()
+    }
+
+    /** « Proposer 5 domaines » : crée les domaines absents (noms déjà traduits), sans doublon. */
+    fun suggestAreas(names: List<String>) = launchAction {
+        AreaSuggestions.missing(areas.value, names).forEach { repository.createArea(it) }
+    }
 
     fun deleteNoteWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Note, uid)) { repository.deleteNote(uid) }
 

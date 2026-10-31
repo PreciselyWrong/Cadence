@@ -1,6 +1,9 @@
 package ch.nicolab.cadence.tasks.data
 
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.GoalBucket
+import ch.nicolab.cadence.tasks.model.GoalHorizon
+import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
@@ -46,10 +49,24 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         reviewOn = parseDay(reviewOn),
         reviewedAt = parseInstant(reviewedAtRaw),
         someday = someday,
+        goalUid = extras["goal_uid"],
     )
 }
 
-internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, areaUid, pinToSidebar, sourceType)
+internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, areaUid, pinToSidebar, sourceType, nextTaskUid, goalUid)
+
+internal fun GoalEntity.toItem() = GoalItem(
+    uid = uid,
+    title = title,
+    why = why,
+    horizon = GoalHorizon.fromWire(horizon),
+    targetDate = parseDay(targetDateRaw),
+    status = status,
+    color = color,
+    bucket = GoalBucket.fromWire(bucket),
+    areaUid = areaUid,
+    parentGoalUid = parentGoalUid,
+)
 
 internal fun AreaEntity.toItem() = AreaItem(uid, name, color)
 

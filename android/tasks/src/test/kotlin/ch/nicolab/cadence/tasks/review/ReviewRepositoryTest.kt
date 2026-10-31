@@ -61,4 +61,24 @@ class ReviewRepositoryTest {
         server.online = false
         assertTrue(repository.keepProject("p1").isFailure)
     }
+
+    @Test
+    fun `the Friday routine is read and planned online only`() = runTest {
+        val server = FakeServer(online = true, body = """{"exists":false}""")
+        val repository = ReviewRepository(server::call, ReviewCache(dir))
+
+        assertEquals(false, repository.weeklyRoutineExists().getOrThrow())
+        assertTrue(repository.planWeeklyRoutine("Revue hebdo").isSuccess)
+        assertEquals(listOf("GET /api/v1/review/weekly-routine", "POST /api/v1/review/weekly-routine"), server.calls)
+
+        val offline = ReviewRepository(FakeServer(online = false, body = "{}")::call, ReviewCache(dir))
+        assertTrue(offline.weeklyRoutineExists().isFailure)
+        assertTrue(offline.planWeeklyRoutine("Revue hebdo").isFailure)
+    }
+
+    @Test
+    fun `an existing routine is reported as such`() = runTest {
+        val repository = ReviewRepository(FakeServer(online = true, body = """{"exists":true}""")::call, ReviewCache(dir))
+        assertEquals(true, repository.weeklyRoutineExists().getOrThrow())
+    }
 }

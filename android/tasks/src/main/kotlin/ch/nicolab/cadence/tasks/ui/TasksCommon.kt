@@ -26,6 +26,7 @@ import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.LocalDate
 import java.time.temporal.WeekFields
@@ -187,6 +188,8 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
             onSchedule = { viewModel.reschedule(open.task, it) },
             onAction = { viewModel.swipe(open.task, it) },
             onFunnel = { viewModel.funnel(open.task, it) },
+            nextAction = if (NextAction.canDesignate(open.task)) NextAction.isDesignated(open.task, projects) else null,
+            onNextAction = { viewModel.toggleNextAction(open.task) },
             onDismiss = viewModel::dismissSheet,
         )
         is SwipeSheet.Schedule -> ScheduleSheet(

@@ -107,6 +107,24 @@ interface AreaDao {
 }
 
 @Dao
+interface GoalDao {
+    @Query("SELECT * FROM goals ORDER BY title COLLATE NOCASE")
+    fun observeAll(): Flow<List<GoalEntity>>
+
+    @Query("SELECT * FROM goals WHERE uid = :uid")
+    suspend fun get(uid: String): GoalEntity?
+
+    @Upsert
+    suspend fun upsert(goal: GoalEntity)
+
+    @Query("DELETE FROM goals WHERE uid = :uid")
+    suspend fun delete(uid: String)
+
+    @Query("DELETE FROM goals")
+    suspend fun deleteAll()
+}
+
+@Dao
 interface TagDao {
     @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<TagEntity>>

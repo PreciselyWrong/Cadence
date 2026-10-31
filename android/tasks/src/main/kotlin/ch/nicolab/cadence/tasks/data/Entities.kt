@@ -53,6 +53,25 @@ data class ProjectEntity(
     val sourceType: String? = null,
     /** « Garder tel quel » d'un projet stagnant en revue ; posé par le serveur. */
     val reviewedAtRaw: String? = null,
+    /** Prochaine action choisie (`next_task_uid`) : une tâche ouverte du projet, effacée par le serveur à sa clôture. */
+    val nextTaskUid: String? = null,
+    /** Objectif ou résultat clé lié (`goal_uid`). */
+    val goalUid: String? = null,
+)
+
+/** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`) ; lecture seule ici. */
+@Entity(tableName = "goals")
+data class GoalEntity(
+    @PrimaryKey val uid: String,
+    val title: String,
+    val why: String?,
+    val horizon: String?,
+    val targetDateRaw: String?,
+    val status: String?,
+    val color: String?,
+    val bucket: String?,
+    val areaUid: String?,
+    val parentGoalUid: String?,
 )
 
 @Entity(tableName = "areas")

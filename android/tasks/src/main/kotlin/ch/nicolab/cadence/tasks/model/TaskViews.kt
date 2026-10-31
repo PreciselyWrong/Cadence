@@ -31,15 +31,31 @@ object TaskViews {
         }.sortedWith(todayOrder)
 
     /**
-     * Suggestions du jour : les tâches décidées pour la semaine [weekStart], puis celles en vue (la plus
-     * récemment mise en vue d'abord), hors « Plus tard » et hors ce qu'Aujourd'hui montre déjà.
+     * Suggestions du jour : la prochaine action choisie de chaque projet, puis les tâches décidées pour la
+     * semaine [weekStart], puis celles en vue (la plus récemment mise en vue d'abord), hors « Plus tard » et
+     * hors ce qu'Aujourd'hui montre déjà. Un projet qui a choisi sa prochaine action ([nextByProject],
+     * projet vers tâche) ne propose que celle-là.
      */
-    fun suggestions(tasks: List<TaskItem>, today: LocalDate, now: Instant, weekStart: LocalDate): List<TaskItem> {
+    fun suggestions(
+        tasks: List<TaskItem>,
+        today: LocalDate,
+        now: Instant,
+        weekStart: LocalDate,
+        nextByProject: Map<String, String> = emptyMap(),
+    ): List<TaskItem> {
         val shown = today(tasks, today, now).mapTo(hashSetOf()) { it.uid }
-        val open = tasks.filter { visibleNow(it, now) && !it.someday && it.uid !in shown }
-        val week = open.filter { it.weekOf == weekStart }.sortedBy { it.name.lowercase() }
-        val inView = open.filter { it.weekOf != weekStart && it.inViewAt != null }.sortedByDescending { it.inViewAt }
-        return week + inView
+        val picks = nextByProject.filter { (project, uid) ->
+            tasks.any { it.uid == uid && it.projectUid == project && !it.isClosed }
+        }
+        val open = tasks.filter { task ->
+            visibleNow(task, now) && !task.someday && task.uid !in shown &&
+                (task.projectUid == null || task.projectUid !in picks || picks[task.projectUid] == task.uid)
+        }
+        val designated = open.filter { it.projectUid != null && picks[it.projectUid] == it.uid }.sortedBy { it.name.lowercase() }
+        val rest = open.filterNot { it in designated }
+        val week = rest.filter { it.weekOf == weekStart }.sortedBy { it.name.lowercase() }
+        val inView = rest.filter { it.weekOf != weekStart && it.inViewAt != null }.sortedByDescending { it.inViewAt }
+        return designated + week + inView
     }
 
     fun overdue(tasks: List<TaskItem>, today: LocalDate, now: Instant): List<TaskItem> =

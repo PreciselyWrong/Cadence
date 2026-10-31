@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Today
@@ -61,6 +62,9 @@ internal fun TaskMenuSheet(
     onSchedule: (LocalDate?) -> Unit,
     onAction: (SwipeAction) -> Unit,
     onFunnel: (FunnelStage) -> Unit,
+    /** null : la tâche ne peut pas être une prochaine action ; sinon, l'est-elle déjà ? */
+    nextAction: Boolean? = null,
+    onNextAction: () -> Unit = {},
     onDismiss: () -> Unit,
 ) {
     var picking by remember { mutableStateOf(false) }
@@ -85,7 +89,11 @@ internal fun TaskMenuSheet(
         )
     } else quickDates + listOf(
         Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
-    ) + funnel + listOf(
+    ) + funnel + listOfNotNull(
+        nextAction?.let { on ->
+            Entry(Icons.Outlined.Flag, if (on) R.string.next_action_menu_clear else R.string.next_action_menu_set, onNextAction)
+        },
+    ) + listOf(
         Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
         Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) },
         Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) },

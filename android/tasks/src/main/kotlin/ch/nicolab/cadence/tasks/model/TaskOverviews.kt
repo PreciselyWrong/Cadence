@@ -12,6 +12,8 @@ data class ProjectCard(
     val openCount: Int,
     val doneCount: Int,
     val nextTaskName: String?,
+    /** Prochaine action choisie par l'utilisateur ; sinon [nextTaskName] reste la suggestion automatique. */
+    val nextActionName: String? = null,
 ) {
     val progress: Float get() = if (openCount + doneCount == 0) 0f else doneCount.toFloat() / (openCount + doneCount)
 }
@@ -67,6 +69,7 @@ object TaskOverviews {
                 openCount = own.count { !it.isClosed },
                 doneCount = own.count { it.status == TaskStatus.DONE },
                 nextTaskName = open.firstOrNull()?.name,
+                nextActionName = NextAction.of(project, own)?.name,
             )
         }.sortedBy { it.project.name.lowercase() }
         val known = areas.mapTo(HashSet()) { it.uid }

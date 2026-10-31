@@ -68,6 +68,8 @@ data class TaskItem(
     val reviewedAt: Instant? = null,
     /** Étiquette `someday` : « Plus tard », hors des suggestions et jamais en retard. */
     val someday: Boolean = false,
+    /** Objectif ou résultat clé lié (`goal_uid`). */
+    val goalUid: String? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)
@@ -104,6 +106,9 @@ data class ProjectItem(
     val areaUid: String? = null,
     val pinToSidebar: Boolean = false,
     val sourceType: String? = null,
+    /** Prochaine action choisie (`next_task_uid`) ; n'a de sens que tant que la tâche est ouverte et dans le projet. */
+    val nextTaskUid: String? = null,
+    val goalUid: String? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)

@@ -50,6 +50,7 @@ internal class RoomSyncStore(
         database.taskDao().deleteSynced()
         database.projectDao().deleteAll()
         database.areaDao().deleteAll()
+        database.goalDao().deleteAll()
         database.tagDao().deleteAll()
         database.noteDao().deleteSynced()
         database.inboxDao().deleteSynced()
@@ -68,6 +69,7 @@ internal class RoomSyncStore(
                 "task" -> database.taskDao().upsert(WireCodec.taskFromWire(merged))
                 "project" -> database.projectDao().upsert(WireCodec.projectFromWire(merged))
                 "area" -> database.areaDao().upsert(WireCodec.areaFromWire(merged))
+                "goal" -> database.goalDao().upsert(WireCodec.goalFromWire(merged))
                 "tag" -> database.tagDao().upsert(WireCodec.tagFromWire(merged))
                 "note" -> database.noteDao().upsert(WireCodec.noteFromWire(merged))
                 "inbox_item" -> database.inboxDao().upsert(WireCodec.inboxFromWire(merged))
@@ -85,6 +87,7 @@ internal class RoomSyncStore(
             "task" -> database.taskDao().delete(uid)
             "project" -> database.projectDao().delete(uid)
             "area" -> database.areaDao().delete(uid)
+            "goal" -> database.goalDao().delete(uid)
             "tag" -> database.tagDao().delete(uid)
             "note" -> database.noteDao().delete(uid)
             "inbox_item" -> database.inboxDao().delete(uid)
@@ -118,6 +121,7 @@ internal class RoomSyncStore(
         "task" -> database.taskDao().get(uid)?.name
         "project" -> database.projectDao().get(uid)?.name
         "area" -> database.areaDao().get(uid)?.name
+        "goal" -> database.goalDao().get(uid)?.title
         "tag" -> database.tagDao().get(uid)?.name
         "note" -> database.noteDao().get(uid)?.title
         "inbox_item" -> database.inboxDao().get(uid)?.content

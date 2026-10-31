@@ -113,6 +113,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
     val summary by viewModel.summary.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
     val busy by viewModel.busy.collectAsStateWithLifecycle()
+    val routineMissing by viewModel.routineMissing.collectAsStateWithLifecycle()
     val snackbar = rememberAppSnackbarHostState()
     var deciding by remember { mutableStateOf<Deciding?>(null) }
     var openTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
@@ -138,6 +139,13 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                     subtitle = subtitle,
                     onBack = onBack,
                     backDescription = stringResource(R.string.review_back),
+                )
+            }
+            if (routineMissing) {
+                TertiaryAction(
+                    stringResource(R.string.review_routine_plan),
+                    modifier = Modifier.padding(horizontal = Space.gutter),
+                    onClick = viewModel::planRoutine,
                 )
             }
             TabPills(

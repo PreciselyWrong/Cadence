@@ -89,6 +89,8 @@ fun TasksScreen(
     val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val areas by viewModel.areas.collectAsStateWithLifecycle()
+    val areaFilter by viewModel.areaFilter.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) selectedTaskUid = openTaskUid
@@ -160,6 +162,14 @@ fun TasksScreen(
                             tab = TasksTab.entries[it]
                             openTagUid = null
                         },
+                    )
+                }
+                if (openProjectUid == null && (tab == TasksTab.TODAY || tab == TasksTab.UPCOMING || tab == TasksTab.PROJECTS)) {
+                    AreaFilterRow(
+                        areas = areas,
+                        selected = areaFilter,
+                        onSelect = viewModel::selectArea,
+                        modifier = Modifier.padding(bottom = Space.xs),
                     )
                 }
                 SyncStatusLine(

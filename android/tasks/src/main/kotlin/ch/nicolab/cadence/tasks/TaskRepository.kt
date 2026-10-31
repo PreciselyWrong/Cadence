@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -31,6 +32,9 @@ interface TaskRepository {
     fun observeProjects(): Flow<List<ProjectItem>>
     fun observeAreas(): Flow<List<AreaItem>>
     fun observeTags(): Flow<List<TagItem>>
+
+    /** Objectifs, résultats clés et envies, en lecture seule sur l'appareil. */
+    fun observeGoals(): Flow<List<GoalItem>>
     fun observeInbox(): Flow<List<InboxEntry>>
 
     /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */
@@ -66,6 +70,12 @@ interface TaskRepository {
 
     /** Change le statut du projet [uid] (valeur serveur, voir [ProjectStatus.wire]) ; sans effet si le projet est inconnu. */
     suspend fun setProjectStatus(uid: String, status: ProjectStatus)
+
+    /** Désigne [taskUid] comme prochaine action du projet [projectUid] ; null retire le choix. Sans effet si le projet est inconnu. */
+    suspend fun setNextAction(projectUid: String, taskUid: String?)
+
+    /** Crée un domaine (l'uid est choisi par l'appareil) et retourne son uid. */
+    suspend fun createArea(name: String): String
 
     suspend fun captureInbox(text: String): String
     suspend fun deleteInboxItem(uid: String)

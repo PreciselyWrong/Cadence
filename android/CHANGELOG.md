@@ -6,6 +6,11 @@
 - Fiche d'une tâche : « En vue », « Cette semaine » et « Plus tard » en un geste, une date « Revoir le » pour une idée mise de côté, et une ligne discrète « Déplacée N fois » avec l'historique au toucher. Les mêmes choix sont dans le menu d'une ligne et peuvent être placés sur un balayage.
 - Planifier la journée : les tâches de la semaine puis celles en vue sont proposées en premier, avec « Aujourd'hui » pour les prendre.
 
+- Prochaine action : dans le menu d'une tâche de projet et sur sa fiche, « Prochaine action » la désigne pour son projet. La carte et l'en-tête du projet affichent « Prochaine action : … », et Aujourd'hui ne suggère que celle-là pour ce projet.
+- Objectifs, depuis le Bilan : les objectifs avec leurs résultats clés et leur avancement (« 3 sur 5 faits », calculé sur les tâches et projets liés), puis la liste d'envies (Avoir, Être, Faire). Lecture seule ; la création reste sur le web.
+- Domaines : une rangée de puces filtre Aujourd'hui, À venir et Projets par domaine (le choix est gardé), et « Proposer 5 domaines » crée les domaines manquants quand il n'y en a aucun.
+- Revue : « Planifier une revue le vendredi » crée une tâche récurrente sans rappel, tant qu'aucune n'existe (connexion requise).
+
 ### Corrections
 - Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.
 

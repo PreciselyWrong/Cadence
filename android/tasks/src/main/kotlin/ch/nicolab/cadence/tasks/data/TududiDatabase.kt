@@ -10,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         TaskEntity::class,
         ProjectEntity::class,
         AreaEntity::class,
+        GoalEntity::class,
         TagEntity::class,
         NoteEntity::class,
         LinkPreviewEntity::class,
@@ -18,13 +19,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun projectDao(): ProjectDao
     abstract fun areaDao(): AreaDao
+    abstract fun goalDao(): GoalDao
     abstract fun tagDao(): TagDao
     abstract fun noteDao(): NoteDao
     abstract fun linkPreviewDao(): LinkPreviewDao
@@ -93,6 +95,23 @@ internal val MIGRATION_5_6 = object : Migration(5, 6) {
         db.execSQL("ALTER TABLE tasks ADD COLUMN reviewOn TEXT")
         db.execSQL("ALTER TABLE tasks ADD COLUMN reviewedAtRaw TEXT")
         db.execSQL("ALTER TABLE projects ADD COLUMN reviewedAtRaw TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Prochaine action et objectif lié d'un projet, et table des objectifs. Le curseur est retiré : le prochain
+ * instantané apporte les objectifs et les valeurs des projets déjà reçus.
+ */
+internal val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE projects ADD COLUMN nextTaskUid TEXT")
+        db.execSQL("ALTER TABLE projects ADD COLUMN goalUid TEXT")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `goals` (`uid` TEXT NOT NULL, `title` TEXT NOT NULL, `why` TEXT, `horizon` TEXT, " +
+                "`targetDateRaw` TEXT, `status` TEXT, `color` TEXT, `bucket` TEXT, `areaUid` TEXT, `parentGoalUid` TEXT, " +
+                "PRIMARY KEY(`uid`))",
+        )
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

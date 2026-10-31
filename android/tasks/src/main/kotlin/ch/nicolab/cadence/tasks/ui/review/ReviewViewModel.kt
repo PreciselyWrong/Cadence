@@ -71,6 +71,11 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
     private val _summary = MutableStateFlow<Loaded<ReviewSummary>?>(null)
     val summary: StateFlow<Loaded<ReviewSummary>?> = _summary.asStateFlow()
 
+    private val _routineMissing = MutableStateFlow(false)
+
+    /** Vrai tant que le serveur dit qu'aucune routine du vendredi n'existe ; faux hors ligne (rien n'est proposé). */
+    val routineMissing: StateFlow<Boolean> = _routineMissing.asStateFlow()
+
     private val _content = MutableStateFlow<StepContent>(StepContent.Loading)
 
     /** Lignes traitées ici qui ne portent pas de `reviewed_at` (boîte, projets) : masquées jusqu'au prochain chargement. */
@@ -103,6 +108,17 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
 
     init {
         load()
+        viewModelScope.launch { review.weeklyRoutineExists().onSuccess { _routineMissing.value = !it } }
+    }
+
+    /** « Planifier une revue le vendredi » : tâche récurrente sans rappel, créée au toucher seulement, en ligne. */
+    fun planRoutine() = run("routine") {
+        review.planWeeklyRoutine(getString(R.string.review_routine_name))
+            .onSuccess {
+                _routineMissing.value = false
+                _messages.tryEmit(getString(R.string.review_routine_planned))
+            }
+            .onFailure { _messages.tryEmit(getString(R.string.review_online_only)) }
     }
 
     fun select(step: ReviewStep) {

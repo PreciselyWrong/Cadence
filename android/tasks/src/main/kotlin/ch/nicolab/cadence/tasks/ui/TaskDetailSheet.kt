@@ -65,6 +65,7 @@ import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.BadgeTone
 import ch.nicolab.cadence.designsystem.components.CadenceBadge
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
@@ -76,6 +77,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.EstimateFormat
+import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -221,6 +223,14 @@ internal fun TaskDetailSheet(
                         enabled = !readOnly,
                         onToggle = { viewModel.funnel(current, it) },
                         onReviewOn = { viewModel.reviewOn(current, it) },
+                    )
+                }
+                if (!readOnly && NextAction.canDesignate(current)) {
+                    ChoiceChip(
+                        label = stringResource(R.string.next_action_chip),
+                        selected = NextAction.isDesignated(current, projects),
+                        leadingIcon = Icons.Outlined.Flag,
+                        onClick = { viewModel.toggleNextAction(current) },
                     )
                 }
                 PostponementLine(taskUid = current.uid, version = current.dueDay)

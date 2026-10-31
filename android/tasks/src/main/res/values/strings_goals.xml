@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Prochaine action d'un projet (docs/06-projects.md) : un choix discret, jamais une obligation. -->
+    <string name="next_action_chip">Prochaine action</string>
+    <string name="next_action_menu_set">Prochaine action</string>
+    <string name="next_action_menu_clear">Retirer la prochaine action</string>
+    <string name="next_action_line">Prochaine action : %1$s</string>
+
+    <!-- Domaines : filtre des listes et suggestion des cinq domaines. -->
+    <string name="areas_filter_all">Tous</string>
+    <string name="areas_filter_label">Filtrer par domaine</string>
+    <string name="areas_suggest">Proposer 5 domaines</string>
+    <string name="areas_suggest_business">Business et Argent</string>
+    <string name="areas_suggest_tech">Tech et Systèmes</string>
+    <string name="areas_suggest_personal">Perso</string>
+    <string name="areas_suggest_family">Famille et Social</string>
+    <string name="areas_suggest_logistics">Logistique</string>
+
+    <!-- Objectifs : lecture seule, depuis le Bilan. -->
+    <string name="goals_entry_title">Objectifs</string>
+    <string name="goals_entry_detail">Résultats clés et liste d\'envies</string>
+    <string name="goals_title">Objectifs</string>
+    <string name="goals_back">Retour au Bilan</string>
+    <string name="goals_tab_objectives">Objectifs</string>
+    <string name="goals_tab_wishes">Liste d\'envies</string>
+    <string name="goals_empty">Aucun objectif pour l\'instant. Ils se créent sur le web et arrivent ici à la synchronisation.</string>
+    <string name="goals_wishes_empty">Liste d\'envies vide.</string>
+    <string name="goals_progress">%1$d sur %2$d faits</string>
+    <string name="goals_nothing_linked">Rien de lié</string>
+    <string name="goals_key_results">Résultats clés</string>
+    <string name="goals_target">Pour le %1$s</string>
+    <string name="goals_horizon_month">Mois</string>
+    <string name="goals_horizon_quarter">Trimestre</string>
+    <string name="goals_horizon_season">Saison</string>
+    <string name="goals_horizon_year">Année</string>
+    <string name="goals_status_achieved">Atteint</string>
+    <string name="goals_status_paused">En pause</string>
+    <string name="goals_status_dropped">Abandonné</string>
+    <string name="goals_bucket_have">Avoir</string>
+    <string name="goals_bucket_be">Être</string>
+    <string name="goals_bucket_do">Faire</string>
+
+    <!-- Routine du vendredi : un lien discret dans la revue. -->
+    <string name="review_routine_plan">Planifier une revue le vendredi</string>
+    <string name="review_routine_name">Revue hebdo</string>
+    <string name="review_routine_planned">Revue du vendredi planifiée</string>
+</resources>

@@ -90,6 +90,21 @@ internal object WireCodec {
         pinToSidebar = wire.bool("pin_to_sidebar"),
         sourceType = wire.string("source_type"),
         reviewedAtRaw = wire.string("reviewed_at"),
+        nextTaskUid = wire.string("next_task_uid"),
+        goalUid = wire.string("goal_uid"),
+    )
+
+    fun goalFromWire(wire: JsonObject) = GoalEntity(
+        uid = wire.requireString("uid"),
+        title = wire.string("title").orEmpty(),
+        why = wire.string("why"),
+        horizon = wire.string("horizon"),
+        targetDateRaw = wire.string("target_date"),
+        status = wire.string("status"),
+        color = wire.string("color"),
+        bucket = wire.string("bucket"),
+        areaUid = wire.string("area_uid"),
+        parentGoalUid = wire.string("parent_goal_uid"),
     )
 
     fun areaFromWire(wire: JsonObject) = AreaEntity(

@@ -5,6 +5,7 @@ import androidx.room.withTransaction
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -98,6 +99,9 @@ internal class RoomTaskRepository(
 
     override fun observeTags(): Flow<List<TagItem>> =
         tagDao.observeAll().map { rows -> rows.map { it.toItem() } }
+
+    override fun observeGoals(): Flow<List<GoalItem>> =
+        database.goalDao().observeAll().map { rows -> rows.map { it.toItem() } }
 
     override fun observeInbox(): Flow<List<InboxEntry>> =
         inboxDao.observeAll().map { rows -> rows.map { it.toEntry() } }
@@ -302,6 +306,29 @@ internal class RoomTaskRepository(
             true
         }
         if (written) afterLocalWrite()
+    }
+
+    override suspend fun setNextAction(projectUid: String, taskUid: String?) {
+        val clock = hlc.now()
+        val fields = mapOf("next_task_uid" to jsonString(taskUid))
+        val written = database.withTransaction {
+            val existing = projectDao.get(projectUid) ?: return@withTransaction false
+            projectDao.upsert(existing.copy(nextTaskUid = taskUid))
+            outbox.insert(LocalOps.upsert("project", projectUid, fields, clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun createArea(name: String): String {
+        val uid = UUID.randomUUID().toString()
+        val clock = hlc.now()
+        database.withTransaction {
+            areaDao.upsert(AreaEntity(uid, name, null))
+            outbox.insert(LocalOps.upsert("area", uid, mapOf("name" to JsonPrimitive(name)), clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
     }
 
     override suspend fun captureInbox(text: String): String {
