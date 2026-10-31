@@ -163,4 +163,12 @@ class TodayPaletteTest {
             TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.VERRE, glassSheen = 20)))
         assertEquals(0f, TodayPalette.sheenAlpha(TodayWidgetConfig(background = TodayBackground.SOMBRE, glassSheen = 80)))
     }
+
+    @Test
+    fun `l'opacité du verre arrive jusqu'à la couleur posée sur le widget`() {
+        val glass = TodayPalette.of(TodayWidgetConfig(background = TodayBackground.VERRE, glassOpacity = 15)).night.surface
+
+        assertEquals(0.15f, layerColor(glass).alpha, 0.01f)
+        assertEquals(0.15f * 0.5f, layerColor(glass, alpha = 0.5f).alpha, 0.01f)
+    }
 }

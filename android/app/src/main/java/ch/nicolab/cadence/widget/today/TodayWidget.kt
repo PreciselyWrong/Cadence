@@ -269,7 +269,10 @@ private class TodayView(
 )
 
 private fun TodayPalettes.provider(alpha: Float = 1f, pick: (TodayPalette) -> Int): GlanceColor =
-    ColorProvider(day = Color(pick(day)).copy(alpha = alpha), night = Color(pick(night)).copy(alpha = alpha))
+    ColorProvider(day = layerColor(pick(day), alpha), night = layerColor(pick(night), alpha))
+
+/** Couleur d'une couche : [alpha] s'ajoute à celle de la teinte (verre translucide) au lieu de la remplacer. */
+internal fun layerColor(argb: Int, alpha: Float = 1f): Color = Color(argb).let { it.copy(alpha = it.alpha * alpha) }
 
 private fun constantProvider(argb: Int): GlanceColor = ColorProvider(day = Color(argb), night = Color(argb))
 
