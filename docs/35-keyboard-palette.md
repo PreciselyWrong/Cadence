@@ -8,7 +8,7 @@ Fuzzy search (accents ignored, every word must match, keywords count at a lower 
 
 - commands: create a task, project, note or habit, quick capture, search, triage the inbox, toggle dark mode, show shortcuts;
 - pages: Today, Inbox, Upcoming, Calendar, Projects, Tasks, Notes, Habits, Settings;
-- entities: tasks, projects and notes (existing search API), habits (matched by name);
+- entities: tasks, projects, notes and goals (existing search API, `filters=Task,Project,Note,Goal`; a goal opens its page), habits (matched by name);
 - task commands, when a task is the target: complete or reopen, open, date (today, tomorrow, next week, none), priority, move to a project.
 
 The target task is the row with focus, else the row under the pointer, else the task open in the side panel. Up and Down move, Enter runs, Esc closes. With an empty field the palette lists recent commands and recently opened entities. Each row shows its shortcut.

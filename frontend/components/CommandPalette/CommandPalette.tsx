@@ -79,7 +79,14 @@ const GROUP_LABELS: Record<string, { key: string; fallback: string }> = {
     projects: { key: 'commandCenter.groups.projects', fallback: 'Projects' },
     tasks: { key: 'commandCenter.groups.tasks', fallback: 'Tasks' },
     notes: { key: 'commandCenter.groups.notes', fallback: 'Notes' },
+    goals: { key: 'commandCenter.groups.goals', fallback: 'Goals' },
     habits: { key: 'commandCenter.groups.habits', fallback: 'Habits' },
+};
+
+const PALETTE_GROUP_BY_TYPE: Record<string, PaletteItem['group']> = {
+    Task: 'tasks',
+    Project: 'projects',
+    Goal: 'goals',
 };
 
 const Keys: React.FC<{ keys?: string[] }> = ({ keys }) =>
@@ -172,7 +179,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         const timer = setTimeout(() => {
             searchUniversal({
                 query: text,
-                filters: ['Task', 'Project', 'Note'],
+                filters: ['Task', 'Project', 'Note', 'Goal'],
                 limit: 12,
             })
                 .then((response) => {
@@ -183,11 +190,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                             .map((result) => {
                                 const name = result.name || result.title || '';
                                 const group =
-                                    result.type === 'Task'
-                                        ? 'tasks'
-                                        : result.type === 'Project'
-                                          ? 'projects'
-                                          : 'notes';
+                                    PALETTE_GROUP_BY_TYPE[result.type];
                                 return {
                                     id: `${result.type}:${result.uid}`,
                                     title: name,

@@ -69,7 +69,15 @@
     "tags": "الوسوم",
     "goToToday": "الانتقال إلى اليوم",
     "loadMore": "تحميل المزيد",
-    "showAll": "عرض الكل"
+    "showAll": "عرض الكل",
+    "actions": "الإجراءات",
+    "creating": "جارٍ الإنشاء...",
+    "createCalendar": "إنشاء تقويم",
+    "untitled": "بدون عنوان",
+    "resolving": "جارٍ الحل...",
+    "showLess": "عرض أقل",
+    "breadcrumb": "مسار التنقل",
+    "undo": "تراجع"
   },
   "sidebar": {
     "dashboard": "لوحة التحكم",
@@ -148,7 +156,11 @@
     "search": "بحث",
     "admin": "مدير",
     "adminBadge": "مدير",
-    "templates": "القوالب"
+    "templates": "القوالب",
+    "today": "اليوم",
+    "projects": "المشاريع",
+    "inbox": "الوارد",
+    "notes": "الملاحظات"
   },
   "settings": {
     "todayPageSettings": "إعدادات صفحة اليوم",
@@ -298,7 +310,9 @@
       "inProgress": "قيد التقدم",
       "waiting": "انتظار",
       "done": "تم",
-      "dropHere": "اسحب هنا"
+      "dropHere": "اسحب هنا",
+      "customizeColumns": "تخصيص الأعمدة",
+      "columns": "الأعمدة"
     },
     "chaseUp": "متابعة",
     "habit": "عادة",
@@ -321,7 +335,17 @@
       "moveToProject": "نقل إلى مشروع"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "حذف المهمة"
+    "deleteConfirmTitle": "حذف المهمة",
+    "dueSoon": "مستحق قريبًا",
+    "progress": "التقدم",
+    "priority": "الأولوية",
+    "todayPlan": "خطة اليوم",
+    "startNow": "ابدأ الآن",
+    "noDue": "بدون تاريخ استحقاق",
+    "overdueBy": "متأخرة بـ {{days}} يوم",
+    "dueInDays": "مستحقة خلال {{days}} يوم",
+    "startedSuccessfully": "تم بدء المهمة بنجاح!",
+    "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",
@@ -652,7 +676,9 @@
       "setupSuccess": "تم تكوين التقويم بنجاح!",
       "setupFailed": "فشل في إنشاء التقويم",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "يُرجى ملء جميع بيانات الاتصال بالخادم أولًا",
+      "validationError": "يُرجى ملء جميع الحقول المطلوبة واختبار الاتصال"
     },
     "conflictResolver": {
       "title": "حل تعارضات المزامنة",
@@ -679,7 +705,8 @@
       "resolveSuccess": "تم حل جميع النزاعات بنجاح",
       "resolveError": "فشل في حل النزاعات",
       "nextConflict": "التالي",
-      "prevConflict": "السابق"
+      "prevConflict": "السابق",
+      "mixedResolutionError": "يُرجى اختيار \"استخدام الكل محليًا\" أو \"استخدام الكل من الخادم\" لكل تعارض. لا يُدعم اختيار حقول مختلطة حتى الآن."
     },
     "editCalendar": {
       "title": "تعديل التقويم",
@@ -1055,7 +1082,8 @@
     "allClearHint": "لا توجد حاليًا مهام غامضة أو عمل متوقف أو مشاريع عالقة. وقت مناسب للتخطيط للخطوة التالية.",
     "goToTasks": "الانتقال إلى المهام",
     "goToProjects": "الانتقال إلى المشاريع",
-    "planDay": "خطط ليومك"
+    "planDay": "خطط ليومك",
+    "andMore": "... و{{count}} أخرى"
   },
   "modals": {
     "confirmDelete": "هل أنت متأكد أنك تريد الحذف؟",
@@ -1136,7 +1164,9 @@
         "weekOfMonth": "أسبوع من الشهر",
         "recurrenceEndDate": "تاريخ الانتهاء (اختياري)",
         "completionBased": "كرر بعد الانتهاء",
-        "repeatOn": "التكرار في"
+        "repeatOn": "التكرار في",
+        "recurrence": "تكرار",
+        "attachments": "المرفقات"
       },
       "projectSearchPlaceholder": "ابحث أو أنشئ مشروعًا...",
       "noMatchingProjects": "لا توجد مشاريع مطابقة",
@@ -1189,7 +1219,10 @@
     "startDate": "البدء",
     "goalBucket": "مجموعة قائمة الأمنيات",
     "goalParent": "نتيجة رئيسية لـ",
-    "noParentGoal": "بدون (مستقل)"
+    "noParentGoal": "بدون (مستقل)",
+    "name": "الاسم",
+    "goalTitle": "النتيجة",
+    "project": "المشروع"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -1230,7 +1263,24 @@
     },
     "captcha_required": "يرجى إكمال التحقق والمحاولة مرة أخرى.",
     "registration_successful": "أكّد عنوان بريدك الإلكتروني",
-    "registration_email_sent": "أكّد عنوان بريدك الإلكتروني لتفعيل حسابك. أرسلنا لك رابطًا، تحقق من صندوق الوارد."
+    "registration_email_sent": "أكّد عنوان بريدك الإلكتروني لتفعيل حسابك. أرسلنا لك رابطًا، تحقق من صندوق الوارد.",
+    "back_to_login": "العودة إلى تسجيل الدخول",
+    "email_verified": "تم التحقق من بريدك الإلكتروني! يمكنك الآن تسجيل الدخول.",
+    "verification_expired": "انتهت صلاحية رابط التحقق. يُرجى التسجيل مرة أخرى.",
+    "already_verified": "تم التحقق من بريدك الإلكتروني بالفعل. يمكنك تسجيل الدخول.",
+    "verification_failed": "فشل التحقق من البريد الإلكتروني. يُرجى المحاولة مرة أخرى.",
+    "email_not_verified": "يُرجى التحقق من عنوان بريدك الإلكتروني قبل تسجيل الدخول.",
+    "no_auth_methods": "لا تتوفر طرق مصادقة. يُرجى التواصل مع المسؤول.",
+    "no_account": "ليس لديك حساب؟",
+    "passwords_not_match": "كلمتا المرور غير متطابقتين",
+    "registration_failed": "فشل التسجيل. يُرجى المحاولة مرة أخرى.",
+    "error_occurred": "حدث خطأ. يُرجى المحاولة مرة أخرى.",
+    "password_registration_disabled": "تسجيل كلمة المرور معطّل",
+    "password_registration_disabled_message": "التسجيل بكلمة المرور غير متاح. يُرجى استخدام SSO لتسجيل الدخول.",
+    "registration_closed_title": "التسجيل مغلق",
+    "registration_closed_message": "التسجيل في الحسابات الجديدة معطّل حاليًا. تواصل مع المسؤول للحصول على الوصول.",
+    "confirm_password": "تأكيد كلمة المرور",
+    "already_have_account": "لديك حساب بالفعل؟"
   },
   "dropdown": {
     "createNew": "إنشاء جديد",
@@ -1353,7 +1403,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "الإجراء التالي",
-    "nextActionLine": "الإجراء التالي: {{name}}"
+    "nextActionLine": "الإجراء التالي: {{name}}",
+    "noCompletedTasks": "لا توجد مهام مكتملة."
   },
   "errors": {
     "required": "هذا الحقل مطلوب",
@@ -1394,7 +1445,12 @@
     "failedToDeleteTag": "تعذر حذف الوسم.",
     "projectStatusUpdateFailed": "فشل تحديث حالة المشروع",
     "failedToSaveTask": "تعذّر حفظ المهمة.",
-    "permissionDenied": "تم رفض الإذن"
+    "permissionDenied": "تم رفض الإذن",
+    "failedToDeleteArea": "تعذّر حذف المنطقة.",
+    "failedToUpdateGoal": "تعذّر تحديث الهدف.",
+    "failedToSaveProject": "تعذّر حفظ المشروع.",
+    "failedToDeleteProject": "تعذّر حذف المشروع.",
+    "projectNameTooLong": "يجب ألا يتجاوز اسم المشروع {{max}} حرفًا"
   },
   "inbox": {
     "title": "صندوق الوارد",
@@ -1532,7 +1588,8 @@
     "goalCreated": "تم إنشاء الهدف!",
     "goalUpdated": "تم تحديث الهدف!",
     "goalDeleted": "تم حذف الهدف!",
-    "tagDeleted": "تم حذف الوسم!"
+    "tagDeleted": "تم حذف الوسم!",
+    "areaDeleted": "تم حذف المنطقة بنجاح!"
   },
   "note": {
     "title": "العنوان",
@@ -1714,7 +1771,10 @@
     "hoursAgo": "منذ {{count}} ساعة",
     "minutesAgo": "منذ {{count}} دقيقة",
     "inMinutes": "خلال {{count}} دقيقة",
-    "inHours": "خلال {{count}} ساعة"
+    "inHours": "خلال {{count}} ساعة",
+    "pastDue": "متأخرة",
+    "editDetails": "تعديل التفاصيل",
+    "noUpcomingOccurrences": "لا توجد مواعيد قادمة."
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -1838,7 +1898,10 @@
     "savedAsTemplate": "تم حفظ \"{{name}}\" كقالب.",
     "saveAsTemplateError": "تعذّر حفظ المشروع كقالب.",
     "sortTasks": "ترتيب المهام",
-    "upcomingProjects": "المشاريع القادمة"
+    "upcomingProjects": "المشاريع القادمة",
+    "deleteError": "تعذّر حذف المشروع",
+    "shared": "مشترك",
+    "status": "حالة المشروع"
   },
   "projectItem": {
     "edit": "تعديل",
@@ -1920,7 +1983,8 @@
     "projects": "مشاريع",
     "goals": "أهداف",
     "tasks": "مهام",
-    "progressSummary": "تقدم المجال · {{done}} من {{total}} مهام منجزة"
+    "progressSummary": "تقدم المجال · {{done}} من {{total}} مهام منجزة",
+    "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
   },
   "notes": {
     "loading": "جارٍ تحميل الملاحظات...",
@@ -1991,7 +2055,12 @@
       "more": "{{count}} more"
     },
     "edit": "تعديل",
-    "delete": "حذف"
+    "delete": "حذف",
+    "saveBeforeFiles": "أضف عنوانًا أو نصًا إلى الملاحظة أولًا، ثم أضف الملفات.",
+    "fileUploadError": "تعذّر رفع {{name}}",
+    "slashFile": "صورة أو ملف",
+    "slashFileHint": "ارفعه وضعه هنا",
+    "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
   },
   "tags": {
     "loading": "جاري تحميل العلامات...",
@@ -2045,7 +2114,8 @@
     "parentTag": "الوسم الأصل",
     "noParent": "بلا (مستوى أعلى)",
     "showChildTags": "إظهار الوسوم الفرعية",
-    "hideChildTags": "إخفاء الوسوم الفرعية"
+    "hideChildTags": "إخفاء الوسوم الفرعية",
+    "progressSummary": "تقدم الوسم · تم إنجاز {{done}} من {{total}} مهمة"
   },
   "recurrence": {
     "none": "لا شيء",
@@ -2076,7 +2146,9 @@
     "everyNMonths": "كل {{count}} شهر",
     "completionBased": "بعد الإنجاز",
     "onDay": "في اليوم",
-    "until": "حتى"
+    "until": "حتى",
+    "monthDayPlaceholder": "اختر يوم الشهر",
+    "instance": "مثيل متكرر"
   },
   "weekdays": {
     "sunday": "أحد",
@@ -2231,7 +2303,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "مهمة"
   },
   "pages": {
     "notFound": {
@@ -2447,7 +2520,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} مستخدمًا · {{tasks}} مهمة · {{waitlist}} في قائمة الانتظار · Cadence {{version}} · {{env}}",
+      "visitors": "الزوار، آخر 7 أيام",
+      "signups": "التسجيلات، آخر 7 أيام",
+      "activation": "التفعيل، خلال {{days}} يومًا",
+      "activationHint": "{{n}} من {{total}} تسجيلًا",
+      "weeklyUsers": "المستخدمون الأسبوعيون",
+      "weeklyUsersHint": "أنشأ شيئًا",
+      "selfHostedUsers": "ذاتي الاستضافة · {{n}} جديد اليوم"
     },
     "waitlist": {
       "title": "قائمة الانتظار",
@@ -2460,7 +2541,12 @@
       "joined": "انضم",
       "empty": "لم يسجل أحد بعد",
       "noMatches": "لا توجد عناوين تطابق هذا البحث",
-      "showing": "{{from}}-{{to}} من {{total}}"
+      "showing": "{{from}}-{{to}} من {{total}}",
+      "removed": "تمت الإزالة من قائمة الانتظار",
+      "removeFailed": "تعذّرت إزالة الإدخال",
+      "ipAddress": "عنوان IP",
+      "removeTitle": "إزالة العنوان",
+      "confirmRemove": "هل تريد إزالة {{email}} من قائمة الانتظار؟ لا يمكن التراجع عن ذلك."
     },
     "passwordInviteHint": "اتركه فارغًا لإرسال بريد دعوة",
     "invitationSent": "تم إرسال بريد الدعوة إلى {{email}}",
@@ -2737,7 +2823,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "زوار الموقع",
+      "visitorsHint": "الموقع التسويقي والمدونة",
+      "views": "مشاهدات الصفحات",
+      "blog": "قراء المدونة",
+      "signupsRow": "التسجيلات",
+      "reach": "الوصول",
+      "createdAnything": "أنشأ أي شيء",
+      "firstPlanShort": "3+ مهام",
+      "threeDaysShort": "تسجيلات الأسبوع الماضي، 3 أيام في أسبوعها الأول",
+      "newUsersGroup": "تسجيلات هذا الأسبوع",
+      "appUsers": "مستخدمو التطبيق",
+      "appUsersMonthHint": "{{month}} خلال 30 يومًا",
+      "creators": "أنشأ شيئًا",
+      "creatorsHint": "مستخدمون، أي نوع من العناصر",
+      "canceled": "ملغاة",
+      "failed": "مدفوعات فاشلة",
+      "today": "اليوم",
+      "thisWeek": "هذا الأسبوع",
+      "lastWeek": "الأسبوع الماضي",
+      "change": "التغيير",
+      "fortnight": "14 يومًا"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2769,8 +2876,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "يزور",
+      "stepSignups": "يسجّل",
+      "stepActivated": "يفعّل",
+      "stepPaid": "يدفع",
+      "pts": "{{diff}} نقطة",
+      "noRate": "عدد الزوار المحتسبين أقل من التسجيلات",
+      "before": "كان {{n}}"
+    },
+    "insights": {
+      "title": "ما يلفت الانتباه"
+    },
+    "aiUsage": {
+      "title": "استخدام الذكاء الاصطناعي",
+      "users": "المستخدمون",
+      "totalCredits": "الأرصدة المستخدمة هذا الشهر (جميع المستخدمين)",
+      "searchPlaceholder": "البحث بالبريد الإلكتروني",
+      "user": "المستخدم",
+      "plan": "الخطة",
+      "used": "المستخدم",
+      "limit": "الحد",
+      "remaining": "المتبقي",
+      "empty": "لا يوجد مستخدمون بعد"
+    },
+    "userDeletedSuccessfully": "تم حذف المستخدم بنجاح"
   },
   "shares": {
     "shareProject": "مشاركة المشروع",
@@ -2875,7 +3005,11 @@
     "blankSlateNew": "ابحث لإنشاء عرض",
     "noViewsMatch": "لم يتم العثور على عروض",
     "blankSlateFilteredHint": "جرّب بحثًا مختلفًا.",
-    "blankSlateClearSearch": "مسح البحث"
+    "blankSlateClearSearch": "مسح البحث",
+    "view": "عرض",
+    "progressSummary": "عرض التقدم · تم إنجاز {{done}} من {{total}} مهمة",
+    "sortTasks": "فرز المهام",
+    "filters": "مرشحات"
   },
   "search": {
     "placeholder": "ابحث عن المهام، المشاريع، الملاحظات...",
@@ -2999,7 +3133,8 @@
     "restoreButton": "استعادة",
     "adminInstanceNote": "بصفتك مسؤولًا، تتضمن نسختك الاحتياطية كل حساب على هذه النسخة، مع بياناته وتجزئات كلمات المرور. استعادتها على تثبيت جديد تعيد الجميع. احفظ الملف بعناية كما تحفظ قاعدة البيانات.",
     "accountsCount_one": "حسابات أخرى: {{count}}",
-    "accountsCount_other": "حسابات أخرى: {{count}}"
+    "accountsCount_other": "حسابات أخرى: {{count}}",
+    "delete": "حذف"
   },
   "notifications": {
     "table": {
@@ -3551,7 +3686,8 @@
     "linkedAccount": "مرتبط بحساب مستخدم",
     "archivedBadge": "مؤرشف",
     "deletePerson": "حذف الشخص",
-    "deleteConfirm": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن ذلك."
+    "deleteConfirm": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن ذلك.",
+    "contact": "جهة الاتصال"
   },
   "members": {
     "addTitle": "إضافة عضو",
@@ -3580,7 +3716,9 @@
     "removed": "تمت إزالة العضو",
     "updated": "تم تحديث العضو",
     "invitationSent": "تم إرسال الدعوة",
-    "failedToRemove": "تعذّرت إزالة العضو"
+    "failedToRemove": "تعذّرت إزالة العضو",
+    "title": "الأعضاء",
+    "titleOne": "عضو"
   },
   "signInLink": {
     "action": "رابط تسجيل الدخول",
@@ -3969,7 +4107,11 @@
     },
     "reorderError": "تعذّر حفظ ترتيب الأهداف",
     "noGoalsInArea": "لا توجد أهداف مرتبطة بهذا المجال.",
-    "maintenance": "الصيانة"
+    "maintenance": "الصيانة",
+    "noGoalsSelected": "لم يتم اختيار أهداف",
+    "noAvailableGoals": "لا توجد أهداف متاحة",
+    "progressHint": "شريط: المهام والمشاريع المنجزة. خط: الوقت المنقضي بين الإنشاء وتاريخ الهدف.",
+    "removeFromArea": "إزالة من المنطقة"
   },
   "templates": {
     "new": "قالب جديد",
@@ -4710,7 +4852,8 @@
       "projects": "المشاريع",
       "tasks": "المهام",
       "notes": "الملاحظات",
-      "habits": "العادات"
+      "habits": "العادات",
+      "goals": "الأهداف"
     },
     "help": {
       "title": "اختصارات لوحة المفاتيح",
@@ -5129,5 +5272,24 @@
   "loading": {
     "tasks": "جارٍ تحميل المهام…",
     "subtasks": "جارٍ تحميل المهام الفرعية..."
+  },
+  "noteCreation": "إنشاء ملاحظة جديدة",
+  "notFound": {
+    "todayDescription": "عرض مهام اليوم",
+    "projectsDescription": "تصفح مشاريعك",
+    "inboxDescription": "راجع عناصر الوارد",
+    "notesDescription": "تصفح ملاحظاتك",
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة. ربما تم نقلها أو حذفها، أو أدخلت عنوانًا خاطئًا.",
+    "goBack": "رجوع",
+    "goHome": "الانتقال إلى اليوم",
+    "quickActions": "إجراءات سريعة"
+  },
+  "colors": {
+    "label": "اللون",
+    "none": "بدون"
+  },
+  "tag": {
+    "viewTag": "الانتقال إلى الوسم"
   }
 }

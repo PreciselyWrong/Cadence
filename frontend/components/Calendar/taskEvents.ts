@@ -20,6 +20,8 @@ export interface CalendarEvent {
     // estimate when the block is due time + estimate, its due time when the
     // block runs from the start time to the due time.
     resize?: 'estimate' | 'due';
+    // A day of a habit: clicking it opens the habit.
+    habitUid?: string;
     // A later occurrence of a recurring task: shown, but not moved or
     // resized until it becomes the next one.
     readOnly?: boolean;

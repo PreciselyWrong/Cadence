@@ -67,7 +67,15 @@
     "tags": "Мітки",
     "goToToday": "Перейти до сьогодні",
     "loadMore": "Завантажити ще",
-    "showAll": "Показати все"
+    "showAll": "Показати все",
+    "actions": "Дії",
+    "creating": "Створення...",
+    "createCalendar": "Створити календар",
+    "untitled": "Без назви",
+    "resolving": "Вирішення...",
+    "showLess": "Показати менше",
+    "breadcrumb": "Навігаційний ланцюжок",
+    "undo": "Скасувати"
   },
   "sidebar": {
     "dashboard": "Дашборд",
@@ -146,7 +154,11 @@
     "search": "Пошук",
     "admin": "Адміністратор",
     "adminBadge": "Адміністратор",
-    "templates": "Шаблони"
+    "templates": "Шаблони",
+    "today": "Сьогодні",
+    "projects": "Проєкти",
+    "inbox": "Вхідні",
+    "notes": "Нотатки"
   },
   "settings": {
     "todayPageSettings": "Налаштування сторінки Сьогодні",
@@ -296,7 +308,9 @@
       "inProgress": "В процесі",
       "waiting": "Очікування",
       "done": "Завершено",
-      "dropHere": "Перетягніть сюди"
+      "dropHere": "Перетягніть сюди",
+      "customizeColumns": "Налаштувати стовпці",
+      "columns": "Стовпці"
     },
     "chaseUp": "Нагадати",
     "habit": "Звичка",
@@ -319,7 +333,17 @@
       "moveToProject": "Перемістити до проєкту"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Видалити завдання"
+    "deleteConfirmTitle": "Видалити завдання",
+    "dueSoon": "скоро термін",
+    "progress": "Прогрес",
+    "priority": "Пріоритет",
+    "todayPlan": "План на сьогодні",
+    "startNow": "Почати зараз",
+    "noDue": "Без терміну",
+    "overdueBy": "Прострочено на {{days}} дн.",
+    "dueInDays": "Термін через {{days}} дн.",
+    "startedSuccessfully": "Завдання успішно розпочато!",
+    "deleteConfirmMessage": "Ви впевнені, що хочете видалити \"{{name}}\"? Цю дію не можна скасувати."
   },
   "timeline": {
     "activityTimeline": "Хронологія Активності",
@@ -485,7 +509,10 @@
     "savedAsTemplate": "\"{{name}}\" збережено як шаблон.",
     "saveAsTemplateError": "Не вдалося зберегти проєкт як шаблон.",
     "sortTasks": "Сортувати завдання",
-    "upcomingProjects": "Найближчі проєкти"
+    "upcomingProjects": "Найближчі проєкти",
+    "deleteError": "Не вдалося видалити проєкт",
+    "shared": "Спільне",
+    "status": "Статус проєкту"
   },
   "projectItem": {
     "edit": "Редагувати",
@@ -535,7 +562,9 @@
         "dueDate": "Термін виконання",
         "deferUntil": "Відкласти до",
         "note": "Примітка",
-        "repeatOn": "Повторювати в"
+        "repeatOn": "Повторювати в",
+        "recurrence": "Повтор",
+        "attachments": "Вкладення"
       },
       "recurrenceSettings": "Налаштування повторення",
       "completionBasedHelp": "Якщо відмічено, наступне завдання буде створене на основі дати завершення замість дати виконання",
@@ -593,7 +622,10 @@
     "startDate": "Початок",
     "goalBucket": "Група списку бажань",
     "goalParent": "Ключовий результат для",
-    "noParentGoal": "Немає (окрема ціль)"
+    "noParentGoal": "Немає (окрема ціль)",
+    "name": "Назва",
+    "goalTitle": "Результат",
+    "project": "Проєкт"
   },
   "modals": {
     "updateNote": "Оновити нотатку",
@@ -682,7 +714,12 @@
     "failedToDeleteTag": "Не вдалося видалити тег.",
     "projectStatusUpdateFailed": "Не вдалося оновити статус проєкту",
     "failedToSaveTask": "Не вдалося зберегти завдання.",
-    "permissionDenied": "Доступ заборонено"
+    "permissionDenied": "Доступ заборонено",
+    "failedToDeleteArea": "Не вдалося видалити область.",
+    "failedToUpdateGoal": "Не вдалося оновити ціль.",
+    "failedToSaveProject": "Не вдалося зберегти проєкт.",
+    "failedToDeleteProject": "Не вдалося видалити проєкт.",
+    "projectNameTooLong": "Назва проєкту має містити не більше {{max}} символів"
   },
   "success": {
     "noteUpdated": "Нотатку успішно оновлено!",
@@ -702,7 +739,8 @@
     "goalCreated": "Ціль створено!",
     "goalUpdated": "Ціль оновлено!",
     "goalDeleted": "Ціль видалено!",
-    "tagDeleted": "Тег видалено!"
+    "tagDeleted": "Тег видалено!",
+    "areaDeleted": "Область успішно видалено!"
   },
   "notes": {
     "loading": "Завантаження нотаток...",
@@ -773,7 +811,12 @@
       "more": "{{count}} more"
     },
     "edit": "Редагувати",
-    "delete": "Видалити"
+    "delete": "Видалити",
+    "saveBeforeFiles": "Спочатку додайте нотатці заголовок або текст, потім файли.",
+    "fileUploadError": "Не вдалося завантажити {{name}}",
+    "slashFile": "Зображення або файл",
+    "slashFileHint": "Завантажте та розмістіть тут",
+    "toggleDropdownMenu": "Перемкнути меню"
   },
   "recurrence": {
     "none": "Немає",
@@ -804,7 +847,9 @@
     "everyNMonths": "Кожні {{count}} міс.",
     "completionBased": "Після виконання",
     "onDay": "Числа",
-    "until": "До"
+    "until": "До",
+    "monthDayPlaceholder": "Оберіть день місяця",
+    "instance": "Повторюваний екземпляр"
   },
   "weekdays": {
     "sunday": "Нд",
@@ -986,7 +1031,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Наступна дія",
-    "nextActionLine": "Наступна дія: {{name}}"
+    "nextActionLine": "Наступна дія: {{name}}",
+    "noCompletedTasks": "Немає виконаних завдань."
   },
   "profile": {
     "taskFeed": {
@@ -1273,7 +1319,9 @@
       "setupSuccess": "Календар успішно налаштовано!",
       "setupFailed": "Не вдалося створити календар",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Спочатку заповніть усі дані підключення до сервера",
+      "validationError": "Заповніть усі обов'язкові поля та перевірте підключення"
     },
     "conflictResolver": {
       "title": "Вирішення конфліктів синхронізації",
@@ -1300,7 +1348,8 @@
       "resolveSuccess": "Всі конфлікти успішно вирішені",
       "resolveError": "Не вдалося вирішити конфлікти",
       "nextConflict": "Наступний",
-      "prevConflict": "Попередній"
+      "prevConflict": "Попередній",
+      "mixedResolutionError": "Для кожного конфлікту оберіть «Використати всі локальні» або «Використати всі віддалені». Змішаний вибір полів поки не підтримується."
     },
     "editCalendar": {
       "title": "Редагувати календар",
@@ -1824,7 +1873,10 @@
     "hoursAgo": "{{count}} год тому",
     "minutesAgo": "{{count}} хв тому",
     "inMinutes": "через {{count}} хв",
-    "inHours": "через {{count}} год"
+    "inHours": "через {{count}} год",
+    "pastDue": "Прострочено",
+    "editDetails": "Редагувати деталі",
+    "noUpcomingOccurrences": "Немає найближчих повторів."
   },
   "calendar": {
     "focusSession": "Фокус",
@@ -1957,7 +2009,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Завдання"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1991,7 +2044,8 @@
     "allClearHint": "Зараз немає розмитих завдань, роботи, що застоялася, чи проектів, які застрягли. Гарний момент, щоб спланувати наступний крок.",
     "goToTasks": "Перейти до завдань",
     "goToProjects": "Перейти до проектів",
-    "planDay": "Спланувати день"
+    "planDay": "Спланувати день",
+    "andMore": "... та ще {{count}}"
   },
   "auth": {
     "login": "Увійти",
@@ -2032,7 +2086,24 @@
     },
     "captcha_required": "Пройдіть перевірку та спробуйте ще раз.",
     "registration_successful": "Підтвердьте адресу електронної пошти",
-    "registration_email_sent": "Підтвердьте адресу електронної пошти, щоб активувати обліковий запис. Ми надіслали вам посилання, перевірте пошту."
+    "registration_email_sent": "Підтвердьте адресу електронної пошти, щоб активувати обліковий запис. Ми надіслали вам посилання, перевірте пошту.",
+    "back_to_login": "Назад до входу",
+    "email_verified": "Вашу електронну пошту підтверджено! Тепер ви можете увійти.",
+    "verification_expired": "Термін дії посилання для підтвердження минув. Будь ласка, зареєструйтеся знову.",
+    "already_verified": "Вашу електронну пошту вже підтверджено. Ви можете увійти.",
+    "verification_failed": "Не вдалося підтвердити електронну пошту. Спробуйте ще раз.",
+    "email_not_verified": "Будь ласка, підтвердіть свою електронну адресу перед входом.",
+    "no_auth_methods": "Методи автентифікації недоступні. Зверніться до адміністратора.",
+    "no_account": "Немає облікового запису?",
+    "passwords_not_match": "Паролі не збігаються",
+    "registration_failed": "Не вдалося зареєструватися. Спробуйте ще раз.",
+    "error_occurred": "Сталася помилка. Спробуйте ще раз.",
+    "password_registration_disabled": "Реєстрація за паролем вимкнена",
+    "password_registration_disabled_message": "Реєстрація за паролем недоступна. Будь ласка, увійдіть через SSO.",
+    "registration_closed_title": "Реєстрацію закрито",
+    "registration_closed_message": "Реєстрація нових облікових записів наразі вимкнена. Для доступу зверніться до адміністратора.",
+    "confirm_password": "Підтвердіть пароль",
+    "already_have_account": "Вже маєте обліковий запис?"
   },
   "dropdown": {
     "createNew": "Створити новий",
@@ -2158,7 +2229,8 @@
     "projects": "проєктів",
     "goals": "цілей",
     "tasks": "завдань",
-    "progressSummary": "Прогрес сфери · виконано {{done}} з {{total}} завдань"
+    "progressSummary": "Прогрес сфери · виконано {{done}} з {{total}} завдань",
+    "toggleDropdownMenu": "Перемкнути меню"
   },
   "tags": {
     "loading": "Завантаження тегів...",
@@ -2212,7 +2284,8 @@
     "parentTag": "Батьківський тег",
     "noParent": "Немає (верхній рівень)",
     "showChildTags": "Показати дочірні теги",
-    "hideChildTags": "Сховати дочірні теги"
+    "hideChildTags": "Сховати дочірні теги",
+    "progressSummary": "Прогрес мітки · виконано {{done}} із {{total}} завдань"
   },
   "pomodoro": {
     "play": "Грати",
@@ -2437,7 +2510,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} користувачів · {{tasks}} завдань · {{waitlist}} у списку очікування · Cadence {{version}} · {{env}}",
+      "visitors": "Відвідувачі, 7 днів",
+      "signups": "Реєстрації, 7 днів",
+      "activation": "Активація, {{days}} дн.",
+      "activationHint": "{{n}} із {{total}} реєстрацій",
+      "weeklyUsers": "Щотижневі користувачі",
+      "weeklyUsersHint": "створили щось",
+      "selfHostedUsers": "самостійне розгортання · {{n}} нових сьогодні"
     },
     "waitlist": {
       "title": "Список очікування",
@@ -2450,7 +2531,12 @@
       "joined": "Приєднано",
       "empty": "Ніхто ще не зареєструвався",
       "noMatches": "Немає адрес, що відповідають цьому запиту",
-      "showing": "{{from}}-{{to}} з {{total}}"
+      "showing": "{{from}}-{{to}} з {{total}}",
+      "removed": "Видалено зі списку очікування",
+      "removeFailed": "Не вдалося видалити запис",
+      "ipAddress": "IP-адреса",
+      "removeTitle": "Видалити адресу",
+      "confirmRemove": "Видалити {{email}} зі списку очікування? Цю дію не можна скасувати."
     },
     "passwordInviteHint": "Залиште порожнім, щоб надіслати запрошення на електронну пошту",
     "invitationSent": "Запрошення на електронну пошту надіслано на {{email}}",
@@ -2725,7 +2811,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Відвідувачі сайту",
+      "visitorsHint": "маркетинговий сайт і блог",
+      "views": "Перегляди сторінок",
+      "blog": "Читачі блогу",
+      "signupsRow": "Реєстрації",
+      "reach": "Охоплення",
+      "createdAnything": "Створили щось",
+      "firstPlanShort": "3+ завдання",
+      "threeDaysShort": "реєстрації минулого тижня, 3 дні на першому тижні",
+      "newUsersGroup": "Реєстрації цього тижня",
+      "appUsers": "Користувачі застосунку",
+      "appUsersMonthHint": "{{month}} за 30 днів",
+      "creators": "Створили щось",
+      "creatorsHint": "користувачів, будь-який тип елемента",
+      "canceled": "Скасовано",
+      "failed": "Невдалі платежі",
+      "today": "Сьогодні",
+      "thisWeek": "Цей тиждень",
+      "lastWeek": "Минулий тиждень",
+      "change": "Зміна",
+      "fortnight": "14 днів"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2757,8 +2864,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "відвідують",
+      "stepSignups": "реєструються",
+      "stepActivated": "активують",
+      "stepPaid": "платять",
+      "pts": "{{diff}} п.",
+      "noRate": "Підрахованих відвідувачів менше, ніж реєстрацій",
+      "before": "було {{n}}"
+    },
+    "insights": {
+      "title": "Що виділяється"
+    },
+    "aiUsage": {
+      "title": "Використання AI",
+      "users": "Користувачі",
+      "totalCredits": "Витрачено кредитів цього місяця (усі користувачі)",
+      "searchPlaceholder": "Пошук за email",
+      "user": "Користувач",
+      "plan": "План",
+      "used": "Використано",
+      "limit": "Ліміт",
+      "remaining": "Залишилось",
+      "empty": "Користувачів ще немає"
+    },
+    "userDeletedSuccessfully": "Користувача успішно видалено"
   },
   "shares": {
     "shareProject": "Поділитися проектом",
@@ -2863,7 +2993,11 @@
     "blankSlateNew": "Шукати, щоб створити перегляд",
     "noViewsMatch": "Переглядів не знайдено",
     "blankSlateFilteredHint": "Спробуйте інший запит.",
-    "blankSlateClearSearch": "Очистити пошук"
+    "blankSlateClearSearch": "Очистити пошук",
+    "view": "Переглянути",
+    "progressSummary": "Переглянути прогрес · виконано {{done}} із {{total}} завдань",
+    "sortTasks": "Сортувати завдання",
+    "filters": "фільтри"
   },
   "search": {
     "placeholder": "Шукати завдання, проекти, нотатки...",
@@ -2987,7 +3121,8 @@
     "restoreButton": "Відновити",
     "adminInstanceNote": "Оскільки ви адміністратор, ваша резервна копія містить усі облікові записи цього сервера з їхніми даними та хешами паролів. Відновлення на новій установці поверне всіх. Зберігайте файл так само надійно, як базу даних.",
     "accountsCount_one": "Інших облікових записів: {{count}}",
-    "accountsCount_other": "Інших облікових записів: {{count}}"
+    "accountsCount_other": "Інших облікових записів: {{count}}",
+    "delete": "Видалити"
   },
   "notifications": {
     "table": {
@@ -3537,7 +3672,8 @@
     "linkedAccount": "Пов'язано з обліковим записом",
     "archivedBadge": "в архіві",
     "deletePerson": "Видалити людину",
-    "deleteConfirm": "Ви справді хочете видалити «{{name}}»? Цю дію не можна скасувати."
+    "deleteConfirm": "Ви справді хочете видалити «{{name}}»? Цю дію не можна скасувати.",
+    "contact": "Контакт"
   },
   "members": {
     "addTitle": "Додати учасника",
@@ -3566,7 +3702,9 @@
     "removed": "Учасника видалено",
     "updated": "Учасника оновлено",
     "invitationSent": "Запрошення надіслано",
-    "failedToRemove": "Не вдалося видалити учасника"
+    "failedToRemove": "Не вдалося видалити учасника",
+    "title": "Учасники",
+    "titleOne": "Учасник"
   },
   "signInLink": {
     "action": "Посилання для входу",
@@ -3953,7 +4091,11 @@
     },
     "reorderError": "Не вдалося зберегти порядок цілей",
     "noGoalsInArea": "До цієї сфери не прив'язано жодної цілі.",
-    "maintenance": "Підтримка"
+    "maintenance": "Підтримка",
+    "noGoalsSelected": "Цілі не вибрано",
+    "noAvailableGoals": "Немає доступних цілей",
+    "progressHint": "Стовпчик: виконані завдання та проєкти. Лінія: час між створенням і цільовою датою.",
+    "removeFromArea": "Вилучити з області"
   },
   "templates": {
     "new": "Новий шаблон",
@@ -4692,7 +4834,8 @@
       "projects": "Проєкти",
       "tasks": "Завдання",
       "notes": "Нотатки",
-      "habits": "Звички"
+      "habits": "Звички",
+      "goals": "Цілі"
     },
     "help": {
       "title": "Гарячі клавіші",
@@ -5099,5 +5242,24 @@
   "loading": {
     "tasks": "Завантаження завдань…",
     "subtasks": "Завантаження підзавдань..."
+  },
+  "noteCreation": "Створити нотатку",
+  "notFound": {
+    "todayDescription": "Переглянути сьогоднішні завдання",
+    "projectsDescription": "Перегляньте свої проєкти",
+    "inboxDescription": "Перевірте елементи у вхідних",
+    "notesDescription": "Перегляньте свої нотатки",
+    "title": "Сторінку не знайдено",
+    "description": "Сторінку, яку ви шукаєте, не існує. Можливо, її переміщено чи видалено або ви ввели неправильну адресу.",
+    "goBack": "Назад",
+    "goHome": "На сьогодні",
+    "quickActions": "Швидкі дії"
+  },
+  "colors": {
+    "label": "Колір",
+    "none": "Немає"
+  },
+  "tag": {
+    "viewTag": "Перейти до мітки"
   }
 }

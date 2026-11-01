@@ -67,7 +67,15 @@
     "tags": "Метки",
     "goToToday": "Перейти к сегодня",
     "loadMore": "Загрузить ещё",
-    "showAll": "Показать все"
+    "showAll": "Показать все",
+    "actions": "Действия",
+    "creating": "Создание...",
+    "createCalendar": "Создать календарь",
+    "untitled": "Без названия",
+    "resolving": "Разрешение...",
+    "showLess": "Свернуть",
+    "breadcrumb": "Хлебные крошки",
+    "undo": "Отменить"
   },
   "sidebar": {
     "dashboard": "Панель управления",
@@ -146,7 +154,11 @@
     "search": "Поиск",
     "admin": "Администратор",
     "adminBadge": "Администратор",
-    "templates": "Шаблоны"
+    "templates": "Шаблоны",
+    "today": "Сегодня",
+    "projects": "Проекты",
+    "inbox": "Входящие",
+    "notes": "Заметки"
   },
   "settings": {
     "todayPageSettings": "Настройки страницы «Сегодня»",
@@ -296,7 +308,9 @@
       "inProgress": "В процессе",
       "waiting": "Ожидание",
       "done": "Выполнено",
-      "dropHere": "Перетащите сюда"
+      "dropHere": "Перетащите сюда",
+      "customizeColumns": "Настроить колонки",
+      "columns": "Колонки"
     },
     "chaseUp": "Напомнить",
     "habit": "Привычка",
@@ -319,7 +333,17 @@
       "moveToProject": "Переместить в проект"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Удалить задачу"
+    "deleteConfirmTitle": "Удалить задачу",
+    "dueSoon": "скоро срок",
+    "progress": "Прогресс",
+    "priority": "Приоритет",
+    "todayPlan": "План на сегодня",
+    "startNow": "Начать сейчас",
+    "noDue": "Без срока",
+    "overdueBy": "Просрочено на {{days}} дн.",
+    "dueInDays": "Срок через {{days}} дн.",
+    "startedSuccessfully": "Задача успешно начата!",
+    "deleteConfirmMessage": "Удалить «{{name}}»? Это действие нельзя отменить."
   },
   "timeline": {
     "activityTimeline": "Хронология активности",
@@ -650,7 +674,9 @@
       "setupSuccess": "Календарь успешно настроен!",
       "setupFailed": "Не удалось создать календарь",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Сначала заполните все данные подключения к серверу",
+      "validationError": "Заполните все обязательные поля и проверьте подключение"
     },
     "conflictResolver": {
       "title": "Разрешение конфликтов синхронизации",
@@ -677,7 +703,8 @@
       "resolveSuccess": "Все конфликты успешно разрешены",
       "resolveError": "Не удалось разрешить конфликты",
       "nextConflict": "Следующий",
-      "prevConflict": "Предыдущий"
+      "prevConflict": "Предыдущий",
+      "mixedResolutionError": "Для каждого конфликта выберите «Использовать все локальные» или «Использовать все удалённые». Смешанный выбор полей пока не поддерживается."
     },
     "editCalendar": {
       "title": "Редактировать календарь",
@@ -1053,7 +1080,8 @@
     "allClearHint": "Сейчас нет размытых задач, застоявшейся работы или застрявших проектов. Хороший момент, чтобы спланировать следующий шаг.",
     "goToTasks": "Перейти к задачам",
     "goToProjects": "Перейти к проектам",
-    "planDay": "Спланировать день"
+    "planDay": "Спланировать день",
+    "andMore": "... и ещё {{count}}"
   },
   "modals": {
     "confirmDelete": "Вы уверены, что хотите удалить?",
@@ -1134,7 +1162,9 @@
         "weekOfMonth": "Неделя месяца",
         "recurrenceEndDate": "Дата окончания (необязательно)",
         "completionBased": "Повторять после завершения",
-        "repeatOn": "Повторять в"
+        "repeatOn": "Повторять в",
+        "recurrence": "Повтор",
+        "attachments": "Вложения"
       },
       "projectSearchPlaceholder": "Поиск или создание проекта...",
       "noMatchingProjects": "Нет подходящих проектов",
@@ -1187,7 +1217,10 @@
     "startDate": "Начало",
     "goalBucket": "Группа списка желаний",
     "goalParent": "Ключевой результат для",
-    "noParentGoal": "Нет (отдельная цель)"
+    "noParentGoal": "Нет (отдельная цель)",
+    "name": "Имя",
+    "goalTitle": "Результат",
+    "project": "Проект"
   },
   "auth": {
     "login": "Войти",
@@ -1228,7 +1261,24 @@
     },
     "captcha_required": "Пройдите проверку и попробуйте снова.",
     "registration_successful": "Подтвердите адрес электронной почты",
-    "registration_email_sent": "Подтвердите адрес электронной почты, чтобы активировать аккаунт. Мы отправили вам ссылку, проверьте почту."
+    "registration_email_sent": "Подтвердите адрес электронной почты, чтобы активировать аккаунт. Мы отправили вам ссылку, проверьте почту.",
+    "back_to_login": "Назад ко входу",
+    "email_verified": "Ваш email подтверждён! Теперь вы можете войти.",
+    "verification_expired": "Срок действия ссылки для подтверждения истёк. Зарегистрируйтесь снова.",
+    "already_verified": "Ваш email уже подтверждён. Вы можете войти.",
+    "verification_failed": "Не удалось подтвердить email. Попробуйте ещё раз.",
+    "email_not_verified": "Подтвердите адрес электронной почты перед входом.",
+    "no_auth_methods": "Способы входа недоступны. Обратитесь к администратору.",
+    "no_account": "Нет аккаунта?",
+    "passwords_not_match": "Пароли не совпадают",
+    "registration_failed": "Не удалось зарегистрироваться. Попробуйте ещё раз.",
+    "error_occurred": "Произошла ошибка. Попробуйте ещё раз.",
+    "password_registration_disabled": "Регистрация по паролю отключена",
+    "password_registration_disabled_message": "Регистрация по паролю недоступна. Войдите через SSO.",
+    "registration_closed_title": "Регистрация закрыта",
+    "registration_closed_message": "Регистрация новых аккаунтов сейчас отключена. Для получения доступа обратитесь к администратору.",
+    "confirm_password": "Подтвердите пароль",
+    "already_have_account": "Уже есть аккаунт?"
   },
   "dropdown": {
     "createNew": "Создать новый",
@@ -1349,7 +1399,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Следующее действие",
-    "nextActionLine": "Следующее действие: {{name}}"
+    "nextActionLine": "Следующее действие: {{name}}",
+    "noCompletedTasks": "Нет выполненных задач."
   },
   "errors": {
     "required": "Это поле обязательно для заполнения",
@@ -1390,7 +1441,12 @@
     "failedToDeleteTag": "Не удалось удалить тег.",
     "projectStatusUpdateFailed": "Не удалось обновить статус проекта",
     "failedToSaveTask": "Не удалось сохранить задачу.",
-    "permissionDenied": "Доступ запрещён"
+    "permissionDenied": "Доступ запрещён",
+    "failedToDeleteArea": "Не удалось удалить область.",
+    "failedToUpdateGoal": "Не удалось обновить цель.",
+    "failedToSaveProject": "Не удалось сохранить проект.",
+    "failedToDeleteProject": "Не удалось удалить проект.",
+    "projectNameTooLong": "Название проекта не должно превышать {{max}} символов"
   },
   "inbox": {
     "title": "Входящие",
@@ -1528,7 +1584,8 @@
     "goalCreated": "Цель создана!",
     "goalUpdated": "Цель обновлена!",
     "goalDeleted": "Цель удалена!",
-    "tagDeleted": "Тег удалён!"
+    "tagDeleted": "Тег удалён!",
+    "areaDeleted": "Область успешно удалена!"
   },
   "note": {
     "title": "Название",
@@ -1710,7 +1767,10 @@
     "hoursAgo": "{{count}} ч назад",
     "minutesAgo": "{{count}} мин назад",
     "inMinutes": "через {{count}} мин",
-    "inHours": "через {{count}} ч"
+    "inHours": "через {{count}} ч",
+    "pastDue": "Просрочено",
+    "editDetails": "Изменить детали",
+    "noUpcomingOccurrences": "Нет предстоящих повторений."
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -1832,7 +1892,10 @@
     "savedAsTemplate": "\"{{name}}\" сохранён как шаблон.",
     "saveAsTemplateError": "Не удалось сохранить проект как шаблон.",
     "sortTasks": "Сортировать задачи",
-    "upcomingProjects": "Предстоящие проекты"
+    "upcomingProjects": "Предстоящие проекты",
+    "deleteError": "Не удалось удалить проект",
+    "shared": "Общие",
+    "status": "Статус проекта"
   },
   "projectItem": {
     "edit": "Редактировать",
@@ -1914,7 +1977,8 @@
     "projects": "проектов",
     "goals": "целей",
     "tasks": "задач",
-    "progressSummary": "Прогресс области · выполнено {{done}} из {{total}} задач"
+    "progressSummary": "Прогресс области · выполнено {{done}} из {{total}} задач",
+    "toggleDropdownMenu": "Переключить выпадающее меню"
   },
   "notes": {
     "loading": "Загрузка заметок...",
@@ -1985,7 +2049,12 @@
       "more": "{{count}} more"
     },
     "edit": "Изменить",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "saveBeforeFiles": "Сначала добавьте заметке заголовок или текст, затем прикрепите файлы.",
+    "fileUploadError": "Не удалось загрузить {{name}}",
+    "slashFile": "Изображение или файл",
+    "slashFileHint": "Загрузить и вставить здесь",
+    "toggleDropdownMenu": "Переключить выпадающее меню"
   },
   "tags": {
     "loading": "Загрузка тегов...",
@@ -2039,7 +2108,8 @@
     "parentTag": "Родительский тег",
     "noParent": "Нет (верхний уровень)",
     "showChildTags": "Показать дочерние теги",
-    "hideChildTags": "Скрыть дочерние теги"
+    "hideChildTags": "Скрыть дочерние теги",
+    "progressSummary": "Прогресс метки · выполнено {{done}} из {{total}} задач"
   },
   "recurrence": {
     "none": "Нет",
@@ -2070,7 +2140,9 @@
     "everyNMonths": "Каждые {{count}} мес.",
     "completionBased": "После выполнения",
     "onDay": "В день",
-    "until": "До"
+    "until": "До",
+    "monthDayPlaceholder": "Выберите день месяца",
+    "instance": "Повторяющийся экземпляр"
   },
   "weekdays": {
     "sunday": "Вс",
@@ -2221,7 +2293,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Задача"
   },
   "pages": {
     "notFound": {
@@ -2437,7 +2510,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} пользователей · {{tasks}} задач · {{waitlist}} в листе ожидания · Cadence {{version}} · {{env}}",
+      "visitors": "Посетители, 7 дней",
+      "signups": "Регистрации, 7 дней",
+      "activation": "Активация, {{days}} дн.",
+      "activationHint": "{{n}} из {{total}} регистраций",
+      "weeklyUsers": "Пользователи за неделю",
+      "weeklyUsersHint": "создал(а) что-либо",
+      "selfHostedUsers": "self-hosted · новых сегодня: {{n}}"
     },
     "waitlist": {
       "title": "Список ожидания",
@@ -2450,7 +2531,12 @@
       "joined": "Присоединился",
       "empty": "Пока никто не записался",
       "noMatches": "Нет адресов, соответствующих этому запросу",
-      "showing": "{{from}}-{{to}} из {{total}}"
+      "showing": "{{from}}-{{to}} из {{total}}",
+      "removed": "Удалено из листа ожидания",
+      "removeFailed": "Не удалось удалить запись",
+      "ipAddress": "IP-адрес",
+      "removeTitle": "Удалить адрес",
+      "confirmRemove": "Удалить {{email}} из листа ожидания? Это действие нельзя отменить."
     },
     "passwordInviteHint": "Оставьте пустым, чтобы отправить приглашение по электронной почте",
     "invitationSent": "Приглашение отправлено на электронную почту {{email}}",
@@ -2725,7 +2811,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Посетители сайта",
+      "visitorsHint": "маркетинговый сайт и блог",
+      "views": "Просмотры страниц",
+      "blog": "Читатели блога",
+      "signupsRow": "Регистрации",
+      "reach": "Охват",
+      "createdAnything": "Создали что-либо",
+      "firstPlanShort": "3+ задачи",
+      "threeDaysShort": "регистрации прошлой недели, 3 дня в первую неделю",
+      "newUsersGroup": "Регистрации за эту неделю",
+      "appUsers": "Пользователи приложения",
+      "appUsersMonthHint": "{{month}} за 30 дней",
+      "creators": "Создал(а) что-либо",
+      "creatorsHint": "пользователей, любой тип элементов",
+      "canceled": "Отменено",
+      "failed": "Неудачные платежи",
+      "today": "Сегодня",
+      "thisWeek": "Эта неделя",
+      "lastWeek": "Прошлая неделя",
+      "change": "Изменение",
+      "fortnight": "14 дней"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2757,8 +2864,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "посещают",
+      "stepSignups": "регистрируются",
+      "stepActivated": "активируют",
+      "stepPaid": "платят",
+      "pts": "{{diff}} п.п.",
+      "noRate": "Засчитанных посетителей меньше, чем регистраций",
+      "before": "было {{n}}"
+    },
+    "insights": {
+      "title": "Что выделяется"
+    },
+    "aiUsage": {
+      "title": "Использование ИИ",
+      "users": "Пользователи",
+      "totalCredits": "Кредиты, использованные в этом месяце (все пользователи)",
+      "searchPlaceholder": "Поиск по email",
+      "user": "Пользователь",
+      "plan": "Тариф",
+      "used": "Использовано",
+      "limit": "Лимит",
+      "remaining": "Осталось",
+      "empty": "Пока нет пользователей"
+    },
+    "userDeletedSuccessfully": "Пользователь успешно удалён"
   },
   "shares": {
     "shareProject": "Поделиться проектом",
@@ -2863,7 +2993,11 @@
     "blankSlateNew": "Найти, чтобы создать представление",
     "noViewsMatch": "Представления не найдены",
     "blankSlateFilteredHint": "Попробуйте другой запрос.",
-    "blankSlateClearSearch": "Очистить поиск"
+    "blankSlateClearSearch": "Очистить поиск",
+    "view": "Вид",
+    "progressSummary": "Прогресс вида · выполнено {{done}} из {{total}} задач",
+    "sortTasks": "Сортировать задачи",
+    "filters": "фильтры"
   },
   "search": {
     "placeholder": "Поиск задач, проектов, заметок...",
@@ -2987,7 +3121,8 @@
     "restoreButton": "Восстановить",
     "adminInstanceNote": "Поскольку вы администратор, ваша резервная копия содержит все учётные записи этого сервера с их данными и хешами паролей. Восстановление на новой установке вернёт всех. Храните файл так же надёжно, как базу данных.",
     "accountsCount_one": "Других учётных записей: {{count}}",
-    "accountsCount_other": "Других учётных записей: {{count}}"
+    "accountsCount_other": "Других учётных записей: {{count}}",
+    "delete": "Удалить"
   },
   "notifications": {
     "table": {
@@ -3537,7 +3672,8 @@
     "linkedAccount": "Связан с учётной записью",
     "archivedBadge": "в архиве",
     "deletePerson": "Удалить человека",
-    "deleteConfirm": "Вы действительно хотите удалить «{{name}}»? Это нельзя отменить."
+    "deleteConfirm": "Вы действительно хотите удалить «{{name}}»? Это нельзя отменить.",
+    "contact": "Контакт"
   },
   "members": {
     "addTitle": "Добавить участника",
@@ -3566,7 +3702,9 @@
     "removed": "Участник удалён",
     "updated": "Участник изменён",
     "invitationSent": "Приглашение отправлено",
-    "failedToRemove": "Не удалось удалить участника"
+    "failedToRemove": "Не удалось удалить участника",
+    "title": "Участники",
+    "titleOne": "Участник"
   },
   "signInLink": {
     "action": "Ссылка для входа",
@@ -3953,7 +4091,11 @@
     },
     "reorderError": "Не удалось сохранить порядок целей",
     "noGoalsInArea": "С этой областью не связано ни одной цели.",
-    "maintenance": "Поддержка"
+    "maintenance": "Поддержка",
+    "noGoalsSelected": "Цели не выбраны",
+    "noAvailableGoals": "Нет доступных целей",
+    "progressHint": "Столбец: выполненные задачи и проекты. Линия: время между созданием и целевой датой.",
+    "removeFromArea": "Убрать из области"
   },
   "templates": {
     "new": "Новый шаблон",
@@ -4692,7 +4834,8 @@
       "projects": "Проекты",
       "tasks": "Задачи",
       "notes": "Заметки",
-      "habits": "Привычки"
+      "habits": "Привычки",
+      "goals": "Цели"
     },
     "help": {
       "title": "Горячие клавиши",
@@ -5099,5 +5242,24 @@
   "loading": {
     "tasks": "Загрузка задач…",
     "subtasks": "Загрузка подзадач..."
+  },
+  "noteCreation": "Создать заметку",
+  "notFound": {
+    "todayDescription": "Задачи на сегодня",
+    "projectsDescription": "Просмотреть проекты",
+    "inboxDescription": "Проверить входящие элементы",
+    "notesDescription": "Просмотреть заметки",
+    "title": "Страница не найдена",
+    "description": "Страница, которую вы ищете, не существует. Возможно, её переместили или удалили, либо вы ввели неверный адрес.",
+    "goBack": "Назад",
+    "goHome": "Перейти к сегодня",
+    "quickActions": "Быстрые действия"
+  },
+  "colors": {
+    "label": "Цвет",
+    "none": "Нет"
+  },
+  "tag": {
+    "viewTag": "Перейти к метке"
   }
 }

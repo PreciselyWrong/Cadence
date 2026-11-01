@@ -36,6 +36,54 @@ describe('Inbox Routes', () => {
             expect(typeof response.body.uid).toBe('string');
         });
 
+        it('creates one item for a retried capture with the same Idempotency-Key', async () => {
+            const body = { content: 'Call the plumber', source: 'android' };
+            const first = await agent
+                .post('/api/inbox')
+                .set('Idempotency-Key', 'capture-1')
+                .send(body);
+            const retry = await agent
+                .post('/api/inbox')
+                .set('Idempotency-Key', 'capture-1')
+                .send(body);
+
+            expect(first.status).toBe(201);
+            expect(retry.status).toBe(201);
+            expect(retry.headers['idempotent-replayed']).toBe('true');
+            expect(retry.body.uid).toBe(first.body.uid);
+            expect(
+                await InboxItem.count({
+                    where: { user_id: user.id, content: body.content },
+                })
+            ).toBe(1);
+        });
+
+        it('rejects an Idempotency-Key reused for another capture', async () => {
+            await agent
+                .post('/api/inbox')
+                .set('Idempotency-Key', 'capture-2')
+                .send({ content: 'First thing' });
+            const other = await agent
+                .post('/api/inbox')
+                .set('Idempotency-Key', 'capture-2')
+                .send({ content: 'Another thing' });
+
+            expect(other.status).toBe(422);
+            expect(other.body.code).toBe('IDEMPOTENCY_KEY_REUSED');
+        });
+
+        it('still creates every item when no Idempotency-Key is sent', async () => {
+            const body = { content: 'Twice on purpose' };
+            await agent.post('/api/inbox').send(body);
+            await agent.post('/api/inbox').send(body);
+
+            expect(
+                await InboxItem.count({
+                    where: { user_id: user.id, content: body.content },
+                })
+            ).toBe(2);
+        });
+
         it('should require authentication', async () => {
             const inboxData = {
                 content: 'Test content',

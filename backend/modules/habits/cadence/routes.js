@@ -5,6 +5,7 @@ const { requireAuth } = require('../../../middleware/auth');
 const idempotency = require('../../../middleware/idempotency');
 const read = require('./operations/read');
 const write = require('./operations/write');
+const { habitsCalendar } = require('./operations/calendar');
 const { importLegacyHabits } = require('./operations/importLegacy');
 const { NotFoundError } = require('../../../shared/errors');
 
@@ -55,6 +56,20 @@ router.get(
             await read.listHabits(req.currentUser.id, {
                 archived: bool(req.query.archived),
                 date: req.query.date,
+            })
+        );
+    })
+);
+
+// Read-only: the days each habit appears on, for the web calendar.
+router.get(
+    '/cadence/calendar',
+    requireAuth,
+    handle(async (req, res) => {
+        res.json(
+            await habitsCalendar(req.currentUser.id, {
+                from: req.query.from,
+                to: req.query.to,
             })
         );
     })

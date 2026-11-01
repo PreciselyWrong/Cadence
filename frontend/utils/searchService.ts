@@ -18,7 +18,7 @@ interface SearchParams {
 }
 
 interface SearchResult {
-    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag';
+    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Goal';
     id: number;
     uid?: string;
     name: string;

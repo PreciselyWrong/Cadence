@@ -65,7 +65,15 @@
     "tags": "Tags",
     "goToToday": "Naar vandaag",
     "loadMore": "Meer laden",
-    "showAll": "Alles tonen"
+    "showAll": "Alles tonen",
+    "actions": "Acties",
+    "creating": "Bezig met aanmaken...",
+    "createCalendar": "Agenda aanmaken",
+    "untitled": "Naamloos",
+    "resolving": "Bezig met oplossen...",
+    "showLess": "Minder tonen",
+    "breadcrumb": "Kruimelpad",
+    "undo": "Ongedaan maken"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -144,7 +152,11 @@
     "search": "Zoeken",
     "admin": "Beheerder",
     "adminBadge": "Beheerder",
-    "templates": "Sjablonen"
+    "templates": "Sjablonen",
+    "today": "Vandaag",
+    "projects": "Projecten",
+    "inbox": "Inbox",
+    "notes": "Notities"
   },
   "settings": {
     "todayPageSettings": "Instellingen Vandaag Pagina",
@@ -294,7 +306,9 @@
       "inProgress": "Bezig",
       "waiting": "Wachten",
       "done": "Voltooid",
-      "dropHere": "Hier neerzetten"
+      "dropHere": "Hier neerzetten",
+      "customizeColumns": "Kolommen aanpassen",
+      "columns": "Kolommen"
     },
     "chaseUp": "Opvolgen",
     "habit": "Gewoonte",
@@ -317,7 +331,17 @@
       "moveToProject": "Verplaatsen naar project"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Taak verwijderen"
+    "deleteConfirmTitle": "Taak verwijderen",
+    "dueSoon": "binnenkort verlopen",
+    "progress": "Voortgang",
+    "priority": "Prioriteit",
+    "todayPlan": "Plan van vandaag",
+    "startNow": "Nu starten",
+    "noDue": "Geen vervaldatum",
+    "overdueBy": "{{days}} d te laat",
+    "dueInDays": "Verloopt over {{days}} d",
+    "startedSuccessfully": "Taak succesvol gestart!",
+    "deleteConfirmMessage": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
   },
   "timeline": {
     "activityTimeline": "Activiteit Tijdlijn",
@@ -648,7 +672,9 @@
       "setupSuccess": "Kalender succesvol geconfigureerd!",
       "setupFailed": "Mislukt om kalender aan te maken",
       "serverUrlPlaceholder": "https://caldav.voorbeeld.com",
-      "calendarPathPlaceholder": "/calendars/gebruiker/taken"
+      "calendarPathPlaceholder": "/calendars/gebruiker/taken",
+      "fillServerDetails": "Vul eerst alle gegevens van de serververbinding in",
+      "validationError": "Vul alle verplichte velden in en test de verbinding"
     },
     "conflictResolver": {
       "title": "Synchronisatieconflicten oplossen",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Alle conflicten zijn succesvol opgelost",
       "resolveError": "Kon conflicten niet oplossen",
       "nextConflict": "Volgende",
-      "prevConflict": "Vorige"
+      "prevConflict": "Vorige",
+      "mixedResolutionError": "Kies voor elk conflict \"Alles lokaal gebruiken\" of \"Alles extern gebruiken\". Gemengde selecties worden nog niet ondersteund."
     },
     "editCalendar": {
       "title": "Kalender Bewerken",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Op dit moment geen vage taken, blijven liggen werk of vastgelopen projecten. Een goed moment om de volgende stap te plannen.",
     "goToTasks": "Naar taken",
     "goToProjects": "Naar projecten",
-    "planDay": "Plan je dag"
+    "planDay": "Plan je dag",
+    "andMore": "... en nog {{count}}"
   },
   "modals": {
     "confirmDelete": "Weet je zeker dat je wilt verwijderen?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Week van de maand",
         "recurrenceEndDate": "Einddatum (optioneel)",
         "completionBased": "Herhaal na voltooiing",
-        "repeatOn": "Herhaal op"
+        "repeatOn": "Herhaal op",
+        "recurrence": "Herhalen",
+        "attachments": "Bijlagen"
       },
       "projectSearchPlaceholder": "Zoek of maak een project...",
       "noMatchingProjects": "Geen overeenkomende projecten",
@@ -1185,7 +1215,10 @@
     "startDate": "Start",
     "goalBucket": "Bucketlistgroep",
     "goalParent": "Kernresultaat van",
-    "noParentGoal": "Geen (zelfstandig)"
+    "noParentGoal": "Geen (zelfstandig)",
+    "name": "Naam",
+    "goalTitle": "Resultaat",
+    "project": "Project"
   },
   "auth": {
     "login": "Inloggen",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Voltooi de verificatie en probeer het opnieuw.",
     "registration_successful": "Bevestig je e-mailadres",
-    "registration_email_sent": "Bevestig je e-mailadres om je account te activeren. We hebben je een link gestuurd, controleer je inbox."
+    "registration_email_sent": "Bevestig je e-mailadres om je account te activeren. We hebben je een link gestuurd, controleer je inbox.",
+    "back_to_login": "Terug naar inloggen",
+    "email_verified": "Je e-mailadres is geverifieerd! Je kunt nu inloggen.",
+    "verification_expired": "De verificatielink is verlopen. Registreer je opnieuw.",
+    "already_verified": "Je e-mailadres is al geverifieerd. Je kunt inloggen.",
+    "verification_failed": "E-mailverificatie mislukt. Probeer het opnieuw.",
+    "email_not_verified": "Verifieer je e-mailadres voordat je inlogt.",
+    "no_auth_methods": "Er zijn geen authenticatiemethoden beschikbaar. Neem contact op met je beheerder.",
+    "no_account": "Nog geen account?",
+    "passwords_not_match": "Wachtwoorden komen niet overeen",
+    "registration_failed": "Registratie mislukt. Probeer het opnieuw.",
+    "error_occurred": "Er is een fout opgetreden. Probeer het opnieuw.",
+    "password_registration_disabled": "Wachtwoordregistratie uitgeschakeld",
+    "password_registration_disabled_message": "Registratie met wachtwoord is niet beschikbaar. Log in met SSO.",
+    "registration_closed_title": "Registratie gesloten",
+    "registration_closed_message": "Registratie van nieuwe accounts is momenteel uitgeschakeld. Neem contact op met je beheerder voor toegang.",
+    "confirm_password": "Wachtwoord bevestigen",
+    "already_have_account": "Al een account?"
   },
   "dropdown": {
     "createNew": "Nieuw Aanmaken",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Volgende actie",
-    "nextActionLine": "Volgende actie: {{name}}"
+    "nextActionLine": "Volgende actie: {{name}}",
+    "noCompletedTasks": "Geen voltooide taken."
   },
   "errors": {
     "required": "Dit veld is verplicht",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Tag verwijderen mislukt.",
     "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt",
     "failedToSaveTask": "Taak opslaan mislukt.",
-    "permissionDenied": "Toegang geweigerd"
+    "permissionDenied": "Toegang geweigerd",
+    "failedToDeleteArea": "Gebied verwijderen mislukt.",
+    "failedToUpdateGoal": "Doel bijwerken mislukt.",
+    "failedToSaveProject": "Project opslaan mislukt.",
+    "failedToDeleteProject": "Project verwijderen mislukt.",
+    "projectNameTooLong": "Projectnaam mag maximaal {{max}} tekens bevatten"
   },
   "inbox": {
     "title": "Inbox",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Doel aangemaakt!",
     "goalUpdated": "Doel bijgewerkt!",
     "goalDeleted": "Doel verwijderd!",
-    "tagDeleted": "Tag verwijderd!"
+    "tagDeleted": "Tag verwijderd!",
+    "areaDeleted": "Gebied succesvol verwijderd!"
   },
   "note": {
     "title": "Titel",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} uur geleden",
     "minutesAgo": "{{count}} minuten geleden",
     "inMinutes": "over {{count}} minuten",
-    "inHours": "over {{count}} uur"
+    "inHours": "over {{count}} uur",
+    "pastDue": "Verlopen",
+    "editDetails": "Details bewerken",
+    "noUpcomingOccurrences": "Geen aankomende herhalingen."
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" opgeslagen als sjabloon.",
     "saveAsTemplateError": "Project opslaan als sjabloon mislukt.",
     "sortTasks": "Taken sorteren",
-    "upcomingProjects": "Aankomende projecten"
+    "upcomingProjects": "Aankomende projecten",
+    "deleteError": "Project verwijderen mislukt",
+    "shared": "Gedeeld",
+    "status": "Projectstatus"
   },
   "projectItem": {
     "edit": "Bewerken",
@@ -1908,7 +1971,8 @@
     "projects": "projecten",
     "goals": "doelen",
     "tasks": "taken",
-    "progressSummary": "Voortgang gebied · {{done}} van {{total}} taken voltooid"
+    "progressSummary": "Voortgang gebied · {{done}} van {{total}} taken voltooid",
+    "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
   },
   "notes": {
     "loading": "Bezig met het laden van notities...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Bewerken",
-    "delete": "Verwijderen"
+    "delete": "Verwijderen",
+    "saveBeforeFiles": "Geef de notitie eerst een titel of tekst, voeg daarna bestanden toe.",
+    "fileUploadError": "{{name}} kon niet worden geüpload",
+    "slashFile": "Afbeelding of bestand",
+    "slashFileHint": "Hier uploaden en plaatsen",
+    "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
   },
   "tags": {
     "loading": "Tags laden...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Bovenliggende tag",
     "noParent": "Geen (hoogste niveau)",
     "showChildTags": "Onderliggende tags tonen",
-    "hideChildTags": "Onderliggende tags verbergen"
+    "hideChildTags": "Onderliggende tags verbergen",
+    "progressSummary": "Tagvoortgang · {{done}} van {{total}} taken voltooid"
   },
   "recurrence": {
     "none": "Geen",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Elke {{count}} maanden",
     "completionBased": "Na voltooiing",
     "onDay": "Op dag",
-    "until": "Tot"
+    "until": "Tot",
+    "monthDayPlaceholder": "Selecteer dag van de maand",
+    "instance": "Herhalend exemplaar"
   },
   "weekdays": {
     "sunday": "Zo",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Taak"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} gebruikers · {{tasks}} taken · {{waitlist}} op de wachtlijst · Cadence {{version}} · {{env}}",
+      "visitors": "Bezoekers, 7 dagen",
+      "signups": "Aanmeldingen, 7 dagen",
+      "activation": "Activering, {{days}} dagen",
+      "activationHint": "{{n}} van {{total}} aanmeldingen",
+      "weeklyUsers": "Wekelijkse gebruikers",
+      "weeklyUsersHint": "heeft iets gemaakt",
+      "selfHostedUsers": "self-hosted · {{n}} nieuw vandaag"
     },
     "waitlist": {
       "title": "Wachtlijst",
@@ -2440,7 +2521,12 @@
       "joined": "Aangemeld",
       "empty": "Niemand heeft zich nog aangemeld",
       "noMatches": "Geen adressen die overeenkomen met die zoekopdracht",
-      "showing": "{{from}}-{{to}} van {{total}}"
+      "showing": "{{from}}-{{to}} van {{total}}",
+      "removed": "Verwijderd van de wachtlijst",
+      "removeFailed": "Item verwijderen mislukt",
+      "ipAddress": "IP-adres",
+      "removeTitle": "Adres verwijderen",
+      "confirmRemove": "{{email}} van de wachtlijst verwijderen? Dit kan niet ongedaan worden gemaakt."
     },
     "passwordInviteHint": "Laat leeg om een uitnodigingsmail te sturen",
     "invitationSent": "Uitnodigingsmail verzonden naar {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Sitebezoekers",
+      "visitorsHint": "marketingsite en blog",
+      "views": "Paginaweergaven",
+      "blog": "Bloglezers",
+      "signupsRow": "Aanmeldingen",
+      "reach": "Bereik",
+      "createdAnything": "Iets gemaakt",
+      "firstPlanShort": "3+ taken",
+      "threeDaysShort": "aanmeldingen van vorige week, 3 dagen in hun eerste week",
+      "newUsersGroup": "Aanmeldingen van deze week",
+      "appUsers": "App-gebruikers",
+      "appUsersMonthHint": "{{month}} in 30 dagen",
+      "creators": "Iets gemaakt",
+      "creatorsHint": "gebruikers, elk type item",
+      "canceled": "Geannuleerd",
+      "failed": "Mislukte betalingen",
+      "today": "Vandaag",
+      "thisWeek": "Deze week",
+      "lastWeek": "Vorige week",
+      "change": "Verschil",
+      "fortnight": "14 dagen"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "bezoekt",
+      "stepSignups": "meldt zich aan",
+      "stepActivated": "activeert",
+      "stepPaid": "betaalt",
+      "pts": "{{diff}} pt",
+      "noRate": "Minder geteld bezoekers dan aanmeldingen",
+      "before": "was {{n}}"
+    },
+    "insights": {
+      "title": "Opvallend"
+    },
+    "aiUsage": {
+      "title": "AI-gebruik",
+      "users": "Gebruikers",
+      "totalCredits": "Credits gebruikt deze maand (alle gebruikers)",
+      "searchPlaceholder": "Zoeken op e-mail",
+      "user": "Gebruiker",
+      "plan": "Abonnement",
+      "used": "Gebruikt",
+      "limit": "Limiet",
+      "remaining": "Resterend",
+      "empty": "Nog geen gebruikers"
+    },
+    "userDeletedSuccessfully": "Gebruiker succesvol verwijderd"
   },
   "shares": {
     "shareProject": "Project delen",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Zoek om een weergave te maken",
     "noViewsMatch": "Geen weergaven gevonden",
     "blankSlateFilteredHint": "Probeer een andere zoekopdracht.",
-    "blankSlateClearSearch": "Zoekopdracht wissen"
+    "blankSlateClearSearch": "Zoekopdracht wissen",
+    "view": "Weergeven",
+    "progressSummary": "Voortgang bekijken · {{done}} van {{total}} taken voltooid",
+    "sortTasks": "Taken sorteren",
+    "filters": "filters"
   },
   "search": {
     "placeholder": "Zoek taken, projecten, notities...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Herstellen",
     "adminInstanceNote": "Als beheerder bevat je back-up elk account op deze installatie, met hun gegevens en wachtwoordhashes. Terugzetten op een nieuwe installatie brengt iedereen terug. Bewaar het bestand net zo zorgvuldig als de database.",
     "accountsCount_one": "{{count}} ander account",
-    "accountsCount_other": "{{count}} andere accounts"
+    "accountsCount_other": "{{count}} andere accounts",
+    "delete": "Verwijderen"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Gekoppeld aan een gebruikersaccount",
     "archivedBadge": "gearchiveerd",
     "deletePerson": "Persoon verwijderen",
-    "deleteConfirm": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+    "deleteConfirm": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "contact": "Contact"
   },
   "members": {
     "addTitle": "Lid toevoegen",
@@ -3552,7 +3688,9 @@
     "removed": "Lid verwijderd",
     "updated": "Lid bijgewerkt",
     "invitationSent": "Uitnodiging verstuurd",
-    "failedToRemove": "Lid verwijderen mislukt"
+    "failedToRemove": "Lid verwijderen mislukt",
+    "title": "Leden",
+    "titleOne": "Lid"
   },
   "signInLink": {
     "action": "Inloglink",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Volgorde van doelen opslaan mislukt",
     "noGoalsInArea": "Geen doelen gekoppeld aan dit gebied.",
-    "maintenance": "Onderhoud"
+    "maintenance": "Onderhoud",
+    "noGoalsSelected": "Geen doelen geselecteerd",
+    "noAvailableGoals": "Geen beschikbare doelen",
+    "progressHint": "Balk: voltooide taken en projecten. Lijn: verstreken tijd tussen aanmaak en streefdatum.",
+    "removeFromArea": "Verwijderen uit gebied"
   },
   "templates": {
     "new": "Nieuw sjabloon",
@@ -4674,7 +4816,8 @@
       "projects": "Projecten",
       "tasks": "Taken",
       "notes": "Notities",
-      "habits": "Gewoonten"
+      "habits": "Gewoonten",
+      "goals": "Doelen"
     },
     "help": {
       "title": "Sneltoetsen",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Taken laden…",
     "subtasks": "Subtaken laden..."
+  },
+  "noteCreation": "Nieuwe notitie maken",
+  "notFound": {
+    "todayDescription": "Taken van vandaag bekijken",
+    "projectsDescription": "Blader door je projecten",
+    "inboxDescription": "Bekijk je inboxitems",
+    "notesDescription": "Blader door je notities",
+    "title": "Pagina niet gevonden",
+    "description": "De pagina die je zoekt bestaat niet. Mogelijk is ze verplaatst of verwijderd, of heb je een verkeerde URL ingevoerd.",
+    "goBack": "Terug",
+    "goHome": "Naar vandaag",
+    "quickActions": "Snelle acties"
+  },
+  "colors": {
+    "label": "Kleur",
+    "none": "Geen"
+  },
+  "tag": {
+    "viewTag": "Ga naar tag"
   }
 }

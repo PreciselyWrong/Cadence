@@ -67,7 +67,15 @@
         "tags": "Štítky",
         "goToToday": "Prejsť na dnes",
         "loadMore": "Načítať ďalšie",
-        "showAll": "Zobraziť všetko"
+        "showAll": "Zobraziť všetko",
+        "actions": "Akcie",
+        "creating": "Vytvára sa...",
+        "createCalendar": "Vytvoriť kalendár",
+        "untitled": "Bez názvu",
+        "resolving": "Rieši sa...",
+        "showLess": "Zobraziť menej",
+        "breadcrumb": "Drobčeková navigácia",
+        "undo": "Späť"
     },
     "sidebar": {
         "dashboard": "Prehľad",
@@ -145,7 +153,11 @@
         "search": "Hľadať",
         "admin": "Správa",
         "adminBadge": "Admin",
-        "templates": "Šablóny"
+        "templates": "Šablóny",
+        "today": "Dnes",
+        "projects": "Projekty",
+        "inbox": "Doručená pošta",
+        "notes": "Poznámky"
     },
     "settings": {
         "todayPageSettings": "Nastavenia stránky Dnes",
@@ -283,7 +295,9 @@
             "inProgress": "Prebieha",
             "waiting": "Čaká sa",
             "done": "Hotovo",
-            "dropHere": "Pustite sem"
+            "dropHere": "Pustite sem",
+            "customizeColumns": "Prispôsobiť stĺpce",
+            "columns": "Stĺpce"
         },
         "show": "Zobraziť",
         "open": "Otvorené",
@@ -318,7 +332,17 @@
             "clearDate": "Vymazať dátum",
             "moveToProject": "Presunúť do projektu"
         },
-        "deleteConfirmTitle": "Odstrániť úlohu"
+        "deleteConfirmTitle": "Odstrániť úlohu",
+        "dueSoon": "čoskoro splatné",
+        "progress": "Priebeh",
+        "priority": "Priorita",
+        "todayPlan": "Plán na dnes",
+        "startNow": "Začať teraz",
+        "noDue": "Bez termínu",
+        "overdueBy": "Oneskorené o {{days}} d",
+        "dueInDays": "Termín o {{days}} d",
+        "startedSuccessfully": "Úloha bola úspešne spustená!",
+        "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť."
     },
     "comments": {
         "count": "Komentáre: {{count}}",
@@ -632,7 +656,9 @@
             "setupSuccess": "Kalendár bol úspešne nakonfigurovaný!",
             "setupFailed": "Kalendár sa nepodarilo vytvoriť",
             "serverUrlPlaceholder": "https://caldav.example.com",
-            "calendarPathPlaceholder": "/calendars/user/tasks"
+            "calendarPathPlaceholder": "/calendars/user/tasks",
+            "fillServerDetails": "Najprv vyplňte všetky údaje o pripojení k serveru",
+            "validationError": "Vyplňte všetky povinné polia a otestujte pripojenie"
         },
         "conflictResolver": {
             "title": "Vyriešiť konflikty synchronizácie",
@@ -659,7 +685,8 @@
             "resolveSuccess": "Všetky konflikty boli úspešne vyriešené",
             "resolveError": "Konflikty sa nepodarilo vyriešiť",
             "nextConflict": "Ďalší",
-            "prevConflict": "Predchádzajúci"
+            "prevConflict": "Predchádzajúci",
+            "mixedResolutionError": "Pre každý konflikt zvoľte „Použiť všetky lokálne“ alebo „Použiť všetky vzdialené“. Zmiešaný výber polí zatiaľ nie je podporovaný."
         },
         "security": "Nastavenia zabezpečenia",
         "deleteAccount": "Odstrániť účet",
@@ -1078,7 +1105,8 @@
         "issuesFound_many": "{{count}} problému s produktivitou si vyžaduje pozornosť",
         "issuesFound_other": "{{count}} problémov s produktivitou si vyžaduje pozornosť",
         "reviewItems": "Kliknite a skontrolujte a vylepšite svoj pracovný postup",
-        "suggestion": "Kliknutím na ktorúkoľvek položku vyššie ju otvoríte a môžete ju vylepšiť."
+        "suggestion": "Kliknutím na ktorúkoľvek položku vyššie ju otvoríte a môžete ju vylepšiť.",
+        "andMore": "... a ešte {{count}}"
     },
     "modals": {
         "confirmDelete": "Naozaj chcete odstrániť?",
@@ -1158,7 +1186,9 @@
                 "weekOfMonth": "Týždeň v mesiaci",
                 "recurrenceEndDate": "Dátum ukončenia (voliteľné)",
                 "completionBased": "Opakovať po dokončení",
-                "repeatOn": "Opakovať v"
+                "repeatOn": "Opakovať v",
+                "recurrence": "Opakovať",
+                "attachments": "Prílohy"
             },
             "selectAtLeastOneDay": "Vyberte aspoň jeden deň",
             "projectSearchPlaceholder": "Vyhľadajte alebo vytvorte projekt...",
@@ -1211,7 +1241,10 @@
         "startDate": "Začiatok",
         "goalBucket": "Skupina zoznamu prianí",
         "goalParent": "Kľúčový výsledok cieľa",
-        "noParentGoal": "Žiadny (samostatný)"
+        "noParentGoal": "Žiadny (samostatný)",
+        "name": "Názov",
+        "goalTitle": "Výsledok",
+        "project": "Projekt"
     },
     "auth": {
         "login": "Prihlásiť sa",
@@ -1252,7 +1285,24 @@
         },
         "captcha_required": "Dokončite overenie a skúste to znova.",
         "registration_successful": "Overte svoju e-mailovú adresu",
-        "registration_email_sent": "Overte svoju e-mailovú adresu a aktivujte si účet. Poslali sme vám odkaz, skontrolujte si doručenú poštu."
+        "registration_email_sent": "Overte svoju e-mailovú adresu a aktivujte si účet. Poslali sme vám odkaz, skontrolujte si doručenú poštu.",
+        "back_to_login": "Späť na prihlásenie",
+        "email_verified": "Váš e-mail bol overený! Teraz sa môžete prihlásiť.",
+        "verification_expired": "Platnosť overovacieho odkazu vypršala. Zaregistrujte sa znova.",
+        "already_verified": "Váš e-mail je už overený. Môžete sa prihlásiť.",
+        "verification_failed": "Overenie e-mailu zlyhalo. Skúste to znova.",
+        "email_not_verified": "Pred prihlásením overte svoju e-mailovú adresu.",
+        "no_auth_methods": "Nie sú k dispozícii žiadne spôsoby overenia. Kontaktujte správcu.",
+        "no_account": "Nemáte účet?",
+        "passwords_not_match": "Heslá sa nezhodujú",
+        "registration_failed": "Registrácia zlyhala. Skúste to znova.",
+        "error_occurred": "Vyskytla sa chyba. Skúste to znova.",
+        "password_registration_disabled": "Registrácia heslom je vypnutá",
+        "password_registration_disabled_message": "Registrácia heslom nie je dostupná. Na prihlásenie použite SSO.",
+        "registration_closed_title": "Registrácia uzavretá",
+        "registration_closed_message": "Registrácia nových účtov je momentálne vypnutá. Na získanie prístupu kontaktujte správcu.",
+        "confirm_password": "Potvrdiť heslo",
+        "already_have_account": "Už máte účet?"
     },
     "dropdown": {
         "createNew": "Vytvoriť nové",
@@ -1380,7 +1430,8 @@
         "fewerFiles": "Show fewer",
         "noTasks": "No tasks.",
         "nextAction": "Ďalšia akcia",
-        "nextActionLine": "Ďalšia akcia: {{name}}"
+        "nextActionLine": "Ďalšia akcia: {{name}}",
+        "noCompletedTasks": "Žiadne dokončené úlohy."
     },
     "errors": {
         "required": "Toto pole je povinné",
@@ -1421,7 +1472,12 @@
         "failedToDeleteTag": "Štítok sa nepodarilo odstrániť.",
         "projectStatusUpdateFailed": "Nepodarilo sa aktualizovať stav projektu",
         "failedToSaveTask": "Úlohu sa nepodarilo uložiť.",
-        "permissionDenied": "Prístup bol zamietnutý"
+        "permissionDenied": "Prístup bol zamietnutý",
+        "failedToDeleteArea": "Oblasť sa nepodarilo odstrániť.",
+        "failedToUpdateGoal": "Cieľ sa nepodarilo aktualizovať.",
+        "failedToSaveProject": "Projekt sa nepodarilo uložiť.",
+        "failedToDeleteProject": "Projekt sa nepodarilo odstrániť.",
+        "projectNameTooLong": "Názov projektu môže mať najviac {{max}} znakov"
     },
     "inbox": {
         "title": "Schránka",
@@ -1557,7 +1613,8 @@
         "goalCreated": "Cieľ bol vytvorený!",
         "goalUpdated": "Cieľ bol aktualizovaný!",
         "goalDeleted": "Cieľ bol odstránený!",
-        "tagDeleted": "Štítok bol úspešne odstránený!"
+        "tagDeleted": "Štítok bol úspešne odstránený!",
+        "areaDeleted": "Oblasť bola úspešne odstránená!"
     },
     "note": {
         "title": "Názov",
@@ -1737,7 +1794,10 @@
         "hoursAgo": "pred {{count}} hod.",
         "minutesAgo": "pred {{count}} min.",
         "inMinutes": "o {{count}} min.",
-        "inHours": "o {{count}} hod."
+        "inHours": "o {{count}} hod.",
+        "pastDue": "Po termíne",
+        "editDetails": "Upraviť podrobnosti",
+        "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty."
     },
     "subtasks": {
         "placeholder": "Pridajte podúlohu...",
@@ -1849,7 +1909,10 @@
         "savedAsTemplate": "\"{{name}}\" bol uložený ako šablóna.",
         "saveAsTemplateError": "Projekt sa nepodarilo uložiť ako šablónu.",
         "sortTasks": "Zoradiť úlohy",
-        "upcomingProjects": "Nadchádzajúce projekty"
+        "upcomingProjects": "Nadchádzajúce projekty",
+        "deleteError": "Projekt sa nepodarilo odstrániť",
+        "shared": "Zdieľané",
+        "status": "Stav projektu"
     },
     "projectStatus": {
         "not_started": "Nezačatý",
@@ -1950,7 +2013,8 @@
         "projects": "projekty",
         "goals": "ciele",
         "tasks": "úlohy",
-        "progressSummary": "Pokrok oblasti · dokončené {{done}} z {{total}} úloh"
+        "progressSummary": "Pokrok oblasti · dokončené {{done}} z {{total}} úloh",
+        "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
     },
     "notes": {
         "addNote": "Pridať poznámku",
@@ -2021,7 +2085,12 @@
             "more": "{{count}} more"
         },
         "edit": "Upraviť",
-        "delete": "Odstrániť"
+        "delete": "Odstrániť",
+        "saveBeforeFiles": "Najprv poznámke pridajte názov alebo text, potom pridajte súbory.",
+        "fileUploadError": "Nepodarilo sa nahrať {{name}}",
+        "slashFile": "Obrázok alebo súbor",
+        "slashFileHint": "Nahrajte a vložte sem",
+        "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
     },
     "tags": {
         "addTag": "Pridať štítok",
@@ -2075,7 +2144,8 @@
         "parentTag": "Nadradený štítok",
         "noParent": "Žiadny (najvyššia úroveň)",
         "showChildTags": "Zobraziť podradené štítky",
-        "hideChildTags": "Skryť podradené štítky"
+        "hideChildTags": "Skryť podradené štítky",
+        "progressSummary": "Priebeh štítka · dokončené úlohy: {{done}} z {{total}}"
     },
     "habits": {
         "completeHabit": "Splniť návyk",
@@ -2245,7 +2315,9 @@
         "everyNMonths": "Každých {{count}} mesiacov",
         "completionBased": "Po dokončení",
         "onDay": "V deň",
-        "until": "Do"
+        "until": "Do",
+        "monthDayPlaceholder": "Vyberte deň v mesiaci",
+        "instance": "Opakujúci sa výskyt"
     },
     "weekdays": {
         "sunday": "Ne",
@@ -2403,7 +2475,8 @@
         "view": "View",
         "moreViews": "More views",
         "openDay": "Open day",
-        "noEventsThisDay": "Nothing planned."
+        "noEventsThisDay": "Nothing planned.",
+        "task": "Úloha"
     },
     "pages": {
         "notFound": {
@@ -2610,7 +2683,15 @@
             "emptyAccountsHint": "{{pct}} of users never created anything",
             "tasks": "Tasks",
             "payingShare": "{{pct}} of users",
-            "gated": "gated"
+            "gated": "gated",
+            "subtitleTotals": "{{users}} používateľov · {{tasks}} úloh · {{waitlist}} na čakacej listine · Cadence {{version}} · {{env}}",
+            "visitors": "Návštevníci, 7 dní",
+            "signups": "Registrácie, 7 dní",
+            "activation": "Aktivácia, {{days}} dní",
+            "activationHint": "{{n}} z {{total}} registrácií",
+            "weeklyUsers": "Týždenní používatelia",
+            "weeklyUsersHint": "vytvorili niečo",
+            "selfHostedUsers": "self-hosted · {{n}} nových dnes"
         },
         "waitlist": {
             "title": "Čakacia listina",
@@ -2623,7 +2704,12 @@
             "joined": "Pridaný",
             "empty": "Zatiaľ sa nikto neprihlásil",
             "noMatches": "Vyhľadávaniu nezodpovedajú žiadne adresy",
-            "showing": "{{from}}-{{to}} z {{total}}"
+            "showing": "{{from}}-{{to}} z {{total}}",
+            "removed": "Odstránené z čakacej listiny",
+            "removeFailed": "Záznam sa nepodarilo odstrániť",
+            "ipAddress": "IP adresa",
+            "removeTitle": "Odstrániť adresu",
+            "confirmRemove": "Odstrániť {{email}} z čakacej listiny? Túto akciu nie je možné vrátiť späť."
         },
         "passwordInviteHint": "Nechajte prázdne, ak chcete odoslať e-mail s pozvánkou",
         "invitationSent": "E-mail s pozvánkou bol odoslaný na {{email}}",
@@ -2898,7 +2984,28 @@
             "usage": "Usage",
             "createdSomething": "Created something",
             "ofNewUsers": "{{n}} of {{total}} new users",
-            "trialsAndChurn": "Trials and churn"
+            "trialsAndChurn": "Trials and churn",
+            "visitors": "Návštevníci webu",
+            "visitorsHint": "marketingový web a blog",
+            "views": "Zobrazenia stránok",
+            "blog": "Čitatelia blogu",
+            "signupsRow": "Registrácie",
+            "reach": "Dosah",
+            "createdAnything": "Vytvorili niečo",
+            "firstPlanShort": "3+ úlohy",
+            "threeDaysShort": "registrácie minulého týždňa, 3 dni v prvom týždni",
+            "newUsersGroup": "Registrácie tento týždeň",
+            "appUsers": "Používatelia aplikácie",
+            "appUsersMonthHint": "{{month}} za 30 dní",
+            "creators": "Vytvoril niečo",
+            "creatorsHint": "používateľov, akýkoľvek typ položky",
+            "canceled": "Zrušené",
+            "failed": "Neúspešné platby",
+            "today": "Dnes",
+            "thisWeek": "Tento týždeň",
+            "lastWeek": "Minulý týždeň",
+            "change": "Zmena",
+            "fortnight": "14 dní"
         },
         "visits": {
             "title": "Visits, last 7 days",
@@ -2930,8 +3037,31 @@
             "paid": "Paid",
             "paidHint": "activated and has had a subscription",
             "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-            "paidWithoutActivating": "{{n}} more paid without activating."
-        }
+            "paidWithoutActivating": "{{n}} more paid without activating.",
+            "stepVisitors": "navštevujú",
+            "stepSignups": "registrujú sa",
+            "stepActivated": "aktivujú",
+            "stepPaid": "platia",
+            "pts": "{{diff}} b.",
+            "noRate": "Počet započítaných návštevníkov je nižší ako počet registrácií",
+            "before": "bolo {{n}}"
+        },
+        "insights": {
+            "title": "Čo vyniká"
+        },
+        "aiUsage": {
+            "title": "Využitie AI",
+            "users": "Používatelia",
+            "totalCredits": "Kredity použité tento mesiac (všetci používatelia)",
+            "searchPlaceholder": "Hľadať podľa e-mailu",
+            "user": "Používateľ",
+            "plan": "Plán",
+            "used": "Použité",
+            "limit": "Limit",
+            "remaining": "Zostáva",
+            "empty": "Zatiaľ žiadni používatelia"
+        },
+        "userDeletedSuccessfully": "Používateľ bol úspešne odstránený"
     },
     "billing": {
         "title": "Plán a fakturácia",
@@ -3100,7 +3230,11 @@
         "viewWillSave": "Toto zobrazenie uloží:",
         "saveView": "Uložiť zobrazenie",
         "filtersLabel": "Filtre:",
-        "searchLabel": "Hľadanie:"
+        "searchLabel": "Hľadanie:",
+        "view": "Zobraziť",
+        "progressSummary": "Priebeh zobrazenia · dokončené úlohy: {{done}} z {{total}}",
+        "sortTasks": "Zoradiť úlohy",
+        "filters": "filtre"
     },
     "search": {
         "placeholder": "Hľadať úlohy, projekty, poznámky...",
@@ -3216,7 +3350,8 @@
         "accountsCount_one": "{{count}} ďalší účet",
         "accountsCount_few": "{{count}} ďalšie účty",
         "accountsCount_many": "{{count}} ďalších účtov",
-        "accountsCount_other": "{{count}} ďalších účtov"
+        "accountsCount_other": "{{count}} ďalších účtov",
+        "delete": "Odstrániť"
     },
     "notifications": {
         "table": {
@@ -3541,7 +3676,8 @@
         "linkedAccount": "Prepojené s používateľským účtom",
         "archivedBadge": "archivované",
         "deletePerson": "Odstrániť osobu",
-        "deleteConfirm": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť."
+        "deleteConfirm": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť.",
+        "contact": "Kontakt"
     },
     "members": {
         "addTitle": "Pridať člena",
@@ -3570,7 +3706,9 @@
         "removed": "Member removed",
         "updated": "Member updated",
         "invitationSent": "Invitation sent",
-        "failedToRemove": "Failed to remove member"
+        "failedToRemove": "Failed to remove member",
+        "title": "Členovia",
+        "titleOne": "Člen"
     },
     "signInLink": {
         "action": "Prihlasovací odkaz",
@@ -4014,7 +4152,11 @@
         },
         "reorderError": "Poradie cieľov sa nepodarilo uložiť",
         "noGoalsInArea": "S touto oblasťou nie je prepojený žiadny cieľ.",
-        "maintenance": "Údržba"
+        "maintenance": "Údržba",
+        "noGoalsSelected": "Nie sú vybraté žiadne ciele",
+        "noAvailableGoals": "Nie sú dostupné žiadne ciele",
+        "progressHint": "Stĺpec: dokončené úlohy a projekty. Čiara: čas medzi vytvorením a cieľovým dátumom.",
+        "removeFromArea": "Odstrániť z oblasti"
     },
     "templates": {
         "new": "Nová šablóna",
@@ -4669,7 +4811,8 @@
             "projects": "Projekty",
             "tasks": "Úlohy",
             "notes": "Poznámky",
-            "habits": "Návyky"
+            "habits": "Návyky",
+            "goals": "Ciele"
         },
         "help": {
             "title": "Klávesové skratky",
@@ -5076,5 +5219,24 @@
     "loading": {
         "tasks": "Načítavajú sa úlohy…",
         "subtasks": "Načítavajú sa podúlohy..."
+    },
+    "noteCreation": "Vytvoriť novú poznámku",
+    "notFound": {
+        "todayDescription": "Zobraziť dnešné úlohy",
+        "projectsDescription": "Prechádzať projekty",
+        "inboxDescription": "Skontrolovať položky v doručenej pošte",
+        "notesDescription": "Prechádzať poznámky",
+        "title": "Stránka sa nenašla",
+        "description": "Stránka, ktorú hľadáte, neexistuje. Mohla byť presunutá alebo odstránená, alebo ste zadali nesprávnu adresu.",
+        "goBack": "Späť",
+        "goHome": "Prejsť na dnes",
+        "quickActions": "Rýchle akcie"
+    },
+    "colors": {
+        "label": "Farba",
+        "none": "Žiadna"
+    },
+    "tag": {
+        "viewTag": "Prejsť na štítok"
     }
 }

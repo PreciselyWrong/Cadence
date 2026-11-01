@@ -65,7 +65,15 @@
     "tags": "Thẻ",
     "goToToday": "Đi tới Hôm nay",
     "loadMore": "Tải thêm",
-    "showAll": "Hiện tất cả"
+    "showAll": "Hiện tất cả",
+    "actions": "Thao tác",
+    "creating": "Đang tạo...",
+    "createCalendar": "Tạo lịch",
+    "untitled": "Không có tiêu đề",
+    "resolving": "Đang xử lý...",
+    "showLess": "Thu gọn",
+    "breadcrumb": "Đường dẫn",
+    "undo": "Hoàn tác"
   },
   "sidebar": {
     "dashboard": "Bảng điều khiển",
@@ -144,7 +152,11 @@
     "search": "Tìm kiếm",
     "admin": "Quản trị viên",
     "adminBadge": "Quản trị viên",
-    "templates": "Mẫu"
+    "templates": "Mẫu",
+    "today": "Hôm nay",
+    "projects": "Dự án",
+    "inbox": "Hộp thư đến",
+    "notes": "Ghi chú"
   },
   "settings": {
     "todayPageSettings": "Cài đặt Trang Hôm nay",
@@ -294,7 +306,9 @@
       "inProgress": "Đang tiến hành",
       "waiting": "Đang chờ",
       "done": "Đã hoàn thành",
-      "dropHere": "Thả ở đây"
+      "dropHere": "Thả ở đây",
+      "customizeColumns": "Tùy chỉnh cột",
+      "columns": "Cột"
     },
     "chaseUp": "Theo dõi",
     "habit": "Thói quen",
@@ -317,7 +331,17 @@
       "moveToProject": "Chuyển vào dự án"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Xóa việc"
+    "deleteConfirmTitle": "Xóa việc",
+    "dueSoon": "sắp đến hạn",
+    "progress": "Tiến độ",
+    "priority": "Ưu tiên",
+    "todayPlan": "Kế hoạch hôm nay",
+    "startNow": "Bắt đầu ngay",
+    "noDue": "Không có hạn",
+    "overdueBy": "Quá hạn {{days}} ngày",
+    "dueInDays": "Đến hạn sau {{days}} ngày",
+    "startedSuccessfully": "Đã bắt đầu công việc!",
+    "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác."
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -648,7 +672,9 @@
       "setupSuccess": "Lịch đã được cấu hình thành công!",
       "setupFailed": "Tạo lịch không thành công",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Vui lòng điền đầy đủ thông tin kết nối máy chủ trước",
+      "validationError": "Vui lòng điền tất cả trường bắt buộc và kiểm tra kết nối"
     },
     "conflictResolver": {
       "title": "Giải quyết Xung đột Đồng bộ",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Tất cả xung đột đã được giải quyết thành công",
       "resolveError": "Giải quyết xung đột thất bại",
       "nextConflict": "Tiếp theo",
-      "prevConflict": "Trước đó"
+      "prevConflict": "Trước đó",
+      "mixedResolutionError": "Với mỗi xung đột, hãy chọn \"Dùng tất cả cục bộ\" hoặc \"Dùng tất cả từ xa\". Hiện chưa hỗ trợ chọn lẫn lộn các trường."
     },
     "editCalendar": {
       "title": "Chỉnh sửa Lịch",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Hiện không có công việc mơ hồ, việc bị bỏ dở hay dự án bị kẹt. Đây là lúc tốt để lên kế hoạch cho bước tiếp theo.",
     "goToTasks": "Đến công việc",
     "goToProjects": "Đến dự án",
-    "planDay": "Lên kế hoạch cho ngày"
+    "planDay": "Lên kế hoạch cho ngày",
+    "andMore": "... và {{count}} mục khác"
   },
   "modals": {
     "confirmDelete": "Bạn có chắc chắn muốn xóa không?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Tuần trong tháng",
         "recurrenceEndDate": "Ngày kết thúc (tùy chọn)",
         "completionBased": "Lặp lại sau khi hoàn thành",
-        "repeatOn": "Lặp lại vào"
+        "repeatOn": "Lặp lại vào",
+        "recurrence": "Lặp lại",
+        "attachments": "Tệp đính kèm"
       },
       "projectSearchPlaceholder": "Tìm kiếm hoặc tạo một dự án...",
       "noMatchingProjects": "Không có dự án nào phù hợp",
@@ -1185,7 +1215,10 @@
     "startDate": "Bắt đầu",
     "goalBucket": "Nhóm danh sách mong muốn",
     "goalParent": "Kết quả chính của",
-    "noParentGoal": "Không có (độc lập)"
+    "noParentGoal": "Không có (độc lập)",
+    "name": "Tên",
+    "goalTitle": "Kết quả",
+    "project": "Dự án"
   },
   "auth": {
     "login": "Đăng Nhập",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Vui lòng hoàn tất xác minh và thử lại.",
     "registration_successful": "Xác minh địa chỉ email của bạn",
-    "registration_email_sent": "Xác minh địa chỉ email của bạn để kích hoạt tài khoản. Chúng tôi đã gửi một liên kết, hãy kiểm tra hộp thư."
+    "registration_email_sent": "Xác minh địa chỉ email của bạn để kích hoạt tài khoản. Chúng tôi đã gửi một liên kết, hãy kiểm tra hộp thư.",
+    "back_to_login": "Quay lại đăng nhập",
+    "email_verified": "Email của bạn đã được xác minh! Giờ bạn có thể đăng nhập.",
+    "verification_expired": "Liên kết xác minh đã hết hạn. Vui lòng đăng ký lại.",
+    "already_verified": "Email của bạn đã được xác minh. Bạn có thể đăng nhập.",
+    "verification_failed": "Xác minh email thất bại. Vui lòng thử lại.",
+    "email_not_verified": "Vui lòng xác minh địa chỉ email trước khi đăng nhập.",
+    "no_auth_methods": "Không có phương thức xác thực nào khả dụng. Vui lòng liên hệ quản trị viên.",
+    "no_account": "Chưa có tài khoản?",
+    "passwords_not_match": "Mật khẩu không khớp",
+    "registration_failed": "Đăng ký thất bại. Vui lòng thử lại.",
+    "error_occurred": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "password_registration_disabled": "Đã tắt đăng ký bằng mật khẩu",
+    "password_registration_disabled_message": "Không thể đăng ký bằng mật khẩu. Vui lòng dùng SSO để đăng nhập.",
+    "registration_closed_title": "Đã đóng đăng ký",
+    "registration_closed_message": "Hiện đang tắt đăng ký tài khoản mới. Liên hệ quản trị viên để được cấp quyền truy cập.",
+    "confirm_password": "Xác nhận mật khẩu",
+    "already_have_account": "Đã có tài khoản?"
   },
   "dropdown": {
     "createNew": "Tạo mới",
@@ -1345,7 +1395,8 @@
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
     "noTasks": "No tasks.",
     "nextAction": "Hành động tiếp theo",
-    "nextActionLine": "Hành động tiếp theo: {{name}}"
+    "nextActionLine": "Hành động tiếp theo: {{name}}",
+    "noCompletedTasks": "Chưa có công việc hoàn thành."
   },
   "errors": {
     "required": "Trường này là bắt buộc",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Không thể xóa thẻ.",
     "projectStatusUpdateFailed": "Không thể cập nhật trạng thái dự án",
     "failedToSaveTask": "Không thể lưu công việc.",
-    "permissionDenied": "Không có quyền truy cập"
+    "permissionDenied": "Không có quyền truy cập",
+    "failedToDeleteArea": "Không thể xóa khu vực.",
+    "failedToUpdateGoal": "Không thể cập nhật mục tiêu.",
+    "failedToSaveProject": "Không thể lưu dự án.",
+    "failedToDeleteProject": "Không thể xóa dự án.",
+    "projectNameTooLong": "Tên dự án phải có tối đa {{max}} ký tự"
   },
   "inbox": {
     "title": "Hộp thư đến",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Đã tạo mục tiêu!",
     "goalUpdated": "Đã cập nhật mục tiêu!",
     "goalDeleted": "Đã xóa mục tiêu!",
-    "tagDeleted": "Đã xóa thẻ!"
+    "tagDeleted": "Đã xóa thẻ!",
+    "areaDeleted": "Đã xóa khu vực thành công!"
   },
   "note": {
     "title": "Tiêu đề",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} giờ trước",
     "minutesAgo": "{{count}} phút trước",
     "inMinutes": "sau {{count}} phút",
-    "inHours": "sau {{count}} giờ"
+    "inHours": "sau {{count}} giờ",
+    "pastDue": "Quá hạn",
+    "editDetails": "Sửa chi tiết",
+    "noUpcomingOccurrences": "Không có lần lặp lại sắp tới."
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "Đã lưu \"{{name}}\" làm mẫu.",
     "saveAsTemplateError": "Không thể lưu dự án làm mẫu.",
     "sortTasks": "Sắp xếp việc",
-    "upcomingProjects": "Dự án sắp tới"
+    "upcomingProjects": "Dự án sắp tới",
+    "deleteError": "Không thể xóa dự án",
+    "shared": "Đã chia sẻ",
+    "status": "Trạng thái dự án"
   },
   "projectItem": {
     "edit": "Chỉnh sửa",
@@ -1908,7 +1971,8 @@
     "projects": "dự án",
     "goals": "mục tiêu",
     "tasks": "việc",
-    "progressSummary": "Tiến độ lĩnh vực · {{done}} / {{total}} việc đã xong"
+    "progressSummary": "Tiến độ lĩnh vực · {{done}} / {{total}} việc đã xong",
+    "toggleDropdownMenu": "Bật/tắt menu thả xuống"
   },
   "notes": {
     "loading": "Đang tải ghi chú...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Sửa",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "saveBeforeFiles": "Hãy đặt tiêu đề hoặc nhập nội dung cho ghi chú trước, rồi thêm tệp.",
+    "fileUploadError": "Không thể tải lên {{name}}",
+    "slashFile": "Hình ảnh hoặc tệp",
+    "slashFileHint": "Tải lên và đặt tại đây",
+    "toggleDropdownMenu": "Bật/tắt menu thả xuống"
   },
   "tags": {
     "loading": "Đang tải thẻ...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Thẻ cha",
     "noParent": "Không có (cấp cao nhất)",
     "showChildTags": "Hiện thẻ con",
-    "hideChildTags": "Ẩn thẻ con"
+    "hideChildTags": "Ẩn thẻ con",
+    "progressSummary": "Tiến độ thẻ · đã hoàn thành {{done}} trên {{total}} công việc"
   },
   "recurrence": {
     "none": "Không có",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Mỗi {{count}} tháng",
     "completionBased": "Sau khi hoàn thành",
     "onDay": "Vào ngày",
-    "until": "Đến"
+    "until": "Đến",
+    "monthDayPlaceholder": "Chọn ngày trong tháng",
+    "instance": "Lần lặp lại"
   },
   "weekdays": {
     "sunday": "CN",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Công việc"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} người dùng · {{tasks}} công việc · {{waitlist}} trong danh sách chờ · Cadence {{version}} · {{env}}",
+      "visitors": "Lượt truy cập, 7 ngày",
+      "signups": "Đăng ký, 7 ngày",
+      "activation": "Kích hoạt, {{days}} ngày",
+      "activationHint": "{{n}} trên {{total}} lượt đăng ký",
+      "weeklyUsers": "Người dùng hằng tuần",
+      "weeklyUsersHint": "đã tạo nội dung",
+      "selfHostedUsers": "tự lưu trữ · {{n}} người mới hôm nay"
     },
     "waitlist": {
       "title": "Danh sách chờ",
@@ -2440,7 +2521,12 @@
       "joined": "Đã tham gia",
       "empty": "Chưa có ai đăng ký",
       "noMatches": "Không có địa chỉ nào khớp với tìm kiếm đó",
-      "showing": "{{from}}-{{to}} của {{total}}"
+      "showing": "{{from}}-{{to}} của {{total}}",
+      "removed": "Đã xóa khỏi danh sách chờ",
+      "removeFailed": "Không thể xóa mục",
+      "ipAddress": "Địa chỉ IP",
+      "removeTitle": "Xóa địa chỉ",
+      "confirmRemove": "Xóa {{email}} khỏi danh sách chờ? Hành động này không thể hoàn tác."
     },
     "passwordInviteHint": "Để trống để gửi email mời",
     "invitationSent": "Email mời đã được gửi đến {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Lượt truy cập trang web",
+      "visitorsHint": "trang giới thiệu và blog",
+      "views": "Lượt xem trang",
+      "blog": "Người đọc blog",
+      "signupsRow": "Đăng ký",
+      "reach": "Phạm vi tiếp cận",
+      "createdAnything": "Đã tạo nội dung",
+      "firstPlanShort": "3+ công việc",
+      "threeDaysShort": "đăng ký tuần trước, 3 ngày trong tuần đầu",
+      "newUsersGroup": "Đăng ký tuần này",
+      "appUsers": "Người dùng ứng dụng",
+      "appUsersMonthHint": "{{month}} trong 30 ngày",
+      "creators": "Đã tạo nội dung",
+      "creatorsHint": "người dùng, mọi loại mục",
+      "canceled": "Đã hủy",
+      "failed": "Thanh toán thất bại",
+      "today": "Hôm nay",
+      "thisWeek": "Tuần này",
+      "lastWeek": "Tuần trước",
+      "change": "Thay đổi",
+      "fortnight": "14 ngày"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "truy cập",
+      "stepSignups": "đăng ký",
+      "stepActivated": "kích hoạt",
+      "stepPaid": "thanh toán",
+      "pts": "{{diff}} điểm",
+      "noRate": "Số lượt truy cập được tính ít hơn số lượt đăng ký",
+      "before": "trước đó là {{n}}"
+    },
+    "insights": {
+      "title": "Điểm nổi bật"
+    },
+    "aiUsage": {
+      "title": "Sử dụng AI",
+      "users": "Người dùng",
+      "totalCredits": "Số tín dụng đã dùng trong tháng này (tất cả người dùng)",
+      "searchPlaceholder": "Tìm theo email",
+      "user": "Người dùng",
+      "plan": "Gói",
+      "used": "Đã dùng",
+      "limit": "Giới hạn",
+      "remaining": "Còn lại",
+      "empty": "Chưa có người dùng"
+    },
+    "userDeletedSuccessfully": "Đã xóa người dùng thành công"
   },
   "shares": {
     "shareProject": "Chia sẻ dự án",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Tìm kiếm để tạo chế độ xem",
     "noViewsMatch": "Không tìm thấy chế độ xem",
     "blankSlateFilteredHint": "Hãy thử tìm kiếm khác.",
-    "blankSlateClearSearch": "Xóa tìm kiếm"
+    "blankSlateClearSearch": "Xóa tìm kiếm",
+    "view": "Xem",
+    "progressSummary": "Tiến độ xem · đã hoàn thành {{done}} trên {{total}} công việc",
+    "sortTasks": "Sắp xếp công việc",
+    "filters": "bộ lọc"
   },
   "search": {
     "placeholder": "Tìm kiếm nhiệm vụ, dự án, ghi chú...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Khôi phục",
     "adminInstanceNote": "Là quản trị viên, bản sao lưu của bạn chứa mọi tài khoản trên phiên bản này, kèm dữ liệu và mã băm mật khẩu. Khôi phục nó trên bản cài mới sẽ đưa mọi người trở lại. Hãy giữ tệp này cẩn thận như cơ sở dữ liệu.",
     "accountsCount_one": "{{count}} tài khoản khác",
-    "accountsCount_other": "{{count}} tài khoản khác"
+    "accountsCount_other": "{{count}} tài khoản khác",
+    "delete": "Xóa"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Liên kết với tài khoản người dùng",
     "archivedBadge": "đã lưu trữ",
     "deletePerson": "Xóa người",
-    "deleteConfirm": "Bạn có chắc muốn xóa \"{{name}}\" không? Không thể hoàn tác."
+    "deleteConfirm": "Bạn có chắc muốn xóa \"{{name}}\" không? Không thể hoàn tác.",
+    "contact": "Liên hệ"
   },
   "members": {
     "addTitle": "Thêm thành viên",
@@ -3552,7 +3688,9 @@
     "removed": "Đã xóa thành viên",
     "updated": "Đã cập nhật thành viên",
     "invitationSent": "Đã gửi lời mời",
-    "failedToRemove": "Không xóa được thành viên"
+    "failedToRemove": "Không xóa được thành viên",
+    "title": "Thành viên",
+    "titleOne": "Thành viên"
   },
   "signInLink": {
     "action": "Liên kết đăng nhập",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Không thể lưu thứ tự mục tiêu",
     "noGoalsInArea": "Không có mục tiêu nào liên kết với lĩnh vực này.",
-    "maintenance": "Duy trì"
+    "maintenance": "Duy trì",
+    "noGoalsSelected": "Chưa chọn mục tiêu nào",
+    "noAvailableGoals": "Không có mục tiêu khả dụng",
+    "progressHint": "Thanh: công việc và dự án đã hoàn thành. Đường: thời gian từ lúc tạo đến ngày đích.",
+    "removeFromArea": "Xóa khỏi khu vực"
   },
   "templates": {
     "new": "Mẫu mới",
@@ -4674,7 +4816,8 @@
       "projects": "Dự án",
       "tasks": "Công việc",
       "notes": "Ghi chú",
-      "habits": "Thói quen"
+      "habits": "Thói quen",
+      "goals": "Mục tiêu"
     },
     "help": {
       "title": "Phím tắt",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Đang tải việc…",
     "subtasks": "Đang tải việc con..."
+  },
+  "noteCreation": "Tạo ghi chú mới",
+  "notFound": {
+    "todayDescription": "Xem công việc hôm nay",
+    "projectsDescription": "Duyệt các dự án của bạn",
+    "inboxDescription": "Kiểm tra các mục trong hộp thư đến",
+    "notesDescription": "Duyệt các ghi chú của bạn",
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn tìm không tồn tại. Có thể trang đã được chuyển, xóa hoặc bạn đã nhập sai URL.",
+    "goBack": "Quay lại",
+    "goHome": "Đến Hôm nay",
+    "quickActions": "Thao tác nhanh"
+  },
+  "colors": {
+    "label": "Màu sắc",
+    "none": "Không có"
+  },
+  "tag": {
+    "viewTag": "Đến thẻ"
   }
 }

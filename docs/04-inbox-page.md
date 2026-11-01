@@ -857,6 +857,12 @@ While editing, you see action buttons:
 
 ---
 
+## Retried captures (idempotency)
+
+`POST /api/inbox` accepts an `Idempotency-Key` header (1 to 255 visible ASCII characters), like the Cadence habit `POST` routes. The first answer is kept for 24 hours per user; the same key with the same body gets that answer again (`201`, marked `Idempotent-Replayed: true`) and no second item is created, so an offline queue or a flaky network can retry a capture safely. The same key with another body gets `422` (`IDEMPOTENCY_KEY_REUSED`); a repeat while the first request is still running gets `409`. Without the header every call creates an item, as before.
+
+---
+
 ## Analyze API
 
 `POST /api/inbox/analyze-text` parses text without saving anything. The composer calls it as you type; Telegram, MCP or API clients can call it too.

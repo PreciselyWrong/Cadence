@@ -71,6 +71,47 @@ describe('AppriseCard', () => {
         );
     });
 
+    it('can sit inside the settings form without nesting a form', async () => {
+        mockGet.mockResolvedValue({ configured: false, host: null, tags: '' });
+        mockSave.mockResolvedValue({
+            configured: true,
+            host: '192.168.1.10:8000',
+            tags: '',
+        });
+        const consoleError = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => undefined);
+        const onOuterSubmit = jest.fn((e: React.FormEvent) =>
+            e.preventDefault()
+        );
+
+        const { container } = render(
+            <form onSubmit={onOuterSubmit}>
+                <AppriseCard onStateChange={jest.fn()} />
+            </form>
+        );
+        const server = await screen.findByRole('textbox', {
+            name: /apprise server address/i,
+        });
+
+        expect(container.querySelectorAll('form')).toHaveLength(1);
+        expect(consoleError).not.toHaveBeenCalled();
+
+        fireEvent.change(server, {
+            target: { value: 'http://192.168.1.10:8000' },
+        });
+        fireEvent.change(screen.getByLabelText(/config key/i), {
+            target: { value: 'phone' },
+        });
+        fireEvent.keyDown(screen.getByLabelText(/config key/i), {
+            key: 'Enter',
+        });
+
+        await waitFor(() => expect(mockSave).toHaveBeenCalledTimes(1));
+        expect(onOuterSubmit).not.toHaveBeenCalled();
+        consoleError.mockRestore();
+    });
+
     it('removes a saved server', async () => {
         mockGet.mockResolvedValue({
             configured: true,

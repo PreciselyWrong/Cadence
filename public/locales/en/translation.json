@@ -65,7 +65,15 @@
     "tags": "Tags",
     "goToToday": "Go to Today",
     "loadMore": "Load More",
-    "showAll": "Show All"
+    "showAll": "Show All",
+    "actions": "Actions",
+    "creating": "Creating...",
+    "createCalendar": "Create Calendar",
+    "untitled": "Untitled",
+    "resolving": "Resolving...",
+    "showLess": "Show less",
+    "breadcrumb": "Breadcrumb",
+    "undo": "Undo"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -143,7 +151,11 @@
     "search": "Search",
     "admin": "Admin",
     "adminBadge": "Admin",
-    "templates": "Templates"
+    "templates": "Templates",
+    "today": "Today",
+    "projects": "Projects",
+    "inbox": "Inbox",
+    "notes": "Notes"
   },
   "settings": {
     "todayPageSettings": "Today Page Settings",
@@ -281,7 +293,9 @@
       "inProgress": "In Progress",
       "waiting": "Waiting",
       "done": "Done",
-      "dropHere": "Drop here"
+      "dropHere": "Drop here",
+      "customizeColumns": "Customize columns",
+      "columns": "Columns"
     },
     "show": "Show",
     "open": "Open",
@@ -316,7 +330,17 @@
       "clearDate": "Clear date",
       "moveToProject": "Move to project"
     },
-    "deleteConfirmTitle": "Delete Task"
+    "deleteConfirmTitle": "Delete Task",
+    "dueSoon": "due soon",
+    "progress": "Progress",
+    "priority": "Priority",
+    "todayPlan": "Today plan",
+    "startNow": "Start now",
+    "noDue": "No due date",
+    "overdueBy": "Overdue by {{days}}d",
+    "dueInDays": "Due in {{days}}d",
+    "startedSuccessfully": "Task started successfully!",
+    "deleteConfirmMessage": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
   },
   "comments": {
     "count": "{{count}} comments",
@@ -630,7 +654,9 @@
       "setupSuccess": "Calendar configured successfully!",
       "setupFailed": "Failed to create calendar",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Please fill in all server connection details first",
+      "validationError": "Please fill in all required fields and test the connection"
     },
     "conflictResolver": {
       "title": "Resolve Sync Conflicts",
@@ -657,7 +683,8 @@
       "resolveSuccess": "All conflicts resolved successfully",
       "resolveError": "Failed to resolve conflicts",
       "nextConflict": "Next",
-      "prevConflict": "Previous"
+      "prevConflict": "Previous",
+      "mixedResolutionError": "Please choose \"Use all local\" or \"Use all remote\" for each conflict. Mixed field selections are not yet supported."
     },
     "security": "Security Settings",
     "deleteAccount": "Delete account",
@@ -1070,7 +1097,8 @@
     "issuesFound_one": "1 productivity issue needs attention",
     "issuesFound_other": "{{count}} productivity issues need attention",
     "reviewItems": "Click to review and improve your workflow",
-    "suggestion": "Click on any item above to open it and make improvements."
+    "suggestion": "Click on any item above to open it and make improvements.",
+    "andMore": "... and {{count}} more"
   },
   "modals": {
     "confirmDelete": "Are you sure you want to delete?",
@@ -1150,7 +1178,9 @@
         "weekOfMonth": "Week of month",
         "recurrenceEndDate": "End date (optional)",
         "completionBased": "Repeat after completion",
-        "repeatOn": "Repeat on"
+        "repeatOn": "Repeat on",
+        "recurrence": "Repeat",
+        "attachments": "Attachments"
       },
       "selectAtLeastOneDay": "Please select at least one day",
       "projectSearchPlaceholder": "Search or create a project...",
@@ -1203,7 +1233,10 @@
     "startDate": "Start",
     "goalBucket": "Bucket list group",
     "goalParent": "Key result of",
-    "noParentGoal": "None (stands alone)"
+    "noParentGoal": "None (stands alone)",
+    "name": "Name",
+    "goalTitle": "Outcome",
+    "project": "Project"
   },
   "auth": {
     "login": "Login",
@@ -1244,7 +1277,24 @@
     },
     "captcha_required": "Please complete the verification and try again.",
     "registration_successful": "Verify your email address",
-    "registration_email_sent": "Verify your email address to activate your account. We have sent you a link, check your inbox."
+    "registration_email_sent": "Verify your email address to activate your account. We have sent you a link, check your inbox.",
+    "back_to_login": "Back to Login",
+    "email_verified": "Your email has been verified! You can now log in.",
+    "verification_expired": "Verification link has expired. Please register again.",
+    "already_verified": "Your email is already verified. You can log in.",
+    "verification_failed": "Email verification failed. Please try again.",
+    "email_not_verified": "Please verify your email address before logging in.",
+    "no_auth_methods": "No authentication methods available. Please contact your administrator.",
+    "no_account": "Don't have an account?",
+    "passwords_not_match": "Passwords do not match",
+    "registration_failed": "Registration failed. Please try again.",
+    "error_occurred": "An error occurred. Please try again.",
+    "password_registration_disabled": "Password Registration Disabled",
+    "password_registration_disabled_message": "Password-based registration is not available. Please use SSO to sign in.",
+    "registration_closed_title": "Registration Closed",
+    "registration_closed_message": "New account registration is currently disabled. Contact your administrator for access.",
+    "confirm_password": "Confirm Password",
+    "already_have_account": "Already have an account?"
   },
   "dropdown": {
     "createNew": "Create New",
@@ -1370,7 +1420,8 @@
     "startsOn": "Starts {{date}}",
     "noTasks": "No tasks.",
     "nextAction": "Next action",
-    "nextActionLine": "Next action: {{name}}"
+    "nextActionLine": "Next action: {{name}}",
+    "noCompletedTasks": "No completed tasks."
   },
   "errors": {
     "required": "This field is required",
@@ -1411,7 +1462,12 @@
     "failedToDeleteTag": "Failed to delete tag.",
     "projectStatusUpdateFailed": "Failed to update project status",
     "failedToSaveTask": "Failed to save task.",
-    "permissionDenied": "Permission denied"
+    "permissionDenied": "Permission denied",
+    "failedToDeleteArea": "Failed to delete area.",
+    "failedToUpdateGoal": "Failed to update goal.",
+    "failedToSaveProject": "Failed to save project.",
+    "failedToDeleteProject": "Failed to delete project.",
+    "projectNameTooLong": "Project name must be {{max}} characters or less"
   },
   "inbox": {
     "title": "Inbox",
@@ -1547,7 +1603,8 @@
     "goalCreated": "Goal created!",
     "goalUpdated": "Goal updated!",
     "goalDeleted": "Goal deleted!",
-    "tagDeleted": "Tag deleted successfully!"
+    "tagDeleted": "Tag deleted successfully!",
+    "areaDeleted": "Area deleted successfully!"
   },
   "note": {
     "title": "Title",
@@ -1727,7 +1784,10 @@
     "hoursAgo": "{{count}} hours ago",
     "minutesAgo": "{{count}} minutes ago",
     "inMinutes": "in {{count}} minutes",
-    "inHours": "in {{count}} hours"
+    "inHours": "in {{count}} hours",
+    "pastDue": "Past Due",
+    "editDetails": "Edit details",
+    "noUpcomingOccurrences": "No upcoming occurrences."
   },
   "subtasks": {
     "placeholder": "Add a subtask...",
@@ -1837,7 +1897,10 @@
     "savedAsTemplate": "\"{{name}}\" saved as template.",
     "saveAsTemplateError": "Failed to save project as template.",
     "sortTasks": "Sort tasks",
-    "upcomingProjects": "Upcoming Projects"
+    "upcomingProjects": "Upcoming Projects",
+    "deleteError": "Failed to delete project",
+    "shared": "Shared",
+    "status": "Project Status"
   },
   "projectStatus": {
     "not_started": "Not Started",
@@ -1938,7 +2001,8 @@
     "projects": "projects",
     "goals": "goals",
     "tasks": "tasks",
-    "progressSummary": "Area progress · {{done}} of {{total}} tasks done"
+    "progressSummary": "Area progress · {{done}} of {{total}} tasks done",
+    "toggleDropdownMenu": "Toggle dropdown menu"
   },
   "notes": {
     "addNote": "Add Note",
@@ -2009,7 +2073,12 @@
       "more": "{{count}} more"
     },
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "saveBeforeFiles": "Give the note a title or some text first, then add files.",
+    "fileUploadError": "Could not upload {{name}}",
+    "slashFile": "Image or File",
+    "slashFileHint": "Upload and place it here",
+    "toggleDropdownMenu": "Toggle dropdown menu"
   },
   "tags": {
     "addTag": "Add Tag",
@@ -2063,7 +2132,8 @@
     "parentTag": "Parent tag",
     "noParent": "None (top level)",
     "showChildTags": "Show child tags",
-    "hideChildTags": "Hide child tags"
+    "hideChildTags": "Hide child tags",
+    "progressSummary": "Tag progress · {{done}} of {{total}} tasks done"
   },
   "habits": {
     "completeHabit": "Complete habit",
@@ -2233,7 +2303,9 @@
     "everyNMonths": "Every {{count}} months",
     "completionBased": "After completion",
     "onDay": "On day",
-    "until": "Until"
+    "until": "Until",
+    "monthDayPlaceholder": "Select day of month",
+    "instance": "Recurring instance"
   },
   "weekdays": {
     "sunday": "Sun",
@@ -2387,7 +2459,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Task"
   },
   "pages": {
     "notFound": {
@@ -2597,7 +2670,15 @@
       "waitlistAll": "See all",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} users · {{tasks}} tasks · {{waitlist}} on the waitlist · Cadence {{version}} · {{env}}",
+      "visitors": "Visitors, 7 days",
+      "signups": "Signups, 7 days",
+      "activation": "Activation, {{days}} days",
+      "activationHint": "{{n}} of {{total}} signups",
+      "weeklyUsers": "Weekly users",
+      "weeklyUsersHint": "created something",
+      "selfHostedUsers": "self-hosted · {{n}} new today"
     },
     "waitlist": {
       "title": "Waitlist",
@@ -2610,7 +2691,12 @@
       "joined": "Joined",
       "empty": "Nobody has signed up yet",
       "noMatches": "No addresses match that search",
-      "showing": "{{from}}-{{to}} of {{total}}"
+      "showing": "{{from}}-{{to}} of {{total}}",
+      "removed": "Removed from the waitlist",
+      "removeFailed": "Failed to remove entry",
+      "ipAddress": "IP Address",
+      "removeTitle": "Remove Address",
+      "confirmRemove": "Remove {{email}} from the waitlist? This cannot be undone."
     },
     "passwordInviteHint": "Leave blank to send an invitation email",
     "invitationSent": "Invitation email sent to {{email}}",
@@ -2874,7 +2960,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Site visitors",
+      "visitorsHint": "marketing site and blog",
+      "views": "Page views",
+      "blog": "Blog readers",
+      "signupsRow": "Signups",
+      "reach": "Reach",
+      "createdAnything": "Created anything",
+      "firstPlanShort": "3+ tasks",
+      "threeDaysShort": "last week's signups, 3 days in their first week",
+      "newUsersGroup": "This week's signups",
+      "appUsers": "App users",
+      "appUsersMonthHint": "{{month}} in 30 days",
+      "creators": "Created something",
+      "creatorsHint": "users, any kind of item",
+      "canceled": "Canceled",
+      "failed": "Failed payments",
+      "today": "Today",
+      "thisWeek": "This week",
+      "lastWeek": "Last week",
+      "change": "Change",
+      "fortnight": "14 days"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2906,14 +3013,37 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "visiting",
+      "stepSignups": "signing up",
+      "stepActivated": "activating",
+      "stepPaid": "paying",
+      "pts": "{{diff}} pts",
+      "noRate": "Fewer counted visitors than signups",
+      "before": "was {{n}}"
     },
     "mfaOn": "Two-factor sign-in on",
     "mfaReset": "Reset two-factor sign-in",
     "mfaResetConfirm": "Turn off two-factor sign-in for {{email}}? Only do this when you are sure it is them. They will be signed out everywhere and emailed about it.",
     "mfaResetAction": "Reset",
     "mfaResetDone": "Two-factor sign-in was reset. They can sign in with their password.",
-    "mfaResetFailed": "Could not reset 2FA"
+    "mfaResetFailed": "Could not reset 2FA",
+    "insights": {
+      "title": "What stands out"
+    },
+    "aiUsage": {
+      "title": "AI Usage",
+      "users": "Users",
+      "totalCredits": "Credits used this month (all users)",
+      "searchPlaceholder": "Search by email",
+      "user": "User",
+      "plan": "Plan",
+      "used": "Used",
+      "limit": "Limit",
+      "remaining": "Remaining",
+      "empty": "No users yet"
+    },
+    "userDeletedSuccessfully": "User deleted successfully"
   },
   "billing": {
     "title": "Plan & Billing",
@@ -3082,7 +3212,11 @@
     "viewWillSave": "This view will save:",
     "saveView": "Save View",
     "filtersLabel": "Filters:",
-    "searchLabel": "Search:"
+    "searchLabel": "Search:",
+    "view": "View",
+    "progressSummary": "View progress · {{done}} of {{total}} tasks done",
+    "sortTasks": "Sort tasks",
+    "filters": "filters"
   },
   "search": {
     "placeholder": "Search tasks, projects, notes...",
@@ -3196,7 +3330,8 @@
     "backupVersion": "Backup version",
     "adminInstanceNote": "As an admin, your backup includes every account on this instance, with their data and password hashes. Restoring it on a new install brings everyone back. Keep the file as safe as the database.",
     "accountsCount_one": "{{count}} other account",
-    "accountsCount_other": "{{count}} other accounts"
+    "accountsCount_other": "{{count}} other accounts",
+    "delete": "Delete"
   },
   "notifications": {
     "table": {
@@ -3522,7 +3657,8 @@
     "linkedAccount": "Linked to a user account",
     "archivedBadge": "archived",
     "deletePerson": "Delete Person",
-    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This cannot be undone."
+    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+    "contact": "Contact"
   },
   "members": {
     "addTitle": "Add member",
@@ -3551,7 +3687,9 @@
     "removed": "Member removed",
     "updated": "Member updated",
     "invitationSent": "Invitation sent",
-    "failedToRemove": "Failed to remove member"
+    "failedToRemove": "Failed to remove member",
+    "title": "Members",
+    "titleOne": "Member"
   },
   "signInLink": {
     "action": "Sign-in link",
@@ -3990,7 +4128,11 @@
     },
     "reorderError": "Failed to save goal order",
     "noGoalsInArea": "No goals linked to this area.",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "noGoalsSelected": "No goals selected",
+    "noAvailableGoals": "No available goals",
+    "progressHint": "Bar: tasks and projects done. Line: time passed between creation and target date.",
+    "removeFromArea": "Remove from area"
   },
   "templates": {
     "new": "New Template",
@@ -4637,7 +4779,8 @@
       "projects": "Projects",
       "tasks": "Tasks",
       "notes": "Notes",
-      "habits": "Habits"
+      "habits": "Habits",
+      "goals": "Goals"
     },
     "help": {
       "title": "Keyboard shortcuts",
@@ -5032,5 +5175,24 @@
   "loading": {
     "tasks": "Loading tasks…",
     "subtasks": "Loading subtasks..."
+  },
+  "noteCreation": "Create New Note",
+  "notFound": {
+    "todayDescription": "View today's tasks",
+    "projectsDescription": "Browse your projects",
+    "inboxDescription": "Check your inbox items",
+    "notesDescription": "Browse your notes",
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.",
+    "goBack": "Go Back",
+    "goHome": "Go to Today",
+    "quickActions": "Quick Actions"
+  },
+  "colors": {
+    "label": "Color",
+    "none": "None"
+  },
+  "tag": {
+    "viewTag": "Go to tag"
   }
 }

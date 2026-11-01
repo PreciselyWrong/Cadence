@@ -65,7 +65,15 @@
     "tags": "Tunnisteet",
     "goToToday": "Siirry tähän päivään",
     "loadMore": "Lataa lisää",
-    "showAll": "Näytä kaikki"
+    "showAll": "Näytä kaikki",
+    "actions": "Toiminnot",
+    "creating": "Luodaan...",
+    "createCalendar": "Luo kalenteri",
+    "untitled": "Nimetön",
+    "resolving": "Ratkaistaan...",
+    "showLess": "Näytä vähemmän",
+    "breadcrumb": "Murupolku",
+    "undo": "Kumoa"
   },
   "sidebar": {
     "dashboard": "Ohjauspaneeli",
@@ -144,7 +152,11 @@
     "search": "Haku",
     "admin": "Ylläpitäjä",
     "adminBadge": "Ylläpitäjä",
-    "templates": "Mallit"
+    "templates": "Mallit",
+    "today": "Tänään",
+    "projects": "Projektit",
+    "inbox": "Saapuneet",
+    "notes": "Muistiinpanot"
   },
   "settings": {
     "todayPageSettings": "Tänään-sivun asetukset",
@@ -294,7 +306,9 @@
       "inProgress": "Käynnissä",
       "waiting": "Odottaa",
       "done": "Valmis",
-      "dropHere": "Tiputa tähän"
+      "dropHere": "Tiputa tähän",
+      "customizeColumns": "Muokkaa sarakkeita",
+      "columns": "Sarakkeet"
     },
     "chaseUp": "Seuraa perään",
     "habit": "Tapa",
@@ -317,7 +331,17 @@
       "moveToProject": "Siirrä projektiin"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Poista tehtävä"
+    "deleteConfirmTitle": "Poista tehtävä",
+    "dueSoon": "pian erääntyvä",
+    "progress": "Edistyminen",
+    "priority": "Prioriteetti",
+    "todayPlan": "Tämän päivän suunnitelma",
+    "startNow": "Aloita nyt",
+    "noDue": "Ei eräpäivää",
+    "overdueBy": "Myöhässä {{days}} pv",
+    "dueInDays": "Erääntyy {{days}} pv:n kuluttua",
+    "startedSuccessfully": "Tehtävän aloittaminen onnistui!",
+    "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua."
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",
@@ -648,7 +672,9 @@
       "setupSuccess": "Kalenteri on konfiguroitu onnistuneesti!",
       "setupFailed": "Kalenterin luominen epäonnistui",
       "serverUrlPlaceholder": "https://caldav.esimerkki.com",
-      "calendarPathPlaceholder": "/kalenterit/käyttäjä/tehtävät"
+      "calendarPathPlaceholder": "/kalenterit/käyttäjä/tehtävät",
+      "fillServerDetails": "Täytä ensin kaikki palvelimen yhteystiedot",
+      "validationError": "Täytä kaikki pakolliset kentät ja testaa yhteys"
     },
     "conflictResolver": {
       "title": "Ratkaise synkronointikonfliktit",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Kaikki konfliktit ratkaistu onnistuneesti",
       "resolveError": "Konfliktien ratkaiseminen epäonnistui",
       "nextConflict": "Seuraava",
-      "prevConflict": "Edellinen"
+      "prevConflict": "Edellinen",
+      "mixedResolutionError": "Valitse jokaiselle ristiriidalle \"Käytä kaikkia paikallisia\" tai \"Käytä kaikkia etäpalvelimen\" -vaihtoehto. Sekoitettuja valintoja ei vielä tueta."
     },
     "editCalendar": {
       "title": "Muokkaa kalenteria",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Ei epämääräisiä tehtäviä, pysähtynyttä työtä tai jumiin jääneitä projekteja juuri nyt. Hyvä hetki suunnitella seuraava askel.",
     "goToTasks": "Siirry tehtäviin",
     "goToProjects": "Siirry projekteihin",
-    "planDay": "Suunnittele päiväsi"
+    "planDay": "Suunnittele päiväsi",
+    "andMore": "... ja {{count}} muuta"
   },
   "modals": {
     "confirmDelete": "Oletko varma, että haluat poistaa?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Kuukauden viikko",
         "recurrenceEndDate": "Loppupäivämäärä (valinnainen)",
         "completionBased": "Toista valmistumisen jälkeen",
-        "repeatOn": "Toista"
+        "repeatOn": "Toista",
+        "recurrence": "Toisto",
+        "attachments": "Liitteet"
       },
       "projectSearchPlaceholder": "Etsi tai luo projekti...",
       "noMatchingProjects": "Ei vastaavia projekteja",
@@ -1185,7 +1215,10 @@
     "startDate": "Alkaa",
     "goalBucket": "Toivelistan ryhmä",
     "goalParent": "Tavoitteen tulos",
-    "noParentGoal": "Ei mitään (itsenäinen)"
+    "noParentGoal": "Ei mitään (itsenäinen)",
+    "name": "Nimi",
+    "goalTitle": "Tulos",
+    "project": "Projekti"
   },
   "auth": {
     "login": "Kirjaudu",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Suorita vahvistus loppuun ja yritä uudelleen.",
     "registration_successful": "Vahvista sähköpostiosoitteesi",
-    "registration_email_sent": "Vahvista sähköpostiosoitteesi aktivoidaksesi tilisi. Lähetimme sinulle linkin, tarkista saapuneet viestit."
+    "registration_email_sent": "Vahvista sähköpostiosoitteesi aktivoidaksesi tilisi. Lähetimme sinulle linkin, tarkista saapuneet viestit.",
+    "back_to_login": "Takaisin kirjautumiseen",
+    "email_verified": "Sähköpostiosoitteesi on vahvistettu! Voit nyt kirjautua sisään.",
+    "verification_expired": "Vahvistuslinkki on vanhentunut. Rekisteröidy uudelleen.",
+    "already_verified": "Sähköpostiosoitteesi on jo vahvistettu. Voit kirjautua sisään.",
+    "verification_failed": "Sähköpostin vahvistaminen epäonnistui. Yritä uudelleen.",
+    "email_not_verified": "Vahvista sähköpostiosoitteesi ennen kirjautumista.",
+    "no_auth_methods": "Todennustapoja ei ole käytettävissä. Ota yhteyttä ylläpitäjään.",
+    "no_account": "Eikö sinulla ole tiliä?",
+    "passwords_not_match": "Salasanat eivät täsmää",
+    "registration_failed": "Rekisteröinti epäonnistui. Yritä uudelleen.",
+    "error_occurred": "Tapahtui virhe. Yritä uudelleen.",
+    "password_registration_disabled": "Salasanarekisteröinti on poistettu käytöstä",
+    "password_registration_disabled_message": "Salasanalla rekisteröityminen ei ole käytettävissä. Kirjaudu sisään SSO:n avulla.",
+    "registration_closed_title": "Rekisteröinti suljettu",
+    "registration_closed_message": "Uusien tilien rekisteröinti on tällä hetkellä poissa käytöstä. Pyydä käyttöoikeus ylläpitäjältä.",
+    "confirm_password": "Vahvista salasana",
+    "already_have_account": "Onko sinulla jo tili?"
   },
   "dropdown": {
     "createNew": "Luo uusi",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Seuraava toimi",
-    "nextActionLine": "Seuraava toimi: {{name}}"
+    "nextActionLine": "Seuraava toimi: {{name}}",
+    "noCompletedTasks": "Ei valmiita tehtäviä."
   },
   "errors": {
     "required": "Tämä kenttä on pakollinen",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Tunnisteen poistaminen epäonnistui.",
     "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui",
     "failedToSaveTask": "Tehtävän tallennus epäonnistui.",
-    "permissionDenied": "Käyttöoikeus evätty"
+    "permissionDenied": "Käyttöoikeus evätty",
+    "failedToDeleteArea": "Alueen poistaminen epäonnistui.",
+    "failedToUpdateGoal": "Tavoitteen päivittäminen epäonnistui.",
+    "failedToSaveProject": "Projektin tallentaminen epäonnistui.",
+    "failedToDeleteProject": "Projektin poistaminen epäonnistui.",
+    "projectNameTooLong": "Projektin nimen enimmäispituus on {{max}} merkkiä"
   },
   "inbox": {
     "title": "Saapuneet",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Tavoite luotu!",
     "goalUpdated": "Tavoite päivitetty!",
     "goalDeleted": "Tavoite poistettu!",
-    "tagDeleted": "Tunniste poistettu!"
+    "tagDeleted": "Tunniste poistettu!",
+    "areaDeleted": "Alue poistettu onnistuneesti!"
   },
   "note": {
     "title": "Otsikko",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} tuntia sitten",
     "minutesAgo": "{{count}} minuuttia sitten",
     "inMinutes": "{{count}} minuutin kuluttua",
-    "inHours": "{{count}} tunnin kuluttua"
+    "inHours": "{{count}} tunnin kuluttua",
+    "pastDue": "Erääntynyt",
+    "editDetails": "Muokkaa tietoja",
+    "noUpcomingOccurrences": "Ei tulevia toistoja."
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" tallennettiin mallina.",
     "saveAsTemplateError": "Projektia ei voitu tallentaa mallina.",
     "sortTasks": "Lajittele tehtävät",
-    "upcomingProjects": "Tulevat projektit"
+    "upcomingProjects": "Tulevat projektit",
+    "deleteError": "Projektin poistaminen epäonnistui",
+    "shared": "Jaettu",
+    "status": "Projektin tila"
   },
   "projectItem": {
     "edit": "Muokkaa",
@@ -1908,7 +1971,8 @@
     "projects": "projektit",
     "goals": "tavoitteet",
     "tasks": "tehtävät",
-    "progressSummary": "Alueen edistyminen · {{done}} / {{total}} tehtävää tehty"
+    "progressSummary": "Alueen edistyminen · {{done}} / {{total}} tehtävää tehty",
+    "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
   },
   "notes": {
     "loading": "Ladataan muistiinpanoja...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Muokkaa",
-    "delete": "Poista"
+    "delete": "Poista",
+    "saveBeforeFiles": "Anna muistiinpanolle ensin otsikko tai tekstiä, lisää sitten tiedostot.",
+    "fileUploadError": "Tiedoston {{name}} lataaminen epäonnistui",
+    "slashFile": "Kuva tai tiedosto",
+    "slashFileHint": "Lataa ja sijoita tähän",
+    "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
   },
   "tags": {
     "loading": "Ladataan tageja...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Ylätunniste",
     "noParent": "Ei mitään (ylin taso)",
     "showChildTags": "Näytä alatunnisteet",
-    "hideChildTags": "Piilota alatunnisteet"
+    "hideChildTags": "Piilota alatunnisteet",
+    "progressSummary": "Tunnisteen edistyminen · {{done}} / {{total}} tehtävää valmiina"
   },
   "recurrence": {
     "none": "Ei mitään",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Joka {{count}}. kuukausi",
     "completionBased": "Suorittamisen jälkeen",
     "onDay": "Päivänä",
-    "until": "Asti"
+    "until": "Asti",
+    "monthDayPlaceholder": "Valitse kuukauden päivä",
+    "instance": "Toistuva esiintymä"
   },
   "weekdays": {
     "sunday": "Su",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Tehtävä"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} käyttäjää · {{tasks}} tehtävää · {{waitlist}} odotuslistalla · Cadence {{version}} · {{env}}",
+      "visitors": "Kävijät, 7 pv",
+      "signups": "Rekisteröitymiset, 7 pv",
+      "activation": "Aktivointi, {{days}} pv",
+      "activationHint": "{{n}} / {{total}} rekisteröitymisestä",
+      "weeklyUsers": "Viikoittaiset käyttäjät",
+      "weeklyUsersHint": "loi jotain",
+      "selfHostedUsers": "itseisännöity · {{n}} uutta tänään"
     },
     "waitlist": {
       "title": "Jonotuslista",
@@ -2440,7 +2521,12 @@
       "joined": "Liittynyt",
       "empty": "Kukaan ei ole vielä rekisteröitynyt",
       "noMatches": "Ei osoitteita, jotka vastaavat tätä hakua",
-      "showing": "{{from}}-{{to}} / {{total}}"
+      "showing": "{{from}}-{{to}} / {{total}}",
+      "removed": "Poistettu odotuslistalta",
+      "removeFailed": "Merkinnän poistaminen epäonnistui",
+      "ipAddress": "IP-osoite",
+      "removeTitle": "Poista osoite",
+      "confirmRemove": "Poistetaanko {{email}} odotuslistalta? Tätä ei voi perua."
     },
     "passwordInviteHint": "Jätä tyhjäksi lähettääksesi kutsusähköpostin",
     "invitationSent": "Kutsusähköposti lähetetty osoitteeseen {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Sivuston kävijät",
+      "visitorsHint": "markkinointisivusto ja blogi",
+      "views": "Sivunäyttökerrat",
+      "blog": "Blogin lukijat",
+      "signupsRow": "Rekisteröitymiset",
+      "reach": "Tavoittavuus",
+      "createdAnything": "Loi jotain",
+      "firstPlanShort": "3+ tehtävää",
+      "threeDaysShort": "viime viikon rekisteröitymiset, 3 pv ensimmäisellä viikolla",
+      "newUsersGroup": "Tämän viikon rekisteröitymiset",
+      "appUsers": "Sovelluksen käyttäjät",
+      "appUsersMonthHint": "{{month}} 30 päivässä",
+      "creators": "Loi jotain",
+      "creatorsHint": "käyttäjää, mitä tahansa kohdetta",
+      "canceled": "Peruttu",
+      "failed": "Epäonnistuneet maksut",
+      "today": "Tänään",
+      "thisWeek": "Tämä viikko",
+      "lastWeek": "Viime viikko",
+      "change": "Muutos",
+      "fortnight": "14 pv"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "vierailee",
+      "stepSignups": "rekisteröityy",
+      "stepActivated": "aktivoituu",
+      "stepPaid": "maksaa",
+      "pts": "{{diff}} pist.",
+      "noRate": "Laskettuja kävijöitä on vähemmän kuin rekisteröitymisiä",
+      "before": "oli {{n}}"
+    },
+    "insights": {
+      "title": "Mikä erottuu"
+    },
+    "aiUsage": {
+      "title": "Tekoälyn käyttö",
+      "users": "Käyttäjät",
+      "totalCredits": "Tässä kuussa käytetyt krediitit (kaikki käyttäjät)",
+      "searchPlaceholder": "Hae sähköpostilla",
+      "user": "Käyttäjä",
+      "plan": "Tilaus",
+      "used": "Käytetty",
+      "limit": "Raja",
+      "remaining": "Jäljellä",
+      "empty": "Käyttäjiä ei vielä ole"
+    },
+    "userDeletedSuccessfully": "Käyttäjä poistettu onnistuneesti"
   },
   "shares": {
     "shareProject": "Jaa projekti",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Hae luodaksesi näkymän",
     "noViewsMatch": "Näkymiä ei löytynyt",
     "blankSlateFilteredHint": "Kokeile toista hakua.",
-    "blankSlateClearSearch": "Tyhjennä haku"
+    "blankSlateClearSearch": "Tyhjennä haku",
+    "view": "Näytä",
+    "progressSummary": "Näytä edistyminen · {{done}} / {{total}} tehtävää valmiina",
+    "sortTasks": "Lajittele tehtävät",
+    "filters": "suodattimet"
   },
   "search": {
     "placeholder": "Hae tehtäviä, projekteja, muistiinpanoja...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Palauta",
     "adminInstanceNote": "Ylläpitäjänä varmuuskopiosi sisältää tämän instanssin kaikki tilit tietoineen ja salasanatiivisteineen. Kun palautat sen uuteen asennukseen, kaikki palaavat. Säilytä tiedosto yhtä huolellisesti kuin tietokanta.",
     "accountsCount_one": "{{count}} muu tili",
-    "accountsCount_other": "{{count}} muuta tiliä"
+    "accountsCount_other": "{{count}} muuta tiliä",
+    "delete": "Poista"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Liitetty käyttäjätiliin",
     "archivedBadge": "arkistoitu",
     "deletePerson": "Poista henkilö",
-    "deleteConfirm": "Haluatko varmasti poistaa henkilön ”{{name}}”? Tätä ei voi perua."
+    "deleteConfirm": "Haluatko varmasti poistaa henkilön ”{{name}}”? Tätä ei voi perua.",
+    "contact": "Yhteystieto"
   },
   "members": {
     "addTitle": "Lisää jäsen",
@@ -3552,7 +3688,9 @@
     "removed": "Jäsen poistettu",
     "updated": "Jäsen päivitetty",
     "invitationSent": "Kutsu lähetetty",
-    "failedToRemove": "Jäsenen poistaminen epäonnistui"
+    "failedToRemove": "Jäsenen poistaminen epäonnistui",
+    "title": "Jäsenet",
+    "titleOne": "Jäsen"
   },
   "signInLink": {
     "action": "Kirjautumislinkki",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Tavoitteiden järjestystä ei voitu tallentaa",
     "noGoalsInArea": "Tähän alueeseen ei ole liitetty tavoitteita.",
-    "maintenance": "Ylläpito"
+    "maintenance": "Ylläpito",
+    "noGoalsSelected": "Tavoitteita ei ole valittu",
+    "noAvailableGoals": "Tavoitteita ei ole saatavilla",
+    "progressHint": "Palkki: valmiit tehtävät ja projektit. Viiva: luomisen ja kohdepäivän välinen aika.",
+    "removeFromArea": "Poista alueelta"
   },
   "templates": {
     "new": "Uusi malli",
@@ -4674,7 +4816,8 @@
       "projects": "Projektit",
       "tasks": "Tehtävät",
       "notes": "Muistiinpanot",
-      "habits": "Tavat"
+      "habits": "Tavat",
+      "goals": "Tavoitteet"
     },
     "help": {
       "title": "Pikanäppäimet",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Ladataan tehtäviä…",
     "subtasks": "Ladataan alitehtäviä..."
+  },
+  "noteCreation": "Luo uusi muistiinpano",
+  "notFound": {
+    "todayDescription": "Näytä tämän päivän tehtävät",
+    "projectsDescription": "Selaa projektejasi",
+    "inboxDescription": "Tarkista saapuneet-kohteesi",
+    "notesDescription": "Selaa muistiinpanojasi",
+    "title": "Sivua ei löytynyt",
+    "description": "Etsimääsi sivua ei ole olemassa. Se on ehkä siirretty tai poistettu, tai osoite on kirjoitettu väärin.",
+    "goBack": "Takaisin",
+    "goHome": "Siirry tähän päivään",
+    "quickActions": "Pikatoiminnot"
+  },
+  "colors": {
+    "label": "Väri",
+    "none": "Ei mitään"
+  },
+  "tag": {
+    "viewTag": "Siirry tunnisteeseen"
   }
 }

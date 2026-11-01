@@ -65,7 +65,15 @@
     "tags": "Taggar",
     "goToToday": "Gå till I dag",
     "loadMore": "Visa fler",
-    "showAll": "Visa alla"
+    "showAll": "Visa alla",
+    "actions": "Åtgärder",
+    "creating": "Skapar...",
+    "createCalendar": "Skapa kalender",
+    "untitled": "Namnlös",
+    "resolving": "Löser...",
+    "showLess": "Visa mindre",
+    "breadcrumb": "Brödsmula",
+    "undo": "Ångra"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -144,7 +152,11 @@
     "search": "Sök",
     "admin": "Admin",
     "adminBadge": "Admin",
-    "templates": "Mallar"
+    "templates": "Mallar",
+    "today": "Idag",
+    "projects": "Projekt",
+    "inbox": "Inkorg",
+    "notes": "Anteckningar"
   },
   "settings": {
     "todayPageSettings": "Inställningar för dagens sida",
@@ -294,7 +306,9 @@
       "inProgress": "Pågående",
       "waiting": "Väntar",
       "done": "Utförd",
-      "dropHere": "Släpp här"
+      "dropHere": "Släpp här",
+      "customizeColumns": "Anpassa kolumner",
+      "columns": "Kolumner"
     },
     "chaseUp": "Följ upp",
     "habit": "Vana",
@@ -317,7 +331,17 @@
       "moveToProject": "Flytta till projekt"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Ta bort uppgift"
+    "deleteConfirmTitle": "Ta bort uppgift",
+    "dueSoon": "snart",
+    "progress": "Framsteg",
+    "priority": "Prioritet",
+    "todayPlan": "Dagens plan",
+    "startNow": "Starta nu",
+    "noDue": "Inget förfallodatum",
+    "overdueBy": "Försenad med {{days}} d",
+    "dueInDays": "Förfaller om {{days}} d",
+    "startedSuccessfully": "Uppgiften startades!",
+    "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras."
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -648,7 +672,9 @@
       "setupSuccess": "Kalendern konfigurerades framgångsrikt!",
       "setupFailed": "Misslyckades med att skapa kalender",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/kalendrar/användare/uppgifter"
+      "calendarPathPlaceholder": "/kalendrar/användare/uppgifter",
+      "fillServerDetails": "Fyll i alla serveranslutningsuppgifter först",
+      "validationError": "Fyll i alla obligatoriska fält och testa anslutningen"
     },
     "conflictResolver": {
       "title": "Lös synkroniseringskonflikter",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Alla konflikter lösta framgångsrikt",
       "resolveError": "Misslyckades med att lösa konflikter",
       "nextConflict": "Nästa",
-      "prevConflict": "Föregående"
+      "prevConflict": "Föregående",
+      "mixedResolutionError": "Välj »Använd alla lokala« eller »Använd alla externa« för varje konflikt. Blandade fälval stöds ännu inte."
     },
     "editCalendar": {
       "title": "Redigera Kalender",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Inga vaga uppgifter, arbete som står still eller projekt som fastnat just nu. Ett bra tillfälle att planera nästa steg.",
     "goToTasks": "Gå till uppgifter",
     "goToProjects": "Gå till projekt",
-    "planDay": "Planera dagen"
+    "planDay": "Planera dagen",
+    "andMore": "... och {{count}} till"
   },
   "modals": {
     "confirmDelete": "Är du säker på att du vill ta bort?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Vecka i månaden",
         "recurrenceEndDate": "Slutdatum (valfritt)",
         "completionBased": "Upprepa efter slutförd",
-        "repeatOn": "Upprepa på"
+        "repeatOn": "Upprepa på",
+        "recurrence": "Upprepa",
+        "attachments": "Bilagor"
       },
       "projectSearchPlaceholder": "Sök eller skapa ett projekt...",
       "noMatchingProjects": "Inga matchande projekt",
@@ -1185,7 +1215,10 @@
     "startDate": "Start",
     "goalBucket": "Bucket list-grupp",
     "goalParent": "Nyckelresultat för",
-    "noParentGoal": "Ingen (fristående)"
+    "noParentGoal": "Ingen (fristående)",
+    "name": "Namn",
+    "goalTitle": "Resultat",
+    "project": "Projekt"
   },
   "auth": {
     "login": "Logga in",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Slutför verifieringen och försök igen.",
     "registration_successful": "Bekräfta din e-postadress",
-    "registration_email_sent": "Bekräfta din e-postadress för att aktivera ditt konto. Vi har skickat en länk, kontrollera din inkorg."
+    "registration_email_sent": "Bekräfta din e-postadress för att aktivera ditt konto. Vi har skickat en länk, kontrollera din inkorg.",
+    "back_to_login": "Tillbaka till inloggning",
+    "email_verified": "Din e-post har verifierats! Du kan nu logga in.",
+    "verification_expired": "Verifieringslänken har gått ut. Registrera dig igen.",
+    "already_verified": "Din e-post är redan verifierad. Du kan logga in.",
+    "verification_failed": "E-postverifieringen misslyckades. Försök igen.",
+    "email_not_verified": "Verifiera din e-postadress innan du loggar in.",
+    "no_auth_methods": "Inga inloggningsmetoder är tillgängliga. Kontakta din administratör.",
+    "no_account": "Har du inget konto?",
+    "passwords_not_match": "Lösenorden matchar inte",
+    "registration_failed": "Registreringen misslyckades. Försök igen.",
+    "error_occurred": "Ett fel uppstod. Försök igen.",
+    "password_registration_disabled": "Lösenordsregistrering inaktiverad",
+    "password_registration_disabled_message": "Lösenordsregistrering är inte tillgänglig. Använd SSO för att logga in.",
+    "registration_closed_title": "Registreringen är stängd",
+    "registration_closed_message": "Registrering av nya konton är för närvarande inaktiverad. Kontakta din administratör för åtkomst.",
+    "confirm_password": "Bekräfta lösenord",
+    "already_have_account": "Har du redan ett konto?"
   },
   "dropdown": {
     "createNew": "Skapa ny",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Nästa åtgärd",
-    "nextActionLine": "Nästa åtgärd: {{name}}"
+    "nextActionLine": "Nästa åtgärd: {{name}}",
+    "noCompletedTasks": "Inga slutförda uppgifter."
   },
   "errors": {
     "required": "Detta fält är obligatoriskt",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Det gick inte att ta bort taggen.",
     "projectStatusUpdateFailed": "Det gick inte att uppdatera projektstatus",
     "failedToSaveTask": "Kunde inte spara uppgiften.",
-    "permissionDenied": "Åtkomst nekad"
+    "permissionDenied": "Åtkomst nekad",
+    "failedToDeleteArea": "Det gick inte att ta bort området.",
+    "failedToUpdateGoal": "Det gick inte att uppdatera målet.",
+    "failedToSaveProject": "Det gick inte att spara projektet.",
+    "failedToDeleteProject": "Det gick inte att ta bort projektet.",
+    "projectNameTooLong": "Projektnamnet får vara högst {{max}} tecken"
   },
   "inbox": {
     "title": "Inkorg",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Målet skapades!",
     "goalUpdated": "Målet uppdaterades!",
     "goalDeleted": "Målet raderades!",
-    "tagDeleted": "Taggen togs bort!"
+    "tagDeleted": "Taggen togs bort!",
+    "areaDeleted": "Området har tagits bort!"
   },
   "note": {
     "title": "Titel",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "för {{count}} timmar sedan",
     "minutesAgo": "för {{count}} minuter sedan",
     "inMinutes": "om {{count}} minuter",
-    "inHours": "om {{count}} timmar"
+    "inHours": "om {{count}} timmar",
+    "pastDue": "Försenad",
+    "editDetails": "Redigera detaljer",
+    "noUpcomingOccurrences": "Inga kommande förekomster."
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" sparades som mall.",
     "saveAsTemplateError": "Det gick inte att spara projektet som mall.",
     "sortTasks": "Sortera uppgifter",
-    "upcomingProjects": "Kommande projekt"
+    "upcomingProjects": "Kommande projekt",
+    "deleteError": "Det gick inte att ta bort projektet",
+    "shared": "Delat",
+    "status": "Projektstatus"
   },
   "projectItem": {
     "edit": "Ändra",
@@ -1908,7 +1971,8 @@
     "projects": "projekt",
     "goals": "mål",
     "tasks": "uppgifter",
-    "progressSummary": "Framsteg för området · {{done}} av {{total}} uppgifter klara"
+    "progressSummary": "Framsteg för området · {{done}} av {{total}} uppgifter klara",
+    "toggleDropdownMenu": "Växla rullgardinsmeny"
   },
   "notes": {
     "loading": "Laddar anteckningar...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Redigera",
-    "delete": "Ta bort"
+    "delete": "Ta bort",
+    "saveBeforeFiles": "Ge anteckningen en titel eller lite text först, lägg sedan till filer.",
+    "fileUploadError": "Kunde inte ladda upp {{name}}",
+    "slashFile": "Bild eller fil",
+    "slashFileHint": "Ladda upp och placera här",
+    "toggleDropdownMenu": "Växla rullgardinsmeny"
   },
   "tags": {
     "loading": "Laddar taggar...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Överordnad tagg",
     "noParent": "Ingen (översta nivån)",
     "showChildTags": "Visa underordnade taggar",
-    "hideChildTags": "Dölj underordnade taggar"
+    "hideChildTags": "Dölj underordnade taggar",
+    "progressSummary": "Taggframsteg · {{done}} av {{total}} uppgifter klara"
   },
   "recurrence": {
     "none": "Ingen",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Var {{count}}:e månad",
     "completionBased": "Efter slutförande",
     "onDay": "På dag",
-    "until": "Till"
+    "until": "Till",
+    "monthDayPlaceholder": "Välj dag i månaden",
+    "instance": "Återkommande förekomst"
   },
   "weekdays": {
     "sunday": "Sön",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Uppgift"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} användare · {{tasks}} uppgifter · {{waitlist}} på väntelistan · Cadence {{version}} · {{env}}",
+      "visitors": "Besökare, 7 dagar",
+      "signups": "Registreringar, 7 dagar",
+      "activation": "Aktivering, {{days}} dagar",
+      "activationHint": "{{n}} av {{total}} registreringar",
+      "weeklyUsers": "Veckoanvändare",
+      "weeklyUsersHint": "skapade något",
+      "selfHostedUsers": "egen hosting · {{n}} nya idag"
     },
     "waitlist": {
       "title": "Väntelista",
@@ -2440,7 +2521,12 @@
       "joined": "Gick med",
       "empty": "Ingen har registrerat sig ännu",
       "noMatches": "Inga adresser matchar den sökningen",
-      "showing": "{{from}}-{{to}} av {{total}}"
+      "showing": "{{from}}-{{to}} av {{total}}",
+      "removed": "Borttagen från väntelistan",
+      "removeFailed": "Det gick inte att ta bort posten",
+      "ipAddress": "IP-adress",
+      "removeTitle": "Ta bort adress",
+      "confirmRemove": "Ta bort {{email}} från väntelistan? Detta kan inte ångras."
     },
     "passwordInviteHint": "Lämna tomt för att skicka en inbjudan via e-post",
     "invitationSent": "Inbjudan skickad till {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Webbplatsbesökare",
+      "visitorsHint": "marknadssida och blogg",
+      "views": "Sidvisningar",
+      "blog": "Bloggläsare",
+      "signupsRow": "Registreringar",
+      "reach": "Räckvidd",
+      "createdAnything": "Skapade något",
+      "firstPlanShort": "3+ uppgifter",
+      "threeDaysShort": "förra veckans registreringar, 3 dagar i deras första vecka",
+      "newUsersGroup": "Denna veckas registreringar",
+      "appUsers": "Appanvändare",
+      "appUsersMonthHint": "{{month}} under 30 dagar",
+      "creators": "Skapade något",
+      "creatorsHint": "användare, vilken typ av objekt som helst",
+      "canceled": "Avbrutna",
+      "failed": "Misslyckade betalningar",
+      "today": "Idag",
+      "thisWeek": "Denna vecka",
+      "lastWeek": "Förra veckan",
+      "change": "Förändring",
+      "fortnight": "14 dagar"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "besöker",
+      "stepSignups": "registrerar sig",
+      "stepActivated": "aktiverar",
+      "stepPaid": "betalar",
+      "pts": "{{diff}} p",
+      "noRate": "Färre räknade besökare än registreringar",
+      "before": "var {{n}}"
+    },
+    "insights": {
+      "title": "Vad som sticker ut"
+    },
+    "aiUsage": {
+      "title": "AI-användning",
+      "users": "Användare",
+      "totalCredits": "Använda krediter denna månad (alla användare)",
+      "searchPlaceholder": "Sök på e-post",
+      "user": "Användare",
+      "plan": "Plan",
+      "used": "Använt",
+      "limit": "Gräns",
+      "remaining": "Återstår",
+      "empty": "Inga användare än"
+    },
+    "userDeletedSuccessfully": "Användaren har tagits bort"
   },
   "shares": {
     "shareProject": "Dela projekt",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Sök för att skapa en vy",
     "noViewsMatch": "Inga vyer hittades",
     "blankSlateFilteredHint": "Prova en annan sökning.",
-    "blankSlateClearSearch": "Rensa sökning"
+    "blankSlateClearSearch": "Rensa sökning",
+    "view": "Visa",
+    "progressSummary": "Visa framsteg · {{done}} av {{total}} uppgifter klara",
+    "sortTasks": "Sortera uppgifter",
+    "filters": "filter"
   },
   "search": {
     "placeholder": "Sök uppgifter, projekt, anteckningar...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Återställ",
     "adminInstanceNote": "Som administratör innehåller din säkerhetskopia alla konton på den här instansen, med deras data och lösenordshashar. Återställer du den på en ny installation kommer alla tillbaka. Förvara filen lika säkert som databasen.",
     "accountsCount_one": "{{count}} annat konto",
-    "accountsCount_other": "{{count}} andra konton"
+    "accountsCount_other": "{{count}} andra konton",
+    "delete": "Ta bort"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Kopplad till ett användarkonto",
     "archivedBadge": "arkiverad",
     "deletePerson": "Ta bort person",
-    "deleteConfirm": "Vill du verkligen ta bort ”{{name}}”? Det går inte att ångra."
+    "deleteConfirm": "Vill du verkligen ta bort ”{{name}}”? Det går inte att ångra.",
+    "contact": "Kontakt"
   },
   "members": {
     "addTitle": "Lägg till medlem",
@@ -3552,7 +3688,9 @@
     "removed": "Medlemmen togs bort",
     "updated": "Medlemmen uppdaterades",
     "invitationSent": "Inbjudan skickad",
-    "failedToRemove": "Det gick inte att ta bort medlemmen"
+    "failedToRemove": "Det gick inte att ta bort medlemmen",
+    "title": "Medlemmar",
+    "titleOne": "Medlem"
   },
   "signInLink": {
     "action": "Inloggningslänk",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Det gick inte att spara ordningen för mål",
     "noGoalsInArea": "Inga mål är kopplade till det här området.",
-    "maintenance": "Underhåll"
+    "maintenance": "Underhåll",
+    "noGoalsSelected": "Inga mål valda",
+    "noAvailableGoals": "Inga tillgängliga mål",
+    "progressHint": "Stapel: klara uppgifter och projekt. Linje: tid som gått mellan skapande och måldatum.",
+    "removeFromArea": "Ta bort från område"
   },
   "templates": {
     "new": "Ny mall",
@@ -4674,7 +4816,8 @@
       "projects": "Projekt",
       "tasks": "Uppgifter",
       "notes": "Anteckningar",
-      "habits": "Vanor"
+      "habits": "Vanor",
+      "goals": "Mål"
     },
     "help": {
       "title": "Kortkommandon",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Laddar uppgifter…",
     "subtasks": "Laddar deluppgifter..."
+  },
+  "noteCreation": "Skapa ny anteckning",
+  "notFound": {
+    "todayDescription": "Visa dagens uppgifter",
+    "projectsDescription": "Bläddra bland dina projekt",
+    "inboxDescription": "Kontrollera objekten i din inkorg",
+    "notesDescription": "Bläddra bland dina anteckningar",
+    "title": "Sidan hittades inte",
+    "description": "Sidan du letar efter finns inte. Den kan ha flyttats, tagits bort eller så har du angett fel URL.",
+    "goBack": "Gå tillbaka",
+    "goHome": "Gå till idag",
+    "quickActions": "Snabbåtgärder"
+  },
+  "colors": {
+    "label": "Färg",
+    "none": "Ingen"
+  },
+  "tag": {
+    "viewTag": "Gå till tagg"
   }
 }

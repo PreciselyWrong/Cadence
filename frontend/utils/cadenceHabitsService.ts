@@ -334,6 +334,36 @@ const query = (params: Record<string, string | boolean | undefined>) => {
     return text ? `?${text}` : '';
 };
 
+// A habit's due days over a range, for the calendar (read-only).
+export interface CadenceCalendarDay {
+    date: string;
+    status: DayStatus;
+    done: boolean;
+    // HH:mm of its reminder that day, when it has one
+    time: string | null;
+}
+
+export interface CadenceCalendarHabit {
+    uid: string;
+    name: string;
+    icon_id: string | null;
+    color_argb: number | null;
+    group_uid: string | null;
+    days: CadenceCalendarDay[];
+}
+
+export interface CadenceCalendar {
+    from: string;
+    to: string;
+    timezone: string;
+    habits: CadenceCalendarHabit[];
+}
+
+export const fetchCadenceCalendar = (
+    from: string,
+    to: string
+): Promise<CadenceCalendar> => read(`cadence/calendar${query({ from, to })}`);
+
 export const fetchCadenceHabits = (
     options: { archived?: boolean; date?: string } = {}
 ): Promise<CadenceHabitList> =>

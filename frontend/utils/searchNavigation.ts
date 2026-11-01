@@ -1,7 +1,7 @@
 // Where a search result leads, shared by the search overlay and the palette.
 
 export interface SearchTarget {
-    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Habit';
+    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Habit' | 'Goal';
     uid?: string;
     name: string;
     title?: string;
@@ -45,6 +45,13 @@ export const searchDestination = (result: SearchTarget): SearchDestination => {
                 kind: 'path',
                 path: `/tag/${result.uid}-${createSlug(result.name)}`,
             };
+        case 'Goal': {
+            const name = result.title || result.name;
+            return {
+                kind: 'path',
+                path: `/goal/${result.uid}-${createSlug(name)}`,
+            };
+        }
         case 'Habit':
             return { kind: 'path', path: `/habit/${result.uid}` };
         default:

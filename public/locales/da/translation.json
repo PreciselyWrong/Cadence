@@ -65,7 +65,15 @@
     "tags": "Tags",
     "goToToday": "Gå til i dag",
     "loadMore": "Indlæs flere",
-    "showAll": "Vis alle"
+    "showAll": "Vis alle",
+    "actions": "Handlinger",
+    "creating": "Opretter...",
+    "createCalendar": "Opret kalender",
+    "untitled": "Uden titel",
+    "resolving": "Løser...",
+    "showLess": "Vis mindre",
+    "breadcrumb": "Brødkrummesti",
+    "undo": "Fortryd"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -144,7 +152,11 @@
     "search": "Søg",
     "admin": "Admin",
     "adminBadge": "Admin",
-    "templates": "Skabeloner"
+    "templates": "Skabeloner",
+    "today": "I dag",
+    "projects": "Projekter",
+    "inbox": "Indbakke",
+    "notes": "Noter"
   },
   "settings": {
     "todayPageSettings": "Indstillinger for i dag",
@@ -294,7 +306,9 @@
       "inProgress": "I gang",
       "waiting": "Venter",
       "done": "Færdig",
-      "dropHere": "Slip her"
+      "dropHere": "Slip her",
+      "customizeColumns": "Tilpas kolonner",
+      "columns": "Kolonner"
     },
     "chaseUp": "Følge op",
     "habit": "Vane",
@@ -317,7 +331,17 @@
       "moveToProject": "Flyt til projekt"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Slet opgave"
+    "deleteConfirmTitle": "Slet opgave",
+    "dueSoon": "forfalder snart",
+    "progress": "Fremskridt",
+    "priority": "Prioritet",
+    "todayPlan": "Dagens plan",
+    "startNow": "Start nu",
+    "noDue": "Ingen forfaldsdato",
+    "overdueBy": "Forfalden med {{days}} dage",
+    "dueInDays": "Forfalder om {{days}} dage",
+    "startedSuccessfully": "Opgaven blev startet!",
+    "deleteConfirmMessage": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes."
   },
   "timeline": {
     "activityTimeline": "Aktivitets Tidslinje",
@@ -648,7 +672,9 @@
       "setupSuccess": "Kalender konfigureret med succes!",
       "setupFailed": "Fejl ved oprettelse af kalender",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Udfyld venligst alle serverforbindelsesoplysninger først",
+      "validationError": "Udfyld alle obligatoriske felter, og test forbindelsen"
     },
     "conflictResolver": {
       "title": "Løs synkroniseringskonflikter",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Alle konflikter er blevet løst med succes",
       "resolveError": "Kunne ikke løse konflikter",
       "nextConflict": "Næste",
-      "prevConflict": "Forrige"
+      "prevConflict": "Forrige",
+      "mixedResolutionError": "Vælg venligst \"Brug alle lokale\" eller \"Brug alle eksterne\" for hver konflikt. Blandede feltvalg understøttes endnu ikke."
     },
     "editCalendar": {
       "title": "Rediger Kalender",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Ingen vage opgaver, arbejde der står stille eller fastlåste projekter lige nu. Et godt tidspunkt at planlægge det næste.",
     "goToTasks": "Gå til opgaver",
     "goToProjects": "Gå til projekter",
-    "planDay": "Planlæg din dag"
+    "planDay": "Planlæg din dag",
+    "andMore": "... og {{count}} mere"
   },
   "modals": {
     "confirmDelete": "Er du sikker på, at du vil slette?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Uge i måneden",
         "recurrenceEndDate": "Slutdato (valgfri)",
         "completionBased": "Gentag efter fuldførelse",
-        "repeatOn": "Gentag på"
+        "repeatOn": "Gentag på",
+        "recurrence": "Gentag",
+        "attachments": "Vedhæftninger"
       },
       "projectSearchPlaceholder": "Søg eller opret et projekt...",
       "noMatchingProjects": "Ingen matchende projekter",
@@ -1185,7 +1215,10 @@
     "startDate": "Start",
     "goalBucket": "Bucket list-gruppe",
     "goalParent": "Nøgleresultat af",
-    "noParentGoal": "Ingen (står alene)"
+    "noParentGoal": "Ingen (står alene)",
+    "name": "Navn",
+    "goalTitle": "Resultat",
+    "project": "Projekt"
   },
   "auth": {
     "login": "Log ind",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Fuldfør verificeringen, og prøv igen.",
     "registration_successful": "Bekræft din e-mailadresse",
-    "registration_email_sent": "Bekræft din e-mailadresse for at aktivere din konto. Vi har sendt dig et link, tjek din indbakke."
+    "registration_email_sent": "Bekræft din e-mailadresse for at aktivere din konto. Vi har sendt dig et link, tjek din indbakke.",
+    "back_to_login": "Tilbage til login",
+    "email_verified": "Din e-mail er bekræftet! Du kan nu logge ind.",
+    "verification_expired": "Bekræftelseslinket er udløbet. Tilmeld dig venligst igen.",
+    "already_verified": "Din e-mail er allerede bekræftet. Du kan logge ind.",
+    "verification_failed": "E-mailbekræftelsen mislykkedes. Prøv igen.",
+    "email_not_verified": "Bekræft venligst din e-mailadresse, før du logger ind.",
+    "no_auth_methods": "Ingen godkendelsesmetoder er tilgængelige. Kontakt venligst din administrator.",
+    "no_account": "Har du ikke en konto?",
+    "passwords_not_match": "Adgangskoderne stemmer ikke overens",
+    "registration_failed": "Registreringen mislykkedes. Prøv igen.",
+    "error_occurred": "Der opstod en fejl. Prøv igen.",
+    "password_registration_disabled": "Registrering med adgangskode er deaktiveret",
+    "password_registration_disabled_message": "Registrering med adgangskode er ikke tilgængelig. Brug SSO til at logge ind.",
+    "registration_closed_title": "Registrering er lukket",
+    "registration_closed_message": "Registrering af nye konti er i øjeblikket deaktiveret. Kontakt din administrator for adgang.",
+    "confirm_password": "Bekræft adgangskode",
+    "already_have_account": "Har du allerede en konto?"
   },
   "dropdown": {
     "createNew": "Opret Ny",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Næste handling",
-    "nextActionLine": "Næste handling: {{name}}"
+    "nextActionLine": "Næste handling: {{name}}",
+    "noCompletedTasks": "Ingen udførte opgaver."
   },
   "errors": {
     "required": "Dette felt er påkrævet",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Kunne ikke slette tagget.",
     "projectStatusUpdateFailed": "Kunne ikke opdatere projektstatus",
     "failedToSaveTask": "Kunne ikke gemme opgaven.",
-    "permissionDenied": "Adgang nægtet"
+    "permissionDenied": "Adgang nægtet",
+    "failedToDeleteArea": "Området kunne ikke slettes.",
+    "failedToUpdateGoal": "Målet kunne ikke opdateres.",
+    "failedToSaveProject": "Projektet kunne ikke gemmes.",
+    "failedToDeleteProject": "Projektet kunne ikke slettes.",
+    "projectNameTooLong": "Projektnavnet må højst være {{max}} tegn"
   },
   "inbox": {
     "title": "Indbakke",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Mål oprettet!",
     "goalUpdated": "Mål opdateret!",
     "goalDeleted": "Mål slettet!",
-    "tagDeleted": "Tag slettet!"
+    "tagDeleted": "Tag slettet!",
+    "areaDeleted": "Området blev slettet!"
   },
   "note": {
     "title": "Titel",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "for {{count}} timer siden",
     "minutesAgo": "for {{count}} minutter siden",
     "inMinutes": "om {{count}} minutter",
-    "inHours": "om {{count}} timer"
+    "inHours": "om {{count}} timer",
+    "pastDue": "Forfalden",
+    "editDetails": "Rediger detaljer",
+    "noUpcomingOccurrences": "Ingen kommende forekomster."
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" blev gemt som skabelon.",
     "saveAsTemplateError": "Projektet kunne ikke gemmes som skabelon.",
     "sortTasks": "Sortér opgaver",
-    "upcomingProjects": "Kommende projekter"
+    "upcomingProjects": "Kommende projekter",
+    "deleteError": "Projektet kunne ikke slettes",
+    "shared": "Delt",
+    "status": "Projektstatus"
   },
   "projectItem": {
     "edit": "Rediger",
@@ -1908,7 +1971,8 @@
     "projects": "projekter",
     "goals": "mål",
     "tasks": "opgaver",
-    "progressSummary": "Områdets fremskridt · {{done}} af {{total}} opgaver udført"
+    "progressSummary": "Områdets fremskridt · {{done}} af {{total}} opgaver udført",
+    "toggleDropdownMenu": "Skift rullemenu"
   },
   "notes": {
     "loading": "Indlæser noter...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Rediger",
-    "delete": "Slet"
+    "delete": "Slet",
+    "saveBeforeFiles": "Giv noten en titel eller noget tekst først, og tilføj derefter filer.",
+    "fileUploadError": "{{name}} kunne ikke uploades",
+    "slashFile": "Billede eller fil",
+    "slashFileHint": "Upload og placér den her",
+    "toggleDropdownMenu": "Skift rullemenu"
   },
   "tags": {
     "loading": "Indlæser tags...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Overordnet tag",
     "noParent": "Ingen (øverste niveau)",
     "showChildTags": "Vis underordnede tags",
-    "hideChildTags": "Skjul underordnede tags"
+    "hideChildTags": "Skjul underordnede tags",
+    "progressSummary": "Mærkefremskridt · {{done}} af {{total}} opgaver udført"
   },
   "recurrence": {
     "none": "Ingen",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Hver {{count}}. måned",
     "completionBased": "Efter afslutning",
     "onDay": "På dag",
-    "until": "Indtil"
+    "until": "Indtil",
+    "monthDayPlaceholder": "Vælg dag i måneden",
+    "instance": "Gentagen forekomst"
   },
   "weekdays": {
     "sunday": "Søn",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Opgave"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} brugere · {{tasks}} opgaver · {{waitlist}} på venteliste · Cadence {{version}} · {{env}}",
+      "visitors": "Besøgende, 7 dage",
+      "signups": "Tilmeldinger, 7 dage",
+      "activation": "Aktivering, {{days}} dage",
+      "activationHint": "{{n}} af {{total}} tilmeldinger",
+      "weeklyUsers": "Ugentlige brugere",
+      "weeklyUsersHint": "oprettede noget",
+      "selfHostedUsers": "selvhostet · {{n}} nye i dag"
     },
     "waitlist": {
       "title": "Venteliste",
@@ -2440,7 +2521,12 @@
       "joined": "Tilmeldt",
       "empty": "Ingen har tilmeldt sig endnu",
       "noMatches": "Ingen adresser matcher denne søgning",
-      "showing": "{{from}}-{{to}} af {{total}}"
+      "showing": "{{from}}-{{to}} af {{total}}",
+      "removed": "Fjernet fra ventelisten",
+      "removeFailed": "Posten kunne ikke fjernes",
+      "ipAddress": "IP-adresse",
+      "removeTitle": "Fjern adresse",
+      "confirmRemove": "Fjern {{email}} fra ventelisten? Dette kan ikke fortrydes."
     },
     "passwordInviteHint": "Lad være med at udfylde for at sende en invitations-email",
     "invitationSent": "Invitations-email sendt til {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Besøgende på webstedet",
+      "visitorsHint": "hjemmesiden og bloggen",
+      "views": "Sidevisninger",
+      "blog": "Bloglæsere",
+      "signupsRow": "Tilmeldinger",
+      "reach": "Rækkevidde",
+      "createdAnything": "Oprettede noget",
+      "firstPlanShort": "3+ opgaver",
+      "threeDaysShort": "sidste uges tilmeldinger, 3 dage i deres første uge",
+      "newUsersGroup": "Denne uges tilmeldinger",
+      "appUsers": "App-brugere",
+      "appUsersMonthHint": "{{month}} inden for 30 dage",
+      "creators": "Oprettede noget",
+      "creatorsHint": "brugere, enhver type element",
+      "canceled": "Annulleret",
+      "failed": "Mislykkede betalinger",
+      "today": "I dag",
+      "thisWeek": "Denne uge",
+      "lastWeek": "Sidste uge",
+      "change": "Ændring",
+      "fortnight": "14 dage"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "besøger",
+      "stepSignups": "tilmelder sig",
+      "stepActivated": "aktiverer",
+      "stepPaid": "betaler",
+      "pts": "{{diff}} point",
+      "noRate": "Færre talte besøgende end tilmeldinger",
+      "before": "var {{n}}"
+    },
+    "insights": {
+      "title": "Hvad der skiller sig ud"
+    },
+    "aiUsage": {
+      "title": "AI-forbrug",
+      "users": "Brugere",
+      "totalCredits": "Brugte kreditter denne måned (alle brugere)",
+      "searchPlaceholder": "Søg efter e-mail",
+      "user": "Bruger",
+      "plan": "Abonnement",
+      "used": "Brugt",
+      "limit": "Grænse",
+      "remaining": "Tilbage",
+      "empty": "Ingen brugere endnu"
+    },
+    "userDeletedSuccessfully": "Brugeren blev slettet"
   },
   "shares": {
     "shareProject": "Del projekt",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Søg for at oprette en visning",
     "noViewsMatch": "Ingen visninger fundet",
     "blankSlateFilteredHint": "Prøv en anden søgning.",
-    "blankSlateClearSearch": "Ryd søgning"
+    "blankSlateClearSearch": "Ryd søgning",
+    "view": "Vis",
+    "progressSummary": "Vis fremskridt · {{done}} af {{total}} opgaver udført",
+    "sortTasks": "Sortér opgaver",
+    "filters": "filtre"
   },
   "search": {
     "placeholder": "Søg opgaver, projekter, noter...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Gendan",
     "adminInstanceNote": "Som administrator indeholder din backup alle konti på denne instans med deres data og adgangskode-hashes. Gendannes den på en ny installation, kommer alle tilbage. Opbevar filen lige så sikkert som databasen.",
     "accountsCount_one": "{{count}} anden konto",
-    "accountsCount_other": "{{count}} andre konti"
+    "accountsCount_other": "{{count}} andre konti",
+    "delete": "Slet"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Knyttet til en brugerkonto",
     "archivedBadge": "arkiveret",
     "deletePerson": "Slet person",
-    "deleteConfirm": "Er du sikker på, at du vil slette \"{{name}}\"? Det kan ikke fortrydes."
+    "deleteConfirm": "Er du sikker på, at du vil slette \"{{name}}\"? Det kan ikke fortrydes.",
+    "contact": "Kontakt"
   },
   "members": {
     "addTitle": "Tilføj medlem",
@@ -3552,7 +3688,9 @@
     "removed": "Medlemmet blev fjernet",
     "updated": "Medlemmet blev opdateret",
     "invitationSent": "Invitation sendt",
-    "failedToRemove": "Kunne ikke fjerne medlemmet"
+    "failedToRemove": "Kunne ikke fjerne medlemmet",
+    "title": "Medlemmer",
+    "titleOne": "Medlem"
   },
   "signInLink": {
     "action": "Login-link",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Rækkefølgen af mål kunne ikke gemmes",
     "noGoalsInArea": "Ingen mål er knyttet til dette område.",
-    "maintenance": "Vedligeholdelse"
+    "maintenance": "Vedligeholdelse",
+    "noGoalsSelected": "Ingen mål valgt",
+    "noAvailableGoals": "Ingen tilgængelige mål",
+    "progressHint": "Søjle: udførte opgaver og projekter. Linje: tid mellem oprettelse og slutdato.",
+    "removeFromArea": "Fjern fra området"
   },
   "templates": {
     "new": "Ny skabelon",
@@ -4674,7 +4816,8 @@
       "projects": "Projekter",
       "tasks": "Opgaver",
       "notes": "Noter",
-      "habits": "Vaner"
+      "habits": "Vaner",
+      "goals": "Mål"
     },
     "help": {
       "title": "Tastaturgenveje",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Indlæser opgaver…",
     "subtasks": "Indlæser delopgaver..."
+  },
+  "noteCreation": "Opret ny note",
+  "notFound": {
+    "todayDescription": "Vis dagens opgaver",
+    "projectsDescription": "Gennemse dine projekter",
+    "inboxDescription": "Gennemgå dine indbakkeelementer",
+    "notesDescription": "Gennemse dine noter",
+    "title": "Siden blev ikke fundet",
+    "description": "Siden, du leder efter, findes ikke. Den kan være flyttet eller slettet, eller du har indtastet en forkert webadresse.",
+    "goBack": "Gå tilbage",
+    "goHome": "Gå til i dag",
+    "quickActions": "Hurtige handlinger"
+  },
+  "colors": {
+    "label": "Farve",
+    "none": "Ingen"
+  },
+  "tag": {
+    "viewTag": "Gå til mærke"
   }
 }

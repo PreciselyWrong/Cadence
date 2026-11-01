@@ -66,7 +66,15 @@
     "tags": "Etichete",
     "goToToday": "Mergi la Azi",
     "loadMore": "Încarcă mai multe",
-    "showAll": "Afișează tot"
+    "showAll": "Afișează tot",
+    "actions": "Acțiuni",
+    "creating": "Se creează...",
+    "createCalendar": "Creează calendar",
+    "untitled": "Fără titlu",
+    "resolving": "Se rezolvă...",
+    "showLess": "Arată mai puțin",
+    "breadcrumb": "Breadcrumb",
+    "undo": "Anulează"
   },
   "sidebar": {
     "dashboard": "Tabloul de bord",
@@ -145,7 +153,11 @@
     "search": "Caută",
     "admin": "Admin",
     "adminBadge": "Admin",
-    "templates": "Șabloane"
+    "templates": "Șabloane",
+    "today": "Azi",
+    "projects": "Proiecte",
+    "inbox": "Inbox",
+    "notes": "Notițe"
   },
   "settings": {
     "todayPageSettings": "Setări Pagina de Azi",
@@ -295,7 +307,9 @@
       "inProgress": "În desfășurare",
       "waiting": "Așteptare",
       "done": "Finalizat",
-      "dropHere": "Aruncă aici"
+      "dropHere": "Aruncă aici",
+      "customizeColumns": "Personalizează coloanele",
+      "columns": "Coloane"
     },
     "chaseUp": "Urmărește",
     "habit": "Obicei",
@@ -318,7 +332,17 @@
       "moveToProject": "Mută în proiect"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Șterge sarcina"
+    "deleteConfirmTitle": "Șterge sarcina",
+    "dueSoon": "scadent curând",
+    "progress": "Progres",
+    "priority": "Prioritate",
+    "todayPlan": "Planul de azi",
+    "startNow": "Începe acum",
+    "noDue": "Fără termen",
+    "overdueBy": "Întârziat cu {{days}} z",
+    "dueInDays": "Scadent în {{days}} z",
+    "startedSuccessfully": "Sarcina a fost pornită cu succes!",
+    "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată."
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",
@@ -649,7 +673,9 @@
       "setupSuccess": "Calendar configurat cu succes!",
       "setupFailed": "Crearea calendarului a eșuat",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Completează mai întâi toate detaliile conexiunii la server",
+      "validationError": "Completează toate câmpurile obligatorii și testează conexiunea"
     },
     "conflictResolver": {
       "title": "Rezolvă Conflictele de Sincronizare",
@@ -676,7 +702,8 @@
       "resolveSuccess": "Toate conflictele au fost rezolvate cu succes",
       "resolveError": "Rezolvarea conflictelor a eșuat",
       "nextConflict": "Următorul",
-      "prevConflict": "Anterior"
+      "prevConflict": "Anterior",
+      "mixedResolutionError": "Alege „Folosește tot local” sau „Folosește tot de la distanță” pentru fiecare conflict. Selecțiile mixte de câmpuri nu sunt încă acceptate."
     },
     "editCalendar": {
       "title": "Editează Calendar",
@@ -1054,7 +1081,8 @@
     "allClearHint": "Momentan nu există sarcini vagi, muncă blocată sau proiecte împotmolite. Un moment bun să planifici pasul următor.",
     "goToTasks": "Mergi la sarcini",
     "goToProjects": "Mergi la proiecte",
-    "planDay": "Planifică-ți ziua"
+    "planDay": "Planifică-ți ziua",
+    "andMore": "... și încă {{count}}"
   },
   "modals": {
     "confirmDelete": "Ești sigur că vrei să ștergi?",
@@ -1135,7 +1163,9 @@
         "weekOfMonth": "Săptămâna lunii",
         "recurrenceEndDate": "Data de sfârșit (opțional)",
         "completionBased": "Repetare după finalizare",
-        "repeatOn": "Repetă pe"
+        "repeatOn": "Repetă pe",
+        "recurrence": "Repetă",
+        "attachments": "Atașamente"
       },
       "projectSearchPlaceholder": "Caută sau creează un proiect...",
       "noMatchingProjects": "Niciun proiect corespunzător",
@@ -1188,7 +1218,10 @@
     "startDate": "Început",
     "goalBucket": "Grupul listei de dorințe",
     "goalParent": "Rezultat cheie al",
-    "noParentGoal": "Niciunul (independent)"
+    "noParentGoal": "Niciunul (independent)",
+    "name": "Nume",
+    "goalTitle": "Rezultat",
+    "project": "Proiect"
   },
   "auth": {
     "login": "Conectare",
@@ -1229,7 +1262,24 @@
     },
     "captcha_required": "Finalizează verificarea și încearcă din nou.",
     "registration_successful": "Verifică-ți adresa de e-mail",
-    "registration_email_sent": "Verifică-ți adresa de e-mail pentru a-ți activa contul. Ți-am trimis o legătură, verifică-ți inboxul."
+    "registration_email_sent": "Verifică-ți adresa de e-mail pentru a-ți activa contul. Ți-am trimis o legătură, verifică-ți inboxul.",
+    "back_to_login": "Înapoi la autentificare",
+    "email_verified": "Adresa ta de e-mail a fost verificată! Acum te poți autentifica.",
+    "verification_expired": "Linkul de verificare a expirat. Te rugăm să te înregistrezi din nou.",
+    "already_verified": "Adresa ta de e-mail este deja verificată. Te poți autentifica.",
+    "verification_failed": "Verificarea adresei de e-mail a eșuat. Încearcă din nou.",
+    "email_not_verified": "Te rugăm să îți verifici adresa de e-mail înainte de autentificare.",
+    "no_auth_methods": "Nu există metode de autentificare disponibile. Contactează administratorul.",
+    "no_account": "Nu ai un cont?",
+    "passwords_not_match": "Parolele nu coincid",
+    "registration_failed": "Înregistrarea a eșuat. Încearcă din nou.",
+    "error_occurred": "A apărut o eroare. Încearcă din nou.",
+    "password_registration_disabled": "Înregistrarea cu parolă este dezactivată",
+    "password_registration_disabled_message": "Înregistrarea cu parolă nu este disponibilă. Folosește SSO pentru a te autentifica.",
+    "registration_closed_title": "Înregistrare închisă",
+    "registration_closed_message": "Înregistrarea conturilor noi este dezactivată momentan. Contactează administratorul pentru acces.",
+    "confirm_password": "Confirmă parola",
+    "already_have_account": "Ai deja un cont?"
   },
   "dropdown": {
     "createNew": "Creează Nou",
@@ -1349,7 +1399,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Următoarea acțiune",
-    "nextActionLine": "Următoarea acțiune: {{name}}"
+    "nextActionLine": "Următoarea acțiune: {{name}}",
+    "noCompletedTasks": "Nicio sarcină finalizată."
   },
   "errors": {
     "required": "Acest câmp este obligatoriu",
@@ -1390,7 +1441,12 @@
     "failedToDeleteTag": "Eticheta nu a putut fi ștearsă.",
     "projectStatusUpdateFailed": "Nu s-a putut actualiza starea proiectului",
     "failedToSaveTask": "Nu s-a putut salva sarcina.",
-    "permissionDenied": "Acces refuzat"
+    "permissionDenied": "Acces refuzat",
+    "failedToDeleteArea": "Ștergerea zonei a eșuat.",
+    "failedToUpdateGoal": "Actualizarea obiectivului a eșuat.",
+    "failedToSaveProject": "Salvarea proiectului a eșuat.",
+    "failedToDeleteProject": "Ștergerea proiectului a eșuat.",
+    "projectNameTooLong": "Numele proiectului trebuie să aibă cel mult {{max}} caractere"
   },
   "inbox": {
     "title": "Căsuța de primire",
@@ -1528,7 +1584,8 @@
     "goalCreated": "Obiectiv creat!",
     "goalUpdated": "Obiectiv actualizat!",
     "goalDeleted": "Obiectiv șters!",
-    "tagDeleted": "Etichetă ștearsă!"
+    "tagDeleted": "Etichetă ștearsă!",
+    "areaDeleted": "Zona a fost ștearsă cu succes!"
   },
   "note": {
     "title": "Titlu",
@@ -1710,7 +1767,10 @@
     "hoursAgo": "acum {{count}} ore",
     "minutesAgo": "acum {{count}} minute",
     "inMinutes": "în {{count}} minute",
-    "inHours": "în {{count}} ore"
+    "inHours": "în {{count}} ore",
+    "pastDue": "Restante",
+    "editDetails": "Editează detaliile",
+    "noUpcomingOccurrences": "Nicio apariție viitoare."
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -1831,7 +1891,10 @@
     "savedAsTemplate": "\"{{name}}\" a fost salvat ca șablon.",
     "saveAsTemplateError": "Nu s-a putut salva proiectul ca șablon.",
     "sortTasks": "Sortează sarcinile",
-    "upcomingProjects": "Proiecte viitoare"
+    "upcomingProjects": "Proiecte viitoare",
+    "deleteError": "Ștergerea proiectului a eșuat",
+    "shared": "Partajat",
+    "status": "Starea proiectului"
   },
   "projectItem": {
     "edit": "Editează",
@@ -1913,7 +1976,8 @@
     "projects": "proiecte",
     "goals": "obiective",
     "tasks": "sarcini",
-    "progressSummary": "Progresul zonei · {{done}} din {{total}} sarcini finalizate"
+    "progressSummary": "Progresul zonei · {{done}} din {{total}} sarcini finalizate",
+    "toggleDropdownMenu": "Comutare meniu derulant"
   },
   "notes": {
     "loading": "Se încarcă notițele...",
@@ -1984,7 +2048,12 @@
       "more": "{{count}} more"
     },
     "edit": "Editează",
-    "delete": "Șterge"
+    "delete": "Șterge",
+    "saveBeforeFiles": "Adaugă mai întâi un titlu sau text la notiță, apoi adaugă fișiere.",
+    "fileUploadError": "Nu s-a putut încărca {{name}}",
+    "slashFile": "Imagine sau fișier",
+    "slashFileHint": "Încarcă și plasează aici",
+    "toggleDropdownMenu": "Comutare meniu derulant"
   },
   "tags": {
     "loading": "Se încarcă etichetele...",
@@ -2038,7 +2107,8 @@
     "parentTag": "Etichetă părinte",
     "noParent": "Niciuna (nivel superior)",
     "showChildTags": "Afișează etichetele copil",
-    "hideChildTags": "Ascunde etichetele copil"
+    "hideChildTags": "Ascunde etichetele copil",
+    "progressSummary": "Progres etichetă · {{done}} din {{total}} sarcini finalizate"
   },
   "recurrence": {
     "none": "Niciuna",
@@ -2069,7 +2139,9 @@
     "everyNMonths": "La fiecare {{count}} luni",
     "completionBased": "După finalizare",
     "onDay": "În ziua",
-    "until": "Până la"
+    "until": "Până la",
+    "monthDayPlaceholder": "Selectează ziua din lună",
+    "instance": "Instanță recurentă"
   },
   "weekdays": {
     "sunday": "Dum",
@@ -2218,7 +2290,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Sarcină"
   },
   "pages": {
     "notFound": {
@@ -2434,7 +2507,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} utilizatori · {{tasks}} sarcini · {{waitlist}} pe lista de așteptare · Cadence {{version}} · {{env}}",
+      "visitors": "Vizitatori, 7 zile",
+      "signups": "Înregistrări, 7 zile",
+      "activation": "Activare, {{days}} zile",
+      "activationHint": "{{n}} din {{total}} înregistrări",
+      "weeklyUsers": "Utilizatori săptămânali",
+      "weeklyUsersHint": "a creat ceva",
+      "selfHostedUsers": "self-hosted · {{n}} noi astăzi"
     },
     "waitlist": {
       "title": "Listă de așteptare",
@@ -2447,7 +2528,12 @@
       "joined": "Înscris",
       "empty": "Nimeni nu s-a înscris încă",
       "noMatches": "Niciună dintre adrese nu se potrivește cu această căutare",
-      "showing": "{{from}}-{{to}} din {{total}}"
+      "showing": "{{from}}-{{to}} din {{total}}",
+      "removed": "Eliminat de pe lista de așteptare",
+      "removeFailed": "Eliminarea intrării a eșuat",
+      "ipAddress": "Adresă IP",
+      "removeTitle": "Elimină adresa",
+      "confirmRemove": "Ștergi {{email}} de pe lista de așteptare? Acțiunea nu poate fi anulată."
     },
     "passwordInviteHint": "Lăsați gol pentru a trimite un email de invitație",
     "invitationSent": "Email de invitație trimis la {{email}}",
@@ -2721,7 +2807,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Vizitatori ai site-ului",
+      "visitorsHint": "site de marketing și blog",
+      "views": "Vizualizări de pagină",
+      "blog": "Cititori ai blogului",
+      "signupsRow": "Înregistrări",
+      "reach": "Acoperire",
+      "createdAnything": "Au creat ceva",
+      "firstPlanShort": "3+ sarcini",
+      "threeDaysShort": "înregistrările din săptămâna trecută, 3 zile în prima săptămână",
+      "newUsersGroup": "Înregistrările din această săptămână",
+      "appUsers": "Utilizatori ai aplicației",
+      "appUsersMonthHint": "{{month}} în 30 de zile",
+      "creators": "A creat ceva",
+      "creatorsHint": "utilizatori, orice tip de element",
+      "canceled": "Anulate",
+      "failed": "Plăți eșuate",
+      "today": "Azi",
+      "thisWeek": "Săptămâna aceasta",
+      "lastWeek": "Săptămâna trecută",
+      "change": "Modificare",
+      "fortnight": "14 zile"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2753,8 +2860,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "vizitează",
+      "stepSignups": "se înregistrează",
+      "stepActivated": "activează",
+      "stepPaid": "plătește",
+      "pts": "{{diff}} pct",
+      "noRate": "Mai puțini vizitatori numărați decât înregistrări",
+      "before": "era {{n}}"
+    },
+    "insights": {
+      "title": "Ce iese în evidență"
+    },
+    "aiUsage": {
+      "title": "Utilizare AI",
+      "users": "Utilizatori",
+      "totalCredits": "Credite utilizate luna aceasta (toți utilizatorii)",
+      "searchPlaceholder": "Caută după e-mail",
+      "user": "Utilizator",
+      "plan": "Plan",
+      "used": "Utilizat",
+      "limit": "Limită",
+      "remaining": "Rămas",
+      "empty": "Încă nu există utilizatori"
+    },
+    "userDeletedSuccessfully": "Utilizator șters cu succes"
   },
   "shares": {
     "shareProject": "Partajați proiectul",
@@ -2859,7 +2989,11 @@
     "blankSlateNew": "Caută pentru a crea o vedere",
     "noViewsMatch": "Nu s-au găsit vederi",
     "blankSlateFilteredHint": "Încearcă altă căutare.",
-    "blankSlateClearSearch": "Șterge căutarea"
+    "blankSlateClearSearch": "Șterge căutarea",
+    "view": "Vizualizare",
+    "progressSummary": "Progres vizualizare · {{done}} din {{total}} sarcini finalizate",
+    "sortTasks": "Sortează sarcinile",
+    "filters": "filtre"
   },
   "search": {
     "placeholder": "Caută sarcini, proiecte, note...",
@@ -2983,7 +3117,8 @@
     "restoreButton": "Restaurare",
     "adminInstanceNote": "Ca administrator, copia ta de rezervă include fiecare cont de pe această instanță, cu datele și hash-urile parolelor. Restaurarea ei pe o instalare nouă îi aduce pe toți înapoi. Păstrează fișierul la fel de sigur ca baza de date.",
     "accountsCount_one": "Alte conturi: {{count}}",
-    "accountsCount_other": "Alte conturi: {{count}}"
+    "accountsCount_other": "Alte conturi: {{count}}",
+    "delete": "Șterge"
   },
   "notifications": {
     "table": {
@@ -3532,7 +3667,8 @@
     "linkedAccount": "Legată de un cont de utilizator",
     "archivedBadge": "arhivată",
     "deletePerson": "Șterge persoana",
-    "deleteConfirm": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată."
+    "deleteConfirm": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată.",
+    "contact": "Contact"
   },
   "members": {
     "addTitle": "Adaugă membru",
@@ -3561,7 +3697,9 @@
     "removed": "Membru eliminat",
     "updated": "Membru actualizat",
     "invitationSent": "Invitație trimisă",
-    "failedToRemove": "Membrul nu a putut fi eliminat"
+    "failedToRemove": "Membrul nu a putut fi eliminat",
+    "title": "Membri",
+    "titleOne": "Membru"
   },
   "signInLink": {
     "action": "Link de autentificare",
@@ -3947,7 +4085,11 @@
     },
     "reorderError": "Nu s-a putut salva ordinea obiectivelor",
     "noGoalsInArea": "Niciun obiectiv nu este legat de această zonă.",
-    "maintenance": "Întreținere"
+    "maintenance": "Întreținere",
+    "noGoalsSelected": "Niciun obiectiv selectat",
+    "noAvailableGoals": "Niciun obiectiv disponibil",
+    "progressHint": "Bară: sarcini și proiecte finalizate. Linie: timpul trecut între creare și data țintă.",
+    "removeFromArea": "Elimină din zonă"
   },
   "templates": {
     "new": "Șablon nou",
@@ -4685,7 +4827,8 @@
       "projects": "Proiecte",
       "tasks": "Sarcini",
       "notes": "Notițe",
-      "habits": "Obiceiuri"
+      "habits": "Obiceiuri",
+      "goals": "Obiective"
     },
     "help": {
       "title": "Comenzi rapide de la tastatură",
@@ -5086,5 +5229,24 @@
   "loading": {
     "tasks": "Se încarcă sarcinile…",
     "subtasks": "Se încarcă subsarcinile..."
+  },
+  "noteCreation": "Creează notiță nouă",
+  "notFound": {
+    "todayDescription": "Vezi sarcinile de azi",
+    "projectsDescription": "Răsfoiește proiectele tale",
+    "inboxDescription": "Verifică elementele din inbox",
+    "notesDescription": "Răsfoiește notițele tale",
+    "title": "Pagina nu a fost găsită",
+    "description": "Pagina pe care o cauți nu există. Poate a fost mutată sau ștearsă ori ai introdus un URL greșit.",
+    "goBack": "Înapoi",
+    "goHome": "Mergi la Azi",
+    "quickActions": "Acțiuni rapide"
+  },
+  "colors": {
+    "label": "Culoare",
+    "none": "Niciuna"
+  },
+  "tag": {
+    "viewTag": "Mergi la etichetă"
   }
 }

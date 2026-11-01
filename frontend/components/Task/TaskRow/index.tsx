@@ -730,7 +730,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     title={t('tasks.deleteConfirmTitle', 'Delete Task')}
                     message={t(
                         'tasks.deleteConfirmMessage',
-                        `Are you sure you want to delete "${task.name}"? This action cannot be undone.`
+                        'Are you sure you want to delete "{{name}}"? This action cannot be undone.',
+                        { name: task.name }
                     )}
                     onConfirm={() => {
                         setIsConfirmDialogOpen(false);

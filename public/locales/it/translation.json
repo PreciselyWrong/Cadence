@@ -66,7 +66,15 @@
     "tags": "Tag",
     "goToToday": "Vai a Oggi",
     "loadMore": "Carica altri",
-    "showAll": "Mostra tutto"
+    "showAll": "Mostra tutto",
+    "actions": "Azioni",
+    "creating": "Creazione in corso...",
+    "createCalendar": "Crea calendario",
+    "untitled": "Senza titolo",
+    "resolving": "Risoluzione in corso...",
+    "showLess": "Mostra meno",
+    "breadcrumb": "Breadcrumb",
+    "undo": "Annulla"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -145,7 +153,11 @@
     "search": "Cerca",
     "admin": "Amministratore",
     "adminBadge": "Amministratore",
-    "templates": "Modelli"
+    "templates": "Modelli",
+    "today": "Oggi",
+    "projects": "Progetti",
+    "inbox": "Inbox",
+    "notes": "Note"
   },
   "settings": {
     "todayPageSettings": "Impostazioni Pagina Oggi",
@@ -295,7 +307,9 @@
       "inProgress": "In Corso",
       "waiting": "In attesa",
       "done": "Fatto",
-      "dropHere": "Trascina qui"
+      "dropHere": "Trascina qui",
+      "customizeColumns": "Personalizza colonne",
+      "columns": "Colonne"
     },
     "chaseUp": "Insegui",
     "habit": "Abitudine",
@@ -318,7 +332,17 @@
       "moveToProject": "Sposta in progetto"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Elimina attività"
+    "deleteConfirmTitle": "Elimina attività",
+    "dueSoon": "in scadenza a breve",
+    "progress": "Avanzamento",
+    "priority": "Priorità",
+    "todayPlan": "Piano di oggi",
+    "startNow": "Inizia ora",
+    "noDue": "Nessuna scadenza",
+    "overdueBy": "In ritardo di {{days}} g",
+    "dueInDays": "Scade tra {{days}} g",
+    "startedSuccessfully": "Attività avviata con successo!",
+    "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata."
   },
   "timeline": {
     "activityTimeline": "Timeline delle Attività",
@@ -649,7 +673,9 @@
       "setupSuccess": "Calendario configurato con successo!",
       "setupFailed": "Impossibile creare il calendario",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Compila prima tutti i dettagli di connessione al server",
+      "validationError": "Compila tutti i campi obbligatori e prova la connessione"
     },
     "conflictResolver": {
       "title": "Risolvi i Conflitti di Sincronizzazione",
@@ -676,7 +702,8 @@
       "resolveSuccess": "Tutti i conflitti risolti con successo",
       "resolveError": "Impossibile risolvere i conflitti",
       "nextConflict": "Successivo",
-      "prevConflict": "Precedente"
+      "prevConflict": "Precedente",
+      "mixedResolutionError": "Per ogni conflitto scegli \"Usa tutti locali\" o \"Usa tutti remoti\". Le selezioni miste non sono ancora supportate."
     },
     "editCalendar": {
       "title": "Modifica Calendario",
@@ -1052,7 +1079,8 @@
     "allClearHint": "Al momento nessuna attività vaga, nessun lavoro fermo e nessun progetto bloccato. Un buon momento per pianificare il prossimo passo.",
     "goToTasks": "Vai alle attività",
     "goToProjects": "Vai ai progetti",
-    "planDay": "Pianifica la giornata"
+    "planDay": "Pianifica la giornata",
+    "andMore": "... e altri {{count}}"
   },
   "modals": {
     "confirmDelete": "Sei sicuro di voler eliminare?",
@@ -1133,7 +1161,9 @@
         "weekOfMonth": "Settimana del mese",
         "recurrenceEndDate": "Data di fine (opzionale)",
         "completionBased": "Ripeti dopo il completamento",
-        "repeatOn": "Ripeti il"
+        "repeatOn": "Ripeti il",
+        "recurrence": "Ripeti",
+        "attachments": "Allegati"
       },
       "projectSearchPlaceholder": "Cerca o crea un progetto...",
       "noMatchingProjects": "Nessun progetto corrispondente",
@@ -1186,7 +1216,10 @@
     "startDate": "Inizio",
     "goalBucket": "Gruppo lista dei desideri",
     "goalParent": "Risultato chiave di",
-    "noParentGoal": "Nessuno (autonomo)"
+    "noParentGoal": "Nessuno (autonomo)",
+    "name": "Nome",
+    "goalTitle": "Risultato",
+    "project": "Progetto"
   },
   "auth": {
     "login": "Accedi",
@@ -1227,7 +1260,24 @@
     },
     "captcha_required": "Completa la verifica e riprova.",
     "registration_successful": "Verifica il tuo indirizzo email",
-    "registration_email_sent": "Verifica il tuo indirizzo email per attivare l'account. Ti abbiamo inviato un link, controlla la tua casella di posta."
+    "registration_email_sent": "Verifica il tuo indirizzo email per attivare l'account. Ti abbiamo inviato un link, controlla la tua casella di posta.",
+    "back_to_login": "Torna al login",
+    "email_verified": "La tua email è stata verificata! Ora puoi accedere.",
+    "verification_expired": "Il link di verifica è scaduto. Registrati di nuovo.",
+    "already_verified": "La tua email è già verificata. Puoi accedere.",
+    "verification_failed": "Verifica dell'email non riuscita. Riprova.",
+    "email_not_verified": "Verifica il tuo indirizzo email prima di accedere.",
+    "no_auth_methods": "Nessun metodo di autenticazione disponibile. Contatta l'amministratore.",
+    "no_account": "Non hai un account?",
+    "passwords_not_match": "Le password non corrispondono",
+    "registration_failed": "Registrazione non riuscita. Riprova.",
+    "error_occurred": "Si è verificato un errore. Riprova.",
+    "password_registration_disabled": "Registrazione con password disattivata",
+    "password_registration_disabled_message": "La registrazione con password non è disponibile. Usa SSO per accedere.",
+    "registration_closed_title": "Registrazione chiusa",
+    "registration_closed_message": "La registrazione di nuovi account è attualmente disattivata. Contatta l'amministratore per ottenere l'accesso.",
+    "confirm_password": "Conferma password",
+    "already_have_account": "Hai già un account?"
   },
   "dropdown": {
     "createNew": "Crea Nuovo",
@@ -1347,7 +1397,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Prossima azione",
-    "nextActionLine": "Prossima azione: {{name}}"
+    "nextActionLine": "Prossima azione: {{name}}",
+    "noCompletedTasks": "Nessuna attività completata."
   },
   "errors": {
     "required": "Questo campo è obbligatorio",
@@ -1388,7 +1439,12 @@
     "failedToDeleteTag": "Impossibile eliminare il tag.",
     "projectStatusUpdateFailed": "Impossibile aggiornare lo stato del progetto",
     "failedToSaveTask": "Impossibile salvare l'attività.",
-    "permissionDenied": "Autorizzazione negata"
+    "permissionDenied": "Autorizzazione negata",
+    "failedToDeleteArea": "Impossibile eliminare l'area.",
+    "failedToUpdateGoal": "Impossibile aggiornare l'obiettivo.",
+    "failedToSaveProject": "Impossibile salvare il progetto.",
+    "failedToDeleteProject": "Impossibile eliminare il progetto.",
+    "projectNameTooLong": "Il nome del progetto deve contenere al massimo {{max}} caratteri"
   },
   "inbox": {
     "title": "Inbox",
@@ -1526,7 +1582,8 @@
     "goalCreated": "Obiettivo creato!",
     "goalUpdated": "Obiettivo aggiornato!",
     "goalDeleted": "Obiettivo eliminato!",
-    "tagDeleted": "Tag eliminato!"
+    "tagDeleted": "Tag eliminato!",
+    "areaDeleted": "Area eliminata con successo!"
   },
   "note": {
     "title": "Titolo",
@@ -1708,7 +1765,10 @@
     "hoursAgo": "{{count}} ore fa",
     "minutesAgo": "{{count}} minuti fa",
     "inMinutes": "tra {{count}} minuti",
-    "inHours": "tra {{count}} ore"
+    "inHours": "tra {{count}} ore",
+    "pastDue": "Scaduta",
+    "editDetails": "Modifica dettagli",
+    "noUpcomingOccurrences": "Nessuna occorrenza futura."
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -1829,7 +1889,10 @@
     "savedAsTemplate": "\"{{name}}\" salvato come modello.",
     "saveAsTemplateError": "Impossibile salvare il progetto come modello.",
     "sortTasks": "Ordina attività",
-    "upcomingProjects": "Progetti in arrivo"
+    "upcomingProjects": "Progetti in arrivo",
+    "deleteError": "Impossibile eliminare il progetto",
+    "shared": "Condivisi",
+    "status": "Stato del progetto"
   },
   "projectItem": {
     "edit": "Modifica",
@@ -1911,7 +1974,8 @@
     "projects": "progetti",
     "goals": "obiettivi",
     "tasks": "attività",
-    "progressSummary": "Avanzamento area · {{done}} di {{total}} attività completate"
+    "progressSummary": "Avanzamento area · {{done}} di {{total}} attività completate",
+    "toggleDropdownMenu": "Apri o chiudi menu a discesa"
   },
   "notes": {
     "loading": "Caricamento note...",
@@ -1982,7 +2046,12 @@
       "more": "{{count}} more"
     },
     "edit": "Modifica",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "saveBeforeFiles": "Aggiungi prima un titolo o del testo alla nota, poi aggiungi i file.",
+    "fileUploadError": "Impossibile caricare {{name}}",
+    "slashFile": "Immagine o file",
+    "slashFileHint": "Carica e inserisci qui",
+    "toggleDropdownMenu": "Apri o chiudi menu a discesa"
   },
   "tags": {
     "loading": "Caricamento tag...",
@@ -2036,7 +2105,8 @@
     "parentTag": "Tag padre",
     "noParent": "Nessuno (livello superiore)",
     "showChildTags": "Mostra tag figli",
-    "hideChildTags": "Nascondi tag figli"
+    "hideChildTags": "Nascondi tag figli",
+    "progressSummary": "Avanzamento tag · {{done}} di {{total}} attività completate"
   },
   "recurrence": {
     "none": "Nessuna",
@@ -2067,7 +2137,9 @@
     "everyNMonths": "Ogni {{count}} mesi",
     "completionBased": "Dopo il completamento",
     "onDay": "Il giorno",
-    "until": "Fino al"
+    "until": "Fino al",
+    "monthDayPlaceholder": "Seleziona giorno del mese",
+    "instance": "Occorrenza ricorrente"
   },
   "weekdays": {
     "sunday": "Dom",
@@ -2216,7 +2288,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Attività"
   },
   "pages": {
     "notFound": {
@@ -2432,7 +2505,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} utenti · {{tasks}} attività · {{waitlist}} in lista d'attesa · Cadence {{version}} · {{env}}",
+      "visitors": "Visitatori, 7 giorni",
+      "signups": "Registrazioni, 7 giorni",
+      "activation": "Attivazione, {{days}} giorni",
+      "activationHint": "{{n}} di {{total}} registrazioni",
+      "weeklyUsers": "Utenti settimanali",
+      "weeklyUsersHint": "ha creato qualcosa",
+      "selfHostedUsers": "self-hosted · {{n}} nuovi oggi"
     },
     "waitlist": {
       "title": "Lista d'attesa",
@@ -2445,7 +2526,12 @@
       "joined": "Iscritto",
       "empty": "Nessuno si è ancora registrato",
       "noMatches": "Nessun indirizzo corrisponde a questa ricerca",
-      "showing": "{{from}}-{{to}} di {{total}}"
+      "showing": "{{from}}-{{to}} di {{total}}",
+      "removed": "Rimosso dalla lista d'attesa",
+      "removeFailed": "Impossibile rimuovere la voce",
+      "ipAddress": "Indirizzo IP",
+      "removeTitle": "Rimuovi indirizzo",
+      "confirmRemove": "Rimuovere {{email}} dalla lista d'attesa? Non è possibile annullare l'operazione."
     },
     "passwordInviteHint": "Lascia vuoto per inviare un'email di invito",
     "invitationSent": "Email di invito inviata a {{email}}",
@@ -2719,7 +2805,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Visitatori del sito",
+      "visitorsHint": "sito di marketing e blog",
+      "views": "Visualizzazioni di pagina",
+      "blog": "Lettori del blog",
+      "signupsRow": "Registrazioni",
+      "reach": "Raggiungibilità",
+      "createdAnything": "Ha creato qualcosa",
+      "firstPlanShort": "3+ attività",
+      "threeDaysShort": "registrazioni della settimana scorsa, 3 giorni nella prima settimana",
+      "newUsersGroup": "Registrazioni di questa settimana",
+      "appUsers": "Utenti app",
+      "appUsersMonthHint": "{{month}} in 30 giorni",
+      "creators": "Ha creato qualcosa",
+      "creatorsHint": "utenti, qualsiasi tipo di elemento",
+      "canceled": "Annullati",
+      "failed": "Pagamenti non riusciti",
+      "today": "Oggi",
+      "thisWeek": "Questa settimana",
+      "lastWeek": "Settimana scorsa",
+      "change": "Variazione",
+      "fortnight": "14 giorni"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2751,8 +2858,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "visita",
+      "stepSignups": "si registra",
+      "stepActivated": "attiva",
+      "stepPaid": "paga",
+      "pts": "{{diff}} pt",
+      "noRate": "Meno visitatori conteggiati che registrazioni",
+      "before": "era {{n}}"
+    },
+    "insights": {
+      "title": "Cosa spicca"
+    },
+    "aiUsage": {
+      "title": "Utilizzo dell'IA",
+      "users": "Utenti",
+      "totalCredits": "Crediti usati questo mese (tutti gli utenti)",
+      "searchPlaceholder": "Cerca per email",
+      "user": "Utente",
+      "plan": "Piano",
+      "used": "Usati",
+      "limit": "Limite",
+      "remaining": "Rimanenti",
+      "empty": "Nessun utente ancora"
+    },
+    "userDeletedSuccessfully": "Utente eliminato con successo"
   },
   "shares": {
     "shareProject": "Condividi progetto",
@@ -2857,7 +2987,11 @@
     "blankSlateNew": "Cerca per creare una vista",
     "noViewsMatch": "Nessuna vista trovata",
     "blankSlateFilteredHint": "Prova una ricerca diversa.",
-    "blankSlateClearSearch": "Cancella ricerca"
+    "blankSlateClearSearch": "Cancella ricerca",
+    "view": "Visualizza",
+    "progressSummary": "Vedi avanzamento · {{done}} di {{total}} attività completate",
+    "sortTasks": "Ordina attività",
+    "filters": "filtri"
   },
   "search": {
     "placeholder": "Cerca attività, progetti, note...",
@@ -2981,7 +3115,8 @@
     "restoreButton": "Ripristina",
     "adminInstanceNote": "Come amministratore, il tuo backup include tutti gli account di questa istanza, con i loro dati e gli hash delle password. Ripristinarlo su una nuova installazione riporta tutti. Conserva il file con la stessa cura del database.",
     "accountsCount_one": "{{count}} altro account",
-    "accountsCount_other": "{{count}} altri account"
+    "accountsCount_other": "{{count}} altri account",
+    "delete": "Elimina"
   },
   "notifications": {
     "table": {
@@ -3529,7 +3664,8 @@
     "linkedAccount": "Collegata a un account utente",
     "archivedBadge": "archiviata",
     "deletePerson": "Elimina persona",
-    "deleteConfirm": "Vuoi davvero eliminare «{{name}}»? L'operazione non si può annullare."
+    "deleteConfirm": "Vuoi davvero eliminare «{{name}}»? L'operazione non si può annullare.",
+    "contact": "Contatto"
   },
   "members": {
     "addTitle": "Aggiungi membro",
@@ -3558,7 +3694,9 @@
     "removed": "Membro rimosso",
     "updated": "Membro aggiornato",
     "invitationSent": "Invito inviato",
-    "failedToRemove": "Impossibile rimuovere il membro"
+    "failedToRemove": "Impossibile rimuovere il membro",
+    "title": "Membri",
+    "titleOne": "Membro"
   },
   "signInLink": {
     "action": "Link di accesso",
@@ -3943,7 +4081,11 @@
     },
     "reorderError": "Impossibile salvare l'ordine degli obiettivi",
     "noGoalsInArea": "Nessun obiettivo collegato a quest'area.",
-    "maintenance": "Manutenzione"
+    "maintenance": "Manutenzione",
+    "noGoalsSelected": "Nessun obiettivo selezionato",
+    "noAvailableGoals": "Nessun obiettivo disponibile",
+    "progressHint": "Barra: attività e progetti completati. Linea: tempo trascorso tra la creazione e la data di scadenza.",
+    "removeFromArea": "Rimuovi dall'area"
   },
   "templates": {
     "new": "Nuovo modello",
@@ -4681,7 +4823,8 @@
       "projects": "Progetti",
       "tasks": "Attività",
       "notes": "Note",
-      "habits": "Abitudini"
+      "habits": "Abitudini",
+      "goals": "Obiettivi"
     },
     "help": {
       "title": "Scorciatoie da tastiera",
@@ -5082,5 +5225,24 @@
   "loading": {
     "tasks": "Caricamento attività…",
     "subtasks": "Caricamento sottoattività..."
+  },
+  "noteCreation": "Crea nuova nota",
+  "notFound": {
+    "todayDescription": "Visualizza le attività di oggi",
+    "projectsDescription": "Sfoglia i tuoi progetti",
+    "inboxDescription": "Controlla gli elementi nella tua inbox",
+    "notesDescription": "Sfoglia le tue note",
+    "title": "Pagina non trovata",
+    "description": "La pagina che cerchi non esiste. Potrebbe essere stata spostata o eliminata, oppure hai inserito un URL errato.",
+    "goBack": "Indietro",
+    "goHome": "Vai a oggi",
+    "quickActions": "Azioni rapide"
+  },
+  "colors": {
+    "label": "Colore",
+    "none": "Nessuno"
+  },
+  "tag": {
+    "viewTag": "Vai al tag"
   }
 }

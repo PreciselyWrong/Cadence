@@ -73,7 +73,7 @@ const MemberEditModal: React.FC<MemberEditModalProps> = ({
         <EntitySidePanel
             isOpen
             onClose={onClose}
-            eyebrow={t('members.title', 'Member')}
+            eyebrow={t('members.titleOne', 'Member')}
             title={t('members.editTitle', 'Edit member')}
             submitLabel={t('common.save', 'Save')}
             submitTestId="member-edit-submit"

@@ -10,6 +10,7 @@ export type PaletteGroup =
     | 'projects'
     | 'tasks'
     | 'notes'
+    | 'goals'
     | 'habits';
 
 export interface PaletteItem {

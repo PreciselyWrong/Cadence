@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Task, Project, Area, Note, Tag, User } = require('../../models');
+const { Task, Project, Area, Note, Tag, User, Goal } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 const { isPostgres } = require('../../utils/db-dialect');
 const moment = require('moment-timezone');
@@ -27,6 +27,47 @@ describe('Universal Search Routes', () => {
                 const response = await request(app).get('/api/search');
                 expect(response.status).toBe(401);
                 expect(response.body.error).toBe('Authentication required');
+            });
+        });
+
+        describe('Goal search', () => {
+            it('finds own goals by title or why, only when requested', async () => {
+                const other = await createTestUser({
+                    email: 'search-other@example.com',
+                });
+                await Goal.create({
+                    user_id: user.id,
+                    title: 'Run a marathon',
+                    why: 'Stay healthy',
+                });
+                await Goal.create({
+                    user_id: other.id,
+                    title: 'Marathon of someone else',
+                });
+
+                const byTitle = await agent
+                    .get('/api/search')
+                    .query({ q: 'marathon', filters: 'Goal' });
+                expect(byTitle.status).toBe(200);
+                expect(byTitle.body.results).toHaveLength(1);
+                expect(byTitle.body.results[0]).toMatchObject({
+                    type: 'Goal',
+                    name: 'Run a marathon',
+                    title: 'Run a marathon',
+                });
+                expect(byTitle.body.results[0].uid).toBeTruthy();
+
+                const byWhy = await agent
+                    .get('/api/search')
+                    .query({ q: 'healthy', filters: 'Goal' });
+                expect(byWhy.body.results).toHaveLength(1);
+
+                const defaults = await agent
+                    .get('/api/search')
+                    .query({ q: 'marathon' });
+                expect(
+                    defaults.body.results.filter((r) => r.type === 'Goal')
+                ).toHaveLength(0);
             });
         });
 

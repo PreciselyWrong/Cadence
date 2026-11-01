@@ -65,7 +65,15 @@
     "tags": "Tag",
     "goToToday": "Ke Hari Ini",
     "loadMore": "Muat lebih banyak",
-    "showAll": "Tampilkan semua"
+    "showAll": "Tampilkan semua",
+    "actions": "Tindakan",
+    "creating": "Membuat...",
+    "createCalendar": "Buat Kalender",
+    "untitled": "Tanpa judul",
+    "resolving": "Menyelesaikan...",
+    "showLess": "Tampilkan lebih sedikit",
+    "breadcrumb": "Breadcrumb",
+    "undo": "Batalkan"
   },
   "sidebar": {
     "dashboard": "Dasbor",
@@ -144,7 +152,11 @@
     "search": "Cari",
     "admin": "Admin",
     "adminBadge": "Admin",
-    "templates": "Templat"
+    "templates": "Templat",
+    "today": "Hari ini",
+    "projects": "Proyek",
+    "inbox": "Kotak Masuk",
+    "notes": "Catatan"
   },
   "settings": {
     "todayPageSettings": "Pengaturan Halaman Hari Ini",
@@ -294,7 +306,9 @@
       "inProgress": "Sedang Berlangsung",
       "waiting": "Menunggu",
       "done": "Selesai",
-      "dropHere": "Jatuhkan di sini"
+      "dropHere": "Jatuhkan di sini",
+      "customizeColumns": "Sesuaikan kolom",
+      "columns": "Kolom"
     },
     "chaseUp": "Tindak Lanjut",
     "habit": "Kebiasaan",
@@ -317,7 +331,17 @@
       "moveToProject": "Pindahkan ke proyek"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Hapus Tugas"
+    "deleteConfirmTitle": "Hapus Tugas",
+    "dueSoon": "segera jatuh tempo",
+    "progress": "Progres",
+    "priority": "Prioritas",
+    "todayPlan": "Rencana hari ini",
+    "startNow": "Mulai sekarang",
+    "noDue": "Tidak ada tenggat",
+    "overdueBy": "Terlambat {{days}} hari",
+    "dueInDays": "Jatuh tempo dalam {{days}} hari",
+    "startedSuccessfully": "Tugas berhasil dimulai!",
+    "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan."
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",
@@ -648,7 +672,9 @@
       "setupSuccess": "Kalender berhasil dikonfigurasi!",
       "setupFailed": "Gagal membuat kalender",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Harap isi semua detail koneksi server terlebih dahulu",
+      "validationError": "Harap isi semua kolom wajib dan uji koneksi"
     },
     "conflictResolver": {
       "title": "Selesaikan Konflik Sinkronisasi",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Semua konflik berhasil diselesaikan",
       "resolveError": "Gagal menyelesaikan konflik",
       "nextConflict": "Selanjutnya",
-      "prevConflict": "Sebelumnya"
+      "prevConflict": "Sebelumnya",
+      "mixedResolutionError": "Harap pilih \"Gunakan semua lokal\" atau \"Gunakan semua remote\" untuk setiap konflik. Pilihan campuran belum didukung."
     },
     "editCalendar": {
       "title": "Edit Kalender",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Saat ini tidak ada tugas yang tidak jelas, pekerjaan terbengkalai, atau proyek macet. Saat yang tepat untuk merencanakan langkah berikutnya.",
     "goToTasks": "Buka tugas",
     "goToProjects": "Buka proyek",
-    "planDay": "Rencanakan hari Anda"
+    "planDay": "Rencanakan hari Anda",
+    "andMore": "... dan {{count}} lainnya"
   },
   "modals": {
     "confirmDelete": "Apakah Anda yakin ingin menghapus?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Minggu dalam bulan",
         "recurrenceEndDate": "Tanggal akhir (opsional)",
         "completionBased": "Ulangi setelah penyelesaian",
-        "repeatOn": "Ulangi pada"
+        "repeatOn": "Ulangi pada",
+        "recurrence": "Ulangi",
+        "attachments": "Lampiran"
       },
       "projectSearchPlaceholder": "Cari atau buat proyek...",
       "noMatchingProjects": "Tidak ada proyek yang cocok",
@@ -1185,7 +1215,10 @@
     "startDate": "Mulai",
     "goalBucket": "Grup daftar impian",
     "goalParent": "Hasil utama dari",
-    "noParentGoal": "Tidak ada (berdiri sendiri)"
+    "noParentGoal": "Tidak ada (berdiri sendiri)",
+    "name": "Nama",
+    "goalTitle": "Hasil",
+    "project": "Proyek"
   },
   "auth": {
     "login": "Masuk",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Selesaikan verifikasi lalu coba lagi.",
     "registration_successful": "Verifikasi alamat email Anda",
-    "registration_email_sent": "Verifikasi alamat email Anda untuk mengaktifkan akun. Kami telah mengirim tautan, periksa kotak masuk Anda."
+    "registration_email_sent": "Verifikasi alamat email Anda untuk mengaktifkan akun. Kami telah mengirim tautan, periksa kotak masuk Anda.",
+    "back_to_login": "Kembali ke Masuk",
+    "email_verified": "Email Anda telah diverifikasi! Sekarang Anda dapat masuk.",
+    "verification_expired": "Tautan verifikasi sudah kedaluwarsa. Silakan daftar lagi.",
+    "already_verified": "Email Anda sudah diverifikasi. Anda dapat masuk.",
+    "verification_failed": "Verifikasi email gagal. Silakan coba lagi.",
+    "email_not_verified": "Silakan verifikasi alamat email Anda sebelum masuk.",
+    "no_auth_methods": "Tidak ada metode autentikasi yang tersedia. Silakan hubungi administrator Anda.",
+    "no_account": "Belum punya akun?",
+    "passwords_not_match": "Kata sandi tidak cocok",
+    "registration_failed": "Pendaftaran gagal. Silakan coba lagi.",
+    "error_occurred": "Terjadi kesalahan. Silakan coba lagi.",
+    "password_registration_disabled": "Pendaftaran dengan Kata Sandi Dinonaktifkan",
+    "password_registration_disabled_message": "Pendaftaran berbasis kata sandi tidak tersedia. Silakan gunakan SSO untuk masuk.",
+    "registration_closed_title": "Pendaftaran Ditutup",
+    "registration_closed_message": "Pendaftaran akun baru saat ini dinonaktifkan. Hubungi administrator Anda untuk meminta akses.",
+    "confirm_password": "Konfirmasi Kata Sandi",
+    "already_have_account": "Sudah punya akun?"
   },
   "dropdown": {
     "createNew": "Buat Baru",
@@ -1345,7 +1395,8 @@
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
     "noTasks": "No tasks.",
     "nextAction": "Tindakan berikutnya",
-    "nextActionLine": "Tindakan berikutnya: {{name}}"
+    "nextActionLine": "Tindakan berikutnya: {{name}}",
+    "noCompletedTasks": "Tidak ada tugas yang selesai."
   },
   "errors": {
     "required": "Kolom ini diperlukan",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Gagal menghapus tag.",
     "projectStatusUpdateFailed": "Gagal memperbarui status proyek",
     "failedToSaveTask": "Gagal menyimpan tugas.",
-    "permissionDenied": "Izin ditolak"
+    "permissionDenied": "Izin ditolak",
+    "failedToDeleteArea": "Gagal menghapus area.",
+    "failedToUpdateGoal": "Gagal memperbarui tujuan.",
+    "failedToSaveProject": "Gagal menyimpan proyek.",
+    "failedToDeleteProject": "Gagal menghapus proyek.",
+    "projectNameTooLong": "Nama proyek maksimal {{max}} karakter"
   },
   "inbox": {
     "title": "Kotak Masuk",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Tujuan dibuat!",
     "goalUpdated": "Tujuan diperbarui!",
     "goalDeleted": "Tujuan dihapus!",
-    "tagDeleted": "Tag dihapus!"
+    "tagDeleted": "Tag dihapus!",
+    "areaDeleted": "Area berhasil dihapus!"
   },
   "note": {
     "title": "Judul",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} jam lalu",
     "minutesAgo": "{{count}} menit lalu",
     "inMinutes": "dalam {{count}} menit",
-    "inHours": "dalam {{count}} jam"
+    "inHours": "dalam {{count}} jam",
+    "pastDue": "Lewat tenggat",
+    "editDetails": "Edit detail",
+    "noUpcomingOccurrences": "Tidak ada kejadian mendatang."
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" disimpan sebagai templat.",
     "saveAsTemplateError": "Gagal menyimpan proyek sebagai templat.",
     "sortTasks": "Urutkan tugas",
-    "upcomingProjects": "Proyek mendatang"
+    "upcomingProjects": "Proyek mendatang",
+    "deleteError": "Gagal menghapus proyek",
+    "shared": "Dibagikan",
+    "status": "Status Proyek"
   },
   "projectItem": {
     "edit": "Sunting",
@@ -1908,7 +1971,8 @@
     "projects": "proyek",
     "goals": "tujuan",
     "tasks": "tugas",
-    "progressSummary": "Progres area · {{done}} dari {{total}} tugas selesai"
+    "progressSummary": "Progres area · {{done}} dari {{total}} tugas selesai",
+    "toggleDropdownMenu": "Buka atau tutup menu tarik-turun"
   },
   "notes": {
     "loading": "Memuat catatan...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Edit",
-    "delete": "Hapus"
+    "delete": "Hapus",
+    "saveBeforeFiles": "Beri judul atau teks pada catatan terlebih dahulu, lalu tambahkan file.",
+    "fileUploadError": "Tidak dapat mengunggah {{name}}",
+    "slashFile": "Gambar atau File",
+    "slashFileHint": "Unggah dan letakkan di sini",
+    "toggleDropdownMenu": "Buka atau tutup menu tarik-turun"
   },
   "tags": {
     "loading": "Memuat tag...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Tag induk",
     "noParent": "Tidak ada (tingkat atas)",
     "showChildTags": "Tampilkan tag anak",
-    "hideChildTags": "Sembunyikan tag anak"
+    "hideChildTags": "Sembunyikan tag anak",
+    "progressSummary": "Progres tag · {{done}} dari {{total}} tugas selesai"
   },
   "recurrence": {
     "none": "Tidak ada",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Setiap {{count}} bulan",
     "completionBased": "Setelah selesai",
     "onDay": "Pada tanggal",
-    "until": "Sampai"
+    "until": "Sampai",
+    "monthDayPlaceholder": "Pilih tanggal dalam bulan",
+    "instance": "Instans berulang"
   },
   "weekdays": {
     "sunday": "Min",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Tugas"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} pengguna · {{tasks}} tugas · {{waitlist}} dalam daftar tunggu · Cadence {{version}} · {{env}}",
+      "visitors": "Pengunjung, 7 hari",
+      "signups": "Pendaftaran, 7 hari",
+      "activation": "Aktivasi, {{days}} hari",
+      "activationHint": "{{n}} dari {{total}} pendaftaran",
+      "weeklyUsers": "Pengguna mingguan",
+      "weeklyUsersHint": "membuat sesuatu",
+      "selfHostedUsers": "self-hosted · {{n}} baru hari ini"
     },
     "waitlist": {
       "title": "Daftar Tunggu",
@@ -2440,7 +2521,12 @@
       "joined": "Bergabung",
       "empty": "Belum ada yang mendaftar",
       "noMatches": "Tidak ada alamat yang cocok dengan pencarian itu",
-      "showing": "{{from}}-{{to}} dari {{total}}"
+      "showing": "{{from}}-{{to}} dari {{total}}",
+      "removed": "Dihapus dari daftar tunggu",
+      "removeFailed": "Gagal menghapus entri",
+      "ipAddress": "Alamat IP",
+      "removeTitle": "Hapus Alamat",
+      "confirmRemove": "Hapus {{email}} dari daftar tunggu? Tindakan ini tidak dapat dibatalkan."
     },
     "passwordInviteHint": "Biarkan kosong untuk mengirim email undangan",
     "invitationSent": "Email undangan telah dikirim ke {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Pengunjung situs",
+      "visitorsHint": "situs pemasaran dan blog",
+      "views": "Tayangan halaman",
+      "blog": "Pembaca blog",
+      "signupsRow": "Pendaftaran",
+      "reach": "Jangkauan",
+      "createdAnything": "Membuat sesuatu",
+      "firstPlanShort": "3+ tugas",
+      "threeDaysShort": "pendaftaran minggu lalu, 3 hari di minggu pertama",
+      "newUsersGroup": "Pendaftaran minggu ini",
+      "appUsers": "Pengguna aplikasi",
+      "appUsersMonthHint": "{{month}} dalam 30 hari",
+      "creators": "Membuat sesuatu",
+      "creatorsHint": "pengguna, item jenis apa pun",
+      "canceled": "Dibatalkan",
+      "failed": "Pembayaran gagal",
+      "today": "Hari ini",
+      "thisWeek": "Minggu ini",
+      "lastWeek": "Minggu lalu",
+      "change": "Perubahan",
+      "fortnight": "14 hari"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "mengunjungi",
+      "stepSignups": "mendaftar",
+      "stepActivated": "mengaktifkan",
+      "stepPaid": "membayar",
+      "pts": "{{diff}} poin",
+      "noRate": "Pengunjung yang terhitung lebih sedikit daripada pendaftaran",
+      "before": "sebelumnya {{n}}"
+    },
+    "insights": {
+      "title": "Yang menonjol"
+    },
+    "aiUsage": {
+      "title": "Penggunaan AI",
+      "users": "Pengguna",
+      "totalCredits": "Kredit yang digunakan bulan ini (semua pengguna)",
+      "searchPlaceholder": "Cari berdasarkan email",
+      "user": "Pengguna",
+      "plan": "Paket",
+      "used": "Terpakai",
+      "limit": "Batas",
+      "remaining": "Sisa",
+      "empty": "Belum ada pengguna"
+    },
+    "userDeletedSuccessfully": "Pengguna berhasil dihapus"
   },
   "shares": {
     "shareProject": "Bagikan proyek",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Cari untuk membuat tampilan",
     "noViewsMatch": "Tampilan tidak ditemukan",
     "blankSlateFilteredHint": "Coba pencarian lain.",
-    "blankSlateClearSearch": "Hapus pencarian"
+    "blankSlateClearSearch": "Hapus pencarian",
+    "view": "Lihat",
+    "progressSummary": "Lihat progres · {{done}} dari {{total}} tugas selesai",
+    "sortTasks": "Urutkan tugas",
+    "filters": "filter"
   },
   "search": {
     "placeholder": "Cari tugas, proyek, catatan...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Pulihkan",
     "adminInstanceNote": "Sebagai admin, cadanganmu berisi setiap akun di instans ini, beserta data dan hash kata sandinya. Memulihkannya di instalasi baru mengembalikan semuanya. Simpan file ini seaman basis data.",
     "accountsCount_one": "{{count}} akun lain",
-    "accountsCount_other": "{{count}} akun lain"
+    "accountsCount_other": "{{count}} akun lain",
+    "delete": "Hapus"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Terhubung ke akun pengguna",
     "archivedBadge": "diarsipkan",
     "deletePerson": "Hapus orang",
-    "deleteConfirm": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan."
+    "deleteConfirm": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+    "contact": "Kontak"
   },
   "members": {
     "addTitle": "Tambah anggota",
@@ -3552,7 +3688,9 @@
     "removed": "Anggota dihapus",
     "updated": "Anggota diperbarui",
     "invitationSent": "Undangan terkirim",
-    "failedToRemove": "Gagal menghapus anggota"
+    "failedToRemove": "Gagal menghapus anggota",
+    "title": "Anggota",
+    "titleOne": "Anggota"
   },
   "signInLink": {
     "action": "Tautan masuk",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Gagal menyimpan urutan tujuan",
     "noGoalsInArea": "Tidak ada tujuan yang terkait dengan area ini.",
-    "maintenance": "Pemeliharaan"
+    "maintenance": "Pemeliharaan",
+    "noGoalsSelected": "Tidak ada tujuan yang dipilih",
+    "noAvailableGoals": "Tidak ada tujuan yang tersedia",
+    "progressHint": "Batang: tugas dan proyek selesai. Garis: waktu yang berlalu antara pembuatan dan tanggal target.",
+    "removeFromArea": "Hapus dari area"
   },
   "templates": {
     "new": "Templat Baru",
@@ -4674,7 +4816,8 @@
       "projects": "Proyek",
       "tasks": "Tugas",
       "notes": "Catatan",
-      "habits": "Kebiasaan"
+      "habits": "Kebiasaan",
+      "goals": "Tujuan"
     },
     "help": {
       "title": "Pintasan keyboard",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Memuat tugas…",
     "subtasks": "Memuat subtugas..."
+  },
+  "noteCreation": "Buat Catatan Baru",
+  "notFound": {
+    "todayDescription": "Lihat tugas hari ini",
+    "projectsDescription": "Jelajahi proyek Anda",
+    "inboxDescription": "Periksa item kotak masuk Anda",
+    "notesDescription": "Jelajahi catatan Anda",
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Halaman yang Anda cari tidak ada. Mungkin telah dipindahkan atau dihapus, atau URL yang Anda masukkan salah.",
+    "goBack": "Kembali",
+    "goHome": "Ke Hari Ini",
+    "quickActions": "Tindakan Cepat"
+  },
+  "colors": {
+    "label": "Warna",
+    "none": "Tidak ada"
+  },
+  "tag": {
+    "viewTag": "Buka tag"
   }
 }

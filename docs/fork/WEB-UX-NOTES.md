@@ -135,3 +135,19 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - cartes de projet : aucune mention d'échéance absente, échéance passée en date neutre ;
   - Boîte : la liste des éléments capturés est visible à l'ouverture ;
   - libellés : « Tâches bientôt dues » pour les notifications d'échéance proche.
+
+
+### 2026-11-01 — Restes du web : recherche d'objectifs, calendrier des habitudes, réglages
+
+- **Problème** : Ctrl+K ne trouvait pas les objectifs ; « Afficher les habitudes » du calendrier ne faisait plus rien depuis le retrait de l'ancien module ; la carte Apprise imbriquait un `<form>` dans celui du profil (avertissement React) ; le tableau Réglages › Notifications débordait à 375 px avec des interrupteurs de 20 px ; 150 textes utilisés dans le code n'existaient dans aucun fichier de langue (l'anglais par défaut s'affichait partout, y compris en français).
+- **Décisions** :
+  - Ctrl+K : les objectifs apparaissent sous « Objectifs » (titre ou « pourquoi » ; les siens seulement) et ouvrent la page de l'objectif ; l'API de recherche prend `filters=Goal`, absent par défaut ;
+  - calendrier : chaque habitude due s'affiche en puce « journée entière » à sa couleur, ou en bloc de 30 minutes à l'heure de son premier rappel actif ce jour-là ; « ✓ » devant le nom quand le jour est fait ; jours en pause omis ; une habitude « N fois par semaine » ou un suivi libre n'apparaît que les jours où elle a été faite ; un clic ouvre l'habitude ; lecture seule ;
+  - Apprise : plus de `<form>` (Entrée dans un champ enregistre, le bouton Enregistrer aussi), comme Webhooks ;
+  - Réglages › Notifications sur téléphone : une carte par type, une ligne par canal avec son libellé et l'interrupteur (zone d'appui 44 px) ; le tableau reste à partir de `md` ; les boutons « Tester » font 44 px de haut sur téléphone ;
+  - capture : `POST /api/inbox` accepte `Idempotency-Key`, une capture rejouée ne crée pas de doublon.
+- **Android à reprendre** :
+  - calendrier ou agenda : afficher les jours dus des habitudes avec la même règle (pas de pause, pas de jour « N fois par semaine » non fait, heure du premier rappel du jour) ;
+  - recherche : inclure les objectifs ;
+  - capture hors ligne : envoyer un `Idempotency-Key` stable par élément en file pour `POST /api/inbox` ;
+  - réglages de notifications : une ligne par canal avec cible tactile d'au moins 44 dp.

@@ -531,6 +531,51 @@ class SearchService {
     }
 
     /**
+     * Search the user's own goals (title and "why"). Only runs when the
+     * caller asks for the Goal type.
+     */
+    async searchGoals(userId, params) {
+        const { searchQuery, hasPagination, limit, offset } = params;
+
+        const conditions = { user_id: userId };
+        if (searchQuery) {
+            const lowerQuery = searchQuery.toLowerCase();
+            conditions[Op.or] = [
+                sequelize.where(
+                    sequelize.fn('LOWER', sequelize.col('Goal.title')),
+                    { [Op.like]: `%${lowerQuery}%` }
+                ),
+                sequelize.where(
+                    sequelize.fn('LOWER', sequelize.col('Goal.why')),
+                    { [Op.like]: `%${lowerQuery}%` }
+                ),
+            ];
+        }
+
+        const count = hasPagination
+            ? await searchRepository.countGoals(conditions)
+            : 0;
+        const goals = await searchRepository.findGoals(
+            conditions,
+            limit,
+            offset
+        );
+
+        return {
+            count,
+            results: goals.map((goal) => ({
+                type: 'Goal',
+                id: goal.id,
+                uid: goal.uid,
+                name: goal.title,
+                title: goal.title,
+                description: goal.why ? goal.why.substring(0, 100) : '',
+                status: goal.status,
+            })),
+        };
+    }
+
+    /**
      * Search notes.
      */
     async searchNotes(userId, params, tagIds, scope = null) {
@@ -753,6 +798,12 @@ class SearchService {
             );
             results.push(...noteResults.results);
             totalCount += noteResults.count;
+        }
+
+        if (filterTypes.includes('Goal')) {
+            const goalResults = await this.searchGoals(userId, params);
+            results.push(...goalResults.results);
+            totalCount += goalResults.count;
         }
 
         if (filterTypes.includes('Tag')) {

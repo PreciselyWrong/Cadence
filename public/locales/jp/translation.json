@@ -65,7 +65,15 @@
     "tags": "タグ",
     "goToToday": "今日へ移動",
     "loadMore": "さらに読み込む",
-    "showAll": "すべて表示"
+    "showAll": "すべて表示",
+    "actions": "操作",
+    "creating": "作成中...",
+    "createCalendar": "カレンダーを作成",
+    "untitled": "無題",
+    "resolving": "解決中...",
+    "showLess": "簡易表示",
+    "breadcrumb": "パンくず",
+    "undo": "元に戻す"
   },
   "sidebar": {
     "dashboard": "ダッシュボード",
@@ -144,7 +152,11 @@
     "search": "検索",
     "admin": "管理者",
     "adminBadge": "管理者",
-    "templates": "テンプレート"
+    "templates": "テンプレート",
+    "today": "今日",
+    "projects": "プロジェクト",
+    "inbox": "受信箱",
+    "notes": "メモ"
   },
   "settings": {
     "todayPageSettings": "今日のページ設定",
@@ -294,7 +306,9 @@
       "inProgress": "進行中",
       "waiting": "待機中",
       "done": "完了",
-      "dropHere": "ここにドロップ"
+      "dropHere": "ここにドロップ",
+      "customizeColumns": "列をカスタマイズ",
+      "columns": "列"
     },
     "chaseUp": "フォローアップ",
     "habit": "習慣",
@@ -317,7 +331,17 @@
       "moveToProject": "プロジェクトに移動"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "タスクを削除"
+    "deleteConfirmTitle": "タスクを削除",
+    "dueSoon": "まもなく期限",
+    "progress": "進捗",
+    "priority": "優先度",
+    "todayPlan": "今日のプラン",
+    "startNow": "今すぐ開始",
+    "noDue": "期限なし",
+    "overdueBy": "{{days}}日超過",
+    "dueInDays": "あと{{days}}日で期限",
+    "startedSuccessfully": "タスクを開始しました！",
+    "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。"
   },
   "timeline": {
     "activityTimeline": "アクティビティタイムライン",
@@ -648,7 +672,9 @@
       "setupSuccess": "カレンダーが正常に設定されました！",
       "setupFailed": "カレンダーの作成に失敗しました",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "まずサーバー接続の詳細をすべて入力してください",
+      "validationError": "必須項目をすべて入力し、接続をテストしてください"
     },
     "conflictResolver": {
       "title": "同期の競合を解決する",
@@ -675,7 +701,8 @@
       "resolveSuccess": "すべての競合が正常に解決されました",
       "resolveError": "競合の解決に失敗しました",
       "nextConflict": "次",
-      "prevConflict": "前"
+      "prevConflict": "前",
+      "mixedResolutionError": "競合ごとに「すべてローカルを使用」または「すべてリモートを使用」を選択してください。項目ごとの混在選択はまだサポートされていません。"
     },
     "editCalendar": {
       "title": "カレンダーの編集",
@@ -1110,7 +1137,9 @@
         "dueDate": "期限日",
         "deferUntil": "延期するまで",
         "note": "ノート",
-        "repeatOn": "繰り返し"
+        "repeatOn": "繰り返し",
+        "recurrence": "繰り返し",
+        "attachments": "添付ファイル"
       },
       "recurrenceSettings": "繰り返し設定",
       "completionBasedHelp": "チェックすると、次のタスクは期限日ではなく完了日に基づいて作成されます",
@@ -1160,7 +1189,10 @@
     "startDate": "開始",
     "goalBucket": "バケットリストのグループ",
     "goalParent": "主要な結果の対象",
-    "noParentGoal": "なし（単独）"
+    "noParentGoal": "なし（単独）",
+    "name": "名前",
+    "goalTitle": "成果",
+    "project": "プロジェクト"
   },
   "auth": {
     "login": "ログイン",
@@ -1201,7 +1233,24 @@
     },
     "captcha_required": "認証を完了してから、もう一度お試しください。",
     "registration_successful": "メールアドレスを確認してください",
-    "registration_email_sent": "アカウントを有効にするには、メールアドレスを確認してください。リンクをお送りしましたので、受信トレイをご確認ください。"
+    "registration_email_sent": "アカウントを有効にするには、メールアドレスを確認してください。リンクをお送りしましたので、受信トレイをご確認ください。",
+    "back_to_login": "ログインに戻る",
+    "email_verified": "メールアドレスが確認されました。ログインできるようになりました。",
+    "verification_expired": "確認リンクの有効期限が切れています。もう一度登録してください。",
+    "already_verified": "メールアドレスは確認済みです。ログインできます。",
+    "verification_failed": "メールアドレスの確認に失敗しました。もう一度お試しください。",
+    "email_not_verified": "ログインする前にメールアドレスを確認してください。",
+    "no_auth_methods": "利用可能な認証方法がありません。管理者にお問い合わせください。",
+    "no_account": "アカウントをお持ちではありませんか？",
+    "passwords_not_match": "パスワードが一致しません",
+    "registration_failed": "登録に失敗しました。もう一度お試しください。",
+    "error_occurred": "エラーが発生しました。もう一度お試しください。",
+    "password_registration_disabled": "パスワード登録は無効です",
+    "password_registration_disabled_message": "パスワードによる登録は利用できません。SSO でサインインしてください。",
+    "registration_closed_title": "登録は終了しました",
+    "registration_closed_message": "現在、新規アカウントの登録は無効になっています。アクセスについては管理者にお問い合わせください。",
+    "confirm_password": "パスワード（確認）",
+    "already_have_account": "すでにアカウントをお持ちですか？"
   },
   "dropdown": {
     "createNew": "新規作成",
@@ -1260,7 +1309,12 @@
     "failedToDeleteTag": "タグを削除できませんでした。",
     "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした",
     "failedToSaveTask": "タスクを保存できませんでした。",
-    "permissionDenied": "アクセスが拒否されました"
+    "permissionDenied": "アクセスが拒否されました",
+    "failedToDeleteArea": "エリアの削除に失敗しました。",
+    "failedToUpdateGoal": "目標の更新に失敗しました。",
+    "failedToSaveProject": "プロジェクトの保存に失敗しました。",
+    "failedToDeleteProject": "プロジェクトの削除に失敗しました。",
+    "projectNameTooLong": "プロジェクト名は {{max}} 文字以内で入力してください"
   },
   "success": {
     "noteUpdated": "ノートが正常に更新されました！",
@@ -1280,7 +1334,8 @@
     "goalCreated": "目標を作成しました！",
     "goalUpdated": "目標を更新しました！",
     "goalDeleted": "目標を削除しました！",
-    "tagDeleted": "タグを削除しました！"
+    "tagDeleted": "タグを削除しました！",
+    "areaDeleted": "エリアを削除しました！"
   },
   "dateFormats": {
     "long": "EEEE, MMMM d, yyyy",
@@ -1423,7 +1478,10 @@
     "savedAsTemplate": "「{{name}}」をテンプレートとして保存しました。",
     "saveAsTemplateError": "プロジェクトをテンプレートとして保存できませんでした。",
     "sortTasks": "タスクを並べ替え",
-    "upcomingProjects": "今後のプロジェクト"
+    "upcomingProjects": "今後のプロジェクト",
+    "deleteError": "プロジェクトの削除に失敗しました",
+    "shared": "共有",
+    "status": "プロジェクトのステータス"
   },
   "projectItem": {
     "edit": "編集",
@@ -1505,7 +1563,8 @@
     "projects": "プロジェクト",
     "goals": "目標",
     "tasks": "タスク",
-    "progressSummary": "エリアの進捗 · {{total}} 件中 {{done}} 件完了"
+    "progressSummary": "エリアの進捗 · {{total}} 件中 {{done}} 件完了",
+    "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
   },
   "notes": {
     "loading": "ノートを読み込み中...",
@@ -1576,7 +1635,12 @@
       "more": "{{count}} more"
     },
     "edit": "編集",
-    "delete": "削除"
+    "delete": "削除",
+    "saveBeforeFiles": "まずメモにタイトルまたは本文を入力してから、ファイルを追加してください。",
+    "fileUploadError": "{{name}} をアップロードできませんでした",
+    "slashFile": "画像またはファイル",
+    "slashFileHint": "ここにアップロードして配置",
+    "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
   },
   "tags": {
     "loading": "タグを読み込み中...",
@@ -1630,7 +1694,8 @@
     "parentTag": "親タグ",
     "noParent": "なし（最上位）",
     "showChildTags": "子タグを表示",
-    "hideChildTags": "子タグを非表示"
+    "hideChildTags": "子タグを非表示",
+    "progressSummary": "タグの進捗 · {{total}} 件中 {{done}} 件完了"
   },
   "recurrence": {
     "none": "なし",
@@ -1661,7 +1726,9 @@
     "everyNMonths": "{{count}} か月ごと",
     "completionBased": "完了後",
     "onDay": "毎月の日付",
-    "until": "終了日"
+    "until": "終了日",
+    "monthDayPlaceholder": "日を選択",
+    "instance": "繰り返しのインスタンス"
   },
   "weekdays": {
     "monday": "月",
@@ -1841,7 +1908,8 @@
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
     "noTasks": "No tasks.",
     "nextAction": "次のアクション",
-    "nextActionLine": "次のアクション: {{name}}"
+    "nextActionLine": "次のアクション: {{name}}",
+    "noCompletedTasks": "完了したタスクはありません。"
   },
   "task": {
     "recurringMove": {
@@ -2014,7 +2082,10 @@
     "hoursAgo": "{{count}} 時間前",
     "minutesAgo": "{{count}} 分前",
     "inMinutes": "{{count}} 分後",
-    "inHours": "{{count}} 時間後"
+    "inHours": "{{count}} 時間後",
+    "pastDue": "期限切れ",
+    "editDetails": "詳細を編集",
+    "noUpcomingOccurrences": "今後の予定はありません。"
   },
   "calendar": {
     "focusSession": "集中",
@@ -2143,7 +2214,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "タスク"
   },
   "productivity": {
     "stalledProjects": "停滞しているプロジェクト",
@@ -2168,7 +2240,8 @@
     "allClearHint": "今はあいまいなタスクも、止まっている作業も、行き詰まったプロジェクトもありません。次の計画を立てるのにちょうどよいタイミングです。",
     "goToTasks": "タスクへ",
     "goToProjects": "プロジェクトへ",
-    "planDay": "今日の計画を立てる"
+    "planDay": "今日の計画を立てる",
+    "andMore": "ほか {{count}} 件..."
   },
   "priority": {
     "low": "低",
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "ユーザー {{users}} · タスク {{tasks}} · ウェイティングリスト {{waitlist}} · Cadence {{version}} · {{env}}",
+      "visitors": "訪問者（7日間）",
+      "signups": "登録者（7日間）",
+      "activation": "有効化（{{days}}日間）",
+      "activationHint": "登録 {{total}} 件中 {{n}} 件",
+      "weeklyUsers": "週間ユーザー",
+      "weeklyUsersHint": "何かを作成",
+      "selfHostedUsers": "セルフホスト · 本日の新規 {{n}} 件"
     },
     "waitlist": {
       "title": "ウェイトリスト",
@@ -2440,7 +2521,12 @@
       "joined": "参加済み",
       "empty": "まだ誰もサインアップしていません",
       "noMatches": "その検索に一致するアドレスはありません",
-      "showing": "{{from}}-{{to}} / {{total}}"
+      "showing": "{{from}}-{{to}} / {{total}}",
+      "removed": "ウェイティングリストから削除しました",
+      "removeFailed": "エントリの削除に失敗しました",
+      "ipAddress": "IPアドレス",
+      "removeTitle": "アドレスを削除",
+      "confirmRemove": "{{email}} をウェイティングリストから削除しますか？この操作は取り消せません。"
     },
     "passwordInviteHint": "招待メールを送信するには空白のままにしてください",
     "invitationSent": "{{email}}に招待メールを送信しました",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "サイト訪問者",
+      "visitorsHint": "マーケティングサイトとブログ",
+      "views": "ページビュー",
+      "blog": "ブログ読者",
+      "signupsRow": "登録",
+      "reach": "リーチ",
+      "createdAnything": "何かを作成",
+      "firstPlanShort": "3件以上のタスク",
+      "threeDaysShort": "先週の登録者（最初の週の3日間）",
+      "newUsersGroup": "今週の登録者",
+      "appUsers": "アプリユーザー",
+      "appUsersMonthHint": "{{month}}（30日間）",
+      "creators": "何かを作成",
+      "creatorsHint": "ユーザー（アイテムの種類を問わず）",
+      "canceled": "キャンセル",
+      "failed": "支払い失敗",
+      "today": "今日",
+      "thisWeek": "今週",
+      "lastWeek": "先週",
+      "change": "変化",
+      "fortnight": "14日間"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "訪問",
+      "stepSignups": "登録",
+      "stepActivated": "有効化",
+      "stepPaid": "支払い",
+      "pts": "{{diff}} ポイント",
+      "noRate": "カウントされた訪問者が登録者より少ないです",
+      "before": "以前は {{n}}"
+    },
+    "insights": {
+      "title": "注目ポイント"
+    },
+    "aiUsage": {
+      "title": "AI 利用状況",
+      "users": "ユーザー",
+      "totalCredits": "今月の使用クレジット（全ユーザー）",
+      "searchPlaceholder": "メールアドレスで検索",
+      "user": "ユーザー",
+      "plan": "プラン",
+      "used": "使用済み",
+      "limit": "上限",
+      "remaining": "残り",
+      "empty": "ユーザーはまだいません"
+    },
+    "userDeletedSuccessfully": "ユーザーを削除しました"
   },
   "shares": {
     "shareProject": "プロジェクトを共有",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "検索してビューを作成",
     "noViewsMatch": "ビューが見つかりません",
     "blankSlateFilteredHint": "別の検索を試してください。",
-    "blankSlateClearSearch": "検索をクリア"
+    "blankSlateClearSearch": "検索をクリア",
+    "view": "表示",
+    "progressSummary": "進捗を表示 · {{total}} 件中 {{done}} 件完了",
+    "sortTasks": "タスクを並べ替え",
+    "filters": "フィルター"
   },
   "search": {
     "placeholder": "タスク、プロジェクト、ノートを検索...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "復元",
     "adminInstanceNote": "管理者のバックアップには、このインスタンスのすべてのアカウントが、そのデータとパスワードハッシュとともに含まれます。新しい環境に復元すると全員が戻ります。ファイルはデータベースと同じように大切に保管してください。",
     "accountsCount_one": "ほかのアカウント {{count}}件",
-    "accountsCount_other": "ほかのアカウント {{count}}件"
+    "accountsCount_other": "ほかのアカウント {{count}}件",
+    "delete": "削除"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "ユーザーアカウントと連携",
     "archivedBadge": "アーカイブ済み",
     "deletePerson": "人を削除",
-    "deleteConfirm": "「{{name}}」を削除してもよろしいですか？元に戻せません。"
+    "deleteConfirm": "「{{name}}」を削除してもよろしいですか？元に戻せません。",
+    "contact": "連絡先"
   },
   "members": {
     "addTitle": "メンバーを追加",
@@ -3552,7 +3688,9 @@
     "removed": "メンバーを削除しました",
     "updated": "メンバーを更新しました",
     "invitationSent": "招待を送信しました",
-    "failedToRemove": "メンバーを削除できませんでした"
+    "failedToRemove": "メンバーを削除できませんでした",
+    "title": "メンバー",
+    "titleOne": "メンバー"
   },
   "signInLink": {
     "action": "サインインリンク",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "目標の順序を保存できませんでした",
     "noGoalsInArea": "このエリアに紐づく目標はありません。",
-    "maintenance": "メンテナンス"
+    "maintenance": "メンテナンス",
+    "noGoalsSelected": "目標が選択されていません",
+    "noAvailableGoals": "利用可能な目標がありません",
+    "progressHint": "バー：完了したタスクとプロジェクト。線：作成から目標日までの経過時間。",
+    "removeFromArea": "エリアから削除"
   },
   "templates": {
     "new": "新しいテンプレート",
@@ -4674,7 +4816,8 @@
       "projects": "プロジェクト",
       "tasks": "タスク",
       "notes": "メモ",
-      "habits": "習慣"
+      "habits": "習慣",
+      "goals": "目標"
     },
     "help": {
       "title": "キーボードショートカット",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "タスクを読み込み中…",
     "subtasks": "サブタスクを読み込み中..."
+  },
+  "noteCreation": "新しいメモを作成",
+  "notFound": {
+    "todayDescription": "今日のタスクを表示",
+    "projectsDescription": "プロジェクトを閲覧",
+    "inboxDescription": "受信箱の項目を確認",
+    "notesDescription": "メモを閲覧",
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しません。移動または削除されたか、URL が間違っている可能性があります。",
+    "goBack": "戻る",
+    "goHome": "今日に移動",
+    "quickActions": "クイック操作"
+  },
+  "colors": {
+    "label": "色",
+    "none": "なし"
+  },
+  "tag": {
+    "viewTag": "タグへ移動"
   }
 }

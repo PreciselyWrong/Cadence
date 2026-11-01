@@ -65,7 +65,15 @@
     "tags": "Ετικέτες",
     "goToToday": "Μετάβαση στη σημερινή",
     "loadMore": "Φόρτωση περισσότερων",
-    "showAll": "Εμφάνιση όλων"
+    "showAll": "Εμφάνιση όλων",
+    "actions": "Ενέργειες",
+    "creating": "Δημιουργία...",
+    "createCalendar": "Δημιουργία ημερολογίου",
+    "untitled": "Χωρίς τίτλο",
+    "resolving": "Επίλυση...",
+    "showLess": "Εμφάνιση λιγότερων",
+    "breadcrumb": "Διαδρομή πλοήγησης",
+    "undo": "Αναίρεση"
   },
   "sidebar": {
     "dashboard": "Πίνακας Ελέγχου",
@@ -144,7 +152,11 @@
     "search": "Αναζήτηση",
     "admin": "Διαχειριστής",
     "adminBadge": "Διαχειριστής",
-    "templates": "Πρότυπα"
+    "templates": "Πρότυπα",
+    "today": "Σήμερα",
+    "projects": "Έργα",
+    "inbox": "Εισερχόμενα",
+    "notes": "Σημειώσεις"
   },
   "settings": {
     "todayPageSettings": "Ρυθμίσεις Σελίδας Σήμερα",
@@ -216,7 +228,24 @@
     },
     "captcha_required": "Ολοκληρώστε την επαλήθευση και δοκιμάστε ξανά.",
     "registration_successful": "Επιβεβαιώστε τη διεύθυνση email σας",
-    "registration_email_sent": "Επιβεβαιώστε τη διεύθυνση email σας για να ενεργοποιήσετε τον λογαριασμό σας. Σας στείλαμε έναν σύνδεσμο, ελέγξτε τα εισερχόμενά σας."
+    "registration_email_sent": "Επιβεβαιώστε τη διεύθυνση email σας για να ενεργοποιήσετε τον λογαριασμό σας. Σας στείλαμε έναν σύνδεσμο, ελέγξτε τα εισερχόμενά σας.",
+    "back_to_login": "Πίσω στη σύνδεση",
+    "email_verified": "Το email σας επαληθεύτηκε! Μπορείτε τώρα να συνδεθείτε.",
+    "verification_expired": "Ο σύνδεσμος επαλήθευσης έχει λήξει. Εγγραφείτε ξανά.",
+    "already_verified": "Το email σας έχει ήδη επαληθευτεί. Μπορείτε να συνδεθείτε.",
+    "verification_failed": "Η επαλήθευση email απέτυχε. Δοκιμάστε ξανά.",
+    "email_not_verified": "Επαληθεύστε τη διεύθυνση email σας πριν συνδεθείτε.",
+    "no_auth_methods": "Δεν υπάρχουν διαθέσιμες μέθοδοι ταυτοποίησης. Επικοινωνήστε με τον διαχειριστή σας.",
+    "no_account": "Δεν έχετε λογαριασμό;",
+    "passwords_not_match": "Οι κωδικοί πρόσβασης δεν ταιριάζουν",
+    "registration_failed": "Η εγγραφή απέτυχε. Δοκιμάστε ξανά.",
+    "error_occurred": "Παρουσιάστηκε σφάλμα. Δοκιμάστε ξανά.",
+    "password_registration_disabled": "Η εγγραφή με κωδικό είναι απενεργοποιημένη",
+    "password_registration_disabled_message": "Η εγγραφή με κωδικό δεν είναι διαθέσιμη. Χρησιμοποιήστε SSO για σύνδεση.",
+    "registration_closed_title": "Η εγγραφή είναι κλειστή",
+    "registration_closed_message": "Η εγγραφή νέων λογαριασμών είναι προσωρινά απενεργοποιημένη. Επικοινωνήστε με τον διαχειριστή σας για πρόσβαση.",
+    "confirm_password": "Επιβεβαίωση κωδικού",
+    "already_have_account": "Έχετε ήδη λογαριασμό;"
   },
   "profile": {
     "taskFeed": {
@@ -503,7 +532,9 @@
       "setupSuccess": "Το ημερολόγιο ρυθμίστηκε επιτυχώς!",
       "setupFailed": "Αποτυχία δημιουργίας ημερολογίου",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Συμπληρώστε πρώτα όλα τα στοιχεία σύνδεσης με τον διακομιστή",
+      "validationError": "Συμπληρώστε όλα τα υποχρεωτικά πεδία και δοκιμάστε τη σύνδεση"
     },
     "conflictResolver": {
       "title": "Επίλυση Συγκρούσεων Συγχρονισμού",
@@ -530,7 +561,8 @@
       "resolveSuccess": "Όλες οι συγκρούσεις επιλύθηκαν με επιτυχία",
       "resolveError": "Αποτυχία επίλυσης συγκρούσεων",
       "nextConflict": "Επόμενο",
-      "prevConflict": "Προηγούμενο"
+      "prevConflict": "Προηγούμενο",
+      "mixedResolutionError": "Επιλέξτε \"Χρήση όλων τοπικά\" ή \"Χρήση όλων απομακρυσμένα\" για κάθε σύγκρουση. Οι μικτές επιλογές πεδίων δεν υποστηρίζονται ακόμη."
     },
     "editCalendar": {
       "title": "Επεξεργασία Ημερολογίου",
@@ -922,7 +954,12 @@
     "failedToDeleteTag": "Η διαγραφή της ετικέτας απέτυχε.",
     "projectStatusUpdateFailed": "Αποτυχία ενημέρωσης κατάστασης έργου",
     "failedToSaveTask": "Αποτυχία αποθήκευσης εργασίας.",
-    "permissionDenied": "Δεν επιτρέπεται η πρόσβαση"
+    "permissionDenied": "Δεν επιτρέπεται η πρόσβαση",
+    "failedToDeleteArea": "Αποτυχία διαγραφής περιοχής.",
+    "failedToUpdateGoal": "Αποτυχία ενημέρωσης στόχου.",
+    "failedToSaveProject": "Αποτυχία αποθήκευσης έργου.",
+    "failedToDeleteProject": "Αποτυχία διαγραφής έργου.",
+    "projectNameTooLong": "Το όνομα έργου πρέπει να έχει το πολύ {{max}} χαρακτήρες"
   },
   "dropdown": {
     "createNew": "Δημιουργία Νέου",
@@ -1050,7 +1087,9 @@
       "inProgress": "Σε Πρόοδο",
       "waiting": "Αναμονή",
       "done": "Ολοκληρώθηκε",
-      "dropHere": "Αφήστε εδώ"
+      "dropHere": "Αφήστε εδώ",
+      "customizeColumns": "Προσαρμογή στηλών",
+      "columns": "Στήλες"
     },
     "chaseUp": "Επικοινωνία",
     "habit": "Συνήθεια",
@@ -1073,7 +1112,17 @@
       "moveToProject": "Μετακίνηση σε έργο"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Διαγραφή εργασίας"
+    "deleteConfirmTitle": "Διαγραφή εργασίας",
+    "dueSoon": "λήγει σύντομα",
+    "progress": "Πρόοδος",
+    "priority": "Προτεραιότητα",
+    "todayPlan": "Πλάνο σήμερα",
+    "startNow": "Έναρξη τώρα",
+    "noDue": "Χωρίς ημερομηνία λήξης",
+    "overdueBy": "Καθυστέρηση {{days}} ημ.",
+    "dueInDays": "Λήγει σε {{days}} ημ.",
+    "startedSuccessfully": "Η εργασία ξεκίνησε επιτυχώς!",
+    "deleteConfirmMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"{{name}}\"; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
   },
   "timeline": {
     "activityTimeline": "Χρονοδιάγραμμα Δραστηριότητας",
@@ -1237,7 +1286,10 @@
     "savedAsTemplate": "Το «{{name}}» αποθηκεύτηκε ως πρότυπο.",
     "saveAsTemplateError": "Αποτυχία αποθήκευσης του έργου ως πρότυπο.",
     "sortTasks": "Ταξινόμηση εργασιών",
-    "upcomingProjects": "Επερχόμενα έργα"
+    "upcomingProjects": "Επερχόμενα έργα",
+    "deleteError": "Αποτυχία διαγραφής έργου",
+    "shared": "Κοινόχρηστα",
+    "status": "Κατάσταση έργου"
   },
   "notes": {
     "loading": "Φόρτωση σημειώσεων...",
@@ -1308,7 +1360,12 @@
       "more": "{{count}} more"
     },
     "edit": "Επεξεργασία",
-    "delete": "Διαγραφή"
+    "delete": "Διαγραφή",
+    "saveBeforeFiles": "Δώστε πρώτα τίτλο ή κείμενο στη σημείωση και μετά προσθέστε αρχεία.",
+    "fileUploadError": "Δεν ήταν δυνατή η μεταφόρτωση του {{name}}",
+    "slashFile": "Εικόνα ή αρχείο",
+    "slashFileHint": "Μεταφορτώστε και τοποθετήστε το εδώ",
+    "toggleDropdownMenu": "Εναλλαγή μενού"
   },
   "projectItem": {
     "edit": "Επεξεργασία",
@@ -1364,7 +1421,8 @@
     "allClearHint": "Αυτή τη στιγμή δεν υπάρχουν ασαφείς εργασίες, δουλειά που έχει μείνει πίσω ή κολλημένα έργα. Καλή στιγμή να σχεδιάσετε το επόμενο βήμα.",
     "goToTasks": "Μετάβαση στις εργασίες",
     "goToProjects": "Μετάβαση στα έργα",
-    "planDay": "Σχεδιάστε τη μέρα σας"
+    "planDay": "Σχεδιάστε τη μέρα σας",
+    "andMore": "... και {{count}} ακόμη"
   },
   "modals": {
     "confirmDelete": "Είστε βέβαιοι ότι θέλετε να διαγράψετε;",
@@ -1462,7 +1520,9 @@
         "weekOfMonth": "Εβδομάδα του μήνα",
         "recurrenceEndDate": "Ημερομηνία λήξης (προαιρετικό)",
         "completionBased": "Επανάληψη μετά την ολοκλήρωση",
-        "repeatOn": "Επανάληψη στις"
+        "repeatOn": "Επανάληψη στις",
+        "recurrence": "Επανάληψη",
+        "attachments": "Συνημμένα"
       },
       "recurrenceSettings": "Ρυθμίσεις Επανάληψης",
       "completionBasedHelp": "Αν είναι ενεργοποιημένο, η επόμενη εργασία θα δημιουργηθεί με βάση την ημερομηνία ολοκλήρωσης αντί της ημερομηνίας λήξης",
@@ -1498,7 +1558,10 @@
     "startDate": "Έναρξη",
     "goalBucket": "Ομάδα λίστας επιθυμιών",
     "goalParent": "Βασικό αποτέλεσμα του",
-    "noParentGoal": "Κανένας (αυτόνομος)"
+    "noParentGoal": "Κανένας (αυτόνομος)",
+    "name": "Όνομα",
+    "goalTitle": "Αποτέλεσμα",
+    "project": "Έργο"
   },
   "priority": {
     "low": "Χαμηλή",
@@ -1688,7 +1751,10 @@
     "hoursAgo": "πριν από {{count}} ώρες",
     "minutesAgo": "πριν από {{count}} λεπτά",
     "inMinutes": "σε {{count}} λεπτά",
-    "inHours": "σε {{count}} ώρες"
+    "inHours": "σε {{count}} ώρες",
+    "pastDue": "Εκπρόθεσμη",
+    "editDetails": "Επεξεργασία λεπτομερειών",
+    "noUpcomingOccurrences": "Δεν υπάρχουν επερχόμενες εμφανίσεις."
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1826,7 +1892,8 @@
     "goalCreated": "Ο στόχος δημιουργήθηκε!",
     "goalUpdated": "Ο στόχος ενημερώθηκε!",
     "goalDeleted": "Ο στόχος διαγράφηκε!",
-    "tagDeleted": "Η ετικέτα διαγράφηκε!"
+    "tagDeleted": "Η ετικέτα διαγράφηκε!",
+    "areaDeleted": "Η περιοχή διαγράφηκε επιτυχώς!"
   },
   "areas": {
     "title": "Περιοχές",
@@ -1886,7 +1953,8 @@
     "projects": "έργα",
     "goals": "στόχοι",
     "tasks": "εργασίες",
-    "progressSummary": "Πρόοδος τομέα · {{done}} από {{total}} εργασίες ολοκληρωμένες"
+    "progressSummary": "Πρόοδος τομέα · {{done}} από {{total}} εργασίες ολοκληρωμένες",
+    "toggleDropdownMenu": "Εναλλαγή μενού"
   },
   "tags": {
     "loading": "Φόρτωση ετικετών...",
@@ -1940,7 +2008,8 @@
     "parentTag": "Γονική ετικέτα",
     "noParent": "Καμία (ανώτερο επίπεδο)",
     "showChildTags": "Εμφάνιση θυγατρικών ετικετών",
-    "hideChildTags": "Απόκρυψη θυγατρικών ετικετών"
+    "hideChildTags": "Απόκρυψη θυγατρικών ετικετών",
+    "progressSummary": "Πρόοδος ετικέτας · {{done}} από {{total}} εργασίες ολοκληρώθηκαν"
   },
   "note": {
     "title": "Τίτλος",
@@ -1980,7 +2049,9 @@
     "everyNMonths": "Κάθε {{count}} μήνες",
     "completionBased": "Μετά την ολοκλήρωση",
     "onDay": "Την ημέρα",
-    "until": "Έως"
+    "until": "Έως",
+    "monthDayPlaceholder": "Επιλέξτε ημέρα του μήνα",
+    "instance": "Επαναλαμβανόμενη εμφάνιση"
   },
   "weekdays": {
     "sunday": "Κυρ",
@@ -2074,7 +2145,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Επόμενη ενέργεια",
-    "nextActionLine": "Επόμενη ενέργεια: {{name}}"
+    "nextActionLine": "Επόμενη ενέργεια: {{name}}",
+    "noCompletedTasks": "Δεν υπάρχουν ολοκληρωμένες εργασίες."
   },
   "pomodoro": {
     "play": "Αναπαραγωγή",
@@ -2212,7 +2284,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Εργασία"
   },
   "pages": {
     "notFound": {
@@ -2428,7 +2501,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} χρήστες · {{tasks}} εργασίες · {{waitlist}} στη λίστα αναμονής · Cadence {{version}} · {{env}}",
+      "visitors": "Επισκέπτες, 7 ημέρες",
+      "signups": "Εγγραφές, 7 ημέρες",
+      "activation": "Ενεργοποίηση, {{days}} ημέρες",
+      "activationHint": "{{n}} από {{total}} εγγραφές",
+      "weeklyUsers": "Εβδομαδιαίοι χρήστες",
+      "weeklyUsersHint": "δημιούργησε κάτι",
+      "selfHostedUsers": "self-hosted · {{n}} νέοι σήμερα"
     },
     "waitlist": {
       "title": "Λίστα αναμονής",
@@ -2441,7 +2522,12 @@
       "joined": "Συμμετοχή",
       "empty": "Κανείς δεν έχει εγγραφεί ακόμα",
       "noMatches": "Καμία διεύθυνση δεν ταιριάζει σε αυτήν την αναζήτηση",
-      "showing": "{{from}}-{{to}} από {{total}}"
+      "showing": "{{from}}-{{to}} από {{total}}",
+      "removed": "Αφαιρέθηκε από τη λίστα αναμονής",
+      "removeFailed": "Αποτυχία αφαίρεσης εγγραφής",
+      "ipAddress": "Διεύθυνση IP",
+      "removeTitle": "Αφαίρεση διεύθυνσης",
+      "confirmRemove": "Αφαίρεση του {{email}} από τη λίστα αναμονής; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
     },
     "passwordInviteHint": "Αφήστε κενό για να στείλετε ένα email πρόσκλησης",
     "invitationSent": "Email πρόσκλησης στάλθηκε στο {{email}}",
@@ -2714,7 +2800,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Επισκέπτες ιστότοπου",
+      "visitorsHint": "ιστότοπος μάρκετινγκ και blog",
+      "views": "Προβολές σελίδων",
+      "blog": "Αναγνώστες blog",
+      "signupsRow": "Εγγραφές",
+      "reach": "Εμβέλεια",
+      "createdAnything": "Δημιούργησε κάτι",
+      "firstPlanShort": "3+ εργασίες",
+      "threeDaysShort": "εγγραφές της προηγούμενης εβδομάδας, 3 ημέρες στην πρώτη τους εβδομάδα",
+      "newUsersGroup": "Εγγραφές αυτής της εβδομάδας",
+      "appUsers": "Χρήστες εφαρμογής",
+      "appUsersMonthHint": "{{month}} σε 30 ημέρες",
+      "creators": "Δημιούργησε κάτι",
+      "creatorsHint": "χρήστες, οποιοδήποτε είδος στοιχείου",
+      "canceled": "Ακυρώθηκαν",
+      "failed": "Αποτυχημένες πληρωμές",
+      "today": "Σήμερα",
+      "thisWeek": "Αυτή την εβδομάδα",
+      "lastWeek": "Την προηγούμενη εβδομάδα",
+      "change": "Αλλαγή",
+      "fortnight": "14 ημέρες"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2746,8 +2853,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "επισκέπτονται",
+      "stepSignups": "εγγράφονται",
+      "stepActivated": "ενεργοποιούν",
+      "stepPaid": "πληρώνουν",
+      "pts": "{{diff}} μον.",
+      "noRate": "Λιγότεροι καταμετρημένοι επισκέπτες από τις εγγραφές",
+      "before": "ήταν {{n}}"
+    },
+    "insights": {
+      "title": "Τι ξεχωρίζει"
+    },
+    "aiUsage": {
+      "title": "Χρήση AI",
+      "users": "Χρήστες",
+      "totalCredits": "Πιστώσεις που χρησιμοποιήθηκαν αυτόν τον μήνα (όλοι οι χρήστες)",
+      "searchPlaceholder": "Αναζήτηση με email",
+      "user": "Χρήστης",
+      "plan": "Πρόγραμμα",
+      "used": "Χρησιμοποιήθηκαν",
+      "limit": "Όριο",
+      "remaining": "Υπόλοιπο",
+      "empty": "Δεν υπάρχουν ακόμη χρήστες"
+    },
+    "userDeletedSuccessfully": "Ο χρήστης διαγράφηκε επιτυχώς"
   },
   "shares": {
     "shareProject": "Κοινή χρήση έργου",
@@ -2852,7 +2982,11 @@
     "blankSlateNew": "Αναζήτηση για δημιουργία προβολής",
     "noViewsMatch": "Δεν βρέθηκαν προβολές",
     "blankSlateFilteredHint": "Δοκιμάστε άλλη αναζήτηση.",
-    "blankSlateClearSearch": "Καθαρισμός αναζήτησης"
+    "blankSlateClearSearch": "Καθαρισμός αναζήτησης",
+    "view": "Προβολή",
+    "progressSummary": "Πρόοδος προβολής · {{done}} από {{total}} εργασίες ολοκληρώθηκαν",
+    "sortTasks": "Ταξινόμηση εργασιών",
+    "filters": "φίλτρα"
   },
   "search": {
     "placeholder": "Αναζήτηση εργασιών, έργων, σημειώσεων...",
@@ -2976,7 +3110,8 @@
     "restoreButton": "Αποκατάσταση",
     "adminInstanceNote": "Ως διαχειριστής, το αντίγραφο ασφαλείας σου περιλαμβάνει κάθε λογαριασμό αυτής της εγκατάστασης, με τα δεδομένα και τα hash των κωδικών τους. Η επαναφορά του σε νέα εγκατάσταση τους φέρνει όλους πίσω. Φύλαξε το αρχείο όσο προσεκτικά φυλάς τη βάση δεδομένων.",
     "accountsCount_one": "{{count}} ακόμη λογαριασμός",
-    "accountsCount_other": "{{count}} ακόμη λογαριασμοί"
+    "accountsCount_other": "{{count}} ακόμη λογαριασμοί",
+    "delete": "Διαγραφή"
   },
   "notifications": {
     "table": {
@@ -3524,7 +3659,8 @@
     "linkedAccount": "Συνδεδεμένο με λογαριασμό χρήστη",
     "archivedBadge": "αρχειοθετημένο",
     "deletePerson": "Διαγραφή ατόμου",
-    "deleteConfirm": "Θέλετε σίγουρα να διαγράψετε το «{{name}}»; Δεν μπορεί να αναιρεθεί."
+    "deleteConfirm": "Θέλετε σίγουρα να διαγράψετε το «{{name}}»; Δεν μπορεί να αναιρεθεί.",
+    "contact": "Επαφή"
   },
   "members": {
     "addTitle": "Προσθήκη μέλους",
@@ -3553,7 +3689,9 @@
     "removed": "Το μέλος αφαιρέθηκε",
     "updated": "Το μέλος ενημερώθηκε",
     "invitationSent": "Η πρόσκληση στάλθηκε",
-    "failedToRemove": "Αποτυχία αφαίρεσης μέλους"
+    "failedToRemove": "Αποτυχία αφαίρεσης μέλους",
+    "title": "Μέλη",
+    "titleOne": "Μέλος"
   },
   "signInLink": {
     "action": "Σύνδεσμος σύνδεσης",
@@ -3938,7 +4076,11 @@
     },
     "reorderError": "Αποτυχία αποθήκευσης της σειράς των στόχων",
     "noGoalsInArea": "Δεν υπάρχουν στόχοι συνδεδεμένοι με αυτόν τον τομέα.",
-    "maintenance": "Συντήρηση"
+    "maintenance": "Συντήρηση",
+    "noGoalsSelected": "Δεν έχουν επιλεγεί στόχοι",
+    "noAvailableGoals": "Δεν υπάρχουν διαθέσιμοι στόχοι",
+    "progressHint": "Μπάρα: ολοκληρωμένες εργασίες και έργα. Γραμμή: χρόνος που πέρασε από τη δημιουργία έως την ημερομηνία στόχου.",
+    "removeFromArea": "Αφαίρεση από περιοχή"
   },
   "templates": {
     "new": "Νέο πρότυπο",
@@ -4675,7 +4817,8 @@
       "projects": "Έργα",
       "tasks": "Εργασίες",
       "notes": "Σημειώσεις",
-      "habits": "Συνήθειες"
+      "habits": "Συνήθειες",
+      "goals": "Στόχοι"
     },
     "help": {
       "title": "Συντομεύσεις πληκτρολογίου",
@@ -5070,5 +5213,24 @@
   "loading": {
     "tasks": "Φόρτωση εργασιών…",
     "subtasks": "Φόρτωση υποεργασιών..."
+  },
+  "noteCreation": "Δημιουργία νέας σημείωσης",
+  "notFound": {
+    "todayDescription": "Προβολή εργασιών σήμερα",
+    "projectsDescription": "Περιηγηθείτε στα έργα σας",
+    "inboxDescription": "Ελέγξτε τα στοιχεία των εισερχομένων σας",
+    "notesDescription": "Περιηγηθείτε στις σημειώσεις σας",
+    "title": "Η σελίδα δεν βρέθηκε",
+    "description": "Η σελίδα που αναζητάτε δεν υπάρχει. Ίσως έχει μετακινηθεί ή διαγραφεί, ή εισαγάγατε λάθος διεύθυνση.",
+    "goBack": "Επιστροφή",
+    "goHome": "Μετάβαση σε σήμερα",
+    "quickActions": "Γρήγορες ενέργειες"
+  },
+  "colors": {
+    "label": "Χρώμα",
+    "none": "Κανένα"
+  },
+  "tag": {
+    "viewTag": "Μετάβαση στην ετικέτα"
   }
 }

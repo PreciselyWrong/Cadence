@@ -65,7 +65,15 @@
     "tags": "Etiketler",
     "goToToday": "Bugüne git",
     "loadMore": "Daha fazla yükle",
-    "showAll": "Tümünü göster"
+    "showAll": "Tümünü göster",
+    "actions": "İşlemler",
+    "creating": "Oluşturuluyor...",
+    "createCalendar": "Takvim Oluştur",
+    "untitled": "Adsız",
+    "resolving": "Çözümleniyor...",
+    "showLess": "Daha azını göster",
+    "breadcrumb": "Gezinti yolu",
+    "undo": "Geri al"
   },
   "sidebar": {
     "dashboard": "Gösterge Paneli",
@@ -144,7 +152,11 @@
     "search": "Ara",
     "admin": "Yönetici",
     "adminBadge": "Yönetici",
-    "templates": "Şablonlar"
+    "templates": "Şablonlar",
+    "today": "Bugün",
+    "projects": "Projeler",
+    "inbox": "Gelen Kutusu",
+    "notes": "Notlar"
   },
   "settings": {
     "todayPageSettings": "Bugün Sayfası Ayarları",
@@ -294,7 +306,9 @@
       "inProgress": "Devam Ediyor",
       "waiting": "Bekliyor",
       "done": "Tamamlandı",
-      "dropHere": "Buraya bırak"
+      "dropHere": "Buraya bırak",
+      "customizeColumns": "Sütunları özelleştir",
+      "columns": "Sütunlar"
     },
     "chaseUp": "Takip et",
     "habit": "Alışkanlık",
@@ -317,7 +331,17 @@
       "moveToProject": "Projeye taşı"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Görevi sil"
+    "deleteConfirmTitle": "Görevi sil",
+    "dueSoon": "yakında son tarih",
+    "progress": "İlerleme",
+    "priority": "Öncelik",
+    "todayPlan": "Bugünün planı",
+    "startNow": "Şimdi başlat",
+    "noDue": "Son tarih yok",
+    "overdueBy": "{{days}} gün gecikti",
+    "dueInDays": "{{days}} gün içinde son tarih",
+    "startedSuccessfully": "Görev başarıyla başlatıldı!",
+    "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",
@@ -648,7 +672,9 @@
       "setupSuccess": "Takvim başarıyla yapılandırıldı!",
       "setupFailed": "Takvim oluşturulamadı",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/takvimler/kullanıcı/görevler"
+      "calendarPathPlaceholder": "/takvimler/kullanıcı/görevler",
+      "fillServerDetails": "Lütfen önce tüm sunucu bağlantı bilgilerini doldurun",
+      "validationError": "Lütfen tüm zorunlu alanları doldurun ve bağlantıyı test edin"
     },
     "conflictResolver": {
       "title": "Senkronizasyon Çatışmalarını Çöz",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Tüm çatışmalar başarıyla çözüldü",
       "resolveError": "Çatışmaları çözme başarısız oldu",
       "nextConflict": "Sonraki",
-      "prevConflict": "Önceki"
+      "prevConflict": "Önceki",
+      "mixedResolutionError": "Her çakışma için »Tümünü yerel kullan« ya da »Tümünü uzak kullan« seçin. Karışık alan seçimleri henüz desteklenmiyor."
     },
     "editCalendar": {
       "title": "Takvimi Düzenle",
@@ -1051,7 +1078,8 @@
     "allClearHint": "Şu anda belirsiz görev, bekleyen iş veya takılmış proje yok. Sıradakini planlamak için iyi bir an.",
     "goToTasks": "Görevlere git",
     "goToProjects": "Projelere git",
-    "planDay": "Gününüzü planlayın"
+    "planDay": "Gününüzü planlayın",
+    "andMore": "... ve {{count}} tane daha"
   },
   "modals": {
     "confirmDelete": "Silmek istediğinize emin misiniz?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Ayın Haftası",
         "recurrenceEndDate": "Bitiş tarihi (isteğe bağlı)",
         "completionBased": "Tamamlandıktan sonra tekrar et",
-        "repeatOn": "Şu tarihlerde tekrar et"
+        "repeatOn": "Şu tarihlerde tekrar et",
+        "recurrence": "Tekrarla",
+        "attachments": "Ekler"
       },
       "projectSearchPlaceholder": "Proje ara veya oluştur...",
       "noMatchingProjects": "Eşleşen proje yok",
@@ -1185,7 +1215,10 @@
     "startDate": "Başlangıç",
     "goalBucket": "Yapılacaklar listesi grubu",
     "goalParent": "Şu hedefin ana sonucu",
-    "noParentGoal": "Yok (bağımsız)"
+    "noParentGoal": "Yok (bağımsız)",
+    "name": "Ad",
+    "goalTitle": "Sonuç",
+    "project": "Proje"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Lütfen doğrulamayı tamamlayıp tekrar deneyin.",
     "registration_successful": "E-posta adresinizi doğrulayın",
-    "registration_email_sent": "Hesabınızı etkinleştirmek için e-posta adresinizi doğrulayın. Size bir bağlantı gönderdik, gelen kutunuzu kontrol edin."
+    "registration_email_sent": "Hesabınızı etkinleştirmek için e-posta adresinizi doğrulayın. Size bir bağlantı gönderdik, gelen kutunuzu kontrol edin.",
+    "back_to_login": "Girişe dön",
+    "email_verified": "E-posta adresiniz doğrulandı! Artık giriş yapabilirsiniz.",
+    "verification_expired": "Doğrulama bağlantısının süresi doldu. Lütfen yeniden kaydolun.",
+    "already_verified": "E-posta adresiniz zaten doğrulanmış. Giriş yapabilirsiniz.",
+    "verification_failed": "E-posta doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
+    "email_not_verified": "Giriş yapmadan önce lütfen e-posta adresinizi doğrulayın.",
+    "no_auth_methods": "Kullanılabilir kimlik doğrulama yöntemi yok. Lütfen yöneticinizle iletişime geçin.",
+    "no_account": "Hesabınız yok mu?",
+    "passwords_not_match": "Parolalar eşleşmiyor",
+    "registration_failed": "Kayıt başarısız oldu. Lütfen tekrar deneyin.",
+    "error_occurred": "Bir hata oluştu. Lütfen tekrar deneyin.",
+    "password_registration_disabled": "Parolayla Kayıt Devre Dışı",
+    "password_registration_disabled_message": "Parola tabanlı kayıt kullanılamıyor. Lütfen oturum açmak için SSO kullanın.",
+    "registration_closed_title": "Kayıt Kapalı",
+    "registration_closed_message": "Yeni hesap kaydı şu anda devre dışı. Erişim için yöneticinizle iletişime geçin.",
+    "confirm_password": "Parolayı Onayla",
+    "already_have_account": "Zaten hesabınız var mı?"
   },
   "dropdown": {
     "createNew": "Yeni Oluştur",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Sonraki eylem",
-    "nextActionLine": "Sonraki eylem: {{name}}"
+    "nextActionLine": "Sonraki eylem: {{name}}",
+    "noCompletedTasks": "Tamamlanmış görev yok."
   },
   "errors": {
     "required": "Bu alan gereklidir",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Etiket silinemedi.",
     "projectStatusUpdateFailed": "Proje durumu güncellenemedi",
     "failedToSaveTask": "Görev kaydedilemedi.",
-    "permissionDenied": "Erişim reddedildi"
+    "permissionDenied": "Erişim reddedildi",
+    "failedToDeleteArea": "Alan silinemedi.",
+    "failedToUpdateGoal": "Hedef güncellenemedi.",
+    "failedToSaveProject": "Proje kaydedilemedi.",
+    "failedToDeleteProject": "Proje silinemedi.",
+    "projectNameTooLong": "Proje adı en fazla {{max}} karakter olabilir"
   },
   "inbox": {
     "title": "Gelen Kutusu",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Hedef oluşturuldu!",
     "goalUpdated": "Hedef güncellendi!",
     "goalDeleted": "Hedef silindi!",
-    "tagDeleted": "Etiket silindi!"
+    "tagDeleted": "Etiket silindi!",
+    "areaDeleted": "Alan başarıyla silindi!"
   },
   "note": {
     "title": "Başlık",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} saat önce",
     "minutesAgo": "{{count}} dakika önce",
     "inMinutes": "{{count}} dakika içinde",
-    "inHours": "{{count}} saat içinde"
+    "inHours": "{{count}} saat içinde",
+    "pastDue": "Süresi geçmiş",
+    "editDetails": "Ayrıntıları düzenle",
+    "noUpcomingOccurrences": "Yaklaşan tekrar yok."
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" şablon olarak kaydedildi.",
     "saveAsTemplateError": "Proje şablon olarak kaydedilemedi.",
     "sortTasks": "Görevleri sırala",
-    "upcomingProjects": "Yaklaşan projeler"
+    "upcomingProjects": "Yaklaşan projeler",
+    "deleteError": "Proje silinemedi",
+    "shared": "Paylaşılan",
+    "status": "Proje Durumu"
   },
   "projectItem": {
     "edit": "Düzenle",
@@ -1908,7 +1971,8 @@
     "projects": "proje",
     "goals": "hedef",
     "tasks": "görev",
-    "progressSummary": "Alan ilerlemesi · {{total}} görevden {{done}} tanesi tamamlandı"
+    "progressSummary": "Alan ilerlemesi · {{total}} görevden {{done}} tanesi tamamlandı",
+    "toggleDropdownMenu": "Açılır menüyü aç/kapat"
   },
   "notes": {
     "loading": "Notlar yükleniyor...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Düzenle",
-    "delete": "Sil"
+    "delete": "Sil",
+    "saveBeforeFiles": "Önce nota bir başlık veya metin ekleyin, ardından dosya ekleyin.",
+    "fileUploadError": "{{name}} yüklenemedi",
+    "slashFile": "Görsel veya Dosya",
+    "slashFileHint": "Yükleyin ve buraya yerleştirin",
+    "toggleDropdownMenu": "Açılır menüyü aç/kapat"
   },
   "tags": {
     "loading": "Etiketler yükleniyor...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Üst etiket",
     "noParent": "Yok (en üst düzey)",
     "showChildTags": "Alt etiketleri göster",
-    "hideChildTags": "Alt etiketleri gizle"
+    "hideChildTags": "Alt etiketleri gizle",
+    "progressSummary": "Etiket ilerlemesi · {{total}} görevden {{done}} tamamlandı"
   },
   "recurrence": {
     "none": "Yok",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "Her {{count}} ayda bir",
     "completionBased": "Tamamlandıktan sonra",
     "onDay": "Ayın günü",
-    "until": "Bitiş"
+    "until": "Bitiş",
+    "monthDayPlaceholder": "Ayın gününü seçin",
+    "instance": "Tekrarlanan örnek"
   },
   "weekdays": {
     "sunday": "Paz",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Görev"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} kullanıcı · {{tasks}} görev · bekleme listesinde {{waitlist}} · Cadence {{version}} · {{env}}",
+      "visitors": "Ziyaretçiler, 7 gün",
+      "signups": "Kayıtlar, 7 gün",
+      "activation": "Etkinleştirme, {{days}} gün",
+      "activationHint": "{{total}} kayıttan {{n}}",
+      "weeklyUsers": "Haftalık kullanıcılar",
+      "weeklyUsersHint": "bir şey oluşturdu",
+      "selfHostedUsers": "kendi sunucusunda · bugün {{n}} yeni"
     },
     "waitlist": {
       "title": "Bekleme Listesi",
@@ -2440,7 +2521,12 @@
       "joined": "Katıldı",
       "empty": "Henüz kimse kaydolmadı",
       "noMatches": "Bu arama ile eşleşen adres yok",
-      "showing": "{{from}}-{{to}} / {{total}}"
+      "showing": "{{from}}-{{to}} / {{total}}",
+      "removed": "Bekleme listesinden kaldırıldı",
+      "removeFailed": "Kayıt kaldırılamadı",
+      "ipAddress": "IP Adresi",
+      "removeTitle": "Adresi Kaldır",
+      "confirmRemove": "{{email}} bekleme listesinden kaldırılsın mı? Bu işlem geri alınamaz."
     },
     "passwordInviteHint": "Bir davet e-postası göndermek için boş bırakın",
     "invitationSent": "{{email}} adresine davet e-postası gönderildi",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Site ziyaretçileri",
+      "visitorsHint": "pazarlama sitesi ve blog",
+      "views": "Sayfa görüntülemeleri",
+      "blog": "Blog okuyucuları",
+      "signupsRow": "Kayıtlar",
+      "reach": "Erişim",
+      "createdAnything": "Bir şey oluşturanlar",
+      "firstPlanShort": "3+ görev",
+      "threeDaysShort": "geçen haftanın kayıtları, ilk haftalarında 3 gün",
+      "newUsersGroup": "Bu haftanın kayıtları",
+      "appUsers": "Uygulama kullanıcıları",
+      "appUsersMonthHint": "30 günde {{month}}",
+      "creators": "Bir şey oluşturdu",
+      "creatorsHint": "kullanıcı, her türden öğe",
+      "canceled": "İptal edilen",
+      "failed": "Başarısız ödemeler",
+      "today": "Bugün",
+      "thisWeek": "Bu hafta",
+      "lastWeek": "Geçen hafta",
+      "change": "Değişim",
+      "fortnight": "14 gün"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "ziyaret ediyor",
+      "stepSignups": "kaydoluyor",
+      "stepActivated": "etkinleştiriyor",
+      "stepPaid": "ödüyor",
+      "pts": "{{diff}} puan",
+      "noRate": "Sayılan ziyaretçi sayısı kayıt sayısından az",
+      "before": "önce {{n}} idi"
+    },
+    "insights": {
+      "title": "Öne çıkanlar"
+    },
+    "aiUsage": {
+      "title": "AI Kullanımı",
+      "users": "Kullanıcılar",
+      "totalCredits": "Bu ay kullanılan krediler (tüm kullanıcılar)",
+      "searchPlaceholder": "E-postaya göre ara",
+      "user": "Kullanıcı",
+      "plan": "Plan",
+      "used": "Kullanılan",
+      "limit": "Limit",
+      "remaining": "Kalan",
+      "empty": "Henüz kullanıcı yok"
+    },
+    "userDeletedSuccessfully": "Kullanıcı başarıyla silindi"
   },
   "shares": {
     "shareProject": "Projeyi paylaş",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Görünüm oluşturmak için arayın",
     "noViewsMatch": "Görünüm bulunamadı",
     "blankSlateFilteredHint": "Farklı bir arama deneyin.",
-    "blankSlateClearSearch": "Aramayı temizle"
+    "blankSlateClearSearch": "Aramayı temizle",
+    "view": "Görüntüle",
+    "progressSummary": "İlerlemeyi görüntüle · {{total}} görevden {{done}} tamamlandı",
+    "sortTasks": "Görevleri sırala",
+    "filters": "filtreler"
   },
   "search": {
     "placeholder": "Görevleri, projeleri, notları ara...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Geri Yükle",
     "adminInstanceNote": "Yönetici olarak yedeğin bu kurulumdaki tüm hesapları, verileri ve parola özetleriyle birlikte içerir. Yeni bir kuruluma geri yüklemek herkesi geri getirir. Dosyayı veritabanı kadar güvenli sakla.",
     "accountsCount_one": "{{count}} diğer hesap",
-    "accountsCount_other": "{{count}} diğer hesap"
+    "accountsCount_other": "{{count}} diğer hesap",
+    "delete": "Sil"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Bir kullanıcı hesabına bağlı",
     "archivedBadge": "arşivlendi",
     "deletePerson": "Kişiyi sil",
-    "deleteConfirm": "\"{{name}}\" kişisini silmek istediğinizden emin misiniz? Bu geri alınamaz."
+    "deleteConfirm": "\"{{name}}\" kişisini silmek istediğinizden emin misiniz? Bu geri alınamaz.",
+    "contact": "Kişi"
   },
   "members": {
     "addTitle": "Üye ekle",
@@ -3552,7 +3688,9 @@
     "removed": "Üye çıkarıldı",
     "updated": "Üye güncellendi",
     "invitationSent": "Davet gönderildi",
-    "failedToRemove": "Üye çıkarılamadı"
+    "failedToRemove": "Üye çıkarılamadı",
+    "title": "Üyeler",
+    "titleOne": "Üye"
   },
   "signInLink": {
     "action": "Oturum açma bağlantısı",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Hedef sırası kaydedilemedi",
     "noGoalsInArea": "Bu alana bağlı hedef yok.",
-    "maintenance": "Bakım"
+    "maintenance": "Bakım",
+    "noGoalsSelected": "Hiçbir hedef seçilmedi",
+    "noAvailableGoals": "Kullanılabilir hedef yok",
+    "progressHint": "Çubuk: tamamlanan görevler ve projeler. Çizgi: oluşturma ile hedef tarih arasında geçen süre.",
+    "removeFromArea": "Alandan kaldır"
   },
   "templates": {
     "new": "Yeni Şablon",
@@ -4674,7 +4816,8 @@
       "projects": "Projeler",
       "tasks": "Görevler",
       "notes": "Notlar",
-      "habits": "Alışkanlıklar"
+      "habits": "Alışkanlıklar",
+      "goals": "Hedefler"
     },
     "help": {
       "title": "Klavye kısayolları",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Görevler yükleniyor…",
     "subtasks": "Alt görevler yükleniyor..."
+  },
+  "noteCreation": "Yeni Not Oluştur",
+  "notFound": {
+    "todayDescription": "Bugünkü görevleri görüntüle",
+    "projectsDescription": "Projelerinize göz atın",
+    "inboxDescription": "Gelen kutusu öğelerinizi kontrol edin",
+    "notesDescription": "Notlarınıza göz atın",
+    "title": "Sayfa Bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil. Taşınmış, silinmiş olabilir ya da URL'yi yanlış girmiş olabilirsiniz.",
+    "goBack": "Geri Dön",
+    "goHome": "Bugüne Git",
+    "quickActions": "Hızlı İşlemler"
+  },
+  "colors": {
+    "label": "Renk",
+    "none": "Yok"
+  },
+  "tag": {
+    "viewTag": "Etikete git"
   }
 }

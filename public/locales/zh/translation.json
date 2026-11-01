@@ -65,7 +65,15 @@
     "tags": "标签",
     "goToToday": "前往今天",
     "loadMore": "加载更多",
-    "showAll": "显示全部"
+    "showAll": "显示全部",
+    "actions": "操作",
+    "creating": "正在创建...",
+    "createCalendar": "创建日历",
+    "untitled": "未命名",
+    "resolving": "正在解决...",
+    "showLess": "收起",
+    "breadcrumb": "面包屑",
+    "undo": "撤销"
   },
   "sidebar": {
     "dashboard": "仪表板",
@@ -144,7 +152,11 @@
     "search": "搜索",
     "admin": "管理员",
     "adminBadge": "管理员",
-    "templates": "模板"
+    "templates": "模板",
+    "today": "今天",
+    "projects": "项目",
+    "inbox": "收件箱",
+    "notes": "笔记"
   },
   "settings": {
     "todayPageSettings": "今日页面设置",
@@ -294,7 +306,9 @@
       "inProgress": "进行中",
       "waiting": "等待",
       "done": "完成",
-      "dropHere": "拖放到这里"
+      "dropHere": "拖放到这里",
+      "customizeColumns": "自定义列",
+      "columns": "列"
     },
     "chaseUp": "催促",
     "habit": "习惯",
@@ -317,7 +331,17 @@
       "moveToProject": "移到项目"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "删除任务"
+    "deleteConfirmTitle": "删除任务",
+    "dueSoon": "即将到期",
+    "progress": "进度",
+    "priority": "优先级",
+    "todayPlan": "今日计划",
+    "startNow": "立即开始",
+    "noDue": "无截止日期",
+    "overdueBy": "已逾期 {{days}} 天",
+    "dueInDays": "{{days}} 天后到期",
+    "startedSuccessfully": "任务已成功开始！",
+    "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。"
   },
   "timeline": {
     "activityTimeline": "活动时间线",
@@ -648,7 +672,9 @@
       "setupSuccess": "日历配置成功！",
       "setupFailed": "创建日历失败",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "请先填写所有服务器连接信息",
+      "validationError": "请填写所有必填项并测试连接"
     },
     "conflictResolver": {
       "title": "解决同步冲突",
@@ -675,7 +701,8 @@
       "resolveSuccess": "所有冲突已成功解决",
       "resolveError": "解决冲突失败",
       "nextConflict": "下一个",
-      "prevConflict": "上一个"
+      "prevConflict": "上一个",
+      "mixedResolutionError": "请为每个冲突选择“全部使用本地”或“全部使用远程”。暂不支持混合选择字段。"
     },
     "editCalendar": {
       "title": "编辑日历",
@@ -1051,7 +1078,8 @@
     "allClearHint": "目前没有含糊的任务、停滞的工作或卡住的项目。正是规划下一步的好时机。",
     "goToTasks": "前往任务",
     "goToProjects": "前往项目",
-    "planDay": "规划今天"
+    "planDay": "规划今天",
+    "andMore": "……以及另外 {{count}} 项"
   },
   "modals": {
     "confirmDelete": "您确定要删除吗？",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "每月的周",
         "recurrenceEndDate": "结束日期（可选）",
         "completionBased": "完成后重复",
-        "repeatOn": "重复于"
+        "repeatOn": "重复于",
+        "recurrence": "重复",
+        "attachments": "附件"
       },
       "projectSearchPlaceholder": "搜索或创建项目...",
       "noMatchingProjects": "没有匹配的项目",
@@ -1185,7 +1215,10 @@
     "startDate": "开始",
     "goalBucket": "愿望清单分组",
     "goalParent": "所属目标的关键结果",
-    "noParentGoal": "无（独立）"
+    "noParentGoal": "无（独立）",
+    "name": "名称",
+    "goalTitle": "结果",
+    "project": "项目"
   },
   "auth": {
     "login": "登录",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "请完成验证后重试。",
     "registration_successful": "请验证您的邮箱地址",
-    "registration_email_sent": "请验证您的邮箱地址以激活账户。我们已发送链接，请查看收件箱。"
+    "registration_email_sent": "请验证您的邮箱地址以激活账户。我们已发送链接，请查看收件箱。",
+    "back_to_login": "返回登录",
+    "email_verified": "您的邮箱已验证！现在可以登录了。",
+    "verification_expired": "验证链接已过期，请重新注册。",
+    "already_verified": "您的邮箱已验证，可以登录。",
+    "verification_failed": "邮箱验证失败，请重试。",
+    "email_not_verified": "登录前请先验证您的邮箱地址。",
+    "no_auth_methods": "没有可用的身份验证方式，请联系管理员。",
+    "no_account": "还没有账号？",
+    "passwords_not_match": "两次输入的密码不一致",
+    "registration_failed": "注册失败，请重试。",
+    "error_occurred": "发生错误，请重试。",
+    "password_registration_disabled": "已禁用密码注册",
+    "password_registration_disabled_message": "不支持基于密码的注册，请使用 SSO 登录。",
+    "registration_closed_title": "注册已关闭",
+    "registration_closed_message": "目前已禁用新账号注册，如需访问请联系管理员。",
+    "confirm_password": "确认密码",
+    "already_have_account": "已有账号？"
   },
   "dropdown": {
     "createNew": "创建新项",
@@ -1345,7 +1395,8 @@
     "completedWithTasks_one": "Project completed, {{count}} task marked done",
     "noTasks": "No tasks.",
     "nextAction": "下一步行动",
-    "nextActionLine": "下一步行动：{{name}}"
+    "nextActionLine": "下一步行动：{{name}}",
+    "noCompletedTasks": "没有已完成的任务。"
   },
   "errors": {
     "required": "此字段为必填项",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "无法删除标签。",
     "projectStatusUpdateFailed": "更新项目状态失败",
     "failedToSaveTask": "保存任务失败。",
-    "permissionDenied": "权限不足"
+    "permissionDenied": "权限不足",
+    "failedToDeleteArea": "删除领域失败。",
+    "failedToUpdateGoal": "更新目标失败。",
+    "failedToSaveProject": "保存项目失败。",
+    "failedToDeleteProject": "删除项目失败。",
+    "projectNameTooLong": "项目名称不能超过 {{max}} 个字符"
   },
   "inbox": {
     "title": "收件箱",
@@ -1524,7 +1580,8 @@
     "goalCreated": "目标已创建！",
     "goalUpdated": "目标已更新！",
     "goalDeleted": "目标已删除！",
-    "tagDeleted": "标签已删除！"
+    "tagDeleted": "标签已删除！",
+    "areaDeleted": "领域已成功删除！"
   },
   "note": {
     "title": "标题",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "{{count}} 小时前",
     "minutesAgo": "{{count}} 分钟前",
     "inMinutes": "{{count}} 分钟后",
-    "inHours": "{{count}} 小时后"
+    "inHours": "{{count}} 小时后",
+    "pastDue": "已过期",
+    "editDetails": "编辑详情",
+    "noUpcomingOccurrences": "没有即将到来的重复实例。"
   },
   "projects": {
     "parentProject": "父项目",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" 已保存为模板。",
     "saveAsTemplateError": "无法将项目保存为模板。",
     "sortTasks": "排序任务",
-    "upcomingProjects": "即将到来的项目"
+    "upcomingProjects": "即将到来的项目",
+    "deleteError": "删除项目失败",
+    "shared": "共享",
+    "status": "项目状态"
   },
   "projectItem": {
     "edit": "编辑",
@@ -1908,7 +1971,8 @@
     "projects": "个项目",
     "goals": "个目标",
     "tasks": "个任务",
-    "progressSummary": "领域进度 · 已完成 {{done}} / {{total}} 个任务"
+    "progressSummary": "领域进度 · 已完成 {{done}} / {{total}} 个任务",
+    "toggleDropdownMenu": "切换下拉菜单"
   },
   "notes": {
     "loading": "加载笔记...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "编辑",
-    "delete": "删除"
+    "delete": "删除",
+    "saveBeforeFiles": "请先为笔记添加标题或文字，然后再添加文件。",
+    "fileUploadError": "无法上传 {{name}}",
+    "slashFile": "图片或文件",
+    "slashFileHint": "上传并放置到此处",
+    "toggleDropdownMenu": "切换下拉菜单"
   },
   "tags": {
     "loading": "加载标签...",
@@ -2033,7 +2102,8 @@
     "parentTag": "父标签",
     "noParent": "无（顶级）",
     "showChildTags": "显示子标签",
-    "hideChildTags": "隐藏子标签"
+    "hideChildTags": "隐藏子标签",
+    "progressSummary": "标签进度 · 已完成 {{done}} / {{total}} 项任务"
   },
   "recurrence": {
     "none": "无",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "每 {{count}} 个月",
     "completionBased": "完成后",
     "onDay": "每月的当天",
-    "until": "截止于"
+    "until": "截止于",
+    "monthDayPlaceholder": "选择每月的日期",
+    "instance": "重复实例"
   },
   "weekdays": {
     "sunday": "星期日",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "任务"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} 位用户 · {{tasks}} 个任务 · 候补名单 {{waitlist}} 人 · Cadence {{version}} · {{env}}",
+      "visitors": "访客（7 天）",
+      "signups": "注册（7 天）",
+      "activation": "激活（{{days}} 天）",
+      "activationHint": "{{total}} 个注册中的 {{n}} 个",
+      "weeklyUsers": "每周活跃用户",
+      "weeklyUsersHint": "已创建内容",
+      "selfHostedUsers": "自托管 · 今日新增 {{n}}"
     },
     "waitlist": {
       "title": "等待名单",
@@ -2440,7 +2521,12 @@
       "joined": "已加入",
       "empty": "还没有人注册",
       "noMatches": "没有地址与该搜索匹配",
-      "showing": "{{from}}-{{to}} 共 {{total}}"
+      "showing": "{{from}}-{{to}} 共 {{total}}",
+      "removed": "已从候补名单移除",
+      "removeFailed": "移除条目失败",
+      "ipAddress": "IP 地址",
+      "removeTitle": "移除地址",
+      "confirmRemove": "确定将 {{email}} 从候补名单中移除吗？此操作无法撤销。"
     },
     "passwordInviteHint": "留空以发送邀请电子邮件",
     "invitationSent": "邀请电子邮件已发送至 {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "网站访客",
+      "visitorsHint": "营销网站和博客",
+      "views": "页面浏览量",
+      "blog": "博客读者",
+      "signupsRow": "注册数",
+      "reach": "触达",
+      "createdAnything": "已创建内容",
+      "firstPlanShort": "3 个以上任务",
+      "threeDaysShort": "上周注册用户，首周内活跃 3 天",
+      "newUsersGroup": "本周注册",
+      "appUsers": "应用用户",
+      "appUsersMonthHint": "{{month}}（30 天内）",
+      "creators": "已创建内容",
+      "creatorsHint": "用户，任意类型的条目",
+      "canceled": "已取消",
+      "failed": "支付失败",
+      "today": "今天",
+      "thisWeek": "本周",
+      "lastWeek": "上周",
+      "change": "变化",
+      "fortnight": "14 天"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "访问",
+      "stepSignups": "注册",
+      "stepActivated": "激活",
+      "stepPaid": "付费",
+      "pts": "{{diff}} 个百分点",
+      "noRate": "计入的访客少于注册数",
+      "before": "原为 {{n}}"
+    },
+    "insights": {
+      "title": "值得关注"
+    },
+    "aiUsage": {
+      "title": "AI 用量",
+      "users": "用户",
+      "totalCredits": "本月已用积分（所有用户）",
+      "searchPlaceholder": "按邮箱搜索",
+      "user": "用户",
+      "plan": "套餐",
+      "used": "已用",
+      "limit": "上限",
+      "remaining": "剩余",
+      "empty": "暂无用户"
+    },
+    "userDeletedSuccessfully": "用户已成功删除"
   },
   "shares": {
     "shareProject": "分享项目",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "搜索以创建视图",
     "noViewsMatch": "未找到视图",
     "blankSlateFilteredHint": "换个搜索试试。",
-    "blankSlateClearSearch": "清除搜索"
+    "blankSlateClearSearch": "清除搜索",
+    "view": "查看",
+    "progressSummary": "查看进度 · 已完成 {{done}} / {{total}} 项任务",
+    "sortTasks": "排序任务",
+    "filters": "筛选器"
   },
   "search": {
     "placeholder": "搜索任务、项目、笔记...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "恢复",
     "adminInstanceNote": "作为管理员,你的备份包含此实例上的所有账户,以及它们的数据和密码哈希。在新安装上恢复即可让所有人回来。请像保管数据库一样妥善保管此文件。",
     "accountsCount_one": "另外 {{count}} 个账户",
-    "accountsCount_other": "另外 {{count}} 个账户"
+    "accountsCount_other": "另外 {{count}} 个账户",
+    "delete": "删除"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "已关联用户账号",
     "archivedBadge": "已归档",
     "deletePerson": "删除人员",
-    "deleteConfirm": "确定要删除“{{name}}”吗？此操作无法撤销。"
+    "deleteConfirm": "确定要删除“{{name}}”吗？此操作无法撤销。",
+    "contact": "联系人"
   },
   "members": {
     "addTitle": "添加成员",
@@ -3552,7 +3688,9 @@
     "removed": "成员已移除",
     "updated": "成员已更新",
     "invitationSent": "邀请已发送",
-    "failedToRemove": "移除成员失败"
+    "failedToRemove": "移除成员失败",
+    "title": "成员",
+    "titleOne": "成员"
   },
   "signInLink": {
     "action": "登录链接",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "目标顺序保存失败",
     "noGoalsInArea": "没有与该领域关联的目标。",
-    "maintenance": "维护"
+    "maintenance": "维护",
+    "noGoalsSelected": "未选择目标",
+    "noAvailableGoals": "没有可用目标",
+    "progressHint": "柱状图：已完成的任务和项目。折线：从创建到目标日期所经过的时间。",
+    "removeFromArea": "从领域中移除"
   },
   "templates": {
     "new": "新建模板",
@@ -4674,7 +4816,8 @@
       "projects": "项目",
       "tasks": "任务",
       "notes": "笔记",
-      "habits": "习惯"
+      "habits": "习惯",
+      "goals": "目标"
     },
     "help": {
       "title": "键盘快捷键",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "正在加载任务…",
     "subtasks": "正在加载子任务..."
+  },
+  "noteCreation": "新建笔记",
+  "notFound": {
+    "todayDescription": "查看今日任务",
+    "projectsDescription": "浏览您的项目",
+    "inboxDescription": "查看收件箱中的条目",
+    "notesDescription": "浏览您的笔记",
+    "title": "页面未找到",
+    "description": "您要查找的页面不存在。可能已被移动、删除，或者您输入的网址有误。",
+    "goBack": "返回",
+    "goHome": "前往今天",
+    "quickActions": "快捷操作"
+  },
+  "colors": {
+    "label": "颜色",
+    "none": "无"
+  },
+  "tag": {
+    "viewTag": "前往标签"
   }
 }

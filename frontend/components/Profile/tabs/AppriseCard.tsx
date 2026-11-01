@@ -77,6 +77,14 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
         }
     };
 
+    // Not a <form>: the card sits inside the settings page's own form, and a
+    // nested form would submit that one instead.
+    const saveOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        if (url && key && !busy) handleSave();
+    };
+
     const configured = !!config?.configured;
 
     return (
@@ -112,14 +120,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
             </div>
 
             {!configured && config && (
-                <form
-                    className="mt-4 grid gap-3 sm:grid-cols-3"
-                    autoComplete="off"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        if (url && key && !busy) handleSave();
-                    }}
-                >
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     <input
                         type="url"
                         value={url}
@@ -129,6 +130,8 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                             'notifications.apprise.serverLabel',
                             'Apprise server address'
                         )}
+                        autoComplete="off"
+                        onKeyDown={saveOnEnter}
                         className={inputClass}
                     />
                     <input
@@ -143,6 +146,8 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                             'notifications.apprise.keyLabel',
                             'Config key'
                         )}
+                        autoComplete="off"
+                        onKeyDown={saveOnEnter}
                         className={inputClass}
                     />
                     <input
@@ -157,6 +162,8 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                             'notifications.apprise.tagsLabel',
                             'Tags'
                         )}
+                        autoComplete="off"
+                        onKeyDown={saveOnEnter}
                         className={inputClass}
                     />
                     <div className="sm:col-span-3 flex items-center justify-between gap-3">
@@ -167,7 +174,8 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                             )}
                         </p>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleSave}
                             disabled={!url || !key || busy}
                             className="px-3 py-1.5 text-sm font-medium rounded-md text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                         >
@@ -176,7 +184,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                                 : t('notifications.apprise.save', 'Save')}
                         </button>
                     </div>
-                </form>
+                </div>
             )}
 
             {message && (

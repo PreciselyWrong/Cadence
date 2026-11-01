@@ -310,6 +310,7 @@ For the web UI. Same data and field names as the sync; every route needs a signe
 | GET, PUT, DELETE | `/cadence/habits/:uid/{single}` | One row per habit; `PUT` creates (`201`) or updates (`200`); its uid is the habit's |
 | GET, POST | `/cadence/groups` | Groups (the defaults are created on first read); `POST` `{uid?, name, start_minute, end_minute, sort_order}` |
 | PATCH, DELETE | `/cadence/groups/:uid` | Rename, move, delete (its habits fall back to `group-day`) |
+| GET | `/cadence/calendar?from=&to=` | Read-only, for the web calendar. `from` and `to` (inclusive, `YYYY-MM-DD`, at most 400 days apart, otherwise `400`). `{from, to, timezone, habits: [{uid, name, icon_id, color_argb, group_uid, days: [{date, status, done, time}]}]}` with the non-archived habits that appear in the range. `status` is the day status of the statistics (`IDEAL`, `MINIMUM`, `MISSED`, `ACTIVITY`, `NO_ACTIVITY`); `done` is true for `IDEAL`, `MINIMUM`, `ACTIVITY`; `time` is the first enabled reminder of that weekday (`HH:mm`) or `null`. Unplanned and paused days are left out, and a tracker or flexible-period habit appears only on its done days |
 | POST | `/cadence/import-legacy` | Import the user's Tududi habits now (see below) |
 
 Collections: `goals` (`habit_goal`), `schedules`, `entries`, `pauses`, `quick-values`, `reminders`, `health-connect-imports`, `abstinence-logs`, `alcohol-consumptions`, `learned-question-records`. Singles: `timer`, `health-connect-rule`, `learned-question-settings`.

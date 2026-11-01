@@ -65,7 +65,15 @@
     "tags": "Етикети",
     "goToToday": "Към днес",
     "loadMore": "Зареди още",
-    "showAll": "Покажи всички"
+    "showAll": "Покажи всички",
+    "actions": "Действия",
+    "creating": "Създаване...",
+    "createCalendar": "Създаване на календар",
+    "untitled": "Без заглавие",
+    "resolving": "Разрешаване...",
+    "showLess": "Показване на по-малко",
+    "breadcrumb": "Навигационна пътека",
+    "undo": "Отмяна"
   },
   "sidebar": {
     "dashboard": "Табло",
@@ -144,7 +152,11 @@
     "search": "Търсене",
     "admin": "Администратор",
     "adminBadge": "Администратор",
-    "templates": "Шаблони"
+    "templates": "Шаблони",
+    "today": "Днес",
+    "projects": "Проекти",
+    "inbox": "Входящи",
+    "notes": "Бележки"
   },
   "settings": {
     "todayPageSettings": "Настройки на страницата днес",
@@ -294,7 +306,9 @@
       "inProgress": "В процес на изпълнение",
       "waiting": "Изчакване",
       "done": "Готово",
-      "dropHere": "Пуснете тук"
+      "dropHere": "Пуснете тук",
+      "customizeColumns": "Персонализиране на колоните",
+      "columns": "Колони"
     },
     "chaseUp": "Напомни",
     "habit": "Навик",
@@ -317,7 +331,17 @@
       "moveToProject": "Преместване в проект"
     },
     "reorderError": "Failed to save task order",
-    "deleteConfirmTitle": "Изтрий задача"
+    "deleteConfirmTitle": "Изтрий задача",
+    "dueSoon": "скоро изтича",
+    "progress": "Напредък",
+    "priority": "Приоритет",
+    "todayPlan": "План за днес",
+    "startNow": "Започни сега",
+    "noDue": "Без краен срок",
+    "overdueBy": "Закъснява с {{days}} дн.",
+    "dueInDays": "Срок след {{days}} дн.",
+    "startedSuccessfully": "Задачата бе стартирана успешно!",
+    "deleteConfirmMessage": "Сигурни ли сте, че искате да изтриете \"{{name}}\"? Това действие не може да бъде отменено."
   },
   "timeline": {
     "activityTimeline": "Хронология на активността",
@@ -648,7 +672,9 @@
       "setupSuccess": "Календарят е конфигуриран успешно!",
       "setupFailed": "Неуспешно създаване на календар",
       "serverUrlPlaceholder": "https://caldav.example.com",
-      "calendarPathPlaceholder": "/calendars/user/tasks"
+      "calendarPathPlaceholder": "/calendars/user/tasks",
+      "fillServerDetails": "Моля, първо попълнете всички данни за връзка със сървъра",
+      "validationError": "Моля, попълнете всички задължителни полета и тествайте връзката"
     },
     "conflictResolver": {
       "title": "Разрешаване на конфликти при синхронизация",
@@ -675,7 +701,8 @@
       "resolveSuccess": "Всички конфликти успешно разрешени",
       "resolveError": "Неуспешно разрешаване на конфликтите",
       "nextConflict": "Следващ",
-      "prevConflict": "Предишен"
+      "prevConflict": "Предишен",
+      "mixedResolutionError": "Моля, изберете \"Използвай всички локални\" или \"Използвай всички отдалечени\" за всеки конфликт. Смесеният избор на полета все още не се поддържа."
     },
     "editCalendar": {
       "title": "Редактиране на календар",
@@ -1051,7 +1078,8 @@
     "allClearHint": "В момента няма неясни задачи, застояла работа или блокирали проекти. Добър момент да планирате следващата стъпка.",
     "goToTasks": "Към задачите",
     "goToProjects": "Към проектите",
-    "planDay": "Планирайте деня си"
+    "planDay": "Планирайте деня си",
+    "andMore": "... и още {{count}}"
   },
   "modals": {
     "confirmDelete": "Сигурен ли си, че искаш да изтриеш?",
@@ -1132,7 +1160,9 @@
         "weekOfMonth": "Седмица от месеца",
         "recurrenceEndDate": "Краен срок (по избор)",
         "completionBased": "Повторете след завършване",
-        "repeatOn": "Повтаряй на"
+        "repeatOn": "Повтаряй на",
+        "recurrence": "Повторение",
+        "attachments": "Прикачени файлове"
       },
       "projectSearchPlaceholder": "Търсене или създаване на проект...",
       "noMatchingProjects": "Няма съвпадащи проекти",
@@ -1185,7 +1215,10 @@
     "startDate": "Начало",
     "goalBucket": "Група от списъка с желания",
     "goalParent": "Ключов резултат на",
-    "noParentGoal": "Няма (самостоятелна)"
+    "noParentGoal": "Няма (самостоятелна)",
+    "name": "Име",
+    "goalTitle": "Резултат",
+    "project": "Проект"
   },
   "auth": {
     "login": "Вход",
@@ -1226,7 +1259,24 @@
     },
     "captcha_required": "Завършете проверката и опитайте отново.",
     "registration_successful": "Потвърдете имейл адреса си",
-    "registration_email_sent": "Потвърдете имейл адреса си, за да активирате акаунта. Изпратихме ви връзка, проверете пощата си."
+    "registration_email_sent": "Потвърдете имейл адреса си, за да активирате акаунта. Изпратихме ви връзка, проверете пощата си.",
+    "back_to_login": "Назад към вход",
+    "email_verified": "Имейлът ви е потвърден! Вече можете да влезете.",
+    "verification_expired": "Връзката за потвърждение е изтекла. Моля, регистрирайте се отново.",
+    "already_verified": "Имейлът ви вече е потвърден. Можете да влезете.",
+    "verification_failed": "Потвърждението на имейла не бе успешно. Моля, опитайте отново.",
+    "email_not_verified": "Моля, потвърдете имейл адреса си, преди да влезете.",
+    "no_auth_methods": "Няма налични методи за удостоверяване. Моля, свържете се с администратора.",
+    "no_account": "Нямате профил?",
+    "passwords_not_match": "Паролите не съвпадат",
+    "registration_failed": "Регистрацията не бе успешна. Моля, опитайте отново.",
+    "error_occurred": "Възникна грешка. Моля, опитайте отново.",
+    "password_registration_disabled": "Регистрацията с парола е деактивирана",
+    "password_registration_disabled_message": "Регистрацията с парола не е налична. Моля, използвайте SSO за вход.",
+    "registration_closed_title": "Регистрацията е затворена",
+    "registration_closed_message": "Регистрацията на нови профили е временно деактивирана. Свържете се с администратора за достъп.",
+    "confirm_password": "Потвърдете паролата",
+    "already_have_account": "Вече имате профил?"
   },
   "dropdown": {
     "createNew": "Създай ново",
@@ -1345,7 +1395,8 @@
     "fewerFiles": "Show fewer",
     "noTasks": "No tasks.",
     "nextAction": "Следващо действие",
-    "nextActionLine": "Следващо действие: {{name}}"
+    "nextActionLine": "Следващо действие: {{name}}",
+    "noCompletedTasks": "Няма завършени задачи."
   },
   "errors": {
     "required": "Това поле е задължително",
@@ -1386,7 +1437,12 @@
     "failedToDeleteTag": "Неуспешно изтриване на етикета.",
     "projectStatusUpdateFailed": "Неуспешна промяна на статуса на проекта",
     "failedToSaveTask": "Задачата не можа да се запази.",
-    "permissionDenied": "Достъпът е отказан"
+    "permissionDenied": "Достъпът е отказан",
+    "failedToDeleteArea": "Областта не можа да бъде изтрита.",
+    "failedToUpdateGoal": "Целта не можа да бъде обновена.",
+    "failedToSaveProject": "Проектът не можа да бъде запазен.",
+    "failedToDeleteProject": "Проектът не можа да бъде изтрит.",
+    "projectNameTooLong": "Името на проекта трябва да е до {{max}} знака"
   },
   "inbox": {
     "title": "Входяща поща",
@@ -1524,7 +1580,8 @@
     "goalCreated": "Целта е създадена!",
     "goalUpdated": "Целта е обновена!",
     "goalDeleted": "Целта е изтрита!",
-    "tagDeleted": "Етикетът е изтрит!"
+    "tagDeleted": "Етикетът е изтрит!",
+    "areaDeleted": "Областта е изтрита успешно!"
   },
   "note": {
     "title": "Заглавие",
@@ -1706,7 +1763,10 @@
     "hoursAgo": "преди {{count}} часа",
     "minutesAgo": "преди {{count}} минути",
     "inMinutes": "след {{count}} минути",
-    "inHours": "след {{count}} часа"
+    "inHours": "след {{count}} часа",
+    "pastDue": "Просрочена",
+    "editDetails": "Редактиране на подробностите",
+    "noUpcomingOccurrences": "Няма предстоящи повторения."
   },
   "projects": {
     "parentProject": "Родителски проект",
@@ -1826,7 +1886,10 @@
     "savedAsTemplate": "\"{{name}}\" е запазен като шаблон.",
     "saveAsTemplateError": "Проектът не можа да се запази като шаблон.",
     "sortTasks": "Сортирай задачите",
-    "upcomingProjects": "Предстоящи проекти"
+    "upcomingProjects": "Предстоящи проекти",
+    "deleteError": "Проектът не можа да бъде изтрит",
+    "shared": "Споделени",
+    "status": "Статус на проекта"
   },
   "projectItem": {
     "edit": "Редактиране",
@@ -1908,7 +1971,8 @@
     "projects": "проекта",
     "goals": "цели",
     "tasks": "задачи",
-    "progressSummary": "Напредък на областта · {{done}} от {{total}} задачи завършени"
+    "progressSummary": "Напредък на областта · {{done}} от {{total}} задачи завършени",
+    "toggleDropdownMenu": "Превключване на падащото меню"
   },
   "notes": {
     "loading": "Зареждане на бележки...",
@@ -1979,7 +2043,12 @@
       "more": "{{count}} more"
     },
     "edit": "Редактирай",
-    "delete": "Изтрий"
+    "delete": "Изтрий",
+    "saveBeforeFiles": "Първо задайте заглавие или текст на бележката, после добавете файлове.",
+    "fileUploadError": "Файлът {{name}} не можа да бъде качен",
+    "slashFile": "Изображение или файл",
+    "slashFileHint": "Качете го и го поставете тук",
+    "toggleDropdownMenu": "Превключване на падащото меню"
   },
   "tags": {
     "loading": "Зареждане на тагове...",
@@ -2033,7 +2102,8 @@
     "parentTag": "Родителски етикет",
     "noParent": "Няма (най-горно ниво)",
     "showChildTags": "Покажи дъщерните етикети",
-    "hideChildTags": "Скрий дъщерните етикети"
+    "hideChildTags": "Скрий дъщерните етикети",
+    "progressSummary": "Напредък на етикет · {{done}} от {{total}} задачи изпълнени"
   },
   "recurrence": {
     "none": "Няма",
@@ -2064,7 +2134,9 @@
     "everyNMonths": "На всеки {{count}} месеца",
     "completionBased": "След завършване",
     "onDay": "На ден",
-    "until": "До"
+    "until": "До",
+    "monthDayPlaceholder": "Изберете ден от месеца",
+    "instance": "Повтарящ се екземпляр"
   },
   "weekdays": {
     "sunday": "Нед",
@@ -2211,7 +2283,8 @@
     "view": "View",
     "moreViews": "More views",
     "openDay": "Open day",
-    "noEventsThisDay": "Nothing planned."
+    "noEventsThisDay": "Nothing planned.",
+    "task": "Задача"
   },
   "pages": {
     "notFound": {
@@ -2427,7 +2500,15 @@
       "emptyAccountsHint": "{{pct}} of users never created anything",
       "tasks": "Tasks",
       "payingShare": "{{pct}} of users",
-      "gated": "gated"
+      "gated": "gated",
+      "subtitleTotals": "{{users}} потребители · {{tasks}} задачи · {{waitlist}} в списъка за чакане · Cadence {{version}} · {{env}}",
+      "visitors": "Посетители, 7 дни",
+      "signups": "Регистрации, 7 дни",
+      "activation": "Активация, {{days}} дни",
+      "activationHint": "{{n}} от {{total}} регистрации",
+      "weeklyUsers": "Седмични потребители",
+      "weeklyUsersHint": "създаде нещо",
+      "selfHostedUsers": "самостоятелно хостван · {{n}} нови днес"
     },
     "waitlist": {
       "title": "Чакащ списък",
@@ -2440,7 +2521,12 @@
       "joined": "Присъединил се",
       "empty": "Никой не се е записал още",
       "noMatches": "Няма адреси, които да съвпадат с това търсене",
-      "showing": "{{from}}-{{to}} от {{total}}"
+      "showing": "{{from}}-{{to}} от {{total}}",
+      "removed": "Премахнато от списъка за чакане",
+      "removeFailed": "Записът не можа да бъде премахнат",
+      "ipAddress": "IP адрес",
+      "removeTitle": "Премахване на адрес",
+      "confirmRemove": "Да премахнем ли {{email}} от списъка за чакане? Това действие не може да бъде отменено."
     },
     "passwordInviteHint": "Оставете празно, за да изпратите имейл с покана",
     "invitationSent": "Имейл с покана изпратен до {{email}}",
@@ -2713,7 +2799,28 @@
       "usage": "Usage",
       "createdSomething": "Created something",
       "ofNewUsers": "{{n}} of {{total}} new users",
-      "trialsAndChurn": "Trials and churn"
+      "trialsAndChurn": "Trials and churn",
+      "visitors": "Посетители на сайта",
+      "visitorsHint": "маркетинговият сайт и блогът",
+      "views": "Преглеждания на страници",
+      "blog": "Читатели на блога",
+      "signupsRow": "Регистрации",
+      "reach": "Обхват",
+      "createdAnything": "Създаде нещо",
+      "firstPlanShort": "3+ задачи",
+      "threeDaysShort": "регистрациите от миналата седмица, 3 дни през първата им седмица",
+      "newUsersGroup": "Регистрации тази седмица",
+      "appUsers": "Потребители на приложението",
+      "appUsersMonthHint": "{{month}} за 30 дни",
+      "creators": "Създаде нещо",
+      "creatorsHint": "потребители, всякакъв вид елемент",
+      "canceled": "Отказани",
+      "failed": "Неуспешни плащания",
+      "today": "Днес",
+      "thisWeek": "Тази седмица",
+      "lastWeek": "Миналата седмица",
+      "change": "Промяна",
+      "fortnight": "14 дни"
     },
     "visits": {
       "title": "Visits, last 7 days",
@@ -2745,8 +2852,31 @@
       "paid": "Paid",
       "paidHint": "activated and has had a subscription",
       "maturity": "Recent signups may still be on their trial, so the paid step trails the others.",
-      "paidWithoutActivating": "{{n}} more paid without activating."
-    }
+      "paidWithoutActivating": "{{n}} more paid without activating.",
+      "stepVisitors": "посещава",
+      "stepSignups": "се регистрира",
+      "stepActivated": "активира",
+      "stepPaid": "плаща",
+      "pts": "{{diff}} т.",
+      "noRate": "Има по-малко отчетени посетители от регистрациите",
+      "before": "беше {{n}}"
+    },
+    "insights": {
+      "title": "Какво се откроява"
+    },
+    "aiUsage": {
+      "title": "Използване на ИИ",
+      "users": "Потребители",
+      "totalCredits": "Използвани кредити този месец (всички потребители)",
+      "searchPlaceholder": "Търсене по имейл",
+      "user": "Потребител",
+      "plan": "План",
+      "used": "Използвани",
+      "limit": "Лимит",
+      "remaining": "Оставащи",
+      "empty": "Все още няма потребители"
+    },
+    "userDeletedSuccessfully": "Потребителят е изтрит успешно"
   },
   "shares": {
     "shareProject": "Сподели проект",
@@ -2851,7 +2981,11 @@
     "blankSlateNew": "Търсете, за да създадете изглед",
     "noViewsMatch": "Не са намерени изгледи",
     "blankSlateFilteredHint": "Опитайте друго търсене.",
-    "blankSlateClearSearch": "Изчисти търсенето"
+    "blankSlateClearSearch": "Изчисти търсенето",
+    "view": "Преглед",
+    "progressSummary": "Преглед на напредъка · {{done}} от {{total}} задачи изпълнени",
+    "sortTasks": "Сортиране на задачите",
+    "filters": "филтри"
   },
   "search": {
     "placeholder": "Търсене на задачи, проекти, бележки...",
@@ -2975,7 +3109,8 @@
     "restoreButton": "Възстанови",
     "adminInstanceNote": "Като администратор резервното ти копие съдържа всеки акаунт в тази инсталация, с данните и хешовете на паролите му. Възстановяването му на нова инсталация връща всички. Пази файла толкова внимателно, колкото и базата данни.",
     "accountsCount_one": "Други акаунти: {{count}}",
-    "accountsCount_other": "Други акаунти: {{count}}"
+    "accountsCount_other": "Други акаунти: {{count}}",
+    "delete": "Изтриване"
   },
   "notifications": {
     "table": {
@@ -3523,7 +3658,8 @@
     "linkedAccount": "Свързан с потребителски акаунт",
     "archivedBadge": "архивиран",
     "deletePerson": "Изтрий човека",
-    "deleteConfirm": "Сигурни ли сте, че искате да изтриете „{{name}}“? Това не може да се отмени."
+    "deleteConfirm": "Сигурни ли сте, че искате да изтриете „{{name}}“? Това не може да се отмени.",
+    "contact": "Контакт"
   },
   "members": {
     "addTitle": "Добави член",
@@ -3552,7 +3688,9 @@
     "removed": "Членът е премахнат",
     "updated": "Членът е обновен",
     "invitationSent": "Поканата е изпратена",
-    "failedToRemove": "Членът не можа да бъде премахнат"
+    "failedToRemove": "Членът не можа да бъде премахнат",
+    "title": "Членове",
+    "titleOne": "Член"
   },
   "signInLink": {
     "action": "Връзка за вход",
@@ -3937,7 +4075,11 @@
     },
     "reorderError": "Редът на целите не можа да се запази",
     "noGoalsInArea": "Няма цели, свързани с тази област.",
-    "maintenance": "Поддържане"
+    "maintenance": "Поддържане",
+    "noGoalsSelected": "Не са избрани цели",
+    "noAvailableGoals": "Няма налични цели",
+    "progressHint": "Лента: изпълнени задачи и проекти. Линия: изминало време между създаването и целевата дата.",
+    "removeFromArea": "Премахване от областта"
   },
   "templates": {
     "new": "Нов шаблон",
@@ -4674,7 +4816,8 @@
       "projects": "Проекти",
       "tasks": "Задачи",
       "notes": "Бележки",
-      "habits": "Навици"
+      "habits": "Навици",
+      "goals": "Цели"
     },
     "help": {
       "title": "Клавишни комбинации",
@@ -5069,5 +5212,24 @@
   "loading": {
     "tasks": "Задачите се зареждат…",
     "subtasks": "Подзадачите се зареждат..."
+  },
+  "noteCreation": "Създаване на нова бележка",
+  "notFound": {
+    "todayDescription": "Преглед на задачите за днес",
+    "projectsDescription": "Разгледайте проектите си",
+    "inboxDescription": "Прегледайте входящите елементи",
+    "notesDescription": "Разгледайте бележките си",
+    "title": "Страницата не е намерена",
+    "description": "Страницата, която търсите, не съществува. Може да е преместена, изтрита или да сте въвели грешен адрес.",
+    "goBack": "Назад",
+    "goHome": "Към днес",
+    "quickActions": "Бързи действия"
+  },
+  "colors": {
+    "label": "Цвят",
+    "none": "Няма"
+  },
+  "tag": {
+    "viewTag": "Към етикета"
   }
 }

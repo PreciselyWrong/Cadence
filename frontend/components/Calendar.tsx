@@ -69,6 +69,8 @@ import {
 } from './Calendar/taskEvents';
 import { getDateFnsLocale, parseDateString } from '../utils/dateUtils';
 import { Holiday, fetchHolidays } from '../utils/holidaysService';
+import { fetchCadenceCalendar } from '../utils/cadenceHabitsService';
+import { habitsToEvents } from './Calendar/habitEvents';
 import {
     FocusSession,
     fetchFocusSessions,
@@ -423,6 +425,35 @@ const Calendar: React.FC = () => {
         view === 'year' ? currentDate.getFullYear() : 0,
     ]);
 
+    // Each habit's due days in the loaded window (the whole year in the year
+    // view), from the Cadence habits.
+    const [habitEvents, setHabitEvents] = useState<CalendarEvent[]>([]);
+    useEffect(() => {
+        if (!options.showHabits) {
+            setHabitEvents([]);
+            return;
+        }
+        let cancelled = false;
+        fetchCadenceCalendar(
+            view === 'year'
+                ? format(startOfYear(currentDate), 'yyyy-MM-dd')
+                : windowStart,
+            view === 'year'
+                ? format(endOfYear(currentDate), 'yyyy-MM-dd')
+                : windowEnd
+        )
+            .then((data) => !cancelled && setHabitEvents(habitsToEvents(data)))
+            .catch(() => !cancelled && setHabitEvents([]));
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        options.showHabits,
+        windowStart,
+        windowEnd,
+        view === 'year' ? currentDate.getFullYear() : 0,
+    ]);
+
     const shownFeedUids = new Set([
         ...feeds
             .filter((feed) => feed.show_on_calendar)
@@ -437,6 +468,7 @@ const Calendar: React.FC = () => {
             focusToEvent(session, t('calendar.focusSession', 'Focus'))
         ),
         ...events,
+        ...habitEvents,
         ...feedEvents
             .filter((event) => shownFeedUids.has(event.feed_uid))
             .map(feedEventToCalendarEvent),
@@ -631,6 +663,10 @@ const Calendar: React.FC = () => {
     };
 
     const handleEventClick = (event: CalendarEvent) => {
+        if (event.habitUid) {
+            navigate(`/habit/${event.habitUid}`);
+            return;
+        }
         if (event.google) {
             if (!event.editable) {
                 if (event.google.htmlLink) {

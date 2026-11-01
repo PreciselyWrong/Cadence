@@ -92,6 +92,7 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
         apprise: t('notifications.channels.apprise', 'Apprise'),
         desktop: t('notifications.channels.desktop', 'Desktop'),
     };
+    // The button is the tap area (at least 40px); the track is only drawn.
     const renderToggle = (
         channel: PrefChannel,
         isEnabled: boolean,
@@ -102,28 +103,45 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
             onClick={() => isAvailable && onToggle(channel, !isEnabled)}
             disabled={!isAvailable}
             className={`
-                relative inline-flex h-5 w-9 items-center rounded-full
-                transition-colors duration-200 ease-in-out
-                ${isAvailable ? 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' : 'cursor-not-allowed opacity-50'}
-                ${isEnabled && isAvailable ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}
+                group inline-flex h-[44px] min-w-[44px] md:h-[28px] items-center justify-center rounded-full
+                ${isAvailable ? 'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : 'cursor-not-allowed opacity-50'}
             `}
             role="switch"
             aria-checked={isEnabled && isAvailable}
             aria-label={`${channelNames[channel]} · ${label}`}
         >
             <span
+                aria-hidden="true"
                 className={`
-                    inline-block h-3 w-3 transform rounded-full
-                    bg-white transition-transform duration-200 ease-in-out
-                    ${isEnabled && isAvailable ? 'translate-x-5' : 'translate-x-1'}
+                    relative inline-flex h-5 w-9 items-center rounded-full
+                    transition-colors duration-200 ease-in-out
+                    ${isEnabled && isAvailable ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}
                 `}
-            />
+            >
+                <span
+                    className={`
+                        inline-block h-3 w-3 transform rounded-full
+                        bg-white transition-transform duration-200 ease-in-out
+                        ${isEnabled && isAvailable ? 'translate-x-5' : 'translate-x-1'}
+                    `}
+                />
+            </span>
         </button>
     );
 
+    // On a phone each row becomes a card and every channel a labelled line.
+    const channelCell = (channel: PrefChannel, toggle: React.ReactNode) => (
+        <td className="flex items-center justify-between px-4 py-0.5 md:table-cell md:py-4 md:text-center">
+            <span className="text-sm text-gray-700 dark:text-gray-300 md:hidden">
+                {channelNames[channel]}
+            </span>
+            {toggle}
+        </td>
+    );
+
     return (
-        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
-            <td className="py-4 px-4">
+        <tr className="block border-b border-gray-200 py-3 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/30 md:table-row md:py-0">
+            <td className="block px-4 pb-2 md:table-cell md:py-4">
                 <div className="flex items-center space-x-3">
                     <Icon className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0" />
                     <div>
@@ -136,31 +154,31 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
                     </div>
                 </div>
             </td>
-            <td className="py-4 px-4 text-center">
-                {renderToggle('inApp', preferences.inApp, true)}
-            </td>
-            <td className="py-4 px-4 text-center">
-                {renderToggle('push', preferences.push, pushAvailable)}
-            </td>
-            {showTelegram && (
-                <td className="py-4 px-4 text-center">
-                    {renderToggle(
+            {channelCell(
+                'inApp',
+                renderToggle('inApp', preferences.inApp, true)
+            )}
+            {channelCell(
+                'push',
+                renderToggle('push', preferences.push, pushAvailable)
+            )}
+            {showTelegram &&
+                channelCell(
+                    'telegram',
+                    renderToggle(
                         'telegram',
                         preferences.telegram,
                         telegramConfigured
-                    )}
-                </td>
-            )}
-            <td className="py-4 px-4 text-center">
-                {renderToggle(
-                    'apprise',
-                    preferences.apprise,
-                    appriseConfigured
+                    )
                 )}
-            </td>
-            <td className="py-4 px-4 text-center">
-                {renderToggle('desktop', preferences.desktop, true)}
-            </td>
+            {channelCell(
+                'apprise',
+                renderToggle('apprise', preferences.apprise, appriseConfigured)
+            )}
+            {channelCell(
+                'desktop',
+                renderToggle('desktop', preferences.desktop, true)
+            )}
         </tr>
     );
 };
@@ -311,7 +329,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     channel: channelLabel(channel),
                 }
             )}
-            className="px-2.5 py-1 text-xs font-medium rounded-md text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="min-h-[44px] px-3 py-1 text-xs font-medium rounded-md text-gray-700 md:min-h-0 md:px-2.5 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
             {testingChannel === channel
                 ? t('notifications.test.sending', 'Sending...')
@@ -337,9 +355,9 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
             <AppriseCard onStateChange={setAppriseConfigured} />
 
             {/* Notifications Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead>
+            <div className="md:overflow-x-auto">
+                <table className="block w-full md:table">
+                    <thead className="hidden md:table-header-group">
                         <tr className="border-b-2 border-gray-300 dark:border-gray-600">
                             <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {t(
@@ -369,7 +387,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="block md:table-row-group">
                         <NotificationTypeRow
                             icon={BellAlertIcon}
                             label={t(
@@ -485,9 +503,9 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             appriseConfigured={appriseConfigured}
                         />
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td className="py-4 px-4 text-sm text-gray-600 dark:text-gray-300">
+                    <tfoot className="block md:table-footer-group">
+                        <tr className="block pt-3 md:table-row md:pt-0">
+                            <td className="block px-4 pb-2 text-sm text-gray-600 dark:text-gray-300 md:table-cell md:py-4">
                                 {t(
                                     'notifications.test.rowLabel',
                                     'Send a test notification'
@@ -501,12 +519,15 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                 .map((channel) => (
                                     <td
                                         key={channel}
-                                        className="py-4 px-4 text-center"
+                                        className="flex items-center justify-between px-4 py-1 md:table-cell md:py-4 md:text-center"
                                     >
+                                        <span className="text-sm text-gray-700 dark:text-gray-300 md:hidden">
+                                            {channelLabel(channel)}
+                                        </span>
                                         {renderTestButton(channel)}
                                     </td>
                                 ))}
-                            <td />
+                            <td className="hidden md:table-cell" />
                         </tr>
                     </tfoot>
                 </table>
