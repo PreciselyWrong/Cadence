@@ -4006,7 +4006,11 @@
     "close": "Close",
     "button": "Записати",
     "syntaxHint": "#tag  +project  !1–!3 пріоритет  завтра о 15:00 для дати",
+    "chainCount": "Додано до {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Високий",
+      "priorityMedium": "Середній",
+      "priorityLow": "Низький",
       "tag": "Мітка",
       "project": "Проєкт",
       "person": "Людина",

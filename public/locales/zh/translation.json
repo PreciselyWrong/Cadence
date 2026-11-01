@@ -3990,7 +3990,11 @@
     "filesAttached_one": "1 file attached.",
     "button": "捕获",
     "syntaxHint": "#tag  +project  !1 到 !3 优先级  明天 15:00 设置日期",
+    "chainCount": "已添加到 {{project}}：{{total}}",
     "slash": {
+      "priorityHigh": "高",
+      "priorityMedium": "中",
+      "priorityLow": "低",
       "tag": "标签",
       "project": "项目",
       "person": "人员",

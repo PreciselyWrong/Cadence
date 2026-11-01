@@ -3995,7 +3995,11 @@
     "close": "Close",
     "button": "Fang",
     "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato",
+    "chainCount": "Lagt til i {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Høy",
+      "priorityMedium": "Moderat",
+      "priorityLow": "Lav",
       "tag": "Etikett",
       "project": "Prosjekt",
       "person": "Person",

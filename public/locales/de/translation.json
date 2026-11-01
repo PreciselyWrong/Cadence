@@ -3999,7 +3999,11 @@
     "close": "Close",
     "button": "Erfassen",
     "syntaxHint": "#tag  +project  !1 bis !3 Priorität  morgen 15 Uhr für ein Datum",
+    "chainCount": "Hinzugefügt zu {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Hoch",
+      "priorityMedium": "Mittel",
+      "priorityLow": "Niedrig",
       "tag": "Tag",
       "project": "Projekt",
       "person": "Person",

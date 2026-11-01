@@ -3990,7 +3990,11 @@
     "filesAttached_one": "1 file attached.",
     "button": "Ghi lại",
     "syntaxHint": "#tag  +project  !1 đến !3 ưu tiên  ngày mai 15:00 để đặt ngày",
+    "chainCount": "Đã thêm vào {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Cao",
+      "priorityMedium": "Trung bình",
+      "priorityLow": "Thấp",
       "tag": "Thẻ",
       "project": "Dự án",
       "person": "Người",

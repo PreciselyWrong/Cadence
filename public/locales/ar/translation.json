@@ -4022,7 +4022,11 @@
     "close": "Close",
     "button": "التقاط",
     "syntaxHint": "#tag  +project  !1 إلى !3 للأولوية  غدًا 3pm للتاريخ",
+    "chainCount": "أُضيف إلى {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "مرتفع",
+      "priorityMedium": "متوسط",
+      "priorityLow": "منخفض",
       "tag": "وسم",
       "project": "مشروع",
       "person": "شخص",

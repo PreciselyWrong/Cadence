@@ -4006,7 +4006,11 @@
     "close": "Close",
     "button": "Przechwyć",
     "syntaxHint": "#tag  +project  !1 do !3 priorytet  jutro 15:00 jako termin",
+    "chainCount": "Dodano do {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Wysoki",
+      "priorityMedium": "Średni",
+      "priorityLow": "Niski",
       "tag": "Tag",
       "project": "Projekt",
       "person": "Osoba",

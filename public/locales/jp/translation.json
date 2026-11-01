@@ -3990,7 +3990,11 @@
     "filesAttached_one": "1 file attached.",
     "button": "キャプチャ",
     "syntaxHint": "#tag  +project  !1〜!3 優先度  明日15時 日付指定",
+    "chainCount": "{{project}} に追加: {{total}}",
     "slash": {
+      "priorityHigh": "高",
+      "priorityMedium": "中",
+      "priorityLow": "低",
       "tag": "タグ",
       "project": "プロジェクト",
       "person": "人物",

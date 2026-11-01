@@ -4006,7 +4006,11 @@
     "close": "Close",
     "button": "Захват",
     "syntaxHint": "#tag  +project  !1–!3 приоритет  завтра в 15:00 для даты",
+    "chainCount": "Добавлено в {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Высокий",
+      "priorityMedium": "Средний",
+      "priorityLow": "Низкий",
       "tag": "Метка",
       "project": "Проект",
       "person": "Человек",

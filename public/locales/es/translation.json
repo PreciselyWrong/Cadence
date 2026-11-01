@@ -3983,7 +3983,11 @@
     "close": "Close",
     "button": "Capturar",
     "syntaxHint": "#tag  +project  !1 a !3 prioridad  mañana 15:00 para una fecha",
+    "chainCount": "Añadidas a {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Alta",
+      "priorityMedium": "Media",
+      "priorityLow": "Baja",
       "tag": "Etiqueta",
       "project": "Proyecto",
       "person": "Persona",

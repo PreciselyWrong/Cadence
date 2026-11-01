@@ -3990,7 +3990,11 @@
     "close": "Close",
     "button": "Запис",
     "syntaxHint": "#tag  +project  !1 до !3 приоритет  утре 15:00 за дата",
+    "chainCount": "Добавени към {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Висок",
+      "priorityMedium": "Среден",
+      "priorityLow": "Нисък",
       "tag": "Етикет",
       "project": "Проект",
       "person": "Човек",

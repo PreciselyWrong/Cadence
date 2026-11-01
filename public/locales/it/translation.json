@@ -3996,7 +3996,11 @@
     "close": "Close",
     "button": "Cattura",
     "syntaxHint": "#tag  +project  !1 a !3 priorità  domani alle 15 per una data",
+    "chainCount": "Aggiunte a {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Alta",
+      "priorityMedium": "Media",
+      "priorityLow": "Bassa",
       "tag": "Tag",
       "project": "Progetto",
       "person": "Persona",

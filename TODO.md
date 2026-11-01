@@ -4,10 +4,10 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr.io/preciselywrong/cadence:latest` publiés. Vérifié : suites serveur sur SQLite et sur PostgreSQL 16 (podman local, migrations du jour rejouées), tests web, tests Android dont les migrations Room sous Robolectric. Reste ce qui demande l'usage réel, ton téléphone ou ton serveur.
+Tout le code prévu est livré dans `main` et poussé ; APK 1.6.5 et image `ghcr.io/preciselywrong/cadence:latest` publiés. Vérifié : suites serveur sur SQLite et sur PostgreSQL 16 (podman local, migrations du jour rejouées), tests web, tests Android dont les migrations Room sous Robolectric. Reste ce qui demande l'usage réel, ton téléphone ou ton serveur.
 
 - **À faire par toi.**
-  - Installer l'APK 1.6.1 (versionCode 33) depuis NicoApps et mettre à jour le conteneur sur Unraid (`docker pull ghcr.io/preciselywrong/cadence:latest` puis redémarrer). Vérif : synchro dans les deux sens par Tailscale, rappels, « Plus tard », heures calmes, widgets, revue, Stash.
+  - Installer l'APK 1.6.5 (versionCode 37) depuis NicoApps et mettre à jour le conteneur sur Unraid (`docker pull ghcr.io/preciselywrong/cadence:latest` puis redémarrer). Vérif : synchro dans les deux sens par Tailscale, rappels, « Plus tard », heures calmes, widgets, revue, Stash ; 1.6.5 : mode avion puis retour réseau (ligne « Hors ligne · N en attente » puis synchro seule), notification d'une tâche à heure fixe et d'un événement d'agenda, tri des liens dans la Boîte (balayage, « À tester », « Trier les liens »), ajout rapide en chaîne.
   - Synchro Google (`docs/33-google-sync.md`) : créer le client OAuth (Calendar + Tasks API, app « En production »), `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min.
   - Revue (`docs/34-review.md`) : 2 semaines d'usage réel, puis ajuster seuils (3 reports en 30 j, « jour arrivé ou lendemain », 90 j « Ancien », 30 j « projet stagnant ») seulement si des faux positifs apparaissent.
   - Production sur le Postgres d'Unraid : export puis import (⛔ jamais par-dessus une base SQLite remplie). Le code est vérifié sur PostgreSQL 16 en local.
@@ -15,6 +15,8 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr
 - **Petits restes, à faire quand le besoin se montre.**
   - Android : éditer icônes et parents (sous-projets, tags) — web seulement ; Liens : étiquettes d'un lien et « aller à la source » — web seulement (note et statut sont sur Android ; vérif : une étiquette posée sur le téléphone apparaît sur `/links`) ; choix « Session courte » de la revue (Android n'a pas de plan du jour) ; habitudes « N fois par semaine » absentes de l'Agenda.
   - Serveur : rappels d'habitudes envoyés par le téléphone seulement ; avec plusieurs processus serveur, une création incomplète (sans nom) qui croise une autre création du même uid est refusée au lieu d'être fusionnée ; défaut ancien `habitReminders` dans `users.notification_preferences` sur les bases mises à niveau (sans effet).
+  - Parité 1.6.5, web : liste des conflits et page Synchronisation (Android seul) ; tri des liens dans l'inbox (Garder, À tester, Plus tard, Jeter, mode tri ; voir `docs/fork/ANDROID-UX-NOTES.md`) avec un champ serveur `review_at` (la date « Plus tard » reste sur le téléphone) ; option « description sous le titre » des lignes de tâches. Vérif : un lien trié sur le web quitte l'inbox du téléphone.
+  - Parité 1.6.5, Android : zone `~` et création d'un tag dans l'ajout rapide ; projet prérempli depuis la page d'un projet (`initialProjectUid` existe, aucun écran ne le passe) ; écritures d'habitudes en attente non comptées dans « N en attente ».
   - Traductions automatiques des 24 langues hors fr/en : non relues (surtout ja, ko).
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
 - Hors périmètre volontaire : limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; les 24 tags sont supprimés, valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
@@ -33,5 +35,4 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr
 
 - Capture Android : partage vers l'inbox en moins d'une seconde, puis galerie des découvertes (aperçu OpenGraph, README GitHub) avec décision rapide : tester, rattacher, reporter, jeter.
 - Enrichissement déterministe sans IA (OpenGraph, README, étoiles), puis Hermes en lot différé (résumé, projet, doublons, résurgence).
-- Migration TickTick via son MCP, une fois les rappels prouvés pendant quelques semaines.
 - Vues outliner et galerie dans les clients.

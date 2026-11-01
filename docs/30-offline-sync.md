@@ -100,3 +100,10 @@ Once a tombstone is gone, "delete wins" no longer holds for that row: a device o
 - Shared projects.
 
 See [fork/PLAN-clients-sync.md](fork/PLAN-clients-sync.md).
+
+## Android client behaviour (1.6.5)
+
+- Before each pass the phone reads `GET /sync/meta` and only snapshots, pulls and pushes entities and fields the server lists. Ops for an unknown entity stay queued; when the server later lists it, that entity is snapshotted alone, without resetting the cursor.
+- A refused batch (4xx, or 500 when one op throws) is retried in halves, at most 24 requests per pass: one bad op is marked rejected (4xx) or kept queued with the later ops of its row (500); 429/502/503/504 stop the push.
+- `rejected_fields` from push are stored as conflicts with both values; the user keeps the phone's value (resent with a fresh HLC) or the server's.
+- "Server unreachable" is shown only for a refused connection or no route; HTTP errors, unexpected bodies, TLS and timeouts get their own message.

@@ -17,6 +17,9 @@ const labels = {
     tomorrow: 'Tomorrow',
     nextMonday: 'Next Monday',
     inAWeek: 'In a week',
+    priorityHigh: 'High',
+    priorityMedium: 'Medium',
+    priorityLow: 'Low',
     everyDay: 'Every day',
     everyWeekday: 'Every weekday',
     everyWeek: 'Every week',
@@ -187,5 +190,93 @@ describe('applySlashItem', () => {
         expect(result.text).toBe('Call @Maria later');
         expect(result.cursor).toBe(12);
         expect(result.next).toBeNull();
+    });
+});
+
+describe('triggers that open a list straight away', () => {
+    it('opens tags on "#", projects on "+" and priorities on "!" at a word start', () => {
+        expect(slashTriggerAt('Buy milk #', 10)).toEqual({
+            start: 9,
+            stage: 'tag',
+            trigger: '#',
+        });
+        expect(slashTriggerAt('Buy milk +', 10)?.stage).toBe('project');
+        expect(slashTriggerAt('!', 1)?.stage).toBe('priority');
+    });
+
+    it('leaves C#, a trailing "!" and mid-word triggers alone', () => {
+        expect(slashTriggerAt('Learn C#', 8)).toBeNull();
+        expect(slashTriggerAt('Great!', 6)).toBeNull();
+        expect(slashTriggerAt('a+', 2)).toBeNull();
+    });
+
+    it('ends a tag or project at a space unless a quote opened it', () => {
+        const tag = { start: 0, stage: 'tag' as const, trigger: '#' as const };
+        expect(slashQuery('#per', 4, tag)).toBe('per');
+        expect(slashQuery('#per ', 5, tag)).toBeNull();
+        const project = {
+            start: 0,
+            stage: 'project' as const,
+            trigger: '+' as const,
+        };
+        expect(slashQuery('+"Home Re', 9, project)).toBe('Home Re');
+        expect(slashQuery('+"Home Reno" ', 13, project)).toBeNull();
+    });
+
+    it('closes the priority list once !1 to !3 is complete or not a priority', () => {
+        const bang = {
+            start: 0,
+            stage: 'priority' as const,
+            trigger: '!' as const,
+        };
+        expect(slashQuery('!', 1, bang)).toBe('');
+        expect(slashQuery('!2', 2, bang)).toBeNull();
+        expect(slashQuery('!x', 2, bang)).toBeNull();
+    });
+});
+
+describe('rich lists', () => {
+    it('lists the three priorities with their colours, !1 being high', () => {
+        const items = slashItems('priority', '', ctx());
+        expect(items.map((i) => [i.insert, i.label])).toEqual([
+            ['!1', 'High'],
+            ['!2', 'Medium'],
+            ['!3', 'Low'],
+        ]);
+        expect(items.every((i) => i.color)).toBe(true);
+        expect(slashItems('priority', '', ctx({ target: 'note' }))).toEqual([]);
+    });
+
+    it('puts the most used tag first, shows nested tags as paths and carries colours', () => {
+        const tags = [
+            { name: 'perso/sport', color: '#10b981', usage: 3 },
+            { name: 'perso/admin', usage: 9 },
+            { name: 'work' },
+        ];
+        const items = slashItems('tag', 'perso', ctx({ tags }));
+        expect(items.map((i) => i.insert)).toEqual([
+            '#perso/admin',
+            '#perso/sport',
+            '#perso',
+        ]);
+        expect(items[1].color).toBe('#10b981');
+        expect(items[2].label).toBe('Create #perso');
+    });
+
+    it('matches a nested tag by its last segment, ignoring accents', () => {
+        const tags = [{ name: 'perso/sport' }, { name: 'café' }];
+        expect(
+            slashItems('tag', 'sp', ctx({ tags })).map((i) => i.insert)
+        ).toEqual(['#perso/sport', '#sp']);
+        expect(
+            slashItems('tag', 'cafe', ctx({ tags: [{ name: 'cafe' }] }))[0]
+                .insert
+        ).toBe('#cafe');
+    });
+
+    it('offers no project list when the box makes a project', () => {
+        expect(slashItems('project', '', ctx({ target: 'project' }))).toEqual(
+            []
+        );
     });
 });

@@ -3990,7 +3990,11 @@
     "filesAttached_one": "1 file attached.",
     "button": "Tangkap",
     "syntaxHint": "#tag  +project  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal",
+    "chainCount": "Ditambahkan ke {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Tinggi",
+      "priorityMedium": "Sedang",
+      "priorityLow": "Rendah",
       "tag": "Tag",
       "project": "Proyek",
       "person": "Orang",

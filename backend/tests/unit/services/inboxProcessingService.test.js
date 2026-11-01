@@ -70,6 +70,14 @@ describe('inboxProcessingService', () => {
         });
     });
 
+    describe('nested tags', () => {
+        it('reads #perso/sport as one tag named by its path', () => {
+            const result = processInboxItem('Run #perso/sport #home');
+
+            expect(result.parsed_tags).toEqual(['perso/sport', 'home']);
+        });
+    });
+
     describe('containsUrl', () => {
         it('should detect URLs in text with hashtags', () => {
             expect(containsUrl('https://example.com/page #tag1')).toBe(true);

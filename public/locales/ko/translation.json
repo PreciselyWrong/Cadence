@@ -3990,7 +3990,11 @@
     "filesAttached_one": "1 file attached.",
     "button": "캡처",
     "syntaxHint": "#tag  +project  !1~!3 우선순위  내일 오후 3시 날짜",
+    "chainCount": "{{project}}에 추가됨: {{total}}",
     "slash": {
+      "priorityHigh": "높음",
+      "priorityMedium": "보통",
+      "priorityLow": "낮음",
       "tag": "태그",
       "project": "프로젝트",
       "person": "사람",

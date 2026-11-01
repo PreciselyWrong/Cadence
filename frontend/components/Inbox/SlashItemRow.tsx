@@ -2,6 +2,7 @@ import React from 'react';
 import {
     ArrowPathIcon,
     CalendarIcon,
+    FlagIcon,
     FolderIcon,
     PlusIcon,
     Squares2X2Icon,
@@ -14,6 +15,7 @@ const ICONS: Record<SlashIcon, React.ComponentType<{ className?: string }>> = {
     tag: TagIcon,
     project: FolderIcon,
     person: UserIcon,
+    priority: FlagIcon,
     area: Squares2X2Icon,
     date: CalendarIcon,
     repeat: ArrowPathIcon,
@@ -39,6 +41,14 @@ const SlashItemRow: React.FC<{ item: SlashItem }> = ({ item }) => {
                     </span>
                 )}
             </span>
+            {item.color && (
+                <span
+                    data-testid="slash-item-dot"
+                    aria-hidden="true"
+                    className="flex-shrink-0 h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                />
+            )}
         </>
     );
 };

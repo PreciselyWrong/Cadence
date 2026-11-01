@@ -4006,7 +4006,11 @@
     "close": "Close",
     "button": "Zajem",
     "syntaxHint": "#tag  +project  !1 do !3 prednost  jutri ob 15:00 za datum",
+    "chainCount": "Dodano v {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Visoka",
+      "priorityMedium": "Srednja",
+      "priorityLow": "Nizka",
       "tag": "Oznaka",
       "project": "Projekt",
       "person": "Oseba",

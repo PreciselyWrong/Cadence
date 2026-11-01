@@ -4021,7 +4021,11 @@
     "filesAttached_other": "{{count}} files attached.",
     "button": "Capture",
     "syntaxHint": "#tag  +project  !1 to !3 priority  tomorrow 3pm for a date",
+    "chainCount": "Added to {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "High",
+      "priorityMedium": "Medium",
+      "priorityLow": "Low",
       "tag": "Tag",
       "project": "Project",
       "person": "Person",

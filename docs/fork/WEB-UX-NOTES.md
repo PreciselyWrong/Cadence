@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Suggestions en direct et saisie en série
+
+- **Problème** : taper `#` ou `+` seul n'ouvrait rien (il fallait déjà une lettre), `!` et `~` ne proposaient rien, les étiquettes imbriquées (`perso/sport`) n'étaient ni proposées ni relues par le serveur, et chaque tâche ajoutée repartait sans le projet de la précédente.
+- **Décision** : `#`, `+`, `~` et `!` en début de mot ouvrent leur liste tout de suite, sous le curseur : étiquettes (plus utilisées d'abord, chemin complet, point de couleur, « Créer #nom » en dernier), projets ouverts, domaines, priorités `!1` Haute / `!2` Moyenne / `!3` Basse. Flèches, Entrée ou Tab choisissent, Échap ferme ; `!` ne présélectionne rien (Entrée continue d'enregistrer). Aucun appel réseau : les listes viennent du store. La phrase de date reconnue est surlignée dans le champ. Après un enregistrement la boîte reste ouverte et le projet reste en pastille retirable, avec le compteur « Ajoutées à Projet : 3 » et « Annuler » ; étiquettes, priorité et date ne suivent pas ; fin de série à la réouverture, au retrait de la pastille ou après 2 minutes sans activité.
+- **Android** : même grammaire (`#` `+` `^` `!`), liste compacte sous le champ au-dessus du clavier, date surlignée, saisie en série avec « Terminé ». Écarts : pas de `~` (une tâche Android n'a pas de domaine propre) ni de « Créer #nom » (l'app ne crée pas d'étiquette).
+
 ### 2026-10-31 — Vue « À venir » (7 prochains jours)
 
 - **Problème** : contenu centré dans une largeur maximale, ce qui laissait une bande vide à côté de la barre latérale ; colonnes de jours sur une seule ligne qui débordaient à droite.

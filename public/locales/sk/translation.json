@@ -4045,7 +4045,11 @@
         "filesAttached_other": "Priložených {{count}} súborov.",
         "button": "Zachytiť",
         "syntaxHint": "#tag  +project  !1 až !3 priorita  zajtra o 15:00 pre dátum",
+        "chainCount": "Pridané do {{project}}: {{total}}",
         "slash": {
+            "priorityHigh": "Vysoká",
+            "priorityMedium": "Stredná",
+            "priorityLow": "Nízka",
             "tag": "Štítok",
             "project": "Projekt",
             "person": "Osoba",

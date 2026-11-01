@@ -98,6 +98,7 @@ import {
     SlashLabels,
     SlashMenuState,
 } from '../../utils/slashMenu';
+import { isProjectLive } from '../../utils/projectStatus';
 export interface QuickCaptureInputHandle {
     submit: (forceInbox?: boolean) => Promise<void>;
     focus: () => void;
@@ -220,6 +221,18 @@ interface PickedTokens {
     area: { uid: string; name: string } | null;
 }
 const NO_PICKS: PickedTokens = { tags: [], project: null, area: null };
+// A series of tasks added to one project
+interface ChainState {
+    uid: string;
+    name: string;
+    count: number;
+    // Whether the project was put back in the box as a badge
+    badge: boolean;
+}
+
+// How long a series waits for the next task
+const CHAIN_IDLE_MS = 2 * 60 * 1000;
+
 // Text colours for the tokens in the edit box, matching their chips.
 
 const TOKEN_TEXT_CLASS: Record<InboxTokenKind, string> = {
@@ -239,6 +252,25 @@ const withProjectName = (text: string, name: string): string =>
         PROJECT_QUERY_PATTERN,
         (match) => `${match.charAt(0)}${name} `
     );
+
+// The date phrase the parser read ("tomorrow 3pm") gets a soft highlight in
+// the box, matching the date badge below it.
+const withDateHighlight = (text: string, phrase: string): React.ReactNode => {
+    const at = text.toLowerCase().indexOf(phrase.toLowerCase());
+    if (at < 0) return text;
+    return (
+        <>
+            {text.slice(0, at)}
+            <mark
+                data-testid="capture-date-highlight"
+                className="rounded bg-amber-100 text-gray-900 dark:bg-amber-500/30 dark:text-gray-100"
+            >
+                {text.slice(at, at + phrase.length)}
+            </mark>
+            {text.slice(at + phrase.length)}
+        </>
+    );
+};
 
 const QuickCaptureInput = React.forwardRef<
     QuickCaptureInputHandle,
@@ -367,6 +399,52 @@ const QuickCaptureInput = React.forwardRef<
         // Tags, projects and areas chosen from a list are kept as badges
         // (not as text) and added to the text when it is saved.
         const [picked, setPicked] = useState<PickedTokens>(NO_PICKS);
+        // Tasks added one after the other to the same project: the project
+        // stays as a badge until the series ends.
+        const [chain, setChainState] = useState<ChainState | null>(null);
+        const chainRef = useRef<ChainState | null>(null);
+        const setChain = useCallback((next: ChainState | null) => {
+            chainRef.current = next;
+            setChainState(next);
+        }, []);
+        const endChain = useCallback(() => {
+            const current = chainRef.current;
+            if (!current) return;
+            if (current.badge) {
+                const name = current.name.toLowerCase();
+                setPicked((p) =>
+                    p.project?.toLowerCase() === name
+                        ? { ...p, project: null }
+                        : p
+                );
+            }
+            setChain(null);
+        }, [setChain]);
+
+        // After a task is saved: the next one goes to the same project
+        // unless the badge is removed. Tags, priority and date are not
+        // carried, they were in the text that was just cleared.
+        const continueChain = (items: CapturedItem[]) => {
+            const uid = items[0]?.projectUid;
+            const name = items[0]?.projectName;
+            if (!uid || !name || items.some((i) => i.projectUid !== uid)) {
+                endChain();
+                return;
+            }
+            const current = chainRef.current;
+            const sameProject = current?.uid === uid;
+            // The opening text already holds the project (a project page)
+            const inOpeningText = /(^|\s)[+^]/.test(prefillText || '');
+            setChain({
+                uid,
+                name,
+                count: (sameProject ? current.count : 0) + items.length,
+                badge: !inOpeningText,
+            });
+            if (!inOpeningText) {
+                setPicked((p) => ({ ...p, project: name }));
+            }
+        };
         const addPicked = (kind: 'tag' | 'project' | 'area', name: string) => {
             if (kind === 'tag') {
                 setPicked((p) =>
@@ -446,6 +524,18 @@ const QuickCaptureInput = React.forwardRef<
             setTarget(defaultTarget);
             if (prefillText) setInputText(prefillText);
         }, [resetKey, defaultTarget, prefillText]);
+
+        // A new open starts a new series
+        useEffect(() => {
+            endChain();
+        }, [resetKey, endChain]);
+
+        // So does two minutes without typing or saving
+        useEffect(() => {
+            if (!chain) return undefined;
+            const timer = setTimeout(endChain, CHAIN_IDLE_MS);
+            return () => clearTimeout(timer);
+        }, [chain, inputText, endChain]);
 
         useEffect(() => {
             if (isEditMode) {
@@ -558,7 +648,7 @@ const QuickCaptureInput = React.forwardRef<
                             const tagName = words[j].substring(1);
                             if (
                                 tagName &&
-                                /^[a-zA-Z0-9_-]+$/.test(tagName) &&
+                                /^[a-zA-Z0-9_/-]+$/.test(tagName) &&
                                 !matches.includes(tagName)
                             ) {
                                 matches.push(tagName);
@@ -1089,7 +1179,9 @@ const QuickCaptureInput = React.forwardRef<
             if (menu && slashQuery(newText, newCursorPosition, menu) !== null) {
                 closeSuggestions();
                 setSlash(menu);
-                setSelectedSuggestionIndex(0);
+                // "!" is also punctuation, so nothing is chosen until the
+                // user moves to a row; Enter then keeps saving.
+                setSelectedSuggestionIndex(menu.trigger === '!' ? -1 : 0);
                 setDropdownPosition(
                     calculateDropdownPosition(e.target, menu.start, true)
                 );
@@ -1943,11 +2035,24 @@ const QuickCaptureInput = React.forwardRef<
                     : undefined;
             // A ~area in the text means the task is not for the Focus, so
             // the Focus project (which sits in the Focus area) is not used.
-            const projectUid =
+            const chosenProjectUid =
                 pageProjectUid ??
                 (await resolveOrCreateProject(projectName)) ??
+                undefined;
+            const projectUid =
+                chosenProjectUid ??
                 (analysis?.parsed_area ? undefined : focus?.project_uid) ??
                 undefined;
+            const chosenProject = chosenProjectUid
+                ? {
+                      projectUid: chosenProjectUid,
+                      projectName:
+                          projects.find((p) => p.uid === chosenProjectUid)
+                              ?.name ??
+                          projectName ??
+                          defaultProject?.name,
+                  }
+                : {};
 
             if (destination === 'task') {
                 const task = applyAnalysisToTask(
@@ -1970,7 +2075,12 @@ const QuickCaptureInput = React.forwardRef<
                 const created = await useStore
                     .getState()
                     .tasksStore.createTask(task);
-                return { target: destination, uid: created.uid, title };
+                return {
+                    target: destination,
+                    uid: created.uid,
+                    title,
+                    ...chosenProject,
+                };
             }
 
             const isUrlContent =
@@ -2077,6 +2187,16 @@ const QuickCaptureInput = React.forwardRef<
                 setStatus({
                     text: t('capture.removed', 'Removed. Nothing was saved.'),
                 });
+                const current = chainRef.current;
+                if (
+                    current &&
+                    items.some((item) => item.projectUid === current.uid)
+                ) {
+                    setChain({
+                        ...current,
+                        count: Math.max(0, current.count - items.length),
+                    });
+                }
                 onUndone?.(items);
             } catch (error) {
                 console.error('Failed to undo capture:', error);
@@ -2271,6 +2391,8 @@ const QuickCaptureInput = React.forwardRef<
                     }
                 }
                 finish(captured, [], attached);
+                if (destination === 'task') continueChain(captured);
+                else endChain();
             } catch (error) {
                 if (error instanceof OfflineQueuedError) {
                     finish([], []);
@@ -2341,6 +2463,9 @@ const QuickCaptureInput = React.forwardRef<
             tomorrow: t('capture.slash.tomorrow', 'Tomorrow'),
             nextMonday: t('capture.slash.nextMonday', 'Next Monday'),
             inAWeek: t('capture.slash.inAWeek', 'In a week'),
+            priorityHigh: t('capture.slash.priorityHigh', 'High'),
+            priorityMedium: t('capture.slash.priorityMedium', 'Medium'),
+            priorityLow: t('capture.slash.priorityLow', 'Low'),
             everyDay: t('capture.slash.everyDay', 'Every day'),
             everyWeekday: t('capture.slash.everyWeekday', 'Every weekday'),
             everyWeek: t('capture.slash.everyWeek', 'Every week'),
@@ -2358,9 +2483,19 @@ const QuickCaptureInput = React.forwardRef<
                 ? slashItems(slash.stage, slashQueryNow, {
                       target,
                       labels: slashLabels,
-                      tags: tags.map((tag) => tag.name),
-                      projects: projects.map((project) => project.name),
-                      areas: areas.map((area) => area.name),
+                      tags: tags.map((tag) => ({
+                          name: tag.name,
+                          color: tag.color,
+                          usage: tag.usage_count,
+                      })),
+                      // Paused and closed projects stay out of the way
+                      projects: projects
+                          .filter((project) => isProjectLive(project.status))
+                          .map((project) => project.name),
+                      areas: areas.map((area) => ({
+                          name: area.name,
+                          color: area.color,
+                      })),
                       people: slashPeople,
                   })
                 : [];
@@ -2546,7 +2681,7 @@ const QuickCaptureInput = React.forwardRef<
             }
 
             if (unified && e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                if (activeSuggestions) {
+                if (activeSuggestions && selectedSuggestionIndex >= 0) {
                     return;
                 }
                 if (isSaving) {
@@ -2563,7 +2698,7 @@ const QuickCaptureInput = React.forwardRef<
             }
 
             if (e.key === 'Enter' && !e.shiftKey && !isSaving) {
-                if (activeSuggestions) {
+                if (activeSuggestions && selectedSuggestionIndex >= 0) {
                     return;
                 }
                 e.preventDefault();
@@ -2961,6 +3096,18 @@ const QuickCaptureInput = React.forwardRef<
                             )}
                         </span>
                         <span className="flex gap-3">
+                            {chain && chain.count > 0 && (
+                                <span data-testid="capture-chain-count">
+                                    {t(
+                                        'capture.chainCount',
+                                        'Added to {{project}}: {{total}}',
+                                        {
+                                            total: chain.count,
+                                            project: chain.name,
+                                        }
+                                    )}
+                                </span>
+                            )}
                             {touch && enterSaves && (
                                 <button
                                     type="button"
@@ -3222,7 +3369,13 @@ const QuickCaptureInput = React.forwardRef<
                                                                     : undefined
                                                             }
                                                         >
-                                                            {segment.text}
+                                                            {segment.kind ||
+                                                            !dateChip?.phrase
+                                                                ? segment.text
+                                                                : withDateHighlight(
+                                                                      segment.text,
+                                                                      dateChip.phrase
+                                                                  )}
                                                         </span>
                                                     ))}
                                                     {inputText.endsWith('\n')

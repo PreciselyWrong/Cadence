@@ -6,17 +6,43 @@ import type { CaptureTarget } from './captureText';
 // inserts the token's text, so nobody has to remember the syntax.
 
 export type SlashStage =
-    'root' | 'tag' | 'project' | 'person' | 'area' | 'date' | 'repeat';
+    | 'root'
+    | 'tag'
+    | 'project'
+    | 'person'
+    | 'area'
+    | 'priority'
+    | 'date'
+    | 'repeat';
+
+export type SlashTrigger = '/' | '~' | '#' | '+' | '!';
 
 export interface SlashMenuState {
-    // Index of the "/" or "~" in the text
+    // Index of the "/", "~", "#", "+" or "!" in the text
     start: number;
     stage: SlashStage;
-    trigger: '/' | '~';
+    trigger: SlashTrigger;
 }
 
 export type SlashIcon =
-    'tag' | 'project' | 'person' | 'area' | 'date' | 'repeat' | 'create';
+    | 'tag'
+    | 'project'
+    | 'person'
+    | 'area'
+    | 'priority'
+    | 'date'
+    | 'repeat'
+    | 'create';
+
+// A name with what the lists show and sort by. Plain strings stand for a
+// name with nothing else known.
+export interface SlashEntry {
+    name: string;
+    color?: string;
+    // How often a tag is used; the most used come first
+    usage?: number;
+}
+export type SlashName = string | SlashEntry;
 
 export interface SlashItem {
     key: string;
@@ -25,6 +51,8 @@ export interface SlashItem {
     // The syntax or phrase the item stands for, shown under the label
     description?: string;
     icon: SlashIcon;
+    // A colour dot shown beside the label
+    color?: string;
     // Text that replaces "/query" when the item is picked
     insert?: string;
     // The list the item opens instead of inserting anything
@@ -44,6 +72,9 @@ export interface SlashLabels {
     tomorrow: string;
     nextMonday: string;
     inAWeek: string;
+    priorityHigh: string;
+    priorityMedium: string;
+    priorityLow: string;
     everyDay: string;
     everyWeekday: string;
     everyWeek: string;
@@ -54,31 +85,39 @@ export interface SlashLabels {
 export interface SlashContext {
     target: CaptureTarget;
     labels: SlashLabels;
-    tags: string[];
-    projects: string[];
-    areas: string[];
-    people: string[];
+    tags: SlashName[];
+    projects: SlashName[];
+    areas: SlashName[];
+    people: SlashName[];
 }
 
 const MAX_ITEMS = 8;
-const TAG_NAME = /^[A-Za-z0-9_-]+$/;
+// A nested tag is its path, so "/" is part of the name
+const TAG_NAME = /^[A-Za-z0-9_/-]+$/;
+const TRIGGER_STAGE: Record<string, SlashStage> = {
+    '/': 'root',
+    '~': 'area',
+    '#': 'tag',
+    '+': 'project',
+    '!': 'priority',
+};
 
 // Where a "/" typed at the cursor starts a menu: at the very start of the
 // text or after whitespace, so URLs, "and/or" and "1/2" are left alone.
-// A "~" there opens the area list straight away, the way "#" and "+" do
-// for tags and projects.
+// A "~", "#", "+" or "!" there opens the list of areas, tags, projects or
+// priorities straight away.
 export const slashTriggerAt = (
     text: string,
     cursor: number
 ): SlashMenuState | null => {
     const char = text.charAt(cursor - 1);
-    if (cursor < 1 || (char !== '/' && char !== '~')) return null;
+    if (cursor < 1 || !(char in TRIGGER_STAGE)) return null;
     const before = cursor - 2;
     if (before >= 0 && !/\s/.test(text.charAt(before))) return null;
     return {
         start: cursor - 1,
-        stage: char === '/' ? 'root' : 'area',
-        trigger: char,
+        stage: TRIGGER_STAGE[char],
+        trigger: char as SlashTrigger,
     };
 };
 
@@ -96,13 +135,47 @@ export const slashQuery = (
     const query = text.slice(menu.start + 1, cursor);
     if (/\n/.test(query)) return null;
     if (menu.stage === 'root' && /\s/.test(query)) return null;
+    if (menu.trigger === '!') {
+        // Only !1 to !3 are priorities; once one is complete there is
+        // nothing left to pick.
+        return /^[0-9]?$/.test(query) && !/^[123]$/.test(query) ? query : null;
+    }
+    if (menu.trigger === '#' || menu.trigger === '+') {
+        // The word ends at a space, unless a quote opened a longer name
+        if (query.startsWith('"')) {
+            const name = query.slice(1);
+            return name.includes('"') ? null : name;
+        }
+        if (/\s/.test(query)) return null;
+    }
     return query;
 };
 
 const quoted = (name: string) => (/\s/.test(name) ? `"${name}"` : name);
 
+const fold = (value: string) =>
+    value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+
 const matches = (name: string, query: string) =>
-    name.toLowerCase().includes(query.trim().toLowerCase());
+    fold(name).includes(fold(query.trim()));
+
+const entryOf = (name: SlashName): SlashEntry =>
+    typeof name === 'string' ? { name } : name;
+
+// 0: the name starts with the query, 1: a word or path segment of it does,
+// 2: it is somewhere inside.
+const rankOf = (name: string, query: string): number => {
+    const wanted = fold(query.trim());
+    if (!wanted) return 0;
+    const folded = fold(name);
+    if (folded.startsWith(wanted)) return 0;
+    return folded.split(/[\s/_-]+/).some((part) => part.startsWith(wanted))
+        ? 1
+        : 2;
+};
 
 // Tags, projects and areas picked from a list are kept as badges, not text
 const pickOf = (
@@ -114,28 +187,39 @@ const pickOf = (
 const valueItems = (
     stage: 'tag' | 'project' | 'person' | 'area',
     prefix: string,
-    names: string[],
+    names: SlashName[],
     query: string,
     labels: SlashLabels,
     canCreate: boolean
 ): SlashItem[] => {
+    const entries = names.map(entryOf);
     const usable =
-        stage === 'tag' ? names.filter((n) => TAG_NAME.test(n)) : names;
-    const items: SlashItem[] = [...usable]
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-        .filter((name) => matches(name, query))
+        stage === 'tag'
+            ? entries.filter((e) => TAG_NAME.test(e.name))
+            : entries;
+    const items: SlashItem[] = usable
+        .filter((entry) => matches(entry.name, query))
+        .sort(
+            (a, b) =>
+                rankOf(a.name, query) - rankOf(b.name, query) ||
+                (b.usage ?? 0) - (a.usage ?? 0) ||
+                a.name.localeCompare(b.name, undefined, {
+                    sensitivity: 'base',
+                })
+        )
         .slice(0, MAX_ITEMS)
-        .map((name) => ({
-            key: `${stage}:${name}`,
-            label: name,
+        .map((entry) => ({
+            key: `${stage}:${entry.name}`,
+            label: entry.name,
             icon: stage,
-            insert: `${prefix}${stage === 'tag' ? name : quoted(name)}`,
-            pick: pickOf(stage, name),
+            color: entry.color,
+            insert: `${prefix}${stage === 'tag' ? entry.name : quoted(entry.name)}`,
+            pick: pickOf(stage, entry.name),
         }));
 
     const wanted = query.trim();
     const exists = usable.some(
-        (name) => name.toLowerCase() === wanted.toLowerCase()
+        (entry) => entry.name.toLowerCase() === wanted.toLowerCase()
     );
     const valid = stage === 'tag' ? TAG_NAME.test(wanted) : wanted !== '';
     if (canCreate && wanted && valid && !exists) {
@@ -150,6 +234,31 @@ const valueItems = (
     }
     return items;
 };
+
+// !1 is high, !2 medium, !3 low, as the box reads them
+const PRIORITY_COLORS = {
+    '1': '#ef4444',
+    '2': '#f59e0b',
+    '3': '#3b82f6',
+};
+
+const priorityItems = (query: string, labels: SlashLabels): SlashItem[] =>
+    (
+        [
+            ['1', labels.priorityHigh],
+            ['2', labels.priorityMedium],
+            ['3', labels.priorityLow],
+        ] as const
+    )
+        .filter(([digit]) => digit.startsWith(query.trim()))
+        .map(([digit, label]) => ({
+            key: `priority:${digit}`,
+            label,
+            description: `!${digit}`,
+            icon: 'priority' as const,
+            color: PRIORITY_COLORS[digit],
+            insert: `!${digit}`,
+        }));
 
 // Which tokens make sense for what is being added. An Inbox item keeps the
 // text as typed and reads the tokens when it is converted, so it gets all.
@@ -207,6 +316,8 @@ export const slashItems = (
         case 'tag':
             return valueItems('tag', '#', ctx.tags, query, labels, true);
         case 'project':
+            // A project is not filed under another project
+            if (ctx.target === 'project') return [];
             return valueItems(
                 'project',
                 '+',
@@ -222,6 +333,11 @@ export const slashItems = (
             return ctx.target === 'note'
                 ? []
                 : valueItems('area', '~', ctx.areas, query, labels, false);
+        case 'priority':
+            // Notes and projects have no !1-!3 priority
+            return ctx.target === 'task' || ctx.target === 'inbox'
+                ? priorityItems(query, labels)
+                : [];
         case 'date':
             return phraseItems(
                 'date',

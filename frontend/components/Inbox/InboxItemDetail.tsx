@@ -178,7 +178,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                         const tagName = words[j].substring(1);
                         if (
                             tagName &&
-                            /^[a-zA-Z0-9_-]+$/.test(tagName) &&
+                            /^[a-zA-Z0-9_/-]+$/.test(tagName) &&
                             !matches.includes(tagName)
                         )
                             matches.push(tagName);

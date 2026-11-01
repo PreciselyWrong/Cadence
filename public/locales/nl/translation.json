@@ -3990,7 +3990,11 @@
     "close": "Close",
     "button": "Vastleggen",
     "syntaxHint": "#tag  +project  !1 t/m !3 prioriteit  morgen 15:00 voor een datum",
+    "chainCount": "Toegevoegd aan {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Hoog",
+      "priorityMedium": "Gemiddeld",
+      "priorityLow": "Laag",
       "tag": "Tag",
       "project": "Project",
       "person": "Persoon",

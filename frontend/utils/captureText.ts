@@ -13,6 +13,10 @@ export interface CapturedItem {
     title: string;
     // A note's text as saved, so files can be added to the end of it.
     body?: string;
+    // The project the user chose for it (not one a Focus supplied), so the
+    // next item of a series can go to the same one.
+    projectUid?: string;
+    projectName?: string;
 }
 
 const BULLET = /^\s*(?:[-*•]|\d+[.)]|\[[ xX]\])\s+/;

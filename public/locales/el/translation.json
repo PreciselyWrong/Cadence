@@ -3991,7 +3991,11 @@
     "close": "Close",
     "button": "Καταγραφή",
     "syntaxHint": "#tag  +project  !1 έως !3 προτεραιότητα  αύριο 15:00 για ημερομηνία",
+    "chainCount": "Προστέθηκαν στο {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Υψηλή",
+      "priorityMedium": "Μεσαία",
+      "priorityLow": "Χαμηλή",
       "tag": "Ετικέτα",
       "project": "Έργο",
       "person": "Άτομο",

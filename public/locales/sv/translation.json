@@ -3990,7 +3990,11 @@
     "close": "Close",
     "button": "Fånga",
     "syntaxHint": "#tag  +project  !1 till !3 prioritet  imorgon kl. 15 för ett datum",
+    "chainCount": "Tillagda i {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Hög",
+      "priorityMedium": "Medel",
+      "priorityLow": "Låg",
       "tag": "Tagg",
       "project": "Projekt",
       "person": "Person",

@@ -3997,7 +3997,11 @@
     "close": "Fermer",
     "button": "Capturer",
     "syntaxHint": "#étiquette  +projet  !1 à !3 priorité  demain 15h pour une date",
+    "chainCount": "Ajoutées à {{project}} : {{total}}",
     "slash": {
+      "priorityHigh": "Élevée",
+      "priorityMedium": "Moyenne",
+      "priorityLow": "Faible",
       "tag": "Étiquette",
       "project": "Projet",
       "person": "Personne",

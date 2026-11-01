@@ -3990,7 +3990,11 @@
     "close": "Close",
     "button": "Kaappaa",
     "syntaxHint": "#tag  +project  !1–!3 prioriteetti  huomenna klo 15 päivämäärälle",
+    "chainCount": "Lisätty kohteeseen {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Korkea",
+      "priorityMedium": "Keskitaso",
+      "priorityLow": "Matala",
       "tag": "Tunniste",
       "project": "Projekti",
       "person": "Henkilö",

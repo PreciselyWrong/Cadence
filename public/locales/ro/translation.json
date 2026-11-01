@@ -4000,7 +4000,11 @@
     "close": "Close",
     "button": "Captură",
     "syntaxHint": "#tag  +project  !1 până la !3 prioritate  mâine la 15:00 pentru o dată",
+    "chainCount": "Adăugate la {{project}}: {{total}}",
     "slash": {
+      "priorityHigh": "Ridicat",
+      "priorityMedium": "Medie",
+      "priorityLow": "Scăzut",
       "tag": "Etichetă",
       "project": "Proiect",
       "person": "Persoană",
