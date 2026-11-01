@@ -64,4 +64,20 @@ class AreasTest {
     fun `suggested areas drop repeated names`() {
         assertEquals(listOf("Perso"), AreaSuggestions.missing(emptyList(), listOf("Perso", "perso")))
     }
+
+    @Test
+    fun `the filter row needs at least two areas to choose between`() {
+        assertEquals(false, AreaFilter.offersChoice(emptyList()))
+        assertEquals(false, AreaFilter.offersChoice(listOf(AreaItem("bucket", "Bucket list"))))
+        assertEquals(true, AreaFilter.offersChoice(listOf(AreaItem("perso", "Perso"), AreaItem("tech", "Tech"))))
+    }
+
+    @Test
+    fun `a remembered area is ignored once it is the only one, since the row that would clear it is hidden`() {
+        val single = listOf(AreaItem("perso", "Perso"))
+        val two = single + AreaItem("tech", "Tech")
+        assertEquals(null, AreaFilter.effective("perso", single))
+        assertEquals("perso", AreaFilter.effective("perso", two))
+        assertEquals(null, AreaFilter.effective("gone", two))
+    }
 }

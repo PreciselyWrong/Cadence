@@ -12,11 +12,12 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 
 /**
  * Filtre par domaine des listes de tâches et de projets : « Tous » puis un domaine à la fois. Le choix est gardé
- * entre les sessions ; la rangée n'existe que lorsqu'il y a des domaines.
+ * entre les sessions ; la rangée n'existe qu'à partir de deux domaines.
  */
 @Composable
 internal fun AreaFilterRow(
@@ -25,7 +26,7 @@ internal fun AreaFilterRow(
     onSelect: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (areas.isEmpty()) return
+    if (!AreaFilter.offersChoice(areas)) return
     LazyRow(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = Space.gutter),

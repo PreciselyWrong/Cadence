@@ -76,7 +76,7 @@ internal fun TaskReviewPanel(onOpenTask: (String) -> Unit) {
                 }
             }
             if (review.overdue.isNotEmpty()) {
-                Caption(stringResource(R.string.bilan_tasks_overdue), color = palette.error)
+                Caption(stringResource(R.string.bilan_tasks_overdue))
                 review.overdue.take(OVERDUE_LIMIT).forEach { task ->
                     LineWithCount(
                         label = task.name,

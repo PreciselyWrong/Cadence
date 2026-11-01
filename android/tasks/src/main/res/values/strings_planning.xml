@@ -20,10 +20,10 @@
         <item quantity="other">%d à placer</item>
     </plurals>
     <string name="planning_sheet_title">Planifier la journée</string>
-    <string name="planning_triage_title">Trier le retard</string>
+    <string name="planning_triage_title">Trier les échues</string>
     <!-- « Sans date », pas « Plus tard » : « Plus tard » est la mise de côté de la revue (étiquette someday). -->
     <string name="planning_triage_hint">« Sans date » retire l\'échéance : la tâche reste dans votre liste.</string>
-    <string name="planning_triage_bulk">Tout le retard</string>
+    <string name="planning_triage_bulk">Toutes les échues</string>
     <string name="planning_target_today">Aujourd\'hui</string>
     <string name="planning_target_tomorrow">Demain</string>
     <string name="planning_target_later">Sans date</string>

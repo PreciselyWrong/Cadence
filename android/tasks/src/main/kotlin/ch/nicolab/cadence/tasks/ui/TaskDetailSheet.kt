@@ -76,6 +76,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.RepeatType
@@ -347,7 +348,7 @@ internal fun TaskDetailSheet(
             onDismiss = dismissPicker,
         )
         Picker.Project -> ProjectSheet(
-            projects = projects,
+            projects = ProjectChoices.forTask(projects, current.projectUid),
             selectedUid = current.projectUid,
             onSelect = { viewModel.update(current.uid, TaskEdits.project(latest, it)) },
             onDismiss = dismissPicker,
@@ -490,7 +491,7 @@ private fun DetailBadges(
             TapBadge(onDates, enabled) {
                 CadenceBadge(
                     text = if (overdue) stringResource(R.string.tasks_detail_overdue, text) else text,
-                    tone = if (overdue) BadgeTone.Error else BadgeTone.Primary,
+                    tone = if (overdue) BadgeTone.Neutral else BadgeTone.Primary,
                     icon = Icons.Outlined.Schedule,
                 )
             }

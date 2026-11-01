@@ -59,7 +59,7 @@ internal fun TaskKpiPanel(habits: List<HabitCardState>) {
             Kpi(
                 value = stats.overdue.toString(),
                 label = stringResource(R.string.bilan_kpi_overdue),
-                valueColor = if (stats.overdue > 0) palette.error else palette.onSurface,
+                valueColor = palette.onSurface,
                 modifier = Modifier.weight(1f),
             )
             Kpi(

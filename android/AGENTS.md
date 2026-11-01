@@ -161,6 +161,8 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 ## Pièges
 - Le dépôt est initialement vide et Java n'est pas dans le PATH; utiliser le JDK embarqué d'Android Studio.
 - Glance produit des RemoteViews; les anneaux déterminés doivent être rendus comme images.
+- Émulateur Linux (Fedora 44, Mesa 26, i9-13900HX) : `-gpu swiftshader_indirect` (avec ou sans `-no-window`, même avec `-feature -Vulkan`) plante en SIGSEGV ~45 s après le démarrage, dans le code JIT de `lib64/gles_swiftshader/libGLESv2.so`. Lancer avec le GPU hôte et une fenêtre : `QT_QPA_PLATFORM=xcb ~/Android/Sdk/emulator/emulator -avd nico35 -no-audio -no-snapshot -memory 3072 -gpu host` (démarrage en ~15 s), puis attendre `sys.boot_completed`. Ne pas lancer Gradle pendant le démarrage.
+- Glance (1.1) n'appelle `provideGlance` qu'une fois par session (45 s au moins, prolongée à chaque événement) : un `update`/`updateAll` reçu pendant la session ne fait que recomposer. Une donnée lue avant `provideContent` reste donc figée ; la lire dans la composition (`collectAsState`) ou la recharger sur signal (`TodayWidget`, `TodayWidgetReloads`). Une coche de widget passe par `WidgetCompletions` : case cochée avant l'écriture, écriture après le maintien, redessin du seul widget touché.
 
 ## État
 MVP local compilable : Room, saisie rapide, statistiques de période et widget Glance.

@@ -1,5 +1,9 @@
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,16 +34,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.components.TaskCheckbox
 import ch.nicolab.cadence.designsystem.components.pressable
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -139,7 +147,8 @@ internal fun TaskRow(
                     if (task.virtual) {
                         onOpen()
                     } else {
-                        if (!task.isClosed) completing = true
+                        // Pendant le maintien, un second toucher décoche : le modèle annule l'écriture.
+                        if (!task.isClosed) completing = !completing
                         onToggle()
                     }
                 },
@@ -148,14 +157,7 @@ internal fun TaskRow(
             )
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
-                Text(
-                    text = task.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = if (showClosed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
-                    textDecoration = if (showClosed) TextDecoration.LineThrough else null,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                StrikingTitle(task.name, struck = showClosed)
                 TaskMeta(task, projectName, projectIcon, today, zone, sectionDay)
             }
             // Une priorité haute est déjà portée par le trait rouge de la case.
@@ -172,6 +174,59 @@ internal fun TaskRow(
         }
     }
 }
+
+/**
+ * Titre barré d'un trait qui se trace de gauche à droite, ligne après ligne, pendant que le
+ * texte s'atténue. Une ligne déjà fermée à l'affichage est barrée sans animation ; « Supprimer
+ * les animations » rend le trait d'un coup (échelle de durée système).
+ */
+@Composable
+private fun StrikingTitle(name: String, struck: Boolean) {
+    val colors = MaterialTheme.colorScheme
+    val progress = animateFloatAsState(
+        targetValue = if (struck) 1f else 0f,
+        animationSpec = tween(Motion.NORMAL, easing = FastOutSlowInEasing),
+        label = "strike",
+    )
+    val color by animateColorAsState(
+        targetValue = if (struck) colors.onSurfaceVariant else colors.onSurface,
+        animationSpec = Motion.color(),
+        label = "titleColor",
+    )
+    var layout by remember { mutableStateOf<TextLayoutResult?>(null) }
+    Text(
+        text = name,
+        style = MaterialTheme.typography.bodyLarge,
+        color = color,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        onTextLayout = { layout = it },
+        modifier = Modifier.drawWithContent {
+            drawContent()
+            val text = layout ?: return@drawWithContent
+            val shown = progress.value
+            if (shown <= 0f) return@drawWithContent
+            val lines = (0 until text.lineCount).map { text.getLineLeft(it) to text.getLineRight(it) }
+            val total = lines.sumOf { (left, right) -> (right - left).toDouble() }.toFloat()
+            var budget = total * shown
+            val fontPx = text.layoutInput.style.fontSize.toPx()
+            val lift = fontPx * STRIKE_LIFT
+            lines.forEachIndexed { index, (left, right) ->
+                if (budget <= 0f) return@drawWithContent
+                val width = minOf(right - left, budget)
+                val y = text.getLineBaseline(index) - lift
+                drawLine(color, Offset(left, y), Offset(left + width, y), strokeWidth = fontPx * STRIKE_THICKNESS, cap = StrokeCap.Round)
+                budget -= width
+            }
+        },
+    )
+}
+
+/** Hauteur du trait au-dessus de la ligne de base, en part de la taille du texte (milieu de la hauteur d'x). */
+private const val STRIKE_LIFT = 0.3f
+
+/** Épaisseur du trait en part de la taille du texte, celle d'un barré typographique. */
+private const val STRIKE_THICKNESS = 0.075f
 
 /**
  * Faux quand la section affiche déjà le jour de l'échéance : la pastille ne répète pas la date.
@@ -198,10 +253,11 @@ private fun TaskMeta(task: TaskItem, projectName: String?, projectIcon: String?,
                 Text(
                     text = badge,
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (overdue) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                    // Une échéance passée se distingue sans alarme : teinte neutre, jamais la couleur d'erreur.
+                    color = if (overdue) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(if (overdue) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer)
+                        .background(if (overdue) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.secondaryContainer)
                         .padding(horizontal = 6.dp, vertical = 2.dp),
                 )
             }

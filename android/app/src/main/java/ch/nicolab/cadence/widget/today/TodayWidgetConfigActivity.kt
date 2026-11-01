@@ -85,6 +85,7 @@ class TodayWidgetConfigActivity : ComponentActivity() {
                     onBack = { finish() },
                     onSave = { config ->
                         store.save(appWidgetId, config)
+                        TodayWidgetReloads.request()
                         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
                         lifecycleScope.launch {
                             val glanceId = GlanceAppWidgetManager(app).getGlanceIdBy(appWidgetId)

@@ -12,7 +12,7 @@
     <string name="tasks_day_today">Aujourd\'hui</string>
     <string name="tasks_day_tomorrow">Demain</string>
     <string name="tasks_day_yesterday">Hier</string>
-    <string name="tasks_section_overdue">En retard</string>
+    <string name="tasks_section_overdue">Échues</string>
     <string name="tasks_section_unsorted">Tâches à classer</string>
     <string name="tasks_notifications_off">Notifications désactivées : les rappels ne s\'afficheront pas</string>
     <string name="tasks_notifications_settings">Ouvrir les réglages</string>
@@ -71,8 +71,8 @@
     <string name="tasks_subprojects_title">Sous-projets</string>
     <string name="tasks_project_open_named">Ouvrir le projet %1$s</string>
     <plurals name="tasks_overdue_count">
-        <item quantity="one">%d en retard</item>
-        <item quantity="other">%d en retard</item>
+        <item quantity="one">%d à replanifier</item>
+        <item quantity="other">%d à replanifier</item>
     </plurals>
     <plurals name="tasks_open_count">
         <item quantity="one">%d tâche ouverte</item>

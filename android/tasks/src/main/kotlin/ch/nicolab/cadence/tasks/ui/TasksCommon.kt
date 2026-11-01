@@ -27,10 +27,9 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.NextAction
+import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.LocalDate
-import java.time.temporal.WeekFields
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 /**
@@ -186,7 +185,8 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
-    val firstDay = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek }
+    // Premier jour du compte (profil), comme « Cette semaine » ; jamais celui de la langue de l'appareil.
+    val firstDay = weekStart.dayOfWeek
     when (val open = sheet) {
         null -> Unit
         is SwipeSheet.Menu -> TaskMenuSheet(
@@ -210,7 +210,7 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
         )
         is SwipeSheet.Project -> ProjectPickerSheet(
             task = open.task,
-            projects = projects,
+            projects = ProjectChoices.forTask(projects, open.task.projectUid),
             onPick = { viewModel.moveToProject(open.task, it) },
             onDismiss = viewModel::dismissSheet,
         )

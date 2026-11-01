@@ -92,7 +92,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
     val palette = cadence
     val isLoaded by viewModel.isLoaded.collectAsStateWithLifecycle()
     val habits by viewModel.habits.collectAsStateWithLifecycle()
-    val lastEntryId by viewModel.lastEntryId.collectAsStateWithLifecycle()
+    val lastEntry by viewModel.lastEntry.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
@@ -155,7 +155,7 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
         QuickSheet(
             single,
             { value, note -> viewModel.addEntry(single, value, "QUICK_MODAL", UUID.randomUUID().toString(), note) },
-            viewModel::undoLastEntry,
+            lastEntry?.undoableFor(single.stored.id)?.let { { viewModel.undoLastEntry(single.stored.id) } },
             { viewModel.clearSaveError(); correctingId = it.id },
             timers[single.stored.id],
             { viewModel.startTimer(single.stored.id) },
@@ -230,7 +230,9 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
                 }
                 Spacer(Modifier.height(Space.lg))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-                    if (lastEntryId != null) TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.weight(1f), onClick = viewModel::undoLastEntry)
+                    lastEntry?.let { last ->
+                        TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.weight(1f), onClick = { viewModel.undoLastEntry(last.habitId) })
+                    }
                     SecondaryAction(stringResource(R.string.quick_btn_close), Modifier.weight(1f), onClick = dismiss)
                 }
                 Spacer(Modifier.height(Space.sm))

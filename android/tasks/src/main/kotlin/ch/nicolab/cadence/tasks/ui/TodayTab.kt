@@ -33,7 +33,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.SectionHeader
-import ch.nicolab.cadence.designsystem.components.SectionTone
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
@@ -252,11 +251,8 @@ internal fun TodayTab(
         }
         if (state.overdue.isNotEmpty()) {
             item(key = "overdue-header") {
-                SectionHeader(
-                    title = stringResource(R.string.tasks_section_overdue),
-                    count = state.overdue.size,
-                    tone = SectionTone.Error,
-                )
+                // Ton sans culpabilité : un titre calme, sans compteur ni rouge ; chaque ligne garde sa date.
+                SectionHeader(title = stringResource(R.string.tasks_section_overdue))
             }
             taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
         }

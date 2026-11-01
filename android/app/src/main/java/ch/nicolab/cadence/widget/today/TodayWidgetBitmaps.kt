@@ -35,6 +35,22 @@ internal fun renderCheckBox(colorArgb: Int, sizeDp: Int, density: Float): Bitmap
 }
 
 /**
+ * Case cochée : le même carré arrondi, plein, la coche évidée pour que la teinte appliquée à
+ * l'affichage ne la recouvre pas.
+ */
+internal fun renderCheckBoxDone(sizeDp: Int, density: Float): Bitmap {
+    val scale = density.coerceAtMost(MAX_CHECK_DENSITY)
+    val pixels = (sizeDp * scale).toInt().coerceAtLeast(1)
+    val bitmap = Bitmap.createBitmap(pixels, pixels, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
+    val radius = CHECK_RADIUS_DP * scale
+    canvas.drawRoundRect(RectF(0f, 0f, pixels.toFloat(), pixels.toFloat()), radius, radius, paint)
+    clearCheck(canvas, pixels, CHECK_STROKE_DP * scale, paint)
+    return bitmap
+}
+
+/**
  * Marque d'un événement : un anneau, rond pour se distinguer de la case carrée d'une tâche
  * (comme dans la liste Tâches). Fait, c'est un disque plein dont la coche est évidée, pour que
  * la teinte de l'agenda appliquée à l'affichage ne recouvre pas la coche.
@@ -54,6 +70,12 @@ internal fun renderEventMark(done: Boolean, sizeDp: Int, density: Float): Bitmap
         return bitmap
     }
     canvas.drawCircle(centre, centre, centre, paint)
+    clearCheck(canvas, pixels, stroke, paint)
+    return bitmap
+}
+
+/** Évide la coche dans la forme pleine déjà dessinée. */
+private fun clearCheck(canvas: Canvas, pixels: Int, stroke: Float, paint: Paint) {
     val check = Path().apply {
         moveTo(pixels * 0.28f, pixels * 0.52f)
         lineTo(pixels * 0.44f, pixels * 0.67f)
@@ -67,7 +89,6 @@ internal fun renderEventMark(done: Boolean, sizeDp: Int, density: Float): Bitmap
         xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
     canvas.drawPath(check, paint)
-    return bitmap
 }
 
 /**

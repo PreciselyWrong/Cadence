@@ -17,13 +17,15 @@ object TodayWidgetLayout {
     private const val CONTENT_PADDING_DP = 24f
     private const val HEADER_MIN_DP = 30f
     private const val HEADER_GAP_DP = 6f
-    private const val ROW_PADDING_DP = 6f
-    private const val CHECK_DP = 22f
+    private const val ROW_PADDING_DP = 2f
+
+    /** Cible tactile de la case, plus haute que la case dessinée (22 dp). */
+    private const val CHECK_TOUCH_DP = 32f
     private const val FACET_DP = 32f
     private const val HABITS_GAP_DP = 6f
     private const val LINE_HEIGHT_RATIO = 1.3f
 
-    private fun rowHeightDp(sizes: TodayTextSizes): Float = max(CHECK_DP, sizes.body * LINE_HEIGHT_RATIO) + ROW_PADDING_DP
+    private fun rowHeightDp(sizes: TodayTextSizes): Float = max(CHECK_TOUCH_DP, sizes.body * LINE_HEIGHT_RATIO) + ROW_PADDING_DP
 
     /** Hauteur prise par le cadre, l'en-tête et, s'il y en a, la rangée d'habitudes (icône, nom, valeur). */
     fun reservedHeightDp(sizes: TodayTextSizes, habitsShown: Boolean): Float {

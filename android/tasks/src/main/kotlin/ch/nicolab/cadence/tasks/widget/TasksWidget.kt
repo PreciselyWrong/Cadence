@@ -8,7 +8,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceTheme
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
@@ -24,7 +27,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -40,6 +42,7 @@ import androidx.glance.semantics.contentDescription
 import androidx.glance.semantics.semantics
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
@@ -58,6 +61,9 @@ private val dateFormat = DateTimeFormatter.ofPattern("d MMM", tasksLocale)
 
 internal val taskUidKey = ActionParameters.Key<String>("task_uid")
 
+/** Vrai pour le widget carré : la coche redessine le widget touché, pas tous les widgets Tâches. */
+internal val squareWidgetKey = ActionParameters.Key<Boolean>("task_square")
+
 class TasksWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
@@ -68,13 +74,14 @@ class TasksWidget : GlanceAppWidget() {
             // Observé dans la composition : une session ouverte se recompose à chaque
             // écriture, alors qu'une lecture unique figerait la liste jusqu'à sa fermeture.
             val tasks by repository.observeTasks().collectAsState(initial)
+            val held by WidgetCompletions.held.collectAsState()
             val zone = ZoneId.systemDefault()
             val now = Instant.now()
             val today = LocalDate.now(zone)
             val overdueUids = TaskViews.overdue(tasks, today, now).mapTo(hashSetOf()) { it.uid }
             // Tri stable : les tâches en retard passent devant, l'ordre de TaskViews reste à l'intérieur.
             val rows = TaskViews.today(tasks, today, now).sortedBy { it.uid !in overdueUids }
-            TasksWidgetContent(rows, overdueUids, today, zone)
+            TasksWidgetContent(rows, overdueUids, held, today, zone)
         }
     }
 }
@@ -83,12 +90,15 @@ class TasksWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = TasksWidget()
 }
 
+/**
+ * La case se coche dans le widget touché avant l'écriture ; la tâche est écrite après le maintien
+ * et les autres widgets la retirent en suivant la base ([TasksWidgetUpdater]).
+ */
 class CompleteTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val uid = parameters[taskUidKey] ?: return
-        TasksGraph.repository(context).completeTask(uid)
-        TasksWidget().updateAll(context)
-        TasksSquareWidget().updateAll(context)
+        val widget = if (parameters[squareWidgetKey] == true) TasksSquareWidget() else TasksWidget()
+        WidgetCompletions.toggle(context, uid) { widget.update(context, glanceId) }
     }
 }
 
@@ -96,6 +106,7 @@ class CompleteTaskAction : ActionCallback {
 private fun TasksWidgetContent(
     rows: List<TaskItem>,
     overdueUids: Set<String>,
+    held: Set<String>,
     today: LocalDate,
     zone: ZoneId,
 ) {
@@ -119,7 +130,7 @@ private fun TasksWidgetContent(
             } else {
                 LazyColumn {
                     items(rows, itemId = { it.uid.hashCode().toLong() }) { task ->
-                        TaskRow(task, overdue = task.uid in overdueUids, today = today, zone = zone)
+                        TaskRow(task, overdue = task.uid in overdueUids, checked = task.uid in held, today = today, zone = zone)
                     }
                 }
             }
@@ -159,7 +170,7 @@ private fun WidgetHeader(count: Int) {
 }
 
 @Composable
-private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: ZoneId) {
+private fun TaskRow(task: TaskItem, overdue: Boolean, checked: Boolean, today: LocalDate, zone: ZoneId) {
     val context = LocalContext.current
     val open = openTaskIntent(context, task.uid)
     val dueLabel = dueLabel(task, today, zone)
@@ -167,7 +178,7 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: Zo
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 4.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
-        CompletionCircle(task.uid, LocalContext.current.getString(R.string.tasks_mark_done))
+        CompletionCircle(task.uid, checked, LocalContext.current.getString(if (checked) R.string.tasks_mark_undone else R.string.tasks_mark_done))
         Column(
             modifier = GlanceModifier
                 .defaultWeight()
@@ -177,7 +188,11 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: Zo
             Text(
                 task.name,
                 maxLines = 1,
-                style = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 15.sp),
+                style = TextStyle(
+                    color = if (checked) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface,
+                    fontSize = 15.sp,
+                    textDecoration = if (checked) TextDecoration.LineThrough else null,
+                ),
             )
             dueLabel?.let {
                 Text(
@@ -194,9 +209,12 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: Zo
     }
 }
 
-/** Anneau cliquable : termine la tâche sans l'ouvrir. La cible fait 40 dp autour de l'anneau de 24 dp. */
+/**
+ * Anneau cliquable : termine la tâche sans l'ouvrir ; cochée, c'est un disque plein. Un second
+ * toucher pendant le maintien annule. La cible fait 40 dp autour de l'anneau de 24 dp.
+ */
 @Composable
-private fun CompletionCircle(uid: String, label: String) {
+private fun CompletionCircle(uid: String, checked: Boolean, label: String) {
     Box(
         modifier = GlanceModifier
             .size(40.dp)
@@ -207,16 +225,25 @@ private fun CompletionCircle(uid: String, label: String) {
         Box(
             modifier = GlanceModifier
                 .size(24.dp)
-                .background(GlanceTheme.colors.outline)
+                .background(if (checked) GlanceTheme.colors.primary else GlanceTheme.colors.outline)
                 .cornerRadius(12.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = GlanceModifier
-                    .size(20.dp)
-                    .background(GlanceTheme.colors.widgetBackground)
-                    .cornerRadius(10.dp),
-            ) {}
+            if (checked) {
+                Image(
+                    ImageProvider(R.drawable.tasks_widget_check),
+                    contentDescription = null,
+                    modifier = GlanceModifier.size(16.dp),
+                    colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
+                )
+            } else {
+                Box(
+                    modifier = GlanceModifier
+                        .size(20.dp)
+                        .background(GlanceTheme.colors.widgetBackground)
+                        .cornerRadius(10.dp),
+                ) {}
+            }
         }
     }
 }

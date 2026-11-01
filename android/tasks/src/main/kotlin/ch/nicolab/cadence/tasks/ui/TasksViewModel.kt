@@ -48,6 +48,7 @@ import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.UndoChanges
+import ch.nicolab.cadence.tasks.widget.HeldCompletion
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -162,7 +163,7 @@ internal class TasksViewModel(
 
     private val chosenArea = MutableStateFlow(filterPrefs.getString(KEY_AREA, null))
 
-    private val _areaFilter: Flow<String?> = combine(chosenArea, areas) { chosen, all -> chosen?.takeIf { uid -> all.any { it.uid == uid } } }
+    private val _areaFilter: Flow<String?> = combine(chosenArea, areas, AreaFilter::effective)
 
     /** Domaine filtré sur les listes de tâches et de projets, gardé entre les sessions ; null = tous. */
     val areaFilter: StateFlow<String?> = _areaFilter
@@ -181,6 +182,7 @@ internal class TasksViewModel(
     val messages: Flow<String> = _messages.asSharedFlow()
 
     private val _completed = MutableSharedFlow<TaskItem>(extraBufferCapacity = 4)
+    private val heldCompletion = HeldCompletion(COMPLETE_HOLD_MS)
 
     /** Tâches terminées à l'instant, pour proposer « Annuler » ; une récurrente avance d'occurrence et n'en fait pas partie. */
     val completed: Flow<TaskItem> = _completed.asSharedFlow()
@@ -297,14 +299,21 @@ internal class TasksViewModel(
     fun observeProjectTasks(projectUid: String): Flow<List<TaskItem>> =
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
 
-    /** [hold] laisse la ligne cochée et barrée un instant avant que la tâche quitte la liste. */
+    /**
+     * [hold] laisse la ligne cochée et barrée un instant avant que la tâche quitte la liste ;
+     * un second toucher pendant ce temps annule la coche sans rien écrire.
+     */
     fun toggle(task: TaskItem, hold: Boolean = false) = launchAction {
-        if (task.isClosed) {
-            repository.reopenTask(task.uid)
-        } else {
-            if (hold) delay(COMPLETE_HOLD_MS)
-            repository.completeTask(task.uid)
-            if (!task.isRecurring) _completed.tryEmit(task)
+        when {
+            task.isClosed -> repository.reopenTask(task.uid)
+            hold -> {
+                val outcome = heldCompletion.toggle(task.uid) { repository.completeTask(it) }
+                if (outcome == HeldCompletion.Outcome.WRITTEN && !task.isRecurring) _completed.tryEmit(task)
+            }
+            else -> {
+                repository.completeTask(task.uid)
+                if (!task.isRecurring) _completed.tryEmit(task)
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.background
+import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.links.LinkExtractor
@@ -304,7 +305,7 @@ private fun IdeaProjectSheet(viewModel: TasksViewModel, onPick: (String?) -> Uni
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     CadenceSheet(title = stringResource(R.string.tasks_idea_project_title), subtitle = null, dismiss = onDismiss) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(bottom = Space.xl)) {
-            projects.forEach { project ->
+            ProjectChoices.forTask(projects, null).forEach { project ->
                 Text(
                     project.name,
                     style = MaterialTheme.typography.bodyLarge,

@@ -623,12 +623,13 @@
     <string name="today_widget_empty">Rien à faire aujourd’hui</string>
     <string name="today_widget_add">Ajouter une tâche</string>
     <string name="today_widget_configure">Configurer le widget</string>
-    <string name="today_overdue_label">En retard · %1$d</string>
+    <string name="today_overdue_label">Échues · %1$d</string>
     <string name="today_no_date_label">Sans date</string>
     <string name="today_event_all_day">Journée</string>
     <string name="today_events_label">Agenda</string>
     <string name="today_event_check_description">Marquer %1$s comme fait</string>
     <string name="today_widget_check_description">Terminer %1$s</string>
+    <string name="today_widget_uncheck_description">Annuler la coche de %1$s</string>
     <string name="today_day_yesterday">Hier</string>
     <string name="today_day_today">Auj.</string>
     <string name="today_day_tomorrow">Demain</string>
@@ -647,7 +648,7 @@
     <string name="today_config_max_facets">Facettes max.</string>
     <string name="today_config_high_priority">Priorité haute seulement</string>
     <string name="today_config_hide_recurring">Masquer les récurrences</string>
-    <string name="today_config_overdue_section">Section « En retard » séparée</string>
+    <string name="today_config_overdue_section">Section « Échues » séparée</string>
     <string name="today_config_group_by_day">Regrouper par jour</string>
     <string name="today_config_glass_opacity">Opacité du verre</string>
     <string name="today_config_glass_sheen">Reflet</string>
@@ -676,7 +677,7 @@
     <string name="today_selection_by_time">Selon l’heure</string>
     <string name="today_selection_all">Toutes</string>
     <string name="today_selection_choose">Choisir</string>
-    <string name="today_scope_overdue_and_today">En retard + aujourd’hui</string>
+    <string name="today_scope_overdue_and_today">Échues + aujourd’hui</string>
     <string name="today_scope_today">Aujourd’hui</string>
     <string name="today_scope_tomorrow">Demain</string>
     <string name="today_scope_next_3">3 prochains jours</string>

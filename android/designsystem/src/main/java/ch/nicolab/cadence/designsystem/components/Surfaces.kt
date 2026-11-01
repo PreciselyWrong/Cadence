@@ -17,6 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
@@ -59,7 +63,8 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 fun CadenceScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val palette = cadence
     Surface(modifier.fillMaxSize(), color = palette.background, contentColor = palette.onSurface) {
-        Box(Modifier.fillMaxSize(), content = content)
+        // En paysage, la barre de navigation et l'encoche sont sur le côté : le fond passe dessous, le contenu non.
+        Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)), content = content)
     }
 }
 

@@ -158,7 +158,8 @@ internal fun HabitOptionsSheet(
 internal fun QuickSheet(
     item: HabitCardState,
     add: (Long, String?) -> Unit,
-    undo: () -> Unit,
+    /** Null quand la dernière saisie de la session n'appartient pas à cette habitude : le bouton disparaît. */
+    undo: (() -> Unit)?,
     correct: (HabitEntry) -> Unit,
     timer: HabitTimer?,
     startTimer: () -> Unit,
@@ -236,7 +237,7 @@ internal fun QuickSheet(
             )
         }
         Spacer(Modifier.height(Space.xs))
-        TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.fillMaxWidth(), onClick = undo)
+        if (undo != null) TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.fillMaxWidth(), onClick = undo)
 
         Spacer(Modifier.height(Space.xl))
         SectionHeader(stringResource(R.string.entries_section))

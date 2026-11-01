@@ -1,7 +1,10 @@
 package ch.nicolab.cadence.designsystem.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -30,6 +33,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.launch
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -115,6 +121,10 @@ private fun CheckSurface(
         animationSpec = tween(CHECK_DRAW_MILLIS, easing = FastOutSlowInEasing),
         label = "checkDraw",
     )
+    // Rebond de la case au moment où l'on coche, sur le même instant que l'haptique ; jamais au
+    // premier affichage d'une case déjà cochée. « Supprimer les animations » le rend nul.
+    val pop = remember { Animatable(1f) }
+    val scope = rememberCoroutineScope()
     Box(
         modifier
             .size(Size.touch)
@@ -124,7 +134,12 @@ private fun CheckSurface(
                 indication = LocalIndication.current,
                 role = Role.Checkbox,
                 onValueChange = {
-                    if (it) haptic.confirm() else haptic.tap()
+                    if (it) {
+                        haptic.confirm()
+                        scope.launch { pop.animateTo(1f, PopSpring, initialVelocity = POP_VELOCITY) }
+                    } else {
+                        haptic.tap()
+                    }
                     onCheckedChange(it)
                 },
             )
@@ -136,6 +151,10 @@ private fun CheckSurface(
         Box(
             Modifier
                 .size(Size.checkbox)
+                .graphicsLayer {
+                    scaleX = pop.value
+                    scaleY = pop.value
+                }
                 .clip(shape)
                 .background(fillColor)
                 .border(Size.stroke, strokeColor, shape),
@@ -147,6 +166,12 @@ private fun CheckSurface(
 }
 
 private const val CHECK_DRAW_MILLIS = 220
+
+/** Ressort de pression du style maison (amorti 0,5, raideur moyenne) : un rebond bref et net. */
+private val PopSpring = spring<Float>(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium)
+
+/** Élan initial du rebond : la case grandit d'environ 10 % avant de revenir. */
+private const val POP_VELOCITY = 6f
 
 /** Coche tracée trait après trait : [progress] va de 0 (rien) à 1 (coche complète). */
 @Composable

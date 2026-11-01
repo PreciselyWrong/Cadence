@@ -6,6 +6,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,6 +73,8 @@ import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
+import ch.nicolab.cadence.tasks.widget.WidgetCompletions
+import ch.nicolab.cadence.tasks.widget.WidgetTrace
 import ch.nicolab.cadence.tasks.widget.openTaskIntent
 import ch.nicolab.cadence.widget.WidgetHabit
 import ch.nicolab.cadence.widget.WidgetHabitPresentation
@@ -81,7 +86,15 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
 private val taskUidKey = ActionParameters.Key<String>("today_task_uid")
@@ -97,39 +110,58 @@ private data class FacetView(val habit: WidgetHabit, val bitmap: Bitmap)
 /**
  * Widget « Aujourd'hui » : tâches du périmètre choisi, événements des agendas affichés sur le
  * widget, et habitudes en facettes. Chaque instance a ses réglages ([TodayWidgetConfigStore]).
+ *
+ * Glance n'appelle [provideGlance] qu'une fois par session (45 s au moins) : un `update` reçu
+ * pendant la session ne fait que recomposer. La vue est donc rechargée dans la composition, à
+ * chaque écriture des sources qu'elle lit, sinon une tâche cochée resterait affichée jusqu'à la
+ * session suivante.
  */
 class TodayWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
+    @OptIn(FlowPreview::class)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val app = context.applicationContext as CadenceApp
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
-        val config = TodayWidgetConfigStore(context).load(appWidgetId)
+        val marks = TodayMarks.render(context.resources.displayMetrics.density)
+        val initial = loadView(app, appWidgetId, marks)
+        val reloads = reloadSignals(app, showEvents = initial.config.showEvents, today = initial.today, zone = initial.zone)
+            .debounce(RELOAD_QUIET_MS)
+            .conflate()
+            .map { loadView(app, appWidgetId, marks) }
+            .flowOn(Dispatchers.IO)
+        provideContent {
+            val view by reloads.collectAsState(initial)
+            val held by WidgetCompletions.held.collectAsState()
+            if (held.isNotEmpty()) SideEffect { WidgetTrace.log { "today frame held=$held" } }
+            TodayContent(view, held)
+        }
+    }
+
+    private suspend fun loadView(app: CadenceApp, appWidgetId: Int, marks: TodayMarks): TodayView {
+        val config = TodayWidgetConfigStore(app).load(appWidgetId)
         val zone = ZoneId.systemDefault()
         val today = LocalDate.now(zone)
         val now = Instant.now()
 
-        val tasksRepository = TasksGraph.repository(context)
+        val tasksRepository = TasksGraph.repository(app)
         val tasks = tasksRepository.observeTasks().first()
         val projects = tasksRepository.observeProjects().first().associateBy { it.uid }
         val tagList = tasksRepository.observeTags().first()
         val tagNames = tagList.associate { it.uid to it.name }
-        val selection = selectWidgetTasks(tasks, eventsOf(context, config, today, zone), config, today, zone, now, tagList)
+        val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
         } else {
             habitFacets(app, config, today, now, zone)
         }
-        val density = context.resources.displayMetrics.density
-        val view = TodayView(
+        return TodayView(
             appWidgetId = appWidgetId,
             config = config,
             palette = TodayPalette.of(config),
             sheen = TodayPalette.sheenAlpha(config).takeIf { it > 0f }?.let(::renderGlassSheen),
-            checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
-            eventRing = renderEventMark(done = false, CHECK_DP, density),
-            eventDone = renderEventMark(done = true, CHECK_DP, density),
-            checkEvents = config.showEvents && CalendarGraph.repository(context).globalSettings.first().checkEvents,
+            marks = marks,
+            checkEvents = config.showEvents && CalendarGraph.repository(app).globalSettings.first().checkEvents,
             now = now,
             selection = selection,
             facets = facets,
@@ -138,7 +170,25 @@ class TodayWidget : GlanceAppWidget() {
             today = today,
             zone = zone,
         )
-        provideContent { TodayContent(view) }
+    }
+
+    /**
+     * Tout ce que la vue lit. Chaque source émet aussi sa valeur courante à l'abonnement : la
+     * fenêtre de [RELOAD_QUIET_MS] fond ces premières émissions en un seul rechargement.
+     */
+    private fun reloadSignals(app: CadenceApp, showEvents: Boolean, today: LocalDate, zone: ZoneId): Flow<Unit> {
+        val tasks = TasksGraph.repository(app)
+        val calendar = CalendarGraph.repository(app)
+        val sources = buildList<Flow<Any?>> {
+            add(tasks.observeTasks())
+            add(tasks.observeProjects())
+            add(tasks.observeTags())
+            add(app.repository.observeWidgetRevisions())
+            add(calendar.globalSettings)
+            add(TodayWidgetReloads.requests)
+            if (showEvents) add(calendar.events(todayRange(today, zone), CalendarSurface.WIDGET))
+        }
+        return sources.merge().map { }
     }
 
     private suspend fun eventsOf(
@@ -148,10 +198,13 @@ class TodayWidget : GlanceAppWidget() {
         zone: ZoneId,
     ): List<EventWithDone> {
         if (!config.showEvents) return emptyList()
-        val start = today.atStartOfDay(zone).toInstant().toEpochMilli()
-        val end = today.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
-        return CalendarGraph.repository(context).events(TimeRange(start, end), CalendarSurface.WIDGET).first()
+        return CalendarGraph.repository(context).events(todayRange(today, zone), CalendarSurface.WIDGET).first()
     }
+
+    private fun todayRange(today: LocalDate, zone: ZoneId): TimeRange = TimeRange(
+        today.atStartOfDay(zone).toInstant().toEpochMilli(),
+        today.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli(),
+    )
 
     private suspend fun habitFacets(
         app: CadenceApp,
@@ -203,6 +256,7 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
         TodayCalendarRefresh.ensureScheduled(context)
         // Le contenu dépend du jour et de l'heure : ces signaux le redessinent.
         if (intent.action in DAY_SIGNALS) {
+            TodayWidgetReloads.request()
             val app = context.applicationContext as CadenceApp
             app.applicationScope.launch { TodayWidget().updateAll(context) }
         }
@@ -223,11 +277,14 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
     }
 }
 
+/**
+ * La case se coche dans ce widget avant l'écriture ([WidgetCompletions]) ; la ligne part après
+ * le maintien, quand la session relit la base. Les autres widgets suivent la base.
+ */
 class CompleteTodayTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val uid = parameters[taskUidKey] ?: return
-        TasksGraph.repository(context).completeTask(uid)
-        TodayWidget().updateAll(context)
+        WidgetCompletions.toggle(context, uid) { TodayWidget().update(context, glanceId) }
     }
 }
 
@@ -240,15 +297,43 @@ class ToggleTodayEventAction : ActionCallback {
             instanceBegin = parameters[eventBeginKey] ?: return,
         )
         CalendarGraph.repository(context).toggleDone(key)
+        // Une session ouverte suit déjà les occurrences faites ; les autres démarrent ici.
         TodayWidget().updateAll(context)
     }
 }
 
 private const val FACET_ICON_DP = 22
 private const val CHECK_DP = 22
+
+/** Cible tactile des cases et des marques d'événement, plus large que la case dessinée ([CHECK_DP]). */
+private const val CHECK_TOUCH_DP = 32
+
+/** Fenêtre qui regroupe les écritures d'une même opération en un seul rechargement. */
+private const val RELOAD_QUIET_MS = 80L
 private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
 private const val RIM_DP = 1
 private const val OPAQUE_MASK = 0xFF000000.toInt()
+
+/**
+ * Cases et marques, blanches et teintées à l'affichage : une image par forme, partagée par toutes
+ * les lignes et rendue une fois par session (elles ne dépendent que de la densité).
+ */
+private class TodayMarks(
+    val checkBox: Bitmap,
+    val checkDone: Bitmap,
+    /** Anneau et disque fait des événements, teintés de la couleur de l'agenda. */
+    val eventRing: Bitmap,
+    val eventDone: Bitmap,
+) {
+    companion object {
+        fun render(density: Float) = TodayMarks(
+            checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
+            checkDone = renderCheckBoxDone(CHECK_DP, density),
+            eventRing = renderEventMark(done = false, CHECK_DP, density),
+            eventDone = renderEventMark(done = true, CHECK_DP, density),
+        )
+    }
+}
 
 private class TodayView(
     val appWidgetId: Int,
@@ -256,11 +341,7 @@ private class TodayView(
     val palette: TodayPalettes,
     /** Reflet du verre, null hors du verre ou à force nulle. */
     val sheen: Bitmap?,
-    /** Case à cocher blanche, teintée à l'affichage : une seule image partagée par toutes les lignes. */
-    val checkBox: Bitmap,
-    /** Anneau et disque fait des événements, blancs eux aussi, teintés de la couleur de l'agenda. */
-    val eventRing: Bitmap,
-    val eventDone: Bitmap,
+    val marks: TodayMarks,
     /** « Cocher un événement » est actif : l'anneau coche l'occurrence au lieu d'ouvrir l'application. */
     val checkEvents: Boolean,
     val now: Instant,
@@ -286,7 +367,7 @@ private fun constantProvider(argb: Int): GlanceColor = ColorProvider(day = Color
  * widget, quelle que soit sa taille ni le nombre de tâches.
  */
 @Composable
-private fun TodayContent(view: TodayView) {
+private fun TodayContent(view: TodayView, held: Set<String>) {
     val context = LocalContext.current
     val config = view.config
     val palette = view.palette
@@ -319,7 +400,7 @@ private fun TodayContent(view: TodayView) {
                 Box(GlanceModifier.height(6.dp)) {}
                 if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
                 if (listShown) {
-                    TodayList(view, text, tasksShown)
+                    TodayList(view, held, text, tasksShown)
                 } else {
                     Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
                         if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
@@ -336,7 +417,7 @@ private fun TodayContent(view: TodayView) {
  * événements suivent un intitulé « Agenda » quand des tâches les précèdent.
  */
 @Composable
-private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksShown: Boolean) {
+private fun ColumnScope.TodayList(view: TodayView, held: Set<String>, text: TodayTextSizes, tasksShown: Boolean) {
     val context = LocalContext.current
     val selection = view.selection
     val grouped = view.config.groupByDay
@@ -352,7 +433,7 @@ private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksSh
                 items(section.tasks, itemId = { it.rowKey.hashCode().toLong() }) {
                     // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
                     val due = if (grouped) it.dueTimeLabel(view) else it.dueLabel(view, context)
-                    TaskRowView(it, view, due, overdue = section.overdue, text)
+                    TaskRowView(it, view, due, overdue = section.overdue, checked = it.uid in held, text)
                 }
             }
         }
@@ -444,7 +525,14 @@ private fun EmptyLabel(text: String, palette: TodayPalettes, sizes: TodayTextSiz
 }
 
 @Composable
-private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, overdue: Boolean, sizes: TodayTextSizes) {
+private fun TaskRowView(
+    task: TaskItem,
+    view: TodayView,
+    dueLabel: String?,
+    overdue: Boolean,
+    checked: Boolean,
+    sizes: TodayTextSizes,
+) {
     val palette = view.palette
     val config = view.config
     val projectArgb = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)
@@ -454,7 +542,7 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
     val context = LocalContext.current
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
-        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
+        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 1.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (config.projectRail) {
@@ -462,24 +550,38 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
             Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(rail).cornerRadius(2.dp)) {}
             Box(GlanceModifier.width(6.dp)) {}
         }
-        val checkbox = GlanceModifier.size(CHECK_DP.dp)
-        Image(
-            ImageProvider(view.checkBox),
-            context.getString(R.string.today_widget_check_description, task.name),
-            modifier = if (config.checkFromWidget && !task.virtual) {
-                checkbox.clickable(actionRunCallback<CompleteTodayTaskAction>(actionParametersOf(taskUidKey to task.uid)))
-            } else {
-                checkbox.clickable(actionStartActivityIntent(openIntent))
-            },
-            colorFilter = ColorFilter.tint(accent),
+        // La case de 22 dp est centrée dans une cible de 32 dp ; cochée, elle est pleine, la coche évidée.
+        val checkTarget = GlanceModifier.size(CHECK_TOUCH_DP.dp)
+        val checkLabel = context.getString(
+            if (checked) R.string.today_widget_uncheck_description else R.string.today_widget_check_description,
+            task.name,
         )
+        Box(
+            modifier = if (config.checkFromWidget && !task.virtual) {
+                checkTarget.clickable(actionRunCallback<CompleteTodayTaskAction>(actionParametersOf(taskUidKey to task.uid)))
+            } else {
+                checkTarget.clickable(actionStartActivityIntent(openIntent))
+            },
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                ImageProvider(if (checked) view.marks.checkDone else view.marks.checkBox),
+                checkLabel,
+                modifier = GlanceModifier.size(CHECK_DP.dp),
+                colorFilter = ColorFilter.tint(accent),
+            )
+        }
         Column(
-            modifier = GlanceModifier.defaultWeight().padding(start = 8.dp).clickable(actionStartActivityIntent(openIntent)),
+            modifier = GlanceModifier.defaultWeight().padding(start = 3.dp).clickable(actionStartActivityIntent(openIntent)),
         ) {
             Text(
                 task.name,
                 maxLines = 1,
-                style = TextStyle(color = palette.provider { it.ink }, fontSize = sizes.body.sp),
+                style = TextStyle(
+                    color = if (checked) palette.provider { it.muted } else palette.provider { it.ink },
+                    fontSize = sizes.body.sp,
+                    textDecoration = if (checked) TextDecoration.LineThrough else null,
+                ),
             )
             meta?.let {
                 Text(it, maxLines = 1, style = TextStyle(color = palette.provider { p -> p.muted }, fontSize = sizes.small.sp))
@@ -529,19 +631,24 @@ private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayText
         actionStartActivity<MainActivity>()
     }
     Row(
-        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
+        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 1.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         if (view.config.projectRail) {
             Box(modifier = GlanceModifier.width(3.dp).height(20.dp).background(constantProvider(calendarArgb)).cornerRadius(2.dp)) {}
             Box(GlanceModifier.width(6.dp)) {}
         }
-        Image(
-            ImageProvider(if (state == TodayEventState.DONE) view.eventDone else view.eventRing),
-            context.getString(R.string.today_event_check_description, event.event.title),
-            modifier = GlanceModifier.size(CHECK_DP.dp).clickable(markAction),
-            colorFilter = ColorFilter.tint(tint),
-        )
+        Box(
+            modifier = GlanceModifier.size(CHECK_TOUCH_DP.dp).clickable(markAction),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                ImageProvider(if (state == TodayEventState.DONE) view.marks.eventDone else view.marks.eventRing),
+                context.getString(R.string.today_event_check_description, event.event.title),
+                modifier = GlanceModifier.size(CHECK_DP.dp),
+                colorFilter = ColorFilter.tint(tint),
+            )
+        }
         Text(
             event.event.title,
             maxLines = 1,
@@ -550,7 +657,7 @@ private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayText
                 fontSize = sizes.body.sp,
                 textDecoration = if (state == TodayEventState.DONE) TextDecoration.LineThrough else null,
             ),
-            modifier = GlanceModifier.defaultWeight().padding(start = 8.dp).clickable(actionStartActivity<MainActivity>()),
+            modifier = GlanceModifier.defaultWeight().padding(start = 3.dp).clickable(actionStartActivity<MainActivity>()),
         )
         Text(
             time,

@@ -116,7 +116,6 @@ fun TasksScreen(
         tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
         tab == TasksTab.NOTES -> pluralStringResource(R.plurals.tasks_notes_subtitle, notes.size, notes.size)
         tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
-        overdueCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount)}"
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine
     }

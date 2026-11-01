@@ -114,6 +114,7 @@ internal fun CadenceAppScreen(
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val timers by viewModel.timers.collectAsStateWithLifecycle()
+    val lastEntry by viewModel.lastEntry.collectAsStateWithLifecycle()
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
     val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
@@ -345,7 +346,7 @@ internal fun CadenceAppScreen(
         ) else QuickSheet(
             item,
             { value, note -> viewModel.addEntry(item, value, "APP", UUID.randomUUID().toString(), note) },
-            viewModel::undoLastEntry,
+            lastEntry?.undoableFor(item.stored.id)?.let { { viewModel.undoLastEntry(item.stored.id) } },
             { viewModel.clearSaveError(); correctingId = it.id },
             timers[item.stored.id],
             { viewModel.startTimer(item.stored.id) },

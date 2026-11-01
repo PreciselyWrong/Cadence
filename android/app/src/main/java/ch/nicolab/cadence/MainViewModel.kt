@@ -1,5 +1,6 @@
 package ch.nicolab.cadence
 
+import ch.nicolab.cadence.habits.LastEntry
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.data.local.CadenceRepository
@@ -161,7 +162,7 @@ class MainViewModel(
         SharingStarted.Eagerly,
         emptyList(),
     )
-    val lastEntryId = MutableStateFlow<String?>(null)
+    val lastEntry = MutableStateFlow<LastEntry?>(null)
     private val saving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = saving
     private val savingError = MutableStateFlow<String?>(null)
@@ -303,7 +304,7 @@ class MainViewModel(
     fun undoDirectAction(receipt: DirectActionReceipt) = saveSafely {
         if (receipt.entryId != null) {
             repository.deleteEntry(receipt.entryId)
-            if (lastEntryId.value == receipt.entryId) lastEntryId.value = null
+            if (lastEntry.value?.entryId == receipt.entryId) lastEntry.value = null
         } else if (receipt.startedTimer != null && repository.getTimer(receipt.habitId) == receipt.startedTimer) {
             if (receipt.previousTimer == null) repository.clearTimer(receipt.habitId)
             else repository.saveTimer(receipt.previousTimer)
@@ -401,7 +402,7 @@ class MainViewModel(
             ),
             source = source,
         )
-        lastEntryId.value = entryId
+        lastEntry.value = LastEntry(entryId, habit.stored.id)
         return entryId
     }
 
@@ -492,11 +493,11 @@ class MainViewModel(
         pattern = learnedQuestions.pattern(habitId),
     )
 
-    fun undoLastEntry() = viewModelScope.launch {
-        val id = lastEntryId.value ?: return@launch
+    fun undoLastEntry(habitId: String) = viewModelScope.launch {
+        val id = lastEntry.value?.undoableFor(habitId) ?: return@launch
         repository.deleteEntry(id)
         refreshAll()
-        lastEntryId.value = null
+        lastEntry.value = null
     }
 
     fun saveHabit(
@@ -688,7 +689,7 @@ class MainViewModel(
 
     fun deleteEntry(entryId: String, onSaved: () -> Unit) = saveSafely(onSaved) {
         repository.deleteEntry(entryId)
-        if (lastEntryId.value == entryId) lastEntryId.value = null
+        if (lastEntry.value?.entryId == entryId) lastEntry.value = null
     }
 
     fun saveGroup(group: HabitGroup) = viewModelScope.launch {

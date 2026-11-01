@@ -46,8 +46,10 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Locale
 
-private val shortDay: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+// L'interface est en français : la date suit, quelle que soit la langue de l'appareil.
+private val shortDay: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.FRENCH)
 
 /**
  * Menu d'un appui long : dates rapides, puis priorité, projet et suppression. Une tâche d'un fichier

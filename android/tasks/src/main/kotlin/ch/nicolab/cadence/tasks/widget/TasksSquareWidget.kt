@@ -35,7 +35,10 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
 import androidx.glance.text.Text
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.tasks.R
@@ -57,9 +60,10 @@ class TasksSquareWidget : GlanceAppWidget() {
         val initial = repository.observeTasks().first()
         provideContent {
             val tasks by repository.observeTasks().collectAsState(initial)
+            val held by WidgetCompletions.held.collectAsState()
             val today = LocalDate.now(ZoneId.systemDefault())
             val rows = TaskViews.today(tasks, today, Instant.now())
-            SquareContent(rows)
+            SquareContent(rows, held)
         }
     }
 }
@@ -69,7 +73,7 @@ class TasksSquareWidgetReceiver : GlanceAppWidgetReceiver() {
 }
 
 @Composable
-private fun SquareContent(rows: List<TaskItem>) {
+private fun SquareContent(rows: List<TaskItem>, held: Set<String>) {
     val context = LocalContext.current
     GlanceTheme {
         androidx.glance.layout.Column(
@@ -120,42 +124,69 @@ private fun SquareContent(rows: List<TaskItem>) {
                 }
             } else {
                 LazyColumn(modifier = GlanceModifier.padding(top = 6.dp)) {
-                    items(rows, itemId = { it.uid.hashCode().toLong() }) { task -> SquareRow(task) }
+                    items(rows, itemId = { it.uid.hashCode().toLong() }) { task -> SquareRow(task, checked = task.uid in held) }
                 }
             }
         }
     }
 }
 
+/** La case de 20 dp est posée dans une cible de 32 dp, le maximum que la hauteur d'un 2×2 permet. */
 @Composable
-private fun SquareRow(task: TaskItem) {
-    val open = openTaskIntent(LocalContext.current, task.uid)
+private fun SquareRow(task: TaskItem, checked: Boolean) {
+    val context = LocalContext.current
+    val open = openTaskIntent(context, task.uid)
+    val label = context.getString(if (checked) R.string.tasks_mark_undone else R.string.tasks_mark_done)
     Row(
-        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 3.dp),
+        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 1.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         Box(
             modifier = GlanceModifier
-                .size(20.dp)
-                .background(GlanceTheme.colors.outline)
-                .cornerRadius(6.dp)
-                .clickable(actionRunCallback<CompleteTaskAction>(actionParametersOf(taskUidKey to task.uid))),
+                .size(32.dp)
+                .clickable(
+                    actionRunCallback<CompleteTaskAction>(
+                        actionParametersOf(taskUidKey to task.uid, squareWidgetKey to true),
+                    ),
+                )
+                .semantics { contentDescription = label },
             contentAlignment = Alignment.Center,
         ) {
             Box(
                 modifier = GlanceModifier
-                    .size(16.dp)
-                    .background(GlanceTheme.colors.widgetBackground)
-                    .cornerRadius(4.dp),
-            ) {}
+                    .size(20.dp)
+                    .background(if (checked) GlanceTheme.colors.primary else GlanceTheme.colors.outline)
+                    .cornerRadius(6.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (checked) {
+                    Image(
+                        ImageProvider(R.drawable.tasks_widget_check),
+                        contentDescription = null,
+                        modifier = GlanceModifier.size(14.dp),
+                        colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
+                    )
+                } else {
+                    Box(
+                        modifier = GlanceModifier
+                            .size(16.dp)
+                            .background(GlanceTheme.colors.widgetBackground)
+                            .cornerRadius(4.dp),
+                    ) {}
+                }
+            }
         }
         Text(
             task.name,
             maxLines = 1,
-            style = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 13.sp),
+            style = TextStyle(
+                color = if (checked) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface,
+                fontSize = 13.sp,
+                textDecoration = if (checked) TextDecoration.LineThrough else null,
+            ),
             modifier = GlanceModifier
                 .defaultWeight()
-                .padding(start = 8.dp)
+                .padding(start = 2.dp)
                 .then(if (open != null) GlanceModifier.clickable(actionStartActivityIntent(open)) else GlanceModifier),
         )
     }

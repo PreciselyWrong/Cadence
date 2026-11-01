@@ -60,6 +60,7 @@ import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.ObjectiveCard
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Locale
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -213,7 +214,7 @@ private fun goalColor(goal: GoalItem): Color = projectRailColor(goal.color)?.let
 private fun goalMeta(goal: GoalItem): String? {
     val parts = buildList {
         add(stringResource(horizonLabel(goal.horizon)))
-        goal.targetDate?.let { add(stringResource(R.string.goals_target, it.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))) }
+        goal.targetDate?.let { add(stringResource(R.string.goals_target, it.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.FRENCH)))) }
         statusLabel(goal.status)?.let { add(stringResource(it)) }
     }
     return parts.joinToString(" · ")

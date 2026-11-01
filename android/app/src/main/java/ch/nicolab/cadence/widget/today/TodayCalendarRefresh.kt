@@ -50,6 +50,7 @@ class TodayCalendarRefreshJobService : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
         TodayCalendarRefresh.schedule(this)
         val app = applicationContext as CadenceApp
+        TodayWidgetReloads.request()
         app.applicationScope.launch {
             TodayWidget().updateAll(app)
             jobFinished(params, false)

@@ -6,10 +6,20 @@
 - Étiquettes : renommer une étiquette ou la placer sous une autre (crayon de l'en-tête) ; ses sous-étiquettes suivent, comme sur le web.
 - Agenda : une habitude « N fois par semaine » (ou un suivi libre) apparaît les jours où elle a été faite.
 - Agenda : un bouton calendrier dans l'en-tête déplie le mois pour aller à une date (un jour touché y mène et referme le calendrier).
+- Widgets de tâches : la case se coche dès le toucher, la ligne reste cochée et barrée un instant puis quitte la liste ; toucher de nouveau pendant ce temps annule. Seul le widget touché est redessiné, l'enregistrement et la synchronisation suivent.
+- Tâches : la case rebondit en se cochant, le titre se barre d'un trait qui se trace, et un second toucher avant que la ligne parte annule la coche.
 
 ### Corrections
 - Agenda : la feuille Affichage défile, les agendas du bas sont atteignables.
 - Agenda : défiler la grille n'affiche ni ne masque plus la ligne des jours ; elle est remplacée par le bouton calendrier.
+- Widget « Aujourd'hui » : une tâche cochée peu après une autre disparaît aussitôt au lieu de rester affichée jusqu'à la prochaine modification ; les réglages enregistrés s'appliquent aussi tout de suite.
+- Widgets : les cases sont plus faciles à toucher sans ouvrir la tâche par erreur.
+- Tâches : plus de compteur « N en retard » dans l'en-tête ; la section s'appelle « Échues », sans compteur ni rouge, et chaque ligne garde sa date sur une pastille neutre (fiche, Bilan, carte du matin et widget suivent : « Échues », « à replanifier »).
+- Domaines : la rangée de filtre n'apparaît qu'à partir de deux domaines ; un filtre gardé sur un domaine resté seul est ignoré.
+- Déplacer vers un projet (balayage, fiche, Inbox) ne propose plus les projets terminés, abandonnés ou archivés.
+- Planifier : « Ce week-end » et « Semaine prochaine » affichent leur date en français et la semaine suit le premier jour du compte, pas la langue du téléphone.
+- Habitudes : « Annuler la dernière saisie » n'apparaît que dans la feuille de l'habitude qui vient d'être saisie ; elle ne retire plus la saisie d'une autre habitude.
+- Paysage : le contenu ne passe plus sous la barre de navigation latérale.
 
 ## [1.6.1] — 1 novembre 2026
 
