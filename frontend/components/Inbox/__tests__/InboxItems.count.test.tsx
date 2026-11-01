@@ -132,6 +132,18 @@ describe('InboxItems count footer', () => {
     });
 });
 
+describe('InboxItems header', () => {
+    it('has no info button: the capture box carries its own help', async () => {
+        setInbox(3, 3);
+        render(<InboxItems />);
+
+        await screen.findAllByTestId('inbox-item');
+        expect(
+            screen.queryByRole('button', { name: /inbox information/i })
+        ).toBeNull();
+    });
+});
+
 describe('InboxItems first load', () => {
     it('shows the items once the first load ends', async () => {
         act(() => {

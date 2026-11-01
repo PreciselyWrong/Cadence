@@ -213,6 +213,17 @@ describe('TaskPane in minimal mode', () => {
         );
     });
 
+    it('shows no Subtasks or Comments heading on a task without either', async () => {
+        renderPage();
+
+        fireEvent.click(screen.getByText('Write report'));
+
+        await waitFor(() => expect(titleInput()).toHaveValue('Write report'));
+        expect(
+            screen.queryByRole('heading', { name: /subtasks|comments/i })
+        ).toBeNull();
+    });
+
     it('saves an edited title once and updates the list row', async () => {
         renderPage();
         fireEvent.click(screen.getByText('Write report'));

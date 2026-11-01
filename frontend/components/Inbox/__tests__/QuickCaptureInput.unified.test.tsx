@@ -208,6 +208,18 @@ describe('QuickCaptureInput unified capture', () => {
         expect(overlay.scrollTop).toBe(120);
     });
 
+    it('keeps its help out of sight until something is typed', () => {
+        renderBox();
+        expect(screen.queryByTestId('capture-syntax-hint')).toBeNull();
+        expect(screen.getByTestId('capture-status').textContent).toBe('');
+
+        type('Buy milk');
+        expect(screen.getByTestId('capture-syntax-hint')).toBeInTheDocument();
+        expect(screen.getByTestId('capture-status')).toHaveTextContent(
+            'Enter saves.'
+        );
+    });
+
     it('replaces the status line with the hint as soon as you type again', async () => {
         renderBox();
         type('one');

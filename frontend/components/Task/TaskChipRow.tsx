@@ -172,8 +172,9 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         : null;
     const deferParts = toDueParts(task.defer_until || '');
     const reminderParts = toDueParts(task.reminder_at || '');
-    // A simple task stays simple: date, project and tags always show; any
-    // other field shows once it has a value, the rest waits behind "More".
+    // A simple task stays simple: date and project always show; any other
+    // field (tags included) shows once it has a value, the rest waits
+    // behind "More".
     const [showMore, setShowMore] = useState(false);
 
     const priorityOptions: PopoverOption<string | null>[] = [
@@ -264,6 +265,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     );
 
     const show = {
+        tags: showMore || tagNames.length > 0,
         start: showMore || !!startDate,
         priority: showMore || !!priorityValue,
         area: showMore || !!areaName,
@@ -463,46 +465,48 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     </ChipPopover>
                 )}
 
-                <ChipPopover
-                    label={t('forms.tags', 'Tags')}
-                    widthClass="w-80"
-                    onClose={commitTags}
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            onClick={() => {
-                                tagsDraft.current = tagNames;
-                                props.onClick();
-                            }}
-                            icon={<HashtagIcon />}
-                            text={
-                                tagNames.length > 0
-                                    ? tagNames.map((n) => `#${n}`).join(' ')
-                                    : t('forms.tags', 'Tags')
-                            }
-                            filled={tagNames.length > 0}
-                            data-testid="chip-tags"
-                        />
-                    )}
-                >
-                    {() => (
-                        <TagInput
-                            onTagsChange={(names) => {
-                                tagsDraft.current = names;
-                            }}
-                            initialTags={tagNames}
-                            availableTags={tagsStore.tags}
-                            onFocus={() => {
-                                if (
-                                    !tagsStore.hasLoaded &&
-                                    !tagsStore.isLoading
-                                ) {
-                                    tagsStore.loadTags();
+                {show.tags && (
+                    <ChipPopover
+                        label={t('forms.tags', 'Tags')}
+                        widthClass="w-80"
+                        onClose={commitTags}
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                onClick={() => {
+                                    tagsDraft.current = tagNames;
+                                    props.onClick();
+                                }}
+                                icon={<HashtagIcon />}
+                                text={
+                                    tagNames.length > 0
+                                        ? tagNames.map((n) => `#${n}`).join(' ')
+                                        : t('forms.tags', 'Tags')
                                 }
-                            }}
-                        />
-                    )}
-                </ChipPopover>
+                                filled={tagNames.length > 0}
+                                data-testid="chip-tags"
+                            />
+                        )}
+                    >
+                        {() => (
+                            <TagInput
+                                onTagsChange={(names) => {
+                                    tagsDraft.current = names;
+                                }}
+                                initialTags={tagNames}
+                                availableTags={tagsStore.tags}
+                                onFocus={() => {
+                                    if (
+                                        !tagsStore.hasLoaded &&
+                                        !tagsStore.isLoading
+                                    ) {
+                                        tagsStore.loadTags();
+                                    }
+                                }}
+                            />
+                        )}
+                    </ChipPopover>
+                )}
 
                 {show.status && (
                     <ChipPopover

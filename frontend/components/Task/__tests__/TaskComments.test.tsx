@@ -150,6 +150,26 @@ describe('TaskComments', () => {
         expect(screen.queryByText('No comments yet')).toBeNull();
     });
 
+    it('quiet mode: one "Comment" button until there is a comment to show', async () => {
+        (fetchComments as jest.Mock).mockResolvedValue([]);
+
+        render(<TaskComments task={task} quietWhenEmpty />);
+
+        const open = await screen.findByRole('button', { name: 'Comment' });
+        expect(screen.queryByRole('textbox')).toBeNull();
+        fireEvent.click(open);
+        expect(await screen.findByRole('textbox')).toBeInTheDocument();
+    });
+
+    it('quiet mode still lists existing comments with the composer', async () => {
+        (fetchComments as jest.Mock).mockResolvedValue([baseComment]);
+
+        render(<TaskComments task={task} quietWhenEmpty />);
+
+        expect(await screen.findByText('First comment')).toBeInTheDocument();
+        expect(screen.getByRole('textbox')).toBeInTheDocument();
+    });
+
     it('submits a new comment and appends it to the list', async () => {
         (fetchComments as jest.Mock).mockResolvedValue([]);
         const posted: Comment = {

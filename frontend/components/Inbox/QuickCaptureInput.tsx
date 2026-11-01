@@ -2900,6 +2900,7 @@ const QuickCaptureInput = React.forwardRef<
         const itemTotal = unified
             ? splitCaptureText(inputText, captureSettings.oneItemPerLine).length
             : 0;
+        const writing = inputText.trim().length > 0;
         const touch = isTouchDevice();
         const enterHint = touch
             ? enterSaves
@@ -3097,7 +3098,10 @@ const QuickCaptureInput = React.forwardRef<
                             aria-live="polite"
                             data-testid="capture-status"
                         >
-                            {status ? status.text : enterHint}
+                            {status
+                                ? status.text
+                                : // Help shows while you write, not on an idle box.
+                                  writing && enterHint}
                             {status?.items && (
                                 <button
                                     type="button"
@@ -3136,15 +3140,17 @@ const QuickCaptureInput = React.forwardRef<
                             )}
                         </span>
                     </div>
-                    <p
-                        data-testid="capture-syntax-hint"
-                        className="order-4 w-full text-xs text-gray-500 dark:text-gray-400"
-                    >
-                        {t(
-                            'capture.syntaxHint',
-                            '#tag  +project  !1 to !3 priority  tomorrow 3pm for a date'
-                        )}
-                    </p>
+                    {writing && (
+                        <p
+                            data-testid="capture-syntax-hint"
+                            className="order-4 w-full text-xs text-gray-500 dark:text-gray-400"
+                        >
+                            {t(
+                                'capture.syntaxHint',
+                                '#tag  +project  !1 to !3 priority  tomorrow 3pm for a date'
+                            )}
+                        </p>
+                    )}
                 </div>
             </div>
         ) : null;
@@ -3311,22 +3317,6 @@ const QuickCaptureInput = React.forwardRef<
                     isEditMode ? '' : 'shadow-sm'
                 } overflow-hidden ${cardClasses}`}
             >
-                {!isEditMode && !compact && (
-                    <svg
-                        width="110"
-                        height="110"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="0.9"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="absolute right-6 top-5 pointer-events-none opacity-[0.09] dark:opacity-[0.08] text-gray-500 dark:text-gray-300"
-                        aria-hidden="true"
-                    >
-                        <path d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M2.25 13.5V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.5M2.25 13.5V9.75A2.25 2.25 0 014.5 7.5h15a2.25 2.25 0 012.25 2.25v3.75" />
-                    </svg>
-                )}
                 <div className={compact ? 'p-5' : 'p-[30px]'}>
                     <div className="flex flex-row gap-3 items-start">
                         <div className="relative flex-1">

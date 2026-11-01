@@ -15,7 +15,7 @@ import InboxItemDetail from './InboxItemDetail';
 import { useToast } from '../Shared/ToastContext';
 import { deferDelete } from '../../utils/deferredDelete';
 import { useTranslation } from 'react-i18next';
-import { InboxIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { InboxIcon } from '@heroicons/react/24/outline';
 import LoadingScreen from '../Shared/LoadingScreen';
 import ProjectModal from '../Project/ProjectModal';
 import NoteModal from '../Note/NoteModal';
@@ -77,7 +77,6 @@ const InboxItems: React.FC = () => {
 
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-    const [isInfoExpanded, setIsInfoExpanded] = useState(false);
     const [inboxListExpanded, setInboxListExpanded] = useState(true);
     const [lastAddedUid, setLastAddedUid] = useState<string | null>(null);
     const [openItemUid, setOpenItemUid] = useState<string | null>(null);
@@ -592,64 +591,6 @@ const InboxItems: React.FC = () => {
                                 {t('inbox.triage.start', 'Triage')}
                             </button>
                         )}
-                        <button
-                            onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-                            className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/40 ${
-                                isInfoExpanded
-                                    ? 'text-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
-                            }`}
-                            aria-expanded={isInfoExpanded}
-                            aria-label={
-                                isInfoExpanded
-                                    ? t(
-                                          'inbox.collapseInfo',
-                                          'Collapse info panel'
-                                      )
-                                    : t(
-                                          'inbox.showInfo',
-                                          'Show inbox information'
-                                      )
-                            }
-                            title={
-                                isInfoExpanded
-                                    ? t('inbox.hideInfo', 'Hide info')
-                                    : t('inbox.aboutInbox', 'About Inbox')
-                            }
-                        >
-                            <InformationCircleIcon className="h-5 w-5" />
-                        </button>
-                    </div>
-                </div>
-
-                {/* ── Info banner ──────────────────────────────────────────── */}
-                <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isInfoExpanded
-                            ? 'max-h-48 opacity-100 mb-5'
-                            : 'max-h-0 opacity-0 mb-0'
-                    }`}
-                >
-                    <div className="flex gap-3 px-4 py-3.5 bg-blue-50/60 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800/20">
-                        <InformationCircleIcon className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                        <div className="text-[13.5px] text-gray-600 dark:text-gray-300 leading-relaxed">
-                            {t(
-                                'inbox.infoShort',
-                                'Inbox is where uncategorized thoughts land — jot things down, sort them later.'
-                            )}{' '}
-                            <span className="text-blue-600 dark:text-blue-400 font-semibold">
-                                #tag
-                            </span>{' '}
-                            {t('inbox.shortcutTag', 'to label with a tag')},{' '}
-                            <span className="text-green-700 dark:text-green-400 font-semibold">
-                                +Project
-                            </span>{' '}
-                            {t(
-                                'inbox.shortcutProject',
-                                'to assign to a project'
-                            )}
-                            .
-                        </div>
                     </div>
                 </div>
 

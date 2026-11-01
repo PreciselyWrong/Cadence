@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -78,6 +79,7 @@ import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
@@ -169,6 +171,7 @@ internal fun TaskDetailSheet(
     var confirmDelete by remember { mutableStateOf(false) }
     // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
+    var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
     LaunchedEffect(hasReminder) {
@@ -253,8 +256,7 @@ internal fun TaskDetailSheet(
                 NoteCard(note = note, onNoteChange = { note = it }, readOnly = readOnly)
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 if (!readOnly) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
-                DetailFieldGroup(
-                    detailFields(
+                val keyedFields = detailFields(
                         task = current,
                         today = today,
                         dueTime = dueTime,
@@ -269,9 +271,21 @@ internal fun TaskDetailSheet(
                         onStatus = { picker = Picker.Status },
                         onTags = { picker = Picker.Tags },
                         onProject = { picker = Picker.Project },
-                    ),
-                    enabled = !readOnly,
+                    )
+                val shownFields = keyedFields
+                    .filter { DetailFieldRules.visible(it.key, it.filled, it.hasBadge, moreFields) }
+                    .map { it.field }
+                if (shownFields.isNotEmpty()) DetailFieldGroup(shownFields, enabled = !readOnly)
+                val canShowMore = DetailFieldRules.hasHidden(
+                    keyedFields.map { it.key to it.filled },
+                    keyedFields.filter { it.hasBadge }.mapTo(HashSet()) { it.key },
+                    moreFields,
                 )
+                if (!readOnly && canShowMore) {
+                    TextButton(onClick = { moreFields = true }, modifier = Modifier.heightIn(min = Size.touch)) {
+                        Text(stringResource(R.string.tasks_detail_more_fields))
+                    }
+                }
                 if (hasReminder && !notifications.allowed) {
                     NotificationsOffNotice()
                 }
@@ -614,7 +628,7 @@ private fun detailFields(
     onStatus: () -> Unit,
     onTags: () -> Unit,
     onProject: () -> Unit,
-): List<DetailField> {
+): List<KeyedDetailField> {
     val due = task.dueDay?.let { compactDateTime(it, dueTime, today) }
     val start = task.startDay?.let { compactDateTime(it, startTime, today) }
     val dates = when {
@@ -624,51 +638,91 @@ private fun detailFields(
         else -> stringResource(R.string.tasks_detail_dates_none)
     }
     val none = stringResource(R.string.tasks_detail_none)
+    val statusSet = task.isClosed || task.status != TaskStatus.NOT_STARTED
     return listOf(
-        DetailField(Icons.Outlined.CalendarMonth, stringResource(R.string.tasks_detail_dates), dates, onDates, due == null && start == null),
-        DetailField(
-            Icons.Outlined.Repeat,
-            stringResource(R.string.tasks_field_repeat),
-            repeatLabel(task.repetition),
-            onRepeat,
-            task.repetition.type == RepeatType.NONE,
+        KeyedDetailField(
+            DetailFieldKey.DATES,
+            filled = due != null || start != null,
+            // Le badge du haut ne montre que l'échéance : un début garde sa ligne.
+            hasBadge = due != null && start == null,
+            DetailField(Icons.Outlined.CalendarMonth, stringResource(R.string.tasks_detail_dates), dates, onDates, due == null && start == null),
         ),
-        DetailField(
-            Icons.Outlined.HourglassEmpty,
-            stringResource(R.string.tasks_field_estimate),
-            task.estimatedMinutes?.let(EstimateFormat::format) ?: none,
-            onEstimate,
-            task.estimatedMinutes == null,
+        KeyedDetailField(
+            DetailFieldKey.REPEAT,
+            filled = task.repetition.type != RepeatType.NONE,
+            hasBadge = task.isRecurring,
+            DetailField(
+                Icons.Outlined.Repeat,
+                stringResource(R.string.tasks_field_repeat),
+                repeatLabel(task.repetition),
+                onRepeat,
+                task.repetition.type == RepeatType.NONE,
+            ),
         ),
-        DetailField(
-            Icons.Outlined.Flag,
-            stringResource(R.string.tasks_field_priority),
-            task.priority?.let { stringResource(priorityLabel(it)) } ?: stringResource(R.string.tasks_priority_none),
-            onPriority,
-            task.priority == null,
+        KeyedDetailField(
+            DetailFieldKey.ESTIMATE,
+            filled = task.estimatedMinutes != null,
+            hasBadge = false,
+            DetailField(
+                Icons.Outlined.HourglassEmpty,
+                stringResource(R.string.tasks_field_estimate),
+                task.estimatedMinutes?.let(EstimateFormat::format) ?: none,
+                onEstimate,
+                task.estimatedMinutes == null,
+            ),
         ),
-        DetailField(
-            Icons.Outlined.TaskAlt,
-            stringResource(R.string.tasks_field_status),
-            stringResource(statusLabelRes(task.status)),
-            onStatus,
+        KeyedDetailField(
+            DetailFieldKey.PRIORITY,
+            filled = task.priority != null,
+            hasBadge = task.priority != null,
+            DetailField(
+                Icons.Outlined.Flag,
+                stringResource(R.string.tasks_field_priority),
+                task.priority?.let { stringResource(priorityLabel(it)) } ?: stringResource(R.string.tasks_priority_none),
+                onPriority,
+                task.priority == null,
+            ),
         ),
-        DetailField(
-            Icons.Outlined.Sell,
-            stringResource(R.string.tasks_field_tags),
-            tagNames.takeIf { it.isNotEmpty() }?.joinToString(" ") { "#$it" } ?: none,
-            onTags,
-            tagNames.isEmpty(),
+        KeyedDetailField(
+            DetailFieldKey.STATUS,
+            filled = statusSet,
+            hasBadge = statusSet,
+            DetailField(
+                Icons.Outlined.TaskAlt,
+                stringResource(R.string.tasks_field_status),
+                stringResource(statusLabelRes(task.status)),
+                onStatus,
+            ),
         ),
-        DetailField(
-            entityIcon(projectIcon) ?: Icons.Outlined.Folder,
-            stringResource(R.string.tasks_field_project),
-            projectName ?: stringResource(R.string.tasks_no_project),
-            onProject,
-            projectName == null,
+        KeyedDetailField(
+            DetailFieldKey.TAGS,
+            filled = tagNames.isNotEmpty(),
+            hasBadge = tagNames.isNotEmpty(),
+            DetailField(
+                Icons.Outlined.Sell,
+                stringResource(R.string.tasks_field_tags),
+                tagNames.takeIf { it.isNotEmpty() }?.joinToString(" ") { "#$it" } ?: none,
+                onTags,
+                tagNames.isEmpty(),
+            ),
+        ),
+        KeyedDetailField(
+            DetailFieldKey.PROJECT,
+            filled = projectName != null,
+            hasBadge = projectName != null,
+            DetailField(
+                entityIcon(projectIcon) ?: Icons.Outlined.Folder,
+                stringResource(R.string.tasks_field_project),
+                projectName ?: stringResource(R.string.tasks_no_project),
+                onProject,
+                projectName == null,
+            ),
         ),
     )
 }
+
+/** Une ligne de la fiche avec ce qu'il faut pour décider si elle s'affiche ([DetailFieldRules]). */
+internal class KeyedDetailField(val key: DetailFieldKey, val filled: Boolean, val hasBadge: Boolean, val field: DetailField)
 
 /** Barre fixe du bas : planifier ou terminer, sans avoir à faire défiler la fiche. */
 @Composable

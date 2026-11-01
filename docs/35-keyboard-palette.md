@@ -40,7 +40,7 @@ The search overlay shows filter chips (types with result counts, priority, due d
 
 ## Quick capture
 
-The lightning chip in the navbar reads "Capture" and shows its key (`C`). The box shows chips for the parsed date, `#tags`, `+project` and `!1`-`!3` priority, and a permanent syntax hint line. Parsing is unchanged (see [04-inbox-page.md](04-inbox-page.md)).
+The lightning chip in the navbar reads "Capture"; its key (`C`) is in the tooltip. The box shows chips for the parsed date, `#tags`, `+project` and `!1`-`!3` priority; the Enter hint and the syntax hint line appear once something is typed. Parsing is unchanged (see [04-inbox-page.md](04-inbox-page.md)).
 
 ## Inbox triage
 

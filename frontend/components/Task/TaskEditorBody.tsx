@@ -81,6 +81,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
     // asks to attach one; the card stays mounted to learn the count.
     const [attachmentsCount, setAttachmentsCount] = useState(0);
     const [attachOpen, setAttachOpen] = useState(false);
+    const [commentCount, setCommentCount] = useState(0);
     const showAttachments = attachOpen || attachmentsCount > 0;
 
     return (
@@ -271,7 +272,11 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                 <>
                     {!readOnly && (
                         <SidePanelSection
-                            title={t('task.subtasks', 'Subtasks')}
+                            title={
+                                subtasks.length > 0
+                                    ? t('task.subtasks', 'Subtasks')
+                                    : ''
+                            }
                         >
                             <TaskSubtasksCard
                                 showTitle={false}
@@ -313,8 +318,18 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                         </button>
                     )}
 
-                    <SidePanelSection title={t('task.comments', 'Comments')}>
-                        <TaskComments task={task} />
+                    <SidePanelSection
+                        title={
+                            commentCount > 0
+                                ? t('task.comments', 'Comments')
+                                : ''
+                        }
+                    >
+                        <TaskComments
+                            task={task}
+                            quietWhenEmpty
+                            onCommentCountChange={setCommentCount}
+                        />
                     </SidePanelSection>
                 </>
             )}

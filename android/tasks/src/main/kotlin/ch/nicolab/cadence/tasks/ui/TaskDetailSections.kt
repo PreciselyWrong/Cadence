@@ -82,6 +82,26 @@ internal class DetailField(
     val empty: Boolean = false,
 )
 
+internal enum class DetailFieldKey { DATES, REPEAT, ESTIMATE, PRIORITY, STATUS, TAGS, PROJECT }
+
+/**
+ * Lignes de la fiche, comme le panneau du web : une valeur déjà lue sur un badge du haut n'est pas répétée
+ * (le badge s'ouvre d'un toucher) ; dates et projet restent visibles même vides ; tout autre champ vide
+ * attend « Plus de champs ».
+ */
+internal object DetailFieldRules {
+    private val core = setOf(DetailFieldKey.DATES, DetailFieldKey.PROJECT)
+
+    fun visible(key: DetailFieldKey, filled: Boolean, hasBadge: Boolean, showMore: Boolean): Boolean = when {
+        filled -> !hasBadge
+        else -> key in core || showMore
+    }
+
+    /** Vrai si « Plus de champs » cacherait au moins une ligne. */
+    fun hasHidden(fields: List<Pair<DetailFieldKey, Boolean>>, badges: Set<DetailFieldKey>, showMore: Boolean): Boolean =
+        fields.any { (key, filled) -> !filled && !visible(key, filled, key in badges, showMore) }
+}
+
 /** Groupe de lignes connectées : coins extérieurs arrondis, jonctions presque droites. */
 @Composable
 internal fun DetailFieldGroup(fields: List<DetailField>, enabled: Boolean = true) {
@@ -200,12 +220,14 @@ internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel, onOpen: 
     val palette = cadence
     Panel(Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-            val title = if (subtasks.isEmpty()) {
-                stringResource(R.string.tasks_subtasks)
-            } else {
-                stringResource(R.string.tasks_subtasks_progress, subtasks.count { it.isClosed }, subtasks.size)
+            // Sans sous-tâche, le champ « Ajouter une sous-tâche » suffit : pas de titre au-dessus (comme le web).
+            if (subtasks.isNotEmpty()) {
+                Text(
+                    stringResource(R.string.tasks_subtasks_progress, subtasks.count { it.isClosed }, subtasks.size),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = palette.onSurface,
+                )
             }
-            Text(title, style = MaterialTheme.typography.titleSmall, color = palette.onSurface)
             subtasks.forEach { subtask ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     TaskCheckbox(

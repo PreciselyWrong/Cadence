@@ -56,17 +56,18 @@ const SECONDARY = [
     'chip-estimate',
     'chip-defer',
     'chip-reminder',
+    'chip-tags',
 ];
 
-// A simple task stays simple: the panel shows the date, project and tags,
-// plus any field that already has a value; the rest waits behind More.
+// A simple task stays simple: the panel shows the date and project, plus
+// any field that already has a value (tags included); the rest waits
+// behind More.
 describe('TaskChipRow progressive disclosure', () => {
     it('shows only the core chips on an empty task', () => {
         renderRow({});
 
         expect(screen.getByTestId('chip-due')).toBeInTheDocument();
         expect(screen.getByTestId('chip-project')).toBeInTheDocument();
-        expect(screen.getByTestId('chip-tags')).toBeInTheDocument();
         SECONDARY.forEach((id) =>
             expect(screen.queryByTestId(id)).not.toBeInTheDocument()
         );
@@ -83,6 +84,12 @@ describe('TaskChipRow progressive disclosure', () => {
         expect(
             screen.queryByRole('button', { name: 'More' })
         ).not.toBeInTheDocument();
+    });
+
+    it('shows the tags once the task has one', () => {
+        renderRow({ tags: [{ name: 'home' }] });
+
+        expect(screen.getByTestId('chip-tags')).toHaveTextContent('#home');
     });
 
     it('shows a field that has a value without opening More', () => {

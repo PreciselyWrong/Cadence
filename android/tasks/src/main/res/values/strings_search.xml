@@ -21,7 +21,6 @@
     <string name="tasks_search_habit_subtitle">Habitude</string>
 
     <!-- Détail d'une tâche -->
-    <string name="tasks_subtasks">Sous-tâches</string>
     <string name="tasks_subtasks_progress">Sous-tâches · %1$d/%2$d</string>
     <string name="tasks_subtask_hint">Ajouter une sous-tâche</string>
     <string name="tasks_subtask_add">Ajouter</string>

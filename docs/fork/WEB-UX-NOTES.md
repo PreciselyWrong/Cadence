@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : Boîte et panneau de tâche
+
+- **Problème** : la Boîte avait un bouton « i » qui ouvrait un bandeau répétant l'aide déjà affichée sous le champ, une grande icône décorative dans la carte de capture et deux lignes d'aide permanentes (« Entrée enregistre… », « #étiquette +projet… ») ; le panneau d'une tâche simple montrait une puce « Étiquettes » vide, un titre « Sous-tâches » au-dessus du seul champ d'ajout et un titre « Commentaires » avec une zone de saisie et un bouton « Commenter » ouverts en permanence.
+- **Décision** : plus de bouton « i » ni de bandeau, plus d'icône décorative ; les deux lignes d'aide apparaissent dès qu'on écrit. Panneau : la puce Étiquettes rejoint « Plus » tant qu'il n'y en a pas (date et projet restent) ; pas de titre « Sous-tâches » sans sous-tâche ; sans commentaire, un seul bouton discret « Commenter » ouvre la zone de saisie, et le titre « Commentaires » n'apparaît qu'avec un commentaire.
+- **Android** : repris dans la même étape : la fiche n'a plus sa liste de 7 lignes toujours remplies de « Aucune » ; une valeur déjà lue sur un badge du haut n'est plus répétée en ligne, Dates et Projet restent même vides, les autres champs vides attendent « Plus de champs » (`DetailFieldRules`) ; pas de titre « Sous-tâches » sans sous-tâche. L'Inbox Android n'a déjà qu'un champ « Capturer une idée… » sans aide permanente ; Android n'écrit pas de commentaires.
+
 ### 2026-11-01 — Passe d'épure : page projet
 
 - **Problème** (projet de 2 tâches, rien de rempli) : « Démarré le 29 oct. », une barre « 0 tâches sur 2 terminées 0 % », un bouton « Partager » à côté de « Terminer », un panneau « Infos du projet » de 7 lignes toutes vides (« Définir un domaine », « Aucune date de début »…), deux panneaux « Aucune note pour l'instant » et « Aucun fichier pour l'instant… », et « Terminé (0) ».

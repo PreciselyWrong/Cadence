@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : fiche de tâche (reprise du web)
+
+- **Problème** : sous les badges, la fiche gardait sept lignes (Dates, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet) même vides (« Aucune », « Sans projet »), et répétait en ligne ce que les badges montraient déjà ; un titre « Sous-tâches » coiffait le seul champ d'ajout.
+- **Décision** : `DetailFieldRules` : une valeur portée par un badge (échéance seule, répétition, priorité, statut, étiquettes, projet) n'a plus de ligne, le badge s'ouvre d'un toucher ; Dates et Projet restent même vides ; l'estimation remplie garde sa ligne ; les autres champs vides attendent « Plus de champs ». Pas de titre « Sous-tâches » sans sous-tâche.
+- **Web** : même étape (étiquettes vides dans « Plus », pas de titre Sous-tâches ni Commentaires à vide). Reste : rien d'essayé sur le téléphone.
+
 ### 2026-11-01 — Passe d'épure : onglets de Tâches (reprise du web)
 
 - **Problème** : les pastilles « À venir 14 » et « Notes 23 » et les sous-titres « 9 étiquettes », « 23 notes » répétaient des comptes sans action attendue.
