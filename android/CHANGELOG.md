@@ -1,4 +1,4 @@
-## [1.6.9] — à publier
+## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés
 - Revue : « Plus tard » se parcourt par projet (puis domaine, puis « Sans projet »), groupes pliables avec leur nombre, le plus récemment touché d'abord, et un champ « Filtrer » (titre, projet, étiquettes, titre du lien). Glisser à droite passe la tâche à aujourd'hui, à gauche la laisse de côté un mois ; « Trier un par un » montre une tâche à la fois (« Passer », « N sur M », reprise là où vous étiez).
