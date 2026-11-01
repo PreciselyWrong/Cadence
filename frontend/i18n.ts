@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { getLocalesPath } from './config/paths';
+import { aliasPluralLocale } from './utils/intlLocale';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -41,120 +42,123 @@ const i18nInstance = i18n
     .use(LanguageDetector)
     .use(initReactI18next);
 
-i18nInstance
-    .init({
-        fallbackLng: 'en',
-        debug: false,
-        load: 'languageOnly',
-        supportedLngs: [
-            'en',
-            'es',
-            'el',
-            'jp',
-            'ua',
-            'de',
-            'it',
-            'fr',
-            'ru',
-            'tr',
-            'ko',
-            'vi',
-            'ar',
-            'nl',
-            'ro',
-            'zh',
-            'pt',
-            'id',
-            'no',
-            'fi',
-            'da',
-            'sv',
-            'pl',
-            'bg',
-            'sl',
-            'sk',
-        ],
-        nonExplicitSupportedLngs: true,
-        resources: devResources,
-        detection: {
-            order: ['querystring', 'cookie', 'localStorage', 'navigator'],
-            lookupQuerystring: 'lng',
-            lookupCookie: 'i18next',
-            lookupLocalStorage: 'i18nextLng',
-            caches: ['localStorage', 'cookie'],
+const initialization = i18nInstance.init({
+    fallbackLng: 'en',
+    debug: false,
+    load: 'languageOnly',
+    supportedLngs: [
+        'en',
+        'es',
+        'el',
+        'jp',
+        'ua',
+        'de',
+        'it',
+        'fr',
+        'ru',
+        'tr',
+        'ko',
+        'vi',
+        'ar',
+        'nl',
+        'ro',
+        'zh',
+        'pt',
+        'id',
+        'no',
+        'fi',
+        'da',
+        'sv',
+        'pl',
+        'bg',
+        'sl',
+        'sk',
+    ],
+    nonExplicitSupportedLngs: true,
+    resources: devResources,
+    detection: {
+        order: ['querystring', 'cookie', 'localStorage', 'navigator'],
+        lookupQuerystring: 'lng',
+        lookupCookie: 'i18next',
+        lookupLocalStorage: 'i18nextLng',
+        caches: ['localStorage', 'cookie'],
+    },
+    interpolation: {
+        escapeValue: false,
+    },
+    defaultNS: 'translation',
+    ns: ['translation'],
+    backend: {
+        loadPath: 'locales/{{lng}}/{{ns}}.json',
+        queryStringParams: { v: '2' },
+        requestOptions: {
+            cache: 'default',
+            credentials: 'same-origin',
+            mode: 'cors',
         },
-        interpolation: {
-            escapeValue: false,
-        },
-        defaultNS: 'translation',
-        ns: ['translation'],
-        backend: {
-            loadPath: 'locales/{{lng}}/{{ns}}.json',
-            queryStringParams: { v: '2' },
-            requestOptions: {
-                cache: 'default',
-                credentials: 'same-origin',
-                mode: 'cors',
-            },
-        },
-    })
-    .then(() => {
-        const loadPath = getLocalesPath(
-            `${translationLanguage(i18n.language)}/translation.json`
-        );
+    },
+});
 
-        fetch(loadPath)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(
-                        `Failed to fetch translation: ${response.status}`
-                    );
-                }
-                return response.json();
-            })
-            .then((data) => {
-                i18n.addResourceBundle(
-                    translationLanguage(i18n.language),
-                    'translation',
-                    data,
-                    true,
-                    true
+// Plural rules are resolved with Intl, which does not know the app's `ua` code.
+aliasPluralLocale(i18n.services.pluralResolver);
+
+initialization.then(() => {
+    const loadPath = getLocalesPath(
+        `${translationLanguage(i18n.language)}/translation.json`
+    );
+
+    fetch(loadPath)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    `Failed to fetch translation: ${response.status}`
                 );
-            })
-            .catch(() => {
-                if (isDevelopment) {
-                    try {
-                        setTimeout(() => {
-                            const retryPath = getLocalesPath(
-                                `${translationLanguage(i18n.language)}/translation.json`
-                            );
-                            fetch(retryPath, {
-                                headers: { Accept: 'application/json' },
-                                mode: 'cors',
+            }
+            return response.json();
+        })
+        .then((data) => {
+            i18n.addResourceBundle(
+                translationLanguage(i18n.language),
+                'translation',
+                data,
+                true,
+                true
+            );
+        })
+        .catch(() => {
+            if (isDevelopment) {
+                try {
+                    setTimeout(() => {
+                        const retryPath = getLocalesPath(
+                            `${translationLanguage(i18n.language)}/translation.json`
+                        );
+                        fetch(retryPath, {
+                            headers: { Accept: 'application/json' },
+                            mode: 'cors',
+                        })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                i18n.addResourceBundle(
+                                    translationLanguage(i18n.language),
+                                    'translation',
+                                    data,
+                                    true,
+                                    true
+                                );
                             })
-                                .then((res) => res.json())
-                                .then((data) => {
-                                    i18n.addResourceBundle(
-                                        translationLanguage(i18n.language),
-                                        'translation',
-                                        data,
-                                        true,
-                                        true
-                                    );
-                                })
-                                .catch((error) => {
-                                    console.error(
-                                        'Error loading translation:',
-                                        error
-                                    );
-                                });
-                        }, 1000);
-                    } catch (e) {
-                        console.error('Error in retry mechanism:', e);
-                    }
+                            .catch((error) => {
+                                console.error(
+                                    'Error loading translation:',
+                                    error
+                                );
+                            });
+                    }, 1000);
+                } catch (e) {
+                    console.error('Error in retry mechanism:', e);
                 }
-            });
-    });
+            }
+        });
+});
 
 i18n.on('initialized', () => {});
 i18n.on('loaded', () => {});

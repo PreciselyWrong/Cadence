@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import i18next, { type TFunction } from 'i18next';
+import { aliasPluralLocale } from '../utils/intlLocale';
 
 const localesDir = path.join(__dirname, '../../public/locales');
 
@@ -20,6 +21,7 @@ const createT = async (lang: string): Promise<TFunction> => {
         },
         interpolation: { escapeValue: false },
     });
+    aliasPluralLocale(instance.services.pluralResolver);
     return instance.t.bind(instance) as TFunction;
 };
 
@@ -29,6 +31,8 @@ describe('plural forms in locales', () => {
         ['ru', 'project.fileCount', 3, '3 файла'],
         ['ru', 'project.fileCount', 5, '5 файлов'],
         ['ru', 'project.fileCount', 21, '21 файл'],
+        ['ua', 'project.fileCount', 3, '3 файли'],
+        ['ua', 'project.fileCount', 5, '5 файлів'],
         ['pl', 'project.fileCount', 3, '3 pliki'],
         ['pl', 'project.fileCount', 5, '5 plików'],
         ['sk', 'project.fileCount', 3, '3 súbory'],
