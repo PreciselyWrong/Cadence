@@ -393,6 +393,7 @@
     "noActivity": "Nessuna attività ancora"
   },
   "profile": {
+    "sectionFailed": "Impossibile mostrare questa sezione. Scegli un'altra sezione o ricarica la pagina.",
     "taskFeed": {
       "title": "Iscriviti alle tue attività",
       "description": "Un indirizzo privato che mostra le tue attività aperte con scadenza in Google Calendar, Apple Calendar o Outlook. Chiunque abbia l'indirizzo può leggere quelle attività.",

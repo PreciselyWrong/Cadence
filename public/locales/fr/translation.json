@@ -394,6 +394,7 @@
     "noActivity": "Aucune activité pour le moment"
   },
   "profile": {
+    "sectionFailed": "Cette section n’a pas pu s’afficher. Choisissez une autre section ou rechargez la page.",
     "taskFeed": {
       "title": "S'abonner à vos tâches",
       "description": "Une adresse privée qui affiche vos tâches ouvertes avec une échéance dans Google Agenda, Apple Calendrier ou Outlook. Toute personne qui a l'adresse peut lire ces tâches.",

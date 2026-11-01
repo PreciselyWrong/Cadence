@@ -393,6 +393,7 @@
     "noActivity": "Nicio activitate încă"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Abonează-te la sarcinile tale",
       "description": "O adresă privată care arată sarcinile deschise cu termen în Google Calendar, Apple Calendar sau Outlook. Oricine are adresa poate citi aceste sarcini.",

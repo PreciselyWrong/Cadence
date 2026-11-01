@@ -48,6 +48,7 @@ import {
 } from '../../utils/apiKeysService';
 import TabsNav, { type TabConfig } from './tabs/TabsNav';
 import AppearanceTab from './tabs/AppearanceTab';
+import SettingsErrorBoundary from './SettingsErrorBoundary';
 import GeneralTab from './tabs/GeneralTab';
 import SecurityTab from './tabs/SecurityTab';
 import OIDCTab from './tabs/OIDCTab';
@@ -1579,433 +1580,472 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     <div className="flex-1 min-w-0">
                         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 sm:p-6">
                             <form onSubmit={handleSubmit} className="space-y-8">
-                                <GeneralTab
-                                    isActive={activeTab === 'general'}
-                                    formData={formData}
-                                    onChange={handleChange}
-                                    onLanguageChange={(languageCode) => {
-                                        const localeFirstDay =
-                                            getLocaleFirstDayOfWeek(
-                                                languageCode
-                                            );
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            language: languageCode,
-                                            first_day_of_week: localeFirstDay,
-                                        }));
-                                    }}
-                                    onTimezoneChange={(timezone) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            timezone,
-                                        }))
-                                    }
-                                    onFirstDayChange={(value) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            first_day_of_week: value,
-                                        }))
-                                    }
-                                    avatarPreview={avatarPreview}
-                                    onAvatarSelect={handleAvatarSelect}
-                                    onAvatarRemove={handleAvatarRemove}
-                                    timezonesByRegion={timezonesByRegion}
-                                    getRegionDisplayName={getRegionDisplayName}
-                                />
+                                <SettingsErrorBoundary resetKey={activeTab}>
+                                    <GeneralTab
+                                        isActive={activeTab === 'general'}
+                                        formData={formData}
+                                        onChange={handleChange}
+                                        onLanguageChange={(languageCode) => {
+                                            const localeFirstDay =
+                                                getLocaleFirstDayOfWeek(
+                                                    languageCode
+                                                );
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                language: languageCode,
+                                                first_day_of_week:
+                                                    localeFirstDay,
+                                            }));
+                                        }}
+                                        onTimezoneChange={(timezone) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                timezone,
+                                            }))
+                                        }
+                                        onFirstDayChange={(value) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                first_day_of_week: value,
+                                            }))
+                                        }
+                                        avatarPreview={avatarPreview}
+                                        onAvatarSelect={handleAvatarSelect}
+                                        onAvatarRemove={handleAvatarRemove}
+                                        timezonesByRegion={timezonesByRegion}
+                                        getRegionDisplayName={
+                                            getRegionDisplayName
+                                        }
+                                    />
 
-                                <AppearanceTab
-                                    isActive={activeTab === 'appearance'}
-                                    formData={formData}
-                                    onAppearanceChange={(appearance) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            appearance,
-                                            ui_settings: {
-                                                ...(prev.ui_settings || {}),
-                                                appearance: {
-                                                    ...(prev.ui_settings
-                                                        ?.appearance || {}),
-                                                    theme: appearance,
+                                    <AppearanceTab
+                                        isActive={activeTab === 'appearance'}
+                                        formData={formData}
+                                        onAppearanceChange={(appearance) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                appearance,
+                                                ui_settings: {
+                                                    ...(prev.ui_settings || {}),
+                                                    appearance: {
+                                                        ...(prev.ui_settings
+                                                            ?.appearance || {}),
+                                                        theme: appearance,
+                                                    },
                                                 },
-                                            },
-                                        }))
-                                    }
-                                    contentBackground={
-                                        formData.ui_settings?.appearance
-                                            ?.contentBackground ?? null
-                                    }
-                                    onContentBackgroundChange={(background) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ui_settings: {
-                                                ...(prev.ui_settings || {}),
-                                                appearance: {
-                                                    ...(prev.ui_settings
-                                                        ?.appearance || {}),
-                                                    contentBackground:
-                                                        background,
+                                            }))
+                                        }
+                                        contentBackground={
+                                            formData.ui_settings?.appearance
+                                                ?.contentBackground ?? null
+                                        }
+                                        onContentBackgroundChange={(
+                                            background
+                                        ) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ui_settings: {
+                                                    ...(prev.ui_settings || {}),
+                                                    appearance: {
+                                                        ...(prev.ui_settings
+                                                            ?.appearance || {}),
+                                                        contentBackground:
+                                                            background,
+                                                    },
                                                 },
-                                            },
-                                        }))
-                                    }
-                                    density={
-                                        formData.ui_settings?.appearance
-                                            ?.density ?? 'minimal'
-                                    }
-                                    onDensityChange={(density) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ui_settings: {
-                                                ...(prev.ui_settings || {}),
-                                                appearance: {
-                                                    ...(prev.ui_settings
-                                                        ?.appearance || {}),
-                                                    density,
+                                            }))
+                                        }
+                                        density={
+                                            formData.ui_settings?.appearance
+                                                ?.density ?? 'minimal'
+                                        }
+                                        onDensityChange={(density) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ui_settings: {
+                                                    ...(prev.ui_settings || {}),
+                                                    appearance: {
+                                                        ...(prev.ui_settings
+                                                            ?.appearance || {}),
+                                                        density,
+                                                    },
                                                 },
-                                            },
-                                        }))
-                                    }
-                                    taskRowFields={
-                                        formData.ui_settings?.appearance
-                                            ?.rowFields ?? null
-                                    }
-                                    onTaskRowFieldsChange={(fields) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ui_settings: {
-                                                ...(prev.ui_settings || {}),
-                                                appearance: {
-                                                    ...(prev.ui_settings
-                                                        ?.appearance || {}),
-                                                    rowFields: fields,
+                                            }))
+                                        }
+                                        taskRowFields={
+                                            formData.ui_settings?.appearance
+                                                ?.rowFields ?? null
+                                        }
+                                        onTaskRowFieldsChange={(fields) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ui_settings: {
+                                                    ...(prev.ui_settings || {}),
+                                                    appearance: {
+                                                        ...(prev.ui_settings
+                                                            ?.appearance || {}),
+                                                        rowFields: fields,
+                                                    },
                                                 },
-                                            },
-                                        }))
-                                    }
-                                />
+                                            }))
+                                        }
+                                    />
 
-                                <SecurityTab
-                                    isActive={activeTab === 'security'}
-                                    hasPassword={profile?.has_password ?? false}
-                                    formData={formData}
-                                    showCurrentPassword={showCurrentPassword}
-                                    showNewPassword={showNewPassword}
-                                    showConfirmPassword={showConfirmPassword}
-                                    onChange={handleChange}
-                                    onToggleCurrentPassword={() =>
-                                        setShowCurrentPassword((prev) => !prev)
-                                    }
-                                    onToggleNewPassword={() =>
-                                        setShowNewPassword((prev) => !prev)
-                                    }
-                                    onToggleConfirmPassword={() =>
-                                        setShowConfirmPassword((prev) => !prev)
-                                    }
-                                />
+                                    <SecurityTab
+                                        isActive={activeTab === 'security'}
+                                        hasPassword={
+                                            profile?.has_password ?? false
+                                        }
+                                        formData={formData}
+                                        showCurrentPassword={
+                                            showCurrentPassword
+                                        }
+                                        showNewPassword={showNewPassword}
+                                        showConfirmPassword={
+                                            showConfirmPassword
+                                        }
+                                        onChange={handleChange}
+                                        onToggleCurrentPassword={() =>
+                                            setShowCurrentPassword(
+                                                (prev) => !prev
+                                            )
+                                        }
+                                        onToggleNewPassword={() =>
+                                            setShowNewPassword((prev) => !prev)
+                                        }
+                                        onToggleConfirmPassword={() =>
+                                            setShowConfirmPassword(
+                                                (prev) => !prev
+                                            )
+                                        }
+                                    />
 
-                                <OIDCTab
-                                    isActive={activeTab === 'oidc'}
-                                    hasPassword={profile?.has_password ?? false}
-                                    isAdmin={currentUser?.is_admin === true}
-                                />
+                                    <OIDCTab
+                                        isActive={activeTab === 'oidc'}
+                                        hasPassword={
+                                            profile?.has_password ?? false
+                                        }
+                                        isAdmin={currentUser?.is_admin === true}
+                                    />
 
-                                <ApiKeysTab
-                                    isActive={activeTab === 'api-keys'}
-                                    apiKeys={apiKeys}
-                                    apiKeysLoading={apiKeysLoading}
-                                    generatedApiToken={generatedApiToken}
-                                    newApiKeyName={newApiKeyName}
-                                    newApiKeyExpiration={newApiKeyExpiration}
-                                    revokeInFlightId={revokeInFlightId}
-                                    deleteInFlightId={deleteInFlightId}
-                                    pendingDeleteId={apiKeyToDelete?.id ?? null}
-                                    onCreateApiKey={handleCreateApiKey}
-                                    onCopyGeneratedToken={
-                                        handleCopyGeneratedToken
-                                    }
-                                    onRevokeApiKey={handleRevokeApiKey}
-                                    onRequestDelete={(apiKey) =>
-                                        setApiKeyToDelete(apiKey)
-                                    }
-                                    onUpdateNewName={setNewApiKeyName}
-                                    onUpdateNewExpiration={
-                                        setNewApiKeyExpiration
-                                    }
-                                    getApiKeyStatus={getApiKeyStatus}
-                                    formatDateTime={formatDateTime}
-                                    isCreatingApiKey={isCreatingApiKey}
-                                />
+                                    <ApiKeysTab
+                                        isActive={activeTab === 'api-keys'}
+                                        apiKeys={apiKeys}
+                                        apiKeysLoading={apiKeysLoading}
+                                        generatedApiToken={generatedApiToken}
+                                        newApiKeyName={newApiKeyName}
+                                        newApiKeyExpiration={
+                                            newApiKeyExpiration
+                                        }
+                                        revokeInFlightId={revokeInFlightId}
+                                        deleteInFlightId={deleteInFlightId}
+                                        pendingDeleteId={
+                                            apiKeyToDelete?.id ?? null
+                                        }
+                                        onCreateApiKey={handleCreateApiKey}
+                                        onCopyGeneratedToken={
+                                            handleCopyGeneratedToken
+                                        }
+                                        onRevokeApiKey={handleRevokeApiKey}
+                                        onRequestDelete={(apiKey) =>
+                                            setApiKeyToDelete(apiKey)
+                                        }
+                                        onUpdateNewName={setNewApiKeyName}
+                                        onUpdateNewExpiration={
+                                            setNewApiKeyExpiration
+                                        }
+                                        getApiKeyStatus={getApiKeyStatus}
+                                        formatDateTime={formatDateTime}
+                                        isCreatingApiKey={isCreatingApiKey}
+                                    />
 
-                                <FeaturesTab
-                                    isActive={activeTab === 'features'}
-                                    eisenhowerEnabled={Boolean(
-                                        formData.features?.eisenhower_enabled
-                                    )}
-                                    onToggleEisenhower={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                eisenhower_enabled:
-                                                    !prev.features
-                                                        ?.eisenhower_enabled,
-                                            },
-                                        }))
-                                    }
-                                    kanbanEnabled={Boolean(
-                                        formData.features?.kanban_enabled
-                                    )}
-                                    onToggleKanban={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                kanban_enabled:
-                                                    !prev.features
-                                                        ?.kanban_enabled,
-                                            },
-                                        }))
-                                    }
-                                    habitsEnabled={Boolean(
-                                        formData.features?.habits_enabled ??
-                                        true
-                                    )}
-                                    onToggleHabits={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                habits_enabled:
-                                                    !prev.features
-                                                        ?.habits_enabled,
-                                            },
-                                        }))
-                                    }
-                                    calendarEnabled={Boolean(
-                                        formData.features?.calendar_enabled
-                                    )}
-                                    onToggleCalendar={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                calendar_enabled:
-                                                    !prev.features
-                                                        ?.calendar_enabled,
-                                            },
-                                        }))
-                                    }
-                                    templatesEnabled={Boolean(
-                                        formData.features?.templates_enabled ??
-                                        true
-                                    )}
-                                    onToggleTemplates={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                templates_enabled: !(
-                                                    prev.features
-                                                        ?.templates_enabled ??
-                                                    true
-                                                ),
-                                            },
-                                        }))
-                                    }
-                                    pomodoroEnabled={Boolean(
-                                        formData.features?.pomodoro_enabled
-                                    )}
-                                    onTogglePomodoro={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                pomodoro_enabled:
-                                                    !prev.features
-                                                        ?.pomodoro_enabled,
-                                            },
-                                        }))
-                                    }
-                                />
-
-                                <SidebarTab
-                                    isActive={activeTab === 'sidebar'}
-                                    isAdmin={currentUser?.is_admin === true}
-                                    visibleSections={
-                                        formData.sidebar_settings
-                                            ?.visibleSections || {}
-                                    }
-                                    linkOrder={resolveOrder(
-                                        formData.sidebar_settings?.linkOrder,
-                                        DEFAULT_LINK_ORDER
-                                    )}
-                                    sectionOrder={resolveOrder(
-                                        formData.sidebar_settings?.sectionOrder,
-                                        DEFAULT_SECTION_ORDER
-                                    )}
-                                    onReorder={(group, order) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            sidebar_settings: {
-                                                ...prev.sidebar_settings,
-                                                [group === 'links'
-                                                    ? 'linkOrder'
-                                                    : 'sectionOrder']: order,
-                                            },
-                                        }))
-                                    }
-                                    onToggleSection={(key) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            sidebar_settings: {
-                                                ...prev.sidebar_settings,
-                                                visibleSections: {
-                                                    ...prev.sidebar_settings
-                                                        ?.visibleSections,
-                                                    [key]: !(
-                                                        prev.sidebar_settings
-                                                            ?.visibleSections?.[
-                                                            key
-                                                        ] !== false
+                                    <FeaturesTab
+                                        isActive={activeTab === 'features'}
+                                        eisenhowerEnabled={Boolean(
+                                            formData.features
+                                                ?.eisenhower_enabled
+                                        )}
+                                        onToggleEisenhower={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    eisenhower_enabled:
+                                                        !prev.features
+                                                            ?.eisenhower_enabled,
+                                                },
+                                            }))
+                                        }
+                                        kanbanEnabled={Boolean(
+                                            formData.features?.kanban_enabled
+                                        )}
+                                        onToggleKanban={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    kanban_enabled:
+                                                        !prev.features
+                                                            ?.kanban_enabled,
+                                                },
+                                            }))
+                                        }
+                                        habitsEnabled={Boolean(
+                                            formData.features?.habits_enabled ??
+                                            true
+                                        )}
+                                        onToggleHabits={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    habits_enabled:
+                                                        !prev.features
+                                                            ?.habits_enabled,
+                                                },
+                                            }))
+                                        }
+                                        calendarEnabled={Boolean(
+                                            formData.features?.calendar_enabled
+                                        )}
+                                        onToggleCalendar={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    calendar_enabled:
+                                                        !prev.features
+                                                            ?.calendar_enabled,
+                                                },
+                                            }))
+                                        }
+                                        templatesEnabled={Boolean(
+                                            formData.features
+                                                ?.templates_enabled ?? true
+                                        )}
+                                        onToggleTemplates={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    templates_enabled: !(
+                                                        prev.features
+                                                            ?.templates_enabled ??
+                                                        true
                                                     ),
                                                 },
-                                            },
-                                        }))
-                                    }
-                                />
+                                            }))
+                                        }
+                                        pomodoroEnabled={Boolean(
+                                            formData.features?.pomodoro_enabled
+                                        )}
+                                        onTogglePomodoro={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    pomodoro_enabled:
+                                                        !prev.features
+                                                            ?.pomodoro_enabled,
+                                                },
+                                            }))
+                                        }
+                                    />
 
-                                <AIAssistantTab
-                                    isActive={activeTab === 'ai-assistant'}
-                                    formData={formData}
-                                    hosted={featureFlags.hosted}
-                                    onToggleAi={(field) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            features: {
-                                                ...prev.features,
-                                                [field]:
-                                                    !prev.features?.[field],
-                                            },
-                                        }))
-                                    }
-                                    onAiProfileChange={(value) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ai_profile: value,
-                                        }))
-                                    }
-                                    onAiProviderFieldChange={(field, value) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            [field]: value,
-                                        }))
-                                    }
-                                    onClearAiApiKey={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ai_api_key: '',
-                                            ai_api_key_set: false,
-                                            ai_api_key_last4: null,
-                                        }))
-                                    }
-                                    onLoadAiProviderSettings={(settings) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            ai_base_url: settings.ai_base_url,
-                                            ai_model: settings.ai_model,
-                                            ai_api_key_set:
-                                                settings.ai_api_key_set,
-                                            ai_api_key_last4:
-                                                settings.ai_api_key_last4,
-                                        }))
-                                    }
-                                />
+                                    <SidebarTab
+                                        isActive={activeTab === 'sidebar'}
+                                        isAdmin={currentUser?.is_admin === true}
+                                        visibleSections={
+                                            formData.sidebar_settings
+                                                ?.visibleSections || {}
+                                        }
+                                        linkOrder={resolveOrder(
+                                            formData.sidebar_settings
+                                                ?.linkOrder,
+                                            DEFAULT_LINK_ORDER
+                                        )}
+                                        sectionOrder={resolveOrder(
+                                            formData.sidebar_settings
+                                                ?.sectionOrder,
+                                            DEFAULT_SECTION_ORDER
+                                        )}
+                                        onReorder={(group, order) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                sidebar_settings: {
+                                                    ...prev.sidebar_settings,
+                                                    [group === 'links'
+                                                        ? 'linkOrder'
+                                                        : 'sectionOrder']:
+                                                        order,
+                                                },
+                                            }))
+                                        }
+                                        onToggleSection={(key) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                sidebar_settings: {
+                                                    ...prev.sidebar_settings,
+                                                    visibleSections: {
+                                                        ...prev.sidebar_settings
+                                                            ?.visibleSections,
+                                                        [key]: !(
+                                                            prev
+                                                                .sidebar_settings
+                                                                ?.visibleSections?.[
+                                                                key
+                                                            ] !== false
+                                                        ),
+                                                    },
+                                                },
+                                            }))
+                                        }
+                                    />
 
-                                <NotificationsTab
-                                    isActive={activeTab === 'notifications'}
-                                    showTelegram={featureFlags.telegram}
-                                    notificationPreferences={
-                                        formData.notification_preferences
-                                    }
-                                    onChange={(preferences) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            notification_preferences:
-                                                preferences,
-                                        }))
-                                    }
-                                    quietHours={formData.quiet_hours}
-                                    onQuietHoursChange={(quietHours) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            quiet_hours: quietHours,
-                                        }))
-                                    }
-                                />
+                                    <AIAssistantTab
+                                        isActive={activeTab === 'ai-assistant'}
+                                        formData={formData}
+                                        hosted={featureFlags.hosted}
+                                        onToggleAi={(field) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                features: {
+                                                    ...prev.features,
+                                                    [field]:
+                                                        !prev.features?.[field],
+                                                },
+                                            }))
+                                        }
+                                        onAiProfileChange={(value) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ai_profile: value,
+                                            }))
+                                        }
+                                        onAiProviderFieldChange={(
+                                            field,
+                                            value
+                                        ) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                [field]: value,
+                                            }))
+                                        }
+                                        onClearAiApiKey={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ai_api_key: '',
+                                                ai_api_key_set: false,
+                                                ai_api_key_last4: null,
+                                            }))
+                                        }
+                                        onLoadAiProviderSettings={(settings) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                ai_base_url:
+                                                    settings.ai_base_url,
+                                                ai_model: settings.ai_model,
+                                                ai_api_key_set:
+                                                    settings.ai_api_key_set,
+                                                ai_api_key_last4:
+                                                    settings.ai_api_key_last4,
+                                            }))
+                                        }
+                                    />
 
-                                <TelegramTab
-                                    isActive={
-                                        featureFlags.telegram &&
-                                        activeTab === 'telegram'
-                                    }
-                                    formData={formData}
-                                    profile={profile}
-                                    telegramBotInfo={telegramBotInfo}
-                                    isPolling={isPolling}
-                                    telegramSetupStatus={telegramSetupStatus}
-                                    onChange={handleChange}
-                                    onSetup={handleSetupTelegram}
-                                    onStartPolling={handleStartPolling}
-                                    onStopPolling={handleStopPolling}
-                                    onToggleSummary={() =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            task_summary_enabled:
-                                                !prev.task_summary_enabled,
-                                        }))
-                                    }
-                                    onSelectFrequency={(frequency) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            task_summary_frequency: frequency,
-                                        }))
-                                    }
-                                    onSendTestSummary={handleSendTestSummary}
-                                    formatFrequency={formatFrequency}
-                                />
+                                    <NotificationsTab
+                                        isActive={activeTab === 'notifications'}
+                                        showTelegram={featureFlags.telegram}
+                                        notificationPreferences={
+                                            formData.notification_preferences
+                                        }
+                                        onChange={(preferences) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                notification_preferences:
+                                                    preferences,
+                                            }))
+                                        }
+                                        quietHours={formData.quiet_hours}
+                                        onQuietHoursChange={(quietHours) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                quiet_hours: quietHours,
+                                            }))
+                                        }
+                                    />
 
-                                <KeyboardShortcutsTab
-                                    isActive={
-                                        activeTab === 'keyboard-shortcuts'
-                                    }
-                                    config={formData.keyboard_shortcuts}
-                                    onChange={(config) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            keyboard_shortcuts: config,
-                                        }))
-                                    }
-                                />
+                                    <TelegramTab
+                                        isActive={
+                                            featureFlags.telegram &&
+                                            activeTab === 'telegram'
+                                        }
+                                        formData={formData}
+                                        profile={profile}
+                                        telegramBotInfo={telegramBotInfo}
+                                        isPolling={isPolling}
+                                        telegramSetupStatus={
+                                            telegramSetupStatus
+                                        }
+                                        onChange={handleChange}
+                                        onSetup={handleSetupTelegram}
+                                        onStartPolling={handleStartPolling}
+                                        onStopPolling={handleStopPolling}
+                                        onToggleSummary={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                task_summary_enabled:
+                                                    !prev.task_summary_enabled,
+                                            }))
+                                        }
+                                        onSelectFrequency={(frequency) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                task_summary_frequency:
+                                                    frequency,
+                                            }))
+                                        }
+                                        onSendTestSummary={
+                                            handleSendTestSummary
+                                        }
+                                        formatFrequency={formatFrequency}
+                                    />
 
-                                <McpTab isActive={activeTab === 'mcp'} />
+                                    <KeyboardShortcutsTab
+                                        isActive={
+                                            activeTab === 'keyboard-shortcuts'
+                                        }
+                                        config={formData.keyboard_shortcuts}
+                                        onChange={(config) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                keyboard_shortcuts: config,
+                                            }))
+                                        }
+                                    />
 
-                                <CalDAVTab isActive={activeTab === 'caldav'} />
+                                    <McpTab isActive={activeTab === 'mcp'} />
 
-                                <CalendarFeedsTab
-                                    isActive={activeTab === 'calendars'}
-                                />
+                                    <CalDAVTab
+                                        isActive={activeTab === 'caldav'}
+                                    />
 
-                                <PlanningTab
-                                    isActive={activeTab === 'planning'}
-                                />
+                                    <CalendarFeedsTab
+                                        isActive={activeTab === 'calendars'}
+                                    />
 
-                                <BillingTab
-                                    isActive={activeTab === 'billing'}
-                                />
+                                    <PlanningTab
+                                        isActive={activeTab === 'planning'}
+                                    />
 
-                                <ImportExportTab
-                                    isActive={activeTab === 'import-export'}
-                                />
+                                    <BillingTab
+                                        isActive={activeTab === 'billing'}
+                                    />
+
+                                    <ImportExportTab
+                                        isActive={activeTab === 'import-export'}
+                                    />
+                                </SettingsErrorBoundary>
 
                                 <div className="flex justify-end dark:border-gray-700">
                                     <button

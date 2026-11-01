@@ -394,6 +394,7 @@
     }
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Naroči se na svoje naloge",
       "description": "Zasebni naslov, ki prikaže odprte naloge z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere te naloge.",

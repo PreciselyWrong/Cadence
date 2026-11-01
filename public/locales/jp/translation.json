@@ -392,6 +392,7 @@
     "noActivity": "まだアクティビティはありません"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "タスクを購読",
       "description": "期限付きの未完了タスクを Google カレンダー、Apple カレンダー、Outlook に表示する非公開アドレスです。アドレスを知っている人は誰でもタスクを読めます。",

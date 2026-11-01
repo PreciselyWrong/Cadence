@@ -394,6 +394,7 @@
     "noActivity": "Пока нет активности"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Подписка на ваши задачи",
       "description": "Секретный адрес, который показывает открытые задачи со сроком в Google Календаре, Apple Календаре или Outlook. Любой, у кого есть адрес, может читать эти задачи.",

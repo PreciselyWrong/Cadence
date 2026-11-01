@@ -392,6 +392,7 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
+    "sectionFailed": "Dit onderdeel kon niet worden weergegeven. Kies een ander onderdeel of laad de pagina opnieuw.",
     "taskFeed": {
       "title": "Abonneren op je taken",
       "description": "Een privéadres dat je open taken met een deadline toont in Google Agenda, Apple Agenda of Outlook. Iedereen met het adres kan die taken lezen.",

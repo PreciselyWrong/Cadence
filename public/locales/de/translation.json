@@ -889,6 +889,7 @@
     "noCompletedTasks": "Keine abgeschlossenen Aufgaben."
   },
   "profile": {
+    "sectionFailed": "Dieser Bereich konnte nicht angezeigt werden. Wähle einen anderen Bereich oder lade die Seite neu.",
     "taskFeed": {
       "title": "Aufgaben abonnieren",
       "description": "Eine private Adresse, die Ihre offenen Aufgaben mit Fälligkeitsdatum in Google Kalender, Apple Kalender oder Outlook anzeigt. Wer die Adresse hat, kann diese Aufgaben lesen.",

@@ -392,6 +392,7 @@
     "noActivity": "Ei vielä aktiivisuutta"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Tilaa tehtäväsi",
       "description": "Yksityinen osoite, joka näyttää avoimet tehtäväsi eräpäivineen Google Kalenterissa, Apple Kalenterissa tai Outlookissa. Kuka tahansa osoitteen tietävä voi lukea tehtävät.",

@@ -392,6 +392,7 @@
     "noActivity": "Все още няма активност"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Абониране за задачите ви",
       "description": "Частен адрес, който показва отворените ви задачи с краен срок в Google Календар, Apple Календар или Outlook. Всеки с адреса може да чете тези задачи.",

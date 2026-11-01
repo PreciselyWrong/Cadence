@@ -392,6 +392,7 @@
     "noActivity": "Henüz etkinlik yok"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Görevlerinize abone olun",
       "description": "Son tarihi olan açık görevlerinizi Google Takvim, Apple Takvim veya Outlook'ta gösteren özel bir adres. Adrese sahip herkes bu görevleri okuyabilir.",

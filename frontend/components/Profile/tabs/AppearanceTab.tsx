@@ -128,6 +128,9 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
     onTaskRowFieldsChange,
 }) => {
     const { t } = useTranslation();
+    const [accent, setAccent] = useState(getStoredAccent);
+    const [pureBlack, setPureBlack] = useState(getStoredPureBlack);
+    const [customHex, setCustomHex] = useState(accent);
 
     if (!isActive) return null;
 
@@ -148,10 +151,6 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
             )
         );
     };
-
-    const [accent, setAccent] = useState(getStoredAccent);
-    const [pureBlack, setPureBlack] = useState(getStoredPureBlack);
-    const [customHex, setCustomHex] = useState(accent);
 
     const chooseAccent = (hex: string) => {
         setAccent(hex);

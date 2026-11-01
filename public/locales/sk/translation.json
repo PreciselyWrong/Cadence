@@ -624,6 +624,7 @@
     }
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Odoberať svoje úlohy",
       "description": "Súkromná adresa, ktorá zobrazí otvorené úlohy s termínom v Kalendári Google, Apple alebo Outlooku. Ktokoľvek s adresou môže tieto úlohy čítať.",

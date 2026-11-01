@@ -413,6 +413,7 @@
     }
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Subscribe to your tasks",
       "description": "A private address that shows your open tasks with a due date in Google Calendar, Apple Calendar or Outlook. Anyone with the address can read those tasks.",

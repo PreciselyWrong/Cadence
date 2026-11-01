@@ -393,6 +393,7 @@
     "noActivity": "Ingen aktivitet ennå"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Abonner på oppgavene dine",
       "description": "En privat adresse som viser åpne oppgaver med frist i Google Kalender, Apple Kalender eller Outlook. Alle med adressen kan lese oppgavene.",

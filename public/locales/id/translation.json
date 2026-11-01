@@ -392,6 +392,7 @@
     "noActivity": "Belum ada aktivitas"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Berlangganan tugas Anda",
       "description": "Alamat pribadi yang menampilkan tugas terbuka dengan tenggat di Google Calendar, Apple Calendar, atau Outlook. Siapa pun yang punya alamat ini dapat membaca tugas tersebut.",

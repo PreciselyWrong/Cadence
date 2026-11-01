@@ -392,6 +392,7 @@
     "noActivity": "Ingen aktivitet endnu"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Abonnér på dine opgaver",
       "description": "En privat adresse, der viser dine åbne opgaver med forfaldsdato i Google Kalender, Apple Kalender eller Outlook. Alle med adressen kan læse opgaverne.",

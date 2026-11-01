@@ -392,6 +392,7 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Đăng ký công việc của bạn",
       "description": "Một địa chỉ riêng hiển thị các công việc còn mở có hạn trong Google Calendar, Apple Calendar hoặc Outlook. Ai có địa chỉ đều đọc được các công việc đó.",

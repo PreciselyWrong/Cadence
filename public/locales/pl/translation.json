@@ -394,6 +394,7 @@
     "noActivity": "Brak aktywności"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Subskrybuj swoje zadania",
       "description": "Prywatny adres pokazujący otwarte zadania z terminem w Kalendarzu Google, Kalendarzu Apple lub Outlooku. Każdy, kto zna adres, może czytać te zadania.",

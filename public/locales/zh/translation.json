@@ -392,6 +392,7 @@
     "noActivity": "还没有活动"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "订阅你的任务",
       "description": "一个私密地址，可在 Google 日历、Apple 日历或 Outlook 中显示有截止日期的未完成任务。任何拥有该地址的人都能读取这些任务。",

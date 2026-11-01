@@ -10,7 +10,15 @@ jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: any) =>
         typeof fallback === 'string' ? fallback : key;
     const value = { t };
-    return { useTranslation: () => value };
+    // The real useTranslation is a hook; a hook-free mock would hide hook
+    // order bugs, since React mounts hooks afresh after a hook-free render.
+    const { useRef } = jest.requireActual('react');
+    return {
+        useTranslation: () => {
+            useRef(null);
+            return value;
+        },
+    };
 });
 
 const renderTab = (contentBackground: string | null) => {
@@ -177,5 +185,27 @@ describe('AppearanceTab task row details', () => {
         expect(
             screen.getByRole('button', { name: 'Move down: Due date' })
         ).toBeDisabled();
+    });
+});
+
+describe('AppearanceTab tab switching', () => {
+    it('renders when it becomes the active tab after starting hidden', () => {
+        const props = {
+            formData: { appearance: 'light' } as ProfileFormData,
+            onAppearanceChange: jest.fn(),
+            contentBackground: null,
+            onContentBackgroundChange: jest.fn(),
+            density: 'minimal' as const,
+            onDensityChange: jest.fn(),
+        };
+        const { rerender } = render(
+            <AppearanceTab isActive={false} {...props} />
+        );
+
+        rerender(<AppearanceTab isActive {...props} />);
+
+        expect(
+            screen.getByRole('heading', { name: 'Appearance' })
+        ).toBeInTheDocument();
     });
 });

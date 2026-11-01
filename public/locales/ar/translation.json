@@ -396,6 +396,7 @@
     "noActivity": "لا توجد أنشطة حتى الآن"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "الاشتراك في مهامك",
       "description": "عنوان خاص يعرض مهامك المفتوحة ذات الموعد في تقويم Google أو Apple أو Outlook. أي شخص لديه العنوان يمكنه قراءة هذه المهام.",

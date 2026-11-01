@@ -393,6 +393,7 @@
     "noActivity": "Nenhuma atividade ainda"
   },
   "profile": {
+    "sectionFailed": "Não foi possível mostrar esta secção. Escolha outra secção ou recarregue a página.",
     "taskFeed": {
       "title": "Assinar suas tarefas",
       "description": "Um endereço privado que mostra suas tarefas abertas com prazo no Google Agenda, Apple Calendário ou Outlook. Qualquer pessoa com o endereço pode ler essas tarefas.",

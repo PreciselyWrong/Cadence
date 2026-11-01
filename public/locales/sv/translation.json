@@ -392,6 +392,7 @@
     }
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Prenumerera på dina uppgifter",
       "description": "En privat adress som visar dina öppna uppgifter med förfallodatum i Google Kalender, Apple Kalender eller Outlook. Alla med adressen kan läsa uppgifterna.",

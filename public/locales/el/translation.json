@@ -249,6 +249,7 @@
     "already_have_account": "Έχετε ήδη λογαριασμό;"
   },
   "profile": {
+    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Συνδρομή στις εργασίες σας",
       "description": "Μια ιδιωτική διεύθυνση που δείχνει τις ανοιχτές εργασίες σας με προθεσμία στο Google Calendar, Apple Calendar ή Outlook. Όποιος έχει τη διεύθυνση μπορεί να τις διαβάσει.",
