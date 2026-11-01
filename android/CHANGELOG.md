@@ -14,6 +14,7 @@
 - Événements : « Rejoindre » ouvre le lien Meet, Zoom, Teams ou Webex trouvé dans le lieu ou la description.
 - Événements : « Ouvrir dans l'agenda » ouvre l'occurrence dans l'application d'agenda, à son heure.
 - Capture sans ouvrir l'application : raccourci « Nouvelle tâche » (appui long sur l'icône), tuile « Capturer » dans les réglages rapides, et « Cadence » dans le menu du texte sélectionné (envoie le texte à l'Inbox).
+
 ### Corrections
 - Fiche de tâche : un titre long s'affiche en entier (il passait à la ligne puis était coupé après deux lignes) et prend une police plus petite ; les boutons restent alignés en haut.
 
