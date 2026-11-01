@@ -74,8 +74,9 @@ object TaskReminderScheduler {
                 periodicTicks(),
                 quietPolicies(app),
                 TimedRemindersStore(app).changes(),
-            ) { tasks, _, quiet, timed -> Triple(tasks, quiet, timed) }
-                .collect { (tasks, quiet, timed) -> sync(app, tasks, Instant.now(), quiet, timed) }
+                PlanSlotsStore(app).changes(),
+            ) { tasks, _, quiet, timed, slots -> Inputs(tasks, quiet, timed, slots) }
+                .collect { sync(app, it.tasks, Instant.now(), it.quiet, it.timed, it.slots) }
         }
     }
 
@@ -87,8 +88,11 @@ object TaskReminderScheduler {
             Instant.now(),
             currentQuiet(context),
             TimedRemindersStore(context).read(),
+            PlanSlotsStore(context).read(),
         )
     }
+
+    private data class Inputs(val tasks: List<TaskItem>, val quiet: QuietPolicy, val timed: TimedReminders, val slots: List<PlanSlot>)
 
     private fun quietPolicies(context: Context): Flow<QuietPolicy> =
         TasksGraph.connection(context).observe().map { it?.quiet ?: QuietPolicy.NONE }.distinctUntilChanged()
@@ -164,13 +168,13 @@ object TaskReminderScheduler {
         }
     }
 
-    private fun sync(context: Context, tasks: List<TaskItem>, now: Instant, quiet: QuietPolicy, timed: TimedReminders) {
+    private fun sync(context: Context, tasks: List<TaskItem>, now: Instant, quiet: QuietPolicy, timed: TimedReminders, slots: List<PlanSlot>) {
         synchronized(lock) {
             val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             val delivered = ReminderPlan.pruneDelivered(prefs.stringSet(KEY_DELIVERED), now)
             val storedSnoozes = prefs.stringSet(KEY_SNOOZED)
             val plan = ReminderPlan.alarms(
-                tasks, delivered, prefs.stringSet(KEY_SCHEDULED_ALARMS), storedSnoozes, now, quiet, timed, ZoneId.systemDefault(),
+                tasks, delivered, prefs.stringSet(KEY_SCHEDULED_ALARMS), storedSnoozes, now, quiet, timed, ZoneId.systemDefault(), slots,
             )
             prefs.stringSet(KEY_LEGACY_SCHEDULED_UIDS).forEach { cancelLegacy(context, it) }
             plan.staleReminders.forEach { cancel(context, it) }

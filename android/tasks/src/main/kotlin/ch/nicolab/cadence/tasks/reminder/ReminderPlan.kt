@@ -11,9 +11,9 @@ import java.time.ZoneId
  * Décisions de rappel sans Android : quelles alarmes poser, quelles notifications
  * retirer, et si « Terminer » vise encore la même occurrence.
  *
- * Deux sortes de rappel, chacune repérée par un instant « repère » ([Wanted.marker]) : le `reminder_at` explicite
- * d'une tâche, ou l'échéance horaire d'une occurrence quand [TimedReminders] est actif et qu'aucun rappel
- * explicite n'existe. Une alarme est identifiée par `uid|repère` ([alarmKey]) : une série à heure fixe en a une
+ * Trois sortes de rappel, chacune repérée par un instant « repère » ([Wanted.marker]) : le `reminder_at` explicite
+ * d'une tâche, ou, quand [TimedReminders] est actif et qu'aucun rappel explicite n'existe, l'échéance horaire d'une
+ * occurrence et l'heure où la tâche est placée dans le plan du jour ([PlanSlot]). Une alarme est identifiée par `uid|repère` ([alarmKey]) : une série à heure fixe en a une
  * par occurrence dans l'horizon.
  */
 internal object ReminderPlan {
@@ -65,10 +65,28 @@ internal object ReminderPlan {
         return (listOf(due) + later).filter { marker -> task.deferUntil?.let { !marker.isBefore(it) } ?: true }
     }
 
-    /** Vrai si [marker] est encore un repère de rappel de [task] : son `reminder_at`, ou une échéance horaire. */
-    fun isCurrentMarker(task: TaskItem?, marker: Long, timed: TimedReminders, now: Instant, zone: ZoneId): Boolean {
+    /**
+     * Heures où [task] est placée dans le plan du jour ([slots]), repères de rappel comme une échéance horaire et
+     * avec la même avance. Mêmes exclusions qu'une tâche à heure fixe : réglage coupé, tâche fermée, « Plus tard »,
+     * rappel explicite (qui l'emporte).
+     */
+    fun planMarkers(task: TaskItem, timed: TimedReminders, slots: List<PlanSlot>): List<Instant> {
+        if (!timed.enabled || task.isClosed || task.someday || task.reminderAt != null) return emptyList()
+        return slots.filter { it.uid == task.uid }.map { it.start }
+    }
+
+    /** Vrai si [marker] est encore un repère de rappel de [task] : son `reminder_at`, une échéance horaire ou un placement. */
+    fun isCurrentMarker(
+        task: TaskItem?,
+        marker: Long,
+        timed: TimedReminders,
+        now: Instant,
+        zone: ZoneId,
+        slots: List<PlanSlot> = emptyList(),
+    ): Boolean {
         if (task == null || task.isClosed) return false
         if (task.reminderAt?.toEpochMilli() == marker) return true
+        if (planMarkers(task, timed, slots).any { it.toEpochMilli() == marker }) return true
         return timedMarkers(task, timed, now.minus(LOOKBACK), now.plus(HORIZON), zone).any { it.toEpochMilli() == marker }
     }
 
@@ -88,6 +106,7 @@ internal object ReminderPlan {
         timed: TimedReminders = TimedReminders.OFF,
         quiet: QuietPolicy = QuietPolicy.NONE,
         zone: ZoneId = ZoneId.systemDefault(),
+        slots: List<PlanSlot> = emptyList(),
     ): Map<String, Wanted> {
         val horizon = now.plus(HORIZON)
         val earliest = now.minus(LATE_WINDOW)
@@ -103,7 +122,8 @@ internal object ReminderPlan {
                     if (upcoming || late) Wanted(task.uid, explicit, explicit).let { put(it.key, it) }
                     continue
                 }
-                for (marker in timedMarkers(task, timed, earliest, horizon, zone)) {
+                val markers = timedMarkers(task, timed, earliest, horizon, zone) + planMarkers(task, timed, slots)
+                for (marker in markers.distinct()) {
                     val notifyAt = timed.lead.notifyAt(marker)
                     val ring = quiet.shift(notifyAt)
                     val upcoming = ring.isAfter(now) && !notifyAt.isAfter(horizon)
@@ -138,8 +158,9 @@ internal object ReminderPlan {
         quiet: QuietPolicy,
         timed: TimedReminders = TimedReminders.OFF,
         zone: ZoneId = ZoneId.systemDefault(),
+        slots: List<PlanSlot> = emptyList(),
     ): AlarmPlan {
-        val wanted = wanted(tasks, delivered, now, timed, quiet, zone)
+        val wanted = wanted(tasks, delivered, now, timed, quiet, zone, slots)
         val byUid = tasks.associateBy { it.uid }
         val earliest = now.minus(LATE_WINDOW)
         val valid = mutableMapOf<String, TaskSnooze>()
@@ -148,7 +169,7 @@ internal object ReminderPlan {
             val snooze = TaskSnooze.decode(raw)
             val task = snooze?.let { byUid[it.uid] }
             val alive = snooze != null && task != null && !snooze.triggerAt.isBefore(earliest) &&
-                isCurrentMarker(task, snooze.reminderAt, timed, now, zone)
+                isCurrentMarker(task, snooze.reminderAt, timed, now, zone, slots)
             if (alive) valid[snooze.uid] = snooze else stale += raw
         }
         return AlarmPlan(

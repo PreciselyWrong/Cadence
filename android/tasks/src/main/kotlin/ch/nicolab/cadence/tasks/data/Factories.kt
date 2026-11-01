@@ -7,6 +7,8 @@ import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
+import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
+import ch.nicolab.cadence.tasks.reminder.refreshPlanSlots
 import java.io.File
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -75,6 +77,7 @@ internal class TasksRuntime private constructor(context: Context) {
         hlc,
         onProfile = connection::saveProfile,
         entities = if (habitStore != null) SYNCED_ENTITIES + HABIT_ENTITIES else SYNCED_ENTITIES,
+        onSynced = { refreshPlanSlots(PlanSlotsStore(appContext), api::call) },
     )
     private val habitPending: Flow<Int> = habitStorage?.let { storage ->
         combine(storage.observePendingCount(), ownership.observeForeign()) { count, foreign -> pendingHabitWrites(count, foreign) }

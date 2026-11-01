@@ -59,6 +59,8 @@ class SyncEngine(
     private val nowMs: () -> Long = System::currentTimeMillis,
     /** Entités du passage, les références d'abord : tâches seules, ou tâches et habitudes. */
     private val entities: List<String> = SYNCED_ENTITIES,
+    /** Après un passage réussi : relectures en ligne qui ne passent pas par le journal (plan du jour). */
+    private val onSynced: suspend () -> Unit = {},
 ) {
     private val mutex = Mutex()
     private val generation = AtomicLong(0)
@@ -101,6 +103,15 @@ class SyncEngine(
             }
             if (result != SyncResult.Closed) {
                 _state.update { it.copy(lastError = result.errorMessage(report), unsupported = report.unsupported) }
+            }
+            if (result == SyncResult.Synced) {
+                try {
+                    onSynced()
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (_: Exception) {
+                    // Une relecture annexe ne fait pas échouer la synchro.
+                }
             }
             result
         }

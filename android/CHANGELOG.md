@@ -1,5 +1,8 @@
 ## [1.7.0] — à publier
 
+### Corrections
+- Une tâche placée à une heure dans le plan du jour (web ou téléphone) sonne à cette heure, même sans heure d'échéance, avec l'avance des tâches à heure fixe ; le plan est relu après chaque synchro, un placement déplacé ou retiré déplace ou retire l'alarme.
+
 ### Nouveautés
 - Arborescence d'un projet : même ordre que sur le web (le web range désormais les tâches d'un projet par le même champ synchronisé) ; les tâches jamais rangées passent en tête, la plus récente d'abord.
 

@@ -74,7 +74,9 @@ class TaskReminderReceiver : BroadcastReceiver() {
     }
 
     private fun stillCurrent(context: Context, task: TaskItem?, marker: Long): Boolean =
-        ReminderPlan.isCurrentMarker(task, marker, TimedRemindersStore(context).read(), Instant.now(), ZoneId.systemDefault())
+        ReminderPlan.isCurrentMarker(
+            task, marker, TimedRemindersStore(context).read(), Instant.now(), ZoneId.systemDefault(), PlanSlotsStore(context).read(),
+        )
 
     /** Une notification d'occurrence passée ne doit pas terminer la suivante. */
     private suspend fun completeIfSameOccurrence(context: Context, uid: String, occurrence: Long) {
