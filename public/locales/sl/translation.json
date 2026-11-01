@@ -396,6 +396,8 @@
   "profile": {
     "showTaskDescription": "Prikaži opis pod naslovom",
     "sync": {
+      "pending_few": "{{count}} spremembe, narejene brez povezave v tem brskalniku, čakajo na pošiljanje.",
+      "pending_two": "{{count}} spremembi, narejeni brez povezave v tem brskalniku, čakata na pošiljanje.",
       "field": {
         "review_at": "Datum pregleda",
         "review_on": "Pregled na",
@@ -1132,6 +1134,8 @@
     "pureBlack": "Čista črna v temnem načinu"
   },
   "productivity": {
+    "issuesFound_few": "{{count}} težave s produktivnostjo potrebujejo pozornost",
+    "issuesFound_two": "{{count}} težavi s produktivnostjo potrebujeta pozornost",
     "stalledProjects": "Zastali projekti",
     "stalledProjectsDesc": "Ti projekti nimajo nalog ali dejanj",
     "needsNextAction": "Projekti potrebujejo naslednje dejanje",
@@ -1390,6 +1394,14 @@
     "waiting": "Čaka"
   },
   "project": {
+    "noteCount_few": "{{count}} opombe",
+    "noteCount_two": "{{count}} opombi",
+    "memberCount_few": "{{count}} člani",
+    "memberCount_two": "{{count}} člana",
+    "fileCount_few": "{{count}} datoteke",
+    "fileCount_two": "{{count}} datoteki",
+    "daysToDue_few": "{{count}} dni do roka",
+    "daysToDue_two": "{{count}} dneva do roka",
     "name": "Ime projekta",
     "projectImage": "Slika projekta",
     "uploadImageHint": "Naložite sliko za vaš projekt (max 10MB)",
@@ -2557,6 +2569,8 @@
     "deleteUser": "Izbriši uporabnika",
     "confirmDeleteUser": "Ali ste prepričani, da želite izbrisati {{email}}? Te akcije ni mogoče razveljaviti.",
     "billing": {
+      "trialDaysLeft_few": "{{count}} dni preostali",
+      "trialDaysLeft_two": "{{count}} dneva preostala",
       "title": "Obračun",
       "accounts": "Računi",
       "onPro": "Na Pro",
@@ -2790,6 +2804,10 @@
       "statusResolved": "Rešeno"
     },
     "userStatus": {
+      "itemsCreated_few": "{{count}} elementi",
+      "itemsCreated_two": "{{count}} elementa",
+      "emailsSent_few": "{{count}} poslane",
+      "emailsSent_two": "{{count}} poslani",
       "title": "Uporabniki",
       "user": "Uporabnik",
       "signedUp": "Registriran",
@@ -3187,6 +3205,8 @@
     "title": "Podnaloge"
   },
   "backup": {
+    "accountsCount_few": "Drugi računi: {{count}}",
+    "accountsCount_two": "Drugi računi: {{count}}",
     "title": "Varnostna kopija in obnova",
     "description": "Ustvarite varnostne kopije ali obnovite iz prejšnjih varnostnih kopij. Vaših zadnjih 5 varnostnih kopij je samodejno shranjenih.",
     "createBackup": "Ustvari varnostno kopijo",
@@ -3702,6 +3722,8 @@
     "planChanged": "Vaš paket je bil zamenjan."
   },
   "subscription": {
+    "trialBanner_few": "Uporabljate brezplačni preizkus, še {{count}} dni",
+    "trialBanner_two": "Uporabljate brezplačni preizkus, še {{count}} dneva",
     "title": "Naročnina",
     "chooseForCloud": "Izberite načrt za Cadence Cloud",
     "noActive": "Brez aktivne naročnine",
@@ -3958,6 +3980,8 @@
     "lateWarning": "Čas je minil, opravilo pa ni opravljeno",
     "movedOffPlan": "'{{name}}' ni več zapadla danes, zato je izstopila iz današnjega načrta.",
     "tips": {
+      "missed_few": "{{count}} načrtovani bloki so že minili",
+      "missed_two": "{{count}} načrtovana bloka sta že minila",
       "title": "Nasveti za načrtovanje",
       "missed": "Načrtovanih blokov, ki so že minili: {{count}}",
       "moveMissed": "Premakni v naslednje proste reže",
