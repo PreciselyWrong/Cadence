@@ -1,3 +1,9 @@
+## [1.7.0] — à publier
+
+### Corrections
+- Échéance passée : plus de couleur d'alerte ni de graisse dans le widget Tâches, le widget Aujourd'hui, la barre de l'agenda et le bloc « À replanifier » ; la date passée s'affiche comme les autres.
+- En-têtes de section : un compteur à zéro n'est plus affiché.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés

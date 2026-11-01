@@ -48,7 +48,7 @@ fun SectionHeader(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        count?.let {
+        visibleSectionCount(count)?.let {
             Spacer(Modifier.width(Space.xs))
             Text(it.toString(), style = MaterialTheme.typography.labelLarge, color = palette.outline)
         }
@@ -69,3 +69,6 @@ fun SectionHeader(
         }
     }
 }
+
+/** Un compteur à zéro ou absent ne s'affiche pas : « En retard 0 » n'apporte rien. */
+internal fun visibleSectionCount(count: Int?): Int? = count?.takeIf { it > 0 }

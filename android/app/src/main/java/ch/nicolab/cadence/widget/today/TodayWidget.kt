@@ -481,7 +481,7 @@ private fun ColumnScope.TodayList(view: TodayView, held: Set<String>, text: Toda
         taskSections(selection, view.config, view.today, view.zone).forEach { section ->
             if (section.labelled) {
                 item(itemId = section.labelId()) {
-                    val colour = if (section.overdue) view.palette.provider { it.overdue } else view.palette.provider { it.muted }
+                    val colour = view.palette.provider { it.muted }
                     SectionLabel(section.label(view, context), colour, text)
                 }
             }
@@ -491,7 +491,7 @@ private fun ColumnScope.TodayList(view: TodayView, held: Set<String>, text: Toda
                         val task = row.task
                         // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
                         val due = if (grouped) task.dueTimeLabel(view) else task.dueLabel(view, context)
-                        TaskRowView(task, view, due, overdue = section.overdue, checked = task.uid in held, text)
+                        TaskRowView(task, view, due, checked = task.uid in held, text)
                     }
                     is TodayItem.Event -> EventRowView(row.event, view, text)
                 }
@@ -596,7 +596,6 @@ private fun TaskRowView(
     task: TaskItem,
     view: TodayView,
     dueLabel: String?,
-    overdue: Boolean,
     checked: Boolean,
     sizes: TodayTextSizes,
 ) {
@@ -677,9 +676,8 @@ private fun TaskRowView(
                 it,
                 maxLines = 1,
                 style = TextStyle(
-                    color = if (overdue) palette.provider { p -> p.overdue } else palette.provider { p -> p.muted },
+                    color = palette.provider { p -> p.muted },
                     fontSize = sizes.small.sp,
-                    fontWeight = if (overdue) FontWeight.Medium else null,
                 ),
             )
         }

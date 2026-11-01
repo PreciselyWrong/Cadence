@@ -342,7 +342,7 @@ internal fun PlanDaySheet(
                 Text(
                     stringResource(R.string.planning_triage_title),
                     style = MaterialTheme.typography.titleSmall,
-                    color = cadence.error,
+                    color = cadence.onSurface,
                 )
                 Text(
                     stringResource(R.string.planning_triage_hint),

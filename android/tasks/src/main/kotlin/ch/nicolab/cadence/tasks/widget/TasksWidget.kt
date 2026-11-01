@@ -81,7 +81,7 @@ class TasksWidget : GlanceAppWidget() {
             val overdueUids = TaskViews.overdue(tasks, today, now).mapTo(hashSetOf()) { it.uid }
             // Tri stable : les tâches en retard passent devant, l'ordre de TaskViews reste à l'intérieur.
             val rows = TaskViews.today(tasks, today, now).sortedBy { it.uid !in overdueUids }
-            TasksWidgetContent(rows, overdueUids, held, today, zone)
+            TasksWidgetContent(rows, held, today, zone)
         }
     }
 }
@@ -105,7 +105,6 @@ class CompleteTaskAction : ActionCallback {
 @Composable
 private fun TasksWidgetContent(
     rows: List<TaskItem>,
-    overdueUids: Set<String>,
     held: Set<String>,
     today: LocalDate,
     zone: ZoneId,
@@ -130,7 +129,7 @@ private fun TasksWidgetContent(
             } else {
                 LazyColumn {
                     items(rows, itemId = { it.uid.hashCode().toLong() }) { task ->
-                        TaskRow(task, overdue = task.uid in overdueUids, checked = task.uid in held, today = today, zone = zone)
+                        TaskRow(task, checked = task.uid in held, today = today, zone = zone)
                     }
                 }
             }
@@ -170,7 +169,7 @@ private fun WidgetHeader(count: Int) {
 }
 
 @Composable
-private fun TaskRow(task: TaskItem, overdue: Boolean, checked: Boolean, today: LocalDate, zone: ZoneId) {
+private fun TaskRow(task: TaskItem, checked: Boolean, today: LocalDate, zone: ZoneId) {
     val context = LocalContext.current
     val open = openTaskIntent(context, task.uid)
     val dueLabel = dueLabel(task, today, zone)
@@ -199,9 +198,9 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, checked: Boolean, today: L
                     it,
                     maxLines = 1,
                     style = TextStyle(
-                        color = if (overdue) GlanceTheme.colors.error else GlanceTheme.colors.onSurfaceVariant,
+                        // Une échéance passée reste neutre : pas de couleur d'alerte ni de graisse.
+                        color = GlanceTheme.colors.onSurfaceVariant,
                         fontSize = 12.sp,
-                        fontWeight = if (overdue) FontWeight.Medium else null,
                     ),
                 )
             }

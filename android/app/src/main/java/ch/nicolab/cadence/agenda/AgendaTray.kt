@@ -201,7 +201,7 @@ internal fun Modifier.trayDragSource(
 private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (TrayItem, LocalDateTime) -> Unit) {
     val palette = cadence
     val pastDue = item.pastDue
-    val source = (if (pastDue != null) palette.error else item.colorArgb?.let { Color(it) } ?: palette.primary).toArgb()
+    val source = (if (pastDue != null) palette.onSurfaceVariant else item.colorArgb?.let { Color(it) } ?: palette.primary).toArgb()
     val card = palette.card.toArgb()
     val ink = palette.onSurface.toArgb()
     val variant = palette.onSurfaceVariant.toArgb()

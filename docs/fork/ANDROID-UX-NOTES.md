@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Passe « UI épurée » reprise sur Android
+
+- **Problème** : des écrans Android gardaient les réflexes d'avant la passe web : date passée en rouge dans les widgets et la barre de l'agenda, « 0 » affiché dans les en-têtes de section.
+- **Décision** : une échéance passée reste neutre partout (ligne, widget, bloc « À replanifier ») ; un compteur à zéro ne s'affiche pas. Priorité haute reste rouge (c'est une priorité, pas une échéance).
+- **Web** : rien à reprendre ; la passe est alignée. Reste à vérifier sur le téléphone.
+
 ### 2026-11-01 — Revue : « Plus tard » comme un fonds à parcourir
 
 - **Problème** : la revue était une liste plate de cartes identiques avec un menu « Décider ▾ » ; un lien s'affichait en URL brute ; ~150 tâches « Plus tard » formaient un long déversement.
