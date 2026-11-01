@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : Aujourd'hui (reprise du web)
+
+- **Problème** : la jauge « 0 min planifiées » s'affichait sur un jour vide, la carte du matin comptait le retard (« 3 à replanifier »), les en-têtes « Aujourd'hui » et « Demain » répétaient un compteur déjà porté par l'onglet.
+- **Décision** : jauge seulement si une tâche est planifiée (`DayRhythm.capacityVisible`), résumé du matin sans compte de retard (seulement « à placer » et suggestions, ligne omise si vide), en-têtes de section sans compteur.
+- **Web** : même étape (voir WEB-UX-NOTES). Reste : rien d'essayé sur le téléphone.
+
 ### 2026-11-01 — Objectifs et liste d'envies : un seul écran calme
 
 - **Problème** (émulateur, ~5 objectifs, 15 résultats clés, 62 envies) : l'onglet Objectifs était le cinquième des Tâches, hors de l'écran ; il ouvrait une deuxième rangée d'onglets Objectifs / Liste d'envies ; une carte d'objectif occupait tout l'écran (chaque résultat clé avec sa barre) sans dire quoi faire ensuite ; les 62 envies formaient une colonne de grosses cartes sans recherche, sans ajout, sans geste « faite », les réalisées mêlées aux autres, « Écrire » rangé après « Voir » ; la liste d'envies s'ouvrait au milieu (défilement repris de l'autre onglet) ; le bouton + créait une tâche ; les états de la fiche étaient décalés.

@@ -355,6 +355,18 @@ describe('TodayPage', () => {
         expect(screen.queryByTestId('place-all')).toBeNull();
     });
 
+    it('keeps an empty day calm: no guide opening by itself, no 0-minute gauge', async () => {
+        render(<TodayPage />);
+
+        await screen.findByTestId('candidate-o1');
+        expect(screen.queryByTestId('start-of-day')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('capacity')).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('plan-more'));
+        fireEvent.click(screen.getByTestId('plan-open-guide'));
+        expect(await screen.findByTestId('start-of-day')).toBeInTheDocument();
+    });
+
     it('keeps the daily quote off until it is chosen in the day menu', async () => {
         render(<TodayPage />);
 

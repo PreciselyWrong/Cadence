@@ -129,6 +129,10 @@ object DayRhythm {
             dismissedDay != today &&
             (overdueCount > 0 || toPlaceCount > 0 || suggestionCount > 0)
 
+    /** La jauge de charge attend une première tâche planifiée : pas de « 0 min planifiées » (comme le web). */
+    fun capacityVisible(workday: Boolean, closed: Boolean, capacity: Capacity): Boolean =
+        workday && !closed && capacity.plannedMinutes > 0
+
     /** « Terminer la journée » apparaît à l'heure choisie, une fois par jour, s'il reste quelque chose à dire. */
     fun eveningCardVisible(
         settings: PlanningSettings,

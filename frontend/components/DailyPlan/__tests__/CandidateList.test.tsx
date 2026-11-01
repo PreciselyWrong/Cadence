@@ -102,6 +102,34 @@ describe('CandidateList', () => {
         ]);
     });
 
+    it('keeps a task due today quiet on Today: no "Due today", no default length', () => {
+        renderList();
+        expect(screen.queryByTestId('candidate-meta-t-today')).toBeNull();
+        expect(
+            screen.getByTestId('candidate-meta-t-started')
+        ).toHaveTextContent('In progress');
+        expect(
+            screen.getByTestId('candidate-meta-t-started')
+        ).not.toHaveTextContent('30');
+    });
+
+    it('shows a length the task carries itself', () => {
+        renderList({
+            ...candidates,
+            due_today: [task('t-today', 'Pay rent', { estimated_minutes: 45 })],
+        });
+        expect(screen.getByTestId('candidate-meta-t-today')).toHaveTextContent(
+            '45m'
+        );
+    });
+
+    it('keeps the add button for hover or focus when a mouse is there', () => {
+        renderList();
+        expect(screen.getByTestId('add-t-today').className).toMatch(
+            /\[@media\(hover:hover\)\]:opacity-0/
+        );
+    });
+
     it('says since when an overdue task is due, without counting days late', () => {
         renderList();
         expect(screen.getByText(/Due Sep 20/)).toBeInTheDocument();

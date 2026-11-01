@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : Aujourd'hui
+
+- **Problème** : un jour vide s'ouvrait sur la jauge « 0 min planifiées sur 7 h libres » et sur le grand guide « Démarrer la journée, étape 1 sur 3 » (même avec « Rien ne reste d'hier ») ; chaque ligne répétait « Échéance aujourd'hui » sous la page Aujourd'hui et « 30 min », la durée par défaut, sur toutes les tâches ; le « + » d'ajout au plan restait visible sur chaque ligne.
+- **Décision** : la jauge n'apparaît qu'une fois une tâche planifiée ; le guide ne s'ouvre plus de lui-même (« … › Démarrer la journée ») ; une ligne due aujourd'hui n'a plus de sous-ligne, une durée ne s'affiche que si la tâche en porte une (estimation, début→fin ou choix fait sur la ligne) ; à la souris, le « + » apparaît au survol ou au focus clavier (toujours visible au toucher).
+- **Android** : repris dans la même étape : jauge de charge seulement si une tâche est planifiée, plus de compteur de retard dans le résumé de la carte du matin (« N à replanifier »), plus de compteur dans les en-têtes « Aujourd'hui » et « Demain » (le compte est déjà sur l'onglet). La carte du matin reste une ligne refermable : pas de grand guide à retirer côté Android.
+
 ### 2026-11-01 — Page Objectifs : un seul écran, comme Android
 
 - **Problème** : `/goals` séparait Objectifs et Liste d'envies en onglets ; un objectif n'était qu'une ligne (titre, « pourquoi ») sans avancement à 375 px, sans résultats clés ni prochain pas ; tri, filtre par domaine et glisser-déposer chargeaient l'écran ; « Créer une tâche » d'une envie était caché dans un menu « … » ; une envie réalisée restait dans son groupe sans le dire sur téléphone.

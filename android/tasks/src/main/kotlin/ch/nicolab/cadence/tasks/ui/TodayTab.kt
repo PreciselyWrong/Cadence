@@ -184,7 +184,7 @@ internal fun TodayTab(
                 }
             }
         }
-        if (plan.workday && !closed) {
+        if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
         proposals?.let { current ->
@@ -221,7 +221,6 @@ internal fun TodayTab(
             item(key = "morning") {
                 CardSlot {
                     MorningCard(
-                        overdueCount = triageable.size,
                         toPlaceCount = plan.toPlace.size,
                         suggestionCount = suggestions.size,
                         onOpen = { planSheetOpen = true },
@@ -246,7 +245,7 @@ internal fun TodayTab(
             item(key = "closed") { ClosedDay(state.completed.size) }
             if (tomorrowTasks.isNotEmpty()) {
                 item(key = "tomorrow-header") {
-                    SectionHeader(title = stringResource(R.string.planning_closed_tomorrow), count = tomorrowTasks.size)
+                    SectionHeader(title = stringResource(R.string.planning_closed_tomorrow))
                 }
                 taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = today.plusDays(1), projectIcons = projectIcons)
             }
@@ -259,7 +258,8 @@ internal fun TodayTab(
             taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
         }
         if (agenda.isNotEmpty()) {
-            item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today), count = agenda.size) }
+            // Le compte du jour est déjà sur l'onglet « Aujourd'hui » : pas de second compteur ici.
+            item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today)) }
             agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons, planStarts = state.planStarts)
         }
         item(key = "routine") { routineStrip() }

@@ -114,17 +114,18 @@ internal fun CapacityLine(capacity: Capacity, modifier: Modifier = Modifier) {
     }
 }
 
-/** Carte du matin : un appui ouvre la feuille de planification ; la croix la masque pour la journée. */
+/**
+ * Carte du matin : un appui ouvre la feuille de planification ; la croix la masque pour la journée.
+ * Le résumé ne compte jamais le retard (ton sans culpabilité) : seulement ce qu'il reste à placer et les suggestions.
+ */
 @Composable
 internal fun MorningCard(
-    overdueCount: Int,
     toPlaceCount: Int,
     onOpen: () -> Unit,
     onDismiss: () -> Unit,
     suggestionCount: Int = 0,
 ) {
     val summary = buildList {
-        if (overdueCount > 0) add(pluralStringResource(R.plurals.tasks_overdue_count, overdueCount, overdueCount))
         if (toPlaceCount > 0) add(pluralStringResource(R.plurals.planning_to_place_count, toPlaceCount, toPlaceCount))
         if (suggestionCount > 0) add(pluralStringResource(R.plurals.planning_suggestion_count, suggestionCount, suggestionCount))
     }.joinToString(" · ")
@@ -179,7 +180,9 @@ private fun PlanningCard(icon: androidx.compose.ui.graphics.vector.ImageVector, 
             Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
-                Text(summary, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+                if (summary.isNotEmpty()) {
+                    Text(summary, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+                }
             }
             IconButton(onClick = onDismiss, modifier = Modifier.size(Size.touch)) {
                 Icon(

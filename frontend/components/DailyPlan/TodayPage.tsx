@@ -152,7 +152,6 @@ const CALENDAR_OPEN_KEY = 'today.calendarOpen';
 const WRAP_UP_MINUTE = 18 * 60;
 const PANEL_MODE_KEY = 'today.panelMode';
 const QUOTE_KEY = 'today.showQuote';
-const GUIDE_KEY_PREFIX = 'today.guide.';
 const SAVE_DELAY_MS = 500;
 const DATE_PARAM = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -169,14 +168,6 @@ const countSuggested = (list: PlanCandidates, delta: number) =>
 const readShowQuote = (): boolean => {
     try {
         return localStorage.getItem(QUOTE_KEY) === '1';
-    } catch {
-        return false;
-    }
-};
-
-const guideDismissed = (date: string): boolean => {
-    try {
-        return localStorage.getItem(`${GUIDE_KEY_PREFIX}${date}`) !== null;
     } catch {
         return false;
     }
@@ -1207,18 +1198,8 @@ const TodayPage: React.FC = () => {
             })
         );
 
-    const closeGuide = (finished: boolean) => {
-        setGuideOpen(false);
-        if (!date) return;
-        try {
-            localStorage.setItem(
-                `${GUIDE_KEY_PREFIX}${date}`,
-                finished ? 'done' : 'dismissed'
-            );
-        } catch {
-            // The guide then shows again on the next visit; harmless.
-        }
-    };
+    // The guide never opens by itself: it waits in the day menu ("…").
+    const closeGuide = () => setGuideOpen(false);
 
     const toggleQuote = () => {
         const next = !showQuote;
@@ -1554,16 +1535,6 @@ const TodayPage: React.FC = () => {
     const showWrapUp =
         isToday && (shutdownOpen ?? (aiEnabled && (dayIsOver || !!wrapUp)));
 
-    // The guide opens by itself once a day, on an empty plan, and only until
-    // it is dismissed or finished for that day.
-    const guideChecked = useRef<string | null>(null);
-    useEffect(() => {
-        if (!date || !isToday || !candidates) return;
-        if (guideChecked.current === date) return;
-        guideChecked.current = date;
-        if (items.length === 0 && !guideDismissed(date)) setGuideOpen(true);
-    }, [date, isToday, candidates, items.length]);
-
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {
@@ -1849,7 +1820,8 @@ const TodayPage: React.FC = () => {
                         </span>
                     )}
 
-                    {candidates && isToday && (
+                    {/* Nothing planned yet: no "0 min planned" gauge. */}
+                    {candidates && isToday && planned > 0 && (
                         <CapacityMeter planned={planned} free={freeMinutes} />
                     )}
 

@@ -58,6 +58,9 @@ interface CandidateCardProps {
     group: TaskGroupKey;
     duration: number;
     suggested?: number | null;
+    // False while the length is only the planning default: the card then
+    // keeps it to itself instead of printing "30 min" on every row.
+    lengthKnown?: boolean;
     isToday?: boolean;
     onDurationChange: (minutes: number) => void;
     onAdd: () => void;
@@ -75,6 +78,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     group,
     duration,
     suggested = null,
+    lengthKnown = true,
     isToday = true,
     onDurationChange,
     onAdd,
@@ -115,7 +119,12 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
             }),
         });
     }
-    const meta = [status, formatDuration(duration)].filter(Boolean).join(' · ');
+    // On Today the page title already says "today"; the row only speaks up
+    // for what differs (overdue, in progress, suggested).
+    if (group === 'due_today' && isToday) status = '';
+    const meta = [status, lengthKnown ? formatDuration(duration) : '']
+        .filter(Boolean)
+        .join(' · ');
 
     const quietAction =
         'text-xs text-gray-600 underline-offset-2 hover:text-gray-800 hover:underline dark:text-gray-300 dark:hover:text-gray-200';
@@ -150,15 +159,20 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                     >
                         {task.name}
                     </button>
-                    <span className="flex items-center gap-1.5 truncate text-xs text-gray-600 dark:text-gray-300">
-                        {group === 'overdue' && (
-                            <span
-                                className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500"
-                                aria-hidden="true"
-                            />
-                        )}
-                        <span className="truncate">{meta}</span>
-                    </span>
+                    {meta && (
+                        <span
+                            className="flex items-center gap-1.5 truncate text-xs text-gray-600 dark:text-gray-300"
+                            data-testid={`candidate-meta-${task.uid}`}
+                        >
+                            {group === 'overdue' && (
+                                <span
+                                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500"
+                                    aria-hidden="true"
+                                />
+                            )}
+                            <span className="truncate">{meta}</span>
+                        </span>
+                    )}
                 </div>
                 {task.tags && task.tags.length > 0 && (
                     // Bounded so long tags never squeeze the task name away
@@ -186,7 +200,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                             name: task.name,
                         }
                     )}
-                    className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-300 sm:h-8 sm:w-8"
+                    // With a mouse the "+" waits for the row to be hovered or
+                    // focused; touch screens keep it, they have no hover.
+                    className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-300 sm:h-8 sm:w-8 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:focus-visible:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 [@media(hover:hover)]:group-hover:opacity-100"
                     data-testid={`add-${task.uid}`}
                 >
                     <PlusIcon className="h-4 w-4" />
@@ -412,6 +428,11 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                     taskLength(task) ??
                                     aiEstimates[task.uid as string] ??
                                     DEFAULT_DURATION
+                                }
+                                lengthKnown={
+                                    durations[task.uid as string] !==
+                                        undefined ||
+                                    taskLength(task) !== undefined
                                 }
                                 suggested={
                                     task.estimated_minutes

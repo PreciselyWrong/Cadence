@@ -77,10 +77,6 @@
     <string name="tasks_tag_expand">Déplier %1$s</string>
     <string name="tasks_subprojects_title">Sous-projets</string>
     <string name="tasks_project_open_named">Ouvrir le projet %1$s</string>
-    <plurals name="tasks_overdue_count">
-        <item quantity="one">%d à replanifier</item>
-        <item quantity="other">%d à replanifier</item>
-    </plurals>
     <plurals name="tasks_open_count">
         <item quantity="one">%d tâche ouverte</item>
         <item quantity="other">%d tâches ouvertes</item>

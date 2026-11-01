@@ -1,5 +1,8 @@
 ## [1.7.1] — à publier
 
+### Épure
+- Aujourd'hui : la jauge « planifiées / libres » n'apparaît qu'une fois une tâche planifiée ; la carte du matin ne compte plus le retard ; les en-têtes « Aujourd'hui » et « Demain » n'ont plus de compteur (il reste sur l'onglet).
+
 ### Nouveautés
 - Objectifs : un seul écran, sans onglets imbriqués. Une recherche (titre ou note, sans accents), les objectifs actifs en cartes (pourcentage, barre fine, prochain pas avec sa case, résultats clés en lignes « 3/10 »), les objectifs en pause ou atteints repliés, puis la liste d'envies en trois groupes repliables Avoir / Être / Faire et les envies réalisées à part.
 - Objectifs : le prochain pas d'un objectif est sa tâche ouverte (ou celle d'un résultat clé) à l'échéance la plus proche, sinon la plus ancienne ; une case la termine, « Ajouter un prochain pas » en crée une liée quand il n'y en a pas.

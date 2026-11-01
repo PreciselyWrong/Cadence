@@ -103,4 +103,12 @@ class DayPlanTest {
         assertFalse(DayRhythm.eveningCardVisible(settings, friday, evening, null, 0, 0))
         assertTrue(DayRhythm.eveningCardVisible(settings, friday, evening, friday.minusDays(1), 0, 1))
     }
+
+    @Test
+    fun `capacity line waits for something planned, like the web gauge`() {
+        assertFalse(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(0, 420)))
+        assertTrue(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(30, 420)))
+        assertFalse(DayRhythm.capacityVisible(workday = false, closed = false, capacity = Capacity(30, 420)))
+        assertFalse(DayRhythm.capacityVisible(workday = true, closed = true, capacity = Capacity(30, 420)))
+    }
 }
