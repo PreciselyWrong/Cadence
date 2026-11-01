@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : liste des tâches
+
+- **Problème** : l'en-tête de « Toutes les tâches » (et des listes Demain, À venir…) gardait un bouton « i » bleu qui dépliait une phrase d'explication.
+- **Décision** : bouton et bandeau retirés ; l'en-tête garde recherche et tri.
+- **Android** : repris dans la même étape : les sous-titres d'explication « Résultats clés et liste d'envies » (Objectifs) et « Les plus récentes d'abord » (Terminées) disparaissent ; « 7 prochains jours » (À venir) reste, il dit la période montrée.
+
 ### 2026-11-01 — Passe d'épure : Boîte et panneau de tâche
 
 - **Problème** : la Boîte avait un bouton « i » qui ouvrait un bandeau répétant l'aide déjà affichée sous le champ, une grande icône décorative dans la carte de capture et deux lignes d'aide permanentes (« Entrée enregistre… », « #étiquette +projet… ») ; le panneau d'une tâche simple montrait une puce « Étiquettes » vide, un titre « Sous-tâches » au-dessus du seul champ d'ajout et un titre « Commentaires » avec une zone de saisie et un bouton « Commenter » ouverts en permanence.

@@ -6,7 +6,6 @@ import GroupedTaskList from './Task/GroupedTaskList';
 import TaskViewBody from './Task/TaskViewBody';
 import { Task } from '../entities/Task';
 import { getTitleAndIcon } from './Task/getTitleAndIcon';
-import { getDescription } from './Task/getDescription';
 import {
     createTask,
     fetchTasks,
@@ -75,7 +74,6 @@ const Tasks: React.FC = () => {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [orderBy, setOrderBy] = useState<string>('created_at:desc');
     const [taskSearchQuery, setTaskSearchQuery] = useState<string>('');
-    const [isInfoExpanded, setIsInfoExpanded] = useState(false);
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [showCompleted, setShowCompleted] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -622,8 +620,6 @@ const Tasks: React.FC = () => {
             : []),
     ];
 
-    const description = getDescription(query, projects, t, location.pathname);
-
     return (
         <div className="w-full pt-4 pb-8 px-4 sm:px-6 lg:px-8">
             <div
@@ -658,7 +654,7 @@ const Tasks: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    {/* Info expand/collapse button, search button, show completed toggle, and sort dropdown */}
+                    {/* Search button, show completed toggle, and sort dropdown */}
                     <div
                         className={`flex items-center gap-2 flex-shrink-0 ${
                             isUpcomingView
@@ -666,32 +662,6 @@ const Tasks: React.FC = () => {
                                 : ''
                         }`}
                     >
-                        <button
-                            onClick={() => setIsInfoExpanded((v) => !v)}
-                            className={`flex items-center hover:bg-blue-100/50 dark:hover:bg-blue-800/20 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg${isInfoExpanded ? ' bg-blue-50/70 dark:bg-blue-900/20' : ''} p-2`}
-                            aria-expanded={isInfoExpanded}
-                            aria-label={
-                                isInfoExpanded
-                                    ? t(
-                                          'ariaLabels.collapseInfoPanel',
-                                          'Collapse info panel'
-                                      )
-                                    : t(
-                                          'ariaLabels.showTasksInformation',
-                                          'Show tasks information'
-                                      )
-                            }
-                            title={
-                                isInfoExpanded
-                                    ? t('ariaLabels.hideInfo', 'Hide info')
-                                    : t('ariaLabels.aboutTasks', 'About Tasks')
-                            }
-                        >
-                            <InformationCircleIcon className="h-5 w-5 text-blue-500" />
-                            <span className="sr-only">
-                                {isInfoExpanded ? 'Hide info' : 'About Tasks'}
-                            </span>
-                        </button>
                         {!isUpcomingView && (
                             <button
                                 onClick={() => setIsSearchExpanded((v) => !v)}
@@ -957,26 +927,6 @@ const Tasks: React.FC = () => {
                                 </div>
                             }
                         />
-                    </div>
-                </div>
-
-                {/* Info/description section with large info icon, collapsible */}
-                <div
-                    className={`transition-all duration-300 ease-in-out ${
-                        isInfoExpanded
-                            ? 'max-h-96 opacity-100 mb-6'
-                            : 'max-h-0 opacity-0 mb-0'
-                    } overflow-hidden`}
-                >
-                    <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-lg px-6 py-5 flex items-start gap-4">
-                        <div className="flex-shrink-0">
-                            <InformationCircleIcon className="h-12 w-12 text-blue-400 opacity-20" />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                                {description}
-                            </p>
-                        </div>
                     </div>
                 </div>
 

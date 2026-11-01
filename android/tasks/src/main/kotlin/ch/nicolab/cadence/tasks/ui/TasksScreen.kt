@@ -119,9 +119,10 @@ fun TasksScreen(
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
         tab == TasksTab.TAGS -> null
-        tab == TasksTab.GOALS -> stringResource(R.string.goals_entry_detail)
+        // Pas de phrase d'explication sous le titre (comme le web, qui a retiré ses boutons « i »).
+        tab == TasksTab.GOALS -> null
         tab == TasksTab.NOTES -> null
-        tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
+        tab == TasksTab.DONE -> null
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine
     }

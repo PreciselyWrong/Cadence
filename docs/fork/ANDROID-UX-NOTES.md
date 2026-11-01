@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : sous-titres d'explication (reprise du web)
+
+- **Problème** : les onglets Objectifs et Terminées affichaient une phrase d'explication sous le titre, comme le bouton « i » que le web vient de retirer.
+- **Décision** : plus de sous-titre sur Objectifs ni Terminées ; « 7 prochains jours » reste sur À venir.
+- **Web** : même étape. Reste : rien d'essayé sur le téléphone.
+
 ### 2026-11-01 — Passe d'épure : fiche de tâche (reprise du web)
 
 - **Problème** : sous les badges, la fiche gardait sept lignes (Dates, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet) même vides (« Aucune », « Sans projet »), et répétait en ligne ce que les badges montraient déjà ; un titre « Sous-tâches » coiffait le seul champ d'ajout.
