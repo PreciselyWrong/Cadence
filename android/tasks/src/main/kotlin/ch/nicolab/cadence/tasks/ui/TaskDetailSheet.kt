@@ -85,6 +85,7 @@ import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.RepeatType
+import ch.nicolab.cadence.tasks.model.DetailTitle
 import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -459,9 +460,14 @@ private fun DetailHeader(
 ) {
     val palette = cadence
     val focus = LocalFocusManager.current
+    val titleStyle = if (DetailTitle.isLong(title)) {
+        MaterialTheme.typography.titleLarge
+    } else {
+        MaterialTheme.typography.headlineSmall
+    }
     Row(
         Modifier.fillMaxWidth().padding(horizontal = Space.sm, vertical = Space.sm),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(Space.xs),
     ) {
         RoundHeaderButton(
@@ -470,12 +476,12 @@ private fun DetailHeader(
             style = HeaderButtonStyle.Plain,
             onClick = onBack,
         )
-        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.weight(1f).padding(top = Space.xs), verticalAlignment = Alignment.Top) {
             Box(Modifier.weight(1f)) {
                 if (title.isEmpty()) {
                     Text(
                         stringResource(R.string.tasks_detail_title_hint),
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = titleStyle,
                         color = palette.outline,
                     )
                 }
@@ -483,9 +489,8 @@ private fun DetailHeader(
                     value = title,
                     onValueChange = onTitleChange,
                     readOnly = readOnly,
-                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = palette.onSurface),
+                    textStyle = titleStyle.copy(color = palette.onSurface),
                     cursorBrush = SolidColor(palette.primary),
-                    maxLines = 2,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         imeAction = ImeAction.Done,
