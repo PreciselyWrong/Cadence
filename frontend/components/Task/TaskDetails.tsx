@@ -58,7 +58,6 @@ import TaskModal from './TaskModal';
 import { resolveTaskTokens, tokenChanges } from '../../utils/taskTokens';
 import {
     isTaskOverdueInTodayPlan,
-    isTaskPastDue,
     getTodayDateString,
 } from '../../utils/dateUtils';
 import { isTaskDone } from '../../constants/taskStatus';
@@ -274,7 +273,6 @@ const TaskDetails: React.FC = () => {
     };
 
     const isOverdue = task ? isTaskOverdueInTodayPlan(task) : false;
-    const isPastDue = task ? isTaskPastDue(task) : false;
 
     useEffect(() => {
         if (!isOverdue) {
@@ -1814,7 +1812,6 @@ const TaskDetails: React.FC = () => {
                     activePill={activePill}
                     onPillChange={setActivePill}
                     showOverdueIcon={isOverdue}
-                    showPastDueBadge={isPastDue}
                     onOverdueIconClick={handleOverdueIconClick}
                     isOverdueAlertVisible={isOverdue && isOverdueBubbleVisible}
                     onDismissOverdueAlert={handleDismissOverdueAlert}

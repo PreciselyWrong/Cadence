@@ -135,13 +135,15 @@ export const formatDueLabel = (d: string, t: Translate): string => {
         : d;
 };
 
-// Colour only flags what still needs doing: overdue red, today blue.
+// Colour only marks today (blue). A past date stays grey: lateness is not
+// an alarm (docs/fork/WEB-UX-NOTES.md, ton sans culpabilité).
 export const dueToneClass = (task: Task): string => {
-    const today = getTodayDateString();
-    if (!task.due_date || isTaskCompleted(task.status))
-        return 'text-gray-600 dark:text-gray-300';
-    if (task.due_date < today) return 'text-red-600 dark:text-red-400';
-    if (task.due_date === today) return 'text-blue-600 dark:text-blue-400';
+    if (
+        task.due_date &&
+        !isTaskCompleted(task.status) &&
+        task.due_date === getTodayDateString()
+    )
+        return 'text-blue-600 dark:text-blue-400';
     return 'text-gray-600 dark:text-gray-300';
 };
 

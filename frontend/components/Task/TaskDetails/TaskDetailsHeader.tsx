@@ -35,7 +35,6 @@ interface TaskDetailsHeaderProps {
     activePill: string;
     onPillChange: (pill: string) => void;
     showOverdueIcon?: boolean;
-    showPastDueBadge?: boolean;
     onOverdueIconClick?: () => void;
     isOverdueAlertVisible?: boolean;
     onDismissOverdueAlert?: () => void;
@@ -64,7 +63,6 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
     activePill,
     onPillChange,
     showOverdueIcon = false,
-    showPastDueBadge = false,
     onOverdueIconClick,
     isOverdueAlertVisible = false,
     onDismissOverdueAlert,
@@ -508,19 +506,6 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                 </div>
                                             )}
                                         </div>
-
-                                        {/* Past Due Badge - Right of priority button */}
-                                        {showPastDueBadge && (
-                                            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex-shrink-0">
-                                                <ExclamationTriangleIcon className="h-3 w-3 text-red-600 dark:text-red-400" />
-                                                <span className="text-xs font-medium text-red-700 dark:text-red-300 hidden sm:inline">
-                                                    {t(
-                                                        'task.pastDue',
-                                                        'Past Due'
-                                                    )}
-                                                </span>
-                                            </div>
-                                        )}
 
                                         {formattedUpdatedAt && (
                                             <span className="text-xs text-gray-500 dark:text-gray-600 sm:pl-1 mt-1 sm:mt-0 break-words">

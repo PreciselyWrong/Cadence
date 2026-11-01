@@ -1,9 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    CalendarIcon,
-    ExclamationTriangleIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarIcon } from '@heroicons/react/24/outline';
 import TaskDueDateSection from '../TaskForm/TaskDueDateSection';
 import { Task } from '../../../entities/Task';
 import {
@@ -61,17 +58,13 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
             relativeText = t('dateIndicators.today', 'today');
         } else if (diffDays === 1) {
             relativeText = t('dateIndicators.tomorrow', 'tomorrow');
-        } else if (diffDays === -1) {
-            relativeText = t('dateIndicators.yesterday', 'yesterday');
         } else if (diffDays > 0) {
             relativeText = t('task.inDays', 'in {{count}} days', {
                 count: diffDays,
             });
-        } else {
-            relativeText = t('task.daysAgo', '{{count}} days ago', {
-                count: Math.abs(diffDays),
-            });
         }
+        // A past date shows only the date: no "N days ago" count and no red
+        // (docs/fork/WEB-UX-NOTES.md, ton sans culpabilité).
 
         return { formattedDate, relativeText };
     };
@@ -82,25 +75,7 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
                 {t('task.dueDate', 'Due Date')}
             </h4>
             <div
-                className={`rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 p-4 transition-colors ${
-                    task.due_date &&
-                    (() => {
-                        const dueDate = parseDateString(task.due_date);
-                        if (!dueDate) return false;
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        dueDate.setHours(0, 0, 0, 0);
-                        const isCompleted =
-                            task.status === 'done' ||
-                            task.status === 2 ||
-                            task.status === 'archived' ||
-                            task.status === 3 ||
-                            task.completed_at;
-                        return dueDate < today && !isCompleted;
-                    })()
-                        ? 'border-red-500 dark:border-red-400'
-                        : ''
-                }`}
+                className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 p-4 transition-colors"
             >
                 {isEditing ? (
                     <div className="space-y-3">
@@ -141,54 +116,23 @@ const TaskDueDateCard: React.FC<TaskDueDateCardProps> = ({
                                     task.due_date
                                 );
                                 if (!display) return null;
-                                const dueDate = parseDateString(task.due_date);
-                                if (!dueDate) return null;
-                                const today = new Date();
-                                today.setHours(0, 0, 0, 0);
-                                dueDate.setHours(0, 0, 0, 0);
-                                const isCompleted =
-                                    task.status === 'done' ||
-                                    task.status === 2 ||
-                                    task.status === 'archived' ||
-                                    task.status === 3 ||
-                                    task.completed_at;
-                                const overdue = dueDate < today && !isCompleted;
 
                                 return (
-                                    <div
-                                        className={`flex items-center justify-between w-full ${
-                                            overdue
-                                                ? 'text-red-600 dark:text-red-400'
-                                                : 'text-gray-900 dark:text-gray-100'
-                                        }`}
-                                    >
+                                    <div className="flex items-center justify-between w-full text-gray-900 dark:text-gray-100">
                                         <div className="flex items-center space-x-2 flex-1 min-w-0">
-                                            <CalendarIcon
-                                                className={`h-4 w-4 flex-shrink-0 ${
-                                                    overdue
-                                                        ? 'text-red-600 dark:text-red-400'
-                                                        : 'text-gray-600 dark:text-gray-300'
-                                                }`}
-                                            />
+                                            <CalendarIcon className="h-4 w-4 flex-shrink-0 text-gray-600 dark:text-gray-300" />
                                             <span className="text-sm font-medium">
                                                 {display.formattedDate}
                                                 {task.due_has_time &&
                                                     task.due_time &&
                                                     ` ${task.due_time}`}
                                             </span>
-                                            <span
-                                                className={`text-sm italic ${
-                                                    overdue
-                                                        ? 'text-red-500 dark:text-red-400 font-medium'
-                                                        : 'text-gray-600 dark:text-gray-300'
-                                                }`}
-                                            >
-                                                ({display.relativeText})
-                                            </span>
+                                            {display.relativeText && (
+                                                <span className="text-sm italic text-gray-600 dark:text-gray-300">
+                                                    ({display.relativeText})
+                                                </span>
+                                            )}
                                         </div>
-                                        {overdue && (
-                                            <ExclamationTriangleIcon className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 ml-2" />
-                                        )}
                                     </div>
                                 );
                             })()

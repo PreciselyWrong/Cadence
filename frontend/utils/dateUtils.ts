@@ -153,38 +153,6 @@ export const getCurrentLocale = (): Locale =>
 export const getIntlLocale = (): string => toIntlLocale(i18n.language);
 
 /**
- * Checks if a task is past its due date
- * @param task - Task object with due_date, status, and completed_at
- * @returns True if task has a due date in the past and is not completed
- */
-export const isTaskPastDue = (task: {
-    due_date?: string | null;
-    status: string | number;
-    completed_at: string | null;
-}): boolean => {
-    // If no due date, task is not past due
-    if (!task.due_date) {
-        return false;
-    }
-
-    // If task is completed, it's not past due
-    if (
-        task.completed_at ||
-        task.status === 'done' ||
-        task.status === 2 ||
-        task.status === 'archived' ||
-        task.status === 3
-    ) {
-        return false;
-    }
-
-    // Check if due date is in the past using string comparison (YYYY-MM-DD)
-    const todayStr = getTodayDateString();
-    const dueDateStr = task.due_date.split('T')[0];
-    return dueDateStr < todayStr;
-};
-
-/**
  * Formats a date using the current locale from i18next
  *
  * @param date - The date to format

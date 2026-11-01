@@ -109,4 +109,12 @@ describe('TaskChipRow progressive disclosure', () => {
 
         expect(screen.queryByTestId('chip-priority')).not.toBeInTheDocument();
     });
+
+    it('shows a past due date like any set date, without red', () => {
+        renderRow({ due_date: '2030-03-01' });
+
+        const due = screen.getByTestId('chip-due');
+        expect(due.className).not.toMatch(/red/);
+        expect(due).toHaveClass('bg-indigo-50');
+    });
 });

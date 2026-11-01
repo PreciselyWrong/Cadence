@@ -33,7 +33,6 @@ import DurationChips from '../DailyPlan/DurationChips';
 import { formatDuration } from '../DailyPlan/planUtils';
 import TaskRecurrenceSection from './TaskForm/TaskRecurrenceSection';
 import { TASK_STATUS, getStatusValue } from '../../constants/taskStatus';
-import { getTodayDateString } from '../../utils/dateUtils';
 import { fromDueParts, toDueParts } from '../../utils/dueDateTime';
 import { resolveTaskArea } from '../../utils/taskArea';
 import { useStore } from '../../store/useStore';
@@ -42,8 +41,6 @@ import EntityIcon from '../Shared/EntityIcon';
 // One place for the chip colours, so they can follow the shared tokens.
 const FILLED =
     'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 dark:bg-indigo-500/15 dark:text-indigo-200 dark:hover:bg-indigo-500/25';
-const OVERDUE =
-    'bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/25';
 const EMPTY =
     'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700/60 dark:text-gray-400 dark:hover:bg-gray-700';
 
@@ -51,14 +48,13 @@ interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon: React.ReactNode;
     text: string;
     filled: boolean;
-    overdue?: boolean;
 }
 
 // A task mirrored from a TODO.md file shows its fields but changes none.
 const ReadOnlyChips = createContext(false);
 
 const Chip = forwardRef<HTMLButtonElement, ChipProps>(
-    ({ icon, text, filled, overdue, className = '', ...rest }, ref) => {
+    ({ icon, text, filled, className = '', ...rest }, ref) => {
         const readOnly = useContext(ReadOnlyChips);
         return (
             <button
@@ -67,7 +63,7 @@ const Chip = forwardRef<HTMLButtonElement, ChipProps>(
                 {...rest}
                 disabled={readOnly || rest.disabled}
                 className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-default disabled:opacity-60 ${
-                    overdue ? OVERDUE : filled ? FILLED : EMPTY
+                    filled ? FILLED : EMPTY
                 } ${className}`}
             >
                 <span className="flex-shrink-0 [&>svg]:h-3.5 [&>svg]:w-3.5">
@@ -170,10 +166,6 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
 
     const dueDate = task.due_date ? String(task.due_date).split('T')[0] : null;
     const dueTime = task.due_has_time ? (task.due_time ?? null) : null;
-    const overdue =
-        !!dueDate &&
-        dueDate < getTodayDateString() &&
-        getStatusValue(task.status as any) !== TASK_STATUS.DONE;
 
     const startDate = task.start_date
         ? String(task.start_date).split('T')[0]
@@ -324,7 +316,6 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                             icon={<CalendarDaysIcon />}
                             text={display ?? t('taskPanel.due', 'Due')}
                             filled={!!display}
-                            overdue={overdue}
                             data-testid="chip-due"
                             aria-label={`${t('taskPanel.due', 'Due')} : ${
                                 display ?? t('datePopover.noDate', 'No date')

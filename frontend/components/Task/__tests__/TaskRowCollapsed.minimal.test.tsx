@@ -125,7 +125,7 @@ describe('TaskRowCollapsed in minimal mode', () => {
         expect(screen.getByText('#perso')).toBeInTheDocument();
     });
 
-    it('colours today blue and an overdue date red', () => {
+    it('colours today blue and leaves a past date grey, never red', () => {
         const { unmount } = renderRow(
             baseTask({ due_date: getTodayDateString() })
         );
@@ -136,10 +136,9 @@ describe('TaskRowCollapsed in minimal mode', () => {
         unmount();
 
         renderRow(baseTask({ due_date: '2000-01-01' }));
-        expect(screen.getByText(/2000/)).toHaveClass(
-            'text-red-600',
-            'dark:text-red-400'
-        );
+        const past = screen.getByText(/2000/);
+        expect(past).toHaveClass('text-gray-600', 'dark:text-gray-300');
+        expect(past.className).not.toMatch(/red/);
     });
 
     it('leaves the date of a completed task grey', () => {
