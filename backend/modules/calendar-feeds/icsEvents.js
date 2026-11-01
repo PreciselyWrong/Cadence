@@ -92,6 +92,12 @@ function wallMinute(at, dayStart, dayEnd) {
     return local.hours() * 60 + local.minutes();
 }
 
+// A text property, or null when the feed leaves it out or empty.
+function textProperty(event, name) {
+    const value = event.component.getFirstPropertyValue(name);
+    return typeof value === 'string' && value.trim() !== '' ? value : null;
+}
+
 function buildOccurrence(event, start, end, date, userTimezone, tzid) {
     if (isCancelled(event)) return null;
 
@@ -109,6 +115,8 @@ function buildOccurrence(event, start, end, date, userTimezone, tzid) {
             end: last || first,
             start_minute: null,
             end_minute: null,
+            location: textProperty(event, 'location'),
+            description: textProperty(event, 'description'),
         };
     }
 
@@ -136,6 +144,8 @@ function buildOccurrence(event, start, end, date, userTimezone, tzid) {
         end: endAt.toISOString(),
         start_minute: wallMinute(clippedStart, dayStart, dayEnd),
         end_minute: wallMinute(clippedEnd, dayStart, dayEnd),
+        location: textProperty(event, 'location'),
+        description: textProperty(event, 'description'),
     };
 }
 

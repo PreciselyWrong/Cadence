@@ -2106,6 +2106,10 @@
     "noUpcomingOccurrences": "今後の予定はありません。"
   },
   "calendar": {
+    "feed": {
+      "close": "Close",
+      "allDay": "All day"
+    },
     "slot": {
       "googleEvent": "New Google event",
       "taskName": "Task name",

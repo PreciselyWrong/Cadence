@@ -33,6 +33,9 @@ import GoogleEventModal, {
     GoogleEventDraft,
 } from './Calendar/GoogleEventModal';
 import SlotChoiceDialog from './Calendar/SlotChoiceDialog';
+import FeedEventPopover, {
+    FeedEventDetail,
+} from './Calendar/FeedEventPopover';
 import { slotTaskInput } from './Calendar/slotTask';
 import { createTask } from '../utils/tasksService';
 import { useToast } from './Shared/ToastContext';
@@ -119,7 +122,20 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         feedUid: event.feed_uid,
         allDay: !!event.all_day,
     };
-    if (event.source !== 'google' || !event.calendar_uid || !event.event_id) {
+    if (event.source !== 'google') {
+        const feedDetail: FeedEventDetail = {
+            title: shown.title,
+            calendarName: event.feed_name,
+            day: localDate(event.date),
+            start: event.all_day ? null : start,
+            end: event.all_day ? null : end,
+            allDay: !!event.all_day,
+            location: event.location ?? null,
+            description: event.description ?? null,
+        };
+        return { ...shown, feedDetail };
+    }
+    if (!event.calendar_uid || !event.event_id) {
         return shown;
     }
     // A piece drawn on another day than the event's start is not resized:
@@ -229,6 +245,7 @@ const Calendar: React.FC = () => {
     const [isManagerOpen, setIsManagerOpen] = useState(false);
     const [googleStatus, setGoogleStatus] = useState<GoogleStatus | null>(null);
     const [slotStart, setSlotStart] = useState<Date | null>(null);
+    const [feedDetail, setFeedDetail] = useState<FeedEventDetail | null>(null);
     const [googleDraft, setGoogleDraft] = useState<GoogleEventDraft | null>(
         null
     );
@@ -701,6 +718,10 @@ const Calendar: React.FC = () => {
                 htmlLink: google.htmlLink,
                 recurring: google.recurring,
             });
+            return;
+        }
+        if (event.feedDetail) {
+            setFeedDetail(event.feedDetail);
             return;
         }
         if (event.type === 'task') {
@@ -1316,6 +1337,13 @@ const Calendar: React.FC = () => {
                             setFeedsVersion((v) => v + 1);
                         }}
                         onClose={() => setIsManagerOpen(false)}
+                    />
+                )}
+
+                {feedDetail && (
+                    <FeedEventPopover
+                        detail={feedDetail}
+                        onClose={() => setFeedDetail(null)}
                     />
                 )}
 

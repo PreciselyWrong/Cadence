@@ -289,3 +289,58 @@ describe('fetchFeed', () => {
         expect(config.httpAgent.keepAlive).toBe(true);
     });
 });
+
+describe('event details', () => {
+    const detailed = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//test//EN',
+        'BEGIN:VEVENT',
+        'UID:workshop',
+        'DTSTART;TZID=Europe/Athens:20261025T160000',
+        'DTEND;TZID=Europe/Athens:20261025T170000',
+        'SUMMARY:Workshop',
+        'LOCATION:Rue du Lac 4\\, Vevey',
+        'DESCRIPTION:Bring the laptop\\nand the badge',
+        'END:VEVENT',
+        'BEGIN:VEVENT',
+        'UID:trip',
+        'DTSTART;VALUE=DATE:20261026',
+        'DTEND;VALUE=DATE:20261027',
+        'SUMMARY:Trip',
+        'DESCRIPTION:Train at 7',
+        'END:VEVENT',
+        'END:VCALENDAR',
+    ].join('\r\n');
+
+    it('keeps the location, description and end of a timed event', () => {
+        const [event] = eventsForDate(parseCalendar(detailed), '2026-10-25', 'Europe/Athens');
+        expect(event).toMatchObject({
+            title: 'Workshop',
+            location: 'Rue du Lac 4, Vevey',
+            description: 'Bring the laptop\nand the badge',
+        });
+        expect(Date.parse(event.end) - Date.parse(event.start)).toBe(
+            60 * 60 * 1000
+        );
+    });
+
+    it('keeps the description of an all-day event and no location', () => {
+        const [event] = eventsForDate(parseCalendar(detailed), '2026-10-26', 'Europe/Athens');
+        expect(event).toMatchObject({
+            title: 'Trip',
+            all_day: true,
+            location: null,
+            description: 'Train at 7',
+        });
+    });
+
+    it('gives null for details the feed does not have', () => {
+        const [event] = eventsForDate(
+            parseCalendar(ICS),
+            '2026-09-24',
+            'Europe/Athens'
+        ).filter((e) => e.title === 'Call with accountant');
+        expect(event).toMatchObject({ location: null, description: null });
+    });
+});

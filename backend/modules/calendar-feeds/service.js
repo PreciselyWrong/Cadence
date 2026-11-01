@@ -176,11 +176,20 @@ function validDay(value, name) {
     return value;
 }
 
+// Location and description are the event's own text: only the Calendar page
+// asks for them. The day view feeds Today and the AI draft, which keep to
+// titles and times as before.
+const withoutDetails = ({
+    location: _location,
+    description: _description,
+    ...event
+}) => event;
+
 async function eventsBetween(
     user,
     startDate,
     endDate,
-    { refresh = false, shownOnly = false } = {}
+    { refresh = false, shownOnly = false, details = false } = {}
 ) {
     const timezone = getSafeTimezone(user.timezone);
 
@@ -204,7 +213,7 @@ async function eventsBetween(
                     timezone
                 )) {
                     events.push({
-                        ...event,
+                        ...(details ? event : withoutDetails(event)),
                         feed_uid: feed.uid,
                         feed_name: feed.name,
                         color: feed.color,
@@ -273,7 +282,10 @@ async function eventsForRangeOfDays(
             `Ask for at most ${MAX_RANGE_DAYS} days at a time`
         );
     }
-    const result = await eventsBetween(user, start, end, { refresh });
+    const result = await eventsBetween(user, start, end, {
+        refresh,
+        details: true,
+    });
     return { start, end, ...result };
 }
 

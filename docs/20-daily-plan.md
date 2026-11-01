@@ -95,6 +95,7 @@ Profile → **Calendars**, or the **Calendars** button on the Calendar page, con
 
 - **Calendar page:** each connected calendar is a chip above the month, week and day views. Click a chip to show or hide that calendar's events; the choice is saved per calendar (`show_on_calendar`, on by default). The same switch is in Profile → Calendars. A hidden calendar is also left out of Today, Plan my day and the AI draft, so its meetings no longer block time there.
 
+- Clicking an event of a feed opens a read-only card: its time, calendar, location (Maps link, copy, and Join for a meeting link) and description. The day view feeding Today and the AI draft keeps to titles and times; the location and description come only to the Calendar page.
 - Cadence never writes to these calendars.
 - The address is a secret: it is stored encrypted (needs `TUDUDI_SESSION_SECRET` or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) and the API only returns its host.
 - The server fetches the feed through the SSRF guard (public hosts only, every redirect checked; `CALDAV_ALLOW_PRIVATE_HOSTS=true` also allows LAN hosts, never link-local or metadata addresses), with a 10 second timeout and a 5 MB limit, and caches it for 15 minutes per process.

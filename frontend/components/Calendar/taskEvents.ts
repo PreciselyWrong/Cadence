@@ -5,6 +5,8 @@ import {
     format,
 } from 'date-fns';
 
+import type { FeedEventDetail } from './FeedEventPopover';
+
 export interface CalendarEvent {
     id: string;
     title: string;
@@ -28,6 +30,8 @@ export interface CalendarEvent {
     // An event of a writable Google calendar: moved, resized and edited
     // like a task, saved to Google (fork).
     editable?: boolean;
+    // An event of an ICS feed: read-only, its details open in a popover.
+    feedDetail?: FeedEventDetail;
     google?: {
         calendarUid: string;
         eventId: string;

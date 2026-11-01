@@ -2179,6 +2179,10 @@
     "done": "Fait"
   },
   "calendar": {
+    "feed": {
+      "close": "Fermer",
+      "allDay": "Toute la journée"
+    },
     "slot": {
       "googleEvent": "Nouvel événement Google",
       "taskName": "Nom de la tâche",

@@ -2175,6 +2175,10 @@
     "done": "완료"
   },
   "calendar": {
+    "feed": {
+      "close": "Close",
+      "allDay": "All day"
+    },
     "slot": {
       "googleEvent": "New Google event",
       "taskName": "Task name",

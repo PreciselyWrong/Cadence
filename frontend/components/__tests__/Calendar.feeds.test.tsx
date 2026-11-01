@@ -47,10 +47,18 @@ jest.mock('../../utils/calendarFeedsService');
 
 jest.mock('../Calendar/CalendarMonthView', () => ({
     __esModule: true,
-    default: ({ events }: { events: { id: string; title: string }[] }) => (
+    default: ({
+        events,
+        onEventClick,
+    }: {
+        events: { id: string; title: string }[];
+        onEventClick?: (event: { id: string; title: string }) => void;
+    }) => (
         <ul>
             {events.map((event) => (
-                <li key={event.id}>{event.title}</li>
+                <li key={event.id} onClick={() => onEventClick?.(event)}>
+                    {event.title}
+                </li>
             ))}
         </ul>
     ),
@@ -185,5 +193,28 @@ describe('Calendar page feeds', () => {
 
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
         expect(screen.getByText('Connect a calendar')).toBeInTheDocument();
+    });
+
+    it('opens an ICS event in a read-only card with its location and description', async () => {
+        (fetchCalendarEventsRange as jest.Mock).mockResolvedValue({
+            start: '2026-08-25',
+            end: '2026-10-07',
+            errors: [],
+            events: [
+                {
+                    ...rangeEvent('work', 'Workshop'),
+                    all_day: false,
+                    start_minute: 960,
+                    end_minute: 1020,
+                    location: 'Rue du Lac 4, Vevey',
+                    description: 'Bring the badge',
+                },
+            ],
+        });
+        renderCalendar();
+        fireEvent.click(await screen.findByText('Workshop'));
+        const card = await screen.findByRole('dialog', { name: 'Workshop' });
+        expect(card).toHaveTextContent('Bring the badge');
+        expect(card).toHaveTextContent('Rue du Lac 4, Vevey');
     });
 });
