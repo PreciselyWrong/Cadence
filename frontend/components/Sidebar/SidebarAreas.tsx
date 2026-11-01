@@ -81,8 +81,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
         const folderOpen = openFolders[area.uid] === true;
         const areaProjects = flattenProjectTree(
             projects.filter(
-                (p) =>
-                    p.area_id === area.id && isProjectLive(p.status)
+                (p) => p.area_id === area.id && isProjectLive(p.status)
             )
         );
         return (
@@ -158,9 +157,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
 
     const itemClass = (path: string, areaUid?: string) =>
         `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
-            location.pathname === path
-                ? 'bg-gray-100 dark:bg-gray-800'
-                : ''
+            location.pathname === path ? 'bg-gray-100 dark:bg-gray-800' : ''
         } ${highlight(isDropHover('area', areaUid))}`;
 
     const navigate = (area: Area) =>
@@ -205,7 +202,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                                 e.stopPropagation();
                                 openAreaModal(null);
                             }}
-                            className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
+                            className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             aria-label={t('areas.addArea', 'Add Area')}
                             title={t('areas.addArea', 'Add Area')}
                         >
@@ -220,11 +217,16 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                                 </span>
                             )}
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
+                                aria-label={t(
+                                    'sidebar.toggleSection',
+                                    'Expand or collapse'
+                                )}
                                 className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon

@@ -1593,8 +1593,9 @@
     "createError": "Aanmaken van notitie is mislukt"
   },
   "task": {
-    "recurringMove": {
-      "title": "Terugkerende taak verplaatsen",
+    "recurringScope": {
+      "editTitle": "Deze taak of de reeks bewerken?",
+      "deleteTitle": "Deze taak of de reeks verwijderen?",
       "optionThis": "Alleen deze keer",
       "optionFollowing": "Deze en volgende keren",
       "optionAll": "Alle keren"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
   },
   "notes": {
+    "emptyPreview": "Lege notitie",
     "loading": "Bezig met het laden van notities...",
     "error": "Fout bij het laden van notities",
     "searchPlaceholder": "Zoek notities...",

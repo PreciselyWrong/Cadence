@@ -2,20 +2,26 @@ import { create } from 'zustand';
 import { Task } from '../entities/Task';
 
 // The task side panel replaces in-app links to the task page. Anything can
-// open it by uid; one TaskPanelHost in the layout renders it.
+// open it by uid; one TaskPanelHost in the layout renders it. A later
+// occurrence of a recurring task opens on its own day (YYYY-MM-DD), so an
+// edit made there can reach that occurrence alone.
 interface TaskPanelState {
     uid: string | null;
-    open: (uid: string) => void;
+    occurrenceDate: string | null;
+    open: (uid: string, occurrenceDate?: string) => void;
     close: () => void;
 }
 
 export const useTaskPanel = create<TaskPanelState>((set) => ({
     uid: null,
-    open: (uid) => set({ uid }),
-    close: () => set({ uid: null }),
+    occurrenceDate: null,
+    open: (uid, occurrenceDate) =>
+        set({ uid, occurrenceDate: occurrenceDate ?? null }),
+    close: () => set({ uid: null, occurrenceDate: null }),
 }));
 
-export const openTaskPanel = (uid: string) => useTaskPanel.getState().open(uid);
+export const openTaskPanel = (uid: string, occurrenceDate?: string) =>
+    useTaskPanel.getState().open(uid, occurrenceDate);
 
 // Fired after the panel saves, so task rows on any page can show the change
 // without the page reloading its list.

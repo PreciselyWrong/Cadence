@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
-import { fetchTaskByUid, updateTask } from '../../utils/tasksService';
-import { isRecurringMoveCancelled } from '../../utils/recurringMove';
+import { fetchTaskByUid } from '../../utils/tasksService';
+import {
+    isRecurringScopeCancelled,
+    saveTaskEdit,
+} from '../../utils/recurringScope';
 import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
 import {
@@ -27,7 +30,7 @@ export interface TaskAutosave {
         optimistic: Partial<Task>,
         op: (
             setters: TaskRowSetters,
-            commit: () => Promise<void>
+            commit: (next?: Task) => Promise<void>
         ) => Promise<void>,
         options?: { allowReadOnly?: boolean }
     ) => Promise<boolean>;
@@ -45,7 +48,9 @@ export interface TaskAutosave {
 // Every edit in the task panel saves on its own: it shows at once, goes to
 // the server in order, and goes back to the saved value when it fails. The
 // saved task, not the shown one, is what the setters compare against, so a
-// recurring task still asks which occurrences a new due date moves.
+// recurring task still asks which occurrences an edit reaches. An edit of
+// one occurrence goes to a task split off the series; the panel then shows
+// that task.
 export const useTaskAutosave = (
     initial: Task,
     onSaved?: (task: Task) => void
@@ -68,18 +73,22 @@ export const useTaskAutosave = (
         []
     );
 
-    const commit = useCallback(async () => {
-        if (!saved.uid) return;
-        const fresh = await fetchTaskByUid(saved.uid);
-        setSaved(fresh);
-        useStore.getState().tasksStore.updateTaskInStore(fresh);
-        window.dispatchEvent(
-            new CustomEvent<TaskPanelSavedDetail>(TASK_PANEL_SAVED_EVENT, {
-                detail: { task: fresh },
-            })
-        );
-        onSavedRef.current?.(fresh);
-    }, [saved.uid]);
+    const commit = useCallback(
+        async (next?: Task) => {
+            const uid = next?.uid ?? saved.uid;
+            if (!uid) return;
+            const fresh = await fetchTaskByUid(uid);
+            setSaved(fresh);
+            useStore.getState().tasksStore.updateTaskInStore(fresh);
+            window.dispatchEvent(
+                new CustomEvent<TaskPanelSavedDetail>(TASK_PANEL_SAVED_EVENT, {
+                    detail: { task: fresh },
+                })
+            );
+            onSavedRef.current?.(fresh);
+        },
+        [saved.uid]
+    );
 
     const setters = useTaskRowSave(saved, commit);
     const settersRef = useRef(setters);
@@ -146,7 +155,7 @@ export const useTaskAutosave = (
                     finish(true);
                     return true;
                 } catch (error) {
-                    finish(false, isRecurringMoveCancelled(error));
+                    finish(false, isRecurringScopeCancelled(error));
                     return false;
                 }
             });
@@ -169,13 +178,17 @@ export const useTaskAutosave = (
     const runFields = useCallback<TaskAutosave['runFields']>(
         (optimistic, payload, errorKey, fallback) =>
             execute(optimistic, async () => {
-                const uid = savedRef.current.uid;
-                if (!uid) return;
+                if (!savedRef.current.uid) return;
                 try {
-                    await updateTask(uid, payload as Partial<Task>);
-                    await commitRef.current();
+                    const edited = await saveTaskEdit(
+                        savedRef.current,
+                        payload
+                    );
+                    await commitRef.current(edited);
                 } catch (error) {
-                    showErrorToast(t(errorKey, fallback));
+                    if (!isRecurringScopeCancelled(error)) {
+                        showErrorToast(t(errorKey, fallback));
+                    }
                     throw error;
                 }
             }),

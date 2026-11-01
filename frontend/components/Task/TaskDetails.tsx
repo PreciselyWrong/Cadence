@@ -19,9 +19,12 @@ import {
     skipTaskOccurrence,
 } from '../../utils/tasksService';
 import {
-    isRecurringMoveCancelled,
+    deleteTaskWithScope,
+    isRecurringScopeCancelled,
+    isRecurringTask,
     moveTaskDue,
-} from '../../utils/recurringMove';
+    saveTaskEdit,
+} from '../../utils/recurringScope';
 import { createProject } from '../../utils/projectsService';
 import { fetchAttachments } from '../../utils/attachmentsService';
 import { fetchComments } from '../../utils/commentsService';
@@ -455,10 +458,13 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await moveTaskDue(task, {
-                due_date: editedDueDate || null,
-                due_time: editedDueDate && editedDueTime ? editedDueTime : null,
-            });
+            openIfSplit(
+                await moveTaskDue(task, {
+                    due_date: editedDueDate || null,
+                    due_time:
+                        editedDueDate && editedDueTime ? editedDueTime : null,
+                })
+            );
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -481,7 +487,7 @@ const TaskDetails: React.FC = () => {
         } catch (error) {
             setEditedDueDate(task.due_date || '');
             setIsEditingDueDate(false);
-            if (isRecurringMoveCancelled(error)) return;
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating due date:', error);
             showErrorToast(
                 t('task.dueDateUpdateError', 'Failed to update due date')
@@ -505,6 +511,19 @@ const TaskDetails: React.FC = () => {
         setIsEditingStartDate(false);
         setEditedStartDate(task?.start_date || '');
         setEditedStartTime(task?.start_time || '');
+    };
+
+    // A split-off occurrence is a task of its own: its page opens.
+    const openIfSplit = (edited: Task) => {
+        if (task && edited.uid && edited.uid !== task.uid) {
+            navigate(`/task/${encodeURIComponent(edited.uid)}`);
+        }
+    };
+
+    // A recurring task asks which occurrences an edit reaches.
+    const saveEdit = async (changes: Record<string, unknown>) => {
+        if (!task) return;
+        openIfSplit(await saveTaskEdit(task, changes));
     };
 
     const handleSaveStartDate = async () => {
@@ -540,7 +559,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 start_date: editedStartDate || null,
                 start_time:
                     editedStartDate && editedStartTime ? editedStartTime : null,
@@ -562,6 +581,7 @@ const TaskDetails: React.FC = () => {
             setIsEditingStartDate(false);
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating start date:', error);
             showErrorToast(
                 t('task.startDateUpdateError', 'Failed to update start date')
@@ -592,7 +612,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 reminder_at: editedReminder || null,
             });
 
@@ -611,6 +631,7 @@ const TaskDetails: React.FC = () => {
             setIsEditingReminder(false);
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error: any) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating reminder:', error);
             showErrorToast(
                 error?.message ||
@@ -663,7 +684,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 defer_until: editedDeferUntil || null,
             });
 
@@ -685,6 +706,7 @@ const TaskDetails: React.FC = () => {
             setIsEditingDeferUntil(false);
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error: any) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating defer until:', error);
             showErrorToast(
                 error?.message ||
@@ -1094,7 +1116,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { project_id: project.id });
+            await saveEdit({ project_id: project.id });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1114,6 +1136,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating project:', error);
             showErrorToast(
                 t('task.projectUpdateError', 'Failed to update project')
@@ -1126,7 +1149,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { project_id: null });
+            await saveEdit({ project_id: null });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1146,6 +1169,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error clearing project:', error);
             showErrorToast(
                 t('task.projectClearError', 'Failed to clear project')
@@ -1288,7 +1312,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 status: newStatus,
             });
 
@@ -1310,6 +1334,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating status:', error);
             showErrorToast(
                 t('task.statusUpdateError', 'Failed to update status')
@@ -1317,28 +1342,45 @@ const TaskDetails: React.FC = () => {
         }
     };
 
-    const handleDeleteClick = () => {
-        if (isTodoMdTask(task)) return;
-        if (task) {
-            setTaskToDelete(task);
-            setIsConfirmDialogOpen(true);
+    // A recurring task asks which occurrences go; that prompt is its
+    // confirmation.
+    const deleteWithScope = async (target: Task) => {
+        if (!target.uid) return;
+        const targetUid = target.uid;
+        try {
+            taskModifiedRef.current = true;
+            const kept = await deleteTaskWithScope(target, () =>
+                deleteTask(targetUid)
+            );
+            showSuccessToast(
+                t('task.deleteSuccess', 'Task deleted successfully')
+            );
+            if (kept) {
+                tasksStore.updateTaskInStore(kept);
+                setTimelineRefreshKey((prev) => prev + 1);
+            } else {
+                navigate(location.state?.from || '/today');
+            }
+        } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
+            console.error('Error deleting task:', error);
+            showErrorToast(t('task.deleteError', 'Failed to delete task'));
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        if (taskToDelete?.uid) {
-            try {
-                taskModifiedRef.current = true;
-                await deleteTask(taskToDelete.uid);
-                showSuccessToast(
-                    t('task.deleteSuccess', 'Task deleted successfully')
-                );
-                navigate(location.state?.from || '/today');
-            } catch (error) {
-                console.error('Error deleting task:', error);
-                showErrorToast(t('task.deleteError', 'Failed to delete task'));
-            }
+    const handleDeleteClick = () => {
+        if (isTodoMdTask(task)) return;
+        if (!task) return;
+        if (task.due_date && isRecurringTask(task)) {
+            void deleteWithScope(task);
+            return;
         }
+        setTaskToDelete(task);
+        setIsConfirmDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (taskToDelete) await deleteWithScope(taskToDelete);
         setIsConfirmDialogOpen(false);
         setTaskToDelete(null);
     };
@@ -1391,7 +1433,7 @@ const TaskDetails: React.FC = () => {
             const existing = tagsStore.tags?.map((tag: any) => tag.name) ?? [];
             const created = newTags.filter((name) => !existing.includes(name));
             if (created.length > 0) tagsStore.addNewTags(created);
-            await updateTask(task.uid, changes as Partial<Task>);
+            await saveEdit(changes as Partial<Task>);
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1411,6 +1453,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating task title:', error);
             showErrorToast(
                 t('task.titleUpdateError', 'Failed to update task title')
@@ -1433,7 +1476,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { note: trimmedContent });
+            await saveEdit({ note: trimmedContent });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1453,6 +1496,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating task content:', error);
             showErrorToast(
                 t('task.contentUpdateError', 'Failed to update task content')
@@ -1470,7 +1514,7 @@ const TaskDetails: React.FC = () => {
 
             projectsStore.setProjects([...projectsStore.projects, newProject]);
 
-            await updateTask(task.uid, { project_id: newProject.id });
+            await saveEdit({ project_id: newProject.id });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1490,6 +1534,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error creating project:', error);
             showErrorToast(
                 t('project.createError', 'Failed to create project')
@@ -1503,7 +1548,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { area_id: area.id });
+            await saveEdit({ area_id: area.id });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1515,6 +1560,7 @@ const TaskDetails: React.FC = () => {
             );
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating area:', error);
             showErrorToast(t('task.areaUpdateError', 'Failed to update area'));
         }
@@ -1525,7 +1571,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { area_id: null });
+            await saveEdit({ area_id: null });
 
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
@@ -1537,6 +1583,7 @@ const TaskDetails: React.FC = () => {
             );
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error clearing area:', error);
             showErrorToast(t('task.areaClearError', 'Failed to clear area'));
         }
@@ -1546,7 +1593,7 @@ const TaskDetails: React.FC = () => {
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { goal_id: goal.id });
+            await saveEdit({ goal_id: goal.id });
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
                 tasksStore.updateTaskInStore(updatedTask);
@@ -1554,6 +1601,7 @@ const TaskDetails: React.FC = () => {
             showSuccessToast(t('task.goalUpdated', 'Goal updated'));
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating goal:', error);
             showErrorToast(t('task.goalUpdateError', 'Failed to update goal'));
         }
@@ -1563,7 +1611,7 @@ const TaskDetails: React.FC = () => {
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { goal_id: null });
+            await saveEdit({ goal_id: null });
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
                 tasksStore.updateTaskInStore(updatedTask);
@@ -1571,6 +1619,7 @@ const TaskDetails: React.FC = () => {
             showSuccessToast(t('task.goalCleared', 'Goal cleared'));
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error clearing goal:', error);
             showErrorToast(t('task.goalClearError', 'Failed to clear goal'));
         }
@@ -1580,12 +1629,13 @@ const TaskDetails: React.FC = () => {
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { estimated_minutes: minutes });
+            await saveEdit({ estimated_minutes: minutes });
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
                 tasksStore.updateTaskInStore(updatedTask);
             }
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating estimate:', error);
             showErrorToast(
                 t('task.estimateError', 'Failed to update the estimate')
@@ -1597,12 +1647,13 @@ const TaskDetails: React.FC = () => {
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, { assigned_to: personUid });
+            await saveEdit({ assigned_to: personUid });
             if (uid) {
                 const updatedTask = await fetchTaskByUid(uid);
                 tasksStore.updateTaskInStore(updatedTask);
             }
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error assigning person:', error);
             showErrorToast('Failed to update assignment');
         }
@@ -1634,7 +1685,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 tags: tags.map((name) => ({ name })),
             });
 
@@ -1659,6 +1710,7 @@ const TaskDetails: React.FC = () => {
 
             setTimelineRefreshKey((prev) => prev + 1);
         } catch (error: any) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating tags:', error);
             const details = error?.details;
             if (details && Array.isArray(details) && details.length > 0) {
@@ -1679,7 +1731,7 @@ const TaskDetails: React.FC = () => {
 
         try {
             taskModifiedRef.current = true;
-            await updateTask(task.uid, {
+            await saveEdit({
                 priority: priority,
             });
             const updatedTask = await fetchTaskByUid(uid!);
@@ -1689,6 +1741,7 @@ const TaskDetails: React.FC = () => {
                 t('task.priorityUpdated', 'Priority updated successfully')
             );
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Error updating priority:', error);
             showErrorToast(
                 t('task.priorityUpdateError', 'Failed to update priority')

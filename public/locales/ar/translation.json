@@ -1601,8 +1601,9 @@
     "createError": "فشل في إنشاء الملاحظة"
   },
   "task": {
-    "recurringMove": {
-      "title": "نقل مهمة متكررة",
+    "recurringScope": {
+      "editTitle": "تعديل هذه المهمة أم السلسلة؟",
+      "deleteTitle": "حذف هذه المهمة أم السلسلة؟",
       "optionThis": "هذا الموعد فقط",
       "optionFollowing": "هذا الموعد والمواعيد التالية",
       "optionAll": "كل المواعيد"
@@ -1987,6 +1988,7 @@
     "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
   },
   "notes": {
+    "emptyPreview": "ملاحظة فارغة",
     "loading": "جارٍ تحميل الملاحظات...",
     "error": "خطأ في تحميل الملاحظات",
     "searchPlaceholder": "ابحث في الملاحظات...",

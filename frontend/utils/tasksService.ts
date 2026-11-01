@@ -133,23 +133,26 @@ export const updateTask = async (
     return updated;
 };
 
-export type RecurringMoveScope = 'this' | 'following' | 'all';
+export type RecurringScope = 'this' | 'following' | 'all';
 
-export interface MoveOccurrenceResult {
+export interface EditOccurrenceResult {
+    // The series after the edit
     task: Task;
-    moved: Task | null;
+    // The task that holds the edited occurrence: a split-off task for "this"
+    // and "following", the series itself otherwise
+    edited: Task;
 }
 
-export const moveTaskOccurrence = async (
+export const editTaskOccurrence = async (
     taskUid: string,
     body: {
-        scope: RecurringMoveScope;
+        scope: RecurringScope;
         occurrence_date: string;
-        due_date: string;
+        changes: Record<string, unknown>;
     }
-): Promise<MoveOccurrenceResult> => {
+): Promise<EditOccurrenceResult> => {
     const response = await fetch(
-        getApiPath(`task/${encodeURIComponent(taskUid)}/move-occurrence`),
+        getApiPath(`task/${encodeURIComponent(taskUid)}/edit-occurrence`),
         {
             method: 'POST',
             credentials: 'include',
@@ -158,7 +161,25 @@ export const moveTaskOccurrence = async (
         }
     );
 
-    await handleAuthResponse(response, 'Failed to move occurrence.');
+    await handleAuthResponse(response, 'Failed to update task.');
+    return await response.json();
+};
+
+export const deleteTaskOccurrence = async (
+    taskUid: string,
+    body: { scope: RecurringScope; occurrence_date: string }
+): Promise<{ task: Task | null; deleted: boolean }> => {
+    const response = await fetch(
+        getApiPath(`task/${encodeURIComponent(taskUid)}/delete-occurrence`),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: await getPostHeadersWithCsrf(),
+            body: JSON.stringify(body),
+        }
+    );
+
+    await handleAuthResponse(response, 'Failed to delete task.');
     return await response.json();
 };
 

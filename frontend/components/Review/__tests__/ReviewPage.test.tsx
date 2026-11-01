@@ -141,6 +141,23 @@ describe('ReviewPage', () => {
         );
     });
 
+    it('takes the row off at once and puts it back if the save fails', async () => {
+        let fail: (error: Error) => void = () => undefined;
+        mocked.decideTask.mockImplementation(
+            () => new Promise((_resolve, reject) => (fail = reject))
+        );
+        renderPage();
+        await screen.findByText('Test app X');
+        fireEvent.click(screen.getByRole('button', { name: /Decide/ }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Keep as is' }));
+        // Gone before the server answers
+        expect(screen.queryByText('Test app X')).not.toBeInTheDocument();
+
+        fail(new Error('offline'));
+        expect(await screen.findByText('Test app X')).toBeInTheDocument();
+        expect(mockToast.showErrorToast).toHaveBeenCalled();
+    });
+
     it('parks a task for later', async () => {
         renderPage();
         await screen.findByText('Test app X');

@@ -1593,8 +1593,9 @@
     "createError": "Tạo ghi chú thất bại"
   },
   "task": {
-    "recurringMove": {
-      "title": "Di chuyển việc lặp lại",
+    "recurringScope": {
+      "editTitle": "Sửa công việc này hay cả chuỗi?",
+      "deleteTitle": "Xóa công việc này hay cả chuỗi?",
       "optionThis": "Chỉ lần này",
       "optionFollowing": "Lần này và các lần sau",
       "optionAll": "Tất cả các lần"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Bật/tắt menu thả xuống"
   },
   "notes": {
+    "emptyPreview": "Ghi chú trống",
     "loading": "Đang tải ghi chú...",
     "error": "Lỗi khi tải ghi chú",
     "searchPlaceholder": "Tìm kiếm ghi chú...",

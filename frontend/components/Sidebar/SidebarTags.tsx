@@ -114,7 +114,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                             e.stopPropagation();
                             openTagModal(null);
                         }}
-                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
+                        className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                         aria-label={t('tags.addTag', 'Add Tag')}
                         title={t('tags.addTag', 'Add Tag')}
                     >
@@ -128,11 +128,16 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                 </span>
                             )}
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
+                                aria-label={t(
+                                    'sidebar.toggleSection',
+                                    'Expand or collapse'
+                                )}
                                 className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon

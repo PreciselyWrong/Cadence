@@ -1593,8 +1593,9 @@
     "createError": "创建笔记失败"
   },
   "task": {
-    "recurringMove": {
-      "title": "移动重复任务",
+    "recurringScope": {
+      "editTitle": "编辑此任务还是整个系列？",
+      "deleteTitle": "删除此任务还是整个系列？",
       "optionThis": "仅此一次",
       "optionFollowing": "此次及之后",
       "optionAll": "所有重复"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "切换下拉菜单"
   },
   "notes": {
+    "emptyPreview": "空笔记",
     "loading": "加载笔记...",
     "error": "加载笔记时出错",
     "searchPlaceholder": "搜索笔记...",

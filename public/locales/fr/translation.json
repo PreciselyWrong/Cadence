@@ -492,7 +492,7 @@
     "taskIntelligence": "Intelligence des tâches",
     "enableTaskIntelligence": "Activer l'assistant d'intelligence des tâches",
     "autoSuggestNextActions": "Suggérer automatiquement les prochaines actions",
-    "enableAutoSuggestNextActions": "Activer les Invitations à la Prochaine Action",
+    "enableAutoSuggestNextActions": "Activer les invitations à la prochaine action",
     "pomodoroDescription": "Activez le minuteur Pomodoro dans la barre de navigation pour des sessions de travail concentrées.",
     "enablePomodoro": "Activer le minuteur Pomodoro",
     "productivityAssistant": "Assistant de productivité",
@@ -598,7 +598,7 @@
       "noPasswordWarning": "Vous n'avez pas de mot de passe défini. Envisagez d'en définir un pour avoir une méthode de connexion alternative."
     },
     "kanbanDescription": "Activez le tableau Kanban pour suivre l'avancement des tâches à travers les swimlanes.",
-    "featuresAddons": "Fonctionnalités & Add-ons",
+    "featuresAddons": "Fonctionnalités et modules",
     "caldav": {
       "title": "Synchronisation CalDAV",
       "description": "Synchronisez vos tâches avec des serveurs CalDAV externes comme Nextcloud, iCloud ou Radicale. Configurez des calendriers, gérez les intervalles de synchronisation et résolvez les conflits.",
@@ -1215,7 +1215,7 @@
     "goalArea": "Zone",
     "noArea": "Aucune zone",
     "startDate": "Début",
-    "goalBucket": "Groupe de la liste de souhaits",
+    "goalBucket": "Groupe de la liste d'envies",
     "goalParent": "Résultat clé de",
     "noParentGoal": "Aucun (autonome)",
     "goalTitle": "Résultat visé",
@@ -1397,8 +1397,8 @@
     "dropToUpload": "Déposer pour envoyer",
     "fewerFiles": "Afficher moins",
     "noTasks": "Aucune tâche.",
-    "nextAction": "Action suivante",
-    "nextActionLine": "Action suivante : {{name}}",
+    "nextAction": "Prochaine action",
+    "nextActionLine": "Prochaine action : {{name}}",
     "noCompletedTasks": "Aucune tâche terminée."
   },
   "errors": {
@@ -1596,11 +1596,12 @@
     "createError": "Échec de la création de la note"
   },
   "task": {
-    "recurringMove": {
-      "title": "Déplacer une tâche récurrente",
-      "optionThis": "Seulement cette occurrence",
-      "optionFollowing": "Cette occurrence et les suivantes",
-      "optionAll": "Toutes les occurrences"
+    "recurringScope": {
+      "editTitle": "Modifier cette tâche ou la série ?",
+      "deleteTitle": "Supprimer cette tâche ou la série ?",
+      "optionThis": "Seulement celle-ci",
+      "optionFollowing": "Celle-ci et les suivantes",
+      "optionAll": "Toutes"
     },
     "labels": {
       "tags": "Étiquettes",
@@ -1979,6 +1980,7 @@
     "toggleDropdownMenu": "Afficher ou masquer le menu"
   },
   "notes": {
+    "emptyPreview": "Note vide",
     "loading": "Chargement des notes...",
     "error": "Erreur lors du chargement des notes",
     "searchPlaceholder": "Rechercher des notes...",
@@ -3476,8 +3478,8 @@
     "waitingFor": "En attente de",
     "allClear": "Tout est clair — aucun projet en attente ou élément en attente.",
     "projectHealth": "Santé du projet",
-    "allProjectsHaveActions": "Tous les projets actifs ont au moins une action suivante.",
-    "projectsWithNoNextAction": "le(s) projet(s) n'ont pas d'action suivante",
+    "allProjectsHaveActions": "Tous les projets actifs ont au moins une prochaine action.",
+    "projectsWithNoNextAction": "le(s) projet(s) n'ont pas de prochaine action",
     "completionTrends": "Tendances de complétion",
     "noCompletions": "Aucune tâche complétée au cours des 8 dernières semaines.",
     "areaBalance": "Équilibre de zone",
@@ -4057,12 +4059,12 @@
     "inactive": "Inactif",
     "viewGoal": "Voir l'objectif",
     "bucket": {
-      "title": "Liste de souhaits",
+      "title": "Liste d'envies",
       "have": "Avoir",
       "be": "Être",
       "do": "Faire",
       "add": "+ Ajouter",
-      "none": "Pas dans la liste de souhaits"
+      "none": "Pas dans la liste d'envies"
     },
     "keyResults": {
       "title": "Résultats clés",
@@ -4607,7 +4609,7 @@
       "undecided": "À décider",
       "pushed": "Repoussées",
       "projects": "Projets stagnants",
-      "later": "En sommeil",
+      "later": "Plus tard",
       "stale": "Anciennes",
       "week": "Cette semaine"
     },
@@ -4615,7 +4617,7 @@
       "undecided": "L’Inbox est vide.",
       "pushed": "Rien que vous repoussiez sans cesse.",
       "projects": "Chaque projet actif a une prochaine étape.",
-      "later": "Rien en sommeil.",
+      "later": "Rien de mis de côté.",
       "stale": "Aucune tâche ancienne."
     },
     "actions": {
@@ -4624,21 +4626,21 @@
       "split": "Découper en étapes",
       "later": "Plus tard",
       "drop": "Abandonner",
-      "keep": "Conserver sans changer",
+      "keep": "Garder tel quel",
       "thisWeek": "Cette semaine",
       "inView": "En vue",
       "reviewIn30": "Revoir dans 30 jours",
       "reviewOn": "Revoir le…",
-      "keepLater": "Garder en sommeil",
-      "toTask": "En faire une tâche",
-      "toLater": "Mettre en sommeil",
-      "discard": "Écarter",
+      "keepLater": "Laisser de côté",
+      "toTask": "Créer une tâche",
+      "toLater": "Mettre de côté",
+      "discard": "Supprimer",
       "openInbox": "Ouvrir la boîte de réception",
       "addNext": "Ajouter la prochaine tâche",
       "openProject": "Ouvrir le projet",
       "pauseProject": "Mettre en attente",
       "removeWeek": "Pas cette semaine",
-      "outOfView": "Retirer de En vue"
+      "outOfView": "Retirer de la vue"
     },
     "reasons": {
       "no_next_action": "aucune prochaine tâche",

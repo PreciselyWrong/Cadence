@@ -48,6 +48,13 @@ describe('CapacityMeter', () => {
     it('warns with the overshoot above 100 %', () => {
         render(<CapacityMeter planned={600} free={480} />);
         expect(screen.getByTestId('capacity-over')).toBeInTheDocument();
+        // An overfull day is a nudge, not an alarm: amber, never red
+        expect(screen.getByTestId('capacity-over').className).not.toMatch(
+            /red-/
+        );
+        expect(screen.getByTestId('capacity-fill').className).not.toMatch(
+            /red-/
+        );
         expect(screen.getByRole('progressbar')).toHaveAttribute(
             'aria-valuenow',
             '100'

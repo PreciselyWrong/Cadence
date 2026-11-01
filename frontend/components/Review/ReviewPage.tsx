@@ -95,7 +95,6 @@ const ReviewPage: React.FC = () => {
     const [rows, setRows] = useState<Row[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [busy, setBusy] = useState<string | null>(null);
     const [nextTaskFor, setNextTaskFor] = useState<string | null>(null);
     const [nextTaskName, setNextTaskName] = useState('');
     // The Friday routine is offered only while none exists.
@@ -181,21 +180,26 @@ const ReviewPage: React.FC = () => {
         else openTaskPanel(uid);
     };
 
-    // Runs a decision, takes the row off the list and refreshes the counts.
+    // Takes the row off at once, then runs the decision; a failed save puts
+    // the row back where it was and says so.
     const decide = async (row: Row, action: () => Promise<unknown>) => {
         const key = rowKey(row);
-        setBusy(key);
+        const index = rows.findIndex((r) => rowKey(r) === key);
+        setRows((current) => current.filter((r) => rowKey(r) !== key));
+        setTotal((count) => Math.max(0, count - 1));
         try {
             await action();
-            setRows((current) => current.filter((r) => rowKey(r) !== key));
-            setTotal((count) => Math.max(0, count - 1));
             refreshSummary();
         } catch {
+            setRows((current) => {
+                if (current.some((r) => rowKey(r) === key)) return current;
+                const at = index < 0 ? 0 : Math.min(index, current.length);
+                return [...current.slice(0, at), row, ...current.slice(at)];
+            });
+            setTotal((count) => count + 1);
             showErrorToast(
                 t('review.saveError', 'Could not save the decision.')
             );
-        } finally {
-            setBusy(null);
         }
     };
 
@@ -601,10 +605,7 @@ const ReviewPage: React.FC = () => {
                                                 {meta(row)}
                                             </span>
                                         </button>
-                                        <DecisionMenu
-                                            options={options(row)}
-                                            disabled={busy === key}
-                                        />
+                                        <DecisionMenu options={options(row)} />
                                     </div>
                                     {row.kind === 'project' &&
                                         nextTaskFor ===

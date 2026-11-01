@@ -1595,8 +1595,9 @@
     "createError": "Falha ao criar nota"
   },
   "task": {
-    "recurringMove": {
-      "title": "Mover tarefa recorrente",
+    "recurringScope": {
+      "editTitle": "Editar esta tarefa ou a série?",
+      "deleteTitle": "Excluir esta tarefa ou a série?",
       "optionThis": "Apenas esta ocorrência",
       "optionFollowing": "Esta e as ocorrências seguintes",
       "optionAll": "Todas as ocorrências"
@@ -1978,6 +1979,7 @@
     "toggleDropdownMenu": "Alternar menu suspenso"
   },
   "notes": {
+    "emptyPreview": "Nota vazia",
     "loading": "Carregando notas...",
     "error": "Erro ao carregar notas",
     "searchPlaceholder": "Pesquisar notas...",

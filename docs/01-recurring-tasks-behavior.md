@@ -65,26 +65,41 @@ This document explains how recurring tasks work in Cadence from a user behavior 
 10. **If you edit the recurrence pattern of a parent task:**
     - Future occurrences update to match the new pattern
     - Past completed occurrences stay in the history unchanged
+    - Changing the pattern never asks which occurrences it reaches: it is the series
 
-11. **You can edit individual details (title, priority, notes) on the parent:**
-    - Changes apply to future occurrences
-    - Past completions keep their original details
+11. **Any other edit of a repeating task asks once, when it is saved:** "Edit this task or the series?"
+    - **Only this occurrence:** that day becomes a separate one-off task carrying the change (same name, note, project, tags, estimate, time of day and reminder otherwise). The series skips that day; if it was the current occurrence, the series moves on to its next one.
+    - **This and following:** the series stops the day before. A new series starts on that day with the same pattern and the change.
+    - **All occurrences:** the series itself changes.
+    - On the first (current) occurrence, "This and following" is the same as "All".
+    - The prompt comes once per save (a blur, a choice in a menu, a drag), never per keystroke. It covers the name, note, time of day, estimate, priority, project, area, goal, tags, reminder, start and defer dates, assignee and status. Completing or reopening keeps its own rules (below); pinning, the Today plan, the order and board columns never ask.
+    - Cancelling the prompt saves nothing.
 
 12. **If you edit a future occurrence (a virtual instance):**
-    - You're actually editing the parent template
-    - The change affects all future occurrences
+    - The prompt applies to that occurrence's own day: "Only this occurrence" splits off that day, not the current one
+    - Opening a later occurrence from the Calendar opens it on its own day
 
 ---
 
 ## **Moving an occurrence**
 
-Drag a repeating task to another day and choose how far the change reaches:
+Moving is an edit of the due date: drag a repeating task to another day (or change its date or time anywhere) and choose how far the change reaches:
 
 - **This occurrence only:** that one day becomes a separate one-off task on the new date. The series keeps its other days, and the moved day is skipped in the series.
 - **This and following:** the series stops before that day. A new series starts on the new date and keeps the same pattern, shifted to the new weekday or day of the month.
 - **All occurrences:** the whole series moves by the same number of days, and its pattern follows.
 
-Skipped days stay skipped when the series advances, so completing a task never brings a moved day back.
+Changing only the time of day, or resizing its block in the Calendar (the estimate, or the due time of a start-to-due block), asks the same question. Skipped days stay skipped when the series advances, so completing a task never brings a moved day back.
+
+A split-off task or series keeps the reminder of the series at the same local time and the same number of days before its due date, across a daylight-saving switch too, and rings again. Moving the whole series moves its reminder by the same number of days.
+
+## **Deleting an occurrence**
+
+Deleting a repeating task asks "Delete this task or the series?" (this prompt replaces the usual confirmation):
+
+- **Only this occurrence:** the current occurrence is skipped (recorded as skipped, as "Skip this occurrence" does); a later one is left out of the series.
+- **This and following:** the series ends the day before. From the first occurrence, this deletes the series.
+- **All occurrences:** the series is deleted (rule 17).
 
 ## **Display Rules**
 
@@ -111,14 +126,14 @@ Skipped days stay skipped when the series advances, so completing a task never b
     - It doesn't pile up multiple occurrences
     - Upcoming only shows future occurrences
 
-17. **If you delete a recurring task:**
+17. **If you delete a recurring task (all occurrences):**
     - The parent template is deleted
     - All future occurrences disappear
     - Past completion history is preserved
 
 18. **Recurring tasks can belong to projects:**
     - Every occurrence inherits the project
-    - Changing the project changes it for all future occurrences
+    - Changing the project asks which occurrences it reaches (rule 11)
 
 ---
 
@@ -144,6 +159,48 @@ Think of it like a gym membership that auto-renews - it's one subscription that 
 
 ---
 
+## **API and offline clients**
+
+### Online endpoints
+
+All take the series' uid, session or API token auth, under `/api` and `/api/v1`. `occurrence_date` is the occurrence's local day (`YYYY-MM-DD`, user timezone): the series' current due day or one of its later occurrences, otherwise `400`.
+
+- `POST /api/task/:uid/edit-occurrence` with `{ occurrence_date, scope: "this" | "following" | "all", changes }`. `changes` is a `PATCH /api/task/:uid` body (`name`, `note`, `priority`, `due_date` + `due_time` (`HH:mm`), `estimated_minutes`, `project_uid`, `area_uid`, `goal_id`, `tags` (`[{name}]`), `reminder_at`, `start_date`, `defer_until`, `assigned_to`, `status`, ...), validated and logged by the same rules. A `due_date` on another day first moves the occurrence there (as `move-occurrence`). A `reminder_at` is the reminder of the edited occurrence; with "all" it is moved onto the series' current occurrence by the same number of days. Recurrence fields are refused with "this". Answer: `{ task: <series>, edited: <task holding the edited occurrence> }`; `edited.uid` differs from the series for "this" and for "following" past the first occurrence. A refused change (`400`/`403`) leaves the series as it was.
+- `POST /api/task/:uid/move-occurrence` with `{ occurrence_date, due_date, scope }`: the date-only case, unchanged (`{ task, moved }`).
+- `POST /api/task/:uid/delete-occurrence` with `{ occurrence_date, scope }`. Answer `{ task: <series>, deleted: false }`, or `{ task: null, deleted: true }` when the series was deleted ("all", "following" from the first occurrence, "this" on the last remaining occurrence).
+
+The review log: a moved day is logged on the series as `due_date_changed` (`action: move_occurrence`, `scope`), field changes on the task that received them, as any PATCH.
+
+### What `/api/v1/sync` shows
+
+Both writes are ordinary task rows, journaled like any web edit:
+
+- **"this":** a new `task` upsert (new uid, `recurrence_type: "none"`, `due_date` on the occurrence's day at the series' time of day, the series' fields and `tag_uids`, the changes) and an upsert of the series with `recurrence_exdates` gaining that day, or, for the current occurrence, `due_date` (and `reminder_at`, `reminder_sent_at: null`) moved to its next occurrence.
+- **"following":** a new `task` upsert carrying the series' recurrence fields, `recurrence_end_date` and the later `recurrence_exdates`, `due_date` on the occurrence's day, the changes; and an upsert of the old series with `recurrence_end_date` = start of the occurrence's local day minus 1 ms and only the earlier `recurrence_exdates`.
+- **"all":** an upsert of the series.
+
+### Offline: the same result with sync ops
+
+A device can apply all three scopes offline with ordinary ops (`T` = series row, `D` = occurrence's local day, `tz` = user timezone). Copy into a new row: `name`, `note`, `priority`, `project_uid`, `area_uid`, `goal_uid`, `estimated_minutes`, `due_has_time`, `tag_uids`; a reminder as `T.reminder_at` plus the whole local days from `T`'s due day to `D` (same wall-clock time). Then apply the user's change to the row that holds the occurrence.
+
+| Edit | Ops, in this order |
+|---|---|
+| "this" on a later `D` | `upsert` new uid: copied fields + `recurrence_type: "none"`, `status` not started, `due_date` = `D` at `T`'s local time (whole-day: the device's usual whole-day instant on `D`), changes. `upsert T`: `recurrence_exdates` = sorted, unique (`T.recurrence_exdates` + `D`). |
+| "this" on the current `D` | Same new row. `upsert T`: `due_date` = next occurrence after `D` that is not in `recurrence_exdates`, `reminder_at` moved by the same duration; no next occurrence: `status` done, `completed_at` now. |
+| "following" on a later `D` | `upsert` new uid: copied fields + `recurrence_type`, `recurrence_interval`, `recurrence_weekday(s)`, `recurrence_month_day`, `recurrence_week_of_month`, `completion_based`, `recurrence_end_date` of `T`, `recurrence_exdates` of `T` after `D`, `due_date` = `D` at `T`'s local time, changes. `upsert T`: `recurrence_end_date` = start of `D` in `tz` minus 1 ms, `recurrence_exdates` = those before `D`. |
+| "following" on the current `D`, or "all" | `upsert T` with the changes (a reminder given for `D` moves back to `T`'s due day by whole local days). |
+
+| Delete | Ops |
+|---|---|
+| "this" on the current `D` | `skip_occurrence` with `occurrence_date` = `T.due_date`. |
+| "this" on a later `D` | `upsert T`: `recurrence_exdates` + `D`. |
+| "following" on a later `D` | `upsert T`: `recurrence_end_date` and `recurrence_exdates` as for an edit. |
+| "following" on the current `D`, or "all" | `delete T`. |
+
+Limits of the offline path: `recurrence_exdates` merges as one field, so two devices that each leave a different day out while offline keep only the later list; a device that is online should prefer the endpoints above, which read the series as it is on the server. A date move together with "this" or "following" also shifts the pattern (weekday, day of month) as `move-occurrence` does; offline, a device may instead call `move-occurrence` once it is back online.
+
+---
+
 ## **Related Documentation**
 
 - [Architecture Overview](architecture.md) - Technical architecture
@@ -154,11 +211,12 @@ Think of it like a gym membership that auto-renews - it's one subscription that 
 **Technical Implementation Files:**
 - Recurrence calculation: `/backend/modules/tasks/recurringTaskService.js`
 - Completion handling: `/backend/modules/tasks/routes.js`
+- Editing, moving and deleting one occurrence: `/backend/modules/tasks/operations/moveOccurrence.js`
 - Task model: `/backend/models/task.js`
 - Completion tracking: `/backend/models/recurringCompletion.js`
 
 ---
 
 **Document Version:** 1.0.0
-**Last Updated:** 2026-03-14
+**Last Updated:** 2026-11-01
 **Audience:** Developers, AI assistants, and end users

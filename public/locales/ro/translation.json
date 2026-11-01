@@ -1597,8 +1597,9 @@
     "createError": "Crearea notei a eșuat"
   },
   "task": {
-    "recurringMove": {
-      "title": "Mută sarcina recurentă",
+    "recurringScope": {
+      "editTitle": "Editezi această sarcină sau seria?",
+      "deleteTitle": "Ștergi această sarcină sau seria?",
       "optionThis": "Doar această apariție",
       "optionFollowing": "Aceasta și aparițiile următoare",
       "optionAll": "Toate aparițiile"
@@ -1980,6 +1981,7 @@
     "toggleDropdownMenu": "Comutare meniu derulant"
   },
   "notes": {
+    "emptyPreview": "Notă goală",
     "loading": "Se încarcă notițele...",
     "error": "Eroare la încărcarea notițelor",
     "searchPlaceholder": "Caută notițe...",

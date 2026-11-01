@@ -122,11 +122,17 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
     const unpinTag = async (tag: Tag, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!tag.uid) return;
-        setTags(tags.map((t) => (t.uid === tag.uid ? { ...t, pinned: false } : t)));
+        setTags(
+            tags.map((t) => (t.uid === tag.uid ? { ...t, pinned: false } : t))
+        );
         try {
             await updateTag(tag.uid, { ...tag, pinned: false });
         } catch {
-            setTags(tags.map((t) => (t.uid === tag.uid ? { ...t, pinned: true } : t)));
+            setTags(
+                tags.map((t) =>
+                    t.uid === tag.uid ? { ...t, pinned: true } : t
+                )
+            );
         }
     };
 
@@ -137,7 +143,10 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                 onClick={() => {
                     const next = !isExpanded;
                     setIsExpanded(next);
-                    localStorage.setItem('bookmarksSidebarCollapsed', String(!next));
+                    localStorage.setItem(
+                        'bookmarksSidebarCollapsed',
+                        String(!next)
+                    );
                 }}
             >
                 <span className="flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
@@ -148,11 +157,25 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                     <span className="h-3.5 w-3.5" aria-hidden="true" />
                     <button
                         className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
-                        aria-label={isExpanded ? t('sidebar.collapseFavorites', 'Collapse favorites') : t('sidebar.expandFavorites', 'Expand favorites')}
+                        aria-label={
+                            isExpanded
+                                ? t(
+                                      'sidebar.collapseFavorites',
+                                      'Collapse favorites'
+                                  )
+                                : t(
+                                      'sidebar.expandFavorites',
+                                      'Expand favorites'
+                                  )
+                        }
                     >
                         <ChevronRightIcon
                             className="h-3 w-3 transition-transform duration-150"
-                            style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                            style={{
+                                transform: isExpanded
+                                    ? 'rotate(90deg)'
+                                    : 'none',
+                            }}
                         />
                     </button>
                 </div>
@@ -177,7 +200,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                             </span>
                             <button
                                 onClick={(e) => unpinProject(project, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
+                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${project.name}`}
                                 title={`Unpin ${project.name}`}
                             >
@@ -203,7 +226,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                             </span>
                             <button
                                 onClick={(e) => unpinNote(note, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
+                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${note.title}`}
                                 title={`Unpin ${note.title}`}
                             >
@@ -224,12 +247,10 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
                                 )
                             }
                         >
-                            <span className="truncate min-w-0">
-                                {tag.name}
-                            </span>
+                            <span className="truncate min-w-0">{tag.name}</span>
                             <button
                                 onClick={(e) => unpinTag(tag, e)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
+                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
                                 aria-label={`Unpin ${tag.name}`}
                                 title={`Unpin ${tag.name}`}
                             >

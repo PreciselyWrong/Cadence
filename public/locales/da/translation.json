@@ -1593,8 +1593,9 @@
     "createError": "Fejl ved oprettelse af note"
   },
   "task": {
-    "recurringMove": {
-      "title": "Flyt gentagen opgave",
+    "recurringScope": {
+      "editTitle": "Rediger denne opgave eller serien?",
+      "deleteTitle": "Slet denne opgave eller serien?",
       "optionThis": "Kun denne forekomst",
       "optionFollowing": "Denne og følgende forekomster",
       "optionAll": "Alle forekomster"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Skift rullemenu"
   },
   "notes": {
+    "emptyPreview": "Tom note",
     "loading": "Indlæser noter...",
     "error": "Fejl ved indlæsning af noter",
     "searchPlaceholder": "Søg noter...",

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    act,
     render,
     screen,
     fireEvent,
@@ -78,9 +79,10 @@ jest.mock('../../../store/useStore', () => ({
 }));
 
 const mockShowUndoToast = jest.fn();
+const mockShowErrorToast = jest.fn();
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => ({
-        showErrorToast: jest.fn(),
+        showErrorToast: mockShowErrorToast,
         showSuccessToast: jest.fn(),
         showUndoToast: mockShowUndoToast,
     }),
@@ -177,6 +179,28 @@ describe('TodayPage', () => {
             expect.objectContaining({ uid: 'o1' })
         );
         expect(mockShowUndoToast).toHaveBeenCalled();
+    });
+
+    it('takes a checked candidate off before the server answers and brings it back on failure', async () => {
+        let fail: (error: Error) => void = () => undefined;
+        (toggleTaskCompletion as jest.Mock).mockImplementation(
+            () => new Promise((_resolve, reject) => (fail = reject))
+        );
+        render(<TodayPage />);
+
+        const card = await screen.findByTestId('candidate-o1');
+        // The row collapses with the check, like every other task row
+        expect(card).toHaveAttribute('data-task-row');
+        fireEvent.click(within(card).getByTestId('task-check-circle'));
+
+        await waitFor(() =>
+            expect(screen.queryByTestId('candidate-o1')).not.toBeInTheDocument()
+        );
+        expect(mockShowUndoToast).not.toHaveBeenCalled();
+
+        await act(async () => fail(new Error('offline')));
+        expect(await screen.findByTestId('candidate-o1')).toBeInTheDocument();
+        expect(mockShowErrorToast).toHaveBeenCalled();
     });
 
     it('saves a placed candidate and starts the day once', async () => {

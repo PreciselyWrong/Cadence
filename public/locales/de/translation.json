@@ -594,6 +594,7 @@
     "areaDeleted": "Bereich erfolgreich gelöscht!"
   },
   "notes": {
+    "emptyPreview": "Leere Notiz",
     "title": "Notizen",
     "loading": "Notizen werden geladen...",
     "error": "Fehler beim Laden der Notizen",
@@ -1552,8 +1553,9 @@
     "pureBlack": "Pure black in dark mode"
   },
   "task": {
-    "recurringMove": {
-      "title": "Wiederkehrende Aufgabe verschieben",
+    "recurringScope": {
+      "editTitle": "Diese Aufgabe oder die Serie bearbeiten?",
+      "deleteTitle": "Diese Aufgabe oder die Serie löschen?",
       "optionThis": "Nur dieses Vorkommen",
       "optionFollowing": "Dieses und folgende Vorkommen",
       "optionAll": "Alle Vorkommen"

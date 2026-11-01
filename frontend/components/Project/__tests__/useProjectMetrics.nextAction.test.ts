@@ -48,3 +48,24 @@ describe('useProjectMetrics next action', () => {
         expect(nextFor([urgent], 'missing')?.uid).toBe('urgent');
     });
 });
+
+describe('useProjectMetrics due descriptor', () => {
+    // No day count for a past due date: the date alone, without blame.
+    it('names the date of a past due task instead of counting days late', () => {
+        const tr = ((key: string, opts?: any) =>
+            typeof opts === 'string'
+                ? opts
+                : (opts?.defaultValue ?? key).replace(
+                      /\{\{(\w+)\}\}/g,
+                      (_m: string, name: string) => String(opts?.[name] ?? '')
+                  )) as never;
+        const { result } = renderHook(() =>
+            useProjectMetrics([], jest.fn().mockResolvedValue(undefined), tr)
+        );
+        const text = result.current.getDueDescriptor(
+            task({ due_date: '2020-03-05' })
+        );
+        expect(text).not.toMatch(/Overdue|\d+d/);
+        expect(text).toMatch(/^Due /);
+    });
+});

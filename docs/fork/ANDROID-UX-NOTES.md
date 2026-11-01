@@ -87,3 +87,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : un badge « Priorité » vide encombrait la fiche d'une tâche sans priorité (la ligne Priorité existe plus bas) ; la croix « Retirer la date » (20 dp), la ligne « Revoir le… » et l'anneau du widget Liste (24 dp) étaient trop petits ; les cases des sous-tâches et des listes de notes n'avaient pas de nom pour TalkBack ; les trois pastilles d'une idée de l'Inbox débordaient en grande police.
 - **Décision** : badge de priorité seulement s'il y en a une ; cibles de 48 dp (40 dp dans le widget) ; chaque case porte le nom de son élément, une sous-tâche faite est barrée ; les pastilles passent à la ligne.
 - **Web** : un badge n'apparaît que pour une valeur posée ; une case de sous-tâche a un libellé accessible.
+
+### 2026-11-01 — Échues sans compteur, filtre de domaines à partir de deux
+
+- **Problème** (QA sur émulateur) : l'en-tête de Tâches disait « Dim. 1 nov. · 41 en retard » et la section « En retard 41 » était rouge, comme les pastilles de date et le chiffre du Bilan ; la rangée « Tous · Bucket list » s'affichait avec un seul domaine ; « Déplacer vers un projet » proposait des projets terminés.
+- **Décision** : en-tête limité à la date ; section « Échues », sans compteur ni rouge, chaque ligne garde sa date sur une pastille neutre ; Bilan « N échues » en couleur normale ; carte du matin « N à replanifier ». La rangée de domaines n'apparaît qu'à partir de deux domaines (un filtre gardé sur un domaine resté seul est ignoré). Les choix de projet n'offrent que les projets ouverts (actifs et stash), plus le projet actuel de la tâche.
+- **Web** : vérifier qu'aucun en-tête ou titre de section ne compte les tâches échues et que le sélecteur de domaine est masqué sous deux domaines ; ne proposer que les projets ouverts pour ranger une tâche.

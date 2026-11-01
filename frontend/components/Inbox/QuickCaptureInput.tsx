@@ -289,6 +289,9 @@ const QuickCaptureInput = React.forwardRef<
                 ? captureSettings.enterTouch
                 : captureSettings.enterKeyboard) === 'save';
         const [isSaving, setIsSaving] = useState(false);
+        // Two clicks in the same frame both see isSaving false; the ref
+        // keeps the second one from saving the item again.
+        const savingRef = useRef(false);
         // Picked files are read into memory first, then uploaded after the
         // item is saved; Add stays locked through both.
         const [isPreparingFiles, setIsPreparingFiles] = useState(false);
@@ -1510,7 +1513,9 @@ const QuickCaptureInput = React.forwardRef<
             async (forceInbox = false) => {
                 const trimmedText = fullText.trim();
                 if ((!trimmedText && !isEditMode) || isSaving) return;
+                if (savingRef.current) return;
 
+                savingRef.current = true;
                 setIsSaving(true);
 
                 try {
@@ -1758,6 +1763,7 @@ const QuickCaptureInput = React.forwardRef<
                     console.error('Failed to save:', error);
                     showErrorToast(t('inbox.addError'));
                 } finally {
+                    savingRef.current = false;
                     setIsSaving(false);
                 }
             },
@@ -2196,7 +2202,8 @@ const QuickCaptureInput = React.forwardRef<
             // becomes the title.
             const raw =
                 inputText.trim() || (withFiles ? titleFromFiles(files) : '');
-            if (!raw || isSaving || isPreparingFiles) return;
+            if (!raw || isSaving || savingRef.current || isPreparingFiles)
+                return;
 
             const texts = splitCaptureText(raw, captureSettings.oneItemPerLine);
             const captured: CapturedItem[] = [];
@@ -2236,6 +2243,7 @@ const QuickCaptureInput = React.forwardRef<
                 inputRef.current?.focus();
             };
 
+            savingRef.current = true;
             setIsSaving(true);
             setStatus(null);
             try {
@@ -2285,6 +2293,7 @@ const QuickCaptureInput = React.forwardRef<
                     );
                 }
             } finally {
+                savingRef.current = false;
                 setIsSaving(false);
             }
         };

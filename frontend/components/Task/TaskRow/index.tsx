@@ -33,6 +33,12 @@ import {
     TaskRelationsChangedDetail,
 } from '../../../utils/tasksService';
 import { isTodoMdTask } from '../../../utils/todoMd';
+import {
+    deleteTaskWithScope,
+    isRecurringScopeCancelled,
+    isRecurringTask,
+    saveTaskEdit,
+} from '../../../utils/recurringScope';
 import { isTaskOverdueInTodayPlan } from '../../../utils/dateUtils';
 import { getApiPath } from '../../../config/paths';
 import TaskRowCollapsed from './TaskRowCollapsed';
@@ -337,17 +343,31 @@ const TaskRow: React.FC<TaskRowProps> = ({
         setContextMenuAt({ x: e.clientX, y: e.clientY });
     }, []);
 
+    // A recurring task's scope prompt is its confirmation.
+    const askToDelete = () => {
+        if (task.uid && task.due_date && isRecurringTask(task)) {
+            void handleDelete();
+        } else {
+            setIsConfirmDialogOpen(true);
+        }
+    };
+
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsConfirmDialogOpen(true);
+        askToDelete();
     };
 
     const handleDelete = async () => {
         if (!task.uid) return;
+        const uid = task.uid;
         try {
-            await onTaskDelete(task.uid);
+            const kept = await deleteTaskWithScope(task, async () => {
+                await onTaskDelete(uid);
+            });
+            if (kept) await onTaskUpdate({ ...task, ...kept });
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Task delete failed:', error);
             showErrorToast(t('errors.permissionDenied', 'Permission denied'));
         }
@@ -356,7 +376,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const handleStatusUpdate = async (updated: Task) => {
         if (!saveStatusChanges || !task.uid) return onTaskUpdate(updated);
         try {
-            const response = await updateTask(task.uid, {
+            const response = await saveTaskEdit(task, {
                 status: updated.status,
             });
             const merged: Task = {
@@ -372,6 +392,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                 await onTaskUpdate(merged);
             }
         } catch (error) {
+            if (isRecurringScopeCancelled(error)) return;
             console.error('Task status update failed:', error);
             showErrorToast(
                 t('task.statusUpdateError', 'Failed to update status')
@@ -697,7 +718,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     task={displayTask}
                     projects={projectList}
                     onTaskUpdate={onTaskUpdate}
-                    onDelete={() => setIsConfirmDialogOpen(true)}
+                    onDelete={askToDelete}
                     onClose={() => setContextMenuAt(null)}
                 />
             )}

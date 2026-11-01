@@ -1597,8 +1597,9 @@
     "createError": "Не удалось создать заметку"
   },
   "task": {
-    "recurringMove": {
-      "title": "Перенести повторяющуюся задачу",
+    "recurringScope": {
+      "editTitle": "Изменить эту задачу или серию?",
+      "deleteTitle": "Удалить эту задачу или серию?",
       "optionThis": "Только это повторение",
       "optionFollowing": "Это и следующие повторения",
       "optionAll": "Все повторения"
@@ -1981,6 +1982,7 @@
     "toggleDropdownMenu": "Переключить выпадающее меню"
   },
   "notes": {
+    "emptyPreview": "Пустая заметка",
     "loading": "Загрузка заметок...",
     "error": "Ошибка загрузки заметок",
     "searchPlaceholder": "Поиск заметок...",

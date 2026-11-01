@@ -780,7 +780,8 @@ const ProjectDetails: React.FC = () => {
         [designatedOpen, project?.next_task_uid, project?.uid]
     );
 
-    if (loading) return <LoadingSpinner message="Loading project details..." />;
+    if (loading)
+        return <LoadingSpinner message={t('common.loading', 'Loading...')} />;
     if (error)
         return (
             <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">

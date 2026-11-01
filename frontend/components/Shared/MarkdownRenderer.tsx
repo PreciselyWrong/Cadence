@@ -409,6 +409,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                             const title = decodeURIComponent(
                                 href.slice(WIKILINK_PREFIX.length)
                             );
+                            // A summary sits inside a card that is itself a
+                            // link: no link may nest in it.
+                            if (summaryMode) return <NoteBadge title={title} />;
                             if (publicNoteLinks) {
                                 const target = publicNoteLinks.find(
                                     (n) =>
@@ -444,6 +447,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                                     title="Note not found"
                                 >
                                     {badge}
+                                </span>
+                            );
+                        }
+                        if (summaryMode) {
+                            return (
+                                <span className="underline underline-offset-2 decoration-gray-400 dark:decoration-gray-500">
+                                    {children}
                                 </span>
                             );
                         }

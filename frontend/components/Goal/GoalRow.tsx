@@ -98,7 +98,7 @@ const GoalRow: React.FC<GoalRowProps> = ({
                 )}
             </div>
 
-            <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 w-40 justify-end">
+            <div className="hidden md:flex items-center gap-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 min-w-[10rem] justify-end">
                 {keyResultsCount > 0 && (
                     <span>
                         {t('goals.stats.keyResults', 'Key results: {{count}}', {
@@ -124,7 +124,9 @@ const GoalRow: React.FC<GoalRowProps> = ({
                         e.stopPropagation();
                         setMenuOpen((open) => !open);
                     }}
-                    className=" opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    aria-label={t('common.moreActions', 'More actions')}
+                    aria-expanded={menuOpen}
                 >
                     <EllipsisVerticalIcon className="h-4 w-4" />
                 </button>

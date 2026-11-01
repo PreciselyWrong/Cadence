@@ -1616,8 +1616,9 @@
     "createError": "Failed to create note"
   },
   "task": {
-    "recurringMove": {
-      "title": "Move recurring task",
+    "recurringScope": {
+      "editTitle": "Edit this task or the series?",
+      "deleteTitle": "Delete this task or the series?",
       "optionThis": "Only this occurrence",
       "optionFollowing": "This and following occurrences",
       "optionAll": "All occurrences"
@@ -2005,6 +2006,7 @@
     "toggleDropdownMenu": "Toggle dropdown menu"
   },
   "notes": {
+    "emptyPreview": "Empty note",
     "addNote": "Add Note",
     "backgroundImage": "Background",
     "noBackground": "No background",

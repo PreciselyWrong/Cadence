@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { Task } from '../entities/Task';
 import { Project } from '../entities/Project';
 import {
-    isRecurringMoveCancelled,
-    saveTaskFieldsWithDue,
-} from '../utils/recurringMove';
+    isRecurringScopeCancelled,
+    saveTaskEdit,
+} from '../utils/recurringScope';
 import {
     CalendarFeed,
     CalendarRangeEvent,
@@ -692,7 +692,8 @@ const Calendar: React.FC = () => {
             return;
         }
         if (event.type === 'task') {
-            const task = findTask(event.id);
+            // A later occurrence opens on its own day.
+            const task = findOccurrence(event.id) ?? findTask(event.id);
             if (task) {
                 const taskEntity: Task = {
                     ...task,
@@ -732,8 +733,11 @@ const Calendar: React.FC = () => {
         if (selectedTask?.uid) {
             setIsEventDetailModalOpen(false);
             const targetUid = selectedTask.uid;
+            const occurrenceDate = selectedTask.is_virtual_occurrence
+                ? selectedTask.due_date?.slice(0, 10)
+                : undefined;
             setSelectedTask(null);
-            openTaskPanel(targetUid);
+            openTaskPanel(targetUid, occurrenceDate);
         }
     };
 
@@ -777,7 +781,7 @@ const Calendar: React.FC = () => {
             );
         replace({ ...task, ...update });
         try {
-            const saved: any = await saveTaskFieldsWithDue(task, update);
+            const saved: any = await saveTaskEdit(task, update);
             // A recurring task's later occurrences follow its new date.
             if (task.recurrence_type && task.recurrence_type !== 'none') {
                 await loadTasks();
@@ -785,7 +789,7 @@ const Calendar: React.FC = () => {
             }
             replace({ ...task, ...update, ...(saved || {}) });
         } catch (error) {
-            if (!isRecurringMoveCancelled(error)) {
+            if (!isRecurringScopeCancelled(error)) {
                 console.error('Error updating task:', error);
             }
             await loadTasks();
@@ -870,7 +874,7 @@ const Calendar: React.FC = () => {
             });
             return;
         }
-        const task = findTask(eventId);
+        const task = findTask(eventId) ?? findOccurrence(eventId);
         const event = events.find((e) => e.id === eventId);
         if (!task?.uid || !event?.resize) return;
         await saveTaskChange(task, resizeUpdate(event, newEnd));

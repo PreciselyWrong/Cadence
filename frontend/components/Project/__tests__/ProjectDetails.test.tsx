@@ -25,7 +25,9 @@ jest.mock('react-i18next', () => ({
                     : maybeOptions;
 
             let template = key;
-            if (key === 'modals.deleteProject.message') {
+            if (key === 'common.loading') {
+                template = 'Chargement…';
+            } else if (key === 'modals.deleteProject.message') {
                 template =
                     'Czy na pewno chcesz usunąć projekt "{{projectName}}"?';
             } else if (typeof optionsOrDefault === 'string') {
@@ -243,5 +245,16 @@ describe('ProjectDetails edit menu item', () => {
         expect(screen.getByTestId('project-edit-panel')).toHaveTextContent(
             'Schedule with WBS'
         );
+    });
+});
+
+describe('ProjectDetails loading', () => {
+    it('says it is loading in the user language', () => {
+        (fetchProjectBySlug as jest.Mock).mockReturnValue(
+            new Promise(() => {})
+        );
+        render(<ProjectDetails />);
+        expect(screen.getByText('Chargement…')).toBeInTheDocument();
+        expect(screen.queryByText(/Loading project/)).not.toBeInTheDocument();
     });
 });

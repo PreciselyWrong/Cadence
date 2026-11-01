@@ -67,7 +67,7 @@ jest.mock('../../../utils/tasksService', () => ({
     fetchSubtasks: jest.fn().mockResolvedValue([]),
     deleteTask: jest.fn(),
     toggleTaskCompletion: jest.fn(),
-    moveTaskOccurrence: jest.fn(),
+    editTaskOccurrence: jest.fn(),
 }));
 
 jest.mock('../../../utils/profileService', () => ({

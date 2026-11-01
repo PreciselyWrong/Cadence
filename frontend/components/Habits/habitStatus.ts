@@ -177,3 +177,31 @@ export function pauseReason(
         MANUAL: t('cadenceHabits.pause.manual', 'Paused'),
     }[reason ?? 'MANUAL'];
 }
+
+// The habit as it will read once an entry is saved, shown before the server
+// answers. Only the period's progress moves; a goal counts as done once the
+// progress reaches its target. The server's evaluation replaces it on reload.
+export function withEntry(
+    habit: CadenceHabit,
+    amountMinor: number
+): CadenceHabit {
+    const goal = habit.goal;
+    const evaluation = habit.status.evaluation;
+    if (!goal || !evaluation) return habit;
+    const progress = evaluation.progress_minor + amountMinor;
+    const isCompleted =
+        kindOf(goal) === 'goal'
+            ? progress >= evaluation.target_minor
+            : evaluation.is_completed;
+    return {
+        ...habit,
+        status: {
+            ...habit.status,
+            evaluation: {
+                ...evaluation,
+                progress_minor: progress,
+                is_completed: isCompleted,
+            },
+        },
+    };
+}

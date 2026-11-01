@@ -18,7 +18,7 @@ export interface EntitySidePanelProps {
     isSubmitting?: boolean;
     isDirty?: boolean;
     error?: string | null;
-    onSubmit?: () => void;
+    onSubmit?: () => void | Promise<unknown>;
     // Shown in the header beside the close button, e.g. a saved indicator
     headerExtra?: React.ReactNode;
     // Replaces the Save and Cancel footer on an autosaving panel
@@ -59,6 +59,9 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
     const [showDiscard, setShowDiscard] = useState(false);
     const panelRef = useRef<HTMLElement>(null);
     const closingRef = useRef(false);
+    // A second click lands before the parent re-renders with isSubmitting,
+    // so the guard lives in a ref until the save settles.
+    const submittingRef = useRef(false);
     const dirtyRef = useRef(isDirty);
     const lockedRef = useRef(closeLocked);
     const onCloseRef = useRef(onClose);
@@ -188,9 +191,15 @@ const EntitySidePanel: React.FC<EntitySidePanelProps> = ({
 
                 <form
                     className="flex min-h-0 flex-1 flex-col"
-                    onSubmit={(event) => {
+                    onSubmit={async (event) => {
                         event.preventDefault();
-                        if (!isSubmitting) onSubmit?.();
+                        if (isSubmitting || submittingRef.current) return;
+                        submittingRef.current = true;
+                        try {
+                            await onSubmit?.();
+                        } finally {
+                            submittingRef.current = false;
+                        }
                     }}
                 >
                     <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overflow-x-hidden px-5 pb-6">

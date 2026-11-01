@@ -69,3 +69,30 @@ describe('SidebarProjects and the stash', () => {
         expect(screen.queryByText('Dropped plan')).not.toBeInTheDocument();
     });
 });
+
+describe('SidebarProjects header controls', () => {
+    it('names its expand toggle and shows its add button without hover', () => {
+        render(
+            <SidebarProjects
+                handleNavClick={jest.fn()}
+                location={
+                    {
+                        pathname: '/today',
+                        search: '',
+                        hash: '',
+                        state: null,
+                        key: 'k',
+                    } as any
+                }
+                isDarkMode={false}
+                openProjectModal={jest.fn()}
+            />
+        );
+        const toggle = screen.getByRole('button', {
+            name: 'Expand or collapse',
+        });
+        expect(toggle).toHaveAttribute('type', 'button');
+        const add = screen.getByRole('button', { name: 'Add Project' });
+        expect(add.className).not.toMatch(/(^|\s)opacity-0(\s|$)/);
+    });
+});

@@ -1593,8 +1593,9 @@
     "createError": "Kunde inte skapa anteckning"
   },
   "task": {
-    "recurringMove": {
-      "title": "Flytta återkommande uppgift",
+    "recurringScope": {
+      "editTitle": "Redigera den här uppgiften eller serien?",
+      "deleteTitle": "Ta bort den här uppgiften eller serien?",
       "optionThis": "Endast denna förekomst",
       "optionFollowing": "Denna och följande förekomster",
       "optionAll": "Alla förekomster"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Växla rullgardinsmeny"
   },
   "notes": {
+    "emptyPreview": "Tom anteckning",
     "loading": "Laddar anteckningar...",
     "error": "Fel vid inläsning av anteckningar",
     "searchPlaceholder": "Sök anteckningar...",

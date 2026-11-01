@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     CheckCircleIcon,
     ExclamationTriangleIcon,
@@ -14,7 +15,10 @@ interface Toast {
 interface ToastContextProps {
     showSuccessToast: (message: string | React.ReactNode) => void;
     showErrorToast: (message: string | React.ReactNode) => void;
-    showUndoToast: (message: string | React.ReactNode, onUndo: () => void) => void;
+    showUndoToast: (
+        message: string | React.ReactNode,
+        onUndo: () => void
+    ) => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -59,7 +63,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     return (
-        <ToastContext.Provider value={{ showSuccessToast, showErrorToast, showUndoToast }}>
+        <ToastContext.Provider
+            value={{ showSuccessToast, showErrorToast, showUndoToast }}
+        >
             {children}
             <div className="fixed top-20 right-4 z-50 space-y-2">
                 {toasts.map((toast, index) => (
@@ -68,7 +74,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
                         message={toast.message}
                         type={toast.type}
                         onClose={() => removeToast(toast.id)}
-                        onUndo={toast.onUndo ? () => { removeToast(toast.id); toast.onUndo!(); } : undefined}
+                        onUndo={
+                            toast.onUndo
+                                ? () => {
+                                      removeToast(toast.id);
+                                      toast.onUndo!();
+                                  }
+                                : undefined
+                        }
                         style={{ transform: `translateY(${index * 4}px)` }}
                     />
                 ))}
@@ -89,6 +102,7 @@ export const useToast = () => {
 // undefined there, so the caller skips the toast.
 export const useOptionalToast = () => useContext(ToastContext);
 
+// Success stays neutral and quiet; only an error takes a strong colour.
 const ToastComponent: React.FC<{
     message: string | React.ReactNode;
     type: 'success' | 'error';
@@ -96,10 +110,14 @@ const ToastComponent: React.FC<{
     onUndo?: () => void;
     style?: React.CSSProperties;
 }> = ({ message, type, onClose, onUndo, style }) => {
+    const { t } = useTranslation();
     return (
         <div
-            className={`px-4 py-3 rounded-lg shadow-md text-white transition-all duration-300 ${
-                type === 'success' ? 'bg-green-600' : 'bg-red-500'
+            role={type === 'error' ? 'alert' : 'status'}
+            className={`w-[min(24rem,calc(100vw-2rem))] px-4 py-3 rounded-lg shadow-lg transition-all duration-200 ease-out ${
+                type === 'success'
+                    ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
+                    : 'bg-red-600 text-white'
             }`}
             style={style}
         >
@@ -111,18 +129,23 @@ const ToastComponent: React.FC<{
                         <ExclamationTriangleIcon className="h-5 w-5" />
                     )}
                 </div>
-                <div className="flex-1 text-sm">{message}</div>
+                <div className="min-w-0 flex-1 break-words text-sm line-clamp-3">
+                    {message}
+                </div>
                 {onUndo && (
                     <button
+                        type="button"
                         onClick={onUndo}
-                        className="flex-shrink-0 text-sm font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"
+                        className="flex-shrink-0 rounded px-1 text-sm font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity focus-visible:outline focus-visible:outline-2"
                     >
-                        Undo
+                        {t('common.undo', 'Undo')}
                     </button>
                 )}
                 <button
+                    type="button"
                     onClick={onClose}
-                    className="flex-shrink-0 text-lg leading-none hover:opacity-75"
+                    aria-label={t('common.close', 'Close')}
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded text-lg leading-none hover:opacity-75 focus-visible:outline focus-visible:outline-2"
                 >
                     &times;
                 </button>

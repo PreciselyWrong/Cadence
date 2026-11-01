@@ -1597,8 +1597,9 @@
     "createError": "Ustvarjanje opombe ni uspelo"
   },
   "task": {
-    "recurringMove": {
-      "title": "Premakni ponavljajoče se opravilo",
+    "recurringScope": {
+      "editTitle": "Urediti to opravilo ali serijo?",
+      "deleteTitle": "Izbrisati to opravilo ali serijo?",
       "optionThis": "Samo to ponovitev",
       "optionFollowing": "To in naslednje ponovitve",
       "optionAll": "Vse ponovitve"
@@ -1981,6 +1982,7 @@
     "toggleDropdownMenu": "Preklopi spustni meni"
   },
   "notes": {
+    "emptyPreview": "Prazna opomba",
     "loading": "Nalaganje opomb...",
     "error": "Napaka pri nalaganju opomb",
     "searchPlaceholder": "Išči opombe...",

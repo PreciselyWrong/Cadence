@@ -1594,8 +1594,9 @@
     "createError": "Kunne ikke opprette notat"
   },
   "task": {
-    "recurringMove": {
-      "title": "Flytt gjentakende oppgave",
+    "recurringScope": {
+      "editTitle": "Rediger denne oppgaven eller serien?",
+      "deleteTitle": "Slett denne oppgaven eller serien?",
       "optionThis": "Bare denne forekomsten",
       "optionFollowing": "Denne og følgende forekomster",
       "optionAll": "Alle forekomster"
@@ -1976,6 +1977,7 @@
     "toggleDropdownMenu": "Veksle rullegardinmeny"
   },
   "notes": {
+    "emptyPreview": "Tom notat",
     "loading": "Laster notater...",
     "error": "Feil ved lasting av notater",
     "searchPlaceholder": "Søk notater...",

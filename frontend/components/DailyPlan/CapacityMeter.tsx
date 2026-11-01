@@ -8,17 +8,15 @@ interface CapacityMeterProps {
     free: number;
 }
 
-// Planned time against the free time of the day. Amber from 90 %, red past
-// 100 % with the overshoot spelled out (colour is never the only signal).
+// Planned time against the free time of the day. Amber from 90 %, with the
+// overshoot spelled out past 100 % (colour is never the only signal). Never
+// red: an overfull day is a nudge to move something, not an alarm.
 const CapacityMeter: React.FC<CapacityMeterProps> = ({ planned, free }) => {
     const { t } = useTranslation();
     const { percent, over, overBy } = capacityState(planned, free);
     const tight = !over && percent >= 90;
-    const fill = over
-        ? 'bg-red-600'
-        : tight
-          ? 'bg-amber-500'
-          : 'bg-blue-600 dark:bg-blue-500';
+    const fill =
+        over || tight ? 'bg-amber-500' : 'bg-blue-600 dark:bg-blue-500';
 
     return (
         <div
@@ -28,7 +26,7 @@ const CapacityMeter: React.FC<CapacityMeterProps> = ({ planned, free }) => {
             <span
                 className={
                     over
-                        ? 'font-medium text-red-700 dark:text-red-400'
+                        ? 'font-medium text-amber-800 dark:text-amber-300'
                         : 'text-gray-700 dark:text-gray-300'
                 }
             >
@@ -59,7 +57,7 @@ const CapacityMeter: React.FC<CapacityMeterProps> = ({ planned, free }) => {
             {over && (
                 <span
                     role="status"
-                    className="text-xs font-medium text-red-700 dark:text-red-400"
+                    className="text-xs text-amber-800 dark:text-amber-300"
                     data-testid="capacity-over"
                 >
                     {t(

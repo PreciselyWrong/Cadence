@@ -743,6 +743,7 @@
     "areaDeleted": "Область успішно видалено!"
   },
   "notes": {
+    "emptyPreview": "Порожня нотатка",
     "loading": "Завантаження нотаток...",
     "error": "Помилка завантаження нотаток",
     "searchPlaceholder": "Пошук нотаток...",
@@ -1703,8 +1704,9 @@
     "pureBlack": "Pure black in dark mode"
   },
   "task": {
-    "recurringMove": {
-      "title": "Перенести повторюване завдання",
+    "recurringScope": {
+      "editTitle": "Змінити це завдання чи серію?",
+      "deleteTitle": "Видалити це завдання чи серію?",
       "optionThis": "Лише це повторення",
       "optionFollowing": "Це й наступні повторення",
       "optionAll": "Усі повторення"

@@ -1577,8 +1577,9 @@
     "noCompletedTasks": "No hay tareas completadas."
   },
   "task": {
-    "recurringMove": {
-      "title": "Mover tarea recurrente",
+    "recurringScope": {
+      "editTitle": "¿Editar esta tarea o la serie?",
+      "deleteTitle": "¿Eliminar esta tarea o la serie?",
       "optionThis": "Solo esta repetición",
       "optionFollowing": "Esta y las siguientes repeticiones",
       "optionAll": "Todas las repeticiones"
@@ -1909,6 +1910,7 @@
     "toggleDropdownMenu": "Alternar menú desplegable"
   },
   "notes": {
+    "emptyPreview": "Nota vacía",
     "loading": "Cargando notas...",
     "error": "Error al cargar notas",
     "searchPlaceholder": "Buscar notas...",

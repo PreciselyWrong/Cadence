@@ -109,7 +109,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                                     summaryMode={true}
                                 />
                             ) : (
-                                <p>No content preview available...</p>
+                                <p>{t('notes.emptyPreview', 'Empty note')}</p>
                             )}
                         </div>
                     </div>

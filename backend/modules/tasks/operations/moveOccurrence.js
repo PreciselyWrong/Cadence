@@ -7,7 +7,10 @@ const {
     calculateVirtualOccurrences,
     localDateOf,
 } = require('../recurringTaskService');
-const { planOccurrenceAdvance } = require('./recurring');
+const {
+    planOccurrenceAdvance,
+    skipRecurringOccurrence,
+} = require('./recurring');
 const {
     dateStringToUTC,
     getSafeTimezone,
@@ -70,6 +73,21 @@ const instantOnLocalDate = (dateString, parentDue, timezone, hasTime) => {
         .tz(`${dateString} ${time}`, 'YYYY-MM-DD HH:mm:ss.SSS', timezone)
         .toDate();
 };
+
+const daysBetween = (fromDate, toDate) =>
+    moment
+        .utc(toDate, DATE_FORMAT)
+        .diff(moment.utc(fromDate, DATE_FORMAT), 'days');
+
+// A reminder moved with its occurrence keeps its local time of day and its
+// distance in days from the due date, across a daylight-saving switch too.
+const shiftedReminder = (task, days, timezone) =>
+    task.reminder_at
+        ? {
+              reminder_at: shiftInstant(task.reminder_at, days, timezone),
+              reminder_sent_at: null,
+          }
+        : {};
 
 const shiftWeekday = (weekday, days) => (((weekday + days) % 7) + 7) % 7;
 
@@ -161,6 +179,7 @@ async function shiftWholeSeries(task, deltaDays, timezone) {
     const changes = {
         due_date: newDue,
         ...shiftPattern(task, deltaDays, localDateOf(newDue, timezone)),
+        ...shiftedReminder(task, deltaDays, timezone),
         recurrence_exdates: (task.recurrence_exdates || []).map((date) =>
             shiftDateString(date, deltaDays)
         ),
@@ -201,6 +220,11 @@ async function splitSeries(
             {
                 ...pick(task, SERIES_FIELDS),
                 ...shiftPattern(task, deltaDays, dueDate),
+                ...shiftedReminder(
+                    task,
+                    daysBetween(localDateOf(task.due_date, timezone), dueDate),
+                    timezone
+                ),
                 due_date: newDue,
                 recurrence_end_date: task.recurrence_end_date,
                 recurrence_exdates: exdates
@@ -241,6 +265,11 @@ async function detachOccurrence(task, { occurrenceDate, dueDate, timezone }) {
         const moved = await Task.create(
             {
                 ...pick(task, ONE_OFF_FIELDS),
+                ...shiftedReminder(
+                    task,
+                    daysBetween(localDateOf(task.due_date, timezone), dueDate),
+                    timezone
+                ),
                 recurrence_type: 'none',
                 due_date: newDue,
             },
@@ -282,15 +311,9 @@ async function detachOccurrence(task, { occurrenceDate, dueDate, timezone }) {
     });
 }
 
-// Moves one occurrence of a recurring series (scope "this"), the occurrence
-// and every later one (scope "following"), or the whole series (scope "all").
-// Dates are local calendar dates in the user's timezone.
-async function moveOccurrence(
-    task,
-    { scope, occurrenceDate, dueDate, timezone } = {}
-) {
-    const tz = getSafeTimezone(timezone);
-
+// Checks that occurrenceDate is a day of this series and returns whether it
+// is the series' current occurrence.
+function requireOccurrence(task, { scope, occurrenceDate, timezone }) {
     if (!task.recurrence_type || task.recurrence_type === 'none') {
         throw new ValidationError(
             'Only recurring tasks have occurrences to move.'
@@ -305,24 +328,38 @@ async function moveOccurrence(
         throw new ValidationError('Scope must be this, following or all.');
     }
     requireLocalDate(occurrenceDate, 'Occurrence date');
-    requireLocalDate(dueDate, 'Due date');
     if (!task.due_date) {
         throw new ValidationError('This recurring task has no due date.');
     }
-
-    const isOccurrence = isOccurrenceOf(task, occurrenceDate, tz);
-    if (!isOccurrence) {
+    if (!isOccurrenceOf(task, occurrenceDate, timezone)) {
         throw new ValidationError(
             'That date is not an occurrence of this task.'
         );
     }
+    return occurrenceDate === localDateOf(task.due_date, timezone);
+}
 
-    const deltaDays = moment
-        .utc(dueDate, DATE_FORMAT)
-        .diff(moment.utc(occurrenceDate, DATE_FORMAT), 'days');
-    const isCurrent = occurrenceDate === localDateOf(task.due_date, tz);
+// Moves one occurrence of a recurring series (scope "this"), the occurrence
+// and every later one (scope "following"), or the whole series (scope "all").
+// Dates are local calendar dates in the user's timezone. With the same day,
+// "this" and "following" still split the occurrence off, so an edit can then
+// be applied to it alone; "all" writes nothing.
+async function moveOccurrence(
+    task,
+    { scope, occurrenceDate, dueDate, timezone } = {}
+) {
+    const tz = getSafeTimezone(timezone);
+    const isCurrent = requireOccurrence(task, {
+        scope,
+        occurrenceDate,
+        timezone: tz,
+    });
+    requireLocalDate(dueDate, 'Due date');
+
+    const deltaDays = daysBetween(occurrenceDate, dueDate);
 
     if (scope === 'all' || (scope === 'following' && isCurrent)) {
+        if (deltaDays === 0) return { task, moved: null };
         return shiftWholeSeries(task, deltaDays, tz);
     }
     if (scope === 'following') {
@@ -336,7 +373,138 @@ async function moveOccurrence(
     return detachOccurrence(task, { occurrenceDate, dueDate, timezone: tz });
 }
 
+const RECURRENCE_KEYS = [
+    'recurrence_type',
+    'recurrence_interval',
+    'recurrence_end_date',
+    'recurrence_weekday',
+    'recurrence_weekdays',
+    'recurrence_month_day',
+    'recurrence_week_of_month',
+    'completion_based',
+    'update_parent_recurrence',
+];
+
+// What a move of the series may change, so a failed edit can put it back.
+const SERIES_STATE = [
+    'due_date',
+    'status',
+    'completed_at',
+    'reminder_at',
+    'reminder_sent_at',
+    'recurrence_end_date',
+    'recurrence_exdates',
+    'recurrence_weekday',
+    'recurrence_weekdays',
+    'recurrence_month_day',
+];
+
+// Splits an edit of one occurrence into the day the occurrence goes to and
+// the PATCH body for the task that ends up holding it: the split-off task
+// for "this" and "following", the series itself otherwise.
+function planOccurrenceEdit(
+    task,
+    { scope, occurrenceDate, changes, timezone } = {}
+) {
+    const tz = getSafeTimezone(timezone);
+    if (!changes || typeof changes !== 'object' || Array.isArray(changes)) {
+        throw new ValidationError('Changes must be an object.');
+    }
+    const isCurrent = requireOccurrence(task, {
+        scope,
+        occurrenceDate,
+        timezone: tz,
+    });
+    if (scope === 'this' && RECURRENCE_KEYS.some((key) => key in changes)) {
+        throw new ValidationError(
+            'Change the repeat rule on the series, not on one occurrence.'
+        );
+    }
+
+    const { due_date: dueChange, ...patch } = changes;
+    let dueDate = occurrenceDate;
+    if (typeof dueChange === 'string' && dueChange !== '') {
+        dueDate = dueChange.slice(0, 10);
+        requireLocalDate(dueDate, 'Due date');
+    } else if (dueChange !== undefined) {
+        patch.due_date = dueChange;
+    }
+
+    const onSeries = scope === 'all' || (scope === 'following' && isCurrent);
+    // The reminder was set for the edited occurrence; the series row holds
+    // its current occurrence, which is that many days away.
+    if (onSeries && patch.reminder_at) {
+        const reminder = new Date(patch.reminder_at);
+        if (!Number.isNaN(reminder.getTime())) {
+            patch.reminder_at = shiftInstant(
+                reminder,
+                daysBetween(occurrenceDate, localDateOf(task.due_date, tz)),
+                tz
+            ).toISOString();
+        }
+    }
+
+    return {
+        dueDate,
+        patch,
+        onSeries,
+        before: pick(task, SERIES_STATE),
+    };
+}
+
+// Undoes moveOccurrence when the edit that followed it was refused.
+async function restoreSeries(task, before, moved) {
+    const { destroyTaskRows } = require('./deletion');
+    if (moved) await destroyTaskRows(moved);
+    await task.update(before);
+}
+
+// Removes one occurrence (scope "this": the current one is skipped, a later
+// one left out of the series) or the occurrence and every later one (scope
+// "following": the series ends the day before). Returns deleteSeries when
+// nothing of the series would remain, so the caller deletes the task.
+async function deleteOccurrence(
+    task,
+    { scope, occurrenceDate, timezone, userId } = {}
+) {
+    const tz = getSafeTimezone(timezone);
+    const isCurrent = requireOccurrence(task, {
+        scope,
+        occurrenceDate,
+        timezone: tz,
+    });
+
+    if (scope === 'all' || (scope === 'following' && isCurrent)) {
+        return { task, deleteSeries: true };
+    }
+
+    if (scope === 'following') {
+        const exdates = task.recurrence_exdates || [];
+        await task.update({
+            recurrence_end_date: moment
+                .tz(occurrenceDate, DATE_FORMAT, tz)
+                .subtract(1, 'ms')
+                .toDate(),
+            recurrence_exdates: exdates.filter((date) => date < occurrenceDate),
+        });
+        return { task, deleteSeries: false };
+    }
+
+    if (isCurrent) {
+        const result = await skipRecurringOccurrence(task, userId, tz);
+        // The last occurrence: skipping it leaves no series behind.
+        return { task, deleteSeries: Boolean(result.error) };
+    }
+
+    const exdates = [...(task.recurrence_exdates || []), occurrenceDate];
+    await task.update({ recurrence_exdates: [...new Set(exdates)].sort() });
+    return { task, deleteSeries: false };
+}
+
 module.exports = {
     moveOccurrence,
+    planOccurrenceEdit,
+    restoreSeries,
+    deleteOccurrence,
     shiftPattern,
 };

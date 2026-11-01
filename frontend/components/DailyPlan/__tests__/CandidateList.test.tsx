@@ -69,6 +69,26 @@ describe('CandidateList', () => {
         expect(screen.getAllByText(/Due that day/).length).toBeGreaterThan(0);
     });
 
+    it('marks a past due date without red and keeps long tags from crowding the name', () => {
+        renderList({
+            ...candidates,
+            overdue: [
+                task('t-late', 'Renew insurance', {
+                    due_date: '2026-09-20',
+                    tags: [
+                        { name: 'perso/sport/course/trail/ultra/utmb' },
+                        { name: 'travail/client-12' },
+                    ],
+                }),
+            ],
+        });
+        const card = screen.getByTestId('candidate-t-late');
+        expect(card.innerHTML).not.toMatch(/bg-red-/);
+        expect(within(card).getByTestId('task-tag-chips').className).toMatch(
+            /max-w-/
+        );
+    });
+
     it('shows overdue, due today, in progress, then the rest', () => {
         renderList();
         const names = screen

@@ -1597,8 +1597,9 @@
     "createError": "Nie udało się utworzyć notatki"
   },
   "task": {
-    "recurringMove": {
-      "title": "Przenieś zadanie cykliczne",
+    "recurringScope": {
+      "editTitle": "Edytować to zadanie czy serię?",
+      "deleteTitle": "Usunąć to zadanie czy serię?",
       "optionThis": "Tylko to wystąpienie",
       "optionFollowing": "To i kolejne wystąpienia",
       "optionAll": "Wszystkie wystąpienia"
@@ -1981,6 +1982,7 @@
     "toggleDropdownMenu": "Przełącz menu rozwijane"
   },
   "notes": {
+    "emptyPreview": "Pusta notatka",
     "loading": "Ładowanie notatek...",
     "error": "Błąd podczas ładowania notatek",
     "searchPlaceholder": "Szukaj notatek...",

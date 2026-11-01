@@ -10,6 +10,7 @@ const TaskPanelHost: React.FC = () => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
     const uid = useTaskPanel((state) => state.uid);
+    const occurrenceDate = useTaskPanel((state) => state.occurrenceDate);
     const close = useTaskPanel((state) => state.close);
     const [task, setTask] = useState<Task | null>(null);
 
@@ -21,7 +22,16 @@ const TaskPanelHost: React.FC = () => {
         let cancelled = false;
         fetchTaskByUid(uid)
             .then((fresh) => {
-                if (!cancelled) setTask(fresh);
+                if (cancelled) return;
+                setTask(
+                    occurrenceDate && occurrenceDate !== fresh.due_date
+                        ? {
+                              ...fresh,
+                              due_date: occurrenceDate,
+                              is_virtual_occurrence: true,
+                          }
+                        : fresh
+                );
             })
             .catch(() => {
                 if (cancelled) return;
@@ -31,7 +41,7 @@ const TaskPanelHost: React.FC = () => {
         return () => {
             cancelled = true;
         };
-    }, [uid]);
+    }, [uid, occurrenceDate]);
 
     if (!uid || !task || task.uid !== uid) return null;
 

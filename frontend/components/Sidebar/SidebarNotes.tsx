@@ -87,7 +87,7 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                             e.stopPropagation();
                             onCreateNote();
                         }}
-                        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
+                        className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                         aria-label={t('notes.addNote', 'Add Note')}
                         title={t('notes.addNote', 'Add Note')}
                     >
@@ -99,11 +99,16 @@ const SidebarNotes: React.FC<SidebarNotesProps> = ({
                                 {notes.length}
                             </span>
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
+                                aria-label={t(
+                                    'sidebar.toggleSection',
+                                    'Expand or collapse'
+                                )}
                                 className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon

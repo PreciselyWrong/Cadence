@@ -15,6 +15,7 @@ import {
 import HabitCard from './HabitCard';
 import HabitEditor from './HabitEditor';
 import PauseEditor from './PauseEditor';
+import { withEntry } from './habitStatus';
 import TabPills from '../Shared/ui/TabPills';
 import BlankSlate from '../Shared/BlankSlate';
 import {
@@ -104,16 +105,26 @@ const Habits: React.FC = () => {
         amountMinor: number,
         note?: string
     ) => {
+        // The card shows the entry at once; a failed save puts it back.
+        setHabits((current) =>
+            current.map((item) =>
+                item.uid === habit.uid ? withEntry(item, amountMinor) : item
+            )
+        );
         try {
             await createRow(habit.uid, 'entries', {
                 value_minor: amountMinor,
                 note: note ?? null,
             });
-            await load();
         } catch (error) {
             console.error('Failed to log an entry:', error);
+            setHabits((current) =>
+                current.map((item) => (item.uid === habit.uid ? habit : item))
+            );
             setFailed(true);
+            return;
         }
+        await load();
     };
 
     const restore = async (habit: CadenceHabit) => {

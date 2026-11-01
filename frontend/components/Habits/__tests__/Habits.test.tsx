@@ -100,6 +100,31 @@ describe('Habits page', () => {
         );
     });
 
+    it('shows a yes/no habit done at once, before the server answers', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(list([habit()]));
+        service.createRow.mockReturnValue(new Promise(() => {}));
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Mark Lire as done' })
+        );
+        expect(
+            screen.queryByRole('button', { name: 'Mark Lire as done' })
+        ).not.toBeInTheDocument();
+    });
+
+    it('puts a habit back and says so when the entry could not be saved', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(list([habit()]));
+        service.createRow.mockRejectedValue(new Error('offline'));
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Mark Lire as done' })
+        );
+        expect(
+            await screen.findByRole('button', { name: 'Mark Lire as done' })
+        ).toBeInTheDocument();
+        expect(screen.getByRole('alert')).toBeInTheDocument();
+    });
+
     it('offers the quick values the habit was given', async () => {
         const run = habit({
             uid: 'run',

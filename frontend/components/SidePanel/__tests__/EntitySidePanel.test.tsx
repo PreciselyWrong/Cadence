@@ -30,6 +30,23 @@ const renderPanel = (
 };
 
 describe('EntitySidePanel', () => {
+    it('submits once while a save is still running, even on a double click', async () => {
+        let finish: () => void = () => undefined;
+        const onSubmit = jest.fn(
+            () => new Promise<void>((resolve) => (finish = resolve))
+        );
+        renderPanel({ onSubmit });
+        const submit = screen.getByTestId('side-panel-submit');
+        fireEvent.click(submit);
+        fireEvent.click(submit);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+
+        finish();
+        await waitFor(() => expect(submit).not.toBeDisabled());
+        fireEvent.click(submit);
+        expect(onSubmit).toHaveBeenCalledTimes(2);
+    });
+
     it('renders nothing when closed', () => {
         renderPanel({ isOpen: false });
         expect(screen.queryByRole('dialog')).toBeNull();

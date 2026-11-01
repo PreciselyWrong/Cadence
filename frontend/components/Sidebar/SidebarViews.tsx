@@ -93,7 +93,7 @@ const SortableViewItem: React.FC<SortableViewItemProps> = ({
             <span className="truncate min-w-0">{view.name}</span>
             <button
                 onClick={onTogglePin}
-                className="opacity-0 group-hover:opacity-100 transition-opacity text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 flex-shrink-0"
+                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 flex-shrink-0"
                 aria-label={t('sidebar.unpinView')}
                 title={t('sidebar.unpinView')}
             >
@@ -316,6 +316,7 @@ const SidebarViews: React.FC<SidebarViewsProps> = ({
                     <div className="flex items-center gap-1">
                         <span className="h-3.5 w-3.5" aria-hidden="true" />
                         <button
+                            type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setIsExpanded((v) => !v);

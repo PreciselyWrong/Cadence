@@ -1593,8 +1593,9 @@
     "createError": "메모 생성에 실패했습니다"
   },
   "task": {
-    "recurringMove": {
-      "title": "반복 작업 이동",
+    "recurringScope": {
+      "editTitle": "이 작업만 편집할까요, 아니면 시리즈 전체를 편집할까요?",
+      "deleteTitle": "이 작업만 삭제할까요, 아니면 시리즈 전체를 삭제할까요?",
       "optionThis": "이 일정만",
       "optionFollowing": "이 일정 및 이후 일정",
       "optionAll": "모든 일정"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "드롭다운 메뉴 전환"
   },
   "notes": {
+    "emptyPreview": "빈 메모",
     "loading": "노트 로딩 중...",
     "error": "노트 로딩 오류",
     "searchPlaceholder": "노트 검색...",

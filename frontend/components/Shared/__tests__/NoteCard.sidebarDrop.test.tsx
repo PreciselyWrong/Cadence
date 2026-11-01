@@ -69,3 +69,11 @@ describe('NoteCard dragged onto the sidebar', () => {
         tag.remove();
     });
 });
+
+describe('NoteCard preview', () => {
+    it('says an empty note is empty through the translations', () => {
+        render(<NoteCard note={{ ...note, content: '' }} />);
+        expect(screen.getByText('Empty note')).toBeInTheDocument();
+        expect(screen.queryByText(/No content preview/)).toBeNull();
+    });
+});

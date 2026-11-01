@@ -514,7 +514,7 @@ Get a single project by UID.
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Project UID |
 
-Project responses from `list_projects`, `get_project`, `create_project` and `update_project` include `goal`, `is_maintenance` and `visibility`.
+Project responses from `list_projects`, `get_project`, `create_project` and `update_project` include `goal`, `is_maintenance`, `visibility` and `next_task` (`{ uid, name }` of the designated next action, or `null`).
 
 ---
 
@@ -557,6 +557,7 @@ Update an existing project.
 | `goal_uid` | string | No | Goal UID, as an alternative to `goal_id`; `null` or empty unlinks |
 | `is_maintenance` | boolean | No | `true` marks as maintenance and unlinks any goal (owner only if a goal is set); linking a goal sets it back to `false` |
 | `visibility` | string | No | `area` or `restricted` (project owner or area owner only); restricting takes back the access the area and goal gave |
+| `next_task_uid` | string | No | Next action: UID of an open task of this project, the same rule as the REST `PATCH`; `null` clears. Cleared automatically when the task is closed, deleted or moved out. A new project has no tasks, so `create_project` does not take it |
 
 ---
 
@@ -737,13 +738,13 @@ List goals with optional filtering by area or status.
 | `area_id` | number | No | — | Filter by area ID |
 | `status` | string | No | `all` | Filter: `active`, `achieved`, `paused`, `dropped`, `all` |
 
-**Returns:** Goal objects with title, why, horizon, status, target date, and linked area.
+**Returns:** Goal objects with title, why, horizon, status, bucket, target date, linked area, `parent_goal_uid` (set on a key result), `key_results` (`[{ uid, title }]`, for an objective) and `progress` (`{ done, total, percent }`; an objective also counts its key results' projects and tasks).
 
 ---
 
 #### `get_goal`
 
-Get a single goal by UID, including the projects linked to it.
+Get a single goal by UID, including the projects linked to it, `parent_goal_uid`, `key_results` and `progress` (same shape as `list_goals`).
 
 **Parameters:**
 | Parameter | Type | Required | Description |
@@ -766,6 +767,7 @@ Create a new goal within an area.
 | `target_date` | string | No | Target date (YYYY-MM-DD) |
 | `status` | string | No | `active`, `achieved`, `paused`, `dropped` (default: `active`) |
 | `bucket` | string | No | `have`, `be` or `do` to put the goal on the bucket list |
+| `parent_goal_uid` | string | No | Make the goal a key result of this objective. One level only: the objective cannot itself be a key result, must be yours, and a bucket-list goal cannot be a key result |
 
 **Example:**
 
@@ -795,6 +797,7 @@ Update an existing goal.
 | `target_date` | string | No | New target date or empty string to clear |
 | `status` | string | No | `active`, `achieved`, `paused`, `dropped` |
 | `bucket` | string | No | `have`, `be` or `do`; bucket list group |
+| `parent_goal_uid` | string | No | Make the goal a key result of this objective (same rules as `create_goal`, and a goal that has key results cannot become one); `null` makes it a top-level objective again |
 
 ---
 

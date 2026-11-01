@@ -168,8 +168,11 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                 className="flex items-center hover:underline text-left"
                                 title={
                                     note.project
-                                        ? 'Change project'
-                                        : 'Add project'
+                                        ? undefined
+                                        : t(
+                                              'projects.addProject',
+                                              'Add project'
+                                          )
                                 }
                             >
                                 {projectColor ? (
@@ -185,7 +188,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                 )}
                                 {note.project
                                     ? note.project.name
-                                    : 'Add project'}
+                                    : t('projects.addProject', 'Add project')}
                             </button>
                             <button
                                 type="button"
@@ -193,8 +196,8 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                 className="flex items-center hover:underline text-left"
                                 title={
                                     note.tags && note.tags.length > 0
-                                        ? 'Change tags'
-                                        : 'Add tags'
+                                        ? undefined
+                                        : t('project.addTags', 'Add tags')
                                 }
                             >
                                 <TagIconOutline className="h-3 w-3 mr-1" />
@@ -206,7 +209,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                                   {tag.name}
                                               </React.Fragment>
                                           ))
-                                        : 'Add tags'}
+                                        : t('project.addTags', 'Add tags')}
                                 </span>
                             </button>
                         </div>

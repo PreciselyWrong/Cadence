@@ -127,11 +127,12 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                 isDragging ? 'opacity-40' : ''
             }`}
             data-testid={`candidate-${task.uid}`}
+            data-task-row
         >
             <div className="flex items-center gap-2.5">
                 <TaskCheckCircle task={task} onToggle={onComplete} />
                 <div
-                    className="flex min-w-0 flex-1 cursor-grab flex-col active:cursor-grabbing"
+                    className="flex min-w-[8rem] flex-1 cursor-grab flex-col active:cursor-grabbing"
                     {...listeners}
                     {...attributes}
                     aria-label={t(
@@ -152,7 +153,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                     <span className="flex items-center gap-1.5 truncate text-xs text-gray-600 dark:text-gray-300">
                         {group === 'overdue' && (
                             <span
-                                className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400/80"
+                                className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500"
                                 aria-hidden="true"
                             />
                         )}
@@ -160,7 +161,11 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                     </span>
                 </div>
                 {task.tags && task.tags.length > 0 && (
-                    <TaskTagChips tags={task.tags} className="hidden sm:flex" />
+                    // Bounded so long tags never squeeze the task name away
+                    <TaskTagChips
+                        tags={task.tags}
+                        className="hidden max-w-[35%] shrink overflow-hidden sm:flex"
+                    />
                 )}
                 {task.Project?.name && (
                     <span

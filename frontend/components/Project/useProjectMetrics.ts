@@ -7,7 +7,11 @@ import {
     isTaskPlanned,
     isTaskWaiting,
 } from '../../constants/taskStatus';
-import { parseDateString, getTodayDateString, toLocalDateString } from '../../utils/dateUtils';
+import {
+    parseDateString,
+    getTodayDateString,
+    toLocalDateString,
+} from '../../utils/dateUtils';
 
 // Check if task is in today's plan (has active status)
 const isTaskInTodayPlan = (task: Task): boolean =>
@@ -411,10 +415,14 @@ export const useProjectMetrics = (
                 (due.getTime() - startOfToday.getTime()) / (1000 * 60 * 60 * 24)
             );
 
+            // A past date is named, never counted in days late.
             if (diffDays < 0) {
-                return t('tasks.overdueBy', {
-                    defaultValue: 'Overdue by {{days}}d',
-                    days: Math.abs(diffDays),
+                return t('project.dueOn', {
+                    defaultValue: 'Due {{date}}',
+                    date: due.toLocaleDateString(undefined, {
+                        day: 'numeric',
+                        month: 'short',
+                    }),
                 }) as string;
             }
             if (diffDays === 0)

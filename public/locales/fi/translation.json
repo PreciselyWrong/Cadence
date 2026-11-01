@@ -1593,8 +1593,9 @@
     "createError": "Muistiinpanon luominen epäonnistui"
   },
   "task": {
-    "recurringMove": {
-      "title": "Siirrä toistuva tehtävä",
+    "recurringScope": {
+      "editTitle": "Muokataanko tätä tehtävää vai sarjaa?",
+      "deleteTitle": "Poistetaanko tämä tehtävä vai sarja?",
       "optionThis": "Vain tämä toistokerta",
       "optionFollowing": "Tämä ja seuraavat toistokerrat",
       "optionAll": "Kaikki toistokerrat"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
   },
   "notes": {
+    "emptyPreview": "Tyhjä muistiinpano",
     "loading": "Ladataan muistiinpanoja...",
     "error": "Virhe muistiinpanojen lataamisessa",
     "searchPlaceholder": "Etsi muistiinpanoja...",

@@ -1,7 +1,14 @@
 'use strict';
 
 const entitlements = require('../../../services/entitlementsService');
-const { sequelize, Project, Area, Tag, Goal } = require('../../../models');
+const {
+    sequelize,
+    Project,
+    Area,
+    Tag,
+    Goal,
+    Task,
+} = require('../../../models');
 const { Op } = require('sequelize');
 const projectsRepository = require('../../projects/repository');
 const {
@@ -10,6 +17,7 @@ const {
     syncContainerShares,
     cascadeAreaToDescendants,
 } = require('../../projects/service');
+const nextAction = require('../../projects/nextAction');
 const {
     resolveParent,
     resolveParentChange,
@@ -126,6 +134,51 @@ const parentInputProperty = {
     },
 };
 
+const nextTaskInputProperty = {
+    next_task_uid: {
+        type: ['string', 'null'],
+        description:
+            'UID of the next action: an open task of this project, shown first in Suggested. Pass null to clear.',
+    },
+};
+
+// The designated next action of each project as { uid, name } (null when none
+// or no longer open), read in one query for a whole list. Keyed by project uid.
+async function nextTasksByProject(projects) {
+    const uids = projects.map((p) => p.next_task_uid).filter(Boolean);
+    if (uids.length === 0) return new Map();
+    const tasks = await Task.findAll({
+        where: { uid: { [Op.in]: uids } },
+        attributes: ['uid', 'name', 'status', 'project_id'],
+    });
+    const byUid = new Map(tasks.map((task) => [task.uid, task]));
+    return new Map(
+        projects.map((project) => {
+            const task = byUid.get(project.next_task_uid);
+            const valid = task && !nextAction.problemWith(task, project);
+            return [
+                project.uid,
+                valid ? { uid: task.uid, name: task.name } : null,
+            ];
+        })
+    );
+}
+
+// null/'' clears the next action; a uid must name an open task of the project.
+async function resolveNextTaskUid(project, taskUid) {
+    if (taskUid === null || taskUid === '') return null;
+    const task =
+        typeof taskUid === 'string'
+            ? await Task.findOne({
+                  where: { uid: taskUid },
+                  attributes: ['uid', 'status', 'project_id'],
+              })
+            : null;
+    const problem = nextAction.problemWith(task, project);
+    if (problem) throw new Error(problem);
+    return task.uid;
+}
+
 const projectIncludes = [
     { model: Area, as: 'Area' },
     { model: Tag, as: 'Tags' },
@@ -190,6 +243,7 @@ function registerProjectTools(server, context, tools) {
                 order: [['created_at', 'DESC']],
             });
 
+            const nextTasks = await nextTasksByProject(projects);
             const serialized = projects.map((p) => {
                 const proj = p.toJSON();
                 return {
@@ -204,7 +258,7 @@ function registerProjectTools(server, context, tools) {
                     parent_project_uid: proj.ParentProject?.uid ?? null,
                     is_maintenance: !!proj.is_maintenance,
                     visibility: proj.visibility,
-                    visibility: proj.visibility,
+                    next_task: nextTasks.get(proj.uid) ?? null,
                     tags: proj.Tags ? proj.Tags.map((t) => t.name) : [],
                     due_date_at: proj.due_date_at,
                     start_date_at: proj.start_date_at,
@@ -268,6 +322,7 @@ function registerProjectTools(server, context, tools) {
             }
 
             const proj = project.toJSON();
+            const nextTasks = await nextTasksByProject([project]);
             const serialized = {
                 id: proj.id,
                 uid: proj.uid,
@@ -280,6 +335,7 @@ function registerProjectTools(server, context, tools) {
                 parent_project_uid: proj.ParentProject?.uid ?? null,
                 is_maintenance: !!proj.is_maintenance,
                 visibility: proj.visibility,
+                next_task: nextTasks.get(proj.uid) ?? null,
                 tags: proj.Tags ? proj.Tags.map((t) => t.name) : [],
                 due_date_at: proj.due_date_at,
                 completed_at: proj.completed_at,
@@ -421,6 +477,7 @@ function registerProjectTools(server, context, tools) {
                 parent_project_uid: reloadedProject.ParentProject?.uid ?? null,
                 is_maintenance: !!reloadedProject.is_maintenance,
                 visibility: reloadedProject.visibility,
+                next_task: null,
                 tags: reloadedProject.Tags
                     ? reloadedProject.Tags.map((t) => t.name)
                     : [],
@@ -499,6 +556,7 @@ function registerProjectTools(server, context, tools) {
                 ...goalInputProperties,
                 ...visibilityInputProperty,
                 ...parentInputProperty,
+                ...nextTaskInputProperty,
             },
             required: ['uid'],
         },
@@ -561,6 +619,13 @@ function registerProjectTools(server, context, tools) {
                 throw new Error('Only the project owner can change its goal');
             }
 
+            if (params.next_task_uid !== undefined) {
+                updates.next_task_uid = await resolveNextTaskUid(
+                    project,
+                    params.next_task_uid
+                );
+            }
+
             const parentChange = await resolveParentChange(
                 project,
                 context.userId,
@@ -618,6 +683,7 @@ function registerProjectTools(server, context, tools) {
                 include: projectIncludes,
             });
 
+            const nextTasks = await nextTasksByProject([reloadedProject]);
             const serialized = {
                 id: reloadedProject.id,
                 uid: reloadedProject.uid,
@@ -630,6 +696,7 @@ function registerProjectTools(server, context, tools) {
                 parent_project_uid: reloadedProject.ParentProject?.uid ?? null,
                 is_maintenance: !!reloadedProject.is_maintenance,
                 visibility: reloadedProject.visibility,
+                next_task: nextTasks.get(reloadedProject.uid) ?? null,
                 tags: reloadedProject.Tags
                     ? reloadedProject.Tags.map((t) => t.name)
                     : [],

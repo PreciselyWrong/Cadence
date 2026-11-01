@@ -6,10 +6,11 @@ import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useViewType } from '../../hooks/useViewType';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
 import {
-    isRecurringMoveCancelled,
+    isRecurringScopeCancelled,
     isRecurringTask,
     moveTaskDue,
-} from '../../utils/recurringMove';
+    saveTaskEdit,
+} from '../../utils/recurringScope';
 import TaskPriorityBoard, { BoardPriority } from './TaskPriorityBoard';
 import TaskMonthCalendar from './TaskMonthCalendar';
 
@@ -76,8 +77,23 @@ const MinimalTaskViewBody: React.FC<TaskViewBodyProps> = ({
     const { viewType, setViewType } = useViewType(viewKey);
     const { openTask } = useTaskPane();
 
+    // A recurring task asks which occurrences the change reaches, then the
+    // page takes the task that holds the changed one.
+    const saveRecurring = (change: Promise<Task>) =>
+        void change
+            .then((saved) => onTaskUpdate(saved))
+            .catch((error) => {
+                if (!isRecurringScopeCancelled(error)) {
+                    console.error('Failed to update recurring task:', error);
+                }
+            });
+
     const changePriority = (task: Task, priority: BoardPriority) => {
-        void onTaskUpdate({ ...task, priority });
+        if (!isRecurringTask(task)) {
+            void onTaskUpdate({ ...task, priority });
+            return;
+        }
+        saveRecurring(saveTaskEdit(task, { priority }));
     };
 
     const moveDue = (task: Task, dueDate: string) => {
@@ -85,13 +101,7 @@ const MinimalTaskViewBody: React.FC<TaskViewBodyProps> = ({
             void onTaskUpdate({ ...task, due_date: dueDate });
             return;
         }
-        void moveTaskDue(task, { due_date: dueDate })
-            .then((saved) => onTaskUpdate(saved))
-            .catch((error) => {
-                if (!isRecurringMoveCancelled(error)) {
-                    console.error('Failed to move recurring task:', error);
-                }
-            });
+        saveRecurring(moveTaskDue(task, { due_date: dueDate }));
     };
 
     return (

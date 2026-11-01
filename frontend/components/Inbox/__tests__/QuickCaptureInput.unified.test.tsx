@@ -160,6 +160,16 @@ describe('QuickCaptureInput unified capture', () => {
         jest.useRealTimers();
     });
 
+    it('saves one item when Add is clicked twice before the save returns', async () => {
+        renderBox();
+        type('buy milk');
+        await act(async () => {
+            fireEvent.click(screen.getByTestId('capture-add'));
+            fireEvent.click(screen.getByTestId('capture-add'));
+        });
+        expect(createInboxItemWithStore).toHaveBeenCalledTimes(1);
+    });
+
     it('adds to the Inbox by default and offers Undo', async () => {
         renderBox();
         expect(screen.getByTestId('capture-target-inbox')).toHaveAttribute(

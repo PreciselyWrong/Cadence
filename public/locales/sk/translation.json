@@ -1626,11 +1626,12 @@
         "createError": "Poznámku sa nepodarilo vytvoriť"
     },
     "task": {
-        "recurringMove": {
-            "title": "Presunúť opakujúcu sa úlohu",
-            "optionThis": "Iba tento výskyt",
-            "optionFollowing": "Tento a nasledujúce výskyty",
-            "optionAll": "Všetky výskyty"
+        "recurringScope": {
+          "editTitle": "Upraviť túto úlohu alebo sériu?",
+          "deleteTitle": "Odstrániť túto úlohu alebo sériu?",
+          "optionThis": "Iba tento výskyt",
+          "optionFollowing": "Tento a nasledujúce výskyty",
+          "optionAll": "Všetky výskyty"
         },
         "labels": {
             "tags": "Štítky",
@@ -2017,6 +2018,7 @@
         "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
     },
     "notes": {
+        "emptyPreview": "Prázdna poznámka",
         "addNote": "Pridať poznámku",
         "loading": "Načítavajú sa poznámky...",
         "error": "Chyba pri načítaní poznámok",

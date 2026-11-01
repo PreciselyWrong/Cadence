@@ -1593,8 +1593,9 @@
     "createError": "Not oluşturulamadı"
   },
   "task": {
-    "recurringMove": {
-      "title": "Tekrarlanan görevi taşı",
+    "recurringScope": {
+      "editTitle": "Bu görevi mi yoksa seriyi mi düzenlemek istiyorsunuz?",
+      "deleteTitle": "Bu görevi mi yoksa seriyi mi silmek istiyorsunuz?",
       "optionThis": "Yalnızca bu tekrar",
       "optionFollowing": "Bu ve sonraki tekrarlar",
       "optionAll": "Tüm tekrarlar"
@@ -1975,6 +1976,7 @@
     "toggleDropdownMenu": "Açılır menüyü aç/kapat"
   },
   "notes": {
+    "emptyPreview": "Boş not",
     "loading": "Notlar yükleniyor...",
     "error": "Notlar yüklenirken hata",
     "searchPlaceholder": "Notları ara...",

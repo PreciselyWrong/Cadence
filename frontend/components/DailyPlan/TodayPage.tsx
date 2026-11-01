@@ -55,11 +55,11 @@ import {
     updateTask,
 } from '../../utils/tasksService';
 import {
-    isRecurringMoveCancelled,
+    isRecurringScopeCancelled,
     isRecurringTask,
     moveTaskDue,
-    saveTaskFieldsWithDue,
-} from '../../utils/recurringMove';
+    saveTaskEdit,
+} from '../../utils/recurringScope';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
 import NewTask from '../Task/NewTask';
@@ -1037,14 +1037,20 @@ const TodayPage: React.FC = () => {
                 : current
         );
 
-    // A round check completes the task, it leaves the list, and Undo puts
-    // it back by reopening it and reloading the day.
+    // A round check completes the task: it leaves the list at once, the
+    // server confirms after, a failed save brings it back, and Undo puts it
+    // back by reopening it and reloading the day.
     const completeCandidate = async (task: Task) => {
         if (!task.uid) return;
         const previousStatus = task.status;
+        replaceCandidate(task.uid, null);
+        setDayTasks((current) =>
+            current.filter((item) => item.uid !== task.uid)
+        );
         try {
             await toggleTaskCompletion(task.uid, task);
         } catch (err) {
+            setReloadToken((count) => count + 1);
             showErrorToast(
                 err instanceof Error
                     ? err.message
@@ -1052,10 +1058,6 @@ const TodayPage: React.FC = () => {
             );
             return;
         }
-        replaceCandidate(task.uid, null);
-        setDayTasks((current) =>
-            current.filter((item) => item.uid !== task.uid)
-        );
         showUndoToast(
             t('dailyPlan.completed', "'{{name}}' completed.", {
                 name: task.name,
@@ -1242,12 +1244,13 @@ const TodayPage: React.FC = () => {
             )
         );
         try {
-            await saveTaskFieldsWithDue(task, update);
-            if (isRecurringTask(task) && 'due_date' in update) {
+            await saveTaskEdit(task, update);
+            // Another occurrence or a split-off task may now be on the day.
+            if (isRecurringTask(task)) {
                 setReloadToken((count) => count + 1);
             }
         } catch (err) {
-            if (!isRecurringMoveCancelled(err)) {
+            if (!isRecurringScopeCancelled(err)) {
                 showErrorToast(
                     err instanceof Error
                         ? err.message
@@ -1317,7 +1320,7 @@ const TodayPage: React.FC = () => {
         try {
             await moveTaskDue(task, { due_date: due });
         } catch (err) {
-            if (isRecurringMoveCancelled(err)) return;
+            if (isRecurringScopeCancelled(err)) return;
             showErrorToast(
                 err instanceof Error
                     ? err.message

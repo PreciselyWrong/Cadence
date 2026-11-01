@@ -44,13 +44,18 @@ const SidebarPeople: React.FC<SidebarPeopleProps> = ({
     );
 
     useEffect(() => {
-        if (sortedPeople.some((person) => getPersonPath(person) === location.pathname)) {
+        if (
+            sortedPeople.some(
+                (person) => getPersonPath(person) === location.pathname
+            )
+        ) {
             setIsExpanded(true);
         }
     }, [location.pathname, sortedPeople.length]);
 
     const isPeoplePageActive =
-        location.pathname === '/people' || location.pathname.startsWith('/person/');
+        location.pathname === '/people' ||
+        location.pathname.startsWith('/person/');
 
     const isActive = (path: string) => location.pathname === path;
 
@@ -101,7 +106,7 @@ const SidebarPeople: React.FC<SidebarPeopleProps> = ({
                                 e.stopPropagation();
                                 openPersonModal(null);
                             }}
-                            className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
+                            className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             aria-label={t('people.addPerson', 'Add Person')}
                             title={t('people.addPerson', 'Add Person')}
                         >
@@ -114,16 +119,25 @@ const SidebarPeople: React.FC<SidebarPeopleProps> = ({
                                 {sortedPeople.length}
                             </span>
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsExpanded((v) => !v);
                                 }}
                                 aria-expanded={isExpanded}
+                                aria-label={t(
+                                    'sidebar.toggleSection',
+                                    'Expand or collapse'
+                                )}
                                 className="p-2 -m-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
                             >
                                 <ChevronRightIcon
                                     className="h-3 w-3 transition-transform duration-150"
-                                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                                    style={{
+                                        transform: isExpanded
+                                            ? 'rotate(90deg)'
+                                            : 'none',
+                                    }}
                                 />
                             </button>
                         </>

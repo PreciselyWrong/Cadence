@@ -91,3 +91,19 @@ describe('MarkdownRenderer note links on a public page', () => {
         expect(link).toHaveAttribute('href', '/blog/packing-list');
     });
 });
+
+describe('MarkdownRenderer in a summary', () => {
+    // A note card is one big link; a link inside it is invalid HTML and a
+    // click on it would fight the card.
+    it('shows web links as text, not as nested links', () => {
+        render(
+            <MemoryRouter>
+                <MarkdownRenderer
+                    content="Read [the doc](https://example.com/doc)"
+                    summaryMode
+                />
+            </MemoryRouter>
+        );
+        expect(screen.getByText('the doc').closest('a')).toBeNull();
+    });
+});

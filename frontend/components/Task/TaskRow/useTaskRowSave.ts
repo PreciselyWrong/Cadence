@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task, PriorityType } from '../../../entities/Task';
-import { updateTask } from '../../../utils/tasksService';
 import {
-    isRecurringMoveCancelled,
+    isRecurringScopeCancelled,
     moveTaskDue,
-} from '../../../utils/recurringMove';
+    saveTaskEdit,
+} from '../../../utils/recurringScope';
 import { useToast } from '../../Shared/ToastContext';
 import { useStore } from '../../../store/useStore';
 import { resolveTaskTokens, tokenChanges } from '../../../utils/taskTokens';
@@ -44,7 +44,9 @@ export interface TaskRowSetters {
 // Centralises task field edits made from the inline quick-edit row. Every setter
 // sends a minimal field-only PATCH (never spreads the task, never includes a
 // `subtasks` key, which the backend would treat as "delete all subtasks"), then
-// merges the response back while preserving the already-loaded subtasks.
+// merges the response back while preserving the already-loaded subtasks. A
+// recurring task asks which occurrences the edit reaches; when it reaches one
+// split off the series, the response is that new task.
 export const useTaskRowSave = (
     task: Task,
     onTaskUpdate: (task: Task) => Promise<void>
@@ -79,8 +81,9 @@ export const useTaskRowSave = (
                 };
                 await onTaskUpdate(merged);
             } catch (error) {
-                // A dismissed recurring-move prompt is not a failure.
-                if (isRecurringMoveCancelled(error)) throw error;
+                // A dismissed recurring-scope prompt is not a failure:
+                // nothing was saved and the saved task still shows.
+                if (isRecurringScopeCancelled(error)) return;
                 console.error('TaskRow save failed:', error);
                 showErrorToast(t(errorKey, fallback));
                 throw error;
@@ -91,12 +94,8 @@ export const useTaskRowSave = (
 
     const save = useCallback(
         (partial: Partial<Task>, errorKey: string, fallback: string) =>
-            saveWith(
-                () => updateTask(task.uid as string, partial),
-                errorKey,
-                fallback
-            ),
-        [task.uid, saveWith]
+            saveWith(() => saveTaskEdit(task, partial), errorKey, fallback),
+        [task, saveWith]
     );
 
     return {
@@ -145,9 +144,7 @@ export const useTaskRowSave = (
                     }),
                 'task.dueDateUpdateError',
                 'Failed to update due date'
-            ).catch((error) => {
-                if (!isRecurringMoveCancelled(error)) throw error;
-            }),
+            ),
         setStart: async (date, time) => {
             if (
                 isStartAfterDue(

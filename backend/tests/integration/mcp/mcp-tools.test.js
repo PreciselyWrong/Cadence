@@ -2832,6 +2832,97 @@ describe('MCP Tools Integration', () => {
             });
         });
 
+        describe('next task', () => {
+            let project;
+            let openTask;
+
+            beforeEach(async () => {
+                project = await Project.create({
+                    user_id: user.id,
+                    name: 'With next action',
+                });
+                openTask = await Task.create({
+                    user_id: user.id,
+                    project_id: project.id,
+                    name: 'Do this first',
+                    status: 0,
+                });
+            });
+
+            const update = async (params) =>
+                getToolContent(
+                    await callMcpTool(apiTokenValue, 'update_project', {
+                        uid: project.uid,
+                        ...params,
+                    })
+                );
+
+            it('should set and clear the next task', async () => {
+                const set = await update({ next_task_uid: openTask.uid });
+                expect(set.isError).toBe(false);
+                expect(set.content.project.next_task).toEqual({
+                    uid: openTask.uid,
+                    name: 'Do this first',
+                });
+                await project.reload();
+                expect(project.next_task_uid).toBe(openTask.uid);
+
+                const got = getToolContent(
+                    await callMcpTool(apiTokenValue, 'get_project', {
+                        uid: project.uid,
+                    })
+                );
+                expect(got.content.project.next_task).toEqual({
+                    uid: openTask.uid,
+                    name: 'Do this first',
+                });
+
+                const listed = getToolContent(
+                    await callMcpTool(apiTokenValue, 'list_projects', {})
+                );
+                expect(
+                    listed.content.projects.find((p) => p.uid === project.uid)
+                        .next_task
+                ).toEqual({ uid: openTask.uid, name: 'Do this first' });
+
+                const cleared = await update({ next_task_uid: null });
+                expect(cleared.isError).toBe(false);
+                expect(cleared.content.project.next_task).toBeNull();
+                await project.reload();
+                expect(project.next_task_uid).toBeNull();
+            });
+
+            it('should leave next_task null when unset', async () => {
+                const got = getToolContent(
+                    await callMcpTool(apiTokenValue, 'get_project', {
+                        uid: project.uid,
+                    })
+                );
+                expect(got.content.project.next_task).toBeNull();
+            });
+
+            it('should refuse closed, foreign and unknown tasks', async () => {
+                const done = await Task.create({
+                    user_id: user.id,
+                    project_id: project.id,
+                    name: 'Finished',
+                    status: 2,
+                });
+                const elsewhere = await Task.create({
+                    user_id: user.id,
+                    name: 'Not in project',
+                    status: 0,
+                });
+
+                for (const uid of [done.uid, elsewhere.uid, 'nope']) {
+                    const result = await update({ next_task_uid: uid });
+                    expect(result.isError).toBe(true);
+                }
+                await project.reload();
+                expect(project.next_task_uid).toBeNull();
+            });
+        });
+
         describe('goal linking', () => {
             it('should link a project to a goal on create by goal_uid', async () => {
                 const goal = await Goal.create({
@@ -3063,6 +3154,240 @@ describe('MCP Tools Integration', () => {
                 const deleted = await Project.findByPk(project.id);
                 expect(deleted).toBeNull();
             });
+        });
+    });
+
+    describe('Goal Tools', () => {
+        let area;
+
+        beforeEach(async () => {
+            area = await Area.create({ user_id: user.id, name: 'Health' });
+        });
+
+        const call = async (tool, params) =>
+            getToolContent(await callMcpTool(apiTokenValue, tool, params));
+
+        it('should accept every horizon and bucket value', async () => {
+            for (const horizon of ['month', 'quarter', 'season', 'year']) {
+                const { content, isError } = await call('create_goal', {
+                    title: `Goal ${horizon}`,
+                    area_id: area.id,
+                    horizon,
+                });
+                expect(isError).toBe(false);
+                expect(content.goal.horizon).toBe(horizon);
+            }
+            for (const bucket of ['have', 'be', 'do']) {
+                const { content, isError } = await call('create_goal', {
+                    title: `Dream ${bucket}`,
+                    area_id: area.id,
+                    bucket,
+                });
+                expect(isError).toBe(false);
+                expect(content.goal.bucket).toBe(bucket);
+            }
+        });
+
+        it('should document horizons and buckets in the tool schemas', async () => {
+            const response = await request(app)
+                .post('/api/mcp')
+                .set('Authorization', `Bearer ${apiTokenValue}`)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json, text/event-stream')
+                .send({ jsonrpc: '2.0', method: 'tools/list', id: 1 });
+            const { tools } = parseSseResponse(response.text).result;
+            for (const name of ['create_goal', 'update_goal']) {
+                const props = tools.find((t) => t.name === name).inputSchema
+                    .properties;
+                expect(props.horizon.enum).toEqual([
+                    'month',
+                    'quarter',
+                    'season',
+                    'year',
+                ]);
+                expect(props.bucket.enum).toEqual(['have', 'be', 'do']);
+                expect(props.parent_goal_uid).toBeDefined();
+            }
+        });
+
+        it('should create a key result under an objective', async () => {
+            const objective = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Get fit',
+            });
+
+            const { content, isError } = await call('create_goal', {
+                title: 'Run 10k',
+                area_id: area.id,
+                parent_goal_uid: objective.uid,
+            });
+
+            expect(isError).toBe(false);
+            expect(content.goal.parent_goal_uid).toBe(objective.uid);
+        });
+
+        it('should attach and detach a key result on update', async () => {
+            const objective = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Get fit',
+            });
+            const kr = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Run 10k',
+            });
+
+            const attached = await call('update_goal', {
+                uid: kr.uid,
+                parent_goal_uid: objective.uid,
+            });
+            expect(attached.isError).toBe(false);
+            expect(attached.content.goal.parent_goal_uid).toBe(objective.uid);
+            await kr.reload();
+            expect(kr.parent_goal_id).toBe(objective.id);
+
+            const detached = await call('update_goal', {
+                uid: kr.uid,
+                parent_goal_uid: null,
+            });
+            expect(detached.isError).toBe(false);
+            expect(detached.content.goal.parent_goal_uid).toBeNull();
+            await kr.reload();
+            expect(kr.parent_goal_id).toBeNull();
+        });
+
+        it('should refuse an invalid hierarchy', async () => {
+            const objective = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Objective',
+            });
+            const kr = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'KR',
+                parent_goal_id: objective.id,
+            });
+            const bucketGoal = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Dream',
+                bucket: 'do',
+            });
+            const other = await createTestUser({
+                email: `mcp_goal_hier_${Date.now()}@example.com`,
+            });
+            const foreign = await Goal.create({
+                user_id: other.id,
+                title: 'Foreign objective',
+            });
+
+            // itself
+            expect(
+                (
+                    await call('update_goal', {
+                        uid: objective.uid,
+                        parent_goal_uid: objective.uid,
+                    })
+                ).isError
+            ).toBe(true);
+            // a second level
+            expect(
+                (
+                    await call('create_goal', {
+                        title: 'Too deep',
+                        area_id: area.id,
+                        parent_goal_uid: kr.uid,
+                    })
+                ).isError
+            ).toBe(true);
+            // an objective that already has key results
+            const standalone = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Standalone',
+            });
+            expect(
+                (
+                    await call('update_goal', {
+                        uid: objective.uid,
+                        parent_goal_uid: standalone.uid,
+                    })
+                ).isError
+            ).toBe(true);
+            // a bucket goal
+            expect(
+                (
+                    await call('update_goal', {
+                        uid: bucketGoal.uid,
+                        parent_goal_uid: objective.uid,
+                    })
+                ).isError
+            ).toBe(true);
+            // another user's objective
+            expect(
+                (
+                    await call('update_goal', {
+                        uid: standalone.uid,
+                        parent_goal_uid: foreign.uid,
+                    })
+                ).isError
+            ).toBe(true);
+            await standalone.reload();
+            expect(standalone.parent_goal_id).toBeNull();
+        });
+
+        it('should return parent_goal_uid, key_results and progress', async () => {
+            const objective = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Get fit',
+            });
+            const kr = await Goal.create({
+                user_id: user.id,
+                area_id: area.id,
+                title: 'Run 10k',
+                parent_goal_id: objective.id,
+            });
+            await Task.create({
+                user_id: user.id,
+                name: 'Run once',
+                status: 2,
+                goal_id: kr.id,
+            });
+            await Task.create({
+                user_id: user.id,
+                name: 'Run twice',
+                status: 0,
+                goal_id: kr.id,
+            });
+
+            const got = await call('get_goal', { uid: objective.uid });
+            expect(got.content.goal.parent_goal_uid).toBeNull();
+            expect(got.content.goal.key_results).toEqual([
+                { uid: kr.uid, title: 'Run 10k' },
+            ]);
+            expect(got.content.goal.progress).toMatchObject({
+                done: 1,
+                total: 2,
+                percent: 50,
+            });
+
+            const gotKr = await call('get_goal', { uid: kr.uid });
+            expect(gotKr.content.goal.parent_goal_uid).toBe(objective.uid);
+
+            const listed = await call('list_goals', {});
+            const byUid = Object.fromEntries(
+                listed.content.goals.map((g) => [g.uid, g])
+            );
+            expect(byUid[kr.uid].parent_goal_uid).toBe(objective.uid);
+            expect(byUid[objective.uid].parent_goal_uid).toBeNull();
+            expect(byUid[objective.uid].key_results).toEqual([
+                { uid: kr.uid, title: 'Run 10k' },
+            ]);
+            expect(byUid[objective.uid].progress.percent).toBe(50);
         });
     });
 

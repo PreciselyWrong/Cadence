@@ -1567,6 +1567,7 @@
     "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
   },
   "notes": {
+    "emptyPreview": "空のメモ",
     "loading": "ノートを読み込み中...",
     "noNotesFound": "ノートが見つかりませんでした",
     "title": "ノート",
@@ -1912,8 +1913,9 @@
     "noCompletedTasks": "完了したタスクはありません。"
   },
   "task": {
-    "recurringMove": {
-      "title": "繰り返しタスクを移動",
+    "recurringScope": {
+      "editTitle": "このタスクを編集しますか、それともシリーズ全体ですか？",
+      "deleteTitle": "このタスクを削除しますか、それともシリーズ全体ですか？",
       "optionThis": "この回のみ",
       "optionFollowing": "この回以降",
       "optionAll": "すべての回"

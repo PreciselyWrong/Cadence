@@ -122,7 +122,7 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
                         e.stopPropagation();
                         setMenuOpen((open) => !open);
                     }}
-                    className=" opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                     aria-label={t(
                         'tags.toggleDropdownMenu',
                         'Toggle dropdown menu'
