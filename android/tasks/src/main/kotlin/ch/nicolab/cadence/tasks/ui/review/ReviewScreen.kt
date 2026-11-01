@@ -146,6 +146,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
     val content by viewModel.content.collectAsStateWithLifecycle()
     val busy by viewModel.busy.collectAsStateWithLifecycle()
     val routineMissing by viewModel.routineMissing.collectAsStateWithLifecycle()
+    val quick by viewModel.quick.collectAsStateWithLifecycle()
     val local by viewModel.local.collectAsStateWithLifecycle()
     val links by tasksViewModel.links.collectAsStateWithLifecycle()
     val tags by tasksViewModel.tags.collectAsStateWithLifecycle()
@@ -173,7 +174,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
             }
         }
     }
-    BackHandler(enabled = openTaskUid == null && !triaging, onBack = onBack)
+    BackHandler(enabled = openTaskUid == null && !triaging && quick == null, onBack = onBack)
 
     val rows = remember(local, links, tags, projectColors) {
         RowContext(local, links, tags.associate { it.uid to it.name }, projectColors)
@@ -217,6 +218,10 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                     onClick = viewModel::planRoutine,
                 )
             }
+            QuickReviewCard(
+                modifier = Modifier.padding(horizontal = Space.gutter, vertical = Space.sm),
+                onStart = { expanded = null; viewModel.startQuick() },
+            )
             Box {
                 TabPills(
                     tabs = ReviewStep.entries.map { TabPill(stringResource(stepLabel(it)), counts?.of(it)?.takeIf { n -> n > 0 }) },
@@ -369,6 +374,17 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
         }
     }
 
+    quick?.let { state ->
+        QuickReviewScreen(
+            state = state,
+            rows = rows,
+            viewModel = viewModel,
+            previews = tasksViewModel.linkPreviews,
+            choices = choices,
+            onOpenTask = { openTaskUid = it },
+        )
+    }
+
     if (triaging) {
         LaterTriageScreen(
             items = laterTasks,
@@ -507,6 +523,8 @@ private fun LazyListScope.laterList(
 internal class ReviewChoices(
     val task: (ReviewTask, ReviewStep) -> List<Choice>,
     val later: (ReviewTask) -> List<Choice>,
+    /** « Plus tard » dans la revue rapide : « Garder de côté » d'un toucher, l'idée regardée repart au bout. */
+    val quickLater: (ReviewTask) -> List<Choice>,
     val week: (ReviewTask, Boolean) -> List<Choice>,
     val inbox: (ReviewInboxItem) -> List<Choice>,
     val project: (ReviewProject) -> List<Choice>,
@@ -557,6 +575,19 @@ private fun rememberChoices(
                 opening(item),
             )
         }
+        val quickLaterChoices = { item: ReviewTask ->
+            listOf(
+                Choice(Icons.Outlined.Today, todayShort, primary = true, run = d(item, Decision.Today, todayShort)),
+                Choice(funnelIcon(FunnelStage.THIS_WEEK), week, run = d(item, Decision.ThisWeek, week)),
+                Choice(Icons.Outlined.Check, keepParked, run = d(item, Decision.KeepParked, keepParked)),
+                Choice(funnelIcon(FunnelStage.LATER), later, more = true, run = d(item, Decision.ReviewIn30Days, review30)),
+                Choice(Icons.Outlined.EventNote, reviewOn, more = true) { ask(Asking.ReviewDate(item)) },
+                Choice(funnelIcon(FunnelStage.IN_VIEW), inView, more = true, run = d(item, Decision.InView, inView)),
+                Choice(Icons.Outlined.TaskAlt, complete, more = true) { viewModel.complete(item, complete) },
+                Choice(Icons.Outlined.Block, drop, danger = true, more = true, run = d(item, Decision.Drop, drop)),
+                opening(item),
+            )
+        }
         ReviewChoices(
             task = { item, step ->
                 when (step) {
@@ -581,6 +612,7 @@ private fun rememberChoices(
                 }
             },
             later = laterChoices,
+            quickLater = quickLaterChoices,
             week = { item, committed ->
                 if (committed) listOf(
                     Choice(Icons.Outlined.Today, today, primary = true, run = d(item, Decision.Today, today)),
@@ -710,7 +742,7 @@ private fun CapacitySheet(current: Int?, onPick: (Int?) -> Unit, dismiss: () -> 
     }
 }
 
-private fun stepLabel(step: ReviewStep): Int = when (step) {
+internal fun stepLabel(step: ReviewStep): Int = when (step) {
     ReviewStep.UNDECIDED -> R.string.review_step_undecided
     ReviewStep.PUSHED -> R.string.review_step_pushed
     ReviewStep.PROJECTS -> R.string.review_step_projects
@@ -728,7 +760,7 @@ private fun emptyLabel(step: ReviewStep): Int = when (step) {
     ReviewStep.WEEK -> R.string.review_empty_week
 }
 
-private fun reasonLabel(reason: ProjectReason): Int = when (reason) {
+internal fun reasonLabel(reason: ProjectReason): Int = when (reason) {
     ProjectReason.NO_NEXT_ACTION -> R.string.review_reason_no_next_action
     ProjectReason.QUIET -> R.string.review_reason_quiet
     ProjectReason.PUSHED_TASKS -> R.string.review_reason_pushed_tasks

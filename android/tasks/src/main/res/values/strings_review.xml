@@ -127,6 +127,18 @@
     <string name="review_triage_done_hint">Les tâches passées reviendront la prochaine fois.</string>
     <string name="review_triage_close">Fermer</string>
 
+    <!-- Revue rapide : une chose à la fois, une décision, la suivante -->
+    <string name="review_quick_title">Revue rapide</string>
+    <string name="review_quick_pitch">Environ 5 minutes, une chose à la fois. Arrêtez quand vous voulez.</string>
+    <string name="review_quick_start">Commencer</string>
+    <string name="review_quick_stop">Arrêter</string>
+    <string name="review_quick_loading">Chargement…</string>
+    <string name="review_quick_done">C\'est tout pour cette fois.</string>
+    <string name="review_quick_saved">Chaque décision est enregistrée. Ce que vous avez passé reviendra la prochaine fois.</string>
+    <string name="review_quick_again">Encore un tour</string>
+    <string name="review_quick_back">Retour à la revue</string>
+    <string name="review_quick_nothing">Rien ne demande votre attention pour l\'instant.</string>
+
     <!-- Semaine -->
     <string name="review_week_committed">Décidées cette semaine</string>
     <string name="review_week_in_view">En vue</string>

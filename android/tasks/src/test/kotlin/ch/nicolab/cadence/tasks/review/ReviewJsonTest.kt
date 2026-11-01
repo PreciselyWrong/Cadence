@@ -32,7 +32,8 @@ class ReviewJsonTest {
         assertEquals(11, summary.attentionTotal)
         assertEquals(5, summary.decidedThisWeek)
         assertEquals(LocalDate.of(2026, 10, 26), summary.weekStart)
-        assertEquals(7, summary.counts.of(ReviewStep.LATER))
+        // « Plus tard » est un stock, pas une dette : son onglet ne compte que les revues arrivées.
+        assertEquals(1, summary.counts.of(ReviewStep.LATER))
         assertEquals(3, summary.counts.of(ReviewStep.UNDECIDED))
     }
 

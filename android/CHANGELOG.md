@@ -5,6 +5,8 @@
 - Objectifs : le prochain pas d'un objectif est sa tâche ouverte (ou celle d'un résultat clé) à l'échéance la plus proche, sinon la plus ancienne ; une case la termine, « Ajouter un prochain pas » en crée une liée quand il n'y en a pas.
 - Liste d'envies : une case « Réalisée » (avec « Annuler »), un bouton « Créer une tâche » sur chaque ligne, et le bouton + ajoute des envies à la suite (nom et groupe) ; elles se synchronisent avec le serveur.
 - Tâches : l'onglet Objectifs passe juste après Projets, visible sans faire défiler les onglets ; les envies se rangent avec les accents (« Écrire » avec les E).
+- Revue : « Revue rapide » au-dessus des onglets, environ 5 minutes, une chose à la fois : au plus 10 éléments (ce qui demande un regard d'abord, puis au moins 3 idées de « Plus tard » regardées il y a le plus longtemps), les choix habituels d'un toucher, « Passer », « N sur M » sans jamais montrer la taille du stock, « Encore un tour » à la fin. Comme sur le web.
+- Revue : l'onglet « Plus tard » ne compte plus tout le stock, seulement les revues arrivées.
 
 ## [1.7.0] — 1 novembre 2026
 

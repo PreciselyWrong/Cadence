@@ -33,12 +33,12 @@ data class ReviewCounts(
     val projects: Int = 0,
     val stale: Int = 0,
 ) {
-    /** Compteur d'un onglet ; la semaine n'en a pas. */
+    /** Compteur d'un onglet ; la semaine n'en a pas, « Plus tard » ne compte que les revues arrivées (un stock, pas une dette). */
     fun of(step: ReviewStep): Int? = when (step) {
         ReviewStep.UNDECIDED -> undecided
         ReviewStep.PUSHED -> pushed
         ReviewStep.PROJECTS -> projects
-        ReviewStep.LATER -> later
+        ReviewStep.LATER -> reviewDue
         ReviewStep.STALE -> stale
         ReviewStep.WEEK -> null
     }

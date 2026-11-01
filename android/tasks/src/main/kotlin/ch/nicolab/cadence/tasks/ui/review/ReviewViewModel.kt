@@ -17,6 +17,9 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.review.Loaded
+import ch.nicolab.cadence.tasks.review.QuickEntry
+import ch.nicolab.cadence.tasks.review.QuickReview
+import ch.nicolab.cadence.tasks.review.QuickView
 import ch.nicolab.cadence.tasks.review.ReviewInboxItem
 import ch.nicolab.cadence.tasks.review.ReviewLists
 import ch.nicolab.cadence.tasks.review.ReviewPage
@@ -59,6 +62,9 @@ internal sealed interface StepContent {
     data class Projects(val page: ReviewPage<ReviewProject>, val fetchedAt: Instant, val fromCache: Boolean) : StepContent
     data class Week(val week: ReviewWeek, val fetchedAt: Instant, val fromCache: Boolean) : StepContent
 }
+
+/** Revue rapide affichée : [view] est vide le temps de lire les listes ([loading]). */
+internal data class QuickState(val loading: Boolean, val view: QuickView)
 
 /**
  * Revue : une étape à la fois, mémorisée entre les sessions. Les listes viennent du serveur ; chaque
@@ -158,6 +164,69 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
 
     private val _busy = MutableStateFlow<String?>(null)
     val busy: StateFlow<String?> = _busy.asStateFlow()
+
+    /** Revue rapide en cours : les entrées tirées au départ, celles passées ; null hors session. */
+    private data class QuickSession(val loading: Boolean, val entries: List<QuickEntry>, val skipped: List<String>)
+
+    private val _quick = MutableStateFlow<QuickSession?>(null)
+
+    /** Boîte et projets traités pendant la session ; `handled` est vidé à chaque chargement d'onglet. */
+    private val quickGone = MutableStateFlow<Set<String>>(emptySet())
+
+    /** La revue rapide telle qu'elle s'affiche ; `loading` le temps de lire les listes. */
+    val quick: StateFlow<QuickState?> = combine(_quick, local, quickGone) { session, local, gone ->
+        session?.let {
+            QuickState(
+                loading = it.loading,
+                view = QuickReview.view(it.entries, it.skipped) { entry ->
+                    when (entry) {
+                        is QuickEntry.Task -> ReviewLists.pending(listOf(entry.item), local).isNotEmpty()
+                        else -> entry.key !in gone
+                    }
+                },
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
+
+    /**
+     * Lit chaque liste une fois et en tire une file courte ; [exclude] garde hors d'un nouveau tour ce qui
+     * a été passé. Hors ligne, les listes gardées servent, comme pour les onglets.
+     */
+    fun startQuick(exclude: List<String> = emptyList()) {
+        _quick.value = QuickSession(loading = true, entries = emptyList(), skipped = exclude)
+        viewModelScope.launch {
+            val inbox = review.inbox().getOrNull()?.value?.items.orEmpty()
+            val pushed = review.tasks(ReviewStep.PUSHED).getOrNull()?.value?.items.orEmpty()
+            val projects = review.projects().getOrNull()?.value?.items.orEmpty()
+            val later = review.tasks(ReviewStep.LATER).getOrNull()?.value?.items.orEmpty()
+            val stale = review.tasks(ReviewStep.STALE).getOrNull()?.value?.items.orEmpty()
+            val known = local.value
+            fun open(items: List<ReviewTask>) = ReviewLists.pending(items, known)
+            val entries = QuickReview.build(inbox, open(pushed), projects, open(later), open(stale), exclude = exclude.toSet())
+            _quick.value = QuickSession(loading = false, entries = entries, skipped = exclude)
+        }
+    }
+
+    /** « Passer » : l'entrée reste telle quelle et reviendra à la prochaine revue. */
+    fun skipQuick() {
+        val session = _quick.value ?: return
+        val current = quick.value?.view?.current ?: return
+        _quick.value = session.copy(skipped = session.skipped + current.key)
+    }
+
+    /** « Encore un tour » : une nouvelle file, sans ce qui a été passé pendant cette visite. */
+    fun againQuick() = startQuick(_quick.value?.skipped.orEmpty())
+
+    fun stopQuick() {
+        _quick.value = null
+        quickGone.value = emptySet()
+        load()
+    }
+
+    private fun gone(key: String) {
+        handled.value += key
+        quickGone.value += key
+    }
 
     init {
         load()
@@ -261,24 +330,24 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
             tasks.updateTask(uid, ReviewDecisions.change(chosen, created, context()).copy(reviewed = false))
         }
         tasks.deleteInboxItem(item.uid)
-        handled.value += "inbox:${item.uid}"
+        gone("inbox:${item.uid}")
     }
 
     fun discard(item: ReviewInboxItem) = run("inbox:${item.uid}") {
         tasks.deleteInboxItem(item.uid)
-        handled.value += "inbox:${item.uid}"
+        gone("inbox:${item.uid}")
     }
 
     fun holdProject(project: ReviewProject) = run("project:${project.uid}") {
         tasks.setProjectStatus(project.uid, ProjectStatus.WAITING)
-        handled.value += "project:${project.uid}"
+        gone("project:${project.uid}")
     }
 
     /** « Garder tel quel » : `projects.reviewed_at` n'est pas synchronisé ; hors ligne, l'appel attend le réseau. */
     fun keepProject(project: ReviewProject) = run("project:${project.uid}") {
         review.keepProject(project.uid, project.name)
             .onSuccess { delivery ->
-                handled.value += "project:${project.uid}"
+                gone("project:${project.uid}")
                 if (delivery == Delivery.QUEUED) _messages.tryEmit(getString(R.string.tasks_sync_offline_queued))
             }
             .onFailure { _messages.tryEmit(getString(R.string.review_online_only)) }
@@ -288,7 +357,7 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         val trimmed = name.trim()
         if (trimmed.isEmpty()) return@run
         tasks.createTask(TaskDraft(name = trimmed, projectUid = project.uid))
-        handled.value += "project:${project.uid}"
+        gone("project:${project.uid}")
     }
 
     fun saveCapacity(minutes: Int?) = run("capacity") {
