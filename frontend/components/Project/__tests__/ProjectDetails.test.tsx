@@ -153,6 +153,18 @@ jest.mock('../ProjectInsightsPanel', () => ({
     default: () => null,
 }));
 
+let mockMinimal = false;
+jest.mock('../../../hooks/useUiDensity', () => ({
+    useIsMinimal: () => mockMinimal,
+    useUiDensity: () => (mockMinimal ? 'minimal' : 'dense'),
+}));
+jest.mock('../../../hooks/useViewType', () => ({
+    useViewType: () => ({
+        viewType: 'list',
+        setViewType: jest.fn(),
+        loaded: true,
+    }),
+}));
 jest.mock('../ProjectTasksSection', () => ({
     __esModule: true,
     default: () => null,
@@ -308,5 +320,47 @@ describe('ProjectDetails when the project cannot be loaded (#2022)', () => {
             screen.queryByText("You don't have access to this project")
         ).not.toBeInTheDocument();
         expect(fetchProjectBySlug).toHaveBeenCalledTimes(1);
+    });
+
+    describe('Add button', () => {
+        const project = {
+            id: 102,
+            uid: 'proj-102',
+            name: 'Garden',
+            status: 'in_progress',
+            tasks: [],
+            notes: [],
+        };
+
+        afterEach(() => {
+            mockMinimal = false;
+            localStorage.clear();
+        });
+
+        it('leaves adding to the inline line on the Minimal task list', async () => {
+            mockMinimal = true;
+            (fetchProjectBySlug as jest.Mock).mockResolvedValue(project);
+            render(<ProjectDetails />);
+
+            await screen.findByText('Garden');
+            expect(
+                screen.queryByTestId('project-add-button')
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(screen.getByTestId('project-view-board'));
+            expect(
+                screen.getByTestId('project-add-button')
+            ).toBeInTheDocument();
+        });
+
+        it('keeps the Add button in Dense, which has no inline line', async () => {
+            (fetchProjectBySlug as jest.Mock).mockResolvedValue(project);
+            render(<ProjectDetails />);
+
+            await screen.findByText('Garden');
+            expect(
+                screen.getByTestId('project-add-button')
+            ).toBeInTheDocument();
+        });
     });
 });

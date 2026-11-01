@@ -1030,13 +1030,17 @@ const ProjectDetails: React.FC = () => {
 
                                 {
                                     <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-4">
-                                        <NewItemButton
-                                            label={t('capture.add', 'Add')}
-                                            onClick={() =>
-                                                openCaptureForProject()
-                                            }
-                                            testId="project-add-button"
-                                        />
+                                        {/* The Minimal task list has its own
+                                            "+ Add task" line right below. */}
+                                        {!(isMinimal && view === 'tasks') && (
+                                            <NewItemButton
+                                                label={t('capture.add', 'Add')}
+                                                onClick={() =>
+                                                    openCaptureForProject()
+                                                }
+                                                testId="project-add-button"
+                                            />
+                                        )}
                                         {aiAssistantEnabled && (
                                             <button
                                                 onClick={() =>

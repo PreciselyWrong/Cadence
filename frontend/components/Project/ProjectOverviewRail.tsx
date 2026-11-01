@@ -241,6 +241,12 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
             : t('project.roleView', 'Can view');
     };
 
+    // The owner alone is not "people": the panel appears once someone else
+    // shares the project; sharing starts from the header's Share button.
+    const isShared = people.some(
+        (row) => !(row.is_owner || row.access_level === 'owner')
+    );
+
     const area = project.area || (project as any).Area;
     const goal = project.Goal || project.goal;
     const priorityColor: Record<string, string> = {
@@ -258,34 +264,23 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
 
     return (
         <div className="space-y-4">
-            <Panel
-                title={t('project.people', 'People')}
-                subtitle={
-                    people.length > 0
-                        ? t('project.memberCount', '{{count}} members', {
-                              count: people.length,
-                          })
-                        : undefined
-                }
-                action={
-                    <button
-                        type="button"
-                        onClick={onShareClick}
-                        className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                        aria-label={t('projectItem.share', 'Share')}
-                    >
-                        <PlusIcon className="h-4 w-4" />
-                    </button>
-                }
-            >
-                {people.length === 0 ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {t(
-                            'project.notShared',
-                            'Only you can see this project.'
-                        )}
-                    </p>
-                ) : (
+            {isShared && (
+                <Panel
+                    title={t('project.people', 'People')}
+                    subtitle={t('project.memberCount', '{{count}} members', {
+                        count: people.length,
+                    })}
+                    action={
+                        <button
+                            type="button"
+                            onClick={onShareClick}
+                            className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                            aria-label={t('projectItem.share', 'Share')}
+                        >
+                            <PlusIcon className="h-4 w-4" />
+                        </button>
+                    }
+                >
                     <ul className={divided}>
                         {people.map((row) => {
                             const person = personByUser.get(row.user_id);
@@ -337,8 +332,8 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                             );
                         })}
                     </ul>
-                )}
-            </Panel>
+                </Panel>
+            )}
 
             <Panel title={t('project.info', 'Project info')}>
                 <dl className={divided}>
