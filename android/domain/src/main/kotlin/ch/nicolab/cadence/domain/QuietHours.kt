@@ -51,12 +51,3 @@ data class QuietPolicy(val hours: QuietHours?, val zone: ZoneId) {
         val NONE = QuietPolicy(null, ZoneId.systemDefault())
     }
 }
-
-/** Choix de « Plus tard » sur une notification de rappel. Le report reste local à l'appareil. */
-enum class SnoozeDelay(val minutes: Long) {
-    TEN_MINUTES(10),
-    ONE_HOUR(60);
-
-    /** Un report ne sonne jamais pendant la plage silencieuse : il attend sa fin. */
-    fun triggerAt(now: Instant, quiet: QuietPolicy): Instant = quiet.shift(now.plusSeconds(minutes * 60))
-}

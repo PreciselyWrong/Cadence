@@ -8,7 +8,6 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.glance.appwidget.updateAll
-import ch.nicolab.cadence.domain.SnoozeDelay
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -39,11 +38,8 @@ class TaskReminderReceiver : BroadcastReceiver() {
             }
             ACTION_SNOOZE -> {
                 val reminderAt = intent.getLongExtra(EXTRA_REMINDER_AT, -1L)
-                val delay = SnoozeDelay.entries.firstOrNull { it.minutes == intent.getLongExtra(EXTRA_SNOOZE_MINUTES, 0L) } ?: return
-                runAsync {
-                    TaskReminderNotifier.cancel(context, uid)
-                    TaskReminderScheduler.snooze(context, uid, reminderAt, delay)
-                }
+                val choice = TaskSnoozeChoice.entries.firstOrNull { it.name == intent.getStringExtra(EXTRA_SNOOZE_CHOICE) } ?: return
+                runAsync { snoozeTask(context, uid, reminderAt, choice) }
             }
             ACTION_COMPLETE -> {
                 val occurrence = intent.getLongExtra(EXTRA_OCCURRENCE, ReminderPlan.NO_OCCURRENCE)
@@ -68,6 +64,15 @@ class TaskReminderReceiver : BroadcastReceiver() {
         TaskReminderNotifier.show(context, requireNotNull(task), Instant.ofEpochMilli(reminderAt))
     }
 
+    /** « Plus tard » : la fin estimée d'une tâche peut avoir disparu depuis la notification, alors rien ne se pose. */
+    private suspend fun snoozeTask(context: Context, uid: String, reminderAt: Long, choice: TaskSnoozeChoice) {
+        TaskReminderNotifier.cancel(context, uid)
+        val task = TasksGraph.repository(context).observeTask(uid).first() ?: return
+        val triggerAt = TaskSnoozeRules.triggerAt(choice, task, Instant.now(), ZoneId.systemDefault(), TaskReminderScheduler.currentQuiet(context))
+            ?: return
+        TaskReminderScheduler.snooze(context, uid, reminderAt, triggerAt)
+    }
+
     private fun stillCurrent(context: Context, task: TaskItem?, marker: Long): Boolean =
         ReminderPlan.isCurrentMarker(task, marker, TimedRemindersStore(context).read(), Instant.now(), ZoneId.systemDefault())
 
@@ -87,7 +92,7 @@ class TaskReminderReceiver : BroadcastReceiver() {
         internal const val ACTION_COMPLETE = "ch.nicolab.cadence.tasks.reminder.ACTION_COMPLETE"
         internal const val ACTION_SNOOZE = "ch.nicolab.cadence.tasks.reminder.ACTION_SNOOZE"
         internal const val EXTRA_OCCURRENCE = "occurrence"
-        internal const val EXTRA_SNOOZE_MINUTES = "snooze_minutes"
+        internal const val EXTRA_SNOOZE_CHOICE = "snooze_choice"
     }
 }
 
@@ -124,8 +129,8 @@ internal object TaskReminderNotifier {
         if (dueAt == task.dueDate) {
             builder.addAction(0, context.getString(R.string.tasks_reminder_complete), completePendingIntent(context, task))
         }
-        SnoozeDelay.entries.forEach { delay ->
-            builder.addAction(0, context.getString(snoozeLabel(delay)), snoozePendingIntent(context, task, delay, marker))
+        TaskSnoozeRules.offered(task, Instant.now()).forEach { choice ->
+            builder.addAction(0, context.getString(snoozeLabel(choice)), snoozePendingIntent(context, task, choice, marker))
         }
         openTaskIntent(context, task.uid)?.let { open ->
             builder.setContentIntent(
@@ -155,22 +160,23 @@ internal object TaskReminderNotifier {
         }
     }
 
-    private fun snoozeLabel(delay: SnoozeDelay): Int = when (delay) {
-        SnoozeDelay.TEN_MINUTES -> R.string.tasks_reminder_snooze_10_min
-        SnoozeDelay.ONE_HOUR -> R.string.tasks_reminder_snooze_1_hour
+    private fun snoozeLabel(choice: TaskSnoozeChoice): Int = when (choice) {
+        TaskSnoozeChoice.TEN_MINUTES -> R.string.tasks_reminder_snooze_10_min
+        TaskSnoozeChoice.UNTIL_END -> R.string.tasks_reminder_snooze_until_end
+        TaskSnoozeChoice.TOMORROW -> R.string.tasks_reminder_snooze_tomorrow
     }
 
-    private fun snoozePendingIntent(context: Context, task: TaskItem, delay: SnoozeDelay, marker: Instant): PendingIntent {
+    private fun snoozePendingIntent(context: Context, task: TaskItem, choice: TaskSnoozeChoice, marker: Instant): PendingIntent {
         val reminderAt = marker.toEpochMilli()
         val intent = Intent(context, TaskReminderReceiver::class.java)
             .setAction(TaskReminderReceiver.ACTION_SNOOZE)
-            .setData(Uri.parse("tududi-reminder://snooze-action/${task.uid}/${delay.minutes}"))
+            .setData(Uri.parse("tududi-reminder://snooze-action/${task.uid}/${choice.name}"))
             .putExtra(EXTRA_TASK_UID, task.uid)
             .putExtra(EXTRA_REMINDER_AT, reminderAt)
-            .putExtra(TaskReminderReceiver.EXTRA_SNOOZE_MINUTES, delay.minutes)
+            .putExtra(TaskReminderReceiver.EXTRA_SNOOZE_CHOICE, choice.name)
         return PendingIntent.getBroadcast(
             context,
-            "snooze-action:${task.uid}:${delay.minutes}".hashCode(),
+            "snooze-action:${task.uid}:${choice.name}".hashCode(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )

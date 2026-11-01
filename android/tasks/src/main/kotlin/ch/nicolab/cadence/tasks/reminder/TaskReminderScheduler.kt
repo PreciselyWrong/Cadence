@@ -14,7 +14,6 @@ import android.os.Build
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import ch.nicolab.cadence.domain.QuietPolicy
-import ch.nicolab.cadence.domain.SnoozeDelay
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -98,11 +97,11 @@ object TaskReminderScheduler {
         TasksGraph.connection(context).observe().first()?.quiet ?: QuietPolicy.NONE
 
     /**
-     * « Plus tard » : repose une notification dans [delay], hors plage silencieuse. Le report est gardé
-     * localement pour survivre à un redémarrage ; [reminderAt] est le rappel d'origine.
+     * « Plus tard » : repose une notification à [triggerAt] (déjà hors plage silencieuse, voir [TaskSnoozeRules]).
+     * Le report est gardé localement pour survivre à un redémarrage ; [reminderAt] est le rappel d'origine.
      */
-    internal suspend fun snooze(context: Context, uid: String, reminderAt: Long, delay: SnoozeDelay, now: Instant = Instant.now()) {
-        val snooze = TaskSnooze(uid, reminderAt, delay.triggerAt(now, currentQuiet(context)))
+    internal fun snooze(context: Context, uid: String, reminderAt: Long, triggerAt: Instant) {
+        val snooze = TaskSnooze(uid, reminderAt, triggerAt)
         synchronized(lock) {
             updateSet(context, KEY_SNOOZED) { TaskSnooze.replacing(it, snooze) }
             armSnooze(context, snooze)

@@ -2,7 +2,6 @@ package ch.nicolab.cadence.tasks.reminder
 
 import ch.nicolab.cadence.domain.QuietHours
 import ch.nicolab.cadence.domain.QuietPolicy
-import ch.nicolab.cadence.domain.SnoozeDelay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.Instant
@@ -67,15 +66,6 @@ class ReminderAlarmPlanTest {
         val plan = ReminderPlan.alarms(tasks, emptySet(), setOf(keep, closed, gone), emptySet(), now, QuietPolicy.NONE)
 
         assertEquals(setOf(closed, gone), plan.staleReminders)
-    }
-
-    @Test
-    fun `un report vaut 10 minutes ou 1 heure et sort de la plage silencieuse`() {
-        val now = at("2026-11-02T12:00:00")
-
-        assertEquals(at("2026-11-02T12:10:00"), SnoozeDelay.TEN_MINUTES.triggerAt(now, quiet))
-        assertEquals(at("2026-11-02T13:00:00"), SnoozeDelay.ONE_HOUR.triggerAt(now, quiet))
-        assertEquals(at("2026-11-03T07:00:00"), SnoozeDelay.ONE_HOUR.triggerAt(at("2026-11-02T21:30:00"), quiet))
     }
 
     @Test
