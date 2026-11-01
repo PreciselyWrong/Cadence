@@ -17,6 +17,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - Hermès « capture » : bot Telegram chez BotFather, `TELEGRAM_BOT_TOKEN` dans `/opt/data/profiles/capture/.env` ; classement automatique en pause (`hermes -p capture cron resume b8875182300b` pour le relancer). Enrichissement des liens : job `cadence-enrich` chaque nuit à 03:30.
   - Annuler la série « 📅 Weekly Planning » (doublon de « Revue hebdo »).
   - PR à l'amont : ouvrir d'abord les issues de discussion (`docs/fork/upstream-prs/task-ics-feed.md`, `calendar-views.md`), puis envoyer les PR préparées dans `../cadence-upstream-*`.
+  - Refonte TickTick, étape 4 (faite le 2026-11-01 sans voir TickTick, accès refusé) : comparer à l'écran avec TickTick 8.0.20 le calendrier de Cadence (ordre des tâches sans heure, Demain / Semaine prochaine dans l'agenda d'Aujourd'hui, dépôt au quart d'heure) et signaler les écarts.
   - Traductions : relecture par des locuteurs natifs des 22 langues hors fr/en/ja/ko (traduites automatiquement le 2026-11-01, pluriels slaves ajoutés).
 - **Quand le besoin se montre.**
   - Parité, venus de l'amont et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage.
@@ -26,7 +27,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 
 ## Next
 
-- Refonte TickTick, étape 4 (mise de côté à ta demande le 2026-11-01) : comparer avec TickTick 8.0.20 lancé en local, écran par écran, et corriger les écarts du calendrier. À trancher : réordonner les tâches sans heure et retirer du plan en déplaçant la date depuis l'agenda.
-- Fusionner l'amont (`chrisvel/tududi`) chaque semaine (dernière synchro : `eda9aa60`, v1.14.0).
+- Fusionner l'amont (`chrisvel/tududi`) chaque semaine (dernière synchro : `eda9aa60`, v1.14.0 ; vérifié le 2026-11-01 : rien de neuf).
 
 ## Ideas
