@@ -3,6 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const service = require('./service');
+const repos = require('./repos');
+const { configuredRepos, invalidSlugs } = require('./repoConfig');
 const { resolveRoot, listProjectFolders, FILE_NAME } = require('./paths');
 const { logInfo, logError } = require('../../services/logService');
 
@@ -12,8 +14,10 @@ const { logInfo, logError } = require('../../services/logService');
 // makes the reaction faster when the platform does deliver events.
 const POLL_MS = 30_000;
 const DEBOUNCE_MS = 750;
+const REPO_POLL_MS = 5 * 60_000;
 
 let timer = null;
+let repoTimer = null;
 let debounce = null;
 let signatures = new Map();
 let watchers = new Map();
@@ -110,25 +114,74 @@ function schedule() {
     debounce.unref();
 }
 
-// "Relire": always reads, whether or not a signature moved.
+const mergeSummaries = (summaries) =>
+    summaries.reduce(
+        (all, one) => ({
+            projects: all.projects + one.projects,
+            created: all.created + one.created,
+            updated: all.updated + one.updated,
+            removed: all.removed + one.removed,
+            errors: [...all.errors, ...one.errors],
+        }),
+        { projects: 0, created: 0, updated: 0, removed: 0, errors: [] }
+    );
+
+// "Relire": always reads, whether or not a signature moved. The
+// repositories are read even when the folder root is unreachable.
 async function rescanNow() {
-    const root = await resolveRoot(service.settings().root);
-    if (root) signatures = await currentSignatures(root);
-    return service.importAll();
+    const summaries = [];
+    let failure = null;
+    if (service.hasRoot()) {
+        const root = await resolveRoot(service.settings().root);
+        if (root) signatures = await currentSignatures(root);
+        try {
+            summaries.push(await service.importAll());
+        } catch (error) {
+            failure = error;
+        }
+    }
+    if (configuredRepos().length > 0) summaries.push(await repos.syncAll());
+    if (failure) throw failure;
+    return mergeSummaries(summaries);
+}
+
+// Pushes reach the server through the webhook; this pass catches the ones
+// it missed (no webhook, server down at the time).
+async function syncRepos() {
+    try {
+        const { withJobLock } = require('../../services/jobLock');
+        await withJobLock('todo-md-git', () => repos.syncAll());
+    } catch (error) {
+        logError('TODO.md repository sync failed:', error);
+    }
 }
 
 function start() {
-    if (timer || !service.isEnabled()) return;
+    if (timer || repoTimer || !service.isEnabled()) return;
     logInfo('TODO.md projects enabled');
-    safeScan({ force: true });
-    timer = setInterval(() => safeScan(), POLL_MS);
-    timer.unref();
+    if (service.hasRoot()) {
+        safeScan({ force: true });
+        timer = setInterval(() => safeScan(), POLL_MS);
+        timer.unref();
+    }
+    if (configuredRepos().length > 0) {
+        for (const slug of invalidSlugs()) {
+            logError(
+                `TODO.md repository "${slug}" is not configured completely`
+            );
+        }
+        syncRepos();
+        repoTimer = setInterval(() => syncRepos(), REPO_POLL_MS);
+        repoTimer.unref();
+    }
 }
 
 function stop() {
     if (timer) clearInterval(timer);
+    if (repoTimer) clearInterval(repoTimer);
     if (debounce) clearTimeout(debounce);
     timer = null;
+    repoTimer = null;
     debounce = null;
     for (const handle of watchers.values()) handle.close();
     watchers = new Map();

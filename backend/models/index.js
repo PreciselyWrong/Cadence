@@ -106,6 +106,7 @@ const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
 const Link = require('./link')(sequelize);
+const TodoMdRepo = require('./todo_md_repo')(sequelize);
 const UserGoalOrder = require('./user_goal_order')(sequelize);
 const UserAreaOrder = require('./user_area_order')(sequelize);
 const Person = require('./person')(sequelize);
@@ -776,6 +777,7 @@ module.exports = {
     Area,
     Goal,
     Link,
+    TodoMdRepo,
     Project,
     Task,
     Tag,

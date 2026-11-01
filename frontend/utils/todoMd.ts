@@ -11,3 +11,7 @@ export const isTodoMdTask = (task?: Pick<Task, 'source_key'> | null): boolean =>
 export const isTodoMdProject = (
     project?: Pick<Project, 'source_type'> | null
 ): boolean => project?.source_type === 'todo_md';
+
+// 'git:<slug>' for a project mirrored from a git repository.
+export const todoMdRepoSlug = (sourcePath?: string | null): string | null =>
+    sourcePath?.startsWith('git:') ? sourcePath.slice(4) : null;

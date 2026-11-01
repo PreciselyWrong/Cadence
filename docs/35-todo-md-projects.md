@@ -1,6 +1,6 @@
 # TODO.md projects (fork)
 
-Folders on the server hold projects: each sub-folder is one project, and its `TODO.md` is that project's task list. Cadence shows them (web and Android) and lets you add tasks and check them off; the **file stays the source of truth**, so it can be edited anywhere (`git pull`, an editor) at any time. Module: `backend/modules/todo-md/`.
+Folders on the server hold projects: each sub-folder is one project, and its `TODO.md` is that project's task list. A `TODO.md` can also live in a **git repository** (Gitea, GitHub): the server clones it, and edits are committed and pushed ([Git repositories](#git-repositories)). Cadence shows them (web and Android) and lets you add tasks and check them off; the **file stays the source of truth**, so it can be edited anywhere (`git pull`, an editor) at any time. Module: `backend/modules/todo-md/`.
 
 **Related:** [Offline sync](30-offline-sync.md), [Projects](06-projects.md), [Backups](backups.md)
 
@@ -22,7 +22,52 @@ environment:
     - TUDUDI_TODO_ROOT=/app/todo-projects
 ```
 
-**Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. The recommended source is a folder of git clones kept up to date by a sidecar or a cron job (`git pull` on a schedule); the server never runs git itself.
+**Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. For a repository, use [Git repositories](#git-repositories) instead: the server clones it itself and nothing is mounted.
+
+## Git repositories
+
+Each repository listed in `TUDUDI_TODO_REPOS` is one project, named after its slug (`source_path = 'git:<slug>'`). The server clones it, reads its `TODO.md` like a folder's, and turns a task added or checked off in Cadence (web, Android) into a commit **by `Cadence <cadence@localhost>`** pushed to the branch. A push to the repository is read back through a webhook, and every **5 minutes** in any case. Module: `backend/modules/todo-md/repos.js`, `git.js`, `webhook.js`.
+
+| Variable                                 | Meaning                                                                                                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `TUDUDI_TODO_REPOS`                      | Slugs, comma-separated: `cadence,notes`. Letters, digits, `-`, `_`.                                                           |
+| `TUDUDI_TODO_REPO_<SLUG>_URL`            | Clone URL, `https://...` or `git@host:owner/repo.git`. No credentials in it. `<SLUG>`: the slug in capitals, `-` becomes `_`. |
+| `TUDUDI_TODO_REPO_<SLUG>_BRANCH`         | Branch to read and push. Default `main`.                                                                                      |
+| `TUDUDI_TODO_REPO_<SLUG>_PATH`           | File in the repository. Default `TODO.md`.                                                                                    |
+| `TUDUDI_TODO_REPO_<SLUG>_TOKEN`          | HTTPS: access token with write access to the repository. Given to git through `GIT_ASKPASS`, never in a URL or argument.      |
+| `TUDUDI_TODO_REPO_<SLUG>_USERNAME`       | HTTPS user name sent with the token. Default `x-access-token` (accepted by GitHub and Gitea).                                 |
+| `TUDUDI_TODO_REPO_<SLUG>_SSH_KEY`        | SSH: the private key itself (`\n` for line breaks is accepted) or the path of a key file. Written `0600` in the clone folder. |
+| `TUDUDI_TODO_REPO_<SLUG>_WEBHOOK_SECRET` | Secret of the push webhook. Without it the webhook answers `404` and only the 5-minute pass reads pushes.                     |
+| `TUDUDI_TODO_GIT_DIR`                    | Where the clones go. Default `<database folder>/todo-repos` (`/app/db/todo-repos` in Docker, inside the database volume).     |
+
+A slug with a missing URL, a branch or path that is not valid (`..`, absolute, `.git/...`, leading `-`) or a command transport (`ext::`) is left out and logged at start-up. `TUDUDI_TODO_ROOT` is not needed for repositories; both can be used together.
+
+### Setting up a repository
+
+1. **Access**, one of:
+    - **Deploy key (SSH, recommended)**: `ssh-keygen -t ed25519 -N '' -f cadence-todo -C cadence`. Gitea: repository → Settings → Deploy keys → Add key, paste `cadence-todo.pub`, tick **Enable write access**. GitHub: repository → Settings → Deploy keys → Add deploy key, tick **Allow write access**. Then `URL=git@host:owner/repo.git` and `SSH_KEY=` the content (or path) of `cadence-todo`. The host key is accepted the first time and kept in `<git dir>/.ssh/known_hosts`; after that a changed host key is refused.
+    - **Token (HTTPS)**: Gitea: user Settings → Applications → token with `write:repository`. GitHub: fine-grained token limited to the repository, **Contents: Read and write**. Then `URL=https://host/owner/repo.git` and `TOKEN=`.
+2. **Webhook** (push events, JSON), URL `https://<cadence>/api/todo-md/webhook/<slug>`, secret = `WEBHOOK_SECRET` (`openssl rand -hex 32`):
+    - Gitea: repository → Settings → Webhooks → Add webhook → Gitea, method POST, content type `application/json`, secret, trigger **Push events**, branch filter = the branch.
+    - GitHub: repository → Settings → Webhooks → Add webhook, content type `application/json`, secret, **Just the push event**.
+    - The webhook must reach the server: from a forge on the tailnet this is direct; from github.com it needs a public route to that one path (e.g. Tailscale Funnel or a Cloudflare tunnel limited to `/api/todo-md/webhook/*`). Without it, the 5-minute pass still reads pushes.
+3. Restart Cadence; the project appears after the first clone. `GET /api/todo-md/status` lists the repositories for the owner.
+
+The webhook checks the HMAC-SHA256 of the raw body (`X-Hub-Signature-256: sha256=...` from GitHub, `X-Gitea-Signature` from Gitea) with a constant-time comparison: `401` on a missing or wrong signature, `404` for an unknown slug or one without a secret, `202` for a push to another branch (ignored), `200` once read.
+
+### How a repository write is made
+
+Under the project's queue: fetch the branch (`--depth 1`), reset the clone to it (a local commit is never kept), apply the one edit to the file as it is **now** (same keyed edits as for a folder: append a bullet, set a box), commit, push. A rejected push (someone pushed in between) starts again from the fetch, up to 3 times. So edits made on both sides are both kept: an edit in Cadence lands on top of whatever the repository holds.
+
+| Case                                                                          | Result                                                                                                               |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| The bullet changed or vanished in the repository (check, uncheck)             | Nothing is written. `409 todo_md_conflict`; the project shows the repository's state and the edit stays **pending**. |
+| The repository cannot be reached (network, credentials, push refused 3 times) | Nothing is written. `503 todo_md_repo_unreachable`; the edit stays **pending**, nothing is deleted.                  |
+| A read fails                                                                  | The project keeps its tasks; `last_error` is set until the next successful read.                                     |
+
+Pending edits are kept in `todo_md_repos.pending` (with the last commit read, `head_sha`, and `synced_at`). The project page shows "Synced with <repo> · 3 minutes ago", or the conflict / waiting edits with **Retry** (`POST /api/todo-md/repos/<slug>/retry`: replays them in order, drops the ones that apply) and **Discard** (`POST .../discard`: forgets them and reads the repository again). Both, and the repositories in `GET /api/todo-md/status`, are for the owner account only.
+
+Git runs with no machine or user configuration (`GIT_CONFIG_GLOBAL=/dev/null`, `GIT_CONFIG_NOSYSTEM=1`), no prompt, no hooks, no signing, and only the `file`, `git`, `http(s)` and `ssh` transports; the token and key never appear in arguments, URLs, logs or stored errors. The file path is resolved inside the clone: a `TODO.md` that is a symlink leading out of the repository or into `.git` is refused. The Docker image ships `git` and `openssh-client`.
 
 ## What is read
 
@@ -71,9 +116,10 @@ Nothing is deleted because a file is unreachable: if the root is missing or a fi
 
 ## When it is read
 
-- At start-up, then every **30 seconds** (size and modification time of each `TODO.md`; this works on bind mounts that do not emit file events), and sooner when `fs.watch` reports a change.
-- **Reread** button on the project page, or `POST /api/todo-md/rescan` (only the account that owns the projects): reads everything now and returns `{ projects, created, updated, removed, errors }`.
-- `GET /api/todo-md/status`: `{ enabled, last_scan }`.
+- Folders: at start-up, then every **30 seconds** (size and modification time of each `TODO.md`; this works on bind mounts that do not emit file events), and sooner when `fs.watch` reports a change.
+- Repositories: at start-up, on each signed push webhook, then every **5 minutes**.
+- **Reread** button on the project page, or `POST /api/todo-md/rescan` (only the account that owns the projects): reads every folder and repository now and returns `{ projects, created, updated, removed, errors }`.
+- `GET /api/todo-md/status`: `{ enabled, last_scan, repos }`; `repos` (owner only, else `[]`) gives per repository `slug`, `repo` (host/path, no credentials), `branch`, `path`, `project_uid`, `webhook`, `head_sha`, `synced_at`, `last_error`, `pending`.
 
 ## What can be done from Cadence
 
@@ -109,3 +155,6 @@ Android reads `source_type` (Room `projects.sourceType`, base v5): a task whose 
 - A folder renamed or removed leaves its old project in place (nothing is deleted while a file is missing); remove it by hand.
 - Editing a bullet's text creates a new task, so Cadence-side data on the old one is lost.
 - A TODO.md that is mounted as a single file (not a folder) cannot be replaced atomically; mount the folder.
+- Repositories: only adding a task and checking / unchecking one are written. Editing a task's text or moving it to another section from Cadence is not offered: the bullet's text is its identity key, so a rename would replace the task (and lose its Cadence-side data); edit those in the repository.
+- Repository writes are serialised per server process; a second process pushing at the same time is handled by the rejected-push retry.
+- A repository removed from `TUDUDI_TODO_REPOS` leaves its project in place; remove it by hand.

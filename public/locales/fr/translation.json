@@ -4988,6 +4988,14 @@
     "rose": "Rose"
   },
   "todoMd": {
+    "repoDiscard": "Abandonner",
+    "repoRetry": "Réessayer",
+    "repoError": "Synchronisation impossible avec {{repo}} : {{error}}",
+    "repoPending": "{{count}} modification(s) en attente : le dépôt est injoignable.",
+    "repoConflict": "Conflit : « {{name}} » a changé dans le dépôt, rien n'a été écrit.",
+    "repoNotSynced": "Pas encore synchronisé avec {{repo}}",
+    "repoSynced": "Synchronisé avec {{repo}} · {{ago}}",
+    "repoInfo": "Reflète le TODO.md du dépôt {{slug}}. Les tâches ajoutées ou cochées sont commitées et poussées.",
     "badge": "TODO.md",
     "badgeTitle": "Issu d'un fichier TODO.md. Lecture seule ici : modifiez le fichier.",
     "readOnly": "Ceci provient d'un fichier TODO.md. Modifiez plutôt le fichier.",

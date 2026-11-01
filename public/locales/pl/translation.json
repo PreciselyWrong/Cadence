@@ -4986,6 +4986,14 @@
     "rose": "Rose"
   },
   "todoMd": {
+    "repoDiscard": "Discard",
+    "repoRetry": "Retry",
+    "repoError": "Could not sync with {{repo}}: {{error}}",
+    "repoPending": "{{count}} change(s) waiting: the repository cannot be reached.",
+    "repoConflict": "Conflict: \"{{name}}\" changed in the repository, nothing was written.",
+    "repoNotSynced": "Not synced with {{repo}} yet",
+    "repoSynced": "Synced with {{repo}} · {{ago}}",
+    "repoInfo": "Mirrors the TODO.md of the {{slug}} repository. Tasks you add and check off are committed and pushed.",
     "badge": "TODO.md",
     "badgeTitle": "Z pliku TODO.md. Tylko do odczytu tutaj: edytuj plik.",
     "readOnly": "To pochodzi z pliku TODO.md. Edytuj zamiast tego plik.",

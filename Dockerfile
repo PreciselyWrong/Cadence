@@ -53,11 +53,14 @@ LABEL service="tududi" \
 ENV APP_UID=1001
 ENV APP_GID=1001
 
-# Install minimal runtime dependencies
+# Install minimal runtime dependencies (git and ssh: TODO.md projects
+# cloned from Gitea/GitHub, docs/35-todo-md-projects.md)
 RUN apk add --no-cache \
     bash \
     sqlite \
     dumb-init \
+    git \
+    openssh-client \
     su-exec && \
     rm -rf /tmp/* /var/cache/apk/*
 

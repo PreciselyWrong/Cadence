@@ -32,8 +32,14 @@ const settings = () => ({
     userEmail: (process.env.TUDUDI_TODO_USER_EMAIL || '').trim().toLowerCase(),
 });
 
-const isEnabled = () => settings().root.trim() !== '';
+const hasRoot = () => settings().root.trim() !== '';
+const isEnabled = () =>
+    hasRoot() || require('./repoConfig').configuredRepos().length > 0;
 const isFileBackedProject = (project) => project?.source_type === SOURCE_TYPE;
+// A project mirrored from a git repository (repos.js), not from a folder.
+const isGitProject = (project) =>
+    isFileBackedProject(project) &&
+    String(project.source_path || '').startsWith('git:');
 const isFileBackedTask = (task) => Boolean(task?.source_key);
 
 // Reads and writes of one project's file never overlap inside this process:
@@ -84,9 +90,9 @@ async function sectionTag(task, userId, name) {
     }
 }
 
-async function upsertProject(owner, folder) {
+async function upsertProject(owner, sourcePath, name) {
     const { Project } = models();
-    const sourcePath = sourcePathFor(folder);
+    const title = name.slice(0, 150);
     let project = await Project.findOne({
         where: {
             user_id: owner.id,
@@ -96,13 +102,13 @@ async function upsertProject(owner, folder) {
     });
     if (!project) {
         project = await Project.create({
-            name: folder.slice(0, 150),
+            name: title,
             user_id: owner.id,
             source_type: SOURCE_TYPE,
             source_path: sourcePath,
         });
-    } else if (project.name !== folder.slice(0, 150)) {
-        project.name = folder.slice(0, 150);
+    } else if (project.name !== title) {
+        project.name = title;
         await project.save();
     }
     return project;
@@ -213,6 +219,24 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     return stats;
 }
 
+// Reconciles the project `sourcePath` with the text of its file. The caller
+// holds the project's queue (`exclusive(sourcePath)`).
+async function importFile(
+    owner,
+    { sourcePath, name, text, modifiedAt },
+    adopt
+) {
+    const project = await upsertProject(owner, sourcePath, name);
+    const stats = await reconcile(
+        project,
+        owner,
+        parseTodoMd(text),
+        modifiedAt,
+        adopt || null
+    );
+    return { project, ...stats };
+}
+
 // Reads the folder's file and reconciles its project. Callers outside this
 // module go through `importFolder`, which takes the project's queue;
 // `importFolderLocked` is for code already holding it.
@@ -223,15 +247,24 @@ async function importFolderLocked(root, owner, folder, adopt = null) {
         readTodoText(file),
         fs.promises.stat(file),
     ]);
-    const project = await upsertProject(owner, folder);
-    const stats = await reconcile(
-        project,
+    return importFile(
         owner,
-        parseTodoMd(text),
-        stat.mtime,
+        {
+            sourcePath: sourcePathFor(folder),
+            name: folder,
+            text,
+            modifiedAt: stat.mtime,
+        },
         adopt
     );
-    return { project, ...stats };
+}
+
+// The bullet `appendTask` just added to `section`.
+function addedItem(text, section) {
+    const wanted = section.toLowerCase();
+    return parseTodoMd(text)
+        .items.filter((i) => i.section.toLowerCase() === wanted)
+        .pop();
 }
 
 const importFolder = (root, owner, folder) =>
@@ -330,6 +363,14 @@ async function createTask(project, { name, note, section, uid } = {}) {
         throw new TodoMdError('not_file_backed', 'Not a TODO.md project');
     }
     const target = (section || DEFAULT_SECTION).trim() || DEFAULT_SECTION;
+    if (isGitProject(project)) {
+        return require('./repos').createTask(project, {
+            name,
+            note,
+            section: target,
+            uid,
+        });
+    }
     try {
         const { root, folder, file } = await projectFile(project);
         const owner = await models().User.findByPk(project.user_id);
@@ -337,11 +378,7 @@ async function createTask(project, { name, note, section, uid } = {}) {
             const written = await editTodoFile(file, (text) =>
                 appendTask(text, target, name, { note })
             );
-            const parsed = parseTodoMd(written.text);
-            const wanted = target.toLowerCase();
-            const added = parsed.items
-                .filter((i) => i.section.toLowerCase() === wanted)
-                .pop();
+            const added = addedItem(written.text, target);
             const { Task } = models();
             await importFolderLocked(root, owner, folder, {
                 key: added.key,
@@ -359,6 +396,9 @@ async function createTask(project, { name, note, section, uid } = {}) {
 // Checks or unchecks the task's bullet. Only the box changes; a task that
 // sits in Done or Dropped has to be moved in the file itself.
 async function setTaskDone(task, project, done) {
+    if (isGitProject(project)) {
+        return require('./repos').setTaskDone(task, project, done);
+    }
     try {
         const { root, folder, file } = await projectFile(project);
         const owner = await models().User.findByPk(project.user_id);
@@ -374,8 +414,10 @@ async function setTaskDone(task, project, done) {
     }
 }
 
-function status() {
-    return { enabled: isEnabled(), last_scan: lastScan };
+async function status({ includeRepos = false } = {}) {
+    const result = { enabled: isEnabled(), last_scan: lastScan };
+    result.repos = includeRepos ? await require('./repos').statuses() : [];
+    return result;
 }
 
 module.exports = {
@@ -383,12 +425,18 @@ module.exports = {
     DEFAULT_SECTION,
     TodoMdError,
     isEnabled,
+    hasRoot,
     isFileBackedProject,
+    isGitProject,
     isFileBackedTask,
     settings,
     ownerUser,
     importAll,
     importFolder,
+    importFile,
+    exclusive,
+    addedItem,
+    asClientError,
     createTask,
     setTaskDone,
     status,

@@ -4966,6 +4966,14 @@
     "rose": "장미색"
   },
   "todoMd": {
+    "repoDiscard": "Discard",
+    "repoRetry": "Retry",
+    "repoError": "Could not sync with {{repo}}: {{error}}",
+    "repoPending": "{{count}} change(s) waiting: the repository cannot be reached.",
+    "repoConflict": "Conflict: \"{{name}}\" changed in the repository, nothing was written.",
+    "repoNotSynced": "Not synced with {{repo}} yet",
+    "repoSynced": "Synced with {{repo}} · {{ago}}",
+    "repoInfo": "Mirrors the TODO.md of the {{slug}} repository. Tasks you add and check off are committed and pushed.",
     "badge": "TODO.md",
     "badgeTitle": "TODO.md 파일에서 가져온 항목입니다. 여기서는 읽기 전용이니 파일을 편집하세요.",
     "readOnly": "TODO.md 파일에서 가져온 항목입니다. 대신 파일을 편집하세요.",

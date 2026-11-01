@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import TodoMdBadge from '../Shared/TodoMdBadge';
 import { useToast } from '../Shared/ToastContext';
+import TodoMdRepoSync from './TodoMdRepoSync';
+import { todoMdRepoSlug } from '../../utils/todoMd';
 
 interface TodoMdProjectNoteProps {
     path: string;
@@ -18,6 +20,8 @@ const TodoMdProjectNote: React.FC<TodoMdProjectNoteProps> = ({
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
     const [busy, setBusy] = useState(false);
+    const [rereads, setRereads] = useState(0);
+    const slug = todoMdRepoSlug(path);
 
     const reread = async () => {
         if (!onReread || busy) return;
@@ -31,6 +35,7 @@ const TodoMdProjectNote: React.FC<TodoMdProjectNoteProps> = ({
             );
         } finally {
             setBusy(false);
+            setRereads((n) => n + 1);
         }
     };
 
@@ -41,11 +46,17 @@ const TodoMdProjectNote: React.FC<TodoMdProjectNoteProps> = ({
         >
             <TodoMdBadge className="ml-0" />
             <span>
-                {t(
-                    'todoMd.projectInfo',
-                    'Mirrors {{path}}. Tasks you add are written to the file, and checking one off updates it.',
-                    { path }
-                )}
+                {slug
+                    ? t(
+                          'todoMd.repoInfo',
+                          'Mirrors the TODO.md of the {{slug}} repository. Tasks you add and check off are committed and pushed.',
+                          { slug }
+                      )
+                    : t(
+                          'todoMd.projectInfo',
+                          'Mirrors {{path}}. Tasks you add are written to the file, and checking one off updates it.',
+                          { path }
+                      )}
             </span>
             {onReread && (
                 <button
@@ -62,6 +73,13 @@ const TodoMdProjectNote: React.FC<TodoMdProjectNoteProps> = ({
                         ? t('todoMd.rereading', 'Rereading...')
                         : t('todoMd.reread', 'Reread')}
                 </button>
+            )}
+            {slug && (
+                <TodoMdRepoSync
+                    slug={slug}
+                    refreshKey={rereads}
+                    onChanged={onReread}
+                />
             )}
         </div>
     );
