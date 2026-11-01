@@ -12,6 +12,14 @@ export interface CaptureProject {
     name: string;
 }
 
+// The goal the box was opened for (a bucket-list item turned into a task):
+// a task saved from that open is linked to it, the goal itself stays.
+export interface CaptureGoal {
+    id: number;
+    uid: string;
+    title: string;
+}
+
 interface CaptureUiState {
     open: boolean;
     target: CaptureTarget;
@@ -19,6 +27,7 @@ interface CaptureUiState {
     // Text the box starts with, e.g. +"Project" when opened from a project
     initialText: string;
     project: CaptureProject | null;
+    goal: CaptureGoal | null;
     // Changes on every open, so the composer can start from the same place
     openCount: number;
 }
@@ -36,6 +45,7 @@ let state: CaptureUiState = {
     scope: null,
     initialText: '',
     project: null,
+    goal: null,
     openCount: 0,
 };
 const listeners = new Set<() => void>();
@@ -50,7 +60,8 @@ export const openCapture = (
     target: CaptureTarget = 'inbox',
     scope: CaptureScope | null = null,
     initialText = '',
-    project: CaptureProject | null = null
+    project: CaptureProject | null = null,
+    goal: CaptureGoal | null = null
 ): void => {
     setState({
         open: true,
@@ -58,6 +69,7 @@ export const openCapture = (
         scope,
         initialText,
         project,
+        goal,
         openCount: state.openCount + 1,
     });
 };

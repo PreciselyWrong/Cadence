@@ -4044,7 +4044,8 @@
       "everyWeek": "Setiap minggu",
       "everyMonth": "Setiap bulan",
       "create": "Buat {{token}}"
-    }
+    },
+    "forGoal": "Langkah berikutnya untuk"
   },
   "area": {
     "loadError": "Gagal memuat area",
@@ -4096,7 +4097,8 @@
       "be": "Menjadi",
       "do": "Melakukan",
       "add": "+ Tambah",
-      "none": "Tidak ada dalam daftar impian"
+      "none": "Tidak ada dalam daftar impian",
+      "linkedTasks": "Tugas terkait: {{count}}"
     },
     "keyResults": {
       "title": "Hasil utama",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Tidak ada tujuan yang dipilih",
     "noAvailableGoals": "Tidak ada tujuan yang tersedia",
     "progressHint": "Batang: tugas dan proyek selesai. Garis: waktu yang berlalu antara pembuatan dan tanggal target.",
-    "removeFromArea": "Hapus dari area"
+    "removeFromArea": "Hapus dari area",
+    "createTask": "Buat tugas"
   },
   "templates": {
     "new": "Templat Baru",

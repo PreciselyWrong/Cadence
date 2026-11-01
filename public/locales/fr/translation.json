@@ -4051,7 +4051,8 @@
       "everyWeek": "Chaque semaine",
       "everyMonth": "Chaque mois",
       "create": "Créer {{token}}"
-    }
+    },
+    "forGoal": "Prochain pas pour"
   },
   "area": {
     "loadError": "Impossible de charger les zones",
@@ -4103,7 +4104,8 @@
       "be": "Être",
       "do": "Faire",
       "add": "+ Ajouter",
-      "none": "Pas dans la liste d'envies"
+      "none": "Pas dans la liste d'envies",
+      "linkedTasks": "Tâches liées : {{count}}"
     },
     "keyResults": {
       "title": "Résultats clés",
@@ -4129,7 +4131,8 @@
     "noAvailableGoals": "Aucun objectif disponible",
     "noGoalsSelected": "Aucun objectif sélectionné",
     "progressHint": "Barre : tâches et projets terminés. Trait : temps écoulé entre la création et la date cible.",
-    "removeFromArea": "Retirer de la zone"
+    "removeFromArea": "Retirer de la zone",
+    "createTask": "Créer une tâche"
   },
   "templates": {
     "new": "Nouveau modèle",

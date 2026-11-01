@@ -4049,7 +4049,8 @@
       "everyWeek": "Hver uke",
       "everyMonth": "Hver måned",
       "create": "Opprett {{token}}"
-    }
+    },
+    "forGoal": "Neste steg for"
   },
   "area": {
     "loadError": "Kunne ikke laste inn områder",
@@ -4101,7 +4102,8 @@
       "be": "Være",
       "do": "Gjøre",
       "add": "+ Legg til",
-      "none": "Ikke på bucket list"
+      "none": "Ikke på bucket list",
+      "linkedTasks": "Koblede oppgaver: {{count}}"
     },
     "keyResults": {
       "title": "Nøkkelresultater",
@@ -4127,7 +4129,8 @@
     "noGoalsSelected": "Ingen mål valgt",
     "noAvailableGoals": "Ingen tilgjengelige mål",
     "progressHint": "Søyle: fullførte oppgaver og prosjekter. Linje: tid mellom opprettelse og måldato.",
-    "removeFromArea": "Fjern fra området"
+    "removeFromArea": "Fjern fra området",
+    "createTask": "Opprett en oppgave"
   },
   "templates": {
     "new": "Ny mal",

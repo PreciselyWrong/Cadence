@@ -4075,7 +4075,8 @@
       "everyWeek": "Every week",
       "everyMonth": "Every month",
       "create": "Create {{token}}"
-    }
+    },
+    "forGoal": "Next step for"
   },
   "attachments": {
     "limitReached": "Maximum 20 attachments allowed",
@@ -4149,7 +4150,8 @@
       "be": "Be",
       "do": "Do",
       "add": "+ Add",
-      "none": "Not on the bucket list"
+      "none": "Not on the bucket list",
+      "linkedTasks": "Linked tasks: {{count}}"
     },
     "keyResults": {
       "title": "Key results",
@@ -4175,7 +4177,8 @@
     "noGoalsSelected": "No goals selected",
     "noAvailableGoals": "No available goals",
     "progressHint": "Bar: tasks and projects done. Line: time passed between creation and target date.",
-    "removeFromArea": "Remove from area"
+    "removeFromArea": "Remove from area",
+    "createTask": "Create a task"
   },
   "templates": {
     "new": "New Template",

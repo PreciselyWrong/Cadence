@@ -4044,7 +4044,8 @@
       "everyWeek": "Her hafta",
       "everyMonth": "Her ay",
       "create": "{{token}} oluştur"
-    }
+    },
+    "forGoal": "Sonraki adım:"
   },
   "area": {
     "loadError": "Alanlar yüklenemedi",
@@ -4096,7 +4097,8 @@
       "be": "Olmak",
       "do": "Yapmak",
       "add": "+ Ekle",
-      "none": "Yapılacaklar listesinde değil"
+      "none": "Yapılacaklar listesinde değil",
+      "linkedTasks": "Bağlı görevler: {{count}}"
     },
     "keyResults": {
       "title": "Ana sonuçlar",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Hiçbir hedef seçilmedi",
     "noAvailableGoals": "Kullanılabilir hedef yok",
     "progressHint": "Çubuk: tamamlanan görevler ve projeler. Çizgi: oluşturma ile hedef tarih arasında geçen süre.",
-    "removeFromArea": "Alandan kaldır"
+    "removeFromArea": "Alandan kaldır",
+    "createTask": "Görev oluştur"
   },
   "templates": {
     "new": "Yeni Şablon",

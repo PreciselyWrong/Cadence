@@ -101,6 +101,10 @@ A goal with a parent is a key result of that objective; the tree is one level de
 
 A goal with a `bucket` (`have`, `be` or `do`) is a wish, not a plan: no target date is asked, and it never shows in Today, the daily plan or the sidebar. The **Bucket list** tab of the Goals page groups them as *Have / Be / Do* (Avoir / Être / Faire) with a **+ Add** per group. Moving a goal off the list is `bucket: null`. A bucket-list goal can still be linked to projects and tasks like any other.
 
+**Turning an item into a task.** An item's menu on the Bucket list tab has **Create a task**: the quick-add box opens on *Task*, pre-filled with the item's name and a "Next step for …" line; the saved task is linked to the item (`goal_id`, synced as `goal_uid`) and may get a project like any task. The item stays on the list (it is the dream, the task its next step) and shows *Linked tasks: N* (tasks linked to it, without cancelled ones or subtasks on Android).
+
+**Android.** Goals are reachable from the **Objectifs** tab of the Tasks screen, from search (title and why; *Objectifs* filter) and from the Bilan card. Touching an objective, a key result or a wish opens an edit sheet: name, note (`why`, blank clears it), type *Avoir / Être / Faire* (wishes only), state (*Actif / Atteint / En pause / Abandonné*), **Créer une tâche** (quick add pre-filled with the name, task linked by `goal_uid`) and **Supprimer** with *Annuler* for five seconds. Writes go through the offline outbox as the `goal` entity (`TaskRepository.updateGoal` sends only the changed fields; `deleteGoal` removes the goal and its key results locally, as the server does). Creating goals stays on the web.
+
 ## Scarcity Rule
 
 The Area detail page displays a warning banner when an area has **more than 5 active goals**. This is a soft nudge, not an enforced limit.

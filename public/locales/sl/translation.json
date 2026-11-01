@@ -4060,7 +4060,8 @@
       "everyWeek": "Vsak teden",
       "everyMonth": "Vsak mesec",
       "create": "Ustvari {{token}}"
-    }
+    },
+    "forGoal": "Naslednji korak za"
   },
   "area": {
     "loadError": "Področij ni bilo mogoče naložiti",
@@ -4112,7 +4113,8 @@
       "be": "Biti",
       "do": "Narediti",
       "add": "+ Dodaj",
-      "none": "Ni na seznamu želja"
+      "none": "Ni na seznamu želja",
+      "linkedTasks": "Povezana opravila: {{count}}"
     },
     "keyResults": {
       "title": "Ključni rezultati",
@@ -4138,7 +4140,8 @@
     "noGoalsSelected": "Ni izbranih ciljev",
     "noAvailableGoals": "Ni razpoložljivih ciljev",
     "progressHint": "Vrstica: opravljene naloge in projekti. Črta: pretečen čas med ustvarjanjem in ciljnim datumom.",
-    "removeFromArea": "Odstrani s področja"
+    "removeFromArea": "Odstrani s področja",
+    "createTask": "Ustvari opravilo"
   },
   "templates": {
     "new": "Nova predloga",

@@ -4044,7 +4044,8 @@
       "everyWeek": "每周",
       "everyMonth": "每月",
       "create": "创建 {{token}}"
-    }
+    },
+    "forGoal": "下一步："
   },
   "area": {
     "loadError": "无法加载区域",
@@ -4096,7 +4097,8 @@
       "be": "成为",
       "do": "做",
       "add": "+ 添加",
-      "none": "不在愿望清单中"
+      "none": "不在愿望清单中",
+      "linkedTasks": "关联任务：{{count}}"
     },
     "keyResults": {
       "title": "关键结果",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "未选择目标",
     "noAvailableGoals": "没有可用目标",
     "progressHint": "柱状图：已完成的任务和项目。折线：从创建到目标日期所经过的时间。",
-    "removeFromArea": "从领域中移除"
+    "removeFromArea": "从领域中移除",
+    "createTask": "创建任务"
   },
   "templates": {
     "new": "新建模板",

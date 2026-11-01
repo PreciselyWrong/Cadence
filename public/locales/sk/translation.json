@@ -4107,7 +4107,8 @@
             "everyWeek": "Každý týždeň",
             "everyMonth": "Každý mesiac",
             "create": "Vytvoriť {{token}}"
-        }
+        },
+        "forGoal": "Ďalší krok pre"
     },
     "attachments": {
         "limitReached": "Povolených je najviac 20 príloh",
@@ -4181,7 +4182,8 @@
             "be": "Byť",
             "do": "Robiť",
             "add": "+ Pridať",
-            "none": "Nie je v zozname prianí"
+            "none": "Nie je v zozname prianí",
+            "linkedTasks": "Prepojené úlohy: {{count}}"
         },
         "keyResults": {
             "title": "Kľúčové výsledky",
@@ -4207,7 +4209,8 @@
         "noGoalsSelected": "Nie sú vybraté žiadne ciele",
         "noAvailableGoals": "Nie sú dostupné žiadne ciele",
         "progressHint": "Stĺpec: dokončené úlohy a projekty. Čiara: čas medzi vytvorením a cieľovým dátumom.",
-        "removeFromArea": "Odstrániť z oblasti"
+        "removeFromArea": "Odstrániť z oblasti",
+        "createTask": "Vytvoriť úlohu"
     },
     "templates": {
         "new": "Nová šablóna",

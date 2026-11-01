@@ -15,6 +15,7 @@ import IconSortDropdown from './Shared/IconSortDropdown';
 import { TASK_SHEET_CLASS } from './Task/taskSheet';
 import SortableItem from './Shared/SortableItem';
 import { useToast } from './Shared/ToastContext';
+import { onCaptureSaved, openCapture } from '../utils/captureUi';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import {
     arrayMove,
@@ -157,6 +158,28 @@ const Goals: React.FC = () => {
     useEffect(() => {
         if (!areasLoaded) loadAreas();
     }, [areasLoaded, loadAreas]);
+
+    // A task made from a bucket-list item changes that item's task count.
+    useEffect(
+        () =>
+            onCaptureSaved(({ items }) => {
+                if (items.some((item) => item.target === 'task')) {
+                    loadGoals(true);
+                }
+            }),
+        [loadGoals]
+    );
+
+    // The item stays on the list (it is the dream); the task is its next
+    // step, linked to it.
+    const createTaskFor = (goal: Goal) => {
+        if (goal.id === undefined || !goal.uid) return;
+        openCapture('task', null, goal.title, null, {
+            id: goal.id,
+            uid: goal.uid,
+            title: goal.title,
+        });
+    };
 
     const handleDeleteGoal = async () => {
         if (!goalToDelete?.uid) return;
@@ -328,6 +351,11 @@ const Goals: React.FC = () => {
                                                     key={goal.uid}
                                                     goal={goal}
                                                     onDelete={openConfirmDelete}
+                                                    onCreateTask={
+                                                        canCreateGoals
+                                                            ? createTaskFor
+                                                            : undefined
+                                                    }
                                                 />
                                             ))}
                                         </div>

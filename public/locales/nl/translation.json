@@ -4044,7 +4044,8 @@
       "everyWeek": "Elke week",
       "everyMonth": "Elke maand",
       "create": "{{token}} aanmaken"
-    }
+    },
+    "forGoal": "Volgende stap voor"
   },
   "area": {
     "loadError": "Gebieden konden niet worden geladen",
@@ -4096,7 +4097,8 @@
       "be": "Zijn",
       "do": "Doen",
       "add": "+ Toevoegen",
-      "none": "Niet op de bucketlist"
+      "none": "Niet op de bucketlist",
+      "linkedTasks": "Gekoppelde taken: {{count}}"
     },
     "keyResults": {
       "title": "Kernresultaten",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Geen doelen geselecteerd",
     "noAvailableGoals": "Geen beschikbare doelen",
     "progressHint": "Balk: voltooide taken en projecten. Lijn: verstreken tijd tussen aanmaak en streefdatum.",
-    "removeFromArea": "Verwijderen uit gebied"
+    "removeFromArea": "Verwijderen uit gebied",
+    "createTask": "Taak maken"
   },
   "templates": {
     "new": "Nieuw sjabloon",

@@ -4050,7 +4050,8 @@
       "everyWeek": "Ogni settimana",
       "everyMonth": "Ogni mese",
       "create": "Crea {{token}}"
-    }
+    },
+    "forGoal": "Prossimo passo per"
   },
   "area": {
     "loadError": "Impossibile caricare le aree",
@@ -4102,7 +4103,8 @@
       "be": "Essere",
       "do": "Fare",
       "add": "+ Aggiungi",
-      "none": "Non nella lista dei desideri"
+      "none": "Non nella lista dei desideri",
+      "linkedTasks": "Attività collegate: {{count}}"
     },
     "keyResults": {
       "title": "Risultati chiave",
@@ -4128,7 +4130,8 @@
     "noGoalsSelected": "Nessun obiettivo selezionato",
     "noAvailableGoals": "Nessun obiettivo disponibile",
     "progressHint": "Barra: attività e progetti completati. Linea: tempo trascorso tra la creazione e la data di scadenza.",
-    "removeFromArea": "Rimuovi dall'area"
+    "removeFromArea": "Rimuovi dall'area",
+    "createTask": "Crea un'attività"
   },
   "templates": {
     "new": "Nuovo modello",

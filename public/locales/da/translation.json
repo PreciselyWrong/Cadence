@@ -4044,7 +4044,8 @@
       "everyWeek": "Hver uge",
       "everyMonth": "Hver måned",
       "create": "Opret {{token}}"
-    }
+    },
+    "forGoal": "Næste skridt for"
   },
   "area": {
     "loadError": "Kunne ikke indlæse områder",
@@ -4096,7 +4097,8 @@
       "be": "Være",
       "do": "Gøre",
       "add": "+ Tilføj",
-      "none": "Ikke på bucket list"
+      "none": "Ikke på bucket list",
+      "linkedTasks": "Tilknyttede opgaver: {{count}}"
     },
     "keyResults": {
       "title": "Nøgleresultater",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Ingen mål valgt",
     "noAvailableGoals": "Ingen tilgængelige mål",
     "progressHint": "Søjle: udførte opgaver og projekter. Linje: tid mellem oprettelse og slutdato.",
-    "removeFromArea": "Fjern fra området"
+    "removeFromArea": "Fjern fra området",
+    "createTask": "Opret en opgave"
   },
   "templates": {
     "new": "Ny skabelon",

@@ -19,6 +19,9 @@ interface GoalRowProps {
     onDelete?: (goal: Goal) => void;
     // Shown in the menu when given, e.g. on an area's goal list.
     onRemoveFromArea?: (goal: Goal) => void;
+    // Shown in the menu when given: the bucket list turns an item into a
+    // task linked to it.
+    onCreateTask?: (goal: Goal) => void;
 }
 
 // One goal in a list, the same row on the Goals page and on an area page.
@@ -27,6 +30,7 @@ const GoalRow: React.FC<GoalRowProps> = ({
     goal,
     onDelete,
     onRemoveFromArea,
+    onCreateTask,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -79,6 +83,20 @@ const GoalRow: React.FC<GoalRowProps> = ({
                 {goal.Area && (
                     <p className="text-xs text-gray-600 dark:text-gray-300 truncate mt-0.5">
                         {goal.Area.name}
+                    </p>
+                )}
+                {goal.bucket && tasksCount > 0 && (
+                    <p
+                        className="text-xs text-gray-600 dark:text-gray-300 truncate mt-0.5"
+                        data-testid="goal-linked-tasks"
+                    >
+                        {t(
+                            'goals.bucket.linkedTasks',
+                            'Linked tasks: {{count}}',
+                            {
+                                count: tasksCount,
+                            }
+                        )}
                     </p>
                 )}
             </Link>
@@ -144,6 +162,20 @@ const GoalRow: React.FC<GoalRowProps> = ({
                         >
                             {t('common.edit', 'Edit')}
                         </button>
+                        {onCreateTask && (
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setMenuOpen(false);
+                                    onCreateTask(goal);
+                                }}
+                                className={`${menuItemClass} text-gray-700 dark:text-gray-300`}
+                            >
+                                {t('goals.createTask', 'Create a task')}
+                            </button>
+                        )}
                         {onRemoveFromArea && (
                             <button
                                 type="button"

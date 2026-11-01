@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Liste d'envies : « Créer une tâche »
+
+- **Problème** : une envie (Avoir / Être / Faire) restait un rêve sans prochain pas ; aucun geste ne la reliait à une tâche, et rien ne disait si un pas existait déjà.
+- **Décision** : le menu « … » d'une envie (onglet Liste d'envies de la page Objectifs) porte « Créer une tâche » : la capture s'ouvre sur Tâche, préremplie du nom, avec la ligne « Prochain pas pour … » ; la tâche enregistrée est liée à l'envie (`goal_id`), projet au choix par `+projet`. L'envie reste et affiche « Tâches liées : N » à toutes les largeurs. L'édition d'une envie passe par sa page (bouton Modifier, `GoalModal`).
+- **Android** : repris dans la même étape (fiche d'une envie, « Créer une tâche », compte des tâches liées).
+
 ### 2026-11-01 — Suggestions en direct et saisie en série
 
 - **Problème** : taper `#` ou `+` seul n'ouvrait rien (il fallait déjà une lettre), `!` et `~` ne proposaient rien, les étiquettes imbriquées (`perso/sport`) n'étaient ni proposées ni relues par le serveur, et chaque tâche ajoutée repartait sans le projet de la précédente.

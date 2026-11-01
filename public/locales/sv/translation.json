@@ -4044,7 +4044,8 @@
       "everyWeek": "Varje vecka",
       "everyMonth": "Varje månad",
       "create": "Skapa {{token}}"
-    }
+    },
+    "forGoal": "Nästa steg för"
   },
   "area": {
     "loadError": "Det gick inte att läsa in områden",
@@ -4096,7 +4097,8 @@
       "be": "Vara",
       "do": "Göra",
       "add": "+ Lägg till",
-      "none": "Inte på bucket list"
+      "none": "Inte på bucket list",
+      "linkedTasks": "Länkade uppgifter: {{count}}"
     },
     "keyResults": {
       "title": "Nyckelresultat",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Inga mål valda",
     "noAvailableGoals": "Inga tillgängliga mål",
     "progressHint": "Stapel: klara uppgifter och projekt. Linje: tid som gått mellan skapande och måldatum.",
-    "removeFromArea": "Ta bort från område"
+    "removeFromArea": "Ta bort från område",
+    "createTask": "Skapa en uppgift"
   },
   "templates": {
     "new": "Ny mall",

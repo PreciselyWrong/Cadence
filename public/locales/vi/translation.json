@@ -4044,7 +4044,8 @@
       "everyWeek": "Mỗi tuần",
       "everyMonth": "Mỗi tháng",
       "create": "Tạo {{token}}"
-    }
+    },
+    "forGoal": "Bước tiếp theo cho"
   },
   "area": {
     "loadError": "Không thể tải khu vực",
@@ -4096,7 +4097,8 @@
       "be": "Trở thành",
       "do": "Làm",
       "add": "+ Thêm",
-      "none": "Không có trong danh sách mong muốn"
+      "none": "Không có trong danh sách mong muốn",
+      "linkedTasks": "Công việc liên kết: {{count}}"
     },
     "keyResults": {
       "title": "Kết quả chính",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Chưa chọn mục tiêu nào",
     "noAvailableGoals": "Không có mục tiêu khả dụng",
     "progressHint": "Thanh: công việc và dự án đã hoàn thành. Đường: thời gian từ lúc tạo đến ngày đích.",
-    "removeFromArea": "Xóa khỏi khu vực"
+    "removeFromArea": "Xóa khỏi khu vực",
+    "createTask": "Tạo công việc"
   },
   "templates": {
     "new": "Mẫu mới",

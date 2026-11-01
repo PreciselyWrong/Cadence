@@ -4044,7 +4044,8 @@
       "everyWeek": "Joka viikko",
       "everyMonth": "Joka kuukausi",
       "create": "Luo {{token}}"
-    }
+    },
+    "forGoal": "Seuraava askel kohteelle"
   },
   "area": {
     "loadError": "Alueiden lataaminen epäonnistui",
@@ -4096,7 +4097,8 @@
       "be": "Olla",
       "do": "Tehdä",
       "add": "+ Lisää",
-      "none": "Ei toivelistalla"
+      "none": "Ei toivelistalla",
+      "linkedTasks": "Linkitetyt tehtävät: {{count}}"
     },
     "keyResults": {
       "title": "Tärkeimmät tulokset",
@@ -4122,7 +4124,8 @@
     "noGoalsSelected": "Tavoitteita ei ole valittu",
     "noAvailableGoals": "Tavoitteita ei ole saatavilla",
     "progressHint": "Palkki: valmiit tehtävät ja projektit. Viiva: luomisen ja kohdepäivän välinen aika.",
-    "removeFromArea": "Poista alueelta"
+    "removeFromArea": "Poista alueelta",
+    "createTask": "Luo tehtävä"
   },
   "templates": {
     "new": "Uusi malli",

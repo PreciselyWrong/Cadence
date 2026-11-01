@@ -219,6 +219,41 @@ describe('CaptureHost', () => {
         stop();
     });
 
+    it('links a task made from a bucket-list goal to that goal', async () => {
+        const { useStore } = jest.requireMock('../../../store/useStore');
+        const createTask = useStore.getState().tasksStore.createTask;
+        createTask.mockClear();
+        renderHost('/goals');
+        act(() =>
+            openCapture('task', null, 'See the northern lights', null, {
+                id: 7,
+                uid: 'goal-7',
+                title: 'See the northern lights',
+            })
+        );
+
+        expect(screen.getByTestId('quick-capture-input')).toHaveValue(
+            'See the northern lights'
+        );
+        expect(screen.getByTestId('capture-goal')).toHaveTextContent(
+            'See the northern lights'
+        );
+        fireEvent.keyDown(screen.getByTestId('quick-capture-input'), {
+            key: 'Enter',
+            ctrlKey: true,
+        });
+
+        await waitFor(() => expect(createTask).toHaveBeenCalledTimes(1));
+        expect(createTask.mock.calls[0][0]).toMatchObject({
+            name: 'See the northern lights',
+            goal_id: 7,
+        });
+
+        act(() => closeCapture());
+        act(() => openCapture('task'));
+        expect(screen.queryByTestId('capture-goal')).not.toBeInTheDocument();
+    });
+
     it.each(['/inbox', '/task/abc', '/note/xyz'])(
         'keeps the phone button out of the way on %s',
         (path) => {

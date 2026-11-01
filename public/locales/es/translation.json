@@ -4037,7 +4037,8 @@
       "everyWeek": "Todas las semanas",
       "everyMonth": "Todos los meses",
       "create": "Crear {{token}}"
-    }
+    },
+    "forGoal": "Siguiente paso para"
   },
   "area": {
     "loadError": "No se pudieron cargar las áreas",
@@ -4089,7 +4090,8 @@
       "be": "Ser",
       "do": "Hacer",
       "add": "+ Añadir",
-      "none": "No está en la lista de deseos"
+      "none": "No está en la lista de deseos",
+      "linkedTasks": "Tareas vinculadas: {{count}}"
     },
     "keyResults": {
       "title": "Resultados clave",
@@ -4115,7 +4117,8 @@
     "noGoalsSelected": "No hay objetivos seleccionados",
     "noAvailableGoals": "No hay objetivos disponibles",
     "progressHint": "Barra: tareas y proyectos completados. Línea: tiempo transcurrido entre la creación y la fecha objetivo.",
-    "removeFromArea": "Quitar del área"
+    "removeFromArea": "Quitar del área",
+    "createTask": "Crear una tarea"
   },
   "templates": {
     "new": "Nueva plantilla",

@@ -4042,7 +4042,8 @@
       "everyWeek": "매주",
       "everyMonth": "매월",
       "create": "{{token}} 만들기"
-    }
+    },
+    "forGoal": "다음 단계:"
   },
   "area": {
     "loadError": "영역을 불러오지 못했습니다",
@@ -4094,7 +4095,8 @@
       "be": "되기",
       "do": "하기",
       "add": "+ 추가",
-      "none": "버킷 리스트에 없음"
+      "none": "버킷 리스트에 없음",
+      "linkedTasks": "연결된 작업: {{count}}"
     },
     "keyResults": {
       "title": "핵심 결과",
@@ -4120,7 +4122,8 @@
     "noGoalsSelected": "선택된 목표가 없습니다",
     "noAvailableGoals": "사용 가능한 목표가 없습니다",
     "progressHint": "막대: 완료된 작업과 프로젝트. 선: 생성일부터 목표일까지 지난 시간.",
-    "removeFromArea": "영역에서 제거"
+    "removeFromArea": "영역에서 제거",
+    "createTask": "작업 만들기"
   },
   "templates": {
     "new": "새 템플릿",

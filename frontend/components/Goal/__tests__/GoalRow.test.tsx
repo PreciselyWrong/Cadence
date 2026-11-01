@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import GoalRow from '../GoalRow';
@@ -44,5 +44,38 @@ describe('GoalRow', () => {
         expect(
             screen.getByText(/Key results/).parentElement?.className
         ).toMatch(/whitespace-nowrap/);
+    });
+
+    it('offers Create a task in its menu when the page allows it', () => {
+        const onCreateTask = jest.fn();
+        const goal = { uid: 'b1', title: 'Own a house', bucket: 'have' } as any;
+        render(
+            <MemoryRouter>
+                <GoalRow goal={goal} onCreateTask={onCreateTask} />
+            </MemoryRouter>
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Create a task' }));
+        expect(onCreateTask).toHaveBeenCalledWith(goal);
+    });
+
+    it('shows how many tasks a bucket-list goal has, on every width', () => {
+        render(
+            <MemoryRouter>
+                <GoalRow
+                    goal={
+                        {
+                            uid: 'b1',
+                            title: 'Own a house',
+                            bucket: 'have',
+                            tasks_count: 2,
+                        } as any
+                    }
+                />
+            </MemoryRouter>
+        );
+        const line = screen.getByTestId('goal-linked-tasks');
+        expect(line).toHaveTextContent('Linked tasks: {{count}}');
+        expect(line.closest('.hidden')).toBeNull();
     });
 });

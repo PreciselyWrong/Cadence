@@ -4042,7 +4042,8 @@
       "everyWeek": "毎週",
       "everyMonth": "毎月",
       "create": "{{token}} を作成"
-    }
+    },
+    "forGoal": "次の一歩:"
   },
   "area": {
     "loadError": "エリアを読み込めませんでした",
@@ -4094,7 +4095,8 @@
       "be": "なる",
       "do": "する",
       "add": "+ 追加",
-      "none": "バケットリストにありません"
+      "none": "バケットリストにありません",
+      "linkedTasks": "リンクされたタスク: {{count}}"
     },
     "keyResults": {
       "title": "主要な結果",
@@ -4120,7 +4122,8 @@
     "noGoalsSelected": "目標が選択されていません",
     "noAvailableGoals": "利用可能な目標がありません",
     "progressHint": "バー：完了したタスクとプロジェクト。線：作成から目標日までの経過時間。",
-    "removeFromArea": "エリアから削除"
+    "removeFromArea": "エリアから削除",
+    "createTask": "タスクを作成"
   },
   "templates": {
     "new": "新しいテンプレート",

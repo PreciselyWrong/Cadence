@@ -4054,7 +4054,8 @@
       "everyWeek": "În fiecare săptămână",
       "everyMonth": "În fiecare lună",
       "create": "Creează {{token}}"
-    }
+    },
+    "forGoal": "Următorul pas pentru"
   },
   "area": {
     "loadError": "Ariile nu au putut fi încărcate",
@@ -4106,7 +4107,8 @@
       "be": "A fi",
       "do": "A face",
       "add": "+ Adaugă",
-      "none": "Nu este pe lista de dorințe"
+      "none": "Nu este pe lista de dorințe",
+      "linkedTasks": "Sarcini legate: {{count}}"
     },
     "keyResults": {
       "title": "Rezultate cheie",
@@ -4132,7 +4134,8 @@
     "noGoalsSelected": "Niciun obiectiv selectat",
     "noAvailableGoals": "Niciun obiectiv disponibil",
     "progressHint": "Bară: sarcini și proiecte finalizate. Linie: timpul trecut între creare și data țintă.",
-    "removeFromArea": "Elimină din zonă"
+    "removeFromArea": "Elimină din zonă",
+    "createTask": "Creează o sarcină"
   },
   "templates": {
     "new": "Șablon nou",

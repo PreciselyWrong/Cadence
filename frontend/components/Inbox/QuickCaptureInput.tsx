@@ -36,7 +36,7 @@ import {
     splitCaptureText,
     splitFirstLine,
 } from '../../utils/captureText';
-import type { CaptureProject } from '../../utils/captureUi';
+import type { CaptureGoal, CaptureProject } from '../../utils/captureUi';
 import {
     InboxTokenKind,
     isProjectToken,
@@ -157,6 +157,9 @@ interface QuickCaptureInputProps {
     // The project the box was opened from. A task or note with no +project,
     // or with this project's name, is linked to it by uid.
     defaultProject?: CaptureProject | null;
+    // The goal the box was opened for: a task saved from it is linked to
+    // that goal (a bucket-list item's next step).
+    defaultGoal?: CaptureGoal | null;
     compact?: boolean;
     onClose?: () => void;
     onCaptured?: (items: CapturedItem[]) => void;
@@ -304,6 +307,7 @@ const QuickCaptureInput = React.forwardRef<
             resetKey,
             prefillText,
             defaultProject = null,
+            defaultGoal = null,
             compact = false,
             onClose,
             onCaptured,
@@ -2068,6 +2072,7 @@ const QuickCaptureInput = React.forwardRef<
                             projectUid,
                             useStore.getState().areasStore?.areas ?? []
                         ),
+                        ...(defaultGoal ? { goal_id: defaultGoal.id } : {}),
                         completed_at: null,
                     },
                     analysis
@@ -3013,6 +3018,17 @@ const QuickCaptureInput = React.forwardRef<
                             locked={lockTarget}
                             scopeLabel={scopeLabel}
                         />
+                        {defaultGoal && target === 'task' && (
+                            <p
+                                className="mt-1.5 text-[13px] text-gray-600 dark:text-gray-300 truncate"
+                                data-testid="capture-goal"
+                            >
+                                {t('capture.forGoal', 'Next step for')}{' '}
+                                <span className="font-semibold text-gray-900 dark:text-white">
+                                    {defaultGoal.title}
+                                </span>
+                            </p>
+                        )}
                     </div>
                     <input
                         ref={fileInputRef}

@@ -4060,7 +4060,8 @@
       "everyWeek": "Co tydzień",
       "everyMonth": "Co miesiąc",
       "create": "Utwórz {{token}}"
-    }
+    },
+    "forGoal": "Następny krok dla"
   },
   "area": {
     "loadError": "Nie udało się wczytać obszarów",
@@ -4112,7 +4113,8 @@
       "be": "Być",
       "do": "Robić",
       "add": "+ Dodaj",
-      "none": "Brak na liście marzeń"
+      "none": "Brak na liście marzeń",
+      "linkedTasks": "Powiązane zadania: {{count}}"
     },
     "keyResults": {
       "title": "Kluczowe wyniki",
@@ -4138,7 +4140,8 @@
     "noGoalsSelected": "Nie wybrano celów",
     "noAvailableGoals": "Brak dostępnych celów",
     "progressHint": "Słupek: ukończone zadania i projekty. Linia: czas między utworzeniem a datą docelową.",
-    "removeFromArea": "Usuń z obszaru"
+    "removeFromArea": "Usuń z obszaru",
+    "createTask": "Utwórz zadanie"
   },
   "templates": {
     "new": "Nowy szablon",

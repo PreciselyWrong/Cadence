@@ -27,6 +27,12 @@ jest.mock('../Shared/ConfirmDialog', () => ({
     default: () => null,
 }));
 
+const mockOpenCapture = jest.fn();
+jest.mock('../../utils/captureUi', () => ({
+    openCapture: (...args: unknown[]) => mockOpenCapture(...args),
+    onCaptureSaved: () => () => undefined,
+}));
+
 let mockGoals: Partial<Goal>[] = [];
 jest.mock('../../store/useStore', () => {
     const state = () => ({
@@ -134,5 +140,25 @@ describe('Goals page: bucket list and key results', () => {
 
         expect(screen.queryByText('year')).toBeNull();
         expect(screen.queryByText('Year')).toBeNull();
+    });
+
+    it('turns a bucket-list goal into a task linked to it, and keeps the goal', () => {
+        mockGoals = [
+            goal({ id: 9, uid: 'b1', title: 'Own a house', bucket: 'have' }),
+        ];
+        renderGoals();
+        fireEvent.click(screen.getByRole('tab', { name: 'Bucket list' }));
+
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Create a task' }));
+
+        expect(mockOpenCapture).toHaveBeenCalledWith(
+            'task',
+            null,
+            'Own a house',
+            null,
+            { id: 9, uid: 'b1', title: 'Own a house' }
+        );
+        expect(screen.getByText('Own a house')).toBeInTheDocument();
     });
 });

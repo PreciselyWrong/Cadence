@@ -4053,7 +4053,8 @@
       "everyWeek": "Jede Woche",
       "everyMonth": "Jeden Monat",
       "create": "{{token}} erstellen"
-    }
+    },
+    "forGoal": "Nächster Schritt für"
   },
   "area": {
     "loadError": "Bereiche konnten nicht geladen werden",
@@ -4105,7 +4106,8 @@
       "be": "Sein",
       "do": "Tun",
       "add": "+ Hinzufügen",
-      "none": "Nicht auf der Bucket List"
+      "none": "Nicht auf der Bucket List",
+      "linkedTasks": "Verknüpfte Aufgaben: {{count}}"
     },
     "keyResults": {
       "title": "Schlüsselergebnisse",
@@ -4131,7 +4133,8 @@
     "noGoalsSelected": "Keine Ziele ausgewählt",
     "noAvailableGoals": "Keine verfügbaren Ziele",
     "progressHint": "Balken: erledigte Aufgaben und Projekte. Linie: vergangene Zeit zwischen Erstellung und Zieldatum.",
-    "removeFromArea": "Aus Bereich entfernen"
+    "removeFromArea": "Aus Bereich entfernen",
+    "createTask": "Aufgabe erstellen"
   },
   "templates": {
     "new": "Neue Vorlage",
