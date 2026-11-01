@@ -12,6 +12,7 @@ jest.mock('../../config/config', () => {
                     enabled: true,
                     auth: { windowMs: 15 * 60 * 1000, max: 3 },
                     bearerFailure: { max: 3 },
+                    authEmail: { windowMs: 15 * 60 * 1000, max: 2 },
                 },
             };
         },
@@ -120,7 +121,9 @@ describe('Remote MCP rate limits on a shared egress range', () => {
             expect((await mcpCall(ip)).status).toBe(401);
         }
 
-        const bad = `tt_${'0'.repeat(9)}${counter}${'f'.repeat(54)}`;
+        // The limiter keys on the first 12 characters, so the test number
+        // goes there to keep each test's bucket apart.
+        const bad = `tt_${String(counter).padStart(9, '0')}${'f'.repeat(55)}`;
         for (let i = 0; i < 3; i++) {
             expect((await mcpCall(ip, bad)).status).toBe(401);
         }
@@ -132,6 +135,27 @@ describe('Remote MCP rate limits on a shared egress range', () => {
             abilities: { scope: 'mcp', oauth_client: 'mcp_x' },
         });
         expect((await mcpCall(ip, rawToken)).status).toBe(200);
+    });
+
+    it('never lets consent failures lock the owner out of web sign-in', async () => {
+        for (let i = 0; i < 4; i++) {
+            const res = await request(app)
+                .post('/oauth/authorize')
+                .set('X-Forwarded-For', nextIp())
+                .type('form')
+                .send({
+                    client_id: 'mcp_bogus',
+                    email: user.email,
+                    password: 'wrong',
+                    decision: 'allow',
+                });
+            expect(res.status).toBe(400);
+        }
+        const login = await request(app)
+            .post('/api/login')
+            .set('X-Forwarded-For', nextIp())
+            .send({ email: user.email, password: 'password123' });
+        expect(login.status).toBe(200);
     });
 
     it('lets a paired registration through after refusals from the same address', async () => {

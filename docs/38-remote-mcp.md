@@ -40,7 +40,7 @@ Claude Code does not use this flow for a public connector: it sends a loopback r
 1. claude.ai `POST /mcp` without a token → `401` with the metadata pointer.
 2. claude.ai reads both metadata documents, then registers at `POST /oauth/register` with `redirect_uris: ["https://claude.ai/api/mcp/auth_callback"]`. Outside a pairing, or once the pairing already has its client, registration answers `403 access_denied`. Any other redirect URI is refused (`400 invalid_redirect_uri`). The `client_id` is signed with a key derived from `TUDUDI_SESSION_SECRET` and carries the client's name, redirect URIs and registration time, so no table is needed and nobody can forge or alter one.
 3. Your browser opens `GET /oauth/authorize?…`. Cloudflare Access asks for the email code first. Cadence then checks the client, that the redirect URI is both registered by the client **and** still in the allowlist, and that the pairing is open for this client (an unknown client, a refused redirect URI or a closed pairing gets an error page, never a redirect); then `response_type=code`, an `S256` challenge, and `resource` when sent. A client registered earlier that connects again (token expired, connector re-added) can use a fresh pairing: the first client to open the consent page during a pairing becomes its one client.
-4. The consent page names the app (as it calls itself, with control and bidi characters removed), **how long ago it registered** and the host you go back to, and asks for your Cadence email, password and a current two-factor code (recovery codes are not accepted). Only the account that opened the pairing can allow it. **Allow** redirects to the callback with a one-minute, single-use code, the `state` and `iss`, closes the pairing, writes the grant to the audit log and emails you; **Deny** returns `access_denied`.
+4. The consent page names the app (as it calls itself, with control and bidi characters removed), **how long ago it registered** and the host you go back to, and asks for your Cadence email, password and a current two-factor code (recovery codes are not accepted). Only the account that opened the pairing can allow it. Every refusal shows the same "Sign-in failed" message, so the page never confirms a password; the log keeps the reason. **Allow** redirects to the callback with a one-minute, single-use code, the `state` and `iss`, closes the pairing, writes the grant to the audit log and emails you; **Deny** returns `access_denied`.
 5. claude.ai's servers `POST /oauth/token` with the code, the redirect URI, the client id and the PKCE verifier. The code is spent on the first try whatever the outcome.
 
 Approve only a consent page you started yourself a moment ago: a client that registered "less than a minute ago" is expected, one that registered hours ago on a fresh connection is not.
@@ -52,7 +52,7 @@ The access token is a regular Cadence API key named `Claude MCP (<client name>)`
 - it acts as your account only (the user who consented);
 - it opens `/mcp`, `/api/mcp` and `/api/v1/mcp` only: any other `/api` path answers `403`, and CalDAV (Bearer or as a Basic password) refuses it like an unknown key. API key consumers only accept a scoped token when they name its scope (`findValidTokenByValue(value, { allowScopes })`);
 - the public `/mcp` accepts nothing else: a full-access `tt_` key, a session cookie or an OIDC token gets `401` there;
-- the same client connecting again (same signed `client_id`) revokes its previous token; a different client with the same name does not;
+- the same client connecting again (same signed `client_id`) revokes its previous token; a different client with the same name does not. Removing and re-adding the connector in claude.ai registers a new client, so the previous `Claude MCP (…)` key stays valid until it expires: revoke it under Profile › API keys (the security email of each grant is the reminder);
 - it expires after `TUDUDI_MCP_OAUTH_TOKEN_DAYS` days (default 30); claude.ai then asks you to connect again, which needs a new pairing;
 - **revoke it** under **Profile › API keys** (Revoke or Delete): the next MCP call gets `401`.
 
@@ -89,7 +89,7 @@ Anthropic's egress range is shared by every Claude user, so nothing on the machi
 | Discovery documents (`/.well-known/…`) | none |
 | `POST /oauth/register` | none: closed outside the pairing window, which costs nothing to refuse |
 | `POST /oauth/token` | failed requests per `client_id` (`RATE_LIMIT_AUTH_MAX` per `RATE_LIMIT_AUTH_WINDOW_MS`, 5 per 15 minutes by default) |
-| `GET`/`POST /oauth/authorize` (your browser) | failed requests per IP, as above, and the consent form per submitted email, like the login form |
+| `GET`/`POST /oauth/authorize` (your browser) | failed requests per IP, as above, and refused sign-ins on the consent form per submitted email (`RATE_LIMIT_AUTH_EMAIL_MAX`, 10 per 15 minutes), on a counter of its own: failed consents never lock you out of the web sign-in, and requests for an unknown client or outside the pairing do not count |
 | `POST /mcp` | failed bearer tokens per token prefix (`RATE_LIMIT_BEARER_FAILURE_MAX`, 50 per 15 minutes); requests per token (`RATE_LIMIT_AUTH_API_MAX`, 1000 per 15 minutes). A call without a token, the first step of every connection, is never counted |
 
 ## Cadence settings (Unraid container)
@@ -176,10 +176,10 @@ Security › WAF › Custom rules › Create rule. Rules 1 and 3 are required; r
    or (http.request.uri.path in {"/oauth/token" "/oauth/register"} and http.request.method ne "POST")))
 ```
 
-**Rule 3, Block — no percent-encoded paths**, so `/oauth/%74oken` cannot slip past rule 1's literal paths:
+**Rule 3, Block — no percent-encoded paths.** Rule 1 compares literal paths; an encoded one (`/oauth/%74oken`, `/oauth%2Fregister`) could otherwise reach the tunnel without matching it. Matching on `%` in the raw path works whatever Cloudflare's URL normalization settings are:
 
 ```
-(http.host eq "cadence.nicolab.ch" and raw.http.request.uri.path ne http.request.uri.path)
+(http.host eq "cadence.nicolab.ch" and raw.http.request.uri.path contains "%")
 ```
 
 Claude's calls come from servers, not browsers: for `cadence.nicolab.ch`, keep **Bot Fight Mode**, **Block AI bots / AI Crawl Control** and **Browser Integrity Check** off, or skip them for this host with a configuration or skip rule. Otherwise `/mcp` and `/oauth/token` get a challenge and the connection never completes.
@@ -214,12 +214,12 @@ Run 1 to 6 from your own machine (not from Anthropic's range), the rest as descr
 |---|---|---|
 | 1 | `curl -si -X POST https://cadence.nicolab.ch/mcp` | `403` (WAF block page) |
 | 2 | `curl -si https://cadence.nicolab.ch/` and `/api/tasks`, `/api/v1/sync`, `/api/login`, `/login` | `404` from the tunnel |
-| 3 | `curl -si https://cadence.nicolab.ch/oauth/token -d grant_type=x` and `curl -si -X POST https://cadence.nicolab.ch/oauth/%72egister` | `403` (WAF rules 1 and 3) |
+| 3 | `curl -si https://cadence.nicolab.ch/oauth/token -d grant_type=x`, then `curl -si -X POST https://cadence.nicolab.ch/oauth/%72egister` and `curl -si -X POST https://cadence.nicolab.ch/oauth%2Fregister` | `403` each (WAF rule 1, then rule 3) |
 | 4 | `curl -si https://cadence.nicolab.ch/.well-known/oauth-authorization-server` | `403` (WAF) |
 | 5 | Open `https://cadence.nicolab.ch/oauth/authorize` in a private window | Cloudflare Access login, not Cadence |
 | 6 | After the Access code, the same URL without parameters | Cadence "Cannot connect" page (unknown client), no redirect |
 | 7 | Without clicking **Authorize a new connector**, Connect from claude.ai | claude.ai fails to register; log has `oauth.client_refused` with `error: pairing_closed` |
-| 8 | Pair, Connect, wrong password (then: right password, wrong code) | Consent page again with "Sign-in failed"; `oauth.authorize_refused` (`invalid_credentials`, then `mfa_invalid`) |
+| 8 | Pair, Connect, wrong password (then: right password, wrong code) | Consent page again with "Sign-in failed"; `oauth.authorize_refused` (`invalid_credentials`, then `mfa_invalid`); your web sign-in still works |
 | 9 | Pair, Connect with the right password and code | Back on claude.ai, connector shows tools; log has `oauth.pairing_opened`, `oauth.client_registered`, `oauth.authorize_granted`, `oauth.token_issued`, `mcp.session_started`; the security email arrives |
 | 10 | Ask Claude to list today's tasks | Answers from your data; `Claude MCP (Claude)` appears under Profile › API keys with a recent "last used" |
 | 11 | Resubmit the consent page from step 9 (browser Back, Allow) | "Cannot connect": the pairing closed with the grant |
@@ -237,4 +237,5 @@ Run 1 to 6 from your own machine (not from Anthropic's range), the rest as descr
 - **A race inside the pairing window:** someone who registers in the 10 minutes before your claude.ai does takes the pairing; your Connect then fails. Their client still cannot get past the consent page; click **Authorize a new connector** again.
 - **Consent phishing:** someone could start a flow from their own claude.ai account and send you the authorize link. Access, the pairing and your password still apply; the defence is to approve only a flow you started, from a client that registered moments ago.
 - **Pairings and authorization codes are in memory**: a restart means clicking **Authorize a new connector** again; several Cadence processes behind one hostname would need a shared store.
+- **Lockout by token prefix:** failed `/mcp` calls are counted per token prefix, the 12 characters shown under Profile › API keys. Someone who saw it and sends 50 bad tokens with that prefix from Anthropic's range gets your connector `429` for 15 minutes; they still cannot use it.
 - **Token lifetime:** a leaked token works until it expires or is revoked, but only on `/mcp`, and only from Anthropic's range or your network.

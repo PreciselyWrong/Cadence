@@ -280,6 +280,15 @@ const loginEmailLimiter = createAuthEmailLimiter('auth-login-email', {
     skipSuccessfulRequests: true,
 });
 
+// The remote connector's consent form, per submitted email (docs/38-remote-mcp.md).
+// Its own counter, so failed consents never lock the owner out of web
+// sign-in, and only refused sign-ins (401) count: a request for an unknown
+// client or outside the pairing window says nothing about the password.
+const oauthConsentEmailLimiter = createAuthEmailLimiter('oauth-consent-email', {
+    skipSuccessfulRequests: true,
+    requestWasSuccessful: (req, res) => res.statusCode !== 401,
+});
+
 // New accounts per IP on a hosted instance, on top of authLimiter's attempt
 // budget: someone farming trials gets a few accounts a day from one address,
 // not one per 15-minute window. Only created accounts count. Self-hosted
@@ -559,6 +568,7 @@ module.exports = {
     oidcLimiter,
     oauthLimiter,
     oauthTokenLimiter,
+    oauthConsentEmailLimiter,
     connectorBearerFailureLimiter,
     signInLinkLimiter,
     authEmailLimiter,

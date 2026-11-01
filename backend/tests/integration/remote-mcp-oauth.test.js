@@ -99,6 +99,13 @@ describe('Remote MCP OAuth authorization server', () => {
         );
     });
 
+    // Every refusal after the password shows the same message, so the page
+    // never confirms a password; the log keeps the reason.
+    const refusalReason = (warnSpy) =>
+        warnSpy.mock.calls.find(
+            ([fields]) => fields?.event === 'oauth.authorize_refused'
+        )?.[0].reason;
+
     const consent = (client, owner, extra = {}) =>
         request(app)
             .post('/oauth/authorize')
@@ -448,10 +455,12 @@ describe('Remote MCP OAuth authorization server', () => {
                 { where: { user_id: other.id } }
             );
             await enrollMfa(other);
+            const warnSpy = jest.spyOn(logger, 'warn');
             const client = (await registerClient()).body.client_id;
             const res = await consent(client, other);
-            expect(res.status).toBe(403);
+            expect(res.status).toBe(401);
             expect(res.headers.location).toBeUndefined();
+            expect(refusalReason(warnSpy)).toBe('pairing_other_user');
         });
 
         it('is opened only from a signed-in session of an allowed account with two-factor', async () => {
@@ -627,7 +636,8 @@ describe('Remote MCP OAuth authorization server', () => {
             const res = await consent(client, owner);
             expect(res.status).toBe(401);
             expect(res.headers.location).toBeUndefined();
-            expect(res.text).toContain('Turn on two-factor sign-in');
+            expect(res.text).not.toContain('two-factor sign-in in Cadence');
+            expect(res.text).toContain('Sign-in failed');
             const refused = warnSpy.mock.calls.find(
                 ([fields]) => fields?.event === 'oauth.authorize_refused'
             );
@@ -647,10 +657,12 @@ describe('Remote MCP OAuth authorization server', () => {
                 { where: { user_id: member.id } }
             );
             await enrollMfa(member);
+            const warnSpy = jest.spyOn(logger, 'warn');
             const client = (await registerClient()).body.client_id;
             const res = await consent(client, member);
-            expect(res.status).toBe(403);
+            expect(res.status).toBe(401);
             expect(res.headers.location).toBeUndefined();
+            expect(refusalReason(warnSpy)).toBe('not_allowed');
         });
 
         it('lets only the emails in TUDUDI_MCP_OAUTH_ALLOWED_EMAILS consent', async () => {
@@ -674,7 +686,7 @@ describe('Remote MCP OAuth authorization server', () => {
             // The admin is not on the list, so it is refused too.
             expect((await openPairing(ownerCookie)).status).toBe(403);
             await openPairing(memberCookie);
-            expect((await consent(client, user)).status).toBe(403);
+            expect((await consent(client, user)).status).toBe(401);
         });
 
         it('redirects with access_denied when the owner refuses', async () => {

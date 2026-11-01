@@ -24,15 +24,12 @@ const mfaService = require('../mfa/service');
 
 const SCOPE = 'mcp';
 
-// What the consent page says for each refusal; anything else is the
-// generic sign-in failure, which tells nothing about which part was wrong.
+// Every refusal shows the same message: one naming the cause (no
+// two-factor, account not allowed, another account's pairing) would confirm
+// the password was right. The log keeps the reason; the profile's pairing
+// button already explains two-factor and allowed accounts.
 const REFUSAL_MESSAGES = {
     password_auth_disabled: 'Password sign-in is turned off on this server.',
-    mfa_required:
-        'Turn on two-factor sign-in in Cadence (Profile › Security) before connecting an assistant.',
-    not_allowed: 'This account may not connect assistants to Cadence.',
-    pairing_other_user:
-        'This connection was started from another Cadence account.',
 };
 const PAIRING_CLOSED =
     'Cadence is not expecting a new connector. In Cadence, open Profile › MCP, click Authorize a new connector, then connect again within 10 minutes.';
@@ -246,11 +243,7 @@ async function submitAuthorize(req, res, next) {
             return renderConsent(res, {
                 client,
                 params,
-                status: ['not_allowed', 'pairing_other_user'].includes(
-                    owner.reason
-                )
-                    ? 403
-                    : 401,
+                status: 401,
                 error: REFUSAL_MESSAGES[owner.reason] || SIGN_IN_FAILED,
             });
         }

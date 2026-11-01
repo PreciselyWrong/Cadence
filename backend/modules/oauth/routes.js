@@ -6,7 +6,7 @@ const authorizationServer = require('./authorizationServer');
 const {
     oauthLimiter,
     oauthTokenLimiter,
-    loginEmailLimiter,
+    oauthConsentEmailLimiter,
 } = require('../../middleware/rateLimiter');
 
 const { logger } = require('../../services/logService');
@@ -61,7 +61,7 @@ router.get('/oauth/authorize', oauthLimiter, authorizationServer.showAuthorize);
 router.post(
     '/oauth/authorize',
     oauthLimiter,
-    loginEmailLimiter,
+    oauthConsentEmailLimiter,
     authorizationServer.submitAuthorize
 );
 router.post('/oauth/token', oauthTokenLimiter, authorizationServer.token);
