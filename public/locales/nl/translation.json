@@ -2169,6 +2169,11 @@
     "done": "Klaar"
   },
   "calendar": {
+    "location": {
+      "copy": "Adres kopiëren",
+      "copied": "Adres gekopieerd",
+      "copyError": "Adres kon niet worden gekopieerd"
+    },
     "focusSession": "Focus",
     "print": "Afdrukken",
     "year": "Jaar",

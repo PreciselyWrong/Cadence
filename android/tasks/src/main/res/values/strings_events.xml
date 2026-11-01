@@ -9,6 +9,10 @@
     <string name="tasks_event_field_calendar">Agenda</string>
     <string name="tasks_event_field_when">Quand</string>
     <string name="tasks_event_field_location">Lieu</string>
+    <string name="tasks_event_location_open_maps">Ouvrir dans Maps</string>
+    <string name="tasks_event_location_copy">Copier l\'adresse</string>
+    <string name="tasks_event_location_copied">Adresse copiée</string>
+    <string name="tasks_event_location_no_app">Aucune application pour ouvrir ce lieu</string>
     <string name="tasks_event_field_description">Description</string>
     <string name="tasks_event_read_only">Lecture seule : cocher ou masquer un événement ne modifie jamais votre agenda.</string>
     <string name="tasks_event_complete">Marquer fait</string>

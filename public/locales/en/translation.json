@@ -2347,6 +2347,11 @@
     "done": "Done"
   },
   "calendar": {
+    "location": {
+      "copy": "Copy address",
+      "copied": "Address copied",
+      "copyError": "Could not copy the address"
+    },
     "focusSession": "Focus",
     "print": "Print",
     "year": "Year",

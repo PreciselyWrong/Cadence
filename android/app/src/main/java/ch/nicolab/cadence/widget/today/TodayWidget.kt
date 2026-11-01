@@ -328,15 +328,15 @@ private class TodayMarks(
     val checkBox: Bitmap,
     val checkDone: Bitmap,
     /** Anneau et disque fait des événements, teintés de la couleur de l'agenda. */
-    val eventRing: Bitmap,
-    val eventDone: Bitmap,
+    val eventCalendar: Bitmap,
+    val eventCalendarDone: Bitmap,
 ) {
     companion object {
         fun render(density: Float) = TodayMarks(
             checkBox = renderCheckBox(WHITE_ARGB, CHECK_DP, density),
             checkDone = renderCheckBoxDone(CHECK_DP, density),
-            eventRing = renderEventMark(done = false, CHECK_DP, density),
-            eventDone = renderEventMark(done = true, CHECK_DP, density),
+            eventCalendar = renderEventMark(done = false, CHECK_DP, density),
+            eventCalendarDone = renderEventMark(done = true, CHECK_DP, density),
         )
     }
 }
@@ -348,7 +348,7 @@ private class TodayView(
     /** Reflet du verre, null hors du verre ou à force nulle. */
     val sheen: Bitmap?,
     val marks: TodayMarks,
-    /** « Cocher un événement » est actif : l'anneau coche l'occurrence au lieu d'ouvrir l'application. */
+    /** « Cocher un événement » est actif : l'icône d'agenda coche l'occurrence au lieu d'ouvrir l'application. */
     val checkEvents: Boolean,
     /** `READ_CALENDAR` manque alors que les événements sont demandés : une ligne discrète la réclame. */
     val calendarAccessMissing: Boolean,
@@ -687,9 +687,9 @@ private fun TaskRowView(
 }
 
 /**
- * Événement d'agenda, distinct d'une tâche : rail et anneau rond à la couleur de l'agenda (une
+ * Événement d'agenda, distinct d'une tâche : rail et icône d'agenda à la couleur de l'agenda (une
  * tâche a une case carrée), plage horaire à droite, colorée tant que l'événement est en cours.
- * Passé, le titre s'atténue ; fait, l'anneau devient un disque coché et le titre est barré.
+ * Passé, le titre s'atténue ; fait, l'icône devient agenda coché et le titre est barré.
  */
 @Composable
 private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayTextSizes) {
@@ -728,7 +728,7 @@ private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayText
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                ImageProvider(if (state == TodayEventState.DONE) view.marks.eventDone else view.marks.eventRing),
+                ImageProvider(if (state == TodayEventState.DONE) view.marks.eventCalendarDone else view.marks.eventCalendar),
                 context.getString(R.string.today_event_check_description, event.event.title),
                 modifier = GlanceModifier.size(CHECK_DP.dp),
                 colorFilter = ColorFilter.tint(tint),

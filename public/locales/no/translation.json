@@ -2170,6 +2170,11 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "location": {
+      "copy": "Kopier adresse",
+      "copied": "Adresse kopiert",
+      "copyError": "Kunne ikke kopiere adressen"
+    },
     "focusSession": "Fokus",
     "print": "Skriv ut",
     "year": "År",

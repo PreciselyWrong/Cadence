@@ -2181,6 +2181,11 @@
     "done": "تم"
   },
   "calendar": {
+    "location": {
+      "copy": "نسخ العنوان",
+      "copied": "تم نسخ العنوان",
+      "copyError": "تعذّر نسخ العنوان"
+    },
     "focusSession": "تركيز",
     "print": "طباعة",
     "year": "السنة",

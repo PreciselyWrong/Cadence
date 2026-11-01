@@ -2100,6 +2100,11 @@
     "noUpcomingOccurrences": "今後の予定はありません。"
   },
   "calendar": {
+    "location": {
+      "copy": "住所をコピー",
+      "copied": "住所をコピーしました",
+      "copyError": "住所をコピーできませんでした"
+    },
     "focusSession": "集中",
     "print": "印刷",
     "year": "年",

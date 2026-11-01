@@ -2169,6 +2169,11 @@
     "done": "Hoàn thành"
   },
   "calendar": {
+    "location": {
+      "copy": "Sao chép địa chỉ",
+      "copied": "Đã sao chép địa chỉ",
+      "copyError": "Không thể sao chép địa chỉ"
+    },
     "focusSession": "Tập trung",
     "print": "In",
     "year": "Năm",

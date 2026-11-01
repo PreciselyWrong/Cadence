@@ -2169,6 +2169,11 @@
     "done": "Tamamlandı"
   },
   "calendar": {
+    "location": {
+      "copy": "Adresi kopyala",
+      "copied": "Adres kopyalandı",
+      "copyError": "Adres kopyalanamadı"
+    },
     "focusSession": "Odak",
     "print": "Yazdır",
     "year": "Yıl",

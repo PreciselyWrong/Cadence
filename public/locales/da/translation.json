@@ -2169,6 +2169,11 @@
     "done": "Færdig"
   },
   "calendar": {
+    "location": {
+      "copy": "Kopiér adresse",
+      "copied": "Adressen er kopieret",
+      "copyError": "Adressen kunne ikke kopieres"
+    },
     "focusSession": "Fokus",
     "print": "Udskriv",
     "year": "År",

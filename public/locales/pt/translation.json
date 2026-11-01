@@ -2172,6 +2172,11 @@
     "done": "Concluído"
   },
   "calendar": {
+    "location": {
+      "copy": "Copiar endereço",
+      "copied": "Endereço copiado",
+      "copyError": "Não foi possível copiar o endereço"
+    },
     "focusSession": "Foco",
     "print": "Imprimir",
     "year": "Ano",

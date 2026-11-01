@@ -2169,6 +2169,11 @@
     "done": "完成"
   },
   "calendar": {
+    "location": {
+      "copy": "复制地址",
+      "copied": "地址已复制",
+      "copyError": "无法复制地址"
+    },
     "focusSession": "专注",
     "print": "打印",
     "year": "年",

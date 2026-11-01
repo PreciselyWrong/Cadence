@@ -2133,6 +2133,11 @@
     "done": "Hecho"
   },
   "calendar": {
+    "location": {
+      "copy": "Copiar dirección",
+      "copied": "Dirección copiada",
+      "copyError": "No se pudo copiar la dirección"
+    },
     "focusSession": "Enfoque",
     "print": "Imprimir",
     "year": "Año",

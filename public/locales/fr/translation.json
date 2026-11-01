@@ -2173,6 +2173,11 @@
     "done": "Fait"
   },
   "calendar": {
+    "location": {
+      "copy": "Copier l'adresse",
+      "copied": "Adresse copiée",
+      "copyError": "Impossible de copier l'adresse"
+    },
     "focusSession": "Focus",
     "print": "Imprimer",
     "year": "Année",

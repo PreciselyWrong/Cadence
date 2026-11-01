@@ -5,7 +5,6 @@ import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarToday
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,13 +33,13 @@ import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localEnd
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.designsystem.components.EventCheck
+import ch.nicolab.cadence.designsystem.components.EventMarkDecoration
 import ch.nicolab.cadence.designsystem.components.pressable
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.tasks.swipe.EventActions
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
-import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.tasks.R
 import java.time.Instant
 import java.time.ZoneId
@@ -52,8 +48,9 @@ import java.time.ZoneId
 private const val DONE_ALPHA = 0.55f
 
 /**
- * Événement de l'agenda de l'appareil dans la liste Aujourd'hui. La case est dans la couleur du
- * calendrier et ne marque l'événement fait que dans Cadence ; [checkable] à faux la masque.
+ * Événement de l'agenda de l'appareil dans la liste Aujourd'hui. L'icône d'agenda, dans la couleur
+ * du calendrier, sert de case et ne marque l'événement fait que dans Cadence ; [checkable] à faux
+ * la rend décorative.
  */
 @Composable
 internal fun EventRow(
@@ -73,7 +70,7 @@ internal fun EventRow(
     val color = readableTintOf(Color(item.calendar.colorArgb), MaterialTheme.colorScheme.surface, ICON_CONTRAST)
     val title = item.event.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val markLabel = stringResource(
-        if (item.done) R.string.tasks_event_mark_undone else R.string.tasks_event_mark_done,
+        if (item.done) R.string.tasks_event_done else R.string.tasks_event_mark_done,
     )
     SwipeActionContainer(
         config = remember(swipeConfig, checkable) { EventActions.swipeConfig(swipeConfig, checkable) },
@@ -113,7 +110,7 @@ internal fun EventRow(
                 contentDescription = markLabel,
             )
         } else {
-            Spacer(Modifier.size(Size.touch))
+            EventMarkDecoration(checked = item.done, color = color)
         }
         Spacer(Modifier.width(8.dp))
         Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
@@ -125,14 +122,14 @@ internal fun EventRow(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            EventMeta(item, color, zone)
+            EventMeta(item, zone)
         }
     }
     }
 }
 
 @Composable
-private fun EventMeta(item: EventWithDone, color: Color, zone: ZoneId) {
+private fun EventMeta(item: EventWithDone, zone: ZoneId) {
     val time = if (item.event.allDay) {
         stringResource(R.string.tasks_event_all_day)
     } else {
@@ -142,24 +139,13 @@ private fun EventMeta(item: EventWithDone, color: Color, zone: ZoneId) {
             clockText(item.event.localEnd(zone), zone),
         )
     }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        Icon(
-            Icons.Outlined.CalendarToday,
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier.size(14.dp),
-        )
-        Text(
-            text = stringResource(R.string.tasks_event_meta, time, item.calendar.displayName),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-    }
+    Text(
+        text = stringResource(R.string.tasks_event_meta, time, item.calendar.displayName),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
 }
 
 private fun clockText(epochMillis: Long, zone: ZoneId): String =

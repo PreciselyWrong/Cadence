@@ -1731,6 +1731,11 @@
     "noUpcomingOccurrences": "Keine anstehenden Termine."
   },
   "calendar": {
+    "location": {
+      "copy": "Adresse kopieren",
+      "copied": "Adresse kopiert",
+      "copyError": "Adresse konnte nicht kopiert werden"
+    },
     "focusSession": "Fokus",
     "print": "Drucken",
     "year": "Jahr",

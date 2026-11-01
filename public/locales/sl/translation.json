@@ -2175,6 +2175,11 @@
     "done": "Končano"
   },
   "calendar": {
+    "location": {
+      "copy": "Kopiraj naslov",
+      "copied": "Naslov kopiran",
+      "copyError": "Naslova ni bilo mogoče kopirati"
+    },
     "focusSession": "Osredotočenost",
     "print": "Natisni",
     "year": "Leto",

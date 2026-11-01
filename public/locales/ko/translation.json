@@ -2169,6 +2169,11 @@
     "done": "완료"
   },
   "calendar": {
+    "location": {
+      "copy": "주소 복사",
+      "copied": "주소를 복사했습니다",
+      "copyError": "주소를 복사할 수 없습니다"
+    },
     "focusSession": "집중",
     "print": "인쇄",
     "year": "연도",

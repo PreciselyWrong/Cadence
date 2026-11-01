@@ -2169,6 +2169,11 @@
     "done": "Selesai"
   },
   "calendar": {
+    "location": {
+      "copy": "Salin alamat",
+      "copied": "Alamat disalin",
+      "copyError": "Alamat tidak dapat disalin"
+    },
     "focusSession": "Fokus",
     "print": "Cetak",
     "year": "Tahun",

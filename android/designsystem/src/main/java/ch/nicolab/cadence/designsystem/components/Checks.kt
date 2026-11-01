@@ -19,12 +19,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.contentDescription
@@ -68,7 +71,10 @@ fun TaskCheckbox(
     )
 }
 
-/** Case d'événement de calendrier : cercle à la couleur du calendrier. */
+/**
+ * Icône d'agenda qui sert de case d'événement : contour à la couleur du calendrier, coche d'agenda
+ * une fois faite. Zone tactile de 48 dp, comme la case d'une tâche.
+ */
 @Composable
 fun EventCheck(
     checked: Boolean,
@@ -77,16 +83,47 @@ fun EventCheck(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
-    CheckSurface(
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = modifier,
-        shape = CircleShape,
-        fill = color,
-        // Le cercle vide doit se voir (3:1) : une couleur d'agenda claire est assombrie, teinte gardée.
-        stroke = readableTintOf(color, cadence.card, ICON_CONTRAST),
-        mark = onColorOf(color),
-        contentDescription = contentDescription,
+    val haptic = rememberCadenceHaptic()
+    Box(
+        modifier
+            .size(Size.touch)
+            .toggleable(
+                value = checked,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current,
+                role = Role.Checkbox,
+                onValueChange = {
+                    if (it) haptic.confirm() else haptic.tap()
+                    onCheckedChange(it)
+                },
+            )
+            .semantics {
+                contentDescription?.let { this.contentDescription = it }
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        EventGlyphIcon(eventGlyphOf(checked), color)
+    }
+}
+
+/** Icône d'agenda sans action, quand « Cocher un événement » est désactivé. */
+@Composable
+fun EventMarkDecoration(checked: Boolean, color: Color, modifier: Modifier = Modifier) {
+    Box(modifier.size(Size.touch), contentAlignment = Alignment.Center) {
+        EventGlyphIcon(eventGlyphOf(checked), color)
+    }
+}
+
+@Composable
+private fun EventGlyphIcon(glyph: EventGlyph, color: Color) {
+    Icon(
+        imageVector = when (glyph) {
+            EventGlyph.CALENDAR -> Icons.Outlined.CalendarToday
+            EventGlyph.CALENDAR_CHECKED -> Icons.Outlined.EventAvailable
+        },
+        contentDescription = null,
+        tint = color,
+        modifier = Modifier.size(Size.checkbox),
     )
 }
 

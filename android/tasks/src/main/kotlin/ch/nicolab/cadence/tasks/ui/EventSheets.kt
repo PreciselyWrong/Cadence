@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarToday
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Subject
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -72,19 +71,27 @@ fun EventDetailSheet(
             Modifier.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
-            val fields = listOfNotNull(
+            val fields = listOf(
                 Triple(Icons.Outlined.Schedule, R.string.tasks_event_field_when, whenText),
                 Triple(Icons.Outlined.CalendarToday, R.string.tasks_event_field_calendar, detail.calendarName),
-                detail.location?.let { Triple(Icons.Outlined.Place, R.string.tasks_event_field_location, it) },
             )
+            val location = detail.location
+            val rowCount = fields.size + if (location == null) 0 else 1
             RowGroup {
                 fields.forEachIndexed { index, (icon, label, value) ->
                     SettingRow(
                         title = value,
                         subtitle = stringResource(label),
                         icon = icon,
-                        shape = rowGroupShape(index, fields.size),
+                        shape = rowGroupShape(index, rowCount),
                         trailing = {},
+                    )
+                }
+                if (location != null) {
+                    EventLocationRow(
+                        location = location,
+                        label = stringResource(R.string.tasks_event_field_location),
+                        shape = rowGroupShape(fields.size, rowCount),
                     )
                 }
             }

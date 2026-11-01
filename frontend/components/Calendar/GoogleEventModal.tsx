@@ -4,11 +4,15 @@ import { addDays, format } from 'date-fns';
 import {
     XMarkIcon,
     ArrowTopRightOnSquareIcon,
+    ClipboardDocumentIcon,
+    MapPinIcon,
 } from '@heroicons/react/24/outline';
 import {
     GoogleCalendar,
     GoogleEventInput,
 } from '../../utils/googleSyncService';
+import { useToast } from '../Shared/ToastContext';
+import { locationHref } from './eventLocation';
 
 export interface GoogleEventDraft {
     // Set when editing an existing event.
@@ -52,6 +56,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
+    const { showSuccessToast, showErrorToast } = useToast();
     const writable = calendars.filter((c) => c.writable);
     const editing = Boolean(draft.eventId);
     const [calendarUid, setCalendarUid] = useState(
@@ -73,6 +78,17 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
     const [location, setLocation] = useState(draft.location || '');
     const [description, setDescription] = useState(draft.description || '');
     const [saving, setSaving] = useState(false);
+
+    const copyLocation = async () => {
+        try {
+            await navigator.clipboard.writeText(location.trim());
+            showSuccessToast(t('calendar.location.copied', 'Address copied'));
+        } catch {
+            showErrorToast(
+                t('calendar.location.copyError', 'Could not copy the address')
+            );
+        }
+    };
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -237,6 +253,31 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                     aria-label={t('calendar.google.location', 'Location')}
                     className={inputClass}
                 />
+                {location.trim() && (
+                    <div className="flex items-center gap-2 text-sm">
+                        <MapPinIcon className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                        <a
+                            href={locationHref(location)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="min-w-0 truncate text-blue-600 hover:underline dark:text-blue-400"
+                        >
+                            {location.trim()}
+                        </a>
+                        <button
+                            type="button"
+                            onClick={copyLocation}
+                            title={t('calendar.location.copy', 'Copy address')}
+                            aria-label={t(
+                                'calendar.location.copy',
+                                'Copy address'
+                            )}
+                            className="flex-shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                        >
+                            <ClipboardDocumentIcon className="h-4 w-4" />
+                        </button>
+                    </div>
+                )}
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}

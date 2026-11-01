@@ -2367,6 +2367,11 @@
         "done": "Hotovo"
     },
     "calendar": {
+      "location": {
+        "copy": "Kopírovať adresu",
+        "copied": "Adresa skopírovaná",
+        "copyError": "Adresu sa nepodarilo skopírovať"
+      },
         "focusSession": "Sústredenie",
         "print": "Tlačiť",
         "year": "Rok",

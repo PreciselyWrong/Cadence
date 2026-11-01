@@ -12,6 +12,7 @@ import android.graphics.RectF
 private const val CHECK_STROKE_DP = 2f
 private const val CHECK_RADIUS_DP = 6f
 private const val MAX_CHECK_DENSITY = 3f
+private const val CALENDAR_RADIUS_DP = 2.5f
 
 /**
  * Case à cocher du widget : le carré arrondi à contour de l'application (24 dp, rayon 8) à
@@ -51,26 +52,36 @@ internal fun renderCheckBoxDone(sizeDp: Int, density: Float): Bitmap {
 }
 
 /**
- * Marque d'un événement : un anneau, rond pour se distinguer de la case carrée d'une tâche
- * (comme dans la liste Tâches). Fait, c'est un disque plein dont la coche est évidée, pour que
- * la teinte de l'agenda appliquée à l'affichage ne recouvre pas la coche.
+ * Marque d'un événement : l'icône d'agenda, celle de l'application (agenda ; fait, agenda coché).
+ * Un widget ne trace pas de contour : elle est rendue en blanc puis teintée à l'affichage. Fait, le
+ * corps est plein et la coche évidée, pour que la teinte de l'agenda ne la recouvre pas.
  */
 internal fun renderEventMark(done: Boolean, sizeDp: Int, density: Float): Bitmap {
     val scale = density.coerceAtMost(MAX_CHECK_DENSITY)
     val pixels = (sizeDp * scale).toInt().coerceAtLeast(1)
     val bitmap = Bitmap.createBitmap(pixels, pixels, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
+    val size = pixels.toFloat()
     val stroke = CHECK_STROKE_DP * scale
-    val centre = pixels / 2f
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
-    if (!done) {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = stroke
-        canvas.drawCircle(centre, centre, centre - stroke / 2f, paint)
-        return bitmap
+    val radius = CALENDAR_RADIUS_DP * scale
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        style = Paint.Style.STROKE
+        strokeWidth = stroke
+        strokeCap = Paint.Cap.ROUND
     }
-    canvas.drawCircle(centre, centre, centre, paint)
-    clearCheck(canvas, pixels, stroke, paint)
+    for (x in listOf(size * 0.32f, size * 0.68f)) {
+        canvas.drawLine(x, size * 0.06f, x, size * 0.26f, paint)
+    }
+    if (done) {
+        paint.style = Paint.Style.FILL
+        canvas.drawRoundRect(RectF(0f, size * 0.2f, size, size), radius, radius, paint)
+        clearCheck(canvas, pixels, stroke, paint)
+    } else {
+        val half = stroke / 2f
+        canvas.drawRoundRect(RectF(half, size * 0.2f + half, size - half, size - half), radius, radius, paint)
+        canvas.drawLine(half, size * 0.42f, size - half, size * 0.42f, paint)
+    }
     return bitmap
 }
 

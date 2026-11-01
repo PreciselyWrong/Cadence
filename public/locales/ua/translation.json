@@ -1891,6 +1891,11 @@
     "noUpcomingOccurrences": "Немає найближчих повторів."
   },
   "calendar": {
+    "location": {
+      "copy": "Копіювати адресу",
+      "copied": "Адресу скопійовано",
+      "copyError": "Не вдалося скопіювати адресу"
+    },
     "focusSession": "Фокус",
     "print": "Друк",
     "year": "Рік",

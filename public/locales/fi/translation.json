@@ -2169,6 +2169,11 @@
     "done": "Valmis"
   },
   "calendar": {
+    "location": {
+      "copy": "Kopioi osoite",
+      "copied": "Osoite kopioitu",
+      "copyError": "Osoitteen kopiointi epäonnistui"
+    },
     "focusSession": "Keskittyminen",
     "print": "Tulosta",
     "year": "Vuosi",

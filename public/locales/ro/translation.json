@@ -2174,6 +2174,11 @@
     "done": "Finalizat"
   },
   "calendar": {
+    "location": {
+      "copy": "Copiază adresa",
+      "copied": "Adresa a fost copiată",
+      "copyError": "Adresa nu a putut fi copiată"
+    },
     "focusSession": "Concentrare",
     "print": "Imprimă",
     "year": "An",

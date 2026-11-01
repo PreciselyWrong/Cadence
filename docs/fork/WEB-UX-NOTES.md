@@ -197,3 +197,9 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Problème** : une idée qui contient un lien offrait Aujourd'hui / Planifier / Projet, mais aucune décision « à voir un jour » ; sur Android, « Plus tard » gardait sa date seulement sur le téléphone, le web ne pouvait pas l'afficher.
 - **Décision** : la carte d'un lien dans l'Inbox porte quatre boutons Garder, Tester, Plus tard, Jeter (mêmes statuts, même marquage « traité »). Tester demande le projet (ou aucun) puis crée « Tester : titre », l'adresse et la note en note de tâche. Plus tard pose la date de revue (`review_at`, +30 jours) côté serveur ; la page Liens l'affiche (« À revoir le … »). Pas d'annulation : il n'existe pas de retour d'une idée traitée. Le mode « Trier les liens » (un lien à la fois) reste à faire (TODO).
 - **Android** : la date de revue est désormais le champ synchronisé `review_at`, plus une valeur locale.
+
+### 2026-11-01 — Lieu d'un événement : carte ou copie
+
+- **Problème** : le lieu d'un événement de l'agenda ne servait à rien d'un geste : une adresse n'ouvrait ni carte ni copie, un lien de réunion restait du texte.
+- **Décision** : dans la fiche d'un événement (web : modale Google), le lieu est un lien et un bouton copier. Une adresse ouvre `https://www.google.com/maps/search/?api=1&query=…` dans un nouvel onglet ; un lien web (`http(s)://`, seul dans le champ) s'ouvre tel quel. Le bouton copie l'adresse et confirme par une notification. Pure logique dans `frontend/components/Calendar/eventLocation.ts`.
+- **Android** : fiche d'événement, ligne « Lieu » touchable avec une épingle. Adresse : menu « Ouvrir dans Maps » (intention `geo:0,0?q=…`, repli sur la recherche Maps dans le navigateur) et « Copier l'adresse » (presse-papiers et confirmation). Lien web : navigateur direct. Pure logique dans `android/calendar/.../EventLocation.kt`. Reste : rien d'essayé sur le téléphone.

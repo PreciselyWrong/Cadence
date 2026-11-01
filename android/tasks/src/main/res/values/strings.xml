@@ -33,7 +33,7 @@
     <string name="tasks_event_time_range">%1$s–%2$s</string>
     <string name="tasks_event_meta">%1$s · %2$s</string>
     <string name="tasks_event_mark_done">Marquer l\'événement comme fait</string>
-    <string name="tasks_event_mark_undone">Démarquer l\'événement</string>
+    <string name="tasks_event_done">Événement fait</string>
     <plurals name="tasks_events_count">
         <item quantity="one">%d événement</item>
         <item quantity="other">%d événements</item>

@@ -7,6 +7,10 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -114,7 +118,7 @@ internal const val MIN_TEXT_BESIDE_MARK_DP = 40f
 internal fun markFitsBeside(innerWidthDp: Float): Boolean =
     innerWidthDp - MARK_SIZE.value - MARK_GAP.value >= MIN_TEXT_BESIDE_MARK_DP
 
-/** Forme du repère : la case carrée se coche (tâche), le rond se coche (événement), le point non, l'hexagone est l'habitude. */
+/** Forme du repère : la case carrée se coche (tâche), l'icône d'agenda se coche (événement), le point non, l'hexagone est l'habitude. */
 internal enum class MarkShape { TASK, EVENT_CHECK, EVENT_DOT, HABIT }
 
 internal fun markShapeOf(entry: AgendaEntry, checkEvents: Boolean): MarkShape = when (entry) {
@@ -130,6 +134,16 @@ internal fun MarkShape.toggles(): Boolean = this == MarkShape.TASK || this == Ma
 @Composable
 internal fun AgendaMark(shape: MarkShape, done: Boolean, color: Color, onColor: Color, modifier: Modifier = Modifier) {
     val fill by animateFloatAsState(if (done) 1f else 0f, tween(Motion.COLOR), label = "markFill")
+    if (shape == MarkShape.EVENT_CHECK) {
+        // L'événement cochable porte l'icône d'agenda, comme sur Aujourd'hui : agenda, puis agenda coché.
+        Icon(
+            imageVector = if (done) Icons.Outlined.EventAvailable else Icons.Outlined.CalendarToday,
+            contentDescription = null,
+            tint = color,
+            modifier = modifier.size(MARK_SIZE),
+        )
+        return
+    }
     Canvas(modifier.size(MARK_SIZE)) {
         val stroke = 1.5.dp.toPx()
         when (shape) {
@@ -143,14 +157,7 @@ internal fun AgendaMark(shape: MarkShape, done: Boolean, color: Color, onColor: 
                     drawCheck(onColor, fill)
                 }
             }
-            MarkShape.EVENT_CHECK -> {
-                val radius = size.minDimension / 2 - 1.dp.toPx() - stroke / 2
-                drawCircle(color, radius, style = Stroke(stroke))
-                if (fill > 0f) {
-                    drawCircle(color.copy(alpha = fill), radius)
-                    drawCheck(onColor, fill)
-                }
-            }
+            MarkShape.EVENT_CHECK -> Unit
             MarkShape.EVENT_DOT -> drawCircle(color, 4.dp.toPx())
             MarkShape.HABIT -> {
                 val hexagon = hexagonPath(center, size.minDimension / 2 - stroke / 2)
