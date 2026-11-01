@@ -23,6 +23,9 @@ import Tooltip from '../Shared/Tooltip';
 import EntityCard from '../Shared/EntityCard';
 import { PROJECT_TABLE_GRID } from './projectTableLayout';
 import { getProjectStatusTint } from './projectStatusStyles';
+
+// The default status is not news on a card: it keeps an icon-only control.
+const DEFAULT_PROJECT_STATUS: ProjectStatus = 'in_progress';
 import { avatarTint } from '../../utils/avatarTint';
 import { differenceInCalendarDays, format } from 'date-fns';
 import { getCurrentLocale } from '../../utils/dateUtils';
@@ -524,20 +527,29 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 noteTestId={`project-next-action-${project.id}`}
                 testId={`project-card-${project.id}`}
                 actions={actionsMenu}
-                progress={{
-                    done: taskStatus?.done ?? 0,
-                    total: taskStatus?.total ?? 0,
-                    title: t('projectItem.completionPercentage', {
-                        percentage: getCompletionPercentage(),
-                    }),
-                }}
+                progress={
+                    (taskStatus?.total ?? 0) > 1
+                        ? {
+                              done: taskStatus?.done ?? 0,
+                              total: taskStatus?.total ?? 0,
+                              title: t('projectItem.completionPercentage', {
+                                  percentage: getCompletionPercentage(),
+                              }),
+                              quiet: true,
+                          }
+                        : undefined
+                }
                 details={
                     <>
                         <span className="truncate">{dueText}</span>
                         {renderStatusPicker(
                             <>
                                 <StatusIcon className="h-3.5 w-3.5" />
-                                <span>{getStatusLabel(project.status, t)}</span>
+                                {project.status !== DEFAULT_PROJECT_STATUS && (
+                                    <span>
+                                        {getStatusLabel(project.status, t)}
+                                    </span>
+                                )}
                             </>,
                             'flex items-center gap-1 rounded px-1 py-0.5 hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors',
                             'right-0 bottom-full mb-1'

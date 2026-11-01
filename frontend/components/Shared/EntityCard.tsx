@@ -6,6 +6,8 @@ export interface EntityCardProgress {
     done: number;
     total: number;
     title?: string;
+    // Muted, thinner progress line for secondary counts.
+    quiet?: boolean;
 }
 
 export interface EntityCardPill {
@@ -116,16 +118,30 @@ const EntityCard: React.FC<EntityCardProps> = ({
                     )}
                     {progress && (
                         <div className="space-y-2" title={progress.title}>
-                            <div className="flex items-center justify-between text-[12px] font-semibold uppercase tracking-wider text-gray-600 tabular-nums dark:text-gray-300">
+                            <div
+                                className={`flex items-center justify-between text-[12px] tabular-nums ${
+                                    progress.quiet
+                                        ? 'text-gray-500 dark:text-gray-400'
+                                        : 'font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300'
+                                }`}
+                            >
                                 <span>
                                     {progress.label && `${progress.label} · `}
                                     {progress.done}/{progress.total}
                                 </span>
                                 <span>{percent}%</span>
                             </div>
-                            <div className="h-[3px] w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                            <div
+                                className={`w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 ${
+                                    progress.quiet ? 'h-[2px]' : 'h-[3px]'
+                                }`}
+                            >
                                 <div
-                                    className="h-full rounded-full bg-blue-500 transition-all duration-300"
+                                    className={`h-full rounded-full transition-all duration-300 ${
+                                        progress.quiet
+                                            ? 'bg-gray-400 dark:bg-gray-500'
+                                            : 'bg-blue-500'
+                                    }`}
                                     style={{ width: `${percent}%` }}
                                 />
                             </div>

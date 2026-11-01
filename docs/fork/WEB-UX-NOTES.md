@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Cartes de projet : statut par défaut et avancement
+
+- **Problème** : chaque carte de projet affichait « En cours » et une barre `0/1` ou `0/0`, du bruit sur un état attendu.
+- **Décision** : le statut par défaut (« En cours ») n'a plus d'étiquette, seule l'icône reste cliquable (« Changer le statut »). L'avancement n'apparaît qu'à partir de deux tâches, en ligne discrète (texte gris, barre fine et grise).
+- **À reprendre sur Android** : même règle sur la carte projet (statut par défaut sans étiquette ; avancement seulement si au moins deux tâches, style discret).
+
 ### 2026-11-01 — Revue : « Plus tard » groupé, liens en carte
 
 - **Problème** : `/review` montrait l'URL brute d'une tâche ou d'une idée qui n'est qu'un lien, et « Plus tard » était une liste plate de 50 lignes.
