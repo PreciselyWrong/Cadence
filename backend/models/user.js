@@ -236,12 +236,6 @@ module.exports = (sequelize) => {
                         push: false,
                         telegram: false,
                     },
-                    habitReminders: {
-                        inApp: true,
-                        email: false,
-                        push: false,
-                        telegram: false,
-                    },
                     comments: {
                         inApp: true,
                         email: false,
@@ -249,6 +243,13 @@ module.exports = (sequelize) => {
                         telegram: false,
                     },
                 },
+            },
+            // {enabled, start, end} (HH:mm) in the user's timezone: push,
+            // Telegram, Apprise and desktop delivery wait for the window to end.
+            quiet_hours: {
+                type: DataTypes.JSON,
+                allowNull: true,
+                defaultValue: null,
             },
             keyboard_shortcuts: {
                 type: DataTypes.JSON,

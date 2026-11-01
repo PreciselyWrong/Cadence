@@ -72,6 +72,16 @@ const ENTITIES = {
                 entity: 'tag',
             },
         },
+        // A reminder moved on a device fires again at its new time, as a
+        // web edit does (applyReminderAt).
+        prepareValues: (row, values) => {
+            if (!('reminder_at' in values)) return;
+            const before = row?.reminder_at ? row.reminder_at.getTime() : null;
+            const after = values.reminder_at
+                ? new Date(values.reminder_at).getTime()
+                : null;
+            if (before !== after) values.reminder_sent_at = null;
+        },
         // A due date changed on the user's device counts for the review.
         afterApply: async ({ row, previous, values, clocks, userId }) => {
             if (!previous || !('due_date' in values)) return;

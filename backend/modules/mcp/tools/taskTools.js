@@ -955,6 +955,7 @@ function registerTaskTools(server, context, tools) {
                 updates.status = Task.STATUS.NOT_STARTED;
                 updates.completed_at = null;
                 updates.due_date = recurringOccurrence.nextDueDate;
+                Object.assign(updates, recurringOccurrence.reminderFields);
             }
 
             await sequelize.transaction(async (transaction) => {

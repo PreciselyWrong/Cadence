@@ -37,6 +37,7 @@ const getCronExpression = (frequency) => {
         account_lifecycle: '0 3 * * *',
         webhook_deliveries: '* * * * *',
         webhook_summaries: '*/5 * * * *',
+        held_notifications: '* * * * *',
     };
     return expressions[frequency];
 };
@@ -61,6 +62,9 @@ const runJob = async (frequency) => {
     } else if (frequency === 'webhook_deliveries') {
         const { processDue } = require('../webhooks/dispatcher');
         await processDue();
+    } else if (frequency === 'held_notifications') {
+        const { Notification } = require('../../models');
+        await Notification.flushDeferred();
     } else if (frequency === 'webhook_summaries') {
         const { sendDueSummaries } = require('../webhooks/summary');
         await sendDueSummaries();
@@ -94,6 +98,7 @@ const createJobEntries = () => {
         'account_lifecycle',
         'webhook_deliveries',
         'webhook_summaries',
+        'held_notifications',
     ];
 
     return frequencies.map((frequency) => {

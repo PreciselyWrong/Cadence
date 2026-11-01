@@ -1673,7 +1673,11 @@
     "nameRequired": "Името на задачата е задължително",
     "deferAfterDueError": "Датата на отлагане не може да е след срока",
     "untitled": "Задача без заглавие",
-    "instanceOfShort": "Повторение"
+    "instanceOfShort": "Повторение",
+    "reminder": "Напомняне",
+    "reminderPlaceholder": "Изберете дата и час на напомнянето",
+    "noReminder": "Няма напомняне",
+    "reminderUpdateError": "Напомнянето не можа да се обнови"
   },
   "projects": {
     "parentProject": "Родителски проект",
@@ -2918,7 +2922,8 @@
       "inApp": "В приложението",
       "email": "Имейл",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Компютър"
     },
     "types": {
       "dueTasks": "Задължителни задачи",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Закъснели проекти",
       "taskAssigned": "Задача назначена",
       "habitReminders": "Напомняния за навици",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Напомняния за задачи"
     },
     "descriptions": {
       "dueTasks": "Задачи, които трябва да бъдат завършени в рамките на 24 часа",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Проекти, които са преминали срока си",
       "taskAssigned": "Задача е назначена на вас от друг",
       "habitReminders": "В зададения за навика час за напомняне, докато още е отворен",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Часът, който задавате на задача. Телефонът звъни; добавете Компютър, ако искате и компютърът да звъни"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Забележка:",
-      "message": "Имейл и Push известия ще бъдат налични скоро. В приложението и Telegram известията в момента са налични."
+      "message": "Имейл и Push известия ще бъдат налични скоро. В приложението и Telegram известията в момента са налични.",
+      "phoneRings": "Напомнянията за задачи звънят на телефона. Компютърът звъни само ако включите Компютър на този ред."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Тихи часове",
+      "description": "През този период нищо не звъни: push, Telegram, Apprise и известията на компютъра изчакват края. Намирате ги в приложението. Часовете следват часовата зона на профила ви.",
+      "enable": "Тихи часове",
+      "from": "От",
+      "to": "До"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Без област",
     "unassigned": "Никой",
     "reopen": "Отвори отново",
-    "complete": "Завърши"
+    "complete": "Завърши",
+    "more": "Още"
   },
   "datePopover": {
     "today": "Днес",

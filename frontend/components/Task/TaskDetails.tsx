@@ -44,6 +44,7 @@ import {
     TaskDueDateCard,
     TaskStartDateCard,
     TaskDeferUntilCard,
+    TaskReminderCard,
     TaskEstimateCard,
     TaskAttachmentsCard,
     TaskAssignedToCard,
@@ -184,6 +185,10 @@ const TaskDetails: React.FC = () => {
     const [isEditingDeferUntil, setIsEditingDeferUntil] = useState(false);
     const [editedDeferUntil, setEditedDeferUntil] = useState<string>(
         task?.defer_until || ''
+    );
+    const [isEditingReminder, setIsEditingReminder] = useState(false);
+    const [editedReminder, setEditedReminder] = useState<string>(
+        task?.reminder_at || ''
     );
     const [isEditingRecurrence, setIsEditingRecurrence] = useState(false);
     const [recurrenceForm, setRecurrenceForm] = useState({
@@ -562,6 +567,56 @@ const TaskDetails: React.FC = () => {
                 t('task.startDateUpdateError', 'Failed to update start date')
             );
             handleCancelStartDateEdit();
+        }
+    };
+
+    const handleStartReminderEdit = () => {
+        setEditedReminder(task?.reminder_at || '');
+        setIsEditingReminder(true);
+    };
+
+    const handleCancelReminderEdit = () => {
+        setIsEditingReminder(false);
+        setEditedReminder(task?.reminder_at || '');
+    };
+
+    const handleSaveReminder = async () => {
+        if (!task?.uid) {
+            handleCancelReminderEdit();
+            return;
+        }
+        if ((editedReminder || '') === (task.reminder_at || '')) {
+            setIsEditingReminder(false);
+            return;
+        }
+
+        try {
+            taskModifiedRef.current = true;
+            await updateTask(task.uid, {
+                reminder_at: editedReminder || null,
+            });
+
+            if (uid) {
+                const updatedTask = await fetchTaskByUid(uid);
+                const existingIndex = tasksStore.tasks.findIndex(
+                    (t: Task) => t.uid === uid
+                );
+                if (existingIndex >= 0) {
+                    const updatedTasks = [...tasksStore.tasks];
+                    updatedTasks[existingIndex] = updatedTask;
+                    tasksStore.setTasks(updatedTasks);
+                }
+            }
+
+            setIsEditingReminder(false);
+            setTimelineRefreshKey((prev) => prev + 1);
+        } catch (error: any) {
+            console.error('Error updating reminder:', error);
+            showErrorToast(
+                error?.message ||
+                    t('task.reminderUpdateError', 'Failed to update reminder')
+            );
+            handleCancelReminderEdit();
         }
     };
 
@@ -1880,6 +1935,16 @@ const TaskDetails: React.FC = () => {
                                     onStartEdit={handleStartDeferUntilEdit}
                                     onSave={handleSaveDeferUntil}
                                     onCancel={handleCancelDeferUntilEdit}
+                                />
+
+                                <TaskReminderCard
+                                    task={task}
+                                    isEditing={isEditingReminder}
+                                    editedReminder={editedReminder}
+                                    onChangeDateTime={setEditedReminder}
+                                    onStartEdit={handleStartReminderEdit}
+                                    onSave={handleSaveReminder}
+                                    onCancel={handleCancelReminderEdit}
                                 />
 
                                 <TaskEstimateCard

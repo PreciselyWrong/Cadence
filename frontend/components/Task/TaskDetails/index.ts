@@ -8,6 +8,7 @@ export { default as TaskRelationsCard } from './TaskRelationsCard';
 export { default as TaskRecurrenceCard } from './TaskRecurrenceCard';
 export { default as TaskDueDateCard } from './TaskDueDateCard';
 export { default as TaskDeferUntilCard } from './TaskDeferUntilCard';
+export { default as TaskReminderCard } from './TaskReminderCard';
 export { default as TaskAttachmentsCard } from './TaskAttachmentsCard';
 export { default as TaskAreaCard } from './TaskAreaCard';
 export { default as TaskAssignedToCard } from './TaskAssignedToCard';

@@ -48,45 +48,42 @@ pub fn pending(queue_dir: &Path) -> Vec<PathBuf> {
     files
 }
 
+/// Newest notification uids remembered, so a notification is shown once even when the
+/// server keeps listing it as unread.
+const SEEN_LIMIT: usize = 500;
+
 /// Notification state owned by the tray process alone.
 pub struct Store {
     path: PathBuf,
-    last_notified: Mutex<Option<String>>,
+    state: Mutex<Persisted>,
 }
 
 #[derive(Serialize, Deserialize, Default)]
 #[serde(default)]
 struct Persisted {
-    /// `created_at` (ISO 8601, sortable as text) of the newest notification already shown.
-    last_notified: Option<String>,
+    /// False until the first successful poll has recorded what already exists.
+    baseline_done: bool,
+    /// Uids of notifications already shown (or present at the baseline), oldest first.
+    seen: Vec<String>,
 }
 
 impl Store {
     pub fn open(path: PathBuf) -> Self {
-        let data: Persisted = std::fs::read_to_string(&path)
+        let state: Persisted = std::fs::read_to_string(&path)
             .ok()
             .and_then(|raw| serde_json::from_str(&raw).ok())
             .unwrap_or_default();
         Self {
             path,
-            last_notified: Mutex::new(data.last_notified),
+            state: Mutex::new(state),
         }
     }
 
-    fn set_last_notified(&self, value: String) {
-        let mut guard = self.last_notified.lock().unwrap();
-        *guard = Some(value.clone());
-        let json = serde_json::to_vec(&Persisted {
-            last_notified: Some(value),
-        })
-        .unwrap_or_default();
+    fn save(&self, state: &Persisted) {
+        let json = serde_json::to_vec(state).unwrap_or_default();
         if let Err(e) = config::write_atomic(&self.path, &json) {
             eprintln!("state not saved: {e}");
         }
-    }
-
-    fn last_notified(&self) -> Option<String> {
-        self.last_notified.lock().unwrap().clone()
     }
 }
 
@@ -146,16 +143,77 @@ struct NotificationList {
     notifications: Vec<ServerNotification>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug)]
 struct ServerNotification {
+    uid: String,
     title: String,
     message: Option<String>,
     created_at: String,
+    /// Delivery channels the server chose for this notification.
+    #[serde(default)]
+    sources: Vec<String>,
+    /// Quiet hours hold delivery until this UTC instant (ISO 8601).
+    #[serde(default)]
+    deliver_after: Option<String>,
 }
 
-/// Unread, non-dismissed notifications newer than the last one shown, oldest first.
-/// The first successful poll only records a baseline, so old unread items do not
-/// flood the desktop.
+impl ServerNotification {
+    /// Quiet hours are over for this notification (ISO 8601 UTC strings sort as text).
+    fn released(&self, now_iso: &str) -> bool {
+        self.deliver_after
+            .as_deref()
+            .map_or(true, |after| after <= now_iso)
+    }
+}
+
+/// Notifications the desktop must show now: the server routed them to `desktop`, quiet
+/// hours are over and they were not shown before. Oldest first.
+fn pick_fresh<'a>(
+    list: &'a [ServerNotification],
+    seen: &[String],
+    now_iso: &str,
+) -> Vec<&'a ServerNotification> {
+    let mut fresh: Vec<&ServerNotification> = list
+        .iter()
+        .filter(|n| n.sources.iter().any(|s| s == SOURCE))
+        .filter(|n| n.released(now_iso))
+        .filter(|n| !seen.contains(&n.uid))
+        .collect();
+    fresh.sort_by(|a, b| a.created_at.cmp(&b.created_at));
+    fresh
+}
+
+/// `YYYY-MM-DDTHH:MM:SS.000Z` for Unix seconds (civil-from-days, proleptic Gregorian).
+fn iso_utc(secs: u64) -> String {
+    let days = (secs / 86_400) as i64;
+    let rem = secs % 86_400;
+    let z = days + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z.rem_euclid(146_097);
+    let yoe = (doe - doe / 1_460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let day = doy - (153 * mp + 2) / 5 + 1;
+    let month = if mp < 10 { mp + 3 } else { mp - 9 };
+    let year = yoe + era * 400 + i64::from(month <= 2);
+    format!(
+        "{year:04}-{month:02}-{day:02}T{:02}:{:02}:{:02}.000Z",
+        rem / 3_600,
+        rem % 3_600 / 60,
+        rem % 60
+    )
+}
+
+fn now_iso() -> String {
+    let secs = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+    iso_utc(secs)
+}
+
+/// Unread notifications the server routed to the desktop, shown once each. The first
+/// successful poll only records a baseline, so old unread items do not flood the desktop.
 pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<(String, String)> {
     if cfg.api_token.is_empty() {
         return Vec::new();
@@ -178,23 +236,121 @@ pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<(String, String)> 
         }
     };
 
-    let newest = list.notifications.iter().map(|n| n.created_at.clone()).max();
-    let Some(last) = store.last_notified() else {
-        store.set_last_notified(newest.unwrap_or_default());
-        return Vec::new();
-    };
-
-    let mut fresh: Vec<&ServerNotification> = list
-        .notifications
-        .iter()
-        .filter(|n| n.created_at > last)
-        .collect();
-    fresh.sort_by(|a, b| a.created_at.cmp(&b.created_at));
-    if let Some(newest) = newest.filter(|n| *n > last) {
-        store.set_last_notified(newest);
+    let now = now_iso();
+    let mut state = store.state.lock().unwrap();
+    let shown: Vec<(String, String)>;
+    if state.baseline_done {
+        let fresh = pick_fresh(&list.notifications, &state.seen, &now);
+        shown = fresh
+            .iter()
+            .map(|n| (n.title.clone(), n.message.clone().unwrap_or_default()))
+            .collect();
+        let uids: Vec<String> = fresh.iter().map(|n| n.uid.clone()).collect();
+        state.seen.extend(uids);
+    } else {
+        // Held notifications stay unseen so they still ring once released.
+        let existing: Vec<String> = list
+            .notifications
+            .iter()
+            .filter(|n| n.released(&now))
+            .map(|n| n.uid.clone())
+            .collect();
+        state.seen.extend(existing);
+        state.baseline_done = true;
+        shown = Vec::new();
     }
-    fresh
-        .into_iter()
-        .map(|n| (n.title.clone(), n.message.clone().unwrap_or_default()))
-        .collect()
+    if state.seen.len() > SEEN_LIMIT {
+        let excess = state.seen.len() - SEEN_LIMIT;
+        state.seen.drain(..excess);
+    }
+    store.save(&state);
+    shown
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn notification(uid: &str, sources: &[&str], deliver_after: Option<&str>) -> ServerNotification {
+        ServerNotification {
+            uid: uid.to_string(),
+            title: format!("title {uid}"),
+            message: None,
+            created_at: format!("2026-11-01T10:00:0{}.000Z", uid.len() % 10),
+            sources: sources.iter().map(|s| s.to_string()).collect(),
+            deliver_after: deliver_after.map(str::to_string),
+        }
+    }
+
+    const NOW: &str = "2026-11-01T12:00:00.000Z";
+
+    fn uids(list: Vec<&ServerNotification>) -> Vec<String> {
+        list.into_iter().map(|n| n.uid.clone()).collect()
+    }
+
+    #[test]
+    fn shows_only_notifications_routed_to_desktop() {
+        let list = vec![
+            notification("a", &["desktop"], None),
+            notification("bb", &["push"], None),
+            notification("ccc", &[], None),
+            notification("dddd", &["push", "desktop"], None),
+        ];
+        assert_eq!(uids(pick_fresh(&list, &[], NOW)), vec!["a", "dddd"]);
+    }
+
+    #[test]
+    fn never_shows_the_same_uid_twice() {
+        let list = vec![
+            notification("a", &["desktop"], None),
+            notification("bb", &["desktop"], None),
+        ];
+        let seen = vec!["a".to_string()];
+        assert_eq!(uids(pick_fresh(&list, &seen, NOW)), vec!["bb"]);
+    }
+
+    #[test]
+    fn holds_notifications_until_quiet_hours_end() {
+        let list = vec![
+            notification("a", &["desktop"], Some("2026-11-01T22:00:00.000Z")),
+            notification("bb", &["desktop"], Some("2026-11-01T12:00:00.000Z")),
+            notification("ccc", &["desktop"], Some("2026-11-01T07:00:00.000Z")),
+        ];
+        assert_eq!(uids(pick_fresh(&list, &[], NOW)), vec!["bb", "ccc"]);
+        assert_eq!(
+            uids(pick_fresh(&list, &[], "2026-11-01T22:00:01.000Z")).len(),
+            3
+        );
+    }
+
+    #[test]
+    fn formats_unix_seconds_as_server_style_iso() {
+        assert_eq!(iso_utc(0), "1970-01-01T00:00:00.000Z");
+        assert_eq!(iso_utc(1_000_000_000), "2001-09-09T01:46:40.000Z");
+        assert_eq!(iso_utc(1_782_864_000), "2026-07-01T00:00:00.000Z");
+    }
+
+    #[test]
+    fn iso_strings_order_like_instants() {
+        assert!(iso_utc(1_000_000_000) < iso_utc(1_000_000_001));
+        assert!("2026-11-01T07:00:00.000Z" <= NOW);
+    }
+
+    #[test]
+    fn store_remembers_seen_uids_across_restarts() {
+        let path = std::env::temp_dir().join(format!("cadence-state-{}.json", std::process::id()));
+        let _ = std::fs::remove_file(&path);
+        {
+            let store = Store::open(path.clone());
+            let mut state = store.state.lock().unwrap();
+            state.baseline_done = true;
+            state.seen.push("a".to_string());
+            store.save(&state);
+        }
+        let reopened = Store::open(path.clone());
+        let state = reopened.state.lock().unwrap();
+        assert!(state.baseline_done);
+        assert_eq!(state.seen, vec!["a".to_string()]);
+        let _ = std::fs::remove_file(&path);
+    }
 }

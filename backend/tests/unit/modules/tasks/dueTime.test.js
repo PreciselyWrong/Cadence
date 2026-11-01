@@ -141,6 +141,83 @@ describe('due time', () => {
             expect(notifications).toHaveLength(1);
         });
 
+        it('delivers on external channels even when in-app is off', async () => {
+            const pushService = require('../../../../modules/push/service');
+            const pushSpy = jest
+                .spyOn(pushService, 'sendNotification')
+                .mockResolvedValue(1);
+            await user.update({
+                notification_preferences: {
+                    taskReminders: { inApp: false, push: true },
+                },
+            });
+            await Task.create({
+                name: 'Phone rings',
+                user_id: user.id,
+                reminder_at: new Date('2026-10-15T09:59:00Z'),
+            });
+
+            const result = await checkTaskReminders(
+                new Date('2026-10-15T10:00:00Z')
+            );
+
+            expect(result.remindersSent).toBe(1);
+            expect(pushSpy).toHaveBeenCalledTimes(1);
+            const [notification] = await Notification.findAll({
+                where: { user_id: user.id, type: 'reminder' },
+            });
+            expect(notification.read_at).not.toBeNull();
+            pushSpy.mockRestore();
+        });
+
+        it('sends nothing when every channel is off', async () => {
+            await user.update({
+                notification_preferences: {
+                    taskReminders: { inApp: false },
+                },
+            });
+            await Task.create({
+                name: 'Silent',
+                user_id: user.id,
+                reminder_at: new Date('2026-10-15T09:59:00Z'),
+            });
+
+            const result = await checkTaskReminders(
+                new Date('2026-10-15T10:00:00Z')
+            );
+
+            expect(result.remindersSent).toBe(0);
+        });
+
+        it('keeps task reminders off the desktop unless asked', async () => {
+            await Task.create({
+                name: 'Phone only',
+                user_id: user.id,
+                reminder_at: new Date('2026-10-15T09:59:00Z'),
+            });
+            await checkTaskReminders(new Date('2026-10-15T10:00:00Z'));
+            let [notification] = await Notification.findAll({
+                where: { user_id: user.id, type: 'reminder' },
+            });
+            expect(notification.sources).not.toContain('desktop');
+
+            await Notification.destroy({ where: { user_id: user.id } });
+            await user.update({
+                notification_preferences: {
+                    taskReminders: { inApp: true, desktop: true },
+                },
+            });
+            await Task.update(
+                { reminder_sent_at: null },
+                { where: { user_id: user.id } }
+            );
+            await checkTaskReminders(new Date('2026-10-15T10:00:00Z'));
+            [notification] = await Notification.findAll({
+                where: { user_id: user.id, type: 'reminder' },
+            });
+            expect(notification.sources).toContain('desktop');
+        });
+
         it('does not send for a reminder in the future', async () => {
             await Task.create({
                 name: 'Later',

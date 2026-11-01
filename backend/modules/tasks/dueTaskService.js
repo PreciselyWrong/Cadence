@@ -6,18 +6,25 @@ const {
     shouldSendTelegramNotification,
     reminderSources,
 } = require('../../utils/notificationPreferences');
+const { getQuietUntil } = require('../../utils/quietHours');
 const telegramPoller = require('../telegram/telegramPoller');
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Due soon is the only due-date reminder: one notification per task per due
+// date, refreshed in place while it is unread. Overdue tasks are never
+// announced; they simply stay in the lists.
 async function checkDueTasks() {
     try {
         const now = new Date();
-        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-        const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+        const tomorrow = new Date(now.getTime() + DAY_MS);
+        const lookBack = new Date(now.getTime() - 3 * DAY_MS);
 
         const dueTasks = await Task.findAll({
             where: {
                 due_date: {
                     [Op.not]: null,
+                    [Op.gt]: now,
                     [Op.lte]: tomorrow,
                 },
                 status: {
@@ -35,6 +42,8 @@ async function checkDueTasks() {
                         'id',
                         'email',
                         'name',
+                        'timezone',
+                        'quiet_hours',
                         'notification_preferences',
                         'telegram_bot_token',
                         'telegram_chat_id',
@@ -53,22 +62,23 @@ async function checkDueTasks() {
 
         // Batch-fetch all relevant notifications in one query to avoid N+1
         const userIds = [...new Set(dueTasks.map((t) => t.user_id))];
-        const allRecentNotifications = await Notification.findAll({
+        const recentNotifications = await Notification.findAll({
             where: {
                 user_id: { [Op.in]: userIds },
-                type: { [Op.in]: ['task_due_soon', 'task_overdue'] },
-                created_at: { [Op.gte]: twoDaysAgo },
+                type: 'task_due_soon',
+                created_at: { [Op.gte]: lookBack },
             },
+            order: [['created_at', 'DESC']],
         });
         const notificationsByUser = {};
-        for (const notif of allRecentNotifications) {
+        for (const notif of recentNotifications) {
+            if (notif.data?.reason) continue;
             if (!notificationsByUser[notif.user_id]) {
                 notificationsByUser[notif.user_id] = [];
             }
             notificationsByUser[notif.user_id].push(notif);
         }
 
-        // Group tasks by user
         const tasksByUser = {};
         for (const task of dueTasks) {
             if (!tasksByUser[task.user_id]) {
@@ -81,94 +91,74 @@ async function checkDueTasks() {
 
         for (const [userId, { user, tasks }] of Object.entries(tasksByUser)) {
             const wantsTelegram =
-                user.telegram_bot_token &&
-                user.telegram_chat_id &&
-                (shouldSendTelegramNotification(user, 'task_due_soon') ||
-                    shouldSendTelegramNotification(user, 'task_overdue'));
+                !!(user.telegram_bot_token && user.telegram_chat_id) &&
+                shouldSendTelegramNotification(user, 'task_due_soon');
+            // During quiet hours Telegram goes through the held-delivery
+            // path instead of the immediate batch.
+            const holdTelegram = wantsTelegram && !!getQuietUntil(user, now);
 
             const dueSoonForTelegram = [];
-            const overdueForTelegram = [];
 
             for (const task of tasks) {
                 try {
-                    const dueDate = new Date(task.due_date);
-                    const isOverdue = dueDate < now;
-                    const notificationType = isOverdue
-                        ? 'task_overdue'
-                        : 'task_due_soon';
-                    const level = isOverdue ? 'error' : 'warning';
-
-                    if (!shouldSendInAppNotification(user, notificationType)) {
+                    if (!shouldSendInAppNotification(user, 'task_due_soon')) {
                         continue;
                     }
 
-                    const recentNotifications =
-                        notificationsByUser[task.user_id] || [];
-
-                    const existingNotification = recentNotifications.find(
-                        (notif) =>
-                            notif.data?.taskUid === task.uid &&
-                            notif.type === notificationType
-                    );
-
-                    let preservedChannelSentAt = null;
-                    let alreadySentViaTelegram = false;
-
-                    if (existingNotification) {
-                        if (existingNotification.dismissed_at) {
-                            continue;
-                        }
-
-                        if (!existingNotification.read_at) {
-                            preservedChannelSentAt =
-                                existingNotification.channel_sent_at;
-                            alreadySentViaTelegram =
-                                existingNotification.wasChannelRecentlySent(
-                                    'telegram',
-                                    24 * 60 * 60 * 1000
-                                );
-                            await existingNotification.destroy();
-                        } else {
-                            continue;
-                        }
-                    }
-
+                    const dueDate = new Date(task.due_date);
                     const { title, message } = generateNotificationContent(
                         task.name,
                         dueDate,
-                        now,
-                        isOverdue
+                        now
                     );
+                    const data = {
+                        taskUid: task.uid,
+                        taskName: task.name,
+                        dueDate: task.due_date,
+                    };
+
+                    const existing = (
+                        notificationsByUser[task.user_id] || []
+                    ).find((notif) => notif.data?.taskUid === task.uid);
+
+                    if (existing) {
+                        const sameDueDate =
+                            new Date(existing.data.dueDate).getTime() ===
+                            dueDate.getTime();
+                        const open =
+                            !existing.read_at && !existing.dismissed_at;
+
+                        if (open) {
+                            if (!sameDueDate || existing.message !== message) {
+                                await existing.update({
+                                    title,
+                                    message,
+                                    data: sameDueDate ? existing.data : data,
+                                });
+                            }
+                            continue;
+                        }
+                        if (sameDueDate) continue;
+                    }
 
                     const notification = await Notification.createNotification({
                         userId: task.user_id,
-                        type: notificationType,
+                        type: 'task_due_soon',
                         title,
                         message,
-                        level,
-                        sources: reminderSources(user, notificationType),
-                        data: {
-                            taskUid: task.uid,
-                            taskName: task.name,
-                            dueDate: task.due_date,
-                            isOverdue,
-                        },
+                        level: 'warning',
+                        sources: [
+                            ...(holdTelegram ? ['telegram'] : []),
+                            ...reminderSources(user, 'task_due_soon'),
+                        ],
+                        data,
                         sentAt: new Date(),
-                        channel_sent_at: preservedChannelSentAt,
                     });
 
                     notificationsCreated++;
 
-                    if (wantsTelegram && !alreadySentViaTelegram) {
-                        if (isOverdue) {
-                            overdueForTelegram.push({
-                                task,
-                                dueDate,
-                                notification,
-                            });
-                        } else {
-                            dueSoonForTelegram.push({ task, notification });
-                        }
+                    if (wantsTelegram && !holdTelegram) {
+                        dueSoonForTelegram.push({ task, notification });
                     }
                 } catch (error) {
                     logError(
@@ -178,14 +168,8 @@ async function checkDueTasks() {
                 }
             }
 
-            // Send one batched Telegram message per type per user
-            if (wantsTelegram) {
-                await sendBatchedTaskTelegramMessage(
-                    user,
-                    dueSoonForTelegram,
-                    overdueForTelegram,
-                    now
-                );
+            if (dueSoonForTelegram.length > 0) {
+                await sendBatchedTaskTelegramMessage(user, dueSoonForTelegram);
             }
         }
 
@@ -200,53 +184,20 @@ async function checkDueTasks() {
     }
 }
 
-async function sendBatchedTaskTelegramMessage(
-    user,
-    dueSoonItems,
-    overdueItems,
-    now
-) {
+async function sendBatchedTaskTelegramMessage(user, dueSoonItems) {
     try {
-        const parts = [];
-
-        if (overdueItems.length > 0) {
-            parts.push('🔴 Overdue Tasks:');
-            for (const { task, dueDate } of overdueItems) {
-                const daysOverdue = Math.floor(
-                    (now - dueDate) / (1000 * 60 * 60 * 24)
-                );
-                const age =
-                    daysOverdue === 0
-                        ? 'due today'
-                        : daysOverdue === 1
-                          ? 'due yesterday'
-                          : `due ${daysOverdue} days ago`;
-                parts.push(`• ${task.name} (${age})`);
-            }
+        const parts = ['Due soon:'];
+        for (const { task } of dueSoonItems) {
+            parts.push(`• ${task.name}`);
         }
 
-        if (dueSoonItems.length > 0) {
-            if (parts.length > 0) parts.push('');
-            parts.push('⚠️ Tasks Due Soon:');
-            for (const { task } of dueSoonItems) {
-                parts.push(`• ${task.name}`);
-            }
-        }
-
-        if (parts.length === 0) return;
-
-        const message = parts.join('\n');
         await telegramPoller.sendTelegramMessage(
             user.telegram_bot_token,
             user.telegram_chat_id,
-            message
+            parts.join('\n')
         );
 
-        const allNotifications = [
-            ...overdueItems.map((i) => i.notification),
-            ...dueSoonItems.map((i) => i.notification),
-        ];
-        for (const notification of allNotifications) {
+        for (const { notification } of dueSoonItems) {
             await notification.markChannelAsSent('telegram');
         }
     } catch (error) {
@@ -254,36 +205,20 @@ async function sendBatchedTaskTelegramMessage(
     }
 }
 
-function generateNotificationContent(taskName, dueDate, now, isOverdue) {
-    if (isOverdue) {
-        const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
-        const title = 'Task is overdue';
-        let message;
+function generateNotificationContent(taskName, dueDate, now) {
+    const hoursUntilDue = Math.floor((dueDate - now) / (1000 * 60 * 60));
+    const title = 'Task due soon';
+    let message;
 
-        if (daysOverdue === 0) {
-            message = `Your task "${taskName}" was due today`;
-        } else if (daysOverdue === 1) {
-            message = `Your task "${taskName}" was due yesterday`;
-        } else {
-            message = `Your task "${taskName}" was due ${daysOverdue} days ago`;
-        }
-
-        return { title, message };
+    if (hoursUntilDue < 1) {
+        message = `Your task "${taskName}" is due in less than 1 hour`;
+    } else if (hoursUntilDue < 24) {
+        message = `Your task "${taskName}" is due in ${hoursUntilDue} hours`;
     } else {
-        const hoursUntilDue = Math.floor((dueDate - now) / (1000 * 60 * 60));
-        const title = 'Task due soon';
-        let message;
-
-        if (hoursUntilDue < 1) {
-            message = `Your task "${taskName}" is due in less than 1 hour`;
-        } else if (hoursUntilDue < 24) {
-            message = `Your task "${taskName}" is due in ${hoursUntilDue} hours`;
-        } else {
-            message = `Your task "${taskName}" is due tomorrow`;
-        }
-
-        return { title, message };
+        message = `Your task "${taskName}" is due tomorrow`;
     }
+
+    return { title, message };
 }
 
 module.exports = {

@@ -1648,7 +1648,11 @@
     "nameRequired": "Το όνομα εργασίας είναι υποχρεωτικό",
     "deferAfterDueError": "Η ημερομηνία αναβολής δεν μπορεί να είναι μετά την προθεσμία",
     "untitled": "Εργασία χωρίς τίτλο",
-    "instanceOfShort": "Εμφάνιση"
+    "instanceOfShort": "Εμφάνιση",
+    "reminder": "Υπενθύμιση",
+    "reminderPlaceholder": "Επιλέξτε ημερομηνία και ώρα υπενθύμισης",
+    "noReminder": "Καμία υπενθύμιση",
+    "reminderUpdateError": "Αποτυχία ενημέρωσης της υπενθύμισης"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2919,7 +2923,8 @@
       "inApp": "Εντός της εφαρμογής",
       "email": "Email",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Υπολογιστής"
     },
     "types": {
       "dueTasks": "Εργασίες που λήγουν",
@@ -2929,7 +2934,8 @@
       "overdueProjects": "Έργα που έχουν καθυστερήσει",
       "taskAssigned": "Καθήκον Ανατεθέν",
       "habitReminders": "Υπενθυμίσεις συνηθειών",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Υπενθυμίσεις εργασιών"
     },
     "descriptions": {
       "dueTasks": "Εργασίες που λήγουν εντός 24 ωρών",
@@ -2939,7 +2945,8 @@
       "overdueProjects": "Έργα που έχουν περάσει την προθεσμία τους",
       "taskAssigned": "Ένα καθήκον σας ανατέθηκε από κάποιον άλλο",
       "habitReminders": "Την ώρα υπενθύμισης μιας συνήθειας, όσο είναι ακόμη ανοιχτή",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Η ώρα που ορίζετε σε μια εργασία. Χτυπά το κινητό· προσθέστε Υπολογιστής αν θέλετε να χτυπά και ο υπολογιστής"
     },
     "telegram": {
       "notConfigured": {
@@ -2960,7 +2967,8 @@
     },
     "info": {
       "title": "Σημείωση:",
-      "message": "Οι ειδοποιήσεις μέσω Email και Push έρχονται σύντομα. Οι ειδοποιήσεις εντός της εφαρμογής και μέσω Telegram είναι διαθέσιμες αυτή τη στιγμή."
+      "message": "Οι ειδοποιήσεις μέσω Email και Push έρχονται σύντομα. Οι ειδοποιήσεις εντός της εφαρμογής και μέσω Telegram είναι διαθέσιμες αυτή τη στιγμή.",
+      "phoneRings": "Οι υπενθυμίσεις εργασιών χτυπούν στο κινητό. Ο υπολογιστής χτυπά μόνο αν ενεργοποιήσετε το Υπολογιστής σε αυτή τη γραμμή."
     },
     "webhooks": {
       "events": {
@@ -3032,6 +3040,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Ώρες ησυχίας",
+      "description": "Σε αυτό το διάστημα τίποτα δεν χτυπά: οι ειδοποιήσεις push, Telegram, Apprise και υπολογιστή περιμένουν το τέλος. Τις βρίσκετε πάντα στην εφαρμογή. Οι ώρες ακολουθούν τη ζώνη ώρας του προφίλ σας.",
+      "enable": "Ώρες ησυχίας",
+      "from": "Από",
+      "to": "Έως"
     }
   },
   "projectStatus": {
@@ -4572,7 +4587,8 @@
     "noArea": "Χωρίς περιοχή",
     "unassigned": "Κανείς",
     "reopen": "Επαναφορά",
-    "complete": "Ολοκλήρωση"
+    "complete": "Ολοκλήρωση",
+    "more": "Περισσότερα"
   },
   "datePopover": {
     "today": "Σήμερα",

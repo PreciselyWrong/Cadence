@@ -334,6 +334,7 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
         const invalidValue = await def.validate(row, values, userId);
         if (invalidValue) throw new Refusal(invalidValue);
     }
+    if (def.prepareValues) def.prepareValues(row, values);
 
     const previous = row && def.afterApply ? row.toJSON() : null;
     const writeOptions = { syncApplied: true, transaction };

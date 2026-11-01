@@ -15,11 +15,11 @@ On Cadence Cloud, webhooks are part of the paid plan and not of the free trial.
 
 | Event | When |
 |---|---|
-| `task.due_soon`, `task.overdue` | A task is due within a day, or past due |
+| `task.due_soon`, `task.overdue` | A task is due within a day (`task.overdue` is no longer produced: overdue is not announced, see [Notifications](36-notifications.md)) |
 | `task.reminder` | A task's reminder time is reached |
 | `task.deferred_ready` | A deferred task becomes active |
 | `task.assigned` | Someone assigns a task to you |
-| `project.due_soon`, `project.overdue` | Same, for projects |
+| `project.due_soon`, `project.overdue` | Same, for projects (`project.overdue` is no longer produced) |
 | `habit.reminder` | A habit reminder fires |
 | `comment.added`, `comment.mention` | A comment on your task, or a mention |
 | `share.invitation` | Someone shares something with you |
@@ -56,7 +56,7 @@ The reminder and alert events follow the same notifications as the in-app bell: 
 }
 ```
 
-`text` and `content` carry the same readable message, so a Slack (`text`) or Discord (`content`) incoming webhook shows it without anything in between. Notification events put the notification under `data.notification` next to its own fields (`taskUid`, `taskName` and so on). `daily_summary` sends `data.date`, `data.timezone`, `data.overdue`, `data.due_today` and `data.in_progress`, each a list of tasks in the shape above.
+`text` and `content` carry the same readable message, so a Slack (`text`) or Discord (`content`) incoming webhook shows it without anything in between. Notification events put the notification under `data.notification` next to its own fields (`taskUid`, `taskName` and so on). `daily_summary` sends `data.date`, `data.timezone`, `data.overdue` (open tasks from earlier days; the key keeps its name for existing receivers), `data.due_today` and `data.in_progress`, each a list of tasks in the shape above. The text says "still open" with the date each task was due, never "overdue".
 
 ## Verifying a request
 

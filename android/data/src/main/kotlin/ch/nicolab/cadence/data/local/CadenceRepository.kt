@@ -607,6 +607,10 @@ class CadenceRepository(
     suspend fun getAllReminders(): List<HabitReminderEntity> =
         database.habitReminderDao().getAllReminders()
 
+    /** Émet à chaque écriture de rappel, y compris celles que la synchro applique. */
+    fun observeAllReminders(): Flow<List<HabitReminderEntity>> =
+        database.habitReminderDao().observeAllReminders()
+
     suspend fun replaceReminders(habitId: String, reminders: List<HabitReminderEntity>) {
         require(reminders.all { it.habitId == habitId })
         database.withTransaction {

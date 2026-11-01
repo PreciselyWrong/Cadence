@@ -1,4 +1,5 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Op } = require('sequelize');
+const { getQuietUntil } = require('../utils/quietHours');
 const { randomUUID } = require('crypto');
 
 module.exports = (sequelize) => {
@@ -80,6 +81,7 @@ module.exports = (sequelize) => {
                             'email',
                             'push',
                             'apprise',
+                            'desktop',
                         ];
                         const invalidSources = value.filter(
                             (s) => !validSources.includes(s)
@@ -109,6 +111,13 @@ module.exports = (sequelize) => {
                 allowNull: true,
                 defaultValue: null,
             },
+            // Quiet hours hold push, Telegram, Apprise and desktop delivery
+            // until this instant; the in-app row exists immediately.
+            deliver_after: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null,
+            },
         },
         {
             tableName: 'notifications',
@@ -134,6 +143,9 @@ module.exports = (sequelize) => {
                 {
                     fields: ['user_id', 'dismissed_at'],
                 },
+                {
+                    fields: ['deliver_after'],
+                },
             ],
         }
     );
@@ -156,6 +168,17 @@ module.exports = (sequelize) => {
         level = 'info',
         channel_sent_at = null,
     }) {
+        // Quiet hours hold the external channels (and the desktop client,
+        // which reads deliver_after); the in-app row is stored right away.
+        let deliverAfter = null;
+        if (sources.length > 0) {
+            const owner = await Notification.sequelize.models.User.findByPk(
+                userId,
+                { attributes: ['id', 'timezone', 'quiet_hours'] }
+            );
+            deliverAfter = getQuietUntil(owner);
+        }
+
         const notification = await Notification.create({
             user_id: userId,
             type,
@@ -166,29 +189,11 @@ module.exports = (sequelize) => {
             level,
             sent_at: sentAt || new Date(),
             channel_sent_at,
+            deliver_after: deliverAfter,
         });
 
-        if (sources.includes('email')) {
-            await sendEmailNotification(userId, title, message, Notification);
-        }
-
-        if (sources.includes('telegram')) {
-            await sendTelegramNotification(
-                userId,
-                title,
-                message,
-                data,
-                Notification,
-                notification
-            );
-        }
-
-        if (sources.includes('push')) {
-            await sendPushNotification(notification);
-        }
-
-        if (sources.includes('apprise')) {
-            await sendAppriseNotification(notification);
+        if (!deliverAfter) {
+            await deliverExternal(notification);
         }
 
         // Webhooks pick their own events, so they do not need a source.
@@ -212,6 +217,58 @@ module.exports = (sequelize) => {
         }
 
         return notification;
+    };
+
+    // Sends one notification on each external channel in its sources.
+    // Channels already sent are skipped, so a flush after an interruption
+    // does not repeat them.
+    async function deliverExternal(notification) {
+        const { sources, title, message, data, user_id: userId } = notification;
+
+        if (sources.includes('email')) {
+            await sendEmailNotification(userId, title, message, Notification);
+        }
+        if (sources.includes('telegram')) {
+            await sendTelegramNotification(
+                userId,
+                title,
+                message,
+                data,
+                Notification,
+                notification
+            );
+        }
+        if (sources.includes('push')) {
+            await sendPushNotification(notification);
+        }
+        if (sources.includes('apprise')) {
+            await sendAppriseNotification(notification);
+        }
+    }
+
+    // Delivers the notifications held by quiet hours whose window is over.
+    Notification.flushDeferred = async function (now = new Date()) {
+        const held = await Notification.findAll({
+            where: {
+                deliver_after: { [Op.not]: null, [Op.lte]: now },
+                dismissed_at: null,
+            },
+            order: [['deliver_after', 'ASC']],
+            limit: 200,
+        });
+
+        let delivered = 0;
+        for (const notification of held) {
+            try {
+                // Release first so a failing channel is not retried forever.
+                await notification.update({ deliver_after: null });
+                await deliverExternal(notification);
+                delivered++;
+            } catch (error) {
+                console.error('Failed to deliver held notification:', error);
+            }
+        }
+        return { delivered };
     };
 
     async function sendAppriseNotification(notificationInstance) {

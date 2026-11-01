@@ -1673,7 +1673,11 @@
     "nameRequired": "Opgavenavn er påkrævet",
     "deferAfterDueError": "Udskydningsdato kan ikke være efter fristen",
     "untitled": "Opgave uden titel",
-    "instanceOfShort": "Forekomst"
+    "instanceOfShort": "Forekomst",
+    "reminder": "Påmindelse",
+    "reminderPlaceholder": "Vælg dato og tidspunkt for påmindelsen",
+    "noReminder": "Ingen påmindelse",
+    "reminderUpdateError": "Påmindelsen kunne ikke opdateres"
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -2918,7 +2922,8 @@
       "inApp": "I-app",
       "email": "E-mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Computer"
     },
     "types": {
       "dueTasks": "Forfaldne opgaver",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Overdue projekter",
       "taskAssigned": "Opgave tildelt",
       "habitReminders": "Vanepåmindelser",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Opgavepåmindelser"
     },
     "descriptions": {
       "dueTasks": "Opgaver der forfalder inden for 24 timer",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Projekter der er overskredet deres forfaldsdato",
       "taskAssigned": "En opgave blev tildelt dig af en anden",
       "habitReminders": "På påmindelsestidspunktet for en vane, så længe den stadig er åben",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Tidspunktet du sætter på en opgave. Din telefon ringer; tilføj Computer, hvis din computer også skal ringe"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Bemærk:",
-      "message": "E-mail og push-notifikationer kommer snart. Notifikationer i appen og Telegram er i øjeblikket tilgængelige."
+      "message": "E-mail og push-notifikationer kommer snart. Notifikationer i appen og Telegram er i øjeblikket tilgængelige.",
+      "phoneRings": "Opgavepåmindelser ringer på din telefon. Computeren ringer kun, hvis du slår Computer til på denne række."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Stille timer",
+      "description": "I dette tidsrum ringer intet: push-, Telegram-, Apprise- og computerbeskeder venter, til det er slut. Du finder dem stadig i appen. Tiderne følger din profils tidszone.",
+      "enable": "Stille timer",
+      "from": "Fra",
+      "to": "Til"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Intet område",
     "unassigned": "Ingen",
     "reopen": "Genåbn",
-    "complete": "Fuldfør"
+    "complete": "Fuldfør",
+    "more": "Mere"
   },
   "datePopover": {
     "today": "I dag",

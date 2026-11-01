@@ -1673,7 +1673,11 @@
     "nameRequired": "Nama tugas wajib diisi",
     "deferAfterDueError": "Tanggal penundaan tidak boleh setelah tenggat",
     "untitled": "Tugas tanpa judul",
-    "instanceOfShort": "Kejadian"
+    "instanceOfShort": "Kejadian",
+    "reminder": "Pengingat",
+    "reminderPlaceholder": "Pilih tanggal dan waktu pengingat",
+    "noReminder": "Tidak ada pengingat",
+    "reminderUpdateError": "Gagal memperbarui pengingat"
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -2918,7 +2922,8 @@
       "inApp": "Dalam aplikasi",
       "email": "Email",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Komputer"
     },
     "types": {
       "dueTasks": "Tugas Jatuh Tempo",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Proyek Terlambat",
       "taskAssigned": "Tugas Diberikan",
       "habitReminders": "Pengingat kebiasaan",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Pengingat tugas"
     },
     "descriptions": {
       "dueTasks": "Tugas yang jatuh tempo dalam 24 jam",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Proyek yang telah melewati tanggal jatuh tempo",
       "taskAssigned": "Sebuah tugas telah diberikan kepada Anda oleh orang lain",
       "habitReminders": "Pada waktu pengingat yang diatur di kebiasaan, selama kebiasaan itu masih terbuka",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Waktu yang Anda atur pada tugas. Ponsel Anda berdering; tambahkan Komputer jika ingin komputer ikut berdering"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Catatan:",
-      "message": "Notifikasi Email dan Push akan segera hadir. Notifikasi di dalam aplikasi dan Telegram saat ini tersedia."
+      "message": "Notifikasi Email dan Push akan segera hadir. Notifikasi di dalam aplikasi dan Telegram saat ini tersedia.",
+      "phoneRings": "Pengingat tugas berdering di ponsel Anda. Komputer hanya berdering jika Anda mengaktifkan Komputer pada baris ini."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Jam tenang",
+      "description": "Pada rentang ini tidak ada yang berdering: notifikasi push, Telegram, Apprise, dan komputer menunggu hingga selesai. Anda tetap bisa melihatnya di aplikasi. Waktu mengikuti zona waktu profil Anda.",
+      "enable": "Jam tenang",
+      "from": "Dari",
+      "to": "Sampai"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Tanpa area",
     "unassigned": "Tidak ada",
     "reopen": "Buka lagi",
-    "complete": "Selesaikan"
+    "complete": "Selesaikan",
+    "more": "Lainnya"
   },
   "datePopover": {
     "today": "Hari ini",

@@ -257,6 +257,31 @@ describe('recurring occurrences', () => {
         expect(event.resize).toBeUndefined();
         expect(taskIdOf(event.id)).toBe('4');
     });
+
+    it('draws a timed occurrence as a block of its estimate', () => {
+        const [event] = taskToEvents({
+            id: 4,
+            due_date: '2026-11-05',
+            due_time: '09:00',
+            estimated_minutes: 90,
+            is_virtual_occurrence: true,
+            occurrence_index: 2,
+        });
+        expect(event.allDay).toBeFalsy();
+        expect(event.start).toEqual(new Date(2026, 10, 5, 9, 0));
+        expect(minutes(event.start, event.end)).toBe(90);
+    });
+
+    it('keeps the hour default for a timed occurrence without estimate', () => {
+        const [event] = taskToEvents({
+            id: 4,
+            due_date: '2026-11-05',
+            due_time: '09:00',
+            is_virtual_occurrence: true,
+            occurrence_index: 2,
+        });
+        expect(minutes(event.start, event.end)).toBe(60);
+    });
 });
 
 describe('dropToDueUpdate', () => {

@@ -1692,7 +1692,11 @@
     "nameRequired": "Task name is required",
     "deferAfterDueError": "Defer until date cannot be after the due date",
     "untitled": "Untitled task",
-    "instanceOfShort": "Occurrence"
+    "instanceOfShort": "Occurrence",
+    "reminder": "Reminder",
+    "reminderPlaceholder": "Select reminder date and time",
+    "noReminder": "No reminder",
+    "reminderUpdateError": "Failed to update reminder"
   },
   "subtasks": {
     "placeholder": "Add a subtask..."
@@ -3137,7 +3141,8 @@
       "inApp": "In-app",
       "email": "Email",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Desktop"
     },
     "types": {
       "dueTasks": "Due Tasks",
@@ -3147,7 +3152,8 @@
       "overdueProjects": "Overdue Projects",
       "taskAssigned": "Task Assigned",
       "habitReminders": "Habit Reminders",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Task reminders"
     },
     "descriptions": {
       "dueTasks": "Tasks that are due within 24 hours",
@@ -3157,7 +3163,8 @@
       "overdueProjects": "Projects that have passed their due date",
       "taskAssigned": "A task was assigned to you by someone else",
       "habitReminders": "At the reminder time set on a habit, while it is still open",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "The time you set on a task. Your phone rings; add Desktop if you want your computer to ring too"
     },
     "telegram": {
       "notConfigured": {
@@ -3175,7 +3182,8 @@
     },
     "info": {
       "title": "Note:",
-      "message": "Email notifications are coming soon. In-app, Push and Telegram notifications are available."
+      "message": "Email notifications are coming soon. In-app, Push and Telegram notifications are available.",
+      "phoneRings": "Task reminders ring on your phone. The desktop only rings for them if you turn on Desktop for that row."
     },
     "push": {
       "title": "Push notifications on this device",
@@ -3247,6 +3255,13 @@
       "history": "History",
       "confirmDelete": "Delete it?",
       "delete": "Delete"
+    },
+    "quietHours": {
+      "title": "Quiet hours",
+      "description": "During this window nothing rings: push, Telegram, Apprise and desktop notifications wait until it ends. You still find them in the app. Times follow your profile timezone.",
+      "enable": "Quiet hours",
+      "from": "From",
+      "to": "To"
     }
   },
   "aiAssistant": {
@@ -4534,7 +4549,8 @@
     "noArea": "No area",
     "unassigned": "Nobody",
     "reopen": "Reopen",
-    "complete": "Complete"
+    "complete": "Complete",
+    "more": "More"
   },
   "datePopover": {
     "today": "Today",

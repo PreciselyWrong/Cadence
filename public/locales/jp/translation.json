@@ -1948,7 +1948,11 @@
     "nameRequired": "タスク名は必須です",
     "deferAfterDueError": "延期日は期限より後にできません",
     "untitled": "無題のタスク",
-    "instanceOfShort": "反復"
+    "instanceOfShort": "反復",
+    "reminder": "リマインダー",
+    "reminderPlaceholder": "リマインダーの日時を選択",
+    "noReminder": "リマインダーなし",
+    "reminderUpdateError": "リマインダーを更新できませんでした"
   },
   "calendar": {
     "focusSession": "集中",
@@ -2918,7 +2922,8 @@
       "inApp": "アプリ内",
       "email": "メール",
       "push": "プッシュ",
-      "telegram": "テレグラム"
+      "telegram": "テレグラム",
+      "desktop": "デスクトップ"
     },
     "types": {
       "dueTasks": "期限内のタスク",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "期限切れのプロジェクト",
       "taskAssigned": "タスクが割り当てられました",
       "habitReminders": "習慣のリマインダー",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "タスクのリマインダー"
     },
     "descriptions": {
       "dueTasks": "24時間以内に期限が来るタスク",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "期限を過ぎたプロジェクト",
       "taskAssigned": "他の誰かからあなたにタスクが割り当てられました",
       "habitReminders": "習慣に設定したリマインダー時刻に、まだ未完了の場合",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "タスクに設定した時刻。スマートフォンが鳴ります。パソコンも鳴らしたい場合はデスクトップを追加してください"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "注意:",
-      "message": "メールおよびプッシュ通知は近日中に提供予定です。アプリ内およびTelegram通知は現在利用可能です。"
+      "message": "メールおよびプッシュ通知は近日中に提供予定です。アプリ内およびTelegram通知は現在利用可能です。",
+      "phoneRings": "タスクのリマインダーはスマートフォンで鳴ります。この行でデスクトップをオンにした場合のみ、パソコンでも鳴ります。"
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "おやすみ時間",
+      "description": "この時間帯は何も鳴りません。プッシュ、Telegram、Apprise、デスクトップの通知は終了まで待機します。アプリでは引き続き確認できます。時刻はプロフィールのタイムゾーンに従います。",
+      "enable": "おやすみ時間",
+      "from": "開始",
+      "to": "終了"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "エリアなし",
     "unassigned": "担当者なし",
     "reopen": "再開",
-    "complete": "完了"
+    "complete": "完了",
+    "more": "その他"
   },
   "datePopover": {
     "today": "今日",

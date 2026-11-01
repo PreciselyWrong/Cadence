@@ -35,8 +35,9 @@ async function findTasks(userId, where) {
     });
 }
 
-// Today's open work for one user, in their timezone: what is overdue, what
-// is due today and what is in progress.
+// Today's open work for one user, in their timezone: what is still open
+// from earlier days, what is due today and what is in progress. The
+// `overdue` key keeps its name for existing consumers; the text stays neutral.
 async function buildSummary(user, now = new Date()) {
     const timezone = getSafeTimezone(user.timezone);
     const date = moment.tz(now, timezone).format('YYYY-MM-DD');
@@ -58,13 +59,18 @@ async function buildSummary(user, now = new Date()) {
     };
 
     const lines = [
-        `Today: ${dueToday.length} due, ${overdue.length} overdue, ${inProgress.length} in progress`,
+        `Today: ${dueToday.length} due, ${overdue.length} still open, ${inProgress.length} in progress`,
     ];
-    const section = (title, tasks) => {
+    const section = (title, tasks, describe = (task) => task.name) => {
         if (tasks.length === 0) return;
-        lines.push('', title, ...tasks.map((task) => `- ${task.name}`));
+        lines.push('', title, ...tasks.map((task) => `- ${describe(task)}`));
     };
-    section('Overdue', overdue);
+    section(
+        'Still open',
+        overdue,
+        (task) =>
+            `${task.name} (since ${moment.tz(task.due_date, timezone).format('YYYY-MM-DD')})`
+    );
     section('Due today', dueToday);
     section('In progress', inProgress);
 

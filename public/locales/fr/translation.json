@@ -1676,7 +1676,11 @@
     "nameRequired": "Le nom de la tâche est obligatoire",
     "deferAfterDueError": "La date de report ne peut pas dépasser l'échéance",
     "untitled": "Tâche sans titre",
-    "instanceOfShort": "Occurrence"
+    "instanceOfShort": "Occurrence",
+    "reminder": "Rappel",
+    "reminderPlaceholder": "Choisir la date et l'heure du rappel",
+    "noReminder": "Aucun rappel",
+    "reminderUpdateError": "Impossible de mettre à jour le rappel"
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -2925,7 +2929,8 @@
       "inApp": "Dans l'application",
       "email": "E-mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Ordinateur"
     },
     "types": {
       "dueTasks": "Tâches échues",
@@ -2935,7 +2940,8 @@
       "overdueProjects": "Projets en retard",
       "taskAssigned": "Tâche assignée",
       "habitReminders": "Rappels d'habitudes",
-      "comments": "Commentaires et mentions"
+      "comments": "Commentaires et mentions",
+      "taskReminders": "Rappels de tâche"
     },
     "descriptions": {
       "dueTasks": "Tâches qui doivent être effectuées dans les 24 heures",
@@ -2945,7 +2951,8 @@
       "overdueProjects": "Projets dont la date limite est dépassée",
       "taskAssigned": "Une tâche vous a été assignée par quelqu'un d'autre",
       "habitReminders": "À l'heure de rappel définie sur une habitude, tant qu'elle n'est pas faite",
-      "comments": "Réponses, commentaires sur les tâches et mentions @"
+      "comments": "Réponses, commentaires sur les tâches et mentions @",
+      "taskReminders": "L'heure fixée sur une tâche. Votre téléphone sonne ; ajoutez Ordinateur pour que le poste sonne aussi"
     },
     "telegram": {
       "notConfigured": {
@@ -2966,7 +2973,8 @@
     },
     "info": {
       "title": "Remarque :",
-      "message": "Les notifications par e-mail et push arrivent bientôt. Les notifications dans l'application et sur Telegram sont actuellement disponibles."
+      "message": "Les notifications par e-mail et push arrivent bientôt. Les notifications dans l'application et sur Telegram sont actuellement disponibles.",
+      "phoneRings": "Les rappels de tâche sonnent sur votre téléphone. L'ordinateur ne sonne que si vous activez Ordinateur sur cette ligne."
     },
     "webhooks": {
       "events": {
@@ -3038,6 +3046,13 @@
       "enable": "Activer",
       "disable": "Désactiver",
       "failed": "Une erreur est survenue. Réessayer."
+    },
+    "quietHours": {
+      "title": "Heures calmes",
+      "description": "Pendant cette plage, rien ne sonne : les notifications push, Telegram, Apprise et ordinateur attendent la fin. Vous les retrouvez dans l'application. Les heures suivent le fuseau horaire de votre profil.",
+      "enable": "Heures calmes",
+      "from": "De",
+      "to": "À"
     }
   },
   "projectStatus": {
@@ -4579,7 +4594,8 @@
     "noArea": "Aucune zone",
     "unassigned": "Personne",
     "reopen": "Rouvrir",
-    "complete": "Terminer"
+    "complete": "Terminer",
+    "more": "Plus"
   },
   "datePopover": {
     "today": "Aujourd'hui",

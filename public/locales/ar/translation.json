@@ -1681,7 +1681,11 @@
     "nameRequired": "اسم المهمة مطلوب",
     "deferAfterDueError": "لا يمكن أن يكون تاريخ التأجيل بعد تاريخ الاستحقاق",
     "untitled": "مهمة بلا عنوان",
-    "instanceOfShort": "تكرار"
+    "instanceOfShort": "تكرار",
+    "reminder": "تذكير",
+    "reminderPlaceholder": "اختر تاريخ التذكير ووقته",
+    "noReminder": "لا يوجد تذكير",
+    "reminderUpdateError": "تعذر تحديث التذكير"
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -2942,7 +2946,8 @@
       "inApp": "داخل التطبيق",
       "email": "البريد الإلكتروني",
       "push": "إشعارات الدفع",
-      "telegram": "تيليجرام"
+      "telegram": "تيليجرام",
+      "desktop": "الكمبيوتر"
     },
     "types": {
       "dueTasks": "المهام المستحقة",
@@ -2952,7 +2957,8 @@
       "overdueProjects": "المشاريع المتأخرة",
       "taskAssigned": "مهمة معينة",
       "habitReminders": "تذكيرات العادات",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "تذكيرات المهام"
     },
     "descriptions": {
       "dueTasks": "المهام المستحقة خلال 24 ساعة",
@@ -2962,7 +2968,8 @@
       "overdueProjects": "المشاريع التي تجاوزت تاريخ استحقاقها",
       "taskAssigned": "تم تعيين مهمة لك من قبل شخص آخر",
       "habitReminders": "في وقت التذكير المحدد للعادة، ما دامت لم تُنجز بعد",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "الوقت الذي تحدده لمهمة. يرن هاتفك؛ أضف الكمبيوتر إن أردت أن يرن حاسوبك أيضًا"
     },
     "telegram": {
       "notConfigured": {
@@ -2983,7 +2990,8 @@
     },
     "info": {
       "title": "ملاحظة:",
-      "message": "ستكون إشعارات البريد الإلكتروني وإشعارات الدفع متاحة قريبًا. الإشعارات داخل التطبيق وإشعارات تليجرام متاحة حاليًا."
+      "message": "ستكون إشعارات البريد الإلكتروني وإشعارات الدفع متاحة قريبًا. الإشعارات داخل التطبيق وإشعارات تليجرام متاحة حاليًا.",
+      "phoneRings": "تذكيرات المهام ترن على هاتفك. لا يرن الكمبيوتر إلا إذا فعّلت الكمبيوتر في هذا الصف."
     },
     "webhooks": {
       "events": {
@@ -3055,6 +3063,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "ساعات الهدوء",
+      "description": "خلال هذه الفترة لا شيء يرن: إشعارات push وTelegram وApprise والكمبيوتر تنتظر حتى تنتهي. تجدها دائمًا في التطبيق. الأوقات تتبع المنطقة الزمنية لملفك.",
+      "enable": "ساعات الهدوء",
+      "from": "من",
+      "to": "إلى"
     }
   },
   "projectStatus": {
@@ -4607,7 +4622,8 @@
     "noArea": "بلا منطقة",
     "unassigned": "لا أحد",
     "reopen": "إعادة فتح",
-    "complete": "إنهاء"
+    "complete": "إنهاء",
+    "more": "المزيد"
   },
   "datePopover": {
     "today": "اليوم",

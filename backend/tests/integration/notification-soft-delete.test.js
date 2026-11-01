@@ -142,8 +142,8 @@ describe('Notification Soft Delete', () => {
         });
 
         it('should not recreate dismissed notifications in cron jobs', async () => {
-            // Update task with due date in the past
-            const dueDate = new Date(Date.now() - 1000 * 60 * 60); // 1 hour ago
+            // Due in a few hours, so the due-soon check picks it up
+            const dueDate = new Date(Date.now() + 1000 * 60 * 60 * 5);
             await task.update({
                 due_date: dueDate,
             });

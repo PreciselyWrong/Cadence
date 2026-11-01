@@ -6,17 +6,22 @@ const {
     shouldSendTelegramNotification,
     reminderSources,
 } = require('../../utils/notificationPreferences');
+const { getQuietUntil } = require('../../utils/quietHours');
 const telegramPoller = require('../telegram/telegramPoller');
 
 async function checkDeferredTasks() {
     try {
         const now = new Date();
         const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000);
+        // A defer date that passed long ago (an old task, a backlog after
+        // downtime) is not announced.
+        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
         const deferredTasks = await Task.findAll({
             where: {
                 defer_until: {
                     [Op.not]: null,
+                    [Op.gte]: oneDayAgo,
                     [Op.lte]: fiveMinutesFromNow,
                 },
                 status: {
@@ -30,6 +35,8 @@ async function checkDeferredTasks() {
                         'id',
                         'email',
                         'name',
+                        'timezone',
+                        'quiet_hours',
                         'notification_preferences',
                         'telegram_bot_token',
                         'telegram_chat_id',
@@ -47,7 +54,7 @@ async function checkDeferredTasks() {
         }
 
         let notificationsCreated = 0;
-        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
 
         // Batch-fetch all relevant notifications in one query to avoid N+1
         const userIds = [...new Set(deferredTasks.map((t) => t.user_id))];
@@ -55,7 +62,7 @@ async function checkDeferredTasks() {
             where: {
                 user_id: { [Op.in]: userIds },
                 type: 'task_due_soon',
-                created_at: { [Op.gte]: oneDayAgo },
+                created_at: { [Op.gte]: twoDaysAgo },
             },
         });
         const notificationsByUser = {};
@@ -77,9 +84,11 @@ async function checkDeferredTasks() {
 
         for (const [userId, { user, tasks }] of Object.entries(tasksByUser)) {
             const wantsTelegram =
-                user.telegram_bot_token &&
-                user.telegram_chat_id &&
+                !!(user.telegram_bot_token && user.telegram_chat_id) &&
                 shouldSendTelegramNotification(user, 'deferUntil');
+            // During quiet hours Telegram goes through the held-delivery
+            // path instead of the immediate batch.
+            const holdTelegram = wantsTelegram && !!getQuietUntil(user, now);
 
             const activatedForTelegram = [];
 
@@ -89,43 +98,29 @@ async function checkDeferredTasks() {
                         continue;
                     }
 
-                    const recentNotifications =
-                        notificationsByUser[task.user_id] || [];
-
-                    const existingNotification = recentNotifications.find(
+                    // One announcement per task per defer date, whatever
+                    // happened to the first one.
+                    const deferTime = new Date(task.defer_until).getTime();
+                    const alreadyAnnounced = (
+                        notificationsByUser[task.user_id] || []
+                    ).some(
                         (notif) =>
                             notif.data?.taskUid === task.uid &&
-                            notif.data?.reason === 'defer_until_reached'
+                            notif.data?.reason === 'defer_until_reached' &&
+                            new Date(notif.data.deferUntil).getTime() ===
+                                deferTime
                     );
-
-                    let preservedChannelSentAt = null;
-                    let alreadySentViaTelegram = false;
-
-                    if (existingNotification) {
-                        if (existingNotification.dismissed_at) {
-                            continue;
-                        }
-
-                        if (!existingNotification.read_at) {
-                            preservedChannelSentAt =
-                                existingNotification.channel_sent_at;
-                            alreadySentViaTelegram =
-                                existingNotification.wasChannelRecentlySent(
-                                    'telegram',
-                                    24 * 60 * 60 * 1000
-                                );
-                            await existingNotification.destroy();
-                        } else {
-                            continue;
-                        }
-                    }
+                    if (alreadyAnnounced) continue;
 
                     const notification = await Notification.createNotification({
                         userId: task.user_id,
                         type: 'task_due_soon',
                         title: 'Task is now active',
                         message: `Your task "${task.name}" is now available to work on`,
-                        sources: reminderSources(user, 'deferUntil'),
+                        sources: [
+                            ...(holdTelegram ? ['telegram'] : []),
+                            ...reminderSources(user, 'deferUntil'),
+                        ],
                         data: {
                             taskUid: task.uid,
                             taskName: task.name,
@@ -133,12 +128,11 @@ async function checkDeferredTasks() {
                             reason: 'defer_until_reached',
                         },
                         sentAt: new Date(),
-                        channel_sent_at: preservedChannelSentAt,
                     });
 
                     notificationsCreated++;
 
-                    if (wantsTelegram && !alreadySentViaTelegram) {
+                    if (wantsTelegram && !holdTelegram) {
                         activatedForTelegram.push({ task, notification });
                     }
                 } catch (error) {
@@ -149,7 +143,7 @@ async function checkDeferredTasks() {
                 }
             }
 
-            if (wantsTelegram && activatedForTelegram.length > 0) {
+            if (activatedForTelegram.length > 0) {
                 await sendBatchedDeferredTelegramMessage(
                     user,
                     activatedForTelegram

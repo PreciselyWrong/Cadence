@@ -28,7 +28,7 @@ describe('Apprise notification preferences', () => {
 
     it('adds apprise next to push for reminders', () => {
         const user = userWith({
-            dueTasks: { push: true, apprise: true },
+            dueTasks: { push: true, apprise: true, desktop: false },
         });
         expect(reminderSources(user, 'dueTasks')).toEqual(['push', 'apprise']);
     });

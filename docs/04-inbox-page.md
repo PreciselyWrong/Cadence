@@ -202,6 +202,20 @@ Write a date in plain English and it becomes the task's due date:
 
 `daily`, `weekly` and `monthly` only count as the last word, so `Write weekly report` stays a plain name.
 
+French phrases work too: `tous les jours`, `chaque jour`, `tous les jours ouvrés`, `tous les lundis`, `chaque mardi`, `tous les lundis et jeudis`, `tous les 3 jours`, `toutes les deux semaines`, `chaque semaine`, `chaque mois`.
+
+**Time of day.** A recurrence keeps a time written next to it: `Standup every Monday at 9am`, `Standup tous les lundis à 9h`, `Yoga chaque mardi à 18h30`. The task is created with that time (every occurrence then shows at that time in the Calendar), and the time leaves the name with the recurrence phrase. A clock time needs a marker: `at` or `à` before it (`at 9am`, `at 14:00`, `à 9h`, `à 9h30`), a colon (`14:00`), or `am`/`pm`. A bare `9h` has no marker and reads as a duration (below).
+
+### 5b. Duration
+
+`1h`, `1 h`, `1.5h`, `30 min`, `1h30`, `1h 30 min`, or after a keyword (`pendant 45 min`, `for 30 min`, `durée 20 min`) set the task's estimate (`estimated_minutes`), bounded to 5 minutes - 12 hours. The words leave the name. Calendar blocks use the estimate, an hour when there is none.
+
+- A time with a marker is never a duration: `à 9h` and `at 9am` are times. A bare hour count above 12 (`15h`, `15h30`) looks like a clock time and is left in the name, unless a keyword makes it explicit (`pendant 15h` is 12 hours).
+- A bare `9h30` with no `à` or `at` is read as a duration of 9 h 30.
+- A rate is not a duration: `every 30 min` and `tous les 2 h` stay as they are.
+- A time attached to a date (`Dentist tomorrow at 3pm for 1h30`, `demain 15h`) stays the due time; only the rest can be a duration. A recurrence time and a duration can be given together: `Standup tous les lundis à 9h30 pendant 45 min`.
+- The analysis returns it as `parsed_estimated_minutes`.
+
 ### 6. People (@person)
 
 **Syntax:** `@name` or `@"Full Name"`
@@ -226,7 +240,7 @@ Write a date in plain English and it becomes the task's due date:
 After parsing, the system creates "cleaned content":
 - Original: `Review contract tomorrow @Maria +ClientWork #urgent`
 - Cleaned: `Review contract`
-- Tags, projects, the date or recurrence phrase and a matched person are stripped
+- Tags, projects, the date or recurrence phrase (with the time written next to a recurrence), a duration and a matched person are stripped
 - A word that only introduces the date goes with it: `Pay the bill until next thursday` and `Send report by friday` become `Pay the bill` and `Send report` (`until`, `till`, `by`, `before`, `due`, `due by`, `due on`). A phrase with a time stays in the title, and so does its lead word
 - Cleaned version is used as task name, note title, or project name
 - Opening an inbox item shows the cleaned text in its edit box. The stripped words are carried: they show as chips (date, tags, project, person, area), count when the item is saved as a task, note or project, and are added back to the end of the first line when the edited text is saved. A chip's × removes that word. Saving the box untouched changes nothing

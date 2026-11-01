@@ -259,6 +259,7 @@ async function detachOccurrence(task, { occurrenceDate, dueDate, timezone }) {
                           status: Task.STATUS.NOT_STARTED,
                           completed_at: null,
                           due_date: advance.nextDueDate,
+                          ...advance.reminderFields,
                       }
                     : {
                           status: Task.STATUS.DONE,

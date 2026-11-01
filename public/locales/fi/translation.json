@@ -1673,7 +1673,11 @@
     "nameRequired": "Tehtävän nimi on pakollinen",
     "deferAfterDueError": "Lykkäyspäivä ei voi olla eräpäivän jälkeen",
     "untitled": "Nimetön tehtävä",
-    "instanceOfShort": "Esiintymä"
+    "instanceOfShort": "Esiintymä",
+    "reminder": "Muistutus",
+    "reminderPlaceholder": "Valitse muistutuksen päivä ja kellonaika",
+    "noReminder": "Ei muistutusta",
+    "reminderUpdateError": "Muistutuksen päivitys epäonnistui"
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -2918,7 +2922,8 @@
       "inApp": "Sovelluksessa",
       "email": "Sähköposti",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Tietokone"
     },
     "types": {
       "dueTasks": "Erääntyneet tehtävät",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Myöhästyneet projektit",
       "taskAssigned": "Tehtävä annettu",
       "habitReminders": "Tapamuistutukset",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Tehtävämuistutukset"
     },
     "descriptions": {
       "dueTasks": "Tehtävät, jotka erääntyvät 24 tunnin sisällä",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Projektit, joiden eräpäivä on mennyt",
       "taskAssigned": "Tehtävä on annettu sinulle jonkun muun toimesta",
       "habitReminders": "Tavalle asetettuna muistutusaikana, kun se on vielä avoinna",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Tehtävälle asettamasi aika. Puhelimesi soi; lisää Tietokone, jos haluat tietokoneenkin soivan"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Huom:",
-      "message": "Sähköposti- ja Push-ilmoitukset ovat tulossa pian. Sovelluksen sisäiset ja Telegram-ilmoitukset ovat tällä hetkellä saatavilla."
+      "message": "Sähköposti- ja Push-ilmoitukset ovat tulossa pian. Sovelluksen sisäiset ja Telegram-ilmoitukset ovat tällä hetkellä saatavilla.",
+      "phoneRings": "Tehtävämuistutukset soivat puhelimessasi. Tietokone soi vain, jos otat Tietokone-valinnan käyttöön tällä rivillä."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Hiljaiset tunnit",
+      "description": "Tänä aikana mikään ei soi: push-, Telegram-, Apprise- ja tietokoneilmoitukset odottavat, kunnes aika päättyy. Löydät ne silti sovelluksesta. Ajat noudattavat profiilisi aikavyöhykettä.",
+      "enable": "Hiljaiset tunnit",
+      "from": "Alkaen",
+      "to": "Päättyen"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Ei aluetta",
     "unassigned": "Ei kukaan",
     "reopen": "Avaa uudelleen",
-    "complete": "Merkitse valmiiksi"
+    "complete": "Merkitse valmiiksi",
+    "more": "Lisää"
   },
   "datePopover": {
     "today": "Tänään",

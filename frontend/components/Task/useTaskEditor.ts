@@ -217,6 +217,11 @@ export const useTaskEditor = (
         );
     };
 
+    const changeReminder = (iso: string | null) => {
+        setError(null);
+        void run({ reminder_at: iso ?? null }, (s) => s.setReminderAt(iso));
+    };
+
     // Closing never loses what was typed but not yet committed
     const flush = () => {
         void commitTitle();
@@ -346,6 +351,7 @@ export const useTaskEditor = (
         changeDue,
         changeStart,
         changeDefer,
+        changeReminder,
         flush,
         reset,
         done,

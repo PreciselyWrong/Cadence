@@ -1673,7 +1673,11 @@
     "nameRequired": "Görev adı gerekli",
     "deferAfterDueError": "Erteleme tarihi bitiş tarihinden sonra olamaz",
     "untitled": "Adsız görev",
-    "instanceOfShort": "Tekrar"
+    "instanceOfShort": "Tekrar",
+    "reminder": "Hatırlatıcı",
+    "reminderPlaceholder": "Hatırlatıcının tarih ve saatini seçin",
+    "noReminder": "Hatırlatıcı yok",
+    "reminderUpdateError": "Hatırlatıcı güncellenemedi"
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -2918,7 +2922,8 @@
       "inApp": "Uygulama İçi",
       "email": "E-posta",
       "push": "Anlık bildirim",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Bilgisayar"
     },
     "types": {
       "dueTasks": "Vadesi Gelen Görevler",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Vadesi Geçmiş Projeler",
       "taskAssigned": "Görev Atandı",
       "habitReminders": "Alışkanlık hatırlatmaları",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Görev hatırlatıcıları"
     },
     "descriptions": {
       "dueTasks": "24 saat içinde vadesi gelen görevler",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Vade tarihini geçmiş projeler",
       "taskAssigned": "Bir görev başka biri tarafından size atandı",
       "habitReminders": "Bir alışkanlığa ayarlanan hatırlatma saatinde, alışkanlık hâlâ açıkken",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Bir göreve koyduğunuz saat. Telefonunuz çalar; bilgisayarın da çalmasını istiyorsanız Bilgisayar'ı ekleyin"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Not:",
-      "message": "E-posta ve Push bildirimleri yakında geliyor. Uygulama içi ve Telegram bildirimleri şu anda mevcuttur."
+      "message": "E-posta ve Push bildirimleri yakında geliyor. Uygulama içi ve Telegram bildirimleri şu anda mevcuttur.",
+      "phoneRings": "Görev hatırlatıcıları telefonunuzda çalar. Bilgisayar yalnızca bu satırda Bilgisayar'ı açarsanız çalar."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Sessiz saatler",
+      "description": "Bu aralıkta hiçbir şey çalmaz: push, Telegram, Apprise ve bilgisayar bildirimleri bitişi bekler. Uygulamada yine bulabilirsiniz. Saatler profilinizin saat dilimini izler.",
+      "enable": "Sessiz saatler",
+      "from": "Başlangıç",
+      "to": "Bitiş"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Alan yok",
     "unassigned": "Kimse",
     "reopen": "Yeniden aç",
-    "complete": "Tamamla"
+    "complete": "Tamamla",
+    "more": "Daha fazla"
   },
   "datePopover": {
     "today": "Bugün",

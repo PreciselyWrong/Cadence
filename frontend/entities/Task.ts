@@ -46,7 +46,7 @@ export interface Task {
     start_date?: string | null;
     start_time?: string | null;
     defer_until?: string;
-    reminder_at?: string;
+    reminder_at?: string | null;
     estimated_minutes?: number | null;
     pinned?: boolean;
     pinned_at?: string | null;

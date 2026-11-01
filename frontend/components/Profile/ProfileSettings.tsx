@@ -170,6 +170,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             },
         },
         notification_preferences: null,
+        quiet_hours: null,
         keyboard_shortcuts: null,
         ai_profile: '',
         currentPassword: '',
@@ -612,6 +613,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     },
                     notification_preferences:
                         data.notification_preferences || null,
+                    quiet_hours: data.quiet_hours || null,
                     keyboard_shortcuts:
                         data.keyboard_shortcuts || getDefaultConfig(),
                     ai_profile: data.ai_profile || '',
@@ -1930,6 +1932,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                             ...prev,
                                             notification_preferences:
                                                 preferences,
+                                        }))
+                                    }
+                                    quietHours={formData.quiet_hours}
+                                    onQuietHoursChange={(quietHours) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            quiet_hours: quietHours,
                                         }))
                                     }
                                 />

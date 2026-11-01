@@ -982,6 +982,10 @@ router.patch('/task/:uid', taskWriteGuards, async (req, res) => {
                 taskAttributes.status = Task.STATUS.NOT_STARTED;
                 taskAttributes.completed_at = null;
                 taskAttributes.due_date = recurringOccurrence.nextDueDate;
+                Object.assign(
+                    taskAttributes,
+                    recurringOccurrence.reminderFields
+                );
             }
         }
 

@@ -1,6 +1,9 @@
 const { Task, Notification, User } = require('../../../../models');
 const { checkDueTasks } = require('../../../../modules/tasks/dueTaskService');
+const telegramPoller = require('../../../../modules/telegram/telegramPoller');
 const bcrypt = require('bcrypt');
+
+const inHours = (hours) => new Date(Date.now() + hours * 60 * 60 * 1000);
 
 describe('dueTaskService', () => {
     let user;
@@ -9,380 +12,179 @@ describe('dueTaskService', () => {
         user = await User.create({
             email: 'test@example.com',
             password_digest: await bcrypt.hash('password123', 10),
-            notification_preferences: {
-                inApp: {
-                    task_due_soon: true,
-                    task_overdue: true,
-                },
-            },
         });
     });
 
-    describe('checkDueTasks', () => {
-        describe('notification deduplication', () => {
-            it('should delete existing unread notification before creating a new one', async () => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
 
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                // Create initial notification
-                const firstNotification = await Notification.createNotification(
-                    {
-                        userId: user.id,
-                        type: 'task_due_soon',
-                        title: 'Task due soon',
-                        message: 'Your task "Test Task" is due tomorrow',
-                        data: {
-                            taskUid: task.uid,
-                            taskName: task.name,
-                            dueDate: task.due_date,
-                            isOverdue: false,
-                        },
-                    }
-                );
-
-                expect(firstNotification.read_at).toBeFalsy();
-
-                // Run the check again (simulating the next day's cron job)
-                await checkDueTasks();
-
-                // First notification should be deleted
-                const deletedNotification = await Notification.findByPk(
-                    firstNotification.id
-                );
-                expect(deletedNotification).toBeNull();
-
-                // New notification should exist
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-                expect(notifications[0].id).not.toBe(firstNotification.id);
-                expect(notifications[0].data.taskUid).toBe(task.uid);
-            });
-
-            it('should not create duplicate if previous notification was read', async () => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                // Create and mark as read
-                const firstNotification = await Notification.createNotification(
-                    {
-                        userId: user.id,
-                        type: 'task_due_soon',
-                        title: 'Task due soon',
-                        message: 'Your task "Test Task" is due tomorrow',
-                        data: {
-                            taskUid: task.uid,
-                            taskName: task.name,
-                            dueDate: task.due_date,
-                            isOverdue: false,
-                        },
-                    }
-                );
-
-                await firstNotification.markAsRead();
-
-                // Run the check again
-                const result = await checkDueTasks();
-
-                // Should not create a new notification
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-                expect(notifications[0].id).toBe(firstNotification.id);
-                expect(result.notificationsCreated).toBe(0);
-            });
-
-            it('should not create duplicate if previous notification was dismissed', async () => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                // Create and dismiss
-                const firstNotification = await Notification.createNotification(
-                    {
-                        userId: user.id,
-                        type: 'task_due_soon',
-                        title: 'Task due soon',
-                        message: 'Your task "Test Task" is due tomorrow',
-                        data: {
-                            taskUid: task.uid,
-                            taskName: task.name,
-                            dueDate: task.due_date,
-                            isOverdue: false,
-                        },
-                    }
-                );
-
-                await firstNotification.dismiss();
-
-                // Run the check again
-                const result = await checkDueTasks();
-
-                // Should not create a new notification
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-                expect(notifications[0].id).toBe(firstNotification.id);
-                expect(result.notificationsCreated).toBe(0);
-            });
-
-            it('should handle transition from task_due_soon to task_overdue', async () => {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: yesterday,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                // Create task_due_soon notification (from when it was due tomorrow)
-                await Notification.createNotification({
-                    userId: user.id,
-                    type: 'task_due_soon',
-                    title: 'Task due soon',
-                    message: 'Your task "Test Task" is due tomorrow',
-                    data: {
-                        taskUid: task.uid,
-                        taskName: task.name,
-                        dueDate: task.due_date,
-                        isOverdue: false,
-                    },
-                });
-
-                // Run the check (task is now overdue)
-                await checkDueTasks();
-
-                // Should create task_overdue notification
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                    },
-                    order: [['created_at', 'DESC']],
-                });
-
-                // Both notifications should exist (different types)
-                expect(notifications.length).toBe(2);
-                expect(notifications[0].type).toBe('task_overdue');
-                expect(notifications[1].type).toBe('task_due_soon');
-            });
-
-            it('should only keep one notification for the same overdue task over multiple days', async () => {
-                const threeDaysAgo = new Date();
-                threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: threeDaysAgo,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                // Simulate 3 days of cron jobs
-                for (let i = 0; i < 3; i++) {
-                    await checkDueTasks();
-                }
-
-                // Should only have 1 notification
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_overdue',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-                expect(notifications[0].data.taskUid).toBe(task.uid);
-            });
+    const createTask = (overrides = {}) =>
+        Task.create({
+            name: 'Test Task',
+            user_id: user.id,
+            due_date: inHours(20),
+            status: Task.STATUS.NOT_STARTED,
+            ...overrides,
         });
 
-        describe('basic functionality', () => {
-            it('should create notification for task due tomorrow', async () => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                const result = await checkDueTasks();
-
-                expect(result.success).toBe(true);
-                expect(result.notificationsCreated).toBe(1);
-
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-            });
-
-            it('should create notification for overdue task', async () => {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-
-                await Task.create({
-                    name: 'Overdue Task',
-                    user_id: user.id,
-                    due_date: yesterday,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                const result = await checkDueTasks();
-
-                expect(result.success).toBe(true);
-                expect(result.notificationsCreated).toBe(1);
-
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_overdue',
-                    },
-                });
-
-                expect(notifications.length).toBe(1);
-            });
-
-            it('should not create notification for completed tasks', async () => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                await Task.create({
-                    name: 'Completed Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.DONE,
-                });
-
-                const result = await checkDueTasks();
-
-                expect(result.notificationsCreated).toBe(0);
-            });
+    const dueSoon = () =>
+        Notification.findAll({
+            where: { user_id: user.id, type: 'task_due_soon' },
         });
 
-        describe('Telegram rate limiting', () => {
-            const telegramPoller = require('../../../../modules/telegram/telegramPoller');
+    describe('due soon', () => {
+        it('notifies once for a task due within 24 hours', async () => {
+            const task = await createTask();
 
-            beforeEach(() => {
-                jest.spyOn(
-                    telegramPoller,
-                    'sendTelegramMessage'
-                ).mockResolvedValue({ ok: true });
-            });
+            const first = await checkDueTasks();
+            const second = await checkDueTasks();
 
-            afterEach(() => {
-                jest.restoreAllMocks();
-            });
+            expect(first.notificationsCreated).toBe(1);
+            expect(second.notificationsCreated).toBe(0);
+            const notifications = await dueSoon();
+            expect(notifications).toHaveLength(1);
+            expect(notifications[0].data.taskUid).toBe(task.uid);
+            expect(notifications[0].level).toBe('warning');
+        });
 
-            it('should not resend Telegram if notification recreated within 24 hours', async () => {
-                // Setup user with Telegram enabled
-                user.telegram_bot_token =
-                    '123456789:ABCdefGHIjklMNOPQRSTUVwxyz-12345678';
-                user.telegram_chat_id = '123456789';
-                user.notification_preferences = {
+        it('ignores tasks due later than 24 hours', async () => {
+            await createTask({ due_date: inHours(40) });
+            const result = await checkDueTasks();
+            expect(result.notificationsCreated).toBe(0);
+        });
+
+        it('never creates an overdue notification', async () => {
+            await createTask({ due_date: inHours(-30) });
+
+            const result = await checkDueTasks();
+
+            expect(result.notificationsCreated).toBe(0);
+            expect(
+                await Notification.count({ where: { user_id: user.id } })
+            ).toBe(0);
+        });
+
+        it('does not notify for completed tasks', async () => {
+            await createTask({ status: Task.STATUS.DONE });
+            const result = await checkDueTasks();
+            expect(result.notificationsCreated).toBe(0);
+        });
+
+        it('keeps the same row when the countdown text changes', async () => {
+            const task = await createTask({ due_date: inHours(20) });
+            await checkDueTasks();
+            const [original] = await dueSoon();
+            await Notification.update(
+                { message: 'stale countdown' },
+                { where: { id: original.id } }
+            );
+
+            await checkDueTasks();
+
+            const notifications = await dueSoon();
+            expect(notifications).toHaveLength(1);
+            expect(notifications[0].id).toBe(original.id);
+            expect(notifications[0].uid).toBe(original.uid);
+            expect(notifications[0].created_at).toEqual(original.created_at);
+            expect(notifications[0].message).toContain('hours');
+            expect(notifications[0].data.taskUid).toBe(task.uid);
+        });
+
+        it('updates an unread notification in place when the due date moves', async () => {
+            const task = await createTask({ due_date: inHours(20) });
+            await checkDueTasks();
+            const [original] = await dueSoon();
+
+            await task.update({ due_date: inHours(5) });
+            await checkDueTasks();
+
+            const notifications = await dueSoon();
+            expect(notifications).toHaveLength(1);
+            expect(notifications[0].uid).toBe(original.uid);
+            expect(new Date(notifications[0].data.dueDate).getTime()).toBe(
+                task.due_date.getTime()
+            );
+        });
+
+        it('does not bring back a read notification for the same due date', async () => {
+            await createTask();
+            await checkDueTasks();
+            const [original] = await dueSoon();
+            await original.markAsRead();
+
+            const result = await checkDueTasks();
+
+            expect(result.notificationsCreated).toBe(0);
+            expect(await dueSoon()).toHaveLength(1);
+        });
+
+        it('does not bring back a dismissed notification', async () => {
+            await createTask();
+            await checkDueTasks();
+            const [original] = await dueSoon();
+            await original.dismiss();
+
+            const result = await checkDueTasks();
+
+            expect(result.notificationsCreated).toBe(0);
+            expect(await dueSoon()).toHaveLength(1);
+        });
+
+        it('asks the desktop client to show it by default', async () => {
+            await createTask();
+            await checkDueTasks();
+            const [notification] = await dueSoon();
+            expect(notification.sources).toContain('desktop');
+        });
+    });
+
+    describe('Telegram', () => {
+        beforeEach(async () => {
+            jest.spyOn(telegramPoller, 'sendTelegramMessage').mockResolvedValue(
+                { ok: true }
+            );
+            await user.update({
+                telegram_bot_token:
+                    '123456789:ABCdefGHIjklMNOPQRSTUVwxyz-12345678',
+                telegram_chat_id: '123456789',
+                notification_preferences: {
                     dueTasks: { inApp: true, telegram: true },
-                    overdueTasks: { inApp: true, telegram: true },
-                };
-                await user.save();
-
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                const task = await Task.create({
-                    name: 'Test Task',
-                    user_id: user.id,
-                    due_date: tomorrow,
-                    status: Task.STATUS.NOT_STARTED,
-                });
-
-                const sendTelegramSpy = jest.spyOn(
-                    telegramPoller,
-                    'sendTelegramMessage'
-                );
-
-                // First check - should send one batched Telegram message
-                await checkDueTasks();
-
-                const firstCallCount = sendTelegramSpy.mock.calls.length;
-                expect(firstCallCount).toBeGreaterThan(0);
-
-                // Get the created notification
-                const notification = await Notification.findOne({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                    order: [['created_at', 'DESC']],
-                });
-
-                expect(notification).not.toBeNull();
-                expect(notification.channel_sent_at).toBeDefined();
-                expect(notification.channel_sent_at.telegram).toBeDefined();
-
-                // Verify notification is still within 24h threshold
-                expect(notification.wasChannelRecentlySent('telegram')).toBe(
-                    true
-                );
-
-                sendTelegramSpy.mockClear();
-
-                // Second check within 24h - notification will be recreated but Telegram should NOT be resent
-                await checkDueTasks();
-
-                const secondCallCount = sendTelegramSpy.mock.calls.length;
-                expect(secondCallCount).toBe(0);
-
-                // Notification should still exist (recreated in-app)
-                const notifications = await Notification.findAll({
-                    where: {
-                        user_id: user.id,
-                        type: 'task_due_soon',
-                    },
-                });
-                expect(notifications.length).toBe(1);
+                },
             });
+        });
+
+        it('sends one due-soon message and never repeats it', async () => {
+            await createTask();
+
+            await checkDueTasks();
+            expect(telegramPoller.sendTelegramMessage).toHaveBeenCalledTimes(1);
+            const text = telegramPoller.sendTelegramMessage.mock.calls[0][2];
+            expect(text).toContain('Test Task');
+
+            telegramPoller.sendTelegramMessage.mockClear();
+            await checkDueTasks();
+            expect(telegramPoller.sendTelegramMessage).not.toHaveBeenCalled();
+        });
+
+        it('sends nothing for an overdue task', async () => {
+            await createTask({ due_date: inHours(-30) });
+            await checkDueTasks();
+            expect(telegramPoller.sendTelegramMessage).not.toHaveBeenCalled();
+        });
+
+        it('holds the Telegram message during quiet hours', async () => {
+            await user.update({
+                quiet_hours: { enabled: true, start: '00:00', end: '23:59' },
+            });
+            await createTask();
+
+            await checkDueTasks();
+
+            expect(telegramPoller.sendTelegramMessage).not.toHaveBeenCalled();
+            const [notification] = await dueSoon();
+            expect(notification.sources).toContain('telegram');
+            expect(notification.deliver_after).not.toBeNull();
         });
     });
 });

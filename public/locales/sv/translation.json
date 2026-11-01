@@ -1673,7 +1673,11 @@
     "nameRequired": "Uppgiftsnamn krävs",
     "deferAfterDueError": "Uppskjutningsdatum kan inte vara efter förfallodatumet",
     "untitled": "Namnlös uppgift",
-    "instanceOfShort": "Förekomst"
+    "instanceOfShort": "Förekomst",
+    "reminder": "Påminnelse",
+    "reminderPlaceholder": "Välj datum och tid för påminnelsen",
+    "noReminder": "Ingen påminnelse",
+    "reminderUpdateError": "Det gick inte att uppdatera påminnelsen"
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -2918,7 +2922,8 @@
       "inApp": "I appen",
       "email": "E-post",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Dator"
     },
     "types": {
       "dueTasks": "Förfallna uppgifter",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Överfallna projekt",
       "taskAssigned": "Uppgift tilldelad",
       "habitReminders": "Vanepåminnelser",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Uppgiftspåminnelser"
     },
     "descriptions": {
       "dueTasks": "Uppgifter som förfaller inom 24 timmar",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Projekt som har passerat sitt förfallodatum",
       "taskAssigned": "En uppgift har tilldelats dig av någon annan",
       "habitReminders": "Vid påminnelsetiden för en vana, så länge den fortfarande är öppen",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Tiden du anger på en uppgift. Din telefon ringer; lägg till Dator om du vill att datorn också ska ringa"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Notera:",
-      "message": "E-post och push-notifikationer kommer snart. In-app och Telegram-notifikationer är för närvarande tillgängliga."
+      "message": "E-post och push-notifikationer kommer snart. In-app och Telegram-notifikationer är för närvarande tillgängliga.",
+      "phoneRings": "Uppgiftspåminnelser ringer på din telefon. Datorn ringer bara om du slår på Dator på den här raden."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Tysta timmar",
+      "description": "Under det här tidsfönstret ringer inget: push-, Telegram-, Apprise- och datoraviseringar väntar tills det är slut. Du hittar dem fortfarande i appen. Tiderna följer din profils tidszon.",
+      "enable": "Tysta timmar",
+      "from": "Från",
+      "to": "Till"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Inget område",
     "unassigned": "Ingen",
     "reopen": "Öppna igen",
-    "complete": "Slutför"
+    "complete": "Slutför",
+    "more": "Mer"
   },
   "datePopover": {
     "today": "Idag",

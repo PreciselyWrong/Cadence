@@ -1651,7 +1651,11 @@
     "nameRequired": "El nombre de la tarea es obligatorio",
     "deferAfterDueError": "La fecha de aplazamiento no puede ser posterior al vencimiento",
     "untitled": "Tarea sin título",
-    "instanceOfShort": "Ocurrencia"
+    "instanceOfShort": "Ocurrencia",
+    "reminder": "Recordatorio",
+    "reminderPlaceholder": "Elige la fecha y la hora del recordatorio",
+    "noReminder": "Sin recordatorio",
+    "reminderUpdateError": "No se pudo actualizar el recordatorio"
   },
   "dateIndicators": {
     "today": "HOY",
@@ -2911,7 +2915,8 @@
       "inApp": "En la aplicación",
       "email": "Correo Electrónico",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Escritorio"
     },
     "types": {
       "dueTasks": "Tareas Vencidas",
@@ -2921,7 +2926,8 @@
       "overdueProjects": "Proyectos Atrasados",
       "taskAssigned": "Tarea Asignada",
       "habitReminders": "Recordatorios de hábitos",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Recordatorios de tareas"
     },
     "descriptions": {
       "dueTasks": "Tareas que vencen en 24 horas",
@@ -2931,7 +2937,8 @@
       "overdueProjects": "Proyectos que han pasado su fecha de vencimiento",
       "taskAssigned": "Se te asignó una tarea por otra persona",
       "habitReminders": "A la hora de recordatorio del hábito, mientras siga pendiente",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "La hora que fijas en una tarea. Suena tu móvil; añade Escritorio si quieres que suene también el ordenador"
     },
     "telegram": {
       "notConfigured": {
@@ -2952,7 +2959,8 @@
     },
     "info": {
       "title": "Nota:",
-      "message": "Las notificaciones por correo electrónico y Push llegarán pronto. Las notificaciones en la aplicación y de Telegram están disponibles actualmente."
+      "message": "Las notificaciones por correo electrónico y Push llegarán pronto. Las notificaciones en la aplicación y de Telegram están disponibles actualmente.",
+      "phoneRings": "Los recordatorios de tareas suenan en tu móvil. El escritorio solo suena si activas Escritorio en esta fila."
     },
     "webhooks": {
       "events": {
@@ -3024,6 +3032,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Horas de silencio",
+      "description": "Durante este intervalo no suena nada: las notificaciones push, Telegram, Apprise y de escritorio esperan a que termine. Las sigues viendo en la aplicación. Las horas siguen la zona horaria de tu perfil.",
+      "enable": "Horas de silencio",
+      "from": "Desde",
+      "to": "Hasta"
     }
   },
   "projectStatus": {
@@ -4565,7 +4580,8 @@
     "noArea": "Sin área",
     "unassigned": "Nadie",
     "reopen": "Reabrir",
-    "complete": "Completar"
+    "complete": "Completar",
+    "more": "Más"
   },
   "datePopover": {
     "today": "Hoy",

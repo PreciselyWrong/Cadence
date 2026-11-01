@@ -1677,7 +1677,11 @@
     "nameRequired": "Укажите название задачи",
     "deferAfterDueError": "Дата откладывания не может быть позже срока",
     "untitled": "Задача без названия",
-    "instanceOfShort": "Повторение"
+    "instanceOfShort": "Повторение",
+    "reminder": "Напоминание",
+    "reminderPlaceholder": "Выберите дату и время напоминания",
+    "noReminder": "Нет напоминания",
+    "reminderUpdateError": "Не удалось обновить напоминание"
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -2930,7 +2934,8 @@
       "inApp": "В приложении",
       "email": "Электронная почта",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Компьютер"
     },
     "types": {
       "dueTasks": "Сроки задач",
@@ -2940,7 +2945,8 @@
       "overdueProjects": "Просроченные проекты",
       "taskAssigned": "Задача назначена",
       "habitReminders": "Напоминания о привычках",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Напоминания о задачах"
     },
     "descriptions": {
       "dueTasks": "Задачи, срок выполнения которых истекает в течение 24 часов",
@@ -2950,7 +2956,8 @@
       "overdueProjects": "Проекты, срок выполнения которых истек",
       "taskAssigned": "Задача была назначена вам кем-то другим",
       "habitReminders": "В заданное для привычки время напоминания, пока она не отмечена",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Время, заданное для задачи. Звонит телефон; включите «Компьютер», если должен звонить и компьютер"
     },
     "telegram": {
       "notConfigured": {
@@ -2971,7 +2978,8 @@
     },
     "info": {
       "title": "Примечание:",
-      "message": "Уведомления по электронной почте и Push скоро будут доступны. Уведомления в приложении и Telegram в настоящее время доступны."
+      "message": "Уведомления по электронной почте и Push скоро будут доступны. Уведомления в приложении и Telegram в настоящее время доступны.",
+      "phoneRings": "Напоминания о задачах звонят на телефоне. Компьютер звонит, только если включить «Компьютер» в этой строке."
     },
     "webhooks": {
       "events": {
@@ -3043,6 +3051,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Тихие часы",
+      "description": "В этот период ничего не звонит: push-, Telegram-, Apprise- и уведомления на компьютере ждут окончания. В приложении они остаются. Время указано в часовом поясе вашего профиля.",
+      "enable": "Тихие часы",
+      "from": "С",
+      "to": "До"
     }
   },
   "projectStatus": {
@@ -4589,7 +4604,8 @@
     "noArea": "Нет области",
     "unassigned": "Никто",
     "reopen": "Открыть снова",
-    "complete": "Выполнить"
+    "complete": "Выполнить",
+    "more": "Ещё"
   },
   "datePopover": {
     "today": "Сегодня",

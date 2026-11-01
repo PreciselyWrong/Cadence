@@ -102,3 +102,14 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - horizons « Mois » et « Trimestre » en plus de Saison et Année ;
   - liste d'envies : onglet « Liste d'envies » de la page Objectifs, groupes Avoir / Être / Faire avec « + Ajouter » par groupe, ni date ni horizon, jamais dans Aujourd'hui ni dans la barre latérale.
 - **Android** : lire `projects.next_task_uid` et `goals` par la synchro (entité `goal`, champs `title`, `why`, `horizon`, `target_date`, `status`, `color`, `bucket`, références `area_uid` et `parent_goal_uid` ; `goal_uid` sur tâches et projets ; schéma 3). À faire : action « Action suivante » dans le menu d'une tâche de projet (écrit `next_task_uid`, à effacer si la tâche est close) et ligne « Action suivante » sur l'en-tête et la carte du projet ; lien « Planifier une revue hebdo le vendredi » dans la revue (`POST /api/review/weekly-routine`, même règle d'existence) ; « Suggérer 5 domaines » sur l'écran des zones (noms localisés, sans doublon) ; écran Objectifs avec résultats clés sous l'objectif (progression calculée localement) et onglet Liste d'envies (Avoir / Être / Faire) ; horizons Mois et Trimestre. Entrée à inscrire dans `TODO.md` (`Now`) par l'agent Android.
+
+### 2026-11-01 — Notifications : une seule voix, heures calmes, rappel
+
+- **Problème** : « en retard » revenait par notification et par Telegram ; la même alerte sonnait partout ; aucun rappel réglable côté web ; rien pour la nuit.
+- **Décisions** (règles dans `docs/36-notifications.md`) :
+  - plus aucune notification ni message Telegram « en retard » (les clés `overdueTasks` et `overdueProjects` restent stockées mais leurs lignes sont masquées) ; « bientôt dû » part une fois par échéance et se met à jour sur place ; les résumés disent « Encore ouvert » avec la date ;
+  - réglages : colonne **Ordinateur** par type (désactivée par défaut pour les rappels de tâche, car le téléphone sonne ; activée pour « bientôt dû » et « tâche active »), ligne « Rappels de tâche », plus de colonne e-mail ni de ligne « Rappels d'habitudes » ;
+  - **Heures calmes** (`quiet_hours` sur le profil, `{enabled, start, end}`, fuseau du profil) : le fil in-app reçoit tout de suite, push, Telegram, Apprise et ordinateur attendent la fin de la plage ;
+  - champ **Rappel** : puce « Rappel » du panneau de tâche derrière « Plus » (visible dès qu'un rappel existe), carte « Rappel » sur la page de tâche ; une tâche récurrente décale son rappel avec l'échéance.
+- **Android** : lire `quiet_hours` (profil) pour ne pas sonner dans la plage ; garder les rappels de tâche locaux (le téléphone en est propriétaire) ; recevoir `reminder_at` et `reminder_sent_at` par la synchro ; retirer toute alerte « en retard » et dire « Encore ouvert » avec la date.
+

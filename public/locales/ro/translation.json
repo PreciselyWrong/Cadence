@@ -1677,7 +1677,11 @@
     "nameRequired": "Numele sarcinii este obligatoriu",
     "deferAfterDueError": "Data amânării nu poate fi după scadență",
     "untitled": "Sarcină fără titlu",
-    "instanceOfShort": "Apariție"
+    "instanceOfShort": "Apariție",
+    "reminder": "Memento",
+    "reminderPlaceholder": "Alege data și ora mementoului",
+    "noReminder": "Niciun memento",
+    "reminderUpdateError": "Mementoul nu a putut fi actualizat"
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -2926,7 +2930,8 @@
       "inApp": "În aplicație",
       "email": "E-mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Calculator"
     },
     "types": {
       "dueTasks": "Sarcini Scadente",
@@ -2936,7 +2941,8 @@
       "overdueProjects": "Proiecte Întârziate",
       "taskAssigned": "Sarcină atribuită",
       "habitReminders": "Mementouri pentru obiceiuri",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Mementouri pentru sarcini"
     },
     "descriptions": {
       "dueTasks": "Sarcini care sunt scadente în următoarele 24 de ore",
@@ -2946,7 +2952,8 @@
       "overdueProjects": "Proiecte care au depășit data limită",
       "taskAssigned": "O sarcină a fost atribuită de altcineva",
       "habitReminders": "La ora de reamintire setată pentru un obicei, cât timp este încă deschis",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Ora stabilită pe o sarcină. Sună telefonul; adaugă Calculator dacă vrei să sune și computerul"
     },
     "telegram": {
       "notConfigured": {
@@ -2967,7 +2974,8 @@
     },
     "info": {
       "title": "Notă:",
-      "message": "Notificările prin Email și Push vor fi disponibile în curând. Notificările în aplicație și pe Telegram sunt disponibile în prezent."
+      "message": "Notificările prin Email și Push vor fi disponibile în curând. Notificările în aplicație și pe Telegram sunt disponibile în prezent.",
+      "phoneRings": "Mementourile pentru sarcini sună pe telefon. Calculatorul sună doar dacă activezi Calculator pe acest rând."
     },
     "webhooks": {
       "events": {
@@ -3039,6 +3047,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Ore de liniște",
+      "description": "În acest interval nu sună nimic: notificările push, Telegram, Apprise și de pe calculator așteaptă finalul. Le găsești în continuare în aplicație. Orele urmează fusul orar al profilului.",
+      "enable": "Ore de liniște",
+      "from": "De la",
+      "to": "Până la"
     }
   },
   "projectStatus": {
@@ -4582,7 +4597,8 @@
     "noArea": "Fără zonă",
     "unassigned": "Nimeni",
     "reopen": "Redeschide",
-    "complete": "Finalizează"
+    "complete": "Finalizează",
+    "more": "Mai mult"
   },
   "datePopover": {
     "today": "Azi",

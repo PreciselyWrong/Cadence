@@ -23,6 +23,31 @@ const nextDueDateSkippingExdates = (task, fromDate, timezone = 'UTC') => {
     return next;
 };
 
+// A timed due date is a wall-clock time ("09:00 every Monday"), so stepping it
+// in UTC drifts by an hour across DST. Step the calendar date from local noon
+// (far from any DST gap) and rebuild the instant with the original local time.
+const calculateNextTimedDueDate = (task, fromDate, timezone) => {
+    const local = moment.tz(fromDate, timezone);
+    const wallTime = local.format('HH:mm:ss.SSS');
+    const localDate = local.format('YYYY-MM-DD');
+    const isWeekly = task.recurrence_type === 'weekly';
+
+    // Weekly stepping reads the weekday in the timezone; the other types read
+    // UTC calendar fields, so they get UTC noon of the local date.
+    const anchor = isWeekly
+        ? moment.tz(`${localDate} 12:00`, 'YYYY-MM-DD HH:mm', timezone).toDate()
+        : new Date(`${localDate}T12:00:00.000Z`);
+    const nextAnchor = advanceDueDate(task, anchor, timezone);
+    if (!nextAnchor) return null;
+
+    const nextDate = isWeekly
+        ? moment.tz(nextAnchor, timezone).format('YYYY-MM-DD')
+        : nextAnchor.toISOString().slice(0, 10);
+    return moment
+        .tz(`${nextDate} ${wallTime}`, 'YYYY-MM-DD HH:mm:ss.SSS', timezone)
+        .toDate();
+};
+
 const calculateNextDueDate = (task, fromDate, timezone = 'UTC') => {
     if (
         !task ||
@@ -33,6 +58,13 @@ const calculateNextDueDate = (task, fromDate, timezone = 'UTC') => {
         return null;
     }
 
+    if (task.due_has_time) {
+        return calculateNextTimedDueDate(task, fromDate, timezone);
+    }
+    return advanceDueDate(task, fromDate, timezone);
+};
+
+const advanceDueDate = (task, fromDate, timezone) => {
     const startDate = new Date(fromDate.getTime());
 
     switch (task.recurrence_type) {

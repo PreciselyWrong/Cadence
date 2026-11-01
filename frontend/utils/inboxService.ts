@@ -22,6 +22,8 @@ export interface InboxAnalysis {
     cleaned_content: string;
     parsed_due_date: string | null;
     parsed_due_time: string | null;
+    // "1h30", "pendant 45 min": the task's duration, in minutes.
+    parsed_estimated_minutes?: number | null;
     parsed_reminder_at: string | null;
     parsed_date_text: string | null;
     parsed_recurrence: InboxRecurrence | null;
@@ -83,6 +85,9 @@ export const applyAnalysisToTask = (
             next.due_time = analysis.parsed_due_time;
             next.due_has_time = true;
         }
+    }
+    if (analysis.parsed_estimated_minutes) {
+        next.estimated_minutes = analysis.parsed_estimated_minutes;
     }
     if (analysis.parsed_reminder_at) {
         next.reminder_at = analysis.parsed_reminder_at;

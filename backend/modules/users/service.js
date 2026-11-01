@@ -86,6 +86,7 @@ const { logError } = require('../../services/logService');
 const fs = require('fs').promises;
 const path = require('path');
 const { getConfig } = require('../../config/config');
+const { normalizeQuietHours } = require('../../utils/quietHours');
 
 const config = getConfig();
 
@@ -486,6 +487,7 @@ class UsersService {
             task_summary_frequency,
             ui_settings,
             notification_preferences,
+            quiet_hours,
             keyboard_shortcuts,
             ai_profile,
             currentPassword,
@@ -590,6 +592,19 @@ class UsersService {
         }
         if (notification_preferences !== undefined)
             allowedUpdates.notification_preferences = notification_preferences;
+        if (quiet_hours !== undefined) {
+            if (quiet_hours === null) {
+                allowedUpdates.quiet_hours = null;
+            } else {
+                const quiet = normalizeQuietHours(quiet_hours);
+                if (!quiet) {
+                    throw new ValidationError(
+                        'Quiet hours need enabled, start and end (HH:mm).'
+                    );
+                }
+                allowedUpdates.quiet_hours = quiet;
+            }
+        }
         if (keyboard_shortcuts !== undefined)
             allowedUpdates.keyboard_shortcuts = keyboard_shortcuts;
         if (ai_profile !== undefined)

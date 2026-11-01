@@ -19,6 +19,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: true,
                 },
                 overdueTasks: {
                     inApp: true,
@@ -26,6 +27,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 dueProjects: {
                     inApp: true,
@@ -33,6 +35,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: true,
                 },
                 overdueProjects: {
                     inApp: true,
@@ -40,6 +43,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 deferUntil: {
                     inApp: true,
@@ -47,6 +51,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: true,
                 },
                 taskAssigned: {
                     inApp: true,
@@ -54,13 +59,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
-                },
-                habitReminders: {
-                    inApp: true,
-                    email: false,
-                    push: false,
-                    telegram: false,
-                    apprise: false,
+                    desktop: false,
                 },
                 taskReminders: {
                     inApp: true,
@@ -68,6 +67,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 comments: {
                     inApp: true,
@@ -75,6 +75,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
             });
         });
@@ -294,8 +295,14 @@ describe('notificationPreferences utils', () => {
             const result = ensureNotificationPreferences(input);
 
             // Existing preferences should be preserved
-            expect(result.dueTasks).toEqual(input.dueTasks);
-            expect(result.overdueTasks).toEqual(input.overdueTasks);
+            expect(result.dueTasks).toEqual({
+                ...input.dueTasks,
+                desktop: true,
+            });
+            expect(result.overdueTasks).toEqual({
+                ...input.overdueTasks,
+                desktop: false,
+            });
 
             // Missing preferences should be added with defaults
             expect(result.dueProjects).toEqual({
@@ -304,6 +311,7 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: true,
             });
             expect(result.overdueProjects).toEqual({
                 inApp: true,
@@ -311,6 +319,7 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: false,
             });
             expect(result.deferUntil).toEqual({
                 inApp: true,
@@ -318,6 +327,7 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: true,
             });
         });
 
@@ -336,6 +346,7 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: true,
             });
             expect(result.overdueTasks).toEqual({
                 inApp: true,
@@ -343,6 +354,7 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: false,
             });
         });
 
@@ -354,6 +366,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: true,
                     apprise: false,
+                    desktop: false,
                 },
                 overdueTasks: {
                     inApp: true,
@@ -361,6 +374,7 @@ describe('notificationPreferences utils', () => {
                     push: true,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 dueProjects: {
                     inApp: true,
@@ -368,6 +382,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 overdueProjects: {
                     inApp: false,
@@ -375,6 +390,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
                 deferUntil: {
                     inApp: true,
@@ -382,6 +398,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: true,
                     apprise: false,
+                    desktop: false,
                 },
                 taskAssigned: {
                     inApp: false,
@@ -389,13 +406,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
-                },
-                habitReminders: {
-                    inApp: false,
-                    email: false,
-                    push: false,
-                    telegram: true,
-                    apprise: false,
+                    desktop: false,
                 },
                 taskReminders: {
                     inApp: false,
@@ -403,6 +414,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: true,
                     apprise: false,
+                    desktop: false,
                 },
                 comments: {
                     inApp: true,
@@ -410,6 +422,7 @@ describe('notificationPreferences utils', () => {
                     push: true,
                     telegram: false,
                     apprise: false,
+                    desktop: false,
                 },
             };
 
@@ -439,10 +452,14 @@ describe('notificationPreferences utils', () => {
                 push: false,
                 telegram: false,
                 apprise: false,
+                desktop: true,
             });
 
             // Valid type should be preserved
-            expect(result.overdueTasks).toEqual(input.overdueTasks);
+            expect(result.overdueTasks).toEqual({
+                ...input.overdueTasks,
+                desktop: false,
+            });
         });
     });
 
@@ -490,8 +507,58 @@ describe('notificationPreferences utils', () => {
                 'telegram',
                 'push',
             ]);
-            expect(deliverySources(user, 'task_due_soon')).toEqual(['push']);
+            expect(deliverySources(user, 'task_due_soon')).toEqual([
+                'push',
+                'desktop',
+            ]);
             expect(deliverySources(user, 'project_overdue')).toEqual([]);
         });
+    });
+});
+
+describe('desktop channel', () => {
+    const {
+        shouldSendDesktopNotification,
+        reminderSources,
+        deliverySources,
+        ensureNotificationPreferences,
+    } = require('../../../utils/notificationPreferences');
+
+    it('rings on the desktop by default for due soon and deferred tasks only', () => {
+        const user = { notification_preferences: null };
+        expect(shouldSendDesktopNotification(user, 'task_due_soon')).toBe(true);
+        expect(shouldSendDesktopNotification(user, 'deferUntil')).toBe(true);
+        expect(shouldSendDesktopNotification(user, 'task_reminder')).toBe(
+            false
+        );
+        expect(shouldSendDesktopNotification(user, 'comment_added')).toBe(
+            false
+        );
+    });
+
+    it('keeps task reminders off the desktop unless the user turns them on', () => {
+        const on = {
+            notification_preferences: { taskReminders: { desktop: true } },
+        };
+        expect(shouldSendDesktopNotification(on, 'task_reminder')).toBe(true);
+        expect(reminderSources(on, 'task_reminder')).toContain('desktop');
+    });
+
+    it('honours an explicit off for due soon', () => {
+        const off = {
+            notification_preferences: { dueTasks: { desktop: false } },
+        };
+        expect(shouldSendDesktopNotification(off, 'task_due_soon')).toBe(false);
+        expect(deliverySources(off, 'task_due_soon')).not.toContain('desktop');
+    });
+
+    it('fills desktop from defaults for stored preferences that predate it', () => {
+        const result = ensureNotificationPreferences({
+            dueTasks: { inApp: true },
+            taskReminders: { inApp: true },
+        });
+        expect(result.dueTasks.desktop).toBe(true);
+        expect(result.taskReminders.desktop).toBe(false);
+        expect(result.habitReminders).toBeUndefined();
     });
 });

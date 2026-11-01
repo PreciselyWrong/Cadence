@@ -32,6 +32,10 @@ This document explains how recurring tasks work in Cadence from a user behavior 
    - **Completion-based**: Next occurrence calculated from when you actually completed it
      - Example: Task due Monday, you complete it Wednesday → Next is 7 days from Wednesday
 
+**Time of day:** a recurring task with a due time (`due_has_time`) keeps its local wall-clock time. After a daylight-saving switch, 09:00 stays 09:00 in your timezone (the UTC instant changes by one hour). The calendar date is advanced in your timezone and the instant is rebuilt from the original local time, for daily, weekly and monthly patterns alike. In the Calendar, every occurrence of a timed task is drawn at that time with the task's estimate as its length (an hour without an estimate).
+
+**Reminders follow the due date:** when a recurring task moves to its next due date (done, skipped or moved), its reminder moves by the same distance and rings again for the new occurrence ([Notifications](36-notifications.md)).
+
 **Skipping an occurrence:** "Skip this occurrence" in the task's ... menu (or `POST /api/task/:uid/skip-occurrence`, or the `skip_task_occurrence` MCP tool) moves the task to its next due date without completing it. The occurrence is recorded with `skipped = true`, so it does not count in completion stats, the Today page or the daily plan. Skipping is refused for completed tasks and when the recurrence has no further occurrence.
 
 ---

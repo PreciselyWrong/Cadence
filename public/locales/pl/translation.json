@@ -1677,7 +1677,11 @@
     "nameRequired": "Nazwa zadania jest wymagana",
     "deferAfterDueError": "Data odroczenia nie może być po terminie",
     "untitled": "Zadanie bez tytułu",
-    "instanceOfShort": "Wystąpienie"
+    "instanceOfShort": "Wystąpienie",
+    "reminder": "Przypomnienie",
+    "reminderPlaceholder": "Wybierz datę i godzinę przypomnienia",
+    "noReminder": "Brak przypomnienia",
+    "reminderUpdateError": "Nie udało się zaktualizować przypomnienia"
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -2930,7 +2934,8 @@
       "inApp": "W aplikacji",
       "email": "E-mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Komputer"
     },
     "types": {
       "dueTasks": "Zadania do wykonania",
@@ -2940,7 +2945,8 @@
       "overdueProjects": "Projekty przeterminowane",
       "taskAssigned": "Zadanie przypisane",
       "habitReminders": "Przypomnienia o nawykach",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Przypomnienia o zadaniach"
     },
     "descriptions": {
       "dueTasks": "Zadania, które muszą być wykonane w ciągu 24 godzin",
@@ -2950,7 +2956,8 @@
       "overdueProjects": "Projekty, których termin minął",
       "taskAssigned": "Zadanie zostało przypisane do Ciebie przez kogoś innego",
       "habitReminders": "O godzinie przypomnienia ustawionej dla nawyku, dopóki jest otwarty",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Godzina ustawiona w zadaniu. Dzwoni telefon; dodaj Komputer, jeśli komputer też ma dzwonić"
     },
     "telegram": {
       "notConfigured": {
@@ -2971,7 +2978,8 @@
     },
     "info": {
       "title": "Uwaga:",
-      "message": "Powiadomienia e-mailowe i push będą dostępne wkrótce. Powiadomienia w aplikacji i na Telegramie są obecnie dostępne."
+      "message": "Powiadomienia e-mailowe i push będą dostępne wkrótce. Powiadomienia w aplikacji i na Telegramie są obecnie dostępne.",
+      "phoneRings": "Przypomnienia o zadaniach dzwonią na telefonie. Komputer dzwoni tylko wtedy, gdy włączysz Komputer w tym wierszu."
     },
     "webhooks": {
       "events": {
@@ -3043,6 +3051,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Godziny ciszy",
+      "description": "W tym przedziale nic nie dzwoni: powiadomienia push, Telegram, Apprise i na komputerze czekają do końca. Nadal znajdziesz je w aplikacji. Godziny wynikają ze strefy czasowej profilu.",
+      "enable": "Godziny ciszy",
+      "from": "Od",
+      "to": "Do"
     }
   },
   "projectStatus": {
@@ -4589,7 +4604,8 @@
     "noArea": "Brak obszaru",
     "unassigned": "Nikt",
     "reopen": "Otwórz ponownie",
-    "complete": "Zakończ"
+    "complete": "Zakończ",
+    "more": "Więcej"
   },
   "datePopover": {
     "today": "Dziś",

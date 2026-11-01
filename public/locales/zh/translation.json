@@ -1673,7 +1673,11 @@
     "nameRequired": "任务名称为必填项",
     "deferAfterDueError": "推迟日期不能晚于截止日期",
     "untitled": "未命名任务",
-    "instanceOfShort": "实例"
+    "instanceOfShort": "实例",
+    "reminder": "提醒",
+    "reminderPlaceholder": "选择提醒日期和时间",
+    "noReminder": "无提醒",
+    "reminderUpdateError": "更新提醒失败"
   },
   "projects": {
     "parentProject": "父项目",
@@ -2918,7 +2922,8 @@
       "inApp": "应用内",
       "email": "电子邮件",
       "push": "推送",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "桌面"
     },
     "types": {
       "dueTasks": "到期任务",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "逾期项目",
       "taskAssigned": "任务分配",
       "habitReminders": "习惯提醒",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "任务提醒"
     },
     "descriptions": {
       "dueTasks": "在24小时内到期的任务",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "已过截止日期的项目",
       "taskAssigned": "有人将任务分配给您",
       "habitReminders": "在习惯设定的提醒时间,且该习惯仍未完成时",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "你在任务上设置的时间。手机会响铃；如果希望电脑也响，请添加桌面"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "注意：",
-      "message": "电子邮件和推送通知即将推出。应用内和 Telegram 通知目前可用。"
+      "message": "电子邮件和推送通知即将推出。应用内和 Telegram 通知目前可用。",
+      "phoneRings": "任务提醒在手机上响铃。只有在此行开启桌面时，电脑才会响。"
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "免打扰时段",
+      "description": "此时段内不会有任何提示：推送、Telegram、Apprise 和桌面通知会等到结束后再发送。你仍可在应用中查看。时间遵循你个人资料的时区。",
+      "enable": "免打扰时段",
+      "from": "从",
+      "to": "到"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "无领域",
     "unassigned": "无人",
     "reopen": "重新打开",
-    "complete": "完成"
+    "complete": "完成",
+    "more": "更多"
   },
   "datePopover": {
     "today": "今天",

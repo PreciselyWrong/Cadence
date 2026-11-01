@@ -1677,7 +1677,11 @@
     "nameRequired": "Ime naloge je obvezno",
     "deferAfterDueError": "Datum odložitve ne sme biti po roku",
     "untitled": "Naloga brez naslova",
-    "instanceOfShort": "Ponovitev"
+    "instanceOfShort": "Ponovitev",
+    "reminder": "Opomnik",
+    "reminderPlaceholder": "Izberite datum in uro opomnika",
+    "noReminder": "Brez opomnika",
+    "reminderUpdateError": "Opomnika ni bilo mogoče posodobiti"
   },
   "projects": {
     "parentProject": "Nadrejeni projekt",
@@ -2930,7 +2934,8 @@
       "inApp": "V aplikaciji",
       "email": "E-pošta",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Računalnik"
     },
     "types": {
       "dueTasks": "Naloge, ki zapadejo",
@@ -2940,7 +2945,8 @@
       "overdueProjects": "Zamujeni projekti",
       "taskAssigned": "Naloga dodeljena",
       "habitReminders": "Opomniki za navade",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Opomniki za naloge"
     },
     "descriptions": {
       "dueTasks": "Naloge, ki zapadejo v 24 urah",
@@ -2950,7 +2956,8 @@
       "overdueProjects": "Projekti, ki so prešli rok",
       "taskAssigned": "Naloga je bila dodeljena vam s strani nekoga drugega",
       "habitReminders": "Ob uri opomnika, nastavljeni pri navadi, dokler je še odprta",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Čas, ki ga nastavite pri nalogi. Zvoni telefon; dodajte Računalnik, če želite, da zvoni tudi računalnik"
     },
     "telegram": {
       "notConfigured": {
@@ -2971,7 +2978,8 @@
     },
     "info": {
       "title": "Opomba:",
-      "message": "Obvestila po e-pošti in potisna obvestila kmalu prihajajo. Obvestila v aplikaciji in na Telegramu so trenutno na voljo."
+      "message": "Obvestila po e-pošti in potisna obvestila kmalu prihajajo. Obvestila v aplikaciji in na Telegramu so trenutno na voljo.",
+      "phoneRings": "Opomniki za naloge zvonijo na telefonu. Računalnik zvoni le, če v tej vrstici vklopite Računalnik."
     },
     "webhooks": {
       "events": {
@@ -3043,6 +3051,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Tihe ure",
+      "description": "V tem obdobju nič ne zvoni: obvestila push, Telegram, Apprise in v računalniku počakajo do konca. V aplikaciji jih še vedno najdete. Ure sledijo časovnemu pasu vašega profila.",
+      "enable": "Tihe ure",
+      "from": "Od",
+      "to": "Do"
     }
   },
   "projectStatus": {
@@ -4589,7 +4604,8 @@
     "noArea": "Brez območja",
     "unassigned": "Nihče",
     "reopen": "Ponovno odpri",
-    "complete": "Dokončaj"
+    "complete": "Dokončaj",
+    "more": "Več"
   },
   "datePopover": {
     "today": "Danes",

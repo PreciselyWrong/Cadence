@@ -1673,7 +1673,11 @@
     "nameRequired": "Tên công việc là bắt buộc",
     "deferAfterDueError": "Ngày hoãn không được sau hạn",
     "untitled": "Công việc không tiêu đề",
-    "instanceOfShort": "Lần xuất hiện"
+    "instanceOfShort": "Lần xuất hiện",
+    "reminder": "Nhắc nhở",
+    "reminderPlaceholder": "Chọn ngày và giờ nhắc nhở",
+    "noReminder": "Không có nhắc nhở",
+    "reminderUpdateError": "Không thể cập nhật nhắc nhở"
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -2918,7 +2922,8 @@
       "inApp": "Trong Ứng Dụng",
       "email": "Email",
       "push": "Thông Báo Đẩy",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Máy tính"
     },
     "types": {
       "dueTasks": "Công Việc Đến Hạn",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Dự Án Quá Hạn",
       "taskAssigned": "Nhiệm vụ đã được giao",
       "habitReminders": "Nhắc nhở thói quen",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Nhắc nhở công việc"
     },
     "descriptions": {
       "dueTasks": "Công việc đến hạn trong vòng 24 giờ",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Dự án đã qua hạn",
       "taskAssigned": "Một nhiệm vụ đã được giao cho bạn bởi người khác",
       "habitReminders": "Vào giờ nhắc đặt cho thói quen, khi thói quen đó vẫn còn mở",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Giờ bạn đặt cho một công việc. Điện thoại sẽ đổ chuông; bật Máy tính nếu muốn máy tính cũng kêu"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Lưu ý:",
-      "message": "Thông báo Email và Push sẽ sớm có. Thông báo trong ứng dụng và Telegram hiện đang có sẵn."
+      "message": "Thông báo Email và Push sẽ sớm có. Thông báo trong ứng dụng và Telegram hiện đang có sẵn.",
+      "phoneRings": "Nhắc nhở công việc kêu trên điện thoại. Máy tính chỉ kêu nếu bạn bật Máy tính ở dòng này."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Giờ yên tĩnh",
+      "description": "Trong khoảng này không có gì kêu: thông báo push, Telegram, Apprise và máy tính chờ đến khi kết thúc. Bạn vẫn thấy chúng trong ứng dụng. Giờ theo múi giờ hồ sơ của bạn.",
+      "enable": "Giờ yên tĩnh",
+      "from": "Từ",
+      "to": "Đến"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Không có khu vực",
     "unassigned": "Không ai",
     "reopen": "Mở lại",
-    "complete": "Hoàn thành"
+    "complete": "Hoàn thành",
+    "more": "Thêm"
   },
   "datePopover": {
     "today": "Hôm nay",

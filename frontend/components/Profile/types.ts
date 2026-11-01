@@ -76,63 +76,31 @@ export interface SidebarSettings {
     sectionBadges?: Record<string, boolean>;
 }
 
+export interface NotificationChannels {
+    inApp: boolean;
+    email: boolean;
+    push: boolean;
+    telegram: boolean;
+    apprise: boolean;
+    desktop: boolean;
+}
+
+export interface QuietHours {
+    enabled: boolean;
+    /** HH:mm in the profile timezone. */
+    start: string;
+    end: string;
+}
+
 export interface NotificationPreferences {
-    dueTasks: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    overdueTasks: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    dueProjects: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    overdueProjects: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    deferUntil: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    taskAssigned: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    habitReminders: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
-    comments: {
-        inApp: boolean;
-        email: boolean;
-        push: boolean;
-        telegram: boolean;
-        apprise: boolean;
-    };
+    dueTasks: NotificationChannels;
+    overdueTasks: NotificationChannels;
+    dueProjects: NotificationChannels;
+    overdueProjects: NotificationChannels;
+    deferUntil: NotificationChannels;
+    taskAssigned: NotificationChannels;
+    taskReminders: NotificationChannels;
+    comments: NotificationChannels;
 }
 
 export interface Profile {
@@ -155,6 +123,7 @@ export interface Profile {
     ui_settings?: UiSettings | null;
     sidebar_settings?: SidebarSettings | null;
     notification_preferences?: NotificationPreferences | null;
+    quiet_hours?: QuietHours | null;
     keyboard_shortcuts?: KeyboardShortcutsConfig | null;
     ai_profile?: string | null;
     ai_base_url?: string | null;

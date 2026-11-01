@@ -33,6 +33,7 @@ export interface TaskRowSetters {
     setDue: (date: string | null, time: string | null) => Promise<void>;
     setStart: (date: string | null, time: string | null) => Promise<void>;
     setDeferUntil: (deferUntil: string | null) => Promise<void>;
+    setReminderAt: (reminderAt: string | null) => Promise<void>;
     setProject: (projectId: number | null) => Promise<void>;
     setTags: (tagNames: string[]) => Promise<void>;
     setAssignee: (personUid: string | null) => Promise<void>;
@@ -178,6 +179,12 @@ export const useTaskRowSave = (
                 { defer_until: deferUntil || null },
                 'task.deferUntilUpdateError',
                 'Failed to update defer date'
+            ),
+        setReminderAt: (reminderAt) =>
+            save(
+                { reminder_at: reminderAt || null },
+                'task.reminderUpdateError',
+                'Failed to update reminder'
             ),
         setProject: (projectId) =>
             save(

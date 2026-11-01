@@ -1675,7 +1675,11 @@
     "nameRequired": "O nome da tarefa é obrigatório",
     "deferAfterDueError": "A data de adiamento não pode ser posterior ao vencimento",
     "untitled": "Tarefa sem título",
-    "instanceOfShort": "Ocorrência"
+    "instanceOfShort": "Ocorrência",
+    "reminder": "Lembrete",
+    "reminderPlaceholder": "Escolha a data e a hora do lembrete",
+    "noReminder": "Sem lembrete",
+    "reminderUpdateError": "Não foi possível atualizar o lembrete"
   },
   "projects": {
     "parentProject": "Projeto pai",
@@ -2924,7 +2928,8 @@
       "inApp": "No aplicativo",
       "email": "Email",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Computador"
     },
     "types": {
       "dueTasks": "Tarefas Pendentes",
@@ -2934,7 +2939,8 @@
       "overdueProjects": "Projetos Atrasados",
       "taskAssigned": "Tarefa Atribuída",
       "habitReminders": "Lembretes de hábitos",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Lembretes de tarefas"
     },
     "descriptions": {
       "dueTasks": "Tarefas que vencem em 24 horas",
@@ -2944,7 +2950,8 @@
       "overdueProjects": "Projetos que passaram da data de vencimento",
       "taskAssigned": "Uma tarefa foi atribuída a você por outra pessoa",
       "habitReminders": "À hora do lembrete definida num hábito, enquanto ainda está em aberto",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque"
     },
     "telegram": {
       "notConfigured": {
@@ -2965,7 +2972,8 @@
     },
     "info": {
       "title": "Nota:",
-      "message": "Notificações por Email e Push estarão disponíveis em breve. Notificações no aplicativo e no Telegram estão atualmente disponíveis."
+      "message": "Notificações por Email e Push estarão disponíveis em breve. Notificações no aplicativo e no Telegram estão atualmente disponíveis.",
+      "phoneRings": "Os lembretes de tarefas tocam no telemóvel. O computador só toca se ativar Computador nesta linha."
     },
     "webhooks": {
       "events": {
@@ -3037,6 +3045,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Horas de silêncio",
+      "description": "Durante este intervalo nada toca: as notificações push, Telegram, Apprise e do computador esperam até ao fim. Continua a encontrá-las na aplicação. As horas seguem o fuso horário do seu perfil.",
+      "enable": "Horas de silêncio",
+      "from": "De",
+      "to": "Até"
     }
   },
   "projectStatus": {
@@ -4578,7 +4593,8 @@
     "noArea": "Sem área",
     "unassigned": "Ninguém",
     "reopen": "Reabrir",
-    "complete": "Concluir"
+    "complete": "Concluir",
+    "more": "Mais"
   },
   "datePopover": {
     "today": "Hoje",

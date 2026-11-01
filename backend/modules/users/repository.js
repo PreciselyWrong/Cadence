@@ -25,6 +25,7 @@ const PROFILE_ATTRIBUTES = [
     'sidebar_settings',
     'ui_settings',
     'notification_preferences',
+    'quiet_hours',
     'keyboard_shortcuts',
     'ai_profile',
     'onboarded_at',
@@ -48,6 +49,7 @@ const PROFILE_UPDATE_ATTRIBUTES = [
     'features',
     'ui_settings',
     'notification_preferences',
+    'quiet_hours',
     'keyboard_shortcuts',
     'ai_profile',
 ];

@@ -1636,7 +1636,11 @@
     "nameRequired": "Aufgabenname ist erforderlich",
     "deferAfterDueError": "Das Zurückstellungsdatum darf nicht nach dem Fälligkeitsdatum liegen",
     "untitled": "Aufgabe ohne Titel",
-    "instanceOfShort": "Vorkommen"
+    "instanceOfShort": "Vorkommen",
+    "reminder": "Erinnerung",
+    "reminderPlaceholder": "Datum und Uhrzeit der Erinnerung wählen",
+    "noReminder": "Keine Erinnerung",
+    "reminderUpdateError": "Erinnerung konnte nicht aktualisiert werden"
   },
   "calendar": {
     "focusSession": "Fokus",
@@ -2927,7 +2931,8 @@
       "inApp": "In-App",
       "email": "E-Mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Desktop"
     },
     "types": {
       "dueTasks": "Fällige Aufgaben",
@@ -2937,7 +2942,8 @@
       "overdueProjects": "Überfällige Projekte",
       "taskAssigned": "Aufgabe zugewiesen",
       "habitReminders": "Gewohnheits-Erinnerungen",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Aufgabenerinnerungen"
     },
     "descriptions": {
       "dueTasks": "Aufgaben, die innerhalb von 24 Stunden fällig sind",
@@ -2947,7 +2953,8 @@
       "overdueProjects": "Projekte, deren Fälligkeitsdatum überschritten ist",
       "taskAssigned": "Eine Aufgabe wurde Ihnen von jemand anderem zugewiesen",
       "habitReminders": "Zur bei der Gewohnheit eingestellten Zeit, solange sie noch offen ist",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "Die Zeit, die du an einer Aufgabe festlegst. Dein Handy klingelt; aktiviere Desktop, wenn auch dein Computer klingeln soll"
     },
     "telegram": {
       "notConfigured": {
@@ -2968,7 +2975,8 @@
     },
     "info": {
       "title": "Hinweis:",
-      "message": "E-Mail- und Push-Benachrichtigungen kommen bald. In-App- und Telegram-Benachrichtigungen sind derzeit verfügbar."
+      "message": "E-Mail- und Push-Benachrichtigungen kommen bald. In-App- und Telegram-Benachrichtigungen sind derzeit verfügbar.",
+      "phoneRings": "Aufgabenerinnerungen klingeln auf deinem Handy. Der Desktop klingelt nur, wenn du Desktop in dieser Zeile aktivierst."
     },
     "webhooks": {
       "events": {
@@ -3040,6 +3048,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Ruhezeiten",
+      "description": "In diesem Zeitfenster klingelt nichts: Push-, Telegram-, Apprise- und Desktop-Benachrichtigungen warten bis zum Ende. In der App findest du sie weiterhin. Die Zeiten folgen der Zeitzone deines Profils.",
+      "enable": "Ruhezeiten",
+      "from": "Von",
+      "to": "Bis"
     }
   },
   "projectStatus": {
@@ -4580,7 +4595,8 @@
     "noArea": "Kein Bereich",
     "unassigned": "Niemand",
     "reopen": "Wieder öffnen",
-    "complete": "Erledigen"
+    "complete": "Erledigen",
+    "more": "Mehr"
   },
   "datePopover": {
     "today": "Heute",

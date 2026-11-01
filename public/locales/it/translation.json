@@ -1675,7 +1675,11 @@
     "nameRequired": "Il nome dell'attività è obbligatorio",
     "deferAfterDueError": "La data di rinvio non può essere successiva alla scadenza",
     "untitled": "Attività senza titolo",
-    "instanceOfShort": "Occorrenza"
+    "instanceOfShort": "Occorrenza",
+    "reminder": "Promemoria",
+    "reminderPlaceholder": "Scegli data e ora del promemoria",
+    "noReminder": "Nessun promemoria",
+    "reminderUpdateError": "Impossibile aggiornare il promemoria"
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -2924,7 +2928,8 @@
       "inApp": "Nell'app",
       "email": "Email",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Desktop"
     },
     "types": {
       "dueTasks": "Compiti Scaduti",
@@ -2934,7 +2939,8 @@
       "overdueProjects": "Progetti In Ritardo",
       "taskAssigned": "Compito Assegnato",
       "habitReminders": "Promemoria abitudini",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Promemoria delle attività"
     },
     "descriptions": {
       "dueTasks": "Compiti che scadono entro 24 ore",
@@ -2944,7 +2950,8 @@
       "overdueProjects": "Progetti che hanno superato la loro data di scadenza",
       "taskAssigned": "Un compito ti è stato assegnato da qualcun altro",
       "habitReminders": "All'ora di promemoria impostata sull'abitudine, finché è ancora da fare",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "L'ora che imposti su un'attività. Suona il telefono; aggiungi Desktop se vuoi che suoni anche il computer"
     },
     "telegram": {
       "notConfigured": {
@@ -2965,7 +2972,8 @@
     },
     "info": {
       "title": "Nota:",
-      "message": "Le notifiche via Email e Push arriveranno presto. Le notifiche in-app e su Telegram sono attualmente disponibili."
+      "message": "Le notifiche via Email e Push arriveranno presto. Le notifiche in-app e su Telegram sono attualmente disponibili.",
+      "phoneRings": "I promemoria delle attività suonano sul telefono. Il desktop suona solo se attivi Desktop in questa riga."
     },
     "webhooks": {
       "events": {
@@ -3037,6 +3045,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Ore di silenzio",
+      "description": "In questa fascia non suona nulla: le notifiche push, Telegram, Apprise e desktop attendono la fine. Le ritrovi comunque nell'app. Gli orari seguono il fuso orario del tuo profilo.",
+      "enable": "Ore di silenzio",
+      "from": "Dalle",
+      "to": "Alle"
     }
   },
   "projectStatus": {
@@ -4578,7 +4593,8 @@
     "noArea": "Nessuna area",
     "unassigned": "Nessuno",
     "reopen": "Riapri",
-    "complete": "Completa"
+    "complete": "Completa",
+    "more": "Altro"
   },
   "datePopover": {
     "today": "Oggi",

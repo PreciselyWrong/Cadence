@@ -102,6 +102,7 @@ async function completeTask(task, user, timezone) {
             status: Task.STATUS.NOT_STARTED,
             completed_at: null,
             due_date: occurrence.nextDueDate,
+            ...occurrence.reminderFields,
         });
         await recordOccurrence(task, occurrence, user.id);
         return;

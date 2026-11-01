@@ -12,6 +12,9 @@ interface HabitReminderDao {
     @Query("SELECT * FROM habit_reminders")
     suspend fun getAllReminders(): List<HabitReminderEntity>
 
+    @Query("SELECT * FROM habit_reminders")
+    fun observeAllReminders(): Flow<List<HabitReminderEntity>>
+
     @Query("SELECT * FROM habit_reminders WHERE habitId = :habitId")
     fun observeReminders(habitId: String): Flow<List<HabitReminderEntity>>
 

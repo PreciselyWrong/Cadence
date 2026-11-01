@@ -125,6 +125,36 @@ describe('Offline sync API', () => {
         expect(task.note).toBe('from B');
     });
 
+    it('re-arms a reminder moved from a device', async () => {
+        await push(agent, [
+            upsert(
+                'op-r1',
+                'task',
+                'clienttask00r01',
+                { name: 'Call', reminder_at: '2026-11-02T08:00:00.000Z' },
+                hlc(10)
+            ),
+        ]);
+        await Task.update(
+            { reminder_sent_at: new Date('2026-11-02T08:00:00.000Z') },
+            { where: { uid: 'clienttask00r01' } }
+        );
+
+        await push(agent, [
+            upsert(
+                'op-r2',
+                'task',
+                'clienttask00r01',
+                { reminder_at: '2026-11-03T08:00:00.000Z' },
+                hlc(20)
+            ),
+        ]);
+
+        const task = await Task.findOne({ where: { uid: 'clienttask00r01' } });
+        expect(task.reminder_at.toISOString()).toBe('2026-11-03T08:00:00.000Z');
+        expect(task.reminder_sent_at).toBeNull();
+    });
+
     it('keeps the newer value and reports the older one as a conflict', async () => {
         await push(agent, [
             upsert('op-n', 'task', 'clienttask00004', { name: 'New' }, hlc(50)),

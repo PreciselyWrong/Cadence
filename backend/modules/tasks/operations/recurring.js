@@ -372,6 +372,17 @@ async function calculateNextIterations(task, startFromDate, userTimezone) {
     return iterations;
 }
 
+// When a recurring task moves to its next due date, its reminder keeps the
+// same distance from it and fires again. Returns the fields to write.
+function shiftedReminderFields(reminderAt, fromDue, toDue) {
+    if (!reminderAt || !fromDue || !toDue) return {};
+    const delta = new Date(toDue).getTime() - new Date(fromDue).getTime();
+    return {
+        reminder_at: new Date(new Date(reminderAt).getTime() + delta),
+        reminder_sent_at: null,
+    };
+}
+
 const OCCURRENCE_RECURRENCE_FIELDS = [
     'recurrence_interval',
     'recurrence_end_date',
@@ -433,6 +444,11 @@ function planOccurrenceAdvance(
             shouldGenerateNextTask(recurrenceContext, nextDueDate)
         ),
         completionBased,
+        reminderFields: shiftedReminderFields(
+            resolve('reminder_at'),
+            originalDueDate,
+            nextDueDate
+        ),
     };
 }
 
@@ -479,6 +495,7 @@ async function completeOccurrence(task, { timezone = 'UTC', userId } = {}) {
                   status: Task.STATUS.NOT_STARTED,
                   completed_at: null,
                   due_date: occurrence.nextDueDate,
+                  ...occurrence.reminderFields,
               }
             : {
                   status: Task.STATUS.DONE,
@@ -534,6 +551,11 @@ async function skipRecurringOccurrence(task, userId, userTimezone) {
         due_date: nextDueDate,
         status: Task.STATUS.NOT_STARTED,
         completed_at: null,
+        ...shiftedReminderFields(
+            task.reminder_at,
+            originalDueDate,
+            nextDueDate
+        ),
     });
 
     await RecurringCompletion.create({

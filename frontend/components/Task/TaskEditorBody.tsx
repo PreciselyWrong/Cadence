@@ -67,6 +67,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
         changeDue,
         changeStart,
         changeDefer,
+        changeReminder,
         toggleCompletion,
         handleSubtaskUpdate,
         handleSubtaskDelete,
@@ -133,6 +134,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                 onDue={changeDue}
                 onStart={changeStart}
                 onDefer={changeDefer}
+                onReminder={changeReminder}
                 onPriority={(priority) => {
                     setError(null);
                     void run({ priority }, (s) => s.setPriority(priority));

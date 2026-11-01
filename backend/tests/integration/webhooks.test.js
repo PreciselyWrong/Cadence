@@ -426,7 +426,9 @@ describe('Webhooks', () => {
             const body = JSON.parse(delivery.payload);
             expect(body.data.date).toBe('2026-07-01');
             expect(body.data.overdue.map((t) => t.name)).toContain('Late');
-            expect(body.text).toContain('Overdue');
+            expect(body.text).toContain('Still open');
+            expect(body.text).not.toMatch(/overdue/i);
+            expect(body.text).toMatch(/- Late \(since \d{4}-\d{2}-\d{2}\)/);
 
             await sendDueSummaries({
                 now: new Date('2026-07-01T05:50:00Z'),

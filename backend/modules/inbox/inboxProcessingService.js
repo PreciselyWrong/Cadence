@@ -8,6 +8,8 @@ const { dueDateTimeToUTC } = require('../../utils/timezone-utils');
 const {
     parseDueDate,
     parseRecurrence,
+    parseClockTime,
+    parseDuration,
     parsePersonRef,
     parseAreaRefs,
     removeSpans,
@@ -390,6 +392,18 @@ const processInboxItem = (content, options = {}) => {
         parseDates && !recurrence
             ? parseDueDate(content, { referenceDate, timezone })
             : null;
+    // A recurrence has no date phrase of its own, so its time comes from an
+    // explicit clock time ("every Monday at 9am", "tous les lundis à 9h").
+    const clockTime = recurrence ? parseClockTime(content) : null;
+    const spanOf = (found) =>
+        found
+            ? { index: found.index, end: found.index + found.text.length }
+            : null;
+    const duration = parseDates
+        ? parseDuration(content, {
+              ignore: [spanOf(recurrence), spanOf(dueDate), spanOf(clockTime)],
+          })
+        : null;
     const person = parsePersonRef(content);
     const area = areaName
         ? parseAreaRefs(content).find(
@@ -399,7 +413,9 @@ const processInboxItem = (content, options = {}) => {
 
     const withoutParsedPhrases = removeSpans(content, [
         recurrence,
+        clockTime,
         dueDate && dueDate.removable ? dueDate : null,
+        duration,
         person && personResolved ? person : null,
         area,
     ]);
@@ -429,7 +445,10 @@ const processInboxItem = (content, options = {}) => {
         parsed_projects: projects,
         cleaned_content: cleanedContent,
         parsed_due_date: schedule ? schedule.date : null,
-        parsed_due_time: dueDate?.time ?? null,
+        parsed_due_time: recurrence
+            ? (clockTime?.time ?? null)
+            : (dueDate?.time ?? null),
+        parsed_estimated_minutes: duration ? duration.minutes : null,
         parsed_reminder_at: reminderAt ? reminderAt.toISOString() : null,
         parsed_date_text: schedule ? schedule.text : null,
         parsed_recurrence: recurrence ? recurrence.recurrence : null,

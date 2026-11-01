@@ -1673,7 +1673,11 @@
     "nameRequired": "Taaknaam is verplicht",
     "deferAfterDueError": "Uitstellen tot kan niet na de vervaldatum liggen",
     "untitled": "Taak zonder titel",
-    "instanceOfShort": "Herhaling"
+    "instanceOfShort": "Herhaling",
+    "reminder": "Herinnering",
+    "reminderPlaceholder": "Kies datum en tijd van de herinnering",
+    "noReminder": "Geen herinnering",
+    "reminderUpdateError": "Herinnering bijwerken mislukt"
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -2918,7 +2922,8 @@
       "inApp": "In de app",
       "email": "E-mail",
       "push": "Push",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "desktop": "Desktop"
     },
     "types": {
       "dueTasks": "Vervaldagen Taken",
@@ -2928,7 +2933,8 @@
       "overdueProjects": "Te Laat Projecten",
       "taskAssigned": "Taak Toegewezen",
       "habitReminders": "Gewoonteherinneringen",
-      "comments": "Comments & Mentions"
+      "comments": "Comments & Mentions",
+      "taskReminders": "Taakherinneringen"
     },
     "descriptions": {
       "dueTasks": "Taken die binnen 24 uur vervallen",
@@ -2938,7 +2944,8 @@
       "overdueProjects": "Projecten die hun vervaldatum hebben overschreden",
       "taskAssigned": "Een taak is aan jou toegewezen door iemand anders",
       "habitReminders": "Op het herinneringstijdstip van een gewoonte, zolang die nog open staat",
-      "comments": "Replies, comments on your tasks, and @mentions"
+      "comments": "Replies, comments on your tasks, and @mentions",
+      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan"
     },
     "telegram": {
       "notConfigured": {
@@ -2959,7 +2966,8 @@
     },
     "info": {
       "title": "Opmerking:",
-      "message": "E-mail- en pushmeldingen komen binnenkort. In-app en Telegram-meldingen zijn momenteel beschikbaar."
+      "message": "E-mail- en pushmeldingen komen binnenkort. In-app en Telegram-meldingen zijn momenteel beschikbaar.",
+      "phoneRings": "Taakherinneringen gaan af op je telefoon. De desktop gaat alleen af als je Desktop in deze rij aanzet."
     },
     "webhooks": {
       "events": {
@@ -3031,6 +3039,13 @@
       "enable": "Turn on",
       "disable": "Turn off",
       "failed": "Something went wrong. Please try again."
+    },
+    "quietHours": {
+      "title": "Stille uren",
+      "description": "In dit tijdvak gaat er niets af: push-, Telegram-, Apprise- en desktopmeldingen wachten tot het voorbij is. Je vindt ze nog steeds in de app. De tijden volgen de tijdzone van je profiel.",
+      "enable": "Stille uren",
+      "from": "Van",
+      "to": "Tot"
     }
   },
   "projectStatus": {
@@ -4571,7 +4586,8 @@
     "noArea": "Geen gebied",
     "unassigned": "Niemand",
     "reopen": "Heropenen",
-    "complete": "Voltooien"
+    "complete": "Voltooien",
+    "more": "Meer"
   },
   "datePopover": {
     "today": "Vandaag",

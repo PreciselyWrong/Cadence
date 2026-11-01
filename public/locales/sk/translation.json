@@ -1702,7 +1702,11 @@
         "nameRequired": "Názov úlohy je povinný",
         "deferAfterDueError": "Dátum odloženia nemôže byť po termíne",
         "untitled": "Úloha bez názvu",
-        "instanceOfShort": "Výskyt"
+        "instanceOfShort": "Výskyt",
+        "reminder": "Pripomienka",
+        "reminderPlaceholder": "Vyberte dátum a čas pripomienky",
+        "noReminder": "Žiadna pripomienka",
+        "reminderUpdateError": "Pripomienku sa nepodarilo aktualizovať"
     },
     "subtasks": {
         "placeholder": "Pridajte podúlohu..."
@@ -3157,7 +3161,8 @@
             "inApp": "V aplikácii",
             "email": "E-mail",
             "push": "Push",
-            "telegram": "Telegram"
+            "telegram": "Telegram",
+            "desktop": "Počítač"
         },
         "types": {
             "dueTasks": "Úlohy s termínom",
@@ -3167,7 +3172,8 @@
             "overdueProjects": "Projekty po termíne",
             "taskAssigned": "Priradená úloha",
             "habitReminders": "Pripomienky návykov",
-            "comments": "Comments & Mentions"
+            "comments": "Comments & Mentions",
+            "taskReminders": "Pripomienky úloh"
         },
         "descriptions": {
             "dueTasks": "Úlohy s termínom do 24 hodín",
@@ -3177,7 +3183,8 @@
             "overdueProjects": "Projekty, ktorým uplynul termín",
             "taskAssigned": "Niekto iný vám priradil úlohu",
             "habitReminders": "V čase pripomienky nastavenom pri návyku, kým je ešte otvorený",
-            "comments": "Replies, comments on your tasks, and @mentions"
+            "comments": "Replies, comments on your tasks, and @mentions",
+            "taskReminders": "Čas nastavený pri úlohe. Zvoní telefón; pridajte Počítač, ak má zvoniť aj počítač"
         },
         "telegram": {
             "notConfigured": {
@@ -3198,7 +3205,8 @@
         },
         "info": {
             "title": "Poznámka:",
-            "message": "E-mailové a push upozornenia pripravujeme. Momentálne sú dostupné upozornenia v aplikácii a cez Telegram."
+            "message": "E-mailové a push upozornenia pripravujeme. Momentálne sú dostupné upozornenia v aplikácii a cez Telegram.",
+            "phoneRings": "Pripomienky úloh zvonia na telefóne. Počítač zvoní, len ak na tomto riadku zapnete Počítač."
         },
         "webhooks": {
             "events": {
@@ -3270,6 +3278,13 @@
             "enable": "Turn on",
             "disable": "Turn off",
             "failed": "Something went wrong. Please try again."
+        },
+        "quietHours": {
+            "title": "Tiché hodiny",
+            "description": "V tomto čase nič nezvoní: oznámenia push, Telegram, Apprise a v počítači čakajú do konca. V aplikácii ich stále nájdete. Časy sa riadia časovým pásmom profilu.",
+            "enable": "Tiché hodiny",
+            "from": "Od",
+            "to": "Do"
         }
     },
     "aiAssistant": {
@@ -4566,7 +4581,8 @@
         "noArea": "Bez oblasti",
         "unassigned": "Nikto",
         "reopen": "Znova otvoriť",
-        "complete": "Dokončiť"
+        "complete": "Dokončiť",
+        "more": "Viac"
     },
     "datePopover": {
         "today": "Dnes",

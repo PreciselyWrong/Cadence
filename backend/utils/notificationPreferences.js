@@ -11,6 +11,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: true,
     },
     overdueTasks: {
         inApp: true,
@@ -18,6 +19,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: false,
     },
     dueProjects: {
         inApp: true,
@@ -25,6 +27,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: true,
     },
     overdueProjects: {
         inApp: true,
@@ -32,6 +35,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: false,
     },
     deferUntil: {
         inApp: true,
@@ -39,6 +43,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: true,
     },
     taskAssigned: {
         inApp: true,
@@ -46,13 +51,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
-    },
-    habitReminders: {
-        inApp: true,
-        email: false,
-        push: false,
-        telegram: false,
-        apprise: false,
+        desktop: false,
     },
     comments: {
         inApp: true,
@@ -60,6 +59,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: false,
     },
     taskReminders: {
         inApp: true,
@@ -67,6 +67,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
+        desktop: false,
     },
 };
 
@@ -174,8 +175,19 @@ function shouldSendAppriseNotification(user, notificationType) {
     return prefs[prefKey].apprise === true;
 }
 
-// Sources for reminders that Telegram delivers in its own batch: push and
-// Apprise are sent per notification.
+// The desktop client shows the notification only when its type is on for
+// "desktop". The phone owns task reminders, so those default to off; an
+// explicit choice always wins.
+function shouldSendDesktopNotification(user, notificationType) {
+    const prefKey =
+        NOTIFICATION_TYPE_MAPPING[notificationType] || notificationType;
+    const explicit = user?.notification_preferences?.[prefKey]?.desktop;
+    if (typeof explicit === 'boolean') return explicit;
+    return DEFAULT_PREFERENCES[prefKey]?.desktop === true;
+}
+
+// Sources for reminders that Telegram delivers in its own batch: push,
+// Apprise and the desktop client are handled per notification.
 function reminderSources(user, notificationType) {
     const sources = [];
     if (shouldSendPushNotification(user, notificationType)) {
@@ -183,6 +195,9 @@ function reminderSources(user, notificationType) {
     }
     if (shouldSendAppriseNotification(user, notificationType)) {
         sources.push('apprise');
+    }
+    if (shouldSendDesktopNotification(user, notificationType)) {
+        sources.push('desktop');
     }
     return sources;
 }
@@ -199,6 +214,9 @@ function deliverySources(user, notificationType) {
     }
     if (shouldSendAppriseNotification(user, notificationType)) {
         sources.push('apprise');
+    }
+    if (shouldSendDesktopNotification(user, notificationType)) {
+        sources.push('desktop');
     }
     return sources;
 }
@@ -250,6 +268,10 @@ function ensureNotificationPreferences(preferences) {
                     preferences[key].apprise !== undefined
                         ? preferences[key].apprise
                         : defaults[key].apprise,
+                desktop:
+                    preferences[key].desktop !== undefined
+                        ? preferences[key].desktop
+                        : defaults[key].desktop,
             };
         } else {
             // Missing preference type, use default
@@ -265,6 +287,7 @@ module.exports = {
     shouldSendTelegramNotification,
     shouldSendPushNotification,
     shouldSendAppriseNotification,
+    shouldSendDesktopNotification,
     deliverySources,
     reminderSources,
     getDefaultNotificationPreferences,

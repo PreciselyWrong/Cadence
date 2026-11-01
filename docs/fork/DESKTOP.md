@@ -16,7 +16,7 @@ Tauri 2 shell around the user's own Cadence server. It adds what a browser tab c
 | Tray icon | Menu: Ouvrir, Ajout rapide, Réglages, Quitter. Closing the window leaves the tray running. |
 | Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field; Enter stores the capture and closes. |
 | Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. |
-| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification newer than the last one shown becomes a native notification, window or not. The first poll only records a baseline. |
+| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification whose `sources` contain `desktop` and whose `deliver_after` (quiet hours) has passed becomes a native notification once, deduplicated by notification `uid` (the last 500 are kept in `state.json`), window or not. The first poll only records a baseline. See [36-notifications.md](../36-notifications.md). |
 
 ## Configuration
 

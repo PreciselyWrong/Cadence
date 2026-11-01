@@ -45,21 +45,24 @@ async function checkTaskReminders(now = new Date()) {
             // Mark first so a failing notification is not retried every minute.
             await task.update({ reminder_sent_at: now });
 
-            if (!shouldSendInAppNotification(user, 'task_reminder')) continue;
-
+            const inApp = shouldSendInAppNotification(user, 'task_reminder');
             const telegram =
                 !!(user.telegram_bot_token && user.telegram_chat_id) &&
                 shouldSendTelegramNotification(user, 'task_reminder');
+            const sources = [
+                ...(telegram ? ['telegram'] : []),
+                ...reminderSources(user, 'task_reminder'),
+            ];
 
-            await Notification.createNotification({
+            // External channels do not depend on the in-app one.
+            if (!inApp && sources.length === 0) continue;
+
+            const notification = await Notification.createNotification({
                 userId: user.id,
                 type: 'reminder',
                 title: 'Task reminder',
                 message: `Reminder: "${task.name}"`,
-                sources: [
-                    ...(telegram ? ['telegram'] : []),
-                    ...reminderSources(user, 'task_reminder'),
-                ],
+                sources,
                 data: {
                     taskUid: task.uid,
                     taskName: task.name,
@@ -67,6 +70,11 @@ async function checkTaskReminders(now = new Date()) {
                 },
                 sentAt: now,
             });
+            // The row carries the delivery; with in-app off it must not
+            // raise the badge. The desktop client reads unread rows only.
+            if (!inApp && !sources.includes('desktop')) {
+                await notification.markAsRead();
+            }
             sent++;
         } catch (error) {
             logError(`Error sending reminder for task ${task.id}:`, error);

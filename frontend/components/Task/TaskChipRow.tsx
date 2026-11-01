@@ -8,10 +8,12 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import {
     ArrowPathIcon,
+    BellAlertIcon,
     BellSnoozeIcon,
     CalendarDaysIcon,
     CheckIcon,
     ClockIcon,
+    EllipsisHorizontalIcon,
     FlagIcon,
     FolderIcon,
     HashtagIcon,
@@ -130,6 +132,7 @@ export interface TaskChipRowProps {
     onDue: (value: DateValue) => void;
     onStart: (value: DateValue) => void;
     onDefer: (iso: string | null) => void;
+    onReminder: (iso: string | null) => void;
     onPriority: (priority: PriorityType) => void;
     onProject: (projectId: number | null) => void;
     onArea: (areaId: number | null) => void;
@@ -148,6 +151,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     onDue,
     onStart,
     onDefer,
+    onReminder,
     onPriority,
     onProject,
     onArea,
@@ -175,6 +179,10 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         ? String(task.start_date).split('T')[0]
         : null;
     const deferParts = toDueParts(task.defer_until || '');
+    const reminderParts = toDueParts(task.reminder_at || '');
+    // The reminder is rarely needed: it stays behind "More" until it is set.
+    const [showMore, setShowMore] = useState(false);
+    const reminderVisible = showMore || !!task.reminder_at;
 
     const priorityOptions: PopoverOption<string | null>[] = [
         { value: null, label: t('priority.none', 'None') },
@@ -657,6 +665,43 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                         />
                     )}
                 />
+
+                {reminderVisible && (
+                    <DatePopover
+                        label={t('task.reminder', 'Reminder')}
+                        value={{
+                            date: reminderParts.date,
+                            time: reminderParts.time,
+                        }}
+                        onChange={({ date, time }) =>
+                            onReminder(date ? fromDueParts(date, time) : null)
+                        }
+                        renderTrigger={({ display, ...props }) => (
+                            <Chip
+                                {...props}
+                                icon={<BellAlertIcon />}
+                                text={
+                                    display
+                                        ? `${t('task.reminder', 'Reminder')} ${display}`
+                                        : t('task.reminder', 'Reminder')
+                                }
+                                filled={!!display}
+                                data-testid="chip-reminder"
+                            />
+                        )}
+                    />
+                )}
+
+                {!reminderVisible && (
+                    <Chip
+                        icon={<EllipsisHorizontalIcon />}
+                        text={t('taskPanel.more', 'More')}
+                        filled={false}
+                        aria-expanded={false}
+                        onClick={() => setShowMore(true)}
+                        data-testid="chip-more"
+                    />
+                )}
 
                 {(people.length > 0 || assignee) && (
                     <ChipPopover
