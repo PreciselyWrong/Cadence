@@ -2149,7 +2149,16 @@
     "upcomingProjects": "Anstehende Projekte",
     "deleteError": "Projekt konnte nicht gelöscht werden",
     "shared": "Geteilt",
-    "status": "Projektstatus"
+    "status": "Projektstatus",
+    "unavailable": {
+      "noAccessTitle": "Du hast keinen Zugriff auf dieses Projekt",
+      "noAccessHint": "Bitte den Eigentümer des Projekts, es mit dir zu teilen.",
+      "notFoundTitle": "Dieses Projekt existiert nicht oder wurde gelöscht",
+      "notFoundHint": "Prüfe den Link oder suche das Projekt in deiner Liste.",
+      "failedTitle": "Projektdetails konnten nicht geladen werden.",
+      "failedHint": "Prüfe deine Verbindung und lade die Seite neu.",
+      "backToProjects": "Zurück zu den Projekten"
+    }
   },
   "projectItem": {
     "edit": "Bearbeiten",
@@ -2934,7 +2943,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Verlassen",
+      "projectTitle": "Projekt verlassen",
+      "areaTitle": "Bereich verlassen",
+      "projectMessage": "Du siehst \"{{name}}\" und seine Aufgaben nicht mehr, und deine offenen Aufgaben dort werden nicht mehr dir zugewiesen. Die Person, die es geteilt hat, wird benachrichtigt.",
+      "areaMessage": "Du siehst \"{{name}}\" und die damit geteilten Projekte nicht mehr, und deine offenen Aufgaben dort werden nicht mehr dir zugewiesen. Die Person, die es geteilt hat, wird benachrichtigt.",
+      "left": "Du hast \"{{name}}\" verlassen",
+      "failed": "Verlassen fehlgeschlagen. Bitte versuche es erneut."
+    }
   },
   "viewType": {
     "label": "Ansicht",
@@ -3576,6 +3594,10 @@
     "perSeatNote": "({{seats}} Plätze, du eingeschlossen)",
     "membersNeedTeam": "Pro ist für eine Person. Mit einem Team-Tarif kannst du Mitglieder hinzufügen, ab 3 Plätzen.",
     "seatsFull": "Alle {{seats}} Plätze deines Tarifs sind belegt. Wechsle zu einem größeren Team-Tarif, um weitere Personen hinzuzufügen.",
+    "seatsFullTitle": "Alle Plätze sind belegt",
+    "seatsFullContact": "Alle {{seats}} Plätze deines Tarifs sind belegt. Kontaktiere uns, um weitere Personen hinzuzufügen.",
+    "seatsContactHint": "Schreib an {{email}}, dann fügen wir deinem Tarif Plätze hinzu.",
+    "contactUs": "Kontakt",
     "changePlan": "Plan ändern",
     "planChanged": "Dein Plan wurde geändert."
   },
@@ -3653,6 +3675,8 @@
     "filterMembers": "Mitglieder",
     "filterContacts": "Kontakte",
     "member": "Mitglied",
+    "owner": "Inhaber",
+    "admin": "Admin",
     "memberNoSignIn": "Mitglied, kann sich noch nicht anmelden",
     "giveAccount": "Konto geben",
     "memberAdded": "Mitglied hinzugefügt",
@@ -3704,7 +3728,12 @@
     "invitationSent": "Einladung gesendet",
     "failedToRemove": "Mitglied konnte nicht entfernt werden",
     "title": "Mitglieder",
-    "titleOne": "Mitglied"
+    "titleOne": "Mitglied",
+    "openTasksCount": "Offene Aufgaben von {{name}}: {{count}}",
+    "handTo": "Aufgaben übergeben an",
+    "handToYou": "{{name}} (Sie)",
+    "leaveUnassigned": "Niemand, nicht zuweisen",
+    "handToHint": "Die Person erhält eine Benachrichtigung mit der Anzahl der Aufgaben. Erledigte Aufgaben bleiben unverändert."
   },
   "signInLink": {
     "action": "Anmeldelink",

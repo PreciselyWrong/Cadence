@@ -1897,7 +1897,16 @@
     "upcomingProjects": "Prihajajoči projekti",
     "deleteError": "Projekta ni bilo mogoče izbrisati",
     "shared": "Deljeno",
-    "status": "Stanje projekta"
+    "status": "Stanje projekta",
+    "unavailable": {
+      "noAccessTitle": "Do tega projekta nimate dostopa",
+      "noAccessHint": "Prosite lastnika projekta, naj ga deli z vami.",
+      "notFoundTitle": "Ta projekt ne obstaja ali je bil izbrisan",
+      "notFoundHint": "Preverite povezavo ali poiščite projekt na svojem seznamu.",
+      "failedTitle": "Podrobnosti projekta ni bilo mogoče naložiti.",
+      "failedHint": "Preverite povezavo in znova naložite stran.",
+      "backToProjects": "Nazaj na projekte"
+    }
   },
   "projectItem": {
     "edit": "Uredi",
@@ -2937,7 +2946,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Zapusti",
+      "projectTitle": "Zapusti projekt",
+      "areaTitle": "Zapusti področje",
+      "projectMessage": "Ne boste več videli \"{{name}}\" ali njegovih opravil, vaša odprta opravila tam pa vam ne bodo več dodeljena. Oseba, ki ga je delila, bo obveščena.",
+      "areaMessage": "Ne boste več videli \"{{name}}\" ali projektov, deljenih z njim, vaša odprta opravila tam pa vam ne bodo več dodeljena. Oseba, ki ga je delila, bo obveščena.",
+      "left": "Zapustili ste \"{{name}}\"",
+      "failed": "Zapuščanje ni uspelo. Poskusite znova."
+    }
   },
   "viewType": {
     "label": "Pogled",
@@ -3581,6 +3599,10 @@
     "perSeatNote": "(mesta: {{seats}}, vključno z vami)",
     "membersNeedTeam": "Pro je za eno osebo. S paketom Ekipa lahko dodajate člane, od 3 mest naprej.",
     "seatsFull": "Vsa mesta vašega paketa ({{seats}}) so zasedena. Preidite na večji paket Ekipa, da dodate več oseb.",
+    "seatsFullTitle": "Vsa mesta so zasedena",
+    "seatsFullContact": "Vsa mesta vašega paketa ({{seats}}) so zasedena. Pišite nam, da dodate več oseb.",
+    "seatsContactHint": "Pišite na {{email}} in vašemu paketu bomo dodali mesta.",
+    "contactUs": "Pišite nam",
     "changePlan": "Zamenjaj paket",
     "planChanged": "Vaš paket je bil zamenjan."
   },
@@ -3658,6 +3680,8 @@
     "filterMembers": "Člani",
     "filterContacts": "Stiki",
     "member": "Član",
+    "owner": "Lastnik",
+    "admin": "Skrbnik",
     "memberNoSignIn": "Član, se še ne more prijaviti",
     "giveAccount": "Dodeli račun",
     "memberAdded": "Član dodan",
@@ -3709,7 +3733,12 @@
     "invitationSent": "Vabilo poslano",
     "failedToRemove": "Člana ni bilo mogoče odstraniti",
     "title": "Člani",
-    "titleOne": "Član"
+    "titleOne": "Član",
+    "openTasksCount": "Odprta opravila, dodeljena {{name}}: {{count}}",
+    "handTo": "Predaj opravila",
+    "handToYou": "{{name}} (vi)",
+    "leaveUnassigned": "Nikomur, pusti jih nedodeljena",
+    "handToHint": "Prejme eno obvestilo s številom opravil. Dokončana opravila ostanejo, kot so."
   },
   "signInLink": {
     "action": "Povezava za prijavo",

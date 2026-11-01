@@ -45,6 +45,8 @@ interface ProjectHeroProps {
     onComplete?: () => void;
     onDeleteClick: () => void;
     onShareClick: () => void;
+    // Offered when the project is shared with the viewer (can_leave)
+    onLeaveClick?: () => void;
     onSaveAsTemplate?: () => void;
     onEditBannerClick?: () => void;
     onEditClick?: () => void;
@@ -67,6 +69,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     onComplete,
     onDeleteClick,
     onShareClick,
+    onLeaveClick,
     onSaveAsTemplate,
     onEditBannerClick,
     onEditClick,
@@ -656,6 +659,19 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                                 )}
                                             </button>
                                         </>
+                                    )}
+                                    {onLeaveClick && project.can_leave && (
+                                        <button
+                                            type="button"
+                                            className="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                onLeaveClick();
+                                            }}
+                                            data-testid="project-leave"
+                                        >
+                                            {t('shares.leave.action', 'Leave')}
+                                        </button>
                                     )}
                                     {!fileBacked && (
                                         <button

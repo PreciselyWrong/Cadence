@@ -68,9 +68,14 @@ import { orderBoardColumn } from '../../utils/projectSectionsService';
 import ProjectOverviewRail from './ProjectOverviewRail';
 import ProjectAttachmentsWidget from './ProjectAttachmentsWidget';
 import { ownerAttachmentsApi } from '../../utils/attachmentsService';
+import { leaveShare } from '../../utils/sharesService';
 import { useProjectMetrics } from './useProjectMetrics';
 import { NextActionContext } from '../../contexts/NextActionContext';
 import useCompleteProject from './useCompleteProject';
+import ProjectUnavailable, {
+    ProjectLoadError,
+    projectLoadErrorFrom,
+} from './ProjectUnavailable';
 import {
     isTaskCompleted,
     matchesTaskStatusFilter,
@@ -104,10 +109,11 @@ const ProjectDetails: React.FC = () => {
     const [panelTask, setPanelTask] = useState<Task | null>(null);
     const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<ProjectLoadError | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
     const [isTemplateConfirmOpen, setIsTemplateConfirmOpen] = useState(false);
+    const [isLeaveConfirmOpen, setIsLeaveConfirmOpen] = useState(false);
     const [previewNote, setPreviewNote] = useState<Note | null>(null);
     const [view, setView] = useState<ProjectViewTab>(() => {
         try {
@@ -242,7 +248,7 @@ const ProjectDetails: React.FC = () => {
         const loadProjectData = async () => {
             try {
                 if (!project) setLoading(true);
-                setError(false);
+                setError(null);
                 const projectData = await fetchProjectBySlug(uidSlug);
                 setProject(projectData);
                 setTasks(projectData.tasks || projectData.Tasks || []);
@@ -267,8 +273,8 @@ const ProjectDetails: React.FC = () => {
                     })
                 );
                 setLoading(false);
-            } catch {
-                setError(true);
+            } catch (err) {
+                setError(projectLoadErrorFrom(err));
                 setLoading(false);
             }
         };
@@ -586,6 +592,29 @@ const ProjectDetails: React.FC = () => {
         navigate('/projects');
     };
 
+    // The viewer gives up a project shared with them, then it leaves their lists
+    const handleLeaveProject = async () => {
+        setIsLeaveConfirmOpen(false);
+        if (!project?.uid) return;
+        try {
+            await leaveShare('project', project.uid);
+        } catch {
+            showErrorToast(
+                t('shares.leave.failed', 'Could not leave. Please try again.')
+            );
+            return;
+        }
+        projectsStore.setProjects(
+            projectsStore.projects.filter((p) => p.uid !== project.uid)
+        );
+        showSuccessToast(
+            t('shares.leave.left', 'You left "{{name}}"', {
+                name: project.name,
+            })
+        );
+        navigate('/projects');
+    };
+
     // Opens the capture box on a task or note with this project filled in
     const openCaptureForProject = (target: 'task' | 'note' = 'task') => {
         if (!project) return;
@@ -782,20 +811,8 @@ const ProjectDetails: React.FC = () => {
 
     if (loading)
         return <LoadingSpinner message={t('common.loading', 'Loading...')} />;
-    if (error)
-        return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-red-500 text-lg">
-                    Failed to load project details.
-                </div>
-            </div>
-        );
-    if (!project)
-        return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-red-500 text-lg">Project not found.</div>
-            </div>
-        );
+    if (error) return <ProjectUnavailable reason={error} />;
+    if (!project) return <ProjectUnavailable reason="notFound" />;
 
     const renderStatusFilter = () => (
         <div className="space-y-3">
@@ -899,6 +916,7 @@ const ProjectDetails: React.FC = () => {
                         setIsConfirmDialogOpen(true);
                     }}
                     onShareClick={() => setIsShareModalOpen(true)}
+                    onLeaveClick={() => setIsLeaveConfirmOpen(true)}
                     onSaveAsTemplate={
                         templatesEnabled ? handleSaveAsTemplate : undefined
                     }
@@ -1360,6 +1378,25 @@ const ProjectDetails: React.FC = () => {
                                 onConfirm={handleConfirmSaveAsTemplate}
                                 onCancel={() => setIsTemplateConfirmOpen(false)}
                                 confirmButtonText={t('common.save', 'Save')}
+                            />
+                        )}
+                        {isLeaveConfirmOpen && (
+                            <ConfirmDialog
+                                title={t(
+                                    'shares.leave.projectTitle',
+                                    'Leave project'
+                                )}
+                                message={t(
+                                    'shares.leave.projectMessage',
+                                    'You will no longer see "{{name}}" or its tasks, and your open tasks there will be unassigned. The person who shared it will be told.',
+                                    { name: project?.name }
+                                )}
+                                onConfirm={handleLeaveProject}
+                                onCancel={() => setIsLeaveConfirmOpen(false)}
+                                confirmButtonText={t(
+                                    'shares.leave.action',
+                                    'Leave'
+                                )}
                             />
                         )}
                         {completeDialog}

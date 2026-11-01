@@ -67,7 +67,7 @@ const projectsController = {
             const timezone = req.currentUser?.timezone;
             // The viewer's access ('ro' | 'rw' | 'admin'), so the page can
             // hide write controls from read-only viewers.
-            const userId = req.currentUser?.id || req.session?.userId;
+            const userId = getAuthenticatedUserId(req);
             const project = await projectsService.getByUid(
                 uid,
                 timezone,

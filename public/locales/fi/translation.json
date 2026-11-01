@@ -1891,7 +1891,16 @@
     "upcomingProjects": "Tulevat projektit",
     "deleteError": "Projektin poistaminen epäonnistui",
     "shared": "Jaettu",
-    "status": "Projektin tila"
+    "status": "Projektin tila",
+    "unavailable": {
+      "noAccessTitle": "Sinulla ei ole pääsyä tähän projektiin",
+      "noAccessHint": "Pyydä projektin omistajaa jakamaan se kanssasi.",
+      "notFoundTitle": "Tätä projektia ei ole olemassa tai se on poistettu",
+      "notFoundHint": "Tarkista linkki tai etsi projekti listastasi.",
+      "failedTitle": "Projektin tietojen lataus epäonnistui.",
+      "failedHint": "Tarkista yhteytesi ja lataa sivu uudelleen.",
+      "backToProjects": "Takaisin projekteihin"
+    }
   },
   "projectItem": {
     "edit": "Muokkaa",
@@ -2925,7 +2934,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Poistu",
+      "projectTitle": "Poistu projektista",
+      "areaTitle": "Poistu alueelta",
+      "projectMessage": "Et enää näe kohdetta \"{{name}}\" tai sen tehtäviä, ja avoimet tehtäväsi siellä eivät ole enää sinulle osoitettuja. Jakajalle ilmoitetaan.",
+      "areaMessage": "Et enää näe kohdetta \"{{name}}\" tai sen kanssa jaettuja projekteja, ja avoimet tehtäväsi siellä eivät ole enää sinulle osoitettuja. Jakajalle ilmoitetaan.",
+      "left": "Poistuit kohteesta \"{{name}}\"",
+      "failed": "Poistuminen epäonnistui. Yritä uudelleen."
+    }
   },
   "viewType": {
     "label": "Näkymä",
@@ -3567,6 +3585,10 @@
     "perSeatNote": "({{seats}} paikkaa, sinä mukaan lukien)",
     "membersNeedTeam": "Pro on yhdelle henkilölle. Tiimi-tilauksella voit lisätä jäseniä, 3 paikasta alkaen.",
     "seatsFull": "Kaikki tilauksesi {{seats}} paikkaa ovat käytössä. Vaihda isompaan Tiimi-tilaukseen lisätäksesi ihmisiä.",
+    "seatsFullTitle": "Kaikki paikat ovat käytössä",
+    "seatsFullContact": "Kaikki tilauksesi {{seats}} paikkaa ovat käytössä. Ota meihin yhteyttä lisätäksesi ihmisiä.",
+    "seatsContactHint": "Lähetä viesti osoitteeseen {{email}}, niin lisäämme paikkoja tilaukseesi.",
+    "contactUs": "Ota yhteyttä",
     "changePlan": "Vaihda tilausta",
     "planChanged": "Tilauksesi on vaihdettu."
   },
@@ -3644,6 +3666,8 @@
     "filterMembers": "Jäsenet",
     "filterContacts": "Yhteyshenkilöt",
     "member": "Jäsen",
+    "owner": "Omistaja",
+    "admin": "Ylläpitäjä",
     "memberNoSignIn": "Jäsen, ei voi vielä kirjautua",
     "giveAccount": "Anna tili",
     "memberAdded": "Jäsen lisätty",
@@ -3695,7 +3719,12 @@
     "invitationSent": "Kutsu lähetetty",
     "failedToRemove": "Jäsenen poistaminen epäonnistui",
     "title": "Jäsenet",
-    "titleOne": "Jäsen"
+    "titleOne": "Jäsen",
+    "openTasksCount": "Henkilölle {{name}} osoitetut avoimet tehtävät: {{count}}",
+    "handTo": "Siirrä tehtävät henkilölle",
+    "handToYou": "{{name}} (sinä)",
+    "leaveUnassigned": "Ei kenellekään, jätä osoittamatta",
+    "handToHint": "Hän saa yhden ilmoituksen tehtävien määrästä. Valmiit tehtävät pysyvät ennallaan."
   },
   "signInLink": {
     "action": "Kirjautumislinkki",

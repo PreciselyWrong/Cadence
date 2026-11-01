@@ -1902,7 +1902,16 @@
     "upcomingProjects": "Upcoming Projects",
     "deleteError": "Failed to delete project",
     "shared": "Shared",
-    "status": "Project Status"
+    "status": "Project Status",
+    "unavailable": {
+      "noAccessTitle": "You don't have access to this project",
+      "noAccessHint": "Ask the project's owner to share it with you.",
+      "notFoundTitle": "This project doesn't exist or was deleted",
+      "notFoundHint": "Check the link, or find the project in your list.",
+      "failedTitle": "Failed to load project details.",
+      "failedHint": "Check your connection and reload the page.",
+      "backToProjects": "Back to Projects"
+    }
   },
   "projectStatus": {
     "not_started": "Not Started",
@@ -3111,6 +3120,10 @@
     "perSeatNote": "({{seats}} seats, you included)",
     "membersNeedTeam": "Pro is for one person. A Team plan lets you add members, from 3 seats up.",
     "seatsFull": "All {{seats}} seats of your plan are in use. Move to a bigger Team plan to add more people.",
+    "seatsFullTitle": "Every seat is taken",
+    "seatsFullContact": "All {{seats}} seats of your plan are in use. Contact us to add more people.",
+    "seatsContactHint": "Email {{email}} and we will add seats to your plan.",
+    "contactUs": "Contact us",
     "changePlan": "Change plan",
     "planChanged": "Your plan was changed."
   },
@@ -3157,7 +3170,16 @@
     "groupAlreadyShared": "already shared",
     "groupHint": "Every member gets an invitation, and people added to the group later are invited too.",
     "sharedWithGroups": "Shared with groups",
-    "groupCounts": "{{accepted}} accepted, {{pending}} pending"
+    "groupCounts": "{{accepted}} accepted, {{pending}} pending",
+    "leave": {
+      "action": "Leave",
+      "projectTitle": "Leave project",
+      "areaTitle": "Leave area",
+      "projectMessage": "You will no longer see \"{{name}}\" or its tasks, and your open tasks there will be unassigned. The person who shared it will be told.",
+      "areaMessage": "You will no longer see \"{{name}}\" or the projects shared with it, and your open tasks there will be unassigned. The person who shared it will be told.",
+      "left": "You left \"{{name}}\"",
+      "failed": "Could not leave. Please try again."
+    }
   },
   "viewType": {
     "label": "View",
@@ -3643,6 +3665,8 @@
     "filterMembers": "Members",
     "filterContacts": "Contacts",
     "member": "Member",
+    "owner": "Owner",
+    "admin": "Admin",
     "memberNoSignIn": "Member, can't sign in yet",
     "giveAccount": "Give account",
     "memberAdded": "Member added",
@@ -3694,7 +3718,12 @@
     "invitationSent": "Invitation sent",
     "failedToRemove": "Failed to remove member",
     "title": "Members",
-    "titleOne": "Member"
+    "titleOne": "Member",
+    "openTasksCount": "Open tasks assigned to {{name}}: {{count}}",
+    "handTo": "Hand their tasks to",
+    "handToYou": "{{name}} (you)",
+    "leaveUnassigned": "Nobody, leave them unassigned",
+    "handToHint": "They get one notice with the number of tasks. Done tasks stay as they are."
   },
   "signInLink": {
     "action": "Sign-in link",

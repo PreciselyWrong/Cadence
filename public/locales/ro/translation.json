@@ -1896,7 +1896,16 @@
     "upcomingProjects": "Proiecte viitoare",
     "deleteError": "Ștergerea proiectului a eșuat",
     "shared": "Partajat",
-    "status": "Starea proiectului"
+    "status": "Starea proiectului",
+    "unavailable": {
+      "noAccessTitle": "Nu ai acces la acest proiect",
+      "noAccessHint": "Roagă-l pe proprietarul proiectului să îl partajeze cu tine.",
+      "notFoundTitle": "Acest proiect nu există sau a fost șters",
+      "notFoundHint": "Verifică linkul sau caută proiectul în lista ta.",
+      "failedTitle": "Nu s-au putut încărca detaliile proiectului.",
+      "failedHint": "Verifică-ți conexiunea și reîncarcă pagina.",
+      "backToProjects": "Înapoi la proiecte"
+    }
   },
   "projectItem": {
     "edit": "Editează",
@@ -2933,7 +2942,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Părăsește",
+      "projectTitle": "Părăsește proiectul",
+      "areaTitle": "Părăsește zona",
+      "projectMessage": "Nu vei mai vedea \"{{name}}\" sau sarcinile sale, iar sarcinile tale deschise de acolo nu îți vor mai fi atribuite. Persoana care l-a partajat va fi anunțată.",
+      "areaMessage": "Nu vei mai vedea \"{{name}}\" sau proiectele partajate cu ea, iar sarcinile tale deschise de acolo nu îți vor mai fi atribuite. Persoana care a partajat-o va fi anunțată.",
+      "left": "Ai părăsit \"{{name}}\"",
+      "failed": "Nu s-a putut părăsi. Încearcă din nou."
+    }
   },
   "viewType": {
     "label": "Vizualizare",
@@ -3576,6 +3594,10 @@
     "perSeatNote": "({{seats}} locuri, inclusiv tu)",
     "membersNeedTeam": "Pro este pentru o singură persoană. Un plan Echipă îți permite să adaugi membri, de la 3 locuri în sus.",
     "seatsFull": "Toate cele {{seats}} locuri din planul tău sunt ocupate. Treci la un plan Echipă mai mare ca să adaugi mai multe persoane.",
+    "seatsFullTitle": "Toate locurile sunt ocupate",
+    "seatsFullContact": "Toate cele {{seats}} locuri din planul tău sunt ocupate. Contactează-ne ca să adaugi mai multe persoane.",
+    "seatsContactHint": "Scrie-ne la {{email}} și adăugăm locuri în planul tău.",
+    "contactUs": "Contactează-ne",
     "changePlan": "Schimbă planul",
     "planChanged": "Planul tău a fost schimbat."
   },
@@ -3653,6 +3675,8 @@
     "filterMembers": "Membri",
     "filterContacts": "Contacte",
     "member": "Membru",
+    "owner": "Proprietar",
+    "admin": "Administrator",
     "memberNoSignIn": "Membru, nu se poate autentifica încă",
     "giveAccount": "Dă un cont",
     "memberAdded": "Membru adăugat",
@@ -3704,7 +3728,12 @@
     "invitationSent": "Invitație trimisă",
     "failedToRemove": "Membrul nu a putut fi eliminat",
     "title": "Membri",
-    "titleOne": "Membru"
+    "titleOne": "Membru",
+    "openTasksCount": "Sarcini deschise atribuite lui {{name}}: {{count}}",
+    "handTo": "Predă sarcinile către",
+    "handToYou": "{{name}} (tu)",
+    "leaveUnassigned": "Nimeni, lasă-le neatribuite",
+    "handToHint": "Va primi o singură notificare cu numărul de sarcini. Sarcinile finalizate rămân neschimbate."
   },
   "signInLink": {
     "action": "Link de autentificare",

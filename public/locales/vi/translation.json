@@ -1891,7 +1891,16 @@
     "upcomingProjects": "Dự án sắp tới",
     "deleteError": "Không thể xóa dự án",
     "shared": "Đã chia sẻ",
-    "status": "Trạng thái dự án"
+    "status": "Trạng thái dự án",
+    "unavailable": {
+      "noAccessTitle": "Bạn không có quyền truy cập dự án này",
+      "noAccessHint": "Hãy nhờ chủ sở hữu dự án chia sẻ với bạn.",
+      "notFoundTitle": "Dự án này không tồn tại hoặc đã bị xóa",
+      "notFoundHint": "Kiểm tra liên kết hoặc tìm dự án trong danh sách của bạn.",
+      "failedTitle": "Không thể tải chi tiết dự án.",
+      "failedHint": "Kiểm tra kết nối và tải lại trang.",
+      "backToProjects": "Quay lại Dự án"
+    }
   },
   "projectItem": {
     "edit": "Chỉnh sửa",
@@ -2925,7 +2934,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Rời khỏi",
+      "projectTitle": "Rời khỏi dự án",
+      "areaTitle": "Rời khỏi lĩnh vực",
+      "projectMessage": "Bạn sẽ không còn thấy \"{{name}}\" hay các công việc của nó, và các công việc đang mở của bạn ở đó sẽ không còn được giao cho bạn. Người đã chia sẻ sẽ được thông báo.",
+      "areaMessage": "Bạn sẽ không còn thấy \"{{name}}\" hay các dự án được chia sẻ cùng nó, và các công việc đang mở của bạn ở đó sẽ không còn được giao cho bạn. Người đã chia sẻ sẽ được thông báo.",
+      "left": "Bạn đã rời khỏi \"{{name}}\"",
+      "failed": "Không thể rời khỏi. Vui lòng thử lại."
+    }
   },
   "viewType": {
     "label": "Chế độ xem",
@@ -3567,6 +3585,10 @@
     "perSeatNote": "({{seats}} chỗ, tính cả bạn)",
     "membersNeedTeam": "Pro dành cho một người. Gói Nhóm cho phép bạn thêm thành viên, từ 3 chỗ trở lên.",
     "seatsFull": "Cả {{seats}} chỗ trong gói của bạn đều đang được dùng. Chuyển sang gói Nhóm lớn hơn để thêm người.",
+    "seatsFullTitle": "Mọi chỗ đều đã được dùng",
+    "seatsFullContact": "Cả {{seats}} chỗ trong gói của bạn đều đang được dùng. Hãy liên hệ với chúng tôi để thêm người.",
+    "seatsContactHint": "Gửi email tới {{email}} và chúng tôi sẽ thêm chỗ vào gói của bạn.",
+    "contactUs": "Liên hệ với chúng tôi",
     "changePlan": "Đổi gói",
     "planChanged": "Gói của bạn đã được đổi."
   },
@@ -3644,6 +3666,8 @@
     "filterMembers": "Thành viên",
     "filterContacts": "Liên hệ",
     "member": "Thành viên",
+    "owner": "Chủ sở hữu",
+    "admin": "Quản trị viên",
     "memberNoSignIn": "Thành viên, chưa thể đăng nhập",
     "giveAccount": "Cấp tài khoản",
     "memberAdded": "Đã thêm thành viên",
@@ -3695,7 +3719,12 @@
     "invitationSent": "Đã gửi lời mời",
     "failedToRemove": "Không xóa được thành viên",
     "title": "Thành viên",
-    "titleOne": "Thành viên"
+    "titleOne": "Thành viên",
+    "openTasksCount": "Công việc đang mở được giao cho {{name}}: {{count}}",
+    "handTo": "Giao công việc của họ cho",
+    "handToYou": "{{name}} (bạn)",
+    "leaveUnassigned": "Không ai, để chưa giao",
+    "handToHint": "Người đó nhận một thông báo kèm số lượng công việc. Công việc đã xong giữ nguyên."
   },
   "signInLink": {
     "action": "Liên kết đăng nhập",

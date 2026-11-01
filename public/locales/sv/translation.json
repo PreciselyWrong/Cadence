@@ -1891,7 +1891,16 @@
     "upcomingProjects": "Kommande projekt",
     "deleteError": "Det gick inte att ta bort projektet",
     "shared": "Delat",
-    "status": "Projektstatus"
+    "status": "Projektstatus",
+    "unavailable": {
+      "noAccessTitle": "Du har inte åtkomst till det här projektet",
+      "noAccessHint": "Be projektets ägare att dela det med dig.",
+      "notFoundTitle": "Det här projektet finns inte eller har tagits bort",
+      "notFoundHint": "Kontrollera länken eller hitta projektet i din lista.",
+      "failedTitle": "Det gick inte att läsa in projektdetaljerna.",
+      "failedHint": "Kontrollera anslutningen och läs in sidan igen.",
+      "backToProjects": "Tillbaka till projekt"
+    }
   },
   "projectItem": {
     "edit": "Ändra",
@@ -2925,7 +2934,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Lämna",
+      "projectTitle": "Lämna projekt",
+      "areaTitle": "Lämna område",
+      "projectMessage": "Du ser inte längre \"{{name}}\" eller dess uppgifter, och dina öppna uppgifter där tilldelas inte längre dig. Personen som delade det får ett meddelande.",
+      "areaMessage": "Du ser inte längre \"{{name}}\" eller projekten som delas med det, och dina öppna uppgifter där tilldelas inte längre dig. Personen som delade det får ett meddelande.",
+      "left": "Du lämnade \"{{name}}\"",
+      "failed": "Det gick inte att lämna. Försök igen."
+    }
   },
   "viewType": {
     "label": "Vy",
@@ -3567,6 +3585,10 @@
     "perSeatNote": "({{seats}} platser, du inräknad)",
     "membersNeedTeam": "Pro är för en person. Med ett Team-abonnemang kan du lägga till medlemmar, från 3 platser och uppåt.",
     "seatsFull": "Alla {{seats}} platser i ditt abonnemang används. Byt till ett större Team-abonnemang för att lägga till fler personer.",
+    "seatsFullTitle": "Alla platser är upptagna",
+    "seatsFullContact": "Alla {{seats}} platser i ditt abonnemang används. Kontakta oss för att lägga till fler personer.",
+    "seatsContactHint": "Mejla {{email}} så lägger vi till platser i ditt abonnemang.",
+    "contactUs": "Kontakta oss",
     "changePlan": "Byt abonnemang",
     "planChanged": "Ditt abonnemang har ändrats."
   },
@@ -3644,6 +3666,8 @@
     "filterMembers": "Medlemmar",
     "filterContacts": "Kontakter",
     "member": "Medlem",
+    "owner": "Ägare",
+    "admin": "Administratör",
     "memberNoSignIn": "Medlem, kan inte logga in än",
     "giveAccount": "Ge konto",
     "memberAdded": "Medlem tillagd",
@@ -3695,7 +3719,12 @@
     "invitationSent": "Inbjudan skickad",
     "failedToRemove": "Det gick inte att ta bort medlemmen",
     "title": "Medlemmar",
-    "titleOne": "Medlem"
+    "titleOne": "Medlem",
+    "openTasksCount": "Öppna uppgifter tilldelade {{name}}: {{count}}",
+    "handTo": "Lämna över uppgifterna till",
+    "handToYou": "{{name}} (du)",
+    "leaveUnassigned": "Ingen, lämna dem otilldelade",
+    "handToHint": "Personen får en avisering med antalet uppgifter. Klara uppgifter lämnas som de är."
   },
   "signInLink": {
     "action": "Inloggningslänk",

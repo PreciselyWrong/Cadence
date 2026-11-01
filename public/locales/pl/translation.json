@@ -1897,7 +1897,16 @@
     "upcomingProjects": "Nadchodzące projekty",
     "deleteError": "Nie udało się usunąć projektu",
     "shared": "Udostępnione",
-    "status": "Status projektu"
+    "status": "Status projektu",
+    "unavailable": {
+      "noAccessTitle": "Nie masz dostępu do tego projektu",
+      "noAccessHint": "Poproś właściciela projektu, aby go Tobie udostępnił.",
+      "notFoundTitle": "Ten projekt nie istnieje lub został usunięty",
+      "notFoundHint": "Sprawdź link albo znajdź projekt na swojej liście.",
+      "failedTitle": "Nie udało się wczytać szczegółów projektu.",
+      "failedHint": "Sprawdź połączenie i odśwież stronę.",
+      "backToProjects": "Wróć do projektów"
+    }
   },
   "projectItem": {
     "edit": "Edytuj",
@@ -2937,7 +2946,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Opuść",
+      "projectTitle": "Opuść projekt",
+      "areaTitle": "Opuść obszar",
+      "projectMessage": "Nie będziesz już widzieć \"{{name}}\" ani jego zadań, a twoje otwarte zadania przestaną być do ciebie przypisane. Osoba, która to udostępniła, zostanie powiadomiona.",
+      "areaMessage": "Nie będziesz już widzieć \"{{name}}\" ani udostępnionych w nim projektów, a twoje otwarte zadania przestaną być do ciebie przypisane. Osoba, która to udostępniła, zostanie powiadomiona.",
+      "left": "Opuszczono \"{{name}}\"",
+      "failed": "Nie udało się opuścić. Spróbuj ponownie."
+    }
   },
   "viewType": {
     "label": "Widok",
@@ -3581,6 +3599,10 @@
     "perSeatNote": "(miejsca: {{seats}}, łącznie z Tobą)",
     "membersNeedTeam": "Pro jest dla jednej osoby. Plan Zespół pozwala dodawać członków, od 3 miejsc wzwyż.",
     "seatsFull": "Wszystkie miejsca w Twoim planie ({{seats}}) są zajęte. Przejdź na większy plan Zespół, aby dodać więcej osób.",
+    "seatsFullTitle": "Wszystkie miejsca są zajęte",
+    "seatsFullContact": "Wszystkie miejsca w Twoim planie ({{seats}}) są zajęte. Skontaktuj się z nami, aby dodać więcej osób.",
+    "seatsContactHint": "Napisz na {{email}}, a dodamy miejsca do Twojego planu.",
+    "contactUs": "Skontaktuj się z nami",
     "changePlan": "Zmień plan",
     "planChanged": "Twój plan został zmieniony."
   },
@@ -3658,6 +3680,8 @@
     "filterMembers": "Członkowie",
     "filterContacts": "Kontakty",
     "member": "Członek",
+    "owner": "Właściciel",
+    "admin": "Administrator",
     "memberNoSignIn": "Członek, nie może się jeszcze zalogować",
     "giveAccount": "Nadaj konto",
     "memberAdded": "Dodano członka",
@@ -3709,7 +3733,12 @@
     "invitationSent": "Zaproszenie wysłane",
     "failedToRemove": "Nie udało się usunąć członka",
     "title": "Członkowie",
-    "titleOne": "Członek"
+    "titleOne": "Członek",
+    "openTasksCount": "Otwarte zadania przypisane do {{name}}: {{count}}",
+    "handTo": "Przekaż zadania osobie",
+    "handToYou": "{{name}} (ty)",
+    "leaveUnassigned": "Nikomu, zostaw bez przypisania",
+    "handToHint": "Ta osoba dostanie jedno powiadomienie z liczbą zadań. Ukończone zadania pozostają bez zmian."
   },
   "signInLink": {
     "action": "Link do logowania",

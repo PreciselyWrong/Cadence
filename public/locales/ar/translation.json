@@ -1903,7 +1903,16 @@
     "upcomingProjects": "المشاريع القادمة",
     "deleteError": "تعذّر حذف المشروع",
     "shared": "مشترك",
-    "status": "حالة المشروع"
+    "status": "حالة المشروع",
+    "unavailable": {
+      "noAccessTitle": "ليس لديك صلاحية الوصول إلى هذا المشروع",
+      "noAccessHint": "اطلب من مالك المشروع مشاركته معك.",
+      "notFoundTitle": "هذا المشروع غير موجود أو تم حذفه",
+      "notFoundHint": "تحقق من الرابط، أو ابحث عن المشروع في قائمتك.",
+      "failedTitle": "تعذر تحميل تفاصيل المشروع.",
+      "failedHint": "تحقق من اتصالك وأعد تحميل الصفحة.",
+      "backToProjects": "العودة إلى المشاريع"
+    }
   },
   "projectItem": {
     "edit": "تعديل",
@@ -2949,7 +2958,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "مغادرة",
+      "projectTitle": "مغادرة المشروع",
+      "areaTitle": "مغادرة المجال",
+      "projectMessage": "لن ترى \"{{name}}\" أو مهامه بعد الآن، ولن تبقى مهامك المفتوحة هناك مسندة إليك. سيتم إبلاغ الشخص الذي شاركه.",
+      "areaMessage": "لن ترى \"{{name}}\" أو المشاريع المشاركة معه بعد الآن، ولن تبقى مهامك المفتوحة هناك مسندة إليك. سيتم إبلاغ الشخص الذي شاركه.",
+      "left": "غادرت \"{{name}}\"",
+      "failed": "تعذّرت المغادرة. حاول مرة أخرى."
+    }
   },
   "viewType": {
     "label": "عرض",
@@ -3595,6 +3613,10 @@
     "perSeatNote": "({{seats}} مقاعد، بما فيها مقعدك)",
     "membersNeedTeam": "خطة Pro لشخص واحد. خطة الفريق تتيح لك إضافة أعضاء، بدءًا من 3 مقاعد.",
     "seatsFull": "جميع مقاعد خطتك ({{seats}}) مستخدمة. انتقل إلى خطة فريق أكبر لإضافة المزيد من الأشخاص.",
+    "seatsFullTitle": "كل المقاعد مشغولة",
+    "seatsFullContact": "جميع مقاعد خطتك ({{seats}}) مستخدمة. تواصل معنا لإضافة المزيد من الأشخاص.",
+    "seatsContactHint": "راسلنا على {{email}} وسنضيف مقاعد إلى خطتك.",
+    "contactUs": "تواصل معنا",
     "changePlan": "تغيير الخطة",
     "planChanged": "تم تغيير خطتك."
   },
@@ -3672,6 +3694,8 @@
     "filterMembers": "الأعضاء",
     "filterContacts": "جهات الاتصال",
     "member": "عضو",
+    "owner": "المالك",
+    "admin": "مسؤول",
     "memberNoSignIn": "عضو، لا يستطيع تسجيل الدخول بعد",
     "giveAccount": "منح حساب",
     "memberAdded": "تمت إضافة العضو",
@@ -3723,7 +3747,12 @@
     "invitationSent": "تم إرسال الدعوة",
     "failedToRemove": "تعذّرت إزالة العضو",
     "title": "الأعضاء",
-    "titleOne": "عضو"
+    "titleOne": "عضو",
+    "openTasksCount": "المهام المفتوحة المسندة إلى {{name}}: {{count}}",
+    "handTo": "تسليم مهامه إلى",
+    "handToYou": "{{name}} (أنت)",
+    "leaveUnassigned": "لا أحد، اتركها بلا تعيين",
+    "handToHint": "سيصله إشعار واحد بعدد المهام. المهام المنجزة تبقى كما هي."
   },
   "signInLink": {
     "action": "رابط تسجيل الدخول",

@@ -1891,7 +1891,16 @@
     "upcomingProjects": "Proyek mendatang",
     "deleteError": "Gagal menghapus proyek",
     "shared": "Dibagikan",
-    "status": "Status Proyek"
+    "status": "Status Proyek",
+    "unavailable": {
+      "noAccessTitle": "Anda tidak memiliki akses ke proyek ini",
+      "noAccessHint": "Minta pemilik proyek untuk membagikannya kepada Anda.",
+      "notFoundTitle": "Proyek ini tidak ada atau telah dihapus",
+      "notFoundHint": "Periksa tautannya, atau cari proyek di daftar Anda.",
+      "failedTitle": "Gagal memuat detail proyek.",
+      "failedHint": "Periksa koneksi Anda dan muat ulang halaman.",
+      "backToProjects": "Kembali ke Proyek"
+    }
   },
   "projectItem": {
     "edit": "Sunting",
@@ -2925,7 +2934,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Keluar",
+      "projectTitle": "Keluar dari proyek",
+      "areaTitle": "Keluar dari area",
+      "projectMessage": "Anda tidak akan lagi melihat \"{{name}}\" atau tugasnya, dan tugas terbuka Anda di sana tidak lagi ditugaskan kepada Anda. Orang yang membagikannya akan diberi tahu.",
+      "areaMessage": "Anda tidak akan lagi melihat \"{{name}}\" atau proyek yang dibagikan bersamanya, dan tugas terbuka Anda di sana tidak lagi ditugaskan kepada Anda. Orang yang membagikannya akan diberi tahu.",
+      "left": "Anda keluar dari \"{{name}}\"",
+      "failed": "Gagal keluar. Silakan coba lagi."
+    }
   },
   "viewType": {
     "label": "Tampilan",
@@ -3567,6 +3585,10 @@
     "perSeatNote": "({{seats}} kursi, termasuk Anda)",
     "membersNeedTeam": "Pro untuk satu orang. Paket Tim memungkinkan Anda menambah anggota, mulai dari 3 kursi.",
     "seatsFull": "Semua {{seats}} kursi di paket Anda sudah terpakai. Pindah ke paket Tim yang lebih besar untuk menambah orang.",
+    "seatsFullTitle": "Semua kursi sudah terpakai",
+    "seatsFullContact": "Semua {{seats}} kursi di paket Anda sudah terpakai. Hubungi kami untuk menambah orang.",
+    "seatsContactHint": "Kirim email ke {{email}} dan kami akan menambah kursi ke paket Anda.",
+    "contactUs": "Hubungi kami",
     "changePlan": "Ganti paket",
     "planChanged": "Paket Anda telah diganti."
   },
@@ -3644,6 +3666,8 @@
     "filterMembers": "Anggota",
     "filterContacts": "Kontak",
     "member": "Anggota",
+    "owner": "Pemilik",
+    "admin": "Admin",
     "memberNoSignIn": "Anggota, belum dapat masuk",
     "giveAccount": "Beri akun",
     "memberAdded": "Anggota ditambahkan",
@@ -3695,7 +3719,12 @@
     "invitationSent": "Undangan terkirim",
     "failedToRemove": "Gagal menghapus anggota",
     "title": "Anggota",
-    "titleOne": "Anggota"
+    "titleOne": "Anggota",
+    "openTasksCount": "Tugas terbuka yang ditugaskan ke {{name}}: {{count}}",
+    "handTo": "Serahkan tugasnya kepada",
+    "handToYou": "{{name}} (Anda)",
+    "leaveUnassigned": "Tidak ada, biarkan tanpa penanggung jawab",
+    "handToHint": "Mereka menerima satu pemberitahuan berisi jumlah tugas. Tugas yang selesai tetap seperti semula."
   },
   "signInLink": {
     "action": "Tautan masuk",

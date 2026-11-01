@@ -1922,7 +1922,16 @@
         "upcomingProjects": "Nadchádzajúce projekty",
         "deleteError": "Projekt sa nepodarilo odstrániť",
         "shared": "Zdieľané",
-        "status": "Stav projektu"
+        "status": "Stav projektu",
+        "unavailable": {
+            "noAccessTitle": "K tomuto projektu nemáte prístup",
+            "noAccessHint": "Požiadajte vlastníka projektu, aby ho s vami zdieľal.",
+            "notFoundTitle": "Tento projekt neexistuje alebo bol odstránený",
+            "notFoundHint": "Skontrolujte odkaz alebo nájdite projekt vo svojom zozname.",
+            "failedTitle": "Podrobnosti projektu sa nepodarilo načítať.",
+            "failedHint": "Skontrolujte pripojenie a znova načítajte stránku.",
+            "backToProjects": "Späť na projekty"
+        }
     },
     "projectStatus": {
         "not_started": "Nezačatý",
@@ -3135,6 +3144,10 @@
         "perSeatNote": "(miesta: {{seats}}, vrátane vás)",
         "membersNeedTeam": "Pro je pre jednu osobu. Plán Tím vám umožní pridávať členov, od 3 miest vyššie.",
         "seatsFull": "Všetky miesta vášho plánu ({{seats}}) sú obsadené. Prejdite na väčší plán Tím, aby ste mohli pridať ďalších ľudí.",
+        "seatsFullTitle": "Všetky miesta sú obsadené",
+        "seatsFullContact": "Všetky miesta vášho plánu ({{seats}}) sú obsadené. Kontaktujte nás, aby ste mohli pridať ďalších ľudí.",
+        "seatsContactHint": "Napíšte na {{email}} a pridáme miesta do vášho plánu.",
+        "contactUs": "Kontaktujte nás",
         "changePlan": "Zmeniť plán",
         "planChanged": "Váš plán bol zmenený.",
         "seatCovered": "Your seat is paid by {{name}}.",
@@ -3183,7 +3196,16 @@
         "groupAlreadyShared": "už zdieľané",
         "groupHint": "Každý člen dostane pozvánku a pozvaní budú aj ľudia, ktorí sa do skupiny pridajú neskôr.",
         "sharedWithGroups": "Zdieľané so skupinami",
-        "groupCounts": "Prijaté: {{accepted}}, čaká sa: {{pending}}"
+        "groupCounts": "Prijaté: {{accepted}}, čaká sa: {{pending}}",
+        "leave": {
+            "action": "Opustiť",
+            "projectTitle": "Opustiť projekt",
+            "areaTitle": "Opustiť oblasť",
+            "projectMessage": "Už neuvidíte \"{{name}}\" ani jeho úlohy a vaše otvorené úlohy tam už nebudú priradené vám. Osoba, ktorá ho zdieľala, dostane upozornenie.",
+            "areaMessage": "Už neuvidíte \"{{name}}\" ani projekty zdieľané s ňou a vaše otvorené úlohy tam už nebudú priradené vám. Osoba, ktorá ju zdieľala, dostane upozornenie.",
+            "left": "Opustili ste \"{{name}}\"",
+            "failed": "Opustenie zlyhalo. Skúste to znova."
+        }
     },
     "viewType": {
         "label": "Zobrazenie",
@@ -3670,6 +3692,8 @@
         "filterMembers": "Členovia",
         "filterContacts": "Kontakty",
         "member": "Člen",
+        "owner": "Vlastník",
+        "admin": "Správca",
         "memberNoSignIn": "Člen, zatiaľ sa nemôže prihlásiť",
         "giveAccount": "Vytvoriť účet",
         "memberAdded": "Člen bol pridaný",
@@ -3721,7 +3745,12 @@
         "invitationSent": "Invitation sent",
         "failedToRemove": "Failed to remove member",
         "title": "Členovia",
-        "titleOne": "Člen"
+        "titleOne": "Člen",
+        "openTasksCount": "Otvorené úlohy priradené {{name}}: {{count}}",
+        "handTo": "Odovzdať úlohy",
+        "handToYou": "{{name}} (vy)",
+        "leaveUnassigned": "Nikomu, nechať nepriradené",
+        "handToHint": "Dostane jedno upozornenie s počtom úloh. Dokončené úlohy zostanú tak, ako sú."
     },
     "signInLink": {
         "action": "Prihlasovací odkaz",

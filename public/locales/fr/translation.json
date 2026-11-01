@@ -1895,7 +1895,16 @@
     "upcomingProjects": "Projets à venir",
     "deleteError": "Impossible de supprimer le projet",
     "shared": "Partagé",
-    "status": "Statut du projet"
+    "status": "Statut du projet",
+    "unavailable": {
+      "noAccessTitle": "Vous n'avez pas accès à ce projet",
+      "noAccessHint": "Demandez au propriétaire du projet de le partager avec vous.",
+      "notFoundTitle": "Ce projet n'existe pas ou a été supprimé",
+      "notFoundHint": "Vérifiez le lien ou retrouvez le projet dans votre liste.",
+      "failedTitle": "Impossible de charger les détails du projet.",
+      "failedHint": "Vérifiez votre connexion et rechargez la page.",
+      "backToProjects": "Retour aux projets"
+    }
   },
   "projectItem": {
     "edit": "Modifier",
@@ -2932,7 +2941,16 @@
     "selectPersonError": "Choisir une personne",
     "alreadyHasAccess": "a déjà accès",
     "someoneElseByEmail": "Quelqu'un d'autre, par e-mail",
-    "you": "vous"
+    "you": "vous",
+    "leave": {
+      "action": "Quitter",
+      "projectTitle": "Quitter le projet",
+      "areaTitle": "Quitter le domaine",
+      "projectMessage": "Vous ne verrez plus \"{{name}}\" ni ses tâches, et vos tâches ouvertes ne vous seront plus attribuées. La personne qui l'a partagé sera prévenue.",
+      "areaMessage": "Vous ne verrez plus \"{{name}}\" ni les projets partagés avec lui, et vos tâches ouvertes ne vous seront plus attribuées. La personne qui l'a partagé sera prévenue.",
+      "left": "Vous avez quitté \"{{name}}\"",
+      "failed": "Impossible de quitter. Veuillez réessayer."
+    }
   },
   "viewType": {
     "label": "Affichage",
@@ -3574,6 +3592,10 @@
     "perSeatNote": "({{seats}} places, vous compris)",
     "membersNeedTeam": "Pro est pour une personne. Un forfait Équipe vous permet d'ajouter des membres, à partir de 3 places.",
     "seatsFull": "Les {{seats}} places de votre forfait sont utilisées. Passez à un forfait Équipe plus grand pour ajouter d'autres personnes.",
+    "seatsFullTitle": "Toutes les places sont prises",
+    "seatsFullContact": "Les {{seats}} places de votre forfait sont utilisées. Contactez-nous pour ajouter d'autres personnes.",
+    "seatsContactHint": "Écrivez à {{email}} et nous ajouterons des places à votre forfait.",
+    "contactUs": "Nous contacter",
     "changePlan": "Changer de formule",
     "planChanged": "Votre formule a été modifiée."
   },
@@ -3651,6 +3673,8 @@
     "filterMembers": "Membres",
     "filterContacts": "Contacts",
     "member": "Membre",
+    "owner": "Propriétaire",
+    "admin": "Administrateur",
     "memberNoSignIn": "Membre, ne peut pas encore se connecter",
     "giveAccount": "Donner un compte",
     "memberAdded": "Membre ajouté",
@@ -3702,7 +3726,12 @@
     "invitationSent": "Invitation envoyée",
     "failedToRemove": "Impossible de retirer le membre",
     "title": "Membres",
-    "titleOne": "Membre"
+    "titleOne": "Membre",
+    "openTasksCount": "Tâches ouvertes assignées à {{name}} : {{count}}",
+    "handTo": "Confier ses tâches à",
+    "handToYou": "{{name}} (vous)",
+    "leaveUnassigned": "Personne, les laisser sans responsable",
+    "handToHint": "Cette personne reçoit un seul avis avec le nombre de tâches. Les tâches terminées restent telles quelles."
   },
   "signInLink": {
     "action": "Lien de connexion",

@@ -1891,7 +1891,16 @@
     "upcomingProjects": "Yaklaşan projeler",
     "deleteError": "Proje silinemedi",
     "shared": "Paylaşılan",
-    "status": "Proje Durumu"
+    "status": "Proje Durumu",
+    "unavailable": {
+      "noAccessTitle": "Bu projeye erişiminiz yok",
+      "noAccessHint": "Proje sahibinden projeyi sizinle paylaşmasını isteyin.",
+      "notFoundTitle": "Bu proje mevcut değil veya silinmiş",
+      "notFoundHint": "Bağlantıyı kontrol edin ya da projeyi listenizde bulun.",
+      "failedTitle": "Proje ayrıntıları yüklenemedi.",
+      "failedHint": "Bağlantınızı kontrol edip sayfayı yeniden yükleyin.",
+      "backToProjects": "Projelere dön"
+    }
   },
   "projectItem": {
     "edit": "Düzenle",
@@ -2925,7 +2934,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Ayrıl",
+      "projectTitle": "Projeden ayrıl",
+      "areaTitle": "Alandan ayrıl",
+      "projectMessage": "Artık \"{{name}}\" ve görevlerini görmeyeceksin, oradaki açık görevlerin de artık sana atanmış olmayacak. Paylaşan kişiye bildirilecek.",
+      "areaMessage": "Artık \"{{name}}\" ve onunla paylaşılan projeleri görmeyeceksin, oradaki açık görevlerin de artık sana atanmış olmayacak. Paylaşan kişiye bildirilecek.",
+      "left": "\"{{name}}\" öğesinden ayrıldın",
+      "failed": "Ayrılamadı. Lütfen tekrar dene."
+    }
   },
   "viewType": {
     "label": "Görünüm",
@@ -3567,6 +3585,10 @@
     "perSeatNote": "(siz dahil {{seats}} koltuk)",
     "membersNeedTeam": "Pro tek kişiliktir. Ekip planı, 3 koltuktan başlayarak üye eklemenizi sağlar.",
     "seatsFull": "Planınızdaki {{seats}} koltuğun hepsi kullanımda. Daha fazla kişi eklemek için daha büyük bir Ekip planına geçin.",
+    "seatsFullTitle": "Tüm koltuklar dolu",
+    "seatsFullContact": "Planınızdaki {{seats}} koltuğun hepsi kullanımda. Daha fazla kişi eklemek için bizimle iletişime geçin.",
+    "seatsContactHint": "{{email}} adresine yazın, planınıza koltuk ekleyelim.",
+    "contactUs": "Bize ulaşın",
     "changePlan": "Planı değiştir",
     "planChanged": "Planınız değiştirildi."
   },
@@ -3644,6 +3666,8 @@
     "filterMembers": "Üyeler",
     "filterContacts": "Kişiler",
     "member": "Üye",
+    "owner": "Sahip",
+    "admin": "Yönetici",
     "memberNoSignIn": "Üye, henüz oturum açamaz",
     "giveAccount": "Hesap ver",
     "memberAdded": "Üye eklendi",
@@ -3695,7 +3719,12 @@
     "invitationSent": "Davet gönderildi",
     "failedToRemove": "Üye çıkarılamadı",
     "title": "Üyeler",
-    "titleOne": "Üye"
+    "titleOne": "Üye",
+    "openTasksCount": "{{name}} kişisine atanmış açık görevler: {{count}}",
+    "handTo": "Görevlerini devret",
+    "handToYou": "{{name}} (siz)",
+    "leaveUnassigned": "Kimse, atanmamış bırak",
+    "handToHint": "Görev sayısını içeren tek bir bildirim alır. Tamamlanan görevler olduğu gibi kalır."
   },
   "signInLink": {
     "action": "Oturum açma bağlantısı",

@@ -77,6 +77,10 @@ export interface Project {
     is_shared?: boolean;
     // The viewer's access to the project (project page only).
     access_level?: 'none' | 'ro' | 'rw' | 'admin';
+    // the viewer owns the project or is an admin, so may manage its shares
+    can_share?: boolean;
+    // shared with the viewer on its own, so they may leave it
+    can_leave?: boolean;
     task_status?: ProjectTaskStatus;
     completion_percentage?: number;
     is_stalled?: boolean;

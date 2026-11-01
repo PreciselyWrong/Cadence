@@ -49,7 +49,7 @@ Thin Tauri 2 shell around your Cadence server (`desktop/`): the web app in a win
 
 ## What Cadence adds to tududi
 
-Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last synced with upstream `f04288d`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app works as in tududi. The full list, kept up to date, is in [docs/fork/FORK.md](docs/fork/FORK.md).
+Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last synced with upstream `eda9aa60`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app works as in tududi. The full list, kept up to date, is in [docs/fork/FORK.md](docs/fork/FORK.md).
 
 ### Offline sync and mobile
 

@@ -1892,7 +1892,16 @@
     "upcomingProjects": "Kommende prosjekter",
     "deleteError": "Kunne ikke slette prosjektet",
     "shared": "Delt",
-    "status": "Prosjektstatus"
+    "status": "Prosjektstatus",
+    "unavailable": {
+      "noAccessTitle": "Du har ikke tilgang til dette prosjektet",
+      "noAccessHint": "Be eieren av prosjektet om å dele det med deg.",
+      "notFoundTitle": "Dette prosjektet finnes ikke eller er slettet",
+      "notFoundHint": "Sjekk lenken, eller finn prosjektet i listen din.",
+      "failedTitle": "Kunne ikke laste inn prosjektdetaljene.",
+      "failedHint": "Sjekk tilkoblingen og last inn siden på nytt.",
+      "backToProjects": "Tilbake til prosjekter"
+    }
   },
   "projectItem": {
     "edit": "Rediger",
@@ -2926,7 +2935,16 @@
     "selectPersonError": "Choose a person",
     "alreadyHasAccess": "already has access",
     "someoneElseByEmail": "Someone else, by email",
-    "you": "you"
+    "you": "you",
+    "leave": {
+      "action": "Forlat",
+      "projectTitle": "Forlat prosjekt",
+      "areaTitle": "Forlat område",
+      "projectMessage": "Du ser ikke lenger \"{{name}}\" eller oppgavene der, og de åpne oppgavene dine der blir ikke lenger tildelt deg. Personen som delte det, får beskjed.",
+      "areaMessage": "Du ser ikke lenger \"{{name}}\" eller prosjektene som er delt med det, og de åpne oppgavene dine der blir ikke lenger tildelt deg. Personen som delte det, får beskjed.",
+      "left": "Du forlot \"{{name}}\"",
+      "failed": "Kunne ikke forlate. Prøv igjen."
+    }
   },
   "viewType": {
     "label": "Visning",
@@ -3572,6 +3590,10 @@
     "perSeatNote": "({{seats}} plasser, deg inkludert)",
     "membersNeedTeam": "Pro er for én person. Med et Team-abonnement kan du legge til medlemmer, fra 3 plasser og oppover.",
     "seatsFull": "Alle {{seats}} plassene i abonnementet ditt er i bruk. Bytt til et større Team-abonnement for å legge til flere personer.",
+    "seatsFullTitle": "Alle plassene er i bruk",
+    "seatsFullContact": "Alle {{seats}} plassene i abonnementet ditt er i bruk. Kontakt oss for å legge til flere personer.",
+    "seatsContactHint": "Send e-post til {{email}}, så legger vi til plasser i abonnementet ditt.",
+    "contactUs": "Kontakt oss",
     "changePlan": "Bytt abonnement",
     "planChanged": "Abonnementet ditt er endret."
   },
@@ -3649,6 +3671,8 @@
     "filterMembers": "Medlemmer",
     "filterContacts": "Kontakter",
     "member": "Medlem",
+    "owner": "Eier",
+    "admin": "Administrator",
     "memberNoSignIn": "Medlem, kan ikke logge inn ennå",
     "giveAccount": "Gi konto",
     "memberAdded": "Medlem lagt til",
@@ -3700,7 +3724,12 @@
     "invitationSent": "Invitasjon sendt",
     "failedToRemove": "Kunne ikke fjerne medlemmet",
     "title": "Medlemmer",
-    "titleOne": "Medlem"
+    "titleOne": "Medlem",
+    "openTasksCount": "Åpne oppgaver tildelt {{name}}: {{count}}",
+    "handTo": "Gi oppgavene til",
+    "handToYou": "{{name}} (deg)",
+    "leaveUnassigned": "Ingen, la dem stå uten tildeling",
+    "handToHint": "De får ett varsel med antall oppgaver. Fullførte oppgaver forblir som de er."
   },
   "signInLink": {
     "action": "Innloggingslenke",
