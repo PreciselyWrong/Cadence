@@ -10,4 +10,14 @@
             android:targetPackage="ch.nicolab.cadence"
             android:targetClass="ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity" />
     </shortcut>
+    <shortcut
+        android:shortcutId="capture_inbox"
+        android:enabled="true"
+        android:icon="@drawable/tasks_ic_notification"
+        android:shortcutShortLabel="@string/tasks_shortcut_inbox">
+        <intent
+            android:action="ch.nicolab.cadence.action.CAPTURE_INBOX"
+            android:targetPackage="ch.nicolab.cadence"
+            android:targetClass="ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity" />
+    </shortcut>
 </shortcuts>

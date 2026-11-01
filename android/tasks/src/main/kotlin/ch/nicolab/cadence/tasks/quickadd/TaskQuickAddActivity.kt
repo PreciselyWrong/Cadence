@@ -62,15 +62,19 @@ class TaskQuickAddActivity : ComponentActivity() {
         when (intent.action) {
             Intent.ACTION_SEND -> captureShared(intent.getStringExtra(Intent.EXTRA_TEXT))
             Intent.ACTION_PROCESS_TEXT -> captureShared(intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString())
-            else -> showQuickAdd()
+            else -> showQuickAdd(QuickAddTarget.fromAction(intent.action))
         }
     }
 
-    private fun showQuickAdd() {
+    private fun showQuickAdd(target: QuickAddTarget) {
         setContent {
             CadenceTheme {
                 QuickAddCard(
-                    onSubmit = { draft -> TasksGraph.repository(this@TaskQuickAddActivity).createTask(draft) },
+                    target = target,
+                    onSubmit = { draft ->
+                        val repository = TasksGraph.repository(this@TaskQuickAddActivity)
+                        if (target == QuickAddTarget.INBOX) repository.captureInbox(draft.name) else repository.createTask(draft)
+                    },
                     onDismiss = { finish() },
                 )
             }
@@ -104,7 +108,7 @@ private fun DueChoice.dateFrom(today: LocalDate): LocalDate? = when (this) {
 }
 
 @Composable
-private fun QuickAddCard(onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () -> Unit) {
+private fun QuickAddCard(target: QuickAddTarget, onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () -> Unit) {
     var name by rememberSaveable { mutableStateOf("") }
     var due by rememberSaveable { mutableStateOf(DueChoice.TODAY) }
     var saving by remember { mutableStateOf(false) }
@@ -122,7 +126,7 @@ private fun QuickAddCard(onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () ->
         if (title.isEmpty() || saving) return
         saving = true
         saveError = null
-        val draft = TaskDraft(name = title, dueDate = due.dateFrom(LocalDate.now()))
+        val draft = TaskDraft(name = title, dueDate = if (target == QuickAddTarget.TASK) due.dateFrom(LocalDate.now()) else null)
         scope.launch {
             try {
                 onSubmit(draft)
@@ -165,12 +169,12 @@ private fun QuickAddCard(onSubmit: suspend (TaskDraft) -> Unit, onDismiss: () ->
                 CadenceField(
                     value = name,
                     onValue = { name = it },
-                    label = stringResource(R.string.tasks_quick_add_hint),
+                    label = stringResource(if (target == QuickAddTarget.INBOX) R.string.tasks_quick_add_inbox_hint else R.string.tasks_quick_add_hint),
                     enabled = !saving,
                     fieldModifier = Modifier.focusRequester(focusRequester),
                     onDone = { submit() },
                 )
-                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                if (target == QuickAddTarget.TASK) Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                     DueChoice.entries.forEach { choice ->
                         ChoiceChip(
                             label = stringResource(choice.label),

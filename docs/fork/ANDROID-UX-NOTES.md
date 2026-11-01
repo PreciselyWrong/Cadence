@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Raccourci « Inbox » sur l'icône
+
+- **Problème** : pour noter une idée sans date, il fallait ouvrir la liste des tâches puis choisir l'Inbox.
+- **Décision** : second raccourci statique « Inbox » ; la fenêtre d'ajout rapide n'affiche alors ni échéance ni « Nouvelle tâche » et écrit dans l'Inbox.
+- **Web** : pas d'équivalent système ; la capture rapide web reste Ctrl+K.
+
 ### 2026-11-01 — Domaine dans l'ajout rapide : `~nom`
 
 - **Problème** : le web désigne un domaine par `~nom` dans la saisie, Android l'ignorait.

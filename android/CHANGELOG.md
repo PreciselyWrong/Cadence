@@ -6,6 +6,9 @@
 ### Nouveautés
 - Ajout rapide : `~nom` désigne un domaine existant (retiré du titre) ; un nom inconnu reste dans le titre.
 
+### Nouveautés
+- Raccourci « Inbox » sur l'icône : une idée part directement dans l'Inbox, sans date ni choix de tâche.
+
 ### Corrections
 - Échéance passée : plus de couleur d'alerte ni de graisse dans le widget Tâches, le widget Aujourd'hui, la barre de l'agenda et le bloc « À replanifier » ; la date passée s'affiche comme les autres.
 - En-têtes de section : un compteur à zéro n'est plus affiché.
