@@ -78,6 +78,7 @@
         "undo": "Späť"
     },
     "sidebar": {
+        "links": "Odkazy",
         "dashboard": "Prehľad",
         "projects": "Projekty",
         "tasks": "Úlohy",
@@ -5247,5 +5248,61 @@
     },
     "tag": {
         "viewTag": "Prejsť na štítok"
+    },
+    "links": {
+        "title": "Odkazy",
+        "count_one": "{{count}} odkaz",
+        "count_other": "{{count}} odkazov",
+        "count_few": "{{count}} odkazy",
+        "count_many": "{{count}} odkazu",
+        "search": "Hľadať v odkazoch",
+        "filter": {
+            "kind": "Typ",
+            "status": "Stav",
+            "tag": "Štítok",
+            "domain": "Stránka",
+            "sort": "Radenie",
+            "allKinds": "Všetky typy",
+            "active": "Nezahodené",
+            "allStatuses": "Všetky stavy",
+            "allTags": "Všetky štítky",
+            "allDomains": "Všetky stránky"
+        },
+        "sort": {
+            "newest": "Najnovšie prvé",
+            "oldest": "Najstaršie prvé"
+        },
+        "kind": {
+            "repo": "Repozitár",
+            "article": "Článok",
+            "video": "Video",
+            "tool": "Nástroj",
+            "other": "Iné"
+        },
+        "status": {
+            "new": "Nový",
+            "tested": "Vyskúšaný",
+            "kept": "Ponechaný",
+            "parked": "Neskôr",
+            "dropped": "Zahodený"
+        },
+        "action": {
+            "tested": "Vyskúšať",
+            "kept": "Ponechať",
+            "parked": "Neskôr",
+            "dropped": "Zahodiť"
+        },
+        "lastCommit": "aktualizované {{date}}",
+        "fetching": "Čítanie stránky…",
+        "editTags": "Upraviť štítky",
+        "goToSource": "Prejsť na miesto uloženia",
+        "open": "Otvoriť odkaz",
+        "note": "Vaša poznámka",
+        "notePlaceholder": "Prečo ste ho uložili…",
+        "addNote": "Pridať poznámku",
+        "saveError": "Odkaz sa nepodarilo uložiť.",
+        "loadError": "Odkazy sa nepodarilo načítať.",
+        "empty": "Odkazy, ktoré zachytíte v prijatých, v úlohe alebo v poznámke, sa zobrazia tu spolu s tým, čo o sebe hovorí stránka.",
+        "noMatch": "Žiadny odkaz nezodpovedá týmto filtrom."
     }
 }

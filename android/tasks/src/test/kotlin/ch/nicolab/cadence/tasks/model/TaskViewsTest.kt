@@ -107,6 +107,28 @@ class TaskViewsTest {
     }
 
     @Test
+    fun `à classer exclut les tâches déjà rangées ailleurs`() {
+        val tasks = listOf(
+            task("sans-rien"),
+            task("dans-un-domaine").copy(areaUid = "domaine"),
+            task("plus-tard").copy(someday = true),
+            task("en-vue").copy(inViewAt = Instant.parse("2026-10-29T08:00:00Z")),
+            task("cette-semaine").copy(weekOf = LocalDate.of(2026, 10, 26)),
+            task("recurrente").copy(recurrenceType = "weekly"),
+            task("reportee").copy(deferUntil = Instant.parse("2026-11-05T00:00:00Z")),
+        )
+
+        assertEquals(listOf("sans-rien"), TaskViews.unsorted(tasks, now).map { it.uid })
+    }
+
+    @Test
+    fun `à classer garde une tâche sans répétition explicite`() {
+        val tasks = listOf(task("aucune").copy(recurrenceType = "none"))
+
+        assertEquals(listOf("aucune"), TaskViews.unsorted(tasks, now).map { it.uid })
+    }
+
+    @Test
     fun `reporter une tâche à heure fixe garde son heure locale`() {
         val paris = ZoneId.of("Europe/Paris")
         // 07:30 UTC vaut 08:30 à Paris fin octobre (heure d'hiver).

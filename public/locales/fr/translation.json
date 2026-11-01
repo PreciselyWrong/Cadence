@@ -77,6 +77,7 @@
     "untitled": "Sans titre"
   },
   "sidebar": {
+    "links": "Liens",
     "dashboard": "Tableau de bord",
     "projects": "Projets",
     "tasks": "Tâches",
@@ -5254,5 +5255,59 @@
   "noteCreation": "Créer une note",
   "tag": {
     "viewTag": "Aller à l'étiquette"
+  },
+  "links": {
+    "title": "Liens",
+    "count_one": "{{count}} lien",
+    "count_other": "{{count}} liens",
+    "search": "Chercher dans les liens",
+    "filter": {
+      "kind": "Type",
+      "status": "Statut",
+      "tag": "Étiquette",
+      "domain": "Site",
+      "sort": "Tri",
+      "allKinds": "Tous les types",
+      "active": "Sauf jetés",
+      "allStatuses": "Tous les statuts",
+      "allTags": "Toutes les étiquettes",
+      "allDomains": "Tous les sites"
+    },
+    "sort": {
+      "newest": "Plus récents d'abord",
+      "oldest": "Plus anciens d'abord"
+    },
+    "kind": {
+      "repo": "Dépôt",
+      "article": "Article",
+      "video": "Vidéo",
+      "tool": "Outil",
+      "other": "Autre"
+    },
+    "status": {
+      "new": "Nouveau",
+      "tested": "Testé",
+      "kept": "Gardé",
+      "parked": "Plus tard",
+      "dropped": "Jeté"
+    },
+    "action": {
+      "tested": "Tester",
+      "kept": "Garder",
+      "parked": "Plus tard",
+      "dropped": "Jeter"
+    },
+    "lastCommit": "mis à jour {{date}}",
+    "fetching": "Lecture de la page…",
+    "editTags": "Modifier les étiquettes",
+    "goToSource": "Aller à l'endroit où il a été noté",
+    "open": "Ouvrir le lien",
+    "note": "Votre note",
+    "notePlaceholder": "Pourquoi vous l'avez gardé…",
+    "addNote": "Ajouter une note",
+    "saveError": "Impossible d'enregistrer le lien.",
+    "loadError": "Impossible de charger les liens.",
+    "empty": "Les liens notés dans la boîte de réception, une tâche ou une note arrivent ici, avec ce que la page dit d'elle-même.",
+    "noMatch": "Aucun lien ne correspond à ces filtres."
   }
 }

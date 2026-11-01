@@ -77,6 +77,7 @@
     "undo": "Anulează"
   },
   "sidebar": {
+    "links": "Linkuri",
     "dashboard": "Tabloul de bord",
     "projects": "Proiecte",
     "tasks": "Sarcini",
@@ -5257,5 +5258,60 @@
   },
   "tag": {
     "viewTag": "Mergi la etichetă"
+  },
+  "links": {
+    "title": "Linkuri",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} de linkuri",
+    "count_few": "{{count}} linkuri",
+    "search": "Caută în linkuri",
+    "filter": {
+      "kind": "Tip",
+      "status": "Stare",
+      "tag": "Etichetă",
+      "domain": "Site",
+      "sort": "Sortare",
+      "allKinds": "Toate tipurile",
+      "active": "Nearuncate",
+      "allStatuses": "Toate stările",
+      "allTags": "Toate etichetele",
+      "allDomains": "Toate site-urile"
+    },
+    "sort": {
+      "newest": "Cele mai noi întâi",
+      "oldest": "Cele mai vechi întâi"
+    },
+    "kind": {
+      "repo": "Depozit",
+      "article": "Articol",
+      "video": "Video",
+      "tool": "Unealtă",
+      "other": "Altul"
+    },
+    "status": {
+      "new": "Nou",
+      "tested": "Încercat",
+      "kept": "Păstrat",
+      "parked": "Mai târziu",
+      "dropped": "Renunțat"
+    },
+    "action": {
+      "tested": "Încearcă",
+      "kept": "Păstrează",
+      "parked": "Mai târziu",
+      "dropped": "Renunță"
+    },
+    "lastCommit": "actualizat {{date}}",
+    "fetching": "Se citește pagina…",
+    "editTags": "Editează etichetele",
+    "goToSource": "Mergi la locul unde a fost salvat",
+    "open": "Deschide linkul",
+    "note": "Nota ta",
+    "notePlaceholder": "De ce l-ai salvat…",
+    "addNote": "Adaugă o notă",
+    "saveError": "Linkul nu a putut fi salvat.",
+    "loadError": "Linkurile nu au putut fi încărcate.",
+    "empty": "Linkurile salvate din inbox, dintr-o sarcină sau dintr-o notă apar aici, cu ce spune pagina despre ea.",
+    "noMatch": "Niciun link nu se potrivește cu aceste filtre."
   }
 }

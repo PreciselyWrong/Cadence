@@ -8,6 +8,8 @@ import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -109,6 +111,29 @@ internal class RoomTaskRepository(
 
     override fun observeGoals(): Flow<List<GoalItem>> =
         database.goalDao().observeAll().map { rows -> rows.map { it.toItem() } }
+
+    override fun observeLinks(): Flow<List<LinkItem>> =
+        database.linkDao().observeAll().map { rows -> rows.map { it.toItem() } }
+
+    override suspend fun setLinkNote(uid: String, note: String?) {
+        val value = note?.trim()?.ifEmpty { null }
+        writeLink(uid, "note" to jsonString(value)) { it.copy(note = value) }
+    }
+
+    override suspend fun setLinkStatus(uid: String, status: LinkStatus) {
+        writeLink(uid, "status" to JsonPrimitive(status.wire)) { it.copy(status = status.wire) }
+    }
+
+    private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = database.linkDao().get(uid) ?: return@withTransaction false
+            database.linkDao().upsert(change(existing))
+            outbox.insert(LocalOps.upsert("link", uid, mapOf(field), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
 
     override fun observeInbox(): Flow<List<InboxEntry>> =
         inboxDao.observeAll().map { rows -> rows.map { it.toEntry() } }

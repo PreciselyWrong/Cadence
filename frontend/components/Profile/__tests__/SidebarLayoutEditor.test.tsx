@@ -126,7 +126,7 @@ describe('SidebarLayoutEditor', () => {
         expect(
             screen.getByRole('switch', { name: 'Show Notes' })
         ).toHaveAttribute('aria-checked', 'true');
-        expect(screen.getAllByRole('switch')).toHaveLength(19);
+        expect(screen.getAllByRole('switch')).toHaveLength(20);
     });
 
     it('reports the item when a switch is clicked', () => {
@@ -227,6 +227,7 @@ describe('SidebarLayoutEditor', () => {
             });
 
             expect(onReorder).toHaveBeenCalledWith('links', [
+                'links',
                 'today',
                 'upcomingTasks',
                 'inbox',

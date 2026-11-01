@@ -8,6 +8,7 @@ export type SmartListId = (typeof SMART_LIST_IDS)[number];
 export const RAIL_IDS = [
     'today',
     'inbox',
+    'links',
     'calendar',
     'notes',
     'habits',
@@ -58,6 +59,7 @@ export interface MinimalSidebarSettings {
 const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
     today: 'rail',
     inbox: 'rail',
+    links: 'more',
     calendar: 'rail',
     notes: 'rail',
     habits: 'rail',

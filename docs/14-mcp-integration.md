@@ -29,6 +29,7 @@ This guide explains how to configure and use the Model Context Protocol (MCP) in
     - [Tags Tools (5)](#tags-tools-5)
     - [Habits Tools (9)](#habits-tools-9)
     - [People Tools (5)](#people-tools-5)
+    - [Links Tools (3)](#links-tools-3)
     - [Misc Tools (1)](#misc-tools-1)
 - [Claude Desktop Setup](#claude-desktop-setup)
 - [Cursor Setup](#cursor-setup)
@@ -45,7 +46,7 @@ Cadence's MCP integration allows AI assistants (Claude, Cursor, VS Code extensio
 
 **Key Features:**
 
-- **65 Tools:** Complete CRUD operations for tasks, projects, inbox, views, goals, areas, notes, tags, habits, and people, plus task comments
+- **68 Tools:** Complete CRUD operations for tasks, projects, inbox, views, goals, areas, notes, tags, habits, and people, plus task comments
 - **Secure Authentication:** API token-based authentication with user isolation
 - **Local or Remote:** Two transport modes for different use cases
 - **Enabled by default:** No configuration needed to turn MCP on
@@ -1185,6 +1186,43 @@ Permanently delete a person/contact.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Person UID |
+
+---
+
+### Links Tools (3)
+
+Links are found by the server in inbox items, tasks and notes, with their page metadata ([37-links.md](37-links.md)). An assistant may write the note, the tags and the status, never the URL or the metadata.
+
+#### `list_links`
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `status` | string | No | — | Comma list of `new`, `kept`, `tested`, `parked`, `dropped` |
+| `kind` | string | No | — | Comma list of `repo`, `article`, `video`, `tool`, `other` |
+| `tag` | string | No | — | Exact tag name |
+| `untagged` | boolean | No | `false` | Only links without any tag (to tag them) |
+| `domain` | string | No | — | Domain without `www.` |
+| `query` | string | No | — | Searched in title, description, url, note and README excerpt |
+| `source_type` | string | No | — | `inbox_item`, `task` or `note` |
+| `sort` | string | No | `newest` | `newest` or `oldest` |
+| `limit`, `offset` | number | No | 100, 0 | Max 1000 |
+
+**Returns:** `{ count, total, links }`; each link has `uid`, `url`, `domain`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `note`, `status`, `tags`, `source_type`, `source_uid`, `fetch_status`.
+
+#### `get_link`
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | string | Yes | Link UID |
+
+#### `update_link`
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | string | Yes | Link UID |
+| `note` | string or null | No | Free text; `null` or `""` clears it |
+| `tags` | string[] | No | Replaces the whole set; nested tags as paths (`dev/tools`); `[]` removes all |
+| `status` | string | No | `new`, `kept`, `tested`, `parked`, `dropped` |
 
 ---
 

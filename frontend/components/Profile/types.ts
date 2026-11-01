@@ -43,6 +43,7 @@ export interface UiSettings {
 
 export interface SidebarVisibleSections {
     inbox?: boolean;
+    links?: boolean;
     today?: boolean;
     allTasks?: boolean;
     upcomingTasks?: boolean;

@@ -42,7 +42,7 @@ class SyncEngineTest {
         assertEquals(SyncResult.Synced, result)
         assertEquals(42L, store.cursor())
         assertEquals("Acheter du pain", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)
-        assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item"), api.snapshotEntities)
+        assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item", "link"), api.snapshotEntities)
     }
 
     @Test
@@ -310,7 +310,7 @@ class SyncEngineTest {
         assertEquals(5L, api.pullCursors.first())
         assertEquals(99L, api.pullCursors.last())
         assertEquals(99L, store.cursor())
-        assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item"), api.snapshotEntities)
+        assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item", "link"), api.snapshotEntities)
         assertEquals(2, pushes)
         assertTrue(store.pendingOps(10).isEmpty())
         assertEquals("modifié ici", store.row("task", "task-1")["name"]!!.jsonPrimitive.content)

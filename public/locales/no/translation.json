@@ -76,6 +76,7 @@
     "undo": "Angre"
   },
   "sidebar": {
+    "links": "Lenker",
     "dashboard": "Dashbord",
     "projects": "Prosjekter",
     "tasks": "Oppgaver",
@@ -5245,5 +5246,59 @@
   },
   "tag": {
     "viewTag": "Gå til merkelapp"
+  },
+  "links": {
+    "title": "Lenker",
+    "count_one": "{{count}} lenke",
+    "count_other": "{{count}} lenker",
+    "search": "Søk i lenker",
+    "filter": {
+      "kind": "Type",
+      "status": "Status",
+      "tag": "Merkelapp",
+      "domain": "Nettsted",
+      "sort": "Sortering",
+      "allKinds": "Alle typer",
+      "active": "Ikke forkastet",
+      "allStatuses": "Alle statuser",
+      "allTags": "Alle merkelapper",
+      "allDomains": "Alle nettsteder"
+    },
+    "sort": {
+      "newest": "Nyeste først",
+      "oldest": "Eldste først"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikkel",
+      "video": "Video",
+      "tool": "Verktøy",
+      "other": "Annet"
+    },
+    "status": {
+      "new": "Ny",
+      "tested": "Prøvd",
+      "kept": "Beholdt",
+      "parked": "Senere",
+      "dropped": "Forkastet"
+    },
+    "action": {
+      "tested": "Prøv",
+      "kept": "Behold",
+      "parked": "Senere",
+      "dropped": "Forkast"
+    },
+    "lastCommit": "oppdatert {{date}}",
+    "fetching": "Leser siden…",
+    "editTags": "Rediger merkelapper",
+    "goToSource": "Gå til der den ble lagret",
+    "open": "Åpne lenken",
+    "note": "Notatet ditt",
+    "notePlaceholder": "Hvorfor du lagret den…",
+    "addNote": "Legg til et notat",
+    "saveError": "Lenken kunne ikke lagres.",
+    "loadError": "Lenkene kunne ikke lastes.",
+    "empty": "Lenker du lagrer fra innboksen, en oppgave eller et notat vises her, med det siden sier om seg selv.",
+    "noMatch": "Ingen lenker samsvarer med disse filtrene."
   }
 }

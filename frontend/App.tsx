@@ -58,6 +58,7 @@ import ProductivityPage from './components/Insights/ProductivityPage';
 import ReportsPage from './components/Insights/ReportsPage';
 import SummaryPage from './components/Insights/SummaryPage';
 import ReviewPage from './components/Review/ReviewPage';
+import LinksPage from './components/Links/LinksPage';
 import DailyBriefPage from './components/Insights/DailyBriefPage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
@@ -561,6 +562,7 @@ const App: React.FC = () => {
                             />
                             <Route path="/review" element={<ReviewPage />} />
                             <Route path="/inbox" element={<InboxItems />} />
+                            <Route path="/links" element={<LinksPage />} />
                             <Route path="/habits" element={<Habits />} />
                             <Route
                                 path="/habit/new"

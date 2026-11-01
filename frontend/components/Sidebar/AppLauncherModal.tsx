@@ -13,6 +13,7 @@ import {
     FlagIcon,
     FolderIcon,
     InboxIcon,
+    LinkIcon,
     LightBulbIcon,
     ListBulletIcon,
     QueueListIcon,
@@ -90,6 +91,15 @@ const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 title: t('sidebar.inbox', 'Inbox'),
                 Icon: InboxIcon,
                 gradient: 'from-sky-400 to-blue-600',
+            },
+            {
+                id: 'links',
+                group: 'links',
+                orderKey: 'links',
+                path: '/links',
+                title: t('sidebar.links', 'Links'),
+                Icon: LinkIcon,
+                gradient: 'from-cyan-400 to-sky-600',
             },
             {
                 id: 'today',

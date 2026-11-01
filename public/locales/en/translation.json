@@ -76,6 +76,7 @@
     "undo": "Undo"
   },
   "sidebar": {
+    "links": "Links",
     "dashboard": "Dashboard",
     "projects": "Projects",
     "tasks": "Tasks",
@@ -5203,5 +5204,59 @@
   },
   "tag": {
     "viewTag": "Go to tag"
+  },
+  "links": {
+    "title": "Links",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} links",
+    "search": "Search links",
+    "filter": {
+      "kind": "Kind",
+      "status": "Status",
+      "tag": "Tag",
+      "domain": "Site",
+      "sort": "Sort",
+      "allKinds": "All kinds",
+      "active": "Not dropped",
+      "allStatuses": "All statuses",
+      "allTags": "All tags",
+      "allDomains": "All sites"
+    },
+    "sort": {
+      "newest": "Newest first",
+      "oldest": "Oldest first"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Article",
+      "video": "Video",
+      "tool": "Tool",
+      "other": "Other"
+    },
+    "status": {
+      "new": "New",
+      "tested": "Tried",
+      "kept": "Kept",
+      "parked": "Later",
+      "dropped": "Dropped"
+    },
+    "action": {
+      "tested": "Try",
+      "kept": "Keep",
+      "parked": "Later",
+      "dropped": "Drop"
+    },
+    "lastCommit": "updated {{date}}",
+    "fetching": "Reading the page…",
+    "editTags": "Edit tags",
+    "goToSource": "Go to where it was saved",
+    "open": "Open the link",
+    "note": "Your note",
+    "notePlaceholder": "Why you saved it…",
+    "addNote": "Add a note",
+    "saveError": "Could not save the link.",
+    "loadError": "Could not load the links.",
+    "empty": "Links you capture in the inbox, a task or a note show up here, with what the page says about itself.",
+    "noMatch": "No link matches these filters."
   }
 }

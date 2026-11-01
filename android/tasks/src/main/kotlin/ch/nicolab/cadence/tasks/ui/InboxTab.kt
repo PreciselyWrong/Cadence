@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.links.LinkPreviews
-import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkLists
+import androidx.compose.ui.platform.LocalUriHandler
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.customActions
@@ -83,6 +85,8 @@ internal fun InboxTab(
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.inbox.collectAsStateWithLifecycle()
+    val links by viewModel.links.collectAsStateWithLifecycle()
+    var notingLink by remember { mutableStateOf<LinkItem?>(null) }
     val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
@@ -116,6 +120,8 @@ internal fun InboxTab(
             IdeaRow(
                 modifier = Modifier.padding(bottom = Space.sm),
                 entry = entry,
+                link = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content) },
+                onEditLinkNote = { notingLink = it },
                 previews = viewModel.linkPreviews,
                 onOpen = { converting = entry },
                 onToday = { viewModel.convertIdea(entry, TaskDraft(name = entry.content, dueDate = moment.today)) },
@@ -130,6 +136,13 @@ internal fun InboxTab(
         }
     }
 
+    notingLink?.let { link ->
+        LinkNoteDialog(
+            initial = link.note,
+            onSave = { viewModel.setLinkNote(link.uid, it); notingLink = null },
+            onDismiss = { notingLink = null },
+        )
+    }
     scheduling?.let { entry ->
         TaskDatePickerDialog(
             initial = moment.today,
@@ -213,6 +226,8 @@ private fun CaptureField(
 @Composable
 private fun IdeaRow(
     entry: InboxEntry,
+    link: LinkItem?,
+    onEditLinkNote: (LinkItem) -> Unit,
     previews: LinkPreviews,
     onOpen: () -> Unit,
     onToday: () -> Unit,
@@ -258,7 +273,7 @@ private fun IdeaRow(
                 Modifier.fillMaxWidth().clickable(onClick = onOpen),
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
-                if (!LinkExtractor.isOnlyLink(entry.content)) {
+                if (LinkLists.showsText(entry.content, link)) {
                     Text(
                         text = entry.content,
                         style = MaterialTheme.typography.bodyLarge,
@@ -267,7 +282,23 @@ private fun IdeaRow(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-                LinkPreviewList(entry.content, previews, limit = 1)
+                if (link == null) LinkPreviewList(entry.content, previews, limit = 1)
+            }
+            // Le lien enregistré : ce qu'il est (titre, description, domaine), puis la note, modifiable.
+            link?.let { saved ->
+                val uriHandler = LocalUriHandler.current
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(Radius.Control)
+                        .background(palette.containerHigh)
+                        .clickable(role = Role.Button) { runCatching { uriHandler.openUri(saved.url) } }
+                        .padding(Space.md),
+                    verticalArrangement = Arrangement.spacedBy(Space.xs),
+                ) {
+                    LinkSummary(saved, descriptionLines = 1)
+                }
+                LinkNoteLine(saved.note) { onEditLinkNote(saved) }
             }
             // Passe à la ligne plutôt que de rogner une pastille en grande police.
             FlowRow(

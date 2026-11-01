@@ -24,6 +24,7 @@ import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -282,6 +283,12 @@ internal class TasksViewModel(
     val inbox: StateFlow<List<InboxEntry>> = combine(repository.observeInbox(), hidden) { entries, gone ->
         entries.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Liens enregistrés : l'Inbox montre celui de chaque idée, sa description et sa note. */
+    val links: StateFlow<List<LinkItem>> = repository.observeLinks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    fun setLinkNote(uid: String, note: String?) = launchAction { repository.setLinkNote(uid, note) }
 
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
         all.filterNot { it.uid in gone }

@@ -10,6 +10,7 @@ const {
     Project,
     Task,
     Tag,
+    Link,
     Note,
     InboxItem,
     TaskEvent,
@@ -265,6 +266,19 @@ async function eraseUserAccount(userId) {
         await Project.destroy(byUser);
         await Goal.destroy(byUser);
         await Area.destroy(byUser);
+        const ownLinks = await Link.findAll({
+            where: { user_id: userId },
+            attributes: ['id'],
+            raw: true,
+            ...tx,
+        });
+        if (ownLinks.length > 0) {
+            await sequelize.models.links_tags.destroy({
+                where: { link_id: ownLinks.map((l) => l.id) },
+                ...tx,
+            });
+        }
+        await Link.destroy(byUser);
         await Tag.destroy(byUser);
         await InboxItemAttachment.destroy(byUser);
         await InboxItem.destroy(byUser);

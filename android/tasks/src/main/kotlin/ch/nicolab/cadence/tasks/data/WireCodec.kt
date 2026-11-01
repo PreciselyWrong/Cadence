@@ -146,6 +146,27 @@ internal object WireCodec {
         put("pin_to_sidebar", note.pinned)
     }
 
+    fun linkFromWire(wire: JsonObject) = LinkEntity(
+        uid = wire.requireString("uid"),
+        url = wire.string("url").orEmpty(),
+        title = wire.string("title"),
+        description = wire.string("description"),
+        imageUrl = wire.string("image_url"),
+        siteName = wire.string("site_name"),
+        kind = wire.string("kind"),
+        githubStars = wire.int("github_stars"),
+        githubLanguage = wire.string("github_language"),
+        githubLastCommitRaw = wire.string("github_last_commit"),
+        readmeExcerpt = wire.string("readme_excerpt"),
+        note = wire.string("note"),
+        status = wire.string("status"),
+        tagUidsJson = (wire["tag_uids"] as? JsonArray ?: JsonArray(emptyList())).toString(),
+        sourceType = wire.string("source_type"),
+        sourceUid = wire.string("source_uid"),
+        fetchStatus = wire.string("fetch_status"),
+        createdAtRaw = wire.string("created_at"),
+    )
+
     fun inboxFromWire(wire: JsonObject) = InboxItemEntity(
         uid = wire.requireString("uid"),
         content = wire.string("content").orEmpty(),

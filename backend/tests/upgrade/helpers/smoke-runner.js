@@ -64,7 +64,8 @@ function bodyOf(res) {
 async function main() {
     const { sequelize, User, Person, Project } = models;
     const report = {
-        modelTables: Object.values(models)
+        // sequelize.models also holds the join tables of belongsToMany.
+        modelTables: Object.values(sequelize.models)
             .filter((model) => model && model.getTableName)
             .map((model) => String(model.getTableName()))
             .sort(),

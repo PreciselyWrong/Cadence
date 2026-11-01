@@ -103,6 +103,7 @@ describe('SidebarNav link order and visibility', () => {
 
         expect(renderedLinks()).toEqual([
             'sidebar-nav-inbox',
+            'sidebar-nav-links',
             'sidebar-nav-today',
             'sidebar-nav-upcoming',
             'sidebar-nav-calendar',

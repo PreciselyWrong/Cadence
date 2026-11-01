@@ -105,6 +105,7 @@ const ProjectSection = require('./project_section')(sequelize);
 const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
+const Link = require('./link')(sequelize);
 const UserGoalOrder = require('./user_goal_order')(sequelize);
 const UserAreaOrder = require('./user_area_order')(sequelize);
 const Person = require('./person')(sequelize);
@@ -300,6 +301,19 @@ Tag.belongsToMany(Note, {
     through: 'notes_tags',
     foreignKey: 'tag_id',
     otherKey: 'note_id',
+});
+
+User.hasMany(Link, { foreignKey: 'user_id' });
+Link.belongsTo(User, { foreignKey: 'user_id' });
+Link.belongsToMany(Tag, {
+    through: 'links_tags',
+    foreignKey: 'link_id',
+    otherKey: 'tag_id',
+});
+Tag.belongsToMany(Link, {
+    through: 'links_tags',
+    foreignKey: 'tag_id',
+    otherKey: 'link_id',
 });
 
 Project.belongsToMany(Tag, {
@@ -746,17 +760,22 @@ require('../modules/sync/journal').install({
     Note,
     InboxItem,
     Goal,
+    Link,
     ...cadenceHabitModels,
     SyncChange,
 });
 
 require('../modules/projects/nextAction').install({ Task, Project });
 
+// Links in inbox items, tasks and notes become Link rows on every write path.
+require('../modules/links/capture').install({ InboxItem, Task, Note });
+
 module.exports = {
     sequelize,
     User,
     Area,
     Goal,
+    Link,
     Project,
     Task,
     Tag,

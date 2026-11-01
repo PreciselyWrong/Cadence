@@ -198,6 +198,32 @@ interface LinkPreviewDao {
     suspend fun deleteOlderThan(olderThanMs: Long)
 }
 
+data class LinkRow(
+    @Embedded val link: LinkEntity,
+    val pendingSync: Boolean,
+)
+
+@Dao
+interface LinkDao {
+    @Query(
+        """SELECT links.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'link' AND outbox.uid = links.uid) AS pendingSync
+        FROM links ORDER BY createdAtRaw DESC""",
+    )
+    fun observeAll(): Flow<List<LinkRow>>
+
+    @Query("SELECT * FROM links WHERE uid = :uid")
+    suspend fun get(uid: String): LinkEntity?
+
+    @Upsert
+    suspend fun upsert(link: LinkEntity)
+
+    @Query("DELETE FROM links WHERE uid = :uid")
+    suspend fun delete(uid: String)
+
+    @Query("DELETE FROM links WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'link')")
+    suspend fun deleteSynced()
+}
+
 @Dao
 interface InboxDao {
     @Query(

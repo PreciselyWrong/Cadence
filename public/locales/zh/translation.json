@@ -76,6 +76,7 @@
     "undo": "撤销"
   },
   "sidebar": {
+    "links": "链接",
     "dashboard": "仪表板",
     "projects": "项目",
     "tasks": "任务",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "前往标签"
+  },
+  "links": {
+    "title": "链接",
+    "count_one": "{{count}} 个链接",
+    "count_other": "{{count}} 个链接",
+    "search": "搜索链接",
+    "filter": {
+      "kind": "类型",
+      "status": "状态",
+      "tag": "标签",
+      "domain": "网站",
+      "sort": "排序",
+      "allKinds": "全部类型",
+      "active": "未放弃",
+      "allStatuses": "全部状态",
+      "allTags": "全部标签",
+      "allDomains": "全部网站"
+    },
+    "sort": {
+      "newest": "最新在前",
+      "oldest": "最早在前"
+    },
+    "kind": {
+      "repo": "代码库",
+      "article": "文章",
+      "video": "视频",
+      "tool": "工具",
+      "other": "其他"
+    },
+    "status": {
+      "new": "新",
+      "tested": "已试用",
+      "kept": "已保留",
+      "parked": "稍后",
+      "dropped": "已放弃"
+    },
+    "action": {
+      "tested": "试用",
+      "kept": "保留",
+      "parked": "稍后",
+      "dropped": "放弃"
+    },
+    "lastCommit": "更新于 {{date}}",
+    "fetching": "正在读取页面…",
+    "editTags": "编辑标签",
+    "goToSource": "前往保存位置",
+    "open": "打开链接",
+    "note": "你的备注",
+    "notePlaceholder": "为什么保存它…",
+    "addNote": "添加备注",
+    "saveError": "无法保存链接。",
+    "loadError": "无法加载链接。",
+    "empty": "从收件箱、任务或笔记中保存的链接会显示在这里，并附带页面自身的描述。",
+    "noMatch": "没有符合这些筛选条件的链接。"
   }
 }

@@ -5,6 +5,9 @@ import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalHorizon
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkKind
+import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.Repetition
@@ -95,6 +98,28 @@ internal fun NoteRow.toItem() = NoteItem(
     updatedAt = parseInstant(note.updatedAtRaw),
     pendingSync = pendingSync,
     pinned = note.pinned,
+)
+
+internal fun LinkRow.toItem() = LinkItem(
+    uid = link.uid,
+    url = link.url,
+    title = link.title,
+    description = link.description,
+    imageUrl = link.imageUrl,
+    siteName = link.siteName,
+    kind = LinkKind.fromWire(link.kind),
+    githubStars = link.githubStars,
+    githubLanguage = link.githubLanguage,
+    githubLastCommit = parseInstant(link.githubLastCommitRaw),
+    readmeExcerpt = link.readmeExcerpt,
+    note = link.note,
+    status = LinkStatus.fromWire(link.status),
+    tagUids = WireCodec.decodeTagUids(link.tagUidsJson),
+    sourceType = link.sourceType,
+    sourceUid = link.sourceUid,
+    fetching = link.fetchStatus == "pending",
+    createdAt = parseInstant(link.createdAtRaw),
+    pendingSync = pendingSync,
 )
 
 internal fun InboxRow.toEntry() = InboxEntry(

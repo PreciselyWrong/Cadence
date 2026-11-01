@@ -189,6 +189,7 @@ const MINIMAL_SMART_LIST_KEYS = ['today', 'tomorrow', 'next7', 'inbox'];
 const MINIMAL_RAIL_KEYS = [
     'today',
     'inbox',
+    'links',
     'calendar',
     'notes',
     'habits',

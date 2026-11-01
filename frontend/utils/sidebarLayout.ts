@@ -1,5 +1,6 @@
 export const DEFAULT_LINK_ORDER = [
     'inbox',
+    'links',
     'today',
     'upcomingTasks',
     'calendar',

@@ -119,6 +119,32 @@ data class LinkPreviewEntity(
     val failed: Boolean,
 )
 
+/**
+ * Lien trouvé par le serveur dans une idée, une tâche ou une note (entité `link`). Métadonnées en lecture
+ * seule ; la note et le statut s'écrivent ici et partent par la file d'envoi.
+ */
+@Entity(tableName = "links")
+data class LinkEntity(
+    @PrimaryKey val uid: String,
+    val url: String,
+    val title: String?,
+    val description: String?,
+    val imageUrl: String?,
+    val siteName: String?,
+    val kind: String?,
+    val githubStars: Int?,
+    val githubLanguage: String?,
+    val githubLastCommitRaw: String?,
+    val readmeExcerpt: String?,
+    val note: String?,
+    val status: String?,
+    val tagUidsJson: String,
+    val sourceType: String?,
+    val sourceUid: String?,
+    val fetchStatus: String?,
+    val createdAtRaw: String?,
+)
+
 @Entity(tableName = "inbox_items")
 data class InboxItemEntity(
     @PrimaryKey val uid: String,

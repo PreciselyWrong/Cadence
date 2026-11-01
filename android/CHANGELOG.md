@@ -1,3 +1,12 @@
+## [1.6.4] — 1 novembre 2026
+
+### Nouveautés
+- Liens : un écran « Liens » (bouton lien de l'en-tête de l'Inbox) réunit tous les liens trouvés dans les idées, les tâches et les notes, lisibles hors ligne : titre, deux lignes de description, domaine, type (dépôt, article, vidéo, outil), étoiles, langage et dernière mise à jour d'un dépôt GitHub, début du README, note et statut. Recherche, filtres par type et « Jetés ». Tester, Garder, Plus tard, Jeter d'un toucher (un second toucher revient à Nouveau) ; la note se modifie dans une petite fenêtre. Note et statut partent par la synchronisation, comme sur le web.
+- Inbox : une idée qui contient un lien montre ce qu'est la page (titre, ligne de description, domaine) et votre note dessous, modifiable d'un toucher. Le texte écrit à côté du lien à la capture devient sa note et n'est plus répété.
+
+### Corrections
+- Inbox : « Tâches à classer » ne montre plus que les tâches que rien ne range : sans échéance, projet ni domaine, hors « Plus tard », hors vue et semaine décidée, ni reportées ni récurrentes. Les tâches d'un domaine ou mises à plus tard n'y arrivent plus.
+
 ## [1.6.3] — 1 novembre 2026
 
 ### Nouveautés

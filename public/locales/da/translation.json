@@ -76,6 +76,7 @@
     "undo": "Fortryd"
   },
   "sidebar": {
+    "links": "Links",
     "dashboard": "Dashboard",
     "projects": "Projekter",
     "tasks": "Opgaver",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Gå til mærke"
+  },
+  "links": {
+    "title": "Links",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} links",
+    "search": "Søg i links",
+    "filter": {
+      "kind": "Type",
+      "status": "Status",
+      "tag": "Mærke",
+      "domain": "Websted",
+      "sort": "Sortering",
+      "allKinds": "Alle typer",
+      "active": "Ikke kasseret",
+      "allStatuses": "Alle statusser",
+      "allTags": "Alle mærker",
+      "allDomains": "Alle websteder"
+    },
+    "sort": {
+      "newest": "Nyeste først",
+      "oldest": "Ældste først"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikel",
+      "video": "Video",
+      "tool": "Værktøj",
+      "other": "Andet"
+    },
+    "status": {
+      "new": "Ny",
+      "tested": "Prøvet",
+      "kept": "Gemt",
+      "parked": "Senere",
+      "dropped": "Kasseret"
+    },
+    "action": {
+      "tested": "Prøv",
+      "kept": "Behold",
+      "parked": "Senere",
+      "dropped": "Kassér"
+    },
+    "lastCommit": "opdateret {{date}}",
+    "fetching": "Læser siden…",
+    "editTags": "Redigér mærker",
+    "goToSource": "Gå til der, hvor den blev gemt",
+    "open": "Åbn linket",
+    "note": "Din note",
+    "notePlaceholder": "Hvorfor du gemte den…",
+    "addNote": "Tilføj en note",
+    "saveError": "Linket kunne ikke gemmes.",
+    "loadError": "Linkene kunne ikke indlæses.",
+    "empty": "Links, du gemmer fra indbakken, en opgave eller en note, vises her sammen med det, siden selv siger.",
+    "noMatch": "Ingen links matcher disse filtre."
   }
 }

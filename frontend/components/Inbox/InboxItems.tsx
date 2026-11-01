@@ -25,6 +25,7 @@ import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import { isUrl } from '../../utils/urlService';
+import { useLinksRefresh } from '../../store/linksStore';
 import { takeSharedText } from '../../utils/shareTargetService';
 import { fetchAreas } from '../../utils/areasService';
 import { fetchProjects } from '../../utils/projectsService';
@@ -60,6 +61,14 @@ const InboxItems: React.FC = () => {
         hasLoaded: tagsHasLoaded,
         isLoading: tagsLoading,
     } = useStore((state) => state.tagsStore);
+
+    // Links are found by the server after a capture: reload them when an
+    // item holding a link appears or changes.
+    const linkedItemsKey = inboxItems
+        .filter((item) => /https?:\/\//i.test(item.content || ''))
+        .map((item) => `${item.uid}:${item.content}`)
+        .join('|');
+    useLinksRefresh(linkedItemsKey);
 
     const [projects, setProjects] = useState<Project[]>([]);
 

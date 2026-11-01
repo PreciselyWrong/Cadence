@@ -78,6 +78,7 @@
     "undo": "Cofnij"
   },
   "sidebar": {
+    "links": "Linki",
     "dashboard": "Panel sterowania",
     "projects": "Projekty",
     "tasks": "Zadania",
@@ -5270,5 +5271,61 @@
   },
   "tag": {
     "viewTag": "Przejdź do tagu"
+  },
+  "links": {
+    "title": "Linki",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} linka",
+    "count_few": "{{count}} linki",
+    "count_many": "{{count}} linków",
+    "search": "Szukaj w linkach",
+    "filter": {
+      "kind": "Rodzaj",
+      "status": "Status",
+      "tag": "Tag",
+      "domain": "Witryna",
+      "sort": "Sortowanie",
+      "allKinds": "Wszystkie rodzaje",
+      "active": "Nieodrzucone",
+      "allStatuses": "Wszystkie statusy",
+      "allTags": "Wszystkie tagi",
+      "allDomains": "Wszystkie witryny"
+    },
+    "sort": {
+      "newest": "Najpierw najnowsze",
+      "oldest": "Najpierw najstarsze"
+    },
+    "kind": {
+      "repo": "Repozytorium",
+      "article": "Artykuł",
+      "video": "Wideo",
+      "tool": "Narzędzie",
+      "other": "Inne"
+    },
+    "status": {
+      "new": "Nowy",
+      "tested": "Wypróbowany",
+      "kept": "Zachowany",
+      "parked": "Później",
+      "dropped": "Odrzucony"
+    },
+    "action": {
+      "tested": "Wypróbuj",
+      "kept": "Zachowaj",
+      "parked": "Później",
+      "dropped": "Odrzuć"
+    },
+    "lastCommit": "zaktualizowano {{date}}",
+    "fetching": "Czytanie strony…",
+    "editTags": "Edytuj tagi",
+    "goToSource": "Przejdź do miejsca zapisania",
+    "open": "Otwórz link",
+    "note": "Twoja notatka",
+    "notePlaceholder": "Dlaczego go zapisano…",
+    "addNote": "Dodaj notatkę",
+    "saveError": "Nie udało się zapisać linku.",
+    "loadError": "Nie udało się wczytać linków.",
+    "empty": "Linki zapisane z skrzynki, zadania lub notatki pojawią się tutaj, wraz z opisem, jaki podaje sama strona.",
+    "noMatch": "Żaden link nie pasuje do tych filtrów."
   }
 }

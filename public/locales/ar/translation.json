@@ -80,6 +80,7 @@
     "undo": "تراجع"
   },
   "sidebar": {
+    "links": "الروابط",
     "dashboard": "لوحة التحكم",
     "projects": "المشاريع",
     "tasks": "المهام",
@@ -5300,5 +5301,63 @@
   },
   "tag": {
     "viewTag": "الانتقال إلى الوسم"
+  },
+  "links": {
+    "title": "الروابط",
+    "count_one": "{{count}} رابط",
+    "count_other": "{{count}} رابط",
+    "count_zero": "{{count}} رابط",
+    "count_two": "{{count}} رابطان",
+    "count_few": "{{count}} روابط",
+    "count_many": "{{count}} رابطًا",
+    "search": "البحث في الروابط",
+    "filter": {
+      "kind": "النوع",
+      "status": "الحالة",
+      "tag": "الوسم",
+      "domain": "الموقع",
+      "sort": "الترتيب",
+      "allKinds": "كل الأنواع",
+      "active": "غير المتروكة",
+      "allStatuses": "كل الحالات",
+      "allTags": "كل الوسوم",
+      "allDomains": "كل المواقع"
+    },
+    "sort": {
+      "newest": "الأحدث أولاً",
+      "oldest": "الأقدم أولاً"
+    },
+    "kind": {
+      "repo": "مستودع",
+      "article": "مقال",
+      "video": "فيديو",
+      "tool": "أداة",
+      "other": "أخرى"
+    },
+    "status": {
+      "new": "جديد",
+      "tested": "جُرّب",
+      "kept": "محفوظ",
+      "parked": "لاحقًا",
+      "dropped": "مرفوض"
+    },
+    "action": {
+      "tested": "جرّب",
+      "kept": "احتفظ",
+      "parked": "لاحقًا",
+      "dropped": "تخلَّ"
+    },
+    "lastCommit": "حُدّث {{date}}",
+    "fetching": "جارٍ قراءة الصفحة…",
+    "editTags": "تعديل الوسوم",
+    "goToSource": "الانتقال إلى مكان حفظه",
+    "open": "فتح الرابط",
+    "note": "ملاحظتك",
+    "notePlaceholder": "لماذا حفظته…",
+    "addNote": "إضافة ملاحظة",
+    "saveError": "تعذّر حفظ الرابط.",
+    "loadError": "تعذّر تحميل الروابط.",
+    "empty": "تظهر هنا الروابط التي تحفظها من الوارد أو مهمة أو ملاحظة، مع ما تقوله الصفحة عن نفسها.",
+    "noMatch": "لا يوجد رابط يطابق هذه الفلاتر."
   }
 }

@@ -12,6 +12,7 @@ import {
     FireIcon,
     FlagIcon,
     InboxIcon,
+    LinkIcon,
     ListBulletIcon,
     QueueListIcon,
     RectangleStackIcon,
@@ -41,6 +42,7 @@ type RailItemId =
     | 'people'
     | 'insights'
     | 'review'
+    | 'links'
     | 'allTasks'
     | 'assignedToMe'
     | 'everyone'
@@ -97,6 +99,14 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
         titleKey: 'sidebar.habits',
         title: 'Habits',
         Icon: FireIcon,
+    },
+    links: {
+        id: 'links',
+        path: '/links',
+        match: /^\/links(\/|$)/,
+        titleKey: 'sidebar.links',
+        title: 'Links',
+        Icon: LinkIcon,
     },
     views: {
         id: 'views',

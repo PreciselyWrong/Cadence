@@ -78,4 +78,4 @@ async function resolveTagsForTransaction(tagsInput, userId, transaction) {
     });
 }
 
-module.exports = { resolveTagsForTransaction };
+module.exports = { resolveTagsForTransaction, decodeTagsInput };

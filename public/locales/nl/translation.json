@@ -76,6 +76,7 @@
     "undo": "Ongedaan maken"
   },
   "sidebar": {
+    "links": "Links",
     "dashboard": "Dashboard",
     "projects": "Projecten",
     "tasks": "Taken",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Ga naar tag"
+  },
+  "links": {
+    "title": "Links",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} links",
+    "search": "Links zoeken",
+    "filter": {
+      "kind": "Soort",
+      "status": "Status",
+      "tag": "Label",
+      "domain": "Site",
+      "sort": "Sorteren",
+      "allKinds": "Alle soorten",
+      "active": "Niet weggegooid",
+      "allStatuses": "Alle statussen",
+      "allTags": "Alle labels",
+      "allDomains": "Alle sites"
+    },
+    "sort": {
+      "newest": "Nieuwste eerst",
+      "oldest": "Oudste eerst"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikel",
+      "video": "Video",
+      "tool": "Hulpmiddel",
+      "other": "Overig"
+    },
+    "status": {
+      "new": "Nieuw",
+      "tested": "Uitgeprobeerd",
+      "kept": "Bewaard",
+      "parked": "Later",
+      "dropped": "Weggegooid"
+    },
+    "action": {
+      "tested": "Proberen",
+      "kept": "Bewaren",
+      "parked": "Later",
+      "dropped": "Weggooien"
+    },
+    "lastCommit": "bijgewerkt {{date}}",
+    "fetching": "Pagina wordt gelezen…",
+    "editTags": "Labels bewerken",
+    "goToSource": "Naar de plek waar het is opgeslagen",
+    "open": "Link openen",
+    "note": "Je notitie",
+    "notePlaceholder": "Waarom je hem bewaarde…",
+    "addNote": "Notitie toevoegen",
+    "saveError": "De link kon niet worden opgeslagen.",
+    "loadError": "De links konden niet worden geladen.",
+    "empty": "Links die je vastlegt in de inbox, een taak of een notitie verschijnen hier, met wat de pagina over zichzelf zegt.",
+    "noMatch": "Geen link komt overeen met deze filters."
   }
 }

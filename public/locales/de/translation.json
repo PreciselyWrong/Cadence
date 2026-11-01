@@ -76,6 +76,7 @@
     "undo": "Rückgängig"
   },
   "sidebar": {
+    "links": "Links",
     "dashboard": "Dashboard",
     "projects": "Projekte",
     "tasks": "Aufgaben",
@@ -5249,5 +5250,59 @@
   },
   "tag": {
     "viewTag": "Zum Tag wechseln"
+  },
+  "links": {
+    "title": "Links",
+    "count_one": "{{count}} Link",
+    "count_other": "{{count}} Links",
+    "search": "Links durchsuchen",
+    "filter": {
+      "kind": "Art",
+      "status": "Status",
+      "tag": "Schlagwort",
+      "domain": "Website",
+      "sort": "Sortierung",
+      "allKinds": "Alle Arten",
+      "active": "Nicht verworfen",
+      "allStatuses": "Alle Status",
+      "allTags": "Alle Schlagwörter",
+      "allDomains": "Alle Websites"
+    },
+    "sort": {
+      "newest": "Neueste zuerst",
+      "oldest": "Älteste zuerst"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikel",
+      "video": "Video",
+      "tool": "Werkzeug",
+      "other": "Sonstiges"
+    },
+    "status": {
+      "new": "Neu",
+      "tested": "Getestet",
+      "kept": "Behalten",
+      "parked": "Später",
+      "dropped": "Verworfen"
+    },
+    "action": {
+      "tested": "Testen",
+      "kept": "Behalten",
+      "parked": "Später",
+      "dropped": "Verwerfen"
+    },
+    "lastCommit": "aktualisiert {{date}}",
+    "fetching": "Seite wird gelesen…",
+    "editTags": "Schlagwörter bearbeiten",
+    "goToSource": "Zum Speicherort gehen",
+    "open": "Link öffnen",
+    "note": "Ihre Notiz",
+    "notePlaceholder": "Warum Sie ihn gespeichert haben…",
+    "addNote": "Notiz hinzufügen",
+    "saveError": "Der Link konnte nicht gespeichert werden.",
+    "loadError": "Die Links konnten nicht geladen werden.",
+    "empty": "Links, die Sie im Posteingang, in einer Aufgabe oder einer Notiz erfassen, erscheinen hier, mit dem, was die Seite über sich selbst sagt.",
+    "noMatch": "Kein Link passt zu diesen Filtern."
   }
 }

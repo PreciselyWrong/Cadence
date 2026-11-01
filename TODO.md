@@ -13,7 +13,7 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr
   - Production sur le Postgres d'Unraid : export puis import (⛔ jamais par-dessus une base SQLite remplie). Le code est vérifié sur PostgreSQL 16 en local.
   - Client Linux : choisir une touche pour l'ajout rapide dans les raccourcis KDE (le portail Wayland la propose ; Ctrl+Alt+Space est déjà pris par Claude), installer le RPM `desktop/src-tauri/target/release/bundle/rpm/`.
 - **Petits restes, à faire quand le besoin se montre.**
-  - Android : éditer icônes et parents (sous-projets, tags) — web seulement ; choix « Session courte » de la revue (Android n'a pas de plan du jour) ; habitudes « N fois par semaine » absentes de l'Agenda.
+  - Android : éditer icônes et parents (sous-projets, tags) — web seulement ; Liens : étiquettes d'un lien et « aller à la source » — web seulement (note et statut sont sur Android ; vérif : une étiquette posée sur le téléphone apparaît sur `/links`) ; choix « Session courte » de la revue (Android n'a pas de plan du jour) ; habitudes « N fois par semaine » absentes de l'Agenda.
   - Serveur : rappels d'habitudes envoyés par le téléphone seulement ; avec plusieurs processus serveur, une création incomplète (sans nom) qui croise une autre création du même uid est refusée au lieu d'être fusionnée ; défaut ancien `habitReminders` dans `users.notification_preferences` sur les bases mises à niveau (sans effet).
   - Traductions automatiques des 24 langues hors fr/en : non relues (surtout ja, ko).
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.

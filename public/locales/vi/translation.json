@@ -76,6 +76,7 @@
     "undo": "Hoàn tác"
   },
   "sidebar": {
+    "links": "Liên kết",
     "dashboard": "Bảng điều khiển",
     "projects": "Dự án",
     "tasks": "Công việc",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Đến thẻ"
+  },
+  "links": {
+    "title": "Liên kết",
+    "count_one": "{{count}} liên kết",
+    "count_other": "{{count}} liên kết",
+    "search": "Tìm liên kết",
+    "filter": {
+      "kind": "Loại",
+      "status": "Trạng thái",
+      "tag": "Thẻ",
+      "domain": "Trang web",
+      "sort": "Sắp xếp",
+      "allKinds": "Mọi loại",
+      "active": "Chưa bỏ",
+      "allStatuses": "Mọi trạng thái",
+      "allTags": "Mọi thẻ",
+      "allDomains": "Mọi trang web"
+    },
+    "sort": {
+      "newest": "Mới nhất trước",
+      "oldest": "Cũ nhất trước"
+    },
+    "kind": {
+      "repo": "Kho mã",
+      "article": "Bài viết",
+      "video": "Video",
+      "tool": "Công cụ",
+      "other": "Khác"
+    },
+    "status": {
+      "new": "Mới",
+      "tested": "Đã thử",
+      "kept": "Đã giữ",
+      "parked": "Để sau",
+      "dropped": "Đã bỏ"
+    },
+    "action": {
+      "tested": "Thử",
+      "kept": "Giữ",
+      "parked": "Để sau",
+      "dropped": "Bỏ"
+    },
+    "lastCommit": "cập nhật {{date}}",
+    "fetching": "Đang đọc trang…",
+    "editTags": "Sửa thẻ",
+    "goToSource": "Đến nơi đã lưu",
+    "open": "Mở liên kết",
+    "note": "Ghi chú của bạn",
+    "notePlaceholder": "Vì sao bạn lưu liên kết này…",
+    "addNote": "Thêm ghi chú",
+    "saveError": "Không thể lưu liên kết.",
+    "loadError": "Không thể tải liên kết.",
+    "empty": "Liên kết bạn lưu từ hộp thư đến, công việc hoặc ghi chú sẽ hiện ở đây, kèm nội dung trang tự mô tả.",
+    "noMatch": "Không có liên kết nào khớp với bộ lọc này."
   }
 }

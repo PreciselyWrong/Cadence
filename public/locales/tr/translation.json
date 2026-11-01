@@ -76,6 +76,7 @@
     "undo": "Geri al"
   },
   "sidebar": {
+    "links": "Bağlantılar",
     "dashboard": "Gösterge Paneli",
     "projects": "Projeler",
     "tasks": "Görevler",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Etikete git"
+  },
+  "links": {
+    "title": "Bağlantılar",
+    "count_one": "{{count}} bağlantı",
+    "count_other": "{{count}} bağlantı",
+    "search": "Bağlantılarda ara",
+    "filter": {
+      "kind": "Tür",
+      "status": "Durum",
+      "tag": "Etiket",
+      "domain": "Site",
+      "sort": "Sırala",
+      "allKinds": "Tüm türler",
+      "active": "Atılmamış",
+      "allStatuses": "Tüm durumlar",
+      "allTags": "Tüm etiketler",
+      "allDomains": "Tüm siteler"
+    },
+    "sort": {
+      "newest": "Önce en yeniler",
+      "oldest": "Önce en eskiler"
+    },
+    "kind": {
+      "repo": "Depo",
+      "article": "Makale",
+      "video": "Video",
+      "tool": "Araç",
+      "other": "Diğer"
+    },
+    "status": {
+      "new": "Yeni",
+      "tested": "Denendi",
+      "kept": "Tutuldu",
+      "parked": "Sonra",
+      "dropped": "Atıldı"
+    },
+    "action": {
+      "tested": "Dene",
+      "kept": "Tut",
+      "parked": "Sonra",
+      "dropped": "At"
+    },
+    "lastCommit": "{{date}} güncellendi",
+    "fetching": "Sayfa okunuyor…",
+    "editTags": "Etiketleri düzenle",
+    "goToSource": "Kaydedildiği yere git",
+    "open": "Bağlantıyı aç",
+    "note": "Notunuz",
+    "notePlaceholder": "Neden kaydettiniz…",
+    "addNote": "Not ekle",
+    "saveError": "Bağlantı kaydedilemedi.",
+    "loadError": "Bağlantılar yüklenemedi.",
+    "empty": "Gelen kutusunda, bir görevde ya da notta kaydettiğiniz bağlantılar, sayfanın kendisi hakkında söyledikleriyle birlikte burada görünür.",
+    "noMatch": "Bu filtrelerle eşleşen bağlantı yok."
   }
 }

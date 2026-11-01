@@ -78,6 +78,7 @@
     "undo": "Razveljavi"
   },
   "sidebar": {
+    "links": "Povezave",
     "dashboard": "Nadzorna plošča",
     "projects": "Projekti",
     "tasks": "Naloge",
@@ -5270,5 +5271,61 @@
   },
   "tag": {
     "viewTag": "Pojdi na oznako"
+  },
+  "links": {
+    "title": "Povezave",
+    "count_one": "{{count}} povezava",
+    "count_other": "{{count}} povezav",
+    "count_two": "{{count}} povezavi",
+    "count_few": "{{count}} povezave",
+    "search": "Iskanje povezav",
+    "filter": {
+      "kind": "Vrsta",
+      "status": "Stanje",
+      "tag": "Oznaka",
+      "domain": "Spletno mesto",
+      "sort": "Razvrsti",
+      "allKinds": "Vse vrste",
+      "active": "Neodvržene",
+      "allStatuses": "Vsa stanja",
+      "allTags": "Vse oznake",
+      "allDomains": "Vsa spletna mesta"
+    },
+    "sort": {
+      "newest": "Najprej novejše",
+      "oldest": "Najprej starejše"
+    },
+    "kind": {
+      "repo": "Repozitorij",
+      "article": "Članek",
+      "video": "Video",
+      "tool": "Orodje",
+      "other": "Drugo"
+    },
+    "status": {
+      "new": "Novo",
+      "tested": "Preizkušeno",
+      "kept": "Shranjeno",
+      "parked": "Pozneje",
+      "dropped": "Zavrženo"
+    },
+    "action": {
+      "tested": "Preizkusi",
+      "kept": "Shrani",
+      "parked": "Pozneje",
+      "dropped": "Zavrzi"
+    },
+    "lastCommit": "posodobljeno {{date}}",
+    "fetching": "Branje strani…",
+    "editTags": "Uredi oznake",
+    "goToSource": "Pojdi na mesto shranjevanja",
+    "open": "Odpri povezavo",
+    "note": "Vaš zapis",
+    "notePlaceholder": "Zakaj ste jo shranili…",
+    "addNote": "Dodaj zapis",
+    "saveError": "Povezave ni bilo mogoče shraniti.",
+    "loadError": "Povezav ni bilo mogoče naložiti.",
+    "empty": "Povezave, ki jih zajamete v pladnju, nalogi ali zapisu, se prikažejo tukaj, skupaj z opisom strani.",
+    "noMatch": "Nobena povezava ne ustreza tem filtrom."
   }
 }

@@ -39,6 +39,7 @@ Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the forme
 - **Capture and reminders:** share text from any app into the inbox, and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
 - **Habits:** synced with the server, so they can be seen and edited on the web.
 - **Review, goals, Stash:** the weekly review, the Stash of paused projects, next actions and goals, as on the web.
+- **Links:** every link you capture, with what the page is, GitHub stats, your note and a status (Try, Keep, Later, Drop), readable offline.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
 
@@ -122,6 +123,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | Stash | Statuses not started, planned, in progress, waiting, done, cancelled | **En pause** and **archived** statuses; the **Stash** is the paused filter with an "N active · N in the stash" counter, and the same grouping on Android. [Docs](docs/06-projects.md) |
 | Next action | — | Pick **one next action** per project (row menu); shown on the project page and cards, and the only suggestion Today makes for that project. On Android too |
 | Goals | Goals linked to tasks and projects, no key results | **Key results** under a goal (progress = share of done linked tasks and projects), **month and quarter** horizons, a **bucket list** (Have / Be / Do, no date, never in Today); **Suggest 5 domains** on Areas. On Android too |
+| Links | Link previews in the quick-capture field | Every link in an inbox item, task or note is **saved with its page title, description, kind and GitHub stats** (stars, language, last push, README start), fetched in the background; **your note** under it (the text typed next to the link at capture), a status (**Try, Keep, Later, Drop**) and tags; a **Links** page with search and filters; MCP tools so an assistant can tag them. On Android too |
 
 ### Tasks, tags and boards
 

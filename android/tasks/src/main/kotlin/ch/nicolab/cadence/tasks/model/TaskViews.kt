@@ -99,9 +99,15 @@ object TaskViews {
         tasks.filter { visibleNow(it, now) && !it.someday && it.dueDay?.isBefore(today) == true }
             .flatMap { RecurrenceExpansion.expand(it, today, today, zone) }
 
-    /** Tâches ouvertes sans échéance ni projet : à trier. */
+    /**
+     * À classer : tâches ouvertes de premier niveau que rien ne range encore, sans échéance, projet ni
+     * domaine, hors « Plus tard », hors vue et semaine décidée, ni reportées ni récurrentes.
+     */
     fun unsorted(tasks: List<TaskItem>, now: Instant): List<TaskItem> =
-        tasks.filter { visibleNow(it, now) && it.dueDate == null && it.dueDay == null && it.projectUid == null }
+        tasks.filter {
+            visibleNow(it, now) && it.dueDate == null && it.dueDay == null && it.projectUid == null &&
+                it.areaUid == null && !it.someday && it.inViewAt == null && it.weekOf == null && !it.isRecurring
+        }
 
     fun ofProject(tasks: List<TaskItem>, projectUid: String, now: Instant): List<TaskItem> =
         tasks.filter { it.projectUid == projectUid && visibleNow(it, now) }

@@ -76,6 +76,7 @@
     "undo": "Kumoa"
   },
   "sidebar": {
+    "links": "Linkit",
     "dashboard": "Ohjauspaneeli",
     "projects": "Projektit",
     "tasks": "Tehtävät",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Siirry tunnisteeseen"
+  },
+  "links": {
+    "title": "Linkit",
+    "count_one": "{{count}} linkki",
+    "count_other": "{{count}} linkkiä",
+    "search": "Hae linkeistä",
+    "filter": {
+      "kind": "Tyyppi",
+      "status": "Tila",
+      "tag": "Tunniste",
+      "domain": "Sivusto",
+      "sort": "Järjestys",
+      "allKinds": "Kaikki tyypit",
+      "active": "Ei hylättyjä",
+      "allStatuses": "Kaikki tilat",
+      "allTags": "Kaikki tunnisteet",
+      "allDomains": "Kaikki sivustot"
+    },
+    "sort": {
+      "newest": "Uusimmat ensin",
+      "oldest": "Vanhimmat ensin"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikkeli",
+      "video": "Video",
+      "tool": "Työkalu",
+      "other": "Muu"
+    },
+    "status": {
+      "new": "Uusi",
+      "tested": "Kokeiltu",
+      "kept": "Säilytetty",
+      "parked": "Myöhemmin",
+      "dropped": "Hylätty"
+    },
+    "action": {
+      "tested": "Kokeile",
+      "kept": "Säilytä",
+      "parked": "Myöhemmin",
+      "dropped": "Hylkää"
+    },
+    "lastCommit": "päivitetty {{date}}",
+    "fetching": "Luetaan sivua…",
+    "editTags": "Muokkaa tunnisteita",
+    "goToSource": "Siirry tallennuspaikkaan",
+    "open": "Avaa linkki",
+    "note": "Muistiinpanosi",
+    "notePlaceholder": "Miksi tallensit sen…",
+    "addNote": "Lisää muistiinpano",
+    "saveError": "Linkkiä ei voitu tallentaa.",
+    "loadError": "Linkkejä ei voitu ladata.",
+    "empty": "Saapuneista, tehtävästä tai muistiinpanosta tallennetut linkit näkyvät tässä sivun omine kuvauksineen.",
+    "noMatch": "Yksikään linkki ei vastaa näitä suodattimia."
   }
 }

@@ -76,6 +76,7 @@
     "undo": "Ångra"
   },
   "sidebar": {
+    "links": "Länkar",
     "dashboard": "Dashboard",
     "projects": "Projekt",
     "tasks": "Uppgifter",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Gå till tagg"
+  },
+  "links": {
+    "title": "Länkar",
+    "count_one": "{{count}} länk",
+    "count_other": "{{count}} länkar",
+    "search": "Sök i länkar",
+    "filter": {
+      "kind": "Typ",
+      "status": "Status",
+      "tag": "Etikett",
+      "domain": "Webbplats",
+      "sort": "Sortering",
+      "allKinds": "Alla typer",
+      "active": "Ej kasserade",
+      "allStatuses": "Alla statusar",
+      "allTags": "Alla etiketter",
+      "allDomains": "Alla webbplatser"
+    },
+    "sort": {
+      "newest": "Nyast först",
+      "oldest": "Äldst först"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikel",
+      "video": "Video",
+      "tool": "Verktyg",
+      "other": "Annat"
+    },
+    "status": {
+      "new": "Ny",
+      "tested": "Testad",
+      "kept": "Behållen",
+      "parked": "Senare",
+      "dropped": "Kasserad"
+    },
+    "action": {
+      "tested": "Testa",
+      "kept": "Behåll",
+      "parked": "Senare",
+      "dropped": "Kassera"
+    },
+    "lastCommit": "uppdaterad {{date}}",
+    "fetching": "Läser sidan…",
+    "editTags": "Redigera etiketter",
+    "goToSource": "Gå till där den sparades",
+    "open": "Öppna länken",
+    "note": "Din anteckning",
+    "notePlaceholder": "Varför du sparade den…",
+    "addNote": "Lägg till anteckning",
+    "saveError": "Länken kunde inte sparas.",
+    "loadError": "Länkarna kunde inte laddas.",
+    "empty": "Länkar du sparar från inkorgen, en uppgift eller en anteckning visas här, med det sidan säger om sig själv.",
+    "noMatch": "Inga länkar matchar de här filtren."
   }
 }

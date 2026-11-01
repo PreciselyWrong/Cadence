@@ -259,6 +259,46 @@ const ENTITIES = {
         fields: ['content', 'title', 'status', 'source'],
         refs: {},
     },
+    // Links are found by the server in inbox items, tasks and notes; a
+    // device cannot create one, only annotate it.
+    link: {
+        model: 'Link',
+        validate: async (row, values) => {
+            if (!row) return 'unknown_link';
+            const { LINK_STATUSES } = require('../links/core/constants');
+            if ('status' in values && !LINK_STATUSES.includes(values.status)) {
+                return 'invalid_status';
+            }
+            return null;
+        },
+        version: 1,
+        fields: ['note', 'status'],
+        serverFields: [
+            'url',
+            'title',
+            'description',
+            'image_url',
+            'site_name',
+            'kind',
+            'github_stars',
+            'github_language',
+            'github_last_commit',
+            'readme_excerpt',
+            'source_type',
+            'source_uid',
+            'fetch_status',
+            'fetched_at',
+        ],
+        refs: {},
+        lists: {
+            tag_uids: {
+                through: 'links_tags',
+                key: 'link_id',
+                otherKey: 'tag_id',
+                entity: 'tag',
+            },
+        },
+    },
 };
 
 // Cadence habits and everything stored around them (docs/21-habits.md).

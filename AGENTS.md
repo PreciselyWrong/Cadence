@@ -5,7 +5,7 @@
 Cadence : un seul système personnel (tâches, projets, habitudes, notes, capture) sur le web, Android et Linux (client Tauri 2 dans `desktop/`), auto-hébergé sur Unraid et joint via Tailscale, sans IA obligatoire. Fork MIT de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin : `PreciselyWrong/cadence`) ; l'attribution et la licence de l'amont restent.
 
 - Serveur et web : React 18 + TypeScript (webpack, Tailwind, Zustand + SWR) ; Express + Sequelize ; SQLite par défaut ou PostgreSQL via `DATABASE_URL`. Dev : deux serveurs (front `:8080` proxifie `/api` vers back `:3002`) ; prod : Express sert `/dist`.
-- Android : `android/` (ex-dépôt Cadence, historique importé) : Kotlin, Compose, Room, widgets Glance ; habitudes locales et tâches synchronisées hors ligne avec le serveur (`/api/v1/sync`).
+- Android : `android/` (ex-dépôt Cadence, historique importé) : Kotlin, Compose, Room, widgets Glance ; habitudes, tâches, notes et liens synchronisés hors ligne avec le serveur (`/api/v1/sync`).
 
 Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `android/`, pages de comportement ajoutées dans `docs/`. Le guide de l'amont (index des docs, architecture) est dans `docs/fork/UPSTREAM-GUIDE.md`.
 
@@ -43,6 +43,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Habitudes | `docs/fork/DECISIONS.md`, `docs/21-habits.md` (section « Cadence habits » = contrat de synchro et d'API), `fixtures/habits/README.md`, `backend/modules/habits/`, `android/domain/` |
 | Aujourd'hui / plan du jour | `docs/02-today-page-sections.md`, `docs/20-daily-plan.md` |
 | Partage, droits, groupes | `docs/08-user-management.md`, `docs/18-user-groups.md`, `docs/19-people-and-roles.md` |
+| Liens (capture, métadonnées, page Liens) | `docs/37-links.md`, `backend/modules/links/` |
 | Projets depuis des `TODO.md` | `docs/35-todo-md-projects.md`, `backend/modules/todo-md/` |
 | MCP | `docs/14-mcp-integration.md` |
 | PR ou issue vers l'amont | `docs/MEMORY.md`, `.github/pull_request_template.md` |
@@ -78,6 +79,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/middleware/authorize.js` : `hasAccess(level, resourceType, getResourceUid)`, droits hérités du projet.
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
 - `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC, compaction quotidienne `compaction.js`, `410 reset_required`) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; l'ancien module des habitudes-tâches (`/api/habits`, moteur, rappels, `habitsService.ts`) est retiré ; les colonnes `tasks.habit_*` restent et les tâches `habit_mode` sont importées au démarrage puis exclues de toutes les listes de tâches. Fixtures partagées avec Android : `fixtures/habits/`.
+- `backend/modules/links/` : liens trouvés dans idées, tâches et notes (hooks de modèle `capture.js`, file de lecture des pages `jobs.js`, GitHub `core/github.js`, routes `/api/links`, entité de synchro `link`) ; web `frontend/components/Links/`, Android `ui/LinksScreen.kt`.
 - `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`).
 - `backend/modules/todo-md/` : projets miroirs de fichiers `TODO.md` (`TUDUDI_TODO_ROOT`) ; le fichier fait foi, écriture atomique (ajout, case cochée) uniquement.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).
@@ -108,4 +110,4 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 
 ## État
 
-Monorepo Cadence (web, serveur, Android, Linux) sur `main`, poussé, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Serveur vérifié sur SQLite et PostgreSQL 16 (`docs/16-postgresql.md`). Android 1.6.1 (versionCode 33, Room tâches v8, habitudes v26) publié sur NicoApps : tâches, habitudes, revue, objectifs, rappels et tags imbriqués synchronisés ; migrations Room testées sous Robolectric, l'émulateur plante sur cette machine (rien d'essayé sur appareil). Client Linux livré (raccourci par le portail Wayland). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.
+Monorepo Cadence (web, serveur, Android, Linux) sur `main`, poussé, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Serveur vérifié sur SQLite et PostgreSQL 16 (`docs/16-postgresql.md`). Android 1.6.1 (versionCode 33) publié sur NicoApps ; 1.6.4 (versionCode 36, Room tâches v9 : liens) prêt, non publié : tâches, habitudes, revue, objectifs, rappels et tags imbriqués synchronisés ; migrations Room testées sous Robolectric, l'émulateur plante sur cette machine (rien d'essayé sur appareil). Client Linux livré (raccourci par le portail Wayland). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.

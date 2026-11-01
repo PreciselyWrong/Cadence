@@ -15,11 +15,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         NoteEntity::class,
         LinkPreviewEntity::class,
         InboxItemEntity::class,
+        LinkEntity::class,
         OutboxEntity::class,
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -27,6 +28,7 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao
     abstract fun areaDao(): AreaDao
     abstract fun goalDao(): GoalDao
+    abstract fun linkDao(): LinkDao
     abstract fun tagDao(): TagDao
     abstract fun noteDao(): NoteDao
     abstract fun linkPreviewDao(): LinkPreviewDao
@@ -127,6 +129,19 @@ internal val MIGRATION_7_8 = object : Migration(7, 8) {
         db.execSQL("ALTER TABLE projects ADD COLUMN parentProjectUid TEXT")
         db.execSQL("ALTER TABLE tags ADD COLUMN icon TEXT")
         db.execSQL("ALTER TABLE tags ADD COLUMN parentUid TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/** Table des liens enregistrés. Le curseur est retiré : le prochain instantané apporte les liens. */
+internal val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `links` (`uid` TEXT NOT NULL, `url` TEXT NOT NULL, `title` TEXT, `description` TEXT, " +
+                "`imageUrl` TEXT, `siteName` TEXT, `kind` TEXT, `githubStars` INTEGER, `githubLanguage` TEXT, " +
+                "`githubLastCommitRaw` TEXT, `readmeExcerpt` TEXT, `note` TEXT, `status` TEXT, `tagUidsJson` TEXT NOT NULL, " +
+                "`sourceType` TEXT, `sourceUid` TEXT, `fetchStatus` TEXT, `createdAtRaw` TEXT, PRIMARY KEY(`uid`))",
+        )
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

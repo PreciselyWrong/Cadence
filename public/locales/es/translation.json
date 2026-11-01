@@ -77,6 +77,7 @@
     "undo": "Deshacer"
   },
   "sidebar": {
+    "links": "Enlaces",
     "dashboard": "Tablero",
     "projects": "Proyectos",
     "tasks": "Tareas",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Ir a la etiqueta"
+  },
+  "links": {
+    "title": "Enlaces",
+    "count_one": "{{count}} enlace",
+    "count_other": "{{count}} enlaces",
+    "search": "Buscar enlaces",
+    "filter": {
+      "kind": "Tipo",
+      "status": "Estado",
+      "tag": "Etiqueta",
+      "domain": "Sitio",
+      "sort": "Orden",
+      "allKinds": "Todos los tipos",
+      "active": "No descartados",
+      "allStatuses": "Todos los estados",
+      "allTags": "Todas las etiquetas",
+      "allDomains": "Todos los sitios"
+    },
+    "sort": {
+      "newest": "Más recientes primero",
+      "oldest": "Más antiguos primero"
+    },
+    "kind": {
+      "repo": "Repositorio",
+      "article": "Artículo",
+      "video": "Vídeo",
+      "tool": "Herramienta",
+      "other": "Otro"
+    },
+    "status": {
+      "new": "Nuevo",
+      "tested": "Probado",
+      "kept": "Guardado",
+      "parked": "Más tarde",
+      "dropped": "Descartado"
+    },
+    "action": {
+      "tested": "Probar",
+      "kept": "Guardar",
+      "parked": "Más tarde",
+      "dropped": "Descartar"
+    },
+    "lastCommit": "actualizado {{date}}",
+    "fetching": "Leyendo la página…",
+    "editTags": "Editar etiquetas",
+    "goToSource": "Ir al lugar donde se guardó",
+    "open": "Abrir el enlace",
+    "note": "Tu nota",
+    "notePlaceholder": "Por qué lo guardaste…",
+    "addNote": "Añadir una nota",
+    "saveError": "No se pudo guardar el enlace.",
+    "loadError": "No se pudieron cargar los enlaces.",
+    "empty": "Los enlaces que captures en la bandeja, una tarea o una nota aparecen aquí, con lo que la página dice de sí misma.",
+    "noMatch": "Ningún enlace coincide con estos filtros."
   }
 }

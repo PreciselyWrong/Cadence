@@ -7,6 +7,9 @@ import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import InboxItemAttachments from './InboxItemAttachments';
+import InboxLinkPreview from '../Links/InboxLinkPreview';
+import { useLinksStore } from '../../store/linksStore';
+import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
 import { useStore } from '../../store/useStore';
 import {
     focusAreaIdForTask,
@@ -262,6 +265,17 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     // Items captured through the API can end up with blank content; without a
     // placeholder the row renders as an invisible strip that cannot be clicked.
     const isBlank = displayText.trim().length === 0;
+
+    // A captured link shows as a card with its note; the text itself is kept
+    // only when it says more than the link and its note.
+    const savedLinks = useLinksStore((state) => state.links);
+    const link = linkForItem(savedLinks, item.uid, fullContent);
+    const textAroundLink = link
+        ? residualText(fullContent, firstUrl(fullContent) ?? '')
+        : '';
+    const showText =
+        !link ||
+        (textAroundLink !== '' && textAroundLink !== (link.note ?? ''));
 
     const extraLineCount =
         displayText.split('\n').filter((l) => l.trim().length > 0).length - 1;
@@ -650,7 +664,9 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     ref={composerRef}
                     mode="edit"
                     initialValue={cleanedEditText ?? fullContent}
-                    carriedText={cleanedEditText === null ? '' : carriedEditText}
+                    carriedText={
+                        cleanedEditText === null ? '' : carriedEditText
+                    }
                     hidePrimaryButton
                     projects={projects}
                     onSubmitOverride={handleSubmitEdit}
@@ -678,23 +694,26 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 >
                     {/* Text content */}
                     <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 leading-snug break-words">
-                            {isBlank ? (
-                                <span className="italic text-gray-500 dark:text-gray-400">
-                                    {t('inbox.emptyItem', '(Empty item)')}
-                                </span>
-                            ) : (
-                                renderInlineSegments(displayText)
-                            )}
-                            {extraLineCount > 0 && (
-                                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
-                                    +{extraLineCount}{' '}
-                                    {extraLineCount === 1
-                                        ? t('inbox.line', 'line')
-                                        : t('inbox.lines', 'lines')}
-                                </span>
-                            )}
-                        </p>
+                        {showText && (
+                            <p className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 leading-snug break-words">
+                                {isBlank ? (
+                                    <span className="italic text-gray-500 dark:text-gray-400">
+                                        {t('inbox.emptyItem', '(Empty item)')}
+                                    </span>
+                                ) : (
+                                    renderInlineSegments(displayText)
+                                )}
+                                {extraLineCount > 0 && (
+                                    <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                                        +{extraLineCount}{' '}
+                                        {extraLineCount === 1
+                                            ? t('inbox.line', 'line')
+                                            : t('inbox.lines', 'lines')}
+                                    </span>
+                                )}
+                            </p>
+                        )}
+                        {link && <InboxLinkPreview link={link} />}
                         {item.uid && item.attachments && (
                             <InboxItemAttachments
                                 itemUid={item.uid}

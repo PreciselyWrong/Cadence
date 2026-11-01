@@ -181,7 +181,7 @@ class TagsRepository extends BaseRepository {
     }
 
     /**
-     * Delete a tag and all its associations (tasks_tags, notes_tags, projects_tags).
+     * Delete a tag and all its associations (tasks_tags, notes_tags, projects_tags, links_tags).
      */
     async deleteWithAssociations(tag) {
         const transaction = await sequelize.transaction();
@@ -195,6 +195,7 @@ class TagsRepository extends BaseRepository {
                 'tasks_tags',
                 'notes_tags',
                 'projects_tags',
+                'links_tags',
             ]) {
                 await sequelize.models[joinTable].destroy({
                     where: { tag_id: tag.id },

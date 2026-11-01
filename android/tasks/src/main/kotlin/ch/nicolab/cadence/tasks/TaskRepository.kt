@@ -3,6 +3,8 @@ package ch.nicolab.cadence.tasks
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
@@ -37,6 +39,15 @@ interface TaskRepository {
 
     /** Objectifs, résultats clés et envies, en lecture seule sur l'appareil. */
     fun observeGoals(): Flow<List<GoalItem>>
+
+    /** Liens trouvés par le serveur, lisibles hors ligne, les plus récents d'abord. */
+    fun observeLinks(): Flow<List<LinkItem>>
+
+    /** Note d'un lien ; vide ou null l'efface. Sans effet si le lien est inconnu. */
+    suspend fun setLinkNote(uid: String, note: String?)
+
+    /** Statut d'un lien (Tester, Garder, Plus tard, Jeter, ou Nouveau). Sans effet si le lien est inconnu. */
+    suspend fun setLinkStatus(uid: String, status: LinkStatus)
     fun observeInbox(): Flow<List<InboxEntry>>
 
     /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */

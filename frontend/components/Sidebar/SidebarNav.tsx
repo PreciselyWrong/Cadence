@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
     CalendarDaysIcon,
     InboxIcon,
+    LinkIcon,
     ListBulletIcon,
     ClockIcon,
     CalendarIcon,
@@ -65,6 +66,12 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
             icon: <InboxIcon className="h-[15px] w-[15px]" />,
         },
         {
+            id: 'links',
+            path: '/links',
+            title: t('sidebar.links', 'Links'),
+            icon: <LinkIcon className="h-[15px] w-[15px]" />,
+        },
+        {
             id: 'today',
             path: '/today',
             title: t('sidebar.today', 'Today'),
@@ -123,7 +130,12 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         if (path === '/today') {
             return location.pathname.startsWith('/today');
         }
-        if (path === '/inbox' || path === '/calendar' || path === '/everyone') {
+        if (
+            path === '/inbox' ||
+            path === '/links' ||
+            path === '/calendar' ||
+            path === '/everyone'
+        ) {
             return location.pathname === path;
         }
         if (path.startsWith('/upcoming')) {

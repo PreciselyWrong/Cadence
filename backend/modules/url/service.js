@@ -31,6 +31,30 @@ const fetchWithTimeout = async (url, options = {}, timeoutMs = 7000) => {
     }
 };
 
+// A <meta> value by property or name, whichever order the attributes use.
+function metaContent(html, key) {
+    const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const attr = `(?:property|name)=["']${escaped}["']`;
+    const match =
+        html.match(
+            new RegExp(`<meta[^>]+${attr}[^>]+content=["']([^"']+)["']`, 'i')
+        ) ||
+        html.match(
+            new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+${attr}`, 'i')
+        );
+    return match ? decodeEntities(match[1].trim()) : null;
+}
+
+function decodeEntities(text) {
+    return text
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&#x27;/g, "'")
+        .replace(/&amp;/g, '&');
+}
+
 // Fast regex-based metadata extraction (much faster than cheerio for head content)
 function extractMetadataFromHtml(html) {
     try {
@@ -120,6 +144,8 @@ function extractMetadataFromHtml(html) {
             title,
             image,
             description,
+            siteName: metaContent(html, 'og:site_name'),
+            type: metaContent(html, 'og:type'),
         };
     } catch (error) {
         logError('Error parsing HTML:', error);
@@ -419,6 +445,13 @@ async function fetchUrlMetadata(url) {
     return null;
 }
 
+// Direct fetch only, never through the reading proxy: the links job runs
+// on every saved link and must not hand them to a third party.
+async function fetchPageMetadata(url) {
+    await assertSafeUrl(url);
+    return fetchMetadataViaHttp(url);
+}
+
 class UrlService {
     async getTitle(url) {
         if (!url) {
@@ -496,3 +529,5 @@ class UrlService {
 }
 
 module.exports = new UrlService();
+module.exports.fetchPageMetadata = fetchPageMetadata;
+module.exports.extractMetadataFromHtml = extractMetadataFromHtml;

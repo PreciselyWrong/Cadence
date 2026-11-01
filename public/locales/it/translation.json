@@ -77,6 +77,7 @@
     "undo": "Annulla"
   },
   "sidebar": {
+    "links": "Link",
     "dashboard": "Dashboard",
     "projects": "Progetti",
     "tasks": "Attività",
@@ -5253,5 +5254,59 @@
   },
   "tag": {
     "viewTag": "Vai al tag"
+  },
+  "links": {
+    "title": "Link",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} link",
+    "search": "Cerca link",
+    "filter": {
+      "kind": "Tipo",
+      "status": "Stato",
+      "tag": "Etichetta",
+      "domain": "Sito",
+      "sort": "Ordina",
+      "allKinds": "Tutti i tipi",
+      "active": "Non scartati",
+      "allStatuses": "Tutti gli stati",
+      "allTags": "Tutte le etichette",
+      "allDomains": "Tutti i siti"
+    },
+    "sort": {
+      "newest": "Prima i più recenti",
+      "oldest": "Prima i più vecchi"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Articolo",
+      "video": "Video",
+      "tool": "Strumento",
+      "other": "Altro"
+    },
+    "status": {
+      "new": "Nuovo",
+      "tested": "Provato",
+      "kept": "Tenuto",
+      "parked": "Più tardi",
+      "dropped": "Scartato"
+    },
+    "action": {
+      "tested": "Prova",
+      "kept": "Tieni",
+      "parked": "Più tardi",
+      "dropped": "Scarta"
+    },
+    "lastCommit": "aggiornato {{date}}",
+    "fetching": "Lettura della pagina…",
+    "editTags": "Modifica etichette",
+    "goToSource": "Vai al punto in cui è stato salvato",
+    "open": "Apri il link",
+    "note": "La tua nota",
+    "notePlaceholder": "Perché l'hai salvato…",
+    "addNote": "Aggiungi una nota",
+    "saveError": "Impossibile salvare il link.",
+    "loadError": "Impossibile caricare i link.",
+    "empty": "I link salvati dalla posta in arrivo, da un'attività o da una nota compaiono qui, con quello che la pagina dice di sé.",
+    "noMatch": "Nessun link corrisponde a questi filtri."
   }
 }

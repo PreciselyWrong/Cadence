@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Scaffold
@@ -52,6 +53,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     var selectedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var captureOpen by rememberSaveable { mutableStateOf(false) }
+    var linksOpen by rememberSaveable { mutableStateOf(false) }
     val ideas by viewModel.inbox.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     DeletionUndoEffect(viewModel, snackbar)
@@ -67,6 +69,11 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                     subtitle = pluralStringResource(R.plurals.tasks_inbox_subtitle, ideas.size, ideas.size),
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
+                        RoundHeaderButton(
+                            icon = Icons.Outlined.Link,
+                            contentDescription = stringResource(R.string.links_open_screen),
+                            onClick = { linksOpen = true },
+                        )
                         RoundHeaderButton(
                             icon = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.tasks_search_open),
@@ -123,6 +130,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     selectedNoteUid?.let { uid ->
         NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null })
     }
+    if (linksOpen) LinksScreen(onBack = { linksOpen = false })
 }
 
 /** Bandeau « Annuler » des suppressions de notes et d'idées, sur l'écran qui les montre. */

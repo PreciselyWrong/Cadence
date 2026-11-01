@@ -77,6 +77,7 @@
     "undo": "Desfazer"
   },
   "sidebar": {
+    "links": "Links",
     "dashboard": "Painel",
     "projects": "Projetos",
     "tasks": "Tarefas",
@@ -5253,5 +5254,59 @@
   },
   "tag": {
     "viewTag": "Ir para a tag"
+  },
+  "links": {
+    "title": "Links",
+    "count_one": "{{count}} link",
+    "count_other": "{{count}} links",
+    "search": "Pesquisar links",
+    "filter": {
+      "kind": "Tipo",
+      "status": "Status",
+      "tag": "Etiqueta",
+      "domain": "Site",
+      "sort": "Ordenar",
+      "allKinds": "Todos os tipos",
+      "active": "Não descartados",
+      "allStatuses": "Todos os status",
+      "allTags": "Todas as etiquetas",
+      "allDomains": "Todos os sites"
+    },
+    "sort": {
+      "newest": "Mais recentes primeiro",
+      "oldest": "Mais antigos primeiro"
+    },
+    "kind": {
+      "repo": "Repositório",
+      "article": "Artigo",
+      "video": "Vídeo",
+      "tool": "Ferramenta",
+      "other": "Outro"
+    },
+    "status": {
+      "new": "Novo",
+      "tested": "Testado",
+      "kept": "Mantido",
+      "parked": "Depois",
+      "dropped": "Descartado"
+    },
+    "action": {
+      "tested": "Testar",
+      "kept": "Manter",
+      "parked": "Depois",
+      "dropped": "Descartar"
+    },
+    "lastCommit": "atualizado {{date}}",
+    "fetching": "Lendo a página…",
+    "editTags": "Editar etiquetas",
+    "goToSource": "Ir para onde foi salvo",
+    "open": "Abrir o link",
+    "note": "Sua nota",
+    "notePlaceholder": "Por que você salvou…",
+    "addNote": "Adicionar nota",
+    "saveError": "Não foi possível salvar o link.",
+    "loadError": "Não foi possível carregar os links.",
+    "empty": "Os links que você captura na caixa de entrada, em uma tarefa ou em uma nota aparecem aqui, com o que a própria página diz sobre si.",
+    "noMatch": "Nenhum link corresponde a estes filtros."
   }
 }

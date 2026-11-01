@@ -76,6 +76,7 @@
     "undo": "Batalkan"
   },
   "sidebar": {
+    "links": "Tautan",
     "dashboard": "Dasbor",
     "projects": "Proyek",
     "tasks": "Tugas",
@@ -5240,5 +5241,59 @@
   },
   "tag": {
     "viewTag": "Buka tag"
+  },
+  "links": {
+    "title": "Tautan",
+    "count_one": "{{count}} tautan",
+    "count_other": "{{count}} tautan",
+    "search": "Cari tautan",
+    "filter": {
+      "kind": "Jenis",
+      "status": "Status",
+      "tag": "Tag",
+      "domain": "Situs",
+      "sort": "Urutkan",
+      "allKinds": "Semua jenis",
+      "active": "Belum dibuang",
+      "allStatuses": "Semua status",
+      "allTags": "Semua tag",
+      "allDomains": "Semua situs"
+    },
+    "sort": {
+      "newest": "Terbaru dulu",
+      "oldest": "Terlama dulu"
+    },
+    "kind": {
+      "repo": "Repo",
+      "article": "Artikel",
+      "video": "Video",
+      "tool": "Alat",
+      "other": "Lainnya"
+    },
+    "status": {
+      "new": "Baru",
+      "tested": "Dicoba",
+      "kept": "Disimpan",
+      "parked": "Nanti",
+      "dropped": "Dibuang"
+    },
+    "action": {
+      "tested": "Coba",
+      "kept": "Simpan",
+      "parked": "Nanti",
+      "dropped": "Buang"
+    },
+    "lastCommit": "diperbarui {{date}}",
+    "fetching": "Membaca halaman…",
+    "editTags": "Ubah tag",
+    "goToSource": "Buka lokasi penyimpanan",
+    "open": "Buka tautan",
+    "note": "Catatan Anda",
+    "notePlaceholder": "Alasan menyimpannya…",
+    "addNote": "Tambah catatan",
+    "saveError": "Tautan tidak dapat disimpan.",
+    "loadError": "Tautan tidak dapat dimuat.",
+    "empty": "Tautan yang Anda simpan dari kotak masuk, tugas, atau catatan akan muncul di sini, beserta keterangan dari halaman itu sendiri.",
+    "noMatch": "Tidak ada tautan yang cocok dengan filter ini."
   }
 }
