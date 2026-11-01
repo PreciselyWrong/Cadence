@@ -14,16 +14,17 @@ Tauri 2 shell around the user's own Cadence server. It adds what a browser tab c
 | Feature | How |
 |---|---|
 | Tray icon | Menu: Ouvrir, Ajout rapide, Réglages, Quitter. Closing the window leaves the tray running. |
-| Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field; Enter stores the capture and closes. |
-| Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. |
-| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification whose `sources` contain `desktop` and whose `deliver_after` (quiet hours) has passed becomes a native notification once, deduplicated by notification `uid` (the last 500 are kept in `state.json`), window or not. The first poll only records a baseline. See [36-notifications.md](../36-notifications.md). |
+| Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field (560 x 76 px); Enter stores the capture and closes. On X11 the key is grabbed by the global-shortcut plugin; under Wayland it is bound through the XDG GlobalShortcuts portal (see below). |
+| Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. Each capture carries an `Idempotency-Key` (a uuid stored in its queue file), the same on every retry, so the server stores it once. |
+| Autostart | Settings checkbox, off by default. On writes `~/.config/autostart/cadence-desktop.desktop` (`Exec=... --background`, the AppImage file when run from one); off removes it. The file is the source of truth. |
+| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification whose `sources` contain `desktop` and whose `deliver_after` (quiet hours) has passed becomes a native notification once, deduplicated by notification `uid` (the last 500 are kept in `state.json`), window or not. Clicking it opens the main window on the related item (`data.taskUid` to `/task/<uid>`, `data.projectUid` to `/project/<uid>`, else the home page); an already open main window is retargeted and raised. The first poll only records a baseline. See [36-notifications.md](../36-notifications.md). |
 
 ## Configuration
 
 `~/.config/ch.nicolab.cadence.desktop/config.json` (created by the first-launch settings window, editable by hand, picked up within 2 s):
 
 ```json
-{ "server_url": "http://cadence.lan", "api_token": "tt_...", "shortcut": "Ctrl+Alt+Space", "poll_seconds": 60 }
+{ "server_url": "http://cadence.lan", "api_token": "tt_...", "shortcut": "Ctrl+Alt+Space", "poll_seconds": 60, "autostart": false }
 ```
 
 Create the key in the web app: Profile, API keys. Without a key the web window works but quick add and notifications stay idle.
@@ -40,15 +41,27 @@ CARGO_BUILD_JOBS=6 npm run build   # when the machine is busy
 
 Fedora build dependencies: `sudo dnf install webkit2gtk4.1-devel libappindicator-gtk3-devel librsvg2-devel openssl-devel rpm-build`. The AppImage bundler downloads linuxdeploy on first use.
 
-Flags: `--quick` (open quick add; use it as the command of a desktop shortcut), `--background` (tray only, for autostart). A second launch forwards its flags to the running tray process.
+Flags: `--quick` (open quick add; use it as the command of a desktop shortcut), `--background` (tray only, for autostart). A second launch forwards its flags to the running tray process: without `--quick` it opens the main window or, when it is already open, restores and raises it.
+
+The tray process drives its window processes over their stdin (`focus`, `goto /route`, one per line): that is how "Ouvrir" raises a window and how a notification click retargets the main window, since a window cannot be reached from another process any other way. The RPM also installs a hidden `ch.nicolab.cadence.desktop.desktop` (the app id), which the portal needs to name the app.
 
 ## Known limits
 
-- **Wayland (KDE, GNOME):** the global shortcut is an X11 grab and does not fire in Wayland sessions. Bind `cadence-desktop --quick` to a key in the desktop's own shortcut settings instead.
-- **Duplicates:** a capture is sent at least once. If the server stores it but the answer is lost (timeout), the retry creates a second inbox item. `POST /api/inbox` has no idempotency key; `/api/v1/sync/push` would give exactly-once.
-- Clicking a notification does not open the app; "Ouvrir" on an already open window does not raise it.
+- **Wayland shortcut:** bound through `org.freedesktop.portal.GlobalShortcuts` (`ashpd`, tray process). The desktop asks the user to confirm the binding on the first run and owns the key afterwards: change it in the desktop's shortcut settings, the `shortcut` config value is only the first suggestion. The portal can refuse a suggestion that another app already holds (on the maintainer's machine `Ctrl+Alt+Space` is taken by the Claude desktop app, so the action is created unassigned until the user picks a key). If the portal is missing, the plugin's X11 grab is tried. The key press only reaches the app when the app id is known: install the RPM (hidden desktop file) or, for the AppImage, put a `ch.nicolab.cadence.desktop.desktop` in `~/.local/share/applications`; otherwise the portal files the shortcut under whatever app the process was started from. `cadence-desktop --quick` bound in the desktop's own settings also works everywhere.
+- **Duplicates:** a capture is sent at least once; the `Idempotency-Key` makes the server (`backend/middleware/idempotency.js`, 24 h window per user) return the first answer for a retry instead of creating a second inbox item. A server without the middleware ignores the header and a lost answer can still duplicate.
+- **Wayland focus:** raising a window uses the toolkit's focus request; the compositor may only flash the taskbar entry instead of focusing (focus-stealing prevention).
 - Strings of the setup and quick-add pages are French/English only, not in the 26 web locales.
 - Tray on GNOME needs the AppIndicator extension.
+
+## Verification (2026-11-01, Fedora 44, KDE Plasma 6.7 Wayland)
+
+Done with a debug build, a mock server on 127.0.0.1, an isolated `XDG_CONFIG_HOME`/`XDG_DATA_HOME` and a locked screen (no mouse or keyboard input, so dialogs could not be answered and the settings page was not looked at):
+
+- Portal shortcut: `CreateSession` and `BindShortcuts` reach xdg-desktop-portal-kde (seen with `busctl monitor`); invoking the action through `org.kde.kglobalaccel` `invokeShortcut` produced `Activated`, which opened the quick-add window. With the app id registered (temporary desktop file) the bind waited on KDE's confirmation dialog, which nobody could answer. Not verified: a real key press, and the dialog flow end to end.
+- Quick-add window measured through a KWin script: 560 x 76 px (it was 200 px high before; GTK ignored `resizable(false)`, the fix is min = max inner size).
+- Notification click: with a mock `org.freedesktop.Notifications` server on a private bus, the notification offered the `default` action, its `ActionInvoked` opened the main window at `/task/<uid>` (seen in the server log), a second one retargeted the open window, and a plain second launch restored a minimized main window (`active`, not minimized).
+- Idempotency: a capture whose first POST was cut mid-request was retried 60 s later with the same `Idempotency-Key`; the queue file was then deleted.
+- Not exercised at runtime: the autostart toggle (unit-tested only).
 
 ## Verification (2026-10-31, Fedora 44, KDE Wayland)
 

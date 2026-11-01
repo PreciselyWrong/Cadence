@@ -9,14 +9,17 @@
 //!   WebKit keeps its helper processes alive after a window closes, so each window gets its
 //!   own process to give the memory back.
 
+mod autostart;
 mod config;
+mod shortcut;
 mod sync;
 
 use config::Config;
 use std::{
     collections::HashMap,
+    io::{BufRead, Write},
     path::{Path, PathBuf},
-    process::{Child, Command},
+    process::{Child, Command, Stdio},
     sync::Mutex,
     thread,
     time::{Duration, Instant, SystemTime},
@@ -34,18 +37,31 @@ const QUICK_FLAG: &str = "--quick";
 /// Start in the tray with no window (for autostart).
 const BACKGROUND_FLAG: &str = "--background";
 const UI_FLAG: &str = "--ui";
+/// Web UI route the main window opens at (`--ui main --path /task/<uid>`).
+const PATH_FLAG: &str = "--path";
+/// Extra carried by a notification: the web UI route opened when it is clicked.
+const CLICK_PATH_KEY: &str = "path";
+/// Quick-add window (logical px): one input row, 12 px of margin around it.
+const QUICK_SIZE: (f64, f64) = (560.0, 76.0);
 const TICK: Duration = Duration::from_secs(2);
 const FLUSH_RETRY: Duration = Duration::from_secs(60);
 
 struct Paths {
+    /// `~/.config`, home of the autostart entry.
+    config_home: PathBuf,
     config: PathBuf,
     queue: PathBuf,
 }
 
 impl Paths {
-    fn resolve(app: &tauri::App) -> tauri::Result<Self> {
+    fn resolve(app: &tauri::App) -> Result<Self, Box<dyn std::error::Error>> {
+        let config_dir = app.path().app_config_dir()?;
         Ok(Self {
-            config: app.path().app_config_dir()?.join("config.json"),
+            config_home: config_dir
+                .parent()
+                .map(Path::to_path_buf)
+                .ok_or("config directory has no parent")?,
+            config: config_dir.join("config.json"),
             queue: app.path().app_data_dir()?.join("queue"),
         })
     }
@@ -54,7 +70,12 @@ impl Paths {
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     match args.iter().position(|a| a == UI_FLAG) {
-        Some(i) => run_ui(args.get(i + 1).cloned().unwrap_or_default()),
+        Some(i) => run_ui(
+            args.get(i + 1).cloned().unwrap_or_default(),
+            args.iter()
+                .position(|a| a == PATH_FLAG)
+                .and_then(|p| args.get(p + 1).cloned()),
+        ),
         None => run_tray(&args),
     }
 }
@@ -63,7 +84,10 @@ fn main() {
 
 #[tauri::command]
 fn get_config(paths: State<Paths>) -> Config {
-    config::load(&paths.config).unwrap_or_default()
+    Config {
+        autostart: autostart::is_enabled(&paths.config_home),
+        ..config::load(&paths.config).unwrap_or_default()
+    }
 }
 
 /// Writes the config and closes the settings window. The tray process notices the file
@@ -71,6 +95,8 @@ fn get_config(paths: State<Paths>) -> Config {
 #[tauri::command]
 fn save_config(app: AppHandle, paths: State<Paths>, config: Config) -> Result<(), String> {
     let config = config.normalized()?;
+    let launcher = autostart::launcher().map_err(|e| e.to_string())?;
+    autostart::apply(&paths.config_home, &launcher, config.autostart)?;
     config::save(&paths.config, &config)?;
     close(&app, "settings");
     Ok(())
@@ -100,7 +126,7 @@ fn close(app: &AppHandle, label: &str) {
     }
 }
 
-fn run_ui(kind: String) {
+fn run_ui(kind: String, path: Option<String>) {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_config,
@@ -111,29 +137,38 @@ fn run_ui(kind: String) {
         .setup(move |app| {
             let paths = Paths::resolve(app)?;
             let config = config::load(&paths.config);
+            let server_url = config
+                .as_ref()
+                .map(|c| c.server_url.clone())
+                .unwrap_or_default();
             app.manage(paths);
             let handle = app.handle();
             // The Cadence page of the main window talks to the server by itself (session
             // cookie). It is not a local page, so it gets no access to the commands above.
             match (kind.as_str(), config) {
                 ("main", Some(config)) => {
-                    let url = config.server_url.parse()?;
+                    let url = route_url(&config.server_url, path.as_deref())?;
                     WebviewWindowBuilder::new(handle, "main", WebviewUrl::External(url))
                         .title("Cadence")
                         .inner_size(1280.0, 840.0)
                         .build()?;
                 }
                 ("quick", _) => {
-                    WebviewWindowBuilder::new(handle, "quick", WebviewUrl::App("quick.html".into()))
-                        .title("Cadence - Ajout rapide")
-                        .inner_size(560.0, 76.0)
-                        .decorations(false)
-                        .resizable(false)
-                        .always_on_top(true)
-                        .skip_taskbar(true)
-                        .center()
-                        .focused(true)
-                        .build()?;
+                    WebviewWindowBuilder::new(
+                        handle,
+                        "quick",
+                        WebviewUrl::App("quick.html".into()),
+                    )
+                    .title("Cadence - Ajout rapide")
+                    .inner_size(QUICK_SIZE.0, QUICK_SIZE.1)
+                    .min_inner_size(QUICK_SIZE.0, QUICK_SIZE.1)
+                    .max_inner_size(QUICK_SIZE.0, QUICK_SIZE.1)
+                    .decorations(false)
+                    .always_on_top(true)
+                    .skip_taskbar(true)
+                    .center()
+                    .focused(true)
+                    .build()?;
                 }
                 _ => {
                     WebviewWindowBuilder::new(
@@ -142,15 +177,58 @@ fn run_ui(kind: String) {
                         WebviewUrl::App("setup.html".into()),
                     )
                     .title("Cadence - Réglages")
-                    .inner_size(460.0, 560.0)
+                    .inner_size(460.0, 640.0)
                     .resizable(false)
                     .build()?;
                 }
             }
+            listen_for_commands(app.handle().clone(), server_url);
             Ok(())
         })
         .run(tauri::generate_context!())
         .expect("failed to run the Cadence UI process");
+}
+
+/// Joins the server address and a web UI route; only plain routes are accepted.
+fn route_url(
+    server_url: &str,
+    path: Option<&str>,
+) -> Result<tauri::Url, Box<dyn std::error::Error>> {
+    let route = path.filter(|p| p.starts_with('/') && !p.starts_with("//") && !p.contains(".."));
+    Ok(format!(
+        "{}{}",
+        server_url.trim_end_matches('/'),
+        route.unwrap_or("")
+    )
+    .parse()?)
+}
+
+/// The tray process drives this window over stdin, one command per line: `focus`, or
+/// `goto /route` to open an item. Windows live in their own process, so this is the only
+/// way for the tray to raise one (and to retarget the main window on a notification click).
+fn listen_for_commands(app: AppHandle, server_url: String) {
+    thread::spawn(move || {
+        for line in std::io::stdin().lock().lines().map_while(Result::ok) {
+            let line = line.trim().to_string();
+            let target = line.strip_prefix("goto ").map(str::to_string);
+            let app = app.clone();
+            let server_url = server_url.clone();
+            let _ = app.clone().run_on_main_thread(move || {
+                for window in app.webview_windows().values() {
+                    if let Some(route) = &target {
+                        if window.label() == "main" {
+                            if let Ok(url) = route_url(&server_url, Some(route)) {
+                                let _ = window.navigate(url);
+                            }
+                        }
+                    }
+                    let _ = window.unminimize();
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
+            });
+        }
+    });
 }
 
 // ------------------------------------------------------------- tray process
@@ -177,18 +255,45 @@ impl Tray {
         }
     }
 
-    /// Starts a UI process unless one of that kind is already open.
+    /// Opens a window of that kind, or raises it when it is already open.
     fn open(&self, kind: &'static str) {
+        self.open_at(kind, None);
+    }
+
+    /// Like [`open`](Self::open); for the main window `path` is the web UI route to show
+    /// (a clicked notification's task), also when the window is already open.
+    fn open_at(&self, kind: &'static str, path: Option<&str>) {
         let kind = if kind == "main" && *self.first_run.lock().unwrap() {
             "settings"
         } else {
             kind
         };
         if self.is_running(kind) {
+            let command = match path.filter(|_| kind == "main") {
+                Some(path) => format!("goto {path}"),
+                None => "focus".to_string(),
+            };
+            if let Some(stdin) = self
+                .ui
+                .lock()
+                .unwrap()
+                .get_mut(kind)
+                .and_then(|child| child.stdin.as_mut())
+            {
+                if let Err(e) = writeln!(stdin, "{command}").and_then(|()| stdin.flush()) {
+                    eprintln!("cannot reach the {kind} window: {e}");
+                }
+            }
             return;
         }
-        let spawned = std::env::current_exe()
-            .and_then(|exe| Command::new(exe).args([UI_FLAG, kind]).spawn());
+        let spawned = std::env::current_exe().and_then(|exe| {
+            let mut command = Command::new(exe);
+            command.args([UI_FLAG, kind]).stdin(Stdio::piped());
+            if let Some(path) = path.filter(|_| kind == "main") {
+                command.args([PATH_FLAG, path]);
+            }
+            command.spawn()
+        });
         match spawned {
             Ok(child) => {
                 self.ui.lock().unwrap().insert(kind, child);
@@ -219,6 +324,24 @@ fn register_shortcut(app: &AppHandle, shortcut: &str) {
     }
 }
 
+/// Wayland sessions get the portal binding; X11 (or a missing portal) the plugin's key grab.
+fn start_shortcut(app: &AppHandle, shortcut: &str) {
+    if !shortcut::is_wayland() {
+        register_shortcut(app, shortcut);
+        return;
+    }
+    let app = app.clone();
+    let shortcut = shortcut.to_string();
+    thread::spawn(move || {
+        let opener = app.clone();
+        let result = shortcut::listen(&shortcut, move || opener.state::<Tray>().open("quick"));
+        if let Err(e) = result {
+            eprintln!("shortcut portal unavailable ({e}), using the X11 grab");
+            register_shortcut(&app, &shortcut);
+        }
+    });
+}
+
 fn modified(path: &Path) -> Option<SystemTime> {
     path.metadata().and_then(|m| m.modified()).ok()
 }
@@ -230,7 +353,8 @@ fn reload_config(app: &AppHandle, tray: &Tray) {
     };
     let old = tray.config();
     *tray.config.lock().unwrap() = new.clone();
-    if new.shortcut != old.shortcut {
+    // Under Wayland the portal owns the key (changed in the desktop's shortcut settings).
+    if new.shortcut != old.shortcut && !shortcut::is_wayland() {
         register_shortcut(app, &new.shortcut);
     }
     let first_run = std::mem::replace(&mut *tray.first_run.lock().unwrap(), false);
@@ -272,10 +396,13 @@ fn background_loop(app: AppHandle) {
 
         if last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
             last_poll = Instant::now();
-            for (title, body) in sync::poll_notifications(&tray.store, &config) {
-                let mut notification = app.notification().builder().title(title);
-                if !body.is_empty() {
-                    notification = notification.body(body);
+            for alert in sync::poll_notifications(&tray.store, &config) {
+                let mut notification = app.notification().builder().title(alert.title);
+                if !alert.body.is_empty() {
+                    notification = notification.body(alert.body);
+                }
+                if let Some(path) = alert.path {
+                    notification = notification.extra(CLICK_PATH_KEY, path);
                 }
                 if let Err(e) = notification.show() {
                     eprintln!("notification not shown: {e}");
@@ -336,7 +463,11 @@ fn run_tray(args: &[String]) {
                 ],
             )?;
             TrayIconBuilder::new()
-                .icon(app.default_window_icon().cloned().ok_or("missing app icon")?)
+                .icon(
+                    app.default_window_icon()
+                        .cloned()
+                        .ok_or("missing app icon")?,
+                )
                 .tooltip("Cadence")
                 .menu(&menu)
                 .on_menu_event(|app, event| {
@@ -355,7 +486,16 @@ fn run_tray(args: &[String]) {
                 .build(app)?;
 
             let handle = app.handle().clone();
-            register_shortcut(&handle, &shortcut);
+            // A click on a notification (the `default` action) opens the related item.
+            let on_click = handle.clone();
+            handle.notification().on_action(move |performed| {
+                let path = performed
+                    .notification()
+                    .and_then(|n| n.extra().get(CLICK_PATH_KEY))
+                    .and_then(|v| v.as_str());
+                on_click.state::<Tray>().open_at("main", path);
+            })?;
+            start_shortcut(&handle, &shortcut);
             let tray = app.state::<Tray>();
             if quick_at_start {
                 tray.open("quick");

@@ -14,6 +14,10 @@ const NOTIFICATION_PAGE: u32 = 20;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Capture {
+    /// Sent as `Idempotency-Key`, so a retry after a lost answer cannot create a second
+    /// inbox item. Files written by older versions have none (see [`idempotency_key`]).
+    #[serde(default)]
+    pub id: String,
     pub content: String,
     /// Unix seconds, for diagnostics only (the inbox has no capture date on create).
     pub captured_at: u64,
@@ -26,6 +30,7 @@ pub fn enqueue(queue_dir: &Path, content: String) -> Result<(), String> {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default();
     let capture = Capture {
+        id: uuid::Uuid::new_v4().to_string(),
         content,
         captured_at: now.as_secs(),
     };
@@ -46,6 +51,17 @@ pub fn pending(queue_dir: &Path) -> Vec<PathBuf> {
         .unwrap_or_default();
     files.sort();
     files
+}
+
+/// Key of one capture, identical on every retry: the capture's own uuid, or for a file from an
+/// older version the file name (also fixed for the life of the file).
+fn idempotency_key(path: &Path, capture: &Capture) -> String {
+    if !capture.id.is_empty() {
+        return capture.id.clone();
+    }
+    path.file_stem()
+        .map(|stem| stem.to_string_lossy().into_owned())
+        .unwrap_or_default()
 }
 
 /// Newest notification uids remembered, so a notification is shown once even when the
@@ -119,6 +135,7 @@ pub fn flush_queue(queue_dir: &Path, cfg: &Config) {
         let result = agent
             .post(&url)
             .set("Authorization", &bearer(cfg))
+            .set("Idempotency-Key", &idempotency_key(&path, &capture))
             .send_json(serde_json::json!({ "content": capture.content, "source": SOURCE }));
         match result {
             Ok(_) => {
@@ -155,9 +172,44 @@ struct ServerNotification {
     /// Quiet hours hold delivery until this UTC instant (ISO 8601).
     #[serde(default)]
     deliver_after: Option<String>,
+    /// Free-form payload (`taskUid`, `projectUid`, ...) used to open the related item.
+    #[serde(default)]
+    data: Option<serde_json::Value>,
+}
+
+/// What the desktop shows for one server notification.
+pub struct Alert {
+    pub title: String,
+    pub body: String,
+    /// Web UI path of the related task or project, opened when the notification is clicked.
+    pub path: Option<String>,
+}
+
+/// A uid is interpolated into a URL path, so only plain identifier characters are accepted.
+fn is_plain_uid(uid: &str) -> bool {
+    !uid.is_empty()
+        && uid.len() <= 64
+        && uid
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
 }
 
 impl ServerNotification {
+    /// Web UI route of the item this notification is about (`/task/<uid>`, `/project/<uid>`).
+    fn target_path(&self) -> Option<String> {
+        let data = self.data.as_ref()?;
+        let uid_of = |key: &str| {
+            data.get(key)
+                .and_then(serde_json::Value::as_str)
+                .filter(|uid| is_plain_uid(uid))
+        };
+        if let Some(uid) = uid_of("taskUid") {
+            Some(format!("/task/{uid}"))
+        } else {
+            uid_of("projectUid").map(|uid| format!("/project/{uid}"))
+        }
+    }
+
     /// Quiet hours are over for this notification (ISO 8601 UTC strings sort as text).
     fn released(&self, now_iso: &str) -> bool {
         self.deliver_after
@@ -214,7 +266,7 @@ fn now_iso() -> String {
 
 /// Unread notifications the server routed to the desktop, shown once each. The first
 /// successful poll only records a baseline, so old unread items do not flood the desktop.
-pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<(String, String)> {
+pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<Alert> {
     if cfg.api_token.is_empty() {
         return Vec::new();
     }
@@ -238,12 +290,16 @@ pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<(String, String)> 
 
     let now = now_iso();
     let mut state = store.state.lock().unwrap();
-    let shown: Vec<(String, String)>;
+    let shown: Vec<Alert>;
     if state.baseline_done {
         let fresh = pick_fresh(&list.notifications, &state.seen, &now);
         shown = fresh
             .iter()
-            .map(|n| (n.title.clone(), n.message.clone().unwrap_or_default()))
+            .map(|n| Alert {
+                title: n.title.clone(),
+                body: n.message.clone().unwrap_or_default(),
+                path: n.target_path(),
+            })
             .collect();
         let uids: Vec<String> = fresh.iter().map(|n| n.uid.clone()).collect();
         state.seen.extend(uids);
@@ -271,7 +327,11 @@ pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<(String, String)> 
 mod tests {
     use super::*;
 
-    fn notification(uid: &str, sources: &[&str], deliver_after: Option<&str>) -> ServerNotification {
+    fn notification(
+        uid: &str,
+        sources: &[&str],
+        deliver_after: Option<&str>,
+    ) -> ServerNotification {
         ServerNotification {
             uid: uid.to_string(),
             title: format!("title {uid}"),
@@ -279,6 +339,7 @@ mod tests {
             created_at: format!("2026-11-01T10:00:0{}.000Z", uid.len() % 10),
             sources: sources.iter().map(|s| s.to_string()).collect(),
             deliver_after: deliver_after.map(str::to_string),
+            data: None,
         }
     }
 
@@ -352,5 +413,135 @@ mod tests {
         assert!(state.baseline_done);
         assert_eq!(state.seen, vec!["a".to_string()]);
         let _ = std::fs::remove_file(&path);
+    }
+
+    #[test]
+    fn opens_the_task_or_project_a_notification_is_about() {
+        let with = |data: serde_json::Value| ServerNotification {
+            data: Some(data),
+            ..notification("a", &["desktop"], None)
+        };
+        assert_eq!(
+            with(serde_json::json!({ "taskUid": "abc-123_X", "projectUid": "p1" })).target_path(),
+            Some("/task/abc-123_X".to_string())
+        );
+        assert_eq!(
+            with(serde_json::json!({ "projectUid": "p1" })).target_path(),
+            Some("/project/p1".to_string())
+        );
+        assert_eq!(
+            with(serde_json::json!({ "reason": "x" })).target_path(),
+            None
+        );
+        assert_eq!(notification("a", &[], None).target_path(), None);
+    }
+
+    #[test]
+    fn refuses_uids_that_could_escape_the_route() {
+        let hostile = ServerNotification {
+            data: Some(serde_json::json!({ "taskUid": "../../logout?x=1" })),
+            ..notification("a", &["desktop"], None)
+        };
+        assert_eq!(hostile.target_path(), None);
+    }
+
+    /// Serves `answers` (one status line per connection) and returns every request's headers.
+    fn serve(answers: Vec<&'static str>) -> (String, std::thread::JoinHandle<Vec<String>>) {
+        use std::io::{Read, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let url = format!("http://{}", listener.local_addr().unwrap());
+        let handle = std::thread::spawn(move || {
+            let mut seen = Vec::new();
+            for status in answers {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = Vec::new();
+                let mut chunk = [0u8; 1024];
+                // Read the whole request (headers, then the declared body) before answering.
+                loop {
+                    let n = stream.read(&mut chunk).unwrap();
+                    request.extend_from_slice(&chunk[..n]);
+                    let text = String::from_utf8_lossy(&request).to_lowercase();
+                    if let Some((head, body)) = text.split_once("\r\n\r\n") {
+                        let wanted = header(head, "content-length")
+                            .and_then(|v| v.parse::<usize>().ok())
+                            .unwrap_or(0);
+                        if body.len() >= wanted || n == 0 {
+                            break;
+                        }
+                    } else if n == 0 {
+                        break;
+                    }
+                }
+                seen.push(String::from_utf8_lossy(&request).to_lowercase());
+                write!(
+                    stream,
+                    "HTTP/1.1 {status}\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{{}}"
+                )
+                .unwrap();
+            }
+            seen
+        });
+        (url, handle)
+    }
+
+    fn header(request: &str, name: &str) -> Option<String> {
+        request
+            .lines()
+            .find_map(|line| line.strip_prefix(&format!("{name}: ")))
+            .map(str::to_string)
+    }
+
+    #[test]
+    fn retry_after_a_failed_post_carries_the_same_idempotency_key() {
+        let (url, server) = serve(vec!["500 Internal Server Error", "201 Created"]);
+        let dir = std::env::temp_dir().join(format!("cadence-queue-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let cfg = Config {
+            server_url: url,
+            api_token: "tt_test".into(),
+            ..Config::default()
+        };
+        enqueue(&dir, "buy milk".into()).unwrap();
+
+        flush_queue(&dir, &cfg);
+        assert_eq!(pending(&dir).len(), 1, "a 500 keeps the capture queued");
+        flush_queue(&dir, &cfg);
+        assert!(pending(&dir).is_empty());
+
+        let requests = server.join().unwrap();
+        let first = header(&requests[0], "idempotency-key").expect("key on the first attempt");
+        let second = header(&requests[1], "idempotency-key").expect("key on the retry");
+        assert_eq!(first, second);
+        assert_eq!(first.len(), 36, "uuid v4");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn distinct_captures_get_distinct_keys_and_legacy_files_a_stable_one() {
+        let dir = std::env::temp_dir().join(format!("cadence-keys-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        enqueue(&dir, "a".into()).unwrap();
+        enqueue(&dir, "b".into()).unwrap();
+        let read = |p: &Path| {
+            serde_json::from_str::<Capture>(&std::fs::read_to_string(p).unwrap()).unwrap()
+        };
+        let files = pending(&dir);
+        let keys: Vec<String> = files.iter().map(|p| idempotency_key(p, &read(p))).collect();
+        assert_ne!(keys[0], keys[1]);
+
+        let legacy = Capture {
+            id: String::new(),
+            content: "old".into(),
+            captured_at: 1,
+        };
+        let path = dir.join("00000000000000000001-42.json");
+        assert_eq!(idempotency_key(&path, &legacy), "00000000000000000001-42");
+        assert_eq!(
+            idempotency_key(&path, &legacy),
+            idempotency_key(&path, &legacy)
+        );
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

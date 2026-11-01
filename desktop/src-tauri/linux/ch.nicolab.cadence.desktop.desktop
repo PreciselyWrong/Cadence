@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Cadence
+Comment=Cadence desktop client
+Exec=cadence-desktop
+Icon=cadence-desktop
+Terminal=false
+NoDisplay=true
+StartupWMClass=cadence-desktop

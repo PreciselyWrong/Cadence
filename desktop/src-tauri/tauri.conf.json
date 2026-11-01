@@ -26,7 +26,12 @@
       "icons/icon.png"
     ],
     "linux": {
-      "rpm": { "release": "1" }
+      "rpm": {
+        "release": "1",
+        "files": {
+          "/usr/share/applications/ch.nicolab.cadence.desktop.desktop": "linux/ch.nicolab.cadence.desktop.desktop"
+        }
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ body { padding: 20px; }
 h1 { font-size: 18px; margin: 0 0 16px; }
 label { display: block; margin: 14px 0 4px; font-weight: 600; }
 .hint { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
-input {
+input:not([type="checkbox"]) {
   width: 100%; padding: 9px 10px; font: inherit; color: inherit;
   background: transparent; border: 1px solid var(--border); border-radius: 8px;
 }
@@ -33,7 +33,11 @@ button {
   margin-top: 20px; padding: 9px 18px; font: inherit; font-weight: 600; cursor: pointer;
   color: var(--accent-fg); background: var(--accent); border: 0; border-radius: 8px;
 }
+label.check { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+label.check input { width: auto; margin: 0; }
 #error { color: var(--error); min-height: 1.4em; margin-top: 12px; }
-body.quick { padding: 12px; }
-body.quick input { font-size: 18px; padding: 12px 14px; }
-body.quick #error { margin-top: 4px; font-size: 13px; min-height: 0; }
+/* The window is 76 px tall: 12 + 50 (input) + 12. The error floats over the bottom padding. */
+html:has(body.quick), body.quick { height: 76px; overflow: hidden; }
+body.quick { padding: 12px; position: relative; }
+body.quick input { font-size: 18px; line-height: 24px; padding: 12px 14px; }
+body.quick #error { position: absolute; left: 14px; right: 14px; bottom: 0; margin: 0; font-size: 12px; line-height: 14px; min-height: 0; }

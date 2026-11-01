@@ -17,6 +17,9 @@ pub struct Config {
     pub api_token: String,
     pub shortcut: String,
     pub poll_seconds: u64,
+    /// Start in the tray at login. The autostart entry is the source of truth: this is
+    /// filled from it when the settings page loads and applied to it on save.
+    pub autostart: bool,
 }
 
 impl Default for Config {
@@ -26,6 +29,7 @@ impl Default for Config {
             api_token: String::new(),
             shortcut: DEFAULT_SHORTCUT.into(),
             poll_seconds: 60,
+            autostart: false,
         }
     }
 }
