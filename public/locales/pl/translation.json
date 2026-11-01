@@ -396,6 +396,8 @@
   "profile": {
     "showTaskDescription": "Pokaż opis pod tytułem",
     "sync": {
+      "pending_many": "{{count}} zmian wykonanych offline w tej przeglądarce czeka na wysłanie.",
+      "pending_few": "{{count}} zmiany wykonane offline w tej przeglądarce czekają na wysłanie.",
       "field": {
         "review_at": "Data przeglądu",
         "review_on": "Data przeglądu",
@@ -1132,6 +1134,8 @@
     "pureBlack": "Czysta czerń w trybie ciemnym"
   },
   "productivity": {
+    "issuesFound_many": "{{count}} problemów z produktywnością wymaga uwagi",
+    "issuesFound_few": "{{count}} problemy z produktywnością wymagają uwagi",
     "stalledProjects": "Zatrzymane projekty",
     "stalledProjectsDesc": "Te projekty nie mają zadań ani działań",
     "needsNextAction": "Projekty wymagają następnego działania",
@@ -1390,6 +1394,14 @@
     "waiting": "Oczekiwanie"
   },
   "project": {
+    "noteCount_many": "{{count}} notatek",
+    "noteCount_few": "{{count}} notatki",
+    "memberCount_many": "{{count}} członków",
+    "memberCount_few": "{{count}} członkowie",
+    "fileCount_many": "{{count}} plików",
+    "fileCount_few": "{{count}} pliki",
+    "daysToDue_many": "{{count}} dni do terminu",
+    "daysToDue_few": "{{count}} dni do terminu",
     "name": "Nazwa projektu",
     "projectImage": "Obraz projektu",
     "uploadImageHint": "Prześlij obraz dla swojego projektu (maks. 10MB)",
@@ -2557,6 +2569,8 @@
     "deleteUser": "Usuń użytkownika",
     "confirmDeleteUser": "Czy na pewno chcesz usunąć {{email}}? Ta akcja nie może być cofnięta.",
     "billing": {
+      "trialDaysLeft_many": "Zostaje {{count}} dni",
+      "trialDaysLeft_few": "Zostają {{count}} dni",
       "title": "Płatności",
       "accounts": "Konta",
       "onPro": "Na planie Pro",
@@ -2790,6 +2804,10 @@
       "statusResolved": "Rozwiązane"
     },
     "userStatus": {
+      "itemsCreated_many": "{{count}} elementów",
+      "itemsCreated_few": "{{count}} elementy",
+      "emailsSent_many": "Wysłane: {{count}}",
+      "emailsSent_few": "Wysłane: {{count}}",
       "title": "Użytkownicy",
       "user": "Użytkownik",
       "signedUp": "Zarejestrowany",
@@ -3187,6 +3205,8 @@
     "title": "Podzadania"
   },
   "backup": {
+    "accountsCount_many": "Inne konta: {{count}}",
+    "accountsCount_few": "Inne konta: {{count}}",
     "title": "Kopia zapasowa i przywracanie",
     "description": "Twórz kopie zapasowe lub przywracaj z poprzednich kopii zapasowych. Twoje ostatnie 5 kopii zapasowych jest automatycznie zapisywanych.",
     "createBackup": "Utwórz kopię zapasową",
@@ -3702,6 +3722,8 @@
     "planChanged": "Twój plan został zmieniony."
   },
   "subscription": {
+    "trialBanner_many": "Darmowy okres próbny, pozostało {{count}} dni",
+    "trialBanner_few": "Darmowy okres próbny, pozostały {{count}} dni",
     "title": "Subskrypcja",
     "chooseForCloud": "Wybierz plan dla Cadence Cloud",
     "noActive": "Brak aktywnej subskrypcji",
@@ -3958,6 +3980,8 @@
     "lateWarning": "Czas minął, a zadanie nie jest zrobione",
     "movedOffPlan": "'{{name}}' nie ma już terminu na dziś, więc została usunięta z dzisiejszego planu.",
     "tips": {
+      "missed_many": "Minęło {{count}} zaplanowanych bloków",
+      "missed_few": "Minęły {{count}} zaplanowane bloki",
       "title": "Wskazówki do planowania",
       "missed": "{{count}} zaplanowane bloki już minęły",
       "moveMissed": "Przenieś do najbliższych wolnych miejsc",
