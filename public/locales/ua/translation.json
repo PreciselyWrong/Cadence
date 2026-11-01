@@ -962,6 +962,14 @@
     }
   },
   "project": {
+    "noteCount_many": "{{count}} нотаток",
+    "noteCount_few": "{{count}} нотатки",
+    "memberCount_many": "{{count}} учасників",
+    "memberCount_few": "{{count}} учасники",
+    "fileCount_many": "{{count}} файлів",
+    "fileCount_few": "{{count}} файли",
+    "daysToDue_many": "{{count}} днів до терміну",
+    "daysToDue_few": "{{count}} дні до терміну",
     "projectImage": "Зображення проекту",
     "uploadImageHint": "Завантажте зображення для вашого проекту (макс. 10МБ)",
     "browseImage": "Обрати зображення",
@@ -1051,6 +1059,8 @@
   "profile": {
     "showTaskDescription": "Показувати опис під заголовком",
     "sync": {
+      "pending_many": "{{count}} змін, зроблених офлайн у цьому браузері, очікують надсилання.",
+      "pending_few": "{{count}} зміни, зроблені офлайн у цьому браузері, очікують надсилання.",
       "field": {
         "review_at": "Огляд на",
         "review_on": "Огляд на",
@@ -2125,6 +2135,8 @@
     "todayHeader": "dddd, d MMMM yyyy 'р.'"
   },
   "productivity": {
+    "issuesFound_many": "{{count}} проблем з продуктивністю потребують уваги",
+    "issuesFound_few": "{{count}} проблеми з продуктивністю потребують уваги",
     "stalledProjects": "Зупинені проекти",
     "stalledProjectsDesc": "У цих проектах немає завдань або дій",
     "needsNextAction": "Проекти потребують наступної дії",
@@ -2557,6 +2569,8 @@
     "deleteUser": "Видалити користувача",
     "confirmDeleteUser": "Ви впевнені, що хочете видалити {{email}}? Цю дію не можна скасувати.",
     "billing": {
+      "trialDaysLeft_many": "Залишилось {{count}} днів",
+      "trialDaysLeft_few": "Залишилось {{count}} дні",
       "title": "Оплата",
       "accounts": "Облікові записи",
       "onPro": "На Pro",
@@ -2790,6 +2804,10 @@
       "statusResolved": "Вирішено"
     },
     "userStatus": {
+      "itemsCreated_many": "{{count}} елементів",
+      "itemsCreated_few": "{{count}} елементи",
+      "emailsSent_many": "Надіслано: {{count}}",
+      "emailsSent_few": "Надіслано: {{count}}",
       "title": "Користувачі",
       "user": "Користувач",
       "signedUp": "Зареєструвався",
@@ -3187,6 +3205,8 @@
     "title": "Підзавдання"
   },
   "backup": {
+    "accountsCount_many": "Інших облікових записів: {{count}}",
+    "accountsCount_few": "Інших облікових записів: {{count}}",
     "title": "Резервне копіювання та відновлення",
     "description": "Створіть резервні копії або відновіть з попередніх резервних копій. Ваші останні 5 резервних копій автоматично зберігаються.",
     "createBackup": "Створити резервну копію",
@@ -3702,6 +3722,8 @@
     "planChanged": "Ваш тариф змінено."
   },
   "subscription": {
+    "trialBanner_many": "Ви на безкоштовному пробному періоді, залишилось {{count}} днів",
+    "trialBanner_few": "Ви на безкоштовному пробному періоді, залишилось {{count}} дні",
     "title": "Підписка",
     "chooseForCloud": "Виберіть план для Cadence Cloud",
     "noActive": "Немає активної підписки",
@@ -3958,6 +3980,8 @@
     "lateWarning": "Час минув, а задачу не виконано",
     "movedOffPlan": "'{{name}}' більше не має терміну на сьогодні, тому її прибрано з плану на день.",
     "tips": {
+      "missed_many": "Минуло {{count}} запланованих блоків",
+      "missed_few": "Минуло {{count}} заплановані блоки",
       "title": "Поради з планування",
       "missed": "Минуло запланованих блоків: {{count}}",
       "moveMissed": "Перенести в найближчі вільні проміжки",
