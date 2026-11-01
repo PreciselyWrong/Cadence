@@ -1599,6 +1599,9 @@
     "createError": "Errore nella creazione della nota"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Modificare questa attività o la serie?",
       "deleteTitle": "Eliminare questa attività o la serie?",

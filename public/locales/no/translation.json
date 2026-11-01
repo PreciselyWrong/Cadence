@@ -1598,6 +1598,9 @@
     "createError": "Kunne ikke opprette notat"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Rediger denne oppgaven eller serien?",
       "deleteTitle": "Slett denne oppgaven eller serien?",

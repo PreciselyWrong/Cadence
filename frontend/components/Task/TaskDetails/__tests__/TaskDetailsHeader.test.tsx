@@ -37,6 +37,30 @@ const task: any = {
     priority: null,
 };
 
+describe('TaskDetailsHeader duplicate', () => {
+    it('duplicates the task from the actions menu', () => {
+        const onDuplicate = jest.fn();
+        render(
+            <TaskDetailsHeader
+                task={task}
+                onTitleUpdate={jest.fn()}
+                onStatusUpdate={jest.fn()}
+                onPriorityUpdate={jest.fn()}
+                onDelete={jest.fn()}
+                onDuplicate={onDuplicate}
+                onQuickStatusToggle={jest.fn()}
+                activePill="overview"
+                onPillChange={jest.fn()}
+            />
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Duplicate' }));
+
+        expect(onDuplicate).toHaveBeenCalledTimes(1);
+    });
+});
+
 describe('TaskDetailsHeader copy link', () => {
     it('copies the direct task link from the icon next to the title', async () => {
         const writeText = jest.fn().mockResolvedValue(undefined);

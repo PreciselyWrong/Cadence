@@ -1601,6 +1601,9 @@
     "createError": "Nie udało się utworzyć notatki"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Edytować to zadanie czy serię?",
       "deleteTitle": "Usunąć to zadanie czy serię?",

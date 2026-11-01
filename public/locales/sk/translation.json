@@ -1830,6 +1830,9 @@
     "createError": "Poznámku sa nepodarilo vytvoriť"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Upraviť túto úlohu alebo sériu?",
       "deleteTitle": "Odstrániť túto úlohu alebo sériu?",

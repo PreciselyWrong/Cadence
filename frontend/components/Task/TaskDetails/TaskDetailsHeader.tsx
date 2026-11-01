@@ -17,6 +17,7 @@ import Tooltip from '../../Shared/Tooltip';
 import { Task, PriorityType } from '../../../entities/Task';
 import BackButton from '../../Shared/BackButton';
 import { formatDateTime } from '../../../utils/dateUtils';
+import { isTodoMdTask } from '../../../utils/todoMd';
 import TaskStatusControl from '../TaskStatusControl';
 import { getStatusValue } from '../../../constants/taskStatus';
 import QuickCaptureInput from '../../Inbox/QuickCaptureInput';
@@ -29,6 +30,7 @@ interface TaskDetailsHeaderProps {
     onStatusUpdate: (newStatus: number) => Promise<void>;
     onPriorityUpdate: (newPriority: PriorityType) => Promise<void>;
     onDelete: () => void;
+    onDuplicate?: () => void;
     onSkipOccurrence?: () => void;
     getProjectLink?: (project: any) => string;
     getTagLink?: (tag: any) => string;
@@ -55,6 +57,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
     onStatusUpdate,
     onPriorityUpdate,
     onDelete,
+    onDuplicate,
     onSkipOccurrence,
     onEdit,
     onTogglePin,
@@ -892,6 +895,25 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                     )}
                                                 </button>
                                             )}
+                                            {onDuplicate &&
+                                                !isTodoMdTask(task) && (
+                                                    <button
+                                                        className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            setActionsMenuOpen(
+                                                                false
+                                                            );
+                                                            onDuplicate();
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            'task.duplicate',
+                                                            'Duplicate'
+                                                        )}
+                                                    </button>
+                                                )}
                                             <button
                                                 className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                                                 onClick={(e) => {

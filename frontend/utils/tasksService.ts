@@ -106,6 +106,24 @@ export const createTask = async (taskData: Task): Promise<Task> => {
     return created;
 };
 
+// A copy keeps the words, the place and the dates. Identity, status, subtasks,
+// recurrence and parent links are left out: the copy is one open task.
+export const duplicateTask = (task: Task): Promise<Task> =>
+    createTask({
+        name: task.name,
+        note: task.note,
+        priority: task.priority,
+        project_id: task.project_id,
+        area_id: task.area_id,
+        tags: task.tags?.map((tag) => ({ name: tag.name })) as Task['tags'],
+        due_date: task.due_date,
+        due_time: task.due_time,
+        due_has_time: task.due_has_time,
+        start_date: task.start_date,
+        start_time: task.start_time,
+        defer_until: task.defer_until,
+    } as Task);
+
 export const updateTask = async (
     taskUid: string,
     taskData: Partial<Task>

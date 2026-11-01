@@ -1601,6 +1601,9 @@
     "createError": "Не удалось создать заметку"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Изменить эту задачу или серию?",
       "deleteTitle": "Удалить эту задачу или серию?",

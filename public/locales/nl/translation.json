@@ -1597,6 +1597,9 @@
     "createError": "Aanmaken van notitie is mislukt"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Deze taak of de reeks bewerken?",
       "deleteTitle": "Deze taak of de reeks verwijderen?",

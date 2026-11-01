@@ -11,9 +11,11 @@ import {
 } from '../../../utils/dateUtils';
 import { TASK_UPDATED_EVENT } from '../../../contexts/TaskPaneContext';
 import { NextActionContext } from '../../../contexts/NextActionContext';
+import { useTaskPanel } from '../../../store/taskPanelStore';
 
 jest.mock('../../../utils/tasksService', () => ({
     updateTask: jest.fn(),
+    duplicateTask: jest.fn(),
 }));
 
 const mockShowUndoToast = jest.fn();
@@ -230,6 +232,35 @@ describe('MinimalContextMenu', () => {
             fireEvent.click(screen.getByRole('menuitem', { name: 'Tomorrow' }));
         });
         expect(mockShowUndoToast).not.toHaveBeenCalled();
+    });
+
+    it('duplicates the task and opens the copy', async () => {
+        (tasksService.duplicateTask as jest.Mock).mockResolvedValue({
+            ...baseTask(),
+            id: 99,
+            uid: 'copy-uid-99',
+        });
+        const { props } = renderMenu();
+
+        await act(async () => {
+            fireEvent.click(
+                screen.getByRole('menuitem', { name: 'Duplicate' })
+            );
+        });
+
+        expect(props.onClose).toHaveBeenCalled();
+        expect(tasksService.duplicateTask).toHaveBeenCalledWith(
+            expect.objectContaining({ uid: 'task-7', name: 'Write report' })
+        );
+        expect(useTaskPanel.getState().uid).toBe('copy-uid-99');
+    });
+
+    it('does not offer to duplicate a task from a TODO.md file', () => {
+        renderMenu(baseTask({ source_key: 'todo:abc' } as Partial<Task>));
+
+        expect(
+            screen.queryByRole('menuitem', { name: 'Duplicate' })
+        ).not.toBeInTheDocument();
     });
 
     it('sets the due date to the next Monday for Next week', async () => {

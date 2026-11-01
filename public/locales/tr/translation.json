@@ -1597,6 +1597,9 @@
     "createError": "Not oluşturulamadı"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Bu görevi mi yoksa seriyi mi düzenlemek istiyorsunuz?",
       "deleteTitle": "Bu görevi mi yoksa seriyi mi silmek istiyorsunuz?",

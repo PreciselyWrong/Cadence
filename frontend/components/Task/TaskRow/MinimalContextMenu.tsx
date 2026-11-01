@@ -7,7 +7,11 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPinIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+    DocumentDuplicateIcon,
+    MapPinIcon,
+    TrashIcon,
+} from '@heroicons/react/24/outline';
 import { Task, PriorityType } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import {
@@ -23,6 +27,9 @@ import {
     TaskDecision,
 } from '../../../utils/reviewService';
 import { isRecurringTask } from '../../../utils/recurringScope';
+import { isTodoMdTask } from '../../../utils/todoMd';
+import { duplicateTask } from '../../../utils/tasksService';
+import { openTaskPanel } from '../../../store/taskPanelStore';
 import { isCurrentWeek } from '../../Review/TaskDecisionRow';
 import { useToast } from '../../Shared/ToastContext';
 import { useNextAction } from '../../../contexts/NextActionContext';
@@ -79,7 +86,7 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
         [onTaskUpdate]
     );
     const setters = useTaskRowSave(task, saveAndAnnounce);
-    const { showErrorToast, showUndoToast } = useToast();
+    const { showSuccessToast, showErrorToast, showUndoToast } = useToast();
     // Only on a project page, for an open task of the project itself.
     const nextAction = useNextAction();
     const canBeNextAction =
@@ -147,6 +154,19 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
     const run = (action: () => Promise<void>) => {
         onClose();
         void action().catch(() => {});
+    };
+    // The copy opens in the side panel; a TODO.md task is not copied.
+    const duplicate = async () => {
+        try {
+            const copy = await duplicateTask(task);
+            showSuccessToast(t('task.duplicated', 'Task duplicated'));
+            if (copy.uid) openTaskPanel(copy.uid);
+        } catch (error) {
+            console.error('Failed to duplicate task:', error);
+            showErrorToast(
+                t('task.duplicateError', 'Could not duplicate the task.')
+            );
+        }
     };
     // A saved date or project change can be taken back. A change that failed
     // rejects before the toast. A recurring task may answer the scope prompt
@@ -393,6 +413,20 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
                 <MapPinIcon className="h-4 w-4" aria-hidden="true" />
                 {task.pinned ? t('task.unpin', 'Unpin') : t('task.pin', 'Pin')}
             </button>
+            {!isTodoMdTask(task) && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => run(duplicate)}
+                    className={itemClass}
+                >
+                    <DocumentDuplicateIcon
+                        className="h-4 w-4"
+                        aria-hidden="true"
+                    />
+                    {t('task.duplicate', 'Duplicate')}
+                </button>
+            )}
             <button
                 type="button"
                 role="menuitem"

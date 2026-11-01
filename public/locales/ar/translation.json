@@ -1605,6 +1605,9 @@
     "createError": "فشل في إنشاء الملاحظة"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "تعديل هذه المهمة أم السلسلة؟",
       "deleteTitle": "حذف هذه المهمة أم السلسلة؟",

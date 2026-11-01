@@ -1601,6 +1601,9 @@
     "createError": "Ustvarjanje opombe ni uspelo"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Urediti to opravilo ali serijo?",
       "deleteTitle": "Izbrisati to opravilo ali serijo?",

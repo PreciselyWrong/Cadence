@@ -1597,6 +1597,9 @@
     "createError": "创建笔记失败"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "编辑此任务还是整个系列？",
       "deleteTitle": "删除此任务还是整个系列？",

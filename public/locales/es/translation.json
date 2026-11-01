@@ -1590,6 +1590,9 @@
     "noCompletedTasks": "No hay tareas completadas."
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "¿Editar esta tarea o la serie?",
       "deleteTitle": "¿Eliminar esta tarea o la serie?",

@@ -1620,6 +1620,9 @@
     "createError": "Failed to create note"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Edit this task or the series?",
       "deleteTitle": "Delete this task or the series?",

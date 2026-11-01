@@ -253,3 +253,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : dans le menu clic droit d'une tâche, changer la date ou le projet était définitif : une erreur de clic se réparait à la main.
 - **Décision** : après un changement enregistré, un toast « Annuler » (« Date modifiée » ou « Projet modifié ») remet l'ancienne valeur, heure comprise. Rien n'est proposé si l'enregistrement échoue, ni pour une tâche récurrente (son choix de portée décide déjà, et une portée annulée n'enregistre rien).
 - **Android** : à reprendre. Le même « Annuler » après un changement de date ou de projet depuis le menu d'une ligne. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Dupliquer une tâche
+
+- **Problème** : pour refaire une tâche semblable, il fallait la recréer à la main : nom, note, projet, zone, étiquettes, priorité et dates.
+- **Décision** : « Dupliquer » dans le menu clic droit et dans le menu d'actions de la page tâche. La copie reprend le nom, la note, le projet, la zone, les étiquettes, la priorité et les dates de début et d'échéance, et reste une tâche ouverte. Les sous-tâches, la récurrence, le statut et la tâche parente ne sont pas copiés. La copie s'ouvre (panneau latéral dans le menu, sa page dans la page tâche). Pas proposé pour une tâche de TODO.md. Le service `duplicateTask` (`frontend/utils/tasksService.ts`) passe par `POST /task` : aucun changement serveur.
+- **Android** : à reprendre. Même copie depuis le menu d'une tâche, avec les mêmes champs exclus. Reste : rien d'essayé sur le téléphone.

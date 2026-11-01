@@ -161,6 +161,7 @@ In Minimal mode, task rows and their lists take the gestures below. Dense mode h
     - Date: Today, Tomorrow, Next week (the next Monday after today) or Clear date. Setting a date clears any time of day on the task.
     - Move to project: No project, or one of your projects.
     - Pin or Unpin.
+    - Duplicate: a new open task with the name, note, project, area, tags, priority and dates; it opens in the side panel. Not offered for a TODO.md task. Subtasks, recurrence, status and parent task are not copied. The task page's actions menu has the same item and opens the copy on its page.
     - Delete: the task leaves the list at once and an « Undo » toast (5 s) keeps it; after that, or when the page is left, it is deleted. A recurring task asks its scope first instead.
     - A date or project change shows an « Undo » toast that puts the old value back (not for a recurring task, whose scope prompt decides).
     - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.

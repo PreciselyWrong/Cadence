@@ -1597,6 +1597,9 @@
     "createError": "메모 생성에 실패했습니다"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "이 작업만 편집할까요, 아니면 시리즈 전체를 편집할까요?",
       "deleteTitle": "이 작업만 삭제할까요, 아니면 시리즈 전체를 삭제할까요?",

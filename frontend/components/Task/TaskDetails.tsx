@@ -17,6 +17,7 @@ import {
     TaskIteration,
     toggleTaskCompletion,
     skipTaskOccurrence,
+    duplicateTask,
 } from '../../utils/tasksService';
 import {
     deleteTaskWithScope,
@@ -1366,6 +1367,21 @@ const TaskDetails: React.FC = () => {
         }
     };
 
+    // The copy opens on its own page.
+    const handleDuplicate = async () => {
+        if (!task) return;
+        try {
+            const copy = await duplicateTask(task);
+            showSuccessToast(t('task.duplicated', 'Task duplicated'));
+            if (copy.uid) navigate(`/task/${copy.uid}`);
+        } catch (error) {
+            console.error('Failed to duplicate task:', error);
+            showErrorToast(
+                t('task.duplicateError', 'Could not duplicate the task.')
+            );
+        }
+    };
+
     const handleDeleteClick = () => {
         if (isTodoMdTask(task)) return;
         if (!task) return;
@@ -1804,6 +1820,7 @@ const TaskDetails: React.FC = () => {
                     onStatusUpdate={handleStatusUpdate}
                     onPriorityUpdate={handlePriorityUpdate}
                     onDelete={handleDeleteClick}
+                    onDuplicate={handleDuplicate}
                     onSkipOccurrence={
                         canSkipOccurrence ? handleSkipOccurrence : undefined
                     }

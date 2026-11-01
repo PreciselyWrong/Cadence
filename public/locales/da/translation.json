@@ -1597,6 +1597,9 @@
     "createError": "Fejl ved oprettelse af note"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Rediger denne opgave eller serien?",
       "deleteTitle": "Slet denne opgave eller serien?",

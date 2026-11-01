@@ -1926,6 +1926,9 @@
     "noCompletedTasks": "完了したタスクはありません。"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "このタスクを編集しますか、それともシリーズ全体ですか？",
       "deleteTitle": "このタスクを削除しますか、それともシリーズ全体ですか？",

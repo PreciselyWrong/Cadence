@@ -1595,6 +1595,9 @@
     "waiting": "Σε αναμονή"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Επεξεργασία αυτής της εργασίας ή της σειράς;",
       "deleteTitle": "Διαγραφή αυτής της εργασίας ή της σειράς;",

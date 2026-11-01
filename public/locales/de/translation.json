@@ -1557,6 +1557,9 @@
     "pureBlack": "Pure black in dark mode"
   },
   "task": {
+    "duplicateError": "Could not duplicate the task.",
+    "duplicated": "Task duplicated",
+    "duplicate": "Duplicate",
     "recurringScope": {
       "editTitle": "Diese Aufgabe oder die Serie bearbeiten?",
       "deleteTitle": "Diese Aufgabe oder die Serie löschen?",

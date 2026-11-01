@@ -1600,6 +1600,9 @@
     "createError": "Échec de la création de la note"
   },
   "task": {
+    "duplicateError": "Impossible de dupliquer la tâche.",
+    "duplicated": "Tâche dupliquée",
+    "duplicate": "Dupliquer",
     "recurringScope": {
       "editTitle": "Modifier cette tâche ou la série ?",
       "deleteTitle": "Supprimer cette tâche ou la série ?",
