@@ -47,6 +47,7 @@ import { isTodoMdProject } from '../../utils/todoMd';
 import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { mergeVisibleOrder } from '../Shared/sortableList';
+import { sortByTaskOrder } from '../../utils/taskOrder';
 import IconSortDropdown from '../Shared/IconSortDropdown';
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import { getApiPath } from '../../config/paths';
@@ -753,19 +754,28 @@ const ProjectDetails: React.FC = () => {
         [orderBy, taskPositions]
     );
 
-    // Dragging a task saves a manual order and switches the list to it,
-    // starting from the order on screen.
-    const handleTaskReorder = async (orderedUids: string[]) => {
+    // Dragging a task saves the project's order (the synced `order` of its
+    // tasks) and switches the list to it, starting from the order on screen.
+    // The outline always shows that order, so a move there leaves the
+    // list's sort alone.
+    const handleTaskReorder = async (
+        orderedUids: string[],
+        fromOutline = false
+    ) => {
         if (!project?.uid) return;
-        const fullOrder = tasks
+        const fullOrder = (
+            fromOutline
+                ? sortByTaskOrder(tasks, taskOrder)
+                : [...tasks].sort(compareTasks)
+        )
             .filter((task) => task.uid)
-            .sort(compareTasks)
             .map((task) => task.uid as string);
         const newOrder = mergeVisibleOrder(fullOrder, orderedUids);
         const prevOrder = taskOrder;
         const prevOrderBy = orderBy;
+        const switchSort = !fromOutline && !orderBy.startsWith('custom:');
         setTaskOrder(newOrder);
-        if (!orderBy.startsWith('custom:')) handleSortChange('custom:asc');
+        if (switchSort) handleSortChange('custom:asc');
         try {
             await saveTaskOrder(
                 { scope: 'project', project_uid: project.uid },
@@ -774,7 +784,7 @@ const ProjectDetails: React.FC = () => {
         } catch (error) {
             console.error('Error saving task order:', error);
             setTaskOrder(prevOrder);
-            handleSortChange(prevOrderBy);
+            if (switchSort) handleSortChange(prevOrderBy);
             showErrorToast(
                 t('tasks.reorderError', 'Failed to save task order')
             );
@@ -796,6 +806,11 @@ const ProjectDetails: React.FC = () => {
         }
         return [...filteredTasks].sort(compareTasks);
     }, [tasks, taskStatusFilter, taskSearchQuery, compareTasks]);
+
+    const outlineTasks = useMemo(
+        () => sortByTaskOrder(displayTasks, taskOrder),
+        [displayTasks, taskOrder]
+    );
 
     const { taskStats, nextBestAction } = useProjectMetrics(
         tasks,
@@ -1201,9 +1216,11 @@ const ProjectDetails: React.FC = () => {
                                     />
                                 ) : view === 'outline' ? (
                                     <ProjectOutline
-                                        tasks={displayTasks}
+                                        tasks={outlineTasks}
                                         projectUid={project.uid as string}
-                                        onReorder={handleTaskReorder}
+                                        onReorder={(uids) =>
+                                            handleTaskReorder(uids, true)
+                                        }
                                         onReload={reloadProjectTasks}
                                         readOnly={project.access_level === 'ro'}
                                         structureLocked={isTodoMdProject(
@@ -1238,8 +1255,8 @@ const ProjectDetails: React.FC = () => {
                                                 taskSearchQuery={
                                                     taskSearchQuery
                                                 }
-                                                onTaskReorder={
-                                                    handleTaskReorder
+                                                onTaskReorder={(uids) =>
+                                                    handleTaskReorder(uids)
                                                 }
                                                 onInlineCreate={
                                                     isMinimal

@@ -750,6 +750,20 @@ async function startServer() {
             }
         }
 
+        // Project orders saved per user move onto the synced task order
+        // (docs/fork/DECISIONS.md); a no-op once done.
+        try {
+            const moved =
+                await require('./modules/tasks/order/service').moveProjectOrders();
+            if (moved.projects > 0) {
+                console.log(
+                    `Task order: moved the saved order of ${moved.projects} projects onto their tasks`
+                );
+            }
+        } catch (error) {
+            console.error('Could not move project task orders:', error);
+        }
+
         const server = app.listen(config.port, config.host, () => {
             console.log(`Server running on port ${config.port}`);
             console.log(`Server listening on http://localhost:${config.port}`);

@@ -424,10 +424,10 @@ The **Outline** tab (both densities) shows the project's tasks and their subtask
 
 - **Enter** saves the line and opens a new one below at the same level (a subtask line opens a subtask of the same parent); typing a name and pressing **Enter** creates the task there and opens the next line. **Escape**, or **Backspace** on an empty line, drops it. **+ Add task** at the foot adds a line at the end (the header **Add** button is hidden on this tab).
 - **Tab** makes a task a subtask of the task above it; **Shift+Tab** lifts a subtask back out, right after its former parent. One level only, as everywhere else: a task that has subtasks of its own does not indent.
-- **Alt+↑ / Alt+↓** move a line among its siblings: for tasks this saves the project's custom order (and switches the list to it), for subtasks it rewrites the order of all the parent's subtasks as the server holds them, so none is dropped.
+- **Alt+↑ / Alt+↓** move a line among its siblings: for tasks this saves the project's order (the synced `tasks.order`, the order Android shows too) without changing the list's sort; for subtasks it rewrites the order of all the parent's subtasks as the server holds them, so none is dropped.
 - **↑ / ↓** move between lines; the checkbox completes or reopens a task; leaving a line saves its new name.
 - Read-only viewers get the outline without editing. In a TODO.md project only new lines and ticks are written (names, indentation and order belong to the file).
-- The outline follows the page's status filter, search and sort. In Minimal the choice is remembered per project in `ui_settings.viewTypes` (`outline`). Logic: `frontend/components/Project/ProjectOutline.tsx`, using the existing task endpoints (`POST /api/task`, `PATCH /api/task/:uid` with `parent_task_id` or `subtasks`, `PUT /api/tasks/order`).
+- The outline follows the page's status filter and search, and always shows the project's order: tasks never placed first, newest first, then by `order` (subtasks never placed first, oldest first). In Minimal the choice is remembered per project in `ui_settings.viewTypes` (`outline`). Logic: `frontend/components/Project/ProjectOutline.tsx`, using the existing task endpoints (`POST /api/task`, `PATCH /api/task/:uid` with `parent_task_id` or `subtasks`, `PUT /api/tasks/order`).
 
 ## Board View
 

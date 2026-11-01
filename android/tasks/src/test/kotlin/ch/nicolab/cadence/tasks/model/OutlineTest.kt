@@ -36,10 +36,23 @@ class OutlineTest {
         assertTrue(Outline.rows(reversed)[1].hasChildren)
     }
 
+    private fun created(task: TaskItem, at: String) = task.copy(extras = task.extras + ("created_at" to at))
+
     @Test
-    fun `sans order, l'ordre reçu est gardé, les tâches rangées passent devant`() {
-        val mixed = Outline.tree(listOf(a, b, task("c", order = 0)), listOf(a, b))
-        assertEquals(listOf("c", "a", "b"), shape(mixed))
+    fun `comme sur le web, les tâches jamais rangées passent devant, la plus récente d'abord`() {
+        val old = created(task("old"), "2026-10-01T00:00:00.000Z")
+        val recent = created(task("recent"), "2026-10-03T00:00:00.000Z")
+        val local = task("local")
+        val mixed = Outline.tree(listOf(task("c", order = 0), old, recent, local, task("d", order = 1)), emptyList())
+        assertEquals(listOf("local", "recent", "old", "c", "d"), shape(mixed))
+    }
+
+    @Test
+    fun `les sous-tâches jamais rangées passent devant, la plus ancienne d'abord`() {
+        val first = created(task("s1", parent = "b"), "2026-10-01T00:00:00.000Z")
+        val second = created(task("s2", parent = "b"), "2026-10-02T00:00:00.000Z")
+        val mixed = Outline.tree(listOf(b), listOf(b, task("s0", parent = "b", order = 0), second, first))
+        assertEquals(listOf("b", "  s1", "  s2", "  s0"), shape(mixed))
     }
 
     @Test

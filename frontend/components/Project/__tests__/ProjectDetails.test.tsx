@@ -169,6 +169,20 @@ jest.mock('../ProjectTasksSection', () => ({
     __esModule: true,
     default: () => null,
 }));
+let mockOutlineProps: any = null;
+jest.mock('../ProjectOutline', () => ({
+    __esModule: true,
+    default: (props: any) => {
+        mockOutlineProps = props;
+        return (
+            <ol data-testid="outline">
+                {props.tasks.map((task: any) => (
+                    <li key={task.uid}>{task.name}</li>
+                ))}
+            </ol>
+        );
+    },
+}));
 
 describe('ProjectDetails delete confirmation (#1826)', () => {
     it('interpolates project name in delete confirm dialog and does not display literal placeholder', async () => {
@@ -361,6 +375,62 @@ describe('ProjectDetails when the project cannot be loaded (#2022)', () => {
             expect(
                 screen.getByTestId('project-add-button')
             ).toBeInTheDocument();
+        });
+    });
+
+    describe('Outline order', () => {
+        const task = (uid: string, name: string, created: string) => ({
+            id: Number(uid.slice(1)),
+            uid,
+            name,
+            status: 'not_started',
+            created_at: created,
+        });
+        const project = {
+            id: 103,
+            uid: 'proj-103',
+            name: 'Garage',
+            status: 'in_progress',
+            tasks: [
+                task('t1', 'Alpha', '2026-10-01T00:00:00Z'),
+                task('t2', 'Bravo', '2026-10-02T00:00:00Z'),
+                task('t3', 'Charlie', '2026-10-03T00:00:00Z'),
+            ],
+            notes: [],
+        };
+
+        afterEach(() => {
+            localStorage.clear();
+            mockOutlineProps = null;
+        });
+
+        it('shows and saves the synced project order whatever the list sort', async () => {
+            const { fetchTaskOrder, saveTaskOrder } = jest.requireMock(
+                '../../../utils/tasksService'
+            );
+            localStorage.setItem('project_order_by', 'name:asc');
+            (fetchProjectBySlug as jest.Mock).mockResolvedValue(project);
+            (fetchTaskOrder as jest.Mock).mockResolvedValue(['t3', 't1', 't2']);
+            (saveTaskOrder as jest.Mock).mockResolvedValue(undefined);
+            render(<ProjectDetails />);
+
+            await screen.findByText('Garage');
+            fireEvent.click(screen.getByTestId('project-view-outline'));
+            await waitFor(() =>
+                expect(
+                    screen
+                        .getAllByRole('listitem')
+                        .map((item) => item.textContent)
+                ).toEqual(['Charlie', 'Alpha', 'Bravo'])
+            );
+
+            await mockOutlineProps.onReorder(['t1', 't3', 't2']);
+
+            expect(saveTaskOrder).toHaveBeenCalledWith(
+                { scope: 'project', project_uid: 'proj-103' },
+                ['t1', 't3', 't2']
+            );
+            expect(localStorage.getItem('project_order_by')).toBe('name:asc');
         });
     });
 });

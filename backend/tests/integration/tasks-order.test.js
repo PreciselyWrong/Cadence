@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../../app');
-const { UserTaskOrder, sequelize } = require('../../models');
+const { UserTaskOrder, Project, sequelize } = require('../../models');
+const { moveProjectOrders } = require('../../modules/tasks/order/service');
 const {
     createTestUser,
     acceptAllInvitations,
@@ -110,7 +111,7 @@ describe('Tasks manual order', () => {
         expect(allOrder.body.task_uids).toEqual([]);
     });
 
-    it('keeps the order per user in a shared project', async () => {
+    it('shares the project order with editors; read-only members cannot change it', async () => {
         await ownerAgent.post('/api/shares').send({
             resource_type: 'project',
             resource_uid: project.uid,
@@ -130,12 +131,147 @@ describe('Tasks manual order', () => {
             project_uid: project.uid,
             task_uids: [d, c, b, a],
         });
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(403);
 
-        const ownerOrder = await ownerAgent.get(
+        const memberOrder = await memberAgent.get(
             `/api/tasks/order?scope=project&project_uid=${project.uid}`
         );
-        expect(ownerOrder.body.task_uids).toEqual([a, b, c, d]);
+        expect(memberOrder.body.task_uids).toEqual([a, b, c, d]);
+    });
+
+    describe('project order is the synced task order', () => {
+        const hlc = (ms) => `${String(ms).padStart(13, '0')}-0000-devA`;
+        const pushOrder = (agent, orders) =>
+            agent.post('/api/v1/sync/push').send({
+                ops: Object.entries(orders).map(([uid, order], i) => ({
+                    op_id: `op-order-${i}-${uid}`,
+                    entity: 'task',
+                    uid,
+                    action: 'upsert',
+                    fields: {
+                        order: { value: order, hlc: hlc(Date.now() + 60000) },
+                    },
+                })),
+            });
+        const pulledOrders = async (agent) => {
+            const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+            expect(pulled.status).toBe(200);
+            const orders = {};
+            pulled.body.changes
+                .filter((c) => c.entity === 'task' && c.op === 'upsert')
+                .forEach((c) => {
+                    orders[c.uid] = c.data.order;
+                });
+            return orders;
+        };
+
+        it('a web drag is the order a device pulls', async () => {
+            const [a, b, c, d] = tasks.map((t) => t.uid);
+            const put = await ownerAgent.put('/api/tasks/order').send({
+                scope: 'project',
+                project_uid: project.uid,
+                task_uids: [d, b, a, c],
+            });
+            expect(put.status).toBe(200);
+
+            const orders = await pulledOrders(ownerAgent);
+            expect([a, b, c, d].map((uid) => orders[uid])).toEqual([
+                2, 1, 3, 0,
+            ]);
+            expect(await UserTaskOrder.count()).toBe(0);
+        });
+
+        it('an order pushed by a device is the order the web reads', async () => {
+            const [a, b, c, d] = tasks.map((t) => t.uid);
+            const real = await pushOrder(ownerAgent, {
+                [c]: 0,
+                [a]: 1,
+                [d]: 2,
+                [b]: 3,
+            });
+            expect(real.body.results.every((r) => r.status === 'applied')).toBe(
+                true
+            );
+
+            const get = await ownerAgent.get(
+                `/api/tasks/order?scope=project&project_uid=${project.uid}`
+            );
+            expect(get.body.task_uids).toEqual([c, a, d, b]);
+        });
+
+        it('rejects a subtask in a project order', async () => {
+            const sub = (
+                await ownerAgent.post('/api/task').send({
+                    name: 'Sub',
+                    project_uid: project.uid,
+                    parent_task_id: tasks[0].id,
+                })
+            ).body;
+            const res = await ownerAgent.put('/api/tasks/order').send({
+                scope: 'project',
+                project_uid: project.uid,
+                task_uids: [sub.uid],
+            });
+            expect(res.status).toBe(404);
+        });
+
+        it('moves a saved per-user project order onto the tasks, once', async () => {
+            const [a, b, c, d] = tasks.map((t) => t.uid);
+            const ids = Object.fromEntries(tasks.map((t) => [t.uid, t.id]));
+            const projectRow = await Project.findOne({
+                where: { uid: project.uid },
+            });
+            await UserTaskOrder.bulkCreate(
+                [b, d, a].map((uid, position) => ({
+                    user_id: owner.id,
+                    task_id: ids[uid],
+                    scope: `project:${projectRow.id}`,
+                    position,
+                }))
+            );
+            await UserTaskOrder.create({
+                user_id: owner.id,
+                task_id: ids[a],
+                scope: 'all',
+                position: 0,
+            });
+
+            const moved = await moveProjectOrders();
+            expect(moved.projects).toBe(1);
+
+            const get = await ownerAgent.get(
+                `/api/tasks/order?scope=project&project_uid=${project.uid}`
+            );
+            expect(get.body.task_uids).toEqual([b, d, a]);
+            const orders = await pulledOrders(ownerAgent);
+            expect(orders[b]).toBe(0);
+            expect(orders[c]).toBeNull();
+            // All Tasks keeps its per-user order.
+            expect(await UserTaskOrder.count()).toBe(1);
+            expect((await moveProjectOrders()).projects).toBe(0);
+        });
+
+        it('keeps an order a device already wrote over an older saved one', async () => {
+            const [a, b] = tasks.map((t) => t.uid);
+            const projectRow = await Project.findOne({
+                where: { uid: project.uid },
+            });
+            await pushOrder(ownerAgent, { [b]: 0, [a]: 1 });
+            await UserTaskOrder.create({
+                user_id: owner.id,
+                task_id: tasks[0].id,
+                scope: `project:${projectRow.id}`,
+                position: 0,
+            });
+
+            await moveProjectOrders();
+
+            const get = await ownerAgent.get(
+                `/api/tasks/order?scope=project&project_uid=${project.uid}`
+            );
+            expect(get.body.task_uids).toEqual([b, a]);
+            expect(await UserTaskOrder.count()).toBe(0);
+        });
     });
 
     it('rejects tasks and projects the user cannot see', async () => {

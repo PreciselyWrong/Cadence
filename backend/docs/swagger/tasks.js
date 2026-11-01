@@ -9,7 +9,7 @@
  * @swagger
  * /api/tasks/order:
  *   get:
- *     summary: Get your manual task order for a list
+ *     summary: Get the manual task order of a list (yours for all and tag; the project's synced task order for project)
  *     tags: [Tasks]
  *     security:
  *       - cookieAuth: []

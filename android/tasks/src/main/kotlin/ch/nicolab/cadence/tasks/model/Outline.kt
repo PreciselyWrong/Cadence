@@ -28,15 +28,27 @@ object Outline {
 
     fun order(task: TaskItem): Int? = task.extras["order"]?.toDoubleOrNull()?.toInt()
 
-    /** [top] : tâches ouvertes du projet, dans l'ordre de la liste ; [every] : toutes les tâches, pour leurs sous-tâches. */
+    /** [top] : tâches ouvertes du projet ; [every] : toutes les tâches, pour leurs sous-tâches. */
     fun tree(top: List<TaskItem>, every: List<TaskItem>): List<OutlineNode> {
         val children = every.filter { it.parentTaskUid != null && !it.isClosed }.groupBy { it.parentTaskUid }
-        return ranked(top).map { OutlineNode(it, ranked(children[it.uid].orEmpty())) }
+        return ranked(top, newestFirst = true).map { OutlineNode(it, ranked(children[it.uid].orEmpty(), newestFirst = false)) }
     }
 
-    /** Les tâches rangées (`order`) d'abord, dans leur rang ; les autres gardent l'ordre reçu. */
-    private fun ranked(tasks: List<TaskItem>): List<TaskItem> =
-        tasks.withIndex().sortedWith(compareBy<IndexedValue<TaskItem>> { order(it.value) ?: Int.MAX_VALUE }.thenBy { it.index }).map { it.value }
+    /**
+     * Même ordre que le web (`sortByTaskOrder`, `ProjectOutline`) : les tâches jamais rangées (`order` vide) d'abord,
+     * la plus récente d'abord au premier niveau, la plus ancienne d'abord parmi des sous-tâches ; puis par rang.
+     * Une tâche créée ici et pas encore renvoyée par le serveur n'a pas de `created_at` : c'est la plus récente.
+     */
+    private fun ranked(tasks: List<TaskItem>, newestFirst: Boolean): List<TaskItem> {
+        val (unranked, rankedTasks) = tasks.partition { order(it) == null }
+        val byAge = compareBy<TaskItem, String?>(nullsLast()) { it.extras["created_at"] }
+        val unrankedSorted = if (newestFirst) {
+            unranked.sortedWith(compareBy<TaskItem, String?>(nullsFirst(reverseOrder())) { it.extras["created_at"] })
+        } else {
+            unranked.sortedWith(byAge)
+        }
+        return unrankedSorted + rankedTasks.sortedWith(compareBy<TaskItem> { order(it) }.then(byAge))
+    }
 
     fun rows(tree: List<OutlineNode>): List<OutlineRow> = tree.flatMap { node ->
         listOf(OutlineRow(node.task, 0, node.children.isNotEmpty())) + node.children.map { OutlineRow(it, 1, false) }

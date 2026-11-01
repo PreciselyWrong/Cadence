@@ -9,7 +9,11 @@ const {
     sequelize,
 } = require('../../../models');
 const permissionsService = require('../../../services/permissionsService');
-const { NotFoundError, ValidationError } = require('../../../shared/errors');
+const {
+    ForbiddenError,
+    NotFoundError,
+    ValidationError,
+} = require('../../../shared/errors');
 
 const MAX_ORDER_TASKS = 5000;
 const ALL_SCOPE = 'all';
@@ -20,6 +24,11 @@ const BASE_ORDER_BY =
 // tasks (which needs read access to that project), or one of the user's
 // tags. A tag order covers the visible tasks sent with it; tags have no
 // sharing, so the tag must belong to the user.
+//
+// All Tasks and tag lists keep a per-user order in user_task_orders. A
+// project's top-level tasks keep theirs in `tasks.order`, the field every
+// device syncs: one order per project, shared by everyone who can edit it
+// (docs/fork/DECISIONS.md).
 async function resolveScope(
     userId,
     { scope, project_uid: projectUid, tag_uid: tagUid }
@@ -52,7 +61,54 @@ async function resolveScope(
     if (!project || access === 'none') {
         throw new NotFoundError('Project not found.');
     }
-    return { key: `project:${project.id}`, projectId: project.id };
+    return {
+        key: `project:${project.id}`,
+        projectId: project.id,
+        access,
+    };
+}
+
+// A project's top-level tasks in their synced order, as uids. Tasks never
+// placed (`order` null) are left out, as unplaced rows are for other lists.
+async function getProjectOrderedUids(projectId, transaction) {
+    const rows = await Task.findAll({
+        where: {
+            project_id: projectId,
+            parent_task_id: null,
+            order: { [Op.ne]: null },
+        },
+        attributes: ['uid'],
+        order: [
+            ['order', 'ASC'],
+            ['id', 'ASC'],
+        ],
+        raw: true,
+        transaction,
+    });
+    return rows.map((row) => row.uid);
+}
+
+// Writes positions as `order` on each task whose rank changed, through the
+// model so the sync journal hands the change to every device.
+async function writeProjectOrder(projectId, uids, transaction) {
+    const rows = await Task.findAll({
+        where: {
+            project_id: projectId,
+            parent_task_id: null,
+            uid: { [Op.in]: uids },
+        },
+        transaction,
+    });
+    const byUid = new Map(rows.map((row) => [row.uid, row]));
+    let index = 0;
+    for (const uid of uids) {
+        const row = byUid.get(uid);
+        if (!row) continue;
+        if (row.order !== index) {
+            await row.update({ order: index }, { transaction });
+        }
+        index += 1;
+    }
 }
 
 // The saved order of a list, as task uids. Rows of deleted tasks drop out
@@ -69,6 +125,9 @@ async function getOrderedUids(userId, scopeKey) {
 
 async function getOrder(userId, query) {
     const scope = await resolveScope(userId, query);
+    if (scope.projectId !== null) {
+        return { task_uids: await getProjectOrderedUids(scope.projectId) };
+    }
     return { task_uids: await getOrderedUids(userId, scope.key) };
 }
 
@@ -108,13 +167,16 @@ async function saveOrder(userId, body, timezone) {
     }
 
     const scope = await resolveScope(userId, body);
+    if (scope.projectId !== null && scope.access === 'ro') {
+        throw new ForbiddenError('Read-only access to this project.');
+    }
     const visibleWhere = await permissionsService.ownershipOrPermissionWhere(
         'task',
         userId
     );
     const conditions = [visibleWhere, { uid: { [Op.in]: taskUids } }];
     if (scope.projectId !== null) {
-        conditions.push({ project_id: scope.projectId });
+        conditions.push({ project_id: scope.projectId, parent_task_id: null });
     }
     const tasks = taskUids.length
         ? await Task.findAll({
@@ -131,10 +193,14 @@ async function saveOrder(userId, body, timezone) {
     if (baseOrderBy !== undefined && !BASE_ORDER_BY.test(baseOrderBy)) {
         throw new ValidationError('base_order_by is not a valid sort.');
     }
-    const saved =
-        baseOrderBy && scope.key === ALL_SCOPE
-            ? await seedAllOrder(userId, baseOrderBy, timezone)
-            : await getOrderedUids(userId, scope.key);
+    let saved;
+    if (baseOrderBy && scope.key === ALL_SCOPE) {
+        saved = await seedAllOrder(userId, baseOrderBy, timezone);
+    } else if (scope.projectId !== null) {
+        saved = await getProjectOrderedUids(scope.projectId);
+    } else {
+        saved = await getOrderedUids(userId, scope.key);
+    }
     const savedSet = new Set(saved);
     // Unplaced tasks sort first, newest first, in every custom list.
     const unplaced = tasks
@@ -147,6 +213,13 @@ async function saveOrder(userId, body, timezone) {
     const newOrder = current.map((uid) =>
         moved.has(uid) ? taskUids[next++] : uid
     );
+
+    if (scope.projectId !== null) {
+        await sequelize.transaction((transaction) =>
+            writeProjectOrder(scope.projectId, newOrder, transaction)
+        );
+        return { task_uids: newOrder };
+    }
 
     const idByUid = new Map(tasks.map((task) => [task.uid, task.id]));
     const missing = newOrder.filter((uid) => !idByUid.has(uid));
@@ -180,6 +253,64 @@ async function saveOrder(userId, body, timezone) {
     return { task_uids: newOrder };
 }
 
+// Project orders used to be per user. Each project still holding saved
+// rows takes its owner's order onto its tasks, unless a device has already
+// ordered it; the rows then go. Runs at start-up, a no-op once done.
+async function moveProjectOrders() {
+    const rows = await UserTaskOrder.findAll({
+        where: { scope: { [Op.like]: 'project:%' } },
+        attributes: ['user_id', 'scope', 'position'],
+        include: [
+            {
+                model: Task,
+                as: 'Task',
+                attributes: ['uid', 'project_id', 'parent_task_id'],
+            },
+        ],
+        order: [['position', 'ASC']],
+    });
+    const byProject = new Map();
+    for (const row of rows) {
+        const projectId = Number(row.scope.slice('project:'.length));
+        if (!byProject.has(projectId)) byProject.set(projectId, []);
+        byProject.get(projectId).push(row);
+    }
+
+    let moved = 0;
+    for (const [projectId, projectRows] of byProject) {
+        await sequelize.transaction(async (transaction) => {
+            const project = await Project.findByPk(projectId, {
+                attributes: ['id', 'user_id'],
+                transaction,
+            });
+            const alreadyOrdered = project
+                ? (await getProjectOrderedUids(projectId, transaction)).length >
+                  0
+                : true;
+            if (!alreadyOrdered) {
+                const uids = projectRows
+                    .filter(
+                        (row) =>
+                            row.user_id === project.user_id &&
+                            row.Task &&
+                            row.Task.project_id === projectId &&
+                            row.Task.parent_task_id === null
+                    )
+                    .map((row) => row.Task.uid);
+                if (uids.length) {
+                    await writeProjectOrder(projectId, uids, transaction);
+                    moved += 1;
+                }
+            }
+            await UserTaskOrder.destroy({
+                where: { scope: `project:${projectId}` },
+                transaction,
+            });
+        });
+    }
+    return { projects: moved };
+}
+
 // ORDER BY for `order_by=custom` on GET /tasks: placed tasks by position,
 // unplaced ones first and newest first.
 function customOrderClause(userId) {
@@ -200,4 +331,5 @@ module.exports = {
     getOrder,
     saveOrder,
     customOrderClause,
+    moveProjectOrders,
 };

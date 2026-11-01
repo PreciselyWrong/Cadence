@@ -1,6 +1,9 @@
 ## [1.7.0] — à publier
 
 ### Nouveautés
+- Arborescence d'un projet : même ordre que sur le web (le web range désormais les tâches d'un projet par le même champ synchronisé) ; les tâches jamais rangées passent en tête, la plus récente d'abord.
+
+### Nouveautés
 - Habitudes : « Monter » et « Descendre » rangent dans le groupe affiché (plus seulement à côté dans la liste entière) et renumérotent le groupe ; « Dupliquer » place la copie à la fin de son groupe. Même ordre que sur le web.
 
 ### Nouveautés

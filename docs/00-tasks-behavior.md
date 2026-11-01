@@ -165,7 +165,7 @@ In Minimal mode, task rows and their lists take the gestures below. Dense mode h
     - Delete: the task leaves the list at once and an « Undo » toast (5 s) keeps it; after that, or when the page is left, it is deleted. A recurring task asks its scope first instead.
     - A date or project change shows an « Undo » toast that puts the old value back (not for a recurring task, whose scope prompt decides).
     - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.
-- **Drag to reorder:** grab a row in the Tasks list (no explicit sort), a project's task list or a tag's task list and drop it at a new place. The order is saved for this account and that list, survives a reload, and the list then sorts by **Custom**. A first drag made under another sort starts from that sort. A tag's order is kept apart from All Tasks and each project (`user_task_orders`, scopes `all`, `project:<id>`, `tag:<id>`); a tag can only be ordered by its owner. Rows not in the saved order come first, newest first.
+- **Drag to reorder:** grab a row in the Tasks list (no explicit sort), a project's task list or a tag's task list and drop it at a new place. The order survives a reload and the list then sorts by **Custom**. A first drag made under another sort starts from that sort. All Tasks and each tag keep a per-user order (`user_task_orders`, scopes `all`, `tag:<id>`); a tag can only be ordered by its owner. A project's order is the synced `order` of its top-level tasks, shared by everyone who can edit the project and shown on Android too; read-only members cannot change it. Rows not in the saved order come first, newest first.
 - **Drop on the sidebar:** drag a row from any task list (Minimal or Dense, Upcoming and Today included) onto a sidebar project, tag, area, or Today / Tomorrow. The target lights up while the pointer is over it; releasing there moves the task to the project, adds the tag (other tags stay), sets the area, or makes it due that day, and the row stays where it was in its list. A task that already has it is left alone. The click that ends the drag does not open the target. Recurring tasks are not taken by Today / Tomorrow. Full rules: [Sidebar — Drop on the sidebar](32-sidebar.md#drop-on-the-sidebar).
 - **Keyboard:** the list keeps one row in the Tab order. Arrow Up and Arrow Down move focus between rows, subtask rows included. They do nothing while focus is in a text field.
     - Enter opens the task in the right-hand pane.
@@ -536,11 +536,11 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
 53. **Custom order (drag and drop):**
     - Drag a task row to move it on **All Tasks** (`/tasks`), inside a **project**, and among the **Anytime** tasks on **Today**
     - Dragging under any other sort switches the list to **Custom**, starting from the order that was on screen
-    - Each list keeps its own order, per user: moving a task on All Tasks does not move it inside its project, and a shared project can be ordered differently by each member
+    - Each list keeps its own order: moving a task on All Tasks does not move it inside its project. All Tasks and tags are per user; a project has one order (its tasks' synced `order`), the same for every member and on Android, and only members who can edit the project change it
     - Tasks that were never placed (new ones) show first, newest first
     - With filters, search or paging, only the shown tasks move; the rest keep their places
     - On Today, timed tasks follow the clock; only **Anytime** tasks are dragged, and their order is the day plan's own item order
-    - Storage: `user_task_orders` (`user_id`, `task_id`, `scope`, `position`), scope `all` or `project:<project id>`
+    - Storage: `user_task_orders` (`user_id`, `task_id`, `scope`, `position`), scope `all` or `tag:<tag id>`; projects: `tasks.order` of top-level tasks (subtasks use it within their parent). Project rows saved per user before 2026-11-01 move onto the tasks once at start-up (the owner's order, unless a device had already ordered the project)
     - API: `GET /api/tasks/order?scope=all|project&project_uid=...` returns the saved uids; `PUT /api/tasks/order` with `{ scope, project_uid?, task_uids, base_order_by? }` saves a drag; `GET /api/tasks?order_by=custom:asc` sorts All Tasks by it
 
 54. **Pinned tasks:**
